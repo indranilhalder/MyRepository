@@ -72,7 +72,6 @@
 					    <c:when test="${product.rootCategory=='Clothing'}">
                  <div class="sizes apparelSizes">
                     <table>
-				<%-- <h2>Top</h2> --%>
 					<tr>
 					<td>
 								<ul>								
@@ -164,27 +163,6 @@
 				</tr>	
 			</table> 
 		</div>
-						<%-- <c:forEach items="${sizeguideData}" var="sizeGuide" >
-							<c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set>
-							<li class="item">
-								<ul>
-									<li>${sizeGuide.key}</li>
-									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
-										<li>${sizeGuideValue.dimensionValue}
-											<c:choose>
-											<c:when test="${fn:containsIgnoreCase(sizeGuideValue.dimensionUnit , 'inch')}">"</c:when> 
-											<c:otherwise>${sizeGuideValue.dimensionUnit}</c:otherwise>
-											</c:choose>
-										</li>
-									</c:forEach>
-									<c:if test="${count gt 1 }">
-									<c:forEach begin="0" end="${count-1}">
-										<li>&nbsp;</li>
-									</c:forEach>
-									</c:if>
-								</ul>
-							</li>	
-						</c:forEach> --%>
 						</c:when>
 						 <c:when test="${product.rootCategory=='Footwear'}">
 								<c:forEach items="${sizeguideData}" var="sizeGuide" >
@@ -288,7 +266,6 @@
 			<div class="details">
 	 	<span id="noProductForSelectedSeller"> <font color="#ff1c47">
 			<spring:theme code="product.product.size.guide.notavail"/></font>
-			<!-- <h3> Selected Size is not available for this Seller </h3> -->
 			</span>
 		<span id="productDetails"> 
  <h3 class="company">
@@ -298,21 +275,14 @@
 
 </span>
  <div class="price" id="sizePrice">
-         <!--  <p class="normal"><div id="specialSelPrice"></div></p> -->
 	<p class="old" id="sizemrpPriceId" style="display:none">
-		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
 	<p class="sale" id="sizemopPriceId" style="display:none">
-		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
 	<p class="sale" id="sizespPriceId" style="display:none">
-		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
 	<br>
     </div>
-        <!-- <div class="price">
-          <p class="normal"><div id="specialSelPrice"></div></p>
-        </div> -->
         <div class="attributes">
 						<ul class="color-swatch">
 					<c:choose>
@@ -325,29 +295,30 @@
 						<li>
 						<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
 								var="variantUrl" />
-						
-							 <c:choose>
-							<%-- 	<c:when test="${empty selectedSize}"> --%>
+							<!-- TISPRO-308 -->
+							<%--  <c:choose>
 							 <c:when test="${empty sizeSelectedSizeGuide}">
+							 
 								<a href="${variantUrl}&sizeSelected=" data-target="#popUpModal" data-toggle="modal" data-productcode="${variantOption.code}">
 							 </c:when>
 							 <c:otherwise>
 								<a href="${variantUrl}&sizeSelected=true" data-target="#popUpModal" data-productcode="${variantOption.code}" data-toggle="modal">
 						     </c:otherwise>
-							 </c:choose>
+							 </c:choose> --%>
 											
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
-									<c:choose>
+								<c:choose> 
 								<c:when test="${color=='multi'}"> 
-						     	<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
+						     	<img src="${commonResourcePath}/images/multi.jpg" style="width:100%;height:100%;cursor: pointer;" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"/>
 								</c:when>
+								<%-- <span style="background-color: ${color};border: 1px solid rgb(204, 211, 217);" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span> --%>
 								<c:otherwise>
 									<span
 										style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"
-										title="${variantOption.colour}"></span></a>
-                               </c:otherwise>
-                               </c:choose>
+										title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span>
+                               </c:otherwise> 
+                               </c:choose> 
 
 									<c:if test="${variantOption.code eq product.code}">
 										<c:set var="currentColor" value="${color}" /> 
@@ -382,9 +353,6 @@
 	</c:choose>	
 			</ul>			
 <div class="size">	
-				<%-- <c:when test="${sizeSelectedSizeGuide == true}"> --%>
-					<%-- ${sizeSelectedSizeGuide} --%>
-				<%-- </c:when> --%>
 
 <c:if test="${noVariant!=true&&notApparel!=true}">
  <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
@@ -397,8 +365,6 @@
 					<option value="#"><spring:theme code="text.select.size" /></option>
 				</c:otherwise>
 			</c:choose>
-			<%-- <option value="#" id="select-option"><spring:theme code="text.select.size" /></option> --%>
-			<%-- <option value="#" data-target="#popUpModalNew"><spring:theme code="text.select.size" /></option> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:forEach items="${variantOption.colourCode}" var="color">
 					<c:choose>
@@ -421,9 +387,6 @@
 												</c:otherwise>
 											</c:choose>
 										
-										
-										
-											<%-- <option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option> --%>
 										</c:when>
 										<c:otherwise>
 											<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
@@ -488,10 +451,6 @@
 					<option>10</option>
 				</select>
 			</div>
-			<!-- <a href="#" class="button red">Add To Bag</a> -->
-			<!-- <div id="addToCartSizeGuideTitleSuccess" >
-	
-</div -->
 
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
 		
@@ -552,11 +511,6 @@
 	</span>
 	<span id="addToCartSizeGuideTitleSuccess"></span>
 </form:form>
-<%-- <span id="addToCartSizeGuideTitleaddtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
-<span id="addToCartSizeGuideTitleaddtobagerror" style="display:none"><spring:theme code="product.error"/></span>
-<span id="addToCartSizeGuideTitlebagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
-<span id="addToCartSizeGuideTitlebagfull" style="display:none"><spring:theme code="product.bag"/></span>  --%>
-			
 		</div>
 	</div>
 	</c:when>

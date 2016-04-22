@@ -136,6 +136,7 @@
 		}else{
 			// TISPRO-153
 			utag.link({ "event_type" : "Login", "link_name" : "Login" });
+			
 			//TISSIT-1703
 			var hostName=window.location.host;
 			if(hostName.indexOf(':') >=0)

@@ -27,7 +27,7 @@ $(function() {
 	});
 });
 
- $("div.departmenthover").on(
+$("div.departmenthover").on(
 		"mouseover touchend",
 		function() {
 
@@ -493,9 +493,9 @@ function getBestPicksAjaxCall(){
 						response.subItems,function(k, v){
 							
 							if(v.url){
-								renderHtml += "<a href='"
-									+ v.url
-									+ "' class='item'>";
+								renderHtml += "<a href='"+ appendIcid(v.url, v.icid)+ "' class='item'>";
+
+
 							}
 							
 							if(v.imageUrl){
@@ -514,7 +514,7 @@ function getBestPicksAjaxCall(){
 							
 						
 				});
-			renderHtml += "</div> <a href='/store/o/viewAllOffers' class='view-cliq-offers'> Cliq for More </a>";	
+			renderHtml += "</div> <a href='/store/o/viewAllOffers' class='view-cliq-offers'> View Cliq Offers </a>";	
 			$("#bestPicks").html(renderHtml);
 			// console.log()
 		},
@@ -577,9 +577,9 @@ function getProductsYouCareAjaxCall(){
 						
 						var URL = ACC.config.encodedContextPath+"/Categories/"+v.categoryName+"/c/"+v.categoryCode;
 						//for url
-						renderHtml += "<a href='"
-							+ URL
-							+ "' class='item'>";
+						renderHtml += "<a href='"+ appendIcid(URL,v.icid)+ "' class='item'>";
+
+
 						//for image
 						renderHtml += "<div class='home-product-you-care-carousel-img'> <img src='"
 							+ v.mediaURL
@@ -888,7 +888,7 @@ function getShowcaseContentAjaxCall(id) {
 					if (typeof response.bannerImageUrl !=="undefined") {
 						defaultHtml +="<div class='desc-section'>";
 						if(typeof response.bannerUrl !=="undefined"){
-							defaultHtml +="<a href='"+ACC.config.encodedContextPath+response.bannerUrl+"'>";
+							defaultHtml +="<a href='"+appendIcid(ACC.config.encodedContextPath+response.bannerUrl, response.icid)+"'>";
 						}
 						defaultHtml += "<img src='"+ response.bannerImageUrl
 						+ "'></img>";	
@@ -972,3 +972,13 @@ $(window).on(
 				$('#stayQued').css('min-height', 'auto');
 			}
 		});
+
+function appendIcid(url,icid){
+	if(url!= null){
+		if(url.indexOf("?")!= -1){
+			return url+"&icid="+icid;
+		}else{
+			return url+"?icid="+icid;
+		}
+	}
+}

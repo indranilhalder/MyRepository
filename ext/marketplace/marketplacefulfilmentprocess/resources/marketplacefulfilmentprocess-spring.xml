@@ -138,4 +138,13 @@
 	<bean id="mplUtility" class="com.tisl.mpl.fulfilmentprocess.utility.GenericUtility" >
 	</bean>
 	
+	<!-- TaskInterceptor starts -->
+   	<bean id="TaskInterceptor" class="com.tisl.mpl.fulfilmentprocess.interceptor.TaskInterceptor" />
+   
+   	<bean id="TaskInterceptorMapping"
+   		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+   		<property name="interceptor" ref="TaskInterceptor" />
+   		<property name="typeCode" value="Task" />
+   	</bean>
+	
 </beans>

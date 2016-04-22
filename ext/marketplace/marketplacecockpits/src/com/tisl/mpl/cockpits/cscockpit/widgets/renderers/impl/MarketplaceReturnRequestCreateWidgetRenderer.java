@@ -7,17 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.zkoss.zk.ui.Session;
 import net.sourceforge.pmd.util.StringUtil;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zkex.zul.Borderlayout;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
+import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
@@ -46,6 +49,7 @@ import de.hybris.platform.cockpit.widgets.InputWidget;
 import de.hybris.platform.cockpit.widgets.models.ListWidgetModel;
 import de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.cscockpit.exceptions.ValidationException;
 import de.hybris.platform.cscockpit.utils.CockpitUiConfigLoader;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
@@ -66,6 +70,7 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 	private static final String REVERSE_LOGISTICS_PARTIALAVAILABLE = "reverselogisticpartialavailable";
 	private static final String NO_RESPONSE_FROM_SERVER = "noResponseFromServer";
 
+	private static final String FAILED_TO_VALIDATE_PINCODE_FEILD = "FailedToValidatePinCode";
 	@Override
 	protected HtmlBasedComponent createContentInternal(InputWidget widget,
 			HtmlBasedComponent rootContainer) {
@@ -85,16 +90,77 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 			listBox.setFixedLayout(true);
 			listBox.setSclass("csWidgetListbox");
 			renderListbox(listBox, widget);
-			Div requestCreationContent = new Div();
-			requestCreationContent.setSclass("csReturnRequestActions");
-			requestCreationContent.setParent(content);
-			Button createButton = new Button(LabelUtils.getLabel(widget,
-					"createButton", new Object[0]));
-			createButton.setParent(requestCreationContent);
-			createButton.addEventListener(
-					"onClick",
-					createReturnRequestCreateEventListener(widget,
-							returnObjectValueContainers));
+
+			if ("RefundEntry".equalsIgnoreCase(getListConfigurationType())) {
+				LOG.debug("Initiate Return  button pressed ");
+
+				Div div = new Div();
+				div.setStyle("margin-left:400px;");
+				div.setSclass("customerDetails");
+				div.setParent(content);
+				final Hbox pinCodeHbox = createHbox(widget, "Pincode", false,
+						true);
+				final Textbox pinCodeFieldTextBox = createTextbox(pinCodeHbox);
+				pinCodeHbox.setWidth("100px");
+				pinCodeHbox.setHeight("30px");
+				pinCodeFieldTextBox.setWidth("150px");
+				pinCodeFieldTextBox.setStyle(Borderlayout.CENTER);
+				
+				try {
+					OrderModel order = (OrderModel) ((ReturnsController) widget
+							.getWidgetController()).getCurrentOrder()
+							.getObject();
+
+					if (!order.getDeliveryAddress().getPostalcode().isEmpty()
+							|| order.getDeliveryAddress().getPostalcode() != null) {
+						String pincode = order.getDeliveryAddress().getPostalcode();
+						pinCodeFieldTextBox.setValue(pincode);
+					}
+				} catch (Exception e) {
+					LOG.debug("Exception" + e);
+				}
+
+				try {
+
+					pinCodeFieldTextBox.setMaxlength(6);
+					String errorMsgName = LabelUtils.getLabel(widget,
+							"error.msg.pinCode", new Object[0]);
+					pinCodeFieldTextBox.setConstraint("/[0-9]*$/:"
+							+ errorMsgName);
+					
+					pinCodeFieldTextBox.setConstraint("" + errorMsgName);
+				} catch (Exception e) {
+					LOG.debug(e);
+				}
+
+				pinCodeHbox.setParent(div);
+				pinCodeFieldTextBox.setParent(div);
+				Div requestCreationContent = new Div();
+				requestCreationContent.setSclass("csReturnRequestActions");
+				requestCreationContent.setParent(content);
+				Button createButton = new Button(LabelUtils.getLabel(widget,
+						"createButton", new Object[0]));
+				createButton.setParent(requestCreationContent);
+				createButton.addEventListener(
+						"onClick",
+						createReturnRequestCreateEventListener(widget,
+								returnObjectValueContainers,
+								pinCodeFieldTextBox));
+
+			} else if ("ReplacementEntry"
+					.equalsIgnoreCase(getListConfigurationType())) {
+				Div requestCreationContent = new Div();
+				requestCreationContent.setSclass("csReturnRequestActions");
+				requestCreationContent.setParent(content);
+				Button createButton = new Button(LabelUtils.getLabel(widget,
+						"createButton", new Object[0]));
+				createButton.setParent(requestCreationContent);
+				createButton.addEventListener(
+						"onClick",
+						createReturnRequestCreateEventListener(widget,
+								returnObjectValueContainers));
+			}
+
 		} else {
 			Label dummyLabel = new Label(LabelUtils.getLabel(widget,
 					"cantReturn", new Object[0]));
@@ -102,6 +168,36 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 			dummyLabel.setParent(content);
 		}
 		return content;
+	}
+
+	
+	// Added  for create event
+	protected EventListener createReturnRequestCreateEventListener(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			List<ObjectValueContainer> returnObjectValueContainers,
+			final Textbox pinCodeFieldTextBox) {
+		return new ReturnRequestCreateEventListener(widget,
+				returnObjectValueContainers, pinCodeFieldTextBox);
+	}
+
+	protected class ReturnRequestCreateEventListener implements EventListener {
+		private final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget;
+		private final List<ObjectValueContainer> returnObjectValueContainers;
+		final Textbox pinCodeFieldTextBox;
+
+		public ReturnRequestCreateEventListener(
+				InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+				List<ObjectValueContainer> returnObjectValueContainers,
+				final Textbox pinCodeFieldTextBox) {
+			this.widget = widget;
+			this.returnObjectValueContainers = returnObjectValueContainers;
+			this.pinCodeFieldTextBox = pinCodeFieldTextBox;
+		}
+
+		public void onEvent(Event event) throws Exception {
+			handleReturnRequestCreateEvent(widget, event,
+					returnObjectValueContainers, pinCodeFieldTextBox);
+		}
 	}
 
 	@Override
@@ -320,6 +416,38 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 		}
 	}
 
+	private Hbox createHbox(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final String attributeLabel, final boolean hidden,
+			final boolean overwriteWidth) {
+
+		final Hbox hbox = new Hbox();
+		hbox.setWidth("36%");
+		if (overwriteWidth) {
+			hbox.setWidths("9em, none");
+		}
+		hbox.setAlign("center");
+
+		if (hidden) {
+			hbox.setVisible(false);
+		}
+
+		hbox.setClass("editorWidgetEditor");
+		final Label label = new Label(LabelUtils.getLabel(widget,
+				attributeLabel));
+		label.setParent(hbox);
+		return hbox;
+
+	}// createHbox
+
+	private Textbox createTextbox(final Hbox parent) {
+		final Textbox textBox = new Textbox();
+		textBox.setWidth("50%");
+		textBox.setParent(parent);
+		return textBox;
+	}// Textbox
+		// TODO Auto-generated method stub
+
 	@Override
 	protected ObjectValueContainer buildReturnEntryValueContainer(
 			TypedObject orderEntry, ObjectType returnEntryType,
@@ -357,6 +485,12 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 					.validateReverseLogistics(returnLogisticsList);
 
 			if ("RefundEntry".equalsIgnoreCase(getListConfigurationType())) {
+
+				/*
+				 * if
+				 * ("RefundEntry".equalsIgnoreCase(getListConfigurationType()))
+				 * {
+				 */
 				if (((ReturnsController) widget.getWidgetController())
 						.validateCreateRefundRequest(returnObjectValueContainers)) {
 
@@ -389,10 +523,12 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 						return;
 					}
 				}
-/*				Messagebox.show(LabelUtils.getLabel(widget, "failedToValidate",
-						new Object[0]), LabelUtils.getLabel(widget,
-						"failedToValidate", new Object[0]), 1,
-						"z-msgbox z-msgbox-error");*/
+				/*
+				 * Messagebox.show(LabelUtils.getLabel(widget,
+				 * "failedToValidate", new Object[0]),
+				 * LabelUtils.getLabel(widget, "failedToValidate", new
+				 * Object[0]), 1, "z-msgbox z-msgbox-error");
+				 */
 				return;
 			}
 			if ("ReplacementEntry".equalsIgnoreCase(getListConfigurationType())) {
@@ -427,11 +563,95 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 								returnObjectValueContainers, responseMap);
 						return;
 					}
+
+					/*
+					 * Messagebox.show(LabelUtils.getLabel(widget,
+					 * "failedToValidate", new Object[0]),
+					 * LabelUtils.getLabel(widget, "failedToValidate", new
+					 * Object[0]), 1, "z-msgbox z-msgbox-error");
+					 */
+					return;
 				}
-			/*	Messagebox.show(LabelUtils.getLabel(widget, "failedToValidate",
-						new Object[0]), LabelUtils.getLabel(widget,
-						"failedToValidate", new Object[0]), 1,
-						"z-msgbox z-msgbox-error");*/
+			}
+
+			throw new IllegalStateException("Unsupported return entry type ["
+					+ getListConfigurationType() + "]");
+		} catch (ValidationException e) {
+			Messagebox.show(e.getMessage()
+					+ ((e.getCause() == null) ? "" : new StringBuilder(" - ")
+							.append(e.getCause().getMessage()).toString()),
+					LabelUtils.getLabel(widget, "failedToValidate",
+							new Object[0]), 1, "z-msgbox z-msgbox-error");
+		}
+
+	}
+
+	protected void handleReturnRequestCreateEvent(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			Event event,
+			final List<ObjectValueContainer> returnObjectValueContainers,
+			final Textbox pinCodeFieldTextBox) throws Exception {
+
+		try {
+			
+			String pinCode = pinCodeFieldTextBox.getValue();
+			
+			  Session session = Executions.getCurrent().getDesktop().getSession();
+			  session.setAttribute("pinCode", pinCode);
+			 
+			if ("RefundEntry".equalsIgnoreCase(getListConfigurationType())) {
+
+				/*
+				 * if
+				 * ("RefundEntry".equalsIgnoreCase(getListConfigurationType()))
+				 * {
+				 */
+				if (((ReturnsController) widget.getWidgetController())
+						.validateCreateRefundRequest(returnObjectValueContainers) && validatePinCode(widget,pinCode)) {
+					
+					 List<ReturnLogistics> returnLogisticsList = ((MarketPlaceReturnsController) widget
+								.getWidgetController()).getReturnLogisticsList(widget,
+								returnObjectValueContainers,pinCode);
+
+						final Map<Boolean, List<OrderLineDataResponse>> responseMap = ((MarketPlaceReturnsController) widget
+								.getWidgetController())
+								.validateReverseLogistics(returnLogisticsList);
+
+					if (((MarketPlaceReturnsController) widget
+							.getWidgetController())
+							.isFreebieAvaialble(returnObjectValueContainers)) {
+						Messagebox.show(LabelUtils.getLabel(widget,
+								"freeBieAvaialble", new Object[0]), LabelUtils
+								.getLabel(widget, "freeBieAvaialbleTitle",
+										new Object[0]), Messagebox.OK
+								| Messagebox.CANCEL, Messagebox.INFORMATION,
+								new EventListener() {
+
+									@Override
+									public void onEvent(Event event)
+											throws Exception {
+										if (!event.getName().equals("onOK")) {
+											return;
+										} else {
+											proceedToReturn(
+													widget,
+													returnObjectValueContainers,
+													responseMap);
+										}
+									}
+								});
+					} else {
+						proceedToReturn(widget, returnObjectValueContainers,
+								responseMap);
+						return;
+					}
+				}
+				/*
+				 * Messagebox.show(LabelUtils.getLabel(widget,
+				 * "failedToValidate", new Object[0]),
+				 * LabelUtils.getLabel(widget, "failedToValidate", new
+				 * Object[0]), 1, "z-msgbox z-msgbox-error");
+				 */
 				return;
 			}
 			throw new IllegalStateException("Unsupported return entry type ["
@@ -444,6 +664,29 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 							new Object[0]), 1, "z-msgbox z-msgbox-error");
 		}
 	}
+
+	private boolean validatePinCode(
+			InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			String pinCode) throws InterruptedException {
+		if(pinCode.isEmpty() || pinCode==null) {
+			Messagebox.show(LabelUtils.getLabel(widget,
+					"pinCodeEmpty"), LabelUtils.getLabel(widget,
+							FAILED_TO_VALIDATE_PINCODE_FEILD), Messagebox.OK,
+					Messagebox.ERROR);
+			return false;
+		}
+		if(pinCode.length()<6) {
+			Messagebox.show(LabelUtils.getLabel(widget,
+					"pinCodeNotValid"), LabelUtils.getLabel(widget,
+							FAILED_TO_VALIDATE_PINCODE_FEILD), Messagebox.OK,
+					Messagebox.ERROR);
+			return false;
+		}
+		
+		return true;
+	}
+
+
 
 	private void proceedToReplacement(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
@@ -665,12 +908,16 @@ public class MarketplaceReturnRequestCreateWidgetRenderer extends
 		return;
 	}
 
-	@Override
-	protected EventListener createReturnRequestCreateEventListener(
-			InputWidget widget, List returnObjectValueContainers) {
-		return new ReturnRequestCreateEventListener(widget,
-				returnObjectValueContainers);
-	}
+	/*
+	 * protected EventListener createReturnRequestCreateEventListener(
+	 * InputWidget widget, List returnObjectValueContainers, Textbox
+	 * pinCodeFieldTextBox) {
+	 * 
+	 * pinCode = pinCodeFieldTextBox.getValue();
+	 * 
+	 * return new ReturnRequestCreateEventListener(widget,
+	 * returnObjectValueContainers); }
+	 */
 
 	private void replacementOK(
 			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,

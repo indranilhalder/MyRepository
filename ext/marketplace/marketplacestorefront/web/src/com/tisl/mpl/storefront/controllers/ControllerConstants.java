@@ -180,6 +180,7 @@ public interface ControllerConstants
 				String AccountMyStyleProfilePage = "pages/account/myStyleProfile";
 				String AccountInviteFriendPage = "pages/account/inviteFriends";
 				String AccountCouponsPage = "pages/account/accountCouponDetailsPage";
+				String AccountOrderReturnPincodeServiceCheck = "pages/account/returnPincodeAvailabilityCheck";
 			}
 
 

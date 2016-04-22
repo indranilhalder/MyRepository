@@ -176,6 +176,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String MPLDELIVERYMETHODURL = "/checkout/multi/delivery-method";
 	public static final String MPLDELIVERYCHOOSEURL = "/choose";
 	public static final String MPLDELIVERYSELECTURL = "/select";
+	public static final String MPLDELIVERYCHECKURL = "/check";
+	public static final String MPLDELIVERYCNCINVRESV = "/invReservation";
 	public static final String MPLDELIVERYNEWADDRESSURL = "/new-address";
 	public static final String MPLDELIVERYSELECTADDRESSURL = "/select-address";
 	public static final String ADDRESS_CODE_PATH_VARIABLE_PATTERN = "{addressCode:.*}";
@@ -207,6 +209,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	public static final String CHANNEL_WEB = "WEB";
 
+	public static final String UPDATE_CHECK_PINCODE = "/updatePincodeCheck";
+
 	//Payment Messages
 	public static final String CVV_HELP = "payment.cards.CVVHelpContent";
 	public static final String CVV_HELP_VAR = "cvvHelp";
@@ -229,6 +233,12 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String EXPYEARS = "noOfYearsFromCurrentYear";
 
 	public static final String MPLCOUPONURL = "/checkout/multi/coupon";
+	//delivery mode
+	public static final String CLICK_N_COLLECT = "click-and-collect";
+
+	public static final String PAYNOWCOUPONINVALID = "couponinvalid";
+	public static final String COUPONINVALID = "Applied coupon is not valid";
+	public static final String CHANGEDELIVERYMODE = "/changeDeliveryMode";
 
 	private MarketplacecheckoutaddonConstants()
 	{

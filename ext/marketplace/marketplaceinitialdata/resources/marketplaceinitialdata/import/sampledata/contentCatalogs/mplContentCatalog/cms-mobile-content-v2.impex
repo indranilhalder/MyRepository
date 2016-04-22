@@ -1,0 +1,190 @@
+
+#
+# Import the CMS content for the site
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=mplProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$picture=media(code, $contentCV);
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;MobileAppDiscoverHomePageTemplate;Mobile App Home Page Template - Discover;;ContentPage;true;
+;;MobileAppShowcaseHomePageTemplate;Mobile App Home Page Template - Showcase;;ContentPage;true;
+;;MobileAppBrandPageTemplate;Mobile App Brand Page Template;;ContentPage;true;
+;;MobileAppCategoryPageTemplate;Mobile App Category Page Template;;ContentPage;true;
+;;MobileAppDealsBannerPageTemplate;Mobile App Deals Banner Page Template;;ContentPage;true;
+;;MobileAppDealsProductsPageTemplate;Mobile App Deals Product Page Template;;ContentPage;true;
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;MobileAppDiscoverHomePageTemplate;$jarResourceCms/structure-view/structure_mobileDiscoverHomePageTemplate.vm
+;;MobileAppShowcaseHomePageTemplate;$jarResourceCms/structure-view/structure_mobileShowcaseHomePageTemplate.vm
+;;MobileAppBrandPageTemplate;$jarResourceCms/structure-view/structure_mobileBrandPageTemplate.vm
+;;MobileAppCategoryPageTemplate;$jarResourceCms/structure-view/structure_mobileCategoryPageTemplate.vm
+;;MobileAppDealsBannerPageTemplate;$jarResourceCms/structure-view/structure_mobileDealsBannerPageTemplate.vm
+;;MobileAppDealsProductsPageTemplate;$jarResourceCms/structure-view/structure_mobileDealsProductsPageTemplate.vm
+
+# Discover Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppDiscoverHomePageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;BannersSection;;CMSParagraphComponent,SimpleBannerComponent
+;BrandsSection;;CMSParagraphComponent,SimpleBannerComponent
+;MarketingMessageSection;;CMSParagraphComponent
+;BestPickSection;;CMSParagraphComponent,SimpleBannerComponent
+;ProductYouCareAboutSection;;CMSParagraphComponent,SimpleBannerComponent
+;StayQueuedSection;;CMSParagraphComponent,SimpleBannerComponent
+;ShowcaseSection;;CMSParagraphComponent,SimpleBannerComponent
+
+
+# Showcase Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppShowcaseHomePageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;DiscoverNewAndExclusiveSection;;CMSParagraphComponent,ProductCarouselComponent
+;NowTrendingSection;;CMSParagraphComponent,ProductCarouselComponent
+
+
+# Brand Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppBrandPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;HeroBannerSection;;CMSParagraphComponent,SimpleBannerComponent
+;CategoriesSection;;CMSParagraphComponent,SimpleBannerComponent
+;NewLaunchSection;;CMSParagraphComponent,SimpleBannerComponent
+;ShopByLookSection;;CMSParagraphComponent,SimpleBannerComponent
+;MoreBannersSection;;CMSParagraphComponent,SimpleBannerComponent
+
+
+# Category Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppCategoryPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;WhatsNewSection;;CMSParagraphComponent,SimpleBannerComponent
+;ShopByLookSection;;CMSParagraphComponent,SimpleBannerComponent
+
+
+# Deals Banner Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppDealsBannerPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;DealsBannerSection;;CMSParagraphComponent,SimpleBannerComponent
+
+
+# Deals Product Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppDealsProductsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;DealsProductSection;;CMSParagraphComponent,ProductCarouselComponent
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;channel(code);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;MobileHomepageDiscover;Mobile Home Page Discover;MobileAppDiscoverHomePageTemplate;Mobile Homepage Discover;Mobile
+;;MobileHomepageShowCase;Mobile Home Page Showcase;MobileAppShowcaseHomePageTemplate;Mobile Homepage;Mobile
+;;MobileBrandPage;Mobile Brand Page;MobileAppBrandPageTemplate;Mobile Brand Page;Mobile
+;;MobileCategoryPage;Mobile Category Page Showcase;MobileAppCategoryPageTemplate;Mobile Category;Mobile
+;;MobileDealsBannerPage;Mobile Deals Banner Page Showcase;MobileAppDealsBannerPageTemplate;Mobile Deals Banner;Mobile
+;;MobileDealsProductPage;Mobile Deals Product Page Showcase;MobileAppDealsProductsPageTemplate;Mobile Deals Product;Mobile
+
+
+########################### Sample Data starts from here ###############################
+
+#Sample data for discover homepage
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];description
+;;bannerImage1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;;Test message 1
+;;bannerImage2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png;;Test message 2
+;;bannerImage3;text/png;banner_image3.png;$siteResource/images/mobile/banner_image3.png;;Test message 3
+;;bannerImage4;text/png;banner_image4.png;$siteResource/images/mobile/banner_image4.png;;Test message 4
+;;bannerImage5;text/png;banner_image5.png;$siteResource/images/mobile/banner_image5.png;;Test message 5
+;;bannerImage6;text/png;banner_image6.png;$siteResource/images/mobile/banner_image6.png;;Test message 6
+
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;$picture[lang=en];;;;deeplinkType;deeplinkTypeId;deeplinkTypeVal
+;;SampleBannerComponent1;Simple Banner Component;SampleBannerComponent1;bannerImage1;;;;brand;MH1010;Apple
+;;SampleBannerComponent2;Simple Banner Component;SampleBannerComponent2;bannerImage2;;;;category;MSH11;Ethnic Wear
+ ;;SampleBannerComponent3;Simple Banner Component;SampleBannerComponent3;bannerImage2;;;;category;MSH11;Ethnic Wear
+ ;;SampleBannerComponent4;Simple Banner Component;SampleBannerComponent4;bannerImage3;;;;category;MSH11;Ethnic Wear
+ ;;SampleBannerComponent5;Simple Banner Component;SampleBannerComponent5;bannerImage2;;;;category;MSH11;Ethnic Wear
+ 
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=en];deeplinkType;deeplinkTypeId;deeplinkTypeVal
+;;SampleParagraph;"Section message";category;MSH11;Ethnic Wear
+;;SampleMarketingParagraph;"Marketing message";category;MSH11;Ethnic Wear
+
+ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;Banners-MobileHomepageDiscover;Content Slot for MobileHomepageDiscover;true;SampleParagraph,SampleBannerComponent1,SampleBannerComponent2,SampleBannerComponent3
+;;Brands-MobileHomepageDiscover;Content Slot for MobileHomepageDiscover;true;SampleParagraph,SampleBannerComponent1,SampleBannerComponent2,SampleBannerComponent3
+;;Marketing-MobileHomepageDiscover;Content Slot for MobileHomepageDiscover;true;SampleMarketingParagraph
+;;Best-MobileHomepageDiscover;Content Slot for MobileHomepageDiscover;true;SampleParagraph,SampleBannerComponent1,SampleBannerComponent2,SampleBannerComponent3
+;;Product-MobileHomepageDiscover;Content Slot for MobileHomepageDiscover;true;SampleParagraph,SampleBannerComponent1,SampleBannerComponent2,SampleBannerComponent3
+;;Stay-MobileHomepageDiscover;Content Slot for MobileHomepageDiscover;true;SampleParagraph,SampleBannerComponent1,SampleBannerComponent2,SampleBannerComponent3
+;;Show-MobileHomepageDiscover;Content Slot for MobileHomepageDiscover;true;SampleParagraph,SampleBannerComponent1,SampleBannerComponent2,SampleBannerComponent3
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true]
+;;Banners-MobileHomepageDiscover;BannersSection;MobileHomepageDiscover;Banners-MobileHomepageDiscover
+;;Brands-MobileHomepageDiscover;BrandsSection;MobileHomepageDiscover;Brands-MobileHomepageDiscover
+;;Marketing-MobileHomepageDiscover;MarketingMessageSection;MobileHomepageDiscover;Marketing-MobileHomepageDiscover
+;;Best-MobileHomepageDiscover;BestPickSection;MobileHomepageDiscover;Best-MobileHomepageDiscover
+;;Product-MobileHomepageDiscover;ProductYouCareAboutSection;MobileHomepageDiscover;Product-MobileHomepageDiscover
+;;Stay-MobileHomepageDiscover;StayQueuedSection;MobileHomepageDiscover;Stay-MobileHomepageDiscover
+;;Show-MobileHomepageDiscover;ShowcaseSection;MobileHomepageDiscover;Show-MobileHomepageDiscover
+
+INSERT_UPDATE Product;$catalogVersion;code[unique=true];deeplinkTypeId;deeplinkTypeVal;
+;;987654321;category;MSH11;Ethnic Wear
+;;987654341;category;MSH11;Ethnic Wear
+;;987654401;category;MSH11;Ethnic Wear
+
+
+#Sample data for homepage- showcase
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);scroll(code);popup;&componentRef
+;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections Component;987654321,987654341,987654401;allVisible;false;TMPHomepageHandpickedProductCarouselComponent
+
+ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;Products-DiscoverNewAndExclusiveSection;Content Slot for MobileHomepageShowCase;true;TMPHomepageHandpickedProductCarouselComponent
+;;Products-NowTrendingSection;Content Slot for MobileHomepageShowCase;true;TMPHomepageHandpickedProductCarouselComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true]
+;;Products-DiscoverNewAndExclusiveSection;DiscoverNewAndExclusiveSection;MobileHomepageShowCase;Products-DiscoverNewAndExclusiveSection
+;;Products-NowTrendingSection;NowTrendingSection;MobileHomepageShowCase;Products-NowTrendingSection
+
+
+#Sample data for brands page
+ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;Brands-HeroBannerSection;Content Slot for MobileBrandPage;true;SampleBannerComponent4
+;;Brands-CategoriesSection;Content Slot for MobileBrandPage;true;SampleParagraph,SampleBannerComponent2,SampleBannerComponent3,SampleBannerComponent4
+;;Brands-NewLaunchSection;Content Slot for MobileBrandPage;true;SampleParagraph,SampleBannerComponent2,SampleBannerComponent3,SampleBannerComponent4
+;;Brands-ShopByLookSection;Content Slot for MobileBrandPage;true;SampleParagraph,SampleBannerComponent2,SampleBannerComponent3,SampleBannerComponent4
+;;Brands-MoreBannersSection;Content Slot for MobileBrandPage;true;SampleParagraph,SampleBannerComponent5,SampleBannerComponent1
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true]
+;;Brands-HeroBannerSection;HeroBannerSection;MobileBrandPage;Brands-HeroBannerSection
+;;Brands-CategoriesSection;CategoriesSection;MobileBrandPage;Brands-CategoriesSection
+;;Brands-NewLaunchSection;NewLaunchSection;MobileBrandPage;Brands-NewLaunchSection
+;;Brands-ShopByLookSection;ShopByLookSection;MobileBrandPage;Brands-ShopByLookSection
+;;Brands-MoreBannersSection;MoreBannersSection;MobileBrandPage;Brands-MoreBannersSection
+
+
+#Sample data for categories page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;Categories-WhatsNewSection;Content Slot for MobileCategoryPage;true;SampleParagraph,SampleBannerComponent2,SampleBannerComponent3,SampleBannerComponent4
+;;Categories-ShopByLookSection;Content Slot for MobileCategoryPage;true;SampleParagraph,SampleBannerComponent1,SampleBannerComponent5,SampleBannerComponent4
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true]
+;;Categories-WhatsNewSection;WhatsNewSection;MobileCategoryPage;Categories-WhatsNewSection
+;;Categories-ShopByLookSection;ShopByLookSection;MobileCategoryPage;Categories-ShopByLookSection
+
+
+#Sample data for Deals Banner page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;Deals-DealsBannerSection;Content Slot for MobileDealsBannerPage;true;SampleParagraph,SampleBannerComponent2,SampleBannerComponent3,SampleBannerComponent4
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true]
+;;Deals-DealsBannerSection;DealsBannerSection;MobileDealsBannerPage;Deals-DealsBannerSection
+
+
+#Sample data for Deals Product page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;Deals-DealsProductSection;Content Slot for MobileDealsProductPage;true;SampleParagraph,TMPHomepageHandpickedProductCarouselComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true]
+;;Deals-DealsProductSection;DealsProductSection;MobileDealsProductPage;Deals-DealsProductSection
+

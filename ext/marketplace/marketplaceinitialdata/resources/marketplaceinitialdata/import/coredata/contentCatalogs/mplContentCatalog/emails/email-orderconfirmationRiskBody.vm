@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <head>
 <title>TATA - CLiQ</title>
+<style>
+span img{
+width:100%;
+}
+</style>
 </head>
 
 <body>
@@ -8,11 +13,11 @@
   <tr>
     <td><table width="598" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td align="left" valign="top" bgcolor="#ffffff">${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
+        <td align="left" valign="top" bgcolor="#ffffff"><span>${ctx.cmsSlotContents.OrderConfirmSiteLogo}</span></td>
       </tr>
  
       <tr>
-        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="13">&nbsp;</td>
             <td>
@@ -22,12 +27,12 @@
 			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.customerName},</font>
                   <br>
                   <br>
-                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">We checked out your order and found that it's good to go, so we're sending it straight to you!
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We checked out your order and found that it's good to go, so we're sending it straight to you!
  
  <br>
                   <br>
                   </font>
-				   <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">Here's what's on its way:
+				   <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;">Here's what's on its way:
  
  <br>
                   <br>
@@ -43,17 +48,16 @@
 	 
 	 
       <tr>
-        <td bgcolor="#fbfbfb"><table width="598" border="0" cellspacing="0" cellp12 baje
-        dding="0">
+        <td><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="13">&nbsp;</td>
             <td><table width="572" border="0" cellspacing="0" cellpadding="0">
 			<tr>
-        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="20" height="35" bgcolor="#f5f5f5">&nbsp;</td>
+            <td width="20" height="35">&nbsp;</td>
             <td width="203" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order reference number:</td>
-            <td width="240" align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold;padding-right:12px;">$ctx.orderReferenceNumber</td>
+            <td width="240" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold;padding-right:12px;">$ctx.orderReferenceNumber</td>
             <td>&nbsp;</td>
           </tr>
         </table><br></td>
@@ -62,11 +66,11 @@
 	   #set ($shippingCharge=0)
 	    #foreach( $childorder in ${ctx.childOrders} )
 	  <tr>
-        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="20" height="35" bgcolor="#f5f5f5">&nbsp;</td>
-            <td width="125" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order number:</td>
-            <td width="100" align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 12px;">$childorder.code</td>
+            <td width="20" height="35">&nbsp;</td>
+            <td width="125" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#aa133d; font-weight:bold;">Order number:</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#4a4a4a; font-weight:bold; padding-right: 12px;width: calc(100% - 145px);">$childorder.code</td>
             <td>&nbsp;</td>
           </tr>
         </table><br></td>
@@ -117,9 +121,9 @@
               <tr>
                 <td><table width="572" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td width="280" height="70" align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#aa133d; font-weight:bold;">Total: 	<span style="color:#000;">${ctx.totalPrice}</span>  </td>
+                    <td width="280" height="70" align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#aa133d;">Total: <span style="color:#606060;">INR&nbsp; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</span>  </td>
                     <td>&nbsp;</td>
-					<td width="280" height="70" align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#aa133d; font-weight:bold;">Shipping: 	<span style="color:#000;">${ctx.totalPrice}</span>  </td>
+					<td width="280" height="70" align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#aa133d;">Shipping: <span style="color:#606060;">INR&nbsp; $ctx.numberTool.format("#0.00", $shippingCharge)</span>  </td>
                     
                   </tr>
 				  
@@ -128,35 +132,35 @@
                     
                   
                 </table>
-				<div style="text-align:center;font-weight:bold;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#fff;padding: 10px 15px;">${ctx.cmsSlotContents.trackbtn}</a></div>
+				<div style="text-align:center;font-weight:bold;margin-top:18px;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#000;padding: 10px 15px;">${ctx.cmsSlotContents.trackbtn}</a></div>
 				<br><br>
 				
 				</td>
               </tr>
 			   <tr>
-                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;font-weight:bold;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">Delivery details are as follows:</span></td>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4a; padding:5px 0;">Delivery details are as follows:</span></td>
               </tr>
 			  <tr>
-                <td bgcolor="#f3f3f3"><table width="572" border="0" cellspacing="0" cellpadding="0" >
+                <td><table bgcolor="#f3f3f3" width="572" border="0" cellspacing="0" cellpadding="0" >
                   <tr>
                     <td width="10" >&nbsp;</td>
                     <td width="265" align="left" valign="top" style="padding-right:10px;vertical-align:middle;">${ctx.cmsSlotContents.OrderDelivery}</td>
                     <td>&nbsp;</td>
                     <td width="265" align="left" valign="top"><table width="394" border="0" cellspacing="0" cellpadding="0">
                       <tr>
-                        <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;"><strong style="color:#000">${ctx.nameofperson}</strong></td>
+                        <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;"><strong style="color:#AA133D">${ctx.nameofperson}</strong></td>
                       </tr>
                       <tr>
                         <td height="1"></td>
                       </tr>
                       <tr>
-                        <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;"><strong style="color:#000">${ctx.nameofperson}</strong></td>
+                        <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;"><strong style="color:#AA133D">${ctx.deliveryAddress}</strong></td>
                       </tr>
                       <tr>
                         <td height="1"></td>
                       </tr>
 					  <tr>
-                        <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;"><strong style="color:#000">${ctx.nameofperson}</strong></td>
+                        <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;"><strong style="color:#AA133D">${ctx.mobilenumber}</strong></td>
                       </tr>
                     </table></td>
                     <td width="10">&nbsp;</td>
@@ -226,7 +230,7 @@
         </table></td>
       </tr>
       <tr>
-        <td bgcolor="#fbfbfb">&nbsp;</td>
+        <td>&nbsp;</td>
       </tr>
     </table></td>
   </tr>

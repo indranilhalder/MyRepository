@@ -79,7 +79,12 @@ public class DefaultRMSVerificationNotificationService implements RMSVerificatio
 
 
 			final String orderNumber = (null == orderModel.getCode()) ? "" : orderModel.getCode();
-			final String mobileNumber = orderModel.getDeliveryAddress().getPhone1();
+			String mobileNumber = null;
+			if (orderModel.getDeliveryAddress() != null)
+			{
+				mobileNumber = orderModel.getDeliveryAddress().getPhone1();
+			}
+
 			final String contactNumber = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
 
@@ -92,7 +97,17 @@ public class DefaultRMSVerificationNotificationService implements RMSVerificatio
 
 			try
 			{
-				sendSMSService.sendSMS(smsRequestDataRMSonHold);
+				if (null != mobileNumber)
+				{
+					sendSMSService.sendSMS(smsRequestDataRMSonHold);
+				}
+				else
+				{
+					mobileNumber=orderModel.getPickupPersonMobile();
+					smsRequestDataRMSonHold.setRecipientPhoneNumber(mobileNumber);
+					sendSMSService.sendSMS(smsRequestDataRMSonHold);
+					LOG.info("Did not send sms as mobile number was not found. Sending SMS to Pickup person ");
+				}
 			}
 			catch (final JAXBException e)
 			{
@@ -127,7 +142,11 @@ public class DefaultRMSVerificationNotificationService implements RMSVerificatio
 
 
 			final String orderNumber = (null == orderModel.getCode()) ? "" : orderModel.getCode();
-			final String mobileNumber = orderModel.getDeliveryAddress().getPhone1();
+			String mobileNumber = null;
+			if (orderModel.getDeliveryAddress() != null)
+			{
+				mobileNumber = orderModel.getDeliveryAddress().getPhone1();
+			}
 			final String contactNumber = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
 			final String appDwldUrl = getConfigurationService().getConfiguration().getString(
@@ -146,7 +165,18 @@ public class DefaultRMSVerificationNotificationService implements RMSVerificatio
 
 			try
 			{
-				sendSMSService.sendSMS(smsRequestDataRiskRejected);
+				if (null != mobileNumber)
+				{
+					sendSMSService.sendSMS(smsRequestDataRiskRejected);
+				}
+				else
+				{
+					mobileNumber=orderModel.getPickupPersonMobile();
+					smsRequestDataRiskRejected.setRecipientPhoneNumber(mobileNumber);
+					sendSMSService.sendSMS(smsRequestDataRiskRejected);
+					LOG.info("Did not send sms as mobile number was not found. Sending SMS to Pickup person ");
+				}
+
 			}
 			catch (final JAXBException e)
 			{
@@ -181,7 +211,11 @@ public class DefaultRMSVerificationNotificationService implements RMSVerificatio
 
 
 			final String orderNumber = (null == orderModel.getCode()) ? "" : orderModel.getCode();
-			final String mobileNumber = orderModel.getDeliveryAddress().getPhone1();
+			String mobileNumber = null;
+			if (orderModel.getDeliveryAddress() != null)
+			{
+				mobileNumber = orderModel.getDeliveryAddress().getPhone1();
+			}
 			final String trackingUrl = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
 					+ orderNumber;
@@ -195,7 +229,18 @@ public class DefaultRMSVerificationNotificationService implements RMSVerificatio
 
 			try
 			{
-				sendSMSService.sendSMS(smsRequestDataRiskConfirmed);
+				if (null != mobileNumber)
+				{
+					sendSMSService.sendSMS(smsRequestDataRiskConfirmed);
+				}
+				else
+				{
+					mobileNumber=orderModel.getPickupPersonMobile();
+					smsRequestDataRiskConfirmed.setRecipientPhoneNumber(mobileNumber);
+				   sendSMSService.sendSMS(smsRequestDataRiskConfirmed);
+				LOG.info("Did not send sms as mobile number was not found. Sending SMS to Pickup person ");
+				}
+
 			}
 			catch (final JAXBException e)
 			{

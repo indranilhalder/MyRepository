@@ -10,6 +10,7 @@ import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
 import net.sourceforge.pmd.util.StringUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
@@ -36,8 +37,15 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 	{
 		Assert.notNull(source, "source Address can't be null");
 		Assert.notNull(target, "target Address can't be null");
-		target.setFirstName(source.getFirstname());
-		target.setLastName(source.getLastname());
+		if (StringUtils.isNotBlank(source.getFirstname()))
+		{
+			target.setFirstName(source.getFirstname());
+		}
+		if (StringUtils.isNotBlank(source.getLastname()))
+		{
+			target.setLastName(source.getLastname());
+		}
+
 
 		target.setAddressLine1(source.getLine1() != null ? source.getLine1() : source.getStreetname());
 		target.setAddressLine2(source.getLine2() != null ? source.getLine2() : source.getStreetnumber());
@@ -45,6 +53,7 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 		//target.setPostalZone(source.getPostalcode());
 		target.setCityName(source.getTown());
 		target.setPinCode(source.getPostalcode());
+      target.setLandmark(source.getLandmark());
 
 		if (StringUtil.isNotEmpty(source.getDistrict()))
 		{

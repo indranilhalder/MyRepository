@@ -19,6 +19,7 @@ background-color:#29404f;
 			<listheader label="ON HAND"></listheader>
 			<listheader label="RESERVED"></listheader>
 			<listheader label="ALLOCATED"></listheader>
+			<listheader label="INTRANSIT"></listheader>
 		</listhead>
 	</listbox>
 	

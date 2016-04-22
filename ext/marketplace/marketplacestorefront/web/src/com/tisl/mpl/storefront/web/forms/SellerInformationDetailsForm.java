@@ -20,6 +20,7 @@ public class SellerInformationDetailsForm
 	private List<String> skuIdsWithNoStock;
 	private List<String> skuIdForED;
 	private List<String> skuIdForHD;
+	private List<String> skuIdForCNC;
 	private String skuIdForCod;
 	private String selectedSizeVariant;
 	private String stockDataArray;
@@ -176,6 +177,23 @@ public class SellerInformationDetailsForm
 	public void setIsPinCodeChecked(final String isPinCodeChecked)
 	{
 		this.isPinCodeChecked = isPinCodeChecked;
+	}
+
+	/**
+	 * @return the skuIdForCNC
+	 */
+	public List<String> getSkuIdForCNC()
+	{
+		return skuIdForCNC;
+	}
+
+	/**
+	 * @param skuIdForCNC
+	 *           the skuIdForCNC to set
+	 */
+	public void setSkuIdForCNC(final List<String> skuIdForCNC)
+	{
+		this.skuIdForCNC = skuIdForCNC;
 	}
 
 	/**

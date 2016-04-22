@@ -242,4 +242,5 @@
 		<property name="omsOrderAdapter" ref="omsOrderSyncAdapter"/>
 		<property name="modelService" ref="modelService"/>
 	</bean>	
+
 </beans>

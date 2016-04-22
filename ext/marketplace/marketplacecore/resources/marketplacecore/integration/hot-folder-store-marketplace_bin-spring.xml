@@ -64,10 +64,12 @@
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
 		p:mapping="bins_iso_9_4" p:converter-ref="batchBinConverter" />
 
+
 	<!-- Converter Mapping for Bank Upload -->
 	
 	<bean id="batchbankConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+
     p:mapping="bank_data"
     p:converter-ref="batchBankConverter"/>
 
@@ -77,6 +79,7 @@
 	 <bean id="batchBinConverter"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
+
 			<value>
 				# Insert BIN Data
 				INSERT Bin;BinNo;CardBrand;bankName;CardType;Category;IssuingCountry;ISOA2;ISOA3;ISONumber;IssuingOrgWebsite;IssuingOrgPhoneNo;version[cellDecorator=com.tisl.mpl.core.celldecorator.MplBinVersionDecorator]

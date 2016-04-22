@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -23,7 +25,6 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketCont
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -31,9 +32,9 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
-import com.tisl.mpl.order.impl.MplDefaultCalculationService;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.InventoryReservationService;
+import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
 import com.tisl.mpl.wsdto.InventoryReservResponse;
 
@@ -41,6 +42,7 @@ import de.hybris.platform.catalog.constants.CatalogConstants;
 import de.hybris.platform.catalog.jalo.CatalogVersion;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
+import de.hybris.platform.cockpit.widgets.browsers.WidgetBrowserModel;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
@@ -52,7 +54,6 @@ import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
-import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.cscockpit.exceptions.PaymentException;
@@ -62,21 +63,16 @@ import de.hybris.platform.cscockpit.utils.TypeUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultBasketController;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.JaloSession;
-import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.util.WeakArrayList;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
-import de.hybris.platform.voucher.jalo.util.VoucherEntrySet;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
-import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
@@ -88,7 +84,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		implements MarketPlaceBasketController {
 
 	/** The Constant _15. */
-	private static final int _15 = 15;
+	//private static final int _15 = 15;
 
 	/** The Constant LOG. */
 	private static final Logger LOG = Logger
@@ -123,31 +119,19 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 
 	@Autowired
-	  private BuyBoxFacade buyBoxFacade;
+	private BuyBoxFacade buyBoxFacade;
+	
 	@Autowired
 	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;
-	@Autowired
-    private VoucherService voucherService;
-	@Autowired
+	
+	@Resource(name = "voucherService")
+	private VoucherService voucherService;
+	
+	@Resource(name = "voucherModelService")
 	private VoucherModelService voucherModelService;
-	@Autowired
-	private MplCouponFacade mplCouponFacade;
-	@Autowired
-	private MplDefaultCalculationService mplDefaultCalculationService;
-	@Autowired
-	private MplVoucherService mplVoucherService;
-
-	public BuyBoxFacade getBuyBoxFacade() {
-		return buyBoxFacade;
-	}
-
-
-
-
-	@Required
-	public void setBuyBoxFacade(BuyBoxFacade buyBoxFacade) {
-		this.buyBoxFacade = buyBoxFacade;
-	}
+		
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;	
 
 	/**
 	 * Adds the to market place cart.
@@ -192,26 +176,27 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 								return null;
 							}
 						});
+		
 		modelService.save(cart);
 		
-		if (CollectionUtils.isNotEmpty(cart.getDiscounts())){
-			final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
-			final String voucherCode=voucher.getVoucherCode();
-			final List<AbstractOrderEntryModel> applicableOrderEntryList = mplVoucherService.getOrderEntryModelFromVouEntries(voucher,
-					cart);
 			try {
-				//checkCartAfterApply(voucherCode, voucher, applicableOrderEntryList);
-				mplVoucherService.checkCartAfterApply(voucher, cart, applicableOrderEntryList);
-			} catch (JaloInvalidParameterException | NumberFormatException
-					| JaloSecurityException | CalculationException
-					| JaloPriceFactoryException | ModelSavingException | VoucherOperationException e) {
+				getMplVoucherService().checkCartWithVoucher(cart);
+			} catch (EtailNonBusinessExceptions e) {
+				LOG.error("Exception calculating cart ["
+						+ cart + "]", e);
+				ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			}
+			catch(VoucherOperationException e)
+			{
 				LOG.error("Exception calculating cart ["
 						+ cart + "]", e);
 			}
-			
-			mplVoucherService.setApportionedValueForVoucher(voucher, cart, voucherCode, applicableOrderEntryList);
-
-	} 
+			catch(Exception e)
+			{
+				LOG.error("Exception calculating cart ["
+						+ cart + "]", e);
+				ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+			}
 
 		return isItemAddedToCart;
 	}
@@ -356,7 +341,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					return false;
 				}
 				List<AbstractOrderEntryModel> cartEntries = cart.getEntries();
-				Map<String, String> cartMap = getCartData(cart);
+				//Map<String, String> cartMap = getCartData(cart);
 				try {
 					for (AbstractOrderEntryModel cartEntry : cartEntries) {
 						com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData cartSoftReservationRequestData = new CartSoftReservationData();
@@ -428,12 +413,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	 *            the cart
 	 * @return the cart data
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String> getCartData(final CartModel cart) {
 		CartData cartData = mplExtendedCartConverter.convert(cart);
 		// Key=Cart Entry,Value=Fulfillment Type
 		Map<String, String> fulfillmentData = new WeakHashMap<String, String>();
-		final List<String> categoryList = new ArrayList<String>();
+		//final List<String> categoryList = new ArrayList<String>();
 		final JaloSession session = JaloSession.getCurrentSession();
 		session.createLocalSessionContext();
 		try
@@ -533,8 +519,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 													cartParameter);
 									cart.setCartReservationDate(null);
 									 ((MarketplaceCheckoutControllerImpl) getCheckoutController()).removeCODPayment();
-
-
+									
+									 
 								} catch (CommerceCartModificationException | PaymentException | 
 										ValidationException | JaloInvalidParameterException | NumberFormatException e) {
 									LOG.error("Exception calculating cart ["
@@ -546,26 +532,23 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 						});
 		
 		modelService.save(cart);
-		 
-		 if (CollectionUtils.isNotEmpty(cart.getDiscounts())){
-				final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
-				final String voucherCode=voucher.getVoucherCode();
-				final List<AbstractOrderEntryModel> applicableOrderEntryList = mplVoucherService.getOrderEntryModelFromVouEntries(voucher,
-						cart);
 				try {
-					//checkCartAfterApply(voucherCode, voucher, applicableOrderEntryList);
-					mplVoucherService.checkCartAfterApply(voucher, cart, applicableOrderEntryList);
-				} catch (JaloInvalidParameterException | NumberFormatException
-						| JaloSecurityException | CalculationException
-						| JaloPriceFactoryException | ModelSavingException | VoucherOperationException e) {
+					getMplVoucherService().checkCartWithVoucher(cart);
+				} catch (EtailNonBusinessExceptions e) {
+					LOG.error("Exception calculating cart ["
+							+ cart + "]", e);
+					ExceptionUtil.etailNonBusinessExceptionHandler(e);
+				}catch(VoucherOperationException e)
+				{
 					LOG.error("Exception calculating cart ["
 							+ cart + "]", e);
 				}
-				
-				mplVoucherService.setApportionedValueForVoucher(voucher, cart, voucherCode, applicableOrderEntryList);
-
-		} 
-	
+				catch(Exception e)
+				{
+					LOG.error("Exception calculating cart ["
+							+ cart + "]", e);
+					ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+				}
 
 	}
 	
@@ -589,6 +572,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	    if ((cartEntry != null) && (cartEntry.getObject() instanceof AbstractOrderEntryModel))
 	    {
 	      AbstractOrderEntryModel entry = (AbstractOrderEntryModel)cartEntry.getObject();
+	      final CartModel cart = (CartModel)entry.getOrder();
 
 	      MplZoneDeliveryModeValueModel deliveryModeModel = null;
 	      if ((deliveryMode != null) && (deliveryMode.getObject() instanceof MplZoneDeliveryModeValueModel))
@@ -608,10 +592,25 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	        changed = true;
 	        CommerceCartParameter cartParameter = new CommerceCartParameter();
 			cartParameter.setCart((CartModel)entry.getOrder());			
-				getCommerceCartService().recalculateCart(cartParameter);
-			} catch (CalculationException | PaymentException | ValidationException e) {
-			LOG.error(e);
+			getCommerceCartService().recalculateCart(cartParameter);
+			
+			getMplVoucherService().checkCartWithVoucher(cart);
+	      }catch (CalculationException | PaymentException | ValidationException e) {
+				LOG.error(e);
+				ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
 			}	
+	      catch(final VoucherOperationException e)
+			{
+	    	  LOG.error(e);
+			}
+	      catch(final EtailNonBusinessExceptions e)
+			{
+				ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			}
+			catch(final Exception e)
+			{
+				ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+			}
 			
 	    }
 	    return changed;
@@ -831,7 +830,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		{
 			try
 			{
-				if (!voucherService.redeemVoucher(voucherCode, cartModel))
+				if (!getVoucherService().redeemVoucher(voucherCode, cartModel))
 				{
 					LOG.error("Error while applying voucher: " + voucherCode);
 					return "error_voucher";
@@ -841,23 +840,14 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				//((EziBuyCommerceCartService) getCommerceCartService()).setAppliedVoucherCode(cartModel, voucherCode);
 				//getCommerceCartService().recalculateCart(cartModel);
 				
-				mplVoucherService.recalculateCartForCoupon(cartModel);
+				getMplVoucherService().recalculateCartForCoupon(cartModel);
 				
-				final List<AbstractOrderEntryModel> applicableOrderEntryList = mplVoucherService.getOrderEntryModelFromVouEntries(voucher,
+				final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService().getOrderEntryModelFromVouEntries(voucher,
 						cartModel);
 				
-//				final String checkMsg = mplVoucherService.checkCartAfterApply(voucherCode, voucher, applicableOrderEntryList);
-//				if(!checkMsg.equalsIgnoreCase("success"))
-//				{
-//					LOG.error("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
-//					return checkMsg;
-//				}
-				
-				final VoucherDiscountData data=mplVoucherService.checkCartAfterApply(voucher, cartModel, applicableOrderEntryList);
+				final VoucherDiscountData data=getMplVoucherService().checkCartAfterApply(voucher, cartModel, applicableOrderEntryList);
 				if (null != data && StringUtils.isNotEmpty(data.getRedeemErrorMsg()))
 				{
-
-
 					if (data.getRedeemErrorMsg().equalsIgnoreCase("freebie"))
 					{
 						return "freebie";
@@ -872,15 +862,15 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					}
 				}
 				
-				mplVoucherService.setApportionedValueForVoucher(voucher, cartModel, voucherCode, applicableOrderEntryList);
+				getMplVoucherService().setApportionedValueForVoucher(voucher, cartModel, voucherCode, applicableOrderEntryList);
 				
 				//For TISSTRT-302
 				return "coupon_redeem";
 			}
 			catch (Exception e)
 			{
-				
 				LOG.error("Error while applying voucher: " + voucherCode);
+				ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
 				return "error_voucher";
 			}
 		}
@@ -895,7 +885,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 	protected boolean isVoucherCodeValid(final String voucherCode)
 	{
-		final VoucherModel voucher = voucherService.getVoucher(voucherCode);
+		final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
 		if (voucher == null)
 		{
 			return false;
@@ -905,140 +895,34 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 	protected boolean checkVoucherCanBeRedeemed(final VoucherModel voucher, final String voucherCode)
 	{
-		return voucherModelService.isApplicable(voucher, getCartModel())
-				&& voucherModelService.isReservable(voucher, voucherCode, getCartModel());
+		return getVoucherModelService().isApplicable(voucher, getCartModel())
+				&& getVoucherModelService().isReservable(voucher, voucherCode, getCartModel());
 	}
 	protected VoucherModel getVoucherModel(final String voucherCode)
 	{
-		final VoucherModel voucher = voucherService.getVoucher(voucherCode);
+		final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
 		if (voucher == null)
 		{
 			throw new IllegalArgumentException("Voucher not found: " + voucherCode);
 		}
 		return voucher;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
 	@Override
 	public String releaseVoucher()
 	{
 		//Modified for TISSTRT-303
 		String message = StringUtils.EMPTY;
 		final CartModel cartModel = getCartModel();
-		Collection<String> voucherList = voucherService.getAppliedVoucherCodes(cartModel);
+		Collection<String> voucherList = getVoucherService().getAppliedVoucherCodes(cartModel);
 		if(CollectionUtils.isNotEmpty(voucherList))
 		{
 			for (String voucherCode : voucherList) {
 				try {
 					final VoucherModel voucher = getVoucherModel(voucherCode);
-					voucherService.releaseVoucher(voucherCode, cartModel);
+					getVoucherService().releaseVoucher(voucherCode, cartModel);
 					
-					for (final AbstractOrderEntryModel entry : mplVoucherService.getOrderEntryModelFromVouEntries(voucher, cartModel))
+					for (final AbstractOrderEntryModel entry : getMplVoucherService().getOrderEntryModelFromVouEntries(voucher, cartModel))
 						
 					{
 						entry.setCouponCode("");
@@ -1048,15 +932,26 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					
 					//((EziBuyCommerceCartService) getCommerceCartService()).setAppliedVoucherCode(cartModel, null);
 				} catch (JaloPriceFactoryException e) {
+					LOG.error("Couldn't release voucher: ",e);
+				} catch (ModelSavingException e){
+					LOG.error("Couldn't release voucher: ",e);
+				}
+				catch(Exception e)
+				{
 					LOG.error("Couldn't release voucher: " + voucherCode);
+					ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
 				}
 			}
 			try {
 				//getCommerceCartService().recalculateCart(cartModel);
-				mplVoucherService.recalculateCartForCoupon(cartModel);
+				getMplVoucherService().recalculateCartForCoupon(cartModel);
 				message="release_voucher";
-			} catch (CalculationException | JaloPriceFactoryException e) {
+			} catch (EtailNonBusinessExceptions e) {
 				LOG.error("Recalculation of Cart Failed ");
+			}catch(Exception e)
+			{
+				LOG.error("Recalculation of Cart Failed ");
+				ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
 			}
 		}
 		
@@ -1066,7 +961,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	public Collection<String> getAppliedVoucherCodesList()
 	{
 		final CartModel cartModel = getCartModel();
-		Collection<String> voucherList = voucherService.getAppliedVoucherCodes(cartModel);
+		Collection<String> voucherList = getVoucherService().getAppliedVoucherCodes(cartModel);
 		return voucherList;
 	}
 	
@@ -1103,27 +998,98 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	protected boolean checkVoucherIsReservable(final VoucherModel voucher, final String voucherCode, final CartModel cartModel)
 	{
 		return getVoucherModelService().isReservable(voucher, voucherCode, cartModel);
+	}	
+	
+	
+	
+	/**
+	 * This method is called when "Checkout" button is clicked in CS Cockpit
+	 */
+	@Override
+	public void triggerCheckout() throws ValidationException
+	{
+		try
+		{
+			CartModel cartModel = getCartModel();
+				
+			calculateCartInContext(cartModel);
+			validateBasketReadyForCheckout(cartModel);
+			setDeliveryAddressIfAvailable(cartModel);
+			setDeliveryModeIfAvailable(cartModel);
+			setPaymentAddressIfAvailable(cartModel);
+			
+			//Custom to handle voucher custom code
+			getMplVoucherService().checkCartWithVoucher(cartModel);
+				     
+			WidgetBrowserModel checkoutBrowser = getCheckoutBrowser();
+				     
+			getWidgetHelper().openAndFocusBrowser(checkoutBrowser);
+			getWidgetHelper().focusWidget(checkoutBrowser.getBrowserCode(), getCheckoutBrowserDefaultWidgetCode());
+		}catch (final VoucherOperationException e)
+		{
+			LOG.error(e);
+		}
+		catch(final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch(final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+		}
+	}
+	
+	
+	
+	
+	/**
+	 * @return the mplVoucherService
+	 */
+	public MplVoucherService getMplVoucherService()
+	{
+		return mplVoucherService;
 	}
 
-
-
-
 	/**
-	 * @return the voucherModelService
+	 * @param mplVoucherService
+	 *           the mplVoucherService to set
 	 */
-	public VoucherModelService getVoucherModelService() {
+	public void setMplVoucherService(final MplVoucherService mplVoucherService)
+	{
+		this.mplVoucherService = mplVoucherService;
+	}
+	
+	public BuyBoxFacade getBuyBoxFacade() {
+		return buyBoxFacade;
+	}
+
+	@Required
+	public void setBuyBoxFacade(BuyBoxFacade buyBoxFacade) {
+		this.buyBoxFacade = buyBoxFacade;
+	}
+	
+	public VoucherModelService getVoucherModelService()
+	{
 		return voucherModelService;
 	}
 
 
-
-
-	/**
-	 * @param voucherModelService the voucherModelService to set
-	 */
-	public void setVoucherModelService(VoucherModelService voucherModelService) {
+	public void setVoucherModelService(final VoucherModelService voucherModelService)
+	{
 		this.voucherModelService = voucherModelService;
 	}
 
+
+	public VoucherService getVoucherService()
+	{
+		return voucherService;
+	}
+
+
+	public void setVoucherService(final VoucherService voucherService)
+	{
+		this.voucherService = voucherService;
+	}
+		
 	
 }

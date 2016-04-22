@@ -8,8 +8,6 @@ package com.hybris.oms.tata.widgets;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
@@ -25,9 +23,6 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 
-import xlsxtocsv.ExcelToTship;
-import xlsxtocsv.XlsxtoCSVUsingBufferDynamic;
-
 import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.api.logisticserviceability.LogisticServiceabilityFacade;
@@ -35,11 +30,13 @@ import com.hybris.oms.buc.bulkupload.LogisticsServBulkUpldErrFacade;
 import com.hybris.oms.tata.services.CsvFileToZipFileService;
 import com.hybris.oms.tata.services.FilePathProviderService;
 
+import xlstocsv.ExceltoCSVUsingBufferDynamic;
+
 
 /**
  * This class is for uploading a bulk data of logistics by using excel sheet
- * 
- * 
+ *
+ *
  */
 @SuppressWarnings("serial")
 public class LogisticDataUploadController extends DefaultWidgetController
@@ -56,12 +53,10 @@ public class LogisticDataUploadController extends DefaultWidgetController
 	private String validationErrorPath = "";
 	private String tplCSVInboundPath = "";
 	private String tplCSVOutboundPath = "";
-	private String tshipPinUnivsPath = "";
 	private static final String CSV = ".csv";
 
 	private static final String[] PROPERTY_FILE_ERRORS =
-	{ "Temporary file path", "Validation_Error file path", "Tpl Inbound file path", "Tpl Outbound file path",
-			"Tship PinUniverse file path" };
+	{ "Temporary file path", "Validation_Error file path", "Tpl Inbound file path", "Tpl Outbound file path" };
 	private static final Logger LOG = Logger.getLogger(LogisticDataUploadController.class.getName());
 
 	@Autowired
@@ -93,11 +88,10 @@ public class LogisticDataUploadController extends DefaultWidgetController
 			validationErrorPath = filePathProviderService.getValidationErrFilePath();
 			tplCSVInboundPath = filePathProviderService.getTplInbndCsvPath();
 			tplCSVOutboundPath = filePathProviderService.getTplOutbndCsvPath();
-			tshipPinUnivsPath = filePathProviderService.getTshipPinUnivsPath();
 		}
 		else
 		{
-			LOG.error("bulk upload saveFilePath genearating error..");
+			LOG.error("filePathProviderService is con't be null");
 
 		}
 	}
@@ -108,19 +102,11 @@ public class LogisticDataUploadController extends DefaultWidgetController
 
 	private Media media;
 
-	//private Label msgLb;
-
-
 	@ViewEvent(componentID = "home_uploadzip", eventName = Events.ON_UPLOAD)
 	public void selectHomeUploadZip(final UploadEvent uploadEvent) throws InterruptedException
 	{
-		//Date format
-		final DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
-		final Date date = new Date();
-		final String currentDate = dateFormat.format(date);
 
-
-		if (!propertyFilePathValidation(tmpFilePath, validationErrorPath, tplCSVInboundPath, tplCSVOutboundPath, tshipPinUnivsPath))
+		if (!propertyFilePathValidation(tmpFilePath, validationErrorPath, tplCSVInboundPath, tplCSVOutboundPath))
 		{
 			return;
 		}
@@ -130,12 +116,8 @@ public class LogisticDataUploadController extends DefaultWidgetController
 		final String fileName1 = "TempLogServFile_HD" + CSV;
 		LOG.info("**********Filename1 is**********" + fileName1);
 
-
 		// this is the temp path for generating xlsx file
 		final File dest = new File(tmpFilePath.trim(), fileName);
-		//		final File tplCSVTmpFile = new File(tmpFilePath.trim(), fileName1 + CSV);
-		//		final File tplvalErrTmpFile = new File(tmpFilePath.trim(), "ValidationError.csv");
-		//		final File tplTshipTmpFile = new File(tmpFilePath.trim(), "TshipPincodeUniverse_" + currentDate + CSV);
 
 		expressExcelFileName.setText("");
 		expressEmptyFileError.setValue("");
@@ -167,9 +149,6 @@ public class LogisticDataUploadController extends DefaultWidgetController
 
 			final File validationErrorFile = new File(validationErrorPath.trim(), "ValidationError.csv");
 
-			final File tshiptmpFile = new File(tshipPinUnivsPath.trim(), "tmpTshipFile_HD" + CSV);
-			final File tshipPinUnivsFile = new File(tshipPinUnivsPath.trim(), "TshipPincodeUniverse_HD" + CSV);
-
 			try
 			{
 				LOG.info("Start Copying of HD file from another system to Commerce Server");
@@ -189,7 +168,7 @@ public class LogisticDataUploadController extends DefaultWidgetController
 			{
 				final File statePropFile = new File(filePathProviderService.getStatesPropFilePath(), "statecodes.properties");
 				LOG.info("State code file path " + statePropFile.getAbsolutePath());
-				final XlsxtoCSVUsingBufferDynamic xlsxtoCSVUsingBufferDynamic = new XlsxtoCSVUsingBufferDynamic();
+				final ExceltoCSVUsingBufferDynamic xlsxtoCSVUsingBufferDynamic = new ExceltoCSVUsingBufferDynamic();
 				xlsxtoCSVUsingBufferDynamic.setPropertiesPath(statePropFile.getAbsolutePath());
 
 				LOG.info("Start Converting the file from xlsx file to required CSV format in TempLogServFile ");
@@ -205,9 +184,6 @@ public class LogisticDataUploadController extends DefaultWidgetController
 					logisticServiceabilityFacade.deleteOlderRecords(csvData);
 					LOG.info("************AFTER CALLING DELETE WEBSERVICES**************" + csvData);
 
-
-
-
 					LOG.info("StartCopying TempLogServFile as LogisticsServiceabilityData_HD_datetime format in outbound");
 					FileUtils.copyFile(tmpTplCSVInboundFile, tplCSVOutboundFile);
 					LOG.info("End Copying TempLogServFile as LogisticsServiceabilityData_HD_datetime format in outbound Folder");
@@ -215,49 +191,11 @@ public class LogisticDataUploadController extends DefaultWidgetController
 					LOG.info("Start renaming TempLogServFile as LogisticsServiceabilityData_HD_datetime format to inbound folder");
 					tmpTplCSVInboundFile.renameTo(tplCSVInboundFile);
 					LOG.info("End of renaming TempLogServFile as LogisticsServiceabilityData_HD_datetime format to inbound folder ");
-
-
-					try
-					{
-
-						//ExcelToPincodeMasterCSV1.xlsx("HD", dest, tplCSVOutboundFile, tplvalErrTmpFile);
-						//move the file in outbound folder
-						//tplCSVTmpFile.renameTo(tplCSVInboundFile);
-
-
-
-
-						final long xlToTshipStartTime = System.nanoTime();
-						LOG.info("Starting of Conversion of Temp TSHIP  Universe from uploaded file ");
-						final ExcelToTship excelTship = new ExcelToTship();
-						excelTship.setPropertiesPath(statePropFile.getAbsolutePath());
-						excelTship.xls("HD", dest, tshiptmpFile);
-						LOG.info("End of Conversion of Temp TSHIP Universe from uploaded file ");
-						final long xlToTshipEndTime = System.nanoTime();
-						final double difference = (xlToTshipEndTime - xlToTshipStartTime) / 1e6;
-						LOG.info("Total Time taken to convert Excel To TSHIP" + difference);
-
-						final long xlToTshipRenamingSTime = System.nanoTime();
-						LOG.info("Starting of Renaming of TSHIP Universe from Temp TSHIP Universe ");
-						tshiptmpFile.renameTo(tshipPinUnivsFile);
-						LOG.info("End of Renaming of TSHIP Universe from Temp TSHIP Universe ");
-						final long xlToTshipRenamingEndTime = System.nanoTime();
-						final double rdifference = (xlToTshipRenamingEndTime - xlToTshipRenamingSTime) / 1e6;
-						LOG.info("Total Time taken to convert Excel To TSHIP" + rdifference + MIL_SEC);
-
-
-					}
-					catch (final Exception excp)
-					{
-						LOG.error(excp.getMessage());
-					}
 					Messagebox.show("File uploaded successfully");
 
 				}
 				if (validationErrorFile.length() > 0)
 				{
-					// only move to exact location when the validation path contains some data
-					//tplvalErrTmpFile.renameTo(validationErrorFile);
 					try
 					{
 						csvFileToZipFileService.convert(validationErrorFile);
@@ -274,6 +212,7 @@ public class LogisticDataUploadController extends DefaultWidgetController
 			}
 			catch (final Exception exp)
 			{
+				LOG.error(exp.getMessage());
 				homeEmptyFileError.setValue("Error while uploading File");
 			}
 		}
@@ -288,28 +227,19 @@ public class LogisticDataUploadController extends DefaultWidgetController
 	@ViewEvent(componentID = "express_uploadzip", eventName = Events.ON_UPLOAD)
 	public void selectExpressUploadZip(final UploadEvent uploadEvent) throws InterruptedException
 	{
-		//Date format
-		final DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
-		final Date date = new Date();
-		final String currentDate = dateFormat.format(date);
 
-		if (!propertyFilePathValidation(tmpFilePath, validationErrorPath, tplCSVInboundPath, tplCSVOutboundPath, tshipPinUnivsPath))
+		if (!propertyFilePathValidation(tmpFilePath, validationErrorPath, tplCSVInboundPath, tplCSVOutboundPath))
 		{
 			return;
 		}
 		media = uploadEvent.getMedia();
 		final String fileName = media.getName();
-		//	final String fileName1 = fileName.substring(0, fileName.length() - 5);
 		final String fileName1 = "TempLogServFile_ED" + CSV;
 		LOG.info("**********Filename1 is**********" + fileName1);
 
-
-
 		// this is the temp path for generating xlsx file
 		final File dest = new File(tmpFilePath.trim(), fileName);
-		//		final File tplCSVTmpFile = new File(tmpFilePath.trim(), fileName1 + CSV);
-		//		final File tplvalErrTmpFile = new File(tmpFilePath.trim(), "ValidationError.csv");
-		//		final File tplTshipTmpFile = new File(tmpFilePath.trim(), "TshipPincodeUniverse_" + currentDate + CSV);
+
 		homeExcelFileName.setText("");
 		homeEmptyFileError.setValue("");
 		expressExcelFileName.setText("");
@@ -338,16 +268,13 @@ public class LogisticDataUploadController extends DefaultWidgetController
 			final File tplCSVOutboundFile = new File(tplCSVOutboundPath.trim(), ED_FILE_NAME + CSV);
 			final File validationErrorFile = new File(validationErrorPath.trim(), "ValidationError.csv");
 
-			final File tshiptmpFile = new File(tshipPinUnivsPath.trim(), "tmpTshipFile_ED" + CSV);
-			final File tshipPinUnivsFile = new File(tshipPinUnivsPath.trim(), "TshipPincodeUniverse_ED" + CSV);
-
 			try
 			{
 				LOG.info("Start Copying of ED file from another system to Commerce Server");
 				final long copyStartTime = System.nanoTime();
 				Files.copy(dest, media.getStreamData());
-				LOG.info("Total Time taken ED file for copying from host system To commerce  " + (System.nanoTime() - copyStartTime)
-						/ 1e6 + MIL_SEC);
+				LOG.info("Total Time taken ED file for copying from host system To commerce  "
+						+ (System.nanoTime() - copyStartTime) / 1e6 + MIL_SEC);
 				LOG.info("End of Copying of ED file from another system to Commerce Server");
 			}
 			catch (final IOException ioexception)
@@ -359,7 +286,7 @@ public class LogisticDataUploadController extends DefaultWidgetController
 			{
 				final File statePropFile = new File(filePathProviderService.getStatesPropFilePath(), "statecodes.properties");
 				LOG.info("State code file path " + statePropFile.getAbsolutePath());
-				final XlsxtoCSVUsingBufferDynamic xlsxtoCSVUsingBufferDynamic = new XlsxtoCSVUsingBufferDynamic();
+				final ExceltoCSVUsingBufferDynamic xlsxtoCSVUsingBufferDynamic = new ExceltoCSVUsingBufferDynamic();
 				xlsxtoCSVUsingBufferDynamic.setPropertiesPath(statePropFile.getAbsolutePath());
 				LOG.info("Start Converting the file from xlsx file to required CSV format in TempLogServFile ");
 				xlsxtoCSVUsingBufferDynamic.xlsx("ED", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
@@ -391,48 +318,11 @@ public class LogisticDataUploadController extends DefaultWidgetController
 					final double difference1 = (endRenTime - startRenTShipTime) / 1e6;
 					LOG.info("End of renaming TempLogServFile as LogisticsServiceabilityData_ED_datetime format" + difference1
 							+ "milliseconds");
-
-
-
-
-					try
-					{
-						//ExcelToPincodeMasterCSV1.xlsx("HD", dest, tplCSVOutboundFile, tplvalErrTmpFile);
-
-						// now copy file in outbound folder for LogisticsPincode Serviceability
-						//FileUtils.copyFile(tplCSVTmpFile, tplCSVOutboundFile);
-
-						//move the file in outbound folder
-						//tplCSVTmpFile.renameTo(tplCSVInboundFile);
-
-						final long startTshiptime = System.nanoTime();
-						LOG.info("Starting of Conversion of Temp TSHIP  Universe from uploaded file ");
-						final ExcelToTship excelTship = new ExcelToTship();
-						excelTship.setPropertiesPath(statePropFile.getAbsolutePath());
-						excelTship.xls("ED", dest, tshiptmpFile);
-						final long endTshipTime = System.nanoTime();
-						final double difference2 = (endTshipTime - startTshiptime) / 1e6;
-						LOG.info("End of Conversion of Temp TSHIP Universe from uploaded file" + difference2 + "milliseconds");
-
-						final long startRenamtime = System.nanoTime();
-						LOG.info("Starting of Renaming of TSHIP Universe from Temp TSHIP Universe ");
-						tshiptmpFile.renameTo(tshipPinUnivsFile);
-						final long endRenamtime = System.nanoTime();
-						final double difference3 = (endRenamtime - startRenamtime) / 1e6;
-						LOG.info("End of Renaming of TSHIP Universe from Temp TSHIP Universe in" + difference3 + "milliseconds");
-
-					}
-					catch (final Exception excp)
-					{
-						LOG.error(excp.getMessage());
-					}
 					Messagebox.show("File uploaded successfully");
 
 				}
 				if (validationErrorFile.length() > 0)
 				{
-					// only move to exact location when the validation path contains some data
-					//tplvalErrTmpFile.renameTo(validationErrorFile);
 					try
 					{
 						csvFileToZipFileService.convert(validationErrorFile);
@@ -449,6 +339,7 @@ public class LogisticDataUploadController extends DefaultWidgetController
 			}
 			catch (final Exception exp)
 			{
+				LOG.error(exp.getMessage());
 				expressEmptyFileError.setValue("Error while uploading File");
 			}
 		}
@@ -463,7 +354,7 @@ public class LogisticDataUploadController extends DefaultWidgetController
 	{
 		for (int i = 0; i < values.length; i++)
 		{
-			if (values[i].equals("null") || values[i].equals(""))
+			if ("null".equals(values[i]) || "".equals(values[i]) || values[i] == null)
 			{
 				Messagebox.show("Unable to find " + PROPERTY_FILE_ERRORS[i], "Error", Messagebox.OK, Messagebox.ERROR);
 				LOG.info("Unable to find " + PROPERTY_FILE_ERRORS[i]);

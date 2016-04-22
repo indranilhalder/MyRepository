@@ -1,8 +1,6 @@
 <%@ tag body-content="empty" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%@ taglib prefix="compressible" tagdir="/WEB-INF/tags/responsive/template/compressible" %>
-
 
 
 <%--  AddOn Common CSS files --%>
@@ -11,15 +9,20 @@
 </c:forEach>
 
 
-<c:choose>
-	<c:when test="${isMinificationEnabled}">
-		<compressible:mplmincss/>
-	</c:when>
-	<c:otherwise>
-		<compressible:mplcss/>
-	</c:otherwise>
-</c:choose>
 
+
+
+<%-- Theme CSS files --%>
+
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/style.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jquery-picZoomer.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/reset.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jqtree.css"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+<!--[if gte IE 9]>
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/main-ie9.css"/>
+<![endif]-->
 
 <%--  AddOn Theme CSS files --%>
 <c:forEach items="${addOnThemeCssPaths}" var="addOnThemeCss">

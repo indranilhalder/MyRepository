@@ -7,15 +7,20 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCallContextController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.MarketplaceSearchResultWidgetModel;
+import com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceAlternateContactDetailsWidgetRenderer;
+import com.tisl.mpl.facades.account.register.MplOrderFacade;
 
+import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.session.UISessionUtils;
 import de.hybris.platform.cockpit.widgets.WidgetConfig;
 import de.hybris.platform.cockpit.widgets.models.WidgetModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.EmployeeModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultCallContextController;
@@ -29,11 +34,14 @@ import de.hybris.platform.servicelayer.user.UserService;
  */
 public class MarketplaceDefaultCallContextController extends
 		DefaultCallContextController  implements MarketplaceCallContextController{
-
+	private static final Logger LOG = Logger
+			.getLogger(MarketplaceDefaultCallContextController.class);
 	
 	private static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%*&.]).{8,16})";
 	
-	
+	@Autowired
+	private MplOrderFacade mplOrderFacade;
+
 	@Override
 	public UserModel getCurrentUser() {
 		return  UISessionUtils.getCurrentSession().getUser();
@@ -114,5 +122,14 @@ public class MarketplaceDefaultCallContextController extends
 
 		return super.endCall();
 	}
+
+	@Override
+	public TypedObject crmTicketGeneration(OrderModel mainOrder,String customerId,String source) {
+		
+		mplOrderFacade.createcrmTicketForCockpit(mainOrder, customerId,source);
+		return null;
+	}
 	
+	
+
 }

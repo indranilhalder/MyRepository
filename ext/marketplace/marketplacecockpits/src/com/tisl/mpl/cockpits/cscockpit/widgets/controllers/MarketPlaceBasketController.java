@@ -114,5 +114,7 @@ public interface MarketPlaceBasketController extends BasketController {
 
 
 	Collection<String> getAppliedVoucherCodesList();
+	
+	void triggerCheckout() throws ValidationException;
  
 }

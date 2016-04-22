@@ -14,11 +14,6 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 
-
-
-
-
-
 <!-- <div class="orderList"> -->
 <%-- 	<div class="headline"><spring:theme code="basket.page.title.yourDeliveryItems" text="Your Delivery Items"/></div>
  --%>
@@ -26,6 +21,13 @@
 
 <!-- <table class="orderListTable"> -->
 
+<c:set var="bogoGiveaway" value="false" />
+<c:forEach items="${orderGroup.entries}" var="entry">
+	<c:if 
+	test="${ entry.isBOGOapplied || entry.giveAway}">
+	<c:set var="bogoGiveaway" value="true" />	
+	</c:if>
+</c:forEach> 
 
 <c:forEach items="${orderGroup.entries}" var="entry">
 	<c:url value="${entry.product.url}" var="productUrl" />
@@ -69,8 +71,15 @@
 								var="promotion">
 								<c:forEach items="${promotion.consumedEntries}"
 									var="consumedEntry">
+										
+									<c:if 
+										test="${not displayed &&  entry.isBOGOapplied || entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+										<c:set var="displayed" value="true" />
+										<li><span>${promotion.description}</span></li>
+									</c:if>
+								
 									<c:if
-										test="${not displayed && not entry.isBOGOapplied && entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+										test="${not displayed &&  not bogoGiveaway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
 										<c:set var="displayed" value="true" />
 										<li><span>${promotion.description}</span></li>
 									</c:if>
@@ -92,14 +101,11 @@
 						</span>
 					</p>
 					<ul class="item-details">
-
-
-						<%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>
-
-					</ul>
-				</div>
-
-			</li>
+					 <%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>
+					</ul> 
+					</div>
+					  
+					</li>
 			<li class="shipping">
 				<ul class="${entry.mplDeliveryMode.name}">
 					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>

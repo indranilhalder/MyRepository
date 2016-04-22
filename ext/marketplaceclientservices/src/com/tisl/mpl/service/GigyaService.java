@@ -26,5 +26,26 @@ public interface GigyaService
 	public void notifyGigya(final String siteUid, final String gigyaUid, final String fName, final String lName,
 			final String eMail, String gigyaMethod);
 
+
+	/**
+	 * @param customerModel
+	 * @param isNewUser
+	 * @return List
+	 */
+
 	public GigyaWsDTO gigyaLoginHelperforMobile(CustomerModel customerModel, boolean isNewUser);
+
+	/**
+	 * notify gigya for social registration and login through mobile
+	 * 
+	 * @param uid
+	 * @param gigyaUid
+	 * @param fName
+	 * @param lName
+	 * @param eMail
+	 * @param gigyaMethod
+	 * @return GigyaWsDTO
+	 */
+	public GigyaWsDTO notifyGigyaforMobile(String uid, String gigyaUid, String fName, String lName, String eMail,
+			String gigyaMethod);
 }

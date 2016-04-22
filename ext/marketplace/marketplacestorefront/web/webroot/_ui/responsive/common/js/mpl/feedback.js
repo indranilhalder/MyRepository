@@ -316,6 +316,7 @@ $(document).ready(function(){
 				if($(window).width() < 773) {
 					$("span#mobile-menu-toggle").unbind('click');
 					$("span#mobile-menu-toggle").click(function(){
+						$("a#tracklink").mouseover();
 						$(this).parent('li').siblings().find('#mobile-menu-toggle').removeClass("menu-dropdown-arrow");
 						$(this).parent('li').siblings().find('#mobile-menu-toggle + ul').slideUp();
 						$(this).next().slideToggle();
@@ -458,7 +459,9 @@ $(document).ready(function(){
 				 $(this).find('header').first().find('.compact-toggle').click(function(){
 					 $(this).parents('header').toggleClass('compact');
 					 $(this).parents('header').find('.compact-toggle').toggleClass('open');
-				 });   
+				 }); 
+				 
+			
 				 
 				/* $(this).find('header').find('.compact-toggle').toggleClass('open');
 				 $(this).find('header').first().find('.compact-toggle').click(function(){
@@ -466,6 +469,14 @@ $(document).ready(function(){
 					 $(this).parents('header').find('.compact-toggle').toggleClass('open');
 				 });*/
 			 }
+			 $(window).scroll(function () {
+			 if($("header .content .bottom").hasClass("active")){
+					$("header > .content .top .compact-toggle.open").css("display","none");
+				}
+				else{
+					$("header > .content .top .compact-toggle.open").css("display","inline-block");
+				}
+			 });
 	/*---END of Micro site brand header toggle functionality ---*/
 			 
 	/*-------Start of Marketplace preferences--------*/
@@ -1109,6 +1120,7 @@ $(document).ready(function(){
 			if($(window).width() < 773) {
 				$("span#mobile-menu-toggle").unbind('click');
 				$("span#mobile-menu-toggle").click(function(){
+					$("a#tracklink").mouseover();
 					$(this).parent('li').siblings().find('#mobile-menu-toggle').removeClass("menu-dropdown-arrow");
 					$(this).parent('li').siblings().find('#mobile-menu-toggle + ul').slideUp();
 					$(this).next().slideToggle();
@@ -1148,7 +1160,6 @@ $(document).ready(function(){
 	$(window).on("load",function(e){
 		$('.sort-refine-bar.mobile').append('<span id="hidden-option-width" style="display: none;"></span>')
 		$(".sort-refine-bar select.black-arrow-left").css("display","block");
-		/*$(".sort-refine-bar select.black-arrow-left").css("background-position-x","30%");*/
 		$(".sort-refine-bar select").change(function(){
 			 $("#hidden-option-width").html($(this).find('option:selected').text());
 			 var option_width=$("#hidden-option-width").width() + 22;

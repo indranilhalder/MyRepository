@@ -9,17 +9,21 @@
 	var="categoryUrl">
 
 
-	<c:if test="${not empty component.filterBySellerName}">
+	<c:if test="${not empty component.filterBySellerName}"> 
 
 		<c:param name="q"
 			value=":relevance:sellerId:${component.filterBySellerName}"></c:param>
-	</c:if>
+ 	</c:if> 
 	<c:if test="${not empty component.filterByBrandName}">
 
 		<c:param name="q"
 			value=":relevance:brand:${component.filterByBrandName}"></c:param>
 	</c:if>
+	<c:param name="icid"
+			value="${component.pk}"></c:param>
 </c:url>
+
+
 <li><c:choose>
 		
 		<c:when test="${component.isImageFromPCM eq 'true'}">

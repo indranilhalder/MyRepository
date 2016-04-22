@@ -18,13 +18,12 @@ import com.tisl.mpl.wsdto.GigyaWsDTO;
  */
 public class GigyaFacadeImpl implements GigyaFacade
 {
-
 	@Autowired
 	public GigyaService gigyaService;
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.reviews.GigyaFacade#notifyGigya(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -36,24 +35,24 @@ public class GigyaFacadeImpl implements GigyaFacade
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.facades.account.reviews.GigyaFacade#gigyaLoginHelper(de.hybris.platform.core.model.user.
-	 * CustomerModel, boolean)
+	/**
+	 * @param customerModel
+	 * @param isNewUser
+	 * @return List
 	 */
 	@Override
 	public GigyaWsDTO gigyaLoginHelper(final CustomerModel customerModel, final boolean isNewUser)
 	{
-		// YTODO Auto-generated method stub
+
 		return gigyaService.gigyaLoginHelperforMobile(customerModel, isNewUser);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.tisl.mpl.facades.account.reviews.GigyaFacade#ratingLogoutHelper(de.hybris.platform.core.model.user.
-	 * CustomerModel)
+	 * @see
+	 * com.tisl.mpl.facades.account.reviews.GigyaFacade#ratingLogoutHelper(de.hybris.platform.core.model.user.CustomerModel
+	 * )
 	 */
 	@Override
 	public void ratingLogoutHelper(final CustomerModel customerModel)
@@ -62,4 +61,16 @@ public class GigyaFacadeImpl implements GigyaFacade
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facades.account.reviews.GigyaFacade#validateSignature(java.lang.String, java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public boolean validateSignature(final String uid, final String timestamp, final String signature)
+	{
+		// YTODO Auto-generated method stub
+		return gigyaService.validateSignature(uid, timestamp, signature);
+	}
 }

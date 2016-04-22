@@ -14,6 +14,7 @@ import com.tisl.mpl.wsdto.GigyaWsDTO;
  */
 public interface GigyaFacade
 {
+
 	public void notifyGigya(final String siteUid, final String gigyaUid, final String fName, final String lName,
 			final String eMail, String gigyaMethod);
 
@@ -25,4 +26,6 @@ public interface GigyaFacade
 	public GigyaWsDTO gigyaLoginHelper(CustomerModel customerModel, boolean isNewUser);
 
 	public void ratingLogoutHelper(final CustomerModel customerModel);
+
+	public boolean validateSignature(final String uid, final String timestamp, final String signature);
 }

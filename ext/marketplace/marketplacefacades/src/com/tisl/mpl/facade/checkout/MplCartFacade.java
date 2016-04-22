@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.data.StoreLocationRequestData;
+import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 
@@ -387,4 +389,11 @@ public interface MplCartFacade extends CartFacade
 	public CartModel getCalculatedCart() throws CommerceCartModificationException, EtailNonBusinessExceptions;
 
 	OrderEntryData getCartEntryByUssid(final String ussid, CartData cart);
+
+	/**
+	 * @author TECH
+	 * @param storeLocationRequestDataList
+	 * @return
+	 */
+	List<StoreLocationResponseData> getStoreLocationsforCnC(List<StoreLocationRequestData> storeLocationRequestDataList);
 }

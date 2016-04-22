@@ -22,16 +22,16 @@
 			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.displayName},</font>
                   <br>
                   <br>
-                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">We heard you wanted a copy of your order's invoice. So we've attached it for you.<br>
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We heard you wanted a copy of your order's invoice. So we've attached it for you.<br>
                   <br>
                   </font>
-				   <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;"><strong>${ctx.orderCode}</strong> with <strong>${ctx.transactionID}</strong><br>
+				   <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;"><strong>${ctx.orderCode}</strong> with <strong>${ctx.transactionID}</strong><br>
                   <br>
                   </font>
-				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">We have tons of new stuff for you at TataCliq. So what are you waiting for?<br>
+				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We have tons of new stuff for you at TataCliq. So what are you waiting for?<br>
                   <br>
                   </font>
-				  <div style="font-family:Arial, Helvetica, sans-serif;font-size: 16px;color:#AA133D;background-color:#EE0C6E;text-align: center;width: 25%;margin: auto;height: 35px;padding: 0 17px;
+				  <div style="font-family:Arial, Helvetica, sans-serif;font-size: 16px;color:#AA133D;background-color:#AA133D;border-radius:16px;text-align: center;width: 30%;margin: auto;height: 35px;padding: 0 21px;
 "><a href="${ctx.websiteUrl}" style="color: #fff;text-decoration:none;line-height: 35px;font-weight:bold">Let's go shopping!</a><br>
                   
                   </div>

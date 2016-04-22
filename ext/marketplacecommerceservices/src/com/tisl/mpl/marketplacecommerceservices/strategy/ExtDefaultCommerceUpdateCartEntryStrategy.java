@@ -24,7 +24,7 @@ import com.tisl.mpl.strategy.service.MplCheckCartLevelStrategy;
 
 /**
  * @author TCS
- *
+ * 
  */
 public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUpdateCartEntryStrategy
 {
@@ -87,15 +87,17 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 		}
 		final long quantityToAdd = newQuantity - entryToUpdate.getQuantity().longValue();
 
-		if (entryToUpdate.getDeliveryPointOfService() != null)
-		{
-			final long actualAllowedQuantityChange = getAllowedCartAdjustmentForProduct(cartModel, entryToUpdate.getProduct(),
-					quantityToAdd, entryToUpdate.getDeliveryPointOfService());
+		//commented by Techouts
+		//As we do not maintain stock at commerce side
 
-			final CommerceCartModification modification = modifyEntry(cartModel, entryToUpdate, actualAllowedQuantityChange,
-					newQuantity, maxOrderQuantity);
-			return modification;
-		}
+		/*
+		 * if (entryToUpdate.getDeliveryPointOfService() != null) { final long actualAllowedQuantityChange =
+		 * getAllowedCartAdjustmentForProduct(cartModel, entryToUpdate.getProduct(), quantityToAdd,
+		 * entryToUpdate.getDeliveryPointOfService());
+		 * 
+		 * final CommerceCartModification modification = modifyEntry(cartModel, entryToUpdate,
+		 * actualAllowedQuantityChange, newQuantity, maxOrderQuantity); return modification; }
+		 */
 		//Find stock level From USSID, Sent USSID as a parameter
 		long actualAllowedQuantityChange = 0;
 		CommerceCartModification modification = null;

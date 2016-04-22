@@ -150,12 +150,26 @@
 </c:if>	
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.signinflyout.js"></script>
 
+
+
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.search.js"></script>
 
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/reviews')}">
     <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.reviewrating.js"></script>
 </c:if> 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -221,10 +235,11 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.sellerDetails.js"></script>
 </c:if> 
+<!-- Js entry for store finder -->
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/store-finder')}">
+ <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.storefinder.js"></script>
 
-
-
-
+</c:if>
 <c:if test="${isIAEnabled}">
 <script type="text/javascript"
 	src="${commonResourcePath}/js/ia-plugins/ia_plugin_general.js" defer="defer"></script>
@@ -232,6 +247,7 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 </c:if>
 
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
+
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/populateAddressDetail') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/addNewAddress') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/editAddress') or

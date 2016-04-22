@@ -163,9 +163,6 @@ public interface MplPaymentService
 	 * @param cartData
 	 * @param cart
 	 * @return MplPromoPriceData
-	 * @throws JaloPriceFactoryException
-	 * @throws JaloSecurityException
-	 * @throws CalculationException
 	 * @throws VoucherOperationException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
@@ -254,11 +251,11 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
