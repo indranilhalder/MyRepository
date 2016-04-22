@@ -132,7 +132,7 @@ width:100%;
                     
                   
                 </table>
-				<div style="text-align:center;font-weight:bold;margin-top:18px;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#fff;background-color:#aa133d;padding: 10px 15px;">${ctx.cmsSlotContents.trackbtn}</a></div>
+				<div style="text-align:center;font-weight:bold;margin-top:18px;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#000;padding: 10px 15px;">${ctx.cmsSlotContents.trackbtn}</a></div>
 				<br><br>
 				
 				</td>
