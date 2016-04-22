@@ -663,18 +663,15 @@ public class UsersController extends BaseCommerceController
 			LOG.debug("****************** Social Media User Login mobile web service ***********" + emailId);
 			if (StringUtils.isNotEmpty(uid))
 			{
-				final String decodedUid = java.net.URLDecoder.decode(uid, "UTF-8");
-				setGigyaUID(decodedUid);
+				setGigyaUID(encodeutf(uid));
 			}
 			if (StringUtils.isNotEmpty(signature))
 			{
-				final String decodedSignature = java.net.URLDecoder.decode(signature, "UTF-8");
-				setSignature(decodedSignature);
+				setSignature(encodeutf(signature));
 			}
 			if (StringUtils.isNotEmpty(timestamp))
 			{
-				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, "UTF-8");
-				setTimestamp(decodedTimestamp);
+				setTimestamp(encodeutf(timestamp));
 			}
 			//Social Media should not be anything other than FB or Google +
 			if (gigyaFacade.validateSignature(uid, timestamp, signature))
@@ -739,6 +736,11 @@ public class UsersController extends BaseCommerceController
 		}
 		//Return result
 		return result;
+	}
+
+	private String encodeutf(final String data) throws UnsupportedEncodingException
+	{
+		return java.net.URLDecoder.decode(data, "UTF-8");
 	}
 
 	/**
