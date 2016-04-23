@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <head>
 <title>TATA - CLiQ</title>
+<style>
+td span img{
+width:100%;
+}
+</style>
 </head>
 
 <body>
-<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #000;" >
+<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #cccccc;" >
   <tr>
-    <td><table width="598" border="0" cellspacing="0" cellpadding="0">
+    <td><table border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td align="left" valign="top" bgcolor="#ffffff">${ctx.cmsSlotContents.OnHOldSiteLogo}</td>
+        <td align="left" valign="top" bgcolor="#ffffff"><span>${ctx.cmsSlotContents.OnHOldSiteLogo}</span></td>
       </tr>
  
       <tr>
-        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="13">&nbsp;</td>
+            <td>&nbsp;</td>
             <td>
 			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;">You're Genuinely Awesome. So We'll Make Sure</h2>
 			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 12px;margin-top:4px">Your Order Is Too.</h2><br>
@@ -32,16 +37,16 @@ placed on <strong>${ctx.orderDate}</strong> has just a few details we're not com
                   <br>
                   </font>
 				  </td>
-            <td width="13">&nbsp;</td>
+            <td>&nbsp;</td>
           </tr>
         </table></td>
       </tr>
       
       <tr>
-        <td bgcolor="#fbfbfb"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="13">&nbsp;</td>
-            <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+            <td>&nbsp;</td>
+            <td><table border="0" cellspacing="0" cellpadding="0">
               
               <tr>
                 <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
@@ -53,7 +58,7 @@ placed on <strong>${ctx.orderDate}</strong> has just a few details we're not com
                 <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
               <tr>
-                <td>${ctx.cmsSlotContents.smileyimg}</td>
+                <td><span>${ctx.cmsSlotContents.smileyimg}</span></td>
               </tr>
               <tr>
                 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
@@ -62,24 +67,24 @@ placed on <strong>${ctx.orderDate}</strong> has just a few details we're not com
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+                <td><table border="0" cellspacing="0" cellpadding="0" style="width:95%;">
                   <tr>
-                    <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
+                    <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
                     <td>&nbsp;</td>
-                    <td width="27" align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.Invoicefb}</a></td>
-                    <td width="27" align="right"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</a></td>
-                    <td width="27" align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
-                    <td width="27" align="right"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</a></td>
+                    <td align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
+                    <td align="right"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</a></td>
+                    <td align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
+                    <td align="right"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</a></td>
                   </tr>
                 </table></td>
               </tr>
               </table></td>
-            <td width="13">&nbsp;</td>
+            <td>&nbsp;</td>
           </tr>
         </table></td>
       </tr>
       <tr>
-        <td bgcolor="#fbfbfb">&nbsp;</td>
+        <td>&nbsp;</td>
       </tr>
     </table></td>
   </tr>
