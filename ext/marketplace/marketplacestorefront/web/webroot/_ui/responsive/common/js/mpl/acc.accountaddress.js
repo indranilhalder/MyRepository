@@ -6,6 +6,7 @@
 	 /*To highlight the active link*/
 	 
 		var pageName = $("#pageName").val();
+		var pageNameDropdown = $("#pageNameDropdown").val();
 		if(pageName=="overViews"){
        		$("#lnOverView a").addClass("active"); 		
        	}
@@ -37,7 +38,33 @@
        		$("#lnReview a").addClass("active"); 		
        	}
 		
-		
+		if(pageNameDropdown=="overViews"){
+			$('#menuPageSelect option').eq(0).attr("selected","selected");
+       	}
+       	else if(pageNameDropdown=="mplPref"){
+       		$('#menuPageSelect option').eq(1).attr("selected","selected");
+       	}
+       	else if(pageNameDropdown=="personalInfo"){
+       		$('#menuPageSelect option').eq(2).attr("selected","selected");		
+       	}
+       	else if(pageNameDropdown=="orderHistory"){
+       		$('#menuPageSelect option').eq(3).attr("selected","selected");
+       	}
+       	else if(pageNameDropdown=="savedCards"){
+       		$('#menuPageSelect option').eq(4).attr("selected","selected"); 		
+       	}
+       	else if(pageNameDropdown=="addressBook"){
+       		$('#menuPageSelect option').eq(5).attr("selected","selected");
+       	}
+       	else if(pageNameDropdown=="review"){
+       		$('#menuPageSelect option').eq(6).attr("selected","selected");
+       	}
+    	else if(pageNameDropdown=="coupons"){
+       		$('#menuPageSelect option').eq(8).attr("selected","selected");	
+       	}
+       	else if(pageNameDropdown=="invite"){
+       		$('#menuPageSelect option').eq(9).attr("selected","selected");
+       	}
 		
 		var sPageURL = window.location.search.substring(1);
 		if(sPageURL.indexOf('&pageAnchor=')>0){
