@@ -134,7 +134,7 @@ ${ctx.cmsSlotContents.HOTCSiteLogo}</td>
                 <td>&nbsp;</td>
               </tr>
 			    <tr>
-                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;text-align:center;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a;padding: 10px 10px;background-color:#aa133d;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#fff;">${ctx.cmsSlotContents.HOTCTrackOrder1}</a></span></td>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;text-align:center;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a;padding: 10px 10px;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#000;">${ctx.cmsSlotContents.HOTCTrackOrder1}</a></span></td>
               </tr>
 			  
 			  <tr>
