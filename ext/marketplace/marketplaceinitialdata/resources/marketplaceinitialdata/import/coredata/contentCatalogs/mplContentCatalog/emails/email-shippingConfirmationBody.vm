@@ -149,7 +149,7 @@ ${ctx.cmsSlotContents.HOTCSiteLogo}</td>
 			   <tr style="word-break:break-word;">
                 <td colspan="1" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;color:#aa133d;"><table style="background-color:#f3f3f3;"><tr style="color:#aa133d;"><td style="width:161px;padding-right:25px;">
 				<span>${ctx.cmsSlotContents.HOTCDeliveryPerson1}</span>
-				</td><td><table><tr style="color:#aa133d;"><td>Your package is being sent to you by: <strong style="color:#4a4a4a;">$ctx.carrier</strong></td></tr><tr style="color:#aa133d;"><td>Here's your tracking number: <strong style="color:#4a4a4a;">$ctx.deliveryAddress</strong></td></tr></table></td></tr></table></td>
+				</td><td><table><tr style="font-family:Arial, Helvetica, sans-serif; font-size:14px; padding:5px 0;color:#aa133d;"><td>Your package is being sent to you by: <strong style="color:#4a4a4a;">$ctx.carrier</strong></td></tr><tr style="color:#aa133d;"><td style="font-family:Arial, Helvetica, sans-serif; font-size:14px;  padding:5px 0;color:#aa133d;">Here's your tracking number: <strong style="color:#4a4a4a;">$ctx.deliveryAddress</strong></td></tr></table></td></tr></table></td>
 				
               </tr>
 			  <tr>
