@@ -9,7 +9,7 @@ width:100%;
 </head>
 
 <body>
-<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #cccccc;">
+<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #cccccc; font-family:Arial, Helvetica, sans-serif;">
   <tr>
     <td><table border="0" cellspacing="0" cellpadding="0">
       <tr>
@@ -20,10 +20,10 @@ width:100%;
       <tr>
         <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td>&nbsp;</td>
+            <td width="13">&nbsp;</td>
             <td>
-			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;margin-top:0px">Let's Do This Again Soon</h2>
-			<h2 style="padding-left: 17px;color: #AA133D;margin-top: 4px;margin-bottom:0px">Really Soon</h2>
+			<h2 style="color: #AA133D;margin-bottom: 2px;margin-top:0px">Let's Do This Again Soon</h2>
+			<h2 style="color: #AA133D;margin-top: 4px;margin-bottom:0px">Really Soon</h2>
 			<br>
 			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.customerName},</font>
                   <br>
@@ -33,7 +33,7 @@ width:100%;
                   <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;">If you're wondering what we're talking about, <a href="https://www.tatacliq.com" style="color:#AA133D"><strong>click here.</strong></a><br>
                   <br>
                   </font></td>
-            <td>&nbsp;</td>
+            <td width="13">&nbsp;</td>
           </tr>
         </table></td>
       </tr>
@@ -42,10 +42,10 @@ width:100%;
 	 <tr>
         <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td height="35">&nbsp;</td>
+            <td width="13" height="35">&nbsp;</td>
             <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order reference number:</td>
             <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;">${ctx.pOrderCode}</td>
-            <td>&nbsp;</td>
+            <td width="13">&nbsp;</td>
           </tr>
         </table>
 		<br>
@@ -55,10 +55,10 @@ width:100%;
 	  <tr>
         <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td height="35">&nbsp;</td>
+            <td width="13" height="35">&nbsp;</td>
             <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order number:</td>
             <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;">${ctx.orderCode}</td>
-            <td>&nbsp;</td>
+            <td width="13">&nbsp;</td>
           </tr>
         </table>
 		<br>
@@ -68,24 +68,24 @@ width:100%;
       <tr>
         <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td>&nbsp;</td>
-            <td><table border="0" cellspacing="0" cellpadding="0">
+            <td width="13">&nbsp;</td>
+            <td><table width="572" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td><table border="0" cellspacing="0" cellpadding="0">
+                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td height="10"></td>
                   </tr>
                   <tr>
-                    <td style="border-bottom:solid 1px #f4f4f4;"><table border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#aa133d; font-weight:bold;">
+                    <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#aa133d; font-weight:bold;">
                       <tr>
-                        <td height="55" align="center">Transaction <br>
+                        <td width="120" height="55" align="center">Transaction <br>
                           ID</td>
-                        <td align="center">Product</td>
-                        <td align="center">Qty</td>
-                        <td align="center">Price<br></td>
-						  <td align="center">Shipping charges<br>
+                        <td width="155" align="center">Product</td>
+                        <td width="80" align="center">Qty</td>
+                        <td width="90" align="center">Price<br></td>
+						  <td width="120" align="center">Shipping charges<br>
                           (if any) </td>
-						   <td align="center">COD Charges<br>
+						   <td width="120" align="center">COD Charges<br>
                           (if any) </td>
                        
                       </tr>
@@ -96,12 +96,12 @@ width:100%;
                   <tr>
                     <td style="border-bottom:solid 1px #f4f4f4;"><table border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#424242;">
                       <tr style="word-break:break-word;">
-                        <td height="55" align="center" >$entry.orderLineId</td>
-                        <td align="center">$entry.product.name</td>
-                        <td align="center" >$entry.quantity</td>
-                        <td align="center">$ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
-                        <td align="center" >$ctx.numberTool.format("#0.00", $entry.currDelCharge)</td>
-						<td align="center" >$ctx.numberTool.format("#0.00", $entry.convenienceChargeApportion)</td>
+                        <td width="120" height="55" align="center" >$entry.orderLineId</td>
+                        <td width="130" align="center">$entry.product.name</td>
+                        <td width="50" align="center" >$entry.quantity</td>
+                        <td width="80" align="center">$ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
+                        <td width="100" align="center" >$ctx.numberTool.format("#0.00", $entry.currDelCharge)</td>
+						<td width="120" align="center" >$ctx.numberTool.format("#0.00", $entry.convenienceChargeApportion)</td>
                         
                       </tr>
                     </table></td>
@@ -117,7 +117,7 @@ width:100%;
               
              
               <tr>
-                <td>&nbsp;</td>
+                <td width="13">&nbsp;</td>
               </tr>
 			  <tr>
                 <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; padding:5px 0;font-weight:bold;">We hope you're happy with your order. If not,  <a href="https://www.tatacliq.com" style="color:#AA133D"><strong>click here.</strong></a>
