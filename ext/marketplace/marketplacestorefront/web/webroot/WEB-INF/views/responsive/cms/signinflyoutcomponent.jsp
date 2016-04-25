@@ -26,7 +26,7 @@
 	
 
 			<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-			<%-- <c:set var="maxNumberChars" value="25" />
+				<%-- <c:set var="maxNumberChars" value="25" />
 				<c:if test="${fn:length(user.firstName) gt maxNumberChars}">
 					<c:set target="${user}" property="firstName"
 						value="${fn:substring(user.firstName, 0, maxNumberChars)}..." />
@@ -35,14 +35,14 @@
 				<li class="logged_in dropdown ajaxloginhi" >
 				<span class="material-icons">&#xE8A6;</span>
 				<ycommerce:testId code="header_LoggedUser">
-					<%-- <c:set var="userName" value="${user.firstName}"/>
-						<c:if test="${not empty userName}">
+					<c:set var="userName" value="${user.firstName}"/>
+						<%-- <c:if test="${not empty userName}">
 							<c:choose>
 								<c:when test="${!fn:contains(userName, '@')}">
 									<c:choose>
 										<c:when test="${fn:contains(userName, 'Anonymous')}">
-											<a href="<c:url value="/logout"/>"><spring:theme
-											
+											<a href="<c:url value="/logout"/>"
+												class=""><spring:theme
 													code="header.hi.blank" arguments="${userName}"
 													htmlEscape="true" />!</a>
 										</c:when>
@@ -60,119 +60,15 @@
 								</c:otherwise>
 							</c:choose>
 						</c:if>
-						<c:if test="${empty userName}">
+						<c:if test="${empty userName}"> --%>
 							<a href="<c:url value="/my-account"/>"
-								class="account-userTitle account-userTitle-custom"><spring:theme
+								class="headeruserdetails account-userTitle account-userTitle-custom"><spring:theme
 									code="header.hi.blank" arguments="${userName}" htmlEscape="true" />!</a>
-						</c:if> --%>
-						<a href="<c:url value="/my-account"/>"
-												class="headeruserdetails account-userTitle account-userTitle-custom"></a>
+						<%-- </c:if> --%>
 						<span id="mobile-menu-toggle"></span>
 					</ycommerce:testId>
-					<c:if test="${empty userName}">
 						<ul class="dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout" role="menu">
-	
-							<li class="header-myAccount"><spring:theme
-									code="header.flyout.myaccount" /></li>
-	
-							<li><a href="<c:url value="/my-account/"/>"><spring:theme
-										code="header.flyout.overview" /></a></li>
-							
-							<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-										code="header.flyout.marketplacepreferences" /></a></li>
-	
-							<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
-										code="header.flyout.Personal" /></a></li>
-	
-							<li><a href="<c:url value="/my-account/orders"/>"><spring:theme
-										code="header.flyout.orders" /></a></li>
-	
-							<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
-										code="header.flyout.cards" /></a></li>
-	
-							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
-										code="header.flyout.address" /></a></li>
-	<!-- Release 2 changes -->
-						<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
-										code="header.flyout.review" /></a></li> 
-										
-							<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-										code="header.flyout.myInterest" /></a></li>
-							
-							
-							 <li class="header-SignInShare"><spring:theme
-									code="header.flyout.credits" /></li>
-
-						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li> 
-							 
-							<li class="header-SignInShare"><spring:theme
-									code="header.flyout.share" /></li>
-	
-							<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
-										code="header.flyout.invite" /></a></li>
-											<!-- For Infinite Analytics Start -->
-												<li><div class="ia_cat_recent" id="ia_categories_recent"></div></li>
-											<!-- For Infinite Analytics End -->
-							<li><ycommerce:testId code="header_signOut">
-									<u><a href="<c:url value='/logout'/>"  class="header-myAccountSignOut"> <spring:theme
-											code="header.link.logout" />
-									</a></u>
-								</ycommerce:testId>
-							</li>
 						</ul>
-					</c:if>
-					<c:if test="${not empty userName && !fn:contains(userName, 'Anonymous')}">
-						<ul class="dropdown-menu dropdown-hi loggedIn-flyout" role="menu">
-	
-							<li class="header-myAccount"><spring:theme
-									code="header.flyout.myaccount" /></li>
-	
-							<li><a href="<c:url value="/my-account/"/>"><spring:theme
-										code="header.flyout.overview" /></a></li>
-							
-							<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-										code="header.flyout.marketplacepreferences" /></a></li>
-	
-							<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
-										code="header.flyout.Personal" /></a></li>
-	
-							<li><a href="<c:url value="/my-account/orders"/>"><spring:theme
-										code="header.flyout.orders" /></a></li>
-	
-							<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
-										code="header.flyout.cards" /></a></li>
-	
-							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
-										code="header.flyout.address" /></a></li>
-	
-						<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
-										code="header.flyout.review" /></a></li> 
-
-										
-							<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-										code="header.flyout.myInterest" /></a></li>
-							
-											<li class="header-SignInShare"><spring:theme
-									code="header.flyout.credits" /></li>
-
-						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li> 
-									
-							<li class="header-SignInShare"><spring:theme
-									code="header.flyout.share" /></li>
-	
-							<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
-										code="header.flyout.invite" /></a></li>
-										
-							<li><ycommerce:testId code="header_signOut">
-									<u><a href="<c:url value='/logout'/>"  class="header-myAccountSignOut"> <spring:theme
-											code="header.link.logout" />
-									</a></u>
-								</ycommerce:testId>
-							</li>
-						</ul>
-					</c:if>
 				</li>
 			</sec:authorize>
 
@@ -182,7 +78,7 @@
 				<div class="content">
 				<div class="right">
 					<ul>
-						<li class="dropdown sign-in-dropdown sign-in ajaxloginhi" >
+						<li class="dropdown sign-in-dropdown sign-in ajaxloginhi">
 						<span class="material-icons">&#xE8A6;</span>
 						<ycommerce:testId
 						code="header_Login_link">
@@ -191,9 +87,7 @@
 								code="header.link.flylogin" /> --%></a>
 					</ycommerce:testId>
 
-							<ul class="sign-in-info signin-dropdown-body ajaxflyout" id="signIn">								<li><spring:theme code="header.flyout.message" /></li>
-					
-	
+							<ul class="sign-in-info signin-dropdown-body ajaxflyout" id="signIn">
 							</ul></li>
 					</ul>
 				</div></div>

@@ -1,9 +1,9 @@
-$(document).ready(function(){
+/*$(document).ready(function(){
 	//var isAjaxCalled = false;
 	
 
 
-	/*$("#socialLogin").hover(function(e){
+	$("#socialLogin").hover(function(e){
 		//if(isAjaxCalled == false){
 			$.ajax({
 				"url":"/store/mpl/en/login/sociallogin",
@@ -24,11 +24,11 @@ $(document).ready(function(){
 
 		//isAjaxCalled = true;
 		
-	});*/
+	});
 
 	//ajax spring login authentication
 
-	/*$("#triggerLoginAjax").on('click touch',function(){
+	$("#triggerLoginAjax").on('click touch',function(){
 		
 	var emailPattern=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 	if($("input[name=j_username]").val() == ""){
@@ -97,7 +97,7 @@ $(document).ready(function(){
 				$("#triggerLoginAjax").click();
 			}
 		}
-	});*/
+	});
 
 	
 	$(".header-myAccountSignOut").click(function(){
@@ -127,4 +127,4 @@ $(document).ready(function(){
 		}  
 	}
 
-});
+});*/

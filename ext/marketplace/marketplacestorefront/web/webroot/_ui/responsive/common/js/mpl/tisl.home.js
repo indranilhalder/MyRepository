@@ -161,6 +161,23 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
 		}
 	});
 });
+
+
+
+
+$("li.ajaxloginhi").on("mouseover touchend", function(e) {
+    e.stopPropagation();
+	if ($("ul.ajaxflyout").html().trim().length <= 0) {
+		$.ajax({
+			url: ACC.config.encodedContextPath + "/headerloginhi",
+			type: 'GET',
+			success: function (html)
+			{
+				$("ul.ajaxflyout").html(html);
+			}
+		});
+	}
+});
 //
 
 var activePos = 0;
