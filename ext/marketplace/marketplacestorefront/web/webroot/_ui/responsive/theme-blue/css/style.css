@@ -30951,6 +30951,9 @@ line-height: normal;
     margin: auto;
     width: 100%;
     text-align: center;
+        top: 60px;
+    transform: none;
+    height: 100%;
  }
  body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-header-italic{
         font-size: 102px;
@@ -31054,6 +31057,34 @@ text-align:center;
  body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncomponent>div{
  width:49%;
  }
+}
+@media(max-width:1080px) and (min-width:1052px){
+body.template-pages-layout-errorPageTemplate .hero .major-promos {
+    top: 30px;
+}
+}
+@media(max-width:1051px) and (min-width:791px){
+body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:last-child {
+    width: 40%;
+}
+}
+@media(max-width:1051px) and (min-width:791px){
+body.template-pages-layout-errorPageTemplate .hero .major-promos {
+    top: 0px;
+}
+}
+@media(max-width:880px) and (min-width:791px){
+body.template-pages-layout-errorPageTemplate .hero .major-promos a.button {
+    margin-top: 20px;
+}
+}
+@media(max-width:835px) and (min-width:791px){
+body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:last-child {
+    width: 50%;
+}
+body.template-pages-layout-errorPageTemplate .hero .major-promos a.button {
+    margin-top: 10px;
+}
 }
  /*404 error page css ends*/
 /*--------------maincss-----------*/
@@ -37256,8 +37287,8 @@ span.mini-cart-close {
 
 /*error page template css starts*/
 .error-template-message {
-	margin-top: 5px;
-	border-top: 2px solid #979797;
+/* 	margin-top: 5px;
+	border-top: 2px solid #979797; */
 }
 
 .error-template-message .error_container>ul {
@@ -37316,12 +37347,12 @@ span.mini-cart-close {
 }
 
 @media ( max-width : 650px) {
-	.error-template-message {
+/* 	.error-template-message {
 		width: calc(100% - 30px);
 		width: -webkit-calc(100% - 30px);
 		margin: auto;
 		padding-bottom:50px;
-	}
+	} */
 	.error-template-message .error_container ul li.left_col,
 		.error-template-message .error_container ul li.right_col {
 		width: calc(100% - 30px);
