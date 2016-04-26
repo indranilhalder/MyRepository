@@ -30867,6 +30867,12 @@ line-height: normal;
     font-size:14px;
     }
  }
+ul.less-stock li {
+ 	font-size: 12px;
+    color: #ff1c47;
+    padding: 10px;
+    line-height: 14px;
+ }
 /*--------------maincss-----------*/
 .row
 {
