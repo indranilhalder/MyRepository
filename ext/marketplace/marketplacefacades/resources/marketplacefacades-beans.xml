@@ -827,4 +827,8 @@
 		<property name="transactionId" type="String"></property>
 	</bean>
 
+	<bean class="de.hybris.platform.commercefacades.order.data.PromotionOrderEntryConsumedData">
+		<property name="ussid" type="String"/>
+	</bean>
+	
 </beans>
