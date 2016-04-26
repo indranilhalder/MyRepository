@@ -819,6 +819,9 @@ display:none;
 													code="pdp.delisted.message" />
 											</span>
 											<button id="addToCartButton-wrong" type="button" class="btn-block" disable="true" style="display: block;"><spring:theme code="basket.add.to.basket" /></button>
+											<script>
+         										$('.wish-share').css('visibility','hidden');
+    										</script>
 										</c:when>
 										<c:otherwise>
 											<button id="addToCartButton" type="${buttonType}"
