@@ -1207,9 +1207,9 @@ $("#otpMobileNUMField").focus(function(){
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
 		
-		if($(".redirect").val()=="false"){
-			Juspay.startSecondFactor();
-		}
+		//if($(".redirect").val()=="false"){
+			//Juspay.startSecondFactor();
+		//}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
 			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping},
@@ -1238,34 +1238,39 @@ $("#otpMobileNUMField").focus(function(){
 					$("#no-click").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}else{
-//					if($(".redirect").val()=="false"){
-//						//Juspay.startSecondFactor();
-//					}
-					$("#order_id_saved").val(response);
-					var baseUrl=window.location.origin;
-					var website = ACC.config.encodedContextPath;
-					var thank_you_page = /*(website.indexOf("https") > -1 ? "" : "https://") +*/ baseUrl+website + "/checkout/multi/payment-method/cardPayment";
-					var error_page = /*(website.indexOf("https") > -1 ? "" : "https://") +*/ baseUrl+website + "/checkout/multi/payment-method/cardPayment";
-					Juspay.Setup({
-						payment_form: "#card_form",
-						success_handler: function(status, statusObj) {
-							//redirect to success page
-							var p = "order_id=" + statusObj.orderId
-							p = p + "&status=" + statusObj.status 
-							p = p + "&status_id=" + statusObj.statusId
-							window.location.href = thank_you_page
-						},
-						error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
-							//redirect to failure page
-							//alert("Transaction not successful. Error: " + bank_error_message)
-							window.location.href = error_page
-						},
-						second_factor_window_closed_handler: function() {
-						    // enable the pay button for the user
-							window.location.href = error_page
-						}
-					})
-					$("#card_form").submit() 
+					if($(".redirect").val()=="false"){
+						Juspay.startSecondFactor();
+				    } 
+					setTimeout(function(){ 	
+						$("#order_id_saved").val(response);
+						var baseUrl=window.location.origin;
+						var website = ACC.config.encodedContextPath;
+						var thank_you_page = /*(website.indexOf("https") > -1 ? "" : "https://") +*/ baseUrl+website + "/checkout/multi/payment-method/cardPayment";
+						var error_page = /*(website.indexOf("https") > -1 ? "" : "https://") +*/ baseUrl+website + "/checkout/multi/payment-method/cardPayment";
+						Juspay.Setup({
+							payment_form: "#card_form",
+							success_handler: function(status, statusObj) {
+								//redirect to success page
+								var p = "order_id=" + statusObj.orderId
+								p = p + "&status=" + statusObj.status 
+								p = p + "&status_id=" + statusObj.statusId
+								window.location.href = thank_you_page
+							},
+							error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
+								//redirect to failure page
+								//alert("Transaction not successful. Error: " + bank_error_message)
+								window.location.href = error_page
+							},
+							second_factor_window_closed_handler: function() {
+							    // enable the pay button for the user
+								window.location.href = error_page
+							}
+						})
+						$("#card_form").submit(); 		
+						
+					 }, 1000);
+			
+
 				}
 			},
 			error : function(resp) {
@@ -1321,9 +1326,9 @@ $("#otpMobileNUMField").focus(function(){
 			var sameAsShipping = false;
 		}
 		
-		if($(".redirect").val()=="false"){
-			Juspay.startSecondFactor();
-		}
+		//if($(".redirect").val()=="false"){
+			//Juspay.startSecondFactor();
+		//}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
 			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping},
@@ -1347,12 +1352,15 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay .spinner").remove();
 					$("#no-click").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
-				}else{
-//					if($(".redirect").val()=="false"){
-//						Juspay.startSecondFactor();
-//					}
-					$("#order_id_new").val(response);
-					submitCardForm();				
+				}else{					
+					 if($(".redirect").val()=="false"){
+						Juspay.startSecondFactor();
+				     } 		 
+					 setTimeout(function(){ 			 
+						  $("#order_id_new").val(response);
+						  submitCardForm();		 
+					 }, 1000);
+			
 				}
 			},
 			error : function(resp) {
