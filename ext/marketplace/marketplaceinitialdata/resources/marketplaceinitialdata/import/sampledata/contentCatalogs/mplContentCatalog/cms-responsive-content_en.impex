@@ -1935,3 +1935,27 @@ UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];banne
 ;;ErrorPageBannerComponent;TMP_ErrorPageBanner.png;"<span class='major-promo-header-italic'>DANG!</span>
                   <span class='major-promo-description'><p>YOU JUST BROKE THE INTERNET</p><p>Dust yourself and ride into the sunset on our super-hero camel</p></span>
                           <a href='http://localhost:9001/store/' class='button'>BACK TO THE HOMEPAGE</a>";
+
+                          
+#CMSLinkComponent
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang];category(code, $productCV);
+;;BCLink11;Women's Apparel;MPH1110;
+;;BCLink12;Apparel;MPH11;
+;;BCLink13;Formal shirt;MPH1111100100;
+;;BCLink14;Formal suits;MPH1111100102;
+;;BCLink15;Kids Apparel;MPH1112;
+;;BCLink21;Formal shirt;MPH1111100100;
+;;BCLink22;Women's Apparel;MPH1110;
+;;BCLink23;Kids Apparel;MPH1112;
+;;BCLink24;Formal suits;MPH1111100102;
+;;BCLink25;Apparel;MPH11;
+;;BCLink31;Apparel;MPH11;
+;;BCLink32;Formal suits;MPH1111100102;
+;;BCLink33;Kids Apparel;MPH1112;
+;;BCLink34;Women's Apparel;MPH1110;
+;;BCLink35;Formal shirt;MPH1111100100;
+;;BCLink41;Formal suits;MPH1111100102;
+;;BCLink42;Apparel;MPH11;
+;;BCLink43;Formal shirt;MPH1111100100;
+;;BCLink44;Women's Apparel;MPH1110;
+;;BCLink45;Kids Apparel;MPH1112;
