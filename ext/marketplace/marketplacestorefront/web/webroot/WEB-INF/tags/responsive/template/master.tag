@@ -13,6 +13,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="htmlmeta" uri="http://hybris.com/tld/htmlmeta"%>
 <%@ taglib prefix="tealium" tagdir="/WEB-INF/tags/addons/tealiumIQ/shared/analytics" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
@@ -30,6 +31,45 @@
 	
 	<!-- Tag for Google Webmaster Tool Verification -->
 	<meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU" />
+	
+	
+	<c:set var="host" value="${header.host}"/>
+	<c:set var="pageURL" value="${pageContext.request.requestURL}"/>
+	<c:set var="protocolString" value="${fn:split(pageURL, '://')}"/>
+	<c:set var="baseURL" value="${protocolString[0]}://${host}"/>
+	
+	<!-- Canonical Tag -->
+	<link rel="canonical" href="${baseURL}${requestScope['javax.servlet.forward.request_uri']}" />
+	
+	<c:forEach items="${metatags}" var="metatagItem">
+		<c:if test="${metatagItem.name eq 'title'}">
+			<c:set var="metaTitle" value="${metatagItem.content}"/>
+		</c:if>
+		<c:if test="${metatagItem.name eq 'description'}">
+			<c:set var="metaDescription" value="${metatagItem.content}"/>
+		</c:if>
+	</c:forEach>
+	
+	
+	<!-- Markup for Google+ -->
+	<meta itemprop="name" content="${metaTitle}">
+	<meta itemprop="description" content="${metaDescription}">
+	<meta itemprop="image" content=""><!-- Image URL of the brand - 470x256 -->
+	
+	<!-- Twitter Card data -->
+	<meta name="twitter:card" content="${baseURL}/">
+	<meta name="twitter:site" content=""><!-- Twitter Handle Name -->
+	<meta name="twitter:title" content="${metaTitle}">
+	<meta name="twitter:description" content="${metaDescription}">
+	<meta name="twitter:image:src" content=""><!-- Image URL of the brand - 470x256 -->
+	
+	<!-- FB Open Graph data -->
+	<meta property="og:title" content="${metaTitle}" />
+	<meta property="og:url" content="${baseURL}${requestScope['javax.servlet.forward.request_uri']}" />
+	<meta property="og:image" content="" /><!-- Image URL of the brand - 470x256 -->
+	<meta property="og:description" content="${metaDescription}" />
+	<meta property="og:site_name" content="Tata CLiQ" />
+		
 	
 	<%-- Favourite Icon --%>
 	<spring:theme code="img.favIcon" text="/" var="favIconPath"/>
