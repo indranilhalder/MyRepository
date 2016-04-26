@@ -147,9 +147,9 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SearchBox;;;searchbox
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
 ;NavigationBar;;;navigation
-;MiddleContent;;CMSParagraphComponent
+;MiddleContent;;AccountNavigationCollectionComponent;
 ;BottomContent;;;wide
-;SideContent;;MplBigPromoBannerComponent;narrow
+;SideContent;;MplBigPromoBannerComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
