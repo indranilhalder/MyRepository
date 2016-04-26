@@ -658,7 +658,8 @@ function makeProductHtml(widgetElement, obj, rid) {
 		  else if(obj.price != null && parseInt(obj.price) > parseInt(obj.discounted_price) && parseInt(obj.price) > 0){
 			  html += '<p class="old moprice">₹'+parseInt(obj.price)+'</p>';
 		  }
-		  html += '<p class="normal discprice">₹'+parseInt(obj.discounted_price)+'</p>';
+		  //TISPRO-317 changes
+		  html += '<p class="sale discprice">₹'+parseInt(obj.discounted_price)+'</p>';
 	  }
 	  }
 	  else if(Math.round(obj.original_price) == (obj.price)){
