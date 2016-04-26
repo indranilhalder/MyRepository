@@ -11932,6 +11932,9 @@ body .account .right-account .order-history .pagination li{
 .reviews {
     background-color: #fff;
 }
+#ReviewSecion.reviews *{
+	font-family: "Montserrat" !important;
+}
 .reviews .account-only {
     display: none
 }
@@ -11947,7 +11950,8 @@ body .account .right-account .order-history .pagination li{
     text-align: center;
     font-size: 28px;
     padding: 40px 0 20px;
-    font-weight: 500
+    font-weight: 500;
+    font-family: "Montserrat";
 }
 .reviews .header p {
     text-align: center;
