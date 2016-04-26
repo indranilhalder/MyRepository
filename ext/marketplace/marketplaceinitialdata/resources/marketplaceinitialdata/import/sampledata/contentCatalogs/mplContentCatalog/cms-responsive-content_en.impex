@@ -1959,3 +1959,6 @@ UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$
 ;;BCLink43;Formal shirt;MPH1111100100;
 ;;BCLink44;Women's Apparel;MPH1110;
 ;;BCLink45;Kids Apparel;MPH1112;
+
+UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];title;
+;BrowseCategoryNavNode1;;Browse Category;
