@@ -17,13 +17,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.SocketAddress;
-import java.net.URL;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +25,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.util.TextUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -41,11 +34,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-//import com.google.api.client.util.Charsets;
-import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
-import com.granule.json.JSONException;
-import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.enums.Frequency;
@@ -63,6 +51,9 @@ import com.tisl.mpl.wsdto.FetchCategoryBrandWsDTO;
 import com.tisl.mpl.wsdto.FetchNewsLetterSubscriptionWsDTO;
 import com.tisl.mpl.wsdto.FetchNewsLetterWsDTO;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
+
+
+//import com.google.api.client.util.Charsets;
 
 
 /**
@@ -114,8 +105,10 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	private ExtendedUserService extUserService;
 	@Autowired
 	MplUserHelper mplUserHelper;
-	private static final String n = "\n";
+	//	private static final String n = "\n";
 	private static final Logger LOG = Logger.getLogger(MplMobileUserServiceImpl.class);
+
+	private String gigyaUID;
 
 	/**
 	 * Register new user
@@ -326,8 +319,10 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws EtailNonBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	private MplUserResultWsDto registerNewUserSocial(final String login, final String socialMediaType)
-			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
+	//	private MplUserResultWsDto registerNewUserSocial(final String login, final String socialMediaType)
+	//			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
+	private MplUserResultWsDto registerNewUserSocial(final String login, final String socialMediaType, final String uid)
+			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions, UnsupportedEncodingException
 	{
 		final MplUserResultWsDto result = new MplUserResultWsDto();
 		boolean successFlag = false;
@@ -335,6 +330,12 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		final ExtRegisterData registration = new ExtRegisterData();
 		registration.setLogin(login);
 		registration.setSocialMediaType(socialMediaType);
+		if (StringUtils.isNotEmpty(uid))
+		{
+			final String decodedUid = java.net.URLDecoder.decode(uid, "UTF-8");
+			setGigyaUID(decodedUid);
+		}
+		registration.setUid(getGigyaUID());
 		LOG.debug("*************** Mobile web service social media registration ***********" + login + socialMediaType);
 		try
 		{
@@ -484,17 +485,29 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	/**
 	 * login via FB
 	 *
-	 * @param accessToken
 	 * @param login
 	 * @return MplUserResultWsDto
 	 */
 	@Override
-	public MplUserResultWsDto loginSocialFbUser(final String accessToken, final String login)
+	//public MplUserResultWsDto loginSocialFbUser(final String accessToken, final String login)
+	public MplUserResultWsDto loginSocialFbUser(final String login, final String uid) throws UnsupportedEncodingException
 	{
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		String result = null;
 		UserDetails userDetails = null;
 		boolean successflag = false;
+
+		ExtRegisterData data = new ExtRegisterData();
+		data.setLogin(login);
+		data.setSocialMediaType(MarketplacewebservicesConstants.FACEBOOK);
+
+		if (StringUtils.isNotEmpty(uid))
+		{
+			final String decodedUid = java.net.URLDecoder.decode(uid, "UTF-8");
+			setGigyaUID(decodedUid);
+		}
+		data.setUid(getGigyaUID());
+
 		final MplUserResultWsDto validatedResult = mplUserHelper.validateEmail(login);
 		if (null != validatedResult.getStatus()
 				&& validatedResult.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
@@ -503,23 +516,45 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		}
 		try
 		{
-			boolean acesstokenforemail = false;
-			acesstokenforemail = validateFacebookTokenwithEmailId(accessToken, login);
-			if (!acesstokenforemail
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_EMAIL_TOKEN_ERROR))
-			{ //Throw error if social media token does not match with the emailId
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9019);
-			}
-			else
+			//boolean acesstokenforemail = false;
+			//	acesstokenforemail = validateFacebookTokenwithEmailId(accessToken, login);
+			//	if (!acesstokenforemail
+			//			&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_EMAIL_TOKEN_ERROR))
+			//	{ //Throw error if social media token does not match with the emailId
+			//		throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9019);
+			//	}
+			//	else
+			//	{
+			//Check if the user exists in the system with login
+			//				userDetails = retrieveUserforMarketplace(login);
+			//				LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + userDetails);
+			//				result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
+			//				if (null != login && null != getCustomerId(login))
+			//				{
+			//					output.setCustomerId(getCustomerId(login));
+			//				}
+			//			}
+
+			final boolean isMobile = true;
+			data = registerCustomerFacade.registerSocial(data, isMobile);
+
+			if (null != data)
 			{
-				//Check if the user exists in the system with login
 				userDetails = retrieveUserforMarketplace(login);
 				LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + userDetails);
-				result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
-				if (null != login && null != getCustomerId(login))
-				{
-					output.setCustomerId(getCustomerId(login));
-				}
+			}
+			result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
+			if (null != login && null != getCustomerId(login))
+			{
+				output.setCustomerId(getCustomerId(login));
+			}
+			if (null != data && null != data.getGigyaSessionsForMob() && null != data.getGigyaSessionsForMob().getSessionSecret())
+			{
+				output.setSessionSecret(data.getGigyaSessionsForMob().getSessionSecret());
+			}
+			if (null != data && null != data.getGigyaSessionsForMob() && null != data.getGigyaSessionsForMob().getSessionToken())
+			{
+				output.setSessionToken(data.getGigyaSessionsForMob().getSessionToken());
 			}
 		}
 		catch (final UsernameNotFoundException notFound)
@@ -590,16 +625,28 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * Social login--- Google Plus.. input is only login since password was not sent back to Mobile
 	 *
 	 * @param login
-	 * @param accessToken
 	 * @return MplUserResultWsDto
 	 */
 	@Override
-	public MplUserResultWsDto loginSocialGoogleUser(final String accessToken, final String login, final String userId)
+	//	public MplUserResultWsDto loginSocialGoogleUser(final String accessToken, final String login, final String userId)
+	public final MplUserResultWsDto loginSocialGoogleUser(final String login, final String uid)
+			throws UnsupportedEncodingException
 	{
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		String result = null;
 		UserDetails userDetails = null;
 		boolean successflag = false;
+		ExtRegisterData data = new ExtRegisterData();
+
+		data.setLogin(login);
+		data.setSocialMediaType(MarketplacewebservicesConstants.GOOGLEPLUS);
+		if (StringUtils.isNotEmpty(uid))
+		{
+			final String decodedUid = java.net.URLDecoder.decode(uid, "UTF-8");
+			setGigyaUID(decodedUid);
+		}
+		data.setUid(getGigyaUID());
+
 		final MplUserResultWsDto validatedResult = mplUserHelper.validateEmail(login);
 		if (null != validatedResult.getStatus()
 				&& validatedResult.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
@@ -608,23 +655,44 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		}
 		try
 		{
-			boolean acesstokenforemail = false;
-			acesstokenforemail = validateGoogleTokenwithEmailId(accessToken, userId);
-			if (!acesstokenforemail
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_EMAIL_TOKEN_ERROR))
-			{ //Throw error if social media token does not match with the emailId
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9019);
-			}
-			else
+			//			boolean acesstokenforemail = false;
+			//			acesstokenforemail = validateGoogleTokenwithEmailId(accessToken, userId);
+			//			if (!acesstokenforemail
+			//					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_EMAIL_TOKEN_ERROR))
+			//			{ //Throw error if social media token does not match with the emailId
+			//				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9019);
+			//			}
+			//			else
+			//			{
+			//Check if the user exists in the system with login
+			userDetails = retrieveUserforMarketplace(login);
+			LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + userDetails);
+			successflag = true;
+
+			final boolean isMobile = true;
+			//				if (null != login && null != getCustomerId(login))
+			//				{
+			//					output.setCustomerId(getCustomerId(login));
+			//				}
+
+			data = registerCustomerFacade.registerSocial(data, isMobile);
+			if (null != data)
 			{
-				//Check if the user exists in the system with login
 				userDetails = retrieveUserforMarketplace(login);
 				LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + userDetails);
-				successflag = true;
-				if (null != login && null != getCustomerId(login))
-				{
-					output.setCustomerId(getCustomerId(login));
-				}
+			}
+			if (null != data && null != data.getGigyaSessionsForMob() && null != data.getGigyaSessionsForMob().getSessionSecret())
+			{
+				output.setSessionSecret(data.getGigyaSessionsForMob().getSessionSecret());
+			}
+			if (null != data && null != data.getGigyaSessionsForMob() && null != data.getGigyaSessionsForMob().getSessionToken())
+			{
+				output.setSessionToken(data.getGigyaSessionsForMob().getSessionToken());
+			}
+
+			if (null != login && null != getCustomerId(login))
+			{
+				output.setCustomerId(getCustomerId(login));
 			}
 		}
 		catch (final UsernameNotFoundException notFound)
@@ -699,32 +767,32 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws EtailNonBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	private boolean validateFacebookTokenwithEmailId(final String accessToken, final String emailId)
-			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
-	{
-		String fbemail = null;
-		String graph = null;
-		graph = getFBGraph(accessToken);
-		fbemail = getGraphData(graph);
-		boolean acesstokenforemail = false;
-		//Comparing the entered emailId by mobile and emailId parsed for graph of the token
-		if (!StringUtils.isEmpty(fbemail) && !StringUtils.isEmpty(graph) && StringUtils.equalsIgnoreCase(emailId, fbemail))
-		{
-			acesstokenforemail = true;
-		}
-
-		return acesstokenforemail;
-	}
+	//	private boolean validateFacebookTokenwithEmailId(final String accessToken, final String emailId)
+	//			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
+	//	{
+	//		String fbemail = null;
+	//		String graph = null;
+	//		graph = getFBGraph(accessToken);
+	//		fbemail = getGraphData(graph);
+	//		boolean acesstokenforemail = false;
+	//		//Comparing the entered emailId by mobile and emailId parsed for graph of the token
+	//		if (!StringUtils.isEmpty(fbemail) && !StringUtils.isEmpty(graph) && StringUtils.equalsIgnoreCase(emailId, fbemail))
+	//		{
+	//			acesstokenforemail = true;
+	//		}
+	//
+	//		return acesstokenforemail;
+	//	}
 
 	/**
 	 * Validate access token then invoke social Registration -- Facebook
 	 *
-	 * @param accessToken
 	 * @param emailId
 	 * @return MplUserResultWsDto
 	 */
 	@Override
-	public MplUserResultWsDto socialFbRegistration(final String accessToken, final String emailId)
+	//	public MplUserResultWsDto socialFbRegistration(final String accessToken, final String emailId)
+	public MplUserResultWsDto socialFbRegistration(final String emailId, final String uid)
 	{
 		boolean successflag = false;
 		MplUserResultWsDto socialRegister = new MplUserResultWsDto();
@@ -736,13 +804,15 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		}
 		try
 		{
-			boolean acesstokenforemail = false;
+			//	boolean acesstokenforemail = false;
 			// validate socialMediaToken with facebook
-			acesstokenforemail = validateFacebookTokenwithEmailId(accessToken, emailId);
+			//	acesstokenforemail = validateFacebookTokenwithEmailId(accessToken, emailId);
 			//once token is verified by social media register the user
-			if (acesstokenforemail && !StringUtils.isEmpty(emailId))
+			//	if (acesstokenforemail && !StringUtils.isEmpty(emailId))
+			if (!StringUtils.isEmpty(emailId))
 			{
-				socialRegister = registerNewUserSocial(emailId, MarketplacecommerceservicesConstants.FACEBOOK);
+				//socialRegister = registerNewUserSocial(emailId, MarketplacecommerceservicesConstants.FACEBOOK);
+				socialRegister = registerNewUserSocial(emailId, MarketplacecommerceservicesConstants.FACEBOOK, uid);
 				if (!StringUtils.isEmpty(socialRegister.getStatus())
 						&& socialRegister.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
 				{
@@ -812,26 +882,28 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	/**
 	 * Validate access token then invoke social Registration -- Google
 	 *
-	 * @param accessToken
 	 * @param emailId
-	 * @param socialUserId
 	 * @return MplUserResultWsDto
 	 */
 	@Override
-	public MplUserResultWsDto socialGoogleRegistration(final String accessToken, final String emailId, final String socialUserId)
+	//	public MplUserResultWsDto socialGoogleRegistration(final String accessToken, final String emailId, final String socialUserId)
+	public MplUserResultWsDto socialGoogleRegistration(final String emailId, final String uid)
 	{
 		boolean successflag = false;
 		MplUserResultWsDto socialRegister = new MplUserResultWsDto();
 		try
 		{
 			socialRegister = mplUserHelper.validateEmail(emailId);
-			boolean acesstokenforemail = false;
+			//boolean acesstokenforemail = false;
 			// validate socialMediaToken with google plus
-			acesstokenforemail = validateGoogleTokenwithEmailId(accessToken, socialUserId);
+			//	acesstokenforemail = validateGoogleTokenwithEmailId(accessToken, socialUserId);
 			//once token is verified by social media register the user
-			if (acesstokenforemail && !StringUtils.isEmpty(emailId))
+			//			if (acesstokenforemail && !StringUtils.isEmpty(emailId))
+			if (!StringUtils.isEmpty(emailId))
 			{
-				socialRegister = registerNewUserSocial(emailId, MarketplacecommerceservicesConstants.GOOGLE);
+				//socialRegister = registerNewUserSocial(emailId, MarketplacecommerceservicesConstants.GOOGLE);
+				socialRegister = registerNewUserSocial(emailId, MarketplacecommerceservicesConstants.GOOGLE, uid);
+
 				if (!StringUtils.isEmpty(socialRegister.getStatus())
 						&& socialRegister.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
 				{
@@ -900,22 +972,22 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws EtailNonBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	private boolean validateGoogleTokenwithEmailId(final String accessToken, final String socialUserId)
-			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
-
-	{
-		String actualGoogleUserid = null;
-		actualGoogleUserid = getGoogleAuthEmail(accessToken);
-		boolean acesstokenforUserId = false;
-		//Comparing the entered emailId by mobile and emailId parsed for google oauth token
-		if (!StringUtils.isEmpty(actualGoogleUserid) && !StringUtils.isEmpty(socialUserId)
-				&& StringUtils.equalsIgnoreCase(socialUserId, actualGoogleUserid))
-		{
-			acesstokenforUserId = true;
-		}
-
-		return acesstokenforUserId;
-	}
+	//	private boolean validateGoogleTokenwithEmailId(final String accessToken, final String socialUserId)
+	//			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
+	//
+	//	{
+	//		String actualGoogleUserid = null;
+	//		actualGoogleUserid = getGoogleAuthEmail(accessToken);
+	//		boolean acesstokenforUserId = false;
+	//		//Comparing the entered emailId by mobile and emailId parsed for google oauth token
+	//		if (!StringUtils.isEmpty(actualGoogleUserid) && !StringUtils.isEmpty(socialUserId)
+	//				&& StringUtils.equalsIgnoreCase(socialUserId, actualGoogleUserid))
+	//		{
+	//			acesstokenforUserId = true;
+	//		}
+	//
+	//		return acesstokenforUserId;
+	//	}
 
 	/**
 	 * Obtaining the email id for a google oauth token
@@ -923,49 +995,49 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @param socialMediaToken
 	 * @return String
 	 */
-	private String getGoogleAuthEmail(final String socialMediaToken)
-	{
-
-		String actualGoogleUserId = null;
-		try
-		{
-			final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
-					MarketplacewebservicesConstants.PROXYENABLED);
-			final String configuration = getConfigurationService().getConfiguration().getString(
-					MarketplacewebservicesConstants.SOCIAL_GOOGLEAPI_ME_INFO)
-					+ socialMediaToken;
-			final URL googleurl = new URL(configuration);
-			HttpURLConnection urlConnection = null;
-			//Proxy added
-			if (proxyEnableStatus.equalsIgnoreCase("true"))
-			{
-				final SocketAddress addr = new InetSocketAddress(getConfigurationService().getConfiguration().getString(
-						MarketplacewebservicesConstants.SOCIAL_DEV_LOGIN_PROXY), Integer.parseInt(getConfigurationService()
-						.getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_DEV_LOGIN_PROXY_PORT)));
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				urlConnection = (HttpURLConnection) googleurl.openConnection(proxy);
-			}
-			else
-			{
-				urlConnection = (HttpURLConnection) googleurl.openConnection();
-			}
-
-			final String content = CharStreams.toString(new InputStreamReader(urlConnection.getInputStream(), Charsets.UTF_8));
-			if (!TextUtils.isEmpty(content))
-			{
-				final JSONObject response = new JSONObject(content);
-				if (null != response.get(MarketplacewebservicesConstants.SOCIAL_GOOGLE_USERID))
-				{
-					actualGoogleUserId = (String) response.get(MarketplacewebservicesConstants.SOCIAL_GOOGLE_USERID);
-				}
-			}
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9016);
-		}
-		return actualGoogleUserId;
-	}
+	//	private String getGoogleAuthEmail(final String socialMediaToken)
+	//	{
+	//
+	//		String actualGoogleUserId = null;
+	//		try
+	//		{
+	//			final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
+	//					MarketplacewebservicesConstants.PROXYENABLED);
+	//			final String configuration = getConfigurationService().getConfiguration().getString(
+	//					MarketplacewebservicesConstants.SOCIAL_GOOGLEAPI_ME_INFO)
+	//					+ socialMediaToken;
+	//			final URL googleurl = new URL(configuration);
+	//			HttpURLConnection urlConnection = null;
+	//			//Proxy added
+	//			if (proxyEnableStatus.equalsIgnoreCase("true"))
+	//			{
+	//				final SocketAddress addr = new InetSocketAddress(getConfigurationService().getConfiguration().getString(
+	//						MarketplacewebservicesConstants.SOCIAL_DEV_LOGIN_PROXY), Integer.parseInt(getConfigurationService()
+	//						.getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_DEV_LOGIN_PROXY_PORT)));
+	//				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+	//				urlConnection = (HttpURLConnection) googleurl.openConnection(proxy);
+	//			}
+	//			else
+	//			{
+	//				urlConnection = (HttpURLConnection) googleurl.openConnection();
+	//			}
+	//
+	//			final String content = CharStreams.toString(new InputStreamReader(urlConnection.getInputStream(), Charsets.UTF_8));
+	//			if (!TextUtils.isEmpty(content))
+	//			{
+	//				final JSONObject response = new JSONObject(content);
+	//				if (null != response.get(MarketplacewebservicesConstants.SOCIAL_GOOGLE_USERID))
+	//				{
+	//					actualGoogleUserId = (String) response.get(MarketplacewebservicesConstants.SOCIAL_GOOGLE_USERID);
+	//				}
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9016);
+	//		}
+	//		return actualGoogleUserId;
+	//	}
 
 	/**
 	 * Getting FB graph for a token Graph will contain the user details for the token
@@ -973,81 +1045,80 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @param accessToken
 	 * @return String
 	 */
-	private String getFBGraph(final String accessToken)
-	{
-		String graph = null;
-		try
-		{
-
-			final String config = getConfigurationService().getConfiguration().getString(
-					MarketplacewebservicesConstants.SOCIAL_FB_ME_INFO)
-					+ accessToken
-					+ getConfigurationService().getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_FBAPI_ME_FIELDS);
-			final URL fburl = new URL(config);
-			final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
-					MarketplacewebservicesConstants.PROXYENABLED);
-			HttpURLConnection htypConnection = null;
-			//proxy added
-			if (proxyEnableStatus.equalsIgnoreCase("true"))
-			{
-				final SocketAddress addr = new InetSocketAddress(getConfigurationService().getConfiguration().getString(
-						MarketplacewebservicesConstants.SOCIAL_LOGIN_PROXY), Integer.parseInt(getConfigurationService()
-						.getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_LOGIN_PROXY_PORT)));
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				htypConnection = (HttpURLConnection) fburl.openConnection(proxy);
-			}
-			else
-			{
-				htypConnection = (HttpURLConnection) fburl.openConnection();
-			}
-			if (null != htypConnection)
-			{
-				LOG.debug(MarketplacewebservicesConstants.FB_RESPONSE_CODE + htypConnection.getResponseCode());
-				final BufferedReader in = new BufferedReader(new InputStreamReader(htypConnection.getInputStream()));
-				String inputLine;
-				final StringBuffer b = new StringBuffer();
-				while ((inputLine = in.readLine()) != null)
-				{
-					b.append(inputLine + n);
-				}
-				in.close();
-				graph = b.toString();
-			}
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9018);
-		}
-		return graph;
-	}
+	//	private String getFBGraph(final String accessToken)
+	//	{
+	//		String graph = null;
+	//		try
+	//		{
+	//
+	//			final String config = getConfigurationService().getConfiguration().getString(
+	//					MarketplacewebservicesConstants.SOCIAL_FB_ME_INFO)
+	//					+ accessToken
+	//					+ getConfigurationService().getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_FBAPI_ME_FIELDS);
+	//			final URL fburl = new URL(config);
+	//			final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
+	//					MarketplacewebservicesConstants.PROXYENABLED);
+	//			HttpURLConnection htypConnection = null;
+	//			//proxy added
+	//			if (proxyEnableStatus.equalsIgnoreCase("true"))
+	//			{
+	//				final SocketAddress addr = new InetSocketAddress(getConfigurationService().getConfiguration().getString(
+	//						MarketplacewebservicesConstants.SOCIAL_LOGIN_PROXY), Integer.parseInt(getConfigurationService()
+	//						.getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_LOGIN_PROXY_PORT)));
+	//				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+	//				htypConnection = (HttpURLConnection) fburl.openConnection(proxy);
+	//			}
+	//			else
+	//			{
+	//				htypConnection = (HttpURLConnection) fburl.openConnection();
+	//			}
+	//			if (null != htypConnection)
+	//			{
+	//				LOG.debug(MarketplacewebservicesConstants.FB_RESPONSE_CODE + htypConnection.getResponseCode());
+	//				final BufferedReader in = new BufferedReader(new InputStreamReader(htypConnection.getInputStream()));
+	//				String inputLine;
+	//				final StringBuffer b = new StringBuffer();
+	//				while ((inputLine = in.readLine()) != null)
+	//				{
+	//					b.append(inputLine + n);
+	//				}
+	//				in.close();
+	//				graph = b.toString();
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9018);
+	//		}
+	//		return graph;
+	//	}
 
 	/**
 	 * Parsing graph data and fetching email id from the graph
 	 *
-	 * @param fbGraph
 	 * @return String
 	 */
-	private String getGraphData(final String fbGraph)
-	{
-		String emailId = "";
-
-		try
-		{
-
-			final JSONObject json = new JSONObject(fbGraph);
-
-			if (json.has(MarketplacewebservicesConstants.SOCIAL_FB_EMAIL))
-			{
-				emailId = json.getString(MarketplacewebservicesConstants.SOCIAL_FB_EMAIL);
-			}
-
-		}
-		catch (final JSONException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9017);
-		}
-		return emailId;
-	}
+	//	private String getGraphData(final String fbGraph)
+	//	{
+	//		String emailId = "";
+	//
+	//		try
+	//		{
+	//
+	//			final JSONObject json = new JSONObject(fbGraph);
+	//
+	//			if (json.has(MarketplacewebservicesConstants.SOCIAL_FB_EMAIL))
+	//			{
+	//				emailId = json.getString(MarketplacewebservicesConstants.SOCIAL_FB_EMAIL);
+	//			}
+	//
+	//		}
+	//		catch (final JSONException e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9017);
+	//		}
+	//		return emailId;
+	//	}
 
 	// fetchNewsLetter webservice code
 
@@ -1330,6 +1401,24 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	}
 
 
+	/**
+	 * @return the gigyaUID
+	 */
+	public String getGigyaUID()
+	{
+		return gigyaUID;
+	}
+
+
+	/**
+	 * @param gigyaUID
+	 *           the gigyaUID to set
+	 */
+	public void setGigyaUID(final String gigyaUID)
+	{
+		this.gigyaUID = gigyaUID;
+	}
+
+
 
 }
-

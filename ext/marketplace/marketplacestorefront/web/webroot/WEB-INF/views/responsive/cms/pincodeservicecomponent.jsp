@@ -31,7 +31,7 @@
 	   <c:forEach var="entry" items="${deliveryModeMap}">
 		<%-- Key: <c:out value="${entry.key}"/> --%>
 		<c:if test="${entry.key eq 'home-delivery'}">
-		<li class="hdclass"><a  id="home" class="HomeDelivery home" style="display: none"> <span><spring:theme code="text.home.delivery"/></span> 
+		<li class="hdclass" id="homeli"><a  id="home" class="HomeDelivery home" style="display: none"> <span><spring:theme code="text.home.delivery"/></span> 
 		 <c:forEach var="homeEntry" items="${entry.value}">
 			 <c:if test="${homeEntry.key eq 'startForHome'}">
 			 <input type="hidden" value="${homeEntry.value}" id="homeStartId"/>
@@ -47,7 +47,7 @@
 			</li>
 		  </c:if>
 		  <c:if test="${entry.key eq 'express-delivery'}">
-			<li class="edclass"><a id="express" class="ExpressDelivery express" style="display: none"> <span><spring:theme code="text.express.shipping"/></span> 
+			<li class="edclass" id="expressli"><a id="express" class="ExpressDelivery express" style="display: none"> <span><spring:theme code="text.express.shipping"/></span> 
 			 <c:forEach var="expressEntry" items="${entry.value}">
 			 <c:if test="${expressEntry.key eq 'startForExpress'}">
 			 <input type="hidden" value="${expressEntry.value}" id="expressStartId"/>

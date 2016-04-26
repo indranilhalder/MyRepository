@@ -2716,7 +2716,8 @@ h2 {
       float: left;
       margin-bottom: 5px; }
       header > .content .bottom .brand-logo img {
-        max-height: 40px; }
+        max-height: 40px;
+        margin-top: 10px; }
     header > .content .bottom .bag {
       display: none;
       position: absolute;
@@ -2774,6 +2775,9 @@ h2 {
         -moz-transition: width 0.3s, z-index 0s 0.3s, left 0.3s;
         transition: width 0.3s, z-index 0s 0.3s, left 0.3s;
     }
+    header > .content .bottom nav > ul > li > .toggle span {
+    text-transform: uppercase;
+	}
         header > .content .bottom nav > ul > li .toggle:after {
           font-family: 'FontAwesome';
      -webkit-font-smoothing: antialiased;
@@ -2785,6 +2789,8 @@ h2 {
      color: #000;
      position: relative;
      top: 2px; }
+        header.brand-header > .content .bottom nav > ul > li .toggle:after {
+     color: #fff;}
         header > .content .bottom nav > ul > li .toggle:before {
         content: "close";
         font-weight: 400;
@@ -16529,7 +16535,8 @@ body .account .right-account .order-history.order-details li.item:not(.in-store)
     display: block
 }
 body .account .right-account .order-history.order-details li.item .order {
-    position: relative
+    position: relative;
+    margin-top: 0px !important;
 }
 body .account .right-account .order-history.order-details li.item .order::after {
     clear: both;
@@ -18387,7 +18394,6 @@ width: 12px;
 	text-align:center;
 	margin:15px auto;
 	background: #fafafa;
-    padding: 1px 0 15px;
 	
 }
 .cartPromotions .promotions{
@@ -18399,7 +18405,6 @@ width: 12px;
 .cartPromotions .promotionDesc{
 	font-size:14px;
 }
-
 
 
 
@@ -19401,6 +19406,7 @@ header.brand-header .content .bottom nav>ul>li>ul {
 @media ( max-width :790px) {
 	header.brand-header .content .bottom nav>ul>li>ul {
 		top: 55px;
+		left:0;
 	}
 }
 
@@ -24079,6 +24085,7 @@ header .content .search .links li  div.price
 {
 	margin-left:10px;
 	margin-top:10px;
+	font-size: 12px;
 }
 header .content .search .links li img
 {
@@ -27721,6 +27728,7 @@ padding-right: 10px;
 	.cartPromotions {
     text-align: center;
     margin: 15px auto;
+        background: #EDEEF0;
 }
 	.cartPromotions div{
     margin: 5px 0px;
@@ -29126,11 +29134,11 @@ body.page-coupons .pagination li.active span,body.page-coupons .pagination li.ac
 @media(min-width:791px) and (max-width:1300px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
 	    position: absolute;
-    	left: 210px;
+    	left: 110px;
 	}
 	header.compact .content .marketplace.compact + .right > ul > li.store-locator-header{
 	    position: absolute;
-    	left: 120px;
+    	left: 10px;
 	}
 	/* header.compact .content .marketplace.compact a img{
 	width:180px;
@@ -29524,8 +29532,8 @@ position:relative;
 .shop-promos {
     padding: 10px;
 }
-.shop-promos .promos li:nth-last-of-type(1) {
-    border-bottom: none;
+.shop-promos .promos li:first-of-type {
+    border-top: 1px solid #ccc;
 }
 	.shop-promos .promos li span{
 	    padding-left: 100px;
@@ -37556,6 +37564,19 @@ font-size:14px;}
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.header {
     height: auto;
 }
+
+.cartPromotions .promotions{
+	padding-top:15px;
+}
+.cartPromotions .cartpotproline_desc{
+	padding-bottom:15px;
+}
+
+select#micrositeSearchCategory, select#searchCategory{
+	background-image: url('../images/select-arrow.png');
+    background-position: 95% 51%;
+}
+
 /* SAP Code Start */
 .pickup_Edit{
 	display: none;
