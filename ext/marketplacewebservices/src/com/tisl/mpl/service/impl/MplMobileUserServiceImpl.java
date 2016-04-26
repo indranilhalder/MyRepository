@@ -370,7 +370,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				}
 				if (null != registration.getGigyaSessionsForMob() && null != registration.getGigyaSessionsForMob().getSessionToken())
 				{
-					result.setSessionSecret(registration.getGigyaSessionsForMob().getSessionToken());
+					result.setSessionToken(registration.getGigyaSessionsForMob().getSessionToken());
 				}
 			}
 		}
