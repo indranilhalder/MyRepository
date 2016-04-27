@@ -74,7 +74,7 @@
   	<bean id="batchUserGroupConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
-            	 # Insert Products
+            	 # Insert User Groups and Customers
               INSERT_UPDATE UserGroup;uid[unique=true];members(uid)[mode=append]
             </value>
         </property>
