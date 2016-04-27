@@ -600,7 +600,8 @@ $(document).ready(function(){
 	$(".color-swatch li span").each(function(){
 		var title = $(this).attr("title");
 		if(currentColour == title){
-			$(this).parent().parent().addClass("active");
+			//TISPRO-322 PDP Size Guide issue fixed
+			$(this).parent().addClass("active");
 		}			
 	});
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
