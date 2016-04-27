@@ -179,7 +179,7 @@ ACC.autocomplete = {
 						$.each(data.brands, function (i, obj)
 						{
 							autoSearchData.push(
-									{value: suggestedString ,
+									{value: obj.name,
 										code: obj.code,
 										desc: obj.description,	
 										//url:  "/mpl/en/search/?text=" + data.searchTerm + "&searchCategory=" + obj,
@@ -229,7 +229,7 @@ ACC.autocomplete = {
 						$.each(data.categories, function (i, obj)
 						{
 							autoSearchData.push(
-									{value: suggestedString ,
+									{value: obj.name,
 										code: obj.code,
 										desc: obj.description,	
 										//url: ACC.config.contextPath + obj.url + "/?q=" + data.searchTerm + "&text=" + data.searchTerm +"&searchCategory="+selectedCat,
