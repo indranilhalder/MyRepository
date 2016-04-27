@@ -364,6 +364,14 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				{
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9007);
 				}
+					if (null != registration.getGigyaSessionsForMob() && null != registration.getGigyaSessionsForMob().getSessionSecret())
+				{
+					result.setSessionSecret(registration.getGigyaSessionsForMob().getSessionSecret());
+				}
+				if (null != registration.getGigyaSessionsForMob() && null != registration.getGigyaSessionsForMob().getSessionToken())
+				{
+					result.setSessionToken(registration.getGigyaSessionsForMob().getSessionToken());
+				}
 			}
 		}
 
