@@ -5489,7 +5489,8 @@ text-transform: uppercase;
             height: 40px; } }
       .cart.wrapper .right-block .block p, .confirmation .right-block .block p {
         margin-bottom: 20px;
-        line-height:18px; }
+        line-height:18px;
+             }
       .cart.wrapper .right-block .block .totals li, .confirmation .right-block .block .totals li {
         width: 100%;
         margin: 10px 0; }
@@ -6413,7 +6414,7 @@ text-transform: uppercase;
           right: 0;
           width: 70%;
           min-width: 145px;
-          font-size: 11px; }
+          font-size: 12px; }
           .cart.wrapper .product-block li.item ul .item-edit-details li {
             display: inline-block;
           }
@@ -6502,7 +6503,8 @@ text-transform: uppercase;
          }
         @media (min-width: 651px) {
           .cart.wrapper .product-block li.item > ul > li, .confirmation .product-block li.item > ul > li {
-            padding: 15px; } }
+            padding: 15px;
+                font-size: 14px; } }
         .cart.wrapper .product-block li.item > ul > li.price select, .confirmation .product-block li.item > ul > li.qty select, .confirmation .product-block li.item > ul > li.price select {
           width:100%; }
     		.cart.wrapper .product-block li.item > ul > li.qty select{
@@ -6610,7 +6612,7 @@ text-transform: uppercase;
             line-height:17px; }
             .cart.wrapper .product-block li.item > ul > li:first-child div.product p, .confirmation .product-block li.item > ul > li:first-child div.product p {
               margin-top: 10px;
-              font-size: 11px; }
+              font-size: 14px; }
               .cart.wrapper .product-block li.item > ul > li:first-child div.product p.company, .confirmation .product-block li.item > ul > li:first-child div.product p.company {
                 margin-top: 0px; }
               .cart.wrapper .product-block li.item > ul > li:first-child div.product p.item-info > span, .confirmation .product-block li.item > ul > li:first-child div.product p.item-info > span {
@@ -19596,7 +19598,7 @@ header .content .marketplace.compact a img{
   margin-top: 7px;
 }
 body.template-pages-layout-micrositePage1 header .content .marketplace.compact a img{
-	 margin-top: 3px;
+	 margin-top: -5px;
 } 
 header .banner .toggle.mobile {
   display: none;
@@ -25285,6 +25287,9 @@ div.variantFormContainer{
 		display: table;
 		margin-top:-18px;
 	}
+	 body.template-pages-layout-micrositePage1 header:not(.brand-header) >.content .bottom .marketplace {
+		margin-top:0px;
+	}
 	header>.content .bottom .marketplace .simple-banner-component
 		{
 		display: table-cell;
@@ -27427,7 +27432,7 @@ div.other-sellers .other-sellers-table tbody tr td>div.sellerAddToBagTitle:after
 	.cart.wrapper .product-block li.item>ul.desktop>li.price {
 		width: 19% !important;
 		padding-left: 0px !important;
-		font-size: 12px !important;
+		font-size: 14px !important;
 		float: right;
 		padding-right: 7px;
 	}
@@ -27966,7 +27971,7 @@ body .account .account-header select.menu-select optgroup option{
     width: 60%;
     left: 34%;
     top: 53%;
-    font-size: 10px;
+    font-size: 12px;
 	}
 	.cart.wrapper .product-block li.item > ul.desktop > li.price{
 	    position: absolute;
@@ -30455,7 +30460,7 @@ body.touchDevice header .content nav>ul>li>ul>li>ul>li>a.view_dept{
     padding-bottom: 70px;
 }
 header.compact .content .top{
-min-height:95px;}
+min-height:70px;}
 header.compact .content span.material-icons{
 	 height: 50px;
     vertical-align: top;
@@ -30735,7 +30740,7 @@ li#ratingDiv {
 	text-transform: none;
     color: #A9143C;
     text-decoration: underline;
-    font-size: 12px;
+    font-size: 14px;
     font-weight:600;
     margin: 20px 0;
     line-height: 24px;
@@ -30853,6 +30858,20 @@ line-height: normal;
  .cod-link{
  color:#a9143c;
  text-decoration: underline;
+ }
+ @media(min-width:791px){
+ header.compact .content .top{
+	min-height: 65px;
+    margin-top: -20px;}
+    .cart.wrapper .right-block .block p, .confirmation .right-block .block p,.cart.wrapper .right-block .block .totals li, .confirmation .right-block .block .totals li{
+    font-size:14px;
+    }
+ }
+ul.less-stock li {
+ 	font-size: 12px;
+    color: #ff1c47;
+    padding: 10px;
+    line-height: 14px;
  }
 /*--------------maincss-----------*/
 .row
