@@ -128,11 +128,17 @@ ACC.autocomplete = {
 							if(i==0){
 								if(data.brands.length!=undefined && data.brands.length>0){
 								//	var suggestedString="";
+								if(/\s/.test(request.term)){
+										suggestedString=data.searchTerm;
+									}
+									else{
+									
 									if (/\s/.test(obj.term)) {
 										suggestedString=obj.term.substr(0,obj.term.indexOf(' '));
 									}
 									else{
 										suggestedString=obj.term;
+									}
 									}
 									autoSearchData.push({
 										value: suggestedString,
@@ -177,7 +183,7 @@ ACC.autocomplete = {
 										code: obj.code,
 										desc: obj.description,	
 										//url:  "/mpl/en/search/?text=" + data.searchTerm + "&searchCategory=" + obj,
-										url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Abrand%3A" +  obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+										url:  "/mpl/en/search/?q=" + suggestedString + "%3Arelevance%3Abrand%3A" +  obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
 										term: data.searchTerm,
 										type: "brands",
 										index: i,
@@ -188,17 +194,24 @@ ACC.autocomplete = {
 					}
 					
 			
-					if(data.suggestions != null){
+				if(data.suggestions != null){
 						$.each(data.suggestions, function (i, obj)
 						{
 							if(i==0){
 								var suggestedString="";
+								
 								if(data.categories.length!=undefined && data.categories.length>0){
+									
+									if(/\s/.test(request.term)){
+										suggestedString=data.searchTerm;
+									}
+									else{
 									if (/\s/.test(obj.term)) {
 										suggestedString=obj.term.substr(0,obj.term.indexOf(' '));
 									}
 									else{
 										suggestedString=obj.term;
+									}
 									}
 							    autoSearchData.push({
 								value: suggestedString,

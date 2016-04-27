@@ -1460,4 +1460,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		class="com.tisl.mpl.facades.populators.MplBaseOptionDataPopulator"
 		parent="baseOptionDataPopulator">
 	</bean>
+	
+	 <alias name="mplPromotionOrderEntryConsumedPopulator" alias="promotionOrderEntryConsumedPopulator" />
+	<bean id="mplPromotionOrderEntryConsumedPopulator" class="com.tisl.mpl.facades.populators.MplPromotionOrderEntryConsumedPopulator"
+	parent="defaultPromotionOrderEntryConsumedPopulator">
+	</bean>
 </beans>
