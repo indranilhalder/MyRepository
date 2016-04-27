@@ -1493,8 +1493,7 @@ h2 {
       text-transform: none;
       color: #A9143C;
       font-weight: 100;
-      font-family: "LP Bambus";
-      font-style: italic;
+      font-family: inherit;
       font-weight: 100; } }
     @media (min-width:791px) and (max-width: 900px) {
       header .content .marketplace {
@@ -2728,8 +2727,7 @@ h2 {
         text-transform: none;
         font-family: "Montserrat";}
         header > .content .bottom .marketplace > a span {
-        font-family: "LP Bambus";
-        font-style: italic;
+        font-family: inherit;
         font-weight: 100;
         color: #A9143C;
     }
@@ -3284,16 +3282,16 @@ h2 {
 	-o-transform: translateX(-50%) translateY(-50%);
 	transform: translateX(-50%) translateY(-50%);
 	color: #fff;
-	font-family: "LP Bambus";
-	font-size: 72px;
-	font-weight: 100;
+	font-family: inherit;
+	font-size: 28px;
+	font-weight: 500;
 }
 
 @media ( max-width : 790px) {
 	.hero h1 {
 		left: 47%;
 		top: 60%;
-		font-size: 42px
+		font-size: 28px
 	}
 }
 
@@ -4356,11 +4354,10 @@ color:inherit;}
 }
 
 .feature-collections ul.collections li h3 {
-	font-size: 72px;
+	font-size: 28px;
 	position: relative;
-	font-family: "LP Bambus";
-	font-style: italic;
-	font-weight: 100;
+	font-family: inherit;
+	font-weight: 500;
 	margin-bottom: 10px;
 }
 
@@ -4866,8 +4863,8 @@ text-transform: uppercase;
   .shop-the-trend h2 {
     font-size: 36px; }
   .shop-the-trend h1 {
-    font-size: 80px;
-    font-family: "LP Bambus";
+    font-size: 28px;
+    font-family: inherit;
     font-weight: 500;
     padding-top: 20px; }
   .shop-the-trend span {
@@ -5346,12 +5343,11 @@ text-transform: uppercase;
   padding: 10px 20px;
   text-align: center;
   overflow: hidden;
-  font-size: 48px;
+  font-size: 28px;
   line-height: 72px;
   color: #A9143C;
-  font-family: "LP Bambus";
-  font-style: italic;
-  font-weight: 100;
+  font-family: inherit;
+  font-weight: 500;
   font-style: normal; }
   .promise span {
     display: inline-block;
@@ -8475,10 +8471,8 @@ footer>ul>li:first-child h3 {
 footer>ul>li:nth-of-type(1) h3 span {
 	text-transform: none;
 	color: #A9143C;
-	font-weight: lighter;
-	font-family: "LP Bambus";
-	font-style: italic;
-	font-weight: 100;
+	font-family: inherit;
+	font-weight: 500;
 }
 footer>ul {
 	margin-bottom: 0;
@@ -8713,10 +8707,8 @@ footer .banner {
     .top.checkout-top .marketplace span {
       text-transform: none;
       color: #A9143C;
-      font-weight: 100;
-      font-family: "LP Bambus";
-      font-style: italic;
-      font-weight: 100; }
+      font-weight: 500;
+      font-family: inherit;}
   .top.checkout-top .content {
     width: 100%;
     text-align: center;
@@ -9643,8 +9635,8 @@ footer .banner {
       content: "";
       display: table; }
     .listing.wrapper .right-block .best-selling h1 {
-      font-family: "LP Bambus";
-      font-size: 60px;
+      font-family: inherit;
+      font-size: 28px;
       text-align: center;
       padding: 30px 0; }
   .listing.wrapper .right-block .product-list > li {
@@ -13063,9 +13055,9 @@ div.pdp .reviews .toolbar select.white {
       width: 100%;
       height: auto; }
     .modal.get-the-look .content .look h3 {
-      font-family: "LP Bambus";
-      font-size: 40px;
-      font-weight: 100;
+      font-family: inherit;
+      font-size: 28px;
+      font-weight: 500;
       margin-bottom: 20px; }
     .modal.get-the-look .content .look h4 {
       font-size: 22px;
@@ -13579,7 +13571,7 @@ div.get-in-touch,
 div.get-in-touch h2,
 .rewards div.customer-service h2,
 .contact-us-header h2 {
-    font-family: "LP Bambus";
+    font-family: inherit;
     font-size: 28px;
     margin-bottom: 40px;
 }
@@ -13623,9 +13615,9 @@ div.get-in-touch .help,
 .contact-us-header .help {
     display: block;
     padding: 40px 0 25px;
-    font-family: "LP Bambus";
-    font-size: 42px;
-    font-weight: 300;
+    font-family: inherit;
+    font-size: 28px;
+    font-weight: 500;
     letter-spacing: 1px;
 }
 .no-results ul,
@@ -14122,8 +14114,8 @@ body.get-in-touch .shop-promos {
     }
     .customer-care-tabs h1 {
         display: block;
-        font-family: "LP Bambus";
-        font-size: 42px;
+        font-family: inherit;
+        font-size: 28px;
         text-align: center;
         padding: 20px 0;
     }
@@ -17671,6 +17663,7 @@ ul.helpmeshop-list{
 }
 .left p, .right p {
     text-align: left;
+        font-size: 14px;
 }
 ul.social-connect > li a
 {
@@ -25808,8 +25801,8 @@ margin-top:10px;
 
 .listing.wrapper .right-block h3.heroTitle{
     margin-bottom: 10px;
-    font-family: "LP Bambus";
-    font-size: 60px;
+    font-family: inherit;
+    font-size: 28px;
     text-align: center;
     padding: 10px 0;
 }
@@ -29557,6 +29550,7 @@ position: absolute;
 .shop-promos .promos li span{
 color:#ACACAC;
 position:relative;
+font-weight:bold;
 
   }
 .shop-promos .promos li span:after{
@@ -29756,6 +29750,10 @@ a.button.trending-button:hover{
 	color:#333;
 	text-align:left;
 }
+#newAndExclusive .New_Exclusive_price{
+	font-size:14px;
+
+	}
 footer .footer-text {
 	clear:both;
 }
@@ -30117,6 +30115,10 @@ p.showcase-para {
 	line-height: 20px;
 	text-align:left;
 }
+.showcase-center .price p{
+	font-size:14px;
+
+	}
 .showcase-section .desc-section{
 width:33.33%;
 float:left;
