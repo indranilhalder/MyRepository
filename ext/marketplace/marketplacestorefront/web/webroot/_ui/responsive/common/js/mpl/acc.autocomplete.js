@@ -194,24 +194,25 @@ ACC.autocomplete = {
 					}
 					
 			
-					if(data.suggestions != null){
+				if(data.suggestions != null){
 						$.each(data.suggestions, function (i, obj)
 						{
 							if(i==0){
 								var suggestedString="";
-								if(/\s/.test(request.term)){
-									suggestedString=data.searchTerm;
-								}
-								else{
+								
 								if(data.categories.length!=undefined && data.categories.length>0){
+									
+									if(/\s/.test(request.term)){
+										suggestedString=data.searchTerm;
+									}
+									else{
 									if (/\s/.test(obj.term)) {
 										suggestedString=obj.term.substr(0,obj.term.indexOf(' '));
 									}
 									else{
 										suggestedString=obj.term;
 									}
-								}
-								}
+									}
 							    autoSearchData.push({
 								value: suggestedString,
 								searchterm:term,
