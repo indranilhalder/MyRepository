@@ -75,7 +75,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	 # Insert Products
-              INSERT_UPDATE UserGroup;uid[unique=true];members(uid)
+              INSERT_UPDATE UserGroup;uid[unique=true];members(uid)[mode=append]
             </value>
         </property>
         <property name="impexRow">
