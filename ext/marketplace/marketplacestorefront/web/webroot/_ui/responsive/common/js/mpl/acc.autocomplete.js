@@ -129,7 +129,7 @@ ACC.autocomplete = {
 								if(data.brands.length!=undefined && data.brands.length>0){
 								//	var suggestedString="";
 								if(/\s/.test(request.term)){
-										suggestedString=obj.term;
+										suggestedString=data.searchTerm;
 									}
 									else{
 									
@@ -200,7 +200,7 @@ ACC.autocomplete = {
 							if(i==0){
 								var suggestedString="";
 								if(/\s/.test(request.term)){
-									suggestedString=obj.term;
+									suggestedString=data.searchTerm;
 								}
 								else{
 								if(data.categories.length!=undefined && data.categories.length>0){
