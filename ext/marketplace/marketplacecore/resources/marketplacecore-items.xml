@@ -91,6 +91,7 @@
 			elementtype="java.lang.String" autocreate="true" generate="true" type="list" />	
 
 
+
 		<collectiontype code="productBasedCoupon"
 			elementtype="Product" autocreate="true" generate="true" type="list" />	
 		<collectiontype code="categoryBasedCoupon"
@@ -737,7 +738,9 @@
 
 
 
+
 	</enumtypes>
+
 
 
 
@@ -2180,6 +2183,10 @@
 					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
+
+
+
+
 				</attributes>
 			</itemtype>
 
@@ -2725,6 +2732,17 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- Added for TISCR-278 enabling a check box for Tata my rewards in login page -->
+					<attribute qualifier="ischeckedMyRewards"
+						autocreate="true" type="java.lang.Boolean" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					
+					<!-- Added for TISCR-278 enabling a check box for Tata my rewards in login page -->
 					<!-- Push notification save device key web service ends -->
 				</attributes>
 			</itemtype>
@@ -3448,6 +3466,7 @@
 					</attribute>
 
 
+
 					<attribute qualifier="footerAppImageList" type="FooterImageCollection"
 						generate="true" autocreate="true">
 						<persistence type="property" />
@@ -3455,6 +3474,7 @@
 					</attribute>
 
 					<attribute qualifier="footerText" type="localized:java.lang.String" generate="true" autocreate="true">
+
 
 
 
@@ -4007,6 +4027,7 @@
 
 
 
+
 						<description>This attribute is for storing the brand logo to be displayed</description>
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
@@ -4084,6 +4105,7 @@
 
 						</persistence>
 					</attribute>
+
 
 
 					<attribute type="java.lang.String" qualifier="bannerUrl"
@@ -5390,6 +5412,14 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Start TISPRO-249 -->
+					<attribute qualifier="buyABGetcParentTransactionId" type="java.lang.String">
+						<description>Parent Transaction id mapping used for Buy A B Get C promotion - Multiple Parent Scenario</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- End TISPRO-249 -->
 				</attributes>
 			</itemtype>
 
@@ -5575,6 +5605,15 @@
 						<description>The sales application for which the order was placed.</description>
 						<persistence type="property" />
 						<defaultvalue>em().getEnumerationValue("SalesApplication","Web")</defaultvalue>
+					</attribute>
+
+						<attribute autocreate="true" qualifier="isExpressCheckoutSelected"
+						type="java.lang.Boolean">
+						<persistence type="property" qualifier="isExpressCheckoutSelected">
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -6974,12 +7013,14 @@
 
 
 
+
 						<description>priority start date</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property" />
 					</attribute>
 				<attribute autocreate="true"  qualifier="priorityEndDate" type="java.util.Date">
+
 
 
 
@@ -7054,6 +7095,7 @@
 
 
 
+
 						<description>L3 level priority for category</description>
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 						<modifiers read="true" write="true" optional="true"
@@ -7065,6 +7107,7 @@
 
 
 
+
 						<description>L4 level priority for category</description>
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 						<modifiers read="true" write="true" optional="true"
@@ -7072,6 +7115,7 @@
 						<persistence type="property" />
 					</attribute>
 				<attribute autocreate="true"  qualifier="ProductPriority" type="java.lang.Integer">
+
 
 
 
@@ -7092,6 +7136,7 @@
 			</itemtype>
 		<!-- 	seller priority cron job -->
 			<itemtype code="UpdateSellerPriorityJob" extends="CronJob" autocreate="true" generate="true"
+
 
 
 

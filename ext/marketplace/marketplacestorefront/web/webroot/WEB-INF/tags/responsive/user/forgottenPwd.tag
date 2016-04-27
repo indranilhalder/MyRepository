@@ -52,7 +52,7 @@
 	<div class="content">
 		<div class="required right">
 			<h1>
-				<strong><spring:theme code="account.confirmation.forgotten.password.link.sent" text="You've got mail." /></strong>
+				<spring:theme code="account.confirmation.forgotten.password.link.sent" text="You've got mail." />
 			</h1>
 			<div class="forgotPasswordSuccessPopup-desc">
 			<spring:theme code="email.confirmation.statement1"

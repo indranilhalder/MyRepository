@@ -722,8 +722,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			{
 				if (StringUtils.isNotEmpty(sellerData.getFullfillment()))
 				{
-					final String globalCodeFulfilmentType = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData.getFullfillment()
-							.toUpperCase());
+					final String globalCodeFulfilmentType = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData.getFullfillment().toUpperCase());
 					if (StringUtils.isNotEmpty(globalCodeFulfilmentType))
 					{
 						pincodeServiceData.setFullFillmentType(globalCodeFulfilmentType.toUpperCase());
@@ -1828,5 +1827,27 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 		LOG.debug("from getStoreLocationforCnC");
 		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList);
+	}
+	@Override
+	public OrderEntryData getCartEntryByUssid(final String ussid, final CartData cart)
+
+
+	{
+		OrderEntryData requiredCartEntry = null;
+
+		if (cart.getEntries() != null)
+		{
+			for (final OrderEntryData cartEntry : cart.getEntries())
+			{
+				if (cartEntry.getSelectedUssid().equalsIgnoreCase(ussid))
+				{
+					requiredCartEntry = cartEntry;
+					break;
+				}
+			}
+		}
+		return requiredCartEntry;
+
+
 	}
 }

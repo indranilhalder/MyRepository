@@ -93,7 +93,7 @@
 							<label><spring:theme code="text.returRequest.reasonForReturn" text="Why are you returning this item?" /></label>
 							<span id="returnReasonvalMsg" style="display:none;color:red">Please select a reason to return!</span>
 							<form:select name="reasonList" id="reasonSelectBox"
-								path="reasonCode">
+								path="reasonCode" onchange="reasonSelectChange()">
 
 								<option selected='selected' disabled="disabled"><spring:theme code="text.requestDropdown.selected"/></option>
 								<c:forEach items="${reasonDataList}" var="reason"
@@ -101,6 +101,7 @@
 										<option value="${reason.code}">${reason.reasonDescription}</option>
 									</c:forEach>
 							</form:select>
+							<div id="blankReturnReasonError" style="display:none; color:red; padding-top: 10px;"><spring:theme code="text.requestDropdown.selected.error" text="Please select a reason"/></div>
 						</div>
 					</div>
 					<button type="submit" class="light-blue submit-request" ><spring:theme code="text.returRequest.continueButton" text="Continue"/></button>

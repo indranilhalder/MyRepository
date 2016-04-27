@@ -184,7 +184,7 @@ UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[l
 ;; NewAndExclusiveProductCarouselComponent;"Discover New & Exclusive"
 #;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections.
 
-<<<<<<< HEAD
+
 UPDATE MplNowTrendingProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
 #;;TMPHomepageNowTrendingProductCarouselComponent;Now Trending
 
@@ -932,7 +932,7 @@ UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[la
 
 
 
-=======
+
 ######## Footer image icons starts #######
 
 # Media Content

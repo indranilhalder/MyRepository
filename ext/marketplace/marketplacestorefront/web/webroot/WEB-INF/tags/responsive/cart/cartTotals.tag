@@ -18,7 +18,7 @@ $(document).ready(function() {
         }
         else  
         {  
-        	$("#defaultPinCodeIds").css("color","red");
+        	$("#defaultPinCodeIds").css("color","#ff1c47");
         	$('#unsevisablePin').hide();
             $( "#errorId").show();
              

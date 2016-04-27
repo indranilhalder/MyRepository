@@ -103,10 +103,6 @@
 	</bean>
 	
 	<bean id="improvedShallowEtagHeaderFilter" class="com.tisl.mpl.filter.ImprovedShallowEtagHeaderFilter"/>
-	
-	
-	
-
 	<util:set id="baseFilterResourceExceptionsV2">
 		<value>logoutsuccessful</value>
 		<value>oauth</value>

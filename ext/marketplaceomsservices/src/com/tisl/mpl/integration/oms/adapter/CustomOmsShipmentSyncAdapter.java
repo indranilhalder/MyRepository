@@ -1,4 +1,3 @@
-
 /**
  *
  */
@@ -131,10 +130,12 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}else{
 					final ConsignmentModel existingConsignmentModel = getConsignmentByShipment(shipment, orderModel);
 					if (existingConsignmentModel == null)
+
 					{
 
 
 						if (shipmentMustBeCreated(shipment))
+
 						{
 
 
@@ -150,6 +151,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}
 
 			}
+
+
+
+
 
 
 
@@ -458,17 +463,34 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		{
 			final ConsignmentStatus shipmentNewStatus = getConsignmentStatusMappingStrategy().getHybrisEnumFromDto(shipment);
 			final ConsignmentStatus shipmentCurrentStatus = consignmentModel.getStatus();
+
+
 															 
 			if ((consignmentModel.getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || consignmentModel.getStatus().equals(
 					ConsignmentStatus.ORDER_UNCOLLECTED))
 					&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
 			{
+
+
+
+
+
+
+
+
+
+
+
+
 				LOG.debug("Calling cancel Initiation process started");
 
 				for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
 				{
+
+
 					for (final ConsignmentEntryModel consigmEntry : orderEntryModel.getConsignmentEntries())
 					{
+
 						if ((consigmEntry.getConsignment().getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || consigmEntry
 								.getConsignment().getStatus().equals(ConsignmentStatus.ORDER_UNCOLLECTED))
 								&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
@@ -499,6 +521,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				{
 					eventService.publishEvent(orderRefundCreditedEvent);
 				}
+
 				catch (final Exception e1)
 				{
 					LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
@@ -549,6 +572,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					LOG.info("Consignment Status::" + consignmentModel.getStatus());
 					saveAndNotifyConsignment(consignmentModel);
 					modelService.save(createHistoryLog(shipmentNewStatus.toString(), orderModel, consignmentModel.getCode()));
+
 					LOG.info("Order History entry created for" + orderModel.getCode() + "Line ID" + consignmentModel.getCode());
 
 				LOG.info("****************************************Order synced succesfully - Now sending notificatioon to customer *******************");
@@ -610,6 +634,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 
 	protected OrderHistoryEntryModel createHistoryLog(final String description, final OrderModel order, final String lineId)
 	{
+
 		final OrderHistoryEntryModel historyEntry = modelService.create(OrderHistoryEntryModel.class);
 		historyEntry.setTimestamp(getTimeService().getCurrentTime());
 		historyEntry.setOrder(order);
@@ -630,8 +655,28 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		consigmnetEntry.setConsignment(consignmentModel);
 		consigmnetEntry.setShippedQuantity(Long.valueOf("1"));
 		modelService.save(consigmnetEntry);
-		modelService
-				.save(createHistoryLog(consignmentModel.getStatus().toString(), (OrderModel) owner, consignmentModel.getCode()));
+
+		// added for merging TCS_PROD_SUPPORT with SAP
+		boolean createHistoryEntry = false;
+		for (final OrderHistoryEntryModel entry : ((OrderModel) owner).getHistoryEntries())
+		{
+			if (consignmentModel.getStatus().toString().equalsIgnoreCase(entry.getDescription())
+					&& consignmentModel.getCode().equalsIgnoreCase(entry.getLineId()))
+			{
+				createHistoryEntry = true;
+			}
+
+		}
+		if (!createHistoryEntry)
+		{
+
+
+			modelService.save(createHistoryLog(consignmentModel.getStatus().toString(), (OrderModel) owner,
+					consignmentModel.getCode()));
+		}
+
+		//modelService.save(createHistoryLog(consignmentModel.getStatus().toString(), (OrderModel) owner, consignmentModel.getCode()));
+		// added for merging TCS_PROD_SUPPORT with SAP
 		getModelService().save(consignmentModel.getShippingAddress());
 		saveAndNotifyConsignment(consignmentModel);
 		return consignmentModel;
@@ -866,10 +911,12 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	 * ConsignmentModel consignment : orderModel.getConsignments()) { for (final ConsignmentEntryModel s :
 	 * consignment.getConsignmentEntries()) { if (s.getOrderEntry().getEntryNumber().equals(line.getOrderLineId())) {
 	 * return consignment; } }
+
 	 * 
 
 
 	 * }
+
 	 * 
 
 

@@ -203,6 +203,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@PreValidateCheckoutStep(checkoutStep = MarketplacecheckoutaddonConstants.PAYMENT_METHOD)
 	public String enterStep(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
+		final CartModel serviceCart = getCartService().getSessionCart();
+		serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(true));
+		modelService.save(serviceCart);
 		//redirecting to previous page for anonymous user
 		if (getUserFacade().isAnonymousUser())
 		{
