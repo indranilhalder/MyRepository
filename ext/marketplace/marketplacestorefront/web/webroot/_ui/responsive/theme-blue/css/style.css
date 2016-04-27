@@ -513,8 +513,7 @@ input[type="checkbox"]:checked + label:before, input[type="radio"]:checked + lab
   display: inline-block;
   color: transparent;
   cursor: pointer;
-  height: 8px !important
-  ;
+  height: 8px !important;
   width: 8px !important;
   background: transparent;
   vertical-align: middle;
@@ -1130,7 +1129,8 @@ h2 {
                 right: 0;
                 top: 10px;
                 width: 100px;
-                text-align: center; }
+                text-align: center;
+                    font-size: 14px; }
             header .content .right > ul > li.bag .mini-bag > ul > li:not(.item) {
               clear: both; }
               header .content .right > ul > li.bag .mini-bag > ul > li:not(.item)::after {
@@ -7997,8 +7997,11 @@ div.wishlist-content .pagination {
         margin-bottom: 15px; }
         .wishlist-content .products > ul > li div.product-info > div > ul > li {
           line-height: 1.3; }
-          .wishlist-content .products > ul > li div.product-info > div > ul > li.name, .wishlist-content .products > ul > li div.product-info > div > ul > li.price {
+          .wishlist-content .products > ul > li div.product-info > div > ul > li.name {
             font-size: 16px; }
+           .wishlist-content .products > ul > li div.product-info > div > ul > li.price{
+             font-size: 14px;
+            }
             .wishlist-content .products > ul > li div.product-info > div > ul > li.name{
             font-weight: 600;  }
         .wishlist-content .products > ul > li div.product-info > div > ul.comments a {
@@ -10860,7 +10863,7 @@ body .account .right-account .order-history .pagination li{
 }
 .promo-block p {
     width: 45%;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.5;
     margin-bottom: 10px
 }
@@ -20466,7 +20469,7 @@ display: inline-block;
   font-size: 14px;
  }
 .product-tile .short-info .company, .product-tile .short-info .price {
-  font-size: 12px;
+  font-size: 14px;
   font-family: "Montserrat", "Courier New";
   line-height: normal;
   float: left;
@@ -22294,7 +22297,7 @@ body .lookbook_wrapper .lookbook-pagination .right-bottom-link{
 @media (min-width: 791px){
 body .lookbook_wrapper div.share-link {
    position: relative;
-    top: -35px;
+    top: 10px;
 }
 .lookbooks {
     margin: 60px auto;
@@ -23931,6 +23934,7 @@ body .account.preferences .right-account div.email-pref form fieldset .feed labe
 .checkout.wrapper .product-block.addresses.new-form li.item .half.address-select select,.checkout.wrapper .product-block.addresses.new-form li.item .half.country-select select{
 	width:100%;
 	background-image: url('../images/arrow.png');
+	height: 30px;
 }
 .checkout.wrapper .product-block.addresses.new-form li.item .form-additionals{
 	padding-left:3px;
