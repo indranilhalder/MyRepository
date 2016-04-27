@@ -671,7 +671,7 @@ display:none;
     <div class="product-detail">
     <h2 class="company">
               <span class="logo"></span>${product.brand.brandname}&nbsp;<spring:theme code="product.by"/>&nbsp;${sellerName}</h2>
-    <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>
+    <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     <div class="price">
     <c:choose>
     <c:when test="${not empty spPrice.value && spPrice.value ne 0}">

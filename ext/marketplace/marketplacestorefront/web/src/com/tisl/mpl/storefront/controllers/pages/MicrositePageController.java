@@ -4,13 +4,13 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractSearchPageController;
-import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 
 import java.io.UnsupportedEncodingException;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,7 +27,7 @@ import org.springframework.web.util.UrlPathHelper;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.category.MplCategoryFacade;
-import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -46,6 +46,10 @@ public class MicrositePageController extends AbstractSearchPageController
 	protected static final String SELLER_NAME_PATH_VARIABLE_PATTERN = "/{mSellerName:.*}";
 
 	private static final String ERROR_CMS_PAGE = "notFound";
+
+	@Resource(name = "frontEndErrorHelper")
+	private FrontEndErrorHelper frontEndErrorHelper;
+
 	@Autowired
 	private MplCategoryFacade mplCategoryFacade;
 	private final UrlPathHelper urlPathHelper = new UrlPathHelper();
@@ -67,16 +71,18 @@ public class MicrositePageController extends AbstractSearchPageController
 			return getViewForPage(pageForRequest);
 		}
 
+		/******* Code Commented and chnaged for TISPRO-323 ***************/
 		// No page found - display the notFound page with error from controller
-		storeCmsPageInModel(model, getContentPageForLabelOrId(ERROR_CMS_PAGE));
-		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ERROR_CMS_PAGE));
+		//storeCmsPageInModel(model, getContentPageForLabelOrId(ERROR_CMS_PAGE));
+		//setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ERROR_CMS_PAGE));
 
 		//model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,resourceBreadcrumbBuilder.getBreadcrumbs("breadcrumb.not.found"));
-		GlobalMessages.addErrorMessage(model, "system.error.page.not.found");
+		//	GlobalMessages.addErrorMessage(model, "system.error.page.not.found");
 
-		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		//response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
-		return ControllerConstants.Views.Pages.Error.ErrorNotFoundPage;
+		//return ControllerConstants.Views.Pages.Error.ErrorNotFoundPage;
+		return frontEndErrorHelper.callNonBusinessError(model, "system.error.page.not.found");
 	}
 
 	/**
@@ -108,13 +114,13 @@ public class MicrositePageController extends AbstractSearchPageController
 
 	/*
 	 * This method will get category data from MplCategoryFacade for the given category name.
-	 *
+	 * 
 	 * @param sellerName category name comes from ajax url
 	 */
 	@RequestMapping(value = "/fetchSellerSalesHierarchyCategories/{sellerName}", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryData getShopBrandCategories(@PathVariable final String sellerName)
-			throws CMSItemNotFoundException, UnsupportedEncodingException
+	public CategoryData getShopBrandCategories(@PathVariable final String sellerName) throws CMSItemNotFoundException,
+			UnsupportedEncodingException
 	{
 		CategoryData catData = null;
 		try
