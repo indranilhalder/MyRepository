@@ -9,7 +9,7 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *  
+ *
  */
 package com.tisl.mpl.storefront.web.forms;
 
@@ -20,6 +20,7 @@ public class ExtRegisterForm extends RegisterForm
 {
 
 	private String affiliateId;
+	private boolean checkMyRewards;
 
 	/**
 	 * @return the affiliateId
@@ -37,6 +38,27 @@ public class ExtRegisterForm extends RegisterForm
 	{
 		this.affiliateId = affiliateId;
 	}
+
+	/**
+	 * @return the check_MyRewards
+	 */
+	public boolean isCheckMyRewards()
+	{
+		return checkMyRewards;
+	}
+
+	/**
+	 * @param checkMyRewards
+	 *           the check_MyRewards to set
+	 */
+	public void setCheckMyRewards(final boolean checkMyRewards)
+	{
+		this.checkMyRewards = checkMyRewards;
+	}
+
+
+
+
 
 
 

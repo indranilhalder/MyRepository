@@ -1,4 +1,5 @@
 /*
+
  *
  * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
@@ -386,6 +387,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMAIL_NOT_FOUND = "user.email.not_found";
 	public static final String WISHLIST_NO = "Wishlist";
 	public static final String THUMBNAIL = "thumbnail";
+	public static final String SEARCHPAGE = "searchPage";
 	public static final String WISHLIST_EXISTS_MSG = "Wishlist name already exists.";
 
 
@@ -837,6 +839,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9516 = "B9516";
 	public static final String B9517 = "B9517";
 	public static final String B9518 = "B9518";
+
+	public static final String B9103 = "B9103";
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -1381,8 +1385,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CAMPAIGN_CHANNEL = "WEB|WEBMOBILE|MOBILE|CALLCENTER|KIOSK".intern();
 	public static final String CAMPAIGN_MULTIDATA_SEPERATOR = "|".intern();
 	public static final String CAMPAIGN_FILE_LOCATION = "campaign.promotion.csv.path".intern();
-	public static final String CAMPAIGN_HEADER = "IDENTIFIER,TITLE,PROMOTIONGROUP,DESCRIPTION,ENABLED,PRIORITY,CHANNEL,PRODUCTS,CATEGORIES,EXCLUDED PRODUCTS,CATEGORY MIN AMOUNT,QUANTITY,MAX DISCOUNT,IS PERCENTAGE,PERCENTAGE,DISCOUNT PRICES,GIFT PRODUCTS,START DATE,END DATE,RESTRICTIONS,FIRED MESSAGE,COULD FIRE MESSAGE,SECOND PRODUCTS,SECOND CATEGORIES,THRESH TOTALS,TSHIP,SSHIP,DISCOUNT TYPE,DELIVERY MODE,FREE COUNT,URL"
-			.intern();
+	//	public static final String CAMPAIGN_HEADER = "IDENTIFIER,TITLE,PROMOTIONGROUP,DESCRIPTION,ENABLED,PRIORITY,CHANNEL,PRODUCTS,CATEGORIES,EXCLUDED PRODUCTS,CATEGORY MIN AMOUNT,QUANTITY,MAX DISCOUNT,IS PERCENTAGE,PERCENTAGE,DISCOUNT PRICES,GIFT PRODUCTS,START DATE,END DATE,RESTRICTIONS,FIRED MESSAGE,COULD FIRE MESSAGE,SECOND PRODUCTS,SECOND CATEGORIES,THRESH TOTALS,TSHIP,SSHIP,DISCOUNT TYPE,DELIVERY MODE,FREE COUNT,URL"
+	//			.intern();
 	public static final String CAMPAIGN_FILE_DELIMITTER = ",".intern();
 	public static final String CAMPAIGN_FILE_NEW_LINE_SEPARATOR = "\n".intern();
 	public static final String CAMPAIGN_FILE_NAME = "campaign".intern();
@@ -1489,7 +1493,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String PROMO_PRODUCT_UPLOAD_SEPARATOR = ",".intern();
 
+	public static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+
 	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
+
+	public static final String CAMPAIGN_HEADER_1 = "IDENTIFIER,TITLE,PROMOTIONGROUP,DESCRIPTION,ENABLED,PRIORITY,".intern();
+
+	public static final String CAMPAIGN_HEADER_2 = "PRODUCTS,CATEGORIES,EXCLUDED PRODUCTS,CATEGORY MIN AMOUNT,QUANTITY,MAX DISCOUNT,IS PERCENTAGE,PERCENTAGE,DISCOUNT PRICES,GIFT PRODUCTS,START DATE,END DATE,RESTRICTIONS,FIRED MESSAGE,COULD FIRE MESSAGE,SECOND PRODUCTS,SECOND CATEGORIES,THRESH TOTALS,TSHIP,SSHIP,DISCOUNT TYPE,DELIVERY MODE,FREE COUNT,URL"
+			.intern();
+
 
 	public static final String TYPE = "type";
 

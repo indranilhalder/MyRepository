@@ -258,7 +258,7 @@
 					</c:when>
 					<c:when test="${product.rootCategory=='Footwear'}">
 						<%-- <img src="${commonResourcePath}/images/foot_size.jpg" alt="sizeGuideImage" style="max-width:65%;" /> --%>
-						<img src="${imageURL}" alt="sizeGuideImage" />
+						<img src="${imageURL}" alt="sizeGuideImage" style="max-width:65%;" />
 					</c:when>
 				</c:choose>
 			</div>
@@ -295,28 +295,30 @@
 						<li>
 						<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
 								var="variantUrl" />
-						
-							 <c:choose>
+							<!-- TISPRO-308 -->
+							<%--  <c:choose>
 							 <c:when test="${empty sizeSelectedSizeGuide}">
+							 
 								<a href="${variantUrl}&sizeSelected=" data-target="#popUpModal" data-toggle="modal" data-productcode="${variantOption.code}">
 							 </c:when>
 							 <c:otherwise>
 								<a href="${variantUrl}&sizeSelected=true" data-target="#popUpModal" data-productcode="${variantOption.code}" data-toggle="modal">
 						     </c:otherwise>
-							 </c:choose>
+							 </c:choose> --%>
 											
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
-									<c:choose>
+								<c:choose> 
 								<c:when test="${color=='multi'}"> 
-						     	<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
+						     	<img src="${commonResourcePath}/images/multi.jpg" style="width:100%;height:100%;cursor: pointer;" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"/>
 								</c:when>
+								<%-- <span style="background-color: ${color};border: 1px solid rgb(204, 211, 217);" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span> --%>
 								<c:otherwise>
 									<span
 										style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"
-										title="${variantOption.colour}"></span></a>
-                               </c:otherwise>
-                               </c:choose>
+										title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span>
+                               </c:otherwise> 
+                               </c:choose> 
 
 									<c:if test="${variantOption.code eq product.code}">
 										<c:set var="currentColor" value="${color}" /> 

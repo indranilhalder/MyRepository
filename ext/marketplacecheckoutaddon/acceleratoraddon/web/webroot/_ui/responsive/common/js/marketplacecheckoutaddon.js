@@ -1,3 +1,5 @@
+
+
 var isCodSet = false;	//this is a variable to check whether convenience charge is set or not
 var binStatus= false;
 
@@ -94,6 +96,7 @@ function refresh(){
 	//TISEE-5555
 	$('.security_code_hide').prop('disabled', true);
 	$('.security_code').prop('disabled', false); 
+
 }
 
 
@@ -373,8 +376,10 @@ function submitForm(){
 
 
 
+
 							//TISPRO-153
 							sendTealiumData();	
+
 
 
 
@@ -383,7 +388,7 @@ function submitForm(){
 							$("#otpSentMessage").css("display","none");
 							$(".pay .payment-button").prop("disabled",true);
 							$(".pay .payment-button").css("opacity","0.5");
-							$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 10px; height: 30px;">');
+							$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 100px; height: 30px;">');
 							$(".pay .spinner").css("left",(($(".pay#paymentFormButton").width()+$(".pay#paymentFormButton .payment-button").width())/2)+10);
 							$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 							$("#silentOrderPostForm").submit();
@@ -1190,7 +1195,7 @@ $("#otpMobileNUMField").focus(function(){
   function createJuspayOrderForSavedCard(){
 		$(".pay button").prop("disabled",true);
 		$(".pay button").css("opacity","0.5");
-		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 30px; height: 30px;">');
+		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.saved-card-button").width()+$(".pay.saved-card-button button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	  // TISPRO-153		
@@ -1198,12 +1203,13 @@ $("#otpMobileNUMField").focus(function(){
 
 
 
+
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
-		
-		if($(".redirect").val()=="false"){
-			Juspay.startSecondFactor();
-		}
+        //TISPRO-313	
+		//if($(".redirect").val()=="false"){
+			//Juspay.startSecondFactor();
+		//}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
 			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping},
@@ -1211,6 +1217,7 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(response) {
+
 
 
 
@@ -1231,34 +1238,40 @@ $("#otpMobileNUMField").focus(function(){
 					$("#no-click").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}else{
-//					if($(".redirect").val()=="false"){
-//						//Juspay.startSecondFactor();
-//					}
-					$("#order_id_saved").val(response);
-					var baseUrl=window.location.origin;
-					var website = ACC.config.encodedContextPath;
-					var thank_you_page = /*(website.indexOf("https") > -1 ? "" : "https://") +*/ baseUrl+website + "/checkout/multi/payment-method/cardPayment";
-					var error_page = /*(website.indexOf("https") > -1 ? "" : "https://") +*/ baseUrl+website + "/checkout/multi/payment-method/cardPayment";
-					Juspay.Setup({
-						payment_form: "#card_form",
-						success_handler: function(status, statusObj) {
-							//redirect to success page
-							var p = "order_id=" + statusObj.orderId
-							p = p + "&status=" + statusObj.status 
-							p = p + "&status_id=" + statusObj.statusId
-							window.location.href = thank_you_page
-						},
-						error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
-							//redirect to failure page
-							//alert("Transaction not successful. Error: " + bank_error_message)
-							window.location.href = error_page
-						},
-						second_factor_window_closed_handler: function() {
-						    // enable the pay button for the user
-							window.location.href = error_page
-						}
-					})
-					$("#card_form").submit() 
+					 //TISPRO-313
+					if($(".redirect").val()=="false"){
+						Juspay.startSecondFactor();
+				    } 
+					setTimeout(function(){ 	
+						$("#order_id_saved").val(response);
+						var baseUrl=window.location.origin;
+						var website = ACC.config.encodedContextPath;
+						var thank_you_page = /*(website.indexOf("https") > -1 ? "" : "https://") +*/ baseUrl+website + "/checkout/multi/payment-method/cardPayment";
+						var error_page = /*(website.indexOf("https") > -1 ? "" : "https://") +*/ baseUrl+website + "/checkout/multi/payment-method/cardPayment";
+						Juspay.Setup({
+							payment_form: "#card_form",
+							success_handler: function(status, statusObj) {
+								//redirect to success page
+								var p = "order_id=" + statusObj.orderId
+								p = p + "&status=" + statusObj.status 
+								p = p + "&status_id=" + statusObj.statusId
+								window.location.href = thank_you_page
+							},
+							error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
+								//redirect to failure page
+								//alert("Transaction not successful. Error: " + bank_error_message)
+								window.location.href = error_page
+							},
+							second_factor_window_closed_handler: function() {
+							    // enable the pay button for the user
+								window.location.href = error_page
+							}
+						})
+						$("#card_form").submit(); 		
+						
+					 }, 1000);
+			
+
 				}
 			},
 			error : function(resp) {
@@ -1277,14 +1290,16 @@ $("#otpMobileNUMField").focus(function(){
   function createJuspayOrderForNewCard(){
 		$(".pay button").prop("disabled",true);
 		$(".pay button").css("opacity","0.5");
-		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 30px; height: 30px;">');
+		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 
 
 
+
 	  // TISPRO-153
 		sendTealiumData();
+
 
 
 
@@ -1311,10 +1326,10 @@ $("#otpMobileNUMField").focus(function(){
 		else {
 			var sameAsShipping = false;
 		}
-		
-		if($(".redirect").val()=="false"){
-			Juspay.startSecondFactor();
-		}
+	    //TISPRO-313
+		//if($(".redirect").val()=="false"){
+			//Juspay.startSecondFactor();
+		//}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
 			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping},
@@ -1338,12 +1353,16 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay .spinner").remove();
 					$("#no-click").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
-				}else{
-//					if($(".redirect").val()=="false"){
-//						Juspay.startSecondFactor();
-//					}
-					$("#order_id_new").val(response);
-					submitCardForm();				
+				}else{		
+					 //TISPRO-313
+					 if($(".redirect").val()=="false"){
+						Juspay.startSecondFactor();
+				     } 		 
+					 setTimeout(function(){ 			 
+						  $("#order_id_new").val(response);
+						  submitCardForm();		 
+					 }, 1000);
+			
 				}
 			},
 			error : function(resp) {
@@ -1592,6 +1611,31 @@ $("#otpMobileNUMField").focus(function(){
 
 	 }); 
 	 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2615,7 +2659,7 @@ function submitNBForm(){
 	else{
 		$(".pay button").prop("disabled",true);
 		$(".pay button").css("opacity","0.5");
-		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 30px; height: 30px;">');
+		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.top-padding").width()+$(".pay.top-padding button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.00; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		
@@ -2639,8 +2683,10 @@ function submitNBForm(){
 
 
 
+
 					//TISPRO-153
 					sendTealiumData();
+
 
 
 
@@ -2661,11 +2707,13 @@ function submitNBForm(){
 
 
 
+
 								if(method === "POST") {
 									var frm = document.createElement("form")
 									frm.style.display = "none"; // ensure that the form is hidden from the user
 									frm.setAttribute("method", method);
 									frm.setAttribute("action", url);
+
 
 
 
@@ -2812,7 +2860,7 @@ function checkPincodeServiceability(buttonType)
 		
 		$( "#error-Id").hide();
 		$("#emptyId").css({
-			"color":"red",
+			"color":"#ff1c47",
 			"display":"block",
 			});
 
@@ -2863,6 +2911,7 @@ function checkPincodeServiceability(buttonType)
  		}
  	});
 
+
    }
 }
 
@@ -2884,6 +2933,8 @@ function populatePincodeDeliveryMode(response,buttonType){
 	var checkoutLinkURlId = $('#checkoutLinkURlId').val(); 
 	//response='Y|123456|[{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011717","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"ED","inventory":"2","deliveryDate":null},{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"4","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12},{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011719","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"12","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12}]';
 	//response='N|123456|[{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011717","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"ED","inventory":"2","deliveryDate":null},{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"2","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":2},{"fulfilmentType":null,"isPrepaidEligible":null,"ussid":"123653098765485130011719","pinCode":null,"validDeliveryModes":null,"cod":null,"transportMode":null,"isCODLimitFailed":null,"deliveryDate":null,"isServicable":"N","stockCount":null}]';	
+
+
 
 
 	console.log(response);
@@ -2928,6 +2979,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 
 
 
+
 	for ( var key in deliveryModeJsonObj) {
 	var ussId= deliveryModeJsonObj[key].ussid;
 	$("#"+ussId+"_qtyul").remove();
@@ -2964,6 +3016,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		if(stockAvailable==false){
 			var newUl = document.createElement("ul");
 			newUl.setAttribute("id", ussId+'_qtyul');
+			newUl.setAttribute("class", 'less-stock');
 			var newLi = document.createElement("li");
 			var text = document.createTextNode("Oops! We only have "+inventory+" in stock! For pincode : "+selectedPincode);
 			newLi.appendChild(text);
@@ -3147,17 +3200,18 @@ function checkSignInValidation(path){
 	$("#signinEmailIdDiv").hide();
 	if(emailId == null || emailId == ""){
 		$("#signinEmailIdDiv").show();
-		$("#signinEmailIdDiv").html("E-mail cannot be left empty");	
+		$("#signinEmailIdDiv").html("Please enter all mandatory fields");	
+
 		validationResult=false;
 	}
 	else if(!emailPattern.test(emailId)){
 		$("#signinEmailIdDiv").show();
-		$("#signinEmailIdDiv").html("Please enter a valid email ID");
+		$("#signinEmailIdDiv").html("Please enter all mandatory fields");
 		validationResult=false;
 	}
 	else if(password==null || password=="" || password.length==0){
 		$("#signinPasswordDiv").show();
-		$("#signinPasswordDiv").html("Password cannot be left empty");
+		$("#signinPasswordDiv").html("Please enter all mandatory fields");
 		validationResult=false;
 	}
 	
@@ -3829,6 +3883,8 @@ function sendTealiumData(){
 	
 		        } else if (payment_mode === "Credit Card" || payment_mode === "Debit Card") {	
 
+
+
 				payment_type = jQuery("li.active-card span").attr("class") || "Saved Card";
 	
 		        } else if (payment_mode === "NetBanking") {
@@ -3877,3 +3933,4 @@ function sendTealiumData(){
 		// TODO: handle exception
 	   }     
 }
+

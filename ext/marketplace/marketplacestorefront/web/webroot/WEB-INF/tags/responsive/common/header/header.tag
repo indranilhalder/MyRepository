@@ -226,8 +226,8 @@ function registerUser(eventObject)
 				<c:otherwise>
 					<div class="marketplace-checkout">
 						<c:if test="${empty hideLogo}">
-							<cms:pageSlot position="SiteLogo" var="logo" limit="1">
-								<cms:component component="${logo}"/>
+							<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
+								<cms:component component="${logo}" />
 							</cms:pageSlot>
 						</c:if>
 					</div>

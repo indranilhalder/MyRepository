@@ -86,6 +86,7 @@ import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -385,6 +386,9 @@ public class UsersController extends BaseCommerceController
 	@Autowired
 	private GigyaFacade gigyaFacade;
 
+	private String signature;
+	private String timestamp;
+	private String gigyaUID;
 	//@Autowired
 	//private MplPaymentFacadeImpl mplPaymentFacadeImpl;
 	//	@Autowired Critical Sonar fixes Unused private Field
@@ -562,10 +566,12 @@ public class UsersController extends BaseCommerceController
 	{ ROLE_CLIENT, CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/socialMediaRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplUserResultWsDto socialMediaRegistration(@RequestParam final String emailId,
-			@RequestParam final String socialMediaToken, @RequestParam final String socialMedia,
-			@RequestParam(required = false) final String socialUserId) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException
+	//	public MplUserResultWsDto socialMediaRegistration(@RequestParam final String emailId,
+	//			@RequestParam final String socialMediaToken, @RequestParam final String socialMedia,
+	//			@RequestParam(required = false) final String socialUserId) throws RequestParameterException,
+	//			WebserviceValidationException, MalformedURLException
+	public MplUserResultWsDto socialMediaRegistration(@RequestParam final String emailId, @RequestParam final String socialMedia,
+			@RequestParam final String uid) throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		try
@@ -578,12 +584,25 @@ public class UsersController extends BaseCommerceController
 			}
 			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
 			{
-				result = mobileUserService.socialFbRegistration(socialMediaToken, emailId);
+				//				result = mobileUserService.socialFbRegistration(socialMediaToken, emailId);
+				result = mobileUserService.socialFbRegistration(emailId, uid);
 			}
 			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
 			{
-				result = mobileUserService.socialGoogleRegistration(socialMediaToken, emailId, socialUserId);
+				//				result = mobileUserService.socialGoogleRegistration(socialMediaToken, emailId, socialUserId);
+				result = mobileUserService.socialGoogleRegistration(emailId, uid);
 			}
+			if (null != result.getSessionSecret())
+			{
+				result.setSessionSecret(result.getSessionSecret());
+			}
+			if (null != result.getSessionToken())
+			{
+				result.setSessionToken(result.getSessionToken());
+			}
+
+			LOG.debug("****************** SESSSSION KEY ****************** " + result.getSessionSecret());
+			LOG.debug(" ******************  SESSSSION TOKEN ****************** " + result.getSessionToken());
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -630,29 +649,64 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "{emailId}/loginSocialUser", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplUserResultWsDto loginSocialUser(@PathVariable final String emailId, @RequestParam final String socialMediaToken,
-			@RequestParam final String socialMedia, @RequestParam(required = false) final String socialUserId)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	//	public MplUserResultWsDto loginSocialUser(@PathVariable final String emailId, @RequestParam final String socialMediaToken,
+	//			@RequestParam final String socialMedia, @RequestParam(required = false) final String socialUserId)
+	//			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	public MplUserResultWsDto loginSocialUser(@PathVariable final String emailId, @RequestParam final String socialMedia,
+			@RequestParam(required = false) final String timestamp, @RequestParam(required = false) final String signature,
+			@RequestParam(required = false) final String uid) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException, UnsupportedEncodingException
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		try
 		{
 			LOG.debug("****************** Social Media User Login mobile web service ***********" + emailId);
-
+			if (StringUtils.isNotEmpty(uid))
+			{
+				setGigyaUID(encodeutf(uid));
+			}
+			if (StringUtils.isNotEmpty(signature))
+			{
+				setSignature(encodeutf(signature));
+			}
+			if (StringUtils.isNotEmpty(timestamp))
+			{
+				setTimestamp(encodeutf(timestamp));
+			}
 			//Social Media should not be anything other than FB or Google +
-			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK) || (StringUtils
-					.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
+			if (gigyaFacade.validateSignature(uid, timestamp, signature))
+			{
+				if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK) || (StringUtils
+						.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
+				}
+				else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
+				{
+					//				result = mobileUserService.loginSocialFbUser(socialMediaToken, emailId);
+					result = mobileUserService.loginSocialFbUser(emailId, uid);
+				}
+				else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
+				{
+					//				result = mobileUserService.loginSocialGoogleUser(socialMediaToken, emailId, socialUserId);
+					result = mobileUserService.loginSocialGoogleUser(emailId, uid);
+				}
+			}
+			else
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
 			}
-			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
+			if (null != result.getSessionSecret())
 			{
-				result = mobileUserService.loginSocialFbUser(socialMediaToken, emailId);
+				result.setSessionSecret(result.getSessionSecret());
 			}
-			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
+			if (null != result.getSessionToken())
 			{
-				result = mobileUserService.loginSocialGoogleUser(socialMediaToken, emailId, socialUserId);
+				result.setSessionToken(result.getSessionToken());
 			}
+
+			LOG.debug("****************** SESSSSION KEY ****************** " + result.getSessionSecret());
+			LOG.debug(" ******************  SESSSSION TOKEN ****************** " + result.getSessionToken());
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -682,6 +736,11 @@ public class UsersController extends BaseCommerceController
 		}
 		//Return result
 		return result;
+	}
+
+	private String encodeutf(final String data) throws UnsupportedEncodingException
+	{
+		return java.net.URLDecoder.decode(data, "UTF-8");
 	}
 
 	/**
@@ -3087,9 +3146,14 @@ public class UsersController extends BaseCommerceController
 								//Set product image(thumbnail) url
 								for (final ImageData img : productData1.getImages())
 								{
+									/*
+									 * if (null != img && StringUtils.isNotEmpty(img.getFormat()) //&&
+									 * img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar
+									 * fix && img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+									 */
 									if (null != img && StringUtils.isNotEmpty(img.getFormat())
-									//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
-											&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+									//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.SEARCHPAGE) Sonar fix
+											&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
 									{
 										wldpDTO.setImageURL(img.getUrl());
 									}
@@ -7622,6 +7686,57 @@ public class UsersController extends BaseCommerceController
 	public void setProductDetailsHelper(final ProductDetailsHelper productDetailsHelper)
 	{
 		this.productDetailsHelper = productDetailsHelper;
+	}
+
+	/**
+	 * @return the signature
+	 */
+	public String getSignature()
+	{
+		return signature;
+	}
+
+	/**
+	 * @param signature
+	 *           the signature to set
+	 */
+	public void setSignature(final String signature)
+	{
+		this.signature = signature;
+	}
+
+	/**
+	 * @return the timestamp
+	 */
+	public String getTimestamp()
+	{
+		return timestamp;
+	}
+
+	/**
+	 * @param timestamp
+	 *           the timestamp to set
+	 */
+	public void setTimestamp(final String timestamp)
+	{
+		this.timestamp = timestamp;
+	}
+
+	/**
+	 * @return the gigyaUID
+	 */
+	public String getGigyaUID()
+	{
+		return gigyaUID;
+	}
+
+	/**
+	 * @param gigyaUID
+	 *           the gigyaUID to set
+	 */
+	public void setGigyaUID(final String gigyaUID)
+	{
+		this.gigyaUID = gigyaUID;
 	}
 
 }

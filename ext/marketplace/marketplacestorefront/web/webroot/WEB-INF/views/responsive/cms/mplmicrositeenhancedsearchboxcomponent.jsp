@@ -5,6 +5,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <script language='javascript'>
 	$(document).ready(function() {
+		
 		var mSellerName = '${mSellerName}';
 		$(".micrositeSellerName").html(mSellerName);
 	
@@ -21,34 +22,45 @@
 				$(this).parents('.select-list').find('ul').slideUp();
 				$("#js-site-micrositesearch-input").focus(); 
 			});
-	
-			
-		$("#search_form_microsite").submit(function(event) {
-			if($("#js-site-micrositesearch-input").val().trim()=="") {
-			
-				var actionText = ACC.config.contextPath;
-
-				var dropdownValue = $("#micrositeSearchCategory").val();
-				var dropdownName = $("#micrositeSearchCategory").find('option:selected').text();
-				if(dropdownValue=="all"){
-					return false;
-				}
-				else{
-					
-					if (dropdownValue.startsWith("category-")) {
-						actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue.replace("category-",""));
-					}
-					if (dropdownValue.startsWith("brand-")) {
-						actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue.replace("brand-",""));
-					}
-					
-				}
-				
-				$("#search_form_microsite :input").prop("disabled", true);
-				$('#search_form_microsite').attr('action',actionText);
-			} 
-		});
 		
+			
+			 //Added For TISPRO-264
+			$("#micrositesearchButton").click(function(event) {
+					if($("#js-site-micrositesearch-input").val().trim()=="") {			
+						event.preventDefault();
+						return false;
+					}
+					
+					else{					
+						
+						var actionText = ACC.config.contextPath;
+						var dropdownValue = $("#micrositeSearchCategory").val();
+						var dropdownName = $("#micrositeSearchCategory").find('option:selected').text();
+					 
+						if (!String.prototype.startsWith) {
+							  String.prototype.startsWith = function(searchString, position) {
+							    position = position || 0;							    
+							    return this.indexOf(searchString, position) === position;
+							  };
+						}
+						 //Added For TISPRO-264
+						else if(dropdownValue=="all"){							
+								actionText = (actionText + '/mpl/en/search/');								
+							}
+						
+						else if (dropdownValue.startsWith("category-")) {
+							actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue.replace("category-",""));
+						}
+						else if (dropdownValue.startsWith("brand-")) {
+							actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue.replace("brand-",""));
+						}
+						
+					}
+					
+					/* $("#search_form_microsite :input").prop("disabled", true); */
+					$('#search_form_microsite').attr('action',actionText);
+				 
+			});		
 		/*------------Start of SNS auto complete for microsite page----------*/
 		
 		var style_microsite = null ;
@@ -90,7 +102,7 @@
 
 	<form id="search_form_microsite" name="search_form_microsite" method="get" action="${searchUrl}">
 
-
+	 <button id="micrositesearchButton"></button>  <!-- Added for TISPRO-264 -->
 				
 		<input type="hidden" name="mSellerID" 
 				value="${mSellerID}" /> 
@@ -112,17 +124,16 @@
 		</div> 
 --%>
 
-		<span> <ycommerce:testId code="header_search_button">
+		<%-- <span> <ycommerce:testId code="header_search_button">
 				<button></button>
 			</ycommerce:testId>
-		</span>
+		</span> --%>
 
 		<!-- search category List -->
 
 		<div class="select-view">
 			<select id="micrositeSearchCategory" class="select-view" name="micrositeSearchCategory">
-				<option value="all" class="micrositeSellerName"></option>
-				<option disabled>----------</option>
+				<option value="all" class="micrositeSellerName"></option>				
 
 				<c:forEach items="${categoryList }" var="category">
 					<option value="category-${category.code }"
@@ -134,7 +145,7 @@
 					</c:if>>${category.name }
 					</option>
 				</c:forEach>
-				<option disabled>----------</option>
+				
 				<c:forEach items="${brands }" var="brand">
 					<option value="brand-${brand.code }"
 						<c:if test="${brand.code eq categoryCode }"> 
@@ -145,7 +156,7 @@
 					</c:if>>
 						${brand.name}</option>
 				</c:forEach>
-				<option disabled>----------</option>
+				
 		
 			</select>
 

@@ -199,4 +199,13 @@ public class SellerBasedPromotionServiceImpl implements SellerBasedPromotionServ
 		this.modelService = modelService;
 	}
 
+	/**
+	 * Fetch promotion details which are active
+	 */
+	@Override
+	public List<AbstractPromotionModel> getPromoDetails()
+	{
+		return getSellerBasedPromotionDao().getPromoDetails();
+	}
+
 }

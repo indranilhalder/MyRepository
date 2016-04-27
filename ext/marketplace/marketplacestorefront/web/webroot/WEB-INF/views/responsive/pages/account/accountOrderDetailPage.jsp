@@ -76,7 +76,7 @@
 
 
 <template:page pageTitle="${pageTitle}">
-	<div class="account">
+	<div class="account" id="anchorHead">
 		<h1 class="account-header">
 			<spring:theme code="text.account.headerTitle" text="My Marketplace" />
 			<%--  <select class="menu-select">
@@ -98,49 +98,7 @@
 
 
 			<!----- Left Navigation Starts --------->
-			<%-- <div class="left-nav">
-				<h1>
-					<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-				</h1>
-				<ul>
-					<li><h3>
-							<spring:theme code="header.flyout.myaccount" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/"/>"><spring:theme
-								code="header.flyout.overview" /></a></li>
-					<li><a
-						href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-								code="header.flyout.marketplacepreferences" /></a></li>
-					<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
-								code="header.flyout.Personal" /></a></li>
-					<li><a class="active"
-						href="<c:url value="/my-account/orders"/>"><spring:theme
-								code="header.flyout.orders" /></a></li>
-					<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
-								code="header.flyout.cards" /></a></li>
-					<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
-								code="header.flyout.address" /></a></li>
-					<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
-										code="header.flyout.review" /></a></li>
-					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-								code="header.flyout.recommendations" /></a></li>
-				</ul>
-				<!-- <ul>
-				<li class="header-SignInShare"><h3><spring:theme
-									code="header.flyout.credits" /></h3></li>
-						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li>
-				</ul> -->
-				<ul>
-					<li><h3>
-							<spring:theme code="header.flyout.share" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
-								code="header.flyout.invite" /></a></li>
-
-				</ul>
-
-			</div> --%>
+			
 			<user:accountLeftNav pageName="orderDetail"/>
 			<!----- Left Navigation ENDS --------->
 
@@ -202,7 +160,7 @@
 							</ul>
 
 
-							<div class="totals">
+							<div class="totals" id="anchor">
 								<h3>Total:</h3>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
@@ -352,6 +310,12 @@
 									</c:if> --%>
 							</div>
 						</li>
+
+
+
+
+
+
 	                            <c:set var="button" value="true" />
 								<c:set var="entryCount" value="0"></c:set>
 								<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
@@ -368,9 +332,10 @@
 								</c:forEach>
 									
 								<c:if test="${flag}">
-								<li class="item delivered first">
+								<li class="item delivered first" id="shipping-track-order">
 						    	<div class="item-header">
 								<c:if test="${entryCount > 1}">
+
 								<h3>${HD_ED_Count} Product(s)-ShippingAddress:</h3>
 								</c:if>
 								<c:if test="${entryCount  <= 1 }">
@@ -635,6 +600,7 @@
 														text="Return Item" />
 												</a>
 											</c:if>
+
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
 													href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${sellerOrder.code}&transactionId=${entry.transactionId}"
@@ -726,6 +692,8 @@
 																		<option value="${reason.reasonCode}">${reason.reasonDescription}</option>
 																	</c:forEach>
 																</form:select>
+
+
 															</div>
 															<c:set var="ussidClass" value="${orderEntrySellerSKU}"></c:set>
 															<!-- <c:forEach items="${entry.associatedItems}" var="associatedUssid">
@@ -758,6 +726,9 @@
 											</div>
 											<div class="overlay" data-dismiss="modal"></div>
 										</div>
+
+
+
 										<div class=" modal account active fade"
 											id="cancelSuccess${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}">
 											<div class="content">
@@ -864,6 +835,7 @@
 										<c:set var="productDelivered" value="0"></c:set>
 										 <!-- For RTO handling -->
 											<c:forEach items="${shippingStatus}" var="productStatus"
+
 												varStatus="loop">
 												<c:if test="${(productStatus.responseCode eq 'DELIVERED') or (productStatus.responseCode eq 'ORDER_COLLECTED')}">
 										 	<c:set var="productDelivered" value="1"/>
@@ -887,6 +859,7 @@
 												<c:if test="${fn:length(cancelStatus) gt 0}">
 													<li>Cancel</li>
 												</c:if>
+
 													<c:choose>
 														<c:when
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
@@ -897,11 +870,13 @@
 														<c:otherwise>
 															<c:if test="${fn:length(cancelStatus) eq 0}">
 																<li>Shipping</li>
+
 															</c:if>
 														</c:otherwise>
 													</c:choose>
 
 												<!-- For RTO handling productDelivered -->
+
 													<c:choose>
 														<c:when
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
@@ -916,6 +891,9 @@
 																<li>Delivery</li>
 															</c:if>
 														</c:otherwise>
+
+
+
 
 													</c:choose>
 
@@ -1174,6 +1152,7 @@
 																			test="${not empty logistic[entry.orderLineId] and fn:toLowerCase(logistic[entry.orderLineId]) ne 'null' and entry.mplDeliveryMode.code ne 'click-and-collect'
 																			}">
 																			<p>Logistics: ${logistic[entry.orderLineId]}</p>
+
 																		</c:if>
 																		<c:if
 																			test="${not empty awbNum[entry.orderLineId] and fn:toLowerCase(awbNum[entry.orderLineId]) ne 'null' and entry.mplDeliveryMode.code ne 'click-and-collect'
@@ -1184,11 +1163,14 @@
 																					<p>
 																						AWB No. <a
 																							href="${trackingurl[entry.orderLineId]}">${awbNum[entry.orderLineId]}</a>
+
 																				</c:when>
 																				<c:otherwise>
 																					<p>AWB No. ${awbNum[entry.orderLineId]}</p>
 																				</c:otherwise>
 																			</c:choose>
+
+
 																		</c:if>
 
 																		<c:if test="${productStatus.responseCode ne 'DELIVERED'}">
@@ -1209,6 +1191,7 @@
 																		  </div>
 																		  <div id="shippingStatusRecord${entry.orderLineId}_${loop.index}" class="view-more-consignment-data"></div>
 																	 </c:if>
+
 																	 </c:if>
 																	
 																</div>
@@ -1356,10 +1339,12 @@
 										<!-- End Order Tracking diagram -->
 									</div>
 
+
                                    </c:if>
 								</c:forEach>
 								</c:forEach>
 							</c:forEach>
+
 						</li>
 
 
@@ -1405,6 +1390,14 @@ $(function(){
 		}
 	});
 	/*$(".tracking-information").each(function(){
+
+
+
+
+
+
+
+
 	
 			//$(".view-more-consignment-data").hide();
 			 $(this).find("#track-more-info p.active").click(function(){
@@ -1414,6 +1407,7 @@ $(function(){
 				$(this).siblings().toggleClass("active");
 				//$(this).parents("#tracking-order").toggleClass("track-order-height");
 			});
+
  	}); */
 	
 });
@@ -1462,6 +1456,7 @@ $(function() {
 		});
 				
 		$(".view-more-consignment").each(function () {
+
 			$(this).parents('.tracking-information').find(".view-more-consignment-data").hide();
 			$(this).click(function() {
 			   	var orderLineId = $(this).attr("orderlineid");

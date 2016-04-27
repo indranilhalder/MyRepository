@@ -295,16 +295,24 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				newCustomer.setName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 				newCustomer.setFirstName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 				newCustomer.setLastName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
+
+				//implementation for TISCR-278 :start
+				newCustomer.setIscheckedMyRewards(Boolean.valueOf(registerData.isCheckTataRewards()));
+
+				//implementation for TISCR-278 :end
 				newCustomer.setType(CustomerType.REGISTERED);
 				setUidForRegister(registerData, newCustomer);
 				newCustomer.setSessionLanguage(getCommonI18NService().getCurrentLanguage());
 				newCustomer.setSessionCurrency(getCommonI18NService().getCurrentCurrency());
 				extDefaultCustomerService.registerUser(newCustomer, registerData.getPassword(), registerData.getAffiliateId());
+
+
 				/*
 				 * mplCustomerWebService.customerModeltoWsData(newCustomer,
 				 * MarketplacecommerceservicesConstants.NEW_CUSTOMER_CREATE_FLAG, false);
 				 */
 				extUserService.addToRegisteredGroup(newCustomer);
+
 			}
 			else
 			{
@@ -405,9 +413,17 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					final String gigyaMethod = configurationService.getConfiguration().getString(
 							MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 					LOG.debug("GIGYA METHOD" + gigyaMethod);
-					gigyaservice.notifyGigya(newCustomer.getUid(), registerData.getUid(), registerData.getFirstName(),
-							registerData.getLastName(), registerData.getLogin(), gigyaMethod);
+					if (isMobile)
+					{
+						gigyaservice.notifyGigyaforMobile(newCustomer.getUid(), registerData.getUid(), registerData.getFirstName(),
+								registerData.getLastName(), registerData.getLogin(), gigyaMethod);
+					}
+					else
+					{
+						gigyaservice.notifyGigya(newCustomer.getUid(), registerData.getUid(), registerData.getFirstName(),
+								registerData.getLastName(), registerData.getLogin(), gigyaMethod);
 
+					}
 				}
 				catch (final Exception e)
 				{
@@ -441,8 +457,16 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				final String gigyaMethod = configurationService.getConfiguration().getString(
 						MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
 				LOG.debug("GIGYA METHOD" + gigyaMethod);
-				gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
-						registerData.getLastName(), registerData.getLogin(), gigyaMethod);
+				if (isMobile)
+				{
+					gigyaservice.notifyGigyaforMobile(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
+							registerData.getLastName(), registerData.getLogin(), gigyaMethod);
+				}
+				else
+				{
+					gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
+							registerData.getLastName(), registerData.getLogin(), gigyaMethod);
+				}
 				return registerData;
 			}
 		}

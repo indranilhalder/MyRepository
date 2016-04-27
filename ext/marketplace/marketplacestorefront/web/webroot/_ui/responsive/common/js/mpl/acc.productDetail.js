@@ -1,4 +1,5 @@
-ACC.productDetail = {
+	
+	ACC.productDetail = {
 
 	_autoload : [ "initPageEvents", "bindVariantOptions" ],
 
@@ -131,18 +132,45 @@ ACC.productDetail = {
 				window.location.href = url;
 			}
 		});
-		
-		// SizeGuide
+
+// added in merging.....
+	// Move to wish list msg
+		//alert(localStorage.getItem("movedToWishlist_msg"));
+		//alert(localStorage.getItem("removeFromCart_msgFromCart"));
+		if(localStorage.getItem("movedToWishlist_msgFromCart")=="Y")
+		{
+		$('#movedToWishlist_Cart').show();
+		setTimeout(function() {
+			  $("#movedToWishlist_Cart").fadeOut().empty();
+			}, 1500);
+		}
+		 localStorage.removeItem('movedToWishlist_msgFromCart');
+		 
+		 
+		 
+		 // remove from cart msg
+		 
+			if(localStorage.getItem("removeFromCart_msgFromCart")=="Y")
+			{
+			$('#removeFromCart_Cart').show();
+			setTimeout(function() {
+				  $("#removeFromCart_Cart").fadeOut().empty();
+				}, 1500);
+			}
+			 localStorage.removeItem('removeFromCart_msgFromCart');
+			 
+// added in merging.....
+	
+	// SizeGuide
 		
 		// Sise Guide Select Color
 		   
-		$(document).on("click", 'a[data-target=#popUpModal] ',
+		$(document).on("click", '.colorBox',
 			function() {
-			   var target = $(this).attr("href");
+			  var target = $(this).attr('data-producturl');
 			   console.log(target);
-			   var productcode= $(this).attr("data-productcode");
+			  var productcode= $(this).attr('data-productcode');
 			   console.log(productcode);
-		 	   //$("#popUpModal").modal('hide');
 			   $('body').on('hidden.bs.modal', '#popUpModal', function () {
 					  $(this).removeData('bs.modal');
 					});
@@ -863,12 +891,17 @@ $(function() {
 							$('#unsevisablePin,#unableprocessPin,#wrongPin')
 									.hide();
 							$("#emptyPin").show();
+							$('#addToCartButton').show();
+							$('#buyNowButton').attr("disabled",false);
+
 
 							return false;
 						} else if (!regExp.test(pin)) {
 							$('#unsevisablePin,#unableprocessPin,#emptyPin')
 									.hide();
 							$("#wrongPin").show();
+							$('#addToCartButton').show();
+							$('#buyNowButton').attr("disabled",false);
 
 							return false;
 						}
@@ -888,16 +921,19 @@ $(function() {
 											$("#home").hide();
 											$("#homeli").hide();
 											$("#express").hide();
+
 											$("#expressli").hide();
 											$("#collect").hide();
 											$("#collectli").hide();
 
 											$('#wrongPin,#unableprocessPin,#emptyPin').hide();
 
+
 											$('#addToCartFormTitle').hide();
 											$('#addToCartButton-wrong').show();
 											$('#addToCartButton').hide();
 											$('#unsevisablePin').show();
+											$('#buyNowButton').attr("disabled",true);
 											return false;
 										}
 										// check if oms service is down
@@ -939,12 +975,14 @@ $(function() {
 																	.hide();
 															$("#outOfStockId")
 																	.show();
+															$("#buyNowButton").hide();
 															$("#stock").val(0);
 
 														} else {
 															$(
 																	"#addToCartButton")
 																	.show();
+															$("#buyNowButton").show();
 														}
 														if (pincodedata['cod'] == 'Y') {
 
@@ -995,9 +1033,11 @@ $(function() {
 														}
 														if (exp == true) {
 															$("#express").show();
+
 															$("#expressli").show();
 														} else {
 															$("#express").hide();
+
 															$("#expressli").hide();
 														}if (click == true) {
 															$("#collect").show();
@@ -1029,9 +1069,11 @@ $(function() {
 															$(
 																	'#addToCartButton-wrong')
 																	.show();
+															$('#buyNowButton').attr("disabled",true);
 														} else {
 															$("#outOfStockId")
 																	.show();
+															$("#buyNowButton").hide();
 														}
 														$('#addToCartButton')
 																.hide();
@@ -1057,6 +1099,7 @@ $(function() {
 															.show();
 												} else {
 													$("#outOfStockId").show();
+													$("#buyNowButton").hide();
 												}
 												// $('#addToCartButton-wrong').show();
 												$('#addToCartButton').hide();
@@ -1127,14 +1170,20 @@ function fetchPrice() {
 					$("#sellerSelId").val(sellerID);
 					
 					if (allStockZero == 'Y' && data['othersSellersCount']>0) {
+						if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
+						$("#buyNowButton").hide();
+						}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
 					}
-					else if (allStockZero == 'Y' && data['othersSellersCount']==0) {
-						$("#addToCartButton").hide();
-						$("#outOfStockId").show();
+					else if (allStockZero == 'Y' && data['othersSellersCount']==0){
+						if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173
+							$("#addToCartButton").hide();
+							$("#buyNowButton").hide();
+							$("#outOfStockId").show();
+						}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
 					}
@@ -1186,6 +1235,7 @@ function fetchPrice() {
 				 $("#pdpPincodeCheck").hide();
 				 $("#pin").attr("disabled",true);
 				 $("#pdpPincodeCheckDList").show();
+				 $("#buyNowButton").attr("disabled",true);
 				 
 				 
 				
@@ -2036,3 +2086,7 @@ function loadDefaultWishListName_SizeGuide() {
 		$('input.wishlist#add_to_wishlist-sizeguide').popover('hide');
 		}, 1500);
 	}
+	$(document).on('click','#buyNow .js-add-to-cart',function(event){
+		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
+		ACC.product.sendAddToBag("addToCartForm",true);
+	});

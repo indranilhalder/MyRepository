@@ -414,9 +414,10 @@ function submitAddToCart(site_productid,site_ussid){
     success : function(data) {
 		if(data.indexOf("cnt:") >= 0){
 		$("#status"+site_product_id).html("");
-		$("#status"+site_product_id).html("<font color='#00CBE9'>Bagged and ready!</font>");
-		$("#status"+site_product_id).show().fadeOut(5000);
+		//$("#status"+site_product_id).html("<font color='#00CBE9'>Bagged and ready!</font>");
+		//$("#status"+site_product_id).show().fadeOut(5000);
 		//ACC.product.displayAddToCart(data,formId,false);
+		ACC.product.showTransientCart(site_uss_id); 
 		$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 		
 		//TISEE-882
@@ -584,8 +585,8 @@ function makeProductHtml(widgetElement, obj, rid) {
 	  }
 	  var html = '';
 	 
-	  
-	 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)){ 
+	  /*  TISPRO-303 Changes-checking with 'type' */
+	 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2) && (obj.type == 'Electronics')){ 
 		 html += '<li onmouseover="showBoth(this)" onmouseout="hideBoth(this)" class="look slide ' + widgetElement + '_list_elements productParentList" style="display: inline-block; width: 221px; margin-left: 10px; margin-right: 10px; height: 500px; margin-bottom: 20px;position: relative;">';
 		 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; margin: 10px 0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;width: 108px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 26%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; margin: 35px 108px; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 109px;font-size:12px;"><span>Add To Bag</span></div>';
 		
@@ -657,7 +658,8 @@ function makeProductHtml(widgetElement, obj, rid) {
 		  else if(obj.price != null && parseInt(obj.price) > parseInt(obj.discounted_price) && parseInt(obj.price) > 0){
 			  html += '<p class="old moprice">₹'+parseInt(obj.price)+'</p>';
 		  }
-		  html += '<p class="normal discprice">₹'+parseInt(obj.discounted_price)+'</p>';
+		  //TISPRO-317 changes
+		  html += '<p class="sale discprice">₹'+parseInt(obj.discounted_price)+'</p>';
 	  }
 	  }
 	  else if(Math.round(obj.original_price) == (obj.price)){
@@ -837,10 +839,11 @@ function updatePage(response, widgetMode) {
     	sortHtml += '</ul></div></div>';
  
     var catHtml = '<div class="select-view ">'; 
-    catHtml += '<div class="select-list"><span class="selected hotSelected">'+hotDropdownselected+'</span><ul id="ia_category_select" style="width: auto;">';
+  //for release 2 changes in home-page headers-All Departments
+    catHtml += '<div class="select-list"><span class="selected hotSelected">All Departments</span><ul id="ia_category_select" style="width: auto;">';
     for (var i=0; i<categoryFilters.length; i++) {
     	if(i==0){
-    		 catHtml += '<li class="category_li" id="allCat">All Department</li>';
+    		 catHtml += '<li class="category_li" id="allCat">All Departments</li>';
     	}
       catHtml += '<li class="category_li" id="'+categoryCodeForFilters[i]+'">'+categoryFilters[i]+'</li>';
     } 
@@ -851,11 +854,19 @@ function updatePage(response, widgetMode) {
     		html += '<h1><span style="color: black !important;">Best Sellers</span>';
     	}else if(site_page_type === 'viewSellers' && widgetElement === 'ia_products'){
     		html += '<h1><span style="color: black !important;">You May Also Need</span>';
-    	}else{
-    		
-    		html += '<h1><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
-    		
     	}
+    	    	//for release 2 changes in home-page headers-hot now
+    	else if(site_page_type === 'homepage' && widgetElement === 'ia_products_hot'){
+    		html += '<h1><span style="color: black !important;">Best Sellers</span>';
+    	}else{
+    		//for release 2 changes in pdp-page 
+    		if(site_page_type === 'productpage' && widgetElement ==='ia_products_complements'){
+    			html += '<h1><span style="color: black !important;">Things That Go With This</span>';
+    		}else{
+			
+    		html += '<h1><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
+    	}
+    		}
       
       /*For hot we need a scrolldown bar to select filters*/
       if(site_page_type === "homepage" || site_page_type ==="viewAllTrending" && widgetMode != "recent") {
@@ -900,7 +911,8 @@ function updatePage(response, widgetMode) {
       });
       if(widgetMode === "hot" && site_page_type == "homepage"){
           html += '</ul></div>';
-          html += '</div></div><a href="http://'+window.location.host+'/store/mpl/en/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">View All Trending Products</a>';
+        //for release 2 changes in home-page headers-view all trending
+          html += '</div></div><a href="http://'+window.location.host+'/store/mpl/en/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
           }
           else{
         	  html += '</ul></div>';

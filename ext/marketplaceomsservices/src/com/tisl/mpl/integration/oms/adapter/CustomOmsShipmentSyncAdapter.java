@@ -1,4 +1,3 @@
-
 /**
  *
  */
@@ -47,7 +46,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
-
 import com.hybris.oms.domain.order.OrderLine;
 import com.hybris.oms.domain.shipping.Shipment;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -88,7 +86,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	private MplCheckInvoice checkInvoice;
 	private TimeService timeService;
 	private static final Logger LOG = Logger.getLogger(CustomOmsShipmentSyncAdapter.class);
-	
+
 
 	private static final String JAVADOC = "javadoc";
 	@Autowired
@@ -101,8 +99,8 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	private MplSNSMobilePushServiceImpl mplSNSMobilePushService;
 
 	@Autowired
-	private CustomOmsCancelAdapter  customOmsCancelAdapter;
-	
+	private CustomOmsCancelAdapter customOmsCancelAdapter;
+
 	@Autowired
 	private CustomOmsCollectedAdapter customOmsCollectedAdapter;
 
@@ -116,25 +114,32 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		for (final ShipmentWrapper shipmentWrapper : wrapper.getShipments())
 		{
 			final Shipment shipment = shipmentWrapper.getShipment();
-			if(shipment != null && shipment.getOlqsStatus()!= null && shipment.getDeliveryMode() != null){
-				
-				if((shipment.getDeliveryMode().equalsIgnoreCase(MarketplaceomsservicesConstants.CNC)) && 
-						((shipment.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.HOTCOURI)
-						|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.OTFRDLVY)
-						|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.DELIVERD)
-						|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.RETTOORG)
-						|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.LOSTINTT)
-						|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.UNDLVERD)))){
-					
-					LOG.debug("Delivery Mode CNC and Order Status  :"+ shipment.getOlqsStatus() +" :Not Required to update Consignment");
-					
-				}else{
+			if (shipment != null && shipment.getOlqsStatus() != null && shipment.getDeliveryMode() != null)
+			{
+
+				if ((shipment.getDeliveryMode().equalsIgnoreCase(MarketplaceomsservicesConstants.CNC))
+						&& ((shipment.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.HOTCOURI)
+								|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.OTFRDLVY)
+								|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.DELIVERD)
+								|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.RETTOORG)
+								|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.LOSTINTT) || shipment
+								.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.UNDLVERD))))
+				{
+
+					LOG.debug("Delivery Mode CNC and Order Status  :" + shipment.getOlqsStatus()
+							+ " :Not Required to update Consignment");
+
+				}
+				else
+				{
 					final ConsignmentModel existingConsignmentModel = getConsignmentByShipment(shipment, orderModel);
 					if (existingConsignmentModel == null)
+
 					{
 
 
 						if (shipmentMustBeCreated(shipment))
+
 						{
 
 
@@ -158,6 +163,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 
 
 
+
+
+
+
 		}
 		try
 		{
@@ -172,7 +181,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				if (existingConsignmentModel != null)
 				{
 					ConsignmentEntryModel consigmnetEntry = null;
-				
+
 					if (CollectionUtils.isEmpty(existingConsignmentModel.getConsignmentEntries()))
 					{
 						consigmnetEntry = createNewConsigmnetEntry(line.getOrderLineId(), orderModel);
@@ -217,13 +226,17 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					}
 
 					saveAndNotifyConsignment(existingConsignmentModel);
+					LOG.info("=======After =========Consignment code :  " + existingConsignmentModel.getCode()
+							+ " ================ Consignment tracking ID :   " + existingConsignmentModel.getTrackingID());
 
 				}
 				else
 				{
 					LOG.info("ConsignmentModel Not created but Trying to create ConsignmentEntry for Line : " + line.getId());
 				}
-				if (line.getQcReasonCode() != null &&( ConsignmentStatus.QC_FAILED.equals(existingConsignmentModel.getStatus())|| ConsignmentStatus.RETURN_CANCELLED.equals(existingConsignmentModel.getStatus())))
+				if (line.getQcReasonCode() != null
+						&& (ConsignmentStatus.QC_FAILED.equals(existingConsignmentModel.getStatus()) || ConsignmentStatus.RETURN_CANCELLED
+								.equals(existingConsignmentModel.getStatus())))
 				{
 					updateReturnReason(line, orderModel);
 				}
@@ -456,19 +469,42 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 
 		try
 		{
+			if (null != consignmentModel)
+			{
+				LOG.info("=======Before =========Consignment code :  " + consignmentModel.getCode()
+						+ " ================ Consignment tracking ID :   " + consignmentModel.getTrackingID());
+			}
+			LOG.debug("Delivery Mode CNC and Order Status  :" + shipment.getOlqsStatus() + " :Not Required to update Consignment");
 			final ConsignmentStatus shipmentNewStatus = getConsignmentStatusMappingStrategy().getHybrisEnumFromDto(shipment);
 			final ConsignmentStatus shipmentCurrentStatus = consignmentModel.getStatus();
-															 
+
+
+
 			if ((consignmentModel.getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || consignmentModel.getStatus().equals(
 					ConsignmentStatus.ORDER_UNCOLLECTED))
 					&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
 			{
+
+
+
+
+
+
+
+
+
+
+
+
 				LOG.debug("Calling cancel Initiation process started");
 
 				for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
 				{
+
+
 					for (final ConsignmentEntryModel consigmEntry : orderEntryModel.getConsignmentEntries())
 					{
+
 						if ((consigmEntry.getConsignment().getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || consigmEntry
 								.getConsignment().getStatus().equals(ConsignmentStatus.ORDER_UNCOLLECTED))
 								&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
@@ -499,13 +535,14 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				{
 					eventService.publishEvent(orderRefundCreditedEvent);
 				}
+
 				catch (final Exception e1)
 				{
 					LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
 				}
 				//	customOmsCancelAdapter.frameCancelPushNotification(orderModel, orderEntryModel.getOrderLineId(),MarketplaceomsordersConstants.REASON_CODE);
 			}
-			
+
 			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus)
 					&& shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED))
 			{
@@ -529,10 +566,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					customOmsCollectedAdapter.sendNotificationForOrderCollected(orderModel, consignmentModel, abstractOrderEntryModel);
 				}
 			}
-			if((consignmentModel.getStatus().equals(ConsignmentStatus.REFUND_INITIATED) || consignmentModel.getStatus().equals(ConsignmentStatus.REFUND_IN_PROGRESS)) && shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED) ){
+			if ((consignmentModel.getStatus().equals(ConsignmentStatus.REFUND_INITIATED) || consignmentModel.getStatus().equals(
+					ConsignmentStatus.REFUND_IN_PROGRESS))
+					&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
+			{
 				LOG.debug("Already Consignment Status Updated for Order Collected.");
 				return true;
-			}else {
+			}
+			else
+			{
 				createRefundEntry(shipmentNewStatus, consignmentModel, orderModel);
 				if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
 				{
@@ -549,14 +591,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					LOG.info("Consignment Status::" + consignmentModel.getStatus());
 					saveAndNotifyConsignment(consignmentModel);
 					modelService.save(createHistoryLog(shipmentNewStatus.toString(), orderModel, consignmentModel.getCode()));
+
 					LOG.info("Order History entry created for" + orderModel.getCode() + "Line ID" + consignmentModel.getCode());
 
-				LOG.info("****************************************Order synced succesfully - Now sending notificatioon to customer *******************");
-				//call send notification method
-				sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
+					LOG.info("****************************************Order synced succesfully - Now sending notificatioon to customer *******************");
+					//call send notification method
+					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
 
 
-				return true;
+					return true;
 				}
 
 			}
@@ -600,7 +643,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	@Override
-
 	protected void saveAndNotifyConsignment(final ConsignmentModel consignmentModel)
 	{
 		getModelService().save(consignmentModel);
@@ -610,6 +652,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 
 	protected OrderHistoryEntryModel createHistoryLog(final String description, final OrderModel order, final String lineId)
 	{
+
 		final OrderHistoryEntryModel historyEntry = modelService.create(OrderHistoryEntryModel.class);
 		historyEntry.setTimestamp(getTimeService().getCurrentTime());
 		historyEntry.setOrder(order);
@@ -619,7 +662,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	@Override
-
 	protected ConsignmentModel createNewConsignment(final ShipmentWrapper wrapper, final ItemModel owner)
 	{
 		final ConsignmentModel consignmentModel = (ConsignmentModel) getModelService().create(ConsignmentModel.class);
@@ -630,15 +672,34 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		consigmnetEntry.setConsignment(consignmentModel);
 		consigmnetEntry.setShippedQuantity(Long.valueOf("1"));
 		modelService.save(consigmnetEntry);
-		modelService
-				.save(createHistoryLog(consignmentModel.getStatus().toString(), (OrderModel) owner, consignmentModel.getCode()));
+
+		// added for merging TCS_PROD_SUPPORT with SAP
+		boolean createHistoryEntry = false;
+		for (final OrderHistoryEntryModel entry : ((OrderModel) owner).getHistoryEntries())
+		{
+			if (consignmentModel.getStatus().toString().equalsIgnoreCase(entry.getDescription())
+					&& consignmentModel.getCode().equalsIgnoreCase(entry.getLineId()))
+			{
+				createHistoryEntry = true;
+			}
+
+		}
+		if (!createHistoryEntry)
+		{
+
+
+			modelService.save(createHistoryLog(consignmentModel.getStatus().toString(), (OrderModel) owner,
+					consignmentModel.getCode()));
+		}
+
+		//modelService.save(createHistoryLog(consignmentModel.getStatus().toString(), (OrderModel) owner, consignmentModel.getCode()));
+		// added for merging TCS_PROD_SUPPORT with SAP
 		getModelService().save(consignmentModel.getShippingAddress());
 		saveAndNotifyConsignment(consignmentModel);
 		return consignmentModel;
 	}
 
 	@Override
-
 	protected boolean shipmentMustBeCreated(@SuppressWarnings("unused") final Shipment shipment)
 	{
 		/*
@@ -651,7 +712,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	@Override
-
 	protected ConsignmentModel getConsignmentByShipment(final Shipment shipment, final OrderModel orderModel)
 	{
 		for (final ConsignmentModel consignment : orderModel.getConsignments())
@@ -676,13 +736,17 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		return newConsignmentEntry;
 	}
 
-	
+
 	private void createRefundEntry(final ConsignmentStatus newStatus, final ConsignmentModel consignmentModel,
 			final OrderModel orderModel)
 	{
 		if ((ConsignmentStatus.RETURN_INITIATED.equals(newStatus) || ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) || ConsignmentStatus.RETURN_TO_ORIGIN
-				.equals(newStatus)) || (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus)) || (ConsignmentStatus.QC_FAILED.equals(newStatus)) || (ConsignmentStatus.RETURN_CLOSED.equals(newStatus)) 
-            ||(ConsignmentStatus.RETURN_CANCELLED.equals(newStatus)) && CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+				.equals(newStatus))
+				|| (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
+				|| (ConsignmentStatus.QC_FAILED.equals(newStatus))
+				|| (ConsignmentStatus.RETURN_CLOSED.equals(newStatus))
+				|| (ConsignmentStatus.RETURN_CANCELLED.equals(newStatus))
+				&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
 		{
 			try
 			{
@@ -866,13 +930,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	 * ConsignmentModel consignment : orderModel.getConsignments()) { for (final ConsignmentEntryModel s :
 	 * consignment.getConsignmentEntries()) { if (s.getOrderEntry().getEntryNumber().equals(line.getOrderLineId())) {
 	 * return consignment; } }
-	 * 
-
-
+	 *
+	 *
+	 *
+	 *
 	 * }
-	 * 
-
-
+	 *
+	 *
+	 *
+	 *
 	 * return null; }
 	 */
 
@@ -882,7 +948,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	@Override
-
 	@Required
 	public void setModelService(final ModelService modelService)
 	{
@@ -895,7 +960,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	@Override
-
 	public void setOmsShipmentReverseConverter(final Converter<Shipment, ConsignmentModel> omsShipmentReverseConverter)
 	{
 		this.omsShipmentReverseConverter = omsShipmentReverseConverter;
@@ -907,7 +971,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	@Override
-
 	@Required
 	public void setConsignmentStatusMappingStrategy(
 			final OmsHybrisEnumMappingStrategy<ConsignmentStatus, Shipment> consignmentStatusMappingStrategy)
@@ -921,7 +984,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	@Override
-
 	@Required
 	public void setConsignmentProcessNotifier(final ModelChangeNotifier<ConsignmentModel> consignmentProcessNotifier)
 	{
@@ -1013,9 +1075,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	/**
-	 * @param customOmsCancelAdapter the customOmsCancelAdapter to set
+	 * @param customOmsCancelAdapter
+	 *           the customOmsCancelAdapter to set
 	 */
-	public void setCustomOmsCancelAdapter(CustomOmsCancelAdapter customOmsCancelAdapter)
+	public void setCustomOmsCancelAdapter(final CustomOmsCancelAdapter customOmsCancelAdapter)
 	{
 		this.customOmsCancelAdapter = customOmsCancelAdapter;
 	}
@@ -1029,11 +1092,11 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	/**
-	 * @param customOmsCollectedAdapter the customOmsCollectedAdapter to set
+	 * @param customOmsCollectedAdapter
+	 *           the customOmsCollectedAdapter to set
 	 */
-	public void setCustomOmsCollectedAdapter(CustomOmsCollectedAdapter customOmsCollectedAdapter)
+	public void setCustomOmsCollectedAdapter(final CustomOmsCollectedAdapter customOmsCollectedAdapter)
 	{
 		this.customOmsCollectedAdapter = customOmsCollectedAdapter;
-	}	
+	}
 }
-

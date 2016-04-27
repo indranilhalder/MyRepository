@@ -26,8 +26,9 @@
   			</div>
 		</c:if>
 <div class="account">
-  <h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Marketplace" />
-  <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
+  <h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
+  	<user:accountMobileViewMenuDropdown pageNameDropdown="personalInfo"/>
+  <%-- <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
                   <option value=/store/mpl/en/my-account/marketplace-preference data-href="/store/mpl/en/my-account/marketplace-preference"><spring:theme code="header.flyout.marketplacepreferences" /></option>
@@ -40,55 +41,13 @@
           <optgroup label="Share">
                   <option value=/store/mpl/en/my-account/friendsInvite data-href="account-invite.php"><spring:theme code="header.flyout.invite" /></option>
               </optgroup>
-      </select>
+      </select> --%>
 </h1>
 
-<div class="wrapper">
-		
+<div class="wrapper">		
 		
 	<!----- Left Navigation Starts --------->
-			<%-- <div class="left-nav">
-				<h1>
-					<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-				</h1>
-				<ul>
-					<li><h3>
-							<spring:theme code="header.flyout.myaccount" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/"/>"><spring:theme
-								code="header.flyout.overview" /></a></li>
-					<li><a
-						href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-								code="header.flyout.marketplacepreferences" /></a></li>
-					<li><a class="active" href="<c:url value="/my-account/update-profile"/>"><spring:theme
-								code="header.flyout.Personal" /></a></li>
-					<li><a href="<c:url value="/my-account/orders"/>"><spring:theme
-								code="header.flyout.orders" /></a></li>
-					<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
-								code="header.flyout.cards" /></a></li>
-					<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
-								code="header.flyout.address" /></a></li>
-										<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
-						code="header.flyout.review" /></a></li>
-					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-								code="header.flyout.recommendations" /></a></li>
-				</ul>
-			<ul>
-				<li class="header-SignInShare"><h3><spring:theme
-									code="header.flyout.credits" /></h3></li>
-						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li>
-				</ul>
-				<ul>
-					<li><h3>
-							<spring:theme code="header.flyout.share" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
-								code="header.flyout.invite" /></a></li>
-								
-				</ul>
-				
-			</div> --%>
+
 			<user:accountLeftNav pageName="personalInfo"/>
 			<!----- Left Navigation ENDS --------->
 			
@@ -341,7 +300,7 @@
 						<form:form action="update-nickName" method="post" commandName="mplCustomerProfileForm">
 						<fieldset>
 							<div class="full">
-								<label><spring:theme text="Nick Name" /></label>
+								<%-- <label><spring:theme text="Nick Name" /></label> --%>
 										<form:input path="nickName" id="profilenickName"
 										onkeyup="kpressnn()"	 maxlength="40" />
 								<div class="errorMessage"><div id="errnn"></div></div>
