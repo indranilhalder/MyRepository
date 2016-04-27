@@ -1206,7 +1206,7 @@ $("#otpMobileNUMField").focus(function(){
 
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
-		
+        //TISPRO-313	
 		//if($(".redirect").val()=="false"){
 			//Juspay.startSecondFactor();
 		//}
@@ -1238,6 +1238,7 @@ $("#otpMobileNUMField").focus(function(){
 					$("#no-click").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}else{
+					 //TISPRO-313
 					if($(".redirect").val()=="false"){
 						Juspay.startSecondFactor();
 				    } 
@@ -1325,7 +1326,7 @@ $("#otpMobileNUMField").focus(function(){
 		else {
 			var sameAsShipping = false;
 		}
-		
+	    //TISPRO-313
 		//if($(".redirect").val()=="false"){
 			//Juspay.startSecondFactor();
 		//}
@@ -1352,7 +1353,8 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay .spinner").remove();
 					$("#no-click").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
-				}else{					
+				}else{		
+					 //TISPRO-313
 					 if($(".redirect").val()=="false"){
 						Juspay.startSecondFactor();
 				     } 		 
@@ -3014,6 +3016,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		if(stockAvailable==false){
 			var newUl = document.createElement("ul");
 			newUl.setAttribute("id", ussId+'_qtyul');
+			newUl.setAttribute("class", 'less-stock');
 			var newLi = document.createElement("li");
 			var text = document.createTextNode("Oops! We only have "+inventory+" in stock! For pincode : "+selectedPincode);
 			newLi.appendChild(text);
