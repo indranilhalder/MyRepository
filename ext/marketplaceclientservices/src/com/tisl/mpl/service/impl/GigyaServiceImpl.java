@@ -207,10 +207,10 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * This method helps in Logging the User in the Gigya Side and Registers New User
-	 * 
+	 *
 	 * @param CustomerModel customerModel
-	 * 
-	 * 
+	 *
+	 *
 	 * @return List<String> cookieData
 	 */
 	@Override
@@ -221,11 +221,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
+			final String gigyaMethod = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
 
 			final GSObject userAction = new GSObject();
 			String firstName = null;
@@ -343,7 +343,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.GigyaService#RatingLogoutHelper(de.hybris.platform.core.model.user.CustomerModel)
 	 */
 	@Override
@@ -354,11 +354,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.METHOD_LOGOUT);
+			final String gigyaMethod = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.METHOD_LOGOUT);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
 
 
 			if (getSecretkey() != null && getApikey() != null)
@@ -420,7 +420,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.GigyaService#validateSignature(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -449,8 +449,8 @@ public class GigyaServiceImpl implements GigyaService
 		try
 		{
 
-			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
 
 			String loginUserInfo = null;
 
@@ -562,8 +562,8 @@ public class GigyaServiceImpl implements GigyaService
 					}
 					else
 					{
-						LOG.debug("GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->"
-								+ (response.getErrorMessage()));
+						LOG.debug(
+								"GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->" + (response.getErrorMessage()));
 					}
 
 				}
@@ -588,7 +588,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.GigyaService#gigyaLoginHelperforMobile(de.hybris.platform.core.model.user.CustomerModel,
 	 * boolean)
 	 */
@@ -599,11 +599,11 @@ public class GigyaServiceImpl implements GigyaService
 		try
 		{
 			// Define the API-Key and Secret key .
-			final String gigyaMethod = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
+			final String gigyaMethod = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
 
 			final GSObject userAction = new GSObject();
 			String firstName = null;
@@ -716,7 +716,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.GigyaService#notifyGigyaforMobile(java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -727,8 +727,8 @@ public class GigyaServiceImpl implements GigyaService
 		final GigyaWsDTO gigyaWsDTO = new GigyaWsDTO();
 		try
 		{
-			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
 			String loginUserInfo = null;
 			if (getSecretkey() != null && getApikey() != null)
 			{
@@ -837,11 +837,14 @@ public class GigyaServiceImpl implements GigyaService
 						{
 							gigyaWsDTO.setSessionToken(sessionToken);
 						}
+
+						LOG.debug("****************** SESSSSION KEY ****************** " + gigyaWsDTO.getSessionSecret());
+						LOG.debug(" ******************  SESSSSION TOKEN ****************** " + gigyaWsDTO.getSessionToken());
 					}
 					else
 					{
-						LOG.debug("GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->"
-								+ (response.getErrorMessage()));
+						LOG.debug(
+								"GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->" + (response.getErrorMessage()));
 					}
 				}
 				else
