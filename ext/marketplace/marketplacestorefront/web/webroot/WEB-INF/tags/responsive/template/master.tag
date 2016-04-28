@@ -38,8 +38,15 @@
 	<c:set var="protocolString" value="${fn:split(pageURL, '://')}"/>
 	<c:set var="baseURL" value="${protocolString[0]}://${host}"/>
 	
-	<!-- Canonical Tag -->
-	<link rel="canonical" href="${baseURL}${requestScope['javax.servlet.forward.request_uri']}" />
+	<c:set var="reqURI" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+	<c:choose>
+		<c:when test="${fn:contains(reqURI,'search')}">
+		</c:when>
+		<c:otherwise>
+			<!-- Canonical Tag -->
+			<link rel="canonical" href="${baseURL}${reqURI}" />
+		</c:otherwise>
+	</c:choose>
 	
 	<c:forEach items="${metatags}" var="metatagItem">
 		<c:if test="${metatagItem.name eq 'title'}">
