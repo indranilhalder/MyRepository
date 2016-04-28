@@ -5401,7 +5401,8 @@ text-transform: uppercase;
    .cart.wrapper .checkout-types .button,.cart.wrapper .checkout-types button,.cart.wrapper .left-block .payments.tab-view .pay .button, .confirmation .left-block .payments.tab-view .pay .button{
     height: 42px !important;
     font-size: 12px !important;
-    font-weight:500 !important;}
+    font-weight:500 !important;
+    line-height: 16px;}
   .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
   .cart.wrapper #newAddressButtonUp
    {
@@ -5500,11 +5501,13 @@ text-transform: uppercase;
             height: 40px; } }
       .cart.wrapper .right-block .block p, .confirmation .right-block .block p {
         margin-bottom: 20px;
-        line-height:18px; }
+        line-height:18px;
+            font-size: 14px; }
 
       .cart.wrapper .right-block .block .totals li, .confirmation .right-block .block .totals li {
         width: 100%;
-        margin: 10px 0; }
+        margin: 10px 0;
+        font-size: 14px; }
         .cart.wrapper .right-block .block .totals li .amt, .confirmation .right-block .block .totals li .amt {
           float: right; }
         .cart.wrapper .right-block .block .totals li#total, .confirmation .right-block .block .totals li#total {
@@ -5918,7 +5921,8 @@ text-transform: uppercase;
     width: 100%;
     border-color: #DFD1D5;
     float: left;
-    height: 30px
+    height: 30px;
+    font-size: 14px;
 }
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full,
 .confirmation .left-block .payments.tab-view .new-card fieldset .full {
@@ -6508,7 +6512,8 @@ text-transform: uppercase;
         display: inline-block;
         position: relative;
         width: 17.5%;
-        padding: 15px 0; }
+        padding: 15px 0;
+        font-size: 14px; }
         .cart.wrapper .product-block li.item > ul > li del + span{		
          color:red;		
          }
@@ -7334,10 +7339,11 @@ text-transform: uppercase;
       .checkout.wrapper .product-block.addresses li.header > ul li {
         border: none;
         width: auto;
-        font-size: 12px;
-        font-weight: 400; }
+        font-size: 14px;
+        font-weight: 600; }
         .checkout.wrapper .product-block.addresses li.header > ul li.pincode-button {
-          float: right; } }
+          float: right;
+          width: 55%; } }
   @media (min-width: 651px) {
     .checkout.wrapper .product-block.addresses li.header > ul li:first-child {
       width: 69%;
@@ -7726,7 +7732,8 @@ text-transform: uppercase;}
       font-weight: 600;
       letter-spacing: 1px; }
     .confirmation .left-block .address address {
-      line-height: 1.5; }
+      line-height: 1.5;
+      font-size: 14px; }
   .confirmation .ymal h2 {
     text-align: center;
     font-size: 26px;
@@ -21159,6 +21166,7 @@ body.account .right-account select {
 }
 #new-address-option-1 + label,#new-address-option-2 + label {
 	color: #a9a9a9;
+	width: 49%;
 }
 .bottom.active .marketplace .simple-banner-component img{
 	margin-top:-3px;
@@ -26269,7 +26277,7 @@ width:auto;
  .checkout.wrapper .product-block.addresses.new-form li.item input[type="checkbox"] + label,
   .checkout.wrapper .product-block.addresses.new-form li.item input[type="radio"] + label{
   padding-left:35px;
-  font-size:10px;}
+  font-size:14px;}
   .checkout.wrapper .product-block.addresses li.item{
   padding-left:0px;
   padding-right:0px;
@@ -26395,7 +26403,7 @@ line-height:19px;
 @media(max-width:650px){
 	.cart.wrapper .left-block .payments.tab-view .new-card input[type="checkbox"]+label{
 	margin-top:5px;
-	    font-size: 12px;
+	    font-size: 14px;
 	}
 	.cart.wrapper .left-block .button{
 	line-height:1;
@@ -26404,7 +26412,7 @@ line-height:19px;
 	display:block;
 	}
 	.cart.wrapper .left-block .payments.tab-view .tabs > li .product-block li.item.new-form form h2:first-child ~ label{
-	   font-size: 12px;
+	   font-size: 14px;
 	}
 	.cart.wrapper .left-block .payments.tab-view .tabs > li .product-block li.header{
 	display:block;
@@ -26525,7 +26533,7 @@ line-height:19px;
 padding-left:0px;
 }
 .cart.wrapper .left-block h1{
-font-size:18px;
+font-size:24px;
 }
 .checkout.wrapper .product-block li.item{
 margin-top:15px;
@@ -26538,7 +26546,7 @@ font-weight:600;
     float: left;
     width: 50%;
     line-height: 17px;
-    font-size: 12px;
+    font-size: 14px;
 }
 .checkout.wrapper .product-block li.item > ul li.delivery li label.deliveryModeLabel+span{
     float: right;
@@ -28060,16 +28068,16 @@ body .account .account-header select.menu-select optgroup option{
     width: 60%;
     left: 32%;
     top: 55%;
-    font-size: 12px;
+    font-size: 14px;
 	}
 	.cart.wrapper .product-block li.item > ul.desktop > li.price{
 	    position: absolute;
     left: calc(30% - -10px);
-    top: 140px;
+    top: 120px;
     text-align:left;
     padding-top:0px;
     width: 70%;
-    font-size: 12px;
+    font-size: 14px;
 	}
 	.cart.wrapper .product-block li.item ul .item-edit-details{
 	bottom: -75px;
@@ -31147,6 +31155,17 @@ ul.less-stock li {
     padding: 10px;
     line-height: 14px;
  }
+ .cart.wrapper .left-block .item.cardForm .popular-netbanks {
+    padding-left: 0px;
+    color: #000;
+    font-weight: 600;
+}
+.confirmation .product-block li ul li.shipping .deliver-type{
+	font-size:14px;
+}
+.confirmation .product-block li ul li.shipping .deliver{
+	font-size:12px !important;
+}
 /*--------------maincss-----------*/
 .row
 {
@@ -37694,7 +37713,7 @@ text-align:left;
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .half label, .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full label,
 a#cvvHelp,.payment-redirect,.cart.wrapper .left-block .payments.tab-view .pay p,.cart.wrapper .left-block .payments.tab-view .pay p a,
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv label {
-    font-size: 12px;
+    font-size: 14px;
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank li.item > ul li{
     width: 100%;
@@ -37703,7 +37722,7 @@ a#cvvHelp,.payment-redirect,.cart.wrapper .left-block .payments.tab-view .pay p,
     margin-top: -15px;
 }
 .cod-container,.cod-container label.cod-mob-label,#mobilePrefix,input#otpMobileNUMField,.cod-container label,#emi-notice {
-    font-size: 12px;
+    font-size: 14px;
 }
 #bankNameForEMI{
 width:auto;
@@ -37848,16 +37867,16 @@ font-size:14px;}
 	.checkout.wrapper .left-block .checkout-shipping-items p, .checkout-shipping-items-header,.checkout.wrapper .product-block.addresses.new-form li.item .half label, .checkout.wrapper .product-block.addresses.new-form li.item .full label,
 	.address-form .control-label.add-address-left-label,.cart.wrapper .right-block .block.bottom.order-details > ul li.items-shipped-count,.checkout.wrapper .product-block.addresses li.item,
 	.checkout.wrapper .product-block.addresses li.item address{
-	font-size:12px;
+	font-size:14px;
 	}
 	.cart.wrapper .right-block .block.bottom.order-details > ul li.item .product p, .confirmation .right-block .block.bottom.order-details > ul li.item .product p,
 	.cart.wrapper .right-block .block.bottom.order-details > ul li.item .product .product-brand-name{
-	font-size:11px !important;}
+	font-size:14px !important;}
 	.cart.wrapper .right-block.billing .block.bottom.order-details > p,.cart.wrapper .right-block .block.bottom.order-details address{
-	font-size:12px !important;}
+	font-size:14px !important;}
 	.cart.wrapper .right-block .block .totals li#total, .confirmation .right-block .block .totals li#total {
     font-weight: 600;
-    font-size: 12px;
+    font-size: 14px;
 }
 	.cart.wrapper .right-block.shipping .block h2, .cart.wrapper .right-block.billing .block h2 {
         font-size: 18px; }
