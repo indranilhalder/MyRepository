@@ -133,8 +133,7 @@
 
 		<div class="select-view">
 			<select id="micrositeSearchCategory" class="select-view" name="micrositeSearchCategory">
-				<option value="all" class="micrositeSellerName"></option>
-				<option disabled>----------</option>
+				<option value="all" class="micrositeSellerName"></option>				
 
 				<c:forEach items="${categoryList }" var="category">
 					<option value="category-${category.code }"
@@ -146,7 +145,7 @@
 					</c:if>>${category.name }
 					</option>
 				</c:forEach>
-				<option disabled>----------</option>
+				
 				<c:forEach items="${brands }" var="brand">
 					<option value="brand-${brand.code }"
 						<c:if test="${brand.code eq categoryCode }"> 
@@ -157,7 +156,7 @@
 					</c:if>>
 						${brand.name}</option>
 				</c:forEach>
-				<option disabled>----------</option>
+				
 		
 			</select>
 

@@ -1267,8 +1267,7 @@
 		<property name="threadContextService" ref="threadContextService" />
 		<property name="commerceCategoryService" ref="commerceCategoryService" />
 		<property name="baseSiteService" ref="baseSiteService" />
-		<property name="defaultPattern" value="/{product-name}/p-{product-code}" />
-		<!-- <property name="defaultPattern" value="/{product-name}/p/{product-code}" /> -->
+		<property name="defaultPattern" value="/{product-name}/p/{product-code}" />
 		<!-- <property name="defaultPattern" value="/{category-path}/{product-name}/p/{product-code}" 
 			/> -->
 	</bean>
@@ -1279,8 +1278,7 @@
 		<property name="threadContextService" ref="threadContextService" />
 		<property name="commerceCategoryService" ref="commerceCategoryService" />
 		<property name="baseSiteService" ref="baseSiteService" />
-		<property name="pattern" value="/{category-path}/c-{category-code}" />
-		<!-- <property name="pattern" value="/{category-path}/c/{category-code}" /> -->
+		<property name="pattern" value="/{category-path}/c/{category-code}" />
 	</bean>
 
 	<bean id="mplWishlistDao"
@@ -1650,4 +1648,3 @@
 	<!-- UserGroupSaveInterceptor ends -->	
 
 	</beans>
-

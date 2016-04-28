@@ -22,21 +22,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 } 
 
 body.template-pages-layout-errorPageTemplate .mainContent-wrapper{
-	/* 	    background: url('../images/404-page-bg.jpg') no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover; */
     height:auto;
-    /* background-image: url('../images/bg_404.png');
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    width: 100%;
-    height: 100%;
-    background-size: 100% 100%;
-    background-repeat: no-repeat; */
 }
 
 body.page-notFound{
@@ -87,6 +73,7 @@ td, th {
 }
 
 /*  @font-face {
+
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-Bold.eot');
   IE9 Compat Modes
@@ -1131,6 +1118,7 @@ h2 {
                 width: 100px;
                 text-align: center;
                     font-size: 14px; }
+
             header .content .right > ul > li.bag .mini-bag > ul > li:not(.item) {
               clear: both; }
               header .content .right > ul > li.bag .mini-bag > ul > li:not(.item)::after {
@@ -2735,7 +2723,9 @@ h2 {
       float: left;
       margin-bottom: 5px; }
       header > .content .bottom .brand-logo img {
-        max-height: 40px; }
+        max-height: 40px;
+		 margin-top: 10px;}
+
     header > .content .bottom .bag {
       display: none;
       position: absolute;
@@ -2793,6 +2783,9 @@ h2 {
         -moz-transition: width 0.3s, z-index 0s 0.3s, left 0.3s;
         transition: width 0.3s, z-index 0s 0.3s, left 0.3s;
     }
+	 header > .content .bottom nav > ul > li > .toggle span {
+    text-transform: uppercase;
+	}
         header > .content .bottom nav > ul > li .toggle:after {
           font-family: 'FontAwesome';
      -webkit-font-smoothing: antialiased;
@@ -2804,6 +2797,8 @@ h2 {
      color: #000;
      position: relative;
      top: 2px; }
+	   header.brand-header > .content .bottom nav > ul > li .toggle:after {
+     color: #fff;}
         header > .content .bottom nav > ul > li .toggle:before {
         content: "close";
         font-weight: 400;
@@ -2811,7 +2806,7 @@ h2 {
         opacity: 0;
         position: absolute;
         right: 0;
-		bottom: 0;
+		top: 0;
         -webkit-transition: opacity 0.15s;
         -moz-transition: opacity 0.15s;
         transition: opacity 0.15s;
@@ -4357,6 +4352,7 @@ color:inherit;}
 	font-size: 28px;
 	position: relative;
 	font-family: inherit;
+
 	font-weight: 500;
 	margin-bottom: 10px;
 }
@@ -5347,6 +5343,7 @@ text-transform: uppercase;
   line-height: 72px;
   color: #A9143C;
   font-family: inherit;
+
   font-weight: 500;
   font-style: normal; }
   .promise span {
@@ -5504,6 +5501,7 @@ text-transform: uppercase;
       .cart.wrapper .right-block .block p, .confirmation .right-block .block p {
         margin-bottom: 20px;
         line-height:18px; }
+
       .cart.wrapper .right-block .block .totals li, .confirmation .right-block .block .totals li {
         width: 100%;
         margin: 10px 0; }
@@ -6516,7 +6514,8 @@ text-transform: uppercase;
          }
         @media (min-width: 651px) {
           .cart.wrapper .product-block li.item > ul > li, .confirmation .product-block li.item > ul > li {
-            padding: 15px; } }
+            padding: 15px; 
+			font-size: 14px;} }
         .cart.wrapper .product-block li.item > ul > li.price select, .confirmation .product-block li.item > ul > li.qty select, .confirmation .product-block li.item > ul > li.price select {
           width:100%; }
     		.cart.wrapper .product-block li.item > ul > li.qty select{
@@ -6531,6 +6530,7 @@ text-transform: uppercase;
             .cart.wrapper .product-block li.item > ul > li.delivery ul, .confirmation .product-block li.item > ul > li.delivery ul {
               margin-bottom: 60%;
               line-height: 16px; } 
+
             .cart.wrapper .product-block li.item > ul > li.delivery ul span, .confirmation .product-block li.item > ul > li.delivery ul span {
               line-height:16px; } }
         .cart.wrapper .product-block li.item > ul > li.delivery li, .confirmation .product-block li.item > ul > li.delivery li {
@@ -6624,7 +6624,8 @@ text-transform: uppercase;
             padding-left: 10px;
             line-height:17px; }
             .cart.wrapper .product-block li.item > ul > li:first-child div.product p, .confirmation .product-block li.item > ul > li:first-child div.product p {
-               font-size: 12px; }
+				margin-top: 10px;
+               font-size: 14px; }
               .cart.wrapper .product-block li.item > ul > li:first-child div.product p.company, .confirmation .product-block li.item > ul > li:first-child div.product p.company {
                 margin-top: 0px; }
               .cart.wrapper .product-block li.item > ul > li:first-child div.product p.item-info > span, .confirmation .product-block li.item > ul > li:first-child div.product p.item-info > span {
@@ -10408,6 +10409,7 @@ body .account .right-account .order-history .pagination li{
       float: right;
 		max-width:50%;
        line-height: 19px; }
+
       .short-info .color-swatch::after {
         clear: both;
         content: "";
@@ -13712,7 +13714,6 @@ div.get-in-touch ul li:after,
 div.get-in-touch ul li:after,
 .rewards div.customer-service ul li:after,
 .contact-us-header ul li:after {
-
     color: #000;
     font-size: 28px;
     padding-left: 30px;
@@ -13736,6 +13737,7 @@ div.get-in-touch ul li.chat:before,
     left: -20px;
 
 } */
+
 .no-results ul li.chat:after,
 div.get-in-touch ul li.chat:after,
 .rewards div.customer-service ul li.chat:after,
@@ -13764,6 +13766,7 @@ div.get-in-touch ul li.call:before,
     left: -15px;
 
 } */
+
 .no-results ul li.call:after,
 div.get-in-touch ul li.call:after,
 .rewards div.customer-service ul li.call:after,
@@ -14755,6 +14758,7 @@ body.about-us .breadcrumbs {
   padding-bottom: 40px; }
 
 ul.social-connect {
+
   padding-top:15px;
    }
   ul.social-connect > li {
@@ -14896,6 +14900,8 @@ body .account .left-nav h3 {
     margin: 32px 0;
     margin-top: -18px;
     }
+
+
 body .account .left-nav ul {
    padding-bottom: 5px;
 }
@@ -15297,6 +15303,9 @@ body .account .right-account form label {
     }
 }
 @media (max-width: 370px) {
+
+
+
     body .account .right-account form.new-card input[type="radio"]+label:before, body .account .right-account div.new-address input[type="radio"]+label:before{
     margin-right:25px !important;}
 }
@@ -16262,6 +16271,7 @@ body .account .right-account .order-history .product-block li.header>ul>li:first
     }
 
 } */
+
 body .account .right-account .order-history .product-block li.header>ul>li:nth-of-type(4) {
     border-right: none
 }
@@ -16303,8 +16313,12 @@ body .account .right-account .order-history .product-block li.header>ul>li:last-
     }
     body .account .right-account .order-history .product-block li.header>ul>li:first-child {
         width: 50%;
+
         border-right: none
     }
+
+
+
     body .account .right-account .order-history .product-block li.header>ul>li.links {
         width: 50%
     }
@@ -16510,6 +16524,8 @@ body .account .right-account .order-history.order-details li.header div h3{
         display: inline;
         border: none;
         }
+
+
     body .account .right-account .order-history.order-details li.header div {
         width: 100%;
         padding-left: 10px;
@@ -16579,6 +16595,7 @@ body .account .right-account .order-history.order-details li.item:not(.in-store)
 }
 body .account .right-account .order-history.order-details li.item .order {
     position: relative
+	margin-top: 0px !important;
 }
 body .account .right-account .order-history.order-details li.item .order::after {
     clear: both;
@@ -16619,6 +16636,7 @@ body .account .right-account .order-history.order-details li.item .status {
     body .account .right-account .order-history.order-details li.item .item-fulfillment{
     margin-top: 30px;
 }
+
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li {
     width: 20%;
@@ -18442,8 +18460,6 @@ width: 12px;
 	text-align:center;
 	margin:15px auto;
 	background: #fafafa;
-    padding: 1px 0 15px;
-	
 }
 .cartPromotions .promotions{
 	font-size:25px;
@@ -18454,9 +18470,6 @@ width: 12px;
 .cartPromotions .promotionDesc{
 	font-size:14px;
 }
-
-
-
 
 body .account .left-nav h1
 {
@@ -18905,6 +18918,7 @@ height: 0;
 	width:auto !important;	
 	 max-width:200px;
 	 padding: 0 30px 0 5px;		
+
 }		
 	.view select{		
 	margin-top:0px;		
@@ -19457,6 +19471,7 @@ header.brand-header .content .bottom nav>ul>li>ul {
 @media ( max-width :790px) {
 	header.brand-header .content .bottom nav>ul>li>ul {
 		top: 55px;
+		left:0;
 	}
 }
 
@@ -19646,7 +19661,7 @@ header .content .marketplace.compact a img{
   margin-top: 7px;
 }
 body.template-pages-layout-micrositePage1 header .content .marketplace.compact a img{
-	 margin-top: 3px;
+	 margin-top: -5px;
 } 
 header .banner .toggle.mobile {
   display: none;
@@ -20470,6 +20485,7 @@ display: inline-block;
  }
 .product-tile .short-info .company, .product-tile .short-info .price {
   font-size: 14px;
+
   font-family: "Montserrat", "Courier New";
   line-height: normal;
   float: left;
@@ -20574,6 +20590,7 @@ display: inline-block;
 }
 .product-tile .short-info .color-swatch {
   float: right;
+
 }
 .product-tile .short-info .color-swatch img,.listing-leftmenu .Colour li.filter-Colour img{
 	border: 1px solid rgb(204, 211, 217);
@@ -20637,6 +20654,7 @@ body.page-shoe .feature-collections ul.collections li.chef.sub h3 span a{
 	margin-bottom:15px;
 }
 }
+
 .pagination .prev:before {
         content: "";
         display: inline-block;
@@ -22510,6 +22528,7 @@ body .account .new-address form div#checkBox label
 }
 .forgot-password-container .actions .button, .click2chat-container .actions button, .click2call-container .actions button, .manage-wishlist-container .actions button, .create-new-wishlist-popup-container .create_wishlist#CreateNewWishlist , .return-requestInvoice .cancellation-request-block .actions button{
   font-size: 12px;
+
   font-weight: 500;
   background-color: #A9143C;
   border: 2px solid #A9143C;
@@ -22581,6 +22600,7 @@ body .right-account .order-history .cancellation-request-block h2 {
     background: #f0f4f5;
     line-height: 30px;
     padding: 15px 10px;
+
     font-size: 28px;
     font-weight: 500;
     text-align:left;
@@ -22622,6 +22642,7 @@ body .right-account .order-history .cancellation-request-block .return-form .ret
         font-weight: 600
     }
     body .right-account .order-history .cancellation-request-block .return-form .return-container .questions select {
+
         font-size: 16px;
         font-weight: 500
     }
@@ -22638,6 +22659,7 @@ body .right-account .order-history .cancellation-request-block .return-form .but
     }
     body .right-account .order-history .cancellation-request-block .return-form .buttons button {
         width: 100%;
+
         max-width: 420px
     }
    body .right-account .order-history .cancellation-request-block .return-form .buttons .close {
@@ -24140,6 +24162,7 @@ header .content .search .links li  div.price
 {
 	margin-left:10px;
 	margin-top:10px;
+
 }
 header .content .search .links li img
 {
@@ -25330,7 +25353,6 @@ div.variantFormContainer{
 	    margin-right: 5px;
 	    margin-top:1px;
 	}
-
 }
 @media (max-width: 400px){
 	.header .banner .content form{
@@ -25344,6 +25366,9 @@ div.variantFormContainer{
 	 header>.content .bottom .marketplace {
 		display: table;
 		margin-top:-18px;
+	}
+ body.template-pages-layout-micrositePage1 header:not(.brand-header) >.content .bottom .marketplace {
+		margin-top:0px;
 	}
 	header>.content .bottom .marketplace .simple-banner-component
 		{
@@ -27490,7 +27515,7 @@ div.other-sellers .other-sellers-table tbody tr td>div.sellerAddToBagTitle:after
 	.cart.wrapper .product-block li.item>ul.desktop>li.price {
 		width: 19% !important;
 		padding-left: 0px !important;
-		font-size: 12px !important;
+		font-size: 14px !important;
 		float: right;
 		padding-right: 7px;
 	}
@@ -27725,6 +27750,13 @@ content: "";
 .offer-tooltip-wrapper span.offer-popover{
 	width:120%;
 }
+
+
+
+
+
+
+
 	.priceFormat:before,.priceFormat:after{
 	content:"";
 	display:none;
@@ -27789,6 +27821,7 @@ padding-right: 10px;
 	.cartPromotions {
     text-align: center;
     margin: 15px auto;
+	background: #EDEEF0;
 }
 	.cartPromotions div{
     margin: 5px 0px;
@@ -28028,7 +28061,7 @@ body .account .account-header select.menu-select optgroup option{
     width: 60%;
     left: 32%;
     top: 55%;
-    font-size: 10px;
+    font-size: 12px;
 	}
 	.cart.wrapper .product-block li.item > ul.desktop > li.price{
 	    position: absolute;
@@ -29605,6 +29638,7 @@ font-weight:bold;
     border-top: 1px solid #ACACAC;
 }
 	.shop-promos .promos li span{
+
 	    margin-top: 5px;
 	    padding-left: 0px !important;
     	display: inline-block !important;
@@ -29628,6 +29662,7 @@ font-weight:bold;
     display: inline-block;
     height: 28px;
     margin-top: -7px;
+
 }
 .shop-promos .promos li span:after{
       font-size: 32px;
@@ -30062,6 +30097,7 @@ height:80px;
    }
 .showcase .desc-section h1 {
     font-size: 24px;
+
 }
 .showcase-switch> div{
 width:33.33%;
@@ -30549,7 +30585,7 @@ body.touchDevice header .content nav>ul>li>ul>li>ul>li>a.view_dept{
     padding-bottom: 70px;
 }
 header.compact .content .top{
-min-height:95px;}
+min-height:70px;}
 header.compact .content span.material-icons{
 	 height: 50px;
     vertical-align: top;
@@ -30830,7 +30866,7 @@ li#ratingDiv {
 	text-transform: none;
     color: #A9143C;
     text-decoration: underline;
-    font-size: 12px;
+    font-size: 14px;
     font-weight:600;
     margin: 20px 0;
     line-height: 24px;
@@ -30985,6 +31021,9 @@ line-height: normal;
     opacity: .9;
     font-weight: bold;
     font-size: 12px !important;
+
+
+
     margin-top: 50px;
     margin-bottom: 50px;
         padding: 17.5px 0px;
@@ -31031,6 +31070,7 @@ line-height: normal;
  }
 @media (max-width: 790px){
 body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-header-italic {
+
     font-size: 77px;
     color: #a9143c;
     font-weight: bold;
@@ -31093,6 +31133,21 @@ body.template-pages-layout-errorPageTemplate .hero .major-promos a.button {
 }
 }
  /*404 error page css ends*/
+ @media(min-width:791px){
+ header.compact .content .top{
+	min-height: 65px;
+    margin-top: -20px;}
+	
+.cart.wrapper .right-block .block p, .confirmation .right-block .block p,.cart.wrapper .right-block .block .totals li, .confirmation .right-block .block .totals li{
+    font-size:14px;
+    }
+ }
+ul.less-stock li {
+ 	font-size: 12px;
+    color: #ff1c47;
+    padding: 10px;
+    line-height: 14px;
+ }
 /*--------------maincss-----------*/
 .row
 {
@@ -36877,6 +36932,8 @@ input#otpMobileNUMField:focus {
 #juspayconnErrorDiv span {
 	margin: 0px 15px;
    }
+
+
 #sendOTPButton {
 	position: relative;
 }
@@ -37359,6 +37416,7 @@ span.mini-cart-close {
 		margin: auto;
 		padding-bottom:50px;
 	} */
+
 	.error-template-message .error_container ul li.left_col,
 		.error-template-message .error_container ul li.right_col {
 		width: calc(100% - 30px);
@@ -37838,6 +37896,7 @@ max-width:100%;
 
 .hbpagination {
     position: absolute;
+
     bottom: 15px;
     width: 100%;
 }
@@ -37851,11 +37910,24 @@ max-width:100%;
     display: inline-block;
     cursor: pointer;
     margin: 0 3px;
+
+
 }
 
 .hbpagination .hb-page.active{
     background: rgba(255,255,255,0.6);
     border: none;
+}
+.cartPromotions .promotions{
+	padding-top:15px;
+
+}
+.cartPromotions .cartpotproline_desc{
+	padding-bottom:15px;
+}
+select#micrositeSearchCategory, select#searchCategory{
+	background-image: url('../images/select-arrow.png');
+    background-position: 95% 51%;
 }
 
 /* SAP Code Start */

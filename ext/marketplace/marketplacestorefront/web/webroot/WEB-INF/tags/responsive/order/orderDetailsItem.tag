@@ -13,7 +13,7 @@
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!-- <div class="orderList"> -->
 <%-- 	<div class="headline"><spring:theme code="basket.page.title.yourDeliveryItems" text="Your Delivery Items"/></div>
  --%>
@@ -21,8 +21,16 @@
 
 <!-- <table class="orderListTable"> -->
 
+<c:set var="bogoGiveaway" value="false" />
+<c:forEach items="${orderGroup.entries}" var="entry">
+	<c:if 
+	test="${ entry.isBOGOapplied || entry.giveAway}">
+	<c:set var="bogoGiveaway" value="true" />	
+	</c:if>
+</c:forEach> 
 
 <c:forEach items="${orderGroup.entries}" var="entry">
+
 	<c:url value="${entry.product.url}" var="productUrl" />
 	<li class="item">
 		<ul class="desktop">
@@ -60,17 +68,29 @@
 					<c:if test="${not empty parentOrder.appliedProductPromotions}">
 						<ul>
 							<c:set var="displayed" value="false" />
-							<c:forEach items="${order.appliedProductPromotions}"
+						
+							<c:forEach items="${parentOrder.appliedProductPromotions}"
 								var="promotion">
+								
 								<c:forEach items="${promotion.consumedEntries}"
 									var="consumedEntry">
-									<c:if
-										test="${not displayed && not entry.isBOGOapplied && entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+									
+						 <c:if test="${consumedEntry.ussid eq entry.selectedUssid}">
+									
+									<c:if 
+										test="${not displayed &&  entry.isBOGOapplied || entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
 										<c:set var="displayed" value="true" />
 										<li><span>${promotion.description}</span></li>
 									</c:if>
-								</c:forEach>
-							</c:forEach>
+
+									<c:if
+										test="${not displayed &&  not bogoGiveaway && not empty entry.productPromoCode}">
+										<c:set var="displayed" value="true" />
+										<li><span>${promotion.description}</span></li>
+									</c:if>
+									</c:if>
+									</c:forEach>
+						</c:forEach>
 						</ul>
 					</c:if>
 
