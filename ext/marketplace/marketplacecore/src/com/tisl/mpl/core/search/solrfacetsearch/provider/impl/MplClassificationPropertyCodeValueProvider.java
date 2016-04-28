@@ -58,7 +58,7 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 				final Product product = (Product) this.modelService.getSource(model);
 				final List<FieldValue> fieldValues = new ArrayList<FieldValue>();
 
-
+				/********** TISPRO-326 changes **********/ 
 				for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
 				{
 
