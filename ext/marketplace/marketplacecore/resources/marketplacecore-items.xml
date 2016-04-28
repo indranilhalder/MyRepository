@@ -2003,6 +2003,18 @@
 						<modifiers read="true" write="true" initial="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Start OMS Fallback code -->
+					<attribute qualifier="prepaidUpperLimit" type="java.lang.Long">
+						<defaultvalue>Long.valueOf(1)</defaultvalue>
+						<description> To set prepaid upper limit in case of oms error </description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="prepaidLowerLimit" type="java.lang.Long">
+						<defaultvalue>Long.valueOf(100000)</defaultvalue>
+						<description> To set prepaid lower limit in case of oms error </description>
+						<persistence type="property" />
+					</attribute>
+					<!-- End OMS Fallback code -->
 				</attributes>
 			</itemtype>
 
@@ -2163,6 +2175,17 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
+					<!-- End : Attribute added to store reuqest and response xml for audit	purpose -->
+					<!-- Start : New Attribute for identifying Fall Back Orders -->	
+					<attribute autocreate="true" qualifier="isFallBack"
+						type="java.lang.Boolean">
+						<persistence type="property" qualifier="isFallBack">
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+					</attribute>
+					<!-- End : New Attribute for identifying Fall Back Orders -->
 					<attribute qualifier="serialNum" autocreate="true"
 						type="java.lang.String">
 						<modifiers initial="true" read="true" write="true"
@@ -2183,9 +2206,6 @@
 					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
-
-
-
 
 				</attributes>
 			</itemtype>
@@ -7978,6 +7998,70 @@
 			</typegroup>
 			<!--                     Entry For Delist TISPRD-207 End                          -->
 			
+			<typegroup name="CommerceFallBackMechanism">
+				<itemtype code="PincodeServiceabilityData" autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.PincodeServiceabilityData">
+				<description>For Fallback Mechanism on COM end when OMS is down</description>
+				<deployment table="MplPincodeServiceability" typecode="15802" />
+					<attributes>
+					<attribute qualifier="pincode" type="java.lang.String">
+						<description>Defines the Pincode</description>
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="sellerId" type="java.lang.String">
+						<description>Defines the Seller ID </description>
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="serviceableFlag" type="java.lang.String">
+						<description>Serviceability Flag</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="deliveryMode" type="java.lang.String">
+						<description>Type of Delivery Mode</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="fulfillmentType" type="java.lang.String">
+						<description>Defines Fulfillment Type </description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="version" type="java.lang.String">
+						<description>Defines the Version of the Data</description>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+				</itemtype>
+				
+				
+				<itemtype code="PinServiceabilitySlaveData" autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.PinServiceabilitySlaveData">
+				<description>For Fallback Mechanism on COM end when OMS is down (Slave Model)</description>
+				<deployment table="MplPinServiceableSlave" typecode="15801" />
+					<attributes>
+					<attribute qualifier="pincode" type="java.lang.String">
+						<description>Defines the Pincode</description>
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="sellerId" type="java.lang.String">
+						<description>Defines the Seller ID </description>
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="serviceableFlag" type="java.lang.String">
+						<description>Serviceability Flag</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="deliveryMode" type="java.lang.String">
+						<description>Type of Delivery Mode</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="fulfillmentType" type="java.lang.String">
+						<description>Defines Fulfillment Type </description>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+				</itemtype>
+		</typegroup>
 		<typegroup name = "MplConfiguration">
 				<itemtype code="mplConfig" autocreate="true" generate="true">
 					<deployment table="MplConfig" typecode="15998" />
@@ -7998,6 +8082,5 @@
 						</attributes>
 			  </itemtype>
 	   </typegroup>	
-	   
 	</itemtypes>
 </items>

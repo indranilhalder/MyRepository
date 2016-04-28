@@ -132,7 +132,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
-
+	
 	/**
 	 * Adds the to market place cart.
 	 *
@@ -367,24 +367,45 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 						cartdatalist.add(cartSoftReservationRequestData);
 					}
 					// Added inventory request type to set the duration type for cart only
-					InventoryReservListResponse response = inventoryReservationService
-							.convertDatatoWsdto(cartdatalist, cart.getGuid(),
-									pincode,MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
 					
-					for(InventoryReservResponse entry: response.getItem()){
-						
-						if(!"success".equalsIgnoreCase(entry.getReservationStatus()) ){
-							errorMessages.add(new ResourceMessage("placeOrder.validation.cartItemNotReserved",
-									Arrays.asList(entry.getUSSID(), entry.getAvailableQuantity()==null?entry.getReservationStatus():entry.getAvailableQuantity())));
-						} else{
-							// cart.setAddressConfirmationFlag(true);
-							cart.setCartReservationDate(new Date());
-							modelService.save(cart);
-							modelService.refresh(cart);
-							
+					InventoryReservListResponse inventoryReservListResponse = null;
+					try
+					{
+						inventoryReservListResponse = inventoryReservationService
+								.convertDatatoWsdto(cartdatalist, cart.getGuid(),
+										pincode,MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
+					}
+					catch (final ClientEtailNonBusinessExceptions e)
+					{
+						LOG.error("::::::CSCockpit Exception in calling OMS Inventory reservation:::::::::" + e.getErrorCode());
+						if (null != e.getErrorCode()
+								&& ("O0003".equalsIgnoreCase(e.getErrorCode()) || "O0004".equalsIgnoreCase(e.getErrorCode()) || "O0007"
+										.equalsIgnoreCase(e.getErrorCode())))
+						{
+							inventoryReservListResponse = mplCommerceCartService.callInventoryReservationCommerce(cartdatalist);
 						}
 					}
-	
+					
+					if(inventoryReservListResponse!=null && CollectionUtils.isNotEmpty(inventoryReservListResponse.getItem()))
+					{
+						for(InventoryReservResponse entry: inventoryReservListResponse.getItem()){
+							
+							if(!"success".equalsIgnoreCase(entry.getReservationStatus()) ){
+								errorMessages.add(new ResourceMessage("placeOrder.validation.cartItemNotReserved",
+										Arrays.asList(entry.getUSSID(), entry.getAvailableQuantity()==null?entry.getReservationStatus():entry.getAvailableQuantity())));
+							} else{
+								// cart.setAddressConfirmationFlag(true);
+								cart.setCartReservationDate(new Date());
+								modelService.save(cart);
+								modelService.refresh(cart);
+							}
+						}
+					}
+					else
+					{
+						throw new Exception("Error in Inventory Reservation in CSCockpit");
+					}
+			
 				} catch (Exception ex) {
 					isCartReserved = Boolean.FALSE;
 					cart.setCartReservationDate(null);
