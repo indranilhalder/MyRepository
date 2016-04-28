@@ -45,7 +45,7 @@ public class MicrositePageController extends AbstractSearchPageController
 
 	protected static final String SELLER_NAME_PATH_VARIABLE_PATTERN = "/{mSellerName:.*}";
 
-	private static final String ERROR_CMS_PAGE = "notFound";
+	//private static final String ERROR_CMS_PAGE = "notFound";
 
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
@@ -114,7 +114,7 @@ public class MicrositePageController extends AbstractSearchPageController
 
 	/*
 	 * This method will get category data from MplCategoryFacade for the given category name.
-	 * 
+	 *
 	 * @param sellerName category name comes from ajax url
 	 */
 	@RequestMapping(value = "/fetchSellerSalesHierarchyCategories/{sellerName}", method = RequestMethod.GET)
