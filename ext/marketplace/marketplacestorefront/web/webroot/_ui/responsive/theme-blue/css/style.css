@@ -36647,10 +36647,13 @@ input#otpMobileNUMField:focus {
 }
 #juspayconnErrorDiv button.close {
 	right: -7px;
+	display: inline-block;
+    vertical-align: middle;
 }
 #juspayconnErrorDiv span {
 	margin: 0px 15px;
-    line-height: 48px;
+    display: inline-block;
+    vertical-align: middle;
 }
 #sendOTPButton {
 	position: relative;
