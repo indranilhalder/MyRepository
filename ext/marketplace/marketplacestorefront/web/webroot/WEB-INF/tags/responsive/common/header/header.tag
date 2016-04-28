@@ -117,6 +117,7 @@ function registerUser(eventObject)
 	<input type="hidden" id="DamMediaHost" value="${DamMediaHost}">
 	<input type="hidden" id="mplStaticResourceHost" value="${mplStaticResourceHost}">
 	<input type="hidden" id="previewVersion" value="${cmsPageRequestContextData.preview}">
+	<input type="hidden" id="pageTemplateId" value="${cmsPage.masterTemplate.uid}">
 	<!-- For Infinite Analytics End -->
 	
 	<div class="row header-row"></div>

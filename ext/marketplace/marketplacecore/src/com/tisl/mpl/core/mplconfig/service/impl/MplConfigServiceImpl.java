@@ -41,6 +41,9 @@ public class MplConfigServiceImpl implements MplConfigService
 	public String getConfigValueById(final String id)
 	{
 		String configValue = null;
+		
+		try
+		{
 		if (StringUtils.isNotEmpty(id))
 		{
 			final MplConfigModel configModel = mplConfigDao.getConfigValueById(id);
@@ -48,6 +51,11 @@ public class MplConfigServiceImpl implements MplConfigService
 			{
 				configValue = configModel.getValue();
 			}
+		}
+		}
+		catch(Exception e)
+		{
+			LOGGER.error("Congiguration Not foud for the Key:"+id);
 		}
 
 		if (LOGGER.isDebugEnabled())
