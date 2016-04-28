@@ -173,7 +173,7 @@ INSERT_UPDATE SolrIndexerQuery;solrIndexedType(identifier)[unique=true];identifi
 										{{ SELECT * FROM {BuyBox AS bbox} 
 													WHERE {bbox.product}={p.code} 
 													AND {bbox.delisted} != 1 
-													AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+													AND (sysdate() between {bbox.sellerstartdate} and {bbox.sellerenddate})
 										}} 
 									) 
 						AND {p.varianttype} IS NULL   
@@ -200,7 +200,7 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 			{{
 				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} >= ?lastIndexTime
 																	 AND {bbox.delisted} != 1 
-																	 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+																	 AND (sysdate() between {bbox.sellerstartdate} and {bbox.sellerenddate})
 			}}
 		)
 	}}
@@ -219,7 +219,7 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 where tbl.code IN ( 
 					{{ SELECT {bbox.product} FROM {BuyBox AS bbox} 
 								WHERE {bbox.delisted} != 1 
-								AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+								AND (sysdate() between {bbox.sellerstartdate} and {bbox.sellerenddate})
 					}} 
 				)
 
@@ -231,12 +231,12 @@ where tbl.code IN (
 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
 													AND ({bbox.product}={p.code} 
-													AND ({bbox.delisted} = 1 OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})))
+													AND ({bbox.delisted} = 1 OR (sysdate() not between {bbox.sellerstartdate} and {bbox.sellerenddate})))
 													AND {bbox.product} NOT IN (
 													{{
 														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 
 															WHERE {bbox.delisted} != 1 
-															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+															AND (sysdate() between {bbox.sellerstartdate} and {bbox.sellerenddate})
 													}})
 										}} 
 									) 

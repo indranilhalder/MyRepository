@@ -172,7 +172,7 @@ INSERT_UPDATE CMSSubbrand;subBrandName[unique=true];subBrandUrl;subBrandImage(co
 
 #Shop by Department Components
 INSERT_UPDATE DepartmentCollectionComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;departmentCollection(code,$productCV)
-;;ShopByDepartmentComponent;Shop By Department;ShopByDepartmentComponent;MSH10,MSH11,MSH12,MSH13
+;;ShopByDepartmentComponent;Shop By Department;ShopByDepartmentComponent;MSH10,MSH11,MSH12,MSH13,MSH15,MSH16
 
 #INSERT_UPDATE CMSDepartment;department(code,$productCV)[unique=true];departmentImage(code,$contentCV)
 #;MSH10;;
