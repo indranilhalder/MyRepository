@@ -57,7 +57,11 @@
 		</c:if>
 	</c:forEach>
 	
-	<c:set var="seoImageURL" value="${protocolString[0]}://${seoMediaURL}"/>
+	<c:choose>
+	    <c:when test="${not empty seoMediaURL}">
+	        <c:set var="seoImageURL" value="${protocolString[0]}://${seoMediaURL}"/>
+	    </c:when>
+	</c:choose>
 	
 	<!-- Markup for Google+ -->
 	<meta itemprop="name" content="${metaTitle}">
