@@ -1463,7 +1463,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	
  <alias name="mplPromotionOrderEntryConsumedPopulator" alias="promotionOrderEntryConsumedPopulator" />
 	<bean id="mplPromotionOrderEntryConsumedPopulator" class="com.tisl.mpl.facades.populators.MplPromotionOrderEntryConsumedPopulator"
-	parent="defaultPromotionOrderEntryConsumedPopulator">
+	parent="defaultPromotionOrderEntryConsumedPopulator"/>
 	
 	<alias name="mplConfigFacade" alias="defaultMplConfigFacde"/>
 	<bean id="mplConfigFacade"
