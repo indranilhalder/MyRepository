@@ -15,12 +15,17 @@ package com.tisl.mpl.storefront.filters;
 
 import de.hybris.platform.acceleratorstorefrontcommons.history.BrowseHistory;
 import de.hybris.platform.acceleratorstorefrontcommons.history.BrowseHistoryEntry;
+import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.cms2.misc.CMSFilter;
 import de.hybris.platform.commercefacades.storesession.StoreSessionFacade;
+import de.hybris.platform.core.model.media.MediaModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.media.MediaService;
 
 import java.io.IOException;
 import java.util.Collections;
 
+import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,9 +33,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.CookieGenerator;
+
+import com.tisl.mpl.storefront.constants.MessageConstants;
+import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 
 
 /**
@@ -45,6 +54,15 @@ public class StorefrontFilter extends OncePerRequestFilter
 	private StoreSessionFacade storeSessionFacade;
 	private BrowseHistory browseHistory;
 	private CookieGenerator cookieGenerator;
+
+	@Resource
+	private ConfigurationService configurationService;
+	private static final Logger LOG = Logger.getLogger(StorefrontFilter.class);
+	@Resource(name = "mediaService")
+	private MediaService mediaService;
+	@Resource(name = "catalogVersionService")
+	private CatalogVersionService catalogVersionService;
+
 
 	@Override
 	public void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
@@ -77,8 +95,59 @@ public class StorefrontFilter extends OncePerRequestFilter
 
 			getBrowseHistory().addBrowseHistoryEntry(new BrowseHistoryEntry(request.getRequestURI(), null));
 		}
+		getSEOAttributes(request);
 
 		filterChain.doFilter(request, response);
+	}
+
+	/**
+	 * @param request
+	 */
+	private void getSEOAttributes(final HttpServletRequest request)
+	{
+		final String twitterHandle = configurationService.getConfiguration().getString(MessageConstants.TWITTER_HANDLE).trim();
+		final String mediaCode = configurationService.getConfiguration().getString(MessageConstants.MEDIA_CODE).trim();
+		String seoMediaURL = "";
+		final String imageHost = configurationService.getConfiguration().getString(MessageConstants.MEDIA_HOST).trim();
+		if (null != mediaCode)
+		{
+			final MediaModel media = getMediaByCode(mediaCode);
+			try
+			{
+				seoMediaURL = media.getURL2();
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Exception at getSEOAttributes::::::::::::::" + ex);
+			}
+			final StringBuilder sb = new StringBuilder();
+			final String fullURL = sb.append(imageHost).append(seoMediaURL).toString();
+			request.setAttribute(ModelAttributetConstants.SEO_MEDIA_URL, fullURL);
+		}
+
+		request.setAttribute(ModelAttributetConstants.TWITTER_HANDLE, twitterHandle);
+		final String siteName = configurationService.getConfiguration().getString(MessageConstants.SITE_NAME).trim();
+		request.setAttribute(ModelAttributetConstants.SITE_NAME, siteName);
+	}
+
+	protected MediaModel getMediaByCode(final String mediaCode)
+	{
+		if (StringUtils.isNotEmpty(mediaCode))
+		{
+			try
+			{
+				final MediaModel media = mediaService.getMedia(mediaCode);
+				if (media != null)
+				{
+					return media;
+				}
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Exception at getMediaByCode::::::::::::::" + ex);
+			}
+		}
+		return null;
 	}
 
 	protected boolean isGetMethod(final HttpServletRequest httpRequest)
