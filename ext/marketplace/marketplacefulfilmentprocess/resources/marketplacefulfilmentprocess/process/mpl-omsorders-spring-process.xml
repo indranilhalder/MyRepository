@@ -265,5 +265,4 @@
 		<property name="jmsTemplate" ref="jmsTemplate"></property>
 	</bean> 
 	<!-- Beans for ActiveMQ End -->
-			
 </beans>

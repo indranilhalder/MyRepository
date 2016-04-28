@@ -839,6 +839,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9516 = "B9516";
 	public static final String B9517 = "B9517";
 	public static final String B9518 = "B9518";
+	public static final String B9103 = "B9103";
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -1496,6 +1497,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
 	public static final String PINCODE_DATA_UPLOAD_VERSION = "mpl.payment.pincodeData.uploadversion".intern();
 
+	public static final String CAMPAIGN_HEADER_1 = "IDENTIFIER,TITLE,PROMOTIONGROUP,DESCRIPTION,ENABLED,PRIORITY,".intern();
+
+	public static final String CAMPAIGN_HEADER_2 = "PRODUCTS,CATEGORIES,EXCLUDED PRODUCTS,CATEGORY MIN AMOUNT,QUANTITY,MAX DISCOUNT,IS PERCENTAGE,PERCENTAGE,DISCOUNT PRICES,GIFT PRODUCTS,START DATE,END DATE,RESTRICTIONS,FIRED MESSAGE,COULD FIRE MESSAGE,SECOND PRODUCTS,SECOND CATEGORIES,THRESH TOTALS,TSHIP,SSHIP,DISCOUNT TYPE,DELIVERY MODE,FREE COUNT,URL"
+			.intern();
+	
 	public static final String TYPE = "type";
 
 	private MarketplacecommerceservicesConstants()

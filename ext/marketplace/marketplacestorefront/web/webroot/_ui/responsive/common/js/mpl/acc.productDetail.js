@@ -165,13 +165,12 @@
 		
 		// Sise Guide Select Color
 		   
-		$(document).on("click", 'a[data-target=#popUpModal] ',
+		$(document).on("click", '.colorBox',
 			function() {
-			   var target = $(this).attr("href");
+			  var target = $(this).attr('data-producturl');
 			   console.log(target);
-			   var productcode= $(this).attr("data-productcode");
+			  var productcode= $(this).attr('data-productcode');
 			   console.log(productcode);
-		 	   //$("#popUpModal").modal('hide');
 			   $('body').on('hidden.bs.modal', '#popUpModal', function () {
 					  $(this).removeData('bs.modal');
 					});
@@ -1171,18 +1170,20 @@ function fetchPrice() {
 					$("#sellerSelId").val(sellerID);
 					
 					if (allStockZero == 'Y' && data['othersSellersCount']>0) {
-						if( $("#variant,#sizevariant option:selected").val()!="#") {
+						if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
-						}
 						$("#buyNowButton").hide();
+						}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
 					}
-					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("#variant,#sizevariant option:selected").val()!="#") {
-						$("#addToCartButton").hide();
-						$("#buyNowButton").hide();
-						$("#outOfStockId").show();
+					else if (allStockZero == 'Y' && data['othersSellersCount']==0){
+						if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173
+							$("#addToCartButton").hide();
+							$("#buyNowButton").hide();
+							$("#outOfStockId").show();
+						}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
 					}

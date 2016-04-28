@@ -6,6 +6,7 @@
 	 /*To highlight the active link*/
 	 
 		var pageName = $("#pageName").val();
+		var pageNameDropdown = $("#pageNameDropdown").val();
 		if(pageName=="overViews"){
        		$("#lnOverView a").addClass("active"); 		
        	}
@@ -37,7 +38,33 @@
        		$("#lnReview a").addClass("active"); 		
        	}
 		
-		
+		if(pageNameDropdown=="overViews"){
+			$('#menuPageSelect option').eq(0).attr("selected","selected");
+       	}
+       	else if(pageNameDropdown=="mplPref"){
+       		$('#menuPageSelect option').eq(1).attr("selected","selected");
+       	}
+       	else if(pageNameDropdown=="personalInfo"){
+       		$('#menuPageSelect option').eq(2).attr("selected","selected");		
+       	}
+       	else if(pageNameDropdown=="orderHistory"){
+       		$('#menuPageSelect option').eq(3).attr("selected","selected");
+       	}
+       	else if(pageNameDropdown=="savedCards"){
+       		$('#menuPageSelect option').eq(4).attr("selected","selected"); 		
+       	}
+       	else if(pageNameDropdown=="addressBook"){
+       		$('#menuPageSelect option').eq(5).attr("selected","selected");
+       	}
+       	else if(pageNameDropdown=="review"){
+       		$('#menuPageSelect option').eq(6).attr("selected","selected");
+       	}
+    	else if(pageNameDropdown=="coupons"){
+       		$('#menuPageSelect option').eq(8).attr("selected","selected");	
+       	}
+       	else if(pageNameDropdown=="invite"){
+       		$('#menuPageSelect option').eq(9).attr("selected","selected");
+       	}
 		
 		var sPageURL = window.location.search.substring(1);
 		if(sPageURL.indexOf('&pageAnchor=')>0){
@@ -575,7 +602,7 @@ function editAddress(addressId) {
 					|| regexSpace.test(document.getElementById("profileMobileNumber").value)) {
 				$("#errMob").css({
 					"display" : "block",
-					"padding-top" : "40px"
+					"padding-top" : "10px"
 				});
 				document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
 				proceed = false;
@@ -719,7 +746,8 @@ function editAddress(addressId) {
 							document.getElementById("errdata").innerHTML = "<font color='#ff1c47' size='2'>Date of Birth cannot be after Anniversary Date.</font>";
 							proceed = false;
 						} 
-						else 
+						// Changed for TISPRO-320
+						/*else 
 						{
 							$("#errdoaDay").css({
 								"display" : "block",
@@ -727,7 +755,7 @@ function editAddress(addressId) {
 							});
 							document.getElementById("errdoaDay").innerHTML = "<font display='none' size='2'></font>";
 							proceed = true;
-						}
+						}*/
 					}
 				}
 			}
