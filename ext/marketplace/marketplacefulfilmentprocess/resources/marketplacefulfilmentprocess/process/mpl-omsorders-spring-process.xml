@@ -263,6 +263,7 @@
 		
 	<bean id="mplOrderToQueue" class="com.tisl.mpl.integration.oms.order.service.impl.OrderToQueue">
 		<property name="jmsTemplate" ref="jmsTemplate"></property>
+		<property name="omsOrderService" ref="omsOrderService" />
 	</bean> 
 	<!-- Beans for ActiveMQ End -->
 </beans>
