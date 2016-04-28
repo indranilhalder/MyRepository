@@ -54,9 +54,11 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 			//if (classAttrAssignmentList.size() > 0)
 			if (CollectionUtils.isNotEmpty(classAttrAssignmentList))
 			{
-
+				final List<ClassAttributeAssignment> classAttributeAssignmentList = new ArrayList<ClassAttributeAssignment>();
 				final Product product = (Product) this.modelService.getSource(model);
 				final List<FieldValue> fieldValues = new ArrayList<FieldValue>();
+
+				/********** TISPRO-326 changes **********/ 
 				for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
 				{
 
@@ -64,8 +66,24 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 							.getSource(classAttrAssignmentModel);
 
 
-					final FeatureContainer cont = FeatureContainer.loadTyped(product, new ClassAttributeAssignment[]
-					{ classAttributeAssignment });
+					classAttributeAssignmentList.add(classAttributeAssignment);
+
+
+				}
+
+
+				//for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
+				//{
+
+				/*
+				 * final ClassAttributeAssignment classAttributeAssignment = (ClassAttributeAssignment) this.modelService
+				 * .getSource(classAttrAssignmentModel);
+				 */
+
+				final FeatureContainer cont = FeatureContainer.loadTyped(product, classAttributeAssignmentList);
+
+				for (final ClassAttributeAssignment classAttributeAssignment : classAttributeAssignmentList)
+				{
 					if (cont.hasFeature(classAttributeAssignment))
 					{
 						final Feature feature = cont.getFeature(classAttributeAssignment);
@@ -76,6 +94,8 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 						}
 					}
 				}
+
+				//}
 				return fieldValues;
 			}
 
@@ -103,8 +123,8 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 				try
 				{
 					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(getFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
-							: featureValues));
+					result.addAll(
+							getFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues() : featureValues));
 				}
 				finally
 				{
@@ -133,8 +153,8 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 				value = ((ClassificationAttributeValue) value).getCode();
 			}
 			final List<String> rangeNameList = getRangeNameList(indexedProperty, value);
-			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, (language == null) ? null
-					: language.getIsocode());
+			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty,
+					(language == null) ? null : language.getIsocode());
 			for (final String fieldName : fieldNames)
 			{
 				if (rangeNameList.isEmpty())
