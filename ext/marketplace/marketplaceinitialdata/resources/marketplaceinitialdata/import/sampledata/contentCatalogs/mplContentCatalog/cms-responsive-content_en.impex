@@ -1934,7 +1934,7 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
 ;;ErrorPageBannerComponent;TMP_ErrorPageBanner.png;"<span class='major-promo-header-italic'>DANG!</span>
                   <span class='major-promo-description'><p>YOU JUST BROKE THE INTERNET</p><p>Dust yourself and ride into the sunset on our super-hero camel</p></span>
-                          <a href='http://localhost:9001/store/' class='button'>BACK TO THE HOMEPAGE</a>";
+                          <a href='/' class='button'>BACK TO THE HOMEPAGE</a>";
 
                           
 #CMSLinkComponent
