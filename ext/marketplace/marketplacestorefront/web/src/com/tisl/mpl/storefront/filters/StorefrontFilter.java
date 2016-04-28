@@ -16,6 +16,7 @@ package com.tisl.mpl.storefront.filters;
 import de.hybris.platform.acceleratorstorefrontcommons.history.BrowseHistory;
 import de.hybris.platform.acceleratorstorefrontcommons.history.BrowseHistoryEntry;
 import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.misc.CMSFilter;
 import de.hybris.platform.commercefacades.storesession.StoreSessionFacade;
 import de.hybris.platform.core.model.media.MediaModel;
@@ -134,17 +135,20 @@ public class StorefrontFilter extends OncePerRequestFilter
 	{
 		if (StringUtils.isNotEmpty(mediaCode))
 		{
-			try
+			for (final CatalogVersionModel catalogVersionModel : catalogVersionService.getSessionCatalogVersions())
 			{
-				final MediaModel media = mediaService.getMedia(mediaCode);
-				if (media != null)
+				try
 				{
-					return media;
+					final MediaModel media = mediaService.getMedia(catalogVersionModel, mediaCode);
+					if (media != null)
+					{
+						return media;
+					}
 				}
-			}
-			catch (final Exception ex)
-			{
-				LOG.error("Exception at getMediaByCode::::::::::::::" + ex);
+				catch (final Exception ex)
+				{
+					LOG.error("Exception at getMediaByCode::::::::::::::" + ex);
+				}
 			}
 		}
 		return null;
