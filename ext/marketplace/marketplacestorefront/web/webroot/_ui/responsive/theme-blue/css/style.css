@@ -30872,6 +30872,21 @@ ul.less-stock li {
     padding: 10px;
     line-height: 14px;
  }
+ .cart.wrapper .button.make_payment_top_nb, .cart.wrapper .button.make_payment_top_savedCard,
+  .cart.wrapper .button.make_payment_top_newCard{
+ 	float:right;
+ 	width:28%;
+ 	margin-top: 60px;
+    margin-bottom: -47px;
+    border: 1px solid #a9143c;
+    color: #fff;
+    font-weight: 500;
+    display:none;
+    background-color: #a9143c !important;}
+    
+ #make_nb_payment{
+     display:none;
+    }
 /*--------------maincss-----------*/
 .row
 {
