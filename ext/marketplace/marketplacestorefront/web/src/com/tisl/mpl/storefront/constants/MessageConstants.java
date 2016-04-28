@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.storefront.constants;
 
+
 /**
  * @author TCS
  *
@@ -165,6 +166,10 @@ public final class MessageConstants
 	public static final String CANCEL_ORDER_STATUS = "valid.order.statuses.CANCELLATION_ORDER";
 	public static final String WISHLIST_PAGESIZE = "wishlist.pagesize.defaultValue";
 	public static final String ORDER_HISTORY_PAGESIZE = "orderHistory.pagesize.defaultValue";
+	public static final String TWITTER_HANDLE = "twitter.handle";
+	public static final String MEDIA_HOST = "media.dammedia.host";
+	public static final String MEDIA_CODE = "brand.media.code";
+	public static final String SITE_NAME = "site.name";
 
 	//Compare
 	public static final String COMPARE_SYSTEM_ERROR = "Sorry! we are unable to compare the selected products";

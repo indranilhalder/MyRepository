@@ -1217,7 +1217,7 @@ h2 {
           position: absolute;
           left: 0;
           top: 100%;
-          width: 256px;
+          width: 259px;
           padding: 0 25px;
           line-height: 25px;
           -webkit-transition: max-height 0.3s, z-index 0s 0.3s;
@@ -1243,7 +1243,7 @@ h2 {
                font-weight:600;}
                  @media (min-width:791px) and (max-width: 855px) {		
         header .content .right>ul>li.wishlist .wishlist-info {		
-            max-width: 216px		
+            max-width: 219px;		
         }		
     }
      @media (min-width:791px) {
@@ -23209,7 +23209,6 @@ div.complete-your-look h1 {
     font-size: 72px;
     position: relative;
     font-family: inherit;
-    font-style: italic;
     font-weight: 100;
     margin-bottom: 10px;
 }
@@ -32447,12 +32446,12 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 	font-size: 14px;
 	text-align: left;
 	background-color: #fafafa;
-	width:337px;
+	width:341px;
 	padding:0 20px;
 }
 @media (max-width: 855px) and (min-width: 791px){
 .dropdown-menu {
-    width: 277px;
+    width: 281px;
 }}
 .loggedIn-flyout li a
 {

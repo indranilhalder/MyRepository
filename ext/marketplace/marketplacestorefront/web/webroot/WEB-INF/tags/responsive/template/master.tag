@@ -50,26 +50,26 @@
 		</c:if>
 	</c:forEach>
 	
+	<c:set var="seoImageURL" value="${protocolString[0]}://${seoMediaURL}"/>
 	
 	<!-- Markup for Google+ -->
 	<meta itemprop="name" content="${metaTitle}">
 	<meta itemprop="description" content="${metaDescription}">
-	<meta itemprop="image" content=""><!-- Image URL of the brand - 470x256 -->
+	<meta itemprop="image" content="${seoImageURL}">
 	
 	<!-- Twitter Card data -->
 	<meta name="twitter:card" content="${baseURL}/">
-	<meta name="twitter:site" content=""><!-- Twitter Handle Name -->
+	<meta name="twitter:site" content="${twitterHandle}">
 	<meta name="twitter:title" content="${metaTitle}">
 	<meta name="twitter:description" content="${metaDescription}">
-	<meta name="twitter:image:src" content=""><!-- Image URL of the brand - 470x256 -->
+	<meta name="twitter:image:src" content="${seoImageURL}">
 	
 	<!-- FB Open Graph data -->
 	<meta property="og:title" content="${metaTitle}" />
 	<meta property="og:url" content="${baseURL}${requestScope['javax.servlet.forward.request_uri']}" />
-	<meta property="og:image" content="" /><!-- Image URL of the brand - 470x256 -->
+	<meta property="og:image" content="${seoImageURL}" />
 	<meta property="og:description" content="${metaDescription}" />
-	<meta property="og:site_name" content="Tata CLiQ" />
-		
+	<meta property="og:site_name" content="${siteName}" />
 	
 	<%-- Favourite Icon --%>
 	<spring:theme code="img.favIcon" text="/" var="favIconPath"/>
