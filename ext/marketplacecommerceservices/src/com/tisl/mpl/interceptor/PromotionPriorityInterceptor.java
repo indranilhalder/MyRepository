@@ -22,6 +22,7 @@ import de.hybris.platform.util.localization.Localization;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -347,8 +348,36 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 		{
 			final OrderPromotionModel promotion = (OrderPromotionModel) object;
 			populatePromotionGroup(promotion);
+			final String promoCode = checkCartPromoPriority(promotion);
+			if (StringUtils.isNotEmpty(promoCode))
+			{
+				final String errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
+				throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
+						+ MarketplacecommerceservicesConstants.PROMOCODE + promoCode
+						+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.PROMOPRIORITY
+						+ promotion.getPriority());
+			}
 		}
 	}
+
+	/**
+	 * The Method checks the priority for Active Cart Promotions
+	 *
+	 * @param promotion
+	 * @return flag
+	 */
+	private String checkCartPromoPriority(final OrderPromotionModel promotion)
+	{
+		String promoCode = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (null != promotion.getEnabled() && promotion.getEnabled().booleanValue())
+		{
+			LOG.debug("Checking Priority of Cart Promotion----Present Priority:" + promotion.getPriority());
+			promoCode = mplPromotionHelper.checkCartPromoPriority(promotion);
+		}
+		return promoCode;
+	}
+
 
 	/**
 	 * The Method to auto populate a promotion group.

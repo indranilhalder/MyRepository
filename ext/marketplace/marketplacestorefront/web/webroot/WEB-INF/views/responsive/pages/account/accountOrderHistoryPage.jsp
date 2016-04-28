@@ -31,9 +31,9 @@
 	<div class="account">
 		<h1 class="account-header">
 			<spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
-
-
-			<select class="menu-select"
+				<user:accountMobileViewMenuDropdown pageNameDropdown="orderHistory"/>
+		
+			<%-- <select class="menu-select"
 				onchange="window.location=this.options[this.selectedIndex].value;">
 				<optgroup label="<spring:theme code="header.flyout.myaccount" />">
 					<option value=/store/mpl/en/my-account
@@ -64,7 +64,7 @@
 						data-href="account-invite.php"><spring:theme
 							code="header.flyout.invite" /></option>
 				</optgroup>
-			</select>
+			</select> --%>
 
 
 		</h1>
@@ -73,45 +73,7 @@
 
 
 			<!----- Left Navigation Starts --------->
-			<%-- <div class="left-nav">
-				<ul>
-					<li><h3>
-							<spring:theme code="header.flyout.myaccount" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/"/>"><spring:theme
-								code="header.flyout.overview" /></a></li>
-					<li><a
-						href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-								code="header.flyout.marketplacepreferences" /></a></li>
-					<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
-								code="header.flyout.Personal" /></a></li>
-					<li><a class="active"
-						href="<c:url value="/my-account/orders"/>"><spring:theme
-								code="header.flyout.orders" /></a></li>
-					<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
-								code="header.flyout.cards" /></a></li>
-					<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
-								code="header.flyout.address" /></a></li>
-					<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
-										code="header.flyout.review" /></a></li>
-					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-								code="header.flyout.recommendations" /></a></li>
-				</ul>
-				<ul>
-				<li class="header-SignInShare"><h3><spring:theme
-									code="header.flyout.credits" /></h3></li>
-						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li>
-				</ul>
-				<ul>
-					<li><h3>
-							<spring:theme code="header.flyout.share" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
-								code="header.flyout.invite" /></a></li>
-
-				</ul>
-			</div> --%>
+			
 			<user:accountLeftNav pageName="orderHistory"/>
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->

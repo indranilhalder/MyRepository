@@ -242,6 +242,7 @@
 		<property name="signature" type="String"></property>
 		<property name="timestamp" type="String"></property>
 		<property name="checkTataRewards" type="boolean"></property>
+		<property name="gigyaSessionsForMob" type="com.tisl.mpl.wsdto.GigyaWsDTO" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.TrackOrderData">
@@ -826,4 +827,8 @@
 		<property name="transactionId" type="String"></property>
 	</bean>
 
+	<bean class="de.hybris.platform.commercefacades.order.data.PromotionOrderEntryConsumedData">
+		<property name="ussid" type="String"/>
+	</bean>
+	
 </beans>

@@ -17,7 +17,8 @@
 	<!----- Left Navigation Starts --------->
 	<div class="account">
 	  <h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
-  <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
+	  <user:accountMobileViewMenuDropdown pageNameDropdown="review"/>
+  <%-- <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
                   <option value=/store/mpl/en/my-account/marketplace-preference data-href="/store/mpl/en/my-account/marketplace-preference"><spring:theme code="header.flyout.marketplacepreferences" /></option>
@@ -32,7 +33,7 @@
           <optgroup label="Share">
                   <option value=/store/mpl/en/my-account/friendsInvite data-href="account-invite.php"><spring:theme code="header.flyout.invite" /></option>
               </optgroup>
-      </select>
+      </select> --%>
 </h1>
 	<div class="wrapper">
 	<user:accountLeftNav pageName="review"/>
