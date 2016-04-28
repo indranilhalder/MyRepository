@@ -376,7 +376,7 @@
 								    <c:if test="${storeId ne entry.deliveryPointOfService.address.id}">
 									   <c:set var="pos"
 																value="${entry.deliveryPointOfService.address}" />
-																<li class="item delivered first">
+																<li class="item delivered first" id="shipping-track-order">
 																	<div class="item-header">
 															<c:set var="storeId" value="${pos.id}" />
 															
