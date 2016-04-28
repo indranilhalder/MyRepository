@@ -4,8 +4,6 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commerceservices.enums.SalesApplication;
-import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
@@ -1199,30 +1197,30 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 	 * @param promotion
 	 * @return offerChannel
 	 */
-	//	private String populateOfferChannel(final AbstractPromotionModel promotion)
-	//	{
-	//		String offerChannel = MarketplacecommerceservicesConstants.EMPTY;
-	//		if (CollectionUtils.isNotEmpty(promotion.getChannel()))
-	//		{
-	//			for (int i = 0; i < promotion.getChannel().size(); i++)
-	//			{
-	//				if ((i != (promotion.getChannel().size() - 1)))
-	//				{
-	//					offerChannel = offerChannel + (promotion.getChannel().get(i).getCode().toUpperCase())
-	//							+ MarketplacecommerceservicesConstants.CAMPAIGN_MULTIDATA_SEPERATOR;
-	//				}
-	//				else
-	//				{
-	//					offerChannel = offerChannel + (promotion.getChannel().get(i).getCode().toUpperCase());
-	//				}
-	//			}
-	//		}
-	//		else
-	//		{
-	//			offerChannel = MarketplacecommerceservicesConstants.CAMPAIGN_CHANNEL;
-	//		}
-	//		return offerChannel;
-	//	}
+	private String populateOfferChannel(final AbstractPromotionModel promotion)
+	{
+		String offerChannel = MarketplacecommerceservicesConstants.EMPTY;
+		if (CollectionUtils.isNotEmpty(promotion.getChannel()))
+		{
+			for (int i = 0; i < promotion.getChannel().size(); i++)
+			{
+				if ((i != (promotion.getChannel().size() - 1)))
+				{
+					offerChannel = offerChannel + (promotion.getChannel().get(i).getCode().toUpperCase())
+							+ MarketplacecommerceservicesConstants.CAMPAIGN_MULTIDATA_SEPERATOR;
+				}
+				else
+				{
+					offerChannel = offerChannel + (promotion.getChannel().get(i).getCode().toUpperCase());
+				}
+			}
+		}
+		else
+		{
+			offerChannel = MarketplacecommerceservicesConstants.CAMPAIGN_CHANNEL;
+		}
+		return offerChannel;
+	}
 
 
 	/**
@@ -1477,7 +1475,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		data.setDescription(MarketplacecommerceservicesConstants.EMPTYSPACE);
 		data.setEnabled(MarketplacecommerceservicesConstants.EMPTYSPACE);
 		data.setPriority(MarketplacecommerceservicesConstants.EMPTYSPACE);
-		data.setChannel(new ArrayList<String>());
+		data.setChannel(MarketplacecommerceservicesConstants.EMPTYSPACE);
 		data.setUrl(MarketplacecommerceservicesConstants.EMPTYSPACE);
 		data.setProducts(MarketplacecommerceservicesConstants.EMPTYSPACE);
 		data.setCategories(MarketplacecommerceservicesConstants.EMPTYSPACE);
@@ -1513,32 +1511,32 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 	 * @param promotion
 	 * @return offerChannelList
 	 */
-	private List<String> populateOfferChannel(final AbstractPromotionModel promotion)
-	{
-		final List<String> offerChannelList = new ArrayList<String>();
-		final List<EnumerationValueModel> salesAppEnumList = mplEnumerationHelper
-				.getEnumerationValuesForCode(SalesApplication._TYPECODE);
-
-		if (CollectionUtils.isNotEmpty(promotion.getChannel()))
-		{
-			final List<SalesApplication> channelList = promotion.getChannel();
-			for (final SalesApplication channel : channelList)
-			{
-				offerChannelList.add(channel.getCode().toUpperCase());
-			}
-		}
-		else
-		{
-			for (final EnumerationValueModel enumerationValueModel : salesAppEnumList)
-			{
-				if (enumerationValueModel != null)
-				{
-					offerChannelList.add(enumerationValueModel.getCode().toUpperCase());
-				}
-			}
-		}
-		return offerChannelList;
-	}
+	//	private List<String> populateOfferChannel(final AbstractPromotionModel promotion)
+	//	{
+	//		final List<String> offerChannelList = new ArrayList<String>();
+	//		final List<EnumerationValueModel> salesAppEnumList = mplEnumerationHelper
+	//				.getEnumerationValuesForCode(SalesApplication._TYPECODE);
+	//
+	//		if (CollectionUtils.isNotEmpty(promotion.getChannel()))
+	//		{
+	//			final List<SalesApplication> channelList = promotion.getChannel();
+	//			for (final SalesApplication channel : channelList)
+	//			{
+	//				offerChannelList.add(channel.getCode().toUpperCase());
+	//			}
+	//		}
+	//		else
+	//		{
+	//			for (final EnumerationValueModel enumerationValueModel : salesAppEnumList)
+	//			{
+	//				if (enumerationValueModel != null)
+	//				{
+	//					offerChannelList.add(enumerationValueModel.getCode().toUpperCase());
+	//				}
+	//			}
+	//		}
+	//		return offerChannelList;
+	//	}
 
 
 
