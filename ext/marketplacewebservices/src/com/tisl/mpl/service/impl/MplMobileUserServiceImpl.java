@@ -569,8 +569,10 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				output.setSessionToken(data.getGigyaSessionsForMob().getSessionToken());
 			}
 
-			LOG.debug("****************** SESSSSION KEY ****************** " + data.getGigyaSessionsForMob().getSessionSecret());
-			LOG.debug(" ******************  SESSSSION TOKEN ****************** " + data.getGigyaSessionsForMob().getSessionToken());
+			LOG.debug("****************** SESSSSION KEY AT loginSocialFbUser ****************** "
+					+ data.getGigyaSessionsForMob().getSessionSecret());
+			LOG.debug(" ******************  SESSSSION TOKEN loginSocialFbUser ****************** "
+					+ data.getGigyaSessionsForMob().getSessionToken());
 		}
 		catch (final UsernameNotFoundException notFound)
 		{ //User name not found
@@ -709,8 +711,10 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				output.setCustomerId(getCustomerId(login));
 			}
 
-			LOG.debug("****************** SESSSSION KEY ****************** " + data.getGigyaSessionsForMob().getSessionSecret());
-			LOG.debug(" ******************  SESSSSION TOKEN ****************** " + data.getGigyaSessionsForMob().getSessionToken());
+			LOG.debug("****************** SESSSSION KEY  AT loginSocialGoogleUser ****************** "
+					+ data.getGigyaSessionsForMob().getSessionSecret());
+			LOG.debug(" ******************  SESSSSION TOKEN AT loginSocialGoogleUser ****************** "
+					+ data.getGigyaSessionsForMob().getSessionToken());
 		}
 		catch (final UsernameNotFoundException notFound)
 		{ //User name not found
