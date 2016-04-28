@@ -253,8 +253,6 @@ Confirmed!<br>
                     <td>&nbsp;</td>
                     #if($ctx.cmsSlotContents.fb)<td width="27" align="right"><a href="https://www.facebook.com/TataCLiQ/">${ctx.cmsSlotContents.fb}</a></td>#end
                     #if($ctx.cmsSlotContents.twitter)<td width="27" align="right"><a href="https://twitter.com/tatacliq/">${ctx.cmsSlotContents.twitter}</a></td>#end
-
-
                     #if($ctx.cmsSlotContents.youtube)<td width="27" align="right"><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA/">${ctx.cmsSlotContents.youtube}</a></td>#end
                     #if($ctx.cmsSlotContents.gplus)<td width="27" align="right"><a href="https://www.instagram.com/tatacliq/">${ctx.cmsSlotContents.gplus}</a></td>#end
                   </tr>
