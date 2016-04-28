@@ -4568,6 +4568,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
 	}
 
 	/**
