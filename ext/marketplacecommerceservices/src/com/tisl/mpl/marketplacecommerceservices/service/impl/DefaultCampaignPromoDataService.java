@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -102,18 +101,18 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 		try
 		{
 			fileWriter = new FileWriter(rootFolder);
-			//fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_HEADER);
-			final int channelCount = mplEnumerationHelper.getEnumerationValuesForCode(SalesApplication._TYPECODE).size();
-			fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_HEADER_1);
-
-			for (int i = 1; i <= channelCount; i++)
-			{
-				fileWriter.append(MarketplacecommerceservicesConstants.CHANNEL.toUpperCase()
-						.concat(MarketplacecommerceservicesConstants.UNDER_SCORE).concat(String.valueOf(i)));
-				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
-			}
-
-			fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_HEADER_2);
+			fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_HEADER);
+			//			final int channelCount = mplEnumerationHelper.getEnumerationValuesForCode(SalesApplication._TYPECODE).size();
+			//			fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_HEADER_1);
+			//
+			//			for (int i = 1; i <= channelCount; i++)
+			//			{
+			//				fileWriter.append(MarketplacecommerceservicesConstants.CHANNEL.toUpperCase()
+			//						.concat(MarketplacecommerceservicesConstants.UNDER_SCORE).concat(String.valueOf(i)));
+			//				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
+			//			}
+			//
+			//			fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_HEADER_2);
 
 			fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_NEW_LINE_SEPARATOR);
 
@@ -137,16 +136,16 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 				fileWriter.append(data.getPriority());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
-				//				fileWriter.append(data.getChannel());
-				//				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
+				fileWriter.append(data.getChannel());
+				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
-				for (int i = 0; i < channelCount; i++)
-				{
-					final List<String> channelList = data.getChannel();
-					final String channel = (channelList.size() > i) ? channelList.get(i) : "";
-					fileWriter.append(channel);
-					fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
-				}
+				//				for (int i = 0; i < channelCount; i++)
+				//				{
+				//					final List<String> channelList = data.getChannel();
+				//					final String channel = (channelList.size() > i) ? channelList.get(i) : "";
+				//					fileWriter.append(channel);
+				//					fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
+				//				}
 
 				fileWriter.append(data.getProducts());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
