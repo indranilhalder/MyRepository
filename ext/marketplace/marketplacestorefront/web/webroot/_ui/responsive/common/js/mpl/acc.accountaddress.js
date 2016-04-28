@@ -602,7 +602,7 @@ function editAddress(addressId) {
 					|| regexSpace.test(document.getElementById("profileMobileNumber").value)) {
 				$("#errMob").css({
 					"display" : "block",
-					"padding-top" : "40px"
+					"padding-top" : "10px"
 				});
 				document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
 				proceed = false;
@@ -746,7 +746,8 @@ function editAddress(addressId) {
 							document.getElementById("errdata").innerHTML = "<font color='#ff1c47' size='2'>Date of Birth cannot be after Anniversary Date.</font>";
 							proceed = false;
 						} 
-						else 
+						// Changed for TISPRO-320
+						/*else 
 						{
 							$("#errdoaDay").css({
 								"display" : "block",
@@ -754,7 +755,7 @@ function editAddress(addressId) {
 							});
 							document.getElementById("errdoaDay").innerHTML = "<font display='none' size='2'></font>";
 							proceed = true;
-						}
+						}*/
 					}
 				}
 			}

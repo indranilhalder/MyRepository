@@ -76,7 +76,60 @@ public class GenericUtilityMethods
 		return status;
 	}
 
+	/**
+	 * @Description: Sends the year from Date
+	 * @param : date
+	 * @return year
+	 */
+	public static String redirectYear(final Date date)
+	{
+		try
+		{
+			final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+			final String bDayString = dateFormat.format(date);
+			final String bDayStringArry[] = bDayString.split("/");
 
+			final String year = bDayStringArry[0];
+
+			return year;
+
+		}
+		catch (final Exception e)
+		{
+			return null;
+		}
+
+	}
+
+	/**
+	 * @Description: Modifies Date with the required Year
+	 * @param : date,yeartoModify
+	 * @return modifedDate
+	 */
+	public static Date modifiedBDate(final Date date, final String yeartoModify)
+	{
+		try
+		{
+			final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			final String bDayString = dateFormat.format(date);
+			final String bDayStringArry[] = bDayString.split("/");
+
+			final String month = bDayStringArry[1];
+			final String day = bDayStringArry[0];
+
+
+			final String modifiedBDay = day + "/" + month + "/" + yeartoModify;
+
+			final Date modifedDate = dateFormat.parse(modifiedBDay);
+
+			return modifedDate;
+		}
+		catch (final Exception e)
+		{
+			return null;
+		}
+
+	}
 	/**
 	 * @Description: Modifies the System Date according to the format dd/MM/yyyy
 	 * @param date
@@ -139,6 +192,28 @@ public class GenericUtilityMethods
 		}
 		return noOfDays;
 	}
+	/**
+	 * @Description: Compares with System Date
+	 * @param : date
+	 * @return flag
+	 */
+	public static boolean compareDateWithSysDate(final Date date)
+	{
+		boolean flag = false;
+		try
+		{
+			final Date sysDate = modifiedSysDate(new Date());
+			if (sysDate.equals(date))
+			{
+				flag = true;
+			}
+		}
+		catch (final Exception e)
+		{
+			flag = false;
+		}
+		return flag;
+	}
 
 	/**
 	 * @Description: @Promtion: Checks for Excluded Products
@@ -158,6 +233,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks Excluded Manufacturer Restriction
+	 * @param : List<AbstractPromotionRestriction> restrictionLists
 	 * @param restrictionList
 	 * @return manufactureList
 	 */
@@ -180,7 +256,6 @@ public class GenericUtilityMethods
 		return manufactureList;
 	}
 
-
 	/**
 	 * @Description: @Promtion: Checks whether Product Exist in Category
 	 * @param categoryList
@@ -198,13 +273,12 @@ public class GenericUtilityMethods
 					return true;
 				}
 			}
-
 		}
 		return false;
 	}
 
 	/**
-	 * @Description: @Promtion: Checks whether product lies in Excluded Manufacture List
+	 * @Description: @Promtion: Checks whther product lies in Excluded Manufacture List
 	 * @param product
 	 * @param excludedManufactureList
 	 * @return boolean
@@ -303,6 +377,28 @@ public class GenericUtilityMethods
 			for (final SellerInformationData sellerInformationData : sellerDataList)
 			{
 				sellerArticleSKUsBuilder.append('\'').append(sellerInformationData.getUssid()).append('\'').append(',');
+			}
+
+			sellerArticleSKUs = sellerArticleSKUsBuilder.toString();
+		}
+
+		return sellerArticleSKUs;
+	}
+
+	/**
+	 *
+	 * @param sellerDataList
+	 * @return sellerArticleSKUs
+	 */
+	public static String getcommaSepUSSIDs(final List<String> ussidList)
+	{
+		String sellerArticleSKUs = null;
+		if (null != ussidList && !ussidList.isEmpty())
+		{
+			final StringBuilder sellerArticleSKUsBuilder = new StringBuilder();
+			for (final String ussid : ussidList)
+			{
+				sellerArticleSKUsBuilder.append('\'').append(ussid).append('\'').append(',');
 			}
 
 			sellerArticleSKUs = sellerArticleSKUsBuilder.toString();
