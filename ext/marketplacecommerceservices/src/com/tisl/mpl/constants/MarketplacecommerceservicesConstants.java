@@ -1501,8 +1501,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CAMPAIGN_HEADER_2 = "PRODUCTS,CATEGORIES,EXCLUDED PRODUCTS,CATEGORY MIN AMOUNT,QUANTITY,MAX DISCOUNT,IS PERCENTAGE,PERCENTAGE,DISCOUNT PRICES,GIFT PRODUCTS,START DATE,END DATE,RESTRICTIONS,FIRED MESSAGE,COULD FIRE MESSAGE,SECOND PRODUCTS,SECOND CATEGORIES,THRESH TOTALS,TSHIP,SSHIP,DISCOUNT TYPE,DELIVERY MODE,FREE COUNT,URL"
 			.intern();
-	
+
 	public static final String TYPE = "type";
+
+	public static final String SINGLE_QUOTE = "\'";
 
 	private MarketplacecommerceservicesConstants()
 	{
@@ -1511,4 +1513,3 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
-

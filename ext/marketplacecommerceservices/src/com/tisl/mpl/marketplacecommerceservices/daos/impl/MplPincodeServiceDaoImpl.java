@@ -38,7 +38,7 @@ public class MplPincodeServiceDaoImpl implements MplPincodeServiceDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplPincodeServiceDao#getPincodeServicableDataAtCommerce(com.tisl
 	 * .mpl.wsdto.PinCodeDeliveryModeListRequest)
@@ -61,10 +61,11 @@ public class MplPincodeServiceDaoImpl implements MplPincodeServiceDao
 				}
 
 				query.append(" {{").append("select {pk} from {PincodeServiceabilityData} where {pincode} ='").append(pin)
-						.append("\'").append(" and {sellerId}='").append(pincodeServiceData.getSellerId()).append("\'")
-						.append(" and {fulfillmentType}='").append(pincodeServiceData.getFullFillmentType().toUpperCase()).append("\'")
-						.append(" and {deliveryMode} in (").append(getdeliveryModes(pincodeServiceData.getDeliveryModes())).append(')')
-						.append("}} ");
+						.append(MarketplacecommerceservicesConstants.SINGLE_QUOTE).append(" and {sellerId}='")
+						.append(pincodeServiceData.getSellerId()).append(MarketplacecommerceservicesConstants.SINGLE_QUOTE)
+						.append(" and {fulfillmentType}='").append(pincodeServiceData.getFullFillmentType().toUpperCase())
+						.append(MarketplacecommerceservicesConstants.SINGLE_QUOTE).append(" and {deliveryMode} in (")
+						.append(getdeliveryModes(pincodeServiceData.getDeliveryModes())).append(')').append("}} ");
 
 				++count;
 			}
