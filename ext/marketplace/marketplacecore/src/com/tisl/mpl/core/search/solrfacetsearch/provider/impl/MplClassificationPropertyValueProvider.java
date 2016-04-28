@@ -49,9 +49,17 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 			//if (classAttrAssignmentList.size() > 0)
 			if (CollectionUtils.isNotEmpty(classAttrAssignmentList))
 			{
-
+				final List<ClassAttributeAssignment> classAttributeAssignmentList = new ArrayList<ClassAttributeAssignment>();
 				final Product product = (Product) this.modelService.getSource(model);
 				final List<FieldValue> fieldValues = new ArrayList<FieldValue>();
+				//for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
+				//{
+
+				/*
+				 * final ClassAttributeAssignment classAttributeAssignment = (ClassAttributeAssignment) this.modelService
+				 * .getSource(classAttrAssignmentModel);
+				 */
+
 				for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
 				{
 
@@ -59,8 +67,15 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 							.getSource(classAttrAssignmentModel);
 
 
-					final FeatureContainer cont = FeatureContainer.loadTyped(product, new ClassAttributeAssignment[]
-					{ classAttributeAssignment });
+					classAttributeAssignmentList.add(classAttributeAssignment);
+
+
+				}
+
+				final FeatureContainer cont = FeatureContainer.loadTyped(product, classAttributeAssignmentList);
+
+				for (final ClassAttributeAssignment classAttributeAssignment : classAttributeAssignmentList)
+				{
 					if (cont.hasFeature(classAttributeAssignment))
 					{
 						final Feature feature = cont.getFeature(classAttributeAssignment);
@@ -71,6 +86,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 						}
 					}
 				}
+
+				//}
 				return fieldValues;
 			}
 
@@ -98,8 +115,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				try
 				{
 					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
-							: featureValues));
+					result.addAll(extractFieldValues(indexedProperty, language,
+							(feature.isLocalized()) ? feature.getValues() : featureValues));
 				}
 				finally
 				{
