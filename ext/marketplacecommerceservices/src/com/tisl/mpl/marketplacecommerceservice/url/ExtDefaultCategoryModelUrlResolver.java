@@ -28,6 +28,7 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 	protected String resolveInternal(final CategoryModel source)
 	{
 		String url = getPattern();
+		String urlSpecialRemoved = null;
 
 		if (url.contains("{baseSite-uid}"))
 		{
@@ -53,15 +54,17 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 			url = url.replace("{catalogVersion}", source.getCatalogVersion().getVersion());
 		}
 		url = url.toLowerCase();
+
 		try
 		{
 			url = URLDecoder.decode(url, "UTF-8");
+			urlSpecialRemoved = url.replaceAll("[+.^:,'!@&#]", "");
 		}
 		catch (final UnsupportedEncodingException e)
 		{
 			LOG.error(e.getMessage());
 		}
-		return url;
+		return urlSpecialRemoved;
 	}
 
 	@Override

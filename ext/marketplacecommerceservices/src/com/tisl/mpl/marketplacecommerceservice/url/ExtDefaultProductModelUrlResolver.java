@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservice.url;
 
+
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.url.impl.DefaultProductModelUrlResolver;
@@ -10,11 +11,15 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.variants.model.VariantProductModel;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -26,6 +31,7 @@ public class ExtDefaultProductModelUrlResolver extends DefaultProductModelUrlRes
 
 	@Resource
 	private ConfigurationService configurationService;
+	Logger LOG = Logger.getLogger(this.getClass().getName());
 
 	/**
  *
@@ -38,6 +44,7 @@ public class ExtDefaultProductModelUrlResolver extends DefaultProductModelUrlRes
 		//final BaseSiteModel currentBaseSite = getBaseSiteService().getCurrentBaseSite();
 
 		String url = getPattern();
+		String urlSpecialRemoved = null;
 
 		//		if ((currentBaseSite != null) && (url.contains("{baseSite-uid}")))
 		//		{
@@ -56,6 +63,15 @@ public class ExtDefaultProductModelUrlResolver extends DefaultProductModelUrlRes
 			url = url.replace("{product-code}", source.getCode());
 		}
 		url = url.toLowerCase();
+		try
+		{
+			url = URLDecoder.decode(url, "UTF-8");
+			urlSpecialRemoved = url.replaceAll("[+.^:,'!@&#]", "");
+		}
+		catch (final UnsupportedEncodingException e)
+		{
+			LOG.error(e.getMessage());
+		}
 		return url;
 	}
 

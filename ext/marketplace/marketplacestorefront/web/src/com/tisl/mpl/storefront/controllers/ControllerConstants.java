@@ -330,7 +330,7 @@ public interface ControllerConstants
 				public static final String REVIEWS_PATH_VARIABLE_PATTERN = "{numberOfReviews:.*}";
 				public static final String IS_COD = "isCod";
 				public static final String ALL_OF_STOCK = "allOOStock";
-				public static final String BUYBOZFORSIZEGUIDEAJAX = "buyboxDataForSizeGuide";
+				public static final String BUYBOZFORSIZEGUIDEAJAX = "/buyboxDataForSizeGuide";
 
 			}
 		}
