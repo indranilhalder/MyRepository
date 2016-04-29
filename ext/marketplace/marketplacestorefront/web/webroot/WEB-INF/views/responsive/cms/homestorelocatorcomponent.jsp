@@ -1,5 +1,5 @@
 <%@ page trimDirectiveWhitespaces="true"%>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script>
@@ -70,11 +70,6 @@ function initialize(locatorJson,lat,lot)
     var map=new google.maps.Map(document.getElementById("home-googleMap"),mapProp);
    
     // Create a DIV to hold the control and call HomeControl()
-    var homeControlDiv = document.createElement('div');
-    var homeControl = new HomeControl(homeControlDiv, map);
-    homeControlDiv.index = 1;
-    map.controls[google.maps.ControlPosition.LEFT_CENTER].push(homeControlDiv);
-    
     staticLegends(map);
     //Info window.
     var infowindow = new google.maps.InfoWindow({
@@ -219,7 +214,7 @@ function HomeLegendsControl(controlDiv, map) {
     
     var legendStyle = document.getElementById("legend");
     
-     console.info("Style"+legendStyle);
+    console.info("Style"+legendStyle);
     
     var legend = document.getElementById('legend');
      
@@ -231,45 +226,116 @@ function HomeLegendsControl(controlDiv, map) {
 	      div.appendChild(img1);
          legend.appendChild(div);
     } 
-      console.info(legend);
+      console.info('info'+legend);
       controlDiv.style.padding = '10px';
       var controlUI = document.createElement('div');
-      controlUI.style.backgroundColor = '#ffffff';
+      controlUI.style.backgroundColor = 'transparent';
       controlUI.style.textAlign = 'center';
       controlUI.style.right='60px';
-     // opacity: 0.6;
-     // filter: 'alpha(opacity=60)';
-     // controlUI.title = 'Set map to London';
       controlDiv.appendChild(controlUI);
-      //var controlText = document.getElementById('overLayStoreFinderText');
       controlUI.appendChild(legend);
   
 }
 
 </script>
+<style> 
+  .container_store_finder_home {
+		margin: 0px 0px;
+		    vertical-align: baseline;
+	} 
+	
+.container_store_finder_home_map {
+		margin: 0px 22px;
+	}	
+	
+.overLayStoreFinderText {
+       top: 64px;
+       width:400px;
+       display:block;
+       padding-bottom:15px;
+       
+}
 
+.overLayStoreFinderText h1 {
+    margin: 10px 0 15px;
+    font-size: 28px;
+    font-weight: 500;
+    margin-left: 15px;
+    margin-right: 15px;
+    text-align: center;
+    line-height:1.3;
+}
+.overLayStoreFinderText span {
+    margin-top: 15px;
+    padding: 0 40px;
+    text-align: center;
+    }
+@media (max-width: 1170px) {
+  
+  #legend {
+     display:none;
+  }
+  .overLayStoreFinderText {
+    position: relative;
+    width:auto;
+    top:0px;
+    /* background: #F7F8FA; */
+    margin-top:-20px;
+    left:0px;
+  }
+  
+  .overLayStoreFinderText span {
+     word-wrap: break-word; 
+     padding:0 0px;
+        }
+  
+  .home-googleMap {
+	width: 104%;
+  }
+    .overLayStoreFinderText h1{
+    margin-left: 0px;
+    margin-right: 0px;
+    word-wrap: break-word;
+  } 
+  
+}
+ 
+/* .col-centered{
+    float: none;
+    margin: 0 auto;
+} */
+#legend {
+background: transparent;
+}
 
-<div id="home-googleMap" class="home-googleMap">
+.overLayStoreFinderText a {
+    font-size: 12px;
+    margin: 15px 0;
+  }
+  
+</style>
+<div class="container_store_finder_home">
+	<div class="row">
+	 <div class="col-md-12 col-sm-12 col-lg-6">
+	       <div id="overLayStoreFinderText123" class="overLayStoreFinderText">
+		   <h1><spring:theme code="storelocator.home.beinspired.text1" text="Be inspired online, or at one of our partner stores."/></h1>
+			<span><spring:theme code="storelocator.home.beinspired.text2" text="Our seamless online and in-store experiences allow
+				you to shop, make returns, and earn rewards on all your purchases
+				across brands online or in-store."/>
+			 </span>
+		  <a href="${request.contextPath}/aboutus" class="r2-arrow"><spring:theme code="storelocator.home.aboutus.link.text" text="Learn more about our services"/></a> 
+		  <a href="${request.contextPath}/store-finder" class="r2-arrow">
+				<spring:theme code="storelocator.home.storefinder.link.text" text="Find a store"/></a>
+         </div>
+		</div>
+	
+	  
+          <!-- <div id="home-googleMap" class="home-googleMap"> -->
+      
+  </div>
+  <div class="row"> 
+   <div id="home-googleMap" class="home-googleMap"> </div>
+  </div>		
+  <div id="legend"> </div> 
 </div>
-<div id="legend">
-                         
-          </div> 
-
-<div id="overLayStoreFinderText" class="overLayStoreFinderText">
-	<h1>Be inspired online, or at one of our partner stores.</h1> 
-	<span>To Our seamless online and in-store experiences  
-	    allow you to shop, make returns, and earn  
-	    rewards on all your purchases across brands   online or in-store.
-	</span>
-	   
-	   <a href="${request.contextPath}/aboutus" class="r2-arrow">Learn more about our services</a>
-		<a href="${request.contextPath}/store-finder" class="r2-arrow"> Find a Store</a>
-	 
-</div>
-
-
-<%-- <!-- another link. uses the same overlay -->
-<a href="${request.contextPath}/store-finder"  style="text-decoration:none">
-   Find  a Store
-</a> --%>
  
