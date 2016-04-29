@@ -31185,6 +31185,76 @@ ul.less-stock li {
 .gig-rating-readReviewsLink {
 	margin-bottom: 10px;
 }
+
+/*site map css starts*/
+
+.r2-borderBottom {
+    border-bottom: 2px solid #b9b9b9;
+}
+.r2-center{   
+    text-align: center;
+    float: left;
+    width: 100%;
+    margin:20px 0;
+    color: #333333 !important;
+}
+.r2-sitemap section {
+    width: 95%;
+    margin: auto;
+    border-color: #f3f3f3;
+}
+.r2-sitemap > section > ul > li{
+   width: 19%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.r2-sitemap > section > ul {
+    height: auto;
+    overflow: hidden;
+    padding: 20px;
+}
+.r2-sitemap > section > ul > li > ul > h5 {
+    text-transform: uppercase;
+    white-space: nowrap;
+    width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+        font-size: 12px;
+        margin-top: 10px;
+    margin-bottom: 10px;
+        font-weight: 500;
+}
+.r2-sitemap > section > ul > li > ul li a {
+	line-height: 18px;
+	font-size: 12px;
+}
+.r2-sitemap section h4 {
+    padding-bottom: 5px;
+    font-style: 24px;
+}
+.r2-sitemap > section > ul > li > ul > li {
+    padding: 4px 0px;
+    font-size: 12px;
+}
+.r2-sitemap h1 {
+    font-size: 36px;
+}
+.r2-sitemap a{
+    color: #4A4A4A;
+}
+.r2-borderBottom {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+@media(max-width:650px){
+	.r2-sitemap > section > ul > li{
+    width: 49%;
+    display: inline-block;
+    vertical-align: top;
+}
+}
+/*site map css ends*/
 /*--------------maincss-----------*/
 .row
 {
