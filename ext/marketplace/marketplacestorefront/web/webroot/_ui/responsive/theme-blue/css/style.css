@@ -7000,6 +7000,10 @@ text-transform: uppercase;
 .checkout.wrapper .product-block li.header > ul li.delivery, .checkout.wrapper .product-block li.item > ul li.delivery {
   width: 38%;
   margin-right: 0; }
+  .checkout.wrapper .product-block li.item > ul li.delivery ul li label span.priceFormat{
+  display:inline-block;
+  font-size:14px;
+  }
   .checkout.wrapper .product-block li.header > ul li.delivery ul, .checkout.wrapper .product-block li.item > ul li.delivery ul {
     margin-bottom: 0; }
   .checkout.wrapper .product-block li.header > ul li.delivery span, .checkout.wrapper .product-block li.item > ul li.delivery span {
@@ -16601,7 +16605,7 @@ body .account .right-account .order-history.order-details li.item:not(.in-store)
     display: block
 }
 body .account .right-account .order-history.order-details li.item .order {
-    position: relative
+    position: relative;
 	margin-top: 0px !important;
 }
 body .account .right-account .order-history.order-details li.item .order::after {
