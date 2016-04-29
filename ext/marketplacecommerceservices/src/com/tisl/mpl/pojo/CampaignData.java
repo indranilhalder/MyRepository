@@ -3,8 +3,6 @@
  */
 package com.tisl.mpl.pojo;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.marketplacecommerceservices.jobs.PromotionCreationJob;
@@ -25,7 +23,7 @@ public class CampaignData
 	private String description;
 	private String enabled;
 	private String priority;
-	private List<String> channel;
+	private String channel;
 	private String products;
 	private String categories;
 	private String excludedProducts;
@@ -157,7 +155,7 @@ public class CampaignData
 	/**
 	 * @return the channel
 	 */
-	public List<String> getChannel()
+	public String getChannel()
 	{
 		return channel;
 	}
@@ -166,7 +164,7 @@ public class CampaignData
 	 * @param channel
 	 *           the channel to set
 	 */
-	public void setChannel(final List<String> channel)
+	public void setChannel(final String channel)
 	{
 		this.channel = channel;
 	}

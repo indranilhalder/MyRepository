@@ -25227,7 +25227,7 @@ width:100% !important;}
 	max-height:300px;
 	overflow-y:auto;
 }
-.product-tile .details.short-info .brand, ,.product-tile .short-info .company{
+.product-tile .details.short-info .brand, .product-tile .short-info .company{
 	margin-bottom: 15px;
 	font-size:14px;
 	min-height:10px;
@@ -38780,3 +38780,4 @@ Samsung Galaxy S5 -----------
   background-color : transparent;
 }
 /*Store Finder and Home store locator css end here*/
+

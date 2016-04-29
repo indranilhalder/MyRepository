@@ -101,6 +101,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//	private static final String LAST_LINK_CLASS = "active";
 
 	protected static final Logger LOG = Logger.getLogger(CategoryPageController.class);
+	//Added For TISPRD-1243
+	private static final String DROPDOWN_BRAND = "MBH";
+	private static final String DROPDOWN_CATEGORY = "MSH";
 
 	@RequestMapping(value =
 	{ NEW_CATEGORY_URL_PATTERN, NEW_CATEGORY_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
@@ -110,7 +113,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) final String dropDownText, final Model model,
+			@RequestParam(value = "searchCategory", required = false) String dropDownText, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
 	{
 		categoryCode = categoryCode.toUpperCase();
@@ -146,13 +149,29 @@ public class CategoryPageController extends AbstractCategoryPageController
 				&& categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 		{
 			searchCode = searchCode.substring(0, 5);
+
 		}
 		model.addAttribute("searchCode", searchCode);
 		model.addAttribute("isCategoryPage", Boolean.TRUE);
 		final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 		//Set the drop down text if the attribute is not empty or null
 		if (dropDownText != null && !dropDownText.isEmpty())
+		//Added For TISPRD-1243
+
 		{
+
+			if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+
+			{
+				final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
+
+				if (categoryModel != null)
+				{
+					dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+
+				}
+			}
+			//Added For TISPRD-1243
 			model.addAttribute("dropDownText", dropDownText);
 
 		}
