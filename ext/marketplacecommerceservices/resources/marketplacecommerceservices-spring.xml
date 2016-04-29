@@ -1596,6 +1596,18 @@
 
 	<bean id="campaignData" class="com.tisl.mpl.pojo.CampaignData" />
 
+	<!-- Start : Oms fallback mechanism -->
+	<bean id="mplPincodeServiceDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPincodeServiceDaoImpl">
+	</bean>
+	
+	<bean id="mplPincodeService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplPincodeService" >
+		<property name="mplPincodeServiceDao" ref="mplPincodeServiceDao" />
+		<property name="juspayWebHookService" ref="juspayWebHookService" />
+	</bean>
+	<!-- End: fallback mechanism -->
+
 	
 	<!-- Coupon restriction service, added for getting restrictions for coupon -->
 	<bean id="couponRestrictionService"
@@ -1647,5 +1659,4 @@
 	</bean>
 	<!-- UserGroupSaveInterceptor ends -->	
 
-	</beans>
-
+</beans>

@@ -4,7 +4,6 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 import java.util.List;
 
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.model.SellerSalesCategoryModel;
 
 
@@ -24,8 +23,4 @@ public interface MplSellerInformationFacade
 	public SellerSalesCategoryModel getActiveSellerRootCategoryBySellerId(final String sellerId);
 
 	SellerInformationModel getSellerInformationWithSellerMaster(final String sellerID);
-	
-	SellerMasterModel getSellerMasterBySellerId(final String sellerID);
-	
-	String getSellerColloctionDays(final String sellerId);
 }

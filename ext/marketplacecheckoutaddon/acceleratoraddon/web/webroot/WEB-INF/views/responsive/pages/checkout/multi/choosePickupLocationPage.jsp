@@ -532,9 +532,9 @@
 	function test(i, j) {
 		console.log(i+"@@"+j);
 		//alert("Hello");
-		//var posData = $(".addPos"+i).text();
-		//posData = posData.split('@');
-		//openPopForAdddPosToCartEntry(posData[0], posData[1]);
+		var posData = $(".addPos"+i).text();
+		posData = posData.split('@');
+		openPopForAdddPosToCartEntry(posData[0], posData[1]);
 		
 		//Change color for Radio Button
 		
@@ -546,7 +546,7 @@
 		
 		// Load Map for the selected Store
 		
-		//console.log(posData[0]+" @@ "+posData[1]);
+		console.log(posData[0]+" @@ "+posData[1]);
 		var iconURLPrefix = '${request.contextPath}/_ui/responsive/theme-blue/images/storemarkericons/';
 	    
 	    iconURLPrefix = iconURLPrefix.replace("/mpl/en/","/");
@@ -1079,14 +1079,11 @@
 										        	  $("#maphide${status1.index}").hide();
 											          var changecordinates${status1.index} = " ";
 											          $(".removeColor${status1.index}").remove();
-											          openPopForAdddPosToCartEntry("${poses.ussId}", "n/a");
 											          for(var i=0;i<jsonObject${status1.index}.length;i++) {
 											        	  var count = parseInt(i) + 1;
 											        	  var hello = "${status1.index}";
-											        	  var ussid = '"${poses.ussId}"';
-											        	  var posName = '"'+jsonObject${status1.index}[i]['name']+'"';
 											        	  //var name = jsonObject${status1.index}[i]['name'];
-											        	  $(".delivered${status1.index}").append("<li style='width: 240px !important;' class='removeColor${status1.index} remove${status1.index}"+i+"'><input onclick='test("+hello+", "+i+"); openPopForAdddPosToCartEntry("+ussid+", "+posName+");' class='radio_btn radio_btn${status1.index}' name='address${status1.index}' id='address${status1.index}"+i+"' value='address0' type='radio'><div class='pin bounce'><span class='text_in'>"+count+"</span></div></li>")
+											        	  $(".delivered${status1.index}").append("<li style='width: 240px !important;' class='removeColor${status1.index} remove${status1.index}"+i+"'><input onclick='test("+hello+", "+i+")' class='radio_btn radio_btn${status1.index}' name='address${status1.index}' id='address${status1.index}"+i+"' value='address0' type='radio'><div class='pin bounce'><span class='text_in'>"+count+"</span></div></li>")
 											        	  $(".remove${status1.index}"+i).append("<label class='radio_sel${status1.index}"+i+" displayName${status1.index}"+i+" radio_color delivery-address' style='color: #ADA6A6;'></label>");
 											        	  $(".remove${status1.index}"+i).append("<label class='addPos"+i+"' style='display: none;'>${poses.ussId}@"+jsonObject${status1.index}[i]['name']+"</label>");
 											        	  $(".remove${status1.index}"+i).append("<label class='radio_sel${status1.index}"+i+" name${status1.index}"+i+" radio_color delivery-address' style='display:none; color: #ADA6A6;'></label>");

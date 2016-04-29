@@ -459,7 +459,9 @@ $(document).ready(function(){
 				 $(this).find('header').first().find('.compact-toggle').click(function(){
 					 $(this).parents('header').toggleClass('compact');
 					 $(this).parents('header').find('.compact-toggle').toggleClass('open');
-				 });   
+				 }); 
+				 
+			
 				 
 				/* $(this).find('header').find('.compact-toggle').toggleClass('open');
 				 $(this).find('header').first().find('.compact-toggle').click(function(){
@@ -467,6 +469,14 @@ $(document).ready(function(){
 					 $(this).parents('header').find('.compact-toggle').toggleClass('open');
 				 });*/
 			 }
+			 $(window).scroll(function () {
+			 if($("header .content .bottom").hasClass("active")){
+					$("header > .content .top .compact-toggle.open").css("display","none");
+				}
+				else{
+					$("header > .content .top .compact-toggle.open").css("display","inline-block");
+				}
+			 });
 	/*---END of Micro site brand header toggle functionality ---*/
 			 
 	/*-------Start of Marketplace preferences--------*/

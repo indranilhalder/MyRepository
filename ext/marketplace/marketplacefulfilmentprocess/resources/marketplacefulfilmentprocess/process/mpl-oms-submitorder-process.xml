@@ -30,6 +30,12 @@
 
 	<action id="createOmsOrder" bean="customOmsCreateOmsOrderAction">
 		<transition name="OK" to="checkOmsSourcing"/>
+		<!-- <transition name="NOK" to="failed"/> -->
+		<transition name="NOK" to="sendOrderToQueue"/>
+	</action>
+	
+	<action id="sendOrderToQueue" bean="customSendOrderToQueueAction">
+		<transition name="OK" to="checkOmsSourcing"/>
 		<transition name="NOK" to="failed"/>
 	</action>
 
