@@ -138,7 +138,7 @@ ACC.carousel = {
 	
 	homePageBannerCarousel: function(count){
 		
-			var iw = $('#rotatingImageTimeout .owl-item').outerWidth(), ih = $("#rotatingImageTimeout .owl-item").first().next().find('.image img').height();
+			var iw = $('#rotatingImageTimeout .owl-item').outerWidth(), ih = $("#rotatingImageTimeout .owl-item").first().next().find('.hero').height();
 			$("#rotatingImageTimeout .owl-wrapper").css('transition','all 0.5s linear');
 			$("#rotatingImageTimeout .owl-wrapper").css('transform','translate3d(-'+iw+'px, 0px, 0px)');
 			$("#rotatingImageTimeout .owl-wrapper-outer").css('height',ih);

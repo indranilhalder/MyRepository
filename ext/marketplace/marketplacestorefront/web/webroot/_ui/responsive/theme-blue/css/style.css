@@ -17665,7 +17665,7 @@ ul#ui-id-1,ul#ui-id-2,ul.helpmeshop-list
 {
 	position:absolute !important;
 	background:#fff !important;
-	z-index:10;
+	z-index:100;
 	border-top:none;
 	
 }
@@ -29683,6 +29683,11 @@ font-weight:bold;
 .shop-promos .promos li{
    	border-top:1px solid #ccc;
 }}
+@media (max-width: 370px){
+.shop-promos .promos li span {
+    font-size: 14px;
+}
+}
 /* Baby banner end */
 
 .helpmeshopbanner p{
@@ -30473,6 +30478,10 @@ width: 90px !important;
     line-height: 20px;
     word-break: break-word;
 }
+@media (max-width:650px){
+	.home-brands-you-love-wrapper p.home-brands-you-love-main-image-desc{
+	  width: 80%;}
+}
 .home-brands-you-love-wrapper p.home-brands-you-love-main-image-heading {
 	padding-top: 6px;
 }
@@ -30827,11 +30836,13 @@ li#ratingDiv {
  #variantForm .select-size li a:hover {
    color:white;
  } 
- .cart.wrapper .product-block li.item > ul > li.delivery ul > span{
+ .cart.wrapper .product-block li.item > ul > li.delivery ul > span,
+ .cart.wrapper .product-block li.item > ul > li.delivery span.pincodeServiceError{
  	color:#ff1c47;
  	line-height:16px;
  }
- .cart.wrapper .product-block li.item > ul > li.delivery ul > span:before{
+ .cart.wrapper .product-block li.item > ul > li.delivery ul > span:before,
+ .cart.wrapper .product-block li.item > ul > li.delivery span.pincodeServiceError:before{
  	content: '!';
  	font-weight:bolder;
  	margin-right:3px;
@@ -31165,6 +31176,9 @@ ul.less-stock li {
 }
 .confirmation .product-block li ul li.shipping .deliver{
 	font-size:12px !important;
+}
+.gig-rating-readReviewsLink {
+	margin-bottom: 10px;
 }
 /*--------------maincss-----------*/
 .row
@@ -37935,6 +37949,25 @@ max-width:100%;
 .hbpagination .hb-page.active{
     background: rgba(255,255,255,0.6);
     border: none;
+}
+@media(max-width:790px){
+	.hbpagination .hb-page{
+    background: transparent;
+    border: 2px solid #a9143c;
+    border-radius: 100%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    cursor: pointer;
+    margin: 0 3px;
+
+
+}
+
+.hbpagination .hb-page.active{
+    background: #a9143c;
+    border: none;
+}
 }
 .cartPromotions .promotions{
 	padding-top:15px;
