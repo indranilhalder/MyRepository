@@ -236,7 +236,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -308,7 +308,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -366,7 +366,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -454,7 +454,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -527,7 +527,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -589,7 +589,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -647,7 +647,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -705,7 +705,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -772,7 +772,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -852,7 +852,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -924,7 +924,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -969,7 +969,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -1032,7 +1032,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
@@ -1078,7 +1078,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
-			data.setFiredMessage(oModel.getMessageFired());
+			data.setFiredMessage(replaceCommaWithSpace(oModel.getMessageFired()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
