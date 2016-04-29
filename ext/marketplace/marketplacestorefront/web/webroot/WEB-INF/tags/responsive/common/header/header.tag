@@ -162,7 +162,7 @@ function registerUser(eventObject)
 
 				<div class="marketplace compact">
 					<c:if test="${empty hideLogo}">
-						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
+						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
 					</c:if>

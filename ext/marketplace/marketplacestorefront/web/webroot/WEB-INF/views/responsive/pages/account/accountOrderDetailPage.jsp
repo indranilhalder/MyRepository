@@ -1464,7 +1464,9 @@ $(function() {
 				var index = $(this).attr("index");
 				checkAWBstatus(orderLineId,orderCode,"shippingStatusRecord" + orderLineId+"_"+index,"N");
 					$(this).parent().toggleClass("active");
-					$(this).parent().siblings().toggleClass("active");				
+					$(this).parent().siblings().toggleClass("active");	
+					$(this).parents(".trackOrdermessage_00cbe9.shipping.tracking-information").toggleClass("active_viewMore");
+					$(this).parents(".trackOrdermessage_00cbe9.shipping.tracking-information").prev().find('.dot-arrow').toggleClass("active_arrow");
 			});
 		});
 		
