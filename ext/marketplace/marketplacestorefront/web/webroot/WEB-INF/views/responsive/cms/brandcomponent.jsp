@@ -39,7 +39,14 @@
 					</h4></a>
 			</div> --%> <c:forEach items="${component.subBrandList}"
 					var="subBrand">
-					<c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url>
+					<!-- TISPRD-1381 Brand Issue Fix -->
+					<c:if test="${not empty subBrand.subBrandUrl}">
+						<c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url>
+					</c:if>
+					<c:if test="${empty subBrand.subBrandUrl}">
+						<c:url var="subBrandUrl" value="#"></c:url>
+					</c:if> 
+					<%-- <c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url> --%>
 					<a href="${subBrandUrl}">
 						<div class="multibrand-wrapper">
 							<img class="multibrand-logo" src="${subBrand.subBrandImage.URL}" />
