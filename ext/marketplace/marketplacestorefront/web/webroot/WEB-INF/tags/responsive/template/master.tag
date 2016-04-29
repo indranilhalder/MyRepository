@@ -34,7 +34,7 @@
 	
 	
 	<c:set var="host" value="${header.host}"/>
-	<c:set var="pageURL" value="${pageContext.request.requestURL}"/>
+	<c:set var="pageURL" value="${emailURL}"/>
 	<c:set var="protocolString" value="${fn:split(pageURL, '://')}"/>
 	<c:set var="baseURL" value="${protocolString[0]}://${host}"/>
 	

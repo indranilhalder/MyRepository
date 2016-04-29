@@ -106,6 +106,8 @@ public class StorefrontFilter extends OncePerRequestFilter
 	 */
 	private void getSEOAttributes(final HttpServletRequest request)
 	{
+		final String emailURL = configurationService.getConfiguration().getString(MessageConstants.EMAIL_URL);
+		request.setAttribute(ModelAttributetConstants.EMAIL_URL, emailURL);
 		final String twitterHandle = configurationService.getConfiguration().getString(MessageConstants.TWITTER_HANDLE).trim();
 		final String mediaCode = configurationService.getConfiguration().getString(MessageConstants.MEDIA_CODE).trim();
 		String seoMediaURL = "";

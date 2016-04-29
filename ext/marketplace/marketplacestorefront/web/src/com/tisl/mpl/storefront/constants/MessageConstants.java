@@ -170,6 +170,7 @@ public final class MessageConstants
 	public static final String MEDIA_HOST = "media.dammedia.host";
 	public static final String MEDIA_CODE = "brand.media.code";
 	public static final String SITE_NAME = "site.name";
+	public static final String EMAIL_URL = "update_Email_url";
 
 	//Compare
 	public static final String COMPARE_SYSTEM_ERROR = "Sorry! we are unable to compare the selected products";

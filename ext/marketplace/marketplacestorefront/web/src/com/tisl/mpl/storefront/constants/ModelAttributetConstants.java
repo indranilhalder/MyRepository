@@ -179,6 +179,7 @@ public final class ModelAttributetConstants
 	public static final String TWITTER_HANDLE = "twitterHandle";
 	public static final String SEO_MEDIA_URL = "seoMediaURL";
 	public static final String SITE_NAME = "siteName";
+	public static final String EMAIL_URL = "emailURL";
 
 	//Return Item
 	public static final String RETURN_PINCODE_FORM = "returnPincodeCheckForm";
