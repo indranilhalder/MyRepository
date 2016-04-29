@@ -43,9 +43,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.dao.MplSlaveMasterDAO;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
@@ -66,10 +66,10 @@ public class StoresHelper extends AbstractHelper
 
 	@Autowired
 	private MplSlaveMasterDAO mplSlaveMasterDao;
-	
+
 	@Autowired
-	private MplConfigService mplConfigService;
-	
+	private MplConfigFacade mplConfigFacade;
+
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 
@@ -187,7 +187,7 @@ public class StoresHelper extends AbstractHelper
 		List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
 		final ListOfPointOfServiceData listOfPosData = new ListOfPointOfServiceData();
 		final LocationDTO dto = new LocationDTO();
-		String radius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+		String radius = mplConfigFacade.getCongigValue(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
 		LOG.debug("configurableRadius is:" + radius);
 		if (null == radius)
 		{

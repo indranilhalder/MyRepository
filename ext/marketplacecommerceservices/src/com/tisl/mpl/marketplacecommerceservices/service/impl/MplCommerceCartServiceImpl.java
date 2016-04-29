@@ -4093,10 +4093,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1));
 			}
-			else 
-			{
-				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
-			}
 		}
 		else
 		{
