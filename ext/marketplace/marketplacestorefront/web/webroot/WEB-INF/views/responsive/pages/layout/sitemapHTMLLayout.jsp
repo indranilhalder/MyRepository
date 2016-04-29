@@ -88,9 +88,12 @@
 				<c:forEach var="l2MegaMap" items="${megamap.value}">
 						<li>
 							<ul>
-								<h5 class="toggle">${l2MegaMap.key.name}</h5>
+								<h5 class="toggle"><c:url var="l2Url" value="/${l2MegaMap.key.name}/c-${l2MegaMap.key.code}"/><a href="${l2Url}">${l2MegaMap.key.name}</a></h5>
 								<c:forEach var="l3MegaMap" items="${l2MegaMap.value}">
-								<li><a href="${l3MegaMap.code}">${l3MegaMap.name}</a></li>
+								<c:url
+								value="/${l3MegaMap.name}/c-${l3MegaMap.code}"
+								var="l3Url" />
+								<li><a href="${l3Url}">${l3MegaMap.name}</a></li>
 								</c:forEach>
 							</ul>
 						</li>
