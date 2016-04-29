@@ -31214,20 +31214,23 @@ ul.less-stock li {
     overflow: hidden;
     padding: 20px;
 }
-.r2-sitemap > section > ul > li > ul > h5 {
-    text-transform: uppercase;
-    white-space: nowrap;
-    width: 90%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-        font-size: 12px;
-        margin-top: 10px;
-    margin-bottom: 10px;
-        font-weight: 500;
+.r2-sitemap > section > ul > li > ul > h5  {
+	text-transform: uppercase;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 12px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-weight: 600;
+	padding-right: 5px;
 }
 .r2-sitemap > section > ul > li > ul li a {
 	line-height: 18px;
 	font-size: 12px;
+}
+.r2-sitemap > section > ul > li > ul li a:hover {
+	text-decoration:underline;
 }
 .r2-sitemap section h4 {
     padding-bottom: 5px;
