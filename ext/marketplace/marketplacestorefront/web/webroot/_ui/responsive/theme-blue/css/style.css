@@ -2895,7 +2895,7 @@ h2 {
         -webkit-transition: max-height 0.15s;
         -moz-transition: max-height 0.15s;
         transition: max-height 0.15s;
-        z-index:3;
+        z-index:11;
          }
     header > .content .bottom nav > ul li.active > .toggle {
       position: relative; }
