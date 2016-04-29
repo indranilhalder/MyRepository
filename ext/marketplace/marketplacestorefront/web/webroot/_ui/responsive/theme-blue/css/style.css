@@ -15691,7 +15691,8 @@ body .account .right-account form.new-card input[type="radio"]+label:after,
 body .account .right-account div.new-address input[type="radio"]+label:after {
     font-size: 15px;
     position: absolute;
-    left: 15px
+    left: 15px;
+    top: 0px;
 }
 body .account .right-account form.new-card input[type="radio"]+label:before,
 body .account .right-account div.new-address input[type="radio"]+label:before {
