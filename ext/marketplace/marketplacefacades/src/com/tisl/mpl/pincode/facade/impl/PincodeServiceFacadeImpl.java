@@ -434,6 +434,48 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		deliveryModeData.setDeliveryCost(priceData);
 		return deliveryModeData;
 	}
+	
+	/**
+	 * @author TECH
+	 * This methods gets stores from commerce based on pincode and sellerId and prepared StoreLocationReqeustData object.
+	 * @param pincode
+	 * @param sellerUssId
+	 * @return list of StoreLocationRequestData
+	 */
+	@Override
+	public List<StoreLocationRequestData> getStoresFromCommerce(final String pincode, final String sellerUssId)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from getStoresFromCommerce method to get stores slaveIds from commerce");
+		}
+		StoreLocationRequestData storeLocationRequestData = null;
+		final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
+		try
+		{
+			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
+			if (null != pinCodeModelObj)
+			{
+				final LocationDTO dto = new LocationDTO();
+				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+				final Location myLocation = new LocationDtoWrapper(dto);
+
+				storeLocationRequestData = papulateClicknCollectRequestData(sellerUssId, myLocation.getGPS());
+				storeLocationRequestDataList.add(storeLocationRequestData);
+			}
+			else
+			{
+				LOG.error(" pincode model not found for given pincode " + pincode);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9516);
+			}
+		}
+		catch (final Exception e)
+		{
+			throw e;
+		}
+		return storeLocationRequestDataList;
+	}
 
 	/**
 	 * @return the pinCodeFacade

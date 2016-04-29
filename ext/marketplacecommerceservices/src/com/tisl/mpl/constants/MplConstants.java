@@ -91,7 +91,10 @@ public final class MplConstants
 
 	public static final String PIPE = "|";
 
-
+	//for cnc if oms is down
+	public static final String DEFAULT_CNC_INVENTORY_COUNT= "10";
+	public static final String DEFAULT_CNC_NO_INVENTORY= "0";
+	
 	//	for wishlist
 	public static class USER
 	{

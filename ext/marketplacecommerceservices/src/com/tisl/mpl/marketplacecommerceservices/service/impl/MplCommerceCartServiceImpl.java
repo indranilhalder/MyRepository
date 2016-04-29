@@ -92,6 +92,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.model.BrandModel;
@@ -2062,20 +2063,43 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 				isPincodeServiceable = (!isDataPresentInFallback || (!isPrepaidEligible && !isCodEligible)) ? MarketplacecclientservicesConstants.N
 						: isPincodeServiceable;
-
-				final DeliveryModeResOMSWsDto deliveryModeDto = new DeliveryModeResOMSWsDto();
-				deliveryModeDto.setType(getDeliveryGlobalCode(deliveryModeData.getCode()));
-				deliveryModeDto.setInventory(String.valueOf(stockCount));
-				deliveryModeDto.setIsPincodeServiceable(isPincodeServiceable);
-				deliveryModeDto.setIsCOD((isCodEligible) ? MarketplacecclientservicesConstants.Y
-						: MarketplacecclientservicesConstants.N);
-				deliveryModeDto.setIsCODLimitFailed((isCodLimitFailed) ? MarketplacecclientservicesConstants.Y
-						: MarketplacecclientservicesConstants.N);
-				deliveryModeDto.setIsPrepaidEligible((isPrepaidEligible) ? MarketplacecclientservicesConstants.Y
-						: MarketplacecclientservicesConstants.N);
-				deliveryModeDto.setDeliveryDate(new SimpleDateFormat(MarketplacecclientservicesConstants.DELIVERY_DATE_FORMATTER)
-						.format(new Date()));
-
+            //Added the code for CNC Delivery Mode for OMS Fall Back
+				DeliveryModeResOMSWsDto deliveryModeDto =null;
+				if (deliveryModeData.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+				{
+					deliveryModeDto = new DeliveryModeResOMSWsDto();
+					deliveryModeDto.setType(getDeliveryGlobalCode(deliveryModeData.getCode()));
+					if (pincodeServiceData.getStore().size() > 0)
+					{
+						deliveryModeDto.setInventory(MplConstants.DEFAULT_CNC_INVENTORY_COUNT);
+						deliveryModeDto.setIsPincodeServiceable(MarketplacecclientservicesConstants.Y);
+					}
+					else
+					{
+						deliveryModeDto.setInventory(MplConstants.DEFAULT_CNC_NO_INVENTORY);
+						deliveryModeDto.setIsPincodeServiceable(MarketplacecclientservicesConstants.N);
+					}
+					deliveryModeDto.setIsCOD(MarketplacecclientservicesConstants.N);
+					deliveryModeDto.setIsCODLimitFailed(MarketplacecclientservicesConstants.N);
+					deliveryModeDto.setIsPrepaidEligible(MarketplacecclientservicesConstants.Y);
+					deliveryModeDto.setDeliveryDate(new SimpleDateFormat(MarketplacecclientservicesConstants.DELIVERY_DATE_FORMATTER)
+							.format(new Date()));
+				}
+				else
+				{
+					deliveryModeDto = new DeliveryModeResOMSWsDto();
+					deliveryModeDto.setType(getDeliveryGlobalCode(deliveryModeData.getCode()));
+					deliveryModeDto.setInventory(String.valueOf(stockCount));
+					deliveryModeDto.setIsPincodeServiceable(isPincodeServiceable);
+					deliveryModeDto.setIsCOD((isCodEligible) ? MarketplacecclientservicesConstants.Y
+							: MarketplacecclientservicesConstants.N);
+					deliveryModeDto.setIsCODLimitFailed((isCodLimitFailed) ? MarketplacecclientservicesConstants.Y
+							: MarketplacecclientservicesConstants.N);
+					deliveryModeDto.setIsPrepaidEligible((isPrepaidEligible) ? MarketplacecclientservicesConstants.Y
+							: MarketplacecclientservicesConstants.N);
+					deliveryModeDto.setDeliveryDate(new SimpleDateFormat(MarketplacecclientservicesConstants.DELIVERY_DATE_FORMATTER)
+							.format(new Date()));
+				}
 				deliveryModeResOMSWsDtoList.add(deliveryModeDto);
 			}
 
@@ -2196,7 +2220,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		}
 		else if (deliveryCode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
 		{
-			deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CC;
+			deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CnC;
 		}
 
 		return deliveryModeGlobalCode;
@@ -3274,6 +3298,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final String defaultPinCodeId) throws EtailNonBusinessExceptions
 	{
 		final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
+		final List<CartSoftReservationData> cartSoftForCncReservationDatalist = new ArrayList<CartSoftReservationData>();
 
 		boolean inventoryReservationStatus = true;
 		InventoryReservListResponse inventoryReservListResponse = null;
@@ -3292,7 +3317,19 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						&& ("O0003".equalsIgnoreCase(e.getErrorCode()) || "O0004".equalsIgnoreCase(e.getErrorCode()) || "O0007"
 								.equalsIgnoreCase(e.getErrorCode())))
 				{
-					inventoryReservListResponse = callInventoryReservationCommerce(cartSoftReservationDatalist);
+					//prepare cartSoftReservationData object only for HD and Ed
+					//skip reservation call for cnc
+					for (CartSoftReservationData cartSoftReservationData : cartSoftReservationDatalist)
+					{
+						if (null != cartSoftReservationData && !cartSoftReservationData.getDeliveryMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+						{
+							cartSoftForCncReservationDatalist.add(cartSoftReservationData);
+						}
+					}
+					if (cartSoftForCncReservationDatalist.size() > 0)
+					{
+						inventoryReservListResponse = callInventoryReservationCommerce(cartSoftForCncReservationDatalist);
+					}
 				}
 			}
 
@@ -4500,7 +4537,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					responseList.add(responseData);
 				}
 			}
-			return responseList;
 		}
 		catch (final ClientEtailNonBusinessExceptions ex)
 		{
@@ -4508,6 +4544,20 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final StoreLocationResponseData responseData = new StoreLocationResponseData();
 			// responseData.setIsServicable(MarketplacecommerceservicesConstants.NOT_APPLICABLE);
 			responseList.add(responseData);
+			if (null != ex.getErrorCode() && ex.getErrorCode().equalsIgnoreCase("O0001"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0001", ex);
+			}
+			else if (null != ex.getErrorCode() && ex.getErrorCode().equalsIgnoreCase("O0002")) 
+			{
+				throw new ClientEtailNonBusinessExceptions("O0002", ex);
+			}
+			else
+			{
+				throw new ClientEtailNonBusinessExceptions(ex);
+			}
+			
+			
 		}
 		return responseList;
 	}

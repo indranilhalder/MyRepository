@@ -94,6 +94,7 @@ import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
+import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -712,13 +713,28 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				//cart has CNC.
 				LOG.info("Cart Entries contain CNC mode");
 				//calls oms to get inventories for given stores.
-				response = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
 				List<ProudctWithPointOfServicesData> productWithPOS = new ArrayList<ProudctWithPointOfServicesData>();
-				if (null != response && response.size() > 0)
+				try
 				{
-					//populates oms response to data object
-					productWithPOS = getProductWdPos(response, model, freebieParentQtyMap);
+					response = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
+					if (null != response && response.size() > 0)
+					{
+						//populates oms response to data object
+						productWithPOS = getProductWdPos(response, model, freebieParentQtyMap);
+					}
 				}
+				catch (final ClientEtailNonBusinessExceptions e)
+				{
+					LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
+					if (null != e.getErrorCode()
+							&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
+									.equalsIgnoreCase(e.getErrorCode())))
+					{
+						//populates oms response to data object
+						productWithPOS = getProductWdPos(model, freebieParentQtyMap, storeLocationRequestDataList);
+					}
+				}
+				
 				//populate logged in user details as pickup details
 				final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 				String firstName = "";
@@ -768,7 +784,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.debug("from getProductWdPos method which gets product with pos");
 		}
 		final List<ProudctWithPointOfServicesData> productWithPOS = new ArrayList<ProudctWithPointOfServicesData>();
-		final SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+	
 		//iterate over response
 		for (final StoreLocationResponseData storeLocationResponseData : response)
 		{
@@ -924,6 +940,163 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		return productWithPOS;
 	}
 
+	/**
+	 * @author TECH
+	 * This method populates List of stores and product to the data object if oms is down.
+	 * @param model
+	 * @param freebieParentQtyMap
+	 * @param storeLocationRequestDataList
+	 * @return list of product with stores
+	 */
+	private List<ProudctWithPointOfServicesData> getProductWdPos(final Model model
+			, final Map<String, Long> freebieParentQtyMap, final List<StoreLocationRequestData> storeLocationRequestDataList)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from getProductWdPos method if oms is down which gets product with pos");
+		}
+		List<ProudctWithPointOfServicesData> productWithPOS = new ArrayList<ProudctWithPointOfServicesData>();
+		for (StoreLocationRequestData storeLocationRequestData : storeLocationRequestDataList)
+		{
+			ProudctWithPointOfServicesData pwPOS = new ProudctWithPointOfServicesData();
+			List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
+			List<FreebieProduct>  freebieProducts = new ArrayList<FreebieProduct>();
+			Map<String, Long> freebieProductsWithQuant = new HashMap<String, Long>();
+			List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
+			String ussId = storeLocationRequestData.getUssId();
+			final CartModel cartModel = getCartService().getSessionCart();
+			//get only those stores which have quantity greater or equal to selected user quantity
+			final CartModel cartModel1 = getCartService().getSessionCart();
+			for (AbstractOrderEntryModel abstractCartEntry : cartModel1.getEntries())
+			{
+				if (null != abstractCartEntry)
+				{
+					if (abstractCartEntry.getSelectedUSSID().equalsIgnoreCase(ussId))
+					{
+						
+						if (null != freebieParentQtyMap)
+						{
+							if (null != abstractCartEntry.getAssociatedItems() && abstractCartEntry.getAssociatedItems().size() > 0)
+							{
+								for (String ussid : abstractCartEntry.getAssociatedItems())
+								{
+									//check for freebie entry in the cart
+									if (cartModel != null && cartModel.getEntries() != null)
+									{
+										for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+										{
+											if (cartEntryModel != null && cartEntryModel.getSelectedUSSID() != null
+													&& cartEntryModel.getGiveAway() != null && cartEntryModel.getGiveAway().booleanValue())
+											{
+
+												if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussid))
+												{
+													LOG.info("Freebie Parent Product USSID" + abstractCartEntry.getSelectedUSSID());
+													LOG.info("Freebie Product USSID" + ussid);
+													if (cartEntryModel.getAssociatedItems().size() == 1)
+													{
+														freebieProductsWithQuant.put(ussid, cartEntryModel.getQuantity());
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						
+					}
+				}
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("call to commerce db to get the seller details");
+			}
+			final SellerInformationModel sellerInfoModel = mplSellerInformationFacade.getSellerDetail(ussId);
+			if (sellerInfoModel != null)
+			{
+				String sellerName = sellerInfoModel.getSellerName();
+				model.addAttribute("ussid", ussId);
+				
+				final ProductModel productModel = sellerInfoModel.getProductSource();
+				final ProductData productData = productFacade.getProductForOptions(productModel,
+						Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
+				//freebie starts
+				if (freebieProductsWithQuant.size() > 0)
+				{
+					for (Map.Entry<String, Long> entry : freebieProductsWithQuant.entrySet()) {
+						final FreebieProduct freebieProductData = new FreebieProduct();
+					    String uss = entry.getKey();
+					    Long qty = entry.getValue();
+					    final SellerInformationModel sellerInfo = mplSellerInformationFacade.getSellerDetail(uss);
+					    if (null != sellerInfo)
+						{
+					   	 LOG.info("Associated Product USSID " + uss);
+					   	 final String assoicatedProductSellerName = sellerInfo.getSellerName();
+					   	 final ProductModel associateProductModel = sellerInfo.getProductSource();
+					   	 if (null != associateProductModel)
+							{
+					   		 LOG.info("Associated ProductCode "+ associateProductModel.getCode());
+							}
+					   	final ProductData associateProductData = productFacade.getProductForOptions(associateProductModel,
+										Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
+					   	freebieProductData.setProduct(associateProductData);
+					   	freebieProductData.setQty(qty);
+					   	freebieProductData.setSellerName(assoicatedProductSellerName);
+					   	freebieProducts.add(freebieProductData);
+						}
+							
+					}
+				}
+				if (freebieProducts.size() > 0)
+				{
+					productData.setFreebieProducts(freebieProducts);
+				}
+				//freebie ends
+				pwPOS.setUssId(ussId);
+				pwPOS.setSellerName(sellerName);
+				for (final AbstractOrderEntryModel abstractCartEntry : cartModel1.getEntries())
+				{
+					if (null != abstractCartEntry)
+					{
+						if (abstractCartEntry.getSelectedUSSID().equalsIgnoreCase(ussId) && abstractCartEntry.getGiveAway() != null
+								&& !abstractCartEntry.getGiveAway().booleanValue())
+						{
+							final Long quantity =abstractCartEntry.getQuantity();
+							pwPOS.setQuantity(quantity);
+						}
+					}
+				}
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("get stores from commerce based on SellerId and StoredId(slaveId)");
+				}
+				for (int i = 0; i < storeLocationRequestData.getStoreId().size(); i++)
+				{
+					if (i == 3)
+					{
+						break;
+					}
+					PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(sellerInfoModel.getSellerID(),storeLocationRequestData.getStoreId().get(i));
+					posModelList.add(posModel);
+				}
+				for (PointOfServiceModel pointOfServiceModel : posModelList)
+				{
+					//prepare pos data objects
+					PointOfServiceData posData = new PointOfServiceData();
+					if (null != pointOfServiceModel)
+					{
+						posData = pointOfServiceConverter.convert(pointOfServiceModel);
+						posDataList.add(posData);
+					}
+				}
+				pwPOS.setProduct(productData);
+				pwPOS.setPointOfServices(posDataList);
+				productWithPOS.add(pwPOS);
+			}
+		}
+		return productWithPOS;
+	}
 	/**
 	 * @author TECH This is an ajax call to save store for chossen cart entry.
 	 * @param productCode
@@ -1943,16 +2116,34 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		List<PointOfServiceData> stores = new ArrayList<PointOfServiceData>();
 		List<StoreLocationResponseData> omsResponse = new ArrayList<StoreLocationResponseData>();
 		List<ProudctWithPointOfServicesData> productWithPOS = new ArrayList<ProudctWithPointOfServicesData>();
+		List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
 
 		//call to check pincode serviceability
 		boolean status = false;
 
 		//call service to get list of ATS and ussid
-		omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, ussId, productCode);
-
-		if (null != omsResponse && omsResponse.size() > 0)
+		try
 		{
-			productWithPOS = getProductWdPos(omsResponse, model, null);
+			omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, ussId, productCode);
+			if (omsResponse.size() > 0)
+			{
+				productWithPOS = getProductWdPos(omsResponse, model, null);
+			}
+		}
+		catch (final ClientEtailNonBusinessExceptions e)
+		{
+			LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
+			if (null != e.getErrorCode()
+					&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
+							.equalsIgnoreCase(e.getErrorCode())))
+			{
+				storeLocationRequestDataList = pincodeServiceFacade.getStoresFromCommerce(pin, ussId);
+				if (storeLocationRequestDataList.size() > 0)
+				{
+					//populates oms response to data object
+					productWithPOS = getProductWdPos(model, null, storeLocationRequestDataList);
+				}
+			}
 		}
 
 		if (productWithPOS.size() > 0)
