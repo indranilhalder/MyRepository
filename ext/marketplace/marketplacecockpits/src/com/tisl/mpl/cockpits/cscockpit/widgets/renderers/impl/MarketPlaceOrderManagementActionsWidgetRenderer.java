@@ -156,11 +156,17 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 				.getObject();
 
 		Boolean isCnCAvailable = Boolean.FALSE;
+		if(orderModel != null)
+		{
 		for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
-			if (entry.getMplDeliveryMode() != null
-					&& entry.getMplDeliveryMode().getDeliveryMode() != null) {
-
-				String orderStatus = entry.getOrder().getStatus().getCode();
+			if (entry != null && entry.getMplDeliveryMode() != null
+					&& entry.getMplDeliveryMode().getDeliveryMode() != null ) {
+				
+				String orderStatus = null;
+				if(entry.getOrder() != null && entry.getOrder().getStatus() != null)
+				{
+					orderStatus = entry.getOrder().getStatus().getCode();
+				}
 				if (entry
 						.getMplDeliveryMode()
 						.getDeliveryMode()
@@ -214,9 +220,9 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 							ConsignmentStatus.RETURN_COMPLETED.getCode(),
 							ConsignmentStatus.RETURNINITIATED_BY_RTO.getCode());
 					
-					if (entry.getQuantity() <= 0
-							|| nonChangableOrdeStatus.contains(orderStatus.toUpperCase())
-							|| nonChangableOrdeStatusList.contains(orderStatus.toUpperCase())) {
+					if (entry.getQuantity() <= 0 || (orderStatus != null 
+							&& (nonChangableOrdeStatus.contains(orderStatus.toUpperCase())
+							|| nonChangableOrdeStatusList.contains(orderStatus.toUpperCase())))) {
 						isCnCAvailable = false;
 
 					}
@@ -227,8 +233,9 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 				}
 			}
 		}
+	} //if closeing
 		return isCnCAvailable;
-	}
+}
 
 	protected HtmlBasedComponent createRequiredButtons(
 			Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget,
