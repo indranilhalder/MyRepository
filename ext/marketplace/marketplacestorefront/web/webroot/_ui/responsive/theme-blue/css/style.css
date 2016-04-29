@@ -15691,7 +15691,8 @@ body .account .right-account form.new-card input[type="radio"]+label:after,
 body .account .right-account div.new-address input[type="radio"]+label:after {
     font-size: 15px;
     position: absolute;
-    left: 15px
+    left: 15px;
+    top: 0px;
 }
 body .account .right-account form.new-card input[type="radio"]+label:before,
 body .account .right-account div.new-address input[type="radio"]+label:before {
@@ -15937,6 +15938,9 @@ body .account .right-account .reviews .review-list .account-only.product .produc
     transform: scale(.5);
     left: -30%;
     top: -20%
+}
+body .account .right-account .reviews .review-list .account-only.product span.priceFormat {
+    font-size: 14px;
 }
 @media (min-width: 651px) {
     body .account .right-account .reviews .review-list .account-only.product {
@@ -31185,7 +31189,9 @@ ul.less-stock li {
 .gig-rating-readReviewsLink {
 	margin-bottom: 10px;
 }
-
+.pdp-promoDesc .show-date{
+	line-height:16px;
+}
 /*site map css starts*/
 
 .r2-borderBottom {
