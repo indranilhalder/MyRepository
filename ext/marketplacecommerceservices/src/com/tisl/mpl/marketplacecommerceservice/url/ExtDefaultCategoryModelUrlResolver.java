@@ -58,7 +58,8 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 		try
 		{
 			url = URLDecoder.decode(url, "UTF-8");
-			urlSpecialRemoved = url.replaceAll("[+.^:,'!@&#]", "");
+			urlSpecialRemoved = url.replaceAll("[+.^:,'!@#]", "");
+			urlSpecialRemoved = url.replaceAll("-&-", "-");
 		}
 		catch (final UnsupportedEncodingException e)
 		{
