@@ -7,7 +7,6 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
 
-${component.text}sa
 <div class="brands">
 <div class="wrapper">
 	<c:if test="${not empty component.title }">
@@ -23,9 +22,7 @@ ${component.text}sa
 						src="${brandList.subBrandImage.URL}" />
 
 						<span class="brand-subdesc">${component.text}</span>
-						 <img class="logo" src="${brandList.subBrandLogo.URL }" />
 						  <span class="link-copy"><b>SHOP ${brandList.subBrandName}</b></span> 
-						 
 						</a>
 						</li>
 
@@ -38,12 +35,8 @@ ${component.text}sa
 		<ul class="more-brands">
 			<c:forEach items="${component.brandList}" var="brandList">
 				<li><c:url var="subBrandUrl" value="${brandList.subBrandUrl}"></c:url>
-					<a href="${subBrandUrl}"><img class="image" src="${brandList.subBrandImage.URL}" />
-					<span class="brand-subdesc">${component.text}</span>
-					<img class="logo" src="${brandList.subBrandImage.URL}" />
-					 <span class="link-copy"><b>SHOP ${brandList.subBrandName}</b></span> 
-					
-					</a></li>
+					<a href="${subBrandUrl}"><img class="logo"
+						src="${brandList.subBrandImage.URL}" /></a></li>
 			</c:forEach>
 
 		</ul>
