@@ -19,15 +19,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.CampaignPromoSubService;
 import com.tisl.mpl.model.BuyAAboveXGetPercentageOrAmountOffModel;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
@@ -66,9 +63,6 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 	@Autowired
 	private ConfigurationService configurationService;
-
-	@Resource(name = "mplEnumerationHelper")
-	private MplEnumerationHelper mplEnumerationHelper;
 
 	/**
 	 * @Description : Get Promotion Campaign Details
