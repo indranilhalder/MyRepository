@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
-import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
@@ -37,7 +36,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
- * @author 847370
+ * @author TCS
  *
  */
 @Controller
@@ -49,8 +48,11 @@ public class HTMLSitemapController extends AbstractPageController
 	@Autowired
 	private DefaultCMSContentSlotService contentSlotService;
 
+	/**
+	 * @description method is called to get the sitemap
+	 * @return String
+	 */
 	@RequestMapping(value = RequestMappingUrlConstants.SITEMAP, method = RequestMethod.GET)
-	@RequireHardLogIn
 	public String sitemap(
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ONE_VAL) final int page,
 			final Model modelSpring) throws Exception
@@ -101,20 +103,6 @@ public class HTMLSitemapController extends AbstractPageController
 					catch (final Exception exception)
 					{
 						ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
-					}
-				}
-				for (final Map.Entry<CategoryModel, Map<CategoryModel, Collection<CategoryModel>>> entry : megaMap.entrySet())
-				{
-					System.out.println("Parent --" + entry.getKey().getName());
-
-					for (final Map.Entry<CategoryModel, Collection<CategoryModel>> entrySecondLevel : entry.getValue().entrySet())
-					{
-						System.out.println("L2 -------" + entrySecondLevel.getKey().getName());
-						final Collection<CategoryModel> thirdLevelList = entrySecondLevel.getValue();
-						for (final CategoryModel thirdLevelCategory : thirdLevelList)
-						{
-							System.out.println("L3-------------" + thirdLevelCategory.getName());
-						}
 					}
 				}
 			}
