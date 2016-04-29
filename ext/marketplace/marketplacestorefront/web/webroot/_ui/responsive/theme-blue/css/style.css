@@ -1356,7 +1356,7 @@ h2 {
               text-decoration:none; } }
                @media (min-width:791px) and (max-width: 855px) {		
 			        header .content .right>ul>li.sign-in .sign-in-info {		
-			            max-width: 289px		
+			            max-width: 306px		
 			        }
 			        .signin-flyout > li a {
 			        width:218px;}
@@ -7003,6 +7003,7 @@ text-transform: uppercase;
   .checkout.wrapper .product-block li.item > ul li.delivery ul li label span.priceFormat{
   display:inline-block;
   font-size:14px;
+  margin-left:0px;
   }
   .checkout.wrapper .product-block li.header > ul li.delivery ul, .checkout.wrapper .product-block li.item > ul li.delivery ul {
     margin-bottom: 0; }
@@ -13925,7 +13926,7 @@ div.get-in-touch ul li.call:after,
   background-color: #fafafa; }
 
 .contact-us-header h2 {
-  margin-bottom: 0px;
+  margin-bottom: 8px;
 }
 
 body.get-in-touch .breadcrumbs {
@@ -14867,7 +14868,7 @@ body .account .account-header {
     margin-bottom: 20px;
     background-color: #fafafa;
     color: #A9143C;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 400
 }
 @media (min-width: 791px) {
@@ -32483,12 +32484,12 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 	font-size: 14px;
 	text-align: left;
 	background-color: #fafafa;
-	width:341px;
+	width: calc(100% - -259px);
 	padding:0 20px;
 }
 @media (max-width: 855px) and (min-width: 791px){
 .dropdown-menu {
-    width: 281px;
+   width: calc(100% - -211px);
 }}
 .loggedIn-flyout li a
 {
@@ -37472,7 +37473,7 @@ span.mini-cart-close {
     			padding: 0;
     			display: inline-block;
     			margin-bottom: 2px;
-    			width: 152px;
+    			width: 170px;
           }
           .sign-in.tab-view .tabs > li .left form div#checkBox label a.tata-rewards:after{
 		    content: "\f059";
