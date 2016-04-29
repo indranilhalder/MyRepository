@@ -359,13 +359,10 @@
 		var mrpPriceValue = '${product.displayMrp}';
 		var sizeStockLevel = '${product.displayStock}';
 		var productPromotion =  '${product.displayPromotion}';
-      //  console.log("#####"+productPromotion);
-		//find Onsale product based on filters
-	   // findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
-		//modify serp details based on filters
-	//	modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel);
-		modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
-
+		//TISPRD-1379
+		if(typeof(serpSizeList)!= "undefined"){
+			modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
+		 }
 	});
 </script>
 <style>
