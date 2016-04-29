@@ -66,7 +66,8 @@ public class ExtDefaultProductModelUrlResolver extends DefaultProductModelUrlRes
 		try
 		{
 			url = URLDecoder.decode(url, "UTF-8");
-			urlSpecialRemoved = url.replaceAll("[+.^:,'!@&#]", "");
+			urlSpecialRemoved = url.replaceAll("[+.^:,'!@#]", "");
+			urlSpecialRemoved = urlSpecialRemoved.replaceAll("-&-", "-");
 		}
 		catch (final UnsupportedEncodingException e)
 		{
