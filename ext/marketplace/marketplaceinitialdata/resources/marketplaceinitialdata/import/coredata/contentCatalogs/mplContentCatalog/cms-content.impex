@@ -1654,6 +1654,10 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;reviews;Review Page;ReviewPageTemplate;/reviews;
 
+### sitemap ####
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;sitemap;Sitemap Page;sitemapTemplate;/sitemap;
+
 
 ### Shop The Collection Content Slot Update ###
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ShopTheCollectionTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
