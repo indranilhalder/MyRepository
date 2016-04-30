@@ -150,15 +150,9 @@
 						  width: 38% !important; }
 						  .checkout.wrapper .product-block li.header > ul li.delivery, .checkout.wrapper .product-block li.item > ul li.delivery {
 						  width: 28% !important;
-						  }
-						.cart.wrapper .left-block, .confirmation .left-block {
-							width: 77% !important;
-						}
-						.cart.wrapper .right-block, .confirmation .right-block {
-							width: 22% !important;
-						}
-						#pickup {
-							/* width: 920px !important;*/
+						  }		
+						  #pickup {
+						  	width: 920px !important;
 						  	padding-top: 15px;
 						  }
 						  .savenewid {
@@ -201,7 +195,7 @@
 						  .scrollThis {
 						  	height: 188px;
 						  	padding-left: 5px;
-							overflow-x: scroll;
+							overflow-x: hidden;
 							overflow-y: scroll;
 						  }
 						  
