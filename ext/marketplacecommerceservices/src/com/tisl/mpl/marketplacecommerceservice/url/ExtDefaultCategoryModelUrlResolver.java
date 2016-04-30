@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlResolver
 {
 
-	Logger LOG = Logger.getLogger(this.getClass().getName());
+	private static final Logger LOG = Logger.getLogger(ExtDefaultCategoryModelUrlResolver.class);
 
 	@Override
 	protected String resolveInternal(final CategoryModel source)
