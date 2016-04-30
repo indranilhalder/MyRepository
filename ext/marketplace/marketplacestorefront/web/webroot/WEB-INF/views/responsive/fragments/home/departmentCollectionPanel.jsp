@@ -1,13 +1,13 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<c:url value="/${firstLevelCategory.name}/c/${firstLevelCategory.code}" var="departmentUrl" />
+<c:url value="/${firstLevelCategory.name}/c-${firstLevelCategory.code}" var="departmentUrl" />
 <li><a href="${departmentUrl}" class="view_dept">View ${firstLevelCategory.name}</a></li>
 <c:forEach items="${secondLevelCategoryMap}" var="entry">
 
 	<c:set var="values" value="${entry.value}" />
 	<c:forEach items="${values}" var="item">
-		<c:url value="/Categories/${item.name}/c/${item.code}"
+		<c:url value="/Categories/${item.name}/c-${item.code}"
 			var="secondLevelDepartmentUrl" />
 		<li class="short words"><div class="toggle">
 				<a href="${secondLevelDepartmentUrl}">${item.name}</a>
@@ -20,7 +20,7 @@
 				<!-- Iterating through the values of third level category map-->
 				<c:set var="values" value="${entry.value}" />
 				<c:forEach items="${values}" var="item">
-					<c:url value="/Categories/${item.name}/c/${item.code}"
+					<c:url value="/Categories/${item.name}/c-${item.code}"
 						var="thirdLevelDepartmentUrl" />
 					<li class="long words"><div class="toggle">
 							<a href="${thirdLevelDepartmentUrl}" style="font-weight: normal;">${item.name}</a>

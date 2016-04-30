@@ -7,8 +7,12 @@ import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.url.impl.DefaultCategoryModelUrlResolver;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -18,11 +22,13 @@ import java.util.List;
 public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlResolver
 {
 
+	Logger LOG = Logger.getLogger(this.getClass().getName());
 
 	@Override
 	protected String resolveInternal(final CategoryModel source)
 	{
 		String url = getPattern();
+		String urlSpecialRemoved = null;
 
 		if (url.contains("{baseSite-uid}"))
 		{
@@ -37,7 +43,7 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 		if (url.contains("{category-code}"))
 		{
 			final String categoryCode = urlEncode(source.getCode()).replaceAll("\\+", "%20");
-			url = url.replace("{category-code}", categoryCode);
+			url = url.replace("{category-code}", categoryCode); //categoryCode code changed to direct source.getCode()
 		}
 		if (url.contains("{catalog-id}"))
 		{
@@ -47,8 +53,19 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 		{
 			url = url.replace("{catalogVersion}", source.getCatalogVersion().getVersion());
 		}
+		url = url.toLowerCase();
 
-		return url;
+		try
+		{
+			url = URLDecoder.decode(url, "UTF-8");
+			urlSpecialRemoved = url.replaceAll("[+.^:,'!@#]", "");
+			urlSpecialRemoved = urlSpecialRemoved.replaceAll("-&-", "-");
+		}
+		catch (final UnsupportedEncodingException e)
+		{
+			LOG.error(e.getMessage());
+		}
+		return urlSpecialRemoved;
 	}
 
 	@Override

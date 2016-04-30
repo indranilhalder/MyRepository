@@ -176,10 +176,15 @@ public final class ModelAttributetConstants
 	public static final String YEARANNIVERSARYLIST = "yearAnniversaryList";
 	public static final String BASE_URL = "baseUrl";
 
+	public static final String TWITTER_HANDLE = "twitterHandle";
+	public static final String SEO_MEDIA_URL = "seoMediaURL";
+	public static final String SITE_NAME = "siteName";
+	public static final String EMAIL_URL = "emailURL";
+
 	//Return Item
 	public static final String RETURN_PINCODE_FORM = "returnPincodeCheckForm";
 	public static final String RETURN_ADDRESS = "retunAddress";
-	public static final String PINCODE_NOT_SERVICEABLE ="notServiceable";
+	public static final String PINCODE_NOT_SERVICEABLE = "notServiceable";
 
 
 	//review page
@@ -708,7 +713,7 @@ public final class ModelAttributetConstants
 	public static final String NOVALUE = "0.0";
 	public static final String CHECK_MY_REWARDS = "check_MyRewards";
 	public static final String CLICK_AND_COLLECT = "click-and-collect";
-	
+
 	public static final String SUB_ORDER_STATUS = "subOrderStatus";
 	public static final String FILTER_DELIVERYMODE = "filterDeliveryMode";
 
