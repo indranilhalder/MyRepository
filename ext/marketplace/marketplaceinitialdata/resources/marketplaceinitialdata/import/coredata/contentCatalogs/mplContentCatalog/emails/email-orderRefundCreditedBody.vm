@@ -68,7 +68,7 @@
 </tr>
 
 <tr>
-<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">${ctx.cmsSlotContents.handpick}</td>
+      #if($ctx.cmsSlotContents.handpick)<td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.handpick}</a></td>#end
 </tr>
 
 <tr>
@@ -90,12 +90,17 @@
   <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
 </tr>
 <tr>
-  #if($ctx.cmsSlotContents.fb)<td width="27" align="right"><a href="https://www.facebook.com/TataCLiQ/"></a>${ctx.cmsSlotContents.fb}</td>#end
-  #if($ctx.cmsSlotContents.youtube)<td width="27" align="right"><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA/"></a>${ctx.cmsSlotContents.youtube}</td>#end
-  #if($ctx.cmsSlotContents.twitter)<td width="27" align="right"><a href="https://twitter.com/tatacliq/"></a>${ctx.cmsSlotContents.twitter}</td>#end
-  #if($ctx.cmsSlotContents.gplus)<td width="27" align="right"><a href="https://www.instagram.com/tatacliq/"></a>${ctx.cmsSlotContents.gplus}</td>#end
+ <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+                  		<tr>
+                   	 		<td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
+                    		<td>&nbsp;</td>
+				#if($ctx.cmsSlotContents.fb)<td width="27" align="right"><a href="https://www.facebook.com/TataCLiQ/">${ctx.cmsSlotContents.fb}</a></td>#end
+				#if($ctx.cmsSlotContents.youtube)<td width="27" align="right"><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA/">${ctx.cmsSlotContents.youtube}</a></td>#end
+				#if($ctx.cmsSlotContents.twitter)<td width="27" align="right"><a href="https://twitter.com/tatacliq/">${ctx.cmsSlotContents.twitter}</a></td>#end
+				#if($ctx.cmsSlotContents.gplus)<td width="27" align="right"><a href="https://www.instagram.com/tatacliq/">${ctx.cmsSlotContents.gplus}</a></td>#end
+                  		</tr>
+               </table></td>
 </tr>
-
    
 </table>
 </body>
