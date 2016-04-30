@@ -112,7 +112,6 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
@@ -206,7 +205,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
-	
+
 	private static final Logger LOG = Logger.getLogger(DeliveryMethodCheckoutStepController.class);
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHOOSEVALUE, method = RequestMethod.GET)
@@ -566,7 +565,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(defaultPincode);
 						}
 						//read radius from local properties file which is configurable.
-						final String configRadius = mplConfigFacade.getCongigValue(MarketplacecheckoutaddonConstants.CONFIGURABLE_RADIUS);
+						final String configRadius = mplConfigFacade
+								.getCongigValue(MarketplacecheckoutaddonConstants.CONFIGURABLE_RADIUS);
 						configurableRadius = Double.parseDouble(configRadius);
 						LOG.debug("**********configrableRadius:" + configurableRadius);
 						//this dto holds latitude and longitude
@@ -954,14 +954,15 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					if (cartEntryModel != null)
 					{
 						//save collection days at cart entry level
-						
+
 						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussId))
 						{
-							String collectionDays=mplSellerInformationFacade.getSellerColloctionDays(sellerInfoModel.getSellerID());
-							
+							final String collectionDays = mplSellerInformationFacade.getSellerColloctionDays(sellerInfoModel
+									.getSellerID());
+
 							if (StringUtils.isNotBlank(collectionDays))
 							{
-							cartEntryModel.setCollectionDays(Integer.valueOf(collectionDays));
+								cartEntryModel.setCollectionDays(Integer.valueOf(collectionDays));
 							}
 							cartEntryModel.setDeliveryPointOfService(posModel);
 							modelService.save(cartEntryModel);
@@ -1273,50 +1274,52 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		try
 		{
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-			final AccountAddressForm addressForm = new AccountAddressForm();
-			addressForm.setCountryIso(MarketplacecheckoutaddonConstants.COUNTRYISO);
-			final List<StateData> stateDataList = accountAddressFacade.getStates();
-			List<AddressData> deliveryAddress = (List<AddressData>) getMplCustomAddressFacade().getDeliveryAddresses(
-					cartData.getDeliveryAddress());
-			deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook()
-					: deliveryAddress;
-
-			final CartModel cartModel = getCartService().getSessionCart();
-
-			for (final AddressModel userAddress : cartModel.getUser().getAddresses())
+			if (null != cartData)
 			{
-				if (userAddress != null && userAddress.getVisibleInAddressBook() != null
-						&& userAddress.getVisibleInAddressBook().booleanValue() == true)
+				final AccountAddressForm addressForm = new AccountAddressForm();
+				addressForm.setCountryIso(MarketplacecheckoutaddonConstants.COUNTRYISO);
+				final List<StateData> stateDataList = accountAddressFacade.getStates();
+				List<AddressData> deliveryAddress = (List<AddressData>) getMplCustomAddressFacade().getDeliveryAddresses(
+						cartData.getDeliveryAddress());
+				deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook()
+						: deliveryAddress;
+
+				final CartModel cartModel = getCartService().getSessionCart();
+
+				for (final AddressModel userAddress : cartModel.getUser().getAddresses())
 				{
-					addressFlag = "T";
+					if (userAddress != null && userAddress.getVisibleInAddressBook() != null
+							&& userAddress.getVisibleInAddressBook().booleanValue() == true)
+					{
+						addressFlag = "T";
+					}
 				}
+
+				model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFLAG, addressFlag);
+
+				model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSES, deliveryAddress);
+				model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
+				model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataList);
+				model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFORM, addressForm);
+				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWSAVEDTOADDRESSBOOK, Boolean.TRUE);
+				model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSTYPE, getMplCheckoutFacade().getAddressType());
+				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWDELIVERYMETHOD, Boolean.FALSE);
+				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDRESS, Boolean.FALSE);
+				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
+				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.TRUE);
+				model.addAttribute(ModelAttributetConstants.EDIT, Boolean.FALSE);
+				model.addAttribute(MarketplacecheckoutaddonConstants.NOADDRESS, Boolean.TRUE);
+				timeOutSet(model);
+				this.prepareDataForPage(model);
+				storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+				setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+				model.addAttribute(
+						WebConstants.BREADCRUMBS_KEY,
+						getResourceBreadcrumbBuilder().getBreadcrumbs(
+								MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
+				model.addAttribute("metaRobots", "noindex,nofollow");
+				setCheckoutStepLinksForModel(model, getCheckoutStep());
 			}
-
-			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFLAG, addressFlag);
-
-			model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSES, deliveryAddress);
-			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
-			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataList);
-			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFORM, addressForm);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWSAVEDTOADDRESSBOOK, Boolean.TRUE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSTYPE, getMplCheckoutFacade().getAddressType());
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWDELIVERYMETHOD, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDRESS, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.TRUE);
-			model.addAttribute(ModelAttributetConstants.EDIT, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.NOADDRESS, Boolean.TRUE);
-			timeOutSet(model);
-			this.prepareDataForPage(model);
-			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			model.addAttribute(
-					WebConstants.BREADCRUMBS_KEY,
-					getResourceBreadcrumbBuilder().getBreadcrumbs(
-							MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
-			model.addAttribute("metaRobots", "noindex,nofollow");
-			setCheckoutStepLinksForModel(model, getCheckoutStep());
-
 		}
 		catch (final EtailBusinessExceptions e)
 		{
