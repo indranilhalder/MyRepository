@@ -31,7 +31,7 @@ public class ExtDefaultProductModelUrlResolver extends DefaultProductModelUrlRes
 
 	@Resource
 	private ConfigurationService configurationService;
-	Logger LOG = Logger.getLogger(this.getClass().getName());
+	private static final Logger LOG = Logger.getLogger(ExtDefaultProductModelUrlResolver.class);
 
 	/**
  *
