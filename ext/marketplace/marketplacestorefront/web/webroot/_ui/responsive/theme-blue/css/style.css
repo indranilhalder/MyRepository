@@ -16166,7 +16166,7 @@ body .account .right-account .my-reviews.ready .slider .slide .new-review {
     bottom: 25px
 }
 body .account .right-account .my-reviews h2 {
-    font-size: 18px;
+    font-size: 24px;
     padding: 10px 0 0 10px
 }
 body .account .right-account .my-reviews .wrapper>p {
@@ -28506,7 +28506,7 @@ body .account .right-account.rewards>div h2, body .account .right-account.reward
 }
 
 body .account .right-account.rewards>div h2 {
-	font-size: 20px;
+	font-size: 24px;
 	margin-bottom: 10px;
 }
 
@@ -30873,7 +30873,7 @@ li#ratingDiv {
      letter-spacing: 1px;}
      
      header .content nav > ul > li > .toggle > span:last-child{
-    font-size: 13px;
+    font-size: 14px;
     line-height: 13px;
     font-weight: 600;
     letter-spacing: 1px;
@@ -31264,6 +31264,31 @@ ul.less-stock li {
 }
 }
 /*site map css ends*/
+header.compact .content .right ul > li {
+      padding: 0 15px;
+  }
+  header.compact .content li.logged_in.dropdown .dropdown-menu {
+  width: calc(100% - -239px);}
+  @media (max-width: 1300px) and (min-width: 791px){
+  header.compact .content li.logged_in.dropdown .dropdown-menu {
+  width: calc(100% - -219px);}
+  }
+  
+  header.compact .content .right > ul > li.wishlist .wishlist-info{
+  width:239px;}
+  
+  @media (max-width: 1300px) and (min-width: 791px){
+  header.compact .content .right>ul>li.wishlist .wishlist-info {
+      max-width: 219px;
+  }
+  }
+  header.compact .content .right > ul > li.sign-in .sign-in-info{
+  width:351px;}
+  @media (max-width: 1300px) and (min-width: 791px){
+  header.compact .content .right > ul > li.sign-in .sign-in-info {
+      max-width: 326px;
+  }
+  }
 /*--------------maincss-----------*/
 .row
 {
