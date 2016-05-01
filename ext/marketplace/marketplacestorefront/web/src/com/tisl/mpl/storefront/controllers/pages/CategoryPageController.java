@@ -100,6 +100,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String NEW_CATEGORY_URL_PATTERN_PAGINATION = "/**/c-{categoryCode:.*}/page-{page}";
 	//	private static final String LAST_LINK_CLASS = "active";
 
+	private static final String PAGE = "page";
+
 	protected static final Logger LOG = Logger.getLogger(CategoryPageController.class);
 	//Added For TISPRD-1243
 	private static final String DROPDOWN_BRAND = "MBH";
@@ -109,7 +111,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	{ NEW_CATEGORY_URL_PATTERN, NEW_CATEGORY_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
 	public String category(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = PAGE, defaultValue = "0") int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
@@ -119,7 +121,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		categoryCode = categoryCode.toUpperCase();
 		String searchCode = new String(categoryCode);
 		final String uri = request.getRequestURI();
-		if (uri.contains("page"))
+		if (uri.contains(PAGE))
 		{
 			final Pattern p = Pattern.compile("page-[0-9]+");
 			final Matcher m = p.matcher(uri);
@@ -340,7 +342,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	@RequestMapping(value = CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/facets", method = RequestMethod.GET)
 	public FacetRefinement<SearchStateData> getFacets(@PathVariable("categoryCode") final String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode) throws UnsupportedEncodingException
 	{
@@ -351,7 +353,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	@RequestMapping(value = CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
 	public SearchResultsData<ProductData> getResults(@PathVariable("categoryCode") final String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode) throws UnsupportedEncodingException
 	{
@@ -471,7 +473,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			throws UnsupportedEncodingException
 	{
 		final String uri = request.getRequestURI();
-		if (uri.contains("page"))
+		if (uri.contains(PAGE))
 		{
 			final Pattern p = Pattern.compile("page-[0-9]+");
 			final Matcher m = p.matcher(uri);

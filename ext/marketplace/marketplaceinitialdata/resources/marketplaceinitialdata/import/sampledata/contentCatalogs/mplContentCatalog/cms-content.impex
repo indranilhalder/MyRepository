@@ -297,7 +297,9 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;TopHeaderSlot;ResponsiveSiteLogoComponent
 ;;TabsSlot;TabPanelContainer
 ;;TopContentSlot;FacebookOffersBanner
-;;ProductLeftRefinements;browseCategoryComponent,RefinementFacetComponent
+#Log Error Changes-Closing the browseCategoryComponent
+#;;ProductLeftRefinements;browseCategoryComponent,RefinementFacetComponent
+;;ProductLeftRefinements;RefinementFacetComponent
 #pdp changes for configuring number of images to be shown in pdp
 ;;ConfigureImagesCountSlot;ConfigureImagesCount
 #pdp changes for configuring number of products to be shown in pdp
@@ -755,7 +757,8 @@ INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];name;
 ;;TrackOrderHistoryComponent;Track Order History Component;accountOrderTrackingHistoryPage.jsp;;TrackOrderHistoryComponent
 ;;OtpValidationComponent;OTP Validation Component;passwordOTPPage.jsp;;OtpValidationComponent
 ;;FeedBackComponent;Feed Back Component;feedBack.jsp;;FeedBackComponent
-;;browseCategoryComponent;Browse Category Component;browseCategory.jsp;;browseCategoryComponent
+#Log Error Changes -Closing the component
+#;;browseCategoryComponent;Browse Category Component;browseCategory.jsp;;browseCategoryComponent
 ;;AccountMplPreferenceJSPComponent;Account MplPreference JSP Component;accountMarketPreference.jsp;;AccountMplPreferenceJSPComponent
 ;;EmailconfirmationpageMplComponent;EmailconfirmationpageMpl Validation Component;forgotPasswordValidationMessage.jsp;;EmailconfirmationpageMplComponent
 ;;EmailConfirmSuccessPageComponent;Email Confirm Success Page Validation Component;forgotPasswordEmailConfirmationPage.jsp;;EmailConfirmSuccessPageComponent
