@@ -31268,18 +31268,18 @@ header.compact .content .right ul > li {
       padding: 0 15px;
   }
   header.compact .content li.logged_in.dropdown .dropdown-menu {
-  width: calc(100% - -239px);}
+  width: calc(100% - -236px);}
   @media (max-width: 1300px) and (min-width: 791px){
   header.compact .content li.logged_in.dropdown .dropdown-menu {
-  width: calc(100% - -219px);}
+  width: calc(100% - -216px);}
   }
   
   header.compact .content .right > ul > li.wishlist .wishlist-info{
-  width:239px;}
+  width:236px;}
   
   @media (max-width: 1300px) and (min-width: 791px){
   header.compact .content .right>ul>li.wishlist .wishlist-info {
-      max-width: 219px;
+      max-width: 216px;
   }
   }
   header.compact .content .right > ul > li.sign-in .sign-in-info{
