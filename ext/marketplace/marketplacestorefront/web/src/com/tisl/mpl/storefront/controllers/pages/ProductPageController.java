@@ -37,6 +37,9 @@ import de.hybris.platform.commercefacades.product.data.FeatureData;
 import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+
+
+
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
@@ -92,15 +95,24 @@ import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
+
+
+
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+
+
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
+
+
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
+
+
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
@@ -124,7 +136,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 
 @Controller
 @Scope("tenant")
-//@RequestMapping(value = "/**/p")
+@RequestMapping(value = "/**/p")
 public class ProductPageController extends AbstractPageController
 {
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
@@ -184,7 +196,7 @@ public class ProductPageController extends AbstractPageController
 
 	private static final String CUSTOMER_CARE_NUMBER = "1-800-282-8282";
 	private static final String CUSTOMER_CARE_EMAIL = "hello@tatacliq.com";
-	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
+
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
@@ -267,8 +279,8 @@ public class ProductPageController extends AbstractPageController
 	 * @throws UnsupportedEncodingException
 	 */
 
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN, method = RequestMethod.GET)
-	public String productDetail(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	public String productDetail(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			@RequestParam(value = "searchCategory", required = false, defaultValue = " ") final String dropDownText,
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
 			final Model model, final HttpServletRequest request, final HttpServletResponse response)
@@ -278,7 +290,7 @@ public class ProductPageController extends AbstractPageController
 		String returnStatement = null;
 		try
 		{
-			productCode = productCode.toUpperCase();
+
 			LOG.debug("**************************************opening pdp for*************" + productCode);
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
@@ -353,7 +365,7 @@ public class ProductPageController extends AbstractPageController
 	 * @throws CMSItemNotFoundException
 	 */
 
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.SIZE_GUIDE, method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.SIZE_GUIDE, method = RequestMethod.GET)
 	public String viewSizeGuide(
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.SIZESELECTED) final String sizeSelected,
@@ -468,7 +480,7 @@ public class ProductPageController extends AbstractPageController
 	 */
 
 
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxDataForSizeGuide(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLER_ID) final String sellerId) throws JSONException,
@@ -844,7 +856,7 @@ public class ProductPageController extends AbstractPageController
 	 * @throws NullPointerException
 	 */
 	@ResponseBody
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.CHECK_PINCODE, method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.CHECK_PINCODE, method = RequestMethod.GET)
 	public List<PinCodeResponseData> getPincodeServicabilityDetails(@RequestParam(value = "pin") final String pin,
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			final Model model) throws CMSItemNotFoundException
@@ -866,14 +878,16 @@ public class ProductPageController extends AbstractPageController
 				{
 					try
 					{
-
+						
 						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
 						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
 						myLocation = new LocationDtoWrapper(dto);
 						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
 						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
 						sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
-						response = pinCodeFacade.getResonseForPinCode(productCode, pin,
+						response = pinCodeFacade.getResonseForPinCode(
+								productCode,
+								pin,
 								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
 
 						return response;
@@ -1070,24 +1084,21 @@ public class ProductPageController extends AbstractPageController
 	 * @throws CMSItemNotFoundException
 	 * @throws EtailNonBusinessExceptions
 	 */
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/quickView", method = RequestMethod.GET)
-	public String showQuickView(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_VARIABLE_PATTERN + "/quickView", method = RequestMethod.GET)
+	public String showQuickView(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
 			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
-		productCode = productCode.toUpperCase();
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 				ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
-		//final String returnStatement = null;
+		String returnStatement = null;
 		try
 		{
 			populateProductData(productData, model);
 			displayConfigurableAttribute(productData, model);
 			getRequestContextData(request).setProduct(productModel);
-			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
-			model.addAttribute(SELECTED_SIZE, selectedSize);
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
 			buyBoxFacade.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU());
 			model.addAttribute(ModelAttributetConstants.BUYBOX_USSID, buyboxdata.getSellerArticleSKU());
@@ -1115,35 +1126,35 @@ public class ProductPageController extends AbstractPageController
 					buyboxdata.getSellerArticleSKU()).getNewProduct()));
 			model.addAttribute(FULLFILMENT_TYPE, buyBoxFacade
 					.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU()).getFulfillment());
+			model.addAttribute(SELECTED_SIZE, selectedSize);
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
+			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
 			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
-			//returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
+			returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			model.addAttribute(ModelAttributetConstants.ERROR, ModelAttributetConstants.TRUE);
-			//frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
-			//returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			//	ExceptionUtil.etailBusinessExceptionHandler(e, model);
+			frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
+			returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			model.addAttribute(ModelAttributetConstants.ERROR, ModelAttributetConstants.TRUE);
-			//frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			//returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 
 
 
-		return ControllerConstants.Views.Fragments.Product.QuickViewPopup;
+		return returnStatement;
 	}
 
 	@Deprecated
@@ -1541,7 +1552,7 @@ public class ProductPageController extends AbstractPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@ResponseBody
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + RequestMappingUrlConstants.ADD_WISHLIST_IN_POPUP, method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.ADD_WISHLIST_IN_POPUP, method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public boolean addWishListsForPDP(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
 			@RequestParam("ussid") final String ussid, @RequestParam("wish") final String wishName,
@@ -1579,7 +1590,7 @@ public class ProductPageController extends AbstractPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@ResponseBody
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + RequestMappingUrlConstants.VIEW_WISHLISTS_IN_POPUP, method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.VIEW_WISHLISTS_IN_POPUP, method = RequestMethod.GET)
 	public List<WishlistData> showWishListsForPDP(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
@@ -1618,8 +1629,7 @@ public class ProductPageController extends AbstractPageController
 	 * @throws UnsupportedEncodingException
 	 * @throws com.granule.json.JSONException
 	 */
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN
-			+ ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_VARIABLE_PATTERN + "/buybox", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_VARIABLE_PATTERN + "/buybox", method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxPrice(
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode) throws JSONException,
 			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
@@ -1670,8 +1680,7 @@ public class ProductPageController extends AbstractPageController
 	}
 
 	@ResponseBody
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN
-			+ ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_VARIABLE_PATTERN + "/getRichAttributes", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_VARIABLE_PATTERN + "/getRichAttributes", method = RequestMethod.GET)
 	public RichAttributeData getRichAttributesDetails(
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			@RequestParam("buyboxid") final String buyboxid)
@@ -1702,7 +1711,7 @@ public class ProductPageController extends AbstractPageController
 	 * @return List<String>
 	 */
 	@ResponseBody
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "/enlistEMIBanks", method = RequestMethod.GET)
+	@RequestMapping(value = "/enlistEMIBanks", method = RequestMethod.GET)
 	public List<String> enlistEMIBanks(@RequestParam("productVal") final String productVal) throws CMSItemNotFoundException
 	{
 		Map<String, String> emiBankMap = null;
@@ -1742,7 +1751,7 @@ public class ProductPageController extends AbstractPageController
 	 * @param selectedEMIBank
 	 * @return List<EMITermRateData>
 	 */
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + MarketplacecheckoutaddonConstants.GETTERMS, method = RequestMethod.GET)
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETTERMS, method = RequestMethod.GET)
 	public @ResponseBody List<EMITermRateData> getBankTerms(final String productVal, final String selectedEMIBank)
 	{
 		List<EMITermRateData> emiTermRate = null;
@@ -1777,7 +1786,7 @@ public class ProductPageController extends AbstractPageController
 
 
 	@ResponseBody
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + RequestMappingUrlConstants.CHECKUSER, method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.CHECKUSER, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public boolean checkUser()
 	{
@@ -1816,11 +1825,11 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * 
+
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -1861,78 +1870,126 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 * 
-	 * 
-	 * 
+	 *
+
+
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 * 
+
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 * 
-	 * 
+
+
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 * 
+
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 * 
-	 * 
+	 *
+
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 * 
+
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 * 
+
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 * 
+
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 * 
+
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 * 
-	 * 
+
+
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 * 
+
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 * 
+
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 * 
+
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 * 
+
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 * 
+
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 * 
+
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 * 
+
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 * 
-	 * 
-	 * 
+
+
+
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 * 
-	 * 
+
+
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 * 
-	 * 
-	 * 
+
+
+
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 * 
+
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+
+
+
+
+
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 * 
-	 * 
-	 * 
+	 *
+
+
 	 * catch (final Exception e) {
-	 * 
+	 *
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1972,8 +2029,7 @@ public class ProductPageController extends AbstractPageController
 	 * @throws com.granule.json.JSONException
 	 */
 	@ResponseBody
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN
-			+ ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_VARIABLE_PATTERN + "/otherSellerDetails", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_VARIABLE_PATTERN + "/otherSellerDetails", method = RequestMethod.GET)
 	public List<SellerInformationData> getOtherSellerDetails(
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode) throws JSONException,
 			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
@@ -2007,7 +2063,7 @@ public class ProductPageController extends AbstractPageController
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "/sendEmail", method = RequestMethod.GET)
+	@RequestMapping(value = "/sendEmail", method = RequestMethod.GET)
 	public boolean sendEmail(@RequestParam("emailList") final String emailIds, @RequestParam("productId") final String productId,
 			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
@@ -2034,3 +2090,8 @@ public class ProductPageController extends AbstractPageController
 		return successful;
 	}
 }
+
+
+
+
+
