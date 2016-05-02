@@ -216,6 +216,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
 		//this is only when cart entry contains cnc delivery mode.
+		final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+		final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 		final CartModel cartModel = getCartService().getSessionCart();
 		for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
 		{
@@ -230,8 +232,76 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
 				}
 			}
+			if (abstractOrderEntryModel.getGiveAway() != null
+					& !abstractOrderEntryModel.getGiveAway().booleanValue() && abstractOrderEntryModel.getSelectedUSSID() != null)
+			{
+				freebieModelMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getMplDeliveryMode());
+				freebieParentQtyMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getQuantity());
+			}
 		}
 
+		//Populate deliveryPointOfService for freebie
+		if (cartModel.getEntries() != null && !freebieModelMap.isEmpty())
+		{
+			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+			{
+				if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
+						&& cartEntryModel.getAssociatedItems() != null && cartEntryModel.getAssociatedItems().size() > 0)
+				{
+					//start populate deliveryPointOfService for freebie
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
+								+ cartEntryModel.getSelectedUSSID());
+					}
+					PointOfServiceModel posModel = null;
+					for (final AbstractOrderEntryModel cEntry : cartModel.getEntries())
+					{
+						if (cartEntryModel.getAssociatedItems().size() == 1)
+						{
+							if (cEntry.getSelectedUSSID().equalsIgnoreCase(cartEntryModel.getAssociatedItems().get(0)))
+							{
+								if (null != cEntry.getDeliveryPointOfService())
+								{
+									if (LOG.isDebugEnabled())
+									{
+										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + cartEntryModel.getAssociatedItems().get(0));
+									}
+									posModel = cEntry.getDeliveryPointOfService();
+								}
+							}
+						}
+						else 
+						{
+							String parentUssId = findParentUssId(cartEntryModel, cartModel);
+							if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+							{
+								if (null != cEntry.getDeliveryPointOfService())
+								{
+									if (LOG.isDebugEnabled())
+									{
+										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + parentUssId);
+									}
+									posModel = cEntry.getDeliveryPointOfService();
+								}
+							}
+						}
+					}
+					if (null != posModel)
+					{
+						cartEntryModel.setDeliveryPointOfService(posModel);
+						modelService.save(cartEntryModel);
+					}
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
+								+ cartEntryModel.getSelectedUSSID());
+					}
+					//end populate deliveryPointOfService for freebie
+				}
+			}
+		}
+				
 		//creating new Payment Form
 		final PaymentForm paymentForm = new PaymentForm();
 		try
@@ -1673,7 +1743,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
 								&& cartEntryModel.getAssociatedItems() != null && cartEntryModel.getAssociatedItems().size() > 0)
 						{
-							saveDeliveryMethForFreebie(cartEntryModel, freebieModelMap, freebieParentQtyMap);
+							mplCheckoutFacade.saveDeliveryMethForFreebie(cart, freebieModelMap, freebieParentQtyMap);
 							//start populate deliveryPointOfService for freebie
 							if (LOG.isDebugEnabled())
 							{
