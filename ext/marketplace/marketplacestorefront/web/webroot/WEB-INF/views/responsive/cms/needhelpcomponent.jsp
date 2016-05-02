@@ -28,11 +28,11 @@
 					<spring:theme code="needhelp.chatwithus" />
 					</a>
 				</h5>
-
-				<a href="${request.contextPath}/clickto/chat" id="chatMe"
+					<!-- Commented as part of the chairman demo feedback -->
+			<%-- 	<a href="${request.contextPath}/clickto/chat" id="chatMe"
 					data-title="">
 					<spring:theme code="needhelp.availablenow" />
-				</a>
+				</a> --%>
 
 			</div>
 			<div class="call">
