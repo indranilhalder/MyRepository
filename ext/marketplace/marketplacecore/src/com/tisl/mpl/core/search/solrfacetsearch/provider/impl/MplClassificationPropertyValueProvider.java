@@ -59,7 +59,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				 * final ClassAttributeAssignment classAttributeAssignment = (ClassAttributeAssignment) this.modelService
 				 * .getSource(classAttrAssignmentModel);
 				 */
-
+				 /********** TISPRO-326 changes **********/ 
 				for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
 				{
 

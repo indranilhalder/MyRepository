@@ -269,7 +269,7 @@
 display: block;
 }
 .reviews .rating-list .header .gig-rating-averageRating {
-font-family: 'Avenir Next', 'Courier New';
+font-family: "Montserrat";
 font-size: 16px;
 font-weight: normal;
 }
@@ -332,7 +332,7 @@ font-weight: normal;
     content: "\f123";
 }
 #ReviewSecion {
-	font-family: 'Avenir Next';
+	font-family: "Montserrat";
 }
 .gig-rating *, div.gig-rating {
 	color: #000;

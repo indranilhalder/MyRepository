@@ -601,8 +601,9 @@ public class UsersController extends BaseCommerceController
 			//				result.setSessionToken(result.getSessionToken());
 			//			}
 
-			LOG.debug("****************** SESSSSION KEY ****************** " + result.getSessionSecret());
-			LOG.debug(" ******************  SESSSSION TOKEN ****************** " + result.getSessionToken());
+			LOG.debug("****************** SESSSSION KEY at the time of Registration****************** " + result.getSessionSecret());
+			LOG.debug(
+					" ******************  SESSSSION TOKEN at the time of Registration****************** " + result.getSessionToken());
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -694,7 +695,8 @@ public class UsersController extends BaseCommerceController
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
+				//				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9103);
+				LOG.debug("******************Invalid Signature ******************");
 			}
 			//			if (null != result.getSessionSecret())
 			//			{
