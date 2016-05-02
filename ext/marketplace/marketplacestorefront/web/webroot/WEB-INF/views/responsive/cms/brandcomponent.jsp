@@ -1,4 +1,3 @@
-
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
@@ -80,7 +79,7 @@
 				<ul class="words" style="width: 50%; float: left">
 					<c:forEach items="${component.subBrands}" var="subBrand">
 						<c:url var="subBrandUrl"
-							value="/Categories/${subBrand.name}/c/${subBrand.code}"></c:url>
+							value="/Categories/${subBrand.name}/c-${subBrand.code}"></c:url>
 						<li class="long words"><div class="toggle"
 								style="font-weight: normal; text-transform: capitalize">
 								<a href="${subBrandUrl}">${subBrand.name}</a>
