@@ -338,8 +338,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				count++;
 				final HttpSession session = request.getSession();
 				deliveryMethodForm = (DeliveryMethodForm) session.getAttribute("deliveryMethodForm");
-				final String pickupPersonName = null;
-				final String pickupPersonMobile = null;
+				String pickupPersonName = null;
+				String pickupPersonMobile = null;
 
 				if (cartModel != null)
 				{
@@ -423,7 +423,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.debug(">>>>>>>>>>  Step 5:  Cod status setting done  ");
 
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-			final List<AddressData> deliveryAddress;
+			List<AddressData> deliveryAddress = null;
 
 			//TIS 391:  In case of normal checkout , delivery address will be null and for express checkout delivery address will be ore selected from the cart page
 			// In case of express checkout it will redirect to the payment page from delivery mode selection
@@ -436,9 +436,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					return getCheckoutStep().nextStep();
 				}
 
-
 				deliveryAddress = (List<AddressData>) getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress());
 			}
+
 			deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook()
 					: deliveryAddress;
 			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
