@@ -47,11 +47,11 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 	{
 		String value1 = "";
 		String value2 = "";
-		if (arg0.getName() != null)
+		if ( null != arg0.getName())
 		{
 			value1 = arg0.getName().replaceAll("\\s+", "").toUpperCase();
 		}
-		if (arg1.getName() != null)
+		if (null!= arg0.getName())
 		{
 			value2 = arg1.getName().replaceAll("\\s+", "").toUpperCase();
 		}
