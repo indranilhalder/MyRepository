@@ -29,7 +29,6 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.VoucherFacade;
-import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
@@ -217,17 +216,20 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
 		//this is only when cart entry contains cnc delivery mode.
 		final CartModel cartModel = getCartService().getSessionCart();
-		for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
+		if (cartModel != null)
 		{
-			if (null != abstractOrderEntryModel.getDeliveryPointOfService())
+			for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
 			{
-				final String pickupPersonName = cartModel.getPickupPersonName();
-				final String pickupPersonMobile = cartModel.getPickupPersonMobile();
-				if ((pickupPersonName == null) || (pickupPersonMobile == null))
+				if (null != abstractOrderEntryModel.getDeliveryPointOfService())
 				{
-					selectPickupDetails = true;
-					model.addAttribute("selectPickupDetails", Boolean.valueOf(selectPickupDetails));
-					return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
+					final String pickupPersonName = cartModel.getPickupPersonName();
+					final String pickupPersonMobile = cartModel.getPickupPersonMobile();
+					if ((pickupPersonName == null) || (pickupPersonMobile == null))
+					{
+						selectPickupDetails = true;
+						model.addAttribute("selectPickupDetails", Boolean.valueOf(selectPickupDetails));
+						return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
+					}
 				}
 			}
 		}
@@ -831,8 +833,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 		final CartModel cart = getCartService().getSessionCart();
 
-		//setting in cartmodel
-		cart.setConvenienceCharges(Double.valueOf(0));
+		if (null != cart)
+		{
+			//setting in cartmodel
+			cart.setConvenienceCharges(Double.valueOf(0));
+		}
 		//saving cartmodel
 		getMplPaymentFacade().saveCart(cart);
 
@@ -896,7 +901,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 		double totalDiscount = 0l;
-		if (cartData.getAppliedOrderPromotions() != null)
+		if (null != cartData && cartData.getAppliedOrderPromotions() != null)
 		{
 			for (final PromotionResultData promotionResultData : cartData.getAppliedOrderPromotions())
 			{
@@ -1163,7 +1168,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_ELIGIBLE.toString());
 
 						//pincode serviceability check
-						if (null != cart.getIsCODEligible() && cart.getIsCODEligible().booleanValue())
+						if (null != cart && null != cart.getIsCODEligible() && cart.getIsCODEligible().booleanValue())
 						{
 							//Adding to model true if the pincode is serviceable
 							model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
@@ -1547,7 +1552,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//Getting the fields from delivery address
 		try
 		{
-			if (cartData.getDeliveryAddress() != null)
+			if (null != cartData && cartData.getDeliveryAddress() != null)
 			{
 				final String firstName = cartData.getDeliveryAddress().getFirstName();
 				final String lastName = cartData.getDeliveryAddress().getLastName();
@@ -1559,13 +1564,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final String city = cartData.getDeliveryAddress().getTown();
 				final String pincode = cartData.getDeliveryAddress().getPostalCode();
 
-			concatAddress = firstName + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + lastName
-					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine1
-					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine2
-					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine3
-					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + country + MarketplacecheckoutaddonConstants.STRINGSEPARATOR
-					+ state + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + city
-					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + pincode;
+				concatAddress = firstName + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + lastName
+						+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine1
+						+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine2
+						+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine3
+						+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + country
+						+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + state + MarketplacecheckoutaddonConstants.STRINGSEPARATOR
+						+ city + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + pincode;
 			}
 			return concatAddress;
 		}
@@ -1691,13 +1696,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										{
 											if (LOG.isDebugEnabled())
 											{
-												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + cartEntryModel.getAssociatedItems().get(0));
+												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+														+ cartEntryModel.getAssociatedItems().get(0));
 											}
 											posModel = cEntry.getDeliveryPointOfService();
 										}
 									}
 								}
-								else 
+								else
 								{
 									String parentUssId = findParentUssId(cartEntryModel, cart);
 									if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
@@ -1706,7 +1712,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										{
 											if (LOG.isDebugEnabled())
 											{
-												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + parentUssId);
+												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+														+ parentUssId);
 											}
 											posModel = cEntry.getDeliveryPointOfService();
 										}
@@ -1739,10 +1746,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//TISST-7955
 				final CartData promotedCartData = getMplCustomAddressFacade().getCheckoutCart();
 				final Map<String, String> ussidPricemap = new HashMap<String, String>();
-				for (final OrderEntryData entryData : promotedCartData.getEntries())
+				if (promotedCartData != null)
 				{
-					ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
-							.getFormattedValue());
+					for (final OrderEntryData entryData : promotedCartData.getEntries())
+					{
+						ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
+								.getFormattedValue());
+					}
 				}
 				final ObjectMapper objectMapper = new ObjectMapper();
 				jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
@@ -1892,7 +1902,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		String orderId = null;
 		final CartModel cart = getCartService().getSessionCart();
 		final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
-		final String uid = customer.getUid();
+		String uid = "";
+		if (null != customer)
+		{
+
+			uid = customer.getUid();
+		}
 		//final Double cartTotals = cart.getTotalPriceWithConv();
 		boolean redirectFlag = false;
 		final String returnUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8))
@@ -2149,6 +2164,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/**
 	 * This methods find delivery mode for freebie if it has more than one parents.
+	 *
 	 * @param entryModel
 	 * @param abstractOrderModel
 	 * @return delivery mode
@@ -2169,40 +2185,41 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			deliveryMode = entryModel.getAssociatedItems().get(1);
 		}
 		if (ussIdA.doubleValue() == ussIdB.doubleValue()
-				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && 
-				ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
 		{
 			deliveryMode = entryModel.getAssociatedItems().get(0);
 		}
 		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
-				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) &&
-				ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)) 
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
 		{
 			deliveryMode = entryModel.getAssociatedItems().get(0);
 		}
 		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
-				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) &&
-				ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)) 
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
 		{
 			deliveryMode = entryModel.getAssociatedItems().get(1);
 		}
 		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
-				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) &&
-				ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)) 
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
 		{
 			deliveryMode = entryModel.getAssociatedItems().get(0);
 		}
 		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
-				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) &&
-				ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)) 
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
 		{
 			deliveryMode = entryModel.getAssociatedItems().get(1);
 		}
 		return deliveryMode;
 	}
-	
+
 	/**
 	 * Finds delivery mode for freebie.
+	 *
 	 * @param ussid
 	 * @param abstractOrderModel
 	 * @return delivery mode
@@ -2222,7 +2239,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		return deliveryMode;
 	}
-	
+
 	/**
 	 * @param ussid
 	 * @param abstractOrderModel
@@ -2244,7 +2261,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		return qty;
 	}
-	
+
 	/**
 	 * To get the checkout step
 	 *
