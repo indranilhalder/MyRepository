@@ -10617,7 +10617,7 @@ body .account .right-account .order-history .pagination li{
     /* -webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;
     transition: border-color 0.15s; */
-    width:auto;
+    /* width:auto; */
     /* margin-bottom:4px; */
 }
 .product-info .product-image-container .image-list li span.thumb:hover, .product-info .product-image-container .image-list li .active{
@@ -13519,9 +13519,6 @@ font-size:14px;
     font-size:12px !important;
     line-height: 20px;
 }
-.customer-service .content * {
-    font-family: avenir next !important;
-}
 .content b {
     font-weight: 600;
 }
@@ -13859,7 +13856,9 @@ div.get-in-touch ul li.call:after,
     .contact-us-header ul li:nth-last-of-type(1){
         border-bottom: none;
     }
-    
+    .contact-us-header ul li:nth-last-of-type(1) {
+    	padding-top: 10px;
+    }
     div.get-in-touch ul li span,
     .rewards div.customer-service ul li span,
     .contact-us-header ul li span {
