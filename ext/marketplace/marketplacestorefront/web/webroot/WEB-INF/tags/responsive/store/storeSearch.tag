@@ -36,6 +36,7 @@
 		margin-top: 12px;
 		z-index: 9;
 		margin-left: 8px;
+		color:#A9143C;
 	}
 	
 	.container_store_finder {
@@ -45,7 +46,33 @@
 	.body-Content {
 		margin-top: -20px !important;
 	}
-</style>
+	
+	.input-group-btn>.store-btn{
+	 background:#A9143C;
+	}
+	.col-sm-6 .storeSearchTextValue{
+	  color:#A9143C;
+	}
+	
+	@media (max-width: 1170px) {
+	 .container_store_finder {
+		margin: 0px 2px;
+	}
+	.findStoresNearMe{
+	   margin-left: 0px; 
+	   white-space: pre;
+	}
+	.js-store-finder{
+	 margin :0px 12px;
+	}
+	.storesnear {
+		margin-top: 0px;
+		margin-bottom: 10px;
+	}
+	}
+		
+	}
+	</style>
 <c:url value="/store-finder" var="storeFinderFormAction" />
 <input id="initialZoom" name="initialZoom" type="hidden" value="${initialZoom}"/>
 					 <input name="markerZoom" id="markerZoom" type="hidden" value="${markerZoom}"/>

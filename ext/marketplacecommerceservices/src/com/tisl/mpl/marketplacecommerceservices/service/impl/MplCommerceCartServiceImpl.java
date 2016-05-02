@@ -53,6 +53,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.util.Config;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
@@ -3132,6 +3133,22 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								{
 									cartSoftReservationData.setDeliveryMode(deliveryModeGlobalCode);
 								}
+								//set DeliveryPointOfService as parent for freebie
+								final String parentUssid = cartSoftReservationData.getParentUSSID();
+								if (null != parentUssid && deliveryModeGlobalCode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+								{
+									for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
+									{
+										if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssid))
+										{
+											final PointOfServiceModel parentPosModel = cEntry.getDeliveryPointOfService();
+											if (null != parentPosModel)
+											{
+												cartSoftReservationData.setStoreId(parentPosModel.getSlaveId());
+											}
+										}
+									}
+								}
 							}
 						}
 						else
@@ -3156,6 +3173,21 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								if (StringUtil.isNotEmpty(deliveryModeGlobalCode))
 								{
 									cartSoftReservationData.setDeliveryMode(deliveryModeGlobalCode);
+								}
+								//set DeliveryPointOfService as parent for freebie 
+								if (null != ussId && deliveryModeGlobalCode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+								{
+									for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
+									{
+										if (cEntry.getSelectedUSSID().equalsIgnoreCase(ussId))
+										{
+											final PointOfServiceModel parentPosModel = cEntry.getDeliveryPointOfService();
+											if (null != parentPosModel)
+											{
+												cartSoftReservationData.setStoreId(parentPosModel.getSlaveId());
+											}
+										}
+									}
 								}
 							}
 							cartSoftReservationData.setIsAFreebie(MarketplacecommerceservicesConstants.Y);
