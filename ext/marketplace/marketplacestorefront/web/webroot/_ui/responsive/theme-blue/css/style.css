@@ -9258,13 +9258,26 @@ footer .banner {
 }
 @media (max-width: 790px) {
     .sign-in.wrapper .benefits ul li>div:first-child span {
-        height: 70px;
-        line-height: 70px;
-        font-size: 30px
+        height: auto;
+        line-height: 1;
+        font-size: 30px;
     }
-    .sign-in.wrapper .benefits ul li>div:first-child span.last {
+   /*  .sign-in.wrapper .benefits ul li>div:first-child span.last {
         line-height: 70px
-    }
+    } */
+    .sign-in.wrapper .benefits ul li {
+    padding: 20px !important;
+    height: auto !important;
+        margin-bottom: 2px;
+}
+.sign-in.wrapper .benefits ul li > div:first-child {
+    width: 23%;
+    max-width: 23%;
+}
+.sign-in.wrapper .benefits ul li > div {
+    float:none;
+    vertical-align:middle;
+}
 }
 @media (max-width: 650px) {
     .sign-in.wrapper .benefits ul li>div:first-child span {
@@ -25678,7 +25691,7 @@ padding:0;
 	}
 	
 	.sign-in.wrapper .benefits h2 {
-		padding-top:20px;
+		    padding: 40px 0 20px;
 	}
 }
 .short-info .color-swatch li span {
