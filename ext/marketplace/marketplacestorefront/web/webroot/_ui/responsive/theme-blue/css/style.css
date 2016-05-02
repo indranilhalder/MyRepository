@@ -31289,6 +31289,14 @@ header.compact .content .right ul > li {
       max-width: 326px;
   }
   }
+  @media (max-width: 479px){
+  .visuallySimilarItems li{
+  padding: 0 23%;}
+  .visuallySimilarItems li a.product-tile{
+  padding: 0px;}
+  }
+  header .banner > span.helpmeshopbanner{
+  cursor:auto;}
 /*--------------maincss-----------*/
 .row
 {
