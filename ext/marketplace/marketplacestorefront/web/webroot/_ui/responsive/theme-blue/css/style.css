@@ -9016,7 +9016,7 @@ footer .banner {
 		    text-align: justify;
 		    letter-spacing: normal;
 		    text-transform: none;
-		    display: initial;
+		    display: inline;
 		    line-height: 16.5px;
 		    text-decoration: none;
 		        padding: 0;
@@ -9258,13 +9258,26 @@ footer .banner {
 }
 @media (max-width: 790px) {
     .sign-in.wrapper .benefits ul li>div:first-child span {
-        height: 70px;
-        line-height: 70px;
-        font-size: 30px
+        height: auto;
+        line-height: 1;
+        font-size: 30px;
     }
-    .sign-in.wrapper .benefits ul li>div:first-child span.last {
+   /*  .sign-in.wrapper .benefits ul li>div:first-child span.last {
         line-height: 70px
-    }
+    } */
+    .sign-in.wrapper .benefits ul li {
+    padding: 20px !important;
+    height: auto !important;
+        margin-bottom: 2px;
+}
+.sign-in.wrapper .benefits ul li > div:first-child {
+    width: 23%;
+    max-width: 23%;
+}
+.sign-in.wrapper .benefits ul li > div {
+    float:none;
+    vertical-align:middle;
+}
 }
 @media (max-width: 650px) {
     .sign-in.wrapper .benefits ul li>div:first-child span {
@@ -10604,7 +10617,7 @@ body .account .right-account .order-history .pagination li{
     /* -webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;
     transition: border-color 0.15s; */
-    width:auto;
+    /* width:auto; */
     /* margin-bottom:4px; */
 }
 .product-info .product-image-container .image-list li span.thumb:hover, .product-info .product-image-container .image-list li .active{
@@ -13506,9 +13519,6 @@ font-size:14px;
     font-size:12px !important;
     line-height: 20px;
 }
-.customer-service .content * {
-    font-family: avenir next !important;
-}
 .content b {
     font-weight: 600;
 }
@@ -13846,7 +13856,9 @@ div.get-in-touch ul li.call:after,
     .contact-us-header ul li:nth-last-of-type(1){
         border-bottom: none;
     }
-    
+    .contact-us-header ul li:nth-last-of-type(1) {
+    	padding-top: 10px;
+    }
     div.get-in-touch ul li span,
     .rewards div.customer-service ul li span,
     .contact-us-header ul li span {
@@ -25678,7 +25690,7 @@ padding:0;
 	}
 	
 	.sign-in.wrapper .benefits h2 {
-		padding-top:20px;
+		    padding: 40px 0 20px;
 	}
 }
 .short-info .color-swatch li span {
