@@ -38,8 +38,6 @@ import de.hybris.platform.servicelayer.session.SessionService;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -74,7 +72,7 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 @Controller
 @Scope("tenant")
-//@RequestMapping(value = "/**/c")
+@RequestMapping(value = "/**/c")
 public class CategoryPageController extends AbstractCategoryPageController
 {
 	@Resource(name = "categoryService")
@@ -96,8 +94,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private SessionService sessionService;
 	@Resource(name = "productSearchFacade")
 	private ProductSearchFacade<ProductData> productSearchFacade;
-	private static final String NEW_CATEGORY_URL_PATTERN = "/**/c-{categoryCode:.*}";
-	private static final String NEW_CATEGORY_URL_PATTERN_PAGINATION = "/**/c-{categoryCode:.*}/page-{page}";
+	//private static final String NEW_CATEGORY_URL_PATTERN = "/**/c-{categoryCode:.*}";
+	//private static final String NEW_CATEGORY_URL_PATTERN_PAGINATION = "/**/c-{categoryCode:.*}/page-{page}";
 	//	private static final String LAST_LINK_CLASS = "active";
 
 	private static final String PAGE = "page";
@@ -107,34 +105,17 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String DROPDOWN_BRAND = "MBH";
 	private static final String DROPDOWN_CATEGORY = "MSH";
 
-	@RequestMapping(value =
-	{ NEW_CATEGORY_URL_PATTERN, NEW_CATEGORY_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
-	public String category(@PathVariable("categoryCode") String categoryCode,
+	@RequestMapping(value = CATEGORY_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	public String category(@PathVariable("categoryCode") final String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = PAGE, defaultValue = "0") int page,
+			@RequestParam(value = PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
 	{
-		categoryCode = categoryCode.toUpperCase();
 		String searchCode = new String(categoryCode);
-		final String uri = request.getRequestURI();
-		if (uri.contains(PAGE))
-		{
-			final Pattern p = Pattern.compile("page-[0-9]+");
-			final Matcher m = p.matcher(uri);
-			if (m.find())
-			{
-				final String pageNo = m.group().split("-")[1];
-				if (null != pageNo)
-				{
-					page = Integer.parseInt(pageNo);
-					page = page - 1;
-				}
-			}
-		}
 
 		//applying search filters
 		if (searchQuery != null)
@@ -463,28 +444,5 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 		}
 		return Iterables.frequency(splitStr, "size");
-	}
-
-	/**
-	 * This method over rides to support the new pagination url structure
-	 */
-	@Override
-	protected String checkRequestUrl(final HttpServletRequest request, final HttpServletResponse response, String resolvedUrlPath)
-			throws UnsupportedEncodingException
-	{
-		final String uri = request.getRequestURI();
-		if (uri.contains(PAGE))
-		{
-			final Pattern p = Pattern.compile("page-[0-9]+");
-			final Matcher m = p.matcher(uri);
-			if (m.find())
-			{
-				if (!StringUtils.isEmpty(m.group()))
-				{
-					resolvedUrlPath = resolvedUrlPath + "/" + m.group();
-				}
-			}
-		}
-		return super.checkRequestUrl(request, response, resolvedUrlPath);
 	}
 }

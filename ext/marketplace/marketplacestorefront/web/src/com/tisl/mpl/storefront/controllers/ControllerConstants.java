@@ -326,7 +326,7 @@ public interface ControllerConstants
 				public static final String NO_SELLERS = "No Sellers Defined For This Product";
 				public static final String NO_PRODUCT = "Selected Size is not available for this Seller";
 				public static final String PRODUCT_CODE_PATH_VARIABLE_PATTERN = "/{productCode:.*}";
-				public static final String PRODUCT_CODE_PATH_NEW_PATTERN = "/**/p-{productCode:.*}";
+				//public static final String PRODUCT_CODE_PATH_NEW_PATTERN = "/**/p-{productCode:.*}";
 				public static final String REVIEWS_PATH_VARIABLE_PATTERN = "{numberOfReviews:.*}";
 				public static final String IS_COD = "isCod";
 				public static final String ALL_OF_STOCK = "allOOStock";
