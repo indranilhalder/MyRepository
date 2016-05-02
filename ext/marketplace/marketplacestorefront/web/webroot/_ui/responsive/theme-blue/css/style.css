@@ -17682,7 +17682,7 @@ ul.helpmeshop-list{
 	cursor:default;
 }
 @media(min-width:791px){
-	ul.helpmeshop-list
+	ul#ui-id-1,ul#ui-id-2,ul.helpmeshop-list
 {
 	max-height: 500px;
     overflow: auto;
@@ -29662,8 +29662,8 @@ font-weight:bold;
 }
 .shop-promos .promos li{
 	border-bottom: 1px solid #ACACAC;
-    padding: 8px;
-    height: 65px;
+    padding: 8px 0;
+    min-height: 65px;
     text-align: center;}
     .shop-promos .promos li > a{
     display: inline-block;
@@ -29695,6 +29695,10 @@ font-weight:bold;
 @media (max-width: 370px){
 .shop-promos .promos li span {
     font-size: 14px;
+}
+.shop-promos .promos li span:after {
+    top: 4px;
+    font-size:28px;
 }
 }
 /* Baby banner end */
@@ -29845,7 +29849,6 @@ footer .footer-text {
 }
 .home-brands-you-love-carousel-brands {
     display: block;
-    padding: 0 10px;
     box-sizing: border-box;
     vertical-align: top;
     text-align: center;
@@ -29957,7 +29960,6 @@ width:100%;
 .home-brands-you-love-carousel-brands img{
 border-bottom: 2px solid transparent;
     padding: 5px;
-    height: 35px;
 }
 .home-brands-you-love-carousel-brands img:hover{
 cursor:pointer;
