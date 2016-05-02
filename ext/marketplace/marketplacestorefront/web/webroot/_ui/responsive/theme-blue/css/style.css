@@ -29248,7 +29248,7 @@ body.page-coupons .pagination li.active span,body.page-coupons .pagination li.ac
     text-overflow: ellipsis;
 	}
 
-@media(min-width:791px) and (max-width:1300px){
+@media(min-width:791px) and (max-width:1350px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
 	    position: absolute;
     	left: 110px;
@@ -31269,7 +31269,7 @@ header.compact .content .right ul > li {
   }
   header.compact .content li.logged_in.dropdown .dropdown-menu {
   width: calc(100% - -236px);}
-  @media (max-width: 1300px) and (min-width: 791px){
+  @media (max-width: 1350px) and (min-width: 791px){
   header.compact .content li.logged_in.dropdown .dropdown-menu {
   width: calc(100% - -216px);}
   }
@@ -31277,18 +31277,26 @@ header.compact .content .right ul > li {
   header.compact .content .right > ul > li.wishlist .wishlist-info{
   width:236px;}
   
-  @media (max-width: 1300px) and (min-width: 791px){
+  @media (max-width: 1350px) and (min-width: 791px){
   header.compact .content .right>ul>li.wishlist .wishlist-info {
       max-width: 216px;
   }
   }
   header.compact .content .right > ul > li.sign-in .sign-in-info{
   width:351px;}
-  @media (max-width: 1300px) and (min-width: 791px){
+  @media (max-width: 1350px) and (min-width: 791px){
   header.compact .content .right > ul > li.sign-in .sign-in-info {
       max-width: 326px;
   }
   }
+  @media (max-width: 479px){
+  .visuallySimilarItems li{
+  padding: 0 23%;}
+  .visuallySimilarItems li a.product-tile{
+  padding: 0px;}
+  }
+  header .banner > span.helpmeshopbanner{
+  cursor:auto;}
 /*--------------maincss-----------*/
 .row
 {
