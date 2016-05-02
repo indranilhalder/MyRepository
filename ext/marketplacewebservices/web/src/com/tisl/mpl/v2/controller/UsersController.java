@@ -695,7 +695,8 @@ public class UsersController extends BaseCommerceController
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9103);
+				//				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9103);
+				LOG.debug("******************Invalid Signature ******************");
 			}
 			//			if (null != result.getSessionSecret())
 			//			{
