@@ -89,7 +89,7 @@ ${brandCollection.masterBrandName}
 								
 								<span class="letter">${entry.key}</span>
 								 <c:forEach items="${entry.value}" var="itemValue1">
-								 <c:url var="brandlistUrl" value="/Categories/c-${itemValue1.code}"></c:url>
+								 <c:url var="brandlistUrl" value="/Categories/c/${itemValue1.code}"></c:url>
 								 <a href ="${brandlistUrl}">${itemValue1.name}</a> 
 									
 									
@@ -140,7 +140,7 @@ ${brandCollection.masterBrandName}
 								 <span class="letter">${itemValue1.key}</span>
 								 
 								  <c:forEach items="${itemValue1.value}" var="item">
-								   <c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
+								   <c:url var="brandlistUrl" value="/Categories/c/${item.code}"></c:url>
 								 
 								 <a
 									href ="${brandlistUrl}">${item.name}</a> 
@@ -204,7 +204,7 @@ ${brandCollection.masterBrandName}
 								<span class="letter">${item.key}</span>
 								 <c:forEach items="${item.value}" var="itemValue">
 								 
-								   <c:url var="brandlistUrl" value="/Categories/c-${itemValue.code}"></c:url>
+								   <c:url var="brandlistUrl" value="/Categories/c/${itemValue.code}"></c:url>
 								 
 								 <a
 									class ="hello" href="${brandlistUrl}">${itemValue.name}</a> 

@@ -15,7 +15,7 @@
 					var="department">
 					
 					<c:url
-						value="/${department.name}/c-${department.code}"
+						value="/${department.name}/c/${department.code}"
 						var="departmentUrl" />
 						<li>
 					<div class="toggle departmenthover" id="dept${department.code}">
