@@ -128,6 +128,9 @@ ACC.autocomplete = {
 				if(snsSizeCount==1){
 					requestTerm=request.term.trim();
 				}
+				else{
+					requestTerm=request.term;
+				}
 				$.getJSON(self.options.autocompleteUrl, {term: requestTerm, category: selectedCat}, function (data)
 				{
 					if(data.suggestions != null){
