@@ -439,7 +439,7 @@ removeGamma:function(map) {
 	    ]
 	    var iconsLength = icons.length;
 	    var controlUI = document.createElement('div');
-	      controlUI.style.backgroundColor = '#ffffff';
+	      controlUI.style.backgroundColor = 'transparent';
 	      controlUI.style.textAlign = 'center';
 	      controlUI.style.right='60px';
 	      controlUI.style.padding='10px';

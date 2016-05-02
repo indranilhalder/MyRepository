@@ -1,4 +1,3 @@
-
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
@@ -39,7 +38,14 @@
 					</h4></a>
 			</div> --%> <c:forEach items="${component.subBrandList}"
 					var="subBrand">
-					<c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url>
+					<!-- TISPRD-1381 Brand Issue Fix -->
+					<c:if test="${not empty subBrand.subBrandUrl}">
+						<c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url>
+					</c:if>
+					<c:if test="${empty subBrand.subBrandUrl}">
+						<c:url var="subBrandUrl" value="#"></c:url>
+					</c:if> 
+					<%-- <c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url> --%>
 					<a href="${subBrandUrl}">
 						<div class="multibrand-wrapper">
 							<img class="multibrand-logo" src="${subBrand.subBrandImage.URL}" />
@@ -73,7 +79,7 @@
 				<ul class="words" style="width: 50%; float: left">
 					<c:forEach items="${component.subBrands}" var="subBrand">
 						<c:url var="subBrandUrl"
-							value="/Categories/${subBrand.name}/c/${subBrand.code}"></c:url>
+							value="/Categories/${subBrand.name}/c-${subBrand.code}"></c:url>
 						<li class="long words"><div class="toggle"
 								style="font-weight: normal; text-transform: capitalize">
 								<a href="${subBrandUrl}">${subBrand.name}</a>
