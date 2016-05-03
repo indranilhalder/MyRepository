@@ -97,10 +97,9 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final String siteName = currentSite.getUid();
 		final String themeName = getThemeNameForSite(currentSite);
 		final String uiExperienceCode = uiExperienceService.getUiExperienceLevel().getCode();
-		final String uiExperienceCodeLower = uiExperienceViewResolver.getUiExperienceViewPrefix().isEmpty()
-				? uiExperienceCode.toLowerCase()
-				: StringUtils.remove(
-						uiExperienceViewResolver.getUiExperienceViewPrefix().get(uiExperienceService.getUiExperienceLevel()), "/");
+		final String uiExperienceCodeLower = uiExperienceViewResolver.getUiExperienceViewPrefix().isEmpty() ? uiExperienceCode
+				.toLowerCase() : StringUtils.remove(
+				uiExperienceViewResolver.getUiExperienceViewPrefix().get(uiExperienceService.getUiExperienceLevel()), "/");
 		final Object urlEncodingAttributes = request.getAttribute(WebConstants.URL_ENCODING_ATTRIBUTES);
 		final String contextPath = StringUtils.remove(request.getContextPath(),
 				(urlEncodingAttributes != null) ? urlEncodingAttributes.toString() : "");
@@ -129,6 +128,8 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final String gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
 		final String gigyaSocialLoginURL = configurationService.getConfiguration().getString("gigya.sociallogin.url");
 		final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
+		//FOR Feedback survey
+		final String feedbackSurveyUrl = configurationService.getConfiguration().getString(MessageConstants.FEEDBACK_SURVEY_URL);
 
 		modelAndView.addObject("contextPath", contextPath);
 		modelAndView.addObject("sharedResourcePath", sharedResourcePath);
@@ -162,8 +163,8 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final DeviceData currentDetectedDevice = deviceDetectionFacade.getCurrentDetectedDevice();
 		modelAndView.addObject("detectedDevice", currentDetectedDevice);
 
-		final List<String> dependantAddOns = requiredAddOnsNameProvider
-				.getAddOns(request.getSession().getServletContext().getServletContextName());
+		final List<String> dependantAddOns = requiredAddOnsNameProvider.getAddOns(request.getSession().getServletContext()
+				.getServletContextName());
 
 		modelAndView.addObject("addOnCommonCssPaths", getAddOnCommonCSSPaths(contextPath, uiExperienceCodeLower, dependantAddOns));
 		modelAndView.addObject("addOnThemeCssPaths",
@@ -173,6 +174,7 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_API_KEY, gigyaAPIKey);
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_SOCIAL_LOGIN_URL, gigyaSocialLoginURL);
 		modelAndView.addObject(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
+		modelAndView.addObject(ModelAttributetConstants.FEED_BACK_SURVEY_URL, feedbackSurveyUrl);
 	}
 
 	protected List getAddOnCommonCSSPaths(final String contextPath, final String uiExperience, final List<String> addOnNames)
