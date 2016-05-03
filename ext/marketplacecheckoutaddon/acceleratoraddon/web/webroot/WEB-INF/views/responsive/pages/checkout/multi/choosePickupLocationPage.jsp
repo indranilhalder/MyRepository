@@ -70,7 +70,6 @@
 						    color: #fff;
 						    clear: both;
 						    line-height: 30px;
-						    width: 250px !important;
 						    text-align: center;
 						    height: 32px;
 						    padding: 4px 25px 8px 25px;
@@ -142,10 +141,54 @@
 						}
 						
 						@media (max-width:650px){
+							.cart.wrapper .product-block li.item > ul > li, .confirmation .product-block li.item > ul > li, #pickupPersonName, #pickupPersonMobile {
+								width: 100%;
+							}
 							
+							.panel-body, .scrollThis {
+								height: auto !important;
+							}
+							
+							#savePickupPersondDetails, #pickupPersonName, #pickupPersonMobile {
+								margin-top: 5px;
+								margin-left: 0px;
+							}
+							
+							#savePickupPersondDetails {
+								margin-bottom: 5px;
+							}
+							
+							.continue_holder {
+								margin-bottom: 30px;
+							}
+							
+							.scrollThis {
+								overflow-y: hidden !important;
+							}
+							
+							#pickUpDetailsMsg {
+								white-space: inherit;
+								height: 0px;
+							}
+							
+							.text_in {
+								margin-top: 5px !important;
+							    margin-left: 0px !important;
+							    font-size: 10px !important;
+							    text-align: center;
+							}							
 						}
 						
 						@media (min-width: 1024px) {
+							.text_in {
+								font-size: 10px !important;
+								margin-top: 2px !important;
+								margin-left: -2px !important;
+								text-align: center;
+							}
+						.continue_btn {
+							width: 250px !important;
+						}
 						.checkout.wrapper .product-block li.header > ul li:first-child, .checkout.wrapper .product-block li.item > ul li:first-child {
 						  width: 38% !important; }
 						  .checkout.wrapper .product-block li.header > ul li.delivery, .checkout.wrapper .product-block li.item > ul li.delivery {
@@ -233,13 +276,6 @@
 								padding: 15px;
 								margin-bottom: 20px;
 						  }
-						  
-						  .text_in {
-								font-size: 10px !important;
-								margin-top: 2px !important;
-								margin-left: -2px !important;
-								text-align: center;
-							}
 							
 							.changeDeliveryMethod {
 							    background: none !important;
@@ -256,6 +292,7 @@
 								clear: both;
 								padding-top: 5px;
 							}
+							
 						  					 	
 					</style>
 					<script>
@@ -375,13 +412,8 @@
 			} else {
 				console.log("changed map width"); 
 				var mapWidth = $(document).width()-30;
-				$(".mapWidth").css("width", mapWidth+"px"); 
-				$(".cart.wrapper .product-block li.item > ul > li, .confirmation .product-block li.item > ul > li, #pickupPersonName, #pickupPersonMobile").css("width","100%");
-				$(".panel-body").css("height", "auto");
-				$("#savePickupPersondDetails, #pickupPersonName, #pickupPersonMobile").css("margin-top","5px");
-				$("#savePickupPersondDetails").css("margin-left","0px");
-				$("#savePickupPersondDetails").css("margin-bottom","5px");
-				$(".continue_holder").css("margin-bottom","30px");
+				$(".mapWidth").css("width", mapWidth+"px");
+				$(".continue_btn").css("width", mapWidth+"px");
 			}
 			$(".pickUpPersonAjax").hide();
 			$(".pickupPersonSubmitError").hide();
@@ -1302,7 +1334,7 @@
 				<div class="panel">
 					<div class="pickUpPersonAjax"></div>
    			 	</div>
-       			<div class="panel panel-default pickuppersonWidth" style="height: auto!important; width: 100%!important;">
+       			<div class="panel panel-default pickuppersonWidth" style="height: auto !important; width: 100%!important;">
      			 	<div class="panel panel-body" style="margin-top: 14px;">
      			 		<div class="col-md-12 pickupDetails error_txt">
      			 		<spring:theme code="checkout.multi.cnc.pickup.details.validation.msg"/>
@@ -1323,10 +1355,10 @@
 				          <div id="pickupPersonSubmit"></div>
 				          <div class="error_txt pickupPersonSubmitError"></div>
 				            </div>
+				            <div class="col-md-12" id="pickUpDetailsMsg" style="padding-top: 10px;"><spring:theme code="checkout.multi.cnc.pickup.details.below.msg"/></div>
+				            <p style="clear:both;"></p>&nbsp;
 				           </form>
-			            <div class="col-md-12" style="padding-top: 10px;">
-			            	<spring:theme code="checkout.multi.cnc.pickup.details.below.msg"/>
-			            </div>
+			            
 					</div>
 			</div>
 		</div>
