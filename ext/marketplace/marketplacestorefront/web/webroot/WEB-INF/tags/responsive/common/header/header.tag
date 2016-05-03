@@ -289,6 +289,24 @@ function registerUser(eventObject)
 		<cms:component component="${component}" />
 	</cms:pageSlot>
 </c:if>
+<!-- Survey -->
+<div class="feedback-form modal fade" id="feedBackFormModal">
+	<div class="content" style="width: 50%">
+		<button class="close" data-dismiss="modal"></button>
+		<div class="feedback-container">
+		<iframe src="${feebBackSurveyUrl}" 
+				width="100%" 
+				height="800px" 
+				frameborder="0" 
+				marginheight="0" 
+				marginwidth="0">
+				Loading…
+		</iframe>
+		</div>
+
+	</div>
+	<div class="overlay" data-dismiss="modal"></div>
+</div>
 
 <!--  Commented for TISPRD-1440  -->
 <!-- <script>

@@ -39,6 +39,9 @@
 					<a href="${banner.urlLink}" class="appios"><img src="${banner.media.URL}" ></a>
 			</c:forEach>
 		</div>
+		<div class="links">
+		<a id="feedback" href="#nogo"><spring:theme code="text.feedback.survey"/></a>
+		</div>
 	</div>
 </div>
 
