@@ -2954,7 +2954,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#expressCheckoutButtonId").css("cursor","default");
 		$("#expressCheckoutButtonId").css("opacity","0.5");
 		var pincodeEntered = $('#defaultPinCodeIds').val();
-		var pincodeServiceError = "This item is not serviceable for pincode "+pincodeEntered;
+		var pincodeServiceError = "! This item is not serviceable for pincode "+pincodeEntered;
 		//console.log(pincodeServiceError);
 		var elementId = $(".desktop li:nth-child(3) ul");
 		elementId.hide();
@@ -2988,7 +2988,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		var newUi = document.createElement("ul");
 		newUi.setAttribute("id", ussId);
 		var newSpan = document.createElement("span");
-		var text = document.createTextNode("This item is not serviceable for pincode "+selectedPincode);
+		var text = document.createTextNode("! This item is not serviceable for pincode "+selectedPincode);
 		newSpan.appendChild(text);
 		newUi.appendChild(newSpan);
 		$("#"+ussId+"_li").append(newUi);
