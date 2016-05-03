@@ -376,6 +376,9 @@
 			generate="true" dynamic="true">
 			<value code="tship" />
 			<value code="sship" />
+			<!-- us-10: added by i324321 start -->
+ 			<value code="both" />
+ 			<!-- added by i324321 end -->
 		</enumtype>
 
 		<enumtype generate="true" code="SwatchColorEnum" autocreate="true"
@@ -732,6 +735,56 @@
 			<value code="PROCESSED"></value>
 			<value code="ERROR"></value>
 		</enumtype>
+		
+ 		<!-- us-10: added by i324321 start -->
+ 		<enumtype code="deliveryFulfillModeByP1Enum" autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 		</enumtype>
+ 		<enumtype code="returnFulfillModeEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 			<value code="both" />
+ 		</enumtype>
+ 		<enumtype code="returnFulfillModeByP1Enum"   autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 		</enumtype>
+ 		<enumtype code="giftWrappableEnum"           autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="returnAtStoreEligibleEnum"   autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="isFragileEnum"               autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="isPreciousEnum"              autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="mediationRequiredEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="scheduledDeliveryEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<!-- added by i324321 end -->
+  	</enumtypes>
 	<!-- Product Feature Enum Ends -->
 
 
@@ -1845,6 +1898,58 @@
 							unique="false" />
 						<persistence type='property' />
 					</attribute>
+					<!-- added by i324321 start -->
+ 					<attribute type="deliveryFulfillModeByP1Enum" qualifier="deliveryFulfillModeByP1">
+ 						<description>Rich Attribute:- deliveryModes/FulfilledBy Priority 1</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property"/>
+ 					</attribute>
+ 					<attribute type="returnFulfillModeEnum" qualifier="returnFulfillMode">
+ 						<description>Rich Attribute:- return Modes/ Fulfilled by</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property"/>
+ 					</attribute>
+ 					<attribute type="returnFulfillModeByP1Enum" qualifier="returnFulfillModeByP1">
+ 						<description>Rich Attribute:- return Modes/FulfilledBy Priority 1</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property" />
+ 					</attribute>
+ 					<attribute type="java.lang.Integer" qualifier="sellerHandlingTime">
+ 						<description>Rich Attribute:- Seller Handling Time</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type="property" />
+ 					</attribute>
+ 					<attribute type="giftWrappableEnum" qualifier="giftWrappable">
+ 						<description>Rich Attribute:- Gift Wrappable</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="returnAtStoreEligibleEnum" qualifier="returnAtStoreEligible">
+ 						<description>Rich Attribute:- Return at Store Eligible</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="isFragileEnum" qualifier="isFragile">
+ 						<description>Rich Attribute:- Fragile</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="isPreciousEnum" qualifier="isPrecious">
+ 						<description>Rich Attribute:- Precious</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="mediationRequiredEnum" qualifier="mediationRequired">
+ 						<description>Rich Attribute:- Mediation Required</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>
+ 					<attribute type="scheduledDeliveryEnum" qualifier="scheduledDelivery">
+ 						<description>Rich Attribute:- is scheduled delivery eligible</description>
+ 						<modifiers read="true" write="true" optional="true" unique="false" />
+ 						<persistence type='property' />
+ 					</attribute>			
+ 					<!-- added by i324321 end -->	
 					<attribute type="typeOfItem1Enum" qualifier="typeOfItem1">
 						<description>Rich Attribute:- typeOfItem1</description>
 						<modifiers read="true" write="true" optional="true"

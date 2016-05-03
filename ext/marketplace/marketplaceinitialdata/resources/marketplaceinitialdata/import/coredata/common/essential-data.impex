@@ -329,10 +329,50 @@ INSERT_UPDATE paymentModesEnum;code[unique=true];name[lang=en]
 INSERT_UPDATE deliveryFulfillModesEnum;code[unique=true];name[lang=en]
 ;tship;TShip;
 ;sship;SShip;
+;both;Both;
 
 INSERT_UPDATE sellerAssociationStatusEnum;code[unique=true];name[lang=en]
 ;yes;Yes;
 ;no;No;
+
+# us-10: added by i324321 start #
+ INSERT_UPDATE deliveryFulfillModeByP1Enum;code[unique=true];name[lang=en]
+ ;tship;TShip;
+ ;sship;SShip;
+ 
+ INSERT_UPDATE returnFulfillModeEnum;code[unique=true];name[lang=en]
+ ;tship;TShip;
+ ;sship;SShip;
+ ;both;Both;
+ 
+ INSERT_UPDATE returnFulfillModeByP1Enum;code[unique=true];name[lang=en]
+ ;tship;TShip;
+ ;sship;SShip;
+ 
+ INSERT_UPDATE giftWrappableEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ 
+ INSERT_UPDATE returnAtStoreEligibleEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ 
+ INSERT_UPDATE isFragileEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ 
+ INSERT_UPDATE isPreciousEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ 
+ INSERT_UPDATE mediationRequiredEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ 
+ INSERT_UPDATE scheduledDeliveryEnum;code[unique=true];name[lang=en]
+ ;yes;Yes;
+ ;no;No;
+ # added by i324321 end #
 
 INSERT_UPDATE globalIdentifierType;code[unique=true];name[lang=en]
 ;ean;EAN
