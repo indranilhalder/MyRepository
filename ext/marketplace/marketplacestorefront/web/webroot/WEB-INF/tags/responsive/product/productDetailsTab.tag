@@ -16,7 +16,14 @@
 		<ul>
   			<%-- <li>${product.brand.brandname}</li> --%>
   			<c:forEach var="classification" items="${mapConfigurableAttribute}">
-				   <li>${classification.key} - ${classification.value}</li>
+				   <c:choose>
+   					<c:when test="${not empty classification.value }">
+   						 <li> ${classification.key} - ${classification.value}</li>
+   					</c:when>
+   					<c:otherwise>
+   						 <li> ${classification.key}</li>
+   					</c:otherwise>	
+   				</c:choose>
 			</c:forEach>
   				<li><spring:theme code="product.listing.id"></spring:theme>${product.code}</li>
   		</ul>

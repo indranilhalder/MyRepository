@@ -359,7 +359,14 @@
 		class="com.tisl.mpl.interceptors.ExtCustomerOriginalUIDInterceptor">
 		<!-- <property name="modelService" ref="modelService" /> -->
 	</bean>
-
+	
+	<!-- Prodcut Service Implementation -->
+ 	<alias name="mplProductService" alias="mplProductService" />
+ 	<bean id="mplProductService"
+ 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProductServiceImpl">
+ 		<property name="productDao" ref="productDao" />
+ 	</bean>
+	
 	<!-- ============== Update Profile Service & DAO ============== -->
 	<bean id="mplCustomerProfileDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplCustomerProfileDaoImpl">

@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.product;
 
+import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.daos.ProductDao;
 
@@ -25,4 +26,6 @@ public interface MplProductDao extends ProductDao
 	 * @return List<ProductModel>
 	 */
 	List<ProductModel> findProductsByCodeNew(String code);
+
+	List<ProductFeatureModel> findProductFeaturesByCodeAndQualifier(final String code, final String qualifier);
 }
