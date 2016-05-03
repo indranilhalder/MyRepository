@@ -717,4 +717,7 @@ public final class ModelAttributetConstants
 	public static final String SUB_ORDER_STATUS = "subOrderStatus";
 	public static final String FILTER_DELIVERYMODE = "filterDeliveryMode";
 
+	//Feebback Survey
+	public static final String FEED_BACK_SURVEY_URL = "feebBackSurveyUrl";
+
 }
