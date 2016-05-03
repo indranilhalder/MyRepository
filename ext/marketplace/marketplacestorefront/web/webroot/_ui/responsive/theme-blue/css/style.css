@@ -11203,7 +11203,7 @@ body .account .right-account .order-history .pagination li{
     text-transform: uppercase;
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 1px
+    letter-spacing: 0.5px
 }
 .product-info .product-content .wish-share>li a:before {
     margin-right: 10px;
@@ -11235,7 +11235,7 @@ body .account .right-account .order-history .pagination li{
     text-transform: uppercase;
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 1px
+    letter-spacing: 0.5px
 }
 .product-info .product-content .wish-share>li .share span:before {
     margin-right: 10px;
@@ -31036,6 +31036,10 @@ line-height: normal;
     text-align: center;
         top: 60px;
     transform: none;
+    -webkit-transform: none;
+    -moz-transform: none;
+    -ms-transform: none;
+    -o-transform: none;
     height: 100%;
  }
  body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-header-italic{
@@ -31311,6 +31315,12 @@ header.compact .content .right ul > li {
   }
   header .banner > span.helpmeshopbanner{
   cursor:auto;}
+  @media screen and (min-color-index:0) and (-webkit-min-device-pixel-ratio:0) { 
+  @media {
+    header .content nav > ul > li > .toggle:after{ 
+      top:1px;
+    }
+}}
 /*--------------maincss-----------*/
 .row
 {
