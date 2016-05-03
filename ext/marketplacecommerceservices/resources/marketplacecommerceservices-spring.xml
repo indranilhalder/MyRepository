@@ -906,6 +906,8 @@
 		<property name="cancellableStatus">
 			<list>
 				<value>ORDER_ALLOCATED</value>
+				<!-- New Status ORDER_REALLOCATED added for TISPRD-1382 -->
+				<value>ORDER_REALLOCATED</value>
 				<value>PENDING_SELLER_ASSIGNMENT</value>
 				<value>ORDER_ACCEPTED</value>
 				<value>PICK_LIST_GENERATED</value>
@@ -1636,66 +1638,6 @@
 	</bean>
 	
 	<!-- Store Locator Beans end here -->
-	<alias name="customProductPageSiteMapGenerator" alias="productPageSiteMapGenerator"/>
-	<bean id="customProductPageSiteMapGenerator"
-	      class="com.tisl.mpl.sitemap.generator.impl.MplProductPageSiteMapGenerator"
-	      parent="defaultProductPageSiteMapGenerator">
-	     <!--  <property name="configurationService" ref="configurationService"/>	 -->      
-	</bean>
-	
-	 <alias name="mplCustomPageSiteMapGenerator" alias="mplcustomPageSiteMapGenerator"/>
-	<bean id="mplCustomPageSiteMapGenerator"
-	      class="com.tisl.mpl.sitemap.generator.impl.MplCustomPageSiteMapGenerator"
-	      parent="abstractSiteMapGenerator">
-		<property name="siteMapUrlDataConverter" ref="mplCustomPageToSiteMapUrlDataConverter"/>
-		<property name="siteMapPageEnum" value="CUSTOM"/>
-	    <property name="cmsPageService" ref="cmsPageService"/>
-	    <!-- <property name="urlResolver" ref="homepageContentPageUrlResolver"/>
-	    <property name="urlResolver" ref="categoryModelUrlResolver"/> -->
-	</bean> 
-	
-	<!-- <bean id="mplSiteMapUrlData"
-	      class="com.tisl.mpl.sitemap.data.MplSiteMapUrlData"
-	      scope="prototype"
-	      parent="siteMapUrlData"/> -->
-	<!-- <bean id="mplSiteMapContext"
-	      class="com.tisl.mpl.sitemap.renderer.MplSiteMapContext"
-	      scope="prototype"
-	      parent="siteMapContext">
-	</bean> -->
-		
-	
-	
-	<alias name="mplCustomPageToSiteMapUrlDataConverter" alias="mplCustomPageToSiteMapUrlDataConverter"/>
-	<bean id="mplCustomPageToSiteMapUrlDataConverter" parent="abstractPopulatingConverter">
-		<property name="targetClass" value="de.hybris.platform.acceleratorservices.sitemap.data.SiteMapUrlData"/>
-		<property name="populators">
-			<list>
-				<ref bean="mplCustomPageToSiteMapUrlDataPopulator"/>
-			</list>
-		</property>
-	</bean>
-	
-	
-	
-	<alias name="mplCustomPageToSiteMapUrlDataPopulator" alias="mplCustomPageToSiteMapUrlDataPopulator"/>
-	<bean id="mplCustomPageToSiteMapUrlDataPopulator"
-	      class="com.tisl.mpl.converter.populator.MplCustomPageToSiteMapUrlDataPopulator">
-		<!-- <property name="urlResolver" ref="customPageUrlResolver"/> -->
-	</bean>	
-	
-	
-	
-	<alias name="mplProductModelToSiteMapUrlDataPopulator" alias="productModelToSiteMapUrlDataPopulator"/>
-	<bean id="mplProductModelToSiteMapUrlDataPopulator"
-	      class="com.tisl.mpl.converter.populator.MplProductModelToSiteMapUrlDataPopulator"
-	      parent="defaultProductModelToSiteMapUrlDataPopulator">
-	</bean>
-	
-	
-	<bean id="mplSellerInformationFacade"
-		class="com.tisl.mpl.marketplacecommerceservices.facades.impl.MplSellerInformationFacadeImpl">
-	</bean>
 	
 	<!-- UserGroupSaveInterceptor starts -->
 	<bean id="UserGroupSaveInterceptor" class="com.tisl.mpl.interceptor.UserGroupSaveInterceptor" />
@@ -1710,4 +1652,3 @@
 	<!-- UserGroupSaveInterceptor ends -->	
 
 	</beans>
-
