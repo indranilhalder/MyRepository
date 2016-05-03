@@ -177,7 +177,7 @@
 							     skipBlankMessageKey="profile.select.day" items="${dayList}" selectCSSClass="form-control"/></div> --%>
 							      
 							       <label><spring:theme code="profile.dateOfAnniversary"
-											text="Marriage Anniversary Date" /></label>
+											text="Anniversary Date" /></label>
 											
 									<form:select name="dateList" id="dateOfAnniversary" path="dateOfAnniversaryDay" onchange="selectBoxChange();">
 										<option value="selectDay">Date</option>

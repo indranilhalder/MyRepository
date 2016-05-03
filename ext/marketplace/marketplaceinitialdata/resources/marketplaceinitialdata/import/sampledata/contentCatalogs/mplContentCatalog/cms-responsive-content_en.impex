@@ -146,7 +146,7 @@ UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];headerT
 #;;TMPProductsCareCategoriesCarouselComponent;Products You Care About
 
 INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title
-;;ProductsYouCareCategoriesCarouselComponent;Products You Care About
+;;ProductsYouCareCategoriesCarouselComponent;What to Buy Now
 ########
 
 
@@ -181,7 +181,7 @@ UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];tit
 
 
 UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
-;; NewAndExclusiveProductCarouselComponent;"Discover New & Exclusive"
+;; NewAndExclusiveProductCarouselComponent;New In
 #;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections.
 
 
