@@ -10,7 +10,7 @@ INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLangu
 
 
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
-; customerDetailsPopulateCronJob; 0 0 0 * * ?
+; customerDetailsPopulateCronJob; 0 0/30 * * * ?
 ; salesOrderPaymentInfoPopulateJob; 0 0 0 * * ?
 #; merchantMasterPopulateCronJob; 0 0 0 * * ?
 #; promoReportCreationJob; 0 0 0 * * ?

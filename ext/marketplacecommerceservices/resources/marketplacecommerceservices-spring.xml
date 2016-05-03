@@ -906,6 +906,8 @@
 		<property name="cancellableStatus">
 			<list>
 				<value>ORDER_ALLOCATED</value>
+				<!-- New Status ORDER_REALLOCATED added for TISPRD-1382 -->
+				<value>ORDER_REALLOCATED</value>
 				<value>PENDING_SELLER_ASSIGNMENT</value>
 				<value>ORDER_ACCEPTED</value>
 				<value>PICK_LIST_GENERATED</value>

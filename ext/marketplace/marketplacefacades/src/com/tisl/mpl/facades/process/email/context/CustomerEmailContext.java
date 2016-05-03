@@ -29,6 +29,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+
 
 /**
  * Velocity context for a customer email.
@@ -43,6 +45,7 @@ public class CustomerEmailContext extends AbstractEmailContext<StoreFrontCustome
 
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+	private static final String WEBSITE_URL = "websiteUrl";
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -76,7 +79,14 @@ public class CustomerEmailContext extends AbstractEmailContext<StoreFrontCustome
 				put(IS_CUSTOMER_CREATED_IN_CSCOCKPIT, Boolean.TRUE);
 				put(CUSTOMER_PASSWORD, storeFrontCustomerProcessModel.getPassword());
 			}
-
+			/* TISPRD-1504 Email Issue Fix */
+			String websiteUrl = null;
+			websiteUrl = getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
+			if (null != websiteUrl)
+			{
+				put(WEBSITE_URL, websiteUrl);
+			}
 
 			final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
 					"1800-208-8282");
