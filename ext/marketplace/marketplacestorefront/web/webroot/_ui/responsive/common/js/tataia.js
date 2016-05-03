@@ -619,7 +619,7 @@ function makeProductHtml(widgetElement, obj, rid) {
 	  }
 	  //html += '<div class="image" style="position: absolute; left: 0; line-height: 347px; height: 347px; width: 221px; background:center no-repeat url('+obj.image_url+'); background-size:contain;"></div>';
 	  html += '<div class="short-info ia_short-info" style="position: relative; bottom: 0; left: 0; height: 66px; width: 221px;">';
-	  html += '<ul class="color-swatch" style="top: -3px; !important;margin-right: 9px;">';
+	  html += '<ul class="color-swatch" style="top: -3px; ">';
 	  if(obj.colors.length < 3){
 			jQuery.each(obj.colors, function (icount, itemColor) {	
 				if(icount == 1){
@@ -855,10 +855,10 @@ function updatePage(response, widgetMode) {
     	}else if(site_page_type === 'viewSellers' && widgetElement === 'ia_products'){
     		html += '<h1><span style="color: black !important;">You May Also Need</span>';
     	}
-    	    	//for release 2 changes in home-page headers-hot now
-    	else if(site_page_type === 'homepage' && widgetElement === 'ia_products_hot'){
+    	    	//Reverting changes-- for release 2 changes in home-page headers-hot now
+    	/*else if(site_page_type === 'homepage' && widgetElement === 'ia_products_hot'){
     		html += '<h1><span style="color: black !important;">Best Sellers</span>';
-    	}else{
+    	}*/else{
     		//for release 2 changes in pdp-page 
     		if(site_page_type === 'productpage' && widgetElement ==='ia_products_complements'){
     			html += '<h1><span style="color: black !important;">Things That Go With This</span>';

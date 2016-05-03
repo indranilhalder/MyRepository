@@ -117,6 +117,7 @@ function registerUser(eventObject)
 	<input type="hidden" id="DamMediaHost" value="${DamMediaHost}">
 	<input type="hidden" id="mplStaticResourceHost" value="${mplStaticResourceHost}">
 	<input type="hidden" id="previewVersion" value="${cmsPageRequestContextData.preview}">
+	<input type="hidden" id="pageTemplateId" value="${cmsPage.masterTemplate.uid}">
 	<!-- For Infinite Analytics End -->
 	
 	<div class="row header-row"></div>
@@ -161,7 +162,7 @@ function registerUser(eventObject)
 
 				<div class="marketplace compact">
 					<c:if test="${empty hideLogo}">
-						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
+						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
 					</c:if>
@@ -288,11 +289,13 @@ function registerUser(eventObject)
 		<cms:component component="${component}" />
 	</cms:pageSlot>
 </c:if>
-<script>
-$(document).ready(function(){
+
+<!--  Commented for TISPRD-1440  -->
+<!-- <script>
+/*$(document).ready(function(){
 	var href = $(".marketplace,.linear-logo").find("a").attr("href");
 	var p = href.split("?");
 	$(".marketplace").find("a").attr("href",p[0]);
-});
+});*/
 
-</script>
+</script>  -->

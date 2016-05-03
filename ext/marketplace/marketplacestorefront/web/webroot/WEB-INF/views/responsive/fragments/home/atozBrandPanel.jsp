@@ -5,7 +5,7 @@
 <div id="groups"
 	style="min-height: 28px; border-bottom: 4px solid; letter-spacing: 1px; font-size: 17px;">
 	<c:forEach items="${groupedAlphabets}" var="entry">
-		<div id="group" style="float: left; margin-right: 15px;">
+		<div id="group" style="float: left; margin-right: 10px;">
 
 			<a class="brandGroupLink" href="#"
 				data-tab="${entry.key}-${entry.value}">${entry.key}-${entry.value}</a>
