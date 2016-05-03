@@ -233,12 +233,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
 					}
 				}
-			}
-			if (abstractOrderEntryModel.getGiveAway() != null
-					& !abstractOrderEntryModel.getGiveAway().booleanValue() && abstractOrderEntryModel.getSelectedUSSID() != null)
-			{
-				freebieModelMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getMplDeliveryMode());
-				freebieParentQtyMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getQuantity());
+				if (abstractOrderEntryModel.getGiveAway() != null
+						& !abstractOrderEntryModel.getGiveAway().booleanValue() && abstractOrderEntryModel.getSelectedUSSID() != null)
+				{
+					freebieModelMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getMplDeliveryMode());
+					freebieParentQtyMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getQuantity());
+				}
 			}
 		}
 
