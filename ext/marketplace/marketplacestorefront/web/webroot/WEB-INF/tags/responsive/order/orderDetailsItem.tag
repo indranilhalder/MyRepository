@@ -84,7 +84,7 @@
 									</c:if>
 
 									<c:if
-										test="${not displayed &&  not bogoGiveaway && not empty entry.productPromoCode}">
+										test="${not displayed &&  not bogoGiveaway && not empty entry.productPromoCode && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
 										<c:set var="displayed" value="true" />
 										<li><span>${promotion.description}</span></li>
 									</c:if>
