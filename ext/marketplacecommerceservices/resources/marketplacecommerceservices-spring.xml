@@ -906,6 +906,8 @@
 		<property name="cancellableStatus">
 			<list>
 				<value>ORDER_ALLOCATED</value>
+				<!-- New Status ORDER_REALLOCATED added for TISPRD-1382 -->
+				<value>ORDER_REALLOCATED</value>
 				<value>PENDING_SELLER_ASSIGNMENT</value>
 				<value>ORDER_ACCEPTED</value>
 				<value>PICK_LIST_GENERATED</value>
@@ -1267,6 +1269,7 @@
 		<property name="threadContextService" ref="threadContextService" />
 		<property name="commerceCategoryService" ref="commerceCategoryService" />
 		<property name="baseSiteService" ref="baseSiteService" />
+			<!-- <property name="defaultPattern" value="/{product-name}/p-{product-code}" /> -->
 		<property name="defaultPattern" value="/{product-name}/p/{product-code}" />
 		<!-- <property name="defaultPattern" value="/{category-path}/{product-name}/p/{product-code}" 
 			/> -->
@@ -1278,6 +1281,7 @@
 		<property name="threadContextService" ref="threadContextService" />
 		<property name="commerceCategoryService" ref="commerceCategoryService" />
 		<property name="baseSiteService" ref="baseSiteService" />
+		<!-- <property name="pattern" value="/{category-path}/c-{category-code}" /> -->
 		<property name="pattern" value="/{category-path}/c/{category-code}" />
 	</bean>
 
@@ -1648,4 +1652,3 @@
 	<!-- UserGroupSaveInterceptor ends -->	
 
 	</beans>
-
