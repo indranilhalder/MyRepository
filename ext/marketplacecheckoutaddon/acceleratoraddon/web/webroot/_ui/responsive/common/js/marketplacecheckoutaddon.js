@@ -1207,9 +1207,6 @@ $("#otpMobileNUMField").focus(function(){
 	  // TISPRO-153		
 		sendTealiumData();
 
-
-
-
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
         //TISPRO-313	
@@ -1223,10 +1220,6 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(response) {
-
-
-
-
 				if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
@@ -1276,7 +1269,6 @@ $("#otpMobileNUMField").focus(function(){
 						$("#card_form").submit(); 		
 						
 					 }, 1000);
-			
 
 				}
 			},
@@ -2619,8 +2611,8 @@ function submitNBForm(){
 		$("#netbankingError").css("display","block");
 	}
 	else{
-		$(".pay button").prop("disabled",true);
-		$(".pay button").css("opacity","0.5");
+		$(".pay button, .make_payment_top_nb").prop("disabled",true);
+		$(".pay button, .make_payment_top_nb").css("opacity","0.5");
 		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.top-padding").width()+$(".pay.top-padding button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.00; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -2638,8 +2630,16 @@ function submitNBForm(){
 				if(response=='redirect'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
 				}
-				else if(response=="" || response==null){
-					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add"); 
+				//else if(response=="" || response==null){
+				//	$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add"); 
+				//}
+				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, .make_payment_top_nb").prop("disabled",false);
+					$(".pay button, .make_payment_top_nb").css("opacity","1");
+					$(".pay .spinner").remove();
+					$("#no-click").remove();
 				}
 				else{
 
@@ -2656,61 +2656,70 @@ function submitNBForm(){
 						type: "GET",
 						cache: false,
 						success : function(response) {
-								var juspayResponse = JSON.parse(response);
-								//console.log(juspayResponse);
-								var url = juspayResponse.payment.authentication.url;
-								var method = juspayResponse.payment.authentication.method;
-
-								if(method === "POST") {
-									var frm = document.createElement("form")
-									frm.style.display = "none"; // ensure that the form is hidden from the user
-									frm.setAttribute("method", method);
-									frm.setAttribute("action", url);
-
-									var params = juspayResponse.payment.authentication.params;
-									for(var key in params) {
-								    var value = params[key];
-								    var field = document.createElement("input");
-								    field.setAttribute("type", "hidden");
-								    field.setAttribute("name", key);
-								    field.setAttribute("value", value);
-								    frm.appendChild(field);
-								  }
-									document.body.appendChild(frm)
-									// form is now ready
-									frm.submit();
+								if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+									document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
+									$("#juspayconnErrorDiv").css("display","block");
+									$(".pay button, .make_payment_top_nb").prop("disabled",false);
+									$(".pay button, .make_payment_top_nb").css("opacity","1");
+									$(".pay .spinner").remove();
+									$("#no-click").remove();
 								}
-								
-								 if(method == "GET") {
-								    window.location.href = url;
-								    return;
-								 }
-								
-//								var frm = document.createElement("form")
-//								frm.style.display = "none"; // ensure that the form is hidden from the user
-//								frm.setAttribute("method", method);
-//								frm.setAttribute("action", url);
-//								if(method === "POST") {
-//								  var params = juspayResponse.payment.authentication.params;
-//								  for(var key in params) {
-//								    var value = params[key];
-//								    var field = document.createElement("input");
-//								    field.setAttribute("type", "hidden");
-//								    field.setAttribute("name", key);
-//								    field.setAttribute("value", value);
-//								    frm.appendChild(field);
-//								  }
-//								}
-//								document.body.appendChild(frm)
-//								// form is now ready
-//								frm.submit();
-								
-								
-						},
+								else{
+									var juspayResponse = JSON.parse(response);
+									//console.log(juspayResponse);
+									var url = juspayResponse.payment.authentication.url;
+									var method = juspayResponse.payment.authentication.method;
+	
+									if(method === "POST") {
+										var frm = document.createElement("form")
+										frm.style.display = "none"; // ensure that the form is hidden from the user
+										frm.setAttribute("method", method);
+										frm.setAttribute("action", url);
+	
+										var params = juspayResponse.payment.authentication.params;
+										for(var key in params) {
+									    var value = params[key];
+									    var field = document.createElement("input");
+									    field.setAttribute("type", "hidden");
+									    field.setAttribute("name", key);
+									    field.setAttribute("value", value);
+									    frm.appendChild(field);
+									  }
+										document.body.appendChild(frm)
+										// form is now ready
+										frm.submit();
+									}
+									
+									 if(method == "GET") {
+									    window.location.href = url;
+									    return;
+									 }
+									
+	//								var frm = document.createElement("form")
+	//								frm.style.display = "none"; // ensure that the form is hidden from the user
+	//								frm.setAttribute("method", method);
+	//								frm.setAttribute("action", url);
+	//								if(method === "POST") {
+	//								  var params = juspayResponse.payment.authentication.params;
+	//								  for(var key in params) {
+	//								    var value = params[key];
+	//								    var field = document.createElement("input");
+	//								    field.setAttribute("type", "hidden");
+	//								    field.setAttribute("name", key);
+	//								    field.setAttribute("value", value);
+	//								    frm.appendChild(field);
+	//								  }
+	//								}
+	//								document.body.appendChild(frm)
+	//								// form is now ready
+	//								frm.submit();
+									
+								}
+							},
 						error : function(resp) {
 							$("#netbankingIssueError").css("display","block");
-							$(".pay button").prop("disabled",false);
-							$(".pay button").css("opacity","1");
+							$(".pay button, .make_payment_top_nb").prop("disabled",false);
+							$(".pay button, .make_payment_top_nb").css("opacity","1");
 							$(".pay .spinner").remove();
 							$("#no-click").remove();
 						}
