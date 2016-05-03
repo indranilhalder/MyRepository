@@ -31319,12 +31319,11 @@ header.compact .content .right ul > li {
   }
   header .banner > span.helpmeshopbanner{
   cursor:auto;}
-  @media screen and (min-color-index:0) and (-webkit-min-device-pixel-ratio:0) { 
-  @media {
+  @media screen and (min-color-index:0) and (-webkit-min-device-pixel-ratio:2) { 
     header .content nav > ul > li > .toggle:after{ 
       top:1px;
-    }
-}}
+}
+}
 /*--------------maincss-----------*/
 .row
 {
