@@ -26,11 +26,14 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 
 public class MplClassificationPropertyCodeValueProvider extends ClassificationPropertyValueProvider
 {
 	private FieldNameProvider fieldNameProvider;
+
+	//private static final Logger LOG = Logger.getLogger(MplClassificationPropertyCodeValueProvider.class);
 
 	@Override
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
@@ -38,65 +41,79 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 	{
 		if (model instanceof ProductModel)
 		{
-			final List<ClassAttributeAssignmentModel> classAttrAssignmentList = new ArrayList<ClassAttributeAssignmentModel>();
+			/********** TISPRO-326 changes **********/
+			if (!"Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
+					&& StringUtils.isEmpty(indexedProperty.getClassificationProductType())
+					||
 
-			final ClassAttributeAssignmentModel classAttributeAssignmentModel = indexedProperty.getClassAttributeAssignment();
-
-			if (classAttributeAssignmentModel != null)
+					("Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType()) && "Electronics"
+							.equalsIgnoreCase(indexedProperty.getClassificationProductType())))
 			{
-				classAttrAssignmentList.add(classAttributeAssignmentModel);
-			}
-			if (indexedProperty.getClassificationAttributeAssignments() != null)
-			{
-				classAttrAssignmentList.addAll(indexedProperty.getClassificationAttributeAssignments());
-			}
-
-			//if (classAttrAssignmentList.size() > 0)
-			if (CollectionUtils.isNotEmpty(classAttrAssignmentList))
-			{
-				final List<ClassAttributeAssignment> classAttributeAssignmentList = new ArrayList<ClassAttributeAssignment>();
-				final Product product = (Product) this.modelService.getSource(model);
-				final List<FieldValue> fieldValues = new ArrayList<FieldValue>();
 
 
-				for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
+				final List<ClassAttributeAssignmentModel> classAttrAssignmentList = new ArrayList<ClassAttributeAssignmentModel>();
+
+				final ClassAttributeAssignmentModel classAttributeAssignmentModel = indexedProperty.getClassAttributeAssignment();
+
+				if (classAttributeAssignmentModel != null)
 				{
-
-					final ClassAttributeAssignment classAttributeAssignment = (ClassAttributeAssignment) this.modelService
-							.getSource(classAttrAssignmentModel);
-
-
-					classAttributeAssignmentList.add(classAttributeAssignment);
-
-
+					classAttrAssignmentList.add(classAttributeAssignmentModel);
+				}
+				if (indexedProperty.getClassificationAttributeAssignments() != null)
+				{
+					classAttrAssignmentList.addAll(indexedProperty.getClassificationAttributeAssignments());
 				}
 
-
-				//for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
-				//{
-
-				/*
-				 * final ClassAttributeAssignment classAttributeAssignment = (ClassAttributeAssignment) this.modelService
-				 * .getSource(classAttrAssignmentModel);
-				 */
-
-				final FeatureContainer cont = FeatureContainer.loadTyped(product, classAttributeAssignmentList);
-
-				for (final ClassAttributeAssignment classAttributeAssignment : classAttributeAssignmentList)
+				//if (classAttrAssignmentList.size() > 0)
+				if (CollectionUtils.isNotEmpty(classAttrAssignmentList))
 				{
-					if (cont.hasFeature(classAttributeAssignment))
+					final List<ClassAttributeAssignment> classAttributeAssignmentList = new ArrayList<ClassAttributeAssignment>();
+					final Product product = (Product) this.modelService.getSource(model);
+					final List<FieldValue> fieldValues = new ArrayList<FieldValue>();
+
+					/********** TISPRO-326 changes **********/
+					for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
 					{
-						final Feature feature = cont.getFeature(classAttributeAssignment);
-						if ((feature != null) && (!feature.isEmpty()))
+
+						final ClassAttributeAssignment classAttributeAssignment = (ClassAttributeAssignment) this.modelService
+								.getSource(classAttrAssignmentModel);
+
+
+						classAttributeAssignmentList.add(classAttributeAssignment);
+
+
+					}
+
+
+					//for (final ClassAttributeAssignmentModel classAttrAssignmentModel : classAttrAssignmentList)
+					//{
+
+					/*
+					 * final ClassAttributeAssignment classAttributeAssignment = (ClassAttributeAssignment) this.modelService
+					 * .getSource(classAttrAssignmentModel);
+					 */
+
+					final FeatureContainer cont = FeatureContainer.loadTyped(product, classAttributeAssignmentList);
+
+					for (final ClassAttributeAssignment classAttributeAssignment : classAttributeAssignmentList)
+					{
+						if (cont.hasFeature(classAttributeAssignment))
 						{
-							final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
-							fieldValues.addAll(temp);
+							final Feature feature = cont.getFeature(classAttributeAssignment);
+							if ((feature != null) && (!feature.isEmpty()))
+							{
+								final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
+								fieldValues.addAll(temp);
+							}
 						}
 					}
+
+					//}
+					return fieldValues;
 				}
 
-				//}
-				return fieldValues;
+				return Collections.emptyList();
+
 			}
 
 			return Collections.emptyList();
@@ -123,8 +140,8 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 				try
 				{
 					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(
-							getFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues() : featureValues));
+					result.addAll(getFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
+							: featureValues));
 				}
 				finally
 				{
@@ -153,8 +170,8 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 				value = ((ClassificationAttributeValue) value).getCode();
 			}
 			final List<String> rangeNameList = getRangeNameList(indexedProperty, value);
-			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty,
-					(language == null) ? null : language.getIsocode());
+			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, (language == null) ? null
+					: language.getIsocode());
 			for (final String fieldName : fieldNames)
 			{
 				if (rangeNameList.isEmpty())
