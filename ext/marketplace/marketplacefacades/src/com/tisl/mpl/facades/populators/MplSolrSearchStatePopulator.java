@@ -161,11 +161,11 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		{
 			try
 			{
-				return "?q=" + URLEncoder.encode(searchQueryParam, "UTF-8");
+				return "/page-{pageNo}?q=" + URLEncoder.encode(searchQueryParam, "UTF-8");
 			}
 			catch (final UnsupportedEncodingException e)
 			{
-				return "?q=" + StringEscapeUtils.escapeHtml(searchQueryParam);
+				return "/page-{pageNo}?q=" + StringEscapeUtils.escapeHtml(searchQueryParam);
 			}
 		}
 		return "";

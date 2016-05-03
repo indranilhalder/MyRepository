@@ -10,6 +10,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <c:set var="hasPreviousPage"
 	value="${searchPageData.pagination.currentPage > 0}" />
@@ -92,12 +93,15 @@
 					<c:choose>
 						<c:when
 							test="${searchPageData.pagination.currentPage + 1 ne pageNumber}">
+							<!-- New pagination URL -->
+							<c:url var="newPaginationUrl" value="${fn:replace(searchUrl,'{pageno}',($pageNumber - 1))}"></c:url>
 							<spring:url value="${searchUrl}" var="pageNumberUrl"
 								htmlEscape="true">
 								<spring:param name="page" value="${pageNumber - 1}" />
 							</spring:url>
+							
 							<ycommerce:testId code="pageNumber_link">
-								<li><a href="${pageNumberUrl}&searchCategory=${searchCategory}">${pageNumber}</a></li>
+								<li><a href="${newPaginationUrl}&searchCategory=${searchCategory}">${pageNumber}</a></li>
 							</ycommerce:testId>
 						</c:when>
 						<c:otherwise>
