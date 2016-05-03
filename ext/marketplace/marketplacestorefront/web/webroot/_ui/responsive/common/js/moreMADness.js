@@ -71,7 +71,7 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
                         // The Div for the carousel is being constructed below from the JSON response from the MSD server.
                         dS = '';                        
                         dS = dS +    '<div class="trending wrapper">';
-                        dS = dS +        '<h1><span style="color: black !important;">Visually Similar Items</span></h1>';                        
+                        dS = dS +        '<h1><span style="color: black !important;">More Stuff Like This</span></h1>'; //Changes Done for Chairman's Demo-- Visually Similar Items                        
                         dS = dS +        '<div class="spacer">';
                         dS = dS +            '<div class="slider product ready">';
                         dS = dS +                '<div class="frame">';
