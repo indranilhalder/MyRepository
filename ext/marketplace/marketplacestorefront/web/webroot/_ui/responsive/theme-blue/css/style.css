@@ -30868,13 +30868,13 @@ li#ratingDiv {
  	color:#ff1c47;
  	line-height:16px;
  }
- .cart.wrapper .product-block li.item > ul > li.delivery ul > span:before,
+/*  .cart.wrapper .product-block li.item > ul > li.delivery ul > span:before,
  .cart.wrapper .product-block li.item > ul > li.delivery span.pincodeServiceError:before{
  	content: '!';
  	font-weight:bolder;
  	margin-right:3px;
  	font-size: 14px;
- }
+ } */
  @media (max-width:650px){
  	.cart.wrapper .product-block li.item > ul > li.delivery ul > span:before{
  	vertical-align: middle;
