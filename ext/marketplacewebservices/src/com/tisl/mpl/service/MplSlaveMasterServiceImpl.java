@@ -18,7 +18,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,11 +97,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 
 						}
 						//Set Image urls
-						if (StringUtils.isNotBlank(slaveInfoDto.getStoreImage()))
-						{
-							//posModel.setMplStoreImage(slaveInfoDto.getStoreImage());
-							setMplImageUrls(slaveInfoDto, posModel);
-						}
+						setMplImageUrls(slaveInfoDto, posModel);
 
 						//set POS displayName to slave Name.
 						if (StringUtils.isNotEmpty(slaveInfoDto.getName()))
@@ -574,12 +569,8 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 							posModel.setSellerId(slaveInfoDto.getSellerid());
 						}
 						//Set store images
-						if (StringUtils.isNotBlank(slaveInfoDto.getStoreImage()))
-						{
-							//posModel.setMplStoreImage(slaveInfoDto.getStoreImage());
-							setMplImageUrls(slaveInfoDto, posModel);
+						setMplImageUrls(slaveInfoDto, posModel);
 
-						}
 						if (StringUtils.isNotEmpty(slaveInfoDto.getSlaveid()))
 						{
 							posModel.setSlaveId(slaveInfoDto.getSlaveid());
@@ -852,20 +843,21 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 	 */
 	private void setMplImageUrls(final SlaveInfoDTO slaveInfoDto, final PointOfServiceModel posModel)
 	{
-		final String[] imgArr = slaveInfoDto.getStoreImage().split("#");
 		final List<String> mplUrls = new ArrayList<>();
-		for (final String imgUrl : imgArr)
+		if (StringUtils.isNotBlank(slaveInfoDto.getStoreImage()))
 		{
-			if (StringUtils.isNotBlank(imgUrl))
-			{
-				mplUrls.add(imgUrl);
-			}
-		}
+			final String[] imgArr = slaveInfoDto.getStoreImage().split("#");
 
-		if (CollectionUtils.isNotEmpty(mplUrls))
-		{
-			posModel.setMplImageUrls(mplUrls);
+			for (final String imgUrl : imgArr)
+			{
+				if (StringUtils.isNotBlank(imgUrl))
+				{
+					mplUrls.add(imgUrl);
+				}
+			}
+
 		}
+		posModel.setMplImageUrls(mplUrls);
 	}
 
 	/**
@@ -913,6 +905,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 
 	/**
 	 * Gets PointOfService Model for a given slaveId.
+	 *
 	 * @param slaveId
 	 * @return PointOfService model.
 	 */

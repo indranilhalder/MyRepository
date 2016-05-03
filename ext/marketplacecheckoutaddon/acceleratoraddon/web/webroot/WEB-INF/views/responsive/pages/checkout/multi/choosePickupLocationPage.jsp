@@ -229,7 +229,7 @@
 						  
 						  .panel-body {
 					  			margin-top: 14px;
-								height: 107px !important;
+								height: 107px;
 								padding: 15px;
 								margin-bottom: 20px;
 						  }
@@ -364,12 +364,24 @@
 	    }
 	
 		$(document).ready(function(){
-			if($(document).width() <= "1300") {
+			
+			if($(document).width() >= "1100") {
 				$(".right-block").css("width", "324px");
 				var mapWidth = $(".header4").width();
 				mapWidth = parseInt(mapWidth)+10;
-				$(".mapWidth").css("width", mapWidth+"px")
+				$(".mapWidth").css("width", mapWidth+"px");
+				console.log("Greater than 1100 changed map width"); 
 				
+			} else {
+				console.log("changed map width"); 
+				var mapWidth = $(document).width()-30;
+				$(".mapWidth").css("width", mapWidth+"px"); 
+				$(".cart.wrapper .product-block li.item > ul > li, .confirmation .product-block li.item > ul > li, #pickupPersonName, #pickupPersonMobile").css("width","100%");
+				$(".panel-body").css("height", "auto");
+				$("#savePickupPersondDetails, #pickupPersonName, #pickupPersonMobile").css("margin-top","5px");
+				$("#savePickupPersondDetails").css("margin-left","0px");
+				$("#savePickupPersondDetails").css("margin-bottom","5px");
+				$(".continue_holder").css("margin-bottom","30px");
 			}
 			$(".pickUpPersonAjax").hide();
 			$(".pickupPersonSubmitError").hide();
@@ -948,10 +960,10 @@
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
 														<div class="input${status1.index} row" style="width: 111%">
-															<div class="col-md-8 col-sm-8 col-xs-8">
+															<div class="col-md-8 col-sm-4 col-xs-4">
 																<input type="text" name="changepin${status1.index}" class="changepin${status1.index}" maxlength="6" placeholder="Enter Pincode to Change.">
 															</div>
-															<div class="col-md-4 col-sm-4 col-xs-4">
+															<div class="col-md-4 col-sm-2 col-xs-2">
 																<button class="submitPincode submitPincode${status1.index}" style="height: 40px !important; background: #A9143C !important; border: none !important; color: #fff !important;" name="submitPincode${status1.index}">Submit</button>
 															</div>
 														</div>
@@ -1298,15 +1310,15 @@
 	     			 	<form name="pickupPersonDetails" action="#">
 	     				 <div class="col-md-3">
 	      					 <span class="pickupperson"><h5 id="pickup"><spring:theme code="checkout.multi.cnc.pickup.person.name"/></h5></span></div>
-	       					 <div class="col-md-3">
+	       					 <div class="col-md-3 col-sm-12 col-xs-12">
 	        					<input type="text" id="pickupPersonName" name="pickupPersonName"  maxlength="30" class="inputname" placeholder="Enter Full Name"  value="${pickupPersonName}"/><br/>
 	        					<div class="error_txt pickupPersonNameError"></div>
 	            			</div>
-	            			<div class="col-md-3">
+	            			<div class="col-md-3 col-sm-12 col-xs-12">
 								<input type="text" id="pickupPersonMobile" class="inputmobile" maxlength="10" placeholder="Enter Mobile Number" value="${pickUpPersonMobile}"/><br/>
 								<div class="error_txt pickupPersonMobileError"></div>
 	        			    </div>
-				             <div class="col-md-3">
+				             <div class="col-md-3 col-sm-12 col-xs-12">
 				             <button type="button"  class="savenewid" id="savePickupPersondDetails" style="height: 40px !important"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
 				          <div id="pickupPersonSubmit"></div>
 				          <div class="error_txt pickupPersonSubmitError"></div>

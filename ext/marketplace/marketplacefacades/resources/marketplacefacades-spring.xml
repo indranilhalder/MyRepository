@@ -1435,7 +1435,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	
 	<alias name="mplPointOfServicePopulator" alias="pointOfServicePopulator"/>
-	<bean id="mplPointOfServicePopulator" class="com.tisl.mpl.facade.store.populator.MplPointOfServicePopulator" parent="defaultPointOfServicePopulator"/>
+	<bean id="mplPointOfServicePopulator" class="com.tisl.mpl.facade.store.populator.MplPointOfServicePopulator" parent="defaultPointOfServicePopulator">
+	    <property name="mplSellerMasterService" ref="mplSellerMaster"/>
+	</bean>
 
 	<bean id="gigyaFacade"
 		class="com.tisl.mpl.facades.account.reviews.impl.GigyaFacadeImpl">

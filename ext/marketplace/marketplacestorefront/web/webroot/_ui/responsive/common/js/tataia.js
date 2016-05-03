@@ -619,7 +619,7 @@ function makeProductHtml(widgetElement, obj, rid) {
 	  }
 	  //html += '<div class="image" style="position: absolute; left: 0; line-height: 347px; height: 347px; width: 221px; background:center no-repeat url('+obj.image_url+'); background-size:contain;"></div>';
 	  html += '<div class="short-info ia_short-info" style="position: relative; bottom: 0; left: 0; height: 66px; width: 221px;">';
-	  html += '<ul class="color-swatch" style="top: -3px; !important;margin-right: 9px;">';
+	  html += '<ul class="color-swatch" style="top: -3px; ">';
 	  if(obj.colors.length < 3){
 			jQuery.each(obj.colors, function (icount, itemColor) {	
 				if(icount == 1){

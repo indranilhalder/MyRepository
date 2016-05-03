@@ -847,6 +847,10 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			{
 				masterModel.setExtensionTimes(sellerMasterWsDTO.getExtensionTimes());
 			}
+
+			//Set Image urls
+			setSellerImageUrls(sellerMasterWsDTO, masterModel);
+
 			modelService.saveAll(masterModel);
 			//resModel.setSellerMaster(masterModel);
 			//modelService.save(resModel);
@@ -855,7 +859,7 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			 * .getConfiguration().getString("DEFAULT_IMPORT_CATALOG_ID"),
 			 * configurationService.getConfiguration().getString("DEFAULT_IMPORT_CATALOG_VERSION")); if (null !=
 			 * catalogVersionModel) {
-			 * 
+			 *
 			 * resModel.setCatalogVersion(catalogVersionModel); }
 			 */
 
@@ -881,6 +885,33 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 		sellerMasterResWsDTO.setStatus(status);
 		sellerMasterResWsDTO.setSellerMaster(masterModel);
 		return sellerMasterResWsDTO;
+	}
+
+	/**
+	 * Method to set Seller Store Image URLs.
+	 *
+	 * @param sellerMasterWsDTO
+	 * @param masterModel
+	 */
+	private void setSellerImageUrls(final SellerMasterWsDTO sellerMasterWsDTO, final SellerMasterModel masterModel)
+	{
+		LOG.debug("Creat or Update seller icons.");
+		final List<String> mplUrls = new ArrayList<>();
+		if (StringUtils.isNotBlank(sellerMasterWsDTO.getStoreImage()))
+		{
+
+			final String[] imgArr = sellerMasterWsDTO.getStoreImage().split("#");
+			for (final String imgUrl : imgArr)
+			{
+				if (StringUtils.isNotBlank(imgUrl))
+				{
+					mplUrls.add(imgUrl);
+				}
+			}
+
+		}
+		masterModel.setMplImageUrls(mplUrls);
+
 	}
 
 	private boolean updateSellerInfoWithSellerMaster(final List<SellerInformationModel> sellerInfoModelList,
@@ -960,8 +991,8 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			{
 				resModel.setSellerMaster(masterModel);
 			}
-			final CatalogVersionModel catalogVersionModel = catalogService.getCatalogVersion(configurationService.getConfiguration()
-					.getString("DEFAULT_IMPORT_CATALOG_ID"),
+			final CatalogVersionModel catalogVersionModel = catalogService.getCatalogVersion(
+					configurationService.getConfiguration().getString("DEFAULT_IMPORT_CATALOG_ID"),
 					configurationService.getConfiguration().getString("DEFAULT_IMPORT_CATALOG_VERSION"));
 			if (null != catalogVersionModel)
 			{
@@ -1175,8 +1206,10 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			{
 				masterModelUpdate.setExtensionTimes(sellerMasterWsDTO.getExtensionTimes());
 			}
-			
-			
+
+			//Set Image urls
+			setSellerImageUrls(sellerMasterWsDTO, masterModelUpdate);
+
 
 			if (null != sellerMasterWsDTO.getRegisterAddress())
 			{
@@ -1318,20 +1351,20 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 
 			/*
 			 * if (sellerMasterWsDTO.getIsupdate().equalsIgnoreCase("U")) {
-			 * 
+			 *
 			 * // if (masterModel.getId().equals(sellerMasterWsDTO.getId())) // { //final SellerInformationModel
 			 * resModelUpdate = mplSellerInformationDAO.getSellerInformation(sellerMasterWsDTO.getId()); if (resModelUpdate
 			 * == null) {
-			 * 
-			 * 
+			 *
+			 *
 			 * sellerMasterRes = saveSellerMaster(sellerMasterWsDTO); if (null != sellerMasterRes &&
 			 * StringUtils.isNotEmpty(sellerMasterRes.getStatus())) { status = sellerMasterRes.getStatus(); } if (null !=
 			 * sellerMasterRes && null != sellerMasterRes.getSellerMaster()) { status =
 			 * saveSellerInformation(sellerMasterWsDTO, sellerMasterRes.getSellerMaster()); } } else { status =
 			 * saveSellerInformationUpdate(sellerMasterWsDTO, resModelUpdate); } //}
-			 * 
+			 *
 			 * }
-			 * 
+			 *
 			 * else if (sellerMasterWsDTO.getIsupdate().equalsIgnoreCase("I")) { status =
 			 * saveSellerInformation(sellerMasterWsDTO); }
 			 */
