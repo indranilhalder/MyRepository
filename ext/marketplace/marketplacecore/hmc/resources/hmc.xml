@@ -2251,17 +2251,17 @@
 							<attribute name="warrantyTimePeriod" />
 							<attribute name="warrantyType" />
 							<!-- us-10: added by i324321 start -->
- +							<attribute name="deliveryFulfillModeByP1" />
- +							<attribute name="returnFulfillMode" />
- +							<attribute name="returnFulfillModeByP1" />
- +							<attribute name="sellerHandlingTime" />
- +							<attribute name="giftWrappable" />
- +							<attribute name="returnAtStoreEligible" />
- +							<attribute name="isFragile" />
- +							<attribute name="isPrecious" />
- +							<attribute name="mediationRequired" />
- +							<attribute name="scheduledDelivery" />
- +							<!-- added by i324321 end -->
+ 							<attribute name="deliveryFulfillModeByP1" />
+ 							<attribute name="returnFulfillMode" />
+ 							<attribute name="returnFulfillModeByP1" />
+ 							<attribute name="sellerHandlingTime" />
+ 							<attribute name="giftWrappable" />
+ 							<attribute name="returnAtStoreEligible" />
+ 							<attribute name="isFragile" />
+ 							<attribute name="isPrecious" />
+ 							<attribute name="mediationRequired" />
+ 							<attribute name="scheduledDelivery" />
+ 							<!-- added by i324321 end -->
 						</listlayout>
 					</section>
 				</tab>
