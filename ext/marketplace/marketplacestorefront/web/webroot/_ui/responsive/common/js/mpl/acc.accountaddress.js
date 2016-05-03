@@ -2,6 +2,12 @@
 /*-------------- For account address --------------*/
 
 /*--------------Added to create a common tag for left navigation in my account-----------*/
+
+ $(document).ready(function(){
+	 //	Changes for TISPRD-1494
+	 document.getElementById("check_MyRewards").checked= true;
+ });
+ 
  $(document).ready(function(){
 	 /*To highlight the active link*/
 	 
