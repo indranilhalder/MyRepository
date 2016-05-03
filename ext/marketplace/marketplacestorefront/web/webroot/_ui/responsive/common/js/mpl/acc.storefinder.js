@@ -274,7 +274,7 @@ ACC.storefinder = {
 
 	getStoreData: function(page){
 		ACC.storefinder.storeSearchData.page = page;
-		ACC.storefinder.storeSearchData.show='All';
+		//ACC.storefinder.storeSearchData.show='All';
 		url= $(".js-store-finder").data("url");
 		$.ajax({
 			url: url,
