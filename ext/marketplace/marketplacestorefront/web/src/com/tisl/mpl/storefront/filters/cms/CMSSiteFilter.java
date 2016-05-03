@@ -41,12 +41,15 @@ import java.util.Collection;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 
 
 /**
@@ -97,8 +100,9 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 			// process normal request (i.e. normal browser non-cmscockpit request)
 			if (processNormalRequest(httpRequest, httpResponse))
 			{
+				final HttpServletRequestWrapper wrapped = createWrappedRequest(httpRequest);
 				// proceed filters
-				filterChain.doFilter(httpRequest, httpResponse);
+				filterChain.doFilter(wrapped, httpResponse);
 			}
 		}
 		else if (StringUtils.contains(requestURL, PREVIEW_TOKEN))
@@ -127,6 +131,69 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 		}
 	}
 
+
+
+
+	private HttpServletRequestWrapper createWrappedRequest(final HttpServletRequest httpRequest)
+	{
+		final HttpServletRequestWrapper wrapped = new HttpServletRequestWrapper(httpRequest)
+		{
+			@Override
+			public StringBuffer getRequestURL()
+			{
+				StringBuffer originalUrl = ((HttpServletRequest) getRequest()).getRequestURL();
+				if (originalUrl.toString().contains(ModelAttributetConstants.STORE_URL_OLD))
+				{
+					final String newreqUri = originalUrl.toString().replaceAll(ModelAttributetConstants.STORE_URL_OLD, "/");
+
+
+					originalUrl = new StringBuffer(newreqUri);
+				}
+
+				return new StringBuffer(originalUrl);
+			}
+
+			@Override
+			public String getRequestURI()
+			{
+				String originalUri = ((HttpServletRequest) getRequest()).getRequestURI();
+				if (originalUri.contains(ModelAttributetConstants.STORE_URL_OLD))
+				{
+					final String newreqUri = originalUri.replaceAll(ModelAttributetConstants.STORE_URL_OLD, "/");
+
+
+					originalUri = newreqUri;
+				}
+
+				return originalUri;
+			}
+
+			@Override
+			public String getServletPath()
+			{
+				String originalServletPath = ((HttpServletRequest) getRequest()).getServletPath();
+				LOG.info("******originalServletPath******" + originalServletPath);
+				if (originalServletPath.contains(ModelAttributetConstants.STORE_URL_OLD))
+				{
+					final String newreqUri = originalServletPath.replaceAll(ModelAttributetConstants.STORE_URL_OLD, "/");
+
+
+					originalServletPath = newreqUri;
+					LOG.info("**********-------------************The request url contains /store/mpl/en Hence redirecting.......to **********************"
+							+ originalServletPath);
+				}
+
+				return originalServletPath;
+			}
+
+
+		};
+		LOG.info("***********wrapped.getRequestURI()***************" + wrapped.getRequestURI()
+				+ "**********wrapped.getRequestURL()************" + wrapped.getRequestURL().toString());
+
+		return wrapped;
+	}
+
 	/**
 	 * Processing normal request (i.e. when user goes directly to that application - not from cmscockpit)
 	 * <p/>
@@ -137,7 +204,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	 * <li>Current Catalog Versions</li>
 	 * <li>Enabled language fallback</li>
 	 * </ul>
-	 * 
+	 *
 	 * @see ContextInformationLoader#initializeSiteFromRequest(String)
 	 * @see ContextInformationLoader#setCatalogVersions()
 	 * @param httpRequest
@@ -204,7 +271,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	 * <li>Load all fake information (like: User, User group, Language, Time ...)
 	 * <li>Generating target URL according to Preview Data
 	 * </ul>
-	 * 
+	 *
 	 * @param httpRequest
 	 *           current request
 	 * @return target URL
@@ -217,7 +284,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 		previewDataModel.setLanguage(filterPreviewLanguageForSite(httpRequest, previewDataModel.getLanguage()));
 		previewDataModel.setUiExperience(previewDataModel.getUiExperience());
 
-		//load necessary information 
+		//load necessary information
 		getContextInformationLoader().initializePreviewRequest(previewDataModel);
 		//load fake context information
 		getContextInformationLoader().loadFakeContextInformation(httpRequest, previewDataModel);
@@ -240,7 +307,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	/**
 	 * Filters the preview language to a language supported by the site. If the requested preview language is not
 	 * supported, returns the default site language instead.
-	 * 
+	 *
 	 * @param httpRequest
 	 *           current request
 	 * @param previewLanguage
@@ -265,7 +332,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	/**
 	 * Enables or disables language fall back
 	 * <p/>
-	 * 
+	 *
 	 * @param httpRequest
 	 *           current request
 	 * @param enabled
@@ -284,7 +351,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	/**
 	 * Generates target URL accordingly to valid Preview Data passed as a parameter
 	 * <p/>
-	 * 
+	 *
 	 * @param httpRequest
 	 *           current request
 	 * @param previewDataModel
@@ -317,7 +384,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	/**
 	 * Retrieves current mapping handler in order to generate proper target URL for CMS Page
 	 * <p/>
-	 * 
+	 *
 	 * @return current mapping handler
 	 */
 	protected UrlResolver<PreviewDataModel> getPreviewDataModelUrlResolver()

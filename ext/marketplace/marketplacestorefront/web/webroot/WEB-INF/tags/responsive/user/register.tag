@@ -70,6 +70,7 @@
 	<div class="exist-account">
 	<span>Already have a TataCLiQ account?  </span>
 	<span><a href="/store/mpl/en/login"> &nbsp;  SignIn here</a></span>
+	<!-- <span><a href="/login"> &nbsp;  SignIn here</a></span> -->
 	</div>
 </form:form>
 </div>

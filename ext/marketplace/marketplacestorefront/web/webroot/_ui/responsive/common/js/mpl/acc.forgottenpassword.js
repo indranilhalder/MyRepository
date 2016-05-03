@@ -34,6 +34,7 @@ ACC.forgottenpassword = {
 			
 			$.ajax({
 				 url:"/store/mpl/en/login/pw/request/confirmEmail",
+				 //url:"/login/pw/request/confirmEmail",
 				 type:"GET",
 				 returnType:"text/html",
 				 data: dataString,
@@ -69,6 +70,7 @@ ACC.forgottenpassword = {
 			
 			$.ajax({
 				 url:"/store/mpl/en/login/pw/request/confirmEmail/sms",
+				 //url:"/login/pw/request/confirmEmail/sms",
 				 type:"GET",
 				 returnType:"text/html",
 				 data:{"forgotPassword_email":$("input[name=forgotPassword_email]").val()},

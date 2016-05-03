@@ -5,6 +5,7 @@ $(document).ready(function(){
 		if(isAjaxCalled == false){
 			$.ajax({
 				"url":"/store/mpl/en/login/sociallogin",
+				//"url":"/login/sociallogin",
 				"type":"GET",
 				"dataType":"text",
 				"success":function(data){
@@ -47,10 +48,12 @@ $(document).ready(function(){
 		{
 			// for IP , it will not be https 
 			document.flyOutloginForm.action="/store/mpl/en/j_spring_security_check";
+			//document.flyOutloginForm.action="/j_spring_security_check";
 		}
 		else
 		{
 			document.flyOutloginForm.action="https://"+hostName+"/store/mpl/en/j_spring_security_check";
+			//document.flyOutloginForm.action="https://"+hostName+"/j_spring_security_check";
 		}
 		
 		return true;
