@@ -37,10 +37,15 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 			target.setGenericFacet(source.getGenericFacet().booleanValue());
 
 		}
+		/********** TISPRO-326 changes **********/
+		if (source.getClassificationProductType() != null)
+		{
 
+
+			target.setClassificationProductType(source.getClassificationProductType());
+
+		}
 		if (source.getQueryType() == null || StringUtils.isEmpty(source.getQueryType()))
-
-
 		{
 			if (source.getClassificationAttributeAssignments() != null)
 			{
@@ -49,6 +54,8 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 
 			}
 
+
 		}
+
 	}
 }

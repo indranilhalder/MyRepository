@@ -108,7 +108,7 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 ;;Everywhere.png;$siteResource/images/banners/homepage/responsive/Everywhere.png;Everywhere.png;"Homepage Everywhere Banner";
 ;;callus.png;$siteResource/images/banners/homepage/responsive/callus.png;callus.png;"Call us";
 ;;chatwidus.png;$siteResource/images/banners/homepage/responsive/chatwidus.png;chatwidus.png;"Chat With Us";
-
+;;TataCliq_FB.jpg;$siteResource/images/logo/TataCliq_FB.jpg;TataCliq_FB.jpg;"Tata Cliq Brand Image 470x246";
 # changes for help and service page
 ;;callus-getintouch.png;$siteResource/images/banners/homepage/callus-getintouch.png;callus-getintouch.png;"Call us";
 ;;chatwidus-getintouch.png;$siteResource/images/banners/homepage/chatwidus-getintouch.png;chatwidus-getintouch.png;"Chat With Us";

@@ -592,7 +592,7 @@ function getProductsYouCareAjaxCall(){
 						//console.log('Category code: '+v.categoryCode);
 						//console.log('Category media url: '+v.mediaURL);
 						
-						var URL = ACC.config.encodedContextPath+"/Categories/"+v.categoryName+"/c/"+v.categoryCode;
+						var URL = ACC.config.encodedContextPath+"/Categories/"+v.categoryName+"/c-"+v.categoryCode;
 						//for url
 						renderHtml += "<a href='"+ appendIcid(URL,v.icid)+ "' class='item'>";
 

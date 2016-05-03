@@ -49,7 +49,7 @@
 								class="image" /></a>
 						</c:otherwise>
 					</c:choose><span>${category.name}</span> <a class="shop_link"
-		href="${categoryUrl}"><b><spring:theme
-					code="category.carousel.shopNow" /></b></a></li>
+		href="${categoryUrl}"><spring:theme
+					code="category.carousel.shopNow" /></a></li>
 
 </c:forEach>

@@ -1515,5 +1515,41 @@
 		<bean id="mplConfigDao" class="com.tisl.mpl.core.mplconfig.dao.impl.MplConfigDaoImpl" >
 	</bean>
 	<!-- ============== configure beans for mplConfig ============== -->
-
+  <!--  TISPRO-325 changes -->
+  <bean id="sizeAttributeSortProvider"
+	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.DefaultSizeFacetTopValuesProvider">
+		<property name="comparator" ref="sizeFacetAttributeComparator"/>
+	</bean>
+     <bean id="sizeFacetAttributeComparator"
+	      class="com.tisl.mpl.core.comparator.SizeFacetComparator">
+		<property name="pattern" value="^[0-9]+(\.?([0-9])+)?$"/>
+		<property name="sizeSystems">
+			<list><!-- based on EN_13402 -->
+				<value>XXS</value>
+				<value>XS</value>
+				<value>S</value>
+				<value>M</value>
+				<value>L</value>
+				<value>LXL</value>
+				<value>XL</value>
+				<value>XXL</value>
+				<value>3XL</value>
+				<value>4XL</value>
+				<value>5XL</value>
+				<value>SMALL</value>
+			    <value>MEDIUM</value> 
+				<value>LARGE</value>
+				<value>X-LARGE</value>
+				<value>UK/IND</value>
+				<value>EURO</value>
+				<value>US</value>
+				<value>${footwear.header.age}</value>
+				<value>${footwear.header.UK}</value>
+				<value>${footwear.header.US}</value>
+				<value>${footwear.header.EURO}</value>
+				<value>${footwear.header.footlength}</value>
+				<value>${footwear.header.Witdth}</value>
+			</list>
+			</property>
+	</bean>
 </beans>

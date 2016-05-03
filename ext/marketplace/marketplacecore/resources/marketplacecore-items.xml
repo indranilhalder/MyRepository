@@ -43,6 +43,7 @@
 		<!-- Collection of CMS Departments -->
 		<!-- <collectiontype elementtype="CMSDepartment" code="CMSDepartmentCollection" 
 			type="list" autocreate="true" generate="true" /> -->
+
 		<collectiontype code="ChildOrderCollection"
 			elementtype="Order" autocreate="true" generate="true" type="list" />
 		<!-- Collection of SimpleBannerComponent -->
@@ -55,6 +56,7 @@
 			autocreate="true" generate="true" type="list" />
 		<collectiontype code="ProductCollectionType"
 			elementtype="Product" autocreate="true" generate="false" type="list" />
+
 		<collectiontype code="ImeiNoCollection" elementtype="java.lang.String"
 			autocreate="true" generate="false" type="list" />
 		<collectiontype code="ConsignmentList" elementtype="Consignment"
@@ -67,9 +69,11 @@
 		<collectiontype code="JuspayRefundResponseCollection"
 			elementtype="JuspayRefundResponse" autocreate="true" generate="true"
 			type="list" />
+
 		<collectiontype code="myRecBrandsCollection"
 			elementtype="MyRecommendationsBrands" autocreate="true" generate="true"
 			type="list" />
+
 		<collectiontype code="entryNumberList" elementtype="java.lang.String"
 			autocreate="true" generate="false" type="list" />
 		<!-- Collection of Image Category Components -->
@@ -82,23 +86,32 @@
 			elementtype="Product" autocreate="true" generate="true" type="list" />
 		<collectiontype code="MplShopByLookCollection"
 			elementtype="MplShopByLook" autocreate="true" generate="true" type="list" />
+
 		<collectiontype code="voucherCustomerUidList"
 			elementtype="java.lang.String" autocreate="true" generate="true" type="list" />	
+
+
+
 		<collectiontype code="productBasedCoupon"
 			elementtype="Product" autocreate="true" generate="true" type="list" />	
 		<collectiontype code="categoryBasedCoupon"
 			elementtype="Category" autocreate="true" generate="true" type="list" />	
+
 		<collectiontype code="showcaseItemsCollection"
 			elementtype="MplShowcaseItemComponent" autocreate="true" generate="true"
 			type="list" />
+
 		<collectiontype elementtype="CMSMediaParagraphComponent" code="imageCollection"
  				autocreate="true" generate="true" type="list"/>
+
 		<collectiontype elementtype="java.lang.String" code="mplImageUrl"
 				autocreate="true" generate="true" type="list"/>
+
 	</collectiontypes>
 
 
 	<enumtypes>
+
 		<enumtype code="sizeEnum" autocreate="true" generate="true"
 			dynamic="false">
 			<value code="thumbnail"></value>
@@ -722,7 +735,17 @@
 		</enumtype>
 
 	<!-- Product Feature Enum Ends -->
+
+
+
+
+
 	</enumtypes>
+
+
+
+
+
 
 
 	<relations>
@@ -3453,12 +3476,20 @@
 						<persistence type="property" />
 						<description>This attribute represents the list of footer images</description>
 					</attribute>
+
+
+
 					<attribute qualifier="footerAppImageList" type="FooterImageCollection"
 						generate="true" autocreate="true">
 						<persistence type="property" />
 						<description>This attribute represents the list of footer download apps images</description>
 					</attribute>
+
 					<attribute qualifier="footerText" type="localized:java.lang.String" generate="true" autocreate="true">
+
+
+
+
 						<persistence type="property">
 							<columntype database="oracle">
 								<value>CLOB</value>
@@ -3968,6 +3999,8 @@
 						<persistence type='property' />
 					</attribute>
 					
+
+
 					<attribute type="showcaseItemsCollection" qualifier="showcaseItems"
 						autocreate="true" generate="true">
 						<description>This attribute is a collection of showcase items</description>
@@ -4004,6 +4037,10 @@
 
 					<attribute type="Media" qualifier="logo"
 						autocreate="true" generate="true">
+
+
+
+
 						<description>This attribute is for storing the brand logo to be displayed</description>
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
@@ -4041,6 +4078,7 @@
 							<columntype>
 								<value>varchar</value>
 							</columntype>
+
 						</persistence>
 					</attribute>
 
@@ -4077,8 +4115,11 @@
 							<columntype>
 								<value>varchar</value>
 							</columntype>
+
 						</persistence>
 					</attribute>
+
+
 
 					<attribute type="java.lang.String" qualifier="bannerUrl"
 						autocreate="true" generate="true">
@@ -4228,6 +4269,9 @@
 					</attribute>
 
 				</attributes>
+
+
+
 			</itemtype>
 
 
@@ -5448,9 +5492,45 @@
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 					</attribute>
+				<!-- Start TISPRO-326 -->
+					<attribute qualifier="classificationProductType"
+						type="java.lang.String">
+						<description>Specifies the Product Type of the Classification Attribute</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+				<!-- End TISPRO-326 -->
 				</attributes>
 			</itemtype>
 		</typegroup>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		<typegroup name="AccountManagement">
 
@@ -5606,6 +5686,7 @@
 						<persistence type="property" />
 						<defaultvalue>em().getEnumerationValue("SalesApplication","Web")</defaultvalue>
 					</attribute>
+
 						<attribute autocreate="true" qualifier="isExpressCheckoutSelected"
 						type="java.lang.Boolean">
 						<persistence type="property" qualifier="isExpressCheckoutSelected">
@@ -5849,6 +5930,7 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
 					</attribute>
+
 					<!-- <attribute qualifier="targetCategory" type="Category"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
@@ -5938,6 +6020,7 @@
 						<persistence type="property" />
 					</attribute>
 
+
 					<attribute qualifier="targetProduct" type="Product"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
@@ -5945,7 +6028,11 @@
 					</attribute>
 					<attribute qualifier="targetCollection" type="MplShopByLook"
 						autocreate="true" generate="true">
+
+
 						<modifiers read="true" write="true" search="true" />
+
+
 						<persistence type="property" />
 					</attribute> -->
 					<attribute qualifier="associatedCategory" type="targetCategoryCollection"
@@ -5997,6 +6084,10 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
 					</attribute>
+
+
+
+
 					<attribute qualifier="targetProduct" type="Product"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
@@ -7012,17 +7103,28 @@
 							optional="false" />
 				</attribute> 
 				<attribute autocreate="true"  qualifier="priorityStartDate" type="java.util.Date">
+
+
+
+
+
 						<description>priority start date</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property" />
 					</attribute>
 				<attribute autocreate="true"  qualifier="priorityEndDate" type="java.util.Date">
+
+
+
+
+
 						<description>priority end date</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property" />
 				</attribute>
+
 
 				<attribute qualifier="isActive" type="java.lang.Boolean">
 					<persistence type="property" />
@@ -7032,6 +7134,7 @@
   					<persistence type="property" /> 
   					<modifiers read="true" write="true" optional="false" /> 
   				</attribute>
+
 				
 				<!-- <attribute qualifier="isActive" 
 						type="java.lang.Boolean">
@@ -7082,6 +7185,11 @@
 							optional="true" />
 				</attribute> 
 				<attribute autocreate="true"  qualifier="L3Priority" type="java.lang.Integer">
+
+
+
+
+
 						<description>L3 level priority for category</description>
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 						<modifiers read="true" write="true" optional="true"
@@ -7089,6 +7197,11 @@
 						<persistence type="property" />
 					</attribute>
 				<attribute autocreate="true"  qualifier="L4Priority" type="java.lang.Integer">
+
+
+
+
+
 						<description>L4 level priority for category</description>
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 						<modifiers read="true" write="true" optional="true"
@@ -7096,6 +7209,11 @@
 						<persistence type="property" />
 					</attribute>
 				<attribute autocreate="true"  qualifier="ProductPriority" type="java.lang.Integer">
+
+
+
+
+
 						<description>Product level priority</description>
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 						<modifiers read="true" write="true" optional="true"
@@ -7112,6 +7230,10 @@
 			</itemtype>
 		<!-- 	seller priority cron job -->
 			<itemtype code="UpdateSellerPriorityJob" extends="CronJob" autocreate="true" generate="true"
+
+
+
+
 				jaloclass="com.tisl.mpl.core.jalo.UpdateSellerPriorityJob">
 				<deployment table="UpdateSellerPriority" typecode="14006" />
 			</itemtype>
@@ -7404,6 +7526,8 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
+
+
 				</attributes>
 			</itemtype>
 
@@ -7433,6 +7557,8 @@
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
+
+
 				</attributes>
 			</itemtype>
 			<itemtype code="IntExtCampaignAutomationJob" extends="CronJob"
