@@ -321,6 +321,8 @@ function displayCreditCardForm(){
 }
 
 
+
+
 function submitForm(){
 	if($("#paymentMode").val()=="Netbanking")
 	{
@@ -369,8 +371,16 @@ function submitForm(){
 							$('#paymentButtonId').prop('disabled', false); //TISPRD-958
 						}
 						else{
+
+
+
+
 							//TISPRO-153
 							sendTealiumData();
+
+
+
+
 							$("#form-actions, #otpNUM").css("display","block");
 							$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
 							$("#otpSentMessage").css("display","none");
@@ -1189,6 +1199,10 @@ $("#otpMobileNUMField").focus(function(){
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	  // TISPRO-153		
 		sendTealiumData();
+
+
+
+
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;		
         //TISPRO-313	
@@ -1203,6 +1217,9 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(response) {
+
+
+
 
 				if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
@@ -1282,8 +1299,16 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+
+
+
+
 	  // TISPRO-153
 		sendTealiumData();
+
+
+
+
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
 		var addressLine1=$("#address1").val();
@@ -1307,6 +1332,7 @@ $("#otpMobileNUMField").focus(function(){
 		else {
 			var sameAsShipping = false;
 		}		
+
 	    //TISPRO-313
 		//if($(".redirect").val()=="false"){
 			//Juspay.startSecondFactor();
@@ -1490,6 +1516,8 @@ $("#otpMobileNUMField").focus(function(){
  }
   
 
+
+
  function newCardForm(){
 	$(".newCard, #savedCard, .saved-card-button").css("display","none");
 	$(".savedCard").css("display","table-cell");
@@ -1557,6 +1585,7 @@ $("#otpMobileNUMField").focus(function(){
 }
  
 
+
  function populateBillingAddress(){ 
 	 $("#firstNameError, #lastNameError, #address1Error, #address2Error, #address3Error, #cityError, #stateError, #pinError").text(""); 
 	 $.ajax({ 
@@ -1593,6 +1622,49 @@ $("#otpMobileNUMField").focus(function(){
 
 	 }); 
 	 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  	 
 function savedCardForm(){
 	$(".savedCard, .newCardPayment, #newCard").css("display","none");
@@ -2619,8 +2691,16 @@ function submitNBForm(){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add"); 
 				}
 				else{
+
+
+
+
 					//TISPRO-153
 					sendTealiumData();
+
+
+
+
 					$("#juspayOrderId").val(response);
 					var juspayOrderId=$("#juspayOrderId").val();
 					$.ajax({
@@ -2635,11 +2715,19 @@ function submitNBForm(){
 								//console.log(juspayResponse);
 								var url = juspayResponse.payment.authentication.url;
 								var method = juspayResponse.payment.authentication.method;
+
+
+
+
 								if(method === "POST") {
 									var frm = document.createElement("form")
 									frm.style.display = "none"; // ensure that the form is hidden from the user
 									frm.setAttribute("method", method);
 									frm.setAttribute("action", url);	
+
+
+
+
 									var params = juspayResponse.payment.authentication.params;
 									for(var key in params) {
 								    var value = params[key];
@@ -2859,6 +2947,11 @@ function populatePincodeDeliveryMode(response,buttonType){
 	//response='Y|123456|[{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011717","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"ED","inventory":"2","deliveryDate":null},{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"4","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12},{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011719","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"12","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12}]';
 	//response='N|123456|[{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011717","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"ED","inventory":"2","deliveryDate":null},{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"2","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":2},{"fulfilmentType":null,"isPrepaidEligible":null,"ussid":"123653098765485130011719","pinCode":null,"validDeliveryModes":null,"cod":null,"transportMode":null,"isCODLimitFailed":null,"deliveryDate":null,"isServicable":"N","stockCount":null}]';
 	
+
+
+
+
+
 	console.log(response);
 	
 	var values=response.split("|");
@@ -2876,7 +2969,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#expressCheckoutButtonId").css("cursor","default");
 		$("#expressCheckoutButtonId").css("opacity","0.5");
 		var pincodeEntered = $('#defaultPinCodeIds').val();
-		var pincodeServiceError = "This item is not serviceable for pincode "+pincodeEntered;
+		var pincodeServiceError = "! This item is not serviceable for pincode "+pincodeEntered;
 		//console.log(pincodeServiceError);
 		var elementId = $(".desktop li:nth-child(3) ul");
 		elementId.hide();
@@ -2900,6 +2993,9 @@ function populatePincodeDeliveryMode(response,buttonType){
 	}
 
 
+
+
+
 	for ( var key in deliveryModeJsonObj) {
 	var ussId= deliveryModeJsonObj[key].ussid;
 	$("#"+ussId+"_qtyul").remove();
@@ -2908,7 +3004,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		var newUi = document.createElement("ul");
 		newUi.setAttribute("id", ussId);
 		var newSpan = document.createElement("span");
-		var text = document.createTextNode("This item is not serviceable for pincode "+selectedPincode);
+		var text = document.createTextNode("! This item is not serviceable for pincode "+selectedPincode);
 		newSpan.appendChild(text);
 		newUi.appendChild(newSpan);
 		$("#"+ussId+"_li").append(newUi);
@@ -3150,6 +3246,7 @@ function checkSignInValidation(path){
 	/*if(validationResult){
 		utag.link({ "event_type" : "Login", "link_name" : "Login" });
 	}*/
+
 
 
 
@@ -3806,6 +3903,9 @@ function sendTealiumData(){
 		            payment_type = jQuery("select#bankNameForEMI").val();
 	
 		        } else if (payment_mode === "Credit Card" || payment_mode === "Debit Card") {
+
+
+
 		            payment_type = jQuery("li.active-card span").attr("class") || "Saved Card";
 	
 		        } else if (payment_mode === "NetBanking") {
