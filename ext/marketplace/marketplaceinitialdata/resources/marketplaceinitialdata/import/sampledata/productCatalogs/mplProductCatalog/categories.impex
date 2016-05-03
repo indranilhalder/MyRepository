@@ -799,6 +799,109 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;MSH1221102;Accessories;MSH1221;mplProductCatalog:Staged;$uidGroup
 
 
+ ###########################################################
+ ####### Categories only For WATCHESH & Fashion Accessories :::: SART
+ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid);
+ ;MSH1;Sales;;mplProductCatalog:Staged;$uidGroup
+ ;MSH15;Watches;MSH1;mplProductCatalog:Staged;$uidGroup
+ ;MSH1510;All Watches;MSH15;mplProductCatalog:Staged;$uidGroup
+ ;MSH1511;What's New!;MSH15;mplProductCatalog:Staged;$uidGroup
+ ;MSH1512;Exclusively For You!;MSH15;mplProductCatalog:Staged;$uidGroup
+ ;MSH1513;Season’s Picks!;MSH15;mplProductCatalog:Staged;$uidGroup
+ ;MSH1514;Trending Now!;MSH15;mplProductCatalog:Staged;$uidGroup
+ ;MSH1515;Must Haves;MSH15;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1516;Watch Out For;MSH15;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1516100;Printed Dials;MSH1516;mplProductCatalog:Staged;$uidGroup
+ ;MSH1516101;Clever Chronos;MSH1516;mplProductCatalog:Staged;$uidGroup
+ ;MSH1516102;Silicon  Valley;MSH1516;mplProductCatalog:Staged;$uidGroup
+ ;MSH1516103;Swiss  Story;MSH1516;mplProductCatalog:Staged;$uidGroup
+ ;MSH1516104;Made For India;MSH1516;mplProductCatalog:Staged;$uidGroup
+ ;MSH1516105;Luxury Lovers;MSH1516;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1517;Men;MSH15;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1517100;Casual;MSH1517;mplProductCatalog:Staged;$uidGroup
+ ;MSH1517101;Formal;MSH1517;mplProductCatalog:Staged;$uidGroup
+ ;MSH1517102;Sports;MSH1517;mplProductCatalog:Staged;$uidGroup
+ ;MSH1517103;Dress;MSH1517;mplProductCatalog:Staged;$uidGroup
+ ;MSH1517104;Luxury;MSH1517;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1518;Women;MSH15;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1518100;Basics & Casuals;MSH1518;mplProductCatalog:Staged;$uidGroup
+ ;MSH1518101;Traditional & Ethnic;MSH1518;mplProductCatalog:Staged;$uidGroup
+ ;MSH1518102;Dressy & Chic;MSH1518;mplProductCatalog:Staged;$uidGroup
+ ;MSH1518103;Big & Bold;MSH1518;mplProductCatalog:Staged;$uidGroup
+ ;MSH1518104;Sports;MSH1518;mplProductCatalog:Staged;$uidGroup
+ ;MSH1518105;Luxury;MSH1518;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1519;All Kids;MSH15;mplProductCatalog:Staged;$uidGroup
+ ;MSH1520;Pair Watches;MSH15;mplProductCatalog:Staged;$uidGroup
+ ;MSH1521;Pocket Watches;MSH15;mplProductCatalog:Staged;$uidGroup
+ ;MSH1522;Stop Watches;MSH15;mplProductCatalog:Staged;$uidGroup
+ 
+ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid);
+ ;MSH1;Sales;;mplProductCatalog:Staged;$uidGroup
+ ;MSH16;Fashion Accessories;MSH1;mplProductCatalog:Staged;$uidGroup
+ ;MSH1610;All Fashion Accessories;MSH16;mplProductCatalog:Staged;$uidGroup
+ ;MSH1611;What's New!;MSH16;mplProductCatalog:Staged;$uidGroup
+ ;MSH1612;Exclusively For You!;MSH16;mplProductCatalog:Staged;$uidGroup
+ ;MSH1613;Season’s Picks!;MSH16;mplProductCatalog:Staged;$uidGroup
+ ;MSH1614;Trending Now!;MSH16;mplProductCatalog:Staged;$uidGroup
+ ;MSH1615;Must Haves;MSH16;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1616;Fashion Forward;MSH16;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1616100;Desktop Accessories;MSH1616;mplProductCatalog:Staged;$uidGroup
+ ;MSH1616101;Diaries & Organisers;MSH1616;mplProductCatalog:Staged;$uidGroup
+ ;MSH1616102;Keychains;MSH1616;mplProductCatalog:Staged;$uidGroup
+ ;MSH1616103;Umbrella;MSH1616;mplProductCatalog:Staged;$uidGroup
+ ;MSH1616104;Keychains;MSH1616;mplProductCatalog:Staged;$uidGroup
+ ;MSH1616105;Helmets;MSH1616;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1617;Women's Bags;MSH16;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1617100;Handbags;MSH1617;mplProductCatalog:Staged;$uidGroup
+ ;MSH1617101;Shoulder Bags;MSH1617;mplProductCatalog:Staged;$uidGroup
+ ;MSH1617102;Sports;MSH1617;mplProductCatalog:Staged;$uidGroup
+ ;MSH1617103;Totes;MSH1617;mplProductCatalog:Staged;$uidGroup
+ ;MSH1617104;Backpacks;MSH1617;mplProductCatalog:Staged;$uidGroup
+ ;MSH1617105;Clutches;MSH1617;mplProductCatalog:Staged;$uidGroup
+ ;MSH1617106;Wallets;MSH1617;mplProductCatalog:Staged;$uidGroup
+ ;MSH1617107;Messenger Bags;MSH1617;mplProductCatalog:Staged;$uidGroup
+ ;MSH1617108;Cases & Pouches;MSH1617;mplProductCatalog:Staged;$uidGroup
+ ;MSH1617109;Ethnic Bags;MSH1617;mplProductCatalog:Staged;$uidGroup
+ ;MSH1617110;Laptop Bags;MSH1617;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1618;Fashion Essentials for Women;MSH16;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1618100;Belts;MSH1618;mplProductCatalog:Staged;$uidGroup
+ ;MSH1618101;Scarves & Stoles;MSH1618;mplProductCatalog:Staged;$uidGroup
+ ;MSH1618102;Caps & Hats;MSH1618;mplProductCatalog:Staged;$uidGroup
+ ;MSH1618103;Hosiery;MSH1618;mplProductCatalog:Staged;$uidGroup
+ ;MSH1618104;Winter Must Haves;MSH1618;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1619;Hair Accessories;MSH16;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1619100;Hairbands;MSH1619;mplProductCatalog:Staged;$uidGroup
+ ;MSH1619101;Hair Rubbers;MSH1619;mplProductCatalog:Staged;$uidGroup
+ ;MSH1619102;Hair Clips & Pins;MSH1619;mplProductCatalog:Staged;$uidGroup
+ ;MSH1619103;Hair Clutch;MSH1619;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1620;Women's Bags;MSH16;mplProductCatalog:Staged;$uidGroup
+ 
+ ;MSH1620100;Messenger Bags;MSH1620;mplProductCatalog:Staged;$uidGroup
+ ;MSH1620101;Backpacks;MSH1620;mplProductCatalog:Staged;$uidGroup
+ ;MSH1620102;Messenger Bags;MSH1620;mplProductCatalog:Staged;$uidGroup
+ ;MSH1620103;Cases & Pouches;MSH1620;mplProductCatalog:Staged;$uidGroup
+ ;MSH1620104;Satchels & ;MSH1620;mplProductCatalog:Staged;$uidGroup
+ ;MSH1620105;Waist Pouch;MSH1620;mplProductCatalog:Staged;$uidGroup
+ ;MSH1620106;Laptop Bags ;MSH1620;mplProductCatalog:Staged;$uidGroup
+ ;MSH1620107;Briefcases;MSH1620;mplProductCatalog:Staged;$uidGroup
+ ################# Added By SAP :::: END##################
+
 ####### Categories only For Microsite :::: SART
 INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
 ;SSH1;SSH1;;mplProductCatalog:Staged;$uidGroup 

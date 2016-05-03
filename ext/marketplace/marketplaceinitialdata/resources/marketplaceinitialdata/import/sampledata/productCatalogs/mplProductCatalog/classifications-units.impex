@@ -3,6 +3,21 @@
 # Macros / Replacement Parameter definitions
 $systemVersion=systemVersion(catalog(id[default='MplClassification']),version[default='1.0'])
 
+
+ ############################Added By SAP Sample Data for Classification Unit For Fashion Accessories & Watches ::: START 
+ $classSystemVersion=systemVersion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true]
+ 
+ # Create unit
+ # code : 1XX -> length, 2XX -> capacity
+ # unitType : 001 -> length, 002 -> capacity
+ INSERT_UPDATE ClassificationAttributeUnit;code[unique=true];symbol;unitType;name[lang=en];conversionfactor;$classSystemVersion[unique=true]
+ ;101;inch;001;inch;1
+ ;201;litre;002;litre;1
+ ;102;m;001;m;0.254
+ ;103;milimeter;001;milimeter;254
+ 
+ ############################Added By SAP Sample Data for Classification Unit For Fashion Accessories & Watches ::: END 
+
 INSERT_UPDATE ClassificationAttributeUnit;code[unique=true];symbol;unitType;name[lang=en];;name[lang=de];$systemVersion[unique=true]
  
 
