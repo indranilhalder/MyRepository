@@ -24,13 +24,12 @@ import java.util.Locale;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 public class MplClassificationPropertyValueProvider extends ClassificationPropertyValueProvider
 {
 
-	private static final Logger LOG = Logger.getLogger(MplClassificationPropertyValueProvider.class);
+	//private static final Logger LOG = Logger.getLogger(MplClassificationPropertyValueProvider.class);
 
 	@Override
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
@@ -40,10 +39,11 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 		{
 			/********** TISPRO-326 changes **********/
 			if (!"Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
-					&& StringUtils.isEmpty(indexedProperty.getClassificationProductType()) ||
+					&& StringUtils.isEmpty(indexedProperty.getClassificationProductType())
+					||
 
-			("Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
-					&& "Electronics".equalsIgnoreCase(indexedProperty.getClassificationProductType())))
+					("Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType()) && "Electronics"
+							.equalsIgnoreCase(indexedProperty.getClassificationProductType())))
 			{
 
 				final List<ClassAttributeAssignmentModel> classAttrAssignmentList = new ArrayList<ClassAttributeAssignmentModel>();
@@ -133,8 +133,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				try
 				{
 					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(extractFieldValues(indexedProperty, language,
-							(feature.isLocalized()) ? feature.getValues() : featureValues));
+					result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
+							: featureValues));
 				}
 				finally
 				{

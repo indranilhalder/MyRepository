@@ -27,14 +27,13 @@ import java.util.Locale;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 public class MplClassificationPropertyCodeValueProvider extends ClassificationPropertyValueProvider
 {
 	private FieldNameProvider fieldNameProvider;
 
-	private static final Logger LOG = Logger.getLogger(MplClassificationPropertyCodeValueProvider.class);
+	//private static final Logger LOG = Logger.getLogger(MplClassificationPropertyCodeValueProvider.class);
 
 	@Override
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
@@ -44,10 +43,11 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 		{
 			/********** TISPRO-326 changes **********/
 			if (!"Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
-					&& StringUtils.isEmpty(indexedProperty.getClassificationProductType()) ||
+					&& StringUtils.isEmpty(indexedProperty.getClassificationProductType())
+					||
 
-			("Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
-					&& "Electronics".equalsIgnoreCase(indexedProperty.getClassificationProductType())))
+					("Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType()) && "Electronics"
+							.equalsIgnoreCase(indexedProperty.getClassificationProductType())))
 			{
 
 
@@ -140,8 +140,8 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 				try
 				{
 					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(
-							getFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues() : featureValues));
+					result.addAll(getFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
+							: featureValues));
 				}
 				finally
 				{
@@ -170,8 +170,8 @@ public class MplClassificationPropertyCodeValueProvider extends ClassificationPr
 				value = ((ClassificationAttributeValue) value).getCode();
 			}
 			final List<String> rangeNameList = getRangeNameList(indexedProperty, value);
-			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty,
-					(language == null) ? null : language.getIsocode());
+			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, (language == null) ? null
+					: language.getIsocode());
 			for (final String fieldName : fieldNames)
 			{
 				if (rangeNameList.isEmpty())
