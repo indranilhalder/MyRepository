@@ -24,8 +24,12 @@
 						<span class="brand-subdesc">${component.text}</span>
 						</c:if>
 						<!-- logo added for TISPRD-1348  -->
+						 <c:if test="${not empty brandList.subBrandLogo.URL }">
 						 <img class="logo" src="${brandList.subBrandLogo.URL }" />
+						 </c:if>
+						  <c:if test="${not empty brandList.subBrandName}">
 						  <span class="link-copy"><b>SHOP ${brandList.subBrandName}</b></span> 
+						  </c:if>
 						 
 						</a>
 						</li>
@@ -43,8 +47,12 @@
 					 <c:if test="${not empty component.text }">
 					<span class="brand-subdesc">${component.text}</span>
 					</c:if>
-					<img class="logo" src="${brandList.subBrandImage.URL}" />
-					 <span class="link-copy"><b>SHOP ${brandList.subBrandName}</b></span> 
+					<c:if test="${not empty brandList.subBrandLogo.URL }">
+						 <img class="logo" src="${brandList.subBrandLogo.URL }" />
+						 </c:if>
+					 <c:if test="${not empty brandList.subBrandName}">
+						  <span class="link-copy"><b>SHOP ${brandList.subBrandName}</b></span> 
+						  </c:if>
 					
 					</a></li>
 			</c:forEach>
