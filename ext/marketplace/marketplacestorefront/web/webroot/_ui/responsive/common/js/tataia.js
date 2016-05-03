@@ -855,10 +855,10 @@ function updatePage(response, widgetMode) {
     	}else if(site_page_type === 'viewSellers' && widgetElement === 'ia_products'){
     		html += '<h1><span style="color: black !important;">You May Also Need</span>';
     	}
-    	    	//for release 2 changes in home-page headers-hot now
-    	else if(site_page_type === 'homepage' && widgetElement === 'ia_products_hot'){
+    	    	//Reverting changes-- for release 2 changes in home-page headers-hot now
+    	/*else if(site_page_type === 'homepage' && widgetElement === 'ia_products_hot'){
     		html += '<h1><span style="color: black !important;">Best Sellers</span>';
-    	}else{
+    	}*/else{
     		//for release 2 changes in pdp-page 
     		if(site_page_type === 'productpage' && widgetElement ==='ia_products_complements'){
     			html += '<h1><span style="color: black !important;">Things That Go With This</span>';
