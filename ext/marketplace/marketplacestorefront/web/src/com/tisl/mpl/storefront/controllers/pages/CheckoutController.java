@@ -354,11 +354,11 @@ public class CheckoutController extends AbstractCheckoutController
 	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-	 *
+	 * 
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
-	 *
+	 * 
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
@@ -377,123 +377,126 @@ public class CheckoutController extends AbstractCheckoutController
 
 			long totalItemCount = 0L;
 
-			final List<OrderEntryData> orderEntryList = orderDetails.getEntries();
-
-			if (orderDetails.isGuestCustomer()
-					&& !StringUtils.substringBefore(orderDetails.getUser().getUid(), "|").equals(
-							getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID)))
+			if (orderDetails != null)
 			{
-				return getCheckoutRedirectUrl();
-			}
 
-			if (orderDetails.getEntries() != null && !orderDetails.getEntries().isEmpty())
-			{
-				for (final OrderEntryData entry : orderDetails.getEntries())
+				final List<OrderEntryData> orderEntryList = orderDetails.getEntries();
+
+				if (orderDetails.isGuestCustomer()
+						&& !StringUtils.substringBefore(orderDetails.getUser().getUid(), "|").equals(
+								getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID)))
 				{
-					final String productCode = entry.getProduct().getCode();
-					final ProductData product = productFacade.getProductForCodeAndOptions(productCode,
-							Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
-					entry.setProduct(product);
+					return getCheckoutRedirectUrl();
 				}
-			}
 
-			double totalDiscount = 0l;
-			if (orderDetails.getAppliedOrderPromotions() != null)
-			{
-				for (final PromotionResultData promotionResultData : orderDetails.getAppliedOrderPromotions())
+				if (orderDetails.getEntries() != null && !orderDetails.getEntries().isEmpty())
 				{
-					final String st = promotionResultData.getDescription();
-					final String result = stripNonDigits(st);
-
-					try
+					for (final OrderEntryData entry : orderDetails.getEntries())
 					{
-						totalDiscount = totalDiscount + Double.parseDouble(result);
-					}
-					catch (final Exception e)
-					{
-						LOG.error("Exception during double parsing ", e);
-						totalDiscount = totalDiscount + 0;
+						final String productCode = entry.getProduct().getCode();
+						final ProductData product = productFacade.getProductForCodeAndOptions(productCode,
+								Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
+						entry.setProduct(product);
 					}
 				}
-				final String promotionMssg = RECEIVED_INR + totalDiscount + DISCOUNT_MSSG;
-				model.addAttribute("promotionMssg", promotionMssg);
-				final String date = mplCheckoutFacade.ordinalDate(orderCode);
-				model.addAttribute("date", date);
-			}
 
-			for (final OrderEntryData entry : orderEntryList)
-			{
-				if (entry != null && entry.getMplDeliveryMode() !=null)
+				double totalDiscount = 0l;
+				if (orderDetails.getAppliedOrderPromotions() != null)
 				{
-					if (!entry.getMplDeliveryMode().getCode().equals(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+					for (final PromotionResultData promotionResultData : orderDetails.getAppliedOrderPromotions())
 					{
-						totalItemCount += entry.getQuantity();
+						final String st = promotionResultData.getDescription();
+						final String result = stripNonDigits(st);
+
+						try
+						{
+							totalDiscount = totalDiscount + Double.parseDouble(result);
+						}
+						catch (final Exception e)
+						{
+							LOG.error("Exception during double parsing ", e);
+							totalDiscount = totalDiscount + 0;
+						}
+					}
+					final String promotionMssg = RECEIVED_INR + totalDiscount + DISCOUNT_MSSG;
+					model.addAttribute("promotionMssg", promotionMssg);
+					final String date = mplCheckoutFacade.ordinalDate(orderCode);
+					model.addAttribute("date", date);
+				}
+
+				for (final OrderEntryData entry : orderEntryList)
+				{
+					if (entry != null && entry.getMplDeliveryMode() != null)
+					{
+						if (!entry.getMplDeliveryMode().getCode().equals(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+						{
+							totalItemCount += entry.getQuantity();
+						}
 					}
 				}
-			}
-			//saving IP of the Customer
-			try
-			{
-				final String userIpAddress = request.getHeader("X-Forwarded-For");
-				orderModel.setIpAddress(userIpAddress);
-				getModelService().save(orderModel);
-			}
-			catch (final Exception e)
-			{
-				LOG.debug("Exception during IP save", e);
-			}
-			//End saving IP of the Customer
-
-			orderDetails.setNet(true);
-
-			model.addAttribute("totalCount", totalItemCount);
-
-			model.addAttribute("orderCode", orderCode);
-			model.addAttribute("orderData", orderDetails);
-			model.addAttribute("allItems", orderDetails.getEntries());
-			model.addAttribute("deliveryAddress", orderDetails.getDeliveryAddress());
-			model.addAttribute("deliveryMode", orderDetails.getDeliveryMode());
-			model.addAttribute("paymentInfo", orderDetails.getMplPaymentInfo());
-			model.addAttribute("pageType", PageType.ORDERCONFIRMATION.name());
-
-			//Handling of Order Status Message display
-			if (null != orderModel && null != orderModel.getStatus() && StringUtils.isNotEmpty(orderModel.getStatus().toString()))
-			{
-				if (orderModel.getStatus().equals(OrderStatus.RMS_VERIFICATION_PENDING))
+				//saving IP of the Customer
+				try
 				{
-					model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
-							.getString(ModelAttributetConstants.ORDER_CONF_HELD));
+					final String userIpAddress = request.getHeader("X-Forwarded-For");
+					orderModel.setIpAddress(userIpAddress);
+					getModelService().save(orderModel);
 				}
-				else if (orderModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
+				catch (final Exception e)
 				{
-					model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
-							.getString(ModelAttributetConstants.ORDER_CONF_SUCCESS));
+					LOG.debug("Exception during IP save", e);
 				}
+				//End saving IP of the Customer
+
+				orderDetails.setNet(true);
+
+				model.addAttribute("totalCount", totalItemCount);
+
+				model.addAttribute("orderCode", orderCode);
+				model.addAttribute("orderData", orderDetails);
+				model.addAttribute("allItems", orderDetails.getEntries());
+				model.addAttribute("deliveryAddress", orderDetails.getDeliveryAddress());
+				model.addAttribute("deliveryMode", orderDetails.getDeliveryMode());
+				model.addAttribute("paymentInfo", orderDetails.getMplPaymentInfo());
+				model.addAttribute("pageType", PageType.ORDERCONFIRMATION.name());
+
+				//Handling of Order Status Message display
+				if (null != orderModel && null != orderModel.getStatus() && StringUtils.isNotEmpty(orderModel.getStatus().toString()))
+				{
+					if (orderModel.getStatus().equals(OrderStatus.RMS_VERIFICATION_PENDING))
+					{
+						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
+								.getString(ModelAttributetConstants.ORDER_CONF_HELD));
+					}
+					else if (orderModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
+					{
+						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
+								.getString(ModelAttributetConstants.ORDER_CONF_SUCCESS));
+					}
+				}
+
+				final String uid;
+
+				if (orderDetails.isGuestCustomer() && !model.containsAttribute("guestRegisterForm"))
+				{
+					final GuestRegisterForm guestRegisterForm = new GuestRegisterForm();
+					guestRegisterForm.setOrderCode(orderDetails.getGuid());
+					uid = orderDetails.getPaymentInfo().getBillingAddress().getEmail();
+					guestRegisterForm.setUid(uid);
+					model.addAttribute(guestRegisterForm);
+				}
+				else
+				{
+					uid = orderDetails.getUser().getUid();
+				}
+				model.addAttribute("email", uid);
+				final String continueUrl = (String) getSessionService().getAttribute(WebConstants.CONTINUE_URL);
+				model.addAttribute(CONTINUE_URL_KEY, (continueUrl != null && !continueUrl.isEmpty()) ? continueUrl : ROOT);
+
+				final AbstractPageModel cmsPage = getContentPageForLabelOrId(CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL);
+				storeCmsPageInModel(model, cmsPage);
+				setUpMetaDataForContentPage(model, getContentPageForLabelOrId(CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL));
+				model.addAttribute("metaRobots", "noindex,nofollow");
 			}
-
-			final String uid;
-
-			if (orderDetails.isGuestCustomer() && !model.containsAttribute("guestRegisterForm"))
-			{
-				final GuestRegisterForm guestRegisterForm = new GuestRegisterForm();
-				guestRegisterForm.setOrderCode(orderDetails.getGuid());
-				uid = orderDetails.getPaymentInfo().getBillingAddress().getEmail();
-				guestRegisterForm.setUid(uid);
-				model.addAttribute(guestRegisterForm);
-			}
-			else
-			{
-				uid = orderDetails.getUser().getUid();
-			}
-			model.addAttribute("email", uid);
-			final String continueUrl = (String) getSessionService().getAttribute(WebConstants.CONTINUE_URL);
-			model.addAttribute(CONTINUE_URL_KEY, (continueUrl != null && !continueUrl.isEmpty()) ? continueUrl : ROOT);
-
-			final AbstractPageModel cmsPage = getContentPageForLabelOrId(CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL);
-			storeCmsPageInModel(model, cmsPage);
-			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL));
-			model.addAttribute("metaRobots", "noindex,nofollow");
-
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{

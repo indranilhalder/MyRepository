@@ -5447,7 +5447,14 @@
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
 					</attribute>
-
+				<!-- Start TISPRO-326 -->
+					<attribute qualifier="classificationProductType"
+						type="java.lang.String">
+						<description>Specifies the Product Type of the Classification Attribute</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+				<!-- End TISPRO-326 -->
 				</attributes>
 			</itemtype>
 		</typegroup>

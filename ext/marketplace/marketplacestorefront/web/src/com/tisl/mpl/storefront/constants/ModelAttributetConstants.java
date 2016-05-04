@@ -176,6 +176,11 @@ public final class ModelAttributetConstants
 	public static final String YEARANNIVERSARYLIST = "yearAnniversaryList";
 	public static final String BASE_URL = "baseUrl";
 
+	public static final String TWITTER_HANDLE = "twitterHandle";
+	public static final String SEO_MEDIA_URL = "seoMediaURL";
+	public static final String SITE_NAME = "siteName";
+	public static final String EMAIL_URL = "emailURL";
+
 	//Return Item
 	public static final String RETURN_PINCODE_FORM = "returnPincodeCheckForm";
 	public static final String RETURN_ADDRESS = "retunAddress";

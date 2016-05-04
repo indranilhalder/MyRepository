@@ -14,14 +14,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.marketplacecommerceservices.jobs.PromotionCreationJob;
 import com.tisl.mpl.marketplacecommerceservices.service.CampaignPromoDataService;
 import com.tisl.mpl.marketplacecommerceservices.service.CampaignPromoSubService;
@@ -51,8 +48,6 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 
 	private CampaignPromoSubService campaignPromoSubService;
 
-	@Resource(name = "mplEnumerationHelper")
-	private MplEnumerationHelper mplEnumerationHelper;
 
 
 	/**
