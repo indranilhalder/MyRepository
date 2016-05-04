@@ -19678,15 +19678,16 @@ div.other-sellers .navigation button.next:after {
     div.other-sellers .other-sellers-table tbody tr td:last-child {
         border-bottom: 20px solid #fafafa
     }
-     div.other-sellers .manage-wishlist.other-sellers-table tbody tr td:last-child {
-        border-bottom: none;
-    }
+
     div.other-sellers .manage-wishlist thead th{
     background-color: #fff;
     }
 }
   div.other-sellers .manage-wishlist thead th{
     background-color: #fff;
+    }
+       div.other-sellers .manage-wishlist.other-sellers-table tbody tr td {
+        border-bottom: none;
     }
 .selected{
   overflow: hidden;
@@ -24750,9 +24751,6 @@ div.variantFormContainer{
 		display: table;
 		margin-top:-18px;
 	}
- body.template-pages-layout-micrositePage1 header:not(.brand-header) >.content .bottom .marketplace {
-		margin-top:0px;
-	}
 	header>.content .bottom .marketplace .simple-banner-component
 		{
 		display: table-cell;
@@ -27935,7 +27933,7 @@ body .account .right-account.rewards>div.your-activity>p {
 	margin-bottom: 10px;
 	    margin-top: 10px;
 	font-weight: 500;
-	font-size: 14px;
+	font-size: 12px;
 }
 
 body .account .right-account.rewards>div.your-activity>p.mobile {
@@ -28280,12 +28278,6 @@ body .account .right-account.rewards>div.your-activity.cashback-history h2
 body .account .right-account.rewards>div.your-activity.cashback-history ul li.cashback-row .right .mobile
 	{
 	display: none
-}
-
-body .account .right-account.rewards>div.your-activity.coupon-listing h2,
-	body .account .right-account.rewards>div.your-activity.coupon-history h2
-	{
-	font-weight: 600;
 }
 
 @media ( max-width :790px) {
