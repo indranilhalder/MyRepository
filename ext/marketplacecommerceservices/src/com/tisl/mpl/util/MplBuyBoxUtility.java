@@ -196,7 +196,7 @@ public class MplBuyBoxUtility
 				{
 					priceValueMap.put(buyBox, buyBox.getSpecialPrice());
 				}
-				else if (null != buyBox.getSpecialPrice() && buyBox.getPrice().doubleValue() > 0.0)
+				else if (null != buyBox.getPrice() && buyBox.getPrice().doubleValue() > 0.0)
 				{
 					priceValueMap.put(buyBox, buyBox.getPrice());
 				}

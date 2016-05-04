@@ -261,14 +261,19 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 	/*
 	 * This method will check whether fulfillment type is matching or not.
 	 *
+
 	 * @param reqData
 	 *
+
 	 * @param fullfillmentType
 	 *
+
 	 * @param ussId
 	 *
+
 	 * @param selleId
 	 *
+
 	 * @return flag
 	 */
 	private boolean checkFullfillmentType(final List<PincodeServiceData> reqData, final String fullfillmentType,
@@ -477,7 +482,9 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 				// added for Category Id
 				final List<String> categoryList = getCategoryCodeList(pincodeServiceData.getProductCode());
 				if (CollectionUtils.isNotEmpty(categoryList))
+
 				{
+
 					for (final Map.Entry<String, List<String>> entry : restricteddeliveryModeMap.entrySet())
 					{
 						if (entry.getValue().contains(deliveryModeData.getName()) && categoryList.contains(entry.getKey()))
@@ -528,35 +535,42 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 
 
 		final List<String> categoryList = new ArrayList<String>();
-		final JaloSession session = JaloSession.getCurrentSession();
-		session.createLocalSessionContext();
+		//		final JaloSession session = JaloSession.getCurrentSession();
+		//		session.createLocalSessionContext();
 		try
 		{
 
-			Collection<CatalogVersion> vers = null;
+			/*
+			 * Collection<CatalogVersion> vers = null;
 
-			final Collection<CatalogVersion> cvs = (Collection<CatalogVersion>) session
-					.getAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS);
+			 *
+			 * final Collection<CatalogVersion> cvs = (Collection<CatalogVersion>) session
+			 * .getAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS);
 
-			for (final CatalogVersion ver : cvs)
-			{
-				if (VERSION_ONLINE.equals(ver.getVersion()) && CATALOG_ID.equals(ver.getCatalog().getId()))
-				{
-					vers = Collections.singleton(ver);
-					break;
-				}
-			}
-			session.setAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS, vers);
+			 *
+			 * for (final CatalogVersion ver : cvs) { if (VERSION_ONLINE.equals(ver.getVersion()) &&
+
+
+
+			 * CATALOG_ID.equals(ver.getCatalog().getId())) { vers = Collections.singleton(ver); break; } }
+
+
+
+			 * session.setAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS, vers);
+			 */
 
 			final ProductModel productModel = productService.getProductForCode(listingID);
-			for (final CategoryModel c : defaultPromotionManager.getcategoryData(productModel))
+			final List<CategoryModel> categories = defaultPromotionManager.getcategoryData(productModel);
+			for (final CategoryModel c : categories)
 			{
 				categoryList.add(c.getCode());
 			}
 		}
-		finally
+
+		catch (final Exception e)
 		{
-			session.removeLocalSessionContext();
+
+			LOG.error("Exception while retrieving category list", e);
 		}
 		return categoryList;
 
@@ -588,8 +602,4 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 
 		return deliveryModes;
 	}
-
-
-
-
 }

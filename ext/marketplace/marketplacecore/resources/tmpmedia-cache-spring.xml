@@ -45,7 +45,4 @@
 	</bean>
 	
 	<bean id="tmpmediaCacheRegionRegistrar" class="de.hybris.platform.regioncache.region.CacheRegionRegistrar" c:region-ref="tmpmediaCacheRegion" />
-	
-
-	
 </beans>
