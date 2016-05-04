@@ -405,8 +405,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					LOG.debug("Method  registerSocial SITE UID " + registerData.getUid());
 					LOG.debug("Method  registerSocial FIRST_NAME " + registerData.getFirstName());
 					LOG.debug("Method  registerSocial LAST_NAME " + registerData.getLastName());
-					final String gigyaMethod = configurationService.getConfiguration().getString(
-							MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
+					final String gigyaMethod = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 					LOG.debug("GIGYA METHOD" + gigyaMethod);
 					if (isMobile)
 					{
@@ -456,8 +456,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				registerData.setPassword(password);
 				registerData.setSocialLogin(true);
 				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
-				final String gigyaMethod = configurationService.getConfiguration().getString(
-						MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
+				final String gigyaMethod = configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
 				LOG.debug("GIGYA METHOD" + gigyaMethod);
 
 				if (isMobile)
@@ -510,8 +510,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	}
 
 	@Override
-	public void changeUid(final String newUid, final String currentPassword) throws DuplicateUidException,
-			PasswordMismatchException
+	public void changeUid(final String newUid, final String currentPassword)
+			throws DuplicateUidException, PasswordMismatchException
 	{
 		try
 		{
@@ -575,11 +575,11 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			//Added
 			if (!StringUtils.isEmpty(sendInvoiceData.getInvoiceUrl()) && !StringUtils.isEmpty(sendInvoiceData.getTransactionId()))
 			{
-				if (!StringUtils.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
-						sendInvoiceData.getTransactionId())))
+				if (!StringUtils
+						.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId())))
 				{
-					sendInvoiceProcessModel.setInvoiceUrl(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
-							sendInvoiceData.getTransactionId()));
+					sendInvoiceProcessModel.setInvoiceUrl(
+							createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId()));
 				}
 			}
 			//End
@@ -669,6 +669,136 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	public void setOrderModelService(final OrderModelService orderModelService)
 	{
 		this.orderModelService = orderModelService;
+	}
+
+	@Override
+	public ExtRegisterData registerSocialforMobile(final ExtRegisterData mobileregisterData, final boolean isMobile,
+			final String timestamp, final String signature)
+	{
+
+		try
+		{
+			ExtRegisterData mobiledata = new ExtRegisterData();
+			GigyaWsDTO gigyaWsDTO = new GigyaWsDTO();
+			validateParameterNotNullStandardMessage(MplConstants.REGISTER_DATA, mobileregisterData);
+			Assert.hasText(mobileregisterData.getLogin(), MplConstants.ASSERT_LOGIN_MSG);
+			if (extUserService.isEmailUniqueForSite(mobileregisterData.getLogin()))
+			{
+				final CustomerModel newCustomer = getModelService().create(CustomerModel.class);
+				newCustomer.setName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
+				newCustomer.setFirstName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
+				newCustomer.setLastName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
+				if (StringUtils.isNotEmpty(mobileregisterData.getSocialMediaType()))
+				{
+					if (mobileregisterData.getSocialMediaType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FACEBOOK))
+					{
+						newCustomer.setType(CustomerType.FACEBOOK_LOGIN);
+					}
+					if (mobileregisterData.getSocialMediaType().equalsIgnoreCase(MarketplacecommerceservicesConstants.GOOGLE))
+					{
+						newCustomer.setType(CustomerType.GOOGLE_LOGIN);
+					}
+				}
+				setUidForRegister(mobileregisterData, newCustomer);
+				newCustomer.setSessionLanguage(getCommonI18NService().getCurrentLanguage());
+				newCustomer.setSessionCurrency(getCommonI18NService().getCurrentCurrency());
+				//Register customer social
+				newCustomer.setCustomerRegisteredBySocialMedia(Boolean.TRUE);
+				mobiledata = extDefaultCustomerService.registerUserForSocialSignup(newCustomer);
+				extUserService.addToRegisteredGroup(newCustomer);
+
+				/*
+				 * if (!isMobile) {
+				 */
+				try
+				{
+					LOG.debug("Method  registerSocial,Gigys's UID " + newCustomer.getUid());
+					LOG.debug("Method  registerSocial SITE UID " + mobileregisterData.getUid());
+					LOG.debug("Method  registerSocial FIRST_NAME " + mobileregisterData.getFirstName());
+					LOG.debug("Method  registerSocial LAST_NAME " + mobileregisterData.getLastName());
+					final String gigyaMethod = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
+					LOG.debug("GIGYA METHOD" + gigyaMethod);
+					if (isMobile)
+					{
+						gigyaWsDTO = gigyaservice.notifyGigyaforMobilewithSig(newCustomer.getUid(), mobileregisterData.getUid(),
+								mobileregisterData.getFirstName(), mobileregisterData.getLastName(), mobileregisterData.getLogin(),
+								gigyaMethod, timestamp, signature);
+
+						if (null != gigyaWsDTO)
+						{
+							mobiledata.setGigyaSessionsForMob(gigyaWsDTO);
+						}
+
+						LOG.debug("GIGYA ACCESS TOKEN" + gigyaWsDTO.getSessionToken());
+						LOG.debug("GIGYA ACCESS KEY" + gigyaWsDTO.getSessionSecret());
+					}
+					else
+					{
+						gigyaservice.notifyGigya(newCustomer.getUid(), mobileregisterData.getUid(), mobileregisterData.getFirstName(),
+								mobileregisterData.getLastName(), mobileregisterData.getLogin(), gigyaMethod);
+					}
+				}
+				catch (final Exception e)
+				{
+					LOG.error("error notifing gigya of new registration", e);
+				}
+
+				//}
+				return mobiledata;
+			}
+			else
+			{
+				final CustomerModel customerModel = (CustomerModel) extUserService.getUserForUID(mobileregisterData.getLogin());
+				LOG.debug("Method  registerSocial return user ,SITE UID " + customerModel.getUid());
+				LOG.debug("Method  registerSocial else FIRST_NAME " + mobileregisterData.getFirstName());
+				LOG.debug("Method  registerSocial else LAST_NAME " + mobileregisterData.getLastName());
+
+				if (mobileregisterData.getFirstName() != null)
+				{
+					mobileregisterData.setFirstName(mobileregisterData.getFirstName());
+				}
+
+				if (mobileregisterData.getLastName() != null)
+				{
+					mobileregisterData.setLastName(mobileregisterData.getLastName());
+				}
+
+				final String password = "TATACLiQSocialLogin";
+				mobileregisterData.setPassword(password);
+				mobileregisterData.setSocialLogin(true);
+				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
+				final String gigyaMethod = configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
+				LOG.debug("GIGYA METHOD" + gigyaMethod);
+
+				if (isMobile)
+				{
+					gigyaWsDTO = gigyaservice.notifyGigyaforMobile(customerModel.getUid(), mobileregisterData.getUid(),
+							mobileregisterData.getFirstName(), mobileregisterData.getLastName(), mobileregisterData.getLogin(),
+							gigyaMethod);
+
+					if (null != gigyaWsDTO)
+					{
+						mobileregisterData.setGigyaSessionsForMob(gigyaWsDTO);
+					}
+
+					LOG.debug("GIGYA ACCESS TOKEN" + gigyaWsDTO.getSessionToken());
+					LOG.debug("GIGYA ACCESS KEY" + gigyaWsDTO.getSessionSecret());
+				}
+				else
+				{
+					gigyaservice.notifyGigya(customerModel.getUid(), mobileregisterData.getUid(), mobileregisterData.getFirstName(),
+							mobileregisterData.getLastName(), mobileregisterData.getLogin(), gigyaMethod);
+				}
+				return mobileregisterData;
+			}
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+
 	}
 
 }
