@@ -9,11 +9,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
-
 								<li><spring:theme code="header.flyout.message" /></li>
 								<!-- TISSIT-1703 -->
 								<form:form action="/" method="post" name='flyOutloginForm'>
-
 									<script type="text/javascript">
 										(function() {
 											var po = document
@@ -27,25 +25,20 @@
 										})();
 									</script>
 
-
 									<div class="form-group">
-					<label for="j_username"><spring:theme code="header.flyout.email"/></label> <input
-						type="email" class="form-control" name="j_username"
-							id="j_username" placeholder="Enter email" required>
-				</div>
-				
-				
-							<div class="form-group">
-										<label for="exampleInputPassword1"><spring:theme code="header.flyout.password"/></label> <input
-											type="password" class="form-control" name="j_password"
-											id="j_password" placeholder="Password" required>
-							</div>
-							<span id="errorHolder" style="color: red;"></span>	
+										<label for="j_username"><spring:theme code="header.flyout.email"/></label> 
+										<input  type="email" class="form-control" name="j_username" id="j_username" placeholder="Enter email" required>
+									</div>
+									<div class="form-group">
+										<label for="exampleInputPassword1"><spring:theme code="header.flyout.password"/></label> 
+										<input type="password" class="form-control" name="j_password" id="j_password" placeholder="Password" required>
+									</div>
+									<span id="errorHolder" style="color: red;"></span>	
 								
 						<div class="form-actions clearfix">
 							<div class="form-actions clearfix">
 									<ycommerce:testId code="login_Login_button">
-										<button id="triggerLoginAjax" type="button" class="btn  header-signInButton" >
+										<button id="triggerLoginAjax" type="submit" class="btn  header-signInButton">
 											<spring:theme code="login.login" />
 										</button>
 									</ycommerce:testId>
@@ -102,6 +95,9 @@
 												</ycommerce:testId>
 													</div>
 											</li>
+							
+	
+
 											
 <script type="text/javascript">
 
@@ -121,36 +117,35 @@
 		}
 		});
 	
-	$("#triggerLoginAjax").on('click touch',function(){
+	$("#triggerLoginAjax").click(function(){
 		
 		var emailPattern=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 		if($("input[name=j_username]").val() == ""){
-		$("#errorHolder").text("Username cannot be left empty");
+		$("#errorHolder").text("Please enter all mandatory fields");
 		return false;
 		}else if(!emailPattern.test($("input[name=j_username]").val())){
-			$("#errorHolder").text("Please Enter Valid E-mail ID");
+			$("#errorHolder").text("Please enter all mandatory fields");
 			return false;
 			}
 			else if($("input[name=j_password]").val() == ""){
-		$("#errorHolder").text("Password cannot be left empty");
+		$("#errorHolder").text("Please enter all mandatory fields");
 		return false;
 		}else{
-			// TISPRO-153
-			utag.link({ "event_type" : "Login", "link_name" : "Login" });
+			// TISPRO-183
 			
+			//utag.link({ "event_type" : "Login", "link_name" : "Login" });
 			//TISSIT-1703
 			var hostName=window.location.host;
 			if(hostName.indexOf(':') >=0)
 			{
 				// for IP , it will not be https 
 				document.flyOutloginForm.action="/store/mpl/en/j_spring_security_check";
-				document.flyOutloginForm.submit();
 			}
 			else
 			{
 				document.flyOutloginForm.action="https://"+hostName+"/store/mpl/en/j_spring_security_check";
-				document.flyOutloginForm.submit();
 			}
+			
 			return true;
 			
 			//formation of url as a part of solution for VAPT issues(TISSIT-1703)
@@ -182,14 +177,39 @@
 		*/
 		}
 		});
-	 $(document).keypress(function(event){
+		$(document).keypress(function(event){
 			var keycode = (event.keyCode ? event.keyCode : event.which);
-			var isSocialHovered = $(".dropdown.sign-in-dropdown.sign-in").is(":hover");
-			if(isSocialHovered){
+		//	var isSocialHovered = ;
+			if($(".dropdown.sign-in-dropdown.sign-in.hover").length == 0){
 				if(keycode == '13'){
 					$("#triggerLoginAjax").click();
 				}
 			}
 		});
-	
+		
+		$(".header-myAccountSignOut").click(function(){
+			window.localStorage.removeItem("eventFired");
+		});
+		
+		
+		//TISPRO-183 -- Firing Tealium event only after successful user login
+		if(loginStatus){
+			if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {
+				localStorage.setItem("eventFired","true");
+				console.log("Login Success!!!");
+				if(typeof utag == "undefined"){
+					console.log("Utag is undefined")
+				}
+				else{
+					console.log("Firing Tealium Event");
+					utag.link({ "event_type" : "Login", "link_name" : "Login" });
+				}
+				
+				//fireTealiumEvent();
+				
+				
+				
+			}  
+		}
+
 </script>
