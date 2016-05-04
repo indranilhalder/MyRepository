@@ -15,11 +15,4 @@ $(document).ready(function(event){
 			//window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
 		};
 });
-$(document).bind("keypress",function(e){
-	console.log(e.keyCode);
-});
-
-$(document).bind("click",function(e){
-	console.log(e.clientX+"--"+e.clientY);
-});
 
