@@ -33,16 +33,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.bind.JAXBException;
+
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
-import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
+
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
@@ -66,8 +66,7 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 	@Autowired
 	private Converter<OrderModel, OrderData> orderConverter;
 
-	@Autowired
-	private NotificationService notificationService;
+
 
 	@Autowired
 	private MplOrderDao mplOrderDao;
@@ -169,24 +168,6 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 				afterPlaceOrder(parameter, result);
 				//Added to trigger notification
 
-				final String trackOrderUrl = configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-						+ orderModel.getCode();
-				try
-				{
-					notificationService.triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
-					notificationService.sendMobileNotifications(orderModel);
-				}
-				catch (final JAXBException e)
-				{
-					LOG.error("Error while sending notifications>>>>>>", e);
-				}
-				catch (final Exception ex)
-				{
-					LOG.error("Error while sending notifications>>>>>>", ex);
-				}
-
-
 
 				return result;
 
@@ -243,7 +224,8 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 
 				if (promotionResultModel.getCertainty().floatValue() == 1.0F
 						&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-								|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+                                || promotion instanceof BuyAandBGetPromotionOnShippingChargesModel
+								|| promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 				{
 					isShippingPromoApplied = true;
 					break;
@@ -257,10 +239,10 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 	protected void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
 			throws InvalidCartException
 	{
-		if ((getCommercePlaceOrderMethodHooks() == null)
-				|| (!(parameter.isEnableHooks()))
-				|| (!(getConfigurationService().getConfiguration().getBoolean(
-						"commerceservices.commerceplaceordermethodhook.enabled", true))))
+		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
+
+				.getConfiguration().getBoolean("commerceservices.commerceplaceordermethodhook.enabled", true))))
+
 		{
 			return;
 		}
@@ -273,10 +255,10 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 	protected void afterPlaceOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
 			throws InvalidCartException
 	{
-		if ((getCommercePlaceOrderMethodHooks() == null)
-				|| (!(parameter.isEnableHooks()))
-				|| (!(getConfigurationService().getConfiguration().getBoolean(
-						"commerceservices.commerceplaceordermethodhook.enabled", true))))
+		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
+
+				.getConfiguration().getBoolean("commerceservices.commerceplaceordermethodhook.enabled", true))))
+
 		{
 			return;
 		}
@@ -447,3 +429,4 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 	}
 
 }
+

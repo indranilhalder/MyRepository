@@ -1,8 +1,10 @@
-$(document).ready(function(){
-	var isAjaxCalled = false;
+/*$(document).ready(function(){
+	//var isAjaxCalled = false;
 	
+
+
 	$("#socialLogin").hover(function(e){
-		if(isAjaxCalled == false){
+		//if(isAjaxCalled == false){
 			$.ajax({
 				"url":"/store/mpl/en/login/sociallogin",
 				"type":"GET",
@@ -15,27 +17,29 @@ $(document).ready(function(){
 					$("#googleLoginButton").attr("href",splitData[1]);
 				},
 				"fail":function(fail){
-					alert("failed");
+					//alert("failed");
 				}
 				});
-		}
-		isAjaxCalled = true;
+		//}
+
+		//isAjaxCalled = true;
 		
 	});
+
 	//ajax spring login authentication
 
-	$("#triggerLoginAjax").click(function(){
+	$("#triggerLoginAjax").on('click touch',function(){
 		
 	var emailPattern=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 	if($("input[name=j_username]").val() == ""){
-	$("#errorHolder").text("Please enter all mandatory fields");
+	$("#errorHolder").text("Username cannot be left empty");
 	return false;
 	}else if(!emailPattern.test($("input[name=j_username]").val())){
-		$("#errorHolder").text("Please enter all mandatory fields");
+		$("#errorHolder").text("Please Enter Valid E-mail ID");
 		return false;
 		}
 		else if($("input[name=j_password]").val() == ""){
-	$("#errorHolder").text("Please enter all mandatory fields");
+	$("#errorHolder").text("Password cannot be left empty");
 	return false;
 	}else{
 		// TISPRO-183
@@ -59,7 +63,8 @@ $(document).ready(function(){
 		//var hostURL=window.location.host;
 		//var urlFormed="https://"+hostURL+"/store/mpl/en/j_spring_security_check";
 		//console.log("urlFormed"+urlFormed);
-	/*	
+
+
 	$.ajax({
 	url:"/store/mpl/en/j_spring_security_check",
 	type:"POST",
@@ -81,7 +86,7 @@ $(document).ready(function(){
 	//alert(data); 
 	}
 	}); 
-	*/
+
 	}
 	});
 	$(document).keypress(function(event){
@@ -93,6 +98,7 @@ $(document).ready(function(){
 			}
 		}
 	});
+
 	
 	$(".header-myAccountSignOut").click(function(){
 		window.localStorage.removeItem("eventFired");
@@ -110,16 +116,15 @@ $(document).ready(function(){
 			else{
 				console.log("Firing Tealium Event");
 				utag.link({ "event_type" : "Login", "link_name" : "Login" });
-			}
-			
+
+			}			
+
+
 			//fireTealiumEvent();
 			
-			
-			
+
+
 		}  
 	}
-	
-});
 
-
-
+});*/
