@@ -134,6 +134,12 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 
 
 
+	/**
+	 * This method creates a custom HttpServletRequestWrapper to override RequestUrl, RequestUri and ServletPath
+	 *
+	 * @param httpRequest
+	 * @return HttpServletRequestWrapper
+	 */
 	private HttpServletRequestWrapper createWrappedRequest(final HttpServletRequest httpRequest)
 	{
 		final HttpServletRequestWrapper wrapped = new HttpServletRequestWrapper(httpRequest)
@@ -145,7 +151,6 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 				if (originalUrl.toString().contains(ModelAttributetConstants.STORE_URL_OLD))
 				{
 					final String newreqUri = originalUrl.toString().replaceAll(ModelAttributetConstants.STORE_URL_OLD, "/");
-
 
 					originalUrl = new StringBuffer(newreqUri);
 				}
@@ -160,7 +165,6 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 				if (originalUri.contains(ModelAttributetConstants.STORE_URL_OLD))
 				{
 					final String newreqUri = originalUri.replaceAll(ModelAttributetConstants.STORE_URL_OLD, "/");
-
 
 					originalUri = newreqUri;
 				}

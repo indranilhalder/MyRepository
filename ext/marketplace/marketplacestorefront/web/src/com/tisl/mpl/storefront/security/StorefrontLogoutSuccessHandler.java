@@ -32,6 +32,7 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.storefront.constants.MessageConstants;
+import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 
 
 public class StorefrontLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler
@@ -124,6 +125,14 @@ public class StorefrontLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandle
 			{
 				targetUrl = super.getDefaultTargetUrl();
 			}
+		}
+
+		if (targetUrl.contains(ModelAttributetConstants.STORE_URL_OLD))
+		{
+			final String newreqUri = targetUrl.replaceAll(ModelAttributetConstants.STORE_URL_OLD, "/");
+
+
+			targetUrl = newreqUri;
 		}
 
 		return targetUrl;
