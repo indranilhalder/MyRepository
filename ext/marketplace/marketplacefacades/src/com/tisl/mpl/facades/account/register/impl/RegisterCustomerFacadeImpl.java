@@ -297,6 +297,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				newCustomer.setFirstName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 				newCustomer.setLastName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 				newCustomer.setType(CustomerType.REGISTERED);
+				newCustomer.setIscheckedMyRewards(Boolean.valueOf(registerData.isCheckTataRewards()));
 				setUidForRegister(registerData, newCustomer);
 				newCustomer.setSessionLanguage(getCommonI18NService().getCurrentLanguage());
 				newCustomer.setSessionCurrency(getCommonI18NService().getCurrentCurrency());
@@ -404,8 +405,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					LOG.debug("Method  registerSocial SITE UID " + registerData.getUid());
 					LOG.debug("Method  registerSocial FIRST_NAME " + registerData.getFirstName());
 					LOG.debug("Method  registerSocial LAST_NAME " + registerData.getLastName());
-					final String gigyaMethod = configurationService.getConfiguration()
-							.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
+					final String gigyaMethod = configurationService.getConfiguration().getString(
+							MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 					LOG.debug("GIGYA METHOD" + gigyaMethod);
 					if (isMobile)
 					{
@@ -455,8 +456,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				registerData.setPassword(password);
 				registerData.setSocialLogin(true);
 				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
-				final String gigyaMethod = configurationService.getConfiguration()
-						.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
+				final String gigyaMethod = configurationService.getConfiguration().getString(
+						MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
 				LOG.debug("GIGYA METHOD" + gigyaMethod);
 
 				if (isMobile)
@@ -509,8 +510,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	}
 
 	@Override
-	public void changeUid(final String newUid, final String currentPassword)
-			throws DuplicateUidException, PasswordMismatchException
+	public void changeUid(final String newUid, final String currentPassword) throws DuplicateUidException,
+			PasswordMismatchException
 	{
 		try
 		{
@@ -574,11 +575,11 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			//Added
 			if (!StringUtils.isEmpty(sendInvoiceData.getInvoiceUrl()) && !StringUtils.isEmpty(sendInvoiceData.getTransactionId()))
 			{
-				if (!StringUtils
-						.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId())))
+				if (!StringUtils.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
+						sendInvoiceData.getTransactionId())))
 				{
-					sendInvoiceProcessModel.setInvoiceUrl(
-							createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId()));
+					sendInvoiceProcessModel.setInvoiceUrl(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
+							sendInvoiceData.getTransactionId()));
 				}
 			}
 			//End

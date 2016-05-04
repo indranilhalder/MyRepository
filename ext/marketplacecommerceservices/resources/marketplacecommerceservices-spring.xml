@@ -374,6 +374,7 @@
 		<property name="otpDao" ref="otpDao" />
 		<property name="modelservice" ref="modelService" />
 		<property name="userService" ref="userService" />
+		<property name="configurationService" ref="configurationService" />
 
 	</bean>
 	<bean id="otpDao"
@@ -1651,4 +1652,5 @@
 	</bean>
 	<!-- UserGroupSaveInterceptor ends -->	
 
-	</beans>
+
+</beans>
