@@ -177,6 +177,10 @@
          <property name="displayMrp" type="java.util.List&lt;java.lang.String>"></property>
          <property name="displayPromotion" type="java.util.List&lt;java.lang.String>"></property>
 		<!-- pdp changes ends -->
+		
+		<!-- Added for TISCR-405: % off or You save XYZ iN PLP -->
+	<property name="savingsOnProduct"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 
 	</bean>
 
