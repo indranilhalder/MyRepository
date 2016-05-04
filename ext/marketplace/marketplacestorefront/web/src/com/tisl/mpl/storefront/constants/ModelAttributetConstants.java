@@ -711,6 +711,6 @@ public final class ModelAttributetConstants
 
 	public static final String SUB_ORDER_STATUS = "subOrderStatus";
 	public static final String FILTER_DELIVERYMODE = "filterDeliveryMode";
-	public static final String STORE_URL_OLD = "/store/mpl/en/";
+	public static final String STORE_URL_OLD = "/store/mpl/en";
 
 }
