@@ -1199,7 +1199,7 @@ UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=en]
 #;;NodeForCareers;"<span>Careers</span> "
 #;;NodeForSellWithUs;"<span>Sell With Us</span> "
 ;;CustomerServiceNavNode;"Customer Service"
-;;MyMarketplaceNavNode;"My Marketplace"
+;;MyMarketplaceNavNode;"My Tata CLiQ"
 
 
 
