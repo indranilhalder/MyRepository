@@ -155,6 +155,8 @@
     <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.reviewrating.js"></script>
 </c:if> 
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/acc.feedback.js"></script>
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" med="all" href="${themeResourcePath}/css/main-ie8.css"/>
