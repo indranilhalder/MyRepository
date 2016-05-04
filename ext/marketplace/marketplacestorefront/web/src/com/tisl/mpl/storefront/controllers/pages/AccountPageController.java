@@ -1041,6 +1041,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			model.addAttribute(ModelAttributetConstants.TRACK_STATUS, trackStatusMap);
 			model.addAttribute(ModelAttributetConstants.CURRENT_STATUS, currentStatusMap);
+			model.addAttribute(ModelAttributetConstants.CANCEL_ENDPOINT_STATUS_NAME, configurationService.getConfiguration()
+					.getString(ModelAttributetConstants.CANCEL_ENDPOINT_STATUS, "HOTC"));
 			model.addAttribute(ModelAttributetConstants.ORDER_DELIVERY_DATE, formattedDeliveryDates);
 			model.addAttribute(ModelAttributetConstants.ORDER_DELIVERY_DATE_ACTUAL, formattedActualDeliveryDates);
 			model.addAttribute(ModelAttributetConstants.CANCEL_PRODUCT_MAP, currentProductMap);

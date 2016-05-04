@@ -591,6 +591,7 @@
 													data-mylist="<spring:theme code="text.help" />"
 													data-dismiss="modal" onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
 														text="Cancel Order" /></a>
+												The entry is cancellable before "${cancelEndpointStatus}"
 											</c:if>
 											<c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
@@ -599,6 +600,15 @@
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
 												</a>
+												The entry is no longer cancellable
+											</c:if>
+											<c:if
+												test="${entry.itemCancellationStatus eq false and entry.itemReturnStatus eq false and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+													The entry is no longer cancellable
+											</c:if>
+											<c:if
+												test="${entry.giveAway eq true || entry.isBOGOapplied eq true}">
+												The entry is not cancellable
 											</c:if>
 
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
