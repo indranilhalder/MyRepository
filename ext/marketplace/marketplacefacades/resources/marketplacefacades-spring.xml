@@ -600,6 +600,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="cartService" ref="cartService"/>
 		<property name="mplExtendedCartConverter" ref="mplExtendedCartConverter"/>
 		<property name="modelService" ref="modelService" />
+		<property name="mplDefaultCommerceCartCalculationStrategy" ref="mplDefaultCommerceCartCalculationStrategy" />
+
 	
 	</bean>
 	
@@ -1413,6 +1415,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 
 	<!-- <alias name="defaultOrderHistoryPopulator" alias="orderHistoryPopulator"/> -->
 	<bean id="voucherDisplayPopulator"
+
 			class="com.tisl.mpl.facades.populators.MplVoucherDisplayPopulator">
 		<!-- <property name="enumerationService" ref="enumerationService"/>
 		<property name="priceDataFactory" ref="priceDataFactory"/> -->
@@ -1433,9 +1436,11 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="voucherTransactionPopulator"
 			class="com.tisl.mpl.facades.populators.MplVoucherTransactionHistoryPopulator">
 	</bean>
-	
+
+
 	<alias name="mplPointOfServicePopulator" alias="pointOfServicePopulator"/>
 	<bean id="mplPointOfServicePopulator" class="com.tisl.mpl.facade.store.populator.MplPointOfServicePopulator" parent="defaultPointOfServicePopulator"/>
+
 
 	<bean id="gigyaFacade"
 		class="com.tisl.mpl.facades.account.reviews.impl.GigyaFacadeImpl">
@@ -1461,13 +1466,25 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		parent="baseOptionDataPopulator">
 	</bean>
 	
- <alias name="mplPromotionOrderEntryConsumedPopulator" alias="promotionOrderEntryConsumedPopulator" />
-	<bean id="mplPromotionOrderEntryConsumedPopulator" class="com.tisl.mpl.facades.populators.MplPromotionOrderEntryConsumedPopulator"
-	parent="defaultPromotionOrderEntryConsumedPopulator"/>
+
+	<alias name="mplDefaultIndexConfigPopulator" alias="solrIndexConfigPopulator" />
+	<bean id="mplDefaultIndexConfigPopulator" class="com.tisl.mpl.search.converters.populator.MplDefaultIndexConfigPopulator">
+		<property name="indexedTypeConverter" ref="solrIndexedTypeConverter"></property>
+		<property name="solrServerConfigConverter" ref="solrServerConfigConverter"></property>
+	</bean>
 	
+	<alias name="mplDefaultIndexedTypePopulator" alias="solrIndexedTypePopulator" />
+	<bean id="mplDefaultIndexedTypePopulator" class="com.tisl.mpl.facades.populators.MplDefaultIndexedTypePopulator">
+		<property name="indexedPropertyConverter" ref="indexedPropertyConverter"></property>
+	</bean>
+	 <alias name="mplPromotionOrderEntryConsumedPopulator" alias="promotionOrderEntryConsumedPopulator" />
+	<bean id="mplPromotionOrderEntryConsumedPopulator" class="com.tisl.mpl.facades.populators.MplPromotionOrderEntryConsumedPopulator"
+	parent="defaultPromotionOrderEntryConsumedPopulator">
+
+
+	</bean>
 	<alias name="mplConfigFacade" alias="defaultMplConfigFacde"/>
 	<bean id="mplConfigFacade"
 		class="com.tisl.mpl.facade.config.MplConfigFacadeImpl">
 	</bean>
-
 </beans>

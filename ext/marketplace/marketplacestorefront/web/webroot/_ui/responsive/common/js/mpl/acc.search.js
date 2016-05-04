@@ -90,12 +90,14 @@
 	);
 		
 	}
+
 	//change serp product details based on filters
 	function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
 		if(mrpPriceValue!="" && productPrice!=""){
 		console.log("in search js...for product"+product+"mrpPriceJSon"+mrpPriceValue+"price json"+productPrice);	
 		console.log("original prices for "+product+$("#price_"+product).text()+$("#priceEqual_"+product).text());
 		}
+
 		if(categoryTypeValue=='Apparel'||categoryTypeValue=='Footwear'){
 		if(serpSizeList!=''){
 		var sizeMatched = checkSizeCount(list, serpSizeList);
@@ -120,6 +122,8 @@
 						+ minPriceValue); 
 				}
 				 
+
+
 			} else {
 				for (h = 0; h < serpSizeList.length; h++) {
 					var sizePrice = serpSizeList[h];
@@ -132,6 +136,8 @@
 			}
 		}
 		}
+
+
 		if (sizeMatched == "") {
 			if(priceValueList!=""||priceValueList!=[]){
 			priceValueList.sort(function(a, b) {
@@ -143,20 +149,26 @@
 		}
 		}
 		
+
+
+
 		 console.log("nminPrice for product" +product+"price"+minPriceValue + "minsize"
 				+ minPriceSize); 
 		if(minPriceValue!=undefined){ 
 	    $("#price_"+product).html("");
 		$("#price_"+product).html("&#8377;"+minPriceValue);  
 		}
+
 		//set product mrp
 		updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,minPriceValue,product);
 		//update product stock
+
 		updateProductStock(stockLevel,sizeMatched, serpSizeList,minPriceSize,product);
 		//updtae sale price
 		if(productPromotion!=""){
 		findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
 		}
+
 		//updating product url
 		var url1 = productUrl.replace("[[", "");
 		var url2 = url1.replace("]]", "");
@@ -181,6 +193,7 @@
 									+ "/p" + x[sizeMatched]
 									+ "/quickView");
 				}
+
 			} else {
 
 				for (j = 0; j < serpSizeList.length; j++) {
@@ -192,18 +205,21 @@
 											"href",
 											ACC.config.encodedContextPath
 													+ "/p"
+
 													+ x[minPriceSize]);
 							$(".name_" + product)
 									.attr(
 											"href",
 											ACC.config.encodedContextPath
 													+ "/p"
+
 													+ x[minPriceSize]);
 							$("#quickview_" + product)
 									.attr(
 											"href",
 											ACC.config.encodedContextPath
 													+ "/p"
+
 													+ x[sizeMatched]);
 						}
 					}
@@ -212,8 +228,11 @@
 		}//
 		}
 		}
+
 	}
 	}
+
+
 	//find Onsale product based on filters		
 	function findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product) {		
 //		alert("**Inside findOnSaleBasedOnMinPrice****")		
@@ -223,6 +242,8 @@
 		var promo2 = promo1.replace("]]", "");		
 		var arr = new Array();		
 		arr = promo2.split(',');		
+
+
 		
 		if(arr!= undefined) {		
 			
@@ -235,6 +256,13 @@
 			if (sizeMatched != "") {		
 				if (x[sizeMatched] != undefined) {		
 				
+
+
+
+
+
+
+
 					 $("#on-sale_" + product).show();//showing on_sale tag		
 					break;		
 				}		
@@ -242,6 +270,7 @@
 					//alert("UUUU");		
 					continue;		
 				}		
+
 			}		
 			else {		
 				//alert("2.....")		
@@ -249,9 +278,19 @@
 				break;		
 		}		
 		}		
+
+
 		}		
+
+
+
+
+
 	}
 	//get the minimum priced variant
+
+
+
 	function findSizeBasedOnMinPrice(priceValue, priceArray) {
 		for (pIndex = 0; pIndex < priceArray.length; pIndex++) {
 			var proceJson = JSON.parse(priceArray[pIndex]);
@@ -266,6 +305,8 @@
 		}
 	}
 	//update product stock
+
+
 	function updateProductStock(sizeStockLevel,sizeMatched, serpSizeList,minPriceSize,product) {
 		//var sizeStockLevel = "${product.displayStock}";
 		var stock1 = sizeStockLevel.replace("[[", "");
@@ -278,6 +319,7 @@
 				if (stckData[sizeMatched] != undefined) {
 					$("#stockIdFiltered_" + product).val(stckData[sizeMatched]);
 				}
+
 			} else {
 				for (j = 0; j < serpSizeList.length; j++) {
 					var sizeUrl = serpSizeList[j];
@@ -291,6 +333,7 @@
 			}
 		}
 	}
+
 	//update product minimum price and mrp
 	function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,minPriceValue,product) {
 	//  var mrpPriceValue = '${product.displayMrp}';
@@ -318,6 +361,8 @@
 					}
 					
 				}
+
+
 			} else {
 				for (j = 0; j < serpSizeList.length; j++) {
 					var sizeUrl = serpSizeList[j];
@@ -342,6 +387,7 @@
 		}
 	}
 
+
 	//finding the sizes of a product matched with the applied filters
 	function checkSizeCount(list, serpSizeList) {
 		var count = 0;
@@ -359,8 +405,18 @@
 		}
 
 		if (count > 1) {
+
 			matchedSize = "";
 		}
 		//console.log("count" + matchedSize + "count" + count);
+
 		return matchedSize;
 	}
+	$(function() {
+	    img = document.querySelectorAll('[data-searchimgsrc]');
+	    for (var i = 0; i < img.length; i++) {
+	        var self = img[i];
+	          self.src = self.getAttribute('data-searchimgsrc');
+	      }
+
+	});
