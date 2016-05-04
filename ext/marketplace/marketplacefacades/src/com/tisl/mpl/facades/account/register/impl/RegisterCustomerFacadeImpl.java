@@ -718,7 +718,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					LOG.debug("Method  registerSocial LAST_NAME " + mobileregisterData.getLastName());
 					final String gigyaMethod = configurationService.getConfiguration()
 							.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
-					LOG.debug("GIGYA METHOD" + gigyaMethod);
+					LOG.debug("GIGYA METHOD fo..r mobile" + gigyaMethod);
 					if (isMobile)
 					{
 						gigyaWsDTO = gigyaservice.notifyGigyaforMobilewithSig(newCustomer.getUid(), mobileregisterData.getUid(),
@@ -730,8 +730,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 							mobiledata.setGigyaSessionsForMob(gigyaWsDTO);
 						}
 
-						LOG.debug("GIGYA ACCESS TOKEN" + gigyaWsDTO.getSessionToken());
-						LOG.debug("GIGYA ACCESS KEY" + gigyaWsDTO.getSessionSecret());
+						LOG.debug("GIGYA ACCESS TOKEN for Mobile" + gigyaWsDTO.getSessionToken());
+						LOG.debug("GIGYA ACCESS KEY of mobile" + gigyaWsDTO.getSessionSecret());
 					}
 					else
 					{
@@ -770,7 +770,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
 				final String gigyaMethod = configurationService.getConfiguration()
 						.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
-				LOG.debug("GIGYA METHOD" + gigyaMethod);
+				LOG.debug("GIGYA METH f..or testMobile" + gigyaMethod);
 
 				if (isMobile)
 				{
@@ -783,8 +783,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 						mobileregisterData.setGigyaSessionsForMob(gigyaWsDTO);
 					}
 
-					LOG.debug("GIGYA ACCESS TOKEN" + gigyaWsDTO.getSessionToken());
-					LOG.debug("GIGYA ACCESS KEY" + gigyaWsDTO.getSessionSecret());
+					LOG.debug("GIGYA ACESS TOKEN for Mob" + gigyaWsDTO.getSessionToken());
+					LOG.debug("GIGYA ACCESS KEY FOR MOBILE" + gigyaWsDTO.getSessionSecret());
 				}
 				else
 				{
