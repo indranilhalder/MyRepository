@@ -502,7 +502,9 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	@Override
 	//public MplUserResultWsDto loginSocialFbUser(final String accessToken, final String login)
-	public MplUserResultWsDto loginSocialFbUser(final String login, final String uid) throws UnsupportedEncodingException
+	//	public MplUserResultWsDto loginSocialFbUser(final String login, final String uid) throws UnsupportedEncodingException
+	public MplUserResultWsDto loginSocialFbUser(final String login, final String uid, final String timestamp,
+			final String signature) throws UnsupportedEncodingException
 	{
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		String result = null;
@@ -548,7 +550,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//			}
 
 			final boolean isMobile = true;
-			data = registerCustomerFacade.registerSocial(data, isMobile);
+			//			data = registerCustomerFacade.registerSocial(data, isMobile);
+			data = registerCustomerFacade.registerSocialforMobile(data, isMobile, timestamp, signature);
 
 			if (null != data)
 			{
@@ -646,7 +649,9 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	@Override
 	//	public MplUserResultWsDto loginSocialGoogleUser(final String accessToken, final String login, final String userId)
-	public final MplUserResultWsDto loginSocialGoogleUser(final String login, final String uid) throws UnsupportedEncodingException
+	//public final MplUserResultWsDto loginSocialGoogleUser(final String login, final String uid) throws UnsupportedEncodingException
+	public final MplUserResultWsDto loginSocialGoogleUser(final String login, final String uid, final String timestamp,
+			final String signature) throws UnsupportedEncodingException
 	{
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		String result = null;
@@ -691,7 +696,9 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//					output.setCustomerId(getCustomerId(login));
 			//				}
 
-			data = registerCustomerFacade.registerSocial(data, isMobile);
+			//			data = registerCustomerFacade.registerSocial(data, isMobile);
+
+			data = registerCustomerFacade.registerSocialforMobile(data, isMobile, timestamp, signature);
 			if (null != data)
 			{
 				userDetails = retrieveUserforMarketplace(login);

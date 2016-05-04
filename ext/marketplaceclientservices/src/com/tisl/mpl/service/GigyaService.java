@@ -37,7 +37,7 @@ public interface GigyaService
 
 	/**
 	 * notify gigya for social registration and login through mobile
-	 * 
+	 *
 	 * @param uid
 	 * @param gigyaUid
 	 * @param fName
@@ -48,4 +48,18 @@ public interface GigyaService
 	 */
 	public GigyaWsDTO notifyGigyaforMobile(String uid, String gigyaUid, String fName, String lName, String eMail,
 			String gigyaMethod);
+
+	/**
+	 * @param uid
+	 * @param uid2
+	 * @param firstName
+	 * @param lastName
+	 * @param login
+	 * @param gigyaMethod
+	 * @param timestamp
+	 * @param signature
+	 * @return
+	 */
+	public GigyaWsDTO notifyGigyaforMobilewithSig(String uid, String gigyauid, String firstName, String lName, String login,
+			String gigyaMethod, String timestamp, String signature);
 }

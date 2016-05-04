@@ -206,4 +206,7 @@ public class MarketplacecclientservicesConstants
 	public static final String SESSIONSECRET = "sessionSecret".intern();
 	public static final String TARGETENV = "targetEnv";
 	public static final String MOBILE = "mobile";
+
+	public static final String UIDSIG = "UIDSig";
+	public static final String UIDTIMESTAMP = "UIDTimestamp";
 }
