@@ -15,21 +15,6 @@
 		sessionStorage.removeItem("comparePageVisited");
 		window.location.reload(true); // force refresh page1
 	}
-	//find minimum prced variant
-	
-	/* $(document)
-			.ready(
-					function() {
-						var product = '${product.code}';
-						var categoryTypeValue='${product.productCategoryType}';
-						var productUrl = '${product.displayUrl}';
-						var productPrice = '${product.displayPrice}';
-						var list = '${product.displaySize}';
-						var mrpPriceValue = '${product.displayMrp}';
-						var sizeStockLevel = '${product.displayStock}';
-						//modify serp details based on filters
-						modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel);
-					}); */
 </script>
 <spring:theme code="text.addToCart" var="addToCartText" />
 <c:url value="${product.url}" var="productUrl" />
@@ -42,19 +27,20 @@
 		<div class="product-tile">
 			<div class="image">
 
+
 				<c:if test="${product.isProductNew eq true}">
 					<div style="z-index: 1;" class="new">
 						<img class="brush-strokes-sprite sprite-New"
+
 							src="/store/_ui/responsive/common/images/transparent.png"><span>New</span>
 					</div>
 				</c:if>
 
 				<a class="thumb_${product.code}" href="${productUrl}"
-					title="${product.name}"> <product:productPrimaryImage
-						product="${product}" format="searchPage" /> <%-- 	<product:productSearchPrimaryImage product="${product}" format="searchPage" index="1"/> --%>
+					title="${product.name}"> <%-- <product:productPrimaryImage
+						product="${product}" format="searchPage" /> --%> <product:productSearchPrimaryImage product="${product}" format="searchPage"/>
 
 				</a>
-
 		
 				<c:if test="${!product.isOnlineExclusive && product.isOfferExisting}">
 					<%-- <div style="z-index: 2;display: none;" class="on-sale" id="on-sale_${product.code}"> --%>
@@ -65,7 +51,6 @@
 						<span>On Sale</span>
 					</div>
 		         </c:if>
-
 				<c:if test="${product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
@@ -82,6 +67,7 @@
 					<a class="stockLevelStatus" href="${productUrl}"
 						title="${product.name}"> <span
 						id="stockIdFiltered_${product.name}"><spring:theme
+
 								code="pickup.out.of.stock" text="Out Of Stock" /></span>
 					</a>
 				</c:if>
@@ -91,6 +77,7 @@
 					<!-- 	<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference"> -->
 					<c:url value="${productUrl}/quickView" var="productQVUrl" />
 
+
 					<a id='quickview_${product.code}' href="${productQVUrl}"
 						class="js-reference-item cboxElement "
 						data-quickview-title="<spring:theme code="popup.quick.view.select"/>">
@@ -99,8 +86,6 @@
 
 
 					<%-- </c:if> --%>
-
-
 
 					<!-- Added for Addtocart -->
 
@@ -119,6 +104,7 @@
 								<input type="hidden" maxlength="3" size="1" id="qty" name="qty"
 									class="qty js-qty-selector-input" value="1" />
 
+
 								<input type="hidden" maxlength="3" size="1" id="pinCodeChecked"
 									name="pinCodeChecked" value="false">
 								<%-- </c:if> --%>
@@ -129,7 +115,6 @@
 								<input type="hidden" maxlength="3" size="" id="ussid"
 									name="ussid" value="${product.ussID}" />
 
-
 								<button id="addToCartButton${product.code}"
 									class=" serp-addtobag js-add-to-cart" disabled="disabled">
 									<span><spring:theme code="basket.add.to.basket" /></span>
@@ -139,13 +124,11 @@
 									disabled="disabled">
 									<span><spring:theme code="basket.add.to.basket" /></span>
 								</button>
-
 							</form:form>
-
 						</div>
 					</c:if>
-
 				</div>
+
 				<!-- Added for Addtocart -->
 			</div>
 			<div class="details short-info">
@@ -197,6 +180,7 @@
 							</c:forEach>
 						</c:otherwise>
 					</c:choose>
+
 
 				</ul>
 				<!-- Added for colour swatch -->
@@ -289,6 +273,7 @@
 										</c:if>
 									</c:otherwise>
 								</c:choose>
+
 							</c:if>
 						</div>
 					</c:if>
@@ -308,6 +293,7 @@
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
 							                          || product.productCategoryType eq 'Footwear') }">
+
 
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
 							<li class="product-size-list"><span class="product-size">Size:${product.displaySize}<%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>

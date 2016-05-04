@@ -262,6 +262,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String MY_INTEREST = "myInterest";
 	private static final String MY_STYLE_PROFILE = "myStyleProfile";
 	private static final String REVIEW_CMS_PAGE = "reviews";
+
 	private static final Logger LOG = Logger.getLogger(AccountPageController.class);
 	private String dateDOB = MarketplacecommerceservicesConstants.EMPTY;
 	private String dateDOAnn = MarketplacecommerceservicesConstants.EMPTY;
@@ -275,6 +276,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public static final String UNUSED = "unused";
 	public static final String STATUS = "status";
 	public static final String ERROR = "error";
+
 	public static final String OK = "OK";
 	public static final String SUCCESS = "success";
 	public static final String FAILED = "failed";
@@ -286,6 +288,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public static final String RETURN_PINCODE = "returnPincodeAvailabilityCheck";
 	public static final String RETURN_ADDRESS = "returnAddress";
 	public static final String RETURN_Logistics_Availability = "returnLogisticsAvailability";
+
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
 	private CheckoutFacade checkoutFacade;
@@ -405,8 +408,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private MplGigyaReviewCommentService gigyaCommentService;
 	@Autowired
 	private DefaultMplReviewFacade mplReviewrFacade;
+
 	@Autowired
 	private DiscountUtility discountUtility;
+
 
 	@Autowired
 	private MyStyleProfileFacade myStyleProfileFacade;
@@ -2605,9 +2610,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_UPDATE_PARSONAL_DETAIL, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String updateProfile(final MplCustomerProfileForm mplCustomerProfileForm, final BindingResult bindingResult,
-			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttributes)
-			throws CMSItemNotFoundException, ParseException
+			final Model model, final HttpServletRequest request, final HttpSession session,
+			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, ParseException
 	{
+		session.setAttribute("userFirstName", mplCustomerProfileForm.getFirstName().trim());
 		try
 		{
 			final String specificUrl = RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_UPDATE_PROFILE;
@@ -4543,6 +4549,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					ModelAttributetConstants.RENDERING_METHOD_VIEW_PARTICULAR_WISHLIST);
 			model.addAttribute(ModelAttributetConstants.SHOW_WISHLIST, ModelAttributetConstants.Y_SMALL_VAL);
 			model.addAttribute(ModelAttributetConstants.PARTICULAR_WISHLIST_NAME, particularWishlist.getName());
+
 			final RemoveWishlistData removeWishlistData = new RemoveWishlistData();
 			model.addAttribute(ModelAttributetConstants.REMOVE_WISHLIST_DATA, removeWishlistData);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(WISHLIST_CMS_PAGE));

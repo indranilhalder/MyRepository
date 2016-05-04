@@ -201,6 +201,27 @@
 		    });
 		});
 		
+		//TISPRO-333
+		$(document).on("click", 'a[data-target=#popUpModal] ',
+				function() {
+				   var target = $(this).attr("href");
+				   console.log(target);
+				   var productcode= $(this).attr("data-productcode");
+				   console.log(productcode);
+			 	   //$("#popUpModal").modal('hide');
+				   $('body').on('hidden.bs.modal', '#popUpModal', function () {
+						  $(this).removeData('bs.modal');
+						});
+
+				   // load the url and show modal on success
+				   $("#popUpModal .modal-content").load(target, function() { 
+					   	   $("#popUpModal").modal("show");
+						   buyboxDetailsForSizeGuide(productcode);
+				    }); 
+				   
+		 }); 
+		//End
+		
 		
 		/// Size Guide onload
 		
