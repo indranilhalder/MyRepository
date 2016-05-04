@@ -13,7 +13,10 @@
 	<ycommerce:testId code="productTataPromise_content_label">
 		<ul>
 		<li><spring:theme code="know.more.first"/></li>
-		<li><spring:theme code="know.more.second"/>&nbsp;<span id="returnWindow">0</span>&nbsp;<spring:theme code="know.more.third"/></li>
+		<!-- 	TISCR-414 - Chairmans demo feedback 10thMay CR -->
+		<li id="defaultKnowMoreLi"><spring:theme code="know.more.second"/>&nbsp;<span id="returnWindow">0</span>&nbsp;<spring:theme code="know.more.third"/></li>
+		<li id="lingerieKnowMoreLi1" style="display:none"><spring:theme code="know.more.second.lingerie1"/></li>
+		<li id="lingerieKnowMoreLi2" style="display:none"><spring:theme code="know.more.second.lingerie2"/></li>
 		<li><spring:theme code="know.more.fourth"/>&nbsp;${cliqCareNumber}&nbsp;<spring:theme code="know.more.fifth"/>&nbsp;${cliqCareMail}&nbsp;</li>
 	</ul>
 	</ycommerce:testId>
