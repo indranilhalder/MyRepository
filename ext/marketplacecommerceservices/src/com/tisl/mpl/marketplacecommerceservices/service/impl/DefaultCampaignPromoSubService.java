@@ -1543,7 +1543,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 	private String replaceCommaWithSpace(final String paramString)
 	{
-		return paramString.replaceAll("[$&+,:;=?@#|]", "");
+		return paramString.replaceAll("[$&+,:;=?@#|]", " ");
 	}
 
 
