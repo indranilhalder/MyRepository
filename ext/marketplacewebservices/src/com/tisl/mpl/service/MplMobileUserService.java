@@ -17,11 +17,11 @@ import com.tisl.mpl.wsdto.MplUserResultWsDto;
  */
 public interface MplMobileUserService
 {
-	public MplUserResultWsDto registerNewMplUser(final String login, final String password) throws EtailBusinessExceptions,
-			EtailNonBusinessExceptions;
+	public MplUserResultWsDto registerNewMplUser(final String login, final String password)
+			throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 
-	public MplUserResultWsDto loginUser(final String login, final String password) throws EtailNonBusinessExceptions,
-			EtailBusinessExceptions;
+	public MplUserResultWsDto loginUser(final String login, final String password)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions;
 
 	//	public MplUserResultWsDto socialGoogleRegistration(final String accessToken, final String emailId, final String socialUserId);
 	//
@@ -37,8 +37,30 @@ public interface MplMobileUserService
 
 	public MplUserResultWsDto socialFbRegistration(final String emailId, final String uid);
 
-	public MplUserResultWsDto loginSocialGoogleUser(final String login, final String uid) throws UnsupportedEncodingException;
+	//	public MplUserResultWsDto loginSocialGoogleUser(final String login, final String uid) throws UnsupportedEncodingException;
+	//
+	//	public MplUserResultWsDto loginSocialFbUser(final String login, final String uid) throws UnsupportedEncodingException;
 
-	public MplUserResultWsDto loginSocialFbUser(final String login, final String uid) throws UnsupportedEncodingException;
+	/**
+	 * @param emailId
+	 * @param uid
+	 * @param timestamp
+	 * @param signature
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	public MplUserResultWsDto loginSocialFbUser(String emailId, String uid, String timestamp, String signature)
+			throws UnsupportedEncodingException;
+
+	/**
+	 * @param emailId
+	 * @param uid
+	 * @param timestamp
+	 * @param signature
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	public MplUserResultWsDto loginSocialGoogleUser(String emailId, String uid, String timestamp, String signature)
+			throws UnsupportedEncodingException;
 
 }

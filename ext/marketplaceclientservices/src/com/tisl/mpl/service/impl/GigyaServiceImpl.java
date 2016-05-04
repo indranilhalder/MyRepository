@@ -743,6 +743,8 @@ public class GigyaServiceImpl implements GigyaService
 					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
 					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, uid);
 					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
+					//					request.setParam(MarketplacecclientservicesConstants.UIDSIG, uidsig);
+					//					request.setParam(MarketplacecclientservicesConstants.UIDTIMESTAMP, uidtimestamp);
 					request.setParam(MarketplacecclientservicesConstants.TARGETENV, MarketplacecclientservicesConstants.MOBILE);
 					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
@@ -806,6 +808,160 @@ public class GigyaServiceImpl implements GigyaService
 							}
 						}
 						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
+					}
+				}
+				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
+				{
+					setProxy();
+					request.setProxy(proxy);
+				}
+				request.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
+				request.setAPIDomain(getDomain());
+				request.setParam("userInfo at mobile registration", loginUserInfo);
+				//	request.setParam(MarketplacecclientservicesConstants.TARGETENV, MarketplacecclientservicesConstants.MOBILE);
+				// Step 3 - SENDING THE REQUEST
+				final GSResponse response = request.send();
+
+				// Step 4 - HANDLING THE REQUEST RESPONSE
+				if (response != null)
+				{
+					if (response.getErrorCode() == 0)
+					{
+						LOG.debug(response.getResponseText());
+						final GSObject responsedata = response.getData();
+						final String sessionToken = responsedata.getString(MarketplacecclientservicesConstants.SESSIONTOKEN);
+						final String sessionSecret = responsedata.getString(MarketplacecclientservicesConstants.SESSIONSECRET);
+						if (StringUtils.isNotEmpty(sessionSecret))
+						{
+							gigyaWsDTO.setSessionSecret(sessionSecret);
+						}
+						if (StringUtils.isNotEmpty(sessionToken))
+						{
+							gigyaWsDTO.setSessionToken(sessionToken);
+						}
+
+						LOG.debug("****************** SESSSSION KEY ****************** " + gigyaWsDTO.getSessionSecret());
+						LOG.debug(" ******************  SESSSSION TOKEN ****************** " + gigyaWsDTO.getSessionToken());
+					}
+					else
+					{
+						LOG.debug(
+								"GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->" + (response.getErrorMessage()));
+					}
+				}
+				else
+				{
+					LOG.debug(MarketplacecclientservicesConstants.NULL_RESPONSE);
+				}
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(EXCEPTION_LOG, ex);
+			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND, ex);
+		}
+		return gigyaWsDTO;
+	}
+
+
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.service.GigyaService#notifyGigyaforMobilewithSig(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public GigyaWsDTO notifyGigyaforMobilewithSig(final String uid, final String gigyauid, String firstName, final String lName,
+			final String eMail, final String gigyaMethod, final String timestamp, final String signature)
+	{
+		// YTODO Auto-generated method stub
+
+		final GigyaWsDTO gigyaWsDTO = new GigyaWsDTO();
+		try
+		{
+			final String proxyEnabledStatus = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			String loginUserInfo = null;
+			if (getSecretkey() != null && getApikey() != null)
+			{
+				GSRequest request = null;
+				LOG.debug("GigyaServiceImpl, notifyGigya Gigya Method" + gigyaMethod);
+				final String FIRSTNAME = "{firstName:" + "'";
+				final String LASTNAME = ",lastName: ";
+				final String EMAIL = ",email:";
+				// NOTIFY GIGYA WHEN USER LOGIN USING SOCIAL NETWORKS
+				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.notifyRegistration"))
+				{
+					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
+					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, uid);
+					request.setParam(MarketplacecclientservicesConstants.UID, gigyauid);
+					request.setParam(MarketplacecclientservicesConstants.UIDSIG, signature);
+					request.setParam(MarketplacecclientservicesConstants.UIDTIMESTAMP, timestamp);
+					request.setParam(MarketplacecclientservicesConstants.TARGETENV, MarketplacecclientservicesConstants.MOBILE);
+					if (firstName != null && firstName.length() > 0 && !(firstName.equals(" ")))
+					{
+						loginUserInfo = FIRSTNAME + firstName + "'" + "}";
+					}
+					else
+					{
+						if (eMail != null)
+						{
+							final String splitList[] = eMail.split(MarketplacecclientservicesConstants.SPLIT_AT);
+							firstName = splitList[0];
+							if (firstName.contains("."))
+							{
+								firstName = firstName.replace('.', ' ');
+							}
+						}
+						loginUserInfo = FIRSTNAME + firstName + "'" + "}";
+					}
+				}
+				//  NOTIFY GIGYA WHEN USER UPDATES HIS PROFILE DETAILS LIKE FIRSTNAME,LASTNAME,EMAIL
+				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.setUserInfo"))
+				{
+					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
+					request.setParam(MarketplacecclientservicesConstants.UID, uid);
+					if (firstName != null && firstName.length() > 0 && !(firstName.equals(" ")))
+					{
+						loginUserInfo = FIRSTNAME + firstName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
+					}
+					else
+					{
+						final String splitList[] = eMail.split(MarketplacecclientservicesConstants.SPLIT_AT);
+						firstName = splitList[0];
+						if (firstName.contains("."))
+						{
+							firstName = firstName.replace('.', ' ');
+						}
+						loginUserInfo = FIRSTNAME + firstName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
+					}
+				}
+				//NOTIFY GIGYA WHEN USER LOGIN THROUGH SOCIAL WITH THE SAME EMAIL USED DURIGN SITE LOGIN
+				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.setUID"))
+				{
+					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
+					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, uid);
+					request.setParam(MarketplacecclientservicesConstants.UID, gigyauid);
+					request.setParam(MarketplacecclientservicesConstants.TARGETENV, MarketplacecclientservicesConstants.MOBILE);
+
+					if (firstName != null && firstName.length() > 0 && !(firstName.equals(" ")))
+					{
+						loginUserInfo = FIRSTNAME + firstName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
+					}
+					else
+					{
+						if (eMail != null)
+						{
+							final String splitList[] = eMail.split(MarketplacecclientservicesConstants.SPLIT_AT);
+							firstName = splitList[0];
+							if (firstName.contains("."))
+							{
+								firstName = firstName.replace('.', ' ');
+							}
+						}
+						loginUserInfo = FIRSTNAME + firstName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
 					}
 				}
 				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))

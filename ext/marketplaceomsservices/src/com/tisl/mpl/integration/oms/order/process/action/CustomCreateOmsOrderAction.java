@@ -6,7 +6,6 @@ import de.hybris.platform.commerceservices.impersonation.ImpersonationService;
 import de.hybris.platform.commerceservices.util.CommerceCatalogUtils;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.integration.oms.order.data.OrderPlacementResult;
-import de.hybris.platform.integration.oms.order.service.OmsOrderService;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractSimpleDecisionAction;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -16,11 +15,10 @@ import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 
+import com.hybris.commons.client.RestCallException;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
-import com.hybris.commons.client.RestCallException;
 
 
 public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<OrderProcessModel>
@@ -41,8 +39,8 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 
 		final ImpersonationContext context = new ImpersonationContext();
 		context.setOrder(order);
-		context.setCatalogVersions(
-				CommerceCatalogUtils.findProductCatalogVersions(getCatalogVersionService().getAllCatalogVersions()));
+		context.setCatalogVersions(CommerceCatalogUtils.findProductCatalogVersions(getCatalogVersionService()
+				.getAllCatalogVersions()));
 		OrderPlacementResult crmResult = null;
 		OrderPlacementResult omsResult = null;
 		if (order.getCrmSubmitStatus() == null || !order.getCrmSubmitStatus().equals(MarketplaceomsservicesConstants.SUCCESS))
@@ -176,8 +174,8 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 
 
 	/**
-
-
+	 * 
+	 * 
 	 * @param catalogVersionService
 	 *           the catalogVersionService to set
 	 */
@@ -200,8 +198,8 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 	}
 
 	/**
-
-
+	 * 
+	 * 
 	 * @param impersonationService
 	 *           the impersonationService to set
 	 */
