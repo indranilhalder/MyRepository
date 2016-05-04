@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -68,33 +69,33 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 		if (value1.contains(EURO))
 		{
 
-			valueFootwear1 = value1.substring(value1.indexOf("-") + 1, value1.length());
+			valueFootwear1 = value1.substring(value1.indexOf('-') + 1, value1.length());
 			value1 = EURO;
 		}
 		else if (value1.contains(UK_IND))
 		{
-			valueFootwear1 = value1.substring(value1.indexOf("-") + 1, value1.length());
+			valueFootwear1 = value1.substring(value1.indexOf('-') + 1, value1.length());
 			value1 = UK_IND;
 
 		}
 		else if (value1.contains(US))
 		{
-			valueFootwear1 = value1.substring(value1.indexOf("-") + 1, value1.length());
+			valueFootwear1 = value1.substring(value1.indexOf('-') + 1, value1.length());
 			value1 = US;
 		}
 		if (value2.contains(EURO))
 		{
-			valueFootwear2 = value2.substring(value2.indexOf("-") + 1, value2.length());
+			valueFootwear2 = value2.substring(value2.indexOf('-') + 1, value2.length());
 			value2 = EURO;
 		}
 		else if (value2.contains(UK_IND))
 		{
-			valueFootwear2 = value2.substring(value2.indexOf("-") + 1, value2.length());
+			valueFootwear2 = value2.substring(value2.indexOf('-') + 1, value2.length());
 			value2 = UK_IND;
 		}
 		else if (value2.contains(US))
 		{
-			valueFootwear2 = value2.substring(value2.indexOf("-") + 1, value2.length());
+			valueFootwear2 = value2.substring(value2.indexOf('-') + 1, value2.length());
 			value2 = US;
 		}
 		if (value1IsNumber && value2IsNumber)
@@ -110,7 +111,7 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 				final int index2 = sizeSystem.indexOf(value2);
 				if (value1 == value2)
 				{
-					if (valueFootwear1 != "" && valueFootwear2 != "")
+					if (StringUtils.isNotEmpty(valueFootwear1) && StringUtils.isNotEmpty(valueFootwear2))
 					{
 						return numericCompare(valueFootwear1, valueFootwear2);
 					}
