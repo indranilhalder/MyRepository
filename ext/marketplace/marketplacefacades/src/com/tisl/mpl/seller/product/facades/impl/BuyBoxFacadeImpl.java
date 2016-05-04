@@ -1,5 +1,6 @@
 package com.tisl.mpl.seller.product.facades.impl;
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -13,6 +14,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -56,7 +58,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	private static final String ED = "ED";
 	private static final String HD = "HD";
-
+	//TISCR-414 - Chairmans demo feedback 10thMay CR
+	private static final String LINGERIE1 = "LINGERIE1";
+	private static final String LINGERIE2 = "LINGERIE2";
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(BuyBoxFacadeImpl.class);
@@ -543,8 +547,52 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			richData.setNewProduct(Y);
 		}
 		richData.setOnlineExclusive(onlineExclusive);
-		LOG.info("******New Product::::::::::::" + richData.getNewProduct());
+		//TISCR-414 - Chairmans demo feedback 10thMay CR starts
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>(productModel.getSupercategories());
+		final String configLingerieCategoris1 = configurationService.getConfiguration().getString("pdp.lingerie1.code");
+		final String configLingerieCategoris2 = configurationService.getConfiguration().getString("pdp.lingerie2.code");
+
+		if (StringUtils.isNotEmpty(configLingerieCategoris1) && isCatLingerie(categoryList, configLingerieCategoris1))
+		{
+			richData.setReturnWindow(LINGERIE1);
+		}
+		else if (StringUtils.isNotEmpty(configLingerieCategoris2) && isCatLingerie(categoryList, configLingerieCategoris2))
+		{
+			richData.setReturnWindow(LINGERIE2);
+		}
+
+
+		LOG.info("******New Product::::::::::::" + richData.getNewProduct() + " return window:" + richData.getReturnWindow());
+		//TISCR-414 - Chairmans demo feedback 10thMay CR ends
 		return richData;
+	}
+
+	//TISCR-414 - Chairmans demo feedback 10thMay CR
+	private boolean isCatLingerie(final List<CategoryModel> categoryList, final String configLingerieCategoris)
+	{
+		boolean isLingerie = false;
+
+		if (null != categoryList && !categoryList.isEmpty())
+		{
+			final List<String> categoryCodeList = new ArrayList<String>();
+			for (final CategoryModel catModel : categoryList)
+			{
+				categoryCodeList.add(catModel.getCode());
+			}
+			if (StringUtils.isNotEmpty(configLingerieCategoris))
+			{
+				final String[] longeriesCatCodeData = configLingerieCategoris.split(",");
+				for (int index = 0; index < longeriesCatCodeData.length; index++)
+				{
+					if (categoryCodeList.contains(longeriesCatCodeData[index]))
+					{
+						isLingerie = true;
+						break;
+					}
+				}
+			}
+		}
+		return isLingerie;
 	}
 
 	private boolean isNew(final Date existDate)
