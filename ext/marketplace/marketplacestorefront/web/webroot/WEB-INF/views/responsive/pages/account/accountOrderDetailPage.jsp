@@ -591,7 +591,8 @@
 													data-mylist="<spring:theme code="text.help" />"
 													data-dismiss="modal" onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
 														text="Cancel Order" /></a>
-												The entry is cancellable before "${cancelEndpointStatus}"
+												<!-- TISCR-410 -->
+												<spring:theme code="trackOrder.cancellableBefore.msg" /> "${cancelEndpointStatus}"
 											</c:if>
 											<c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
@@ -600,15 +601,18 @@
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
 												</a>
-												The entry is no longer cancellable
+												<!-- TISCR-410 -->
+												<spring:theme code="trackOrder.noLongerCancellable.msg" />
 											</c:if>
+											<!-- TISCR-410 -->
 											<c:if
 												test="${entry.itemCancellationStatus eq false and entry.itemReturnStatus eq false and entry.giveAway eq false and entry.isBOGOapplied eq false}">
-													The entry is no longer cancellable
+													<spring:theme code="trackOrder.noLongerCancellable.msg" />
 											</c:if>
+											<!-- TISCR-410 -->
 											<c:if
 												test="${entry.giveAway eq true || entry.isBOGOapplied eq true}">
-												The entry is not cancellable
+												<spring:theme code="trackOrder.notCancellable.msg" />
 											</c:if>
 
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
