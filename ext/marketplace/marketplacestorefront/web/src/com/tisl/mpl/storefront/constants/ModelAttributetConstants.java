@@ -255,6 +255,8 @@ public final class ModelAttributetConstants
 	public static final String SHIPPING_MODE = "shippingMode";
 	public static final String CONFIGURABLE_ATTRIBUTE = "classification.attributes.";
 	public static final String MAP_CONFIGURABLE_ATTRIBUTE = "mapConfigurableAttribute";
+
+	public static final String MAP_CONFIGURABLE_ATTRIBUTES = "mapConfigurableAttributes";
 	public static final String SELLER_ID = "sellerID";
 
 	public static final String PIN = "pin";

@@ -1355,6 +1355,7 @@ public class ProductPageController extends AbstractPageController
 	private void displayConfigurableAttribute(final ProductData productData, final Model model)
 	{
 		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
+		final Map<String, Map<String, String>> mapConfigurableAttributes = new HashMap<String, Map<String, String>>();
 		final List<String> warrentyList = new ArrayList<String>();
 		try
 		{
@@ -1369,7 +1370,7 @@ public class ProductPageController extends AbstractPageController
 
 					for (final FeatureData featureData : featureDataList)
 					{
-
+						final Map<String, String> productFeatureMap = new HashMap<String, String>();
 						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
 						final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
 								productData, featureData.getCode());
@@ -1388,10 +1389,19 @@ public class ProductPageController extends AbstractPageController
 								if (null != properitsValue && featureValueData.getValue() != null
 										&& properitsValue.toLowerCase().contains(featureData.getName().toLowerCase()))
 								{
-									mapConfigurableAttribute.put(featureValueData.getValue(),
+									//									mapConfigurableAttribute.put(featureValueData.getValue(),
+									//											productFeature != null && productFeature.getUnit() != null
+									//													&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
+									//													: "");
+									if (productFeatureMap.size() > 0)
+									{
+										productFeatureMap.clear();
+									}
+									productFeatureMap.put(featureValueData.getValue(),
 											productFeature != null && productFeature.getUnit() != null
 													&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
 													: "");
+									mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 								}
 
 							} //end apparel
@@ -1417,9 +1427,11 @@ public class ProductPageController extends AbstractPageController
 			}
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
+					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
+					|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())
+					|| ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()))
 			{
-				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 			}
 			else
 			{
