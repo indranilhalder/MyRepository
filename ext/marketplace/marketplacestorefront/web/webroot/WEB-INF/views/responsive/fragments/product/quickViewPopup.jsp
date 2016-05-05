@@ -39,7 +39,7 @@ tr.d0 td {
 		var optionData = "<option value='select' disabled selected>Select</option>";
 		$("#emiTableTHead").hide();
 		$("#emiTableTbody").hide();
-		var requiredUrl = ACC.config.encodedContextPath + "/p" + "/enlistEMIBanks";
+		var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
 		var dataString = 'productVal=' + productVal;
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
@@ -67,7 +67,7 @@ tr.d0 td {
 		var contentData = '';
 		if (selectedBank != "select") {
 			$.ajax({
-				url : ACC.config.encodedContextPath + "/p/getTerms",
+				url : ACC.config.encodedContextPath + "/p-getTerms",
 				data : {
 					'selectedEMIBank' : selectedBank,
 					'productVal' : productVal
@@ -113,7 +113,7 @@ tr.d0 td {
 		
 		var productCode = $("#product_quick").val();
 		var requiredUrl = ACC.config.encodedContextPath + "/p"
-				+ "/viewWishlistsInPDP";
+				+ "-viewWishlistsInPDP";
 
 		var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
 		// for
@@ -243,7 +243,7 @@ tr.d0 td {
 	    	return false;
 	    }
 		var requiredUrl = ACC.config.encodedContextPath + "/p"
-				+ "/addToWishListInPDP";
+				+ "-addToWishListInPDP";
 	    var sizeSelected=true;
 	    if($("#isSizeSelectedQV").val()==''){
 	    	sizeSelected=false;
@@ -1078,7 +1078,7 @@ function sendmail_quick(){
 	if(validEmail(email)){
 		//var emailList = email.split(";");
 		$.ajax({
-			url : ACC.config.encodedContextPath + "/p/sendEmail",
+			url : ACC.config.encodedContextPath + "/p-sendEmail",
 			data : dataString,			
 			type : "GET",
 			cache : false,

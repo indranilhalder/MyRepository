@@ -42,7 +42,7 @@ tr.d0 td {
 function openPopFromCart(entry,productCode,ussid) {
 	
 	//var productCode = $("#product").val();
-	var requiredUrl = ACC.config.encodedContextPath + "/p"+"/viewWishlistsInPDP";
+	var requiredUrl = ACC.config.encodedContextPath + "/p"+"-viewWishlistsInPDP";
 	var dataString = 'productCode=' + productCode+ '&ussid=' + ussid;//modified for ussid
 	var entryNo = $("#entryNo").val(entry);
 		$.ajax({
@@ -116,7 +116,7 @@ function addToWishlistForCart(ussid,productCode)
 	$("#wishlistErrorId").css("display","none");
     
     
-	var requiredUrl = ACC.config.encodedContextPath + "/p"+ "/addToWishListInPDP";
+	var requiredUrl = ACC.config.encodedContextPath + "/p"+ "-addToWishListInPDP";
 	var dataString = 'wish='+wishName 
 				    +'&product='+ productCode
 				    +'&ussid='+ ussid 
