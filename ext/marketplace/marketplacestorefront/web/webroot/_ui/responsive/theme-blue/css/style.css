@@ -1676,14 +1676,14 @@ h2 {
           
           header .content nav > ul > li:hover > ul {
             background-color: #fff;
-            -webkit-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
+           /*  -webkit-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             -moz-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
-            box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
+            box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px; */
           	height: 450px;
             z-index: 3;
-            -webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s, -webkit-box-shadow 0.15s 0.3s;
-            -moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s, -moz-box-shadow 0.15s 0.3s;
-            transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s, box-shadow 0.15s 0.3s; }
+            -webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
+            -moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
+            transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s; }
   header .content .search {
     float: right;
     max-width: 640px;
@@ -25506,7 +25506,8 @@ padding-left: 0px;}
        .listing.wrapper .right-block .listing-menu > div .pagination.mobile{
        position: absolute;
        top:0px;
-       right:-3px;}
+       right:-3px;
+       display:none;}
        .pagination li.prev{
      border: 2px solid #f0f4f5;
     padding-left: 7px;
@@ -30738,8 +30739,636 @@ header.compact .content .right ul > li {
     display: table-cell;
     vertical-align: middle;
     height: 30px;
+}}
+/*App landing page css starts*/
+@media ( min-width : 791px) {
+	.r2-landing-banner h1 {
+		font-size: 55px;
+		text-transform: uppercase;
+		padding-top: 170px;
+		font-weight: 700;
+	}
+	h1.r2-landing-heading {
+		width: 90%;
+		margin: auto;
+		font-size: 30px;
+		text-transform: uppercase;
+		line-height: 40px;
+		padding: 20px;
+	}
+	.r2-landing-banner h5 {
+		color: #fff;
+	}
 }
+
+a.r2-landin-brands .r2-app-brand-img {
+	margin-top: -70px !Important;
 }
+
+.r2-landing-banner {
+	background-image: url('../images/banner-app-mob.png');
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	width: 100%;
+	height: 206px;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	text-align: center;
+}
+
+.r2-landing-banner h1 {
+	font-size: 31px;
+	line-height: 40px;
+	text-transform: uppercase;
+	padding-top: 20px;
+	color: #333;
+	font-weight: 700;
+}
+
+.r2-landing-banner:last-child h1, p {
+	color: #fff;
+}
+
+.r2-landing-banner h5 {
+	font-size: 18px;
+	line-height: 30px;
+	text-align: left;
+}
+
+.r2-landing-banner:last-child h5 {
+	color: #fff;
+}
+
+.r2-app-landing article p {
+	font-size: 18px;
+	padding-top: 40px;
+	color: #333;
+	margin: 0 0 10px;
+	line-height: 25px;
+}
+
+.r2-app-landing article div a span:first-child {
+	font-size: 30px;
+	line-height: 40px;
+	border-right: 1px solid #DCC3C3;
+	margin-left: -7px;
+	padding-right: 10px;
+	width: 37px;
+}
+
+.r2-app-landing article div a span:last-child {
+	margin-top: -10px;
+	padding: 0px;
+	margin-left: -10px;
+	font-size: 14px;
+	line-height: 24px;
+	    font-weight: 700;
+}
+
+.r2-app-landing article div a {
+	height: 67px;
+	width: 294px;
+}
+
+.r2-app-landing article li {
+	font-size: 14px;
+	list-style-type: disc;
+	line-height: 24px;
+	text-align: center;
+	list-style-position: inside;
+}
+
+img.r2-app-mob-up {
+	margin-top: 180px !important;
+	margin-left: 100px !important;
+}
+
+.r2-app-text>div>article>div {
+	margin: auto;
+	width: 80%;
+	width: 100%;
+}
+
+.r2-app-landing div.r2-buy-banner p {
+	font-size: 14px;
+	line-height: 20px;
+	letter-spacing: 2px;
+	padding: 32px;
+	margin: 0px;
+}
+
+.r2-app-slider {
+	background-image: url('../images/r2/app-off-mob.png');
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	width: 100%;
+	height: auto;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	-
+}
+
+.r2-app-slider>div>h1, .r2-app-slider>div>p {
+	color: #fff;
+	text-align: center;
+	width: 90%;
+	margin: auto;
+}
+
+.r2-app-slider>div>h1 {
+	margin-top: 40px;
+	font-size: 31px;
+	text-transform: uppercase;
+	padding-top: 100px;
+	line-height: 40px;
+	width: 100%;
+	font-weight: 700;
+}
+
+.r2-app-slider>div>p {
+	font-size: 14px;
+	line-height: 25px;
+	width: 80%;
+}
+
+.hidden-xs {
+	display: none;
+}
+
+.visible-xs {
+	display: block;
+}
+
+.r2-app-slider .carousel-indicators {
+	bottom: 490px;
+}
+
+img.r2-app-brand-img {
+	margin-left: 20px;
+	margin-bottom: 0px;
+}
+
+.r2-mob-carousel h2 {
+	text-transform: uppercase;
+	font-size: 31px;
+	font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.r2-mob-carousel p {
+	text-transform: lowercase;
+	font-size: 14px;
+	line-height: 24px;
+}
+
+.r2-landing-banner:last-child {
+	background-image: url('../images/landing_last-mobile.png');
+	height: auto;
+	margin-top: 100px;
+	padding-bottom: 40px;
+}
+
+img.r2-app-mob-down {
+	margin-top: -80px;
+	margin-left: 70px;
+}
+
+h1.r2-landing-heading {
+	width: 90%;
+	margin: auto;
+	font-size: 30px;
+	text-transform: uppercase;
+	line-height: 40px;
+	padding: 20px;
+}
+
+.r2-landing-brands p {
+	font-size: 14px;
+	line-height: 20px;
+	color: #333;
+}
+
+.r2-landing-banner h1 {
+	color: #333;
+}
+
+@media ( min-width : 768px) and (max-width: 791px) {
+	img.r2-app-brand-img {
+		margin-top: -20px;
+		margin-bottom: 0px;
+	}
+	.r2-landing-brands>div:nth-child(2)>img {
+		position: relative;
+		left: -150px;
+	}
+	.r2-landing-banner:last-child {
+		height: auto;
+		padding-bottom: 40px;
+	}
+	.r2-app-slider .carousel-indicators {
+		bottom: 400px;
+	}
+	.r2-landing-banner {
+		background-image: url('../images/banner-app-mob.png');
+		height: auto;
+		padding-bottom: 40px;
+	}
+	img.r2-app-mob-down {
+		margin-top: -140px !important;
+		margin-left: 50px;
+	}
+}
+
+@media ( max-width : 480px) and (min-width: 320px) {
+	.r2-landing-brands img.r2-app-brand-img {
+		margin-top: -60px;
+		margin-left: -40px;
+		margin-bottom: 90px;
+	}
+}
+
+@media ( min-width : 768px) {
+	.r2-landing-banner {
+		background-image: url('../images/banner-app.png');
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		width: 100%;
+		height: 467px;
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+	}
+	.r2-landing-banner:last-child {
+		background-image: url('../images/landing_last.png');
+		height: auto;
+		padding-bottom: 40px;
+	}
+	.r2-landing-banner h1 {
+		font-size: 55px;
+		text-transform: uppercase;
+		color: #000;
+		font-weight: 700;
+		line-height: 60px;
+		padding-top: 170px;
+	}
+	.r2-landing-banner img.r2-app-mob-up {
+		margin-top: 150px;
+		margin-left: -80px;
+	}
+	.r2-app-mob {
+		float: right !important;
+	}
+	.r2-app-text {
+		float: left !important;
+	}
+	.r2-landing-banner h5 {
+		font-size: 18px;
+	}
+	.r2-app-landing article p {
+		font-size: 18px;
+		padding-top: 40px;
+	}
+	.r2-app-landing article div a span:first-child {
+		font-size: 25px;
+		line-height: 40px;
+		border-right: 1px solid #fff;
+		padding-right: 10px;
+		width: 37px;
+	}
+	.r2-app-landing article div a span:last-child {
+		padding: 0px;
+		font-size: 14px;
+	}
+	.r2-app-landing article div a {
+		height: 69px !important;
+		width: 294px !important;
+	}
+	.r2-app-landing article li {
+		font-size: 14px;
+		list-style-type: disc;
+		line-height: 24px;
+	}
+	img.r2-app-mob-up {
+		margin-top: 180px;
+		margin-left: -100px;
+	}
+	img.r2-app-mob-down {
+		margin-top: -230px;
+		margin-left: 50px;
+	}
+	.r2-app-landing .r2-buy-banner p {
+		margin: 0px;
+	}
+	.r2-app-slider {
+		background-image: url('../images/app-offer.png');
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		width: 100%;
+		height: auto;
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+		padding-bottom: 40px;
+	}
+	.r2-app-slider>div>h1, .r2-app-slider>div>p {
+		color: #fff;
+		text-align: center;
+		margin: auto;
+	}
+	.r2-app-slider>div>h1 {
+		margin-top: 150px;
+		font-size: 45px;
+		text-transform: uppercase;
+		padding-top: 100px;
+		line-height: 60px;
+		width: 100%;
+		font-weight: 700;
+	}
+	.r2-app-slider>div>p {
+		font-size: 14px;
+		width: 40%;
+	}
+	.hidden-xs {
+		display: block;
+	}
+	.visible-xs {
+		display: none;
+	}
+	.r2-app-brand-img:first-child {
+		margin-left: -150px;
+		margin-top: -70px;
+	}
+	.r2-mob-carousel h2 {
+		text-transform: uppercase;
+		font-size: 45px;
+		font-weight: 700;
+	}
+	.r2-mob-carousel p {
+		line-height: 25px;
+		text-transform: lowercase;
+		font-size: 14px;
+	}
+}
+
+@media ( max-width : 1098px) and (min-width: 791px) {
+	.r2-landing-banner img.r2-app-mob-up {
+		margin-top: 50px !important;
+		margin-left: -200px !important;
+	}
+}
+
+@media ( min-width : 1098px) {
+	.r2-landing-banner img.r2-app-mob-up {
+		margin-top: 130px !important;
+		margin-left: -150px !important;
+	}
+}
+
+@media ( max-width : 767px) and (min-width: 580px) {
+	.r2-app-text>div>article>div {
+		width: 80%;
+	}
+	.r2-landing-brands img.r2-app-brand-img {
+		margin-top: -20px;
+		margin-left: 20px;
+		margin-bottom: 90px;
+	}
+	.r2-landing-banner:last-child {
+		height: auto;
+		padding-bottom: 40px;
+	}
+	.r2-landing-banner {
+		height: 400px;
+	}
+}
+
+@media ( max-width : 420px) and (min-width: 320px) {
+	.r2-app-slider>div>p {
+		width: 90%;
+	}
+}
+
+.r2-app-text>div>article>div {
+	width: 100%;
+}
+
+.r2-app-slider>div>h1 {
+	font-size: 26px;
+}
+
+.r2-mob-carousel {
+	margin-top: 0px;
+}
+
+.r2-app-slider {
+	height: auto;
+	padding-bottom: 40px;
+}
+
+@media ( max-width : 1024px) and (min-width: 990px) {
+	.r2-landing-brands>div:first-child .r2-app-brand-img {
+		margin-left: -300px;
+	}
+	.r2-mob-carousel h2 {
+		margin-top: 60px;
+	}
+	a.r2-landin-brands .r2-app-brand-img {
+		margin-top: -70px;
+	}
+}
+
+@media ( min-width : 1024px) {
+	a.r2-landin-brands .r2-app-brand-img {
+		margin-top: -70px !Important;
+	}
+	.r2-mob-carousel h2 {
+		margin-top: 60px;
+	}
+	.r2-landing-banner h1 {
+		color: #fff;
+	}
+}
+
+.template-pages-layout-appLandingPage .body-Content {
+	overflow: hidden;
+}
+
+.r2-center {
+	text-align: center;
+	float: left;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.r2-left {
+	float: left !Important;
+}
+
+.r2-padding {
+	padding: 20px !important;
+}
+
+.r2-center {
+	text-align: center !important;
+}
+
+.r2-marginAuto {
+	margin: auto !important;
+}
+
+.r2-marginTop {
+	margin-top: 10px;
+}
+
+.r2-app-landing .r2-padding {
+	padding: 20px !important;
+}
+
+.r2-app-landing .container {
+	overflow: hidden;
+}
+
+.r2-paddingTop {
+	padding-top: 20px !important;
+}
+
+.r2-whiteText {
+	color: #fff;
+}
+
+.r2-marginBottom {
+	margin-bottom: 10px;
+}
+
+.r2-minusmarginLeft {
+	margin-left: -20px;
+}
+
+.r2-right-align {
+	text-align: right;
+}
+
+.r2-right {
+	float: right !important;
+}
+
+.r2-landing-banner .r2-app-mob, .r2-landing-banner .r2-app-text {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.r2-buy-banner {
+	overflow: hidden;
+	width: 100%;
+	float: left;
+}
+
+.r2-buy-banner p {
+	padding: 35px;
+	line-height: 20px;
+	color: #fff;
+	text-transform: uppercase;
+	background: #A91E3E;
+	font-weight: 600;
+	letter-spacing: 1.5px;
+	text-align: center;
+	font-size: 16px;
+}
+
+@media ( max-width : 790px) {
+	.r2-app-landing article div a {
+		height: 67px !important;
+		width: 294px !important;
+	}
+}
+
+@media ( min-width :768px) {
+	.r2-landing-banner:last-child h1, p, .r2-app-landing article li {
+		text-align: left;
+	}
+}
+
+@media ( max-width : 790px) {
+	.r2-app-slider {
+		background-image: url('../images/app-off-mob.png');
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		width: 100%;
+		height: auto;
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+	}
+}
+
+@media ( max-width : 790px) {
+	.r2-landing-banner:last-child {
+		background-image: url('../images/landing_last-mobile.png');
+		height: auto;
+		margin-top: 100px;
+		padding-bottom: 40px;
+	}
+}
+
+.r2-app-landing .owl-carousel .owl-controls .owl-pagination .owl-page span
+	{
+	width: 12px;
+	height: 12px;
+	border-radius: 100%;
+	background: transparent;
+	border: 2px solid #fff;
+}
+
+.r2-app-landing .owl-carousel .owl-controls .owl-pagination .owl-page.active span
+	{
+	background: #fff;
+}
+
+.r2-app-landing .owl-carousel .owl-controls .owl-pagination {
+	bottom: -20px;
+}
+@media (max-width: 991px) and (min-width: 768px){
+.r2-app-landing .visible-sm {
+    display: block!important;
+}}
+@media (max-width: 767px){
+.r2-app-landing .visible-xs {
+    display: block!important;
+}
+.r2-landing-banner h5{
+	text-align:center;
+}}
+.r2-app-landing a.button.maroon{
+	    background-color: #A91E3E;
+}
+/*App landing page css ends*/
+.totalPayable{
+	font-size:14px;
+	font-weight:bold;
+	text-align:left;
+	padding-left: 120px;
+	text-transform:capitalize;
+}
+.total-payable-amount{
+	float: right;
+	padding-right:10px;
+}
+p.savings span {
+    display: inline-block;
+    padding: 2px 5px;
+    box-shadow: #a9143c 0px 0px 1px 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: #333;
+} 
 /*--------------maincss-----------*/
 .row
 {
@@ -30863,8 +31492,8 @@ code, kbd, pre, samp {
 	{
 	position: relative;
 	min-height: 1px;
-	padding-left: 10px;
-	padding-right: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6,
