@@ -9,6 +9,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script>
 	//Refresh the page if compare page is already visted
 	if (sessionStorage.getItem("comparePageVisited") != null) {
@@ -268,7 +269,12 @@
 									</c:otherwise>
 								</c:choose>
 
+							</p>																	
+							<p class="savings">															
+							<span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValue} </span>
 							</p>
+							
+							
 						</div>
 					</c:if>
 					<c:if
