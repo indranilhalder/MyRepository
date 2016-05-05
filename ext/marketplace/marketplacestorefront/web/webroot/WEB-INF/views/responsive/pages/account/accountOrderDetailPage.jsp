@@ -603,12 +603,12 @@
 														text="Return Item" />
 												</a>
 												<!-- TISCR-410 -->
-												<spring:theme code="trackOrder.noLongerCancellable.msg" />
+												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 											</c:if>
 											<!-- TISCR-410 -->
 											<c:if
 												test="${entry.itemCancellationStatus eq false and entry.itemReturnStatus eq false and entry.giveAway eq false and entry.isBOGOapplied eq false}">
-													<spring:theme code="trackOrder.noLongerCancellable.msg" />
+													<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 											</c:if>
 											<!-- TISCR-410 -->
 											<c:if
