@@ -31348,6 +31348,26 @@ h1.r2-landing-heading {
 .r2-app-landing a.button.maroon{
 	    background-color: #A91E3E;
 }
+/*App landing page css ends*/
+.totalPayable{
+	font-size:14px;
+	font-weight:bold;
+	text-align:left;
+	padding-left: 120px;
+	text-transform:capitalize;
+}
+.total-payable-amount{
+	float: right;
+	padding-right:10px;
+}
+p.savings span {
+    display: inline-block;
+    padding: 2px 5px;
+    box-shadow: #a9143c 0px 0px 1px 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: #333;
+} 
 /*--------------maincss-----------*/
 .row
 {

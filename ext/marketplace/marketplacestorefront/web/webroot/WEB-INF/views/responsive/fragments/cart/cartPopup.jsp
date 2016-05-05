@@ -84,7 +84,7 @@
 							</div>
 							</c:if>
 							<div class="totalPayable">
-								<spring:theme code="cart.popup.totalPayable" />&nbsp;&nbsp; ${cartData.totalPriceWithConvCharge.formattedValue} 
+								<spring:theme code="cart.popup.totalPayable" /><span class="total-payable-amount">${cartData.totalPriceWithConvCharge.formattedValue}</span> 
 							</div>
 							<a href="${cartUrl}" class="go-to-bag mini-cart-checkout-button">
 							<spring:theme code="mpl.minicart.myBag" /></a>
