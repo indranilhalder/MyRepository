@@ -592,7 +592,7 @@
 													data-dismiss="modal" onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
 														text="Cancel Order" /></a>
 												<!-- TISCR-410 -->
-												<spring:theme code="trackOrder.cancellableBefore.msg" /> "${cancelEndpointStatus}"
+												<spring:theme code="trackOrder.cancellableBefore.msg" />
 											</c:if>
 											<c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
