@@ -166,7 +166,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		updateUserPreferences(pageSize);
 
 		List<ProductModel> heroProducts = new ArrayList<ProductModel>();
-		if (!(searchCode.substring(0, 5).equals(categoryCode))
+		if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
 				&& categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 		{
 			searchCode = searchCode.substring(0, 5);
