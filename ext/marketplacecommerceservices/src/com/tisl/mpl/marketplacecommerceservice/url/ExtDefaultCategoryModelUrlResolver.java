@@ -62,6 +62,11 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 			LOG.error(e.getMessage());
 		}
 		url = url.replaceAll("[^\\w/-]", "");
+		//TISSTRT-1297
+		if (url.contains("--"))
+		{
+			url = url.replaceAll("--", "-");
+		}
 
 		return url;
 	}
