@@ -330,6 +330,7 @@
 															</c:if>
 
 														</c:if>
+														
 														<!--Chairman Demo Changes: New Static Content Sheet: Checkout> Order Cancellation -->
 														<c:if test="${entry.itemCancellationStatus eq 'false' and entry.giveAway eq 'false' and entry.isBOGOapplied eq 'false'}">
 														<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />

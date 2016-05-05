@@ -611,6 +611,7 @@
 													<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 											</c:if>
 											<!-- TISCR-410 -->
+											
 											<c:if
 												test="${entry.giveAway eq true || entry.isBOGOapplied eq true}">
 												<spring:theme code="trackOrder.notCancellable.msg" />
