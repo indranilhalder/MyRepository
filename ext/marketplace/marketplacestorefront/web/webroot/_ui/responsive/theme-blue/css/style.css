@@ -30738,7 +30738,7 @@ header.compact .content .right ul > li {
     display: table-cell;
     vertical-align: middle;
     height: 30px;
-}
+}}
 /*App landing page css starts*/
 @media ( min-width : 791px) {
 	.r2-landing-banner h1 {
