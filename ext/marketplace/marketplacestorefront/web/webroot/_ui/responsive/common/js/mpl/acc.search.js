@@ -64,7 +64,7 @@
 				var node = event.node;
 				if(node.categoryType != 'All') {
 					var actionText = ACC.config.contextPath;
-					actionText = (actionText + '/Categories/' + node.label + '/c/' + node.categoryCode);
+					actionText = (actionText + '/Categories/' + node.name + '/c-' + node.categoryCode);
 					$('#categoryPageDeptHierTreeForm').attr('action',actionText);
 					$('#categoryPageDeptHierTreeForm').submit();
 				}
