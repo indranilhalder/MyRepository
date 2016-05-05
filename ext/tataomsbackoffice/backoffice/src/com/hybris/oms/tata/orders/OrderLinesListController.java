@@ -491,10 +491,15 @@ public class OrderLinesListController
 
 		if (sShipStatus)
 		{
-			if (p1LogisticsIDListbox.getSelectedItem() == null || p2LogisticsIDListbox.getSelectedItem() == null
-					|| p1SlaveIDListbox.getSelectedItem() == null)
+			if (p1SlaveIDListbox.getSelectedItem() == null)
 			{
-				Messagebox.show("Please choose any one option from every dropdown box", "Alert", Messagebox.OK, Messagebox.ERROR);
+				Messagebox.show("Please choose any one option from p1slaveid box", "Alert", Messagebox.OK, Messagebox.ERROR);
+				return;
+			}
+			if (!"CNC".equals(selectedOLBuc.getDeliveryType())
+					&& (p1LogisticsIDListbox.getSelectedItem() == null || p2LogisticsIDListbox.getSelectedItem() == null))
+			{
+				Messagebox.show("Please choose any one option from every p1logistics and p2logistics box", "Alert", Messagebox.OK, Messagebox.ERROR);
 				return;
 			}
 
@@ -503,16 +508,15 @@ public class OrderLinesListController
 			orderLineBuc = new OrderLineBUC();
 			if (p2slavesVisibleStatus)
 			{
-				if (p2SlaveIDListbox.getSelectedItem() == null)
+				if (p2SlaveIDListbox.getSelectedItem() != null)
 				{
-					Messagebox.show("Please choose any one option from every dropdown box", "Alert", Messagebox.OK, Messagebox.ERROR);
-					return;
-				}
-				final SlaveInfo p2slave = (SlaveInfo) p2SlaveIDListbox.getSelectedItem().getValue();
-				if (p2slave != null)
-				{
-					orderLineBuc.setSecondarySlaveID(p2slave.getSlaveid());
-					LOG.info("Selected p2slave id {}", p2slave.getSlaveid());
+
+					final SlaveInfo p2slave = (SlaveInfo) p2SlaveIDListbox.getSelectedItem().getValue();
+					if (p2slave != null)
+					{
+						orderLineBuc.setSecondarySlaveID(p2slave.getSlaveid());
+						LOG.info("Selected p2slave id {}", p2slave.getSlaveid());
+					}
 				}
 			}
 			orderLineBuc.setPrimaryLogisticID(p1LogisticsName);
@@ -534,16 +538,14 @@ public class OrderLinesListController
 			orderLineBuc = new OrderLineBUC();
 			if (p2slavesVisibleStatus)
 			{
-				if (p2SlaveIDListbox.getSelectedItem() == null)
+				if (p2SlaveIDListbox.getSelectedItem() != null)
 				{
-					Messagebox.show("Please choose any one option from P2SlaveID", "Alert", Messagebox.OK, Messagebox.ERROR);
-					return;
-				}
-				final SlaveInfo p2slave = (SlaveInfo) p2SlaveIDListbox.getSelectedItem().getValue();
-				if (p2slave != null)
-				{
-					orderLineBuc.setSecondarySlaveID(p2slave.getSlaveid());
-					LOG.info("Selected p2slave id {}", p2slave.getSlaveid());
+					final SlaveInfo p2slave = (SlaveInfo) p2SlaveIDListbox.getSelectedItem().getValue();
+					if (p2slave != null)
+					{
+						orderLineBuc.setSecondarySlaveID(p2slave.getSlaveid());
+						LOG.info("Selected p2slave id {}", p2slave.getSlaveid());
+					}
 				}
 			}
 			final SlaveInfo p1slave = (SlaveInfo) p1SlaveIDListbox.getSelectedItem().getValue();
