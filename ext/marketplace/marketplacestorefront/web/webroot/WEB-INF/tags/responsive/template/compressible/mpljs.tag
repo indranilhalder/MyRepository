@@ -237,4 +237,42 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <!-- Js entry for store finder -->
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/store-finder')}">
  <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.storefinder.js"></script>
+
 </c:if>
+<c:if test="${isIAEnabled}">
+<script type="text/javascript"
+	src="${commonResourcePath}/js/ia-plugins/ia_plugin_general.js" defer="defer"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/ia-plugins/tataia.js" defer="defer"></script>
+</c:if>
+
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
+
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/populateAddressDetail') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/addNewAddress') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/editAddress') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/set-default-address/*') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/remove-address/*') or
+
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/orders') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/order/*') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnRequest') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnSuccess') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}">
+	<script type="text/javascript"
+		src="${commonResourcePath}/js/acc.accountpagination.js"></script>
+</c:if>
+
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/feedback.js"></script>
+	
+	
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${commonResourcePath}/js/html5shiv.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/respond.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/background-size-shim.js"></script>
+<![endif]-->
+
+<!--[if lt IE 10]>
+<script type="text/javascript" src="${commonResourcePath}/js/jquery.html5-placeholder-shim.js"></script>
+<![endif]-->

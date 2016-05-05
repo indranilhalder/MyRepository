@@ -97,24 +97,27 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final String siteName = currentSite.getUid();
 		final String themeName = getThemeNameForSite(currentSite);
 		final String uiExperienceCode = uiExperienceService.getUiExperienceLevel().getCode();
-		final String uiExperienceCodeLower = uiExperienceViewResolver.getUiExperienceViewPrefix().isEmpty() ? uiExperienceCode
-				.toLowerCase() : StringUtils.remove(
-				uiExperienceViewResolver.getUiExperienceViewPrefix().get(uiExperienceService.getUiExperienceLevel()), "/");
+		final String uiExperienceCodeLower = uiExperienceViewResolver.getUiExperienceViewPrefix().isEmpty()
+				? uiExperienceCode.toLowerCase()
+				: StringUtils.remove(
+						uiExperienceViewResolver.getUiExperienceViewPrefix().get(uiExperienceService.getUiExperienceLevel()), "/");
 		final Object urlEncodingAttributes = request.getAttribute(WebConstants.URL_ENCODING_ATTRIBUTES);
 		final String contextPath = StringUtils.remove(request.getContextPath(),
 				(urlEncodingAttributes != null) ? urlEncodingAttributes.toString() : "");
 
 		LOG.debug("Actual context path static ====> " + contextPath);
 		final String staticResourceHost = configurationService.getConfiguration().getString("marketplace.static.resource.host");
-		String siteRootUrl;
+		String siteRootUrl, addOnContextPath;
 		if (StringUtils.isNotEmpty(staticResourceHost))
 		{
 			siteRootUrl = "//" + staticResourceHost + contextPath + "/_ui/" + uiExperienceCodeLower;
-			LOG.debug("Static resource host ====> " + contextPath);
+			addOnContextPath = "//" + staticResourceHost + contextPath;
+			LOG.debug("Static resource host ====> " + addOnContextPath);
 		}
 		else
 		{
 			siteRootUrl = contextPath + "/_ui/" + uiExperienceCodeLower;
+			addOnContextPath = contextPath;
 		}
 		LOG.debug("siteRootUrl ===> " + siteRootUrl);
 
@@ -130,7 +133,6 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
 		//FOR Feedback survey
 		final String feedbackSurveyUrl = configurationService.getConfiguration().getString(MessageConstants.FEEDBACK_SURVEY_URL);
-
 		modelAndView.addObject("contextPath", contextPath);
 		modelAndView.addObject("sharedResourcePath", sharedResourcePath);
 		modelAndView.addObject("siteResourcePath", siteResourcePath);
@@ -160,17 +162,18 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		modelAndView.addObject("isMinificationEnabled",
 				Boolean.valueOf(siteConfigService.getBoolean("storefront.minification.enabled", false)));
 
+
 		final DeviceData currentDetectedDevice = deviceDetectionFacade.getCurrentDetectedDevice();
 		modelAndView.addObject("detectedDevice", currentDetectedDevice);
 
-		final List<String> dependantAddOns = requiredAddOnsNameProvider.getAddOns(request.getSession().getServletContext()
-				.getServletContextName());
+		final List<String> dependantAddOns = requiredAddOnsNameProvider
+				.getAddOns(request.getSession().getServletContext().getServletContextName());
 
-		modelAndView.addObject("addOnCommonCssPaths", getAddOnCommonCSSPaths(contextPath, uiExperienceCodeLower, dependantAddOns));
+		modelAndView.addObject("addOnCommonCssPaths", getAddOnCommonCSSPaths(addOnContextPath, uiExperienceCodeLower, dependantAddOns));
 		modelAndView.addObject("addOnThemeCssPaths",
-				getAddOnThemeCSSPaths(contextPath, themeName, uiExperienceCodeLower, dependantAddOns));
+				getAddOnThemeCSSPaths(addOnContextPath, themeName, uiExperienceCodeLower, dependantAddOns));
 		modelAndView.addObject("addOnJavaScriptPaths",
-				getAddOnJSPaths(contextPath, siteName, uiExperienceCodeLower, dependantAddOns));
+				getAddOnJSPaths(addOnContextPath, siteName, uiExperienceCodeLower, dependantAddOns));
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_API_KEY, gigyaAPIKey);
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_SOCIAL_LOGIN_URL, gigyaSocialLoginURL);
 		modelAndView.addObject(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
@@ -256,3 +259,4 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 	}
 
 }
+

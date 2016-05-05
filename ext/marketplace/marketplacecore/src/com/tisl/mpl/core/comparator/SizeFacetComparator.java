@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -23,15 +24,15 @@ import com.tisl.mpl.fulfilmentprocess.utility.GenericUtility;
 public class SizeFacetComparator implements Comparator<FacetValue>
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final String US = "US";
 	/**
-	 * 
+	 *
 	 */
 	private static final String UK_IND = "UK/IND";
 	/**
-	 * 
+	 *
 	 */
 	private static final String EURO = "EURO";
 	private String pattern;
@@ -47,11 +48,13 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 	{
 		String value1 = "";
 		String value2 = "";
-		if ( null != arg0.getName())
+		String valueFootwear1 = "";
+		String valueFootwear2 = "";
+		if (null != arg0.getName())
 		{
 			value1 = arg0.getName().replaceAll("\\s+", "").toUpperCase();
 		}
-		if (null!= arg0.getName())
+		if (null != arg0.getName())
 		{
 			value2 = arg1.getName().replaceAll("\\s+", "").toUpperCase();
 		}
@@ -65,26 +68,34 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 		final boolean value2IsNumber = isNumber(value2);
 		if (value1.contains(EURO))
 		{
+
+			valueFootwear1 = value1.substring(value1.indexOf('-') + 1, value1.length());
 			value1 = EURO;
 		}
 		else if (value1.contains(UK_IND))
 		{
+			valueFootwear1 = value1.substring(value1.indexOf('-') + 1, value1.length());
 			value1 = UK_IND;
+
 		}
 		else if (value1.contains(US))
 		{
+			valueFootwear1 = value1.substring(value1.indexOf('-') + 1, value1.length());
 			value1 = US;
 		}
 		if (value2.contains(EURO))
 		{
+			valueFootwear2 = value2.substring(value2.indexOf('-') + 1, value2.length());
 			value2 = EURO;
 		}
 		else if (value2.contains(UK_IND))
 		{
+			valueFootwear2 = value2.substring(value2.indexOf('-') + 1, value2.length());
 			value2 = UK_IND;
 		}
 		else if (value2.contains(US))
 		{
+			valueFootwear2 = value2.substring(value2.indexOf('-') + 1, value2.length());
 			value2 = US;
 		}
 		if (value1IsNumber && value2IsNumber)
@@ -98,7 +109,21 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 			{
 				final int index1 = sizeSystem.indexOf(value1);
 				final int index2 = sizeSystem.indexOf(value2);
-				return index1 - index2;
+				if (value1 == value2)
+				{
+					if (StringUtils.isNotEmpty(valueFootwear1) && StringUtils.isNotEmpty(valueFootwear2))
+					{
+						return numericCompare(valueFootwear1, valueFootwear2);
+					}
+					else
+					{
+						return index1 - index2;
+					}
+				}
+				else
+				{
+					return index1 - index2;
+				}
 			}
 		}
 		//values may come from distinct size systems - where one is numeric

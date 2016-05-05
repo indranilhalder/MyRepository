@@ -117,7 +117,10 @@ public class StorefrontFilter extends OncePerRequestFilter
 			final MediaModel media = getMediaByCode(mediaCode);
 			try
 			{
-				seoMediaURL = media.getURL2();
+				if (null != media)
+				{
+					seoMediaURL = media.getURL2();
+				}
 			}
 			catch (final Exception ex)
 			{

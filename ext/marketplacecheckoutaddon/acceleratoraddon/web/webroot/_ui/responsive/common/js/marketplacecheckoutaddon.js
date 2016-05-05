@@ -377,10 +377,8 @@ function submitForm(){
 							$('#paymentButtonId').prop('disabled', false); //TISPRD-958
 						}
 						else{
-
 							//TISPRO-153
 							sendTealiumData();	
-
 							$("#form-actions, #otpNUM").css("display","block");
 							$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
 							$("#otpSentMessage").css("display","none");
@@ -933,6 +931,7 @@ function generateOTP(){
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/generateOTP",
 		//data: { 'mobileNumber' : mobileNumber, 'prefix' : prefix },
+
 		data: { 'mobileNumber' : mobileNumber },
 		type: "POST",
 		cache: false,	
@@ -1207,11 +1206,15 @@ $("#otpMobileNUMField").focus(function(){
 	  // TISPRO-153		
 		sendTealiumData();
 
+
+
+
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
         //TISPRO-313	
 		//if($(".redirect").val()=="false"){
 			//Juspay.startSecondFactor();
+
 		//}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
@@ -1237,9 +1240,11 @@ $("#otpMobileNUMField").focus(function(){
 					$("#no-click").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}else{
+
 					 //TISPRO-313
 					if($(".redirect").val()=="false"){
 						Juspay.startSecondFactor();
+
 				    } 
 					setTimeout(function(){ 	
 						$("#order_id_saved").val(response);
@@ -1255,11 +1260,13 @@ $("#otpMobileNUMField").focus(function(){
 								p = p + "&status=" + statusObj.status 
 								p = p + "&status_id=" + statusObj.statusId
 								window.location.href = thank_you_page
+
 							},
 							error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
 								//redirect to failure page
 								//alert("Transaction not successful. Error: " + bank_error_message)
 								window.location.href = error_page
+
 							},
 							second_factor_window_closed_handler: function() {
 							    // enable the pay button for the user
@@ -1269,7 +1276,6 @@ $("#otpMobileNUMField").focus(function(){
 						$("#card_form").submit(); 		
 						
 					 }, 1000);
-
 				}
 			},
 			error : function(resp) {
@@ -1291,10 +1297,8 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-
 		// TISPRO-153
 		sendTealiumData();
-
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
 		var addressLine1=$("#address1").val();
@@ -1349,6 +1353,7 @@ $("#otpMobileNUMField").focus(function(){
 					 //TISPRO-313
 					 if($(".redirect").val()=="false"){
 						Juspay.startSecondFactor();
+
 				     } 		 
 					 setTimeout(function(){ 			 
 						  $("#order_id_new").val(response);
@@ -1498,6 +1503,9 @@ $("#otpMobileNUMField").focus(function(){
  $("#payment_form").submit() ;   
  return false; 	 
  }
+
+
+
  
  
 
@@ -1569,6 +1577,7 @@ $("#otpMobileNUMField").focus(function(){
 	$('.security_code').prop('disabled', false); 
 }
  
+
  
 
  function populateBillingAddress(){ 
@@ -1601,6 +1610,8 @@ $("#otpMobileNUMField").focus(function(){
 	 } 
 	 }, 
 	 error : function(resp) { 
+
+
 	 } 
 
 	 }); 
@@ -2642,7 +2653,6 @@ function submitNBForm(){
 					$("#no-click").remove();
 				}
 				else{
-
 					//TISPRO-153
 					sendTealiumData();
 
@@ -2664,6 +2674,7 @@ function submitNBForm(){
 									$(".pay .spinner").remove();
 									$("#no-click").remove();
 								}
+
 								else{
 									var juspayResponse = JSON.parse(response);
 									//console.log(juspayResponse);
@@ -2708,6 +2719,8 @@ function submitNBForm(){
 	//								    field.setAttribute("name", key);
 	//								    field.setAttribute("value", value);
 	//								    frm.appendChild(field);
+
+
 	//								  }
 	//								}
 	//								document.body.appendChild(frm)
@@ -2871,6 +2884,7 @@ function checkPincodeServiceability(buttonType)
  	});
 
 
+
    }
 }
 
@@ -2879,6 +2893,7 @@ function reloadpage(selectedPincode,buttonType) {
 
 	{		
 		if(buttonType != 'typeCheckout') {
+
 		  window.location.reload(); 
 		}
 		
@@ -2927,10 +2942,15 @@ function populatePincodeDeliveryMode(response,buttonType){
 		var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap);
 		var length = Object.keys(deliveryModeJsonObj).length;
 		var isStockAvailable="Y";
+
 		if(deliveryModeJsonMap == 'N') {
 			console.log("This is NO");
 		}	
 	}
+
+
+
+
 
 	for ( var key in deliveryModeJsonObj) {
 	var ussId= deliveryModeJsonObj[key].ussid;
@@ -2958,6 +2978,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		
 		for ( var count in jsonObj) {
 			
+
 			inventory=jsonObj[count].inventory;
 			if(parseFloat(quantityValue) <= parseFloat(inventory)){
 				stockAvailable=true;
@@ -2975,6 +2996,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 			$("#"+ussId+"_qty").append(newUl);
 			isStockAvailable="N";
 		}
+
 			
 			for ( var count in jsonObj) {
 				var inventory=0;
@@ -3179,7 +3201,6 @@ function checkSignInValidation(path){
 	// TISPRO-153
 	/*if(validationResult){
 		utag.link({ "event_type" : "Login", "link_name" : "Login" });
-
 	}*/
 	return validationResult;
 }
@@ -3610,7 +3631,6 @@ function expressbutton()
 	{
 		$("#expresscheckoutErrorDiv").css("display","none");
 		
-		
 		$.ajax({
 	 		url: ACC.config.encodedContextPath + "/cart/checkExCheckoutPincodeServiceability/"+selectedAddressId,
 	 		type: "GET",
@@ -3654,6 +3674,7 @@ function clearDisable()
 {
 	$("#no-click").remove();
 	$(".make_payment").removeAttr('disabled');
+
 }
 
 //Coupon
@@ -3833,6 +3854,8 @@ function sendTealiumData(){
 	
 		        } else if (payment_mode === "Credit Card" || payment_mode === "Debit Card") {	
 
+
+
 				payment_type = jQuery("li.active-card span").attr("class") || "Saved Card";
 	
 		        } else if (payment_mode === "NetBanking") {
@@ -3865,7 +3888,6 @@ function sendTealiumData(){
 				        });
 		        		
 		        	}else{
-		        	
 			        	utag.link({
 				            "link_name": 'Final Checkout',
 				            "event_type": 'PayNow',
@@ -3878,6 +3900,7 @@ function sendTealiumData(){
 	        
 	   } catch (e) {
 		// TODO: handle exception
+
 	   }     
 }
 

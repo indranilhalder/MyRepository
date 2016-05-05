@@ -675,29 +675,31 @@ public class UsersController extends BaseCommerceController
 				setTimestamp(encodeutf(timestamp));
 			}
 			//Social Media should not be anything other than FB or Google +
-			if (gigyaFacade.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
+			//			if (gigyaFacade.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
+			//			{
+			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK)
+					|| (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
 			{
-				if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK)
-						|| (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
-				}
-				else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
-				{
-					//				result = mobileUserService.loginSocialFbUser(socialMediaToken, emailId);
-					result = mobileUserService.loginSocialFbUser(emailId, uid);
-				}
-				else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
-				{
-					//				result = mobileUserService.loginSocialGoogleUser(socialMediaToken, emailId, socialUserId);
-					result = mobileUserService.loginSocialGoogleUser(emailId, uid);
-				}
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
 			}
-			else
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
 			{
-				//				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9103);
-				LOG.debug("******************Invalid Signature ******************");
+				//				result = mobileUserService.loginSocialFbUser(socialMediaToken, emailId);
+				//				result = mobileUserService.loginSocialFbUser(emailId, uid);
+				result = mobileUserService.loginSocialFbUser(emailId, uid, timestamp, signature);
 			}
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
+			{
+				//				result = mobileUserService.loginSocialGoogleUser(socialMediaToken, emailId, socialUserId);
+				//				result = mobileUserService.loginSocialGoogleUser(emailId, uid);
+				result = mobileUserService.loginSocialGoogleUser(emailId, uid, timestamp, signature);
+			}
+			//			}
+			//			else
+			//			{
+			//				//				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9103);
+			//				LOG.debug("******************Invalid Signature ******************");
+			//			}
 			//			if (null != result.getSessionSecret())
 			//			{
 			//				result.setSessionSecret(result.getSessionSecret());
