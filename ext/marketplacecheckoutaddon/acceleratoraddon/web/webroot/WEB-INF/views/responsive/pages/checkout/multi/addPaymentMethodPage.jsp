@@ -133,6 +133,12 @@
     				      startTimer();
     				}
 				</script>
+				<!-- TISCR-305 starts -->					
+					<button type="button" class="button btn-block payment-button make_payment_top_savedCard" id="make_saved_cc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+					<button type="button" class="button btn-block payment-button make_payment_top_newCard" id="make_cc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+					<button type="button" class="button btn-block payment-button make_payment_top_nb" id="make_nb_payment" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+					<%-- <button class="button" id="deliveryMethodSubmitUp" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button> --%>
+				<!-- TISCR-305 ends -->	
 				<div class="left-block">
 					<h1 class="payment-options"><spring:theme code="text.payment.options"/></h1>
 						<div class="checkout-indent payments tab-view">
@@ -724,7 +730,7 @@
 				</div>
 			</div>
 		</jsp:body>
-		</multiCheckout:checkoutSteps>		
+		</multiCheckout:checkoutSteps>	
 		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" />
 	</div>	
 </template:page>

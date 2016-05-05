@@ -99,13 +99,11 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 			// process normal request (i.e. normal browser non-cmscockpit request)
 			if (processNormalRequest(httpRequest, httpResponse))
 			{
-				final StringBuffer originalUrl = httpRequest.getRequestURL();
-				if (originalUrl.toString().contains(ModelAttributetConstants.STORE_URL_OLD))
+				final String requestUrl = httpRequest.getRequestURL().toString();
+				if (requestUrl.contains("/c/") || requestUrl.contains("/p/")
+						|| requestUrl.contains(ModelAttributetConstants.STORE_URL_OLD))
 				{
-					final String newreqUri = originalUrl.toString().replaceAll(ModelAttributetConstants.STORE_URL_OLD, "");
-
-					LOG.info("This url contains /store/mpl/en, hence reforming the url to:::::  " + newreqUri);
-					httpResponse.sendRedirect(newreqUri);
+					checkUrlPattern(requestUrl, httpResponse);
 				}
 				else
 				{
@@ -139,6 +137,35 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 			// proceed filters
 			filterChain.doFilter(httpRequest, httpResponse);
 		}
+	}
+
+
+
+	/**
+	 * This method handles url pattern redirection
+	 *
+	 * @param requestUrl
+	 * @param httpResponse
+	 * @throws IOException
+	 *
+	 */
+	private void checkUrlPattern(String requestUrl, final HttpServletResponse httpResponse) throws IOException
+	{
+		if (requestUrl.contains("/c/"))
+		{
+			requestUrl = requestUrl.replaceAll("/c/", "/c-");
+		}
+		if (requestUrl.contains("/p/"))
+		{
+			requestUrl = requestUrl.replaceAll("/p/", "/p-");
+		}
+		if (requestUrl.contains(ModelAttributetConstants.STORE_URL_OLD))
+		{
+			requestUrl = requestUrl.replaceAll(ModelAttributetConstants.STORE_URL_OLD, "");
+			LOG.info("This url contains /store/mpl/en, hence reforming the url to:::::  " + requestUrl);
+		}
+
+		httpResponse.sendRedirect(requestUrl);
 	}
 
 

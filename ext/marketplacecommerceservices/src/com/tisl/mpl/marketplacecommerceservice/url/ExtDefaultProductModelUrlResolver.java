@@ -56,6 +56,12 @@ public class ExtDefaultProductModelUrlResolver extends DefaultProductModelUrlRes
 			url = url.replace("{product-code}", source.getCode());
 		}
 		url = url.toLowerCase();
+		url = url.replaceAll("[^\\w/-]", "");
+		//TISSTRT-1297
+		if (url.contains("--"))
+		{
+			url = url.replaceAll("--", "-");
+		}
 		return url;
 	}
 

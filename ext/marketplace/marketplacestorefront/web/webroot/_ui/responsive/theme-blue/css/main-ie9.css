@@ -3798,7 +3798,7 @@ body .account.preferences input[type=checkbox]:checked + label ,body .account.pr
     -o-transform: translateY(-50%);
     transform: translateY(-50%);
     color: #fff;
-    font-family: "LP Bambus";
+    font-family: inherit;
     font-style: italic;
     font-weight: 100;
     font-size: 64px
@@ -5989,7 +5989,7 @@ display:none;
       text-transform: none;
       color: #a9143c;
       font-weight: 100;
-      font-family: "LP Bambus";
+      font-family: inherit;
       font-style: italic;
       font-weight: 100; }
   .top.checkout-top .content {
@@ -6009,7 +6009,7 @@ display:none;
       .top.checkout-top .content ul li {
         position: relative;
         display: inline-block;
-        font-family: "LP Bambus";
+        font-family: inherit;
         font-weight: 100;
         font-size: 18px;
         padding: 10px 25px 20px;
@@ -13205,7 +13205,7 @@ div.other-sellers .other-sellers-table tr{
 }
 .listing.wrapper .right-block h3.heroTitle {
     margin-bottom: 10px;
-    font-family: "LP Bambus";
+    font-family: inherit;
     font-size: 60px;
     text-align: center;
     padding: 10px 0;

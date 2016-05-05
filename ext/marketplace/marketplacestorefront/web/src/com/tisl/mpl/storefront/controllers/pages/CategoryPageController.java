@@ -130,7 +130,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	{ NEW_CATEGORY_URL_PATTERN, NEW_CATEGORY_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
 	public String category(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = PAGE, defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
@@ -139,7 +139,22 @@ public class CategoryPageController extends AbstractCategoryPageController
 	{
 		categoryCode = categoryCode.toUpperCase();
 		String searchCode = new String(categoryCode);
-
+		//SEO: New pagination detection
+		final String uri = request.getRequestURI();
+		if (uri.contains("page"))
+		{
+			final Pattern p = Pattern.compile("page-[0-9]+");
+			final Matcher m = p.matcher(uri);
+			if (m.find())
+			{
+				final String pageNo = m.group().split("-")[1];
+				if (null != pageNo)
+				{
+					page = Integer.parseInt(pageNo);
+					page = page - 1;
+				}
+			}
+		}
 		//applying search filters
 		if (searchQuery != null)
 		{
@@ -151,7 +166,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		updateUserPreferences(pageSize);
 
 		List<ProductModel> heroProducts = new ArrayList<ProductModel>();
-		if (!(searchCode.substring(0, 5).equals(categoryCode))
+		if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
 				&& categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 		{
 			searchCode = searchCode.substring(0, 5);
