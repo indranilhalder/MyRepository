@@ -30731,7 +30731,18 @@ header.compact .content .right ul > li {
     background-repeat: no-repeat;
     background-position: center;
 }
-
+@media(max-width:650px){
+	header .banner > span.helpmeshopbanner {
+    line-height: normal;
+    height: 40px;
+    display: table;
+}
+.helpmeshopbanner p {
+    display: table-cell;
+    vertical-align: middle;
+    height: 30px;
+}
+}
 /*--------------maincss-----------*/
 .row
 {
