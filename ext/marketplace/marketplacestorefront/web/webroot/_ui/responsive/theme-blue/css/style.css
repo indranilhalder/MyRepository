@@ -6006,7 +6006,11 @@ text-transform: uppercase;
           .cart.wrapper .left-block .payments.tab-view .tabs > li .product-block.emi li.item .banks.active form fieldset .half.cvv label span, .confirmation .left-block .payments.tab-view .tabs > li .product-block.emi li.item .banks.active form fieldset .half.cvv label span {
             position: absolute;
             bottom: 25%;
-            left: 55%; } }
+            left: 55%; }
+            .cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb{
+            display:none !important;
+            }
+             }
   .cart.wrapper .left-block .offer, .confirmation .left-block .offer {
     margin: 5px 0;
     border: 1px solid #DFD1D5;
@@ -36416,7 +36420,9 @@ input#otpMobileNUMField:focus {
 	border-radius: 0;
 	border: 1px solid #DFD1D5;
 }
-
+#bankNameForEMI, #bankCodeSelection{
+	padding: 0px 20px 0 10px;
+}
 .controls {
 	padding-left: 0 !important;
 }
