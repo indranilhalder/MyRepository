@@ -1035,6 +1035,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
+
 			////TISEE-6290
 			fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
 			model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
