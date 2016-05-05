@@ -31,8 +31,8 @@ var category_array = [];
 /*widget modes that are just products*/
 productWidget = [ "complements", "similar", "bought_together", "normal", "hot", "best_selling", 
                   "new", "recent", "search", "hot_in_category", "hot_in_brand"];
-productWidgetTitle = ["Complete The Look", "More Stuff Like This", "Things That Go With This", "You Know You Want This", "Hot Now", "Best Sellers", 
-                      "Just In(credible)!", "Last Seen", "My Recommendations", "Hot Now", "Hot Now"];
+productWidgetTitle = ["Complete The Look", "More Stuff Like This", "Things That Go With This", "You Know You Want This", "Hot Now", "Hot Now", //Changes Done for Chairman's Demo
+                      "Just In-credible", "Last Seen", "My Recommendations", "Just In-credible", "Hot Now"];
 productWidgetElement = ["ia_products_complements", "ia_products_similar", "ia_products_bought_together", "ia_products", "ia_products_hot", "ia_products_best_selling", "ia_products_new", 
                         "ia_products_recent", "ia_products_search", "ia_products_hot_in_category", "ia_products_hot_in_brand"];
 

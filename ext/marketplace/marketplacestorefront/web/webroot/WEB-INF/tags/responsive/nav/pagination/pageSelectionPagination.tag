@@ -10,6 +10,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <c:set var="hasPreviousPage"
 	value="${searchPageData.pagination.currentPage > 0}" />
@@ -18,14 +19,15 @@
 
 		<c:if test="${(searchPageData.pagination.numberOfPages > 1)}">
 			<ul class="pagination mobile">
-
+			<!-- SEO: New Pattern -->
+			<c:url var="newPaginationUrlPrev" value="${fn:replace(searchUrl,'{pageNo}',searchPageData.pagination.currentPage)}"></c:url>
 				<c:if test="${hasPreviousPage}">
 					<li class="prev"><spring:url value="${searchUrl}" var="previousPageUrl"
 							htmlEscape="true">
 							<spring:param name="page"
 								value="${searchPageData.pagination.currentPage - 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_previousPage_link">
-							<a href="${previousPageUrl}&searchCategory=${searchCategory}" rel="prev"><span><spring:theme code="text.previous.page"/></span></a>
+							<a href="${newPaginationUrlPrev}&searchCategory=${searchCategory}" rel="prev"><span><spring:theme code="text.previous.page"/></span></a>
 						</ycommerce:testId>
 					</li>
 				</c:if>
@@ -92,12 +94,15 @@
 					<c:choose>
 						<c:when
 							test="${searchPageData.pagination.currentPage + 1 ne pageNumber}">
+							<!-- New pagination URL -->
+							<c:url var="newPaginationUrl" value="${fn:replace(searchUrl,'{pageNo}',pageNumber)}"></c:url>
 							<spring:url value="${searchUrl}" var="pageNumberUrl"
 								htmlEscape="true">
 								<spring:param name="page" value="${pageNumber - 1}" />
 							</spring:url>
+							
 							<ycommerce:testId code="pageNumber_link">
-								<li><a href="${pageNumberUrl}&searchCategory=${searchCategory}">${pageNumber}</a></li>
+								<li><a href="${newPaginationUrl}&searchCategory=${searchCategory}">${pageNumber}</a></li>
 							</ycommerce:testId>
 						</c:when>
 						<c:otherwise>
@@ -123,12 +128,15 @@
 				</c:choose>
 
 				<c:if test="${hasNextPage}">
+				<!-- SEO : New pattern  -->
+				<c:url var="newPaginationUrlNext" value="${fn:replace(searchUrl,'{pageNo}',searchPageData.pagination.currentPage + 2)}"></c:url>
+					
 					<li class="next"><spring:url value="${searchUrl}" var="nextPageUrl"
 							htmlEscape="true">
 							<spring:param name="page"
 								value="${searchPageData.pagination.currentPage + 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_nextPage_link">
-							<a href="${nextPageUrl}&searchCategory=${searchCategory}" rel="next"><span><spring:theme code="text.next.page"/></span></a>
+							<a href="${newPaginationUrlNext}&searchCategory=${searchCategory}" rel="next"><span><spring:theme code="text.next.page"/></span></a>
 						</ycommerce:testId></li>
 				</c:if>
 

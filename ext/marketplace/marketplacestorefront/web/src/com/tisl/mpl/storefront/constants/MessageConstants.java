@@ -190,4 +190,6 @@ public final class MessageConstants
 	public static final String TEXT_ACCOUNT_REVIEWS = "text.account.reviews";
 	public static final String PAZE_SIZE = "mpl.account.review.pazesize";
 	public static final String ORDER_CAROUSEL_SIZE = "mpl.account.review.orderCarousel.size";
+	//feebback survey
+	public static final String FEEDBACK_SURVEY_URL = "mpl.feedback.survey";
 }

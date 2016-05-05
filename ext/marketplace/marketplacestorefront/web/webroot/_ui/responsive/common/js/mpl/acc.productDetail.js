@@ -1299,13 +1299,13 @@ function displayDeliveryDetails(sellerName) {
 				if (data['onlineExclusive']) {
 					$('.online-exclusive').show();
 				}
-				if (fulFillment.toLowerCase() == 'tship') {
+				if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
 					$('#fulFilledByTship').show();
 				} else {
 					$('#fulFilledBySship').show();
 					$('#fulFilledBySship').html(sellerName);
 				}
-				if (deliveryModes.indexOf("HD") == -1) {
+				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
 					$("#home").hide();
 					$("#homeli").hide();
 				} else {
@@ -1316,7 +1316,7 @@ function displayDeliveryDetails(sellerName) {
 					$("#homeli").show();
 				}
 				
-				if (deliveryModes.indexOf("ED") == -1) {
+				if (null != deliveryModes && deliveryModes.indexOf("ED") == -1) {
 					$("#express").hide();
 					$("#expressli").hide();
 				} else {
@@ -1328,8 +1328,10 @@ function displayDeliveryDetails(sellerName) {
 					$("#express").show();
 					$("#expressli").show();
 				}
+				if (null != deliveryModes){
 				console.log(deliveryModes.indexOf("CNC") );
-				if (deliveryModes.indexOf("CNC") == -1) {
+				}
+				if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
 					
 					$("#collect").hide();
 					$("#collectli").hide();
@@ -1348,9 +1350,26 @@ function displayDeliveryDetails(sellerName) {
 					$("#codId").hide();
 				}
 				if(null != data['returnWindow'])
+				{
+				//TISCR-414 - Chairmans demo feedback 10thMay CR starts
+				var rWindowValue = data['returnWindow'];
+				
+				if(rWindowValue=="LINGERIE1")
+					{
+					$("#lingerieKnowMoreLi1").show();
+					$("#defaultKnowMoreLi").hide();
+					}
+				else if(rWindowValue=="LINGERIE2")
+					{
+					$("#lingerieKnowMoreLi2").show();
+					$("#defaultKnowMoreLi").hide();
+					}
+				else
 					{
 					$("#returnWindow").text(data['returnWindow']);
 					}
+				//TISCR-414 - Chairmans demo feedback 10thMay CR ends
+				}
 				else
 					{
 					$("#returnWindow").text("0");
