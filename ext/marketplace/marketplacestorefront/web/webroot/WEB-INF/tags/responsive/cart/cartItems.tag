@@ -62,8 +62,8 @@ function openPopFromCart(entry,productCode,ussid) {
 			else
 			{
 				LoadWishListsFromCart(data, productCode,ussid);	
-			}		
-
+			}	
+			
 		},
 		error : function(xhr, status, error) {
 			$("#wishListNonLoggedInId").show();
@@ -133,12 +133,25 @@ function addToWishlistForCart(ussid,productCode)
 			if (data == true) {
 				
 				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
-				var msg=$('#wishlistSuccess').text() + wishName;
+				
+				
+				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
+				
+				
+/* 				var msg=$('#movedToWishlistFromCart').text();
+				$('#movedToWishlist_Cart').show();
+				$('#movedToWishlist_Cart').html(msg);
+				setTimeout(function() {
+					  $("#movedToWishlist_Cart").fadeOut().empty();
+					}, 1500); */
+				
+				
+		/* 		var msg=$('#wishlistSuccess').text() + wishName;
 				$('#addedMessage').show();
 				$('#addedMessage').html(msg);
 				setTimeout(function() {
 					  $("#addedMessage").fadeOut().empty();
-					}, 5000);
+					}, 5000); */
 				removefromCart(entryNo,wishName);
 			}
 		},
@@ -158,7 +171,7 @@ function removefromCart(entryNo,wishName)
 			
 			var productName = $("#moveEntry_"+entryNo).parents(".item").find(".desktop .product-name > a").text();
 			$("#moveEntry_"+entryNo).parents(".item").hide().empty();
-			$(".product-block > li.header").append('<span>'+productName+' Moved to '+wishName+'</span>');
+			/* $(".product-block > li.header").append('<span>'+productName+' Moved to '+wishName+'</span>'); */
 			
 			//$('.moveToWishlistMsg').html("Item successfully moved to "+wishName);
 			//$('.moveToWishlistMsg').show();
@@ -318,8 +331,9 @@ function addToWishlistFromCart() {
 	})
 }
 </script>
-<ul class="product-block">
 
+<ul class="product-block">
+		<span id="removeFromCart_Cart" style="display:none;color:#60A119; "><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
    <li class="header">
    <ul>
    
@@ -532,9 +546,10 @@ function addToWishlistFromCart() {
 											<c:choose>												
 												<c:when	test="${productDeliveryMode.key == entry.entryNumber}">
 													<c:if test="${productDeliveryMode.key == entry.entryNumber}">
-														<c:forEach items="${productDeliveryMode.value}"
-															var="productDeliveryModeMapValue">
-															<li class="method${ productDeliveryModeMapValue.name}">${ productDeliveryModeMapValue.name}</li>
+														<c:set var="delModes" value="${fn:length(deliveryModeDataMap.value)}" />	
+														<c:forEach var="i" begin="1" end="${delModes}" step="1">
+															<c:set var="delMode" value="${deliveryModeDataMap.value[delModes-i]}" />
+															<li class="method${delMode.name}">${delMode.name}</li>
 														</c:forEach>
 													</c:if>
 												</c:when>

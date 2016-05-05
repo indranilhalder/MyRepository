@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+ 
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+ 
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+ 
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:file="http://www.springframework.org/schema/integration/file"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration 
+	http://www.springframework.org/schema/integration/spring-integration.xsd
+	http://www.springframework.org/schema/integration/file 
+	http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+ <bean id="baseDirectoryMarketplacePincode" class="java.lang.String">
+        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-pincode" />
+    </bean>
+ 
+  <!-- 1) Scan for files -->
+    
+    <file:inbound-channel-adapter id="batchFilesMarketplacePincode" directory="#{baseDirectoryMarketplacePincode}"
+        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator">
+        <int:poller fixed-rate="1000" />
+    </file:inbound-channel-adapter>
+ 
+    <!-- 2) move the file to processing and setup header -->
+    
+    <file:outbound-gateway request-channel="batchFilesMarketplacePincode" reply-channel="batchFilesMarketplacePincodeProc"
+        directory="#{baseDirectoryMarketplacePincode}/processing" delete-source-files="true" />
+
+ <!-- 3) transform csv to impex file -->
+ 
+  <int:service-activator input-channel="batchFilesMarketplacePincodeProc" output-channel="batchFilesHeaderInit"
+        ref="MarketplacePincodeHeaderSetupTask" method="execute" />
+ 
+  <bean id="MarketplacePincodeHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+        <property name="catalog" value="mplProductCatalog" />
+        <property name="net" value="false" />
+        <property name="storeBaseDirectory" ref="baseDirectoryMarketplacePincode" />
+    </bean>
+    
+    <!-- Transformer for Pincode Import -->    
+        
+    <bean id="batchMplpincodeConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="Pincode"
+    p:converter-ref="batchMplpincodeConverter"/>
+    
+    
+    
+    <!-- Converters -->
+ 	
+ 	<!-- Converter for Pincode Import -->
+ 	  
+		<bean id="batchMplpincodeConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value> ImpEx for Importing Prices into $CATALOG$
+                $catalog=$CATALOG$
+                $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+                #% impex.setLocale(Locale.ENGLISH);
+				INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude  
+       		</value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1};{+2}</value>
+        </property>
+        </bean>
+</beans>
+    
+    
+    

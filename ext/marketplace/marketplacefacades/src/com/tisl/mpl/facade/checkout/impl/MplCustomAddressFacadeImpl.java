@@ -22,6 +22,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -199,7 +200,6 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 				cartData.setPaymentInfo(getPaymentDetails());
 
 			}
-
 			if (null != cartModel.getConvenienceCharges())
 			{
 				cartData.setConvenienceChargeForCOD(createPrice(cartModel, cartModel.getConvenienceCharges()));
@@ -276,7 +276,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		List<AddressData> deliveryAddresses = null;
 		if (selectedAddressData != null)
 		{
-			deliveryAddresses = getSupportedDeliveryAddresses(true);
+			deliveryAddresses = new ArrayList<AddressData>(getSupportedDeliveryAddresses(true));
 
 			if (!isAddressOnList(deliveryAddresses, selectedAddressData))
 			{
@@ -368,7 +368,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.checkout.MplCustomAddressFacade#populateDeliveryMethodData(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -449,9 +449,9 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * Set delivery mode using USSID
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param sellerArticleSKUID
 	 */
 	@Override

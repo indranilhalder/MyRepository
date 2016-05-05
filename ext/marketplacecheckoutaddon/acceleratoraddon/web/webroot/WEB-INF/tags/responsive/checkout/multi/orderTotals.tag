@@ -71,7 +71,7 @@
 	<button class="remove-coupon-button"></button>
 		<spring:theme code="basket.page.totals.coupons"/>
 		<span id="couponValue" style="float: right"> </span>
-
+<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
 	</li>
     
     

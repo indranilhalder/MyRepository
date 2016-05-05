@@ -9,6 +9,8 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
+import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -80,6 +82,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	private MplSellerInformationService mplSellerInformationService;
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
+	
+	@Resource(name = "mplDataMapper")
+	protected DataMapper mplDataMapper;
 
 	/**
 	 * @description method is called to fetch the details of a particular orders for the user
@@ -115,7 +120,10 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 					//moved to generic utility
 					orderTrackingWsDTO.setBillingAddress(GenericUtilityMethods.setAddress(orderDetails, 1));
 					orderTrackingWsDTO.setDeliveryAddress(GenericUtilityMethods.setAddress(orderDetails, 2));
-
+				   //add pickup person details
+					orderTrackingWsDTO.setPickupPersonName(orderDetails.getPickupName());				
+				    orderTrackingWsDTO.setPickupPersonMobile(orderDetails.getPickupPhoneNumber());
+					
 					if (null != orderDetails.getCreated())
 					{
 						orderTrackingWsDTO.setOrderDate(orderDetails.getCreated());
@@ -176,7 +184,10 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								orderproductdto = new OrderProductWsDTO();
 								//seller order no
 								orderproductdto.setSellerorderno(subOrder.getCode());
-
+								
+							if(null !=entry.getDeliveryPointOfService()){
+								orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(), PointOfServiceWsDTO.class, "DEFAULT"));
+							}							
 								final ProductData product = entry.getProduct();
 								ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
 								if (null != product)

@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
@@ -150,7 +151,14 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 
 			cellLabel.append(item.getCustomerId().concat(saperator));
 			cellLabel.append(item.getEmail().concat(saperator));
-			cellLabel.append(item.getMobileNo().concat(saperator));
+			if (StringUtils.isEmpty(item.getMobileNo()))
+			{
+				cellLabel.append("NA".concat(saperator));
+			}
+			else
+			{
+				cellLabel.append(item.getMobileNo().concat(saperator));
+			}
 			cellLabel.append(String.valueOf(item.getTatConf2Hotc()).concat(saperator));
 			cellLabel.append(String.valueOf(item.getActualTatOrder2Hotc()).concat(saperator));
 			cellLabel.append(String.valueOf(item.getTatConfHotc2Delvd()).concat(saperator));

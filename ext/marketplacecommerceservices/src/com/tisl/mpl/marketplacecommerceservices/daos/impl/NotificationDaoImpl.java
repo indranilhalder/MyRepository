@@ -6,15 +6,18 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
@@ -29,17 +32,17 @@ import com.tisl.mpl.util.ExceptionUtil;
  * @author TCS
  *
  */
-@SuppressWarnings(
-{ "PMD" })
 public class NotificationDaoImpl implements NotificationDao
 {
 
-	@Autowired
+	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
+
 	private static final String SELECT_CLASS = "SELECT {c:";
 	private static final String FROM_CLASS = "FROM {";
 	private static final String WHERE_CLASS = "WHERE ";
 	private static final String C_CLASS = "{c:";
+	private static final String AS_C = " AS c} ";
 
 	protected ConfigurationService getConfigurationService()
 	{
@@ -48,8 +51,8 @@ public class NotificationDaoImpl implements NotificationDao
 	}
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#getNotificationDetail(com.tisl.mpl.core.model.
 	 * NotificationModel)
 	 */
@@ -64,7 +67,7 @@ public class NotificationDaoImpl implements NotificationDao
 			{
 				final StringBuilder stringBuilder = new StringBuilder(100);
 				stringBuilder.append(SELECT_CLASS).append(OrderStatusNotificationModel.PK).append("} ");
-				stringBuilder.append(FROM_CLASS).append(OrderStatusNotificationModel._TYPECODE).append(" AS c} ");
+				stringBuilder.append(FROM_CLASS).append(OrderStatusNotificationModel._TYPECODE).append(AS_C);
 				stringBuilder.append(WHERE_CLASS).append(C_CLASS);
 				stringBuilder.append(OrderStatusNotificationModel.CUSTOMERUID).append("}=?code ");
 				stringBuilder.append("ORDER BY").append(C_CLASS);
@@ -72,7 +75,7 @@ public class NotificationDaoImpl implements NotificationDao
 
 				final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
 				query.addQueryParameter("code", customerUID);
-				notificationList = flexibleSearchService.<OrderStatusNotificationModel> search(query).getResult();
+				notificationList = getFlexibleSearchService().<OrderStatusNotificationModel> search(query).getResult();
 
 			}
 
@@ -92,7 +95,7 @@ public class NotificationDaoImpl implements NotificationDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#checkCustomerFacingEntry(com.tisl.mpl.core.model
 	 * .OrderStatusNotificationModel)
@@ -108,7 +111,7 @@ public class NotificationDaoImpl implements NotificationDao
 			SELECT_CLASS
 					+ OrderStatusNotificationModel.PK
 					+ "}" //
-					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
+					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + AS_C + WHERE_CLASS + C_CLASS
 					+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND" + C_CLASS
 					+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND" + C_CLASS
 					+ OrderStatusNotificationModel.TRANSACTIONID + "}=?transactionId AND" + C_CLASS
@@ -121,7 +124,7 @@ public class NotificationDaoImpl implements NotificationDao
 			query.addQueryParameter(MarketplacecommerceservicesConstants.ORDER_CODE, orderId);
 			query.addQueryParameter("transactionId", transactionId);
 			query.addQueryParameter("customerStatus", customerStatus);
-			orderList = flexibleSearchService.<OrderStatusNotificationModel> search(query).getResult();
+			orderList = getFlexibleSearchService().<OrderStatusNotificationModel> search(query).getResult();
 			return orderList;
 		}
 
@@ -140,7 +143,7 @@ public class NotificationDaoImpl implements NotificationDao
 			SELECT_CLASS
 					+ OrderStatusNotificationModel.PK
 					+ "}" //
-					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
+					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + AS_C + WHERE_CLASS + C_CLASS
 					+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND " + C_CLASS
 					+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND " + C_CLASS
 					+ OrderStatusNotificationModel.TRANSACTIONID + "}=?consignmentId AND " + C_CLASS
@@ -150,7 +153,7 @@ public class NotificationDaoImpl implements NotificationDao
 			SELECT_CLASS
 					+ OrderStatusNotificationModel.PK
 					+ "}" //
-					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
+					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + AS_C + WHERE_CLASS + C_CLASS
 					+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND" + C_CLASS
 					+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND" + C_CLASS
 					+ OrderStatusNotificationModel.CUSTOMERSTATUS + "}=?shopperStatus";
@@ -165,7 +168,7 @@ public class NotificationDaoImpl implements NotificationDao
 				query.addQueryParameter("shopperStatus", shopperStatus);
 
 
-				orderList = flexibleSearchService.<OrderStatusNotificationModel> search(query).getResult();
+				orderList = getFlexibleSearchService().<OrderStatusNotificationModel> search(query).getResult();
 				return orderList;
 
 			}
@@ -179,7 +182,7 @@ public class NotificationDaoImpl implements NotificationDao
 				query.addQueryParameter("shopperStatus", shopperStatus);
 
 
-				orderList = flexibleSearchService.<OrderStatusNotificationModel> search(query).getResult();
+				orderList = getFlexibleSearchService().<OrderStatusNotificationModel> search(query).getResult();
 				return orderList;
 			}
 		}
@@ -196,7 +199,7 @@ public class NotificationDaoImpl implements NotificationDao
 		SELECT_CLASS
 				+ OrderStatusNotificationModel.PK
 				+ "}" //
-				+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
+				+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + AS_C + WHERE_CLASS + C_CLASS
 				+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND " + C_CLASS
 				+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND " + C_CLASS
 				+ OrderStatusNotificationModel.TRANSACTIONID + "}=?transactionId AND " + C_CLASS
@@ -211,31 +214,51 @@ public class NotificationDaoImpl implements NotificationDao
 		query.addQueryParameter("orderStatus", orderStatus);
 
 
-		orderList = flexibleSearchService.<OrderStatusNotificationModel> search(query).getResult();
+		orderList = getFlexibleSearchService().<OrderStatusNotificationModel> search(query).getResult();
 		return orderList;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#findVoucher()
+
+
+	/**
+	 * This method returns list of VoucherStatusNotificationModel where the date is active
+	 *
+	 * @return List<VoucherStatusNotificationModel>
+	 *
 	 */
 	@Override
 	public List<VoucherStatusNotificationModel> findVoucher()
 	{
 		List<VoucherStatusNotificationModel> voucherList = new ArrayList<>();
-		final String queryString = MarketplacecommerceservicesConstants.VOUCHERWITHINDATEQUERYFROMCOUPONMODEL;
 
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("sysdate", new Date());
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.VOUCHERWITHINDATEQUERYFROMCOUPONMODEL;
 
-		voucherList = flexibleSearchService.<VoucherStatusNotificationModel> search(query).getResult();
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.SYSDATE, new Date());
+
+			voucherList = getFlexibleSearchService().<VoucherStatusNotificationModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
 		return voucherList;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#getPromotion()
 	 */
 	@Override
@@ -244,93 +267,145 @@ public class NotificationDaoImpl implements NotificationDao
 		List<AbstractPromotionModel> promotionList = new ArrayList<>();
 		final String queryString = MarketplacecommerceservicesConstants.GETPROMOTIONS;
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		promotionList = flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
+		promotionList = getFlexibleSearchService().<AbstractPromotionModel> search(query).getResult();
 		return promotionList;
 	}
 
-	@Override
-	public boolean checkIsUpdated(final String voucherCode)
-	{
+	//	@Override
+	//	public boolean checkIsUpdated(final String voucherCode)
+	//	{
+	//
+	//		if (null != voucherCode && !voucherCode.isEmpty())
+	//		{
+	//			final String queryString = //
+	//			"SELECT {p:" + VoucherStatusNotificationModel.PK + "}" //
+	//					+ "FROM {" + VoucherStatusNotificationModel._TYPECODE + " AS p} "//
+	//					+ "WHERE " + "{p:" + VoucherStatusNotificationModel.VOUCHERCODE + "}=?voucherCode ";
+	//
+	//			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+	//			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHERCODE, voucherCode);
+	//			if ((getFlexibleSearchService().<VoucherStatusNotificationModel> search(query).getResult().isEmpty()))
+	//			{
+	//				return true;
+	//			}
+	//
+	//		}
+	//		return false;
+	//	}
 
-		if (null != voucherCode && !voucherCode.isEmpty())
-		{
-			final String queryString = //
-			"SELECT {p:" + VoucherStatusNotificationModel.PK + "}" //
-					+ "FROM {" + VoucherStatusNotificationModel._TYPECODE + " AS p} "//
-					+ "WHERE " + "{p:" + VoucherStatusNotificationModel.VOUCHERCODE + "}=?voucherCode ";
 
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("voucherCode", voucherCode);
-			if ((flexibleSearchService.<VoucherStatusNotificationModel> search(query).getResult().isEmpty()))
-			{
-				return true;
-			}
-
-		}
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#getModelForVoucher(java.lang.String)
+	/**
+	 * This method returns list of voucher status notification model based on voucher identifier
+	 *
+	 * @param voucherIndentifier
+	 * @return List<VoucherStatusNotificationModel>
+	 *
 	 */
 	@Override
 	public List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherIndentifier)
 	{
 		List<VoucherStatusNotificationModel> voucherList = new ArrayList<VoucherStatusNotificationModel>();
 
-		if (null != voucherIndentifier && !voucherIndentifier.isEmpty())
+		try
 		{
+			if (StringUtils.isNotEmpty(voucherIndentifier))
+			{
+				final StringBuilder queryBuilder = new StringBuilder(50);
+				final String queryString1 = //
+				queryBuilder.append("SELECT {p:").append(VoucherStatusNotificationModel.PK).append("}").append("FROM {")
+						.append(VoucherStatusNotificationModel._TYPECODE).append(" AS p} ").append("WHERE ").append("{p:")
+						.append(VoucherStatusNotificationModel.VOUCHERIDENTIFIER).append("}=?voucherIndentifier").toString();
 
-			final String queryString1 = //
-			"SELECT {p:" + VoucherStatusNotificationModel.PK + "}" //
-					+ "FROM {" + VoucherStatusNotificationModel._TYPECODE + " AS p} "//
-					+ "WHERE " + "{p:" + VoucherStatusNotificationModel.VOUCHERIDENTIFIER + "}=?voucherIndentifier";
 
+				final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString1);
+				query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHERIDENTIFIER, voucherIndentifier);
+				getFlexibleSearchService().<VoucherStatusNotificationModel> search(query).getResult();
+				voucherList = getFlexibleSearchService().<VoucherStatusNotificationModel> search(query).getResult();
 
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString1);
-			query.addQueryParameter("voucherIndentifier", voucherIndentifier);
-			flexibleSearchService.<VoucherStatusNotificationModel> search(query).getResult();
-			voucherList = flexibleSearchService.<VoucherStatusNotificationModel> search(query).getResult();
-
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
 		return voucherList;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#getModelForVoucherIdentifier(java.lang.String)
+
+
+	/**
+	 * This method returns list of voucher status notification model based on voucher code
+	 *
+	 * @param voucherCode
+	 * @return List<VoucherStatusNotificationModel>
+	 *
 	 */
 	@Override
 	public List<VoucherStatusNotificationModel> getModelForVoucherIdentifier(final String voucherCode)
 	{
-
 		List<VoucherStatusNotificationModel> voucherList = new ArrayList<VoucherStatusNotificationModel>();
-
-
-		if (null != voucherCode && !voucherCode.isEmpty())
+		try
 		{
+			if (StringUtils.isNotEmpty(voucherCode))
+			{
+				final StringBuilder queryBuilder = new StringBuilder(50);
+				final String queryString1 = queryBuilder.append("SELECT {p:").append(VoucherStatusNotificationModel.PK).append("}")
+						.append("FROM {").append(VoucherStatusNotificationModel._TYPECODE).append(" AS p} ").append("WHERE ")
+						.append("{p:").append(VoucherStatusNotificationModel.VOUCHERCODE).append("}=?voucherCode").toString();
 
-			final String queryString1 = //
-			"SELECT {p:" + VoucherStatusNotificationModel.PK + "}" //
-					+ "FROM {" + VoucherStatusNotificationModel._TYPECODE + " AS p} "//
-					+ "WHERE " + "{p:" + VoucherStatusNotificationModel.VOUCHERCODE + "}=?voucherCode";
+				final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString1);
 
+				query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHERCODE, voucherCode);
+				getFlexibleSearchService().<VoucherStatusNotificationModel> search(query).getResult();
+				voucherList = getFlexibleSearchService().<VoucherStatusNotificationModel> search(query).getResult();
 
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString1);
-
-			query.addQueryParameter("voucherCode", voucherCode);
-			flexibleSearchService.<VoucherStatusNotificationModel> search(query).getResult();
-			voucherList = flexibleSearchService.<VoucherStatusNotificationModel> search(query).getResult();
-
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
 		return voucherList;
 
 	}
+
+	/**
+	 * @return the flexibleSearchService
+	 */
+	public FlexibleSearchService getFlexibleSearchService()
+	{
+		return flexibleSearchService;
+	}
+
+	/**
+	 * @param flexibleSearchService
+	 *           the flexibleSearchService to set
+	 */
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
+	}
+
+
+
 
 
 

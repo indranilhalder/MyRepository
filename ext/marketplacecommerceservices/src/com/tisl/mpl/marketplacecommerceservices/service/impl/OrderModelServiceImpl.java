@@ -161,4 +161,11 @@ public class OrderModelServiceImpl implements OrderModelService
 		this.orderModelStatusDao = orderModelStatusDao;
 	}
 
+
+	@Override
+	public OrderModel updatePickUpDetailService(final String orderId, final String name, final String mobile)
+	{
+		return orderModelDao.updatePickUpDetailsDao(orderId, name, mobile);
+	}
+
 }

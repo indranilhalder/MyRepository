@@ -28,27 +28,28 @@
 	<template:page pageTitle="${pageTitle}">
 		<c:url var="mainUrl" value="/my-account/marketplace-preference"></c:url>
 		<c:if test="${not empty result && result eq 'success'}">
-			<div class="alert alert-info">
+			<div class="alert alert-info alert-dismissible">
 				<a href="#nogo" onclick="changeUrl('${mainUrl}')" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	    		<strong><b>SUCCESS: </b></strong><spring:theme code="text.account.preference.save.success" text="Your preferences has been updated"/>
+	    		<spring:theme code="text.account.preference.save.success" text="Your preferences has been updated"/>
   			</div>
 		</c:if>
 		<c:if test="${not empty result && result eq 'unsubscribed'}">
-			<div class="alert alert-info">
+			<div class="alert alert-danger">
 				<a href="#nogo" onclick="changeUrl('${mainUrl}')" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	    		<strong><b></b></strong><spring:theme code="text.account.preference.save.unsubscribed" text="Aww snap, you're leaving. Is it something we said?"/>
+	    		<spring:theme code="text.account.preference.save.unsubscribed" text="Aww snap, you're leaving. Is it something we said?"/>
   			</div>
 		</c:if>
 		<c:if test="${not empty result && result eq 'failure'}">
 			<div class="alert alert-danger">
 				<a href="#nogo" onclick="changeUrl('${mainUrl}')" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	    		<strong><b>ERROR: </b></strong><spring:theme code="text.account.preference.save.failure" text="Your preferences has not been updated"/>
+	    		<spring:theme code="text.account.preference.save.failure" text="Your preferences has not been updated"/>
   			</div>
 		</c:if>
 		
 		<h1 class="account-header">
 			<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-			<select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
+			<user:accountMobileViewMenuDropdown pageNameDropdown="mplPref"/>
+			<%-- <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
                   <option value=/store/mpl/en/my-account/marketplace-preference data-href="/store/mpl/en/my-account/marketplace-preference" selected><spring:theme code="header.flyout.marketplacepreferences" /></option>
@@ -61,53 +62,11 @@
           <optgroup label="Share">
                   <option value=/store/mpl/en/my-account/friendsInvite data-href="account-invite.php"><spring:theme code="header.flyout.invite" /></option>
           </optgroup>
-      </select>
+      </select> --%>
 		</h1>
 
 		<!----- Left Navigation Starts --------->
 		<div class="wrapper">
-			<%-- <div class="left-nav">
-				<h1>
-					<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-				</h1>
-				<ul>
-					<li><h3>
-							<spring:theme code="header.flyout.myaccount" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/"/>"><spring:theme
-								code="header.flyout.overview" /></a></li>
-					<li><a class="active"
-						href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-								code="header.flyout.marketplacepreferences" /></a></li>
-					<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
-								code="header.flyout.Personal" /></a></li>
-					<li><a href="<c:url value="/my-account/orders"/>"><spring:theme
-								code="header.flyout.orders" /></a></li>
-					<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
-								code="header.flyout.cards" /></a></li>
-					<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
-								code="header.flyout.address" /></a></li>
-								<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
-										code="header.flyout.review" /></a></li>
-								<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-								code="header.flyout.recommendations" /></a></li>
-				</ul>
-				<ul>
-				<li class="header-SignInShare"><h3><spring:theme
-									code="header.flyout.credits" /></h3></li>
-						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li>
-				</ul>
-				<ul>
-					<li><h3>
-							<spring:theme code="header.flyout.share" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
-								code="header.flyout.invite" /></a></li>
-
-				</ul>
-
-			</div> --%>
 			<user:accountLeftNav pageName="mplPref"/>
 			<!----- Left Navigation ENDS --------->
 

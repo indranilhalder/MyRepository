@@ -28,7 +28,7 @@ public interface BuyBoxDao
 
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
 
-	List<BuyBoxModel> buyBoxForSizeGuide(String productCode, String sellerId);
+	public BuyBoxModel buyBoxForSizeGuide(String productCode, String sellerId);
 
 	Integer getBuyboxAvailableInventoryForSearch(String productCode, String productType) throws EtailNonBusinessExceptions;
 

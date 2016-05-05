@@ -532,8 +532,15 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		}
 	}
 
+	/**
+	 * Get Buybox data in respect of product code and seller id
+	 *
+	 * @param productCode
+	 * @param sellerID
+	 * @return
+	 */
 	@Override
-	public List<BuyBoxModel> buyBoxForSizeGuide(final String productCode, final String sellerID)
+	public BuyBoxModel buyBoxForSizeGuide(final String productCode, final String sellerID)
 	{
 
 		try
@@ -545,12 +552,12 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 					+ " AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED
 					+ "}=0) AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE + "} and {bb:" + BuyBoxModel.SELLERENDDATE
 					+ "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0";
+			log.debug(String.format("buyboxForSizeGuide : Query fetching SizeGuide:  %s ", queryStringForSizeGuide));
 
-			log.debug("Query fetching SizeGuide" + queryStringForSizeGuide);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForSizeGuide);
 			query.addQueryParameter("productSizeGuide", productCode);
 			query.addQueryParameter("sellerid", sellerID);
-			return flexibleSearchService.<BuyBoxModel> search(query).getResult();
+			return flexibleSearchService.<BuyBoxModel> searchUnique(query);
 		}
 		catch (final FlexibleSearchException e)
 		{

@@ -162,19 +162,37 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	private void sendNotification(final Shipment shipment, final ConsignmentModel consignmentModel, final OrderModel orderModel,
 			final ConsignmentStatus shipmentNewStatus)
 	{
+		String mobileNumber;
+		String firstName;
+
 		LOG.info("*************Inside sendNotification *******************");
 		final String orderNumber = (StringUtils.isEmpty(shipment.getOrderId())) ? MarketplacecommerceservicesConstants.EMPTY
 				: shipment.getOrderId();
 		final String trackingUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
 				+ orderModel.getCode();
-		final String mobileNumber = (StringUtils.isEmpty(shipment.getDelivery().getDeliveryAddress().getPhoneNumber())) ? MarketplacecommerceservicesConstants.EMPTY
-				: shipment.getDelivery().getDeliveryAddress().getPhoneNumber();
+		if (shipment.getDelivery() != null && shipment.getDelivery().getDeliveryAddress() != null)
+		{
+			mobileNumber = (StringUtils.isEmpty(shipment.getDelivery().getDeliveryAddress().getPhoneNumber())) ? MarketplacecommerceservicesConstants.EMPTY
+					: shipment.getDelivery().getDeliveryAddress().getPhoneNumber();
+		}
+		else
+		{
+			mobileNumber = orderModel.getPickupPersonMobile();
+		}
 		final String codAmount = (null != orderModel.getConvenienceCharges()) ? String.valueOf(orderModel.getConvenienceCharges())
 				: MarketplacecommerceservicesConstants.ZERO;
 		final String appDwldUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.SMS_SERVICE_APP_DWLD_URL);
-		final String firstName = orderModel.getDeliveryAddress().getFirstname();
+		if (orderModel.getDeliveryAddress() != null)
+		{
+			firstName = orderModel.getDeliveryAddress().getFirstname();
+		}
+		else
+		{
+			firstName = orderModel.getPickupPersonName();
+		}
+
 		final String contactNumber = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
 		final String logisticPartner = (StringUtils.isEmpty(consignmentModel.getCarrier())) ? MarketplacecommerceservicesConstants.SPACE
@@ -1022,6 +1040,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			for (final ConsignmentEntryModel consignment : consignmentEntries)
 			{
 				final ConsignmentModel consignModel = consignment.getConsignment();
+				LOG.info(">>>>>>>>>>>>>>>>Tracking Id>>>>>>>>>>>>>>>>>" + consignModel.getCode() + " " + consignModel.getTrackingID());
 				if (StringUtils.isEmpty(consignModel.getTrackingID()))
 				{
 					LOG.debug(">>>>>>>>>>>>>consignment.getOrderEntry().getTransactionID()<<<<<<<<<<<<<:::::"

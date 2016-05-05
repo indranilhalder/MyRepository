@@ -20,7 +20,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 /**
  * @author 666220
- * 
+ *
  */
 public class MarketPlaceDefaultOrderCancelStateMappingStrategy extends DefaultOrderCancelStateMappingStrategy
 
@@ -30,7 +30,7 @@ public class MarketPlaceDefaultOrderCancelStateMappingStrategy extends DefaultOr
 
 	List<OrderStatus> nonCancellabelOrdeStatus = Arrays.asList(OrderStatus.RMS_VERIFICATION_FAILED, OrderStatus.PAYMENT_FAILED,
 			OrderStatus.RMS_VERIFICATION_PENDING, OrderStatus.ORDER_CANCELLED, OrderStatus.REFUND_IN_PROGRESS,
-			OrderStatus.CANCELLATION_INITIATED);
+			OrderStatus.CANCELLATION_INITIATED, OrderStatus.PACKED);
 
 
 	@Override

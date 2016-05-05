@@ -5,7 +5,6 @@ import de.hybris.platform.core.model.ItemModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.integration.oms.OrderWrapper;
 import de.hybris.platform.integration.oms.adapter.DefaultOmsOrderSyncAdapter;
-import de.hybris.platform.integration.oms.adapter.OmsSyncAdapter;
 import de.hybris.platform.omsorders.services.query.daos.SyncDao;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -30,7 +29,7 @@ import com.hybris.oms.domain.order.OrderLine;
 
 public class CustomOmsOrderSyncAdapter extends DefaultOmsOrderSyncAdapter
 {
-	private OmsSyncAdapter<OrderWrapper, ConsignmentModel> omsShipmentSyncAdapterCustom;
+	private CustomOmsSyncAdapter<OrderWrapper, ConsignmentModel> omsShipmentSyncAdapterCustom;
 	private ModelService modelService;
 	private SyncDao<OrderModel> orderSyncDao;
 
@@ -162,7 +161,7 @@ public class CustomOmsOrderSyncAdapter extends DefaultOmsOrderSyncAdapter
 	/**
 	 * @return the omsShipmentSyncAdapterCustom
 	 */
-	public OmsSyncAdapter<OrderWrapper, ConsignmentModel> getOmsShipmentSyncAdapterCustom()
+	public CustomOmsSyncAdapter<OrderWrapper, ConsignmentModel> getOmsShipmentSyncAdapterCustom()
 	{
 		return omsShipmentSyncAdapterCustom;
 	}
@@ -172,7 +171,8 @@ public class CustomOmsOrderSyncAdapter extends DefaultOmsOrderSyncAdapter
 	 *           the omsShipmentSyncAdapterCustom to set
 	 */
 	@Required
-	public void setOmsShipmentSyncAdapterCustom(final OmsSyncAdapter<OrderWrapper, ConsignmentModel> omsShipmentSyncAdapterCustom)
+	public void setOmsShipmentSyncAdapterCustom(
+			final CustomOmsSyncAdapter<OrderWrapper, ConsignmentModel> omsShipmentSyncAdapterCustom)
 	{
 		this.omsShipmentSyncAdapterCustom = omsShipmentSyncAdapterCustom;
 	}

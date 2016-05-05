@@ -27,7 +27,8 @@ font-size: 12px;
 		<div class="button_fwd_wrapper actions call-validateOtp">
 			<button id="validateOTPBtn" type="button"><spring:theme code="popupc2c.validateOtp" /></button>
 		</div>
-		<input type="hidden" name="emailId" id="emailId"> 
+		<!-- TISPRDT-111 fix -->
+		<input type="hidden" name="emailId" id="c2cEmailId"> 
 		<input type="hidden" name="contactNo" id="contactNo">
 		<input type="hidden" name="customerName" id="customerName">
 		<input type="hidden" name="reason" id="reason">

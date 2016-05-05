@@ -1,9 +1,11 @@
 /**
- * 
+ *
  */
 package com.hybris.oms.tata.orders;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Listcell;
@@ -15,10 +17,12 @@ import com.hybris.oms.domain.orderbuc.dto.OrderLineBUC;
 
 /**
  * @author Saood
- * 
+ *
  */
 public class OrderLinesListRenderer implements ListitemRenderer
 {
+	final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
 	/**
 	 * The method to implements of a renderer, will be called by listbox automatically while render items
 	 */
@@ -45,14 +49,22 @@ public class OrderLinesListRenderer implements ListitemRenderer
 		addTextListcell(listitem, orderLineBUC.getTransportMode());
 		addTextListcell(listitem, orderLineBUC.getFulfillmentType());
 		addTextListcell(listitem, orderLineBUC.getLogisticProviderName());
-		addTextListcell(listitem, dateToString(orderLineBUC.getDeliveryDate()));
+		if (orderLineBUC.getDeliveryDate() == null)
+		{
+			addTextListcell(listitem, "");
+		}
+		else
+		{
+			dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+			addTextListcell(listitem, dateFormat.format(orderLineBUC.getDeliveryDate()).toString());
+		}
 		addTextListcell(listitem, dateToString(orderLineBUC.getOrderStatusTimeStamp()));
 		addTextListcell(listitem, orderLineBUC.getReceivedBy());
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param listitem
 	 *           list item of listbox
 	 * @param value

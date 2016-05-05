@@ -108,9 +108,10 @@ public interface MarketplaceCheckoutController extends
 	 * @return true, if successful
 	 * @throws PaymentException the payment exception
 	 * @throws ValidationException the validation exception
+	 * @throws Exception 
 	 */
 	boolean processPayment(CartModel cart) throws PaymentException,
-			ValidationException;
+			ValidationException, Exception;
 
 	boolean validateWithOMS(TypedObject cartEntry, TypedObject deliveryMode)
 			throws ValidationException;

@@ -80,6 +80,8 @@
 			<tr>
 				<td height="270px" colspan="6" class="structureViewSection">
 					<cockpit code="fb" />
+					<cockpit code="twitter" />
+					<cockpit code="youtube" />
 					<cockpit code="gplus" />
 				</td>
 			</tr>

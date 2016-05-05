@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -52,8 +53,9 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Checks whether the requested Date lies within range provided
-	 * @param :
-	 *           start,end,comparableDate
+	 * @param start
+	 * @param end
+	 * @param comparableDate
 	 * @return status
 	 */
 	public static boolean compareDate(final Date start, final Date end, final Date comparableDate)
@@ -74,71 +76,15 @@ public class GenericUtilityMethods
 		return status;
 	}
 
-	/**
-	 * @Description: Sends the year from Date
-	 * @param :
-	 *           date
-	 * @return year
-	 */
-	public static String redirectYear(final Date date)
-	{
-		try
-		{
-			final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-			final String bDayString = dateFormat.format(date);
-			final String bDayStringArry[] = bDayString.split("/");
-
-			final String year = bDayStringArry[0];
-
-			return year;
-
-		}
-		catch (final Exception e)
-		{
-			return null;
-		}
-
-	}
-
-	/**
-	 * @Description: Modifies Date with the required Year
-	 * @param :
-	 *           date,yeartoModify
-	 * @return modifedDate
-	 */
-	public static Date modifiedBDate(final Date date, final String yeartoModify)
-	{
-		try
-		{
-			final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-			final String bDayString = dateFormat.format(date);
-			final String bDayStringArry[] = bDayString.split("/");
-
-			final String month = bDayStringArry[1];
-			final String day = bDayStringArry[0];
-
-
-			final String modifiedBDay = day + "/" + month + "/" + yeartoModify;
-
-			final Date modifedDate = dateFormat.parse(modifiedBDay);
-
-			return modifedDate;
-		}
-		catch (final Exception e)
-		{
-			return null;
-		}
-
-	}
 
 	/**
 	 * @Description: Modifies the System Date according to the format dd/MM/yyyy
-	 * @param :
-	 *           date
+	 * @param date
 	 * @return modifedDate
 	 */
 	public static Date modifiedSysDate(final Date date)
 	{
+		Date modifedDate = null;
 		try
 		{
 			final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -151,21 +97,21 @@ public class GenericUtilityMethods
 
 			final String modifiedBDay = day + "/" + month + "/" + year;
 
-			final Date modifedDate = dateFormat.parse(modifiedBDay);
+			modifedDate = dateFormat.parse(modifiedBDay);
 
-			return modifedDate;
 		}
 		catch (final Exception e)
 		{
-			return null;
+			LOG.error(e);
 		}
+		return modifedDate;
 
 	}
 
 	/**
 	 * @Description: Calculates Number of Days Between Dates
-	 * @param :
-	 *           date1,date2
+	 * @param date1
+	 * @param date2
 	 * @return noOfDays
 	 */
 	public static int noOfDaysCalculatorBetweenDates(final Date date1, final Date date2)
@@ -194,36 +140,10 @@ public class GenericUtilityMethods
 		return noOfDays;
 	}
 
-
-	/**
-	 * @Description: Compares with System Date
-	 * @param :
-	 *           date
-	 * @return flag
-	 */
-	public static boolean compareDateWithSysDate(final Date date)
-	{
-		boolean flag = false;
-		try
-		{
-			final Date sysDate = modifiedSysDate(new Date());
-			if (sysDate.equals(date))
-			{
-				flag = true;
-			}
-			return flag;
-		}
-		catch (final Exception e)
-		{
-			flag = false;
-			return flag;
-		}
-	}
-
 	/**
 	 * @Description: @Promtion: Checks for Excluded Products
-	 * @param :
-	 *           Product product,List<Product> excludedProductList
+	 * @param product
+	 * @param excludedProductList
 	 * @return boolean
 	 */
 	public static boolean isProductExcluded(final Product product, final List<Product> excludedProductList)
@@ -238,8 +158,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks Excluded Manufacturer Restriction
-	 * @param :
-	 *           List<AbstractPromotionRestriction> restrictionLists
+	 * @param restrictionList
 	 * @return manufactureList
 	 */
 	public static List<String> getExcludeManufactureList(final List<AbstractPromotionRestriction> restrictionList)
@@ -261,30 +180,11 @@ public class GenericUtilityMethods
 		return manufactureList;
 	}
 
-	/**
-	 * @Description: @Promtion: Checks Manufacture Restriction
-	 * @param :
-	 *           List<AbstractPromotionRestriction> restrictionList
-	 * @return manufacturesRestriction
-	 */
-	//	public static ManufacturesRestriction getPromotionManufactureList(final List<AbstractPromotionRestriction> restrictionList)
-	//	{
-	//		ManufacturesRestriction manufacturesRestriction = null;
-	//		for (final AbstractPromotionRestriction restriction : restrictionList)
-	//		{
-	//			if (restriction instanceof ManufacturesRestriction)
-	//			{
-	//				manufacturesRestriction = (ManufacturesRestriction) restriction;
-	//			}
-	//		}
-	//		return manufacturesRestriction;
-	//	}
-
 
 	/**
 	 * @Description: @Promtion: Checks whether Product Exist in Category
-	 * @param :
-	 *           List<Category> categoryList,List<Category> productCategoryList
+	 * @param categoryList
+	 * @param productCategoryList
 	 * @return boolean
 	 */
 	public static boolean productExistsIncat(final List<Category> categoryList, final List<String> productCategoryList)
@@ -304,9 +204,9 @@ public class GenericUtilityMethods
 	}
 
 	/**
-	 * @Description: @Promtion: Checks whther product lies in Excluded Manufacture List
-	 * @param :
-	 *           Product product, List<String> excludedManufactureList
+	 * @Description: @Promtion: Checks whether product lies in Excluded Manufacture List
+	 * @param product
+	 * @param excludedManufactureList
 	 * @return boolean
 	 */
 	public static boolean isProductExcludedForManufacture(final Product product, final List<String> excludedManufactureList)
@@ -315,30 +215,18 @@ public class GenericUtilityMethods
 		if (null != excludedManufactureList)
 		{
 			flag = getDefaultPromotionsManager().brandDataCheck(excludedManufactureList, product);
-			//			for (final String manufactureName : excludedManufactureList)
-			//			{
-			//				String productManufactureName;
-			//				try
-			//				{
-
-			//					productManufactureName = (String) product.getAttribute(MarketplacecommerceservicesConstants.BRANDSLIST);
-			//					if (manufactureName.toLowerCase().equalsIgnoreCase(productManufactureName))
-			//					{
-			//						LOG.debug("For Product code:" + product.getCode() + " manufacture Name is:" + productManufactureName
-			//								+ " and manufacture Name in restriction is:" + manufactureName);
-			//						return true;
-			//					}
 		}
-		//				catch (final JaloInvalidParameterException e)
-		//				{
-		//					LOG.debug(e.getMessage());
-		//				}
 
 		return flag;
 	}
 
 
 
+	/**
+	 *
+	 * @param date
+	 * @return int
+	 */
 	public static int daysBetweenPresentDateAndGivenDate(final Date date)
 	{
 
@@ -414,7 +302,6 @@ public class GenericUtilityMethods
 			final StringBuilder sellerArticleSKUsBuilder = new StringBuilder();
 			for (final SellerInformationData sellerInformationData : sellerDataList)
 			{
-				//sellerArticleSKUsBuilder.append("'").append(sellerInformationData.getUssid()).append("',");
 				sellerArticleSKUsBuilder.append('\'').append(sellerInformationData.getUssid()).append('\'').append(',');
 			}
 
@@ -424,17 +311,6 @@ public class GenericUtilityMethods
 		return sellerArticleSKUs;
 	}
 
-	public static String getclassificationCode(final String classificationCode)
-	{
-		String code = null;
-		final String[] value = classificationCode.split("\\.");
-
-		if (value.length != 0)
-		{
-			code = value[value.length - 1];
-		}
-		return code;
-	}
 
 	/**
 	 * @Description: Checks whether the Product belong to the brand mentioned in Brand Level Restriction
@@ -447,7 +323,7 @@ public class GenericUtilityMethods
 		boolean applyPromotion = false;
 		try
 		{
-			if (null != restrictionList && !restrictionList.isEmpty())
+			if (CollectionUtils.isNotEmpty(restrictionList))
 			{
 				for (final AbstractPromotionRestriction retrManufacturer : restrictionList)
 				{
@@ -580,8 +456,8 @@ public class GenericUtilityMethods
 	/**
 	 * @Description: Verifies Seller Data corresponding to the cart added Product
 	 * @param restrictionList
-	 * @param entry
-	 * @return
+	 * @param productSellerData
+	 * @return boolean
 	 */
 	public static boolean checkExcludeSellerData(final List<AbstractPromotionRestriction> restrictionList,
 			final List<SellerInformationModel> productSellerData)
@@ -626,10 +502,6 @@ public class GenericUtilityMethods
 								break;
 							}
 						}
-						//						else
-						//						{
-						//							excludeSellerFlag = false;
-						//						}
 					}
 				}
 			}
@@ -643,8 +515,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
-	 * @param :
-	 *           SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
 	 */
 	public static void populateExcludedProductManufacturerList(final SessionContext arg0, final PromotionEvaluationContext arg1,
 			final List<Product> excludedProductList, final List<String> excludeManufactureList,
@@ -655,8 +526,8 @@ public class GenericUtilityMethods
 			if (productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS) != null
 					&& excludedProductList != null)
 			{
-				excludedProductList.addAll(
-						(List<Product>) productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
+				excludedProductList.addAll((List<Product>) productPromotion.getProperty(arg0,
+						MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
 			}
 			if (excludeManufactureList != null)
 			{
@@ -683,8 +554,7 @@ public class GenericUtilityMethods
 	 * @param ctx
 	 * @param productPromotion
 	 * @param restrictionList
-	 * @param minimumCategoryValue
-	 * @param ctx
+	 * @param promoEvalCtx
 	 * @return boolean
 	 */
 
@@ -692,8 +562,8 @@ public class GenericUtilityMethods
 			final SessionContext ctx, final PromotionEvaluationContext promoEvalCtx, final ProductPromotion productPromotion,
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
-		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion)
-				&& getDefaultPromotionsManager().checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
+		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion) && getDefaultPromotionsManager()
+				.checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
 
 	}
 
@@ -820,7 +690,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @param fmtDate
-	 * @return newdate
+	 * @return String
 	 */
 	public static String getFormattedDate(final Date fmtDate)
 	{
@@ -834,6 +704,11 @@ public class GenericUtilityMethods
 	}
 
 
+	/**
+	 *
+	 * @param dateData
+	 * @return Date
+	 */
 	public static Date returnDateData(final String dateData)
 	{
 		final String str_date = dateData;

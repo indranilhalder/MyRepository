@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.hybris.oms.tata.inventory;
 
@@ -13,7 +13,7 @@ import com.hybris.oms.domain.inventorySearchByUssid.dto.InventorySearchByUssid;
 
 /**
  * @author Saood
- * 
+ *
  */
 public class InventoryListRenderer implements ListitemRenderer
 {
@@ -32,6 +32,7 @@ public class InventoryListRenderer implements ListitemRenderer
 		addListcell(listitem, String.valueOf(inventorySearchByUssid.getOnHandQuantity()));
 		addListcell(listitem, String.valueOf(inventorySearchByUssid.getReservedQuantity()));
 		addListcell(listitem, String.valueOf(inventorySearchByUssid.getAllocatedQuantity()));
+		addListcell(listitem, String.valueOf(inventorySearchByUssid.getIntransitQuantity()));
 
 
 	}

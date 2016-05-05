@@ -277,6 +277,10 @@ INSERT_UPDATE SearchResultsListComponent;$contentCV[unique=true];uid[unique=true
 INSERT_UPDATE SearchResultsGridComponent;$contentCV[unique=true];uid[unique=true];name;actions(uid,$contentCV);&componentRef
 ;;SearchResultsGrid;Search Result Grid Component;ListAddToCartAction;SearchResultsGrid
 
+###Store Finder Link Component#
+#INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;linkName;url;category(code, $productCV);target(code)[default='sameWindow'];;
+#;;StoreFinderLink;Store Finder Link;Find a Store;/store-finder;;;;
+
 # ContentSlot 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
 ;;VariantSelectorSlot;VariantSelector
@@ -287,13 +291,15 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;HeaderLinksSlot;ContactInfo,HelpMeShopSearch
 #;;SearchBoxSlot;SearchBox
 #;;HomepageNavLinkSlot;HomepageNavLink
-;;MiniCartSlot;MiniCart,MyWishList,SignInFlyOut,TrackOrder 
+;;MiniCartSlot;MiniCart,helpservicesLink,MyWishList,SignInFlyOut,TrackOrder 
 ;;SideContentSlot;MobileAppBanner
 ;;SiteLogoSlot;SiteLogoComponent
 ;;TopHeaderSlot;ResponsiveSiteLogoComponent
 ;;TabsSlot;TabPanelContainer
 ;;TopContentSlot;FacebookOffersBanner
-;;ProductLeftRefinements;browseCategoryComponent,RefinementFacetComponent
+#Log Error Changes-Closing the browseCategoryComponent
+#;;ProductLeftRefinements;browseCategoryComponent,RefinementFacetComponent
+;;ProductLeftRefinements;RefinementFacetComponent
 #pdp changes for configuring number of images to be shown in pdp
 ;;ConfigureImagesCountSlot;ConfigureImagesCount
 #pdp changes for configuring number of products to be shown in pdp
@@ -462,7 +468,8 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];nam
 ;;TitleForTnCPaymentPageComponent;Title For TnCPayment PageComponent;TitleForTnCPaymentPageComponent;;;;
 ;;HowToDocumentsComponent;How To Documents Component;HowToDocumentsComponent;;;;
 
-
+;;MyTataRewardsComponent;My Tata Rewards Page component;MyTataRewardsComponent;;;;
+;;TncMyTataRewardsComponent;TncMyTataRewardsComponent Page component;TncMyTataRewardsComponent;;;;
   
 # ContentSlot 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
@@ -561,6 +568,37 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;Section3-aboutus;Section3;;Section3-aboutus;;;
 ;;Section4-aboutus;Section4;;Section4-aboutus;;;
 
+#####My Tata Rewards Page ######
+
+#ContentSlot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+;;Section2ASlot-mytatarewards;Section2A Slot for My Tata Rewards Page;true;;
+;;Section2BSlot-mytatarewards;Section2B Slot for My Tata Rewards Page;true;MyTataRewardsComponent;
+;;Section4-mytatarewards;Section4 for My Tata Rewards page;true;ContactAddress;
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mytatarewards'];contentSlot(uid,$contentCV)[unique=true];;;
+
+;;Section2A-mytatarewards;Section2A;;Section2ASlot-mytatarewards;;;
+;;Section2B-mytatarewards;Section2B;;Section2BSlot-mytatarewards;;;
+;;Section4-mytatarewards;Section4;;Section4-mytatarewards;;;
+
+#####Page2 Page ######
+
+#ContentSlot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+;;Section2ASlot-tncmytatarewards;Section2A Slot for Tnc My Tata Rewards Page;true;;
+;;Section2BSlot-tncmytatarewards;Section2B Slot for Tnc My Tata Rewards Page;true;TncMyTataRewardsComponent;
+;;Section4-tncmytatarewards;Section4 for Tnc My Tata Rewards page;true;ContactAddress;
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='tncmytatarewards'];contentSlot(uid,$contentCV)[unique=true];;;
+
+;;Section2A-tncmytatarewards;Section2A;;Section2ASlot-tncmytatarewards;;;
+;;Section2B-tncmytatarewards;Section2B;;Section2BSlot-tncmytatarewards;;;
+;;Section4-tncmytatarewards;Section4;;Section4-tncmytatarewards;;;
 
 ##### Sell With Us Page######
 
@@ -719,7 +757,8 @@ INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];name;
 ;;TrackOrderHistoryComponent;Track Order History Component;accountOrderTrackingHistoryPage.jsp;;TrackOrderHistoryComponent
 ;;OtpValidationComponent;OTP Validation Component;passwordOTPPage.jsp;;OtpValidationComponent
 ;;FeedBackComponent;Feed Back Component;feedBack.jsp;;FeedBackComponent
-;;browseCategoryComponent;Browse Category Component;browseCategory.jsp;;browseCategoryComponent
+#Log Error Changes -Closing the component
+#;;browseCategoryComponent;Browse Category Component;browseCategory.jsp;;browseCategoryComponent
 ;;AccountMplPreferenceJSPComponent;Account MplPreference JSP Component;accountMarketPreference.jsp;;AccountMplPreferenceJSPComponent
 ;;EmailconfirmationpageMplComponent;EmailconfirmationpageMpl Validation Component;forgotPasswordValidationMessage.jsp;;EmailconfirmationpageMplComponent
 ;;EmailConfirmSuccessPageComponent;Email Confirm Success Page Validation Component;forgotPasswordEmailConfirmationPage.jsp;;EmailConfirmSuccessPageComponent
@@ -1139,6 +1178,9 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;AuthenticAndExclusiveLink;AuthenticAndExclusive Link;/authenticAndExclusive;;;;
 ;;footwearLink;footwear Link;/footwear;;;;
 
+;;MyTataRewardsLink;My Tata Rewards Link;/mytatarewards;;;;
+;;TncMyTataRewardsLink;Tnc My Tata Rewards Link;/tncmytatarewards;;;;
+
 INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
 ;TataMarketplaceNavNode;;Tata Marketplace Pages;;;AboutUsLink,CareersLink,SellWithUSLink,StoreLocatorLink;TataMarketplaceNavNode
 ;CustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;CustomerServiceNavNode;
@@ -1235,25 +1277,78 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='compare'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section1Slot-compare;Section1;;Section1Slot-compare;;;
 
-#Error Pages
+### for new 404 page
 
-INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
-;;ErrorParagraphComponent;Error Paragraph Component;ErrorParagraphComponent;;;;
+###########################
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;ErrorPageBannerComponent;Error Page Banner Component;ErrorPageBannerComponent
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
-;;MiddleContent-NotFoundError;Middle Content Slot;true;ErrorParagraphComponent;;;
+;;SideContent-NotFoundError;Banner Image Slot;true;ErrorPageBannerComponent;;;
+;;SideContent-BusinessError;Banner Image Slot;true;ErrorPageBannerComponent;;;
+;;SideContent-NonBusinessError;Banner Image Slot;true;ErrorPageBannerComponent;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='notFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;SideContent-NotFoundError;SideContent;;SideContent-NotFoundError;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='businessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;SideContent-BusinessError;SideContent;;SideContent-BusinessError;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='nonBusinessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;SideContent-NonBusinessError;SideContent;;SideContent-NonBusinessError;;;
+
+########################
+#CMSLinkComponent
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;category(code, $productCV);target(code)[default='sameWindow'];;
+;;BCLink11;BCLink11;;;;;
+;;BCLink12;BCLink12;;;;;
+;;BCLink13;BCLink13;;;;;
+;;BCLink14;BCLink14;;;;;
+;;BCLink15;BCLink15;;;;;
+;;BCLink21;BCLink21;;;;;
+;;BCLink22;BCLink22;;;;;
+;;BCLink23;BCLink23;;;;;
+;;BCLink24;BCLink24;;;;;
+;;BCLink25;BCLink25;;;;;
+;;BCLink31;BCLink31;;;;;
+;;BCLink32;BCLink32;;;;;
+;;BCLink33;BCLink33;;;;;
+;;BCLink34;BCLink34;;;;;
+;;BCLink35;BCLink35;;;;;
+;;BCLink41;BCLink41;;;;;
+;;BCLink42;BCLink42;;;;;
+;;BCLink43;BCLink43;;;;;
+;;BCLink44;BCLink44;;;;;
+;;BCLink45;BCLink45;;;;;
+
+
+# CMS Navigation Nodes  
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef;
+;BrowseCategoryNavNode1;;First Browse Category;SiteRootNode;;BCLink11,BCLink12,BCLink13,BCLink14,BCLink15;BrowseCategoryNavNode1;
+;BrowseCategoryNavNode2;;Second Browse Category;SiteRootNode;;BCLink21,BCLink22,BCLink23,BCLink24,BCLink25;BrowseCategoryNavNode2;
+;BrowseCategoryNavNode3;;Third Browse Category;SiteRootNode;;BCLink31,BCLink32,BCLink33,BCLink34,BCLink35;BrowseCategoryNavNode3;
+;BrowseCategoryNavNode4;;Fourth Browse Category;SiteRootNode;;BCLink41,BCLink42,BCLink43,BCLink44,BCLink45;BrowseCategoryNavNode4;
+
+INSERT_UPDATE AccountNavigationComponent;$contentCV[unique=true];uid[unique=true];name;navigationNode(&nodeRef);styleClass;&componentRef
+;;BrowseCategoryNavigationComponent1; First Browse Category Navigation Component;BrowseCategoryNavNode1;;BrowseCategoryNavigationComponent1
+;;BrowseCategoryNavigationComponent2; Second Browse Category Navigation Component;BrowseCategoryNavNode2;;BrowseCategoryNavigationComponent2
+;;BrowseCategoryNavigationComponent3; Third Browse Category Navigation Component;BrowseCategoryNavNode3;;BrowseCategoryNavigationComponent3
+;;BrowseCategoryNavigationComponent4; Fourth Browse Category Navigation Component;BrowseCategoryNavNode4;;BrowseCategoryNavigationComponent4
+
+# AccountNavigationCollectionComponent
+INSERT_UPDATE AccountNavigationCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(&componentRef);&componentRef;
+;;BrowseCategoryNavigationCollectionComponent;Browse Category Navigation Collection Component;BrowseCategoryNavigationComponent1,BrowseCategoryNavigationComponent2,BrowseCategoryNavigationComponent3,BrowseCategoryNavigationComponent4;BrowseCategoryNavigationCollectionComponent;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;MiddleContent-NotFoundError;Category Navigation Slot;true;BrowseCategoryNavigationCollectionComponent;;;
+;;MiddleContent-BusinessError;Category Navigation Slot;true;BrowseCategoryNavigationCollectionComponent;;;
+;;MiddleContent-NonBusinessError;Category Navigation Slot;true;BrowseCategoryNavigationCollectionComponent;;;
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='notFound'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;MiddleContent-NotFoundError;MiddleContent;;MiddleContent-NotFoundError;;;
 
-INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
-;;MiddleContent-NonBusinessError;Middle Content Slot;true;ErrorParagraphComponent;;;
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='businessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;MiddleContent-BusinessError;MiddleContent;;MiddleContent-BusinessError;;;
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='nonBusinessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;MiddleContent-NonBusinessError;MiddleContent;;MiddleContent-NonBusinessError;;;
-
-INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
-;;MiddleContent-BusinessError;Middle Content Slot;true;ErrorParagraphComponent;;;
-
-INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='businessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
-;;MiddleContent-BusinessError;MiddleContent;;MiddleContent-BusinessError;;;

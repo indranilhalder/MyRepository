@@ -373,8 +373,16 @@
 		</property>
 	</bean>
 
-	<bean id="pageTitleResolver"
+	<!-- <bean id="pageTitleResolver"
 		class="de.hybris.platform.acceleratorservices.storefront.util.PageTitleResolver">
+		<property name="cmsSiteService" ref="cmsSiteService" />
+		<property name="commerceCategoryService" ref="commerceCategoryService" />
+		<property name="productService" ref="productService" />
+	</bean> -->
+	
+	
+	<bean id="pageTitleResolver"
+		class="com.tisl.mpl.storefront.util.MplPageTitleResolver">
 		<property name="cmsSiteService" ref="cmsSiteService" />
 		<property name="commerceCategoryService" ref="commerceCategoryService" />
 		<property name="productService" ref="productService" />

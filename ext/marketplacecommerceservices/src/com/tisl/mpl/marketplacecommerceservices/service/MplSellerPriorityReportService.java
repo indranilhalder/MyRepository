@@ -21,25 +21,27 @@ public interface MplSellerPriorityReportService
 	 * @param endDate
 	 * @return List<SavedValuesModel>
 	 */
-	List<SavedValuesModel> getSellerPriorityDetails(final Date startDate, final Date endDate);
+	public List<SavedValuesModel> getSellerPriorityDetails(final Date startDate, final Date endDate);
 
 	/**
 	 * @Description : Returns data without any date range
 	 * @return List<SavedValuesModel>
 	 */
-	List<SavedValuesModel> getAllSellerPriorityDetails();
+	public List<SavedValuesModel> getAllSellerPriorityDetails();
 
 	/**
 	 * This Method fetches all modified details in SellerPriority Model within the prescribed date Range
 	 *
 	 * @param startDate
 	 * @param endDate
+	 * @throws Exception
 	 */
 	public void fetchSpecificDetails(final Date startDate, final Date endDate);
 
 	/**
 	 * This Method fetches all details in SellerPriority Model
 	 *
+	 * @throws Exception
 	 */
 	public void fetchAllDetails();
 

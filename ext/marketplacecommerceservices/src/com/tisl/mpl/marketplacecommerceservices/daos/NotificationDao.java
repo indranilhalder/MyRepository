@@ -35,7 +35,7 @@ public interface NotificationDao
 	List<AbstractPromotionModel> getPromotion();
 
 
-	boolean checkIsUpdated(String voucherCode);
+	//boolean checkIsUpdated(String voucherCode);
 
 
 	List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherIndentifier);

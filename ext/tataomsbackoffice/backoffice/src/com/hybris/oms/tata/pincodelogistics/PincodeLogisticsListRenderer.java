@@ -3,6 +3,7 @@
  */
 package com.hybris.oms.tata.pincodelogistics;
 
+import org.springframework.util.StringUtils;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
@@ -12,7 +13,7 @@ import com.hybris.oms.domain.buc.report.SellerAndLogisticsPerfRpt.dto.SellerAndL
 
 /**
  * @author Pradeep
- * 
+ *
  */
 public class PincodeLogisticsListRenderer implements ListitemRenderer
 {
@@ -43,7 +44,16 @@ public class PincodeLogisticsListRenderer implements ListitemRenderer
 
 		addListcell(listitem, sellerLRpt.getCustomerId());
 		addListcell(listitem, sellerLRpt.getEmail());
-		addListcell(listitem, sellerLRpt.getMobileNo());
+
+		if (StringUtils.isEmpty(sellerLRpt.getMobileNo()))
+		{
+			addListcell(listitem, "NA");
+		}
+		else
+		{
+			addListcell(listitem, sellerLRpt.getMobileNo());
+		}
+
 		addListcell(listitem, String.valueOf(sellerLRpt.getTatConf2Hotc()));
 		addListcell(listitem, String.valueOf(sellerLRpt.getActualTatOrder2Hotc()));
 		addListcell(listitem, String.valueOf(sellerLRpt.getTatConfHotc2Delvd()));

@@ -56,6 +56,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -92,23 +94,36 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private SessionService sessionService;
 	@Resource(name = "productSearchFacade")
 	private ProductSearchFacade<ProductData> productSearchFacade;
-
+	//private static final String NEW_CATEGORY_URL_PATTERN = "/**/c-{categoryCode:.*}";
+	//private static final String NEW_CATEGORY_URL_PATTERN_PAGINATION = "/**/c-{categoryCode:.*}/page-{page}";
 	//	private static final String LAST_LINK_CLASS = "active";
 
+	private static final String PAGE = "page";
+
 	protected static final Logger LOG = Logger.getLogger(CategoryPageController.class);
+	//Added For TISPRD-1243
+	private static final String DROPDOWN_BRAND = "MBH";
+	private static final String DROPDOWN_CATEGORY = "MSH";
 
 	@RequestMapping(value = CATEGORY_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	public String category(@PathVariable("categoryCode") final String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) final String dropDownText, final Model model,
+			@RequestParam(value = "searchCategory", required = false) String dropDownText, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
 	{
 		String searchCode = new String(categoryCode);
 
+		//applying search filters
+		if (searchQuery != null)
+		{
+			getfilterListCountForSize(searchQuery);
+			model.addAttribute("sizeCount", Integer.valueOf(getfilterListCountForSize(searchQuery)));
+			model.addAttribute("searchQueryValue", searchQuery);
+		}
 		//Storing the user preferred search results count
 		updateUserPreferences(pageSize);
 
@@ -117,13 +132,29 @@ public class CategoryPageController extends AbstractCategoryPageController
 				&& categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 		{
 			searchCode = searchCode.substring(0, 5);
+
 		}
 		model.addAttribute("searchCode", searchCode);
 		model.addAttribute("isCategoryPage", Boolean.TRUE);
 		final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 		//Set the drop down text if the attribute is not empty or null
 		if (dropDownText != null && !dropDownText.isEmpty())
+		//Added For TISPRD-1243
+
 		{
+
+			if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+
+			{
+				final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
+
+				if (categoryModel != null)
+				{
+					dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+
+				}
+			}
+			//Added For TISPRD-1243
 			model.addAttribute("dropDownText", dropDownText);
 
 		}
@@ -292,7 +323,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	@RequestMapping(value = CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/facets", method = RequestMethod.GET)
 	public FacetRefinement<SearchStateData> getFacets(@PathVariable("categoryCode") final String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode) throws UnsupportedEncodingException
 	{
@@ -303,7 +334,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	@RequestMapping(value = CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
 	public SearchResultsData<ProductData> getResults(@PathVariable("categoryCode") final String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode) throws UnsupportedEncodingException
 	{
@@ -388,4 +419,30 @@ public class CategoryPageController extends AbstractCategoryPageController
 		return productSearchFacade.categorySearch(categoryCode, searchState, pageableData);
 	}
 
+	private int getfilterListCountForSize(final String searchQuery)
+	{
+		final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
+		//		model.addAttribute("sizeCount", Integer.valueOf(Iterables.frequency(splitStr, "size")));
+		//		model.addAttribute("searchQueryValue", searchQuery);
+		final String[] temp = searchQuery.split(":");
+		final int countFreq = Iterables.frequency(splitStr, "size");
+		//  int preCount=0
+		int countValue = 0;
+		for (int i = 0; i < temp.length; i++)
+		{
+			if (temp[i].equals("size"))
+			{
+				countValue++;
+				//countFreq = 1;
+			}
+			else if (countValue >= 1)
+			{
+				if (countValue == countFreq)
+				{
+					break;
+				}
+			}
+		}
+		return Iterables.frequency(splitStr, "size");
+	}
 }

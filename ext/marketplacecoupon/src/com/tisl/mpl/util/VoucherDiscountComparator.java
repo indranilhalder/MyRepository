@@ -9,13 +9,21 @@ import com.tisl.mpl.data.VoucherDisplayData;
 
 
 /**
- * @author 752131
+ * @author TCS
  *
  */
 public class VoucherDiscountComparator implements Comparator<VoucherDisplayData>
 {
 
 
+	/**
+	 * This method compares two VoucherDisplayData for comparing
+	 *
+	 * @param data0
+	 * @param data1
+	 * @return int
+	 *
+	 */
 	@Override
 	public int compare(final VoucherDisplayData data0, final VoucherDisplayData data1)
 	{

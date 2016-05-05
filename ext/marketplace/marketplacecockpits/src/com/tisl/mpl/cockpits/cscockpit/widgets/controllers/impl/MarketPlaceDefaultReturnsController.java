@@ -12,6 +12,8 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Session;
 
 import com.tisl.mpl.cockpits.cscockpit.utilities.CodeMasterUtility;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceReturnsController;
@@ -234,10 +236,15 @@ public class MarketPlaceDefaultReturnsController extends
 			TypedObject refundRequestObject = getCockpitTypeService().wrapItem(
 					refundRequest);
 
+			// Added By Techouts for return pincode
+			Session session = Executions.getCurrent().getDesktop().getSession();
+			String pinCode = (String) session.getAttribute("pinCode");
+
 			for (AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
 				ReturnLogistics returnLogistics = new ReturnLogistics();
 				returnLogistics.setOrderId(orderEntry.getOrder().getCode());
 				returnLogistics.setTransactionId(orderEntry.getTransactionID());
+				returnLogistics.setPinCode(pinCode);
 				returnLogisticsList.add(returnLogistics);
 			}
 
@@ -281,6 +288,45 @@ public class MarketPlaceDefaultReturnsController extends
 			LOG.error(e.getMessage(), e);
 			return StringUtils.EMPTY;
 		}
+	}
+
+	public List<ReturnLogistics> getReturnLogisticsList(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final List<ObjectValueContainer> returnObjectValueContainers,
+			String pinCode) {
+		Map returnableOrderEntries = ((ReturnsController) widget
+				.getWidgetController()).getReturnableOrderEntries();
+		List<ReturnLogistics> returnLogisticsList = new ArrayList();
+		for (ObjectValueContainer ovc : returnObjectValueContainers) {
+			TypedObject orderEntry = (TypedObject) ovc.getObject();
+			AbstractOrderEntryModel entry = (OrderEntryModel) orderEntry
+					.getObject();
+			ObjectValueContainer.ObjectValueHolder expectedQty = getPropertyValue(
+					ovc, "ReturnEntry.expectedQuantity");
+			if ((expectedQty != null)
+					&& (expectedQty.getCurrentValue() instanceof Long)) {
+				long expectedQtyValue = SafeUnbox.toLong((Long) expectedQty
+						.getCurrentValue());
+				if (expectedQtyValue != 0L) {
+					if (expectedQtyValue < 0L) {
+						break;
+					}
+					if ((expectedQtyValue > 0L)
+							&& (SafeUnbox.toLong((Long) returnableOrderEntries
+									.get(orderEntry)) < expectedQtyValue)) {
+						break;
+					}
+				}
+				ReturnLogistics returnLogistics = new ReturnLogistics();
+				returnLogistics.setOrderId(((OrderModel) (entry.getOrder()))
+						.getParentReference().getCode());
+				returnLogistics.setTransactionId(entry.getTransactionID());
+				returnLogistics.setPinCode(pinCode);
+				returnLogisticsList.add(returnLogistics);
+
+			}
+		}
+		return returnLogisticsList;
 	}
 
 	public List<ReturnLogistics> getReturnLogisticsList(
@@ -333,6 +379,13 @@ public class MarketPlaceDefaultReturnsController extends
 					OrderLine orderLine = null;
 					String reason = null;
 					String notes = null;
+
+					// Added By Techouts
+
+					Session session = Executions.getCurrent().getDesktop()
+							.getSession();
+					String pinCode = (String) session.getAttribute("pinCode");
+
 					List<ReturnEntryModel> returnEntries = returnRequest
 							.getReturnEntries();
 					if (CollectionUtils.isNotEmpty(returnEntries)) {
@@ -354,7 +407,9 @@ public class MarketPlaceDefaultReturnsController extends
 							orderLine.setReasonCode(reason);
 							orderLine.setReturnCancelRemarks(notes);
 							request.getOrderLine().add(orderLine);
-
+							if (null != pinCode || !pinCode.isEmpty()) {
+								orderLine.setPinCode(pinCode);
+							}
 						}
 
 					} else {
@@ -379,6 +434,9 @@ public class MarketPlaceDefaultReturnsController extends
 							orderLine.setReasonCode(reason);
 							orderLine.setReturnCancelRemarks(notes);
 							request.getOrderLine().add(orderLine);
+							if (null != pinCode || !pinCode.isEmpty()) {
+								orderLine.setPinCode(pinCode);
+							}
 
 						}
 					}

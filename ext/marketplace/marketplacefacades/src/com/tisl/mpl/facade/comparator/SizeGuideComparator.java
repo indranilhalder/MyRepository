@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.facades.product.data.SizeGuideData;
+import com.tisl.mpl.fulfilmentprocess.utility.GenericUtility;
 
 
 /**
@@ -115,6 +116,11 @@ public class SizeGuideComparator implements Comparator<SizeGuideData>
 			final double modifiedValue2 = Double.parseDouble(value2.replaceAll("\\D+", ""));
 			//values out of size-systems are placed as last thus so big number.
 			return Double.compare(modifiedValue1, modifiedValue2);
+		}
+		else if (value1SizeSystemIndex == -1 && value2SizeSystemIndex == -1)
+		{
+			LOG.debug("calling alpha Numeric Compare");
+			return GenericUtility.alphaNumericCompare(value1, value2);
 		}
 		//no luck - assume values are equal
 		return 0;

@@ -61,6 +61,16 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 	private static String voucherCode;
 
 
+
+	/**
+	 * This method is used for anniversary voucher
+	 *
+	 * @param eventType
+	 * @param eventStartDate
+	 * @param eventEndDate
+	 * @return Map<String, List<PrincipalModel>>
+	 *
+	 */
 	@Override
 	public Map<String, List<PrincipalModel>> anniversaryVoucherDetails(final String eventType, final Date eventStartDate,
 			final Date eventEndDate)
@@ -90,6 +100,16 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 		return eventCustomerMap;
 	}
 
+
+	/**
+	 * This method is used for birthday voucher
+	 *
+	 * @param eventType
+	 * @param eventStartDate
+	 * @param eventEndDate
+	 * @return Map<String, List<PrincipalModel>>
+	 *
+	 */
 	@Override
 	public Map<String, List<PrincipalModel>> birthdayVoucherDetails(final String eventType, final Date eventStartDate,
 			final Date eventEndDate)
@@ -117,6 +137,17 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 		return eventCustomerMap;
 	}
 
+
+	/**
+	 * This method is used for voucher based on purchase
+	 *
+	 * @param eventType
+	 * @param eventStartDate
+	 * @param eventEndDate
+	 * @param purAmtOrderValue
+	 * @return Map<String, List<PrincipalModel>>
+	 *
+	 */
 	@Override
 	public Map<String, List<PrincipalModel>> purchaseBasedVoucherDetails(final String eventType, final Date eventStartDate,
 			final Date eventEndDate, final Double purAmtOrderValue)
@@ -144,6 +175,17 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 		return eventCustomerMap;
 	}
 
+
+	/**
+	 * This method is used for voucher for first time registraction
+	 *
+	 * @param eventType
+	 * @param eventStartDate
+	 * @param eventEndDate
+	 * @param firstTimeRegNoOfDays
+	 * @return Map<String, List<PrincipalModel>>
+	 *
+	 */
 	@Override
 	public Map<String, List<PrincipalModel>> firstTimeRegVoucherDetails(final String eventType, final Date eventStartDate,
 			final Date eventEndDate, final int firstTimeRegNoOfDays)
@@ -171,6 +213,15 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 		return eventCustomerMap;
 	}
 
+
+	/**
+	 * This method is used for voucher for cart which is not shopped
+	 *
+	 * @param eventType
+	 * @param cartNotShoppedNoOfDays
+	 * @return Map<String, List<PrincipalModel>>
+	 *
+	 */
 	@Override
 	public Map<String, List<PrincipalModel>> cartNotShoppedVoucherDetails(final String eventType, final int cartNotShoppedNoOfDays)
 	{
@@ -197,6 +248,18 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 		return eventCustomerMap;
 	}
 
+
+	/**
+	 * This method is used for voucher for cart which is abandoned at payment page
+	 *
+	 * @param eventType
+	 * @param eventStartDate
+	 * @param eventEndDate
+	 * @param cartAbanIsGreater
+	 * @param cartAbanCartValue
+	 * @return Map<String, List<PrincipalModel>>
+	 *
+	 */
 	@Override
 	public Map<String, List<PrincipalModel>> cartAbanAtPmtPageDetails(final String eventType, final Date eventStartDate,
 			final Date eventEndDate, final Boolean cartAbanIsGreater, final Double cartAbanCartValue)
@@ -225,6 +288,19 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 		return eventCustomerMap;
 	}
 
+
+
+	/**
+	 * This method is used for voucher for cart which is abandoned at cart page
+	 *
+	 * @param eventType
+	 * @param eventStartDate
+	 * @param eventEndDate
+	 * @param cartAbanIsGreater
+	 * @param cartAbanCartValue
+	 * @return Map<String, List<PrincipalModel>>
+	 *
+	 */
 	@Override
 	public Map<String, List<PrincipalModel>> cartAbanAtCartPageDetails(final String eventType, final Date eventStartDate,
 			final Date eventEndDate, final Boolean cartAbanIsGreater, final Double cartAbanCartValue)
@@ -255,6 +331,13 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 
 
 
+	/**
+	 * This method populates even customer map
+	 *
+	 * @param voucherCode
+	 * @param customer
+	 * @param eventCustomerMap
+	 */
 	private void populateEventCustomerMap(final String voucherCode, final PrincipalModel customer,
 			final Map<String, List<PrincipalModel>> eventCustomerMap)
 	{
@@ -266,6 +349,21 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 		eventCustomerMap.put(voucherCode, validCustomerList);
 	}
 
+
+
+	/**
+	 * This method saves the voucher values
+	 *
+	 * @param eventCustomerMap
+	 * @param currency
+	 * @param discountVal
+	 * @param voucherCode
+	 * @param couponStartDate
+	 * @param couponEndDate
+	 * @param redemptionLmtPerUser
+	 * @param redemptionQtyLimit
+	 *
+	 */
 	@Override
 	public void saveVoucherVals(final Map<String, List<PrincipalModel>> eventCustomerMap, final CurrencyModel currency,
 			final Double discountVal, final String voucherCode, final Date couponStartDate, final Date couponEndDate,
@@ -275,21 +373,22 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 				redemptionQtyLimit);
 	}
 
-	/*
-	 * (non-Javadoc)
+
+
+	/**
+	 * This method is used to get cart details for the customer
 	 *
-	 * @see com.tisl.mpl.facades.jobs.facade.CustomerDetailsFacade#getCartCustomer()
+	 * @param eventType
+	 * @param currency
+	 * @param discountVal
+	 * @param isFreeShipping
+	 * @param noOfDays
+	 *
 	 */
 	@Override
 	public void getCartCustomer(final String eventType, final CurrencyModel currency, final Double discountVal,
 			final Boolean isFreeShipping, final Integer noOfDays)
 	{
-		//Mapping with voucher code and customer list
-		//final Map<String, List<PrincipalModel>> eventCustomerMap = new HashMap<String, List<PrincipalModel>>();
-
-		//Read values from properties file
-		//readValuesFromPropFile();
-
 		//Fetches All Customers
 		final List<CartModel> cartCustomerList = customerDetailsService.getCartDetails();
 
@@ -300,6 +399,11 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 	}
 
 
+	/**
+	 * This method reads values from property file
+	 *
+	 * @param eventType
+	 */
 	public void readValuesFromPropFile(final String eventType)
 	{
 
@@ -312,13 +416,24 @@ public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 		//	        coupon.event.cartAbandonment.code
 		//--------------------------------------------//
 
-		//final DateFormat df = new SimpleDateFormat("ddMMyyyy");
 		final Configuration configuration = configurationService.getConfiguration();
 		final String propFileKey = "coupon.event." + eventType + ".code";
 		voucherCode = configuration.getString(propFileKey);
 	}
 
 
+	/**
+	 * This method creates and saves voucher
+	 *
+	 * @param eventCustomerMap
+	 * @param currency
+	 * @param discountVal
+	 * @param voucherCode
+	 * @param couponStartDate
+	 * @param couponEndDate
+	 * @param redemptionLmtPerUser
+	 * @param redemptionQtyLimit
+	 */
 	private void saveVouchers(final Map<String, List<PrincipalModel>> eventCustomerMap, final CurrencyModel currency,
 			final Double discountVal, final String voucherCode, final Date couponStartDate, final Date couponEndDate,
 			final int redemptionLmtPerUser, final int redemptionQtyLimit)

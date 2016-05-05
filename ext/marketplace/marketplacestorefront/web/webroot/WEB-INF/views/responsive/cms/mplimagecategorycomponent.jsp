@@ -9,17 +9,21 @@
 	var="categoryUrl">
 
 
-	<c:if test="${not empty component.filterBySellerName}">
+	<c:if test="${not empty component.filterBySellerName}"> 
 
 		<c:param name="q"
-			value=":relevance:seller:${component.filterBySellerName}"></c:param>
-	</c:if>
+			value=":relevance:sellerId:${component.filterBySellerName}"></c:param>
+ 	</c:if> 
 	<c:if test="${not empty component.filterByBrandName}">
 
 		<c:param name="q"
 			value=":relevance:brand:${component.filterByBrandName}"></c:param>
 	</c:if>
+	<c:param name="icid"
+			value="${component.pk}"></c:param>
 </c:url>
+
+
 <li><c:choose>
 		
 		<c:when test="${component.isImageFromPCM eq 'true'}">
@@ -70,5 +74,5 @@
 			</c:choose>
 		</c:otherwise>
 	</c:choose> <span>${category.name}</span> <a class="shop_link"
-	href="${categoryUrl}"><b><spring:theme
-				code="category.carousel.shopNow" /></b></a></li>
+	href="${categoryUrl}"><spring:theme
+				code="category.carousel.shopNow" /></a></li>

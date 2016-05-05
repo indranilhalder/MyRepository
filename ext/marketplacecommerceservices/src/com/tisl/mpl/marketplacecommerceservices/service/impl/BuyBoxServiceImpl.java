@@ -136,24 +136,21 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		return buyBox;
 	}
 
-	/*
-	 * This service method will return buybox prices for product code
+	/**
+	 * This service method will return buybox data for product code and seller id
 	 *
-	 * @param - productCode
-	 *
-	 * @return- buyBoxList
+	 * @param productCode
+	 * @param sellerId
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 * @throws EtailBusinessExceptions
 	 */
 	@Override
-	//	public List<BuyBoxModel> buyboxPrice(final String productCode) throws EtailNonBusinessExceptions
-	public List<BuyBoxModel> buyboxForSizeGuide(final String productCode, final String sellerId)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions
+	public BuyBoxModel buyboxForSizeGuide(final String productCode, final String sellerId) throws EtailNonBusinessExceptions,
+			EtailBusinessExceptions
 	{
-
-		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyBoxForSizeGuide(productCode, sellerId);
-
-
-
-		return buyBoxList;
+		//Get Buybox data in respect of product code and seller id
+		return buyBoxDao.buyBoxForSizeGuide(productCode, sellerId);
 	}
 
 	/*

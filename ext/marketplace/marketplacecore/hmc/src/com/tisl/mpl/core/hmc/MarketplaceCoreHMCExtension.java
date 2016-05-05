@@ -33,7 +33,10 @@ import de.hybris.platform.promotions.jalo.OrderPromotion;
 import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.promotions.jalo.PromotionPriceRow;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.localization.Localization;
+import de.hybris.platform.voucher.jalo.Voucher;
+import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +47,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,9 +55,11 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.jalo.BuyABFreePrecentageDiscount;
 import com.tisl.mpl.jalo.BuyAPercentageDiscount;
 import com.tisl.mpl.jalo.BuyAandBPrecentageDiscount;
 import com.tisl.mpl.jalo.BuyAandBgetC;
+import com.tisl.mpl.jalo.BuyXItemsofproductAgetproductBforfree;
 import com.tisl.mpl.jalo.CustomProductBOGOFPromotion;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
@@ -265,6 +271,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 	public ActionResult afterSave(final Item item, final DisplayState displayState, final Map currentValues,
 			final Map initialValues, final ActionResult actionResult)
 	{
+		LOG.debug("Inside aftersave >>>>>>>>>");
 		boolean errorCheck = false;
 		try
 		{
@@ -294,12 +301,16 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 			if (null != item && ((item instanceof ProductPromotion) || (item instanceof OrderPromotion)))
 			{
 				getPromotionSendMailService().sendMail(item);
+
+				checkForMsgModify(item, currentValues, initialValues);
 			}
 
-			//			if (null != item && item instanceof Voucher)
-			//			{
-			//				getNotificationService().saveToVoucherStatusNotification(item);
-			//			}
+			//Saving data into VoucherStatusNotificationModel while saving voucher
+			if (item instanceof Voucher)
+			{
+				final VoucherModel voucher = (VoucherModel) getModelService().get((Voucher) item);
+				getNotificationService().saveToVoucherStatusNotification(voucher);
+			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -318,8 +329,29 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 	}
 
 	/**
-	 * @Description: To populate data for Promotion Price Modification
+	 * Check for Message Modification
+	 *
+	 * @param item
+	 * @param currentValues
 	 * @param initialValues
+	 */
+	private void checkForMsgModify(final Item item, final Map currentValues, final Map initialValues)
+	{
+		if (MapUtils.isNotEmpty(currentValues) && currentValues.containsKey("messageFired"))
+		{
+			LOG.debug("***Fired Message Has been modified****");
+			if (item instanceof BuyXItemsofproductAgetproductBforfree || item instanceof BuyABFreePrecentageDiscount)
+			{
+				LOG.debug("***Modifying Promotion Fired Mesage ****");
+				getSellerBasedPromotionService().modifyFiredMessage(initialValues.get(MarketplaceCoreConstants.PROMOCODE).toString());
+			}
+		}
+
+	}
+
+	/**
+	 * @Description: To populate data for Promotion Price Modification
+	 * @param item
 	 * @return: void
 	 */
 	@SuppressWarnings("boxing")
@@ -616,5 +648,10 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 	protected NotificationService getNotificationService()
 	{
 		return Registry.getApplicationContext().getBean("notificationService", NotificationService.class);
+	}
+
+	protected ModelService getModelService()
+	{
+		return Registry.getApplicationContext().getBean("modelService", ModelService.class);
 	}
 }

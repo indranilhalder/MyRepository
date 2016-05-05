@@ -28,8 +28,6 @@ public interface MplCmsPageService extends CMSPageService
 
 	ContentPageModel getCategoryLandingPageForMobile(CategoryModel category, CMSChannel cms) throws CMSItemNotFoundException;
 
-	ContentPageModel getHomePageForMobile();
-
 	ContentPageModel getCollectionLandingPageForMobile(String collectionId, CMSChannel cms);
 
 	ContentPageModel getSellerLandingPageForMobile(SellerMasterModel sellerMasterModel, CMSChannel cms)
@@ -39,5 +37,10 @@ public interface MplCmsPageService extends CMSPageService
 	Collection<ContentPageModel> getAllContentPages(final Collection<CatalogVersionModel> catalogmodel);
 
 	ContentSlotModel getContentSlotByUidForPage(final String pageId, final String contentSlotId, final String catalogVersion);
+	/**
+	 * @param pageUid
+	 * @return
+	 */
+	ContentPageModel getHomePageForMobile(String pageUid);
 }
 

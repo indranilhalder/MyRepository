@@ -63,6 +63,15 @@
 		<property name="resource" value="classpath:/marketplacefulfilmentprocess/process/mpl-oms-submitorder-process.xml"/>
 	</bean>
 	
+	<bean id="omsSubmitOrderProcessDefinitionResourceV2" class="de.hybris.platform.processengine.definition.ProcessDefinitionResource" >
+		<property name="resource" value="classpath:/marketplacefulfilmentprocess/process/mpl-oms-submitorder-process-v2.xml"/>
+	</bean>
+	
+	<!-- <alias name="omsSubmitOrderProcessDefinitionResourceV2" alias="omsSubmitOrderProcessDefinitionResource"/>
+	<bean id="omsSubmitOrderProcessDefinitionResourceV2" class="de.hybris.platform.processengine.definition.ProcessDefinitionResource" >
+		<property name="resource" value="classpath:/marketplacefulfilmentprocess/process/mpl-oms-submitorder-process-v2.xml"/>
+	</bean> -->
+	
 	<import resource="marketplacefulfilmentprocess/process/mpl-omsorders-spring-process.xml" />
 
 	<!-- Process Actions -->
@@ -128,5 +137,14 @@
 	
 	<bean id="mplUtility" class="com.tisl.mpl.fulfilmentprocess.utility.GenericUtility" >
 	</bean>
+	
+	<!-- TaskInterceptor starts -->
+   	<bean id="TaskInterceptor" class="com.tisl.mpl.fulfilmentprocess.interceptor.TaskInterceptor" />
+   
+   	<bean id="TaskInterceptorMapping"
+   		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+   		<property name="interceptor" ref="TaskInterceptor" />
+   		<property name="typeCode" value="Task" />
+   	</bean>
 	
 </beans>

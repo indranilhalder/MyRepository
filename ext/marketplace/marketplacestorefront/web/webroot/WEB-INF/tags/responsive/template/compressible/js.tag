@@ -20,28 +20,14 @@ var loginStatus = '${sessionScope.loginSuccess}';
 <c:choose>
 	<c:when test="${isMinificationEnabled}">
 		<compressible:mplminjs/>
-		<%-- <compressible:mpljs/> --%>
+
 	</c:when>
 	<c:otherwise>
 		<compressible:mpljs/>
 	</c:otherwise>
 </c:choose>
 
-<!--[if lt IE 9]>
-<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/main-ie8.css"/>
-<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<script type="text/javascript" src="${commonResourcePath}/js/html5shiv.js"></script>
-<script type="text/javascript" src="${commonResourcePath}/js/respond.js"></script>
-<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-<script type="text/javascript" src="${commonResourcePath}/js/jquery.backstretch.min.js"></script>
-<script type="text/javascript" src="${commonResourcePath}/js/background-size-shim.js"></script>
-<![endif]-->
 
-<!--[if lt IE 10]>
-<script type="text/javascript" src="${commonResourcePath}/js/jquery.html5-placeholder-shim.js"></script>
-<![endif]-->
-
-<!-- Search feed back End -->
 
 <c:if test="${isIAEnabled}">
 <script type="text/javascript"
@@ -78,31 +64,6 @@ var loginStatus = '${sessionScope.loginSuccess}';
 	</c:when>
 	</c:choose>
 </c:if>
-<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/populateAddressDetail') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/addNewAddress') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/editAddress') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/set-default-address/*') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/remove-address/*') or
-
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/orders') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/order/*') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnRequest') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnSuccess') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/coupons')}">
-	<script type="text/javascript"
-		src="${commonResourcePath}/js/mpl/acc.accountpagination.js"></script>
-</c:if>
-
-<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/login') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/register') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/login/*')}">
-<script type="text/javascript"
-		src="${commonResourcePath}/js/mpl/acc.accountaddress.js"></script>
-<script type="text/javascript"
-		src="${commonResourcePath}/js/mpl/acc.forgottenpassword.js"></script>
-</c:if>
 
 <script>
 function globalErrorPopup(msg) {
@@ -127,7 +88,7 @@ div.blockMsg {
 	opacity : .09 !important;
 	top : 100px !important;
 } */
+
 </style> 
 
 <!--- END:MSD --->
-

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.hybris.oms.tata.orders;
 
@@ -15,7 +15,7 @@ import com.hybris.oms.domain.orderbuc.dto.BUCStatusRecords;
 
 /**
  * @author Nagarjuna
- * 
+ *
  */
 public class BusStatusRecordsListRenderer implements ListitemRenderer
 {
@@ -33,9 +33,6 @@ public class BusStatusRecordsListRenderer implements ListitemRenderer
 
 		// keep value in listitem
 		listitem.setValue(value);
-
-		LOG.info("**********************" + bucStaterecords.getDate());
-
 		addTextListcell(listitem, bucStaterecords.getDate());
 		addTextListcell(listitem, bucStaterecords.getTime());
 		addTextListcell(listitem, bucStaterecords.getLocation());
@@ -44,7 +41,7 @@ public class BusStatusRecordsListRenderer implements ListitemRenderer
 	}
 
 	/**
-	 * 
+	 *
 	 * @param listitem
 	 *           list item of listbox
 	 * @param value

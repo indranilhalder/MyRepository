@@ -17,6 +17,7 @@ import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commerceservices.enums.SiteChannel;
 import de.hybris.platform.commerceservices.event.AbstractSiteEventListener;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 //import de.hybris.platform.orderprocessing.events.OrderPlacedEvent;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.BusinessProcessService;
@@ -89,9 +90,29 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 		//send SMS
 		try
 		{
+			String mobileNumber = null;
+			String firstName = null;
+			
 			final OrderModel orderDetails = orderProcessModel.getOrder();
-			final String mobileNumber = orderDetails.getDeliveryAddress().getPhone1();
-			final String firstName = orderDetails.getDeliveryAddress().getFirstname();
+			CustomerModel customer=null;
+			if(orderModel.getUser() != null && orderModel.getUser() instanceof CustomerModel){
+				 customer=(CustomerModel) orderModel.getUser();
+			}
+			if(null != orderDetails  && orderDetails.getDeliveryAddress() != null && orderDetails.getDeliveryAddress().getPhone1()!= null){
+				mobileNumber = orderDetails.getDeliveryAddress().getPhone1();
+			}else{
+			 mobileNumber = customer.getMobileNumber();
+			}
+			if(null != orderDetails  && orderDetails.getDeliveryAddress() != null && orderDetails.getDeliveryAddress().getFirstname()!= null){
+				firstName = orderDetails.getDeliveryAddress().getFirstname();
+			}else{
+				if (null != customer && customer.getFirstName() !=null){
+				    firstName = customer.getFirstName();
+				}else {
+					firstName = "Customer";
+				}
+			}
+			
 			final String orderReferenceNumber = orderDetails.getCode();
 			final String trackingUrl = configurationService.getConfiguration().getString(
 					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)

@@ -72,11 +72,15 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 		//final CartData cartData = getCheckoutFacade().getCheckoutCart();      //DSC_006: Commented for Address state field addition
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+		
+		
 
 		model.addAttribute("cartData", cartData);
 		//model.addAttribute("deliveryAddresses", getDeliveryAddresses(cartData.getDeliveryAddress())); //DSC_006: Commented for Address state field addition
+		if(null != cartData)
+		{
 		model.addAttribute("deliveryAddresses", getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress()));
-
+		}
 		model.addAttribute("noAddress", Boolean.valueOf(getCheckoutFlowFacade().hasNoDeliveryAddress()));
 		final AccountAddressForm addressForm = new AccountAddressForm();
 		addressForm.setCountryIso("IN");
@@ -118,7 +122,10 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 		model.addAttribute("cartData", cartData);
+		
+		if(null != cartData){
 		model.addAttribute("deliveryAddresses", getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress()));
+		}
 
 		this.prepareDataForPage(model);
 		if (StringUtils.isNotBlank(addressForm.getCountryIso()))
@@ -275,7 +282,9 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 		final CartData cartData = getCheckoutFacade().getCheckoutCart();
 		model.addAttribute("cartData", cartData);
+		if(null !=cartData){
 		model.addAttribute("deliveryAddresses", getDeliveryAddresses(cartData.getDeliveryAddress()));
+		}
 		if (StringUtils.isNotBlank(addressForm.getCountryIso()))
 		{
 			model.addAttribute("regions", getI18NFacade().getRegionsForCountryIso(addressForm.getCountryIso()));

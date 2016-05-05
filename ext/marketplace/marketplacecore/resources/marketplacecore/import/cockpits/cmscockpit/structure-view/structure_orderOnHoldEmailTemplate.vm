@@ -1,4 +1,4 @@
-    <div>
+<div>
 	<table width="100%" cellspacing="0" style="margin:0;padding:0;table-layout:auto;border:1px solid #1E4EBF;">
 		<tbody>
 			<tr>
@@ -67,20 +67,30 @@
 					<cockpit code="fast" />
 				</td>
 			</tr>
+			
+			<tr>
+				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Tip" />
+				</td>
+				
+			</tr>
+			
 			<tr>
 				<td colspan="6" width="30%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="OnHoldBannerTwo" />
+					<cockpit code="AppDownloadUrl" />
 				</td>
 			</tr>
 			<tr>
 				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="OnHoldsmileyimg" />
+					<cockpit code="smileyimg" />
 				</td>
 			</tr>
 			<tr>
 				<td height="270px" colspan="6" class="structureViewSection">
-					<cockpit code="OnHoldfb" />
-					<cockpit code="OnHOldgplus" />
+					<cockpit code="fb" />
+					<cockpit code="tweet" />
+					<cockpit code="youtube" />
+					<cockpit code="insta" />
 				</td>
 			</tr>
 		</tbody>

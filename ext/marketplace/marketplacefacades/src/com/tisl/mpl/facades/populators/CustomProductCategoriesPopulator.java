@@ -29,8 +29,8 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
  * @param <SOURCE>
  * @param <TARGET>
  */
-public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGET extends ProductData> extends
-		ProductCategoriesPopulator<SOURCE, TARGET>
+public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGET extends ProductData>
+		extends ProductCategoriesPopulator<SOURCE, TARGET>
 {
 
 	@Resource
@@ -65,15 +65,18 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException,
-			EtailNonBusinessExceptions
+	public void populate(final SOURCE productModel, final TARGET productData)
+			throws ConversionException, EtailNonBusinessExceptions
 	{
 
 		//product super category like electronics,clothing are being populated by interceptor.
 		productData.setRootCategory(productModel.getProductCategoryType());
-		final Collection<CategoryModel> categories = getCommerceProductService()
-				.getSuperCategoriesExceptClassificationClassesForProduct(productModel);
-		productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));
+		
+		  final Collection<CategoryModel> categories = getCommerceProductService()
+		  .getSuperCategoriesExceptClassificationClassesForProduct(productModel);
+		  productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));
+		 
+
 	}
 
 

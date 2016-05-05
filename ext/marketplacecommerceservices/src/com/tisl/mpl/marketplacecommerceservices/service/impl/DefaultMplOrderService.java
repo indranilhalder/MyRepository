@@ -7,10 +7,12 @@ import static java.lang.String.format;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.store.BaseStoreModel;
@@ -23,6 +25,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,6 +41,8 @@ import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
+import com.tisl.mpl.model.BuyAandBgetCModel;
+import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.service.MplAwbStatusService;
 import com.tisl.mpl.xml.pojo.AWBStatusResponse;
 import com.tisl.mpl.xml.pojo.AWBStatusResponse.AWBResponseInfo;
@@ -60,6 +65,9 @@ public class DefaultMplOrderService implements MplOrderService
 	private MplAwbStatusService mplAwbStatusService;
 	@Autowired
 	private MplProductDao productDao;
+	@Autowired
+	private SellerBasedPromotionService sellerBasedPromotionService;
+
 	private final static Logger LOG = Logger.getLogger(DefaultMplOrderService.class);
 
 	/**
@@ -249,7 +257,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplAwbStatusService#prepAwbStatus(com.tisl.mpl.xml.pojo.AWBStatusResponse)
 	 */
 	@Override
@@ -329,7 +337,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplOrderService#findProductsByCode(java.lang.String)
 	 */
 	@Override
@@ -343,4 +351,28 @@ public class DefaultMplOrderService implements MplOrderService
 
 		return products.get(0);
 	}
+
+	/*
+	 * @Desc : used to check if BuyAandBGetC is applied on order entry or not TISPRO-249
+	 *
+	 * @param orderEntryModel
+	 *
+	 * @return boolean
+	 *
+	 * @throws Exception
+	 */
+	@Override
+	public boolean checkIfBuyABGetCApplied(final AbstractOrderEntryModel orderEntryModel) throws Exception
+	{
+		boolean isApplied = false;
+		if (StringUtils.isNotEmpty(orderEntryModel.getProductPromoCode()))
+		{
+			final List<AbstractPromotionModel> promoDetailsList = sellerBasedPromotionService.fetchPromotionDetails(orderEntryModel
+					.getProductPromoCode());
+			isApplied = (CollectionUtils.isNotEmpty(promoDetailsList) && promoDetailsList.get(0) instanceof BuyAandBgetCModel) ? true
+					: false;
+		}
+		return isApplied;
+	}
+
 }

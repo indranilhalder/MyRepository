@@ -671,7 +671,7 @@ display:none;
     <div class="product-detail">
     <h2 class="company">
               <span class="logo"></span>${product.brand.brandname}&nbsp;<spring:theme code="product.by"/>&nbsp;${sellerName}</h2>
-    <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>
+    <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     <div class="price">
     <c:choose>
     <c:when test="${not empty spPrice.value && spPrice.value ne 0}">
@@ -809,14 +809,30 @@ display:none;
 					<spring:theme code="product.variants.out.of.stock" />
 				</button> --%>
 			</c:when>
-			<c:otherwise>			
-					<button id="addToCartButton" type="${buttonType}"
-						class="btn-block js-add-to-cart">
-						<spring:theme code="basket.add.to.basket" />
-					</button>
-				
-			</c:otherwise>
-		</c:choose>
+			<c:otherwise>
+			<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
+			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
+			</p></span>			
+					 <c:choose>
+										<c:when test="${error eq 'true'}">
+											<span id="dListedErrorMsg" class="dlist_message" style="color: #FE2E2E;float: right;padding-bottom: 5px;"> <spring:theme
+													code="pdp.delisted.message" />
+											</span>
+											<button id="addToCartButton-wrong" type="button" class="btn-block" disable="true" style="display: block;"><spring:theme code="basket.add.to.basket" /></button>
+											<script>
+         										$('.wish-share').css('visibility','hidden');
+    										</script>
+										</c:when>
+										<c:otherwise>
+											<button id="addToCartButton" type="${buttonType}"
+												class="btn-block js-add-to-cart">
+												<spring:theme code="basket.add.to.basket" />
+											</button>
+										</c:otherwise>
+									</c:choose>
+
+								</c:otherwise>
+							</c:choose>
 		
 	<%-- 	<c:choose>
 		<c:when test="${selectedSize!=null || product.rootCategory=='Electronics'}">
@@ -1038,7 +1054,7 @@ display:none;
 				</button>
 				<span id="email_quick" style="display:none"></span>
 				<span id="emailError_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailError"/></span>
-				<span id="emailSuccess_quick" style="display:none;color:#00CBE9"><spring:theme code="email.emailSuccess"/></span>
+				<span id="emailSuccess_quick" style="display:none;color:#60A119"><spring:theme code="email.emailSuccess"/></span>
 				<span id="emailUnSuccess_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailUnSuccess"/></span>
 				<span id="emailEmpty_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailEmpty"/></span>
 				<span id="validateemail_quick" style="display:none;color:#ff1c47"><spring:theme code="email.validate"/></span>
@@ -1125,17 +1141,9 @@ $('ul.wish-share a#mailQuick').popover({
 
 $(document).on("keypress","#defaultWishName_quick",function(e) {
 	var wishlistname = $("#defaultWishName_quick").val();
-	var key = e.keyCode;
-	if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
-		e.preventDefault();
-		 var start = this.selectionStart,
-         end = this.selectionEnd;
-		$('#defaultWishName_quick').val(wishlistname);
-		$("#addedMessage_quick").show();
-		$("#addedMessage_quick").html("<font color='#ff1c47'><b>Special characters are not allowed</b></font>");
-		$("#addedMessage_quick").show().fadeOut(3000);
-		this.setSelectionRange(start, end);
-	} 
+	var mainDiv = 'defaultWishName_quick';
+	var errorDiv = "#addedMessage_quick";
+	validateSpcharWlName(e,wishlistname,mainDiv,errorDiv);
 }); 
 
 

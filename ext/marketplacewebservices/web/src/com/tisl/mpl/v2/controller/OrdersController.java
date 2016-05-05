@@ -30,9 +30,11 @@ import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.dto.order.OrderHistoryListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.order.OrderWsDTO;
+import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.ProductLowStockException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.StockSystemException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
+import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.strategies.CartLoaderStrategy;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -187,9 +189,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 * 
+	 *
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 * 
+	 *
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -202,6 +204,8 @@ public class OrdersController extends BaseCommerceController
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
+	@Resource(name = "mplDataMapper")
+	protected DataMapper mplDataMapper;
 
 	/**
 	 * @return the mplSellerInformationService
@@ -232,7 +236,8 @@ public class OrdersController extends BaseCommerceController
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
 	@Cacheable(value = "orderCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(false,true,'getOrder',#code,#fields)")
 	@ResponseBody
-	public OrderWsDTO getOrder(@PathVariable final String code, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	public OrderWsDTO getOrder(@PathVariable final String code,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		OrderData orderData;
 		if (orderCodeIdentificationStrategy.isID(code))
@@ -342,8 +347,8 @@ public class OrdersController extends BaseCommerceController
 	@ResponseBody
 	public OrderWsDTO placeOrder(@RequestParam(required = true) final String cartId,
 			@RequestParam(required = false) final String securityCode,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields) throws PaymentAuthorizationException,
-			InvalidCartException, WebserviceValidationException, NoCheckoutCartException
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+					throws PaymentAuthorizationException, InvalidCartException, WebserviceValidationException, NoCheckoutCartException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -396,9 +401,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 * 
+	 *
 	 * @param orderNumber
-	 * 
+	 *
 	 * @param lineID
 	 */
 
@@ -407,8 +412,8 @@ public class OrdersController extends BaseCommerceController
 	@RequestMapping(value = "/users/{emailID}/sendInvoice", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
 	@ResponseBody
-	public UserResultWsDto sendInvoice(@PathVariable final String emailID,
-			@RequestParam(required = true) final String orderNumber, @RequestParam(required = true) final String lineID)
+	public UserResultWsDto sendInvoice(@PathVariable final String emailID, @RequestParam(required = true) final String orderNumber,
+			@RequestParam(required = true) final String lineID)
 	{
 		final UserResultWsDto response = new UserResultWsDto();
 		try
@@ -446,7 +451,7 @@ public class OrdersController extends BaseCommerceController
 
 									/*
 									 * final File invoiceFile = new File(invoicePathURL); FileInputStream input = null;
-									 * 
+									 *
 									 * if (invoiceFile.exists()) { String invoiceFileName = null; final String preInvoiceFileName
 									 * = invoiceFile.getName(); if (!preInvoiceFileName.isEmpty()) { final int index =
 									 * preInvoiceFileName.lastIndexOf('.'); if (index > 0) { invoiceFileName =
@@ -666,6 +671,10 @@ public class OrdersController extends BaseCommerceController
 				{
 					orderWsDTO.setSubTotal(orderDetail.getSubTotal().getValue().toString());
 				}
+				if (null != orderDetail.getCouponDiscount() && null != orderDetail.getCouponDiscount().getValue())
+				{
+					orderWsDTO.setCouponDiscount(orderDetail.getCouponDiscount().getValue().toString());
+				}
 				/*
 				 * if (orderDetail.getTotalPriceWithTax() != null) {
 				 * orderWsDTO.setFinalAmount(orderDetail.getTotalPriceWithTax().getValue().toString()); } if
@@ -803,9 +812,9 @@ public class OrdersController extends BaseCommerceController
 							{
 								sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
 							}
-							if (sellerInfoModel != null
-									&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
-									&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+							if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
+									&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+											.getDeliveryFulfillModes() != null)
 							{
 								/* Fulfillment type */
 								fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
@@ -856,13 +865,13 @@ public class OrdersController extends BaseCommerceController
 				{
 					if (orderDetail.getStatus().equals(OrderStatus.RMS_VERIFICATION_PENDING))
 					{
-						orderWsDTO.setOrderStatusMessage(configurationService.getConfiguration().getString(
-								MarketplacecommerceservicesConstants.ORDER_CONF_HELD));
+						orderWsDTO.setOrderStatusMessage(
+								configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.ORDER_CONF_HELD));
 					}
 					else if (orderDetail.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 					{
-						orderWsDTO.setOrderStatusMessage(configurationService.getConfiguration().getString(
-								MarketplacecommerceservicesConstants.ORDER_CONF_SUCCESS));
+						orderWsDTO.setOrderStatusMessage(configurationService.getConfiguration()
+								.getString(MarketplacecommerceservicesConstants.ORDER_CONF_SUCCESS));
 					}
 				}
 
@@ -919,11 +928,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1117,7 +1126,8 @@ public class OrdersController extends BaseCommerceController
 		OrderStatusCodeMasterModel customerStatusModel = null;
 		OrderData orderDetail = null;
 		OrderModel orderModel = null;
-		String isGiveAway = "N", formattedProductDate = MarketplacecommerceservicesConstants.EMPTY, formattedActualProductDate = MarketplacecommerceservicesConstants.EMPTY;
+		String isGiveAway = "N", formattedProductDate = MarketplacecommerceservicesConstants.EMPTY,
+				formattedActualProductDate = MarketplacecommerceservicesConstants.EMPTY;
 		ConsignmentModel consignmentModel = null;
 		try
 		{
@@ -1133,7 +1143,10 @@ public class OrdersController extends BaseCommerceController
 			{
 				orderTrackingWsDTO.setBillingAddress(setAddress(orderDetail, 1));
 				orderTrackingWsDTO.setDeliveryAddress(setAddress(orderDetail, 2));
-
+				
+				orderTrackingWsDTO.setPickupPersonName(orderDetail.getPickupName());				
+			   	orderTrackingWsDTO.setPickupPersonMobile(orderDetail.getPickupPhoneNumber());
+				
 				orderTrackingWsDTO.setGiftWrapCharge(MarketplacecommerceservicesConstants.ZERO);
 				if (null != orderDetail.getCreated())
 				{
@@ -1234,6 +1247,10 @@ public class OrdersController extends BaseCommerceController
 								//								if (!entry.isGiveAway())
 								//								{
 								orderproductdto.setImageURL(setImageURL(product));
+								if(null !=entry.getDeliveryPointOfService()){
+									orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(), PointOfServiceWsDTO.class, "DEFAULT"));
+								}
+								
 								if (StringUtils.isNotEmpty(entry.getAmountAfterAllDisc().toString()))
 								{
 									orderproductdto.setPrice(entry.getAmountAfterAllDisc().getValue().toString());
@@ -1338,9 +1355,9 @@ public class OrdersController extends BaseCommerceController
 								{
 									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
 								}
-								if (sellerInfoModel != null
-										&& sellerInfoModel.getRichAttribute() != null
-										&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+								if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
+										&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+												.getDeliveryFulfillModes() != null)
 								{
 									/* Fulfillment type */
 									final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
@@ -1471,12 +1488,10 @@ public class OrdersController extends BaseCommerceController
 												if (null != consignmentModel && rm.getReturnWindow() != null)
 												{
 													final Date sDate = new Date();
-													final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
-															consignmentModel.getDeliveryDate(), sDate);
+													final int returnWindow = GenericUtilityMethods
+															.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(), sDate);
 													final int actualReturnWindow = Integer.parseInt(rm.getReturnWindow());
-													if (!entry.isGiveAway()
-															&& !entry.isIsBOGOapplied()
-															&& returnWindow < actualReturnWindow
+													if (!entry.isGiveAway() && !entry.isIsBOGOapplied() && returnWindow < actualReturnWindow
 															&& !checkOrderStatus(consignmentStatus,
 																	MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
 															&& consignmentStatus
@@ -1557,15 +1572,15 @@ public class OrdersController extends BaseCommerceController
 										subOrder, orderDetail);
 								orderproductdto.setStatusDisplayMsg(setStatusDisplayMessage(returnMap, consignmentModel));
 								//setting current product status Display
-								if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
-										.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
+								if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED)
+										|| consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
 										&& returnMap.get(MarketplaceFacadesConstants.CANCEL) != null
 										&& returnMap.get(MarketplaceFacadesConstants.CANCEL).size() > 0)
 								{
 									orderproductdto.setStatusDisplay(MarketplaceFacadesConstants.CANCEL);
 								}
-								else if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
-										.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
+								else if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED)
+										|| consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
 										&& returnMap.get(MarketplaceFacadesConstants.RETURN) != null
 										&& returnMap.get(MarketplaceFacadesConstants.RETURN).size() > 0)
 								{
@@ -1618,8 +1633,8 @@ public class OrdersController extends BaseCommerceController
 									if (entry.getConsignment().getStatus() != null
 											&& (entry.getConsignment().getStatus().equals(ConsignmentStatus.HOTC)
 													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.OUT_FOR_DELIVERY)
-													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB) || entry
-													.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
+													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB)
+													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
 									{
 										orderproductdto.setIsInvoiceAvailable(Boolean.TRUE);
 									}
@@ -1893,9 +1908,8 @@ public class OrdersController extends BaseCommerceController
 	@RequestMapping(value = "/users/{userId}/orderhistorylist", method = RequestMethod.GET)
 	@ResponseBody
 	public GetOrderHistoryListWsDTO getOrders(@RequestParam(required = false) final String statuses,
-			@RequestParam final int currentPage, @RequestParam final int pageSize,
-			@RequestParam(required = false) final String sort, @PathVariable final String userId,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam final int currentPage, @RequestParam final int pageSize, @RequestParam(required = false) final String sort,
+			@PathVariable final String userId, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 
 		final GetOrderHistoryListWsDTO getOrderHistoryListWsDTO = new GetOrderHistoryListWsDTO();
@@ -1985,8 +1999,32 @@ public class OrdersController extends BaseCommerceController
 		}
 		return getOrderHistoryListWsDTO;
 	}
+	
+	/**
+	 * @description method is to update the pickup person details for an order
+	 * @param orderId
+	 * @param name
+	 * @param mobile
+	 * @return OrderTrackingWsDTO (will be get on redirection)
+	 */
 
-
+	@Secured(
+			{ "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
+	@RequestMapping(value = "/users/{userId}/updatePickupDetails",method = RequestMethod.POST)
+	public String updatePickupDetails(@RequestParam(required=true,value = "orderId") final String orderId,@PathVariable String userId,@PathVariable String baseSiteId,
+			@RequestParam(required=true,value = "name") final String name, @RequestParam(required=true,value = "mobile") final String mobile,@RequestParam(value="access_token") String token)
+	{
+		
+		if (orderId != null && name != null && mobile != null)
+		{
+			mplOrderFacade.editPickUpInfo(orderId, name, mobile);
+		}
+		//redirect to order details page to get the all the information of an order
+		String redirectURL="redirect:/v2/"+baseSiteId+"/users/"+userId+"/getSelectedOrder/"+orderId+"?access_token="+token;
+		return redirectURL;
+	}
+ 
 	/**
 	 * @description: To find the Cancellation is enabled/disabled on Order status
 	 * @param: currentStatus

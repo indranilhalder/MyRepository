@@ -58,7 +58,7 @@
 								<tr>
 									<td align="left" valign="top">
 										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">${ctx.messages.getMessage('salutation', ${ctx.title},${ctx.displayName})},</font></p>
-										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">${ctx.messages.getMessage('thankYouForOrder', ${ctx.consignment.deliveryPointOfService.name})}</font></p>
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">${ctx.messages.getMessage('thankYouForOrder', ${ctx.consignment.deliveryPointOfService.displayName})}</font></p>
 										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">${ctx.messages.getMessage('pickupInformation')}</font></p>
 										<span><font color="#666666" size="2" face="Arial, Helvetica, sans-serif"><b>${ctx.consignment.deliveryPointOfService.address.line1},</b></font></span><br/>
 										#if ($ctx.consignment.deliveryPointOfService.address.line2)

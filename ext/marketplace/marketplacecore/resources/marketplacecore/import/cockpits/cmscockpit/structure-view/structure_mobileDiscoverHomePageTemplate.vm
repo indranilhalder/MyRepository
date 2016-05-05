@@ -1,0 +1,44 @@
+<div>
+	<table width="100%" cellspacing="0" style="margin:0;padding:0;table-layout:auto;border:1px solid #1E4EBF;">
+		<tbody>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="BannersSection"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="BrandsSection"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="MarketingMessageSection"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="StayQueuedSection"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="BestPickSection"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="ProductYouCareAboutSection"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="ShowcaseSection"/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div style="width:100%; border-top: 2px solid #bbb" class="cmsContentEditor">
+		<cockpit code="editor" />
+	</div>
+</div>

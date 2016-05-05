@@ -86,7 +86,10 @@
     p:mapping="mplprice"
     p:converter-ref="batchExpressdeliveryConverter"/>
     
-    	  
+     <bean id="batchCAndCdeliveryConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="mplprice"
+    p:converter-ref="batchCAndCdeliveryConverter"/>	  
  	 
  	 <!-- Converters -->
  	
@@ -200,4 +203,28 @@
 		</property> -->
          </bean>
      
+      <bean id="batchCAndCdeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	$productCatalog=mplProductCatalog
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
+					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
+
+					# Set product approval status to Approved only for those products that have prices.
+					$approved=approvalstatus(code)[default='approved']
+
+					$inCurrency=INR
+					$value=value[default='0.0']
+                    $homedelivery=deliveryMode(code)[unique=true][default='click-and-collect'] 
+                    $zone=zone(code)[default='in']
+                    $currency=currency(isocode)[default=$inCurrency]
+                    $minimum=minimum[default='0.0']
+                    $deliveryFulfillModes=deliveryFulfillModes(Code)[default='sship']
+				INSERT_UPDATE MplZoneDeliveryModeValue;$value;sellerArticleSKU[unique=true];productCode[unique=true];$homedelivery;$zone;$currency;$minimum;$deliveryFulfillModes
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{6};{+1};{+0}</value>
+        </property>
+         </bean>
       </beans>

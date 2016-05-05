@@ -14,6 +14,12 @@ import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -34,7 +40,7 @@ import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.helpmeshop.impl.DefaultHelpMeShopFacadeImpl;
 import com.tisl.mpl.facades.cms.data.CollectionPageData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
-import com.tisl.mpl.facades.cms.data.HomePageData;
+import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
 import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
 import com.tisl.mpl.v2.helper.ProductsHelper;
@@ -42,7 +48,8 @@ import com.tisl.mpl.wsdto.CollectionPageWsDTO;
 import com.tisl.mpl.wsdto.HelpmeShopCategoryWsDTO;
 import com.tisl.mpl.wsdto.HelpmeShopWsDTO;
 import com.tisl.mpl.wsdto.HeroProductWsDTO;
-import com.tisl.mpl.wsdto.HomePageWsDTO;
+import com.tisl.mpl.wsdto.MplPageComponentsWsDTO;
+import com.tisl.mpl.wsdto.MplPageWsDTO;
 import com.tisl.mpl.wsdto.PageWsDTO;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 
@@ -55,9 +62,17 @@ import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 @RequestMapping(value = "/{baseSiteId}/cms")
 public class CMSController extends BaseController
 {
+	private final String MOBILE_DISCOVER_UID = "MobileHomepageDiscover";
+	private final String MOBILE_SHOWCASE_UID = "MobileHomepageShowCase";
+	//private final String MOBILE_HOMEPAGE_UID = "MobileHomepage";	//SONAR Fix
+	//private static final String MOBILE_BRANDPAGE_UID = "MobileBrandPage";	//SONAR Fix
+	//private static final String MOBILE_CATEGORYPAGE_UID = "MobileCategoryPage";	//SONAR Fix
+	private static final String MOBILE_DEALSBANNERPAGE_UID = "MobileDealsBannerPage";
+	private static final String MOBILE_DEALSPRODUCTPAGE_UID = "MobileDealsProductPage";
+
 	/*
 	 * private static final Set<CatalogOption> OPTIONS;
-	 * 
+	 *
 	 * static { OPTIONS = getOptions(); }
 	 */
 
@@ -167,17 +182,192 @@ public class CMSController extends BaseController
 	@RequestMapping(value = "/homepage", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
-	public HomePageWsDTO getHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	public MplPageWsDTO getHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
 	{
-		HomePageWsDTO dto;
-		final HomePageData homePageData = mplCmsFacade.getHomePageForMobile();
+		MplPageWsDTO dto;
+		final MplPageData homePageData = mplCmsFacade.getHomePageForMobile();
 		final FieldSetBuilderContext context = new FieldSetBuilderContext();
 
-		final Set<String> fieldSet = fieldSetBuilder.createFieldSet(HomePageData.class, DataMapper.FIELD_PREFIX, fields, context);
-		dto = dataMapper.map(homePageData, HomePageWsDTO.class, fieldSet);
+		final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
+		dto = dataMapper.map(homePageData, MplPageWsDTO.class, fieldSet);
 		return dto;
 
 	}
+
+	@RequestMapping(value = "/homepage/discover", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public MplPageComponentsWsDTO getHomepageDiscover(@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
+		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
+		final List<MplPageData> homePageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_DISCOVER_UID);
+		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
+		final FieldSetBuilderContext context = new FieldSetBuilderContext();
+		for (final MplPageData homePageData : homePageDatas)
+		{
+			pageLastModifiedTime.add(homePageData.getLastModifiedTime());
+			final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
+			final MplPageWsDTO dto = dataMapper.map(homePageData, MplPageWsDTO.class, fieldSet);
+			dtos.add(dto);
+		}
+		Collections.sort(pageLastModifiedTime);
+		if (!pageLastModifiedTime.isEmpty())
+		{
+			components
+					.setLastModifiedTime(getFormatedLastModifiedDateTime(pageLastModifiedTime.get(pageLastModifiedTime.size() - 1)));
+		}
+		components.setMplPageComponent(dtos);
+		return components;
+
+	}
+
+	// this method is used for getting the string format of date.
+	public String getFormatedLastModifiedDateTime(final Date date)
+	{
+		final DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		final String lastValue = formatter.format(date);
+		return lastValue;
+	}
+
+	@RequestMapping(value = "/homepage/showcase", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public MplPageComponentsWsDTO getHomepageShowcase(@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
+		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
+		final List<MplPageData> homePageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_SHOWCASE_UID);
+		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
+		final FieldSetBuilderContext context = new FieldSetBuilderContext();
+		for (final MplPageData homePageData : homePageDatas)
+		{
+			pageLastModifiedTime.add(homePageData.getLastModifiedTime());
+			final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
+			final MplPageWsDTO dto = dataMapper.map(homePageData, MplPageWsDTO.class, fieldSet);
+			dtos.add(dto);
+		}
+		Collections.sort(pageLastModifiedTime);
+		if (!pageLastModifiedTime.isEmpty())
+		{
+			components
+					.setLastModifiedTime(getFormatedLastModifiedDateTime(pageLastModifiedTime.get(pageLastModifiedTime.size() - 1)));
+		}
+		components.setMplPageComponent(dtos);
+		return components;
+	}
+
+	@RequestMapping(value = "/brand/{brandID:.*}", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public MplPageComponentsWsDTO getBrandPage(@PathVariable("brandID") final String brandID,
+			@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
+		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
+		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(brandID);
+		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
+		final FieldSetBuilderContext context = new FieldSetBuilderContext();
+		for (final MplPageData mplPageData : mplPageDatas)
+		{
+			pageLastModifiedTime.add(mplPageData.getLastModifiedTime());
+			final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
+			final MplPageWsDTO dto = dataMapper.map(mplPageData, MplPageWsDTO.class, fieldSet);
+			dtos.add(dto);
+		}
+		Collections.sort(pageLastModifiedTime);
+		if (!pageLastModifiedTime.isEmpty())
+		{
+			components
+					.setLastModifiedTime(getFormatedLastModifiedDateTime(pageLastModifiedTime.get(pageLastModifiedTime.size() - 1)));
+		}
+		components.setMplPageComponent(dtos);
+		return components;
+	}
+
+	@RequestMapping(value = "/mplcategory/{categoryID:.*}", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public MplPageComponentsWsDTO getCategoryPage(@PathVariable("categoryID") final String categoryID,
+			@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
+		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
+		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(categoryID);
+		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
+		final FieldSetBuilderContext context = new FieldSetBuilderContext();
+		for (final MplPageData mplPageData : mplPageDatas)
+		{
+			pageLastModifiedTime.add(mplPageData.getLastModifiedTime());
+			final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
+			final MplPageWsDTO dto = dataMapper.map(mplPageData, MplPageWsDTO.class, fieldSet);
+			dtos.add(dto);
+		}
+		Collections.sort(pageLastModifiedTime);
+		if (!pageLastModifiedTime.isEmpty())
+		{
+			components
+					.setLastModifiedTime(getFormatedLastModifiedDateTime(pageLastModifiedTime.get(pageLastModifiedTime.size() - 1)));
+		}
+		components.setMplPageComponent(dtos);
+		return components;
+	}
+
+	@RequestMapping(value = "/deals/banners", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public MplPageComponentsWsDTO getDeasBannerPage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
+		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
+		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_DEALSBANNERPAGE_UID);
+		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
+		final FieldSetBuilderContext context = new FieldSetBuilderContext();
+		for (final MplPageData mplPageData : mplPageDatas)
+		{
+			pageLastModifiedTime.add(mplPageData.getLastModifiedTime());
+			final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
+			final MplPageWsDTO dto = dataMapper.map(mplPageData, MplPageWsDTO.class, fieldSet);
+			dtos.add(dto);
+		}
+
+		Collections.sort(pageLastModifiedTime);
+		if (!pageLastModifiedTime.isEmpty())
+		{
+			components
+					.setLastModifiedTime(getFormatedLastModifiedDateTime(pageLastModifiedTime.get(pageLastModifiedTime.size() - 1)));
+		}
+		components.setMplPageComponent(dtos);
+		return components;
+	}
+
+	@RequestMapping(value = "/deals/products", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public MplPageComponentsWsDTO getDealsProductPage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+		final List<MplPageWsDTO> dtos = new ArrayList<MplPageWsDTO>();
+		final MplPageComponentsWsDTO components = new MplPageComponentsWsDTO();
+		final List<MplPageData> mplPageDatas = mplCmsFacade.getPageInformationForPageId(MOBILE_DEALSPRODUCTPAGE_UID);
+		final List<Date> pageLastModifiedTime = new ArrayList<Date>();
+		final FieldSetBuilderContext context = new FieldSetBuilderContext();
+		for (final MplPageData mplPageData : mplPageDatas)
+		{
+			pageLastModifiedTime.add(mplPageData.getLastModifiedTime());
+			final Set<String> fieldSet = fieldSetBuilder.createFieldSet(MplPageData.class, DataMapper.FIELD_PREFIX, fields, context);
+			final MplPageWsDTO dto = dataMapper.map(mplPageData, MplPageWsDTO.class, fieldSet);
+			dtos.add(dto);
+		}
+		Collections.sort(pageLastModifiedTime);
+		if (!pageLastModifiedTime.isEmpty())
+		{
+			components
+					.setLastModifiedTime(getFormatedLastModifiedDateTime(pageLastModifiedTime.get(pageLastModifiedTime.size() - 1)));
+		}
+		components.setMplPageComponent(dtos);
+		return components;
+	}
+
 
 	@RequestMapping(value = "/helpmeshop", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)

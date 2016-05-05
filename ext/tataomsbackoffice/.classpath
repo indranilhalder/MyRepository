@@ -7,7 +7,6 @@
 	<classpathentry kind="src" output="eclipsebin/classes" path="testsrc"/>
 	<classpathentry kind="src" output="eclipsebin/classes" path="gensrc"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/omsclient"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/cockpit"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/poi-3.7-20101029.jar"/>
 	<classpathentry kind="lib" path="lib/poi-ooxml-3.5-FINAL.jar"/>
@@ -49,9 +48,9 @@
 	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/zkspring-security-3.1.1.jar"/>
 	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/zweb-7.0.4.jar"/>
 	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/zul-7.0.4.jar"/>
-	<classpathentry kind="lib" path="/omsclient/lib/oms-domain-objects-5.5.1.11.jar"/>
 	<classpathentry kind="lib" path="/omsclient/lib/oms-api-5.5.1.11.jar"/>
+	<classpathentry kind="lib" path="/omsclient/lib/oms-domain-objects-5.5.1.11.jar"/>
 	<classpathentry kind="lib" path="/omsclient/lib/oms-rest-client-5.5.1.11.jar"/>
-	<classpathentry kind="lib" path="lib/xlsxtocsvpincode-3.3.jar"/>
+	<classpathentry kind="lib" path="lib/xlsxtocsvpincode-3.6.jar"/>
 	<classpathentry kind="output" path="eclipsebin/notused"/>
 </classpath>

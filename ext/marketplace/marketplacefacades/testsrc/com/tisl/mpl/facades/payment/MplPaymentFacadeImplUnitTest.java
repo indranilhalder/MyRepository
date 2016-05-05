@@ -68,7 +68,7 @@ public class MplPaymentFacadeImplUnitTest
 		Mockito.when(mplPaymentService.getPaymentModes("mpl")).thenReturn(paymentTypeList);
 		Mockito.when(paymentType.getMode()).thenReturn("COD");
 		Mockito.when(paymentType.getIsAvailable()).thenReturn(Boolean.TRUE);
-		mplPaymentFacadeImpl.getPaymentModes("mpl");
+		mplPaymentFacadeImpl.getPaymentModes("mpl", false, null);
 	}
 
 

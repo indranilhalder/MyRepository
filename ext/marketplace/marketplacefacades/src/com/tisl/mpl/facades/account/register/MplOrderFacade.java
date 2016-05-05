@@ -118,7 +118,7 @@ public interface MplOrderFacade
 
 	/**
 	 * TISEE-6419
-	 * 
+	 *
 	 * @param orderData
 	 * @param transactionId
 	 * @return boolean
@@ -126,4 +126,34 @@ public interface MplOrderFacade
 	 */
 	boolean isChildCancelleable(final OrderData orderData, final String transactionId) throws EtailNonBusinessExceptions;
 
+
+
+	/**
+	 * Update PickUpDEetails
+	 *
+	 * @param orderId
+	 * @param name
+	 * @param mobile
+	 * @return String
+	 */
+	String editPickUpInfo(String orderId, String name, String mobile);
+
+	/**
+	 *
+	 * Create Ticket CRM For UpdatePickUpDetails
+	 */
+	public void createCrmTicketUpdatePickDetails(String orderId);
+
+	/**
+	 * raise ticket in CRM when updating pickup details from cscockpit
+	 *
+	 * @param orderId
+	 */
+	public void createcrmTicketForCockpit(OrderModel mainOrder, String customerId, String source);
+
+	/**
+	 * Sorted DeliveryMode
+	 * @return DeliverYMode List Type
+	 */
+	public List<String> filterDeliveryMode();
 }

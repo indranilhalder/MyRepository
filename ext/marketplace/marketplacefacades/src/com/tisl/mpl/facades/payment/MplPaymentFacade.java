@@ -40,7 +40,7 @@ public interface MplPaymentFacade
 	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
-	Map<String, Boolean> getPaymentModes(String store) throws EtailNonBusinessExceptions;
+	Map<String, Boolean> getPaymentModes(String store,final boolean isMobile, final CartData cartDataMobile) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -152,7 +152,7 @@ public interface MplPaymentFacade
 	 * @param totalCODCharge
 	 */
 	//TISPRD-361
-	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge) throws EtailNonBusinessExceptions;
+	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge) throws EtailNonBusinessExceptions, Exception;
 
 
 	/**
@@ -247,17 +247,16 @@ public interface MplPaymentFacade
 
 	/**
 	 * @return MplPromoPriceData
-	 * @throws CalculationException
-	 * @throws JaloPriceFactoryException
-	 * @throws JaloSecurityException
 	 * @throws VoucherOperationException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 * @throws ModelSavingException
 	 */
+
 	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
 			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+
 
 
 	/**
@@ -269,11 +268,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 

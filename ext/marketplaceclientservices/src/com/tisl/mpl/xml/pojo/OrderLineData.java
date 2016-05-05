@@ -14,11 +14,12 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "OrderLine")
 @XmlType(propOrder =
-{ "orderId", "transactionId" })
+{ "orderId", "transactionId","pinCode" })
 public class OrderLineData
 {
 	private String orderId;
 	private String transactionId;
+	private String pinCode;
 
 	/**
 	 * @return the orderId
@@ -54,6 +55,23 @@ public class OrderLineData
 	public void setTransactionId(final String transactionId)
 	{
 		this.transactionId = transactionId;
+	}
+
+	/**
+	 * @return the pinCode
+	 */
+	@XmlElement(name = "pinCode")
+	public String getPinCode()
+	{
+		return pinCode;
+	}
+
+	/**
+	 * @param pinCode the pinCode to set
+	 */
+	public void setPinCode(String pinCode)
+	{
+		this.pinCode = pinCode;
 	}
 
 

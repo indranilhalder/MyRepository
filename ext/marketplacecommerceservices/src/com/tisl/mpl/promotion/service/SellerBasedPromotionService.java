@@ -24,4 +24,7 @@ public interface SellerBasedPromotionService
 
 	List<AbstractPromotionModel> fetchPromotionDetails(String code);
 
+	void modifyFiredMessage(String string);
+
+	List<AbstractPromotionModel> getPromoDetails();
 }

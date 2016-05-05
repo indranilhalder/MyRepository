@@ -45,7 +45,21 @@ $(document).ready(function (){
 	});
 	
 	
-	
+	$(document).ready(function (){
+		// -----------*** TISSRT-630 --- Pagination with Lazy loading Voucher History ***----------------
+		var pageIndexVH = $('#pageIndexVH').val();
+		var pagableSizeVH = $('#pagableSizeVH').val();
+		var pageNumVH = parseInt(pageIndexVH)+1;
+		var endCountVH = pageNumVH*pagableSizeVH;
+		var startCountVH = endCountVH-pagableSizeVH+1;
+		var totalNumberOfResultsVH = $('#totalNumberOfResultsVH').val();
+		if(endCountVH>totalNumberOfResultsVH){
+			endCountVH = totalNumberOfResultsVH;
+		}
+
+		var displayCouponHistory = startCountVH+"-"+endCountVH+ " of " + totalNumberOfResultsVH + " Transactions";
+		$("#displayPaginationCountUpCouponHistory").html(displayCouponHistory);
+	});
 // [START]
 
 	var divItem = "";

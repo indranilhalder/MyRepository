@@ -22,9 +22,11 @@
 		<div class="myInterestGender">
 			<fieldset class="gender active">
 				<div class="questionnaire-title">
-					<h1>Let's get personal</h1>
+					<!-- <h1>Let's get personal</h1>
 					<h2>Tell us about yourself and we will create personailized
-						recommendations based on what you love.</h2>
+						recommendations based on what you love.</h2> -->
+					<h1><spring:theme code="text.questionnaire.lets.get.personal"/></h1>
+					<h2><spring:theme code="text.questionnaire.lets.get.personal.description"/></h2>
 				</div>
 				<div class="question">
 					<h3>What's your gender?</h3>
@@ -156,7 +158,7 @@
 	</template:page>
 	<style>
 	.error{
-		color: red;
+		color: #ff1c47;
 	}
 	.nextButton {
     background-color: #a9143c;

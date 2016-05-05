@@ -10,7 +10,6 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
-import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 
@@ -41,11 +40,9 @@ import org.xml.sax.InputSource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
-import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pojo.BulkSalesOrderXMLData;
 import com.tisl.mpl.pojo.ChildOrderXMlData;
@@ -66,8 +63,9 @@ public class SalesOrderReverseXMLUtility
 	private final static Logger LOG = Logger.getLogger(SalesOrderReverseXMLUtility.class.getName());
 	@Autowired
 	private PaymentInfoCancelReversalImpl paymentInfoCancelService;
-	@Autowired
-	private MplSellerInformationService mplSellerInformationService;
+	/*
+	 * @Autowired private MplSellerInformationService mplSellerInformationService;
+	 */
 
 	private String payemntrefid = null;
 	private boolean xmlToFico = true;
@@ -368,7 +366,6 @@ public class SalesOrderReverseXMLUtility
 	 */
 	private List<SubOrderXMLData> getSubOrderData(final List<OrderModel> childOrders)
 	{
-		String reversepayemntrefid = null;
 		final List<SubOrderXMLData> subOrderDataList = new ArrayList<SubOrderXMLData>();
 		List<ChildOrderXMlData> childOrderDataList = new ArrayList<ChildOrderXMlData>();
 		try
@@ -379,36 +376,22 @@ public class SalesOrderReverseXMLUtility
 				//if (checkReturnCancelMap != null && checkReturnCancelMap.size() > 0)
 				if (MapUtils.isNotEmpty(checkReturnCancelMap))
 				{
-					if (null != order.getPaymentTransactions())
-					{
-						final List<PaymentTransactionModel> list = order.getPaymentTransactions();
-						if (null != list && !list.isEmpty())
-						{
-							for (final PaymentTransactionModel payTransModel : list)
-							{
-								final List<PaymentTransactionEntryModel> paymentTransactionEntryList = payTransModel.getEntries();
-								if (null != payTransModel.getCode() && null != payTransModel.getStatus()
-										&& CollectionUtils.isNotEmpty(paymentTransactionEntryList)
-										&& payTransModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
-								{
-									for (final PaymentTransactionEntryModel ptModel : paymentTransactionEntryList)
-									{
-										if (null != ptModel.getType() && ptModel.getType().equals(PaymentTransactionType.CANCEL)
-												|| ptModel.getType().equals(PaymentTransactionType.REFUND_DELIVERY_CHARGES)
-												|| ptModel.getType().equals(PaymentTransactionType.MANUAL_REFUND)
-												|| ptModel.getType().equals(PaymentTransactionType.RETURN))
-										{
-											reversepayemntrefid = payTransModel.getCode();
-											LOG.info(reversepayemntrefid);
-											LOG.debug(ptModel.getType());
-											break;
-										}
-									}
-
-								}
-							}
-						}
-					}
+					/*
+					 * if (null != order.getPaymentTransactions()) { final List<PaymentTransactionModel> list =
+					 * order.getPaymentTransactions(); if (null != list && !list.isEmpty()) { for (final
+					 * PaymentTransactionModel payTransModel : list) { final List<PaymentTransactionEntryModel>
+					 * paymentTransactionEntryList = payTransModel.getEntries(); if (null != payTransModel.getCode() && null
+					 * != payTransModel.getStatus() && CollectionUtils.isNotEmpty(paymentTransactionEntryList) &&
+					 * payTransModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS)) { for (final
+					 * PaymentTransactionEntryModel ptModel : paymentTransactionEntryList) { if (null != ptModel.getType() &&
+					 * ptModel.getType().equals(PaymentTransactionType.CANCEL) ||
+					 * ptModel.getType().equals(PaymentTransactionType.REFUND_DELIVERY_CHARGES) ||
+					 * ptModel.getType().equals(PaymentTransactionType.MANUAL_REFUND) ||
+					 * ptModel.getType().equals(PaymentTransactionType.RETURN)) { reversepayemntrefid =
+					 * payTransModel.getCode(); LOG.info(reversepayemntrefid); LOG.debug(ptModel.getType()); break; } }
+					 *
+					 * } } } }
+					 */
 					final SubOrderXMLData xmlData = new SubOrderXMLData();
 					if (null != order.getCode() && xmlToFico)
 					{
@@ -423,7 +406,7 @@ public class SalesOrderReverseXMLUtility
 					if (null != order.getEntries() && !order.getEntries().isEmpty())
 					{
 
-						childOrderDataList = getChildOrderDataForXML(order.getEntries(), checkReturnCancelMap, reversepayemntrefid);
+						childOrderDataList = getChildOrderDataForXML(order.getEntries(), checkReturnCancelMap);
 
 					}
 
@@ -457,7 +440,7 @@ public class SalesOrderReverseXMLUtility
 	 * @param entry
 	 */
 	private List<ChildOrderXMlData> getChildOrderDataForXML(final List<AbstractOrderEntryModel> entries,
-			final Map checkReturnCancelMap, final String reversepayemntrefid)
+			final Map checkReturnCancelMap)
 	{
 		final List<ChildOrderXMlData> childOrderDataList = new ArrayList<ChildOrderXMlData>();
 		List<String> categoryList = new ArrayList<String>();
@@ -540,19 +523,27 @@ public class SalesOrderReverseXMLUtility
 							LOG.debug("after price set");
 						}
 
-						final String ussId = entry.getSelectedUSSID();
+						/*
+						 * final String ussId = entry.getSelectedUSSID();
+						 * 
+						 * final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
+						 * if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null &&
+						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null &&
+						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() !=
+						 * null) { final String fulfillmentType = ((List<RichAttributeModel>)
+						 * sellerInfoModel.getRichAttribute()).get(0) .getDeliveryFulfillModes().getCode();
+						 * LOG.debug("inside rich attribute model" + fulfillmentType.toUpperCase() + " for ussid :" + ussId);
+						 * xmlData.setFulfillmentType(fulfillmentType.toUpperCase()); }
+						 */
 
-						final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
-						if (sellerInfoModel != null
-								&& sellerInfoModel.getRichAttribute() != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+
+						//TISPRD-901
+						if (StringUtils.isNotEmpty(entry.getFulfillmentType()) && xmlToFico)
 						{
-							final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-									.getDeliveryFulfillModes().getCode();
-							LOG.debug("inside rich attribute model" + fulfillmentType.toUpperCase() + " for ussid :" + ussId);
-							xmlData.setFulfillmentType(fulfillmentType.toUpperCase());
+							xmlData.setFulfillmentType(entry.getFulfillmentType().toUpperCase());
+							LOG.debug("set fulfilment mode");
 						}
+
 
 						//						if (null != product.getSellerInformationRelator() && xmlToFico)
 						//						{
@@ -667,9 +658,9 @@ public class SalesOrderReverseXMLUtility
 							canOrRetflag = true;
 						}
 
-						if (reversepayemntrefid != null)
+						if (StringUtils.isNotEmpty(entry.getJuspayRequestId()))
 						{
-							xmlData.setReversePaymentRefId(reversepayemntrefid);
+							xmlData.setReversePaymentRefId(entry.getJuspayRequestId());
 						}
 						/*
 						 * if (xmlData.getOrderTag().equals("NOR")) { xmlData.setReversePaymentRefId(" "); }
@@ -684,9 +675,13 @@ public class SalesOrderReverseXMLUtility
 						{
 							LOG.debug("inside del mode" + entry.getMplDeliveryMode());
 							final MplZoneDeliveryModeValueModel zoneDelivery = entry.getMplDeliveryMode();
-							if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
-									&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
-									&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("express-delivery"))
+							if (null != zoneDelivery
+									&& null != zoneDelivery.getDeliveryMode()
+									&& entry.getCurrDelCharge() != null
+									&& entry.getRefundedDeliveryChargeAmt() != null
+									&& null != zoneDelivery.getDeliveryMode().getCode()
+									&& zoneDelivery.getDeliveryMode().getCode()
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
 							{
 								if (entry.getCurrDelCharge().doubleValue() > 0)
 								{
@@ -698,9 +693,13 @@ public class SalesOrderReverseXMLUtility
 								}
 								LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
 							}
-							else if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
-									&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
-									&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("home-delivery"))
+							else if (null != zoneDelivery
+									&& null != zoneDelivery.getDeliveryMode()
+									&& entry.getCurrDelCharge() != null
+									&& entry.getRefundedDeliveryChargeAmt() != null
+									&& null != zoneDelivery.getDeliveryMode().getCode()
+									&& zoneDelivery.getDeliveryMode().getCode()
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
 							{
 								if (entry.getCurrDelCharge().doubleValue() > 0)
 								{

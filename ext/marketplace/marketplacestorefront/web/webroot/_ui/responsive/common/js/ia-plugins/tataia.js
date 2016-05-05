@@ -659,6 +659,10 @@ if (searchCategory_id){
 					  html += '<p class="sale discprice">₹'+parseInt(obj.discounted_price)+'</p>';
 				  }
 				  }
+				  else if(Math.round(obj.original_price) == (obj.price)){
+					  html += '<p class="normal moprice">₹'+parseInt(obj.price)+'</p>';
+				  }
+
 				  else if(obj.price != null || obj.price != '' || obj.price != "undefined"){
 					  if(parseInt(obj.price) > 0){
 					  if(obj.original_price != null && parseInt(obj.original_price) > parseInt(obj.price) ){
@@ -689,7 +693,7 @@ if (searchCategory_id){
 					  } else {
 					  obj.sizes.sort() /*Not a string-based size array, sort normally*/
 					  }
-					   	html += '<span style="padding-bottom: 0;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
+					   	html += '</div><span style="padding-bottom: 0;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
 					  }
 					  } 
 				  html += '</div></div></a>';

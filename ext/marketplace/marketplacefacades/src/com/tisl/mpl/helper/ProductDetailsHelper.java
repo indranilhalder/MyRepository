@@ -645,6 +645,15 @@ public class ProductDetailsHelper
 							deliveryModeMap.put("endForExpress", deliveryMode.getEnd());
 							deliveryModeATMap.put(deliveryMode.getCode(), deliveryModeMap);
 						}
+
+						if (deliveryMode.getCode().equals(MarketplaceFacadesConstants.CLICK_AND_COLLECT))
+						{
+							//deliveryModeATMap.put(deliveryMode.getCode(), deliveryMode.getDescription());
+							final Map<String, Integer> deliveryModeMap = new HashMap<String, Integer>();
+							deliveryModeMap.put("startForClick", deliveryMode.getStart());
+							deliveryModeMap.put("endForClick", deliveryMode.getEnd());
+							deliveryModeATMap.put(deliveryMode.getCode(), deliveryModeMap);
+						}
 					}
 
 				}

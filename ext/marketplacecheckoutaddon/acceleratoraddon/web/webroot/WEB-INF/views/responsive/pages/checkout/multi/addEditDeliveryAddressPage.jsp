@@ -114,7 +114,7 @@
 
 
 					<button id="addressSubmit" type="button" style="display:none"
-						class="btn btn-primary btn-block checkout-next"><spring:theme code="checkout.multi.deliveryAddress.continue" text="Next"/></button>
+						class="btn btn-primary btn-block checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
 				</ycommerce:testId>
 			</jsp:body>
 

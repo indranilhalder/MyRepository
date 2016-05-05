@@ -6,6 +6,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandConfiguration;
 import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandFactory;
 import de.hybris.platform.integration.oms.order.data.OrderPlacementResult;
+import de.hybris.platform.integration.oms.order.service.impl.DefaultOmsOrderService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.ticket.enums.CsTicketCategory;
@@ -24,17 +25,23 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.commons.client.RestCallException;
 import com.hybris.oms.api.order.OrderFacade;
 import com.hybris.oms.domain.order.Order;
 import com.hybris.oms.domain.order.UpdatedSinceList;
+import com.hybris.oms.domain.pickupinfo.PickupInfo;
+import com.hybris.oms.picupinfo.facade.PickupInfoFacade;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.service.MplSendOrderFromCommerceToCRM;
 
 
-public class CustomOmsOrderService implements MplOmsOrderService
+public class CustomOmsOrderService extends DefaultOmsOrderService implements MplOmsOrderService
 {
 	private static final Logger LOG = Logger.getLogger(CustomOmsOrderService.class);
 	private OndemandHystrixCommandConfiguration hystrixCommandConfig;
@@ -45,6 +52,9 @@ public class CustomOmsOrderService implements MplOmsOrderService
 	private OndemandHystrixCommandFactory ondemandHystrixCommandFactory;
 	private MplSendOrderFromCommerceToCRM ordercreation;
 	private MplCustomerWebService mplCustomerWebService;
+	@Autowired
+	private PickupInfoFacade pickupInfoRestClient;
+
 
 	@Override
 	public OrderPlacementResult createCrmOrder(final OrderModel orderModel)
@@ -133,6 +143,7 @@ public class CustomOmsOrderService implements MplOmsOrderService
 
 	}
 
+	@Override
 	public UpdatedSinceList<String> getUpdatedOrderIds(final Date updatedSince)
 	{
 		UpdatedSinceList<String> listofOrders = null;
@@ -142,6 +153,7 @@ public class CustomOmsOrderService implements MplOmsOrderService
 		return listofOrders;
 	}
 
+	@Override
 	public void flagTheOrderAsFailed(final OrderModel orderModel, final Throwable cause)
 	{
 		final String ticketTitle = Localization.getLocalizedString("message.ticket.ordernotsent.title");
@@ -150,6 +162,7 @@ public class CustomOmsOrderService implements MplOmsOrderService
 		createTicket(ticketTitle, ticketMessage, orderModel, CsTicketCategory.PROBLEM, CsTicketPriority.HIGH);
 	}
 
+	@Override
 	public Order getOrderByOrderId(final String orderId)
 	{
 		Order order = null;
@@ -157,6 +170,7 @@ public class CustomOmsOrderService implements MplOmsOrderService
 		return order;
 	}
 
+	@Override
 	protected CsTicketModel createTicket(final String subject, final String description, final OrderModel orderModel,
 			final CsTicketCategory category, final CsTicketPriority priority)
 	{
@@ -180,6 +194,9 @@ public class CustomOmsOrderService implements MplOmsOrderService
 		try
 		{
 			getOrdercreation().orderCreationDataToCRM(order);
+			LOG.info(" CRM order call for RMS verfication pending");
+			orderModel.setCrmSubmitStatus(MarketplaceomsservicesConstants.SUCCESS);
+			getModelService().save(order);
 			LOG.debug("After CRM order call for Ticket for order :" + order.getOrderId());
 		}
 		catch (final Exception ex)
@@ -197,9 +214,9 @@ public class CustomOmsOrderService implements MplOmsOrderService
 
 	/*
 	 * @Desc Used for generating xml
-	 *
+	 * 
 	 * @param order
-	 *
+	 * 
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)
@@ -229,61 +246,73 @@ public class CustomOmsOrderService implements MplOmsOrderService
 		return xmlString;
 	}
 
+	@Override
 	public OndemandHystrixCommandConfiguration getHystrixCommandConfig()
 	{
 		return this.hystrixCommandConfig;
 	}
 
+	@Override
 	public void setHystrixCommandConfig(final OndemandHystrixCommandConfiguration hystrixCommandConfig)
 	{
 		this.hystrixCommandConfig = hystrixCommandConfig;
 	}
 
+	@Override
 	public Converter<OrderModel, Order> getOrderConverter()
 	{
 		return this.orderConverter;
 	}
 
+	@Override
 	public void setOrderConverter(final Converter<OrderModel, Order> orderConverter)
 	{
 		this.orderConverter = orderConverter;
 	}
 
+	@Override
 	public OrderFacade getOrderRestClient()
 	{
 		return this.orderRestClient;
 	}
 
+	@Override
 	public void setOrderRestClient(final OrderFacade orderRestClient)
 	{
 		this.orderRestClient = orderRestClient;
 	}
 
+	@Override
 	public TicketBusinessService getTicketBusinessService()
 	{
 		return this.ticketBusinessService;
 	}
 
+	@Override
 	public void setTicketBusinessService(final TicketBusinessService ticketBusinessService)
 	{
 		this.ticketBusinessService = ticketBusinessService;
 	}
 
+	@Override
 	public ModelService getModelService()
 	{
 		return this.modelService;
 	}
 
+	@Override
 	public void setModelService(final ModelService modelService)
 	{
 		this.modelService = modelService;
 	}
 
+	@Override
 	protected OndemandHystrixCommandFactory getOndemandHystrixCommandFactory()
 	{
 		return this.ondemandHystrixCommandFactory;
 	}
 
+	@Override
 	public void setOndemandHystrixCommandFactory(final OndemandHystrixCommandFactory ondemandHystrixCommandFactory)
 	{
 		this.ondemandHystrixCommandFactory = ondemandHystrixCommandFactory;
@@ -304,6 +333,35 @@ public class CustomOmsOrderService implements MplOmsOrderService
 	public void setOrdercreation(final MplSendOrderFromCommerceToCRM ordercreation)
 	{
 		this.ordercreation = ordercreation;
+	}
+
+	//Update PickUpDetails OMS Call
+	public void upDatePickUpDetails(final OrderModel orderModel)
+	{
+		final PickupInfo pickInfo = new PickupInfo();
+		if (null != orderModel.getCode())
+		{
+			pickInfo.setOrderId(orderModel.getCode());
+		}
+		if (null != orderModel.getPickupPersonName())
+		{
+			pickInfo.setPickupPerson(orderModel.getPickupPersonName());
+		}
+		if (null != orderModel.getPickupPersonMobile())
+		{
+			pickInfo.setAlternateContactNumber(orderModel.getPickupPersonMobile());
+		}
+		try
+		{
+			LOG.info("OMS PickUpDetails Upadet Call");
+			//orderRestClient.createOrder(pickInfo);
+			pickupInfoRestClient.updatePickupInfo(pickInfo);
+		}
+		catch (final Exception e)
+		{
+
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 	/**

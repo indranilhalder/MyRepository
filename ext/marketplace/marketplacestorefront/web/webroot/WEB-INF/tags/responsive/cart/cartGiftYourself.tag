@@ -15,190 +15,48 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 
-<script>
-var sellersArray = [];
-var ussidArray=[];
-var pincodeServiceableArray = [];
-var index = -1;
-var seq = -1;
-var mrp = '${product.productMRP.value}';
-var sellersList = '${product.seller}';
-var productCode = '${product.code}';
-  
- /* $( document ).ready(function() { 		
-	fetchPrice();		
- }); */
-  
-$( document ).ready(function() {
-	$(".selectQty").change(function() {	
-		$("#qty").val($(".selectQty :selected").val());
-	});
-	
-	$(".addToBagButton").click(function(e){
-		//alert("hi");
-		var element = $(e.target);
-		console.log($(element).closest("form.add_to_cart_form").serialize());
-		var dataString= $(element).closest("form.add_to_cart_form").serialize()
-		
-		var productCode=$('#addToCartForm').find("input[name='productCodePost']").val();
-		
-		var ussid=$('#addToCartForm').find("input[name='ussid']").val();
-		
-		var addToBagButton = $(this);
-		
-		 $.ajax({
-			url : ACC.config.encodedContextPath + "/cart/add",
-			data : dataString,
-			type : "POST",
-			cache : false,
-			beforeSend: function(){
-		        $('#ajax-loader').show();
-		    },
-			success : function(data) {
-				addToBagButton.parents(".item-edit-details").append('<li style="color: #a9143c;">Bagged and Ready</li>');
-				addToBagButton.prop("disabled",true);
-				addToBagButton.css("opacity","0.5");
-				setTimeout(function(){
-					window.location.reload();
-				},"3000");
-				ACC.product.addToBagFromWl(ussid,true);
-				
-			},
-			complete: function(){
-		        $('#ajax-loader').hide();
-		    },
-			error : function(resp) {
-			
-			}
-		}); 
-	});	
-			
-		
-});
-</script>
 
 
-<c:if test="${fn:length(ProductDatas)>0}">
-	<div class="wishlist-banner">
+
+<%-- <c:if test="${fn:length(ProductDatas)>0}"> --%>
+	<div class="wishlist-banner" id="wishlistBanner" style="display:none">
 		<h2>
 			<spring:theme code="Treat Yourself" />
 			<span><spring:theme code="mpl.gift.Yourself" /></span>
 		</h2>
 	</div>
 	<ul class="product-block wishlist" id="giftYourselfProducts">
-		<c:forEach items="${ProductDatas}" var="product">
-			<li class="item" id="${product.code}">
-				<ul class="desktop">
-					<li>
-						<div class="product-img">
-						<c:url value="${product.url}" var="productUrl" />
-							<a href="${productUrl}"><product:productPrimaryImage
-									product="${product}" format="thumbnail" /></a>
-						</div>
-						<div class="product">
-						
-							<p class="company"></p>
-							
-							<!-- TISSIT-1916 -->
-							<h3 class="product-brand-name"><a href="${productUrl}">${product.brand.brandname}</a></h3>
-							<a href="${productUrl}"><h3 class="product-name">${product.name}</h3></a>
-								<c:if test="${not empty product.size}">
-								<p class="size">Size: ${product.size}</p>
-								</c:if>
-								
-								<!--TISPRO-165  -->			
-								<c:choose>
-								
-									<c:when test="${fn:toLowerCase(fulfillmentType) eq 'tship'}">
-										<p class="size">Fullfilled by: <spring:theme code="product.default.fulfillmentType"></spring:theme></p>
-									</c:when>
-									<c:otherwise>
-										<p class="size">Fullfilled by: ${sellerName}</p>
-									</c:otherwise>
-								</c:choose>
-						</div> <form:form method="post" id="addToCartForm"
-							class="add_to_cart_form"
-							action="${request.contextPath }/cart/add">
-							<c:if test="${product.purchasable}">
-								<input type="hidden" maxlength="3" size="1" id="qty" name="qty"
-									class="qty js-qty-selector-input" value="1">
-							</c:if>
-							<input type="hidden" name="productCodePost"
-								value="${product.code}" />
-							<input type="hidden" name="wishlistNamePost" value="N" />
-							<c:forEach items="${ussidMap}" var="entry">
-							 <c:if test="${entry.key eq  product.code}">
-							<input type="hidden" name="ussid"
-								value="${entry.value}" />
-								</c:if>
-								</c:forEach>
-							<c:choose>
-								<c:when test="${product.buyBoxSellers[0].availableStock==0}">
-									<ul class="item-edit-details">
-										<li><button id="addToCartButton" type="button"
-												class="addToBagButton" style="display: block !important;">
-												<spring:theme code="basket.add.to.basket" />
-											</button></li>
-									</ul>
-								</c:when>
-								<c:otherwise>
-									<ycommerce:testId code="addToCartButton">
-
-										<ul class="item-edit-details">
-											<li><button id="addToCartButton" type="button"
-													class="addToBagButton" style="display: block !important;">
-													<spring:theme code="basket.add.to.basket" />
-												</button></li>
-										</ul>
-									</ycommerce:testId>
-								</c:otherwise>
-							</c:choose>
-						</form:form>
-
-					</li>
-					<li class="qty"><ycommerce:testId code="cart_product_quantity">
-							<select id="hiddenPickupQty" name="hiddenPickupQty">
-								<c:forEach items="${configuredQuantityList}" var="quantity">
-									<option value="${quantity}">${quantity}</option>
-								</c:forEach>
-							</select>
-						</ycommerce:testId></li>
-					<li class="delivery">
-					<p class="mobile-delivery"><spring:theme code="basket.delivery.options"/></p>
-						<ul>
-						
-							
-								<%-- <c:if test="${not empty giftYourselfDeliveryModeDataMap}"> --%>
-									<c:forEach items="${giftYourselfDeliveryModeDataMap}"
-										var="giftYourselfDeliveryModeDataMap">
-										<c:if
-											test="${giftYourselfDeliveryModeDataMap.key == product.code}">
-											<c:forEach items="${giftYourselfDeliveryModeDataMap.value}"
-												var="giftYourselfDeliveryModeDataMap">
-												<li class="method${ giftYourselfDeliveryModeDataMap}">${ giftYourselfDeliveryModeDataMap}</li>
-											</c:forEach>
-										</c:if>
-									</c:forEach>
-								<%-- </c:if> --%>
-							
-
-						</ul>
-					</li>
-					
-					<li class="price"><format:fromPrice
-							priceData="${product.productMOP}" /></li>
-				</ul>
-				
-			</li>
-		</c:forEach>
+		
 	</ul>
-</c:if>
+<%-- </c:if> --%>
 <div class="modal fade in" id="addedToBag">
 <div class="content">
 <div class="">Successfully Added to Bag</div>
 </div>
 <div class="overlay"></div>
 </div>
+
+<!--popup for redirect to PDP page start-->
+
+ 		<div class="modal fade" id="redirectsToPDP">
+ 		<div class="overlay" data-dismiss="modal"></div>
+			
+			<div class="modal-content content" style="width:35%; color:#000; font-size:12px; padding:0;">
+			<button type="button" class="close pull-right" style="height:auto !important;" aria-hidden="true" data-dismiss="modal"></button>
+				<!-- Dynamically Insert Content Here -->
+				<div class="modal-header">
+				<h4 class="modal-title">
+					<b><spring:theme code="text.wishlist.pdp" /></b>
+				</h4>
+				<div class="wishlist-redirects-to-pdp-block" style="font-size:12px;">
+				<label class="wishlist-redirects-to-pdp"><spring:theme
+							code="wishlist.redirectsToPdp.message" /></label>
+				</div>
+				<button class="redirectsToPdpPage" type="submit" style="padding:0 10px; height:30px !important; border: none;"><spring:theme code="text.wishlist.ok" /></button>
+				</div>
+				<!-- <button class="close" data-dismiss="modal"></button> -->
+			</div>
+		</div> 
 <%-- <c:if test="${fn:length(ProductDatas)>0}">
 	<ul class="cart-list">
 		<li class="product-item">

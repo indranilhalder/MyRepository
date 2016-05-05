@@ -48,6 +48,9 @@ public class SellerMasterWsDTO implements java.io.Serializable
 	private String PAN;
 	private Date PANValidThru;
 	private String SettlementPeriod;
+	private String collectionDays;
+	private String daysToExtend;
+	private String extensionTimes;
 	private String PayoutPeriod;
 	@XStreamImplicit(itemFieldName = "WthhldTAX")
 	private List<WthhldTAXWsDTO> WthhldTAX;
@@ -500,6 +503,57 @@ public class SellerMasterWsDTO implements java.io.Serializable
 	public void setPaymentInfo(final List<PaymentInfoWsDTO> paymentInfo)
 	{
 		PaymentInfo = paymentInfo;
+	}
+
+	/**
+	 * @return the collectionDays
+	 */
+	public String getCollectionDays()
+	{
+		return collectionDays;
+	}
+
+	/**
+	 * @param collectionDays
+	 *           the collectionDays to set
+	 */
+	public void setCollectionDays(final String collectionDays)
+	{
+		this.collectionDays = collectionDays;
+	}
+
+	/**
+	 * @return the daysToExtend
+	 */
+	public String getDaysToExtend()
+	{
+		return daysToExtend;
+	}
+
+	/**
+	 * @param daysToExtend
+	 *           the daysToExtend to set
+	 */
+	public void setDaysToExtend(final String daysToExtend)
+	{
+		this.daysToExtend = daysToExtend;
+	}
+
+	/**
+	 * @return the extensionTimes
+	 */
+	public String getExtensionTimes()
+	{
+		return extensionTimes;
+	}
+
+	/**
+	 * @param extensionTimes
+	 *           the extensionTimes to set
+	 */
+	public void setExtensionTimes(final String extensionTimes)
+	{
+		this.extensionTimes = extensionTimes;
 	}
 
 

@@ -25,6 +25,8 @@
 		<requires-extension name="marketplaceomsservices"/>
 		<requires-extension name="commercesearch"/>
 		<requires-extension name="marketplaceBinDb" />
+		<requires-extension name="commercewebservicescommons" />
+		
 		<coremodule generated="true" manager="de.hybris.platform.jalo.extension.GenericManager" packageroot="com.tisl.mpl.facades"/>
 
 		

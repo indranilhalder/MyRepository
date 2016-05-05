@@ -25,7 +25,7 @@
 					<c:if test="${not empty component.sellerName}">
 
 						<c:param name="q"
-							value=":relevance:seller:${component.sellerName}"></c:param>
+							value=":relevance:sellerId:${component.sellerName}"></c:param>
 					</c:if>
 				</c:url>
 				<li>
@@ -59,8 +59,8 @@
 								class="image" /></a>
 						</c:otherwise>
 					</c:choose><span>${category.name}</span> <a class="shop_link"
-					href="${categoryUrl}"><b><spring:theme
-								code="category.carousel.shopNow" /></b></a>
+					href="${categoryUrl}"><spring:theme
+								code="category.carousel.shopNow" /></a>
 				</li>
 			</c:forEach>
 		</ul>
@@ -81,7 +81,7 @@
 					<c:if test="${not empty component.sellerName}">
 
 						<c:param name="q"
-							value=":relevance:seller:${component.sellerName}"></c:param>
+							value=":relevance:sellerId:${component.sellerName}"></c:param>
 					</c:if>
 				</c:url>
 				<div class="item slide">
@@ -118,8 +118,8 @@
 
 					</c:choose>
 					<span>${category.name}</span> <a class="shop_link"
-						href="${categoryUrl}"><b><spring:theme
-								code="category.carousel.shopNow" /></b></a>
+						href="${categoryUrl}"><spring:theme
+								code="category.carousel.shopNow" /></a>
 				</div>
 			</c:forEach>
 		</div>

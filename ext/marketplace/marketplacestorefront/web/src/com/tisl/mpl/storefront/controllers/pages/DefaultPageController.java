@@ -17,7 +17,6 @@ import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadc
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.ContentPageBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
-import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 
@@ -72,7 +71,7 @@ public class DefaultPageController extends AbstractPageController
 
 		model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 				resourceBreadcrumbBuilder.getBreadcrumbs("breadcrumb.not.found"));
-		GlobalMessages.addErrorMessage(model, "system.error.page.not.found");
+		//GlobalMessages.addErrorMessage(model, "system.error.page.not.found");
 
 		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 

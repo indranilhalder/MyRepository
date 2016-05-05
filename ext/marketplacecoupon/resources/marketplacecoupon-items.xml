@@ -280,5 +280,20 @@
 			</attributes>
 		</itemtype>
 		
+		<!-- Added for adding multiple products in ProductRestriction -->
+		<itemtype code="ProductRestriction"
+			extends="Restriction"
+			jaloclass="de.hybris.platform.voucher.jalo.ProductRestriction"
+			autocreate="false"
+			generate="false">
+			<attributes>
+				<attribute autocreate="true" generate="true" qualifier="productCodeList" type="java.lang.String">
+					<description>the products the given voucher is valid for.</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" search="true" optional="true"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+		
 	</itemtypes>
 </items>

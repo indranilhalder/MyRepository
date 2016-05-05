@@ -49,9 +49,9 @@
 	
 	
 	
-	<alias name="defaultOmsOrderService2" alias="omsOrderService" />
-	<bean name="defaultOmsOrderService2"
-		class="com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService"
+	<alias name="customOmsOrderService" alias="omsOrderService" />
+	<bean name="customOmsOrderService"
+		class="com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService" parent="defaultOmsOrderService"
 		scope="tenant">
 		<property name="hystrixCommandConfig" ref="orderServiceCommandConfig" />
 		<property name="ondemandHystrixCommandFactory" ref="ondemandHystrixCommandFactory" />
@@ -72,7 +72,6 @@
 		<property name="maxRetryCount" value="${hybris.omsorders.maxRetryCount}"/>
 		<property name="retryDelay" value="${hybris.omsorders.retryDelay}"/>
 		<property name="catalogVersionService" ref="catalogVersionService"/>
-		<property name="impersonationService" ref="impersonationService"/>
 		<property name="modelService" ref="modelService"/>
 	</bean>
 	
@@ -183,6 +182,13 @@
 		<property name="eventService" ref="eventService"/>
 	</bean>
 
+	<alias name="defaultSendOrderPlacedPushNotificationAction" alias="sendOrderPlacedPushNotificationAction"/>
+	<bean id="defaultSendOrderPlacedPushNotificationAction"
+		  class="com.tisl.mpl.fulfilmentprocess.actions.order.SendOrderPlacedPushNotificationAction"
+		  scope="tenant" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
 	<alias name="defaultOmsCancelWholeOrderAction" alias="omsCancelWholeOrderAction"/>
 	<bean id="defaultOmsCancelWholeOrderAction"
 		  class="com.tisl.mpl.integration.oms.order.process.action.CustomCancelWholeOrderAction" scope="tenant"
@@ -210,6 +216,8 @@
 	
 	<alias name="customOmsOrderSyncAdapter" alias="omsOrderSyncAdapter" />
 	<bean id="customOmsOrderSyncAdapter"
+
+
 		class="com.tisl.mpl.integration.oms.adapter.CustomOmsOrderSyncAdapter" parent="defaultOmsOrderSyncAdapter"
 		scope="tenant">
 		<property name="omsShipmentSyncAdapterCustom" ref="omsShipmentSyncAdapter" />
@@ -233,6 +241,6 @@
 		<property name="omsOrderService" ref="omsOrderService"/>
 		<property name="omsOrderAdapter" ref="omsOrderSyncAdapter"/>
 		<property name="modelService" ref="modelService"/>
-	</bean>
-			
+	</bean>	
+
 </beans>

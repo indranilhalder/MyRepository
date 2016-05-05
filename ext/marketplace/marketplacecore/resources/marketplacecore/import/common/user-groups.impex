@@ -33,11 +33,14 @@ INSERT_UPDATE Usergroup;uid[unique=true];groups(uid)[mode=append]
 ;promotionusergroup;employeegroup
 #Payment User Group
 ;paymentusergroup;employeegroup
+#Coupon User Group
+;couponusergroup;employeegroup
 
 #Employee
 INSERT_UPDATE Employee;UID[unique=true];$setPassword;description;name;groups(uid);sessionLanguage(isocode)
 ;promouser;1234;promo user is entitled to create promotions;Promotion User;promotionusergroup;en; 
-
+#Sample Coupon User
+;couponuser;1234;coupon user is entitled to create coupons;Coupon User;couponusergroup;en; 
 
 
 INSERT_UPDATE UserGroup;UID[unique=true];hmcLoginDisabled;

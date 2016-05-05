@@ -28,7 +28,7 @@ public class MplGeneratePromotionVoucherCodeAction extends ItemAction
 		try
 		{
 			voucher.setVoucherCode(voucher.generateVoucherCode());
-			//getModelService().save(getModelService().get(voucher));
+			getModelService().save(getModelService().get(voucher));
 
 			getNotificationService().saveToVoucherStatusNotification((VoucherModel) getModelService().get(voucher));
 

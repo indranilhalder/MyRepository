@@ -100,9 +100,11 @@ public interface MplPaymentService
 	 * @param cartValue
 	 * @param totalCODCharge
 	 * @param entries
+	 * @throws EtailNonBusinessExceptions
+	 *            ,Exception
 	 */
 	void saveCODPaymentInfo(String custName, Double cartValue, Double totalCODCharge, List<AbstractOrderEntryModel> entries,
-			CartModel cartModel);
+			CartModel cartModel) throws EtailNonBusinessExceptions, Exception;
 
 
 	/**
@@ -123,10 +125,12 @@ public interface MplPaymentService
 	 *
 	 * @param paymentMode
 	 * @param cart
+	 * @throws EtailNonBusinessExceptions
+	 *            ,Exception
 	 *
 	 */
 	//TISPRD-361 method signature changes
-	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, CartModel cart) throws EtailNonBusinessExceptions;
+	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, CartModel cart) throws EtailNonBusinessExceptions, Exception;
 
 
 	/**
@@ -159,9 +163,6 @@ public interface MplPaymentService
 	 * @param cartData
 	 * @param cart
 	 * @return MplPromoPriceData
-	 * @throws JaloPriceFactoryException
-	 * @throws JaloSecurityException
-	 * @throws CalculationException
 	 * @throws VoucherOperationException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
@@ -250,11 +251,11 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;

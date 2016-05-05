@@ -5,9 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -26,15 +23,14 @@ import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStra
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
-import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 
 import de.hybris.platform.catalog.impl.DefaultCatalogVersionService;
@@ -46,7 +42,6 @@ import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commerceservices.impersonation.ImpersonationContext;
 import de.hybris.platform.commerceservices.impersonation.ImpersonationService;
-import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartEntryModel;
@@ -119,7 +114,11 @@ public class MarketplaceCheckoutControllerImpl extends
 	private MplPaymentService mplPaymentService;
 	
 	@Autowired
-	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;
+	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;	
+	
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;	
+	
 	/**
 	 * Gets the product value.
 	 *
@@ -595,7 +594,7 @@ public class MarketplaceCheckoutControllerImpl extends
 
 	@Override
 	public boolean processPayment(CartModel cart) throws PaymentException,
-			ValidationException {
+			ValidationException ,Exception{
 
 		double unTotal = getCsCheckoutService().getUnauthorizedTotal(cart);
 
@@ -639,6 +638,7 @@ public class MarketplaceCheckoutControllerImpl extends
 												getCommerceCartService()
 														.recalculateCart(
 																cartParameter);
+												
 											} catch (CalculationException e) {
 												LOG.error("Exception calculating cart ["
 														+ getCartModel() + "]", e);
@@ -664,12 +664,13 @@ public class MarketplaceCheckoutControllerImpl extends
 							new ImpersonationService.Executor<CartModel, ImpersonationService.Nothing>() {
 								@Override
 								public CartModel execute() {
-									try {
+									try {									
 										CommerceCartParameter cartParameter = new CommerceCartParameter();
 										cartParameter.setCart(getCartModel());
 										getCommerceCartService()
 												.recalculateCart(
-														cartParameter);
+														cartParameter);		
+										//getMplVoucherService().checkCartWithVoucher(getCartModel());
 									} catch (CalculationException e) {
 										LOG.error("Exception calculating cart ["
 												+ getCartModel() + "]", e);
@@ -710,6 +711,17 @@ public class MarketplaceCheckoutControllerImpl extends
 			TypedObject deliveryMode) throws ValidationException {
 		return ((MarketPlaceBasketController) getBasketController()).validateWithOMS(cartEntry, deliveryMode);
 	}
+
+	public MplVoucherService getMplVoucherService() {
+		return mplVoucherService;
+	}
+
+	public void setMplVoucherService(MplVoucherService mplVoucherService) {
+		this.mplVoucherService = mplVoucherService;
+	}	
+	
+	
+	
 	
 
 }

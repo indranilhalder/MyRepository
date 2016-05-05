@@ -3,6 +3,13 @@
  */
 package com.tisl.mpl.service;
 
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.store.BaseStoreModel;
+
+import java.net.Proxy;
 import java.util.Date;
 import java.util.List;
 
@@ -30,4 +37,9 @@ public interface MplGigyaReviewCommentService
 	public boolean checkItemKey(GSObject ratings, String key);
 
 	public boolean checkItemArray(GSObject ratings, String key);
+
+	public Proxy getConfiguredProxy();
+
+	public SearchPageData<OrderModel> getPagedFilteredSubOrderHistory(CustomerModel paramCustomerModel,
+			BaseStoreModel paramBaseStoreModel, PageableData paramPageableData);
 }

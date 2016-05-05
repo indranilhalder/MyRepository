@@ -104,4 +104,14 @@ public interface MplCartWebService
 	public AddressModel createDeliveryAddressModel(final AddressData addressData, final CartModel cartModel);
 
 	public PriceData calculateTotalDiscount(final CartModel cart);
+
+	/**
+	 * Service to get cart details with POS
+	 * 
+	 * @param cartId
+	 * @param addressListDTO
+	 * @param pincode
+	 * @return CartDataDetailsWsDTO
+	 */
+	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode);
 }
