@@ -56,6 +56,7 @@ public class ExtDefaultProductModelUrlResolver extends DefaultProductModelUrlRes
 			url = url.replace("{product-code}", source.getCode());
 		}
 		url = url.toLowerCase();
+		url = url.replaceAll("[^\\w/-]", "");
 		return url;
 	}
 
