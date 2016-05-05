@@ -30527,7 +30527,7 @@ header.compact .content .right ul > li {
   }
   @media (max-width: 479px){
   .visuallySimilarItems li{
-  padding: 0 23%;}
+  padding: 0 23% !important;}
   .visuallySimilarItems li a.product-tile{
   padding: 0px;}
   }
@@ -30537,6 +30537,10 @@ header.compact .content .right ul > li {
     header .content nav > ul > li > .toggle:after{ 
       top:1px;
 }
+}
+header .content .search input {
+	background: #fff;
+	cursor: text;
 }
 /*--------------maincss-----------*/
 .row

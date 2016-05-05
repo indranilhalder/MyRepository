@@ -113,6 +113,21 @@
 
 $(document).ready(function(){
 	
+	$('#js-site-search-input').on( 'click', function() {
+	    $(this).removeAttr('readonly').focus().select();
+	});
+	
+	$('#js-site-search-input').on( 'blur', function() {
+	    $( this ).prop( 'readonly', 'readonly' );
+	});
+	$('#mailtext').on( 'click', function() {
+		$(this).removeAttr('readonly').focus().select();
+	});
+	
+	$('#mailtext').on( 'blur', function() {
+		$( this ).prop( 'readonly', 'readonly' );
+	});
+	
 	//TISEEII-640 issue fix -- Start
 	$(".facet.js-facet .js-facet-name").each(function(){
 		var x = $(this).html().length; 
