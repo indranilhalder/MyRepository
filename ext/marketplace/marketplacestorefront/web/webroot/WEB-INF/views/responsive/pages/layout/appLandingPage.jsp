@@ -17,9 +17,9 @@
 	<div class="r2-app-landing">
 		<section class="r2-landing-banner">
 			<div class="col-md-6 col-sm-12 col-xs-12 xol-lg-6 r2-app-mob">
-				<img src="./images/r2/banner-2.png"
+				<img src="${commonResourcePath}/images/banner-2.png"
 					class="r2-app-mob-up hidden-xs hidden-sm"> <img
-					src="./images/r2/banner-app-2.png"
+					src="${commonResourcePath}/images/banner-app-2.png"
 					class="r2-app-brand-img r2-marginTop img-responsive visible-xs visible-sm">
 			</div>
 
@@ -31,11 +31,11 @@
 				<div class="container r2-marginTop r2-marginBottom r2-padding">
 					<span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <a
 						href="#"> <img class="img-responsive"
-							src="./images/r2/desktop_badge_mac.png">
+							src="${commonResourcePath}/images/desktop_badge_mac.png">
 					</a>
 					</span> <span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <a
 						href="#"> <img class="img-responsive"
-							src="./images/r2/desktop_badge_play.png">
+							src="${commonResourcePath}/images/desktop_badge_play.png">
 					</a>
 					</span>
 				</div>
@@ -80,23 +80,23 @@
 				<div id="myCarousel" class="carousel slide hidden-md col-xs-12"
 					data-ride="carousel">
 					<!-- Indicators -->
-					<ol class="carousel-indicators">
+					<!-- <ol class="carousel-indicators">
 						<li data-target="#myCarousel" data-slide-to="0" class=""></li>
 						<li data-target="#myCarousel" data-slide-to="1" class="active"></li>
 						<li data-target="#myCarousel" data-slide-to="2" class=""></li>
-					</ol>
+					</ol> -->
 					<!-- Wrapper for slides -->
-					<div class="carousel-inner" role="listbox">
+					<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference" id="appLanding_carousel">
 						<div class="item">
-							<img src="./images/r2/mob-slider1.png" class="r2-marginTop">
-						</div>
-
-						<div class="item active">
-							<img src="./images/r2/mob-slider2.png" class="r2-marginTop">
+							<img src="${commonResourcePath}/images/mob-slider1.png" class="r2-marginTop">
 						</div>
 
 						<div class="item">
-							<img src="./images/r2/mob-slider3.png" class="r2-marginTop">
+							<img src="${commonResourcePath}/images/mob-slider2.png" class="r2-marginTop">
+						</div>
+
+						<div class="item">
+							<img src="${commonResourcePath}/images/mob-slider3.png" class="r2-marginTop">
 						</div>
 
 					</div>
@@ -125,7 +125,7 @@
 					class="hidden-xs hidden-sm row r2-paddingTop r2-center r2-marginTop">
 					<div class="container r2-marginTop ">
 						<div class="col-md-4 r2-whiteText r2-marginTop">
-							<img src="./images/r2/mob-slider1.png" class="r2-marginTop">
+							<img src="${commonResourcePath}/images/mob-slider1.png" class="r2-marginTop">
 							<div class="col-md-12 r2-marginAuto">
 								<h2>Browse</h2>
 								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
@@ -133,7 +133,7 @@
 							</div>
 						</div>
 						<div class="col-md-4 r2-whiteText r2-marginTop">
-							<img src="./images/r2/mob-slider2.png" class="r2-marginTop">
+							<img src="${commonResourcePath}/images/mob-slider2.png" class="r2-marginTop">
 							<div class="col-md-12 r2-marginAuto">
 								<h2>Shop</h2>
 								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
@@ -141,7 +141,7 @@
 							</div>
 						</div>
 						<div class="col-md-4 r2-whiteText r2-marginTop">
-							<img src="./images/r2/mob-slider3.png" class="r2-marginTop">
+							<img src="${commonResourcePath}/images/mob-slider3.png" class="r2-marginTop">
 							<div class="col-md-12 r2-marginAuto">
 								<h2>Share</h2>
 								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
@@ -158,14 +158,14 @@
 
 		<section class="r2-landing-brands">
 			<div class="col-md-6 col-sm-12 col-xs-12 col-lg-6">
-				<img src="./images/r2/app-feature.png"
+				<img src="${commonResourcePath}/images/app-feature.png"
 					class="r2-app-brand-img hidden-xs"> <img
-					src="./images/r2/app-feature-mob.png"
+					src="${commonResourcePath}/images/app-feature-mob.png"
 					class="r2-app-brand-img visible-xs">
 			</div>
 			<div
 				class="col-md-6 col-sm-12 col-xs-12 col-lg-6 r2-right-align r2-padding">
-				<img src="./images/r2/app-brands.png" class="r2-app-brand-img">
+				<img src="${commonResourcePath}/images/app-brands.png" class="r2-app-brand-img">
 				<div class="col-md-8 r2-marginAuto r2-center r2-right">
 					<h1 class="r2-landing-heading">Brands you love</h1>
 					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
@@ -185,7 +185,7 @@
 
 		<section class="r2-landing-banner r2-left">
 			<div class="col-md-6 col-sm-12 col-xs-12 xol-lg-6 r2-app-mob">
-				<img src="./images/r2/app_last.png"
+				<img src="${commonResourcePath}/images/app_last.png"
 					class="img-responsive r2-app-mob-down">
 			</div>
 
@@ -197,9 +197,9 @@
 					seamless shopping experience.</h5>
 				<div class="container r2-marginTop r2-marginBottom r2-padding">
 					<span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <img
-						class="img-responsive" src="./images/r2/desktop_badge_mac.png">
+						class="img-responsive" src="${commonResourcePath}/images/desktop_badge_mac.png">
 					</span> <span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <img
-						class="img-responsive" src="./images/r2/desktop_badge_play.png">
+						class="img-responsive" src="${commonResourcePath}/images/desktop_badge_play.png">
 					</span>
 				</div>
 
@@ -217,3 +217,17 @@
 	</div>
 
 </template:page>
+<script>
+$("#appLanding_carousel").owlCarousel({
+	navigation:false,
+	rewindNav: false,
+	navigationText :[],
+	pagination:true,
+	autoPlay: true,
+	items:1,
+	itemsDesktop : false, 
+	itemsDesktopSmall : false, 
+	itemsTablet: false, 
+	itemsMobile : false
+});
+</script>
