@@ -61,6 +61,8 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 		{
 			LOG.error(e.getMessage());
 		}
+		url = url.replaceAll("[^\\w/-]", "");
+
 		return url;
 	}
 
