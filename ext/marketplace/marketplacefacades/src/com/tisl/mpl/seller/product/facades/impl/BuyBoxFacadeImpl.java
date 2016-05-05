@@ -584,7 +584,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				final String[] longeriesCatCodeData = configLingerieCategoris.split(",");
 				for (int index = 0; index < longeriesCatCodeData.length; index++)
 				{
-					if (categoryCodeList.contains(longeriesCatCodeData[index]))
+					if (categoryCodeList.contains(longeriesCatCodeData[index].trim()))
 					{
 						isLingerie = true;
 						break;
@@ -624,7 +624,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
