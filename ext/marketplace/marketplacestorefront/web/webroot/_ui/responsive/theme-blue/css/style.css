@@ -961,10 +961,10 @@ h2 {
                     text-decoration: underline; }
               header .content .right > ul > li.bag .mini-bag .item .price {
                 position: absolute;
-                right: 0;
+                right: 10px;
                 top: 10px;
                 width: 100px;
-                text-align: center;
+                text-align: right;
                     font-size: 14px; }
 
             header .content .right > ul > li.bag .mini-bag > ul > li:not(.item) {
@@ -17172,11 +17172,8 @@ ul.helpmeshop-list{
 	font-size:30px;
 	font-weight:400;
 }
-.left p
-{
-	font-size:12px;
-}
-.left p, .right p {
+
+.home-brands-you-love-desc .left p, .home-brands-you-love-desc .right p {
     text-align: left;
         font-size: 14px;
 }
@@ -30755,6 +30752,7 @@ header.compact .content .right ul > li {
 		text-transform: uppercase;
 		line-height: 40px;
 		padding: 20px;
+		font-weight: 700;
 	}
 	.r2-landing-banner h5 {
 		color: #fff;
@@ -30787,7 +30785,7 @@ a.r2-landin-brands .r2-app-brand-img {
 	font-weight: 700;
 }
 
-.r2-landing-banner:last-child h1, p {
+.r2-landing-banner:last-child h1{
 	color: #fff;
 }
 
@@ -30805,8 +30803,10 @@ a.r2-landin-brands .r2-app-brand-img {
 	font-size: 18px;
 	padding-top: 40px;
 	color: #333;
-	margin: 0 0 10px;
 	line-height: 25px;
+}
+.r2-app-landing p{
+		margin: 0 0 10px;
 }
 
 .r2-app-landing article div a span:first-child {
@@ -30845,12 +30845,12 @@ img.r2-app-mob-up {
 	margin-left: 100px !important;
 }
 
-.r2-app-text>div>article>div {
+/* .r2-app-text>div>article>div {
 	margin: auto;
 	width: 80%;
 	width: 100%;
-}
-
+} */
+@media (max-width: 790px){
 .r2-app-landing div.r2-buy-banner p {
 	font-size: 14px;
 	line-height: 20px;
@@ -30858,7 +30858,7 @@ img.r2-app-mob-up {
 	padding: 32px;
 	margin: 0px;
 }
-
+}
 .r2-app-slider {
 	background-image: url('../images/r2/app-off-mob.png');
 	-webkit-background-size: cover;
@@ -30891,7 +30891,7 @@ img.r2-app-mob-up {
 
 .r2-app-slider>div>p {
 	font-size: 14px;
-	line-height: 25px;
+	line-height: 20px;
 	width: 80%;
 }
 
@@ -30925,13 +30925,13 @@ img.r2-app-brand-img {
 	font-size: 14px;
 	line-height: 24px;
 }
-
+@media (max-width: 790px){
 .r2-landing-banner:last-child {
 	background-image: url('../images/landing_last-mobile.png');
 	height: auto;
 	margin-top: 100px;
 	padding-bottom: 40px;
-}
+}}
 
 img.r2-app-mob-down {
 	margin-top: -80px;
@@ -30945,6 +30945,7 @@ h1.r2-landing-heading {
 	text-transform: uppercase;
 	line-height: 40px;
 	padding: 20px;
+	font-weight: 700;
 }
 
 .r2-landing-brands p {
@@ -30956,7 +30957,12 @@ h1.r2-landing-heading {
 .r2-landing-banner h1 {
 	color: #333;
 }
-
+@media (max-width: 790px){
+img.r2-app-brand-img {
+    margin-left: 20px;
+    margin-bottom: 0px;
+}
+}
 @media ( min-width : 768px) and (max-width: 791px) {
 	img.r2-app-brand-img {
 		margin-top: -20px;
@@ -31016,6 +31022,7 @@ h1.r2-landing-heading {
 		font-weight: 700;
 		line-height: 60px;
 		padding-top: 170px;
+		text-align: left;
 	}
 	.r2-landing-banner img.r2-app-mob-up {
 		margin-top: 150px;
@@ -31033,6 +31040,7 @@ h1.r2-landing-heading {
 	.r2-app-landing article p {
 		font-size: 18px;
 		padding-top: 40px;
+		text-align:left;
 	}
 	.r2-app-landing article div a span:first-child {
 		font-size: 25px;
@@ -31159,9 +31167,9 @@ h1.r2-landing-heading {
 	width: 100%;
 }
 
-.r2-app-slider>div>h1 {
+/* .r2-app-slider>div>h1 {
 	font-size: 26px;
-}
+} */
 
 .r2-mob-carousel {
 	margin-top: 0px;
@@ -31242,12 +31250,14 @@ h1.r2-landing-heading {
 .r2-whiteText {
 	color: #fff;
 }
-
+.r2-padding-bottom {
+    padding-bottom: 60px !Important;
+}
 .r2-marginBottom {
 	margin-bottom: 10px;
 }
 
-.r2-minusmarginLeft {
+.r2-minusmarginLeft, .r2-app-landing p.r2-minusmarginLeft {
 	margin-left: -20px;
 }
 
@@ -31263,7 +31273,8 @@ h1.r2-landing-heading {
 	padding-left: 15px;
 	padding-right: 15px;
 }
-
+.r2-landing-banner .r2-app-text ul {
+    margin-bottom: 10px;}
 .r2-buy-banner {
 	overflow: hidden;
 	width: 100%;
@@ -31290,7 +31301,7 @@ h1.r2-landing-heading {
 }
 
 @media ( min-width :768px) {
-	.r2-landing-banner:last-child h1, p, .r2-app-landing article li {
+	.r2-landing-banner:last-child h1, .r2-app-landing article li {
 		text-align: left;
 	}
 }
@@ -31348,7 +31359,16 @@ h1.r2-landing-heading {
 }}
 .r2-app-landing a.button.maroon{
 	    background-color: #A91E3E;
+	    margin: auto;
+	    opacity:0.9;
 }
+.r2-app-landing a.button.maroon:hover{
+	    opacity:1;
+}
+@media (max-width: 790px){
+.r2-app-landing article p {
+    padding-top: 0px;
+}}
 /*App landing page css ends*/
 .totalPayable{
 	font-size:14px;
