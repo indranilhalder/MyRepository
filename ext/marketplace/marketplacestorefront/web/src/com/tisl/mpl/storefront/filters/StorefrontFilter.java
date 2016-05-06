@@ -140,20 +140,19 @@ public class StorefrontFilter extends OncePerRequestFilter
 	{
 		if (StringUtils.isNotEmpty(mediaCode))
 		{
-			for (final CatalogVersionModel catalogVersionModel : catalogVersionService.getSessionCatalogVersions())
+			final CatalogVersionModel catalogVersionModel = catalogVersionService
+					.getSessionCatalogVersionForCatalog("mplContentCatalog");
+			try
 			{
-				try
+				final MediaModel media = mediaService.getMedia(catalogVersionModel, mediaCode);
+				if (media != null)
 				{
-					final MediaModel media = mediaService.getMedia(catalogVersionModel, mediaCode);
-					if (media != null)
-					{
-						return media;
-					}
+					return media;
 				}
-				catch (final Exception ex)
-				{
-					LOG.error("Exception at getMediaByCode::::::::::::::", ex);
-				}
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Exception at getMediaByCode::::::::::::::", ex);
 			}
 		}
 		return null;
