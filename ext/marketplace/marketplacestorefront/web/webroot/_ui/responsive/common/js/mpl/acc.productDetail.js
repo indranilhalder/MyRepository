@@ -412,7 +412,7 @@ function openPop(ussidfromSeller) {
 	var productCode = $("#product").val();
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/viewWishlistsInPDP";
+			+ "-viewWishlistsInPDP";
 
 	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
 	// for
@@ -563,7 +563,7 @@ function addToWishlist() {
     	return false;
     }
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/addToWishListInPDP";
+			+ "-addToWishListInPDP";
     var sizeSelected=true;
     if( $("#variant,#sizevariant option:selected").val()=="#"){
     	sizeSelected=false;
@@ -906,7 +906,7 @@ $(function() {
 						var buyboxSeller = $("#ussid").val();
 						var pin = $("#pin").val();
 						var requiredUrl = ACC.config.encodedContextPath + "/p"
-								+ "/checkPincode";
+								+ "-checkPincode";
 
 						if (pin == "") {
 							$('#unsevisablePin,#unableprocessPin,#wrongPin')
@@ -1157,7 +1157,7 @@ function fetchPrice() {
 	$("#addToCartButton").show();
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
-	var requiredUrl = ACC.config.encodedContextPath + "/p" + "/" + productCode
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/buybox";
 	var dataString = 'productCode=' + productCode;
 	$.ajax({
@@ -1272,7 +1272,7 @@ function displayDeliveryDetails(sellerName) {
 
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
-	var requiredUrl = ACC.config.encodedContextPath + "/p" + "/" + productCode
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/getRichAttributes";
 	var dataString = 'buyboxid=' + buyboxSeller;
 	$.ajax({
@@ -1449,7 +1449,7 @@ function openPopForBankEMI() {
 	var optionData = "<option value='select' disabled selected>Select</option>";
 	$("#emiTableTHead").hide();
 	$("#emiTableTbody").hide();
-	var requiredUrl = ACC.config.encodedContextPath + "/p" + "/enlistEMIBanks";
+	var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
 	var dataString = 'productVal=' + productVal;
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
@@ -1480,7 +1480,7 @@ function getSelectedEMIBankForPDP() {
 	var contentData = '';
 	if (selectedBank != "select") {
 		$.ajax({
-			url : ACC.config.encodedContextPath + "/p/getTerms",
+			url : ACC.config.encodedContextPath + "/p-getTerms",
 			data : {
 				'selectedEMIBank' : selectedBank,
 				'productVal' : productVal
@@ -1521,7 +1521,7 @@ function CheckonReload()
 {
 	var contentData = '';
 	 $.ajax({
-				url : ACC.config.encodedContextPath + "/p/checkUser",
+				url : ACC.config.encodedContextPath + "/p-checkUser",
 				data : {
 				},
 				type : "GET",
@@ -1643,7 +1643,7 @@ function getRating(key,productCode,category)
 function CheckUserLogedIn() {
 	var contentData = '';
  $.ajax({
-			url : ACC.config.encodedContextPath + "/p/checkUser",
+			url : ACC.config.encodedContextPath + "/p-checkUser",
 			data : {
 				
 			},
@@ -1723,7 +1723,7 @@ function sendmail(){
 	if(validEmail(email)){
 		//var emailList = email.split(";");
 		$.ajax({
-			url : ACC.config.encodedContextPath + "/p/sendEmail",
+			url : ACC.config.encodedContextPath + "/p-sendEmail",
 			data : dataString,			
 			type : "GET",
 			cache : false,
@@ -1822,7 +1822,7 @@ function buyboxDetailsForSizeGuide(productCode){
 	var productCode = productCode;//$("#product").val();
 	
 	console.log(sellerID +" "+productCode);
-	var requiredUrl = ACC.config.encodedContextPath + "/p/buyboxDataForSizeGuide";
+	var requiredUrl = ACC.config.encodedContextPath + "/p-buyboxDataForSizeGuide";
 	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
 	
 		$.ajax({
@@ -1912,7 +1912,7 @@ function openPop_SizeGuide() {
 	var productCode = $("#productCode").val(); // '${product.code}';
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/viewWishlistsInPDP";
+			+ "-viewWishlistsInPDP";
 
 	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
 	//alert("localdata: "+dataString);
@@ -2059,7 +2059,7 @@ function loadDefaultWishListName_SizeGuide() {
 		return false;
 	}
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/addToWishListInPDP";
+			+ "-addToWishListInPDP";
 	var sizeSelected=true;
 	if( $("#variant.size-g option:selected").val()=="#"){
 		sizeSelected=false;
