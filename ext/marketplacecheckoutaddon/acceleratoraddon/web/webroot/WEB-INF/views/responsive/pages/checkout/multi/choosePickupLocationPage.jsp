@@ -33,231 +33,6 @@
 
 	<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}">
 		<jsp:body>
-					<style>
-					 	.latlng {
-					 		display: none;
-					 	}
-					 	
-					 	.radio_btn {
-							display: block !important;;
-						    height: 15px !important;
-						    width: 15px !important;
-						    cursor: pointer;
-						   	float: left;
-						   	border-radius: 50% !important;
-							padding: 0px !important;
-						    margin-left: -38px !important;
-						}
-						
-						.radio_btn2 {
-							display: block !important;;
-						    height: 15px;
-						    width: 15px;
-						    cursor: pointer;
-						    border-radius: 10px;
-						    background-color: #fff !important;
-						}
-						
-						input[type="radio"]:checked+label{ font-weight: bold; }
-						
-						input[type="radio"]:checked {
-							background-color: #000 !important;
-						} 
-						
-						.continue_btn {
-							border: none;
-						    background-color: #A9143C;
-						    color: #fff;
-						    clear: both;
-						    line-height: 30px;
-						    width: 250px !important;
-						    text-align: center;
-						    height: 32px;
-						    padding: 4px 25px 8px 25px;
-						    letter-spacing: 1.2px;
-						    font-weight: bold;
-						    font-size: 12px;
-						    text-decoration: none;
-						    cursor: pointer;
-						}
-						
-						.continue_btn:hover {
-							 background: #88102C !important;
-							 text-decoration: none;
-							 cursor: pointer;
-							 color: #fff !important;
-						}
-						
-						.continue_btn_a, .continue_btn_a:hover, .continue_btn_a:link, .continue_btn_a:visited {
-							color: #fff !important;
-							text-decoration: none;
-						}
-						
-						.continue_holder {
-							width: 100% !important;
-							text-align: center;
-						}
-						
-						.change_pincode_block {
-							padding: 10px 0px 0px 0px;
-						}
-						
-						.change_txt {
-							font-size: 14px;
-							letter-spacing: 1px;
-						}
-						
-						.cd-popup {
-							    z-index: 999;
-						}
-						
-						.label_txt {
-							margin-left: -137px;
-						}
-						
-						.error_txt {
-							color: red;
-							font-size: 10px;
-							font-weight: bold;
-						}
-						
-						.pickupDetails {
-							text-align: center;
-							font-size: 12px !important;
-						}
-						
-						.pickUpPersonAjax {
-						    text-align: left;
-						    padding: 10px;
-						    /* padding-top: 5px; */
-						    background: #D2F7F3;
-						    margin-bottom: 10px;
-						    color: #000;
-						    margin-top: -15px;
-						}
-						
-						.pickupText {
-							color: #A9143C;
-							padding-left: 15px; 
-						}
-						
-						@media (max-width:650px){
-							
-						}
-						
-						@media (min-width: 1024px) {
-						.checkout.wrapper .product-block li.header > ul li:first-child, .checkout.wrapper .product-block li.item > ul li:first-child {
-						  width: 38% !important; }
-						  .checkout.wrapper .product-block li.header > ul li.delivery, .checkout.wrapper .product-block li.item > ul li.delivery {
-						  width: 28% !important;
-						  }		
-						.cart.wrapper .left-block, .confirmation .left-block {
-							width: 77% !important;
-						}
-						.cart.wrapper .right-block, .confirmation .right-block {
-							width: 22% !important;
-						}
-						  #pickup {
-							/* width: 920px !important;*/
-						  	padding-top: 15px;
-						  }
-						  .savenewid {
-						  	background: #A9143C !important;
-						  	border-color: #A9143C !important;
-						  	height: 40px !important;
-						  }
-						  
-						 }
-						 
-						 @media (min-width: 1366px) and (max-width: 2160px) {
-						.checkout.wrapper .product-block li.header > ul li:first-child, .checkout.wrapper .product-block li.item > ul li:first-child {
-						  width: 38% !important; }
-						  .checkout.wrapper .product-block li.header > ul li.delivery, .checkout.wrapper .product-block li.item > ul li.delivery {
-						  width: 28% !important;
-						  }	
-						  }
-						 
-						  .checkout.wrapper .product-block li.header > ul li.delivery li label:after, .checkout.wrapper .product-block li.item > ul li.delivery li label:after {
-						  	display: none !important;
-						  } 
-						  .radio_color {
-						  	color: #ADA6A6;
-						  }	
-						  
-						  .colorChange {
-						  	color: #000 !important;
-						  }	
-						  .productCount {
-						  	font-size: 12px;
-						  	font-weight: bold;
-						  	margin-top: -10px;
-    						margin-bottom: 12px;
-						  }
-						  .submitPincode {
-					  	    width: 98px !important;
-						    margin-left: 88px;
-						  }
-						  
-						  .scrollThis {
-						  	height: 188px;
-						  	padding-left: 5px;
-							overflow-x: scroll;
-							overflow-y: scroll;
-						  }
-						  
-						  .continue_holder {
-						  	width: 250px !important;
-						  }
-						  
-						  .collectionDays {
-						  	display: none !important;
-						  }
-						  
-						  .pickup {
-						  	    height: 160px !important;
-						  }
-						  
-						  .pickuppersonWidth {
-							  	width: 100% !important;
-								margin-bottom: 20px;
-								background-color: rgb(255, 255, 255);
-								border-radius: 4px;
-								box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
-								height: 136px !important;
-								border: 1px solid rgb(240, 244, 245);
-						  }
-						  
-						  .panel-body {
-					  			margin-top: 14px;
-								height: 107px;
-								padding: 15px;
-								margin-bottom: 20px;
-						  }
-						  
-						  .text_in {
-								font-size: 10px !important;
-								margin-top: 2px !important;
-								margin-left: -2px !important;
-								text-align: center;
-							}
-							
-							.changeDeliveryMethod {
-							    background: none !important;
-							    border: none !important;
-							    text-transform: capitalize !important;
-							    font-weight: 600 !important;
-							    text-align: left !important;
-							    font-size: 14px !important;
-							    letter-spacing: normal !important;
-							    color: #A9143C !important;
-    						}
-							
-							.pincodeValidation {
-								clear: both;
-								padding-top: 5px;
-							}
-						  					 	
-					</style>
 					<script>
 					//TISST-13010
 					$(document).ready(function() {
@@ -375,13 +150,8 @@
 			} else {
 				console.log("changed map width"); 
 				var mapWidth = $(document).width()-30;
-				$(".mapWidth").css("width", mapWidth+"px"); 
-				$(".cart.wrapper .product-block li.item > ul > li, .confirmation .product-block li.item > ul > li, #pickupPersonName, #pickupPersonMobile").css("width","100%");
-				$(".panel-body").css("height", "auto");
-				$("#savePickupPersondDetails, #pickupPersonName, #pickupPersonMobile").css("margin-top","5px");
-				$("#savePickupPersondDetails").css("margin-left","0px");
-				$("#savePickupPersondDetails").css("margin-bottom","5px");
-				$(".continue_holder").css("margin-bottom","30px");
+				$(".mapWidth").css("width", mapWidth+"px");
+				$(".continue_btn").css("width", mapWidth+"px");
 			}
 			$(".pickUpPersonAjax").hide();
 			$(".pickupPersonSubmitError").hide();
@@ -649,7 +419,7 @@
 </script>
 					
 					<ycommerce:testId code="checkoutStepTwo">
-						<div class="checkout-shipping-items  left-block">
+						<div class="checkout-shipping-items  left-block left-block-width">
 			<h1>
 					<spring:theme code="checkout.multi.cnc.header"></spring:theme>
 					<br>
@@ -660,12 +430,12 @@
 				(for ${cnccount} out of ${delModeCount + cnccount} items in your bag)
 			</div>
 			
-			<ul id="deliveryradioul" class="checkout-table product-block">
+			<ul id="deliveryradioul" class="checkout-table product-block classRadio">
 						
 						<c:forEach items="${pwpos}" var="poses" varStatus="status1">
 							<li class="header item${status1.index}">
 							<ul class="headline">
-								<li class="header2"><spring:theme code="text.product.information"/></li>
+								<li class="header2 headerWidth"><spring:theme code="text.product.information"/></li>
 								<li class="store header5"><spring:theme code="checkout.multi.cnc.store.closeto"/>
 								
 								<c:if test="${not empty defaultPincode}">
@@ -674,7 +444,7 @@
 									</span>	
 								</c:if>
 								</li>
-								<li class="delivery header4"><button style="font-size: 14px !important;" class="changeDeliveryMethod"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
+								<li class="delivery header4 deliveryWidth"><button style="font-size: 14px !important;" class="changeDeliveryMethod"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
@@ -793,7 +563,7 @@
 							
 							<li class="item delivery_options item${status1.index}">
 								<ul>
-										<li>
+										<li class="headerWidth">
 											<div>
 												<div class="thumb product-img">
 													<a class="productUrlName" href="${poses.product.url}"><product:productPrimaryImage
@@ -840,7 +610,7 @@
 										</li>
 							<div class="latlng latlng${status1.index}"><c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status"><c:if test="${(status.index != 0)}">@</c:if> '${pos.displayName}', ${pos.geoPoint.latitude}, ${pos.geoPoint.longitude}</c:forEach>
 							</div>
-							<li class="delivery">
+							<li class="delivery deliveryWidth">
 									<div class="error_txt pincodeServicable${status1.index}" style="width: 200px;font-size: 12px;"></div>
 									<ul class="delivered scrollThis delivered${status1.index}">
 							<c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status">
@@ -886,6 +656,19 @@
 										</li>
 										<script>
 											$(document).ready(function() {
+												var time = "";
+												time = $(".pickup${status1.index}${status.index}").text().split("-");
+												$(".pickup${status1.index}${status.index}").text("");
+												for(i=0;i<time.length;i++) {
+													var spaceRemove = "";
+													spaceRemove = time[i].replace(" ","");
+													spaceRemove = spaceRemove.split(":");
+													$(".pickup${status1.index}${status.index} ").append(spaceRemove[0]+":"+spaceRemove[1]);
+													if(i!=time.length-1) {
+														$(".pickup${status1.index}${status.index}").append(" - ");
+													}
+												}
+												
 												var	collectionDays${status1.index}${status.index} = $(".collectionDays${status1.index}${status.index}").text().split(",");
 												//var	collectionDays${status1.index}${status.index} = ["0","1","2","3","4","5","6"];
 												var weekDays = ["0","1","2","3","4","5","6"];
@@ -1144,7 +927,9 @@
 											        	  } else {
 											        		  $(".address4${status1.index}"+i).text("");  
 											        	  }if(jsonObject${status1.index}[i]['mplClosingTime'] != null && jsonObject${status1.index}[i]['mplOpeningTime'] != null) {
-											        	  	$(".pickup${status1.index}"+i).text(jsonObject${status1.index}[i]['mplOpeningTime']+" - "+jsonObject${status1.index}[i]['mplClosingTime']);
+											        		  openingTime = jsonObject${status1.index}[i]['mplOpeningTime'].split(":");
+											        		  closingTime = jsonObject${status1.index}[i]['mplClosingTime'].split(":");
+											        	  	$(".pickup${status1.index}"+i).text(openingTime[0]+":"+openingTime[1]+" - "+closingTime[0]+":"+closingTime[1]);
 											        	  } else {
 											        		  $(".pickup${status1.index}"+i).text("");  
 											        	  }
@@ -1302,7 +1087,7 @@
 				<div class="panel">
 					<div class="pickUpPersonAjax"></div>
    			 	</div>
-       			<div class="panel panel-default pickuppersonWidth" style="height: auto!important; width: 100%!important;">
+       			<div class="panel panel-default pickuppersonWidth" style="height: auto !important; width: 100%!important;">
      			 	<div class="panel panel-body" style="margin-top: 14px;">
      			 		<div class="col-md-12 pickupDetails error_txt">
      			 		<spring:theme code="checkout.multi.cnc.pickup.details.validation.msg"/>
@@ -1323,16 +1108,16 @@
 				          <div id="pickupPersonSubmit"></div>
 				          <div class="error_txt pickupPersonSubmitError"></div>
 				            </div>
+				            <div class="col-md-12" id="pickUpDetailsMsg" style="padding-top: 10px;"><spring:theme code="checkout.multi.cnc.pickup.details.below.msg"/></div>
+				            <p style="clear:both;"></p>&nbsp;
 				           </form>
-			            <div class="col-md-12" style="padding-top: 10px;">
-			            	<spring:theme code="checkout.multi.cnc.pickup.details.below.msg"/>
-			            </div>
+			            
 					</div>
 			</div>
 		</div>
 		</div>
 		
-		<div class="right-block shipping" style="margin-top: 74px;">
+		<div class="right-block shipping right-block-width" style="margin-top: 74px;">
 				<div class="checkout-order-summary">
 					<multi-checkout:orderTotals cartData="${cartData}"
 						showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />

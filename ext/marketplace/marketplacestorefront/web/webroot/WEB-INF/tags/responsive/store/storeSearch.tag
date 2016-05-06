@@ -35,7 +35,7 @@
 		position: absolute;
 		margin-top: 12px;
 		z-index: 9;
-		margin-left: 8px;
+		margin-left: -8px;
 		color:#A9143C;
 	}
 	
@@ -59,7 +59,7 @@
 		margin: 0px 2px;
 	}
 	.findStoresNearMe{
-	   margin-left: 0px; 
+	   margin-left: -10px; 
 	   white-space: pre;
 	}
 	.js-store-finder{

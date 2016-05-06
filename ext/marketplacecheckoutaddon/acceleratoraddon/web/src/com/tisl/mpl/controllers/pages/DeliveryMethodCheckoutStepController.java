@@ -1913,8 +1913,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					&& richAttributeModel.get(0).getShippingModes() != null
 					&& richAttributeModel.get(0).getShippingModes().getCode() != null)
 			{
-				final String shippingMode = richAttributeModel.get(0).getShippingModes().getCode();
-				storeLocationRequestData.setTransportMode(shippingMode.toUpperCase());
+				final String globalCodeShippingMode = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(
+						richAttributeModel.get(0).getShippingModes().getCode().toUpperCase());
+				storeLocationRequestData.setTransportMode(globalCodeShippingMode);
 			}
 			else
 			{
