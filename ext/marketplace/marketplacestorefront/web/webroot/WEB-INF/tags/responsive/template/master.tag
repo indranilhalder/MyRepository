@@ -34,7 +34,8 @@
 	
 	
 	<c:set var="host" value="${header.host}"/>
-	<c:set var="pageURL" value="${emailURL}"/>
+	<%-- <c:set var="pageURL" value="${emailURL}"/> --%>
+	<c:set var="pageURL" value="${pageContext.request.requestURL}"/>
 	<c:set var="protocolString" value="${fn:split(pageURL, '://')}"/>
 	<c:set var="baseURL" value="${protocolString[0]}://${host}"/>
 	
@@ -94,7 +95,7 @@
 	<jsp:invoke fragment="pageCss"/>
 	<!-- This is commented out as we are not using Google analytics -->
 	<%-- <analytics:analytics/> --%>
-	<generatedVariables:generatedVariables/>
+	<%-- <generatedVariables:generatedVariables/> --%>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<!-- <script src="//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.sync.js"></script> -->

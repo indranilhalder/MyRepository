@@ -48,7 +48,7 @@ function loadVariant(x){
 }
 </script>
 <c:url var="sizeGuideUrl"
-	value="/p/sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
+	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
 <div class="swatch">
 
 	<form:form action="/" id="variantForm" method="post">

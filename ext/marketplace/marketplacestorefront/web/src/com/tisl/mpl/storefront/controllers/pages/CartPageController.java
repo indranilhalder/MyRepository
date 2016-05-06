@@ -701,39 +701,32 @@ public class CartPageController extends AbstractPageController
 		model.addAttribute("pageType", PageType.CART.name());
 
 	}
+	
 
-	/**
-	 * Get Product Delivery Modes
-	 */
-	private void prepareDataForPage(final Model model, final CartData cartData) throws CMSItemNotFoundException,
-			EtailNonBusinessExceptions, EtailBusinessExceptions, Exception
 
+	@RequestMapping(value = "/giftlist", method = RequestMethod.GET)
+	public String showGiftList(final Model model) throws CMSItemNotFoundException,EtailNonBusinessExceptions, EtailBusinessExceptions, Exception
 	{
-		LOG.debug("Entring into prepareDataForPage" + "Class NameprepareDataForPage :" + className);
-		final Map<String, String> ussidMap = new HashMap<String, String>();
-		Map<String, List<String>> giftYourselfDeliveryModeDataMap = new HashMap<String, List<String>>();
 
-		model.addAttribute(ModelAttributetConstants.CONTINUE_URL, ROOT);
-		createProductList(model, cartData);
-		setupCartPageRestorationData(model);
-		clearSessionRestorationData();
-
-		model.addAttribute("isOmsEnabled", Boolean.valueOf(getSiteConfigService().getBoolean("oms.enabled", false)));
-		//TISST-13012
-		if (StringUtils.isNotEmpty(cartData.getGuid()))
+		final boolean isUserAnym = getUserFacade().isAnonymousUser();
+		if (!isUserAnym)
 		{
-
-			final List<ProductData> productDataList = new ArrayList<ProductData>();
-			List<Wishlist2EntryModel> entryModels = new ArrayList<Wishlist2EntryModel>();
-
-			final int minimum_gift_quantity = getSiteConfigService().getInt(MessageConstants.MINIMUM_GIFT_QUANTIY, 0);
-			LOG.debug("Class NameprepareDataForPag :" + className + " minimum_gift_quantity :" + minimum_gift_quantity);
-			final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
-
-			final boolean isUserAnym = getUserFacade().isAnonymousUser();
 			final String defaultPinCodeId = fetchPincode(isUserAnym);
-			if (!isUserAnym)
+
+			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+			if (StringUtils.isNotEmpty(cartData.getGuid()))
 			{
+				final Map<String, String> ussidMap = new HashMap<String, String>();
+				Map<String, List<String>> giftYourselfDeliveryModeDataMap = new HashMap<String, List<String>>();
+
+				final List<ProductData> productDataList = new ArrayList<ProductData>();
+				List<Wishlist2EntryModel> entryModels = new ArrayList<Wishlist2EntryModel>();
+
+				final int minimum_gift_quantity = getSiteConfigService().getInt(MessageConstants.MINIMUM_GIFT_QUANTIY, 0);
+				LOG.debug("Class NameprepareDataForPag :" + className + " minimum_gift_quantity :" + minimum_gift_quantity);
+				
+				final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
+
 				entryModels = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity, allWishlists, defaultPinCodeId); // Code moved to Facade and Impl
 
 				for (final Wishlist2EntryModel entryModel : entryModels)
@@ -807,7 +800,43 @@ public class CartPageController extends AbstractPageController
 					model.addAttribute("giftYourselfDeliveryModeDataMap", null);
 				}
 				/* TISEE-435 : New Code Added section ends */
+
+
+				final ArrayList<Integer> quantityConfigurationList = getMplCartFacade().getQuantityConfiguratioList();
+				if (CollectionUtils.isNotEmpty(quantityConfigurationList))
+				{
+					model.addAttribute("configuredQuantityList", quantityConfigurationList);
+				}
+				else
+				{
+					LOG.debug("CartPageController : product quanity is empty");
+				}
+			
 			}
+		}
+		return ControllerConstants.Views.Fragments.Cart.GiftList;
+
+	}
+
+	/**
+	 * Get Product Delivery Modes
+	 */
+	private void prepareDataForPage(final Model model, final CartData cartData) throws CMSItemNotFoundException,
+			EtailNonBusinessExceptions, EtailBusinessExceptions, Exception
+
+	{
+		LOG.debug("Entring into prepareDataForPage" + "Class NameprepareDataForPage :" + className);
+
+		model.addAttribute(ModelAttributetConstants.CONTINUE_URL, ROOT);
+		createProductList(model, cartData);
+		setupCartPageRestorationData(model);
+		clearSessionRestorationData();
+
+		model.addAttribute("isOmsEnabled", Boolean.valueOf(getSiteConfigService().getBoolean("oms.enabled", false)));
+		//TISST-13012
+		if (StringUtils.isNotEmpty(cartData.getGuid()))
+		{
+
 			//TIS-404
 			final String payNowInventoryCheck = getSessionService().getAttribute(
 					MarketplacecheckoutaddonConstants.PAYNOWINVENTORYNOTPRESENT);
