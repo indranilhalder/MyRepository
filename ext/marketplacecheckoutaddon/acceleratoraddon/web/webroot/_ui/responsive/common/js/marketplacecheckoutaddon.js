@@ -881,7 +881,7 @@ function displayFormForCC(){
   
 
 function mobileBlacklist(){
-	$("#sendOTPButton").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 0px; height: 30px;">');
+	$("#sendOTPButton").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
 	if($("#sendOTPButton #resendOTPMessage").css("display") == 'block') {
 		$("#sendOTPButton .spinner").css("bottom","33px")
 	}
