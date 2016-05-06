@@ -5068,7 +5068,12 @@ text-transform: uppercase;
     .cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
   .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top{
    margin-top: 60px;
-       margin-bottom: -52px;}
+       margin-bottom: -52px;
+       display:none;}
+       
+       .cod_payment_button_top{
+       line-height:16px;
+       }
       .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
   .cart.wrapper #newAddressButtonUp,  .cart.wrapper .button#deliveryMethodSubmit, .cart.wrapper .button#deliveryAddressSubmit,
   .cart.wrapper #newAddressButton,.cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
@@ -6008,8 +6013,11 @@ text-transform: uppercase;
             position: absolute;
             bottom: 25%;
             left: 55%; }
-            .cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb{
+            .cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb,.cart.wrapper .cod-otp-button_top, .cart.wrapper .cod_payment_button_top{
             display:none !important;
+            }
+            .checkout-content.checkout-payment .left-block{
+            margin-top:0px !important;
             }
              }
   .cart.wrapper .left-block .offer, .confirmation .left-block .offer {
@@ -20241,7 +20249,7 @@ box-shadow:none;
 	color:#fff;
 font-weight:500;
 padding:10px;
- width: 200px;
+ width: 59.39%;
  border:0px;
    line-height: 3px;
    margin: 30px auto;
