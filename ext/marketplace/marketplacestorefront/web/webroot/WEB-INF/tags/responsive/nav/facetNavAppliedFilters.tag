@@ -30,6 +30,7 @@ for(var i = 0; i < arr.length; i++)
 }
 </script>
 
+
 <c:if test="${not empty pageData.breadcrumbs}">
 	<div class="facet js-facet">
 		<c:url
@@ -46,9 +47,6 @@ for(var i = 0; i < arr.length; i++)
 			<span class="facet-name js-facet-name appliedFacets">FILTER BY</span><a
 				class="reset" href="${resetQueryUrl}">RESET ALL</a>
 		</h3>
-
-
-
 		<div class="facet-values js-facet-values">
 			<ul class="facet-list">
 				<c:forEach items="${pageData.breadcrumbs}" var="breadcrumb">
@@ -61,13 +59,22 @@ for(var i = 0; i < arr.length; i++)
 					</c:if>
 					
 					<c:if
-						test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' && breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'}">
-						<li><c:url
+						test="${breadcrumb.facetCode == 'inStockFlag' && breadcrumb.facetName ne 'sellerId' && breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'}">
+							<c:forEach items="${pageData.facets}" var="facet">
+			<c:if test="${facet.code == 'inStockFlag'}">
+			<meta name="checkSize" value="${facet.values.size()}"/>
+			<c:if test="${facet.values.size()>1}"> 
+				<li><c:url
 								value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}"
 								var="removeQueryUrl" /><input type="hidden"
 							class="applied-color" value="${breadcrumb.facetValueName}">
 							${breadcrumb.facetValueName}&nbsp;<a href="${removeQueryUrl}"><span
 								class="remove_filter"></span></a></li>
+			</c:if>
+			</c:if>
+			
+			</c:forEach>
+						
 
 					</c:if>
 				</c:forEach>
