@@ -19,13 +19,14 @@
 		<spring:theme code="needhelp.needhelptext" />
 
 		<div id="h">
-			<span class="glyphicon glyphicon-remove" style="float: right;"></span>
+			<span class="cclose-ico"></span>
 			<div class="chat">
 				<h5>
-					<span class="glyphicon glyphicon-comment"></span>
+					<span class="cicon icon-comment"></span>
 					<a href="${request.contextPath}/clickto/chat" id="chatMe"
 					data-title="">
 					<spring:theme code="needhelp.chatwithus" />
+					&nbsp;<span class="bubble">1</span>
 					</a>
 				</h5>
 					<!-- Commented as part of the chairman demo feedback -->
@@ -37,15 +38,15 @@
 			</div>
 			<div class="call">
 				<h5>
-					<span class="glyphicon glyphicon-earphone "></span>
+					<span class="cicon icon-earphone"></span>
 					<a href="${request.contextPath}/clickto/call" id="callMe"
-					data-title="">
-					<spring:theme code="needhelp.callus" />
+					data-title="">${contactNumber}
+					<%-- <spring:theme code="needhelp.callus" /> --%>
 					</a>
 				</h5>
 				
-				
-				<a href="${request.contextPath}/clickto/call" id="callMe">${contactNumber}</a>
+				<!--  Post chairman demo Changes -->
+				<%-- <a href="${request.contextPath}/clickto/call" id="callMe">${contactNumber}</a> --%>
 			</div>
 		</div>
 	</div>
@@ -56,34 +57,25 @@
 				helpMe();
 			});
 			$('#up').click(function() {
-				if (!$("#h").is(":visible")) {
-					$("#h").css("display", "block");
-					if ($(window).width() < 534) {
-						$("#up").css("width", "100%");
-						$("#h").css("width", "100%");
-						$("#up").css("text-align", "center");
-					}
-
+					$("#h").toggle();
+			});
+			$(document).on("blur",".input-box input",function(){	
+				if( $(this).val() != ""){
+					$(this).addClass("used");
 				}
-
 				else {
-					$("#h").css("display", "none");
-					$("#up").css("width", "150px");
-					$("#h").css("width", "150px");
+					$(this).removeClass("used");
+				}
+			});
+			$(document).on("blur",".input-box select",function(){	
+				if( $(this).val() != ""){
+					$(this).addClass("used");
+				}
+				else {
+					$(this).removeClass("used");
 				}
 			});
 
-		});
-
-		$(window).on("load resize", function() {
-			if ($(window).width() < 534 && $("#h").is(":visible")) {
-				$("#up").css("width", "100%");
-				$("#h").css("width", "100%");
-				$("#up").css("text-align", "center");
-			} else {
-				$("#up").css("width", "150px");
-				$("#h").css("width", "150px");
-			}
 		});
 	</script>
 

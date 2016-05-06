@@ -293,7 +293,7 @@
 					<c:when test="${not empty variantOption.defaultUrl}">
 					
 						<li>
-						<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
+						<c:url value="/p-sizeGuide?productCode=${variantOption.code}" 
 								var="variantUrl" />
 							<!-- TISPRO-308 -->
 							<%--  <c:choose>
@@ -372,7 +372,7 @@
 							<c:if test="${currentColor eq color}">
 								<c:set var="currentColor" value="${color}" />
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
-									<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
+									<c:url value="/p-sizeGuide?productCode=${variantOption.code}" 
 								var="link" />
 								<c:set var="code" value="${variantOption.code}"/>
 									<c:choose>
@@ -407,7 +407,7 @@
 										<c:if test="${currentColor eq color}">
 
 											<c:forEach var="entry" items="${variantOption.sizeLink}">
-											<c:url value="/p/sizeGuide?productCode=${variantOption.code}" var="link" />
+											<c:url value="/p-sizeGuide?productCode=${variantOption.code}" var="link" />
 												<c:choose>
 													<c:when test="${(variantOption.code eq product.code)}">
 													<%-- 	<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option> --%>
