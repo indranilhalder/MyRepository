@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
 
 
@@ -57,11 +58,11 @@ public class MplCategoryServiceImplTest
 	@Test
 	public void testgetMatchingCategory()
 	{
-
+		//TISSEC-50
 		Collection<CategoryModel> matchedCategoryList = Arrays.asList(categoryModel);
-		final String mplrootCategory = "MPH1";
-		final String clothingUpper = "Clothing";
-		final String categoryData = "Clothing";
+		final String mplrootCategory = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter root category
+		final String clothingUpper = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter clothing Upper
+		final String categoryData = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter category
 		final Collection<CategoryModel> intraMaxSize = null;
 		//int intraMaxSize=0;
 		given(configurationService.getConfiguration()).willReturn(configuration);
@@ -83,6 +84,6 @@ public class MplCategoryServiceImplTest
 		final Collection<CategoryModel> categoryModelList = Arrays.asList(categoryModel);
 		given(mplCategoryDao.getMplRootCategoriesForCatalogVersion(catalogVersionModel)).willReturn(categoryModelList);
 		mplCategoryServiceImpl.getMplRootCategoriesForCatalogVersion(catalogVersionModel);
-		
+
 	}
 }

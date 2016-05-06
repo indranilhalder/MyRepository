@@ -27,6 +27,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.ClickAndCollectEnum;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.ExpressDeliveryEnum;
@@ -74,8 +75,9 @@ public class DefaultBuyBoxFacadeTest
 	@Test
 	public void testBuyBoxPriceDetails()
 	{
+		//TISSEC-50
 		final BuyBoxData buyboxData = new BuyBoxData();
-		final String productCode = "987654321";
+		final String productCode = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter product code
 		assertNotNull(buyBoxService.buyboxPrice(productCode));
 		assertFalse(buyBoxService.buyboxPrice(productCode).isEmpty());
 		buyboxData.setAllOOStock(MarketplaceFacadesConstants.N);
@@ -111,7 +113,7 @@ public class DefaultBuyBoxFacadeTest
 	{
 		final List<SellerInformationData> SellerInformationDataList = new ArrayList<SellerInformationData>();
 		final BuyBoxData buyboxData = new BuyBoxData();
-		final String productCode = "987654321";
+		final String productCode = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter product code
 		assertFalse(buyBoxService.getsellersDetails(productCode).isEmpty());
 		final BuyBoxModel buyBox = new BuyBoxModel();
 		final RichAttributeModel rich = new RichAttributeModel();
@@ -124,7 +126,7 @@ public class DefaultBuyBoxFacadeTest
 
 		final SellerInformationData sellerData = new SellerInformationData();
 		assertNotNull(buyBox.getAvailable());
-		final String availableStock = "10";
+		final String availableStock = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter available stock
 		buyboxData.setAllOOStock(availableStock);
 		assertNotNull(buyBox.getWeightage());
 		assertNotNull(buyBox.getSellerId());
@@ -171,7 +173,7 @@ public class DefaultBuyBoxFacadeTest
 	{
 		final RichAttributeData richData = new RichAttributeData();
 		final ProductModel productModel = new ProductModel();
-		final String buyboxid = "12345";
+		final String buyboxid = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter buybox id
 		assertNotNull(configurationService.getConfiguration().getString("attribute.new.display"));
 		assertNotNull(productModel.getSellerInformationRelator());
 		final SellerInformationModel seller = new SellerInformationModel();
