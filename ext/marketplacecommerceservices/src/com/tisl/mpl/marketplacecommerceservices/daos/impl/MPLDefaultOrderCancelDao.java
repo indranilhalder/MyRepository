@@ -15,12 +15,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MPLOrderCancelDao;
+import com.tisl.mpl.model.OrderStatusCodeMasterModel;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -50,7 +52,7 @@ public class MPLDefaultOrderCancelDao extends DefaultOrderCancelDao implements M
 			return flexibleSearchService.<OrderCancelRecordEntryModel> search(query).getResult();
 			/*
 			 * if (result.getTotalCount() > 1)
-			 *
+			 * 
 			 * { throw new EtailBusinessExceptions("Cancel  not found"); }
 			 */
 		}
@@ -96,7 +98,7 @@ public class MPLDefaultOrderCancelDao extends DefaultOrderCancelDao implements M
 			return flexibleSearchService.<OrderCancelRecordEntryModel> search(query).getResult();
 			/*
 			 * if (result.getTotalCount() > 1)
-			 *
+			 * 
 			 * { throw new EtailBusinessExceptions("Cancel  not found"); }
 			 */
 		}
@@ -124,7 +126,15 @@ public class MPLDefaultOrderCancelDao extends DefaultOrderCancelDao implements M
 			final String queryString = MarketplacecommerceservicesConstants.ORDERSTAGEQUERY;
 			LOG.debug("queryString: " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			return getFlexibleSearchService().<String> search(query).getResult().get(0);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.ORDERENTRYSTATUS, orderEntryStatus);
+			final List<OrderStatusCodeMasterModel> orderStatusList = getFlexibleSearchService().<OrderStatusCodeMasterModel> search(
+					query).getResult();
+			String stage = null;
+			if (CollectionUtils.isNotEmpty(orderStatusList))
+			{
+				stage = orderStatusList.get(0).getStage();
+			}
+			return stage;
 		}
 		catch (final FlexibleSearchException e)
 		{

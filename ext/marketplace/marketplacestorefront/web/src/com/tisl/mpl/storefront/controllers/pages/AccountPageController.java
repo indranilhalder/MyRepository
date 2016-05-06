@@ -681,10 +681,26 @@ public class AccountPageController extends AbstractMplSearchPageController
 						for (OrderEntryData orderEntryData : subOrder.getEntries())
 						{
 							orderEntryData = getMplOrderFacade().fetchOrderEntryDetails(orderEntryData, sortInvoice, subOrder);
+
 							if (null == orderEntryData)
 							{
 								continue;
 							}
+
+							boolean cancellationMsgFlag = false;
+							if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
+							{
+								//TISCR-410 : To check whether to show missed cancellation deadline message to customer
+								final String orderEntryStatus = orderEntryData.getConsignment().getStatus().getCode();
+								final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
+
+								if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+								{
+									cancellationMsgFlag = true;
+								}
+							}
+							orderEntryData.setIsCancellationMissed(cancellationMsgFlag);
+
 							LOG.debug("Step7-************************Order History: post fetching and populating order entry details "
 									+ orderHistoryData.getCode());
 							//setting cancel product for BOGO
