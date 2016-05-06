@@ -149,7 +149,7 @@ ACC.storefinder = {
 		        return function() {
 		          var infoMsg=storeData[i];
 		          var infoString="<div>"+"<p>" +infoMsg["displayName"]+ "</p><p>Distance Appx."+infoMsg["formattedDistance"]+"</p> <p>"+infoMsg["line1"]
-					+" "+infoMsg["line2"]+infoMsg["postalCode"]+"</p>";
+					+" "+infoMsg["line2"]+" "+infoMsg["postalCode"]+"</p>";
 		          if(infoMsg["mplOpeningTime"] && infoMsg["mplClosingTime"]){
 		        	  infoString=infoString+'<p>PiQ up hrs : '+ infoMsg["mplOpeningTime"]+'-'+infoMsg["mplClosingTime"]+"</p>";
 		          }
@@ -204,12 +204,6 @@ ACC.storefinder = {
 		      })(marker, i));
 			marker.setMap(map);	 
 			}
-			/* Create a DIV to hold the control and call StoreFinderLegendsControl() */
-		    var homeLegendsControlDiv = document.createElement('div');
-		    var homeLegendsControl = new ACC.storefinder.StoreFinderLegendsControl(homeLegendsControlDiv, map);
-		    homeLegendsControlDiv.index = 1;
-			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(homeLegendsControlDiv);
-			
 			map.fitBounds(bounds);
 			
 			//To control max zoom label
@@ -369,11 +363,7 @@ ACC.storefinder = {
 			center: centerPoint
 		}
 	  var map = new google.maps.Map(document.getElementById("store-finder-map"), mapOptions);
-		/* Create a DIV to hold the control and call StoreFinderLegendsControl() */
-	    var homeLegendsControlDiv = document.createElement('div');
-	    var homeLegendsControl = new ACC.storefinder.StoreFinderLegendsControl(homeLegendsControlDiv, map);
-	    homeLegendsControlDiv.index = 1;
-		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(homeLegendsControlDiv);
+		
 	}
 	,
 	bindStoreTestChange:function()
