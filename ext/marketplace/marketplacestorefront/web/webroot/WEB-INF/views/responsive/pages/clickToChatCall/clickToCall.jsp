@@ -28,7 +28,7 @@
 							code="popupc2c.enterOtp" /></label> <label for="errorOTP" class="error"></label>
 				</div>
 				<div class="button_fwd_wrapper actions call-validateOtp">
-					<button id="validateOTPBtn" type="button">
+					<button id="validateOTPBtn" type="button" class="bsubmit" style="margin-top:20px;">
 						<spring:theme code="popupc2c.validateOtp" />
 					</button>
 				</div>
