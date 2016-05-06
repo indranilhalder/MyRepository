@@ -72,6 +72,7 @@ public class MarketPlaceOrderDetailsWidgetRenderer extends
 		button.addEventListener("onClick", new EventListener() {
 			public void onEvent(Event event) throws Exception {
 				handleSyncOrderListEvent(widget, event);
+				handleRefreshTicketListEvent(widget, event);
 			}
 		});
 	}
