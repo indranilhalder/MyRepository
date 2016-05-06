@@ -110,7 +110,7 @@ public class StorefrontFilter extends OncePerRequestFilter
 		request.setAttribute(ModelAttributetConstants.EMAIL_URL, emailURL);
 		final String twitterHandle = configurationService.getConfiguration().getString(MessageConstants.TWITTER_HANDLE).trim();
 		final String mediaCode = configurationService.getConfiguration().getString(MessageConstants.MEDIA_CODE).trim();
-		String seoMediaURL = "";
+		String seoMediaURL = null;
 		final String imageHost = configurationService.getConfiguration().getString(MessageConstants.MEDIA_HOST).trim();
 		if (null != mediaCode)
 		{
@@ -124,7 +124,7 @@ public class StorefrontFilter extends OncePerRequestFilter
 			}
 			catch (final Exception ex)
 			{
-				LOG.error("Exception at getSEOAttributes::::::::::::::" + ex);
+				LOG.error("Exception at getSEOAttributes::::::::::::::", ex);
 			}
 			final StringBuilder sb = new StringBuilder();
 			final String fullURL = sb.append(imageHost).append(seoMediaURL).toString();
@@ -152,7 +152,7 @@ public class StorefrontFilter extends OncePerRequestFilter
 				}
 				catch (final Exception ex)
 				{
-					LOG.error("Exception at getMediaByCode::::::::::::::" + ex);
+					LOG.error("Exception at getMediaByCode::::::::::::::", ex);
 				}
 			}
 		}
