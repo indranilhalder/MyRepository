@@ -21757,7 +21757,7 @@ body .lookbook_wrapper .lookbook-pagination .right-bottom-link{
 @media (min-width: 791px){
 body .lookbook_wrapper div.share-link {
    position: relative;
-    top: 10px;
+    top: -40px;
 }
 .lookbooks {
     margin: 60px auto;
