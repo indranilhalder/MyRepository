@@ -5,8 +5,10 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.ordercancel.dao.impl.DefaultOrderCancelDao;
 import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MPLOrderCancelDao;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -47,7 +50,7 @@ public class MPLDefaultOrderCancelDao extends DefaultOrderCancelDao implements M
 			return flexibleSearchService.<OrderCancelRecordEntryModel> search(query).getResult();
 			/*
 			 * if (result.getTotalCount() > 1)
-			 * 
+			 *
 			 * { throw new EtailBusinessExceptions("Cancel  not found"); }
 			 */
 		}
@@ -93,7 +96,7 @@ public class MPLDefaultOrderCancelDao extends DefaultOrderCancelDao implements M
 			return flexibleSearchService.<OrderCancelRecordEntryModel> search(query).getResult();
 			/*
 			 * if (result.getTotalCount() > 1)
-			 * 
+			 *
 			 * { throw new EtailBusinessExceptions("Cancel  not found"); }
 			 */
 		}
@@ -101,6 +104,39 @@ public class MPLDefaultOrderCancelDao extends DefaultOrderCancelDao implements M
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return null;
+		}
+	}
+
+
+
+	/**
+	 * TISCR-410 : this method picks up the stage in which the order status is currently
+	 *
+	 * @param orderEntryStatus
+	 * @return String
+	 *
+	 */
+	@Override
+	public String getOrderStatusStage(final String orderEntryStatus)
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.ORDERSTAGEQUERY;
+			LOG.debug("queryString: " + queryString);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			return getFlexibleSearchService().<String> search(query).getResult().get(0);
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
