@@ -46,9 +46,10 @@ $('#pincode').on('paste', function () {
 
 
 function refresh(){
-	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up").prop("disabled",false);
-	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up").css("opacity","1");
+	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").prop("disabled",false);
+	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").css("opacity","1");
 	$(".pay .spinner").remove();
+	$(".checkout-content.checkout-payment .left-block").css("margin-top","0px");
 	
 	$("#paymentMode, #bankNameForEMI, #selectedTerm, #bankCodeSelection").val("select");
 	document.getElementById('silentOrderPostForm').reset();
@@ -68,7 +69,7 @@ function refresh(){
 	$("#bankNameForEMI, #listOfEMiBank, #netbankingIssueError, #emiPromoError").css("display","none");
 	$("#convChargeFieldId, #convChargeField").css("display","none");
 	$(".card_ebsErrorSavedCard, .card_cvvErrorSavedCard, #maestroMessage, #newMaestroMessage").css("display","none");
-	$(".make_payment_top_nb, .make_payment_top_savedCard, .make_payment_top_newCard").css("display","none");
+	$(".make_payment_top_nb, .make_payment_top_savedCard, .make_payment_top_newCard, .cod-otp-button_top, .cod_payment_button_top").css("display","none");
 	$("").css("display","none");
 	hideTable();
 	var selection = document.silentOrderPostForm.EMIBankCode;
@@ -143,7 +144,7 @@ function displayCODForm()
 	refresh();
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
-	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
+	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton, .cod-otp-button_top").css("display","block");
 	/*$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","block");*/	//Modified back as erroneously pushed by performance team
 	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 	//setCellNo();
@@ -382,8 +383,8 @@ function submitForm(){
 							$("#form-actions, #otpNUM").css("display","block");
 							$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
 							$("#otpSentMessage").css("display","none");
-							$(".pay .payment-button").prop("disabled",true);
-							$(".pay .payment-button").css("opacity","0.5");
+							$(".pay .payment-button,.cod_payment_button_top").prop("disabled",true);
+							$(".pay .payment-button,.cod_payment_button_top").css("opacity","0.5");
 							$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 100px; height: 30px;">');
 							$(".pay .spinner").css("left",(($(".pay#paymentFormButton").width()+$(".pay#paymentFormButton .payment-button").width())/2)+10);
 							$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -393,8 +394,8 @@ function submitForm(){
 					else
 					{
 						alert("Error validating OTP. Please select another payment mode and proceed");
-						$(".pay button").prop("disabled",false);
-						$(".pay button").css("opacity","1");
+						$(".pay button,.cod_payment_button_top").prop("disabled",false);
+						$(".pay button,.cod_payment_button_top").css("opacity","1");
 						$(".pay .spinner").remove();
 						$("#no-click").remove();
 						$('#paymentButtonId').prop('disabled', false); //TISPRD-958
@@ -403,8 +404,8 @@ function submitForm(){
 			},
 			error : function(resp) {
 				alert("Error validating OTP. Please select another payment mode and proceed");
-				$(".pay button").prop("disabled",false);
-				$(".pay button").css("opacity","1");
+				$(".pay button,.cod_payment_button_top").prop("disabled",false);
+				$(".pay button,.cod_payment_button_top").css("opacity","1");
 				$(".pay .spinner").remove();
 				$("#no-click").remove();
 				
@@ -880,7 +881,7 @@ function displayFormForCC(){
   
 
 function mobileBlacklist(){
-	$("#sendOTPButton").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 0px; height: 30px;">');
+	$("#sendOTPButton").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
 	if($("#sendOTPButton #resendOTPMessage").css("display") == 'block') {
 		$("#sendOTPButton .spinner").css("bottom","33px")
 	}
@@ -945,7 +946,8 @@ function generateOTP(){
 			}
 			else{
 				$("#codMessage").css("display","none");
-				$("#otpNUM, #otpSentMessage, #sendOTPNumber, #enterOTP, #paymentFormButton, #submitPaymentFormCODButton, .make_payment, #sendOTPButton, #resendOTPMessage").css("display","block");
+				$("#otpNUM, #otpSentMessage, #sendOTPNumber, #enterOTP, #paymentFormButton, #submitPaymentFormCODButton, .make_payment, #sendOTPButton, #resendOTPMessage, .cod_payment_button_top").css("display","block");
+				$(".checkout-content.checkout-payment .left-block").css("margin-top","-48px");
 				
 			}
 			
@@ -2719,8 +2721,6 @@ function submitNBForm(){
 	//								    field.setAttribute("name", key);
 	//								    field.setAttribute("value", value);
 	//								    frm.appendChild(field);
-
-
 	//								  }
 	//								}
 	//								document.body.appendChild(frm)

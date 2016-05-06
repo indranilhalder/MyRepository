@@ -119,7 +119,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
-			LOG.error("Exception in DefaultExtendedCartPopulator due to " + ex);
+			LOG.error("Exception in DefaultExtendedCartPopulator due to ", ex);
 		}
 	}
 

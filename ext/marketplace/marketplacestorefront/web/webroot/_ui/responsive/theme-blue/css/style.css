@@ -961,10 +961,10 @@ h2 {
                     text-decoration: underline; }
               header .content .right > ul > li.bag .mini-bag .item .price {
                 position: absolute;
-                right: 0;
+                right: 10px;
                 top: 10px;
                 width: 100px;
-                text-align: center;
+                text-align: right;
                     font-size: 14px; }
 
             header .content .right > ul > li.bag .mini-bag > ul > li:not(.item) {
@@ -4379,6 +4379,7 @@ text-transform: uppercase;
   text-align: center; }
   .trending h1 {
     position: relative;
+    z-index:100;
     left: 50%;
     margin: 60px 0 35px;
     padding: 0 30px;
@@ -5049,9 +5050,13 @@ text-transform: uppercase;
     font-size: 12px !important;
     font-weight:500 !important;
     line-height: 16px;}
+    .cod_payment_button_top{
+    clear:both;
+    display:none;
+    }
   .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
   .cart.wrapper #newAddressButtonUp,.cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb
+  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top
    {
         width: 28%;
     float: right;
@@ -5062,18 +5067,23 @@ text-transform: uppercase;
     color: #fff;
     height: 40px !important; }
     .cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb{
+  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top{
    margin-top: 60px;
-       margin-bottom: -52px;}
+       margin-bottom: -52px;
+       display:none;}
+       
+       .cod_payment_button_top{
+       line-height:16px;
+       }
       .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
   .cart.wrapper #newAddressButtonUp,  .cart.wrapper .button#deliveryMethodSubmit, .cart.wrapper .button#deliveryAddressSubmit,
   .cart.wrapper #newAddressButton,.cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb{
+  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top{
  font-weight: 500;
     font-size: 12px !important; }
   .cart.wrapper .button#deliveryMethodSubmitUp:hover, .cart.wrapper .button#deliveryAddressSubmitUp:hover,
   .cart.wrapper #newAddressButtonUp:hover,.cart.wrapper .make_payment_top_savedCard:hover,.cart.wrapper .make_payment_top_newCard:hover,
-  .cart.wrapper .make_payment_top_nb:hover {
+  .cart.wrapper .make_payment_top_nb:hover, .cart.wrapper .cod-otp-button_top:hover,.cart.wrapper .cod_payment_button_top:hover {
         background: #88102C !important; }
     @media (max-width: 650px) {
       .cart.wrapper button, .cart.wrapper .button, .confirmation button, .confirmation .button {
@@ -6004,8 +6014,11 @@ text-transform: uppercase;
             position: absolute;
             bottom: 25%;
             left: 55%; }
-            .cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb{
+            .cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb,.cart.wrapper .cod-otp-button_top, .cart.wrapper .cod_payment_button_top{
             display:none !important;
+            }
+            .checkout-content.checkout-payment .left-block{
+            margin-top:0px !important;
             }
              }
   .cart.wrapper .left-block .offer, .confirmation .left-block .offer {
@@ -17172,11 +17185,8 @@ ul.helpmeshop-list{
 	font-size:30px;
 	font-weight:400;
 }
-.left p
-{
-	font-size:12px;
-}
-.left p, .right p {
+
+.home-brands-you-love-desc .left p, .home-brands-you-love-desc .right p {
     text-align: left;
         font-size: 14px;
 }
@@ -20240,7 +20250,7 @@ box-shadow:none;
 	color:#fff;
 font-weight:500;
 padding:10px;
- width: 200px;
+ width: 59.39%;
  border:0px;
    line-height: 3px;
    margin: 30px auto;
@@ -21747,7 +21757,7 @@ body .lookbook_wrapper .lookbook-pagination .right-bottom-link{
 @media (min-width: 791px){
 body .lookbook_wrapper div.share-link {
    position: relative;
-    top: 10px;
+    top: -40px;
 }
 .lookbooks {
     margin: 60px auto;
@@ -30755,6 +30765,7 @@ header.compact .content .right ul > li {
 		text-transform: uppercase;
 		line-height: 40px;
 		padding: 20px;
+		font-weight: 700;
 	}
 	.r2-landing-banner h5 {
 		color: #fff;
@@ -30787,7 +30798,7 @@ a.r2-landin-brands .r2-app-brand-img {
 	font-weight: 700;
 }
 
-.r2-landing-banner:last-child h1, p {
+.r2-landing-banner:last-child h1{
 	color: #fff;
 }
 
@@ -30805,8 +30816,10 @@ a.r2-landin-brands .r2-app-brand-img {
 	font-size: 18px;
 	padding-top: 40px;
 	color: #333;
-	margin: 0 0 10px;
 	line-height: 25px;
+}
+.r2-app-landing p{
+		margin: 0 0 10px;
 }
 
 .r2-app-landing article div a span:first-child {
@@ -30845,12 +30858,12 @@ img.r2-app-mob-up {
 	margin-left: 100px !important;
 }
 
-.r2-app-text>div>article>div {
+/* .r2-app-text>div>article>div {
 	margin: auto;
 	width: 80%;
 	width: 100%;
-}
-
+} */
+@media (max-width: 790px){
 .r2-app-landing div.r2-buy-banner p {
 	font-size: 14px;
 	line-height: 20px;
@@ -30858,7 +30871,7 @@ img.r2-app-mob-up {
 	padding: 32px;
 	margin: 0px;
 }
-
+}
 .r2-app-slider {
 	background-image: url('../images/r2/app-off-mob.png');
 	-webkit-background-size: cover;
@@ -30891,7 +30904,7 @@ img.r2-app-mob-up {
 
 .r2-app-slider>div>p {
 	font-size: 14px;
-	line-height: 25px;
+	line-height: 20px;
 	width: 80%;
 }
 
@@ -30925,13 +30938,13 @@ img.r2-app-brand-img {
 	font-size: 14px;
 	line-height: 24px;
 }
-
+@media (max-width: 790px){
 .r2-landing-banner:last-child {
 	background-image: url('../images/landing_last-mobile.png');
 	height: auto;
 	margin-top: 100px;
 	padding-bottom: 40px;
-}
+}}
 
 img.r2-app-mob-down {
 	margin-top: -80px;
@@ -30945,6 +30958,7 @@ h1.r2-landing-heading {
 	text-transform: uppercase;
 	line-height: 40px;
 	padding: 20px;
+	font-weight: 700;
 }
 
 .r2-landing-brands p {
@@ -30956,7 +30970,12 @@ h1.r2-landing-heading {
 .r2-landing-banner h1 {
 	color: #333;
 }
-
+@media (max-width: 790px){
+img.r2-app-brand-img {
+    margin-left: 20px;
+    margin-bottom: 0px;
+}
+}
 @media ( min-width : 768px) and (max-width: 791px) {
 	img.r2-app-brand-img {
 		margin-top: -20px;
@@ -31016,6 +31035,7 @@ h1.r2-landing-heading {
 		font-weight: 700;
 		line-height: 60px;
 		padding-top: 170px;
+		text-align: left;
 	}
 	.r2-landing-banner img.r2-app-mob-up {
 		margin-top: 150px;
@@ -31033,6 +31053,7 @@ h1.r2-landing-heading {
 	.r2-app-landing article p {
 		font-size: 18px;
 		padding-top: 40px;
+		text-align:left;
 	}
 	.r2-app-landing article div a span:first-child {
 		font-size: 25px;
@@ -31159,9 +31180,9 @@ h1.r2-landing-heading {
 	width: 100%;
 }
 
-.r2-app-slider>div>h1 {
+/* .r2-app-slider>div>h1 {
 	font-size: 26px;
-}
+} */
 
 .r2-mob-carousel {
 	margin-top: 0px;
@@ -31242,12 +31263,14 @@ h1.r2-landing-heading {
 .r2-whiteText {
 	color: #fff;
 }
-
+.r2-padding-bottom {
+    padding-bottom: 60px !Important;
+}
 .r2-marginBottom {
 	margin-bottom: 10px;
 }
 
-.r2-minusmarginLeft {
+.r2-minusmarginLeft, .r2-app-landing p.r2-minusmarginLeft {
 	margin-left: -20px;
 }
 
@@ -31263,7 +31286,8 @@ h1.r2-landing-heading {
 	padding-left: 15px;
 	padding-right: 15px;
 }
-
+.r2-landing-banner .r2-app-text ul {
+    margin-bottom: 10px;}
 .r2-buy-banner {
 	overflow: hidden;
 	width: 100%;
@@ -31290,7 +31314,7 @@ h1.r2-landing-heading {
 }
 
 @media ( min-width :768px) {
-	.r2-landing-banner:last-child h1, p, .r2-app-landing article li {
+	.r2-landing-banner:last-child h1, .r2-app-landing article li {
 		text-align: left;
 	}
 }
@@ -31348,7 +31372,16 @@ h1.r2-landing-heading {
 }}
 .r2-app-landing a.button.maroon{
 	    background-color: #A91E3E;
+	    margin: auto;
+	    opacity:0.9;
 }
+.r2-app-landing a.button.maroon:hover{
+	    opacity:1;
+}
+@media (max-width: 790px){
+.r2-app-landing article p {
+    padding-top: 0px;
+}}
 /*App landing page css ends*/
 .totalPayable{
 	font-size:14px;
