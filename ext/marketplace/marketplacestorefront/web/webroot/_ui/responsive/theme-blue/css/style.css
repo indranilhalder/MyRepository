@@ -4379,6 +4379,7 @@ text-transform: uppercase;
   text-align: center; }
   .trending h1 {
     position: relative;
+    z-index:100;
     left: 50%;
     margin: 60px 0 35px;
     padding: 0 30px;
