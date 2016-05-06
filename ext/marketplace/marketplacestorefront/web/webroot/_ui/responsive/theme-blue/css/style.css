@@ -5049,9 +5049,13 @@ text-transform: uppercase;
     font-size: 12px !important;
     font-weight:500 !important;
     line-height: 16px;}
+    .cod_payment_button_top{
+    clear:both;
+    display:none;
+    }
   .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
   .cart.wrapper #newAddressButtonUp,.cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb
+  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top
    {
         width: 28%;
     float: right;
@@ -5062,18 +5066,18 @@ text-transform: uppercase;
     color: #fff;
     height: 40px !important; }
     .cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb{
+  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top{
    margin-top: 60px;
        margin-bottom: -52px;}
       .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
   .cart.wrapper #newAddressButtonUp,  .cart.wrapper .button#deliveryMethodSubmit, .cart.wrapper .button#deliveryAddressSubmit,
   .cart.wrapper #newAddressButton,.cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb{
+  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top{
  font-weight: 500;
     font-size: 12px !important; }
   .cart.wrapper .button#deliveryMethodSubmitUp:hover, .cart.wrapper .button#deliveryAddressSubmitUp:hover,
   .cart.wrapper #newAddressButtonUp:hover,.cart.wrapper .make_payment_top_savedCard:hover,.cart.wrapper .make_payment_top_newCard:hover,
-  .cart.wrapper .make_payment_top_nb:hover {
+  .cart.wrapper .make_payment_top_nb:hover, .cart.wrapper .cod-otp-button_top:hover,.cart.wrapper .cod_payment_button_top:hover {
         background: #88102C !important; }
     @media (max-width: 650px) {
       .cart.wrapper button, .cart.wrapper .button, .confirmation button, .confirmation .button {

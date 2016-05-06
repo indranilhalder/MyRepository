@@ -602,19 +602,6 @@
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
 												</a>
-												<!-- TISCR-410 -->
-												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
-											</c:if>
-											<!-- TISCR-410 -->
-											<c:if
-												test="${entry.itemCancellationStatus eq false and entry.itemReturnStatus eq false and entry.giveAway eq false and entry.isBOGOapplied eq false}">
-													<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
-											</c:if>
-											<!-- TISCR-410 -->
-											
-											<c:if
-												test="${entry.giveAway eq true || entry.isBOGOapplied eq true}">
-												<spring:theme code="trackOrder.notCancellable.msg" />
 											</c:if>
 
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
