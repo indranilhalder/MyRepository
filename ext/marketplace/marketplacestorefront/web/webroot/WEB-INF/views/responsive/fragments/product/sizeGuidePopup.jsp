@@ -356,7 +356,7 @@
 
 <c:if test="${noVariant!=true&&notApparel!=true}">
  <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
-		<select id="variant" class="variant-select size-g">
+		<select id="variant" class="variant-select size-g variant-select-sizeGuidePopUp">            <!--changes for TISPRO-338 (variant-select-sizeGuidePopUp class added) -->
 			<c:choose>
 				<c:when test="${empty sizeSelectedSizeGuide}">
 					<option value="#" data-target="#popUpModal" selected="selected"><spring:theme code="text.select.size" /></option>
