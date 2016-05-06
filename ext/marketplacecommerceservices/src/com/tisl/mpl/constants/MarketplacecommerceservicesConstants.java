@@ -1508,6 +1508,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String TYPE = "type";
 
+	public static final String DELIVERY_STARTTIME = "startTime".intern();
+	public static final String DELIVERY_ENDTIME = "endTime".intern();
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
