@@ -610,6 +610,11 @@
 													onclick="callSendInvoice();"><spring:theme
 														code="text.account.RequestInvoice" text="Request Invoice" /></a>
 											</c:if>
+											<!-- TISCR-410 -->
+											<c:if test="${cancellationMsg eq 'true'}">
+												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+											</c:if>
+											<!-- TISCR-410 ends -->
 										</div>
 
 										<div class="modal cancellation-request fade"
