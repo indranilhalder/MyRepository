@@ -29161,6 +29161,7 @@ footer .footer-text {
 .home-brands-you-love-carousel-brands img,.home-brands-you-love-side-image img,.home-brands-you-love-main-image img{
 max-width:100%;
 vertical-align: middle;
+width: 100%;
 }
 .home-brands-you-love-desc {
     text-align: center;
@@ -29177,7 +29178,7 @@ padding: 0 2.8%;
 }
 @media (max-width:650px){
 .home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
-padding: 0 29%;
+padding: 0 10%;
 }	
 }
  
