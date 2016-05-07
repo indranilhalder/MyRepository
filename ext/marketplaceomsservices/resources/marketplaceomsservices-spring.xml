@@ -41,15 +41,32 @@
 		</property>
 	</bean>
 	
-	
-	
 	<bean id="marketplaceomsordersSampleDataEventListener" parent="abstractGenericAddOnSampleDataEventListener"  >
 		<property name="extensionName" value="marketplaceomsorders" />
 	</bean>
 	
-	
-	
+	<!-- Bean configuration for ActiveMQ in Spring configuration file --> 
 
-	
-	
+    <bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory" 
+            p:brokerURL="#{configurationService.configuration.getProperty('activeMQ.url')}" /> <!-- Reading Queue Url from property File --> 
+
+    <bean id="cachedConnectionFactory" 
+            class="org.springframework.jms.connection.CachingConnectionFactory" 
+            p:targetConnectionFactory-ref="amqConnectionFactory" 
+            p:sessionCacheSize="10" /> 
+
+    <bean id="destination" class="org.apache.activemq.command.ActiveMQQueue"> 
+            <constructor-arg value="#{configurationService.configuration.getProperty('activeMQ.queueName')}" /><!-- Reading Queue Name from property File --> 
+    </bean> 
+
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate" 
+            p:connectionFactory-ref="cachedConnectionFactory" 
+            p:defaultDestination-ref="destination" /> 
+            
+    <bean id="mplOrderToQueue" class="com.tisl.mpl.integration.oms.order.service.impl.OrderToQueue"> 
+            <property name="jmsTemplate" ref="jmsTemplate"></property> 
+            <property name="omsOrderService" ref="omsOrderService" /> 
+    </bean> 
+    <!-- Beans for ActiveMQ End --> 
+
 </beans>

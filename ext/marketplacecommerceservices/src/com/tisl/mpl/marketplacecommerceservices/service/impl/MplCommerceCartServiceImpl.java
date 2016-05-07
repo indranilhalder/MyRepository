@@ -3319,12 +3319,21 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				{
 					//prepare cartSoftReservationData object only for HD and Ed
 					//skip reservation call for cnc
+					int cncModeCount = 0;
 					for (CartSoftReservationData cartSoftReservationData : cartSoftReservationDatalist)
 					{
 						if (null != cartSoftReservationData && !cartSoftReservationData.getDeliveryMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
 						{
 							cartSoftForCncReservationDatalist.add(cartSoftReservationData);
 						}
+						else 
+						{
+							cncModeCount++;
+						}
+					}
+					if (CollectionUtils.isNotEmpty(cartSoftReservationDatalist) && (cartSoftReservationDatalist.size() == cncModeCount))
+					{
+						return true;
 					}
 					if (cartSoftForCncReservationDatalist.size() > 0)
 					{
