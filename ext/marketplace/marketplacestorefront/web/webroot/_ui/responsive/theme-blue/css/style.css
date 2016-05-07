@@ -4382,6 +4382,7 @@ text-transform: uppercase;
   text-align: center; }
   .trending h1 {
     position: relative;
+    z-index: 100;
     left: 50%;
     margin: 60px 0 35px;
     padding: 0 30px;
@@ -4422,7 +4423,7 @@ text-transform: uppercase;
     margin: 10px auto; }
     .trending .button:hover {
       background: #88102C; }
-  @media (min-width: 651px) {
+  @media (min-width: 791px) {
     .trending {
       text-align: center; }
       .trending h1 {
@@ -23704,11 +23705,13 @@ span.brand-subdesc {
    	@media (max-width:790px){
    	body .lookbook_wrapper div.share-link{
    	padding-right: 15px;}}
-
 @media ( max-width :650px) {
 	header .banner .content form {
 		max-width: 490px;
 	}
+}
+@media ( max-width :790px) {
+	
 	.trending h1 span {
 		clear:both;
 		float:none;
