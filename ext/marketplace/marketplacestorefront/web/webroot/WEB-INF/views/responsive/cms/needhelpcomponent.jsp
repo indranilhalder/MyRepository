@@ -50,7 +50,9 @@
 			</div>
 		</div>
 	</div>
-
+	<div class="links">
+		<a id="feedback" href="#nogo"><spring:theme code="text.feedback.survey"/></a>
+		</div>
 	<script>
 		$(document).ready(function() {
 			$('.glyphicon-remove').click(function() {
