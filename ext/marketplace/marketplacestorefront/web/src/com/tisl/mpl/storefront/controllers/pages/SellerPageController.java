@@ -40,9 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
-import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerMasterService;
 import com.tisl.mpl.model.SellerMasterModel;
@@ -50,7 +48,6 @@ import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
-import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
@@ -218,30 +215,29 @@ public class SellerPageController extends AbstractSearchPageController
 			}
 			catch (final Exception exp)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-						MarketplacecommerceservicesConstants.E0000));
-				try
-				{
-					return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
-				}
-				catch (final CMSItemNotFoundException e1)
-				{
-					LOG.error("Exception occured " + e1);
-				}
+				/*
+				 * Commenting for DANG FIX -- Reopen
+				 * 
+				 * ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+				 * MarketplacecommerceservicesConstants.E0000)); try { return
+				 * frontEndErrorHelper.callNonBusinessError(model, exp.getMessage()); } catch (final
+				 * CMSItemNotFoundException e1) { LOG.error("Exception occured " + e1); }
+				 */
+				LOG.error("Exception occured " + exp.getMessage());
 			}
 		}
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
-					MarketplacecommerceservicesConstants.E0000));
-			try
-			{
-				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
-			}
-			catch (final CMSItemNotFoundException e1)
-			{
-				LOG.error("Exception occured " + e1);
-			}
+			/*
+			 * Commenting for DANG FIX -- Reopen
+			 *
+			 * ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+			 * MarketplacecommerceservicesConstants.E0000)); try { return frontEndErrorHelper.callNonBusinessError(model,
+			 * exception.getMessage()); } catch (final CMSItemNotFoundException e1) { LOG.error("Exception occured " + e1);
+			 *
+			 * }
+			 */
+			LOG.error("Exception occured OutSide" + exception.getMessage());
 		}
 
 		return getViewForPage(model);
