@@ -65,7 +65,7 @@
 					<spring:theme
 							code="text.account.order.orderPlaced.message" text="Expect your shipment: "/>&nbsp;In ${deliveryStartTime} - ${deliveryEndTime} days </strong>
 							
-					<!--TISCR-413 ends -->
+					<!--TISCR-413 ends --%>
 				</p>
 				
 
