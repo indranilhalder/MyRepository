@@ -47,7 +47,6 @@ import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
-import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 
 
 /**
@@ -74,8 +73,9 @@ public class SellerPageController extends AbstractSearchPageController
 	@Resource(name = ModelAttributetConstants.ACCOUNT_BREADCRUMB_BUILDER)
 	private ResourceBreadcrumbBuilder sellerBreadcrumbBuilder;
 
-	@Resource(name = "frontEndErrorHelper")
-	private FrontEndErrorHelper frontEndErrorHelper;
+	/*
+	 * @Resource(name = "frontEndErrorHelper") private FrontEndErrorHelper frontEndErrorHelper;
+	 */
 
 	//	@Resource(name = "productSearchFacade")
 	//	private ProductSearchFacade<ProductData> productSearchFacade;
@@ -217,7 +217,7 @@ public class SellerPageController extends AbstractSearchPageController
 			{
 				/*
 				 * Commenting for DANG FIX -- Reopen
-				 * 
+				 *
 				 * ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 				 * MarketplacecommerceservicesConstants.E0000)); try { return
 				 * frontEndErrorHelper.callNonBusinessError(model, exp.getMessage()); } catch (final
@@ -230,11 +230,11 @@ public class SellerPageController extends AbstractSearchPageController
 		{
 			/*
 			 * Commenting for DANG FIX -- Reopen
-			 *
+			 * 
 			 * ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
 			 * MarketplacecommerceservicesConstants.E0000)); try { return frontEndErrorHelper.callNonBusinessError(model,
 			 * exception.getMessage()); } catch (final CMSItemNotFoundException e1) { LOG.error("Exception occured " + e1);
-			 *
+			 * 
 			 * }
 			 */
 			LOG.error("Exception occured OutSide" + exception.getMessage());
