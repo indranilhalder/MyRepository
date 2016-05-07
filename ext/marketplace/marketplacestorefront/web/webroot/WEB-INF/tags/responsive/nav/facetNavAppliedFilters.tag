@@ -43,8 +43,26 @@ for(var i = 0; i < arr.length; i++)
 
 
 		<h3>
+		<c:forEach items="${pageData.breadcrumbs}" var="breadcrumb">
+					<c:if test="${breadcrumb.facetCode ne 'inStockFlag'}">
+					<c:set var="inStockNot" value="${breadcrumb.facetCode}"/>
+					</c:if>
+		</c:forEach>		
+		
+		<c:forEach items="${pageData.facets}" var="facet">
+		<c:if test="${facet.code == 'inStockFlag'}">
+			<meta name = "checkFacetValue" value ="${facet.values.size()}"/>
+			<c:if test="${facet.values.size()>1}">
+			<c:set var="inStockFlag" value="true"/>
 			<span class="facet-name js-facet-name appliedFacets">FILTER BY</span><a
 				class="reset" href="${resetQueryUrl}">RESET ALL</a>
+				</c:if>
+			</c:if>
+		</c:forEach>
+		<c:if test="${not empty inStockNot}">
+		<span class="facet-name js-facet-name appliedFacets">FILTER BYs</span><a
+				class="reset" href="${resetQueryUrl}">RESET ALL</a>
+		</c:if> 	
 		</h3>
 
 
