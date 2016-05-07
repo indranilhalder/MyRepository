@@ -290,7 +290,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -642,7 +642,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
 		if (sellerId != null)
 		{
-
+			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
+			populateInStockFilterFlag(solrSearchQueryTermData, searchQueryData);
 			searchQueryData.setSellerID(sellerId);
 		}
 
