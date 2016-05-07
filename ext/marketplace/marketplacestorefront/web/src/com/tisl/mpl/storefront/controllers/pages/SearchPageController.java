@@ -53,6 +53,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -417,15 +419,33 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @return String
 	 * @throws CMSItemNotFoundException
 	 */
-	@RequestMapping(method = RequestMethod.GET, params = "q")
+	@RequestMapping(method = RequestMethod.GET, params = "q", value =
+	{ "/page-{page}", "" })
 	public String refineSearch(@RequestParam("q") final String searchQuery,
-			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
+			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException, JSONException, ParseException
 	{
+
+
+		final String uri = request.getRequestURI();
+		if (uri.contains("page"))
+		{
+			final Pattern p = Pattern.compile("page-[0-9]+");
+			final Matcher m = p.matcher(uri);
+			if (m.find())
+			{
+				final String pageNo = m.group().split("-")[1];
+				if (null != pageNo)
+				{
+					page = Integer.parseInt(pageNo);
+					page = page - 1;
+				}
+			}
+		}
 
 		final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
 		model.addAttribute("sizeCount", Integer.valueOf(Iterables.frequency(splitStr, "size")));

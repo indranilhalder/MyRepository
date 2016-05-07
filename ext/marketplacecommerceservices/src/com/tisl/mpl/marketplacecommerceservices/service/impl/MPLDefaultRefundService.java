@@ -234,4 +234,20 @@ public class MPLDefaultRefundService extends DefaultRefundService implements MPL
 		// YTODO Auto-generated method stub
 		return mplorderCancelDao.getAllCancelled();
 	}
+
+
+
+
+	/**
+	 * TISCR-410 : this method picks up the stage in which the order status is currently
+	 *
+	 * @param orderEntryStatus
+	 * @return String
+	 *
+	 */
+	@Override
+	public String getOrderStatusStage(final String orderEntryStatus)
+	{
+		return mplorderCancelDao.getOrderStatusStage(orderEntryStatus);
+	}
 }

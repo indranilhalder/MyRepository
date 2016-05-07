@@ -252,8 +252,8 @@
 										</c:if>
 									</c:otherwise>
 								</c:choose>
-
-							</p>																	
+							</p>
+							<!-- TISCR-405: set the savings for the current currency -->																		
 							<p class="savings">															
 							<span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValue} </span>
 							</p>

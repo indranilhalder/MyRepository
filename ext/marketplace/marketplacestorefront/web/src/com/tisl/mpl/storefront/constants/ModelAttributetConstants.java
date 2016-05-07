@@ -722,4 +722,7 @@ public final class ModelAttributetConstants
 	//Feebback Survey
 	public static final String FEED_BACK_SURVEY_URL = "feebBackSurveyUrl";
 
+	//TISCR-410
+	public static final String DISPLAY_CANCELLATION_MSG = "cancellationMsg";
+
 }
