@@ -17063,7 +17063,7 @@ header.brand-header .select-view .select-list li {
  		 border:1px solid rgb(219, 234, 250);
 		}
 }
-#up {
+#up,  .feedback-links{
   bottom: 0;
   right: 0;
   color: #fff;
@@ -17077,6 +17077,26 @@ header.brand-header .select-view .select-list li {
   cursor:pointer;
   font-size:14px;	
 }
+ .feedback-links{
+ right: 175px;}
+
+ .feedback-links a{
+color: #fff;}
+ .feedback-links a:hover{
+color: #fff;}
+ #feedBackFormModal .content{
+ 	width: 650px;
+    position: fixed;
+    bottom: -1px;
+    right: -1px;
+    top: auto;
+    left: auto;
+    }
+  @media (max-width:790px){
+  .feedback-links{
+ right: 0;}
+  #feedBackFormModal .content{
+ 	width: 80%;}}
 #up.minimize > #h {
 	display:block !important;
 }

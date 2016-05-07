@@ -50,7 +50,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="links">
+	<div class="feedback-links">
 		<a id="feedback" href="#nogo"><spring:theme code="text.feedback.survey"/></a>
 		</div>
 	<script>
