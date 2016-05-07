@@ -59,8 +59,8 @@ for(var i = 0; i < arr.length; i++)
 				</c:if>
 			</c:if>
 		</c:forEach>
-		<c:if test="${not empty inStockNot}">
-		<span class="facet-name js-facet-name appliedFacets">FILTER BYs</span><a
+		<c:if test="${not empty inStockNot && empty inStockFlag}">
+		<span class="facet-name js-facet-name appliedFacets">FILTER BY</span><a
 				class="reset" href="${resetQueryUrl}">RESET ALL</a>
 		</c:if> 	
 		</h3>

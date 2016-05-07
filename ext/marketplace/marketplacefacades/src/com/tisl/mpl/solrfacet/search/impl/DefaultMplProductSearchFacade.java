@@ -165,11 +165,12 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
 		final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
+		final SolrSearchQueryTermData solrSearchTermDataStock = new SolrSearchQueryTermData();
 		if (code != null && type != null)
 		{
 			//TISCR-406 changes
-			populateInStockFilterFlag(solrSearchQueryTermData, searchQueryData);
-
+			solrSearchTermDataStock.setKey(IN_STOCK_FLAG);
+			solrSearchTermDataStock.setValue(Boolean.TRUE.toString());
 
 			if (type.equalsIgnoreCase(MarketplaceCoreConstants.BRAND))
 			{
@@ -185,6 +186,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			}
 			solrSearchQueryTermData.setValue(code);
 			filterTerms.add(solrSearchQueryTermData);
+			filterTerms.add(solrSearchTermDataStock);
 			searchQueryData.setFilterTerms(filterTerms);
 			searchQueryData.setSns(searchState.isSns());
 
@@ -290,7 +292,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
