@@ -167,19 +167,9 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 		if (code != null && type != null)
 		{
-			if (filterTerms == null)
+			//TISCR-406 changes
+			populateInStockFilterFlag(solrSearchQueryTermData, searchQueryData);
 
-			{
-				//TISCR-406 changes
-				populateInStockFilterFlag(solrSearchQueryTermData, searchQueryData);
-			}
-			else if (CollectionUtils.isNotEmpty(searchQueryData.getFilterTerms()) && null != searchState.getQuery()
-					&& StringUtils.isNotEmpty(searchState.getQuery().getValue())
-					&& searchState.getQuery().getValue().indexOf(':') == -1)
-			{
-				//TISCR-406 changes
-				populateInStockFilterFlag(solrSearchQueryTermData, searchQueryData);
-			}
 
 			if (type.equalsIgnoreCase(MarketplaceCoreConstants.BRAND))
 			{
@@ -300,7 +290,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -377,6 +367,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 			searchQueryData.setSellerID(sellerId);
 			searchQueryData.setSns(searchState.isSns());
+			populateInStockFilterFlag(solrSearchQueryTermData, searchQueryData);
 		}
 
 
