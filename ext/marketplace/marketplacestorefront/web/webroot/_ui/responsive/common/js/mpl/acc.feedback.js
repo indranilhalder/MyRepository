@@ -1,10 +1,10 @@
-/*$(document).ready(function(event){
+$(document).ready(function(event){
 		$(document).on("click", "#feedback", function(e) {
 			e.preventDefault();
 			$("#feedBackFormModal").modal();
 		});
-		
-		$('body').on('mousedown', stopNavigate);
+});	
+		/*$('body').on('mousedown', stopNavigate);
 		$('body').on('mouseleave', function() {
 			$(window).on('beforeunload', function() {
 				openPopUp();
