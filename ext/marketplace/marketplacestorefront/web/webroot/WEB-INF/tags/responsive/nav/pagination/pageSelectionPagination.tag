@@ -77,12 +77,14 @@
 				</c:set>
 				<c:choose>
 					<c:when test="${searchPageData.pagination.numberOfPages gt 5 && beginPage gt 1}">
+						<!-- New pagination URL -->
+							<c:url var="newPaginationUrlDotPrev" value="${fn:replace(searchUrl,'{pageNo}',1)}"></c:url>
 						<spring:url value="${searchUrl}" var="pageNumberUrl"
 								htmlEscape="true">
 								<spring:param name="page" value="0" />
 						</spring:url>
 						<ycommerce:testId code="pageNumber_link">
-							<li><a href="${pageNumberUrl}&searchCategory=${searchCategory}">1</a>
+							<li><a href="${newPaginationUrlDotPrev}&searchCategory=${searchCategory}">1</a>
 								<c:if test="${beginPage ne 2}">
 									...
 								</c:if>
@@ -113,6 +115,9 @@
 				</c:forEach>
 				<c:choose>
 					<c:when test="${searchPageData.pagination.numberOfPages gt 6 && searchPageData.pagination.currentPage lt (searchPageData.pagination.numberOfPages-3)}">
+						<!-- New pagination URL -->
+							<c:set var="pageNumber" value="${searchPageData.pagination.numberOfPages}"></c:set>
+							<c:url var="newPaginationUrlDotsNext" value="${fn:replace(searchUrl,'{pageNo}',pageNumber)}"></c:url>
 						<spring:url value="${searchUrl}" var="pageNumberUrl"
 								htmlEscape="true">
 								<spring:param name="page" value="${searchPageData.pagination.numberOfPages - 1}" />
@@ -122,7 +127,7 @@
 						<c:if test="${searchPageData.pagination.currentPage ne (searchPageData.pagination.numberOfPages-4)}">
 							...
 						</c:if>
-							<a href="${pageNumberUrl}&searchCategory=${searchCategory}">${searchPageData.pagination.numberOfPages}</a></li>
+							<a href="${newPaginationUrlDotsNext}&searchCategory=${searchCategory}">${searchPageData.pagination.numberOfPages}</a></li>
 						</ycommerce:testId>
 					</c:when>
 				</c:choose>
