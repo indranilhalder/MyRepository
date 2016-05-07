@@ -218,16 +218,13 @@ public class SellerPageController extends AbstractSearchPageController
 			}
 			catch (final Exception exp)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-						MarketplacecommerceservicesConstants.E0000));
-				try
-				{
-					return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
-				}
-				catch (final CMSItemNotFoundException e1)
-				{
-					LOG.error("Exception occured " + e1);
-				}
+				/*
+				 * Commenting for DANG FIX ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+				 * MarketplacecommerceservicesConstants.E0000)); try { return
+				 * frontEndErrorHelper.callNonBusinessError(model, exp.getMessage()); } catch (final
+				 * CMSItemNotFoundException e1) { LOG.error("Exception occured " + e1); }
+				 */
+				LOG.error("Exception occured " + exp.getMessage());
 			}
 		}
 		catch (final Exception exception)
