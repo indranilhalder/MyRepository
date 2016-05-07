@@ -99,7 +99,8 @@
 			</div>
 		</div>
 		<!-- END OF TOP COMPONENT -->
-
+</p>
+</div></div>
 		<div class="wrapper">
 
 			<!-- START OF RIGHT BLOCK COMPONENT -->
