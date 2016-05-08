@@ -277,7 +277,10 @@ public class ProductPageController extends AbstractPageController
 		String returnStatement = null;
 		try
 		{
-			productCode = productCode.toUpperCase();
+			if(null!=productCode)
+			{
+				productCode = productCode.toUpperCase();	
+			}
 			LOG.debug("**************************************opening pdp for*************" + productCode);
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
@@ -670,7 +673,10 @@ public class ProductPageController extends AbstractPageController
 	public String showZoomImages(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam(value = "galleryPosition", required = false) final String galleryPosition, final Model model)
 	{
-		productCode = productCode.toUpperCase();
+		if(null!=productCode)
+		{
+			productCode = productCode.toUpperCase();	
+		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		final ProductData productData = productFacade.getProductForOptions(productModel,
 				Collections.singleton(ProductOption.GALLERY));
@@ -711,7 +717,10 @@ public class ProductPageController extends AbstractPageController
 		String returnStatement = null;
 		try
 		{
-			productCode = productCode.toUpperCase();
+			if(null!=productCode)
+			{
+				productCode = productCode.toUpperCase();	
+			}
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
@@ -841,7 +850,10 @@ public class ProductPageController extends AbstractPageController
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
 			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
-		productCode = productCode.toUpperCase();
+		if(null!=productCode)
+		{
+			productCode = productCode.toUpperCase();	
+		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
@@ -920,7 +932,10 @@ public class ProductPageController extends AbstractPageController
 			throws CMSItemNotFoundException
 
 	{
-		productCode = productCode.toUpperCase();
+		if(null!=productCode)
+		{
+			productCode = productCode.toUpperCase();	
+		}
 		String returnStatement = null;
 		getReviewValidator().validate(form, result);
 
@@ -960,7 +975,10 @@ public class ProductPageController extends AbstractPageController
 	public String reviewHtml(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@PathVariable("numberOfReviews") final String numberOfReviews, final Model model, final HttpServletRequest request)
 	{
-		productCode = productCode.toUpperCase();
+		if(null!=productCode)
+		{
+			productCode = productCode.toUpperCase();	
+		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		final List<ReviewData> reviews;
 		final ProductData productData = productFacade.getProductForOptions(productModel,
@@ -989,7 +1007,10 @@ public class ProductPageController extends AbstractPageController
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/writeReview", method = RequestMethod.GET)
 	public String writeReview(@PathVariable String productCode, final Model model) throws CMSItemNotFoundException
 	{
-		productCode = productCode.toUpperCase();
+		if(null!=productCode)
+		{
+			productCode = productCode.toUpperCase();	
+		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		model.addAttribute(new ReviewForm());
 		setUpReviewPage(model, productModel);
@@ -1014,7 +1035,10 @@ public class ProductPageController extends AbstractPageController
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttrs)
 			throws CMSItemNotFoundException
 	{
-		productCode = productCode.toUpperCase();
+		if(null!=productCode)
+		{
+			productCode = productCode.toUpperCase();	
+		}
 		String returnStatement = null;
 		getReviewValidator().validate(form, result);
 
@@ -1397,7 +1421,10 @@ public class ProductPageController extends AbstractPageController
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
 		try
 		{
-			productCode = productCode.toUpperCase();
+			if(null!=productCode)
+			{
+				productCode = productCode.toUpperCase();	
+			}
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
 			if (buyboxdata != null)
 			{
@@ -1445,7 +1472,10 @@ public class ProductPageController extends AbstractPageController
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam("buyboxid") final String buyboxid)
 	{
-		productCode = productCode.toUpperCase();
+		if(null!=productCode)
+		{
+			productCode = productCode.toUpperCase();	
+		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		RichAttributeData richAttributeData = null;
 		try
@@ -1703,7 +1733,10 @@ public class ProductPageController extends AbstractPageController
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode) throws JSONException,
 			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
-		productCode = productCode.toUpperCase();
+		if(null!=productCode)
+		{
+			productCode = productCode.toUpperCase();	
+		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER));
 		List<SellerInformationData> sellerInformationDataList = null;
