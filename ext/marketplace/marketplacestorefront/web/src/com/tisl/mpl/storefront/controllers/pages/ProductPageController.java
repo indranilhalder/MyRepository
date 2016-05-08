@@ -837,12 +837,12 @@ public class ProductPageController extends AbstractPageController
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/quickView", method = RequestMethod.GET)
-	public String showQuickView(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+	public String showQuickView(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
 			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
-		final ProductModel productModel = productService.getProductForCode(null != productCode ? productCode.toUpperCase()
-				: productCode);
+		productCode = productCode.toUpperCase();
+		final ProductModel productModel = productService.getProductForCode(productCode);
 		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 				ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
