@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -43,7 +41,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	/**
 	 *
 	 */
-	private static final String IN_STOCK_FLAG = "inStockFlag";
+
 
 	/**
 	 *
@@ -349,27 +347,13 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	protected final SolrSearchQueryData decodeSellerStateDropDown(final SearchStateData searchState, final String sellerId)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
-		final SolrSearchQueryTermData solrSearchQueryStockTermData = new SolrSearchQueryTermData();
+		final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
 		if (sellerId != null)
 		{
-			if (searchQueryData.getFilterTerms() == null)
-
-			{
-				//TISCR-406 changes
-				populateInStockFilterFlag(solrSearchQueryStockTermData, searchQueryData);
-			}
-			else if (CollectionUtils.isNotEmpty(searchQueryData.getFilterTerms()) && null != searchState.getQuery()
-					&& StringUtils.isNotEmpty(searchState.getQuery().getValue())
-					&& searchState.getQuery().getValue().indexOf(':') == -1)
-			{
-				//TISCR-406 changes
-				populateInStockFilterFlag(solrSearchQueryStockTermData, searchQueryData);
-			}
-
 			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 			solrSearchQueryTermData.setKey("sellerId");
 			solrSearchQueryTermData.setValue(sellerId);
-			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
+			filterTerms.addAll(Collections.singletonList(solrSearchQueryTermData));
 
 			searchQueryData.setSellerID(sellerId);
 			searchQueryData.setSns(searchState.isSns());
@@ -757,17 +741,6 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			{
 				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.BRAND);
 			}
-			//TISCR-406 changes
-			if (filterTerms.isEmpty() && null != searchState.getQuery() && StringUtils.isNotEmpty(searchState.getQuery().getValue())
-					&& searchState.getQuery().getValue().indexOf(':') == -1)
-			{
-				final SolrSearchQueryTermData solrSearchQueryTermForStock = new SolrSearchQueryTermData();
-				solrSearchQueryTermForStock.setKey(IN_STOCK_FLAG);
-				solrSearchQueryTermForStock.setValue(Boolean.TRUE.toString());
-				filterTerms.add(solrSearchQueryTermForStock);
-				searchQueryData.setFilterTerms(filterTerms);
-
-			}
 			solrSearchQueryTermData.setValue(categoryCode);
 			filterTerms.add(solrSearchQueryTermData);
 			searchQueryData.setFilterTerms(filterTerms);
@@ -813,34 +786,9 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	protected SolrSearchQueryData decodeState(final SearchStateData searchState, final String categoryCode)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
-		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 		if (categoryCode != null)
 		{
 			searchQueryData.setCategoryCode(categoryCode);
-			if (searchQueryData.getFilterTerms() == null)
-
-			{
-				//TISCR-406 changes
-				populateInStockFilterFlag(solrSearchQueryTermData, searchQueryData);
-			}
-			else if (CollectionUtils.isNotEmpty(searchQueryData.getFilterTerms()) && null != searchState.getQuery()
-					&& StringUtils.isNotEmpty(searchState.getQuery().getValue())
-					&& searchState.getQuery().getValue().indexOf(':') == -1)
-			{
-				//TISCR-406 changes
-				populateInStockFilterFlag(solrSearchQueryTermData, searchQueryData);
-			}
-
-		}
-		//TISCR-406 changes
-		else
-		{
-			if (null != searchQueryData.getFilterTerms() && searchQueryData.getFilterTerms().isEmpty()
-					&& null != searchState.getQuery() && StringUtils.isNotEmpty(searchState.getQuery().getValue())
-					&& searchState.getQuery().getValue().indexOf(':') == -1)
-			{
-				populateInStockFilterFlag(solrSearchQueryTermData, searchQueryData);
-			}
 		}
 		searchQueryData.setSns(searchState.isSns());
 		return searchQueryData;
@@ -850,14 +798,6 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	 * @param solrSearchQueryTermData
 	 * @param searchQueryData
 	 */
-	private void populateInStockFilterFlag(final SolrSearchQueryTermData solrSearchQueryTermData,
-			final SolrSearchQueryData searchQueryData)
-	{
-		// YTODO Auto-generated method stub
-		solrSearchQueryTermData.setKey(IN_STOCK_FLAG);
-		solrSearchQueryTermData.setValue(Boolean.TRUE.toString());
-		searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
-	}
 
 	@Override
 	public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> categorySearch(final String categoryCode,
