@@ -49,6 +49,8 @@ public class SellerMasterWsDTO implements java.io.Serializable
 	private Date PANValidThru;
 	private String SettlementPeriod;
 	private String collectionDays;
+	//Added Store Image
+	private String StoreImage;
 	private String daysToExtend;
 	private String extensionTimes;
 	private String PayoutPeriod;
@@ -556,5 +558,21 @@ public class SellerMasterWsDTO implements java.io.Serializable
 		this.extensionTimes = extensionTimes;
 	}
 
+	/**
+	 * @return the storeImage
+	 */
+	public String getStoreImage()
+	{
+		return StoreImage;
+	}
+
+	/**
+	 * @param storeImage
+	 *           the storeImage to set
+	 */
+	public void setStoreImage(final String storeImage)
+	{
+		StoreImage = storeImage;
+	}
 
 }
