@@ -282,7 +282,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -337,6 +337,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	}
 
 
+
 	/**
 	 *
 	 * @param searchState
@@ -347,13 +348,15 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	protected final SolrSearchQueryData decodeSellerStateDropDown(final SearchStateData searchState, final String sellerId)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
-		final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
+
 		if (sellerId != null)
 		{
+
+
 			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 			solrSearchQueryTermData.setKey("sellerId");
 			solrSearchQueryTermData.setValue(sellerId);
-			filterTerms.addAll(Collections.singletonList(solrSearchQueryTermData));
+			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 
 			searchQueryData.setSellerID(sellerId);
 			searchQueryData.setSns(searchState.isSns());
@@ -362,6 +365,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 		return searchQueryData;
 	}
+
 
 	/**
 	 * @param searchState
