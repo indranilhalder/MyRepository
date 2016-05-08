@@ -165,13 +165,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
 		final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
-		final SolrSearchQueryTermData solrSearchTermDataStock = new SolrSearchQueryTermData();
 		if (code != null && type != null)
 		{
-			//TISCR-406 changes
-			solrSearchTermDataStock.setKey(IN_STOCK_FLAG);
-			solrSearchTermDataStock.setValue(Boolean.TRUE.toString());
-
 			if (type.equalsIgnoreCase(MarketplaceCoreConstants.BRAND))
 			{
 				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.BRAND);
@@ -186,11 +181,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			}
 			solrSearchQueryTermData.setValue(code);
 			filterTerms.add(solrSearchQueryTermData);
-			filterTerms.add(solrSearchTermDataStock);
 			searchQueryData.setFilterTerms(filterTerms);
 			searchQueryData.setSns(searchState.isSns());
-
-
 		}
 		return searchQueryData;
 	}
@@ -292,7 +284,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -369,7 +361,6 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 			searchQueryData.setSellerID(sellerId);
 			searchQueryData.setSns(searchState.isSns());
-			populateInStockFilterFlag(solrSearchQueryTermData, searchQueryData);
 		}
 
 
@@ -644,8 +635,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
 		if (sellerId != null)
 		{
-			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
-			populateInStockFilterFlag(solrSearchQueryTermData, searchQueryData);
+
 			searchQueryData.setSellerID(sellerId);
 		}
 
@@ -812,7 +802,6 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
-		System.out.println("#######################debuggingg");
 		if (categoryCode != null)
 		{
 			searchQueryData.setCategoryCode(categoryCode);
