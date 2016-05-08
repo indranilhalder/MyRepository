@@ -29,7 +29,15 @@ for(var i = 0; i < arr.length; i++)
 	}
 }
 </script>
+<c:forEach items="${searchPageData.facets}" var="facetData">
+<c:if test="${not empty facetData.values && facetData.code == 'inStockFlag'}">
 
+	<c:set var="facetValuesForStock" value="${facetData.values}" />
+	
+	<c:set var="facetStockSize" value="${fn:length(facetValuesForStock)}" />
+	
+</c:if>
+</c:forEach>
 <c:if test="${not empty pageData.breadcrumbs}">
 	<div class="facet js-facet">
 		<c:url
@@ -43,26 +51,8 @@ for(var i = 0; i < arr.length; i++)
 
 
 		<h3>
-		<c:forEach items="${pageData.breadcrumbs}" var="breadcrumb">
-					<c:if test="${breadcrumb.facetCode ne 'inStockFlag'}">
-					<c:set var="inStockNot" value="${breadcrumb.facetCode}"/>
-					</c:if>
-		</c:forEach>		
-		
-		<c:forEach items="${pageData.facets}" var="facet">
-		<c:if test="${facet.code == 'inStockFlag'}">
-			<meta name = "checkFacetValue" value ="${facet.values.size()}"/>
-			<c:if test="${facet.values.size()>1}">
-			<c:set var="inStockFlag" value="true"/>
 			<span class="facet-name js-facet-name appliedFacets">FILTER BY</span><a
 				class="reset" href="${resetQueryUrl}">RESET ALL</a>
-				</c:if>
-			</c:if>
-		</c:forEach>
-		<c:if test="${not empty inStockNot && empty inStockFlag}">
-		<span class="facet-name js-facet-name appliedFacets">FILTER BY</span><a
-				class="reset" href="${resetQueryUrl}">RESET ALL</a>
-		</c:if> 	
 		</h3>
 
 
@@ -70,32 +60,30 @@ for(var i = 0; i < arr.length; i++)
 		<div class="facet-values js-facet-values">
 			<ul class="facet-list">
 				<c:forEach items="${pageData.breadcrumbs}" var="breadcrumb">
-					<c:if test="${breadcrumb.facetCode == 'inStockFlag'}">
-						<c:forEach items="${pageData.facets}" var="facet">
-			<c:if test="${facet.code == 'inStockFlag'}">
-			<meta name = "checkFacetValue" value ="${facet.values.size()}"/> 
-			<c:if test="${facet.values.size()>1}">
+					<c:if test="${breadcrumb.facetName == 'inStockFlag'}">
 						<li><c:url
 								value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}"
 								var="removeQueryUrl" /> Exclude OutofStock&nbsp;<a
 							href="${removeQueryUrl}"><span class="remove_filter"></span></a>
 						</li>
-			</c:if>
-			</c:if>
-			
-			</c:forEach>
 					</c:if>
 					
 					<c:if
-						test="${breadcrumb.facetCode ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' && breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'}">
-						<li><c:url
+						test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' && breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'}">
+                       <c:choose>
+                       <c:when test="${breadcrumb.facetValueName=='Exclude out of stock' && facetStockSize==1}">
+                       </c:when>
+                       <c:otherwise>
+                       <li><c:url
 								value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}"
-								var="removeQueryUrl" /><input type="hidden"
+								var="removeQueryUrl" />
+								<input type="hidden"
 							class="applied-color" value="${breadcrumb.facetValueName}">
+							
 							${breadcrumb.facetValueName}&nbsp;<a href="${removeQueryUrl}"><span
 								class="remove_filter"></span></a></li>
-			
-
+                       </c:otherwise> 
+                       </c:choose>
 					</c:if>
 				</c:forEach>
 			</ul>
