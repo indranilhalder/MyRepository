@@ -284,7 +284,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -349,10 +349,22 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	protected final SolrSearchQueryData decodeSellerStateDropDown(final SearchStateData searchState, final String sellerId)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
-
+		final SolrSearchQueryTermData solrSearchQueryStockTermData = new SolrSearchQueryTermData();
 		if (sellerId != null)
 		{
+			if (searchQueryData.getFilterTerms() == null)
 
+			{
+				//TISCR-406 changes
+				populateInStockFilterFlag(solrSearchQueryStockTermData, searchQueryData);
+			}
+			else if (CollectionUtils.isNotEmpty(searchQueryData.getFilterTerms()) && null != searchState.getQuery()
+					&& StringUtils.isNotEmpty(searchState.getQuery().getValue())
+					&& searchState.getQuery().getValue().indexOf(':') == -1)
+			{
+				//TISCR-406 changes
+				populateInStockFilterFlag(solrSearchQueryStockTermData, searchQueryData);
+			}
 
 			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 			solrSearchQueryTermData.setKey("sellerId");
