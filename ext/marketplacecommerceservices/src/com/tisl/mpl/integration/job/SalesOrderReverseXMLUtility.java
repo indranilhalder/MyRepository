@@ -477,6 +477,32 @@ public class SalesOrderReverseXMLUtility
 							xmlToFico = false;
 						}
 
+						//Newly Added Code For DeliveryMode
+						if (null != entry.getMplDeliveryMode() && xmlToFico)
+						{
+							LOG.debug("DeliveryMode Setting into SalesOrderReverseXMLUtility ");
+							if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+							{
+								xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.CnC);
+							}
+							if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+							{
+								xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.HD);
+							}
+							if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+							{
+								xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.ED);
+							}
+							LOG.info("DeliveryMode For FICO   " + entry.getMplDeliveryMode().getDeliveryMode().getCode());
+						}
+						else
+						{
+							xmlToFico = false;
+						}
+
 
 						if (null != entry.getSelectedUSSID() && xmlToFico)
 						{
@@ -525,7 +551,7 @@ public class SalesOrderReverseXMLUtility
 
 						/*
 						 * final String ussId = entry.getSelectedUSSID();
-						 * 
+						 *
 						 * final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
 						 * if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null &&
 						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null &&
