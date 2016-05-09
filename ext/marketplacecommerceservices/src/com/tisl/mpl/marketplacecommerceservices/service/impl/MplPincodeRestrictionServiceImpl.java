@@ -255,20 +255,20 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 
 	/*
 	 * This method will check whether fulfillment type is matching or not.
-	 *
-	 *
+	 * 
+	 * 
 	 * @param reqData
-	 *
-	 *
+	 * 
+	 * 
 	 * @param fullfillmentType
-	 *
-	 *
+	 * 
+	 * 
 	 * @param ussId
-	 *
-	 *
+	 * 
+	 * 
 	 * @param selleId
-	 *
-	 *
+	 * 
+	 * 
 	 * @return flag
 	 */
 	private boolean checkFullfillmentType(final List<PincodeServiceData> reqData, final String fullfillmentType,
@@ -502,14 +502,14 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 				//End - Code additon TISPRO-167
 				/*
 				 * else {
-				 *
+				 * 
 				 * for (final Map.Entry<String, List<String>> entry : restricteddeliveryModeMap.entrySet()) { if
 				 * (entry.getValue().contains(deliveryModeData.getName())) {
 				 * pincodeServiceData.getDeliveryModes().remove(deliveryModeData); break; }
-				 *
+				 * 
 				 * }
-				 *
-				 *
+				 * 
+				 * 
 				 * }
 				 */
 
@@ -537,20 +537,20 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 
 			/*
 			 * Collection<CatalogVersion> vers = null;
-			 *
-			 *
+			 * 
+			 * 
 			 * final Collection<CatalogVersion> cvs = (Collection<CatalogVersion>) session
 			 * .getAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS);
-			 *
-			 *
+			 * 
+			 * 
 			 * for (final CatalogVersion ver : cvs) { if (VERSION_ONLINE.equals(ver.getVersion()) &&
-			 *
-			 *
-			 *
+			 * 
+			 * 
+			 * 
 			 * CATALOG_ID.equals(ver.getCatalog().getId())) { vers = Collections.singleton(ver); break; } }
-			 *
-			 *
-			 *
+			 * 
+			 * 
+			 * 
 			 * session.setAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS, vers);
 			 */
 

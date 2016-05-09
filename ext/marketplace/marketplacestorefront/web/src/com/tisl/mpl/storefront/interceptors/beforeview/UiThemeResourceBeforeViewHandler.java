@@ -131,7 +131,8 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final String gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
 		final String gigyaSocialLoginURL = configurationService.getConfiguration().getString("gigya.sociallogin.url");
 		final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
-
+		//FOR Feedback survey
+		final String feedbackSurveyUrl = configurationService.getConfiguration().getString(MessageConstants.FEEDBACK_SURVEY_URL);
 		modelAndView.addObject("contextPath", contextPath);
 		modelAndView.addObject("sharedResourcePath", sharedResourcePath);
 		modelAndView.addObject("siteResourcePath", siteResourcePath);
@@ -176,6 +177,7 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_API_KEY, gigyaAPIKey);
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_SOCIAL_LOGIN_URL, gigyaSocialLoginURL);
 		modelAndView.addObject(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
+		modelAndView.addObject(ModelAttributetConstants.FEED_BACK_SURVEY_URL, feedbackSurveyUrl);
 	}
 
 	protected List getAddOnCommonCSSPaths(final String contextPath, final String uiExperience, final List<String> addOnNames)

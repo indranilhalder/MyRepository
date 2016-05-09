@@ -425,7 +425,7 @@ function focusOnElement() {
 		    var modifiedData="";
 			var isproductPage = $("#isproductPage").val();
 			var productCode = $("#product").val();
-			var requiredUrl = ACC.config.encodedContextPath + "/p" + "/" + productCode
+			var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 					+ "/otherSellerDetails";
 			var dataString = 'productCode=' + productCode;
 			$.ajax({

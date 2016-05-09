@@ -15,30 +15,74 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
 <%@ taglib prefix="action" tagdir="/WEB-INF/tags/responsive/action"%>
+<style>
+.container_store_finder_map {
+		margin: 0px 0px;
+	}
 
+
+.store-finder-legends{
+z-index: 1;
+/* padding-left:20px */
+position :absolute;
+float:right;
+right:10px;
+top:20%;
+padding-bottom:5px;
+}
+.googleMapLegends{
+  /* width:initial; */
+ /*  margin:-10px; */
+}
+
+@media (max-width: 768px) {
+  .store-finder-legends{
+  position:relative;
+  width:100%;
+  text-align:right;
+  }
+}
+}
+
+@media (max-width: 1170px) {
+  .store-finder-legends{
+     right:10px;
+    }
+}
+
+</style>
 <c:url value="/store-finder" var="storeFinderFormAction" />
-
-<div class="js-store-finder" data-url="${storeFinderFormAction}"
+<div class="container_store_finder_map">
+<div class="row">
+   <div class="js-store-finder" data-url="${storeFinderFormAction}"
 	style="display: block !important;">
 	<ycommerce:testId code="storeFinder">
-        
-       <!--  <div style="padding: 1px;"></div> -->
 		<div class="store-finder-map js-store-finder-map"></div>
-		  <div id="legend" class="legend">
-                           
+	</ycommerce:testId>
+   </div>
+  </div>
+<div class="row"> 
+    <!-- <div id="store-finder-legends" class="store-finder-legends"> -->
+       <div class="col-md-9 col-sm-6 col-lg-8">
+       </div>
+      <div class="col-md-3 col-sm-6 col-lg-4 store-finder-legends">
+       <div>
+                <div><img alt="" src="${commonResourcePath}/images/Bestseller_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/CottonWorld_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/Croma_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/Dell_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/Inc5_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/Killer_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/Lenovo_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/Metro_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/Tresmode_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/Westside_Legend.png" class="googleMapLegends"></div>
           </div> 
           <div id="legend1" class="legend">
                            
-          </div> 
-		 
-
-		<%-- <div class="store-finder-details-openings">
-							<dl class="dl-horizontal js-store-openings"></dl>
-							<div class="store-finder-details-openings-title"><spring:theme code="storeDetails.table.features" /></div>
-							<ul class="js-store-features"></ul>
-						</div> --%>
-
-	</ycommerce:testId>
-
+          </div>
+       </div>
+    <!-- </div> -->
+  </div>
+  
 </div>
-<!-- <div id="home-googleMap" class="home-googleMap"> -->
