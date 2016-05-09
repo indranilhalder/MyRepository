@@ -74,8 +74,8 @@ public final class RequestMappingUrlConstants
 	public static final String LINK_FRIENDS_INVITE = "/friendsInvite";
 	public static final String LINK_INVITE_FRIENDS = "/inviteFriends";
 
-	public static final String VIEW_WISHLISTS_IN_POPUP = "/viewWishlistsInPDP";
-	public static final String ADD_WISHLIST_IN_POPUP = "/addToWishListInPDP";
+	public static final String VIEW_WISHLISTS_IN_POPUP = "-viewWishlistsInPDP";
+	public static final String ADD_WISHLIST_IN_POPUP = "-addToWishListInPDP";
 	public static final String LINK_TERMS_N_CONDITIONS = "/termsConditionMpl";
 	public static final String LINK_CHECKOUT = "/checkout";
 
@@ -100,7 +100,7 @@ public final class RequestMappingUrlConstants
 	public static final String LINK_ORDER_RETURN_SUCCESS = "/returnSuccess";
 	public static final String LINK_ORDER_CANCEL_SUCCESS = "/cancelSuccess";
 	public static final String LINK_CHECK_CURRENT_PASSWORD = "/checkCurrentPassword";
-	
+
 	//Retun Item
 	public static final String LINK_ORDER_RETURN_PINCODE_CHECK = "/order/returnPincodeCheck";
 	public static final String LINK_ORDER_RETURN_PINCODE_SUBMIT = "/order/returnPincodeSubmit";
@@ -123,7 +123,7 @@ public final class RequestMappingUrlConstants
 
 
 	//RatingReview
-	public final static String CHECKUSER = "/checkUser";
+	public final static String CHECKUSER = "-checkUser";
 	public final static String REVIEWS = "/reviews";
 	public final static String REVIEW_OPERATION = "/review/{operation}";
 

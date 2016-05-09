@@ -16,6 +16,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.tisl.mpl.util.GenericUtilityMethods;
+
 
 /**
  * @author TCS
@@ -55,7 +57,14 @@ public class ExtDefaultProductModelUrlResolver extends DefaultProductModelUrlRes
 		{
 			url = url.replace("{product-code}", source.getCode());
 		}
-
+		url = url.toLowerCase();
+		//		url = url.replaceAll("[^\\w/-]", "");
+		//		//TISSTRT-1297
+		//		if (url.contains("--"))
+		//		{
+		//			url = url.replaceAll("--", "-");
+		//		}
+		url = GenericUtilityMethods.changeUrl(url);
 		return url;
 	}
 

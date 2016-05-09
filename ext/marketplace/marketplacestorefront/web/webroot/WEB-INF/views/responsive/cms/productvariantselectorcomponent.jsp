@@ -45,7 +45,7 @@ $("#variant").change(function() {
 <c:set var="selectedSize" value="true" />
 
 <c:url var="sizeGuideUrl"
-	value="/p/sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
+	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
 	
 	
 <!-- logic for displaying color and size variant -->
