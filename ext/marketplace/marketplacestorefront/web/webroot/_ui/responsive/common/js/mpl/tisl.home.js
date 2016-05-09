@@ -428,6 +428,14 @@ $(document).on("click", ".home-brands-you-love-carousel-brands",
 			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 		});
 
+var resize_stop;
+$(window).on('resize', function() {
+	  clearTimeout(resize_stop);
+	  resize_stop = setTimeout(function() {
+		  $('.home-brands-you-love-carousel-brands.active').click();
+	  }, 250);
+});  
+
 	$(document).on("click",".bulprev",function(){
 		/*$('.home-brands-you-love-desc').remove();
 		$(".home-brands-you-love-carousel .owl-wrapper").prepend($(".home-brands-you-love-carousel .owl-item").last());
