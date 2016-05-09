@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -88,37 +87,23 @@ public class SellerPageController extends AbstractSearchPageController
 	protected static final Logger LOG = Logger.getLogger(SellerPageController.class);
 
 	protected static final String SELLER_ID_PATH_VARIABLE_PATTERN = "/{sellerID:.*}";
-	private static final String NEW_SELLER_URL_PATTERN_PAGINATION = "/{sellerID:.*}/page-{page}";
 
 	protected static final String SEARCH_CMS_PAGE_ID = "search";
 	protected static final String SELLER_LISTING_CMS_PAGE_ID = "sellerListing";
 	private static final String BZ_ERROR_CMS_PAGE = "businessErrorFound";
+	private static final String NEW_SELLER_URL_PATTERN_PAGINATION = "/{sellerID}/page-{page}";
 
+	//@RequestMapping(value = SELLER_ID_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	@RequestMapping(value =
-	{ SELLER_ID_PATH_VARIABLE_PATTERN, NEW_SELLER_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
+	{ NEW_SELLER_URL_PATTERN_PAGINATION, SELLER_ID_PATH_VARIABLE_PATTERN }, method = RequestMethod.GET)
 	public String seller(@PathVariable("sellerID") final String sellerID,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode, final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
+			final HttpServletRequest request) throws UnsupportedEncodingException
 	{
 		//Set the drop down text if the attribute is not empty or null
-		final String uri = request.getRequestURI();
-		if (uri.contains("page"))
-		{
-			final Pattern p = Pattern.compile("page-[0-9]+");
-			final Matcher m = p.matcher(uri);
-			if (m.find())
-			{
-				final String pageNo = m.group().split("-")[1];
-				if (null != pageNo)
-				{
-					page = Integer.parseInt(pageNo);
-					page = page - 1;
-				}
-			}
-		}
 
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
 		model.addAttribute("searchCode", sellerID);
@@ -130,6 +115,22 @@ public class SellerPageController extends AbstractSearchPageController
 
 			if (mplSellerMasterService.getSellerMaster(sellerID) != null)
 			{
+				final String uri = request.getRequestURI();
+				if (uri.contains("page"))
+				{
+					final Pattern p = Pattern.compile("page-[0-9]+");
+					final Matcher m = p.matcher(uri);
+					if (m.find())
+					{
+						final String pageNo = m.group().split("-")[1];
+						if (null != pageNo)
+						{
+							page = Integer.parseInt(pageNo);
+							page = page - 1;
+						}
+					}
+				}
+
 				final String sellerName = sellerMaster.getLegalName();
 
 				final ContentPageModel sellerLandingPage = getLandingPageForSeller(sellerMaster);
