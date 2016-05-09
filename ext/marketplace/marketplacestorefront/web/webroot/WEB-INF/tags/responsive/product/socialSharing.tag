@@ -83,7 +83,7 @@
 				</button>
 				<span id="email" style="display:none"></span>
 				<span id="emailError" style="display:none;color:#ff1c47"><spring:theme code="email.emailError"/></span>
-				<span id="emailSuccess" style="display:none;color:#00CBE9"><spring:theme code="email.emailSuccess"/></span>
+				<span id="emailSuccess" style="display:none;color:#60A119"><spring:theme code="email.emailSuccess"/></span>
 				<span id="emailUnSuccess" style="display:none;color:#ff1c47"><spring:theme code="email.emailUnSuccess"/></span>
 				<span id="emailEmpty" style="display:none;color:#ff1c47"><spring:theme code="email.emailEmpty"/></span>
 				<span id="validateemail" style="display:none;color:#ff1c47"><spring:theme code="email.validate"/></span>

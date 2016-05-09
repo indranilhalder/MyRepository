@@ -75,7 +75,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailSe
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
@@ -135,9 +134,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
-
-	@Autowired
-	private SellerBasedPromotionService sellerBasedPromotionService;
 
 	@Autowired
 	private MplOrderService mplOrderService;

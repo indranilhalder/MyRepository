@@ -9,11 +9,21 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 	<div class="qty selectQty">
+	
 	<!-- Component for product count -->
 		<cms:pageSlot position="ConfigureProductsCount" var="component">
 			<cms:component component="${component}" />
 		</cms:pageSlot>
 	</div>
+	
+	<!-- changes for buy now button: start  -->
+	<div id="buyNow">
+	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart">
+				<spring:theme code="buyNow.button.pdp" />
+			</button>
+	        </div>
+	<!-- changes for buy now button: end  -->
+	
 	<!-- <div class="size-guide">Size Guide</div> -->
 <div class="addtocart-component">
 		<c:if test="${empty showAddToCart ? true : showAddToCart}">

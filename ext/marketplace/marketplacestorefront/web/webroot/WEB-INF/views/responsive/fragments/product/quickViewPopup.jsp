@@ -39,7 +39,7 @@ tr.d0 td {
 		var optionData = "<option value='select' disabled selected>Select</option>";
 		$("#emiTableTHead").hide();
 		$("#emiTableTbody").hide();
-		var requiredUrl = ACC.config.encodedContextPath + "/p" + "/enlistEMIBanks";
+		var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
 		var dataString = 'productVal=' + productVal;
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
@@ -67,7 +67,7 @@ tr.d0 td {
 		var contentData = '';
 		if (selectedBank != "select") {
 			$.ajax({
-				url : ACC.config.encodedContextPath + "/p/getTerms",
+				url : ACC.config.encodedContextPath + "/p-getTerms",
 				data : {
 					'selectedEMIBank' : selectedBank,
 					'productVal' : productVal
@@ -113,7 +113,7 @@ tr.d0 td {
 		
 		var productCode = $("#product_quick").val();
 		var requiredUrl = ACC.config.encodedContextPath + "/p"
-				+ "/viewWishlistsInPDP";
+				+ "-viewWishlistsInPDP";
 
 		var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
 		// for
@@ -243,7 +243,7 @@ tr.d0 td {
 	    	return false;
 	    }
 		var requiredUrl = ACC.config.encodedContextPath + "/p"
-				+ "/addToWishListInPDP";
+				+ "-addToWishListInPDP";
 	    var sizeSelected=true;
 	    if($("#isSizeSelectedQV").val()==''){
 	    	sizeSelected=false;
@@ -671,7 +671,7 @@ display:none;
     <div class="product-detail">
     <h2 class="company">
               <span class="logo"></span>${product.brand.brandname}&nbsp;<spring:theme code="product.by"/>&nbsp;${sellerName}</h2>
-    <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>
+    <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     <div class="price">
     <c:choose>
     <c:when test="${not empty spPrice.value && spPrice.value ne 0}">
@@ -809,14 +809,30 @@ display:none;
 					<spring:theme code="product.variants.out.of.stock" />
 				</button> --%>
 			</c:when>
-			<c:otherwise>			
-					<button id="addToCartButton" type="${buttonType}"
-						class="btn-block js-add-to-cart">
-						<spring:theme code="basket.add.to.basket" />
-					</button>
-				
-			</c:otherwise>
-		</c:choose>
+			<c:otherwise>
+			<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
+			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
+			</p></span>			
+					 <c:choose>
+										<c:when test="${error eq 'true'}">
+											<span id="dListedErrorMsg" class="dlist_message" style="color: #FE2E2E;float: right;padding-bottom: 5px;"> <spring:theme
+													code="pdp.delisted.message" />
+											</span>
+											<button id="addToCartButton-wrong" type="button" class="btn-block" disable="true" style="display: block;"><spring:theme code="basket.add.to.basket" /></button>
+											<script>
+         										$('.wish-share').css('visibility','hidden');
+    										</script>
+										</c:when>
+										<c:otherwise>
+											<button id="addToCartButton" type="${buttonType}"
+												class="btn-block js-add-to-cart">
+												<spring:theme code="basket.add.to.basket" />
+											</button>
+										</c:otherwise>
+									</c:choose>
+
+								</c:otherwise>
+							</c:choose>
 		
 	<%-- 	<c:choose>
 		<c:when test="${selectedSize!=null || product.rootCategory=='Electronics'}">
@@ -1038,7 +1054,7 @@ display:none;
 				</button>
 				<span id="email_quick" style="display:none"></span>
 				<span id="emailError_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailError"/></span>
-				<span id="emailSuccess_quick" style="display:none;color:#00CBE9"><spring:theme code="email.emailSuccess"/></span>
+				<span id="emailSuccess_quick" style="display:none;color:#60A119"><spring:theme code="email.emailSuccess"/></span>
 				<span id="emailUnSuccess_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailUnSuccess"/></span>
 				<span id="emailEmpty_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailEmpty"/></span>
 				<span id="validateemail_quick" style="display:none;color:#ff1c47"><spring:theme code="email.validate"/></span>
@@ -1062,7 +1078,7 @@ function sendmail_quick(){
 	if(validEmail(email)){
 		//var emailList = email.split(";");
 		$.ajax({
-			url : ACC.config.encodedContextPath + "/p/sendEmail",
+			url : ACC.config.encodedContextPath + "/p-sendEmail",
 			data : dataString,			
 			type : "GET",
 			cache : false,

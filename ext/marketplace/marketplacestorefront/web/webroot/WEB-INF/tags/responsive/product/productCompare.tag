@@ -20,7 +20,7 @@
 	width: 100%;
 	padding: 15px;
 	text-align: center;
-	font-family: "Avenir Next";
+	font-family: "Montserrat";
 	z-index: 3;
 }
 
@@ -102,7 +102,7 @@
 }
 
 .compareError {
-	color: red;
+	color: #ff1c47;
 	font-size: 16px;
 	margin-bottom: 15px;
 	font-weight: 500;

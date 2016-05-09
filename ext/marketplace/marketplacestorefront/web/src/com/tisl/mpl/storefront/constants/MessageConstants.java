@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.storefront.constants;
 
+
 /**
  * @author TCS
  *
@@ -146,7 +147,7 @@ public final class MessageConstants
 	public static final String MINIMUM_GIFT_QUANTIY = "mpl.cart.giftQuantity.lineItem";
 	public static final String ERROR_QUANTITY_INVALID = "basket.error.quantity.invalid";
 
-	public static final String MY_MARKETPLACE = "My Marketplace";
+	public static final String MY_MARKETPLACE = "My Tata CLiQ";
 	public static final String INVITE_FRIENDS_MESSAGE_KEY = "account.invite.friends.default.message.text";
 	public static final String LOGIN_PAGE_TITLE = "Sign In or Register";
 	public static final String TEXT_ACCOUNT_PREFERENCE_SAVE_SUCCESS = "text.account.preference.save.success";
@@ -165,6 +166,11 @@ public final class MessageConstants
 	public static final String CANCEL_ORDER_STATUS = "valid.order.statuses.CANCELLATION_ORDER";
 	public static final String WISHLIST_PAGESIZE = "wishlist.pagesize.defaultValue";
 	public static final String ORDER_HISTORY_PAGESIZE = "orderHistory.pagesize.defaultValue";
+	public static final String TWITTER_HANDLE = "twitter.handle";
+	public static final String MEDIA_HOST = "media.dammedia.host";
+	public static final String MEDIA_CODE = "brand.media.code";
+	public static final String SITE_NAME = "site.name";
+	public static final String EMAIL_URL = "update_Email_url";
 
 	//Compare
 	public static final String COMPARE_SYSTEM_ERROR = "Sorry! we are unable to compare the selected products";
@@ -184,4 +190,6 @@ public final class MessageConstants
 	public static final String TEXT_ACCOUNT_REVIEWS = "text.account.reviews";
 	public static final String PAZE_SIZE = "mpl.account.review.pazesize";
 	public static final String ORDER_CAROUSEL_SIZE = "mpl.account.review.orderCarousel.size";
+	//feebback survey
+	public static final String FEEDBACK_SURVEY_URL = "mpl.feedback.survey";
 }

@@ -1,18 +1,13 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.catalog.CatalogVersionService;
-import de.hybris.platform.catalog.constants.CatalogConstants;
-import de.hybris.platform.catalog.jalo.CatalogVersion;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -260,15 +255,20 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 
 	/*
 	 * This method will check whether fulfillment type is matching or not.
-	 *
+	 * 
+	 * 
 	 * @param reqData
-	 *
+	 * 
+	 * 
 	 * @param fullfillmentType
-	 *
+	 * 
+	 * 
 	 * @param ussId
-	 *
+	 * 
+	 * 
 	 * @param selleId
-	 *
+	 * 
+	 * 
 	 * @return flag
 	 */
 	private boolean checkFullfillmentType(final List<PincodeServiceData> reqData, final String fullfillmentType,
@@ -477,7 +477,9 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 				// added for Category Id
 				final List<String> categoryList = getCategoryCodeList(pincodeServiceData.getProductCode());
 				if (CollectionUtils.isNotEmpty(categoryList))
+
 				{
+
 					for (final Map.Entry<String, List<String>> entry : restricteddeliveryModeMap.entrySet())
 					{
 						if (entry.getValue().contains(deliveryModeData.getName()) && categoryList.contains(entry.getKey()))
@@ -500,14 +502,14 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 				//End - Code additon TISPRO-167
 				/*
 				 * else {
-				 *
+				 * 
 				 * for (final Map.Entry<String, List<String>> entry : restricteddeliveryModeMap.entrySet()) { if
 				 * (entry.getValue().contains(deliveryModeData.getName())) {
 				 * pincodeServiceData.getDeliveryModes().remove(deliveryModeData); break; }
-				 *
+				 * 
 				 * }
-				 *
-				 *
+				 * 
+				 * 
 				 * }
 				 */
 
@@ -528,35 +530,42 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 
 
 		final List<String> categoryList = new ArrayList<String>();
-		final JaloSession session = JaloSession.getCurrentSession();
-		session.createLocalSessionContext();
+		//		final JaloSession session = JaloSession.getCurrentSession();
+		//		session.createLocalSessionContext();
 		try
 		{
 
-			Collection<CatalogVersion> vers = null;
-
-			final Collection<CatalogVersion> cvs = (Collection<CatalogVersion>) session
-					.getAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS);
-
-			for (final CatalogVersion ver : cvs)
-			{
-				if (VERSION_ONLINE.equals(ver.getVersion()) && CATALOG_ID.equals(ver.getCatalog().getId()))
-				{
-					vers = Collections.singleton(ver);
-					break;
-				}
-			}
-			session.setAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS, vers);
+			/*
+			 * Collection<CatalogVersion> vers = null;
+			 * 
+			 * 
+			 * final Collection<CatalogVersion> cvs = (Collection<CatalogVersion>) session
+			 * .getAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS);
+			 * 
+			 * 
+			 * for (final CatalogVersion ver : cvs) { if (VERSION_ONLINE.equals(ver.getVersion()) &&
+			 * 
+			 * 
+			 * 
+			 * CATALOG_ID.equals(ver.getCatalog().getId())) { vers = Collections.singleton(ver); break; } }
+			 * 
+			 * 
+			 * 
+			 * session.setAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS, vers);
+			 */
 
 			final ProductModel productModel = productService.getProductForCode(listingID);
-			for (final CategoryModel c : defaultPromotionManager.getcategoryData(productModel))
+			final List<CategoryModel> categories = defaultPromotionManager.getcategoryData(productModel);
+			for (final CategoryModel c : categories)
 			{
 				categoryList.add(c.getCode());
 			}
 		}
-		finally
+
+		catch (final Exception e)
 		{
-			session.removeLocalSessionContext();
+
+			LOG.error("Exception while retrieving category list", e);
 		}
 		return categoryList;
 
@@ -588,8 +597,4 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 
 		return deliveryModes;
 	}
-
-
-
-
 }

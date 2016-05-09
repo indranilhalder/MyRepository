@@ -397,6 +397,7 @@ public class LoginPageController extends AbstractLoginPageController
 	 * bindingResult, final Model model, final HttpServletRequest request, final HttpServletResponse response, final
 	 * RedirectAttributes redirectModel) throws CMSItemNotFoundException
 	 */
+	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	private String processRegisterUserRequestNew(final ExtRegisterForm form, final BindingResult bindingResult, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response, final RedirectAttributes redirectModel)
 			throws CMSItemNotFoundException
@@ -418,6 +419,21 @@ public class LoginPageController extends AbstractLoginPageController
 			data.setLogin(form.getEmail().toLowerCase());
 			data.setPassword(form.getPwd());
 			data.setAffiliateId(form.getAffiliateId());
+
+			//implementation for TISCR-278 :start
+
+			if (null != request.getParameter(ModelAttributetConstants.CHECK_MY_REWARDS)
+					&& request.getParameter(ModelAttributetConstants.CHECK_MY_REWARDS).equalsIgnoreCase(ModelAttributetConstants.TRUE))
+			{
+
+				data.setCheckTataRewards(Boolean.TRUE);
+
+			}
+
+
+			//implementation for TISCR-278 :end
+
+
 			try
 			{
 				if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))

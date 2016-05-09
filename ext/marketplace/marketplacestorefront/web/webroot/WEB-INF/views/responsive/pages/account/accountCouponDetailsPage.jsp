@@ -35,8 +35,9 @@
 <template:page pageTitle="${pageTitle}">
 	<div class="account">
 		<h1 class="account-header">
-			<spring:theme code="text.account.headerTitle" text="My Marketplace" />
-			<select class="menu-select"
+			<spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
+			<user:accountMobileViewMenuDropdown pageNameDropdown="coupons"/>
+			<%-- <select class="menu-select"
 				onchange="window.location=this.options[this.selectedIndex].value;">
 				<optgroup label="<spring:theme code="header.flyout.myaccount" />">
 					<option value=/store/mpl/en/my-account
@@ -76,21 +77,17 @@
 						data-href="account-invite.php"><spring:theme
 							code="header.flyout.invite" /></option>
 				</optgroup>
-			</select>
+			</select> --%>
 		</h1>
 
 		<div class="wrapper">
 
 			<user:accountLeftNav pageName="coupons" />
-
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account rewards">
 
-
-
 				<!-- for showing all type of  coupons without semiclosed -start-->
-
 
 				<div class="your-activity coupon-listing">
 					<h2>
@@ -107,6 +104,7 @@
 						<c:choose>
 							<c:when test="${empty searchPageData.results}">
 								<div>
+
 									<h2>
 										<spring:theme code="text.account.coupons.nocouponavailable" />
 									</h2>
@@ -142,6 +140,7 @@
 								</c:forEach> 
 							</c:otherwise>
 						</c:choose>
+
 					</ul>
 					<!--  pagination for upper section  -->
 					<div class="bottom btn-placement">
@@ -161,7 +160,6 @@
 							numberPagesShown="${numberPagesShown}" />
 					</div>
 				</div>
-
 				<!-- for showing  coupons history-start -->
 				<div class="your-activity coupon-history">
 
@@ -182,6 +180,7 @@
 									</c:if> <c:if test="${couponsRedeemedCount > 1}">
 										<spring:theme code="text.account.coupons.coupons" />
 									</c:if>
+
 								</span>
 								<spring:theme code="text.account.coupons.sofarsaved" />
 								<span>${totalSavedSum.formattedValue}</span>
@@ -189,6 +188,7 @@
 							</p>
 								<div class="bottom btn-placement">
 									<c:if test="${not empty searchPageDatahist.results}">
+
 										<!-- TISSRT-630 ---- Set values in hidden filed for lazy loading pagination Voucher History -->
 										<input type="hidden" id="pageIndexVH" value="${pageIndexHist}" />
 										<input type="hidden" id="pagableSizeVH"
@@ -197,6 +197,7 @@
 											value="${searchPageDatahist.pagination.totalNumberOfResults}" />
 										<div id="displayPaginationCountUpCouponHistory"></div>
 									</c:if>
+
 								<span class="cHistTop">
 									<nav:mpl-pagination top="true"
 										supportShowPaged="${isShowPageAllowedhist}"
@@ -232,6 +233,7 @@
 										</p>
 										<p class="description">
 											<span>${couponHistoryDetailDTO.couponDescription}</span>
+
 										</p> 
 											<p class="order">
 												#<span>${couponHistoryDetailDTO.orderCode}</span>
@@ -239,6 +241,7 @@
 											<p class="date">
 												<span>${couponHistoryDetailDTO.redeemedDate}</span>
 											</p>
+
 									</li>
 									</c:if>
 								</c:forEach>
@@ -259,6 +262,7 @@
 
 					<div class="bottom btn-placement">
 						<c:if test="${not empty searchPageDatahist.results}">
+
 							<!-- TISSRT-630 ---- Set values in hidden filed for lazy loading pagination Voucher History -->
 							<input type="hidden" id="pageIndexVH" value="${pageIndexHist}" />
 							<input type="hidden" id="pagableSizeVH"
@@ -267,6 +271,7 @@
 								value="${searchPageDatahist.pagination.totalNumberOfResults}" />
 							<div id="displayPaginationCountUpCouponHistory"></div>
 						</c:if>
+
 						<span class="cHistBottom">
 						<nav:mpl-pagination top="true"
 							supportShowPaged="${isShowPageAllowedhist}"
@@ -275,7 +280,6 @@
 							searchUrl="/my-account/coupons?sort=${searchPageDatahist.pagination.sort}"
 							numberPagesShown="${numberPagesShownhist}" />
 						</span>
-
 
 					</div>
 				</div>
@@ -336,34 +340,41 @@
 		console.log(x);
 		if (x == 0) {
 			$("#transactionHistory").css("top", "10px");
+
 		} else if (0 < x && x < 4) {
 			$("#transactionHistory").css("top", "230px");
+
 		} else if (3 < x && x < 7) {
 			$("#transactionHistory").css("top", "370px");
+
 		} else if (6 < x && x < 10) {
 			$("#transactionHistory").css("top", "515px");
+
 		} else {
 			$("#transactionHistory").css("top", "640px");
 		}
 		
 		$("span.cHistBottom,span.cHistTop li").each(function(){
+
 			var href = $(this).find("a").attr("href");
 			if(href!="" && href != "undefined" && typeof(href)!= "undefined"){
 				var newHref = href.replace("page","pageHistory");
 				$(this).find("a").attr("href",newHref);
 			}
 		});
-		
 		var next = $(".cHistTop").find("li.next").find("a").attr("href");
 		if(next!=""){
 			$(".cHistBottom").find("li.next").find("a").attr("href",next);
 		}
+
 	});
+
 </script>
 <c:if test="${param.pageHistory ne null or param.page ne null}">
 	<script>
 		$(document).ready(function() {
 			$("#couponHistory").click();
 		});
+
 	</script>
 </c:if>

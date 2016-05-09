@@ -68,11 +68,13 @@ public class MplDeliveryModeValueProvider extends AbstractPropertyFieldValueProv
 			{
 				if (HomeDeliveryEnum.YES.equals(richAttr.getHomeDelivery()))
 				{
-					deliveryModes.add("home-delivery");
+					//MR-2 Changes
+					deliveryModes.add("standard delivery");
 				}
 				if (ExpressDeliveryEnum.YES.equals(richAttr.getExpressDelivery()))
 				{
-					deliveryModes.add("express-delivery");
+					//MR-2 Changes
+					deliveryModes.add("express delivery");
 				}
 				// Click and collect option is commented out for release 1
 				//if (ClickAndCollectEnum.YES.equals(richAttr.getClickAndCollect()))

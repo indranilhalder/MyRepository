@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.marketplacecommerceservices.jobs.PromotionCreationJob;
 import com.tisl.mpl.marketplacecommerceservices.service.CampaignPromoDataService;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -27,7 +26,7 @@ public class CampaignPromoDataJob extends AbstractJobPerformable<CronJobModel>
 {
 
 	@SuppressWarnings("unused")
-	private final static Logger LOG = Logger.getLogger(PromotionCreationJob.class.getName());
+	private final static Logger LOG = Logger.getLogger(CampaignPromoDataJob.class.getName());//PromotionCreationJob
 
 	@Autowired
 	private CampaignPromoDataService campaignPromoDataService;

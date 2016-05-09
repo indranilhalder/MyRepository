@@ -31,7 +31,8 @@ $(document).ready(function(){
 					if(data.otp_generated == "true"){
 						$("#validateOTP").show();
 						$("#generateOTP").hide();
-						$("#emailId").val(data.emailId);
+						//TISPRDT-111 fix
+						$("#c2cEmailId").val(data.emailId);
 						$("#contactNo").val(data.contactNo);
 						$("#customerName").val(data.customerName);
 						$("#reason").val(data.reason);

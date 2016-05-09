@@ -30,38 +30,12 @@
 			</tr>
 			<tr>
 				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="OrderReferenceNumberOne" />
-				</td>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="OrderReferenceNumberTwo" />
-				</td>
-			</tr>
-			<tr>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Tip" />
-				</td>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="Description" />
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" width="25%" height="249px" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="handpick" />
-					<cockpit code="slashImgTwo" />
-				</td>
-				<td colspan="2" height="249px" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="brand" />
-				</td>
-				<td width="30%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="exp" />
-				</td>
-				<td width="40%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="fast" />
 				</td>
 			</tr>
 			<tr>
 				<td colspan="6" width="30%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="DeliveryConfirmationBannerTwo" />
+					<cockpit code="AppDownloadUrl" />
 				</td>
 			</tr>
 			<tr>
@@ -72,7 +46,9 @@
 			<tr>
 				<td height="270px" colspan="6" class="structureViewSection">
 					<cockpit code="fb" />
-					<cockpit code="gplus" />
+					<cockpit code="tweet" />
+					<cockpit code="youtube" />
+					<cockpit code="insta" />
 				</td>
 			</tr>
 		</tbody>

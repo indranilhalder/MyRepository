@@ -26,8 +26,9 @@
 
 
 	<div class="account" id="account-invite">
-	<h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Marketplace" />
-  <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
+	<h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
+	<user:accountMobileViewMenuDropdown pageNameDropdown="invite"/>
+  <%-- <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
                   <option value=/store/mpl/en/my-account/marketplace-preference data-href="/store/mpl/en/my-account/marketplace-preference"><spring:theme code="header.flyout.marketplacepreferences" /></option>
@@ -40,31 +41,10 @@
           <optgroup label="Share">
                   <option value=/store/mpl/en/my-account/friendsInvite data-href="account-invite.php" selected><spring:theme code="header.flyout.invite" /></option>
               </optgroup>
-      </select>
+      </select> --%>
 </h1>
 	<div class="wrapper">
-		<%-- <div class="left-nav">
-				<!-- <h1>
-					My MarketPlace</h1> -->
-				<ul>
-					<li><h3><spring:theme code="header.flyout.myaccount" /></h3></li>
-					<li><a href="/store/mpl/en/my-account/"><spring:theme code="text.inviteFriends.overview"/></a></li>
-					<li><a href="/store/mpl/en/my-account/marketplace-preference"><spring:theme code="header.flyout.marketplacepreferences"/></a></li>
-					<li><a href="/store/mpl/en/my-account/update-profile"><spring:theme code="header.flyout.Personal"/></a></li>
-					<li><a href="/store/mpl/en/my-account/orders"><spring:theme code="header.flyout.orders"/></a></li>
-					<li><a href="/store/mpl/en/my-account/payment-details"><spring:theme code="header.flyout.cards"/></a></li>
-					<li><a href="/store/mpl/en/my-account/address-book"><spring:theme code="header.flyout.address"/></a></li>
-					<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
-						code="header.flyout.review" /></a></li>
-					<li><a href="/store/mpl/en/my-account/myInterest"><spring:theme code="header.flyout.recommendations"/></a></li>
-				</ul>
-				<ul>
-					<li><h3><spring:theme code="text.inviteFriends.share"/></h3></li>
-					<li><a class="active" href="/store/mpl/en/my-account/friendsInvite"><spring:theme code="header.flyout.invite"/></a></li>
-								
-				</ul>
-				
-			</div> --%>
+	
 			<user:accountLeftNav pageName="invite"/>
 
 		<!-- Social sharing -->

@@ -91,6 +91,7 @@
 			elementtype="java.lang.String" autocreate="true" generate="true" type="list" />	
 
 
+
 		<collectiontype code="productBasedCoupon"
 			elementtype="Product" autocreate="true" generate="true" type="list" />	
 		<collectiontype code="categoryBasedCoupon"
@@ -732,12 +733,15 @@
 			<value code="PROCESSED"></value>
 			<value code="ERROR"></value>
 		</enumtype>
+
 	<!-- Product Feature Enum Ends -->
 
 
 
 
+
 	</enumtypes>
+
 
 
 
@@ -1810,6 +1814,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="SELLERARTICLESKU_IDX">
+						<key attribute="sellerArticleSKU"/>
+					</index>
+				</indexes>
 			</itemtype>
 
 			<itemtype code="RichAttribute" autocreate="true" generate="true"
@@ -2180,6 +2189,10 @@
 					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
+
+
+
+
 				</attributes>
 			</itemtype>
 
@@ -2725,8 +2738,24 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- Added for TISCR-278 enabling a check box for Tata my rewards in login page -->
+					<attribute qualifier="ischeckedMyRewards"
+						autocreate="true" type="java.lang.Boolean" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					
+					<!-- Added for TISCR-278 enabling a check box for Tata my rewards in login page -->
 					<!-- Push notification save device key web service ends -->
 				</attributes>
+				<indexes>
+					<index name="ORIGINALUID_IDX" unique="true">
+						<key attribute="originalUid"/>
+					</index>
+				</indexes>
 			</itemtype>
 			<itemtype code="Address" autocreate="false" generate="false">
 				<description>Extending the Address type from core with additional attributes.</description>
@@ -3337,6 +3366,7 @@
 						generate="true" autocreate="true">
 						<persistence type="property" />
 						<description>This is a sequence number for the stay qued section</description>
+
 					</attribute> -->
 				</attributes>
 			</itemtype>
@@ -3448,6 +3478,7 @@
 					</attribute>
 
 
+
 					<attribute qualifier="footerAppImageList" type="FooterImageCollection"
 						generate="true" autocreate="true">
 						<persistence type="property" />
@@ -3455,6 +3486,7 @@
 					</attribute>
 
 					<attribute qualifier="footerText" type="localized:java.lang.String" generate="true" autocreate="true">
+
 
 
 
@@ -3949,6 +3981,7 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+
 			
 
 			<!-- End of Mpl Advanced Category Carousel Component -->
@@ -4004,6 +4037,7 @@
 
 					<attribute type="Media" qualifier="logo"
 						autocreate="true" generate="true">
+
 
 
 
@@ -4084,6 +4118,7 @@
 
 						</persistence>
 					</attribute>
+
 
 
 					<attribute type="java.lang.String" qualifier="bannerUrl"
@@ -5391,13 +5426,13 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- Start TISPRO-249 -->
- 					<attribute qualifier="buyABGetcParentTransactionId" type="java.lang.String">
- 						<description>Parent Transaction id mapping used for Buy A B Get C promotion - Multiple Parent Scenario</description>
- 						<modifiers read="true" write="true" removable="true"
- 							optional="true" initial="true" unique="false" search="true" />
- 						<persistence type="property" />
- 					</attribute>
- 					<!-- End TISPRO-249 -->
+					<attribute qualifier="buyABGetcParentTransactionId" type="java.lang.String">
+						<description>Parent Transaction id mapping used for Buy A B Get C promotion - Multiple Parent Scenario</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- End TISPRO-249 -->
 				</attributes>
 			</itemtype>
 
@@ -5428,7 +5463,74 @@
 
 				</attributes>
 			</itemtype>
+
+			<itemtype code="SolrFacetSearchConfig" autocreate="false" generate="false">
+				<description>Extending the SolrFacetSearchConfig type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="SolrIndexedType" autocreate="false" generate="false">
+				<description>Extending the SolrIndexedType type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="SolrIndexedProperty" autocreate="false" generate="false">
+				<description>Extending the SolrIndexedProperty type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				<!-- Start TISPRO-326 -->
+					<attribute qualifier="classificationProductType"
+						type="java.lang.String">
+						<description>Specifies the Product Type of the Classification Attribute</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+				<!-- End TISPRO-326 -->
+				</attributes>
+			</itemtype>
 		</typegroup>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		<typegroup name="AccountManagement">
 
@@ -5583,6 +5685,15 @@
 						<description>The sales application for which the order was placed.</description>
 						<persistence type="property" />
 						<defaultvalue>em().getEnumerationValue("SalesApplication","Web")</defaultvalue>
+					</attribute>
+
+						<attribute autocreate="true" qualifier="isExpressCheckoutSelected"
+						type="java.lang.Boolean">
+						<persistence type="property" qualifier="isExpressCheckoutSelected">
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -5832,8 +5943,10 @@
 					</attribute>
 					<attribute qualifier="targetCollection" type="MplShopByLook"
 						autocreate="true" generate="true">
+
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
+
 					</attribute> -->
 					<attribute qualifier="associatedCategory" type="targetCategoryCollection"
 						autocreate="true" generate="true">
@@ -5901,6 +6014,7 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- <attribute qualifier="targetCategory" type="Category"
+
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
@@ -5965,6 +6079,7 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- <attribute qualifier="targetCategory" type="Category"
+
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
@@ -6296,6 +6411,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="AUDITENTRYID_IDX">
+						<key attribute="auditId"/>
+					</index>	
+				</indexes>
 			</itemtype>
 
 			<itemtype code="MplPaymentAudit" autocreate="true" generate="true"
@@ -6356,6 +6476,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="AUDITID_IDX">
+						<key attribute="auditId"/>
+					</index>	
+				</indexes>
 			</itemtype>
 		</typegroup>
 
@@ -6982,6 +7107,7 @@
 
 
 
+
 						<description>priority start date</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
@@ -6992,12 +7118,13 @@
 
 
 
+
 						<description>priority end date</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property" />
 				</attribute>
-				
+
 
 				<attribute qualifier="isActive" type="java.lang.Boolean">
 					<persistence type="property" />
@@ -7062,6 +7189,7 @@
 
 
 
+
 						<description>L3 level priority for category</description>
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 						<modifiers read="true" write="true" optional="true"
@@ -7073,6 +7201,7 @@
 
 
 
+
 						<description>L4 level priority for category</description>
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 						<modifiers read="true" write="true" optional="true"
@@ -7080,6 +7209,7 @@
 						<persistence type="property" />
 					</attribute>
 				<attribute autocreate="true"  qualifier="ProductPriority" type="java.lang.Integer">
+
 
 
 
@@ -7100,6 +7230,7 @@
 			</itemtype>
 		<!-- 	seller priority cron job -->
 			<itemtype code="UpdateSellerPriorityJob" extends="CronJob" autocreate="true" generate="true"
+
 
 
 
@@ -7418,6 +7549,7 @@
 			</itemtype>
 
 			<itemtype code="FeedbackCronJob" extends="CronJob"
+
 				autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.FeedbackCronJob">
 				<attributes>
@@ -7425,7 +7557,7 @@
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
-				
+
 
 				</attributes>
 			</itemtype>

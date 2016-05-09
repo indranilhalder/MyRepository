@@ -5,8 +5,11 @@
 
 <template:page pageTitle="${pageTitle}">
 <div class="error-template-message">
-<cms:pageSlot position="MiddleContent" var="feature" >
-		<cms:component component="${feature}"/>
-	</cms:pageSlot>
+				<cms:pageSlot position="SideContent" var="features" >
+					<cms:component component="${features}"/>
+				</cms:pageSlot>
+				<cms:pageSlot position="MiddleContent" var="feature" >
+					<cms:component component="${feature}"/>
+				</cms:pageSlot>
 </div>
-</template:page>
+</template:page>       

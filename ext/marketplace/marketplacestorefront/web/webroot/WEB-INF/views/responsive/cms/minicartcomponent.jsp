@@ -18,7 +18,7 @@
 	data-mini-cart-name="<spring:theme code="text.cart"/>" 
 	data-mini-cart-empty-name="<spring:theme code="popup.cart.empty"/>"
     ><spring:theme code="minicart.mybag"/>(<span class="js-mini-cart-count">${totalItems}</span>)</a> --%>
-
+<li class="transient-mini-bag"></li>
 				<li class="bag">
 				
 				<a href="${cartUrl}" 

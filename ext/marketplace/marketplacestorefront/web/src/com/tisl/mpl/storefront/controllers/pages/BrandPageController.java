@@ -363,7 +363,8 @@ public class BrandPageController extends AbstractSearchPageController
 		{
 			for (final CategoryModel category : allBrandList1)
 			{ //gets the first character from a sub brand name
-				final String firstCharacter = category.getName().substring(0, 1);
+				String firstCharacter = category.getName() == null ? "" : category.getName().substring(0, 1);
+				firstCharacter = firstCharacter.toUpperCase();
 
 				if (alphabeticalBrands.isEmpty())
 				{

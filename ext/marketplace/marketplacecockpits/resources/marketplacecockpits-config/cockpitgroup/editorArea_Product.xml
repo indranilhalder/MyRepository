@@ -13,6 +13,10 @@
 		<property qualifier="product.ean" />
 		<property qualifier="product.description" editor="wysiwyg"/>
 		<property qualifier="product.summary" />
+		<property qualifier="product.deeplinkType" />
+        <property qualifier="product.deeplinkTypeId" />
+        <property qualifier="product.deeplinkTypeVal" />
+		
 	</group>
 
 	<custom-group 

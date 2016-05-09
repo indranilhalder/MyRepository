@@ -15,7 +15,7 @@ package com.tisl.mpl.storefront.controllers.misc;
 
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.enumeration.EnumerationService;
+import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.core.enums.FeedbackCategory;
+import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
 
 
@@ -52,7 +53,7 @@ public class FeedbackController extends AbstractPageController
 	private UpdateFeedbackFacade updateFeedbackFacade;
 
 	@Autowired
-	private EnumerationService enumerationService;
+	private MplEnumerationHelper mplEnumerationHelper;
 
 	@RequestMapping(value = "/feedbackyes", method = RequestMethod.GET)
 	public void captureFeedbackYes(@RequestParam("emailField") final String email,
@@ -117,15 +118,23 @@ public class FeedbackController extends AbstractPageController
 	@RequestMapping(value = "/searchcategotylist", method = RequestMethod.GET, produces = "application/json")
 	public Map getFeedbackCategory(final HttpServletRequest request, final HttpServletResponse response)
 	{
-		final List<FeedbackCategory> category = enumerationService.getEnumerationValues(FeedbackCategory.class);
+		//		final List<FeedbackCategory> category = enumerationService.getEnumerationValues(FeedbackCategory.class);
+		//		final Map<String, String> sFeedBack = new HashMap<String, String>();
+		//		for (final FeedbackCategory s : category)
+		//		{
+		//			sFeedBack.put(s.getCode(), s.getCode());
+		//		}
+		final List<EnumerationValueModel> category = mplEnumerationHelper.getEnumerationValuesForCode(FeedbackCategory._TYPECODE);
 		final Map<String, String> sFeedBack = new HashMap<String, String>();
-		for (final FeedbackCategory s : category)
+		for (final EnumerationValueModel enumVal : category)
 		{
-			sFeedBack.put(s.getCode(), s.getCode());
+			if (enumVal != null)
+			{
+				sFeedBack.put(enumVal.getCode(), enumVal.getName());
+			}
 
 		}
 		return sFeedBack;
-
 	}
 
 

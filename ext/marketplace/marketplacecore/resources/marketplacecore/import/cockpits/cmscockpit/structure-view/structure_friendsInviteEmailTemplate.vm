@@ -50,33 +50,32 @@
 					<cockpit code="Invitefast" />
 				</td>
 			</tr>
-			<tr>
-				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="Invitesmileyimg" />
-				</td>
-			</tr>
-			<tr>
-				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="Invitetip" />
-				</td>
-			</tr>
-			<tr>
-				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="tipcontent" />
-				</td>
-			</tr>
+			
+			
 			<tr>
 				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="bestfriend1" />
+					<cockpit code="Tip" />
 				</td>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="bestfriend2" />
+				
+			</tr>
+			
+			<tr>
+				<td colspan="6" width="30%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="AppDownloadUrl" />
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="smileyimg" />
 				</td>
 			</tr>
 			<tr>
 				<td height="270px" colspan="6" class="structureViewSection">
-					<cockpit code="Invitefb" />
-					<cockpit code="Invitegplus" />
+					<cockpit code="fb" />
+					<cockpit code="tweet" />
+					<cockpit code="youtube" />
+					<cockpit code="insta" />
 				</td>
 			</tr>
 		</tbody>

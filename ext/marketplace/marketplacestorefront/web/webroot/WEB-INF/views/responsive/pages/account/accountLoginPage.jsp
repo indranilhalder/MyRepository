@@ -10,7 +10,7 @@
 	<c:if test="${not empty result && result eq 'failure'}">
 		<div id="errorDiv" class="alert alert-danger">
 			<a href="#nogo" onclick="changeUrl('${mainUrl}')" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	    	<strong><b>ERROR: </b></strong><spring:theme code="text.account.login.failure" text="Oops! Your email ID and password don't match"/>
+	    	<spring:theme code="text.account.login.failure" text="Oops! Your email ID and password don't match"/>
   		</div>
 	</c:if>
 	<input type="hidden" id="isSignInActive" value="${isSignInActive}">

@@ -108,7 +108,7 @@
 #videoModal .content > .close:before {
     content: "\00d7";
     color: #fff;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     font-size: 17px;
     font-weight: 600;
     -webkit-transition: font-weight 0.15s;

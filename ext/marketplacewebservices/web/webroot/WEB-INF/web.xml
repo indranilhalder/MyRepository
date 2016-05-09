@@ -33,10 +33,10 @@
 	</filter>
 
 	<!-- provides support for ETag and If-None-Match, shallow -->
-	<filter>
+	<!--  <filter>
 		<filter-name>ETagFilter</filter-name>
 		<filter-class>com.tisl.mpl.filter.ImprovedShallowEtagHeaderFilter</filter-class>
-	</filter>
+	</filter>-->
 
 	<!--	<filter>
 			<filter-name>clientCredentialsTokenEndpointFilter</filter-name>
@@ -87,10 +87,10 @@
 		<url-pattern>/oauth/token</url-pattern>
 	</filter-mapping>
 
-	<filter-mapping>
+	<!-- <filter-mapping>
 		<filter-name>ETagFilter</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> -->
 
 	<filter-mapping>
 		<filter-name>CORS</filter-name>
