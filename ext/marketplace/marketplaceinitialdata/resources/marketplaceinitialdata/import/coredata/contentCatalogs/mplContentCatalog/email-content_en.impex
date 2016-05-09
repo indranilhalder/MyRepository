@@ -101,7 +101,7 @@ UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];
  ;;OrderRefundEmail;"customercare@tatacliq.com";"TataCLiQ Care"
  ;;ReadyForPickupEmail;"customerservices@tataunistore.in";"Customer Services Team"
  ;;FriendsInviteEmail;"customercare@tatacliq.com";"TataCLiQ Care"
- ;;SendInvoiceEmail;"customercare@tatacliq.com";"Customer Services Team"
+ ;;SendInvoiceEmail;"customercare@tatacliq.com";"TataCLiQ Care"
  ;;SendUpdateEmail;"customerservices@tataunistore.in";"Customer Services Team"
  ;;CustomerProfileUpdateEmail;"customercare@tatacliq.com";"TataCLiQ Care"
  ;;ChangePasswordEmail;"customercare@tatacliq.com";"TataCLiQ Care"

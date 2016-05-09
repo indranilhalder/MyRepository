@@ -35,6 +35,7 @@ import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -44,13 +45,18 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,11 +71,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
+import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
@@ -137,6 +148,12 @@ public class CheckoutController extends AbstractCheckoutController
 
 	@Autowired
 	private ModelService modelService;
+
+	@Resource(name = "mplDeliveryCostService")
+	private MplDeliveryCostService mplDeliveryCostService;
+
+	@Resource(name = "mplSellerInformationService")
+	private MplSellerInformationService mplSellerInformationService;
 
 	/**
 	 * @return the modelService
@@ -377,123 +394,132 @@ public class CheckoutController extends AbstractCheckoutController
 
 			long totalItemCount = 0L;
 
-			final List<OrderEntryData> orderEntryList = orderDetails.getEntries();
-
-			if (orderDetails.isGuestCustomer()
-					&& !StringUtils.substringBefore(orderDetails.getUser().getUid(), "|").equals(
-							getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID)))
+			if (orderDetails != null)
 			{
-				return getCheckoutRedirectUrl();
-			}
 
-			if (orderDetails.getEntries() != null && !orderDetails.getEntries().isEmpty())
-			{
-				for (final OrderEntryData entry : orderDetails.getEntries())
+				final List<OrderEntryData> orderEntryList = orderDetails.getEntries();
+
+				if (orderDetails.isGuestCustomer()
+						&& !StringUtils.substringBefore(orderDetails.getUser().getUid(), "|").equals(
+								getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID)))
 				{
-					final String productCode = entry.getProduct().getCode();
-					final ProductData product = productFacade.getProductForCodeAndOptions(productCode,
-							Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
-					entry.setProduct(product);
+					return getCheckoutRedirectUrl();
 				}
-			}
 
-			double totalDiscount = 0l;
-			if (orderDetails.getAppliedOrderPromotions() != null)
-			{
-				for (final PromotionResultData promotionResultData : orderDetails.getAppliedOrderPromotions())
+				if (orderDetails.getEntries() != null && !orderDetails.getEntries().isEmpty())
 				{
-					final String st = promotionResultData.getDescription();
-					final String result = stripNonDigits(st);
-
-					try
+					for (final OrderEntryData entry : orderDetails.getEntries())
 					{
-						totalDiscount = totalDiscount + Double.parseDouble(result);
-					}
-					catch (final Exception e)
-					{
-						LOG.error("Exception during double parsing ", e);
-						totalDiscount = totalDiscount + 0;
+						final String productCode = entry.getProduct().getCode();
+						final ProductData product = productFacade.getProductForCodeAndOptions(productCode,
+								Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
+						entry.setProduct(product);
 					}
 				}
-				final String promotionMssg = RECEIVED_INR + totalDiscount + DISCOUNT_MSSG;
-				model.addAttribute("promotionMssg", promotionMssg);
-				final String date = mplCheckoutFacade.ordinalDate(orderCode);
-				model.addAttribute("date", date);
-			}
 
-			for (final OrderEntryData entry : orderEntryList)
-			{
-				if (entry != null && entry.getMplDeliveryMode() !=null)
+				double totalDiscount = 0l;
+				if (orderDetails.getAppliedOrderPromotions() != null)
 				{
-					if (!entry.getMplDeliveryMode().getCode().equals(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+					for (final PromotionResultData promotionResultData : orderDetails.getAppliedOrderPromotions())
 					{
-						totalItemCount += entry.getQuantity();
+						final String st = promotionResultData.getDescription();
+						final String result = stripNonDigits(st);
+
+						try
+						{
+							totalDiscount = totalDiscount + Double.parseDouble(result);
+						}
+						catch (final Exception e)
+						{
+							LOG.error("Exception during double parsing ", e);
+							totalDiscount = totalDiscount + 0;
+						}
+					}
+					final String promotionMssg = RECEIVED_INR + totalDiscount + DISCOUNT_MSSG;
+					model.addAttribute("promotionMssg", promotionMssg);
+					final String date = mplCheckoutFacade.ordinalDate(orderCode);
+					model.addAttribute("date", date);
+				}
+
+				for (final OrderEntryData entry : orderEntryList)
+				{
+					if (entry != null && entry.getMplDeliveryMode() != null)
+					{
+						if (!entry.getMplDeliveryMode().getCode().equals(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+						{
+							totalItemCount += entry.getQuantity();
+						}
 					}
 				}
-			}
-			//saving IP of the Customer
-			try
-			{
-				final String userIpAddress = request.getHeader("X-Forwarded-For");
-				orderModel.setIpAddress(userIpAddress);
-				getModelService().save(orderModel);
-			}
-			catch (final Exception e)
-			{
-				LOG.debug("Exception during IP save", e);
-			}
-			//End saving IP of the Customer
-
-			orderDetails.setNet(true);
-
-			model.addAttribute("totalCount", totalItemCount);
-
-			model.addAttribute("orderCode", orderCode);
-			model.addAttribute("orderData", orderDetails);
-			model.addAttribute("allItems", orderDetails.getEntries());
-			model.addAttribute("deliveryAddress", orderDetails.getDeliveryAddress());
-			model.addAttribute("deliveryMode", orderDetails.getDeliveryMode());
-			model.addAttribute("paymentInfo", orderDetails.getMplPaymentInfo());
-			model.addAttribute("pageType", PageType.ORDERCONFIRMATION.name());
-
-			//Handling of Order Status Message display
-			if (null != orderModel && null != orderModel.getStatus() && StringUtils.isNotEmpty(orderModel.getStatus().toString()))
-			{
-				if (orderModel.getStatus().equals(OrderStatus.RMS_VERIFICATION_PENDING))
+				//saving IP of the Customer
+				try
 				{
-					model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
-							.getString(ModelAttributetConstants.ORDER_CONF_HELD));
+					final String userIpAddress = request.getHeader("X-Forwarded-For");
+					orderModel.setIpAddress(userIpAddress);
+					getModelService().save(orderModel);
 				}
-				else if (orderModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
+				catch (final Exception e)
 				{
-					model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
-							.getString(ModelAttributetConstants.ORDER_CONF_SUCCESS));
+					LOG.debug("Exception during IP save", e);
 				}
+				//End saving IP of the Customer
+
+				orderDetails.setNet(true);
+
+				model.addAttribute("totalCount", totalItemCount);
+
+				model.addAttribute("orderCode", orderCode);
+				model.addAttribute("orderData", orderDetails);
+				model.addAttribute("allItems", orderDetails.getEntries());
+				model.addAttribute("deliveryAddress", orderDetails.getDeliveryAddress());
+				model.addAttribute("deliveryMode", orderDetails.getDeliveryMode());
+				model.addAttribute("paymentInfo", orderDetails.getMplPaymentInfo());
+				model.addAttribute("pageType", PageType.ORDERCONFIRMATION.name());
+
+				//Handling of Order Status Message display
+				if (null != orderModel && null != orderModel.getStatus() && StringUtils.isNotEmpty(orderModel.getStatus().toString()))
+				{
+					if (orderModel.getStatus().equals(OrderStatus.RMS_VERIFICATION_PENDING))
+					{
+						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
+								.getString(ModelAttributetConstants.ORDER_CONF_HELD));
+					}
+					else if (orderModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
+					{
+						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
+								.getString(ModelAttributetConstants.ORDER_CONF_SUCCESS));
+					}
+				}
+
+				final String uid;
+
+				if (orderDetails.isGuestCustomer() && !model.containsAttribute("guestRegisterForm"))
+				{
+					final GuestRegisterForm guestRegisterForm = new GuestRegisterForm();
+					guestRegisterForm.setOrderCode(orderDetails.getGuid());
+					uid = orderDetails.getPaymentInfo().getBillingAddress().getEmail();
+					guestRegisterForm.setUid(uid);
+					model.addAttribute(guestRegisterForm);
+				}
+				else
+				{
+					uid = orderDetails.getUser().getUid();
+				}
+				model.addAttribute("email", uid);
+				final String continueUrl = (String) getSessionService().getAttribute(WebConstants.CONTINUE_URL);
+				model.addAttribute(CONTINUE_URL_KEY, (continueUrl != null && !continueUrl.isEmpty()) ? continueUrl : ROOT);
+
+				final AbstractPageModel cmsPage = getContentPageForLabelOrId(CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL);
+				storeCmsPageInModel(model, cmsPage);
+				setUpMetaDataForContentPage(model, getContentPageForLabelOrId(CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL));
+				model.addAttribute("metaRobots", "noindex,nofollow");
+
+				//TISCR-413
+				final Map<String, Integer> deliveryTimeMap = getDeliveryTime(orderModel);
+
+				model.addAttribute("deliveryStartTime", deliveryTimeMap.get(MarketplacecommerceservicesConstants.DELIVERY_STARTTIME));
+				model.addAttribute("deliveryEndTime", deliveryTimeMap.get(MarketplacecommerceservicesConstants.DELIVERY_ENDTIME));
 			}
-
-			final String uid;
-
-			if (orderDetails.isGuestCustomer() && !model.containsAttribute("guestRegisterForm"))
-			{
-				final GuestRegisterForm guestRegisterForm = new GuestRegisterForm();
-				guestRegisterForm.setOrderCode(orderDetails.getGuid());
-				uid = orderDetails.getPaymentInfo().getBillingAddress().getEmail();
-				guestRegisterForm.setUid(uid);
-				model.addAttribute(guestRegisterForm);
-			}
-			else
-			{
-				uid = orderDetails.getUser().getUid();
-			}
-			model.addAttribute("email", uid);
-			final String continueUrl = (String) getSessionService().getAttribute(WebConstants.CONTINUE_URL);
-			model.addAttribute(CONTINUE_URL_KEY, (continueUrl != null && !continueUrl.isEmpty()) ? continueUrl : ROOT);
-
-			final AbstractPageModel cmsPage = getContentPageForLabelOrId(CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL);
-			storeCmsPageInModel(model, cmsPage);
-			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL));
-			model.addAttribute("metaRobots", "noindex,nofollow");
-
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
@@ -520,6 +546,63 @@ public class CheckoutController extends AbstractCheckoutController
 			}
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * @Description: It finds the max of start and end delivery time between entries
+	 * @param orderModel
+	 * @return Map<String, Integer>
+	 */
+	private Map<String, Integer> getDeliveryTime(final OrderModel orderModel)
+	{
+		final Map<String, Integer> deliveryTimeMap = new HashMap<String, Integer>();
+		final List<Integer> deliveryStartTimeList = new ArrayList<Integer>();
+		final List<Integer> deliveryEndTimeList = new ArrayList<Integer>();
+		Integer leadTime = null;
+
+		for (final AbstractOrderEntryModel entry : orderModel.getEntries())
+		{
+			final String selectedUSSID = entry.getSelectedUSSID();
+			final String selectedDeliveryMode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
+			final MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(selectedDeliveryMode,
+					MarketplacecommerceservicesConstants.INR, selectedUSSID);
+			String startValue = deliveryModel.getDeliveryMode().getStart() != null ? deliveryModel.getDeliveryMode().getStart()
+					.toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+			String endValue = deliveryModel.getDeliveryMode().getEnd() != null ? deliveryModel.getDeliveryMode().getEnd().toString()
+					: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+			List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
+			final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(selectedUSSID);
+
+			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+			{
+				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+				if (CollectionUtils.isNotEmpty(richAttributeModel))
+				{
+					leadTime = richAttributeModel.get(0).getLeadTimeForHomeDelivery() != null ? richAttributeModel.get(0)
+							.getLeadTimeForHomeDelivery() : Integer.valueOf(0);
+				}
+				LOG.debug(" >> Lead time for Home delivery  " + leadTime);
+			}
+
+			if (selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+			{
+				startValue = String.valueOf(Integer.parseInt(startValue) + leadTime.intValue());
+				endValue = String.valueOf(Integer.parseInt(endValue) + leadTime.intValue());
+			}
+			deliveryStartTimeList.add(Integer.valueOf(startValue));
+			deliveryEndTimeList.add(Integer.valueOf(endValue));
+		}
+
+		//		Collections.sort(deliveryStartTimeList);
+		//		Collections.reverse(deliveryStartTimeList);
+		//
+		//		Collections.sort(deliveryEndTimeList);
+		//		Collections.reverse(deliveryEndTimeList);
+
+		deliveryTimeMap.put(MarketplacecommerceservicesConstants.DELIVERY_STARTTIME, Collections.max(deliveryStartTimeList));
+		deliveryTimeMap.put(MarketplacecommerceservicesConstants.DELIVERY_ENDTIME, Collections.max(deliveryEndTimeList));
+
+		return deliveryTimeMap;
 	}
 
 	protected GuestRegisterValidator getGuestRegisterValidator()

@@ -11,6 +11,10 @@
 		<label key="config.general.editorial" />
 		<property qualifier="AbstractBannerComponent.urlLink"/>
 		<property qualifier="AbstractBannerComponent.external"/>
+		<property qualifier="SimpleCMSComponent.deeplinkType" />
+        <property qualifier="SimpleCMSComponent.deeplinkTypeId" />
+        <property qualifier="SimpleCMSComponent.deeplinkTypeVal" />
+		
 		<property qualifier="AbstractBannerComponent.media" editor="simpleMediaReferenceSelector">
 			<parameter>
 				<name>mimeTypes</name>

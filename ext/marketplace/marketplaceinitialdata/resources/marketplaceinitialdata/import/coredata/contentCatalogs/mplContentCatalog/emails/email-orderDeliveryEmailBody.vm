@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <head>
 <title>TATA - CLiQ</title>
+<style>
+td span img{
+width:100%;
+}
+</style>
 </head>
 
 <body>
-<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #000;" >
+<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #cccccc; font-family:Arial, Helvetica, sans-serif;">
   <tr>
-    <td><table width="598" border="0" cellspacing="0" cellpadding="0">
+    <td><table border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="left" valign="top" bgcolor="#ffffff">
-${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
+<span>${ctx.cmsSlotContents.SiteLogo}</span></td>
       </tr>
  
       <tr>
-        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="13">&nbsp;</td>
             <td>
-			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;margin-top:0px">Let's Do This Again Soon</h2>
-			<h2 style="padding-left: 17px;color: #AA133D;margin-top: 4px;margin-bottom:0px">Really Soon</h2>
+			<h2 style="color: #AA133D;margin-bottom: 2px;margin-top:0px">Let's Do This Again Soon</h2>
+			<h2 style="color: #AA133D;margin-top: 4px;margin-bottom:0px">Really Soon</h2>
 			<br>
 			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.customerName},</font>
                   <br>
                   <br>
 				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4b;">Your order <strong>$ctx.orderCode, </strong>placed on <strong>$ctx.orderDate</strong> has arrived at <strong>${ctx.deliveryAddress}.</strong></font>
 				  <br><br>
-                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;">If you're wondering what we're talking about, <a href="#" style="color:#AA133D"><strong>click here.</strong></a><br>
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;">If you're wondering what we're talking about, <a href="https://www.tatacliq.com" style="color:#AA133D"><strong>click here.</strong></a><br>
                   <br>
                   </font></td>
             <td width="13">&nbsp;</td>
@@ -35,12 +40,12 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
      
 	 
 	 <tr>
-        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="20" height="35">&nbsp;</td>
-            <td width="205" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order reference number:</td>
-            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;width:calc(100% - 225px);">${ctx.pOrderCode}</td>
-            <td>&nbsp;</td>
+            <td width="13" height="35">&nbsp;</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order reference number:</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;">${ctx.pOrderCode}</td>
+            <td width="13">&nbsp;</td>
           </tr>
         </table>
 		<br>
@@ -48,12 +53,12 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
       </tr>
 	  
 	  <tr>
-        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="20" height="35">&nbsp;</td>
-            <td width="205" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;width:125px;">Order number:</td>
-            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;width:calc(100% - 225px);">${ctx.orderCode}</td>
-            <td>&nbsp;</td>
+            <td width="13" height="35">&nbsp;</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order number:</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;">${ctx.orderCode}</td>
+            <td width="13">&nbsp;</td>
           </tr>
         </table>
 		<br>
@@ -61,7 +66,7 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
       </tr>
 	  
       <tr>
-        <td bgcolor="#fbfbfb"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="13">&nbsp;</td>
             <td><table width="572" border="0" cellspacing="0" cellpadding="0">
@@ -75,9 +80,9 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
                       <tr>
                         <td width="120" height="55" align="center">Transaction <br>
                           ID</td>
-                        <td width="130" align="center">Product</td>
+                        <td width="155" align="center">Product</td>
                         <td width="80" align="center">Qty</td>
-                        <td width="120" align="center">Price<br></td>
+                        <td width="90" align="center">Price<br></td>
 						  <td width="120" align="center">Shipping charges<br>
                           (if any) </td>
 						   <td width="120" align="center">COD Charges<br>
@@ -89,14 +94,14 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
 					  #set ($srNo=1)
 					  #foreach($entry in ${ctx.childEntries})
                   <tr>
-                    <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#424242;">
+                    <td style="border-bottom:solid 1px #f4f4f4;"><table border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#424242;">
                       <tr style="word-break:break-word;">
                         <td width="120" height="55" align="center" >$entry.orderLineId</td>
                         <td width="130" align="center">$entry.product.name</td>
                         <td width="50" align="center" >$entry.quantity</td>
-                        <td width="80" align="center">$entry.netAmountAfterAllDisc</td>
-                        <td width="120" align="center" >$entry.currDelCharge</td>
-						<td width="120" align="center" >$ctx.math.roundTo(2, $entry.convenienceChargeApportion)</td>
+                        <td width="80" align="center">$ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
+                        <td width="100" align="center" >$ctx.numberTool.format("#0.00", $entry.currDelCharge)</td>
+						<td width="120" align="center" >$ctx.numberTool.format("#0.00", $entry.convenienceChargeApportion)</td>
                         
                       </tr>
                     </table></td>
@@ -112,10 +117,10 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
               
              
               <tr>
-                <td>&nbsp;</td>
+                <td width="13">&nbsp;</td>
               </tr>
 			  <tr>
-                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; padding:5px 0;font-weight:bold;">We hope you're happy with your order. If not,  <a href="mailto:www.tataCliQ.com" style="color:#AA133D"><strong>click here.</strong></a>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; padding:5px 0;font-weight:bold;">We hope you're happy with your order. If not,  <a href="https://www.tatacliq.com" style="color:#AA133D"><strong>click here.</strong></a>
  </span></td>
               </tr>
 			  <tr>
@@ -133,7 +138,7 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
                 <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
               <tr>
-                <td>${ctx.cmsSlotContents.smileyimg}</td>
+                <td><span>${ctx.cmsSlotContents.smileyimg}</span></td>
               </tr>
               <tr>
                 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
@@ -142,24 +147,24 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+                <td><table border="0" cellspacing="0" cellpadding="0" style="width:95%;">
                   <tr>
-                    <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
+                    <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
                     <td>&nbsp;</td>
-                    <td width="27" align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
-                    <td width="27" align="right"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</a></td>
-                    <td width="27" align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
-                    <td width="27" align="right"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</a></td>
+                    <td align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
+                    <td align="right"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</a></td>
+                    <td align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
+                    <td align="right"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</a></td>
                   </tr>
                 </table></td>
               </tr>
               </table></td>
-            <td width="13">&nbsp;</td>
+            <td>&nbsp;</td>
           </tr>
         </table></td>
       </tr>
       <tr>
-        <td bgcolor="#fbfbfb">&nbsp;</td>
+        <td>&nbsp;</td>
       </tr>
     </table></td>
   </tr>

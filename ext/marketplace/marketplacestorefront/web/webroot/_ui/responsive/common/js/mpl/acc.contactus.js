@@ -218,3 +218,12 @@ $(document).ready(function() {
 	}
 
 });
+
+//code for removing blank <li> : TISPRD-1471
+
+$("div.customer-care-boxes li.yCmsContentSlot").each(function() {
+
+    if(!$.trim($(this).html())) {
+        $(this).hide();
+    }
+}); 

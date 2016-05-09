@@ -1,3 +1,32 @@
+var headerLoggedinStatus = false;
+$(function() {
+	
+	$.ajax({
+		url: ACC.config.encodedContextPath + "/setheader",
+		type: 'GET',
+		success: function (data)
+		{
+			headerLoggedinStatus = data.loggedInStatus;
+			$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
+			if (!headerLoggedinStatus) {
+				$("a.headeruserdetails").html("Sign In");
+			}
+			else {
+				var firstName = data.userFirstName;
+				if (firstName == null || firstName.trim() == '') {
+					$("a.headeruserdetails").html("Hi!");
+				} else {
+					$("a.headeruserdetails").html("Hi, " + firstName + "!");
+				}
+			}
+			$("input[name='CSRFToken']").each(function(){
+			//	console.log("old value ---"+this.value + "---new value--"+data.dts);
+		        	this.value = data.dts;          
+		    });
+		}
+	});
+});
+
 $("div.departmenthover").on(
 		"mouseover touchend",
 		function() {
@@ -131,6 +160,23 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
 			$("div.wishlist-info").html(html);
 		}
 	});
+});
+
+
+
+
+$("li.ajaxloginhi").on("mouseover touchend", function(e) {
+    e.stopPropagation();
+	if ($("ul.ajaxflyout").html().trim().length <= 0) {
+		$.ajax({
+			url: ACC.config.encodedContextPath + "/headerloginhi",
+			type: 'GET',
+			success: function (html)
+			{
+				$("ul.ajaxflyout").html(html);
+			}
+		});
+	}
 });
 //
 
@@ -322,7 +368,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 	}
 }
 // ENd AJAX CALL
-if ($('#brandsYouLove').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+if ($('#brandsYouLove').children().length == 0 && $('#pageTemplateId').val()=='LandingPage2Template') {
 	
 	if (window.localStorage) {
 		for ( var key in localStorage) {
@@ -436,7 +482,7 @@ $('.bulnext').click();
 
 
 // AJAX CALL BEST PICKS START
-if ($('#bestPicks').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+if ($('#bestPicks').children().length == 0 && $('#pageTemplateId').val()=='LandingPage2Template') {
 	getBestPicksAjaxCall();
 }
 
@@ -465,6 +511,8 @@ function getBestPicksAjaxCall(){
 							
 							if(v.url){
 								renderHtml += "<a href='"+ appendIcid(v.url, v.icid)+ "' class='item'>";
+
+
 							}
 							
 							if(v.imageUrl){
@@ -510,10 +558,11 @@ function getBestPicksAjaxCall(){
 	});
 }
 
+
 // AJAX CALL BEST PICKS END
 
 //AJAX CALL PRODUCTS YOU CARE START
-if ($('#productYouCare').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+if ($('#productYouCare').children().length == 0 && $('#pageTemplateId').val()=='LandingPage2Template') {
 	getProductsYouCareAjaxCall();
 }
 
@@ -543,9 +592,11 @@ function getProductsYouCareAjaxCall(){
 						//console.log('Category code: '+v.categoryCode);
 						//console.log('Category media url: '+v.mediaURL);
 						
-						var URL = ACC.config.encodedContextPath+"/Categories/"+v.categoryName+"/c/"+v.categoryCode;
+						var URL = ACC.config.encodedContextPath+"/Categories/"+v.categoryName+"/c-"+v.categoryCode;
 						//for url
 						renderHtml += "<a href='"+ appendIcid(URL,v.icid)+ "' class='item'>";
+
+
 						//for image
 						renderHtml += "<div class='home-product-you-care-carousel-img'> <img src='"
 							+ v.mediaURL
@@ -664,7 +715,7 @@ function getNewAndExclusiveAjaxCall(){
 	});
 }
 
-if ($('#newAndExclusive').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+if ($('#newAndExclusive').children().length == 0 && $('#pageTemplateId').val()=='LandingPage2Template') {
 	
 	getNewAndExclusiveAjaxCall();
 }
@@ -710,7 +761,7 @@ function getPromoBannerHomepage(){
 }
 
 
-if ($('#promobannerhomepage').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+if ($('#promobannerhomepage').children().length == 0 && $('#pageTemplateId').val()=='LandingPage2Template') {
 	
 	getPromoBannerHomepage();
 }
@@ -760,13 +811,13 @@ function getStayQuedHomepage(){
 }
 
 
-if ($('#stayQued').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+if ($('#stayQued').children().length == 0 && $('#pageTemplateId').val()=='LandingPage2Template') {
 	
 	getStayQuedHomepage();
 }
 /* StayQued Section Ends */
 
-if ($('#showcase').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+if ($('#showcase').children().length == 0 && $('#pageTemplateId').val()=='LandingPage2Template') {
 	if (window.localStorage) {
 		for ( var key in localStorage) {
 			if (key.indexOf("showcaseContent") >= 0) {

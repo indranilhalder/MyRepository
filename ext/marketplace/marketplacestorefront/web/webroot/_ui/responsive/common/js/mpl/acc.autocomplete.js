@@ -116,23 +116,40 @@ ACC.autocomplete = {
 			    if(productCodePatternReg.test(term) || productCodeNoReg.test(term)) {
 			        return;
 			    }
-			    
-				$.getJSON(self.options.autocompleteUrl, {term: request.term, category: selectedCat}, function (data)
+			    var autoSearchData = [];
+				var suggestedString="";
+				var snsSizeCount=0;
+				var snsWordCount = 0;
+				var requestTerm =  request.term.split(" "); 
+			    for (i=0 ; i < requestTerm.length ; i++){
+				       if (requestTerm[i] != "")
+				    	   snsSizeCount += 1; 
+				 }
+				if(snsSizeCount==1){
+					requestTerm=request.term.trim();
+				}
+				else{
+					requestTerm=request.term;
+				}
+				$.getJSON(self.options.autocompleteUrl, {term: requestTerm, category: selectedCat}, function (data)
 				{
-					var autoSearchData = [];
-					var suggestedString="";
 					if(data.suggestions != null){
 						$.each(data.suggestions, function (i, obj)
 				       	{
-						
+							
 							if(i==0){
 								if(data.brands.length!=undefined && data.brands.length>0){
-								//	var suggestedString="";
+								if(/\s/.test(requestTerm)){
+										suggestedString=data.searchTerm;
+									}
+									else{
+									
 									if (/\s/.test(obj.term)) {
 										suggestedString=obj.term.substr(0,obj.term.indexOf(' '));
 									}
 									else{
 										suggestedString=obj.term;
+									}
 									}
 									autoSearchData.push({
 										value: suggestedString,
@@ -146,29 +163,6 @@ ACC.autocomplete = {
 									}
 								});
 						     	}
-							
-//								var suggestedString="";
-//								if(data.brands.length!=undefined && data.brands.length>0){
-//									if (/\s/.test(obj.term)) {
-//										suggestedString=item.value.substr(0,obj.term.indexOf(' '));
-//									}
-//									else{
-//										suggestedString=obj.term;
-//										
-//									}
-//									}
-//							autoSearchData.push({
-//								value: suggestedString,
-//								searchterm:term,
-//								url: ACC.config.encodedContextPath + "/search?text=" + obj.term +"&best_search_keyword="+term,
-//								type: "autoSuggestion"
-//							});
-//							
-//							
-//								}
-//							}
-//						});
-//				     	}
 					if(data.brands != null){
 						$.each(data.brands, function (i, obj)
 						{
@@ -177,7 +171,7 @@ ACC.autocomplete = {
 										code: obj.code,
 										desc: obj.description,	
 										//url:  "/mpl/en/search/?text=" + data.searchTerm + "&searchCategory=" + obj,
-										url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Abrand%3A" +  obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+										url:  "/mpl/en/search/?q=" + suggestedString + "%3Arelevance%3Abrand%3A" +  obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
 										term: data.searchTerm,
 										type: "brands",
 										index: i,
@@ -188,17 +182,24 @@ ACC.autocomplete = {
 					}
 					
 			
-					if(data.suggestions != null){
+				if(data.suggestions != null){
 						$.each(data.suggestions, function (i, obj)
 						{
 							if(i==0){
 								var suggestedString="";
+								
 								if(data.categories.length!=undefined && data.categories.length>0){
+									
+									if(/\s/.test(requestTerm)){
+										suggestedString=data.searchTerm;
+									}
+									else{
 									if (/\s/.test(obj.term)) {
 										suggestedString=obj.term.substr(0,obj.term.indexOf(' '));
 									}
 									else{
 										suggestedString=obj.term;
+									}
 									}
 							    autoSearchData.push({
 								value: suggestedString,

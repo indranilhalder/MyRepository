@@ -38,6 +38,8 @@ import de.hybris.platform.servicelayer.session.SessionService;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -72,7 +74,10 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 @Controller
 @Scope("tenant")
-@RequestMapping(value = "/**/c")
+/*
+ * SEO : Changed for new url pattern acceptance
+ */
+//@RequestMapping(value = "/**/c")
 public class CategoryPageController extends AbstractCategoryPageController
 {
 	@Resource(name = "categoryService")
@@ -94,23 +99,49 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private SessionService sessionService;
 	@Resource(name = "productSearchFacade")
 	private ProductSearchFacade<ProductData> productSearchFacade;
-
+	private static final String NEW_CATEGORY_URL_PATTERN = "/**/c-{categoryCode:.*}";
+	private static final String NEW_CATEGORY_URL_PATTERN_PAGINATION = "/**/c-{categoryCode:.*}/page-{page}";
+	private static final String CATEGORY_URL_OLD_PATTERN = "/**/c";
 	//	private static final String LAST_LINK_CLASS = "active";
 
-	protected static final Logger LOG = Logger.getLogger(CategoryPageController.class);
+	private static final String PAGE = "page";
 
-	@RequestMapping(value = CATEGORY_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
-	public String category(@PathVariable("categoryCode") final String categoryCode,
+	protected static final Logger LOG = Logger.getLogger(CategoryPageController.class);
+	//Added For TISPRD-1243
+	private static final String DROPDOWN_BRAND = "MBH";
+	private static final String DROPDOWN_CATEGORY = "MSH";
+
+	/**
+	 * @desc Main method for category landing pages SEO : Changed to accept new pattern and new pagination changes TISCR
+	 *       340
+	 * @param categoryCode
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @param pageSize
+	 * @param dropDownText
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return String
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value =
+	{ NEW_CATEGORY_URL_PATTERN, NEW_CATEGORY_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
+	public String category(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) final String dropDownText, final Model model,
+			@RequestParam(value = "searchCategory", required = false) String dropDownText, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
 	{
+		categoryCode = categoryCode.toUpperCase();
 		String searchCode = new String(categoryCode);
-
+		//SEO: New pagination detection TISCR 340
+		page = getPaginatedPageNo(request);
 		//applying search filters
 		if (searchQuery != null)
 		{
@@ -122,17 +153,33 @@ public class CategoryPageController extends AbstractCategoryPageController
 		updateUserPreferences(pageSize);
 
 		List<ProductModel> heroProducts = new ArrayList<ProductModel>();
-		if (!(searchCode.substring(0, 5).equals(categoryCode))
+		if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
 				&& categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 		{
 			searchCode = searchCode.substring(0, 5);
+
 		}
 		model.addAttribute("searchCode", searchCode);
 		model.addAttribute("isCategoryPage", Boolean.TRUE);
 		final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 		//Set the drop down text if the attribute is not empty or null
 		if (dropDownText != null && !dropDownText.isEmpty())
+		//Added For TISPRD-1243
+
 		{
+
+			if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+
+			{
+				final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
+
+				if (categoryModel != null)
+				{
+					dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+
+				}
+			}
+			//Added For TISPRD-1243
 			model.addAttribute("dropDownText", dropDownText);
 
 		}
@@ -297,30 +344,54 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 	}
 
+	/**
+	 * @description SEO: SEO: changed to match the old pattern. In case of dual pattern match include
+	 *              NEW_CATEGORY_URL_PATTERN in @RequestMapping
+	 * @param categoryCode
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @return FacetRefinement<SearchStateData>
+	 * @throws UnsupportedEncodingException
+	 */
 	@ResponseBody
-	@RequestMapping(value = CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/facets", method = RequestMethod.GET)
-	public FacetRefinement<SearchStateData> getFacets(@PathVariable("categoryCode") final String categoryCode,
+	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/facets", method = RequestMethod.GET)
+	public FacetRefinement<SearchStateData> getFacets(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode) throws UnsupportedEncodingException
 	{
+		categoryCode = categoryCode.toUpperCase();
 		return performSearchAndGetFacets(categoryCode, searchQuery, page, showMode, sortCode);
 	}
 
+	/**
+	 * @description SEO: changed to match the old pattern. In case of dual pattern match include NEW_CATEGORY_URL_PATTERN
+	 *              in @RequestMapping
+	 * @param categoryCode
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @return SearchResultsData<ProductData>
+	 * @throws UnsupportedEncodingException
+	 */
 	@ResponseBody
-	@RequestMapping(value = CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
-	public SearchResultsData<ProductData> getResults(@PathVariable("categoryCode") final String categoryCode,
+	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
+	public SearchResultsData<ProductData> getResults(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode) throws UnsupportedEncodingException
 	{
+		categoryCode = categoryCode.toUpperCase();
 		return performSearchAndGetResultsData(categoryCode, searchQuery, page, showMode, sortCode);
 	}
 
 	/**
-	 * @description method is called to create PageableData
+	 * @description method is called to create PageableData.
 	 * @param pageNumber
 	 * @param pageSize
 	 * @param sortCode
@@ -422,5 +493,54 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 		}
 		return Iterables.frequency(splitStr, "size");
+	}
+
+	/**
+	 * @desc
+	 */
+	@Override
+	protected String checkRequestUrl(final HttpServletRequest request, final HttpServletResponse response, String resolvedUrlPath)
+			throws UnsupportedEncodingException
+	{
+		final String uri = request.getRequestURI();
+		if (uri.contains("page"))
+		{
+			final Pattern p = Pattern.compile("page-[0-9]+");
+			final Matcher m = p.matcher(uri);
+			if (m.find())
+			{
+				if (!StringUtils.isEmpty(m.group()))
+				{
+					resolvedUrlPath = resolvedUrlPath + "/" + m.group();
+				}
+			}
+		}
+		return super.checkRequestUrl(request, response, resolvedUrlPath);
+	}
+
+	/**
+	 * @Desc SEO pagaination URI capture and page no determination TISCR 340
+	 * @param request
+	 * @return int
+	 */
+	private int getPaginatedPageNo(final HttpServletRequest request)
+	{
+		int page = 0;
+		final String uri = request.getRequestURI();
+		if (uri.contains("page"))
+		{
+			final Pattern p = Pattern.compile("page-[0-9]+");
+			final Matcher m = p.matcher(uri);
+			if (m.find())
+			{
+				final String pageNo = m.group().split("-")[1];
+				if (null != pageNo)
+				{
+					page = Integer.parseInt(pageNo);
+					page = page - 1;
+				}
+			}
+		}
+		return page;
 	}
 }

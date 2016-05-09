@@ -41,7 +41,7 @@
 	<div class="pagination-bar listing-menu ${(top)?"top":"bottom"}">
 		<c:if test="${not empty searchPageData.sorts}">
 			<div>
-				<pagination:pageSelectionPagination searchUrl="${searchUrl}"
+				<pagination:mplPageSelectionPagination searchUrl="${searchUrl}"
 					searchPageData="${searchPageData}"
 					numberPagesShown="${numberPagesShown}" themeMsgKey="${themeMsgKey}" />
 			</div>

@@ -242,7 +242,7 @@ public class OrderLinesListController
 	@Command
 	@NotifyChange(
 	{ "orderBUC", "orderlinebusList", "editorVisible", "p1SlaveName", "transTrackOLBus", "sShipStatus", "slaveinfoBtn",
-			"p1SlaveIDList", "shipStatusRepBusSR", "refundedInfoBUCList" })
+			"p1SlaveIDList", "shipStatusRepBusSR", "refundedInfoBUCList", "p1slavesVisibleStatus", "p2slavesVisibleStatus" })
 	public void onListItemSelectOfOrder() throws InterruptedException
 	{
 		LOG.info("******************************OrderLinesList Item Selected............................");
@@ -259,6 +259,8 @@ public class OrderLinesListController
 			p1SlaveName = "";
 			p2SlaveName = "";
 			sShipStatus = false;
+			p1slavesVisibleStatus = false;
+			p2slavesVisibleStatus = false;
 			transTrackOLBus = new OrderLineBUC();
 			slaveinfoBtn = false;
 			shipStatusRepBusSR = null;
@@ -291,7 +293,7 @@ public class OrderLinesListController
 			p1slavesDropDownsStatus = true;
 			p2slavesDropDownsStatus = true;
 			logisticsDropDownsStatus = true;
-			p1slavesVisibleStatus = false;
+			p1slavesVisibleStatus = true;
 			p2slavesVisibleStatus = false;
 			shipStatusRepBusSR = null;
 
@@ -304,24 +306,21 @@ public class OrderLinesListController
 			refundedInfoBUCList = transTrackOLBus.getRefundedInfoRecordsList();
 			LOG.debug("selecetd order line orderId : {} ,orderLineID : {} ,FulfillmentType : {}", selectedOLBuc.getOrderId(),
 					selectedOLBuc.getTransactionId(), selectedOLBuc.getFulfillmentType());
+			LOG.info("selected OLBUC's primary slave id *************:::" + selectedOLBuc.getPrimarySlaveID());
+			//Added to get all stockroom locations by seller
+			slaveInfoArray = createSlaveInfoListForDropdown(
+					stockRoomLocationsFacade.getAllStockRoomLocationsBySeller(selectedOLBuc.getSellerID()).getSlaveInfo(),
+					selectedOLBuc.getPrimarySlaveID());
+
+			p1SlaveIDList = (ListModelList<SlaveInfo>) slaveInfoArray[0];
+
+			p1SlaveName = (String) slaveInfoArray[1];
 			//for TSHIP
 			if (logisticsFacade != null && !selectedOLBuc.getFulfillmentType().equals("SSHIP"))
 			{
 				//logistics drop downs visible status
 				sShipStatus = true;
-				p1slavesVisibleStatus = true;
 				//only for cnc order type
-				if (StringUtils.isNotEmpty(selectedOLBuc.getStoreID()) && "CNC".equals(selectedOLBuc.getDeliveryType()))
-				{
-					p2slavesVisibleStatus = true;
-					slaveInfoArray = createSlaveInfoListForDropdown(stockRoomLocationsFacade.getAllStockRoomLocations().getSlaveInfo(),
-							selectedOLBuc.getSecondarySlaveID());
-
-					p2SlaveIDList = (ListModelList<SlaveInfo>) slaveInfoArray[0];
-
-					p2SlaveName = (String) slaveInfoArray[1];
-
-				}
 				LOG.info("selected OLBUC's primary logistics id *************:::" + selectedOLBuc.getPrimaryLogisticID());
 				slaveInfoArray = createLogisticsListForDropdown((List<Logistics>) logisticsFacade.getAll(),
 						selectedOLBuc.getPrimaryLogisticID());
@@ -347,52 +346,53 @@ public class OrderLinesListController
 				{
 					LOG.info("Order Status" + transTrackOLBus.getTransactionLineStatus());
 					p1slavesDropDownsStatus = false;
-					p2slavesDropDownsStatus = false;
 					logisticsDropDownsStatus = false;
 					slaveinfoBtn = true;
 
 				}
 
 			}
+
 			//for SSHIP
 			if (selectedOLBuc.getFulfillmentType().equals("SSHIP"))
 			{
-				p1slavesVisibleStatus = true;
-				//only for cnc order type
-				if (StringUtils.isNotEmpty(selectedOLBuc.getStoreID()) && "CNC".equals(selectedOLBuc.getDeliveryType()))
-				{
-
-					p2slavesVisibleStatus = true;
-					slaveInfoArray = createSlaveInfoListForDropdown(stockRoomLocationsFacade.getAllStockRoomLocations().getSlaveInfo(),
-							selectedOLBuc.getSecondarySlaveID());
-
-					p2SlaveIDList = (ListModelList<SlaveInfo>) slaveInfoArray[0];
-
-					p2SlaveName = (String) slaveInfoArray[1];
-				}
 				if ("ORDPNASG".equals(transTrackOLBus.getTransactionLineStatus())
 						|| "ORDREJEC".equals(transTrackOLBus.getTransactionLineStatus())
 						|| "PYMTSCSS".equals(transTrackOLBus.getTransactionLineStatus()))
 				{
-					slaveinfoBtn = true;
 					p1slavesDropDownsStatus = false;
-					p2slavesDropDownsStatus = false;
+					slaveinfoBtn = true;
+
 				}
 			}
-
-			if (stockRoomLocationsFacade != null)
+			//cnc orderline
+			if (StringUtils.isNotEmpty(selectedOLBuc.getStoreID()) && "CNC".equals(selectedOLBuc.getDeliveryType()))
 			{
-				LOG.info("selected OLBUC's primary slave id *************:::" + selectedOLBuc.getPrimarySlaveID());
-				//Added to get all stockroom locations by seller
+				slaveInfoArray = createSlaveInfoListForDropdown(stockRoomLocationsFacade.getAllStockRoomLocations().getSlaveInfo(),
+						selectedOLBuc.getSecondarySlaveID());
+
+				p2SlaveIDList = (ListModelList<SlaveInfo>) slaveInfoArray[0];
+
+				p2SlaveName = (String) slaveInfoArray[1];
+
 				slaveInfoArray = createSlaveInfoListForDropdown(
 						stockRoomLocationsFacade.getAllStockRoomLocationsBySeller(selectedOLBuc.getSellerID()).getSlaveInfo(),
-						selectedOLBuc.getPrimarySlaveID());
+						selectedOLBuc.getStoreID());
 
 				p1SlaveIDList = (ListModelList<SlaveInfo>) slaveInfoArray[0];
 
 				p1SlaveName = (String) slaveInfoArray[1];
+				if ("ORDPNASG".equals(transTrackOLBus.getTransactionLineStatus())
+						|| "ORDREJEC".equals(transTrackOLBus.getTransactionLineStatus())
+						|| "PYMTSCSS".equals(transTrackOLBus.getTransactionLineStatus()))
+				{
+					p1slavesDropDownsStatus = true;
+					p2slavesDropDownsStatus = false;
 
+				}
+				p2slavesVisibleStatus = true;
 			}
+
 			orderLinesListbox.clearSelection();
 		}
 		else
@@ -478,8 +478,6 @@ public class OrderLinesListController
 
 
 	@Command
-	@NotifyChange(
-	{ "slaveinfoBtn", "logisticsDropDownsStatus", "p1slavesDropDownsStatus", "p2slavesDropDownsStatus", })
 	public void slaveinfoBtnAction()
 	{
 		OrderLineBUC orderLineBuc;
@@ -488,94 +486,105 @@ public class OrderLinesListController
 			LOG.info("Not enjected object for orderBUCFacade");
 			return;
 		}
+		LOG.info("p1slavesDropDownsStatus {},p2slavesDropDownsStatus {},logisticsDropDownsStatus {}", p1slavesDropDownsStatus,
+				p2slavesDropDownsStatus, logisticsDropDownsStatus);
 
-		if (!p1slavesDropDownsStatus && logisticsDropDownsStatus)
+		if (sShipStatus)
 		{
 			if (p1SlaveIDListbox.getSelectedItem() == null)
 			{
-				Messagebox.show("Please choose any one option from P1SlaveID", "Alert", Messagebox.OK, Messagebox.ERROR);
+				Messagebox.show("Please choose any one option from p1slaveid box", "Alert", Messagebox.OK, Messagebox.ERROR);
 				return;
 			}
-			final SlaveInfo p1slave = (SlaveInfo) p1SlaveIDListbox.getSelectedItem().getValue();
-			orderLineBuc = new OrderLineBUC();
-			orderLineBuc.setPrimarySlaveID(p1slave.getSlaveid());
-			orderLineBuc.setTransactionId(transTrackOLBus.getTransactionId());
-			final OrderLineBUC orderLineBucRtrn = orderBUCFacade.allocateOrderLine(orderLineBuc);
-			if (!orderLineBucRtrn.getPrimarySlaveID().equals(orderLineBuc.getPrimarySlaveID())
-					|| !orderLineBucRtrn.getTransactionId().equals(orderLineBuc.getTransactionId()))
+			if (!"CNC".equals(selectedOLBuc.getDeliveryType())
+					&& (p1LogisticsIDListbox.getSelectedItem() == null || p2LogisticsIDListbox.getSelectedItem() == null))
 			{
-
-				LOG.info("while updating p1slave in orderline, return data::: " + orderLineBucRtrn);
-				LOG.info("sent ordrrLineBUC  *****" + orderLineBuc);
-				Messagebox.show("Updating failed");
-
-			}
-			else
-			{
-
-				Messagebox.show("Successfully updated PrimarySlaveID of orderLine");
-			}
-			p1slavesDropDownsStatus = true;
-			slaveinfoBtn = false;
-			return;
-		}
-
-		if (!logisticsDropDownsStatus)
-		{
-			if (p1LogisticsIDListbox.getSelectedItem() == null || p1SlaveIDListbox.getSelectedItem() == null)
-			{
-				LOG.error("null p1LogisticsIDListbox or  p1SlaveIDListbox");
-				Messagebox.show("Please choose any one option from every P1SlaveID and P1LogisticsID", "Alert", Messagebox.OK,
-						Messagebox.ERROR);
+				Messagebox.show("Please choose any one option from every p1logistics and p2logistics box", "Alert", Messagebox.OK, Messagebox.ERROR);
 				return;
 			}
-			final SlaveInfo p1slave = (SlaveInfo) p1SlaveIDListbox.getSelectedItem().getValue();
-			final Logistics p1logistics = (Logistics) p1LogisticsIDListbox.getSelectedItem().getValue();
-			orderLineBuc = new OrderLineBUC();
-			orderLineBuc.setPrimaryLogisticID(p1logistics.getLogisticsid());
 
-			if (p2LogisticsIDListbox.getSelectedItem() != null)
+			final SlaveInfo p1slave = (SlaveInfo) p1SlaveIDListbox.getSelectedItem().getValue();
+			//final Logistics p1logistics = (Logistics) p1LogisticsIDListbox.getSelectedItem().getValue();
+			orderLineBuc = new OrderLineBUC();
+			if (p2slavesVisibleStatus)
 			{
-				final Logistics p2logistics = (Logistics) p2LogisticsIDListbox.getSelectedItem().getValue();
-				orderLineBuc.setSecondaryLogisticID(p2logistics.getLogisticsid());
+				if (p2SlaveIDListbox.getSelectedItem() != null)
+				{
+
+					final SlaveInfo p2slave = (SlaveInfo) p2SlaveIDListbox.getSelectedItem().getValue();
+					if (p2slave != null)
+					{
+						orderLineBuc.setSecondarySlaveID(p2slave.getSlaveid());
+						LOG.info("Selected p2slave id {}", p2slave.getSlaveid());
+					}
+				}
 			}
-			else
-			{
-				orderLineBuc.setSecondaryLogisticID(null);
-				LOG.info("*********************selected p2LogisticsId {}", "null");
-			}
+			orderLineBuc.setPrimaryLogisticID(p1LogisticsName);
+			orderLineBuc.setSecondaryLogisticID(p2LogisticsName);
 			orderLineBuc.setPrimarySlaveID(p1slave.getSlaveid());
 			orderLineBuc.setTransactionId(transTrackOLBus.getTransactionId());
 			orderLineBuc.setTransactionLineStatus(transTrackOLBus.getTransactionLineStatus());
 			LOG.info("************************save buttom sent OLBUC is {}", orderLineBuc);
-			final OrderLineBUC orderLineBucRtrn = orderBUCFacade.allocateOrderLine(orderLineBuc);
-			if (!orderLineBucRtrn.getPrimaryLogisticID().equals(orderLineBuc.getPrimaryLogisticID())
-					|| !orderLineBucRtrn.getSecondaryLogisticID().equals(orderLineBuc.getSecondaryLogisticID())
-					|| !orderLineBucRtrn.getPrimarySlaveID().equals(orderLineBuc.getPrimarySlaveID())
-					|| !orderLineBucRtrn.getTransactionLineStatus().equals("ORDALLOC")
-					|| !orderLineBucRtrn.getTransactionId().equals(orderLineBuc.getTransactionId()))
-			{
-				LOG.error("while updating p1slave,setPrimarySlaveID,and SecondaryLogisticID in orderline, return data :::"
-						+ orderLineBucRtrn);
-				Messagebox.show("Updating failed");
-			}
-			else
-			{
-
-				Messagebox.show("Successfully updated");
-			}
-			logisticsDropDownsStatus = true;
-			p1slavesDropDownsStatus = true;
-			slaveinfoBtn = false;
+			orderLineAllocValidation(orderLineBuc, orderBUCFacade.allocateOrderLine(orderLineBuc));
 		}
 		else
 		{
 
-			LOG.error("***************logisticsDropDownsStatus is disable*****************");
+			if (p1slavesVisibleStatus && p1SlaveIDListbox.getSelectedItem() == null)
+			{
+				Messagebox.show("Please choose any one option from P1SlaveID", "Alert", Messagebox.OK, Messagebox.ERROR);
+				return;
+			}
+			orderLineBuc = new OrderLineBUC();
+			if (p2slavesVisibleStatus)
+			{
+				if (p2SlaveIDListbox.getSelectedItem() != null)
+				{
+					final SlaveInfo p2slave = (SlaveInfo) p2SlaveIDListbox.getSelectedItem().getValue();
+					if (p2slave != null)
+					{
+						orderLineBuc.setSecondarySlaveID(p2slave.getSlaveid());
+						LOG.info("Selected p2slave id {}", p2slave.getSlaveid());
+					}
+				}
+			}
+			final SlaveInfo p1slave = (SlaveInfo) p1SlaveIDListbox.getSelectedItem().getValue();
+			LOG.info("Selected p1slave id {}", p1slave.getSlaveid());
+			orderLineBuc.setPrimarySlaveID(p1slave.getSlaveid());
+
+			orderLineBuc.setTransactionId(transTrackOLBus.getTransactionId());
+			orderLineAllocValidation(orderLineBuc, orderBUCFacade.allocateOrderLine(orderLineBuc));
 		}
 	}
 
+	private void orderLineAllocValidation(final OrderLineBUC source, final OrderLineBUC orderLBucRtrn)
+	{
+		if (orderLBucRtrn == null)
+		{
+			LOG.error("Update failed orderlineid {} :Reason update call return null", source.getTransactionId());
+			Messagebox.show("Updating failed", "Alert", Messagebox.OK, Messagebox.ERROR);
+		}
+		else if (!source.getPrimarySlaveID().equals(orderLBucRtrn.getPrimarySlaveID())
+				|| !source.getTransactionId().equals(orderLBucRtrn.getTransactionId()))
+		{
 
+			LOG.error("Orderline update failed :Reason ,not equal source p1slaveid {} with result p1slaveid",
+					source.getPrimarySlaveID(), orderLBucRtrn.getPrimarySlaveID());
+			Messagebox.show("Updating failed", "Alert", Messagebox.OK, Messagebox.ERROR);
+
+		}
+		else if (StringUtils.isNotEmpty(orderLBucRtrn.getSecondarySlaveID())
+				&& !source.getSecondarySlaveID().equals(orderLBucRtrn.getSecondarySlaveID()))
+		{
+			LOG.error("Orderline update failed :Reason ,not equal source p2slaveid {} with result p2slaveid",
+					source.getSecondarySlaveID(), orderLBucRtrn.getSecondarySlaveID());
+			Messagebox.show("Updating failed", "Alert", Messagebox.OK, Messagebox.ERROR);
+		}
+		else
+		{
+			Messagebox.show("Successfully updated orderLine");
+		}
+	}
 
 	private Object[] createLogisticsListForDropdown(final List<Logistics> source, final String orderLBLogisticsId)
 	{
@@ -672,14 +681,14 @@ public class OrderLinesListController
 				else
 				{
 
-					LOG.info("Not equal OLBUC's primary slaveid with any slaveid of stockroomlocation");
+					LOG.warn("Not equal OLBUC's slaveid {} with any slaveid of stockroomlocation", orderLBSlaveId);
 				}
 				slaveInfoArray[0] = listModelList;
 				slaveInfoArray[1] = str;
 			}
 			else
 			{
-				LOG.equals("NO slaves avaliable for P1Slaves ,list size " + source.size());
+				LOG.warn("NO slaves avaliable for P1Slaves ,list size " + source.size());
 			}
 		}
 		else

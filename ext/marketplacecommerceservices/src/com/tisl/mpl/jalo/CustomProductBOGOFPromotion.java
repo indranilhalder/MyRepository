@@ -518,6 +518,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 						final int totalFactorCount = totalQty / qualifyingCount;
 						final int validFreeCount = totalFactorCount * freeCount;
+						final int validNonFreeCount = (totalFactorCount * qualifyingCount) - validFreeCount;
 						final Map<String, Integer> QCMapForFreeItems = new HashMap<String, Integer>();
 
 
@@ -537,8 +538,8 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 						}
 
 						final List<PromotionOrderEntryConsumed> consumedItemsFromTail = consumeFromTail(paramSessionContext,
-								comparator, totalFactorCount, orderView.getAllEntries(paramSessionContext), qCMapForCatLevelBOGO,
-								tcMapForValidEntries);
+								comparator, validNonFreeCount, orderView.getAllEntries(paramSessionContext), qCMapForCatLevelBOGO,
+								tcMapForValidEntries);//validNonFreeCount was totalFactorCount which was wrong
 
 						final List actions = new ArrayList();
 						Map<String, List<String>> productAssociatedItemsMap = null;

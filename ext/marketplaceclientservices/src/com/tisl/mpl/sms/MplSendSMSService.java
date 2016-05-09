@@ -87,7 +87,7 @@ public class MplSendSMSService implements SendSmsService
 					LOG.info("Content = " + request.getContent());
 				}
 
-				if (!request.getRecipientPhoneNumber().isEmpty())
+				if (null != request && !request.getRecipientPhoneNumber().isEmpty())
 				{
 					final JAXBContext context = JAXBContext.newInstance(SmsECommReqWsDTO.class);
 					final Marshaller marshaller = context.createMarshaller();

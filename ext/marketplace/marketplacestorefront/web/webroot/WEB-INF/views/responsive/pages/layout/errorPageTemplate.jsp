@@ -5,19 +5,11 @@
 
 <template:page pageTitle="${pageTitle}">
 <div class="error-template-message">
-	<div class="error_container">
-		<ul>
-			<li class="left_col">
 				<cms:pageSlot position="SideContent" var="features" >
 					<cms:component component="${features}"/>
 				</cms:pageSlot>
-			</li>
-			<li class="right_col">
 				<cms:pageSlot position="MiddleContent" var="feature" >
 					<cms:component component="${feature}"/>
 				</cms:pageSlot>
-			</li>
-		</ul>
-	</div>
 </div>
 </template:page>       

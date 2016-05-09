@@ -98,49 +98,7 @@
 
 
 			<!----- Left Navigation Starts --------->
-			<%-- <div class="left-nav">
-				<h1>
-					<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-				</h1>
-				<ul>
-					<li><h3>
-							<spring:theme code="header.flyout.myaccount" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/"/>"><spring:theme
-								code="header.flyout.overview" /></a></li>
-					<li><a
-						href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-								code="header.flyout.marketplacepreferences" /></a></li>
-					<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
-								code="header.flyout.Personal" /></a></li>
-					<li><a class="active"
-						href="<c:url value="/my-account/orders"/>"><spring:theme
-								code="header.flyout.orders" /></a></li>
-					<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
-								code="header.flyout.cards" /></a></li>
-					<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
-								code="header.flyout.address" /></a></li>
-					<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
-										code="header.flyout.review" /></a></li>
-					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-								code="header.flyout.recommendations" /></a></li>
-				</ul>
-				<!-- <ul>
-				<li class="header-SignInShare"><h3><spring:theme
-									code="header.flyout.credits" /></h3></li>
-						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li>
-				</ul> -->
-				<ul>
-					<li><h3>
-							<spring:theme code="header.flyout.share" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
-								code="header.flyout.invite" /></a></li>
-
-				</ul>
-
-			</div> --%>
+			
 			<user:accountLeftNav pageName="orderDetail"/>
 			<!----- Left Navigation ENDS --------->
 
@@ -418,7 +376,7 @@
 								    <c:if test="${storeId ne entry.deliveryPointOfService.address.id}">
 									   <c:set var="pos"
 																value="${entry.deliveryPointOfService.address}" />
-																<li class="item delivered first">
+																<li class="item delivered first" id="shipping-track-order">
 																	<div class="item-header">
 															<c:set var="storeId" value="${pos.id}" />
 															
@@ -633,6 +591,9 @@
 													data-mylist="<spring:theme code="text.help" />"
 													data-dismiss="modal" onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
 														text="Cancel Order" /></a>
+												<!-- TISCR-410 -->
+												<spring:theme code="trackOrder.cancellableBefore.msg" />
+												
 											</c:if>
 											<c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
@@ -649,6 +610,11 @@
 													onclick="callSendInvoice();"><spring:theme
 														code="text.account.RequestInvoice" text="Request Invoice" /></a>
 											</c:if>
+											<!-- TISCR-410 -->
+											<c:if test="${cancellationMsg eq 'true'}">
+												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+											</c:if>
+											<!-- TISCR-410 ends -->
 										</div>
 
 										<div class="modal cancellation-request fade"
@@ -1506,7 +1472,9 @@ $(function() {
 				var index = $(this).attr("index");
 				checkAWBstatus(orderLineId,orderCode,"shippingStatusRecord" + orderLineId+"_"+index,"N");
 					$(this).parent().toggleClass("active");
-					$(this).parent().siblings().toggleClass("active");				
+					$(this).parent().siblings().toggleClass("active");	
+					$(this).parents(".trackOrdermessage_00cbe9.shipping.tracking-information").toggleClass("active_viewMore");
+					$(this).parents(".trackOrdermessage_00cbe9.shipping.tracking-information").prev().find('.dot-arrow').toggleClass("active_arrow");
 			});
 		});
 		
