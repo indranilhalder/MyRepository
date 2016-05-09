@@ -597,11 +597,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -788,5 +788,22 @@ public class GenericUtilityMethods
 			LOG.error(e.getMessage());
 		}
 		return flag;
+	}
+
+
+
+	/**
+	 * @param url
+	 * @return String
+	 */
+	public static String changeUrl(String url)
+	{
+		url = url.replaceAll("[^\\w/-]", "");
+		//TISSTRT-1297
+		if (url.contains("--"))
+		{
+			url = url.replaceAll("--", "-");
+		}
+		return url;
 	}
 }
