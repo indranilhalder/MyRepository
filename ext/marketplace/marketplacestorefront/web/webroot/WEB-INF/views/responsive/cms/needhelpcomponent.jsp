@@ -59,6 +59,7 @@
 				helpMe();
 			});
 			$('#up').click(function() {
+					$(this).removeClass("minimize");
 					$("#h").toggle();
 			});
 			$(document).on("blur",".input-box input",function(){	
