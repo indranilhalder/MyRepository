@@ -16125,7 +16125,7 @@ body .account .right-account .order-history.order-details li.item .status {
         position: static;
         width: 100%;
         float: left;
-        padding: 0 20px 85px
+        padding: 5px 20px 85px;
     }
     body .account .right-account .order-history.order-details li.item .status .message {
     padding: 5px 10px !important;
@@ -16144,7 +16144,15 @@ body .account .right-account .order-history.order-details li.item .status>ul>li 
     line-height: 30px;
     cursor:pointer;
 }
-
+/*TISSIT-2006 start*/
+body .account .right-account .order-history.order-details li.item .status> ul.nav >li{
+	display: inline-block;
+    vertical-align: bottom;
+    float: none;
+    line-height: normal;
+    margin-left: -3px;
+}
+/*TISSIT-2006 end*/
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress {
     line-height: 1;
     position: relative;
