@@ -14,6 +14,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.util.GenericUtilityMethods;
+
 
 /**
  * @author TCS
@@ -23,6 +25,7 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 {
 
 	private static final Logger LOG = Logger.getLogger(ExtDefaultCategoryModelUrlResolver.class);
+
 
 	@Override
 	protected String resolveInternal(final CategoryModel source)
@@ -61,12 +64,14 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 		{
 			LOG.error(e.getMessage());
 		}
-		url = url.replaceAll("[^\\w/-]", "");
-		//TISSTRT-1297
-		if (url.contains("--"))
-		{
-			url = url.replaceAll("--", "-");
-		}
+
+		url = GenericUtilityMethods.changeUrl(url);
+		//		url = url.replaceAll("[^\\w/-]", "");
+		//		//TISSTRT-1297
+		//		if (url.contains("--"))
+		//		{
+		//			url = url.replaceAll("--", "-");
+		//		}
 
 		return url;
 	}

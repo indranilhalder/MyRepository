@@ -298,7 +298,7 @@ function registerUser(eventObject)
 </c:if>
 <!-- Survey -->
 <div class="feedback-form modal fade" id="feedBackFormModal">
-	<div class="content" style="width: 60%; overflow: hidden;">
+	<div class="content" style="overflow: hidden;">
 		<button class="close" data-dismiss="modal"></button>
 		<div class="feedback-container">
 		<iframe src="${feebBackSurveyUrl}" 

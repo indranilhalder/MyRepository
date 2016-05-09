@@ -681,10 +681,26 @@ public class AccountPageController extends AbstractMplSearchPageController
 						for (OrderEntryData orderEntryData : subOrder.getEntries())
 						{
 							orderEntryData = getMplOrderFacade().fetchOrderEntryDetails(orderEntryData, sortInvoice, subOrder);
+
 							if (null == orderEntryData)
 							{
 								continue;
 							}
+
+							boolean cancellationMsgFlag = false;
+							if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
+							{
+								//TISCR-410 : To check whether to show missed cancellation deadline message to customer
+								final String orderEntryStatus = orderEntryData.getConsignment().getStatus().getCode();
+								final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
+
+								if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+								{
+									cancellationMsgFlag = true;
+								}
+							}
+							orderEntryData.setIsCancellationMissed(cancellationMsgFlag);
+
 							LOG.debug("Step7-************************Order History: post fetching and populating order entry details "
 									+ orderHistoryData.getCode());
 							//setting cancel product for BOGO
@@ -1027,6 +1043,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 								trackStatusReturnAWBMap.put(orderEntry.getOrderLineId(), consignmentModel.getReturnAWBNum());
 								trackStatusReturnLogisticMap.put(orderEntry.getOrderLineId(), consignmentModel.getReturnCarrier());
 								trackStatusTrackingURLMap.put(orderEntry.getOrderLineId(), consignmentModel.getTrackingURL());
+
+								//TISCR-410 : To check whether to show missed cancellation deadline message to customer
+								final String orderEntryStatus = consignmentModel.getStatus().getCode();
+								final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
+								boolean cancellationMsgFlag = false;
+								if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+								{
+									cancellationMsgFlag = true;
+								}
+								model.addAttribute(ModelAttributetConstants.DISPLAY_CANCELLATION_MSG, cancellationMsgFlag);
 							}
 
 						}
@@ -1125,7 +1151,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ORDER_DETAIL_CMS_PAGE));
 		return getViewForPage(model);
 	}
-
 
 	@RequestMapping(value = RequestMappingUrlConstants.UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
 	@ResponseBody

@@ -26,7 +26,7 @@
 					<a href="${request.contextPath}/clickto/chat" id="chatMe"
 					data-title="">
 					<spring:theme code="needhelp.chatwithus" />
-					&nbsp;<span class="bubble">1</span>
+					<!-- &nbsp;<span class="bubble">1</span> -->
 					</a>
 				</h5>
 					<!-- Commented as part of the chairman demo feedback -->
@@ -50,7 +50,9 @@
 			</div>
 		</div>
 	</div>
-
+	<div class="feedback-links">
+		<a id="feedback" href="#nogo"><spring:theme code="text.feedback.survey"/></a>
+		</div>
 	<script>
 		$(document).ready(function() {
 			$('.glyphicon-remove').click(function() {
