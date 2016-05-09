@@ -1319,6 +1319,9 @@ $(document).ready(function(){
 	 		$("header .content nav > ul > li > ul > li > .toggle a").click(function(){
 	 			$(this).attr("href","#");
 	 		});
+	 		$("header.brand-header .content .bottom nav>ul>li>ul>li.level1>div.toggle>a").click(function(){
+	 			$(this).attr("href","#");
+	 		});
 			}
 		
 		if($('.lookbook_wrapper .bottom-pagination').children().length==0){
