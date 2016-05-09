@@ -39098,3 +39098,33 @@ Samsung Galaxy S5 -----------
 
 
 /* CNC Page CSS End */
+ #ia_products_hot .listing-leftmenu .checkbox-menu li label:before {
+	width: 10px;
+	height: 10px;
+	margin-top: 1px;
+	border: none;
+}
+
+#ia_products_hot .listing-leftmenu .checkbox-menu li label {
+	color: #000;
+	font-size: 14px;
+	padding-left: 18px;
+}
+
+#ia_products_hot .listing-leftmenu .checkbox-menu li label:hover {
+	color: #a9143c;
+}
+
+#ia_products_hot input[type="checkbox"]:checked+label:before {
+	border: 1px solid #fff;
+}
+
+.slider.product .frame .overflow .slide {
+	width: 100%;
+}
+
+@media ( max-width :650px) {
+	#ia_products_hot .pagination {
+		top: -8px;
+	}
+}
