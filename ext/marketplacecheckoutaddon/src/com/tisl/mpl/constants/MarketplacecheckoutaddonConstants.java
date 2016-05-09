@@ -39,7 +39,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String CHECKOUTCALLBACKURL = "/integration/merchant_callback";
 	public final static String SOPPAGEDATA = "silentOrderPageData";
 	public final static String PAYMENTFORMMPLURL = "paymentFormMplUrl";
-	public final static String PAYMENTVIEWURL = "/store/mpl/en/checkout/multi/payment-method/view";
+	public final static String PAYMENTVIEWURL = "/checkout/multi/payment-method/view";
 	public final static String LOGERROR = "Failed to load Payment Page";
 	public final static String ERRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.generalError";
 	public final static String PAYMENTTRANERRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.PaymentTransactionError";
