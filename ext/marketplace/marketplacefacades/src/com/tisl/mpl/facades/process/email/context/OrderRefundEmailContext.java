@@ -31,12 +31,14 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.OrderRefundProcessModel;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 
 
 /**
@@ -111,8 +113,31 @@ public class OrderRefundEmailContext extends AbstractEmailContext<OrderRefundPro
 		put(NAME_OF_PRODUCT, orderEntry.getProduct().getName());
 		put(AMOUNT_REFUNDED, refundAmount);
 		put(DELIVERY_CHARGE, Double.valueOf(deliveryCharge));
-		put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
-		put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+		try
+		{
+			if (null != returnEntry && null != returnEntry.getOrderEntry()
+					&& null != returnEntry.getOrderEntry().getMplDeliveryMode()
+					&& null != returnEntry.getOrderEntry().getMplDeliveryMode().getDeliveryMode())
+			{
+				if (returnEntry.getOrderEntry().getMplDeliveryMode().getDeliveryMode().getCode().trim()
+						.equalsIgnoreCase(MarketplaceFacadesConstants.CLICK_AND_COLLECT.trim()))
+				{
+					put(CUSTOMER_NAME, CUSTOMER);
+					put(DISPLAY_NAME, CUSTOMER);
+				}
+				else if (null != deliveryAddress)
+				{
+					put(CUSTOMER_NAME, (StringUtils.isNotBlank(deliveryAddress.getFirstname()) ? deliveryAddress.getFirstname()
+							: CUSTOMER));
+					put(DISPLAY_NAME, (StringUtils.isNotBlank(deliveryAddress.getFirstname()) ? deliveryAddress.getFirstname()
+							: CUSTOMER));
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			LOG.debug("Delivery Address Null ");
+		}
 		put(NUMBERTOOL, new NumberTool());
 
 
