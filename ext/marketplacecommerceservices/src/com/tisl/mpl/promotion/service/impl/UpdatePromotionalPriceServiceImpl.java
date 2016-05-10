@@ -23,6 +23,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -87,11 +88,13 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	@Override
 	public void updatePromotionalPrice(final List<Product> products, final List<Category> categories, final Double value,
 			final Date startDate, final Date endtDate, final boolean percent, final Integer priority, final List<String> sellers,
-			final List<String> brands)
+			final List<String> brands, final String promoCode)
 	{
 
 		try
 		{
+			clearExistingData(promoCode);
+
 			final List<String> product = new ArrayList<String>();
 			List<String> stagedProductList = new ArrayList<String>();
 			final List<String> promoproductList = new ArrayList<String>();
@@ -165,6 +168,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 							price.setPromotionEndDate(endtDate);
 							price.setIsPercentage(Boolean.valueOf(percent));
 							price.setPromotionValue(value);
+							price.setPromotionIdentifier(promoCode);
 						}
 						else
 						{
@@ -172,6 +176,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 							price.setPromotionEndDate(endtDate);
 							price.setIsPercentage(Boolean.valueOf(percent));
 							price.setPromotionValue(value);
+							price.setPromotionIdentifier(promoCode);
 						}
 						modelService.save(price);
 					}
@@ -182,6 +187,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						price.setPromotionEndDate(null);
 						price.setIsPercentage(null);
 						price.setPromotionValue(null);
+						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 
 						LOG.debug("Saving Price Row ");
 						modelService.save(price);
@@ -194,6 +200,37 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/**
+	 * The Method clears Existing PriceRow Data
+	 *
+	 * @param promoCode
+	 */
+	private void clearExistingData(final String promoCode)
+	{
+		if (StringUtils.isNotEmpty(promoCode))
+		{
+			final List<PriceRowModel> priceRowList = updatePromotionalPriceDao.fetchPromoPriceData(promoCode);
+			final List<PriceRowModel> finalList = new ArrayList<PriceRowModel>();
+			if (CollectionUtils.isNotEmpty(priceRowList))
+			{
+				for (final PriceRowModel price : priceRowList)
+				{
+					price.setPromotionStartDate(null);
+					price.setPromotionEndDate(null);
+					price.setIsPercentage(null);
+					price.setPromotionValue(null);
+					price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
+					finalList.add(price);
+				}
+
+				if (CollectionUtils.isNotEmpty(finalList))
+				{
+					modelService.saveAll(finalList);
+				}
+			}
 		}
 	}
 
@@ -321,6 +358,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						price.setPromotionEndDate(null);
 						price.setIsPercentage(null);
 						price.setPromotionValue(null);
+						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 					}
 					else if (null != quantity && quantity.longValue() > 1) //For TISPRD-383 : If Validated remove Special Price Details
 					{
@@ -328,6 +366,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						price.setPromotionEndDate(null);
 						price.setIsPercentage(null);
 						price.setPromotionValue(null);
+						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 					}
 					modelService.save(price);
 				}
@@ -348,7 +387,6 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-
 
 	private boolean validateProductData(final Product product, final Integer priority)
 	{

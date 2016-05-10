@@ -369,12 +369,14 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 		Integer priority = Integer.valueOf(0);
 		final List<String> sellerList = new ArrayList<String>();
 		final List<String> brandList = new ArrayList<String>();
+		String promoCode = MarketplacecommerceservicesConstants.EMPTYSPACE;
 		try
 		{
 			if (null != item)
 			{
 				//Bug Fix
 				final BuyAPercentageDiscount buyAPerDiscountPromotion = (BuyAPercentageDiscount) item;
+				promoCode = buyAPerDiscountPromotion.getCode();
 
 				for (final AbstractPromotionRestriction res : buyAPerDiscountPromotion.getRestrictions())
 				{
@@ -445,12 +447,12 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					if (isPercentage)
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(productList, null, price, startDate, endDate, true,
-								priority, sellerList, brandList);
+								priority, sellerList, brandList, promoCode);
 					}
 					else
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(productList, null, price, startDate, endDate, false,
-								priority, sellerList, brandList);
+								priority, sellerList, brandList, promoCode);
 					}
 
 				}
@@ -462,12 +464,12 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					if (isPercentage)
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(null, categoryList, price, startDate, endDate, true,
-								priority, sellerList, brandList);
+								priority, sellerList, brandList, promoCode);
 					}
 					else
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(null, categoryList, price, startDate, endDate, false,
-								priority, sellerList, brandList);
+								priority, sellerList, brandList, promoCode);
 					}
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
