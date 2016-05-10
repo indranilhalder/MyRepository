@@ -69,7 +69,7 @@ function refresh(){
 	$("#bankNameForEMI, #listOfEMiBank, #netbankingIssueError, #emiPromoError").css("display","none");
 	$("#convChargeFieldId, #convChargeField").css("display","none");
 	$(".card_ebsErrorSavedCard, .card_cvvErrorSavedCard, #maestroMessage, #newMaestroMessage").css("display","none");
-	$(".make_payment_top_nb, .make_payment_top_savedCard, .make_payment_top_newCard, .cod-otp-button_top, .cod_payment_button_top").css("display","none");
+	$(".make_payment_top_nb, .make_payment_top_savedCard, .make_payment_top_newCard, .cod_payment_button_top").css("display","none");
 	$("").css("display","none");
 	hideTable();
 	var selection = document.silentOrderPostForm.EMIBankCode;
@@ -144,7 +144,7 @@ function displayCODForm()
 	refresh();
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
-	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton, .cod-otp-button_top").css("display","block");
+	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
 	/*$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","block");*/	//Modified back as erroneously pushed by performance team
 	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 	//setCellNo();
