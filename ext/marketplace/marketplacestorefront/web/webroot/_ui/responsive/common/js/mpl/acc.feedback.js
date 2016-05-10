@@ -3,8 +3,8 @@ $(document).ready(function(event){
 			e.preventDefault();
 			$("#feedBackFormModal").modal();
 		});
-		
-		$('body').on('mousedown', stopNavigate);
+});	
+		/*$('body').on('mousedown', stopNavigate);
 		$('body').on('mouseleave', function() {
 			$(window).on('beforeunload', function() {
 				openPopUp();
@@ -25,7 +25,7 @@ $(document).ready(function(event){
 			});
 		$(window).keyup(function(){
 			$(window).on('beforeunload', function() {
-				openPopUp();
+				//openPopUp();
 			});
 		});
 });
@@ -39,3 +39,4 @@ function openPopUp(){
 	var top = (screen.height/2)-(h/2);
 	window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
 }
+*/

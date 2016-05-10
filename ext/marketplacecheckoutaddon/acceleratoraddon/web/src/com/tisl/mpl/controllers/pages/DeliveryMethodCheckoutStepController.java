@@ -379,10 +379,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
+			applyPromotions();
+			
 			//populate freebie data
 			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
-
-			applyPromotions();
 
 			getMplCheckoutFacade().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
 
@@ -1913,8 +1913,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					&& richAttributeModel.get(0).getShippingModes() != null
 					&& richAttributeModel.get(0).getShippingModes().getCode() != null)
 			{
-				final String shippingMode = richAttributeModel.get(0).getShippingModes().getCode();
-				storeLocationRequestData.setTransportMode(shippingMode.toUpperCase());
+				final String globalCodeShippingMode = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(
+						richAttributeModel.get(0).getShippingModes().getCode().toUpperCase());
+				storeLocationRequestData.setTransportMode(globalCodeShippingMode);
 			}
 			else
 			{

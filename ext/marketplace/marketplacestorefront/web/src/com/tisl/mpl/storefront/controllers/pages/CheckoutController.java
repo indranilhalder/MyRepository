@@ -371,11 +371,11 @@ public class CheckoutController extends AbstractCheckoutController
 	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-	 * 
+	 *
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
-	 * 
+	 *
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
@@ -566,10 +566,10 @@ public class CheckoutController extends AbstractCheckoutController
 			final String selectedDeliveryMode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 			final MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(selectedDeliveryMode,
 					MarketplacecommerceservicesConstants.INR, selectedUSSID);
-			String startValue = deliveryModel.getDeliveryMode().getStart() != null ? ""
-					+ deliveryModel.getDeliveryMode().getStart().intValue() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
-			String endValue = deliveryModel.getDeliveryMode().getEnd() != null ? ""
-					+ deliveryModel.getDeliveryMode().getEnd().intValue() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+			String startValue = deliveryModel.getDeliveryMode().getStart() != null ? deliveryModel.getDeliveryMode().getStart()
+					.toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+			String endValue = deliveryModel.getDeliveryMode().getEnd() != null ? deliveryModel.getDeliveryMode().getEnd().toString()
+					: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 			List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
 			final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(selectedUSSID);
 

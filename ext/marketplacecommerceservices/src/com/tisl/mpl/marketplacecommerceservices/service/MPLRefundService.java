@@ -89,4 +89,10 @@ public interface MPLRefundService extends RefundService
 	 * @throws Exception
 	 */
 	List<OrderCancelRecordEntryModel> getAllCancelled() throws Exception;
+
+	/**
+	 * @param orderEntryStatus
+	 * @return String
+	 */
+	String getOrderStatusStage(String orderEntryStatus);
 }
