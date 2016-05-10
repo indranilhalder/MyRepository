@@ -53,6 +53,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -120,7 +122,7 @@ public class SearchPageController extends AbstractSearchPageController
 	private static final String DROPDOWN_MICROSITE_CATEGORY = "category-";
 	//private static final String DROPDOWN_SELLER = "seller-"; Avoid unused private fields such as 'DROPDOWN_SELLER'.
 
-	
+
 	private static final String NEW_EXCLUSIVE_BREADCRUMB = "Discover New & Exclusive";
 	private static final String LAST_LINK_CLASS = "active";
 	public static final String REDIRECT_PREFIX = "redirect:";
@@ -168,7 +170,7 @@ public class SearchPageController extends AbstractSearchPageController
 	//	@Resource(name = "defaultCategoryService")
 	//	private DefaultCategoryService defaultCategoryService;
 
-	
+
 	@Resource(name = "defaultProductService")
 	private DefaultProductService defaultProductService;
 
@@ -417,15 +419,33 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @return String
 	 * @throws CMSItemNotFoundException
 	 */
-	@RequestMapping(method = RequestMethod.GET, params = "q")
+	@RequestMapping(method = RequestMethod.GET, params = "q", value =
+	{ "/page-{page}", "" })
 	public String refineSearch(@RequestParam("q") final String searchQuery,
-			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
+			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException, JSONException, ParseException
 	{
+
+
+		final String uri = request.getRequestURI();
+		if (uri.contains("page"))
+		{
+			final Pattern p = Pattern.compile("page-[0-9]+");
+			final Matcher m = p.matcher(uri);
+			if (m.find())
+			{
+				final String pageNo = m.group().split("-")[1];
+				if (null != pageNo)
+				{
+					page = Integer.parseInt(pageNo);
+					page = page - 1;
+				}
+			}
+		}
 
 		final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
 		model.addAttribute("sizeCount", Integer.valueOf(Iterables.frequency(splitStr, "size")));
@@ -675,7 +695,7 @@ public class SearchPageController extends AbstractSearchPageController
 			@RequestParam(value = "page", defaultValue = "0", required = false) final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) String sortCode, final HttpServletRequest request, final Model model)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 
 		try
@@ -718,7 +738,11 @@ public class SearchPageController extends AbstractSearchPageController
 			}
 
 			storeCmsPageInModel(model, getCmsPageService().getDefaultCategoryPage());
-
+			if (getCmsSiteService().getCurrentSite() != null
+					&& StringUtils.isNotEmpty(getCmsSiteService().getCurrentSite().getName()))
+			{
+				storeContentPageTitleInModel(model, getCmsSiteService().getCurrentSite().getName());
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -730,8 +754,8 @@ public class SearchPageController extends AbstractSearchPageController
 
 		catch (final Exception exp)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
+					MarketplacecommerceservicesConstants.E0000));
 
 
 
@@ -819,91 +843,92 @@ public class SearchPageController extends AbstractSearchPageController
 			throws CMSItemNotFoundException
 	{
 		final MplAutocompleteResultData resultData = new MplAutocompleteResultData();
-		//boolean allSearchFlag = false;
 
-		//final SearchBoxComponentModel component = (SearchBoxComponentModel) cmsComponentService.getSimpleCMSComponent(componentUid);
-
-		//if (component.isDisplaySuggestions())
-		//{
-
-		final List<AutocompleteSuggestionData> suggestions = productSearchFacade.getAutocompleteSuggestions(term);
-		if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+		try
 		{
-
-			resultData.setSuggestions(suggestions);
-		}
-		else
-		{
-			String substr = "";
-			substr = term.substring(0, term.length() - 1);
-
-			resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(substr));
-
-
-		}
-		//resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(term));
-		final SearchStateData searchState = new SearchStateData();
-		final SearchQueryData searchQueryData = new SearchQueryData();
-		/*********** Fixing for Defect TISPRO-58 and TISPRD-346 Start */
-		final String strSuggestion = resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm()
-				: BLANKSTRING;
-		searchQueryData.setValue(strSuggestion.contains(term) ? strSuggestion : term);
-		/*********** Fixing for Defect TISPRO-58 and TISPRD-346 End */
-		//searchQueryData.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
-		searchState.setQuery(searchQueryData);
-		searchState.setSns(true);
-
-		final PageableData pageableData = null;
-
-		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
-
-
-		if (CollectionUtils.isNotEmpty(resultData.getSuggestions()))
-		{
-
-			if (category.startsWith(MarketplaceCoreConstants.ALL_CATEGORY))
+			final List<AutocompleteSuggestionData> suggestions = productSearchFacade.getAutocompleteSuggestions(term);
+			if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
 			{
-				searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
-						.textSearch(searchState, pageableData);
-				resultData.setCategories(searchPageData.getSnsCategories());
-				resultData.setBrands(searchPageData.getAllBrand());
-				//allSearchFlag = true;
+
+				resultData.setSuggestions(suggestions);
 			}
 			else
-			//if (!allSearchFlag)
 			{
-				if (category.startsWith(DROPDOWN_CATEGORY) || category.startsWith(DROPDOWN_BRAND))
+				String substr = "";
+				substr = term.substring(0, term.length() - 1);
+
+				resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(substr));
+
+
+			}
+
+			//resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(term));
+			final SearchStateData searchState = new SearchStateData();
+			final SearchQueryData searchQueryData = new SearchQueryData();
+			/*********** Fixing for Defect TISPRO-58 and TISPRD-346 Start */
+			final String strSuggestion = resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm()
+					: BLANKSTRING;
+			searchQueryData.setValue(strSuggestion.contains(term) ? strSuggestion : term);
+			/*********** Fixing for Defect TISPRO-58 and TISPRD-346 End */
+			//searchQueryData.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
+			searchState.setQuery(searchQueryData);
+			searchState.setSns(true);
+
+			final PageableData pageableData = null;
+
+			ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+
+
+			if (CollectionUtils.isNotEmpty(resultData.getSuggestions()))
+			{
+
+				if (category.startsWith(MarketplaceCoreConstants.ALL_CATEGORY))
 				{
-					searchPageData = searchFacade.categorySearch(category, searchState, pageableData);
+					searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+							.textSearch(searchState, pageableData);
+					resultData.setCategories(searchPageData.getSnsCategories());
+					resultData.setBrands(searchPageData.getAllBrand());
+					//allSearchFlag = true;
 				}
 				else
+				//if (!allSearchFlag)
 				{
-					searchPageData = searchFacade.dropDownSearch(searchState, category, "sellerId", pageableData);
+					if (category.startsWith(DROPDOWN_CATEGORY) || category.startsWith(DROPDOWN_BRAND))
+					{
+						searchPageData = searchFacade.categorySearch(category, searchState, pageableData);
+					}
+					else
+					{
+						searchPageData = searchFacade.dropDownSearch(searchState, category, "sellerId", pageableData);
+					}
+					resultData.setCategories(searchPageData.getSnsCategories());
+					resultData.setBrands(searchPageData.getAllBrand());
+
 				}
-				resultData.setCategories(searchPageData.getSnsCategories());
-				resultData.setBrands(searchPageData.getAllBrand());
+
+
+
+
+				final List<ProductData> suggestedProducts = searchPageData.getResults();
+
+				//this is done to remove some of the data issues where we
+				//have null images or price
+				if (suggestedProducts != null)
+				{
+					cleanSearchResults(suggestedProducts);
+					//resultData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions()));
+					resultData.setProducts(suggestedProducts);
+					resultData.setSearchTerm(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm()
+							: term);
+				}
+
 
 			}
-
-
-
-
-			final List<ProductData> suggestedProducts = searchPageData.getResults();
-
-			//this is done to remove some of the data issues where we
-			//have null images or price
-			if (suggestedProducts != null)
-			{
-				cleanSearchResults(suggestedProducts);
-				//resultData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions()));
-				resultData.setProducts(suggestedProducts);
-				resultData
-						.setSearchTerm(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
-			}
-
-
 		}
-		//}
+		catch (final EtailNonBusinessExceptions eb)
+		{
+			LOG.debug("Error occured in getAutocompleteSuggestions :" + eb.getMessage());
+		}
 
 		return resultData;
 	}
@@ -992,12 +1017,9 @@ public class SearchPageController extends AbstractSearchPageController
 
 		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
 				ModelAttributetConstants.SEARCH_META_DESC, null, getI18nService().getCurrentLocale())
-				+ " "
-				+ typeOfProduct
-				+ " "
-				+ getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
+				+ " " + typeOfProduct + " " + getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
 
-						getI18nService().getCurrentLocale()) + " " + getSiteName());
+				getI18nService().getCurrentLocale()) + " " + getSiteName());
 		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(typeOfProduct);
 		setUpMetaData(model, metaKeywords, metaDescription);
 
@@ -1085,9 +1107,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 
@@ -1162,7 +1184,7 @@ public class SearchPageController extends AbstractSearchPageController
 				this.pageSize = pageSize;
 			}
 		}
-	
+
 	}
 
 

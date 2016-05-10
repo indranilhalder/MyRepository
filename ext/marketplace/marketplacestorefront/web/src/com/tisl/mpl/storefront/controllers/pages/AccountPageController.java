@@ -262,6 +262,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String MY_INTEREST = "myInterest";
 	private static final String MY_STYLE_PROFILE = "myStyleProfile";
 	private static final String REVIEW_CMS_PAGE = "reviews";
+
 	private static final Logger LOG = Logger.getLogger(AccountPageController.class);
 	private String dateDOB = MarketplacecommerceservicesConstants.EMPTY;
 	private String dateDOAnn = MarketplacecommerceservicesConstants.EMPTY;
@@ -275,6 +276,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public static final String UNUSED = "unused";
 	public static final String STATUS = "status";
 	public static final String ERROR = "error";
+
 	public static final String OK = "OK";
 	public static final String SUCCESS = "success";
 	public static final String FAILED = "failed";
@@ -286,6 +288,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public static final String RETURN_PINCODE = "returnPincodeAvailabilityCheck";
 	public static final String RETURN_ADDRESS = "returnAddress";
 	public static final String RETURN_Logistics_Availability = "returnLogisticsAvailability";
+
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
 	private CheckoutFacade checkoutFacade;
@@ -405,8 +408,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private MplGigyaReviewCommentService gigyaCommentService;
 	@Autowired
 	private DefaultMplReviewFacade mplReviewrFacade;
+
 	@Autowired
 	private DiscountUtility discountUtility;
+
 
 	@Autowired
 	private MyStyleProfileFacade myStyleProfileFacade;
@@ -676,10 +681,26 @@ public class AccountPageController extends AbstractMplSearchPageController
 						for (OrderEntryData orderEntryData : subOrder.getEntries())
 						{
 							orderEntryData = getMplOrderFacade().fetchOrderEntryDetails(orderEntryData, sortInvoice, subOrder);
+
 							if (null == orderEntryData)
 							{
 								continue;
 							}
+
+							boolean cancellationMsgFlag = false;
+							if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
+							{
+								//TISCR-410 : To check whether to show missed cancellation deadline message to customer
+								final String orderEntryStatus = orderEntryData.getConsignment().getStatus().getCode();
+								final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
+
+								if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+								{
+									cancellationMsgFlag = true;
+								}
+							}
+							orderEntryData.setIsCancellationMissed(cancellationMsgFlag);
+
 							LOG.debug("Step7-************************Order History: post fetching and populating order entry details "
 									+ orderHistoryData.getCode());
 							//setting cancel product for BOGO
@@ -1022,6 +1043,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 								trackStatusReturnAWBMap.put(orderEntry.getOrderLineId(), consignmentModel.getReturnAWBNum());
 								trackStatusReturnLogisticMap.put(orderEntry.getOrderLineId(), consignmentModel.getReturnCarrier());
 								trackStatusTrackingURLMap.put(orderEntry.getOrderLineId(), consignmentModel.getTrackingURL());
+
+								//TISCR-410 : To check whether to show missed cancellation deadline message to customer
+								final String orderEntryStatus = consignmentModel.getStatus().getCode();
+								final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
+								boolean cancellationMsgFlag = false;
+								if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+								{
+									cancellationMsgFlag = true;
+								}
+								model.addAttribute(ModelAttributetConstants.DISPLAY_CANCELLATION_MSG, cancellationMsgFlag);
 							}
 
 						}
@@ -1035,12 +1066,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
+
 			////TISEE-6290
 			fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
 			model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
 
 			model.addAttribute(ModelAttributetConstants.TRACK_STATUS, trackStatusMap);
 			model.addAttribute(ModelAttributetConstants.CURRENT_STATUS, currentStatusMap);
+			//			model.addAttribute(ModelAttributetConstants.CANCEL_ENDPOINT_STATUS_NAME, configurationService.getConfiguration()
+			//					.getString(ModelAttributetConstants.CANCEL_ENDPOINT_STATUS, "HOTC"));
 			model.addAttribute(ModelAttributetConstants.ORDER_DELIVERY_DATE, formattedDeliveryDates);
 			model.addAttribute(ModelAttributetConstants.ORDER_DELIVERY_DATE_ACTUAL, formattedActualDeliveryDates);
 			model.addAttribute(ModelAttributetConstants.CANCEL_PRODUCT_MAP, currentProductMap);
@@ -1117,7 +1151,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ORDER_DETAIL_CMS_PAGE));
 		return getViewForPage(model);
 	}
-
 
 	@RequestMapping(value = RequestMappingUrlConstants.UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
 	@ResponseBody
@@ -2605,9 +2638,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_UPDATE_PARSONAL_DETAIL, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String updateProfile(final MplCustomerProfileForm mplCustomerProfileForm, final BindingResult bindingResult,
-			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttributes)
-			throws CMSItemNotFoundException, ParseException
+			final Model model, final HttpServletRequest request, final HttpSession session,
+			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, ParseException
 	{
+		session.setAttribute("userFirstName", mplCustomerProfileForm.getFirstName().trim());
 		try
 		{
 			final String specificUrl = RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_UPDATE_PROFILE;
@@ -4543,6 +4577,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					ModelAttributetConstants.RENDERING_METHOD_VIEW_PARTICULAR_WISHLIST);
 			model.addAttribute(ModelAttributetConstants.SHOW_WISHLIST, ModelAttributetConstants.Y_SMALL_VAL);
 			model.addAttribute(ModelAttributetConstants.PARTICULAR_WISHLIST_NAME, particularWishlist.getName());
+
 			final RemoveWishlistData removeWishlistData = new RemoveWishlistData();
 			model.addAttribute(ModelAttributetConstants.REMOVE_WISHLIST_DATA, removeWishlistData);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(WISHLIST_CMS_PAGE));
@@ -4566,6 +4601,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}

@@ -37,4 +37,10 @@ public interface MPLOrderCancelDao extends OrderCancelDao
 	 * @throws Exception
 	 */
 	List<OrderCancelRecordEntryModel> getAllCancelled(Date startDate, Date endDate) throws Exception;
+
+	/**
+	 * @param orderEntryStatus
+	 * @return String
+	 */
+	String getOrderStatusStage(String orderEntryStatus);
 }

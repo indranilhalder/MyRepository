@@ -31,6 +31,9 @@
 		<collectiontype code="EtailSellerMasterCollection"
 			elementtype="SellerMaster" autocreate="true" generate="false"
 			type="list" />
+		<!-- Store Icon Image URL -->
+		<collectiontype elementtype="java.lang.String" code="mplStoreImageUrl"
+				autocreate="true" generate="true" type="list"/>
 	</collectiontypes>
 
 	<enumtypes>
@@ -2391,7 +2394,14 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
-					
+
+					<!-- Store Icon Image URL -->
+					<attribute autocreate="true" qualifier="mplImageUrls" type="mplStoreImageUrl"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>					
 				</attributes>
 			</itemtype>	
 	</itemtypes>

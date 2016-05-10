@@ -10,6 +10,10 @@
 	<group qualifier="editorial" visible="true" initially-opened="false">
 		<label key="config.general.editorial" />
 		<property qualifier="CMSParagraphComponent.content" editor="wysiwyg"/>
+		<property qualifier="SimpleCMSComponent.deeplinkType" />
+        <property qualifier="SimpleCMSComponent.deeplinkTypeId" />
+        <property qualifier="SimpleCMSComponent.deeplinkTypeVal" />
+		
 	</group>
 	
 	<group qualifier="visibility" visible="true" initially-opened="false">

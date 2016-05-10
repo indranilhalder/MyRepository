@@ -585,8 +585,8 @@ function makeProductHtml(widgetElement, obj, rid) {
 	  }
 	  var html = '';
 	 
-	  
-	 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)){ 
+	  /*  TISPRO-303 Changes-checking with 'type' */
+	 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2) && (obj.type == 'Electronics')){ 
 		 html += '<li onmouseover="showBoth(this)" onmouseout="hideBoth(this)" class="look slide ' + widgetElement + '_list_elements productParentList" style="display: inline-block; width: 221px; margin-left: 10px; margin-right: 10px; height: 500px; margin-bottom: 20px;position: relative;">';
 		 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; margin: 10px 0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;width: 108px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 26%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; margin: 35px 108px; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 109px;font-size:12px;"><span>Add To Bag</span></div>';
 		
@@ -619,7 +619,7 @@ function makeProductHtml(widgetElement, obj, rid) {
 	  }
 	  //html += '<div class="image" style="position: absolute; left: 0; line-height: 347px; height: 347px; width: 221px; background:center no-repeat url('+obj.image_url+'); background-size:contain;"></div>';
 	  html += '<div class="short-info ia_short-info" style="position: relative; bottom: 0; left: 0; height: 66px; width: 221px;">';
-	  html += '<ul class="color-swatch" style="top: -3px; !important;margin-right: 9px;">';
+	  html += '<ul class="color-swatch" style="top: -3px; ">';
 	  if(obj.colors.length < 3){
 			jQuery.each(obj.colors, function (icount, itemColor) {	
 				if(icount == 1){
@@ -658,7 +658,8 @@ function makeProductHtml(widgetElement, obj, rid) {
 		  else if(obj.price != null && parseInt(obj.price) > parseInt(obj.discounted_price) && parseInt(obj.price) > 0){
 			  html += '<p class="old moprice">₹'+parseInt(obj.price)+'</p>';
 		  }
-		  html += '<p class="normal discprice">₹'+parseInt(obj.discounted_price)+'</p>';
+		  //TISPRO-317 changes
+		  html += '<p class="sale discprice">₹'+parseInt(obj.discounted_price)+'</p>';
 	  }
 	  }
 	  else if(Math.round(obj.original_price) == (obj.price)){
@@ -854,10 +855,10 @@ function updatePage(response, widgetMode) {
     	}else if(site_page_type === 'viewSellers' && widgetElement === 'ia_products'){
     		html += '<h1><span style="color: black !important;">You May Also Need</span>';
     	}
-    	    	//for release 2 changes in home-page headers-hot now
-    	else if(site_page_type === 'homepage' && widgetElement === 'ia_products_hot'){
+    	    	//Reverting changes-- for release 2 changes in home-page headers-hot now
+    	/*else if(site_page_type === 'homepage' && widgetElement === 'ia_products_hot'){
     		html += '<h1><span style="color: black !important;">Best Sellers</span>';
-    	}else{
+    	}*/else{
     		//for release 2 changes in pdp-page 
     		if(site_page_type === 'productpage' && widgetElement ==='ia_products_complements'){
     			html += '<h1><span style="color: black !important;">Things That Go With This</span>';

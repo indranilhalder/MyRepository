@@ -108,7 +108,7 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 ;;Everywhere.png;$siteResource/images/banners/homepage/responsive/Everywhere.png;Everywhere.png;"Homepage Everywhere Banner";
 ;;callus.png;$siteResource/images/banners/homepage/responsive/callus.png;callus.png;"Call us";
 ;;chatwidus.png;$siteResource/images/banners/homepage/responsive/chatwidus.png;chatwidus.png;"Chat With Us";
-
+;;TataCliq_FB.jpg;$siteResource/images/logo/TataCliq_FB.jpg;TataCliq_FB.jpg;"Tata Cliq Brand Image 470x246";
 # changes for help and service page
 ;;callus-getintouch.png;$siteResource/images/banners/homepage/callus-getintouch.png;callus-getintouch.png;"Call us";
 ;;chatwidus-getintouch.png;$siteResource/images/banners/homepage/chatwidus-getintouch.png;chatwidus-getintouch.png;"Chat With Us";
@@ -282,7 +282,7 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 # Product Carousel for  New And Exclusive
 INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);scroll(code);popup;&componentRef
-;; NewAndExclusiveProductCarouselComponent; New And Exclusive Component;987654321,987654322,987654323;allVisible;false;NewAndExclusiveProductCarouselComponent
+;; NewAndExclusiveProductCarouselComponent; New In Component Component;987654321,987654322,987654323;allVisible;false;NewAndExclusiveProductCarouselComponent
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
 ;;Section4BSlot-Homepage; NewAndExclusiveProductCarouselComponent
@@ -351,7 +351,7 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 #TISPRD-630
 
 INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(&componentRef);&componentRef;imageSize(code)
-;;ProductsYouCareCategoriesCarouselComponent;Products You Care About Categories Carousel Component;DressesImageCategoryComponent,TopsandTShirtsImageCategoryComponent,SkirtsImageCategoryComponent,KurtaKurtisImageCategoryComponent,SmartphonesImageCategoryComponent,TabletsImageCategoryComponent;ProductsYouCareCategoriesCarouselComponent;thumbnail
+;;ProductsYouCareCategoriesCarouselComponent;What to Buy Now Categories Carousel Component;DressesImageCategoryComponent,TopsandTShirtsImageCategoryComponent,SkirtsImageCategoryComponent,KurtaKurtisImageCategoryComponent,SmartphonesImageCategoryComponent,TabletsImageCategoryComponent;ProductsYouCareCategoriesCarouselComponent;thumbnail
 
 INSERT_UPDATE MplImageCategoryComponent;$contentCV[unique=true];uid[unique=true];name;category(code,$productCV);&componentRef;isImageFromPCM[default='true']
 ;;DressesImageCategoryComponent;Dresses Image Category Component;MSH1010100;DressesImageCategoryComponent

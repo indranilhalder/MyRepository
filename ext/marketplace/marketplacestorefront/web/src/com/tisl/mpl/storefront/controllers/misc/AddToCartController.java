@@ -126,6 +126,11 @@ public class AddToCartController extends AbstractController
 			LOG.error("Error in add to cart controller : " + ex);
 			return MarketplacecommerceservicesConstants.ERROR_MSG_TYPE;
 		}
+		catch (final Exception ex)
+		{
+			LOG.error("Error in add to cart controller : " + ex);
+			return MarketplacecommerceservicesConstants.ERROR_MSG_TYPE;
+		}
 	}
 
 	/*

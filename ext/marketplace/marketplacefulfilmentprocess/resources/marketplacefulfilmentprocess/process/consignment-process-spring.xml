@@ -188,8 +188,8 @@
 		<entry key="ORDALLOC" value="ORDER_ALLOCATED" />
 		<entry key="ORDACCEP" value="ORDER_ACCEPTED" />
 		<entry key="ORDREJEC" value="ORDER_REJECTED" />
-		<entry key="PILIGENE" value="PICK_IN_PROGRESS" />
-		<entry key="PICKINPR" value="PICK_LIST_GENERATED" />		
+		<entry key="PILIGENE" value="PICK_LIST_GENERATED" />
+		<entry key="PICKINPR" value="PICK_IN_PROGRESS" />
 		<entry key="PICKHOLD" value="PICK_HOLD" />
 		<entry key="PICKCONF" value="PICK_CONFIRMED" />
 		<entry key="SCANNED" value="PACKED" />

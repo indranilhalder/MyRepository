@@ -177,6 +177,10 @@
          <property name="displayMrp" type="java.util.List&lt;java.lang.String>"></property>
          <property name="displayPromotion" type="java.util.List&lt;java.lang.String>"></property>
 		<!-- pdp changes ends -->
+		
+		<!-- Added for TISCR-405: % off or You save XYZ iN PLP -->
+	<property name="savingsOnProduct"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 
 	</bean>
 
@@ -242,6 +246,7 @@
 		<property name="signature" type="String"></property>
 		<property name="timestamp" type="String"></property>
 		<property name="checkTataRewards" type="boolean"></property>
+		<property name="gigyaSessionsForMob" type="com.tisl.mpl.wsdto.GigyaWsDTO" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.TrackOrderData">
@@ -497,6 +502,7 @@
 		<property name="classificationAttributeAssignments"
 			type="java.util.List&lt;de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel>" />
 		<property name="genericFacet" type="boolean" />
+		<property name="classificationProductType" type="java.lang.String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.AddressRadioTypeData">
@@ -826,4 +832,8 @@
 		<property name="transactionId" type="String"></property>
 	</bean>
 
+	<bean class="de.hybris.platform.commercefacades.order.data.PromotionOrderEntryConsumedData">
+		<property name="ussid" type="String"/>
+	</bean>
+	
 </beans>

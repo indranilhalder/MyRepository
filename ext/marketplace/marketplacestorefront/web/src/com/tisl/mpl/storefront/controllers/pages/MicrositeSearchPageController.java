@@ -57,6 +57,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
@@ -138,7 +139,7 @@ public class MicrositeSearchPageController extends AbstractSearchPageController
 	public String textSearch(@RequestParam(value = "text", defaultValue = "") final String searchText,
 			@RequestParam(value = "micrositeSearchCategory") final String dropDownValue,
 			@PathVariable("mSellerID") final String mSellerID, final HttpServletRequest request, final Model model)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		//---------------start--------------
 		boolean foundCat = false;
@@ -224,8 +225,10 @@ public class MicrositeSearchPageController extends AbstractSearchPageController
 				}
 				else
 				{
-					model.addAttribute(WebConstants.BREADCRUMBS_KEY, searchBreadcrumbBuilder.getBreadcrumbs(null, searchText,
-							CollectionUtils.isEmpty(searchPageData.getBreadcrumbs())));
+					model.addAttribute(
+							WebConstants.BREADCRUMBS_KEY,
+							searchBreadcrumbBuilder.getBreadcrumbs(null, searchText,
+									CollectionUtils.isEmpty(searchPageData.getBreadcrumbs())));
 				}
 			}
 		}
@@ -259,19 +262,19 @@ public class MicrositeSearchPageController extends AbstractSearchPageController
 
 				if (brandMatch)
 				{
-					storeCmsPageInModel(model,
-							getContentPageForLabelOrId(dropDownText.trim().toLowerCase() + MarketplaceCoreConstants.BRAND_CMS_PAGE_ID));
+					storeCmsPageInModel(model, getContentPageForLabelOrId(dropDownText.trim().toLowerCase()
+							+ MarketplaceCoreConstants.BRAND_CMS_PAGE_ID));
 				}
 				else if (sellerMatch)
 				{
-					storeCmsPageInModel(model,
-							getContentPageForLabelOrId(dropDownText.trim().toLowerCase() + MarketplaceCoreConstants.SELLER_CMS_PAGE_ID));
+					storeCmsPageInModel(model, getContentPageForLabelOrId(dropDownText.trim().toLowerCase()
+							+ MarketplaceCoreConstants.SELLER_CMS_PAGE_ID));
 				}
 
 				else if (categoryMatch)
 				{
-					final CategoryModel category = mplCategoryService
-							.getCategoryModelForCode(cmsSiteService.getCurrentCatalogVersion(), dropDownText);
+					final CategoryModel category = mplCategoryService.getCategoryModelForCode(
+							cmsSiteService.getCurrentCatalogVersion(), dropDownText);
 					//Added to redirect to the category landing page for blank search with category selected
 					return REDIRECT_PREFIX + categoryModelUrlResolver.resolve(category);
 				}
@@ -281,9 +284,11 @@ public class MicrositeSearchPageController extends AbstractSearchPageController
 		model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
 		model.addAttribute("metaRobots", "noindex,follow");
 
-		final String metaDescription = MetaSanitizerUtil
-				.sanitizeDescription(getMessageSource().getMessage("search.meta.description.results", null,
-						"search.meta.description.results", getI18nService().getCurrentLocale()) + " " + searchText + " "
+		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
+				"search.meta.description.results", null, "search.meta.description.results", getI18nService().getCurrentLocale())
+				+ " "
+				+ searchText
+				+ " "
 				+ getMessageSource().getMessage("search.meta.description.on", null, "search.meta.description.on",
 						getI18nService().getCurrentLocale()) + " " + getSiteName());
 		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(searchText);
@@ -310,9 +315,12 @@ public class MicrositeSearchPageController extends AbstractSearchPageController
 	 */
 	protected void updatePageTitle(final String searchText, final Model model)
 	{
-		storeContentPageTitleInModel(model, getPageTitleResolver().resolveContentPageTitle(
-				getMessageSource().getMessage("search.meta.title", null, "search.meta.title", getI18nService().getCurrentLocale())
-						+ " " + searchText));
+		storeContentPageTitleInModel(
+				model,
+				getPageTitleResolver().resolveContentPageTitle(
+						getMessageSource().getMessage("search.meta.title", null, "search.meta.title",
+								getI18nService().getCurrentLocale())
+								+ " " + searchText));
 	}
 
 
@@ -326,84 +334,93 @@ public class MicrositeSearchPageController extends AbstractSearchPageController
 	 */
 	@SuppressWarnings("boxing")
 	@ResponseBody
-	@RequestMapping(value = "/autocomplete/" + COMPONENT_UID_PATH_VARIABLE_PATTERN
-			+ "/sellerID/{mSellerID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/autocomplete/" + COMPONENT_UID_PATH_VARIABLE_PATTERN + "/sellerID/{mSellerID}", method = RequestMethod.GET)
 	public AutocompleteResultData getAutocompleteSuggestions(@PathVariable final String componentUid,
 			@PathVariable("mSellerID") final String mSellerID, @RequestParam("term") final String term,
 			@RequestParam("category") final String category) throws CMSItemNotFoundException
 	{
 		final MplAutocompleteResultData resultData = new MplAutocompleteResultData();
-		String dropDownText = "";
-
-		//final SearchBoxComponentModel component = (SearchBoxComponentModel) cmsComponentService.getSimpleCMSComponent(componentUid);
-
-		if (mSellerID != null)
+		try
 		{
-			//resultData.setSuggestions(subList(productSearchFacade.getAutocompleteSuggestions(term), component.getMaxSuggestions()));
-			resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(term));
-			final SearchStateData searchState = new SearchStateData();
-			final SearchQueryData searchQueryData = new SearchQueryData();
-			searchQueryData.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
-			searchState.setQuery(searchQueryData);
-			searchState.setSns(true);
 
-			final PageableData pageableData = null;
+			String dropDownText = "";
 
-			ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+			//final SearchBoxComponentModel component = (SearchBoxComponentModel) cmsComponentService.getSimpleCMSComponent(componentUid);
 
-
-			if (!(resultData.getSuggestions().isEmpty()))
+			if (mSellerID != null)
 			{
+				//resultData.setSuggestions(subList(productSearchFacade.getAutocompleteSuggestions(term), component.getMaxSuggestions()));
+				final SearchStateData searchState = new SearchStateData();
+				final SearchQueryData searchQueryData = new SearchQueryData();
 
-				boolean categoryMatch = false;
-				final boolean sellerMatch = false;
-				if (MarketplaceCoreConstants.ALL_CATEGORY.equalsIgnoreCase(category))
+				resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(term));
+
+				searchQueryData
+						.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
+				searchState.setQuery(searchQueryData);
+				searchState.setSns(true);
+
+
+				final PageableData pageableData = null;
+
+				ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+
+
+				if (!(resultData.getSuggestions().isEmpty()))
 				{
 
-					searchPageData = searchFacade.dropDownSearchForSeller(searchState, mSellerID, "ALL", pageableData);
-					resultData.setCategories(searchPageData.getMicrositeSnsCategories());
-					resultData.setBrands(searchPageData.getAllBrand());
-				}
-				else
-				{
-
-
-
-
-
-					if (category.startsWith(DROPDOWN_CATEGORY))
+					boolean categoryMatch = false;
+					final boolean sellerMatch = false;
+					if (MarketplaceCoreConstants.ALL_CATEGORY.equalsIgnoreCase(category))
 					{
-						categoryMatch = true;
-						dropDownText = category.replaceFirst(DROPDOWN_CATEGORY, "");
-						searchPageData = searchFacade.sellerCategorySearch(dropDownText, mSellerID, searchState, pageableData);
 
+						searchPageData = searchFacade.dropDownSearchForSeller(searchState, mSellerID, "ALL", pageableData);
+						resultData.setCategories(searchPageData.getMicrositeSnsCategories());
+						resultData.setBrands(searchPageData.getAllBrand());
 					}
-					if (!categoryMatch && !sellerMatch)
+					else
 					{
-						if (category.startsWith(DROPDOWN_BRAND))
+
+
+
+
+
+						if (category.startsWith(DROPDOWN_CATEGORY))
 						{
-							dropDownText = category.replaceFirst(DROPDOWN_BRAND, "");
+							categoryMatch = true;
+							dropDownText = category.replaceFirst(DROPDOWN_CATEGORY, "");
 							searchPageData = searchFacade.sellerCategorySearch(dropDownText, mSellerID, searchState, pageableData);
 
-
 						}
+						if (!categoryMatch && !sellerMatch)
+						{
+							if (category.startsWith(DROPDOWN_BRAND))
+							{
+								dropDownText = category.replaceFirst(DROPDOWN_BRAND, "");
+								searchPageData = searchFacade.sellerCategorySearch(dropDownText, mSellerID, searchState, pageableData);
+
+
+							}
+						}
+
+						resultData.setCategories(searchPageData.getMicrositeSnsCategories());
+						resultData.setBrands(searchPageData.getAllBrand());
+
+					}
+					final List<ProductData> suggestedProducts = searchPageData.getResults();
+
+					//this is done to remove some of the data issues where we
+					//have null images or price
+					if (suggestedProducts != null)
+					{
+						cleanSearchResults(suggestedProducts);
+						//resultData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions()));
+						resultData.setProducts(suggestedProducts);
+						resultData.setSearchTerm(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm()
+								: term);
 					}
 
-					resultData.setCategories(searchPageData.getMicrositeSnsCategories());
-					resultData.setBrands(searchPageData.getAllBrand());
 
-				}
-				final List<ProductData> suggestedProducts = searchPageData.getResults();
-
-				//this is done to remove some of the data issues where we
-				//have null images or price
-				if (suggestedProducts != null)
-				{
-					cleanSearchResults(suggestedProducts);
-					//resultData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions()));
-					resultData.setProducts(suggestedProducts);
-					resultData
-							.setSearchTerm(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
 				}
 
 
@@ -411,7 +428,10 @@ public class MicrositeSearchPageController extends AbstractSearchPageController
 
 
 		}
-
+		catch (final EtailNonBusinessExceptions eb)
+		{
+			LOG.debug("Error occured in getAutocompleteSuggestions :" + eb.getMessage());
+		}
 		return resultData;
 	}
 

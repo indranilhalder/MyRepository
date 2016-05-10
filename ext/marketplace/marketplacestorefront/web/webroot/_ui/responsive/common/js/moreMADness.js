@@ -71,7 +71,7 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
                         // The Div for the carousel is being constructed below from the JSON response from the MSD server.
                         dS = '';                        
                         dS = dS +    '<div class="trending wrapper">';
-                        dS = dS +        '<h1><span style="color: black !important;">Visually Similar Items</span></h1>';                        
+                        dS = dS +        '<h1><span style="color: black !important;">More Stuff Like This</span></h1>'; //Changes Done for Chairman's Demo-- Visually Similar Items                        
                         dS = dS +        '<div class="spacer">';
                         dS = dS +            '<div class="slider product ready">';
                         dS = dS +                '<div class="frame">';
@@ -89,7 +89,7 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
                             
                             // if variants are present show only Quick view
                             if ((products[x].hasOwnProperty('colorSwatches') == true && products[x]['colorSwatches'].length > 0)  || (products[x].hasOwnProperty('variantSize') == true && products[x]['variantSize'].length > 0)) {                            	
-                            	dS = dS + 	'<div onClick="popupwindowMSD(event,\''+products[x]['listingId'] + '\')" class="MSDQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer;bottom: 0px;; z-index: -1;font-size: 12px;left:0; visibility: hidden; color: #00cbe9;font-family: \'icomoon\';display: block; width:222px; margin: 10px 0px; text-align: center;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;line-height: 30px;">Quick View</div>';                           	
+                            	dS = dS + 	'<div onClick="popupwindowMSD(event,\''+products[x]['listingId'] + '\')" class="MSDQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer;bottom: 0px; z-index: -1;font-size: 12px;left:0; visibility: hidden; color: #a9143c;font-family: \'icomoon\';display: block; width:222px; margin: 10px 0px; text-align: center;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;line-height: 30px;">Quick View</div>';                           	
                             	
                             }                            
                             // Quickview and Add to Bag ends

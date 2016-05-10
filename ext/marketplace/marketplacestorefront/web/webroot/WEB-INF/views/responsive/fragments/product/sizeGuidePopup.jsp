@@ -293,30 +293,32 @@
 					<c:when test="${not empty variantOption.defaultUrl}">
 					
 						<li>
-						<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
+						<c:url value="/p-sizeGuide?productCode=${variantOption.code}" 
 								var="variantUrl" />
-						
-							 <c:choose>
+							<!-- TISPRO-308 -->
+							<%--  <c:choose>
 							 <c:when test="${empty sizeSelectedSizeGuide}">
+							 
 								<a href="${variantUrl}&sizeSelected=" data-target="#popUpModal" data-toggle="modal" data-productcode="${variantOption.code}">
 							 </c:when>
 							 <c:otherwise>
 								<a href="${variantUrl}&sizeSelected=true" data-target="#popUpModal" data-productcode="${variantOption.code}" data-toggle="modal">
 						     </c:otherwise>
-							 </c:choose>
+							 </c:choose> --%>
 											
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
-									<c:choose>
+								<c:choose> 
 								<c:when test="${color=='multi'}"> 
-						     	<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
+						     	<img src="${commonResourcePath}/images/multi.jpg" style="width:100%;height:100%;cursor: pointer;" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"/>
 								</c:when>
+								<%-- <span style="background-color: ${color};border: 1px solid rgb(204, 211, 217);" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span> --%>
 								<c:otherwise>
 									<span
 										style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"
-										title="${variantOption.colour}"></span></a>
-                               </c:otherwise>
-                               </c:choose>
+										title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span>
+                               </c:otherwise> 
+                               </c:choose> 
 
 									<c:if test="${variantOption.code eq product.code}">
 										<c:set var="currentColor" value="${color}" /> 
@@ -354,7 +356,7 @@
 
 <c:if test="${noVariant!=true&&notApparel!=true}">
  <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
-		<select id="variant" class="variant-select size-g">
+		<select id="variant" class="variant-select size-g variant-select-sizeGuidePopUp">            <!--changes for TISPRO-338 (variant-select-sizeGuidePopUp class added) -->
 			<c:choose>
 				<c:when test="${empty sizeSelectedSizeGuide}">
 					<option value="#" data-target="#popUpModal" selected="selected"><spring:theme code="text.select.size" /></option>
@@ -370,7 +372,7 @@
 							<c:if test="${currentColor eq color}">
 								<c:set var="currentColor" value="${color}" />
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
-									<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
+									<c:url value="/p-sizeGuide?productCode=${variantOption.code}" 
 								var="link" />
 								<c:set var="code" value="${variantOption.code}"/>
 									<c:choose>
@@ -405,7 +407,7 @@
 										<c:if test="${currentColor eq color}">
 
 											<c:forEach var="entry" items="${variantOption.sizeLink}">
-											<c:url value="/p/sizeGuide?productCode=${variantOption.code}" var="link" />
+											<c:url value="/p-sizeGuide?productCode=${variantOption.code}" var="link" />
 												<c:choose>
 													<c:when test="${(variantOption.code eq product.code)}">
 													<%-- 	<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option> --%>
@@ -598,7 +600,8 @@ $(document).ready(function(){
 	$(".color-swatch li span").each(function(){
 		var title = $(this).attr("title");
 		if(currentColour == title){
-			$(this).parent().parent().addClass("active");
+			//TISPRO-322 PDP Size Guide issue fixed
+			$(this).parent().addClass("active");
 		}			
 	});
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){

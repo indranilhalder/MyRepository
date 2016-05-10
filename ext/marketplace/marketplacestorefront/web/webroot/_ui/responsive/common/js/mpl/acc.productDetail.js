@@ -165,13 +165,12 @@
 		
 		// Sise Guide Select Color
 		   
-		$(document).on("click", 'a[data-target=#popUpModal] ',
+		$(document).on("click", '.colorBox',
 			function() {
-			   var target = $(this).attr("href");
+			  var target = $(this).attr('data-producturl');
 			   console.log(target);
-			   var productcode= $(this).attr("data-productcode");
+			  var productcode= $(this).attr('data-productcode');
 			   console.log(productcode);
-		 	   //$("#popUpModal").modal('hide');
 			   $('body').on('hidden.bs.modal', '#popUpModal', function () {
 					  $(this).removeData('bs.modal');
 					});
@@ -201,6 +200,27 @@
 		     	buyboxDetailsForSizeGuide(productcode);
 		    });
 		});
+		
+		//TISPRO-333
+		$(document).on("click", 'a[data-target=#popUpModal] ',
+				function() {
+				   var target = $(this).attr("href");
+				   console.log(target);
+				   var productcode= $(this).attr("data-productcode");
+				   console.log(productcode);
+			 	   //$("#popUpModal").modal('hide');
+				   $('body').on('hidden.bs.modal', '#popUpModal', function () {
+						  $(this).removeData('bs.modal');
+						});
+
+				   // load the url and show modal on success
+				   $("#popUpModal .modal-content").load(target, function() { 
+					   	   $("#popUpModal").modal("show");
+						   buyboxDetailsForSizeGuide(productcode);
+				    }); 
+				   
+		 }); 
+		//End
 		
 		
 		/// Size Guide onload
@@ -392,7 +412,7 @@ function openPop(ussidfromSeller) {
 	var productCode = $("#product").val();
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/viewWishlistsInPDP";
+			+ "-viewWishlistsInPDP";
 
 	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
 	// for
@@ -543,7 +563,7 @@ function addToWishlist() {
     	return false;
     }
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/addToWishListInPDP";
+			+ "-addToWishListInPDP";
     var sizeSelected=true;
     if( $("#variant,#sizevariant option:selected").val()=="#"){
     	sizeSelected=false;
@@ -886,7 +906,7 @@ $(function() {
 						var buyboxSeller = $("#ussid").val();
 						var pin = $("#pin").val();
 						var requiredUrl = ACC.config.encodedContextPath + "/p"
-								+ "/checkPincode";
+								+ "-checkPincode";
 
 						if (pin == "") {
 							$('#unsevisablePin,#unableprocessPin,#wrongPin')
@@ -1137,7 +1157,7 @@ function fetchPrice() {
 	$("#addToCartButton").show();
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
-	var requiredUrl = ACC.config.encodedContextPath + "/p" + "/" + productCode
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/buybox";
 	var dataString = 'productCode=' + productCode;
 	$.ajax({
@@ -1171,16 +1191,20 @@ function fetchPrice() {
 					$("#sellerSelId").val(sellerID);
 					
 					if (allStockZero == 'Y' && data['othersSellersCount']>0) {
+						if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
 						$("#buyNowButton").hide();
+						}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
 					}
-					else if (allStockZero == 'Y' && data['othersSellersCount']==0) {
-						$("#addToCartButton").hide();
-						$("#buyNowButton").hide();
-						$("#outOfStockId").show();
+					else if (allStockZero == 'Y' && data['othersSellersCount']==0){
+						if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173
+							$("#addToCartButton").hide();
+							$("#buyNowButton").hide();
+							$("#outOfStockId").show();
+						}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
 					}
@@ -1248,7 +1272,7 @@ function displayDeliveryDetails(sellerName) {
 
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
-	var requiredUrl = ACC.config.encodedContextPath + "/p" + "/" + productCode
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/getRichAttributes";
 	var dataString = 'buyboxid=' + buyboxSeller;
 	$.ajax({
@@ -1275,13 +1299,13 @@ function displayDeliveryDetails(sellerName) {
 				if (data['onlineExclusive']) {
 					$('.online-exclusive').show();
 				}
-				if (fulFillment.toLowerCase() == 'tship') {
+				if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
 					$('#fulFilledByTship').show();
 				} else {
 					$('#fulFilledBySship').show();
 					$('#fulFilledBySship').html(sellerName);
 				}
-				if (deliveryModes.indexOf("HD") == -1) {
+				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
 					$("#home").hide();
 					$("#homeli").hide();
 				} else {
@@ -1292,7 +1316,7 @@ function displayDeliveryDetails(sellerName) {
 					$("#homeli").show();
 				}
 				
-				if (deliveryModes.indexOf("ED") == -1) {
+				if (null != deliveryModes && deliveryModes.indexOf("ED") == -1) {
 					$("#express").hide();
 					$("#expressli").hide();
 				} else {
@@ -1304,8 +1328,10 @@ function displayDeliveryDetails(sellerName) {
 					$("#express").show();
 					$("#expressli").show();
 				}
+				if (null != deliveryModes){
 				console.log(deliveryModes.indexOf("CNC") );
-				if (deliveryModes.indexOf("CNC") == -1) {
+				}
+				if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
 					
 					$("#collect").hide();
 					$("#collectli").hide();
@@ -1324,9 +1350,26 @@ function displayDeliveryDetails(sellerName) {
 					$("#codId").hide();
 				}
 				if(null != data['returnWindow'])
+				{
+				//TISCR-414 - Chairmans demo feedback 10thMay CR starts
+				var rWindowValue = data['returnWindow'];
+				
+				if(rWindowValue=="LINGERIE1")
+					{
+					$("#lingerieKnowMoreLi1").show();
+					$("#defaultKnowMoreLi").hide();
+					}
+				else if(rWindowValue=="LINGERIE2")
+					{
+					$("#lingerieKnowMoreLi2").show();
+					$("#defaultKnowMoreLi").hide();
+					}
+				else
 					{
 					$("#returnWindow").text(data['returnWindow']);
 					}
+				//TISCR-414 - Chairmans demo feedback 10thMay CR ends
+				}
 				else
 					{
 					$("#returnWindow").text("0");
@@ -1406,7 +1449,7 @@ function openPopForBankEMI() {
 	var optionData = "<option value='select' disabled selected>Select</option>";
 	$("#emiTableTHead").hide();
 	$("#emiTableTbody").hide();
-	var requiredUrl = ACC.config.encodedContextPath + "/p" + "/enlistEMIBanks";
+	var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
 	var dataString = 'productVal=' + productVal;
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
@@ -1437,7 +1480,7 @@ function getSelectedEMIBankForPDP() {
 	var contentData = '';
 	if (selectedBank != "select") {
 		$.ajax({
-			url : ACC.config.encodedContextPath + "/p/getTerms",
+			url : ACC.config.encodedContextPath + "/p-getTerms",
 			data : {
 				'selectedEMIBank' : selectedBank,
 				'productVal' : productVal
@@ -1478,7 +1521,7 @@ function CheckonReload()
 {
 	var contentData = '';
 	 $.ajax({
-				url : ACC.config.encodedContextPath + "/p/checkUser",
+				url : ACC.config.encodedContextPath + "/p-checkUser",
 				data : {
 				},
 				type : "GET",
@@ -1600,7 +1643,7 @@ function getRating(key,productCode,category)
 function CheckUserLogedIn() {
 	var contentData = '';
  $.ajax({
-			url : ACC.config.encodedContextPath + "/p/checkUser",
+			url : ACC.config.encodedContextPath + "/p-checkUser",
 			data : {
 				
 			},
@@ -1680,7 +1723,7 @@ function sendmail(){
 	if(validEmail(email)){
 		//var emailList = email.split(";");
 		$.ajax({
-			url : ACC.config.encodedContextPath + "/p/sendEmail",
+			url : ACC.config.encodedContextPath + "/p-sendEmail",
 			data : dataString,			
 			type : "GET",
 			cache : false,
@@ -1779,7 +1822,7 @@ function buyboxDetailsForSizeGuide(productCode){
 	var productCode = productCode;//$("#product").val();
 	
 	console.log(sellerID +" "+productCode);
-	var requiredUrl = ACC.config.encodedContextPath + "/p/buyboxDataForSizeGuide";
+	var requiredUrl = ACC.config.encodedContextPath + "/p-buyboxDataForSizeGuide";
 	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
 	
 		$.ajax({
@@ -1838,7 +1881,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#sellerSelArticleSKUVal").val(ussid);
 				$("#nosellerVal").val(nosellerData);
 				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice);
-				if(availableStock==0){
+				if(availableStock==0  && $(".variant-select-sizeGuidePopUp option:selected").val()!="#"){	//changes for TISPRO-338
 					$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
@@ -1869,7 +1912,7 @@ function openPop_SizeGuide() {
 	var productCode = $("#productCode").val(); // '${product.code}';
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/viewWishlistsInPDP";
+			+ "-viewWishlistsInPDP";
 
 	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
 	//alert("localdata: "+dataString);
@@ -2016,7 +2059,7 @@ function loadDefaultWishListName_SizeGuide() {
 		return false;
 	}
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/addToWishListInPDP";
+			+ "-addToWishListInPDP";
 	var sizeSelected=true;
 	if( $("#variant.size-g option:selected").val()=="#"){
 		sizeSelected=false;

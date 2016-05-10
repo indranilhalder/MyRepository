@@ -5,10 +5,11 @@
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/desktop/nav" %>
 
 <c:if test="${navigationNode.visible}">
-	<h1 class="">
-			${navigationNode.title}
-		</h1>
-	
+	<c:if test="${not empty navigationNode.title }">
+		<h1 class="">
+				${navigationNode.title}
+			</h1>
+	</c:if>	
 	<div class="side-nav">
 		
 		<ul>

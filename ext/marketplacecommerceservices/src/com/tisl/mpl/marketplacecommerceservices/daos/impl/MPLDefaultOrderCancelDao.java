@@ -5,19 +5,24 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.ordercancel.dao.impl.DefaultOrderCancelDao;
 import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MPLOrderCancelDao;
+import com.tisl.mpl.model.OrderStatusCodeMasterModel;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -101,6 +106,47 @@ public class MPLDefaultOrderCancelDao extends DefaultOrderCancelDao implements M
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return null;
+		}
+	}
+
+
+
+	/**
+	 * TISCR-410 : this method picks up the stage in which the order status is currently
+	 *
+	 * @param orderEntryStatus
+	 * @return String
+	 *
+	 */
+	@Override
+	public String getOrderStatusStage(final String orderEntryStatus)
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.ORDERSTAGEQUERY;
+			LOG.debug("queryString: " + queryString);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.ORDERENTRYSTATUS, orderEntryStatus);
+			final List<OrderStatusCodeMasterModel> orderStatusList = getFlexibleSearchService().<OrderStatusCodeMasterModel> search(
+					query).getResult();
+			String stage = null;
+			if (CollectionUtils.isNotEmpty(orderStatusList))
+			{
+				stage = orderStatusList.get(0).getStage();
+			}
+			return stage;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 

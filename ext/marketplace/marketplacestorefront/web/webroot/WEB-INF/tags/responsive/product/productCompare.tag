@@ -20,7 +20,7 @@
 	width: 100%;
 	padding: 15px;
 	text-align: center;
-	font-family: "Avenir Next";
+	font-family: "Montserrat";
 	z-index: 3;
 }
 

@@ -26,4 +26,6 @@ public interface GigyaFacade
 	public GigyaWsDTO gigyaLoginHelper(CustomerModel customerModel, boolean isNewUser);
 
 	public void ratingLogoutHelper(final CustomerModel customerModel);
+
+	public boolean validateSignature(final String uid, final String timestamp, final String signature);
 }
