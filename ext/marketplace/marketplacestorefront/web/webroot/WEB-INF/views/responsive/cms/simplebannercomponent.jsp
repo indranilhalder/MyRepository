@@ -40,9 +40,9 @@
 
 <script>
 $(document).ready(function(){
-	var removeHref = $(".marketplace").find("a").attr("href");
+	var removeHref = $("div[data-logo=marketplace]").find("a").attr("href");
 	var href = removeHref.split("?");
-	$(".marketplace").find("a").attr("href",href[0]);
+	$("div[data-logo=marketplace]").find("a").attr("href",href[0]);
 });
 </script>
 
