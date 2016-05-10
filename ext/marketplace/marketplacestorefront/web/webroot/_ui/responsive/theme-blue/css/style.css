@@ -36958,6 +36958,7 @@ span.sizesAvailableMSD {
 	border-bottom: 1px dotted #A9143C;
 	font-size: 12px;
 	overflow: hidden;
+	text-transform: uppercase;
 	}
 .productParentList:hover .sizesAvailableMSD { 
 	display: block !important;
