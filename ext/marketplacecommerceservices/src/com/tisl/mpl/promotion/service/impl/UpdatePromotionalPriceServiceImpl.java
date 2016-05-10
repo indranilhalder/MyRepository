@@ -70,11 +70,19 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		this.modelService = modelService;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.promotion.service.UpdatePromotionalPriceService#updatePromotionalPrice(java.util.Collection,
-	 * java.util.Collection, java.lang.Double, java.util.Date, java.util.Date, boolean)
+
+	/**
+	 * The Method Updates Special Price in Price Row for eligible Products
+	 *
+	 * @param products
+	 * @param categories
+	 * @param value
+	 * @param startDate
+	 * @param endtDate
+	 * @param percent
+	 * @param priority
+	 * @param sellers
+	 * @param brands
 	 */
 	@Override
 	public void updatePromotionalPrice(final List<Product> products, final List<Category> categories, final Double value,
@@ -238,6 +246,19 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		return updateSpecialPrice;
 	}
 
+
+
+
+	/**
+	 * The Method disables Special Price in Price Row for eligible Products
+	 *
+	 * @param products
+	 * @param categories
+	 * @param isEnabled
+	 * @param priority
+	 * @param quantity
+	 * @param brands
+	 */
 	@Override
 	public void disablePromotionalPrice(final List<Product> products, final List<Category> categories, final boolean isEnabled,
 			final Integer priority, final List<String> brands, final Long quantity)
