@@ -62,7 +62,9 @@ import com.tisl.mpl.jalo.BuyAandBgetC;
 import com.tisl.mpl.jalo.BuyXItemsofproductAgetproductBforfree;
 import com.tisl.mpl.jalo.CustomProductBOGOFPromotion;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.jalo.EtailExcludeSellerSpecificRestriction;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
+import com.tisl.mpl.jalo.ExcludeManufacturesRestriction;
 import com.tisl.mpl.jalo.ManufacturesRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
@@ -370,6 +372,8 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 		final List<String> sellerList = new ArrayList<String>();
 		final List<String> brandList = new ArrayList<String>();
 		String promoCode = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		final List<String> rejectSellerList = new ArrayList<String>();
+		final List<String> rejectBrandList = new ArrayList<String>();
 		try
 		{
 			if (null != item)
@@ -396,6 +400,25 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 						for (final Category code : brandRestrictions)
 						{
 							brandList.add(code.getCode());
+						}
+					}
+
+					if (res instanceof EtailExcludeSellerSpecificRestriction)
+					{
+						final List<SellerMaster> sellerMasterList = ((EtailExcludeSellerSpecificRestriction) res).getSellerMasterList();
+						for (final SellerMaster seller : sellerMasterList)
+						{
+							rejectSellerList.add(seller.getId());
+						}
+					}
+
+					if (res instanceof ExcludeManufacturesRestriction)
+					{
+						final ExcludeManufacturesRestriction brandRestriction = (ExcludeManufacturesRestriction) res;
+						final List<Category> brandRestrictions = new ArrayList<Category>(brandRestriction.getManufacturers());
+						for (final Category code : brandRestrictions)
+						{
+							rejectBrandList.add(code.getCode());
 						}
 					}
 				}
@@ -447,12 +470,12 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					if (isPercentage)
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(productList, null, price, startDate, endDate, true,
-								priority, sellerList, brandList, promoCode);
+								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList);
 					}
 					else
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(productList, null, price, startDate, endDate, false,
-								priority, sellerList, brandList, promoCode);
+								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList);
 					}
 
 				}
@@ -464,12 +487,12 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					if (isPercentage)
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(null, categoryList, price, startDate, endDate, true,
-								priority, sellerList, brandList, promoCode);
+								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList);
 					}
 					else
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(null, categoryList, price, startDate, endDate, false,
-								priority, sellerList, brandList, promoCode);
+								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList);
 					}
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
@@ -478,7 +501,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
 							+ " *** categoryList:" + categoryList);
 					getUpdatePromotionalPriceService().disablePromotionalPrice(productList, categoryList, isEnabled, priority,
-							brandList, quantity);
+							brandList, quantity, rejectSellerList, rejectBrandList);
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& quantity > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
@@ -486,7 +509,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
 							+ " *** categoryList:" + categoryList);
 					getUpdatePromotionalPriceService().disablePromotionalPrice(productList, categoryList, isEnabled, priority,
-							brandList, quantity);
+							brandList, quantity, rejectSellerList, rejectBrandList);
 				}
 			}
 		}
@@ -508,8 +531,6 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 
 		return errorFlag;
 	}
-
-
 
 	/**
 	 * @Description: To populate Discount Price
