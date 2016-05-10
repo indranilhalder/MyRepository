@@ -19,6 +19,7 @@
     <c:set var="desktopBadgePlay"><spring:theme code="appLandingPage.desktopBadgePlay"/></c:set>
     <c:set var="pathToReferForMac"><spring:theme code="appLandingPage.pathForMac"/></c:set>
     <c:set var="pathToReferForPlay"><spring:theme code="appLandingPage.pathForPlay"/></c:set>
+    
 		<section class="r2-landing-banner">
 			<div class="col-md-6 col-sm-12 col-xs-12 xol-lg-6 r2-app-mob">
 				<img src="${commonResourcePath}/images/banner-2.png"
