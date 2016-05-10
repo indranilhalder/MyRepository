@@ -268,10 +268,6 @@ $(document).ready(function(){
 			$(".toggle-filterSerp").click(function(){
 				$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
 				$(this).toggleClass("active");
-				$(".facet-name.js-facet-name h4").toggleClass("active");
-				$(".product-facet.js-product-facet.listing-leftmenu").find('.facet-list.js-facet-list').removeClass('active');
-				$(".product-facet.js-product-facet.listing-leftmenu").find('div#searchPageDeptHierTree').hide();
-				
 			});
 			$(".product-facet .facet-list li input.applied-color").each(function(){
 				var appliedColor = $(this).attr("value");
