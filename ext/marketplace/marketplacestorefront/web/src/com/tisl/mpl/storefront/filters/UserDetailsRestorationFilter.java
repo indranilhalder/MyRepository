@@ -70,8 +70,14 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 	private UserTypeCookieGenerator userTypeCookieGenerator;
 	private UserService userService;
 	private SessionService sessionService;
-	private final String ANONYMOUS = "anonymous";
-	private final String REGISTERED = "registered";
+	//private final String ANONYMOUS = "anonymous";
+	//private final String REGISTERED = "registered";
+	//changes done as per IA requirement
+	private final String ANONYMOUS = "session";
+	private final String REGISTERED = "site_user";
+	private final String FACEBOOKUSER = "facebook";
+	private final String FACEBOOK_LOGIN = "FACEBOOK_LOGIN";
+
 	private static final Logger LOG = Logger.getLogger(UserDetailsRestorationFilter.class.getName());
 
 	private ConfigurationService configurationService;
@@ -113,8 +119,8 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 		request.setAttribute("ecompanyForIA", ecompanyForIA);
 		final String DamMediaHost = getConfigurationService().getConfiguration().getString("media.dammedia.host");
 		request.setAttribute("DamMediaHost", DamMediaHost);
-		final String mplStaticResourceHost = getConfigurationService().getConfiguration()
-				.getString("marketplace.static.resource.host");
+		final String mplStaticResourceHost = getConfigurationService().getConfiguration().getString(
+				"marketplace.static.resource.host");
 		request.setAttribute("mplStaticResourceHost", mplStaticResourceHost);
 
 		if (request.getCookies() != null)
@@ -142,11 +148,14 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 					{
 						if (null != currCust && null != currCust.getType())
 						{
-							userType = currCust.getType().toString();
-						}
-						else
-						{
-							userType = "REGISTERED";
+							if (currCust.getType().toString().equals(FACEBOOK_LOGIN))
+							{
+								userType = FACEBOOKUSER;
+							}
+							else
+							{
+								userType = REGISTERED;
+							}
 						}
 					}
 					cookie.setValue(userType);
@@ -205,4 +214,3 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 
 
 }
-

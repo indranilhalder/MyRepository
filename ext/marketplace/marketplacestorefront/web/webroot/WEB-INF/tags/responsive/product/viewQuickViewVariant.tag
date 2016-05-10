@@ -52,7 +52,7 @@
 </script>
 <c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
 <span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
-<c:url var="sizeGuideUrl" value="/p/sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}"  scope="request"></c:url>
+<c:url var="sizeGuideUrl" value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}"  scope="request"></c:url>
 
 <div class="color-swatch-container">
 

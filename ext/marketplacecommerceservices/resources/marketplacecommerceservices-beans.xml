@@ -446,6 +446,7 @@
 		<property name="prodLevelPercentage" type="String"/>
 		<property name="freeCount" type="Integer"/>
 		<property name="qualifyingCount" type="Integer"/>
+		<property name="isCancellationMissed" type="boolean"/>
 		
 	</bean>
 	<!-- Attribute to handle the order cancel status for My Account ends -->

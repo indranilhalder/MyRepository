@@ -35,6 +35,7 @@ import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -44,13 +45,18 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,11 +71,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
+import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
@@ -137,6 +148,12 @@ public class CheckoutController extends AbstractCheckoutController
 
 	@Autowired
 	private ModelService modelService;
+
+	@Resource(name = "mplDeliveryCostService")
+	private MplDeliveryCostService mplDeliveryCostService;
+
+	@Resource(name = "mplSellerInformationService")
+	private MplSellerInformationService mplSellerInformationService;
 
 	/**
 	 * @return the modelService
@@ -354,11 +371,11 @@ public class CheckoutController extends AbstractCheckoutController
 	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-	 * 
+	 *
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
-	 * 
+	 *
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
@@ -496,6 +513,12 @@ public class CheckoutController extends AbstractCheckoutController
 				storeCmsPageInModel(model, cmsPage);
 				setUpMetaDataForContentPage(model, getContentPageForLabelOrId(CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL));
 				model.addAttribute("metaRobots", "noindex,nofollow");
+
+				//TISCR-413
+				final Map<String, Integer> deliveryTimeMap = getDeliveryTime(orderModel);
+
+				model.addAttribute("deliveryStartTime", deliveryTimeMap.get(MarketplacecommerceservicesConstants.DELIVERY_STARTTIME));
+				model.addAttribute("deliveryEndTime", deliveryTimeMap.get(MarketplacecommerceservicesConstants.DELIVERY_ENDTIME));
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
@@ -523,6 +546,63 @@ public class CheckoutController extends AbstractCheckoutController
 			}
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * @Description: It finds the max of start and end delivery time between entries
+	 * @param orderModel
+	 * @return Map<String, Integer>
+	 */
+	private Map<String, Integer> getDeliveryTime(final OrderModel orderModel)
+	{
+		final Map<String, Integer> deliveryTimeMap = new HashMap<String, Integer>();
+		final List<Integer> deliveryStartTimeList = new ArrayList<Integer>();
+		final List<Integer> deliveryEndTimeList = new ArrayList<Integer>();
+		Integer leadTime = null;
+
+		for (final AbstractOrderEntryModel entry : orderModel.getEntries())
+		{
+			final String selectedUSSID = entry.getSelectedUSSID();
+			final String selectedDeliveryMode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
+			final MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(selectedDeliveryMode,
+					MarketplacecommerceservicesConstants.INR, selectedUSSID);
+			String startValue = deliveryModel.getDeliveryMode().getStart() != null ? deliveryModel.getDeliveryMode().getStart()
+					.toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+			String endValue = deliveryModel.getDeliveryMode().getEnd() != null ? deliveryModel.getDeliveryMode().getEnd().toString()
+					: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+			List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
+			final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(selectedUSSID);
+
+			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+			{
+				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+				if (CollectionUtils.isNotEmpty(richAttributeModel))
+				{
+					leadTime = richAttributeModel.get(0).getLeadTimeForHomeDelivery() != null ? richAttributeModel.get(0)
+							.getLeadTimeForHomeDelivery() : Integer.valueOf(0);
+				}
+				LOG.debug(" >> Lead time for Home delivery  " + leadTime);
+			}
+
+			if (selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+			{
+				startValue = String.valueOf(Integer.parseInt(startValue) + leadTime.intValue());
+				endValue = String.valueOf(Integer.parseInt(endValue) + leadTime.intValue());
+			}
+			deliveryStartTimeList.add(Integer.valueOf(startValue));
+			deliveryEndTimeList.add(Integer.valueOf(endValue));
+		}
+
+		//		Collections.sort(deliveryStartTimeList);
+		//		Collections.reverse(deliveryStartTimeList);
+		//
+		//		Collections.sort(deliveryEndTimeList);
+		//		Collections.reverse(deliveryEndTimeList);
+
+		deliveryTimeMap.put(MarketplacecommerceservicesConstants.DELIVERY_STARTTIME, Collections.max(deliveryStartTimeList));
+		deliveryTimeMap.put(MarketplacecommerceservicesConstants.DELIVERY_ENDTIME, Collections.max(deliveryEndTimeList));
+
+		return deliveryTimeMap;
 	}
 
 	protected GuestRegisterValidator getGuestRegisterValidator()
