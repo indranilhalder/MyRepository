@@ -14,12 +14,9 @@
 
 <template:page pageTitle="${pageTitle}">
 
-	<div class="r2-app-landing">	
-	<c:set var="desktopBadgeMac"><spring:theme code="appLandingPage.desktopBadgeMac"/></c:set>
-    <c:set var="desktopBadgePlay"><spring:theme code="appLandingPage.desktopBadgePlay"/></c:set>
-    <c:set var="pathToReferForMac"><spring:theme code="appLandingPage.pathForMac"/></c:set>
-    <c:set var="pathToReferForPlay"><spring:theme code="appLandingPage.pathForPlay"/></c:set>
-    
+	<div class="r2-app-landing">    
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('appLandingPage.pathForMac')" var="pathToReferForMac"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('appLandingPage.pathForPlay')" var="pathToReferForPlay"/>     
 		<section class="r2-landing-banner">
 			<div class="col-md-6 col-sm-12 col-xs-12 xol-lg-6 r2-app-mob">
 				<img src="${commonResourcePath}/images/banner-2.png"
@@ -36,11 +33,11 @@
 				<div class="container r2-marginTop r2-marginBottom r2-padding">
 					<span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <a
 						href="${pathToReferForMac}"> <img class="img-responsive"
-							src="${commonResourcePath}${desktopBadgeMac}">
+							src="${commonResourcePath}/images/desktop_badge_mac.png">
 					</a>
 					</span> <span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <a
 						href="${pathToReferForPlay}"> <img class="img-responsive"
-							src="${commonResourcePath}${desktopBadgePlay}">
+							src="${commonResourcePath}/images/desktop_badge_play.png">
 					</a>
 					</span>
 				</div>
@@ -202,9 +199,9 @@
 					seamless shopping experience.</h5>
 				<div class="container r2-marginTop r2-marginBottom r2-padding">
 					<span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <img
-						class="img-responsive" src="${commonResourcePath}${desktopBadgeMac}">
+						class="img-responsive" src="${commonResourcePath}/images/desktop_badge_mac.png">
 					</span> <span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <img
-						class="img-responsive" src="${commonResourcePath}${desktopBadgePlay}">
+						class="img-responsive" src="${commonResourcePath}/images/desktop_badge_play.png"><
 					</span>
 				</div>
 
