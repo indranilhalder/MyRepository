@@ -49,6 +49,7 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
     $.ajax({
                 
     			//url: 'https://tatadev.madstreetden.com/moreWeb',
+
     			url:    msdRESTURL,
                 type: 'POST',
                 dataType: 'json',
@@ -77,19 +78,20 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
                         dS = dS +                '<div class="frame">';
                         dS = dS +                    '<ul class="overflow visuallySimilarItems">';
                         for (x in products){                                                   	
-                        	dS = dS +                    '<li onmouseover="showBothMSD(this)" onmouseout="hideBothMSD(this)" class="look slide item productParentList" style="width: 100%;">';
+                        	dS = dS +                    '<li onmouseover="showBothMSD(this)" onmouseout="hideBothMSD(this)" class="look slide item productParentList">';
                             dS = dS +                        '<a href="' + products[x]['landingPage'] + '" class="product-tile" ';                        
 
                             dS = dS +                            'onClick="track([\'carouselClick\', \'';
                             dS = dS +                               productID+'\', \''+categoryID+'\', \'';
                             dS = dS +                               products[x]['listingId']+'\', \''+products[x]['categoryCode'] + '\', '+x+']);">';                            
-                            dS = dS +                            '<div class="image" style="line-height: 347px; height: 347px; width: 221px;">';                           
+
+                            dS = dS +                            '<div class="image">';                           
                             dS = dS +                                '<img class="product-image"';
                             dS = dS +                                   'src="' + products[x]['productImage'] + '" alt="">';
                             
                             // if variants are present show only Quick view
                             if ((products[x].hasOwnProperty('colorSwatches') == true && products[x]['colorSwatches'].length > 0)  || (products[x].hasOwnProperty('variantSize') == true && products[x]['variantSize'].length > 0)) {                            	
-                            	dS = dS + 	'<div onClick="popupwindowMSD(event,\''+products[x]['listingId'] + '\')" class="MSDQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer;bottom: 0px; z-index: -1;font-size: 12px;left:0; visibility: hidden; color: #a9143c;font-family: \'icomoon\';display: block; width:222px; margin: 10px 0px; text-align: center;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;line-height: 30px;">Quick View</div>';                           	
+                            	dS = dS + 	'<div onClick="popupwindowMSD(event,\''+products[x]['listingId'] + '\')" class="MSDQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer;bottom: 0px; z-index: -1;font-size: 12px;left:0; visibility: hidden; color: #a9143c; display: block; width:100%; text-align: center;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;line-height: 30px;">Quick View</div>';                           	
                             	
                             }                            
                             // Quickview and Add to Bag ends
