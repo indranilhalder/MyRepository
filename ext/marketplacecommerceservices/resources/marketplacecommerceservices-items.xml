@@ -2394,14 +2394,14 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
+
 					<!-- Store Icon Image URL -->
 					<attribute autocreate="true" qualifier="mplImageUrls" type="mplStoreImageUrl"
 						generate="true">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-					</attribute>
-					
+					</attribute>					
 				</attributes>
 			</itemtype>	
 	</itemtypes>

@@ -7,8 +7,14 @@ import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.url.impl.DefaultCategoryModelUrlResolver;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -17,6 +23,8 @@ import java.util.List;
  */
 public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlResolver
 {
+
+	private static final Logger LOG = Logger.getLogger(ExtDefaultCategoryModelUrlResolver.class);
 
 
 	@Override
@@ -37,7 +45,7 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 		if (url.contains("{category-code}"))
 		{
 			final String categoryCode = urlEncode(source.getCode()).replaceAll("\\+", "%20");
-			url = url.replace("{category-code}", categoryCode);
+			url = url.replace("{category-code}", categoryCode); //categoryCode code changed to direct source.getCode()
 		}
 		if (url.contains("{catalog-id}"))
 		{
@@ -47,6 +55,23 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 		{
 			url = url.replace("{catalogVersion}", source.getCatalogVersion().getVersion());
 		}
+		url = url.toLowerCase();
+		try
+		{
+			url = URLDecoder.decode(url, "UTF-8");
+		}
+		catch (final UnsupportedEncodingException e)
+		{
+			LOG.error(e.getMessage());
+		}
+
+		url = GenericUtilityMethods.changeUrl(url);
+		//		url = url.replaceAll("[^\\w/-]", "");
+		//		//TISSTRT-1297
+		//		if (url.contains("--"))
+		//		{
+		//			url = url.replaceAll("--", "-");
+		//		}
 
 		return url;
 	}

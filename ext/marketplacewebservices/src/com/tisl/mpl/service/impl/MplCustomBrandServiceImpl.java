@@ -153,7 +153,9 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 							{
 								subbranddata.setSub_brand_name(oModel.getName());
 							}
-							final String subBrandUrl = "/Categories/" + oModel.getName() + "c/" + oModel.getCode();
+							//							final String subBrandUrl = "/Categories/" + oModel.getName() + "c/" + oModel.getCode();
+
+							final String subBrandUrl = "/Categories/" + oModel.getName() + "/c-" + oModel.getCode();
 							if (!StringUtils.isEmpty(subBrandUrl))
 							{
 
@@ -268,8 +270,8 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 		if (null != configurationService && null != configurationService.getConfiguration()
 				&& null != MarketplacecommerceservicesConstants.SHOPBYBRANDCOMPONENT)
 		{
-			componentUid = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.SHOPBYBRANDCOMPONENT, "");
+			componentUid = configurationService.getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.SHOPBYBRANDCOMPONENT, "");
 		}
 		final BrandCollectionComponentModel shopByBrandComponent = (BrandCollectionComponentModel) cmsComponentService
 				.getSimpleCMSComponent(componentUid);

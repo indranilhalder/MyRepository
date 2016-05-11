@@ -168,14 +168,13 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 
 				afterPlaceOrder(parameter, result);
 				//Added to trigger notification
-
 				final String trackOrderUrl = configurationService.getConfiguration().getString(
 						MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
 						+ orderModel.getCode();
 				try
 				{
 					notificationService.triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
-					notificationService.sendMobileNotifications(orderModel);
+					//notificationService.sendMobileNotifications(orderModel);
 				}
 				catch (final JAXBException e)
 				{
@@ -185,8 +184,6 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 				{
 					LOG.error("Error while sending notifications>>>>>>", ex);
 				}
-
-
 
 				return result;
 
@@ -257,10 +254,10 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 	protected void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
 			throws InvalidCartException
 	{
-		if ((getCommercePlaceOrderMethodHooks() == null)
-				|| (!(parameter.isEnableHooks()))
-				|| (!(getConfigurationService().getConfiguration().getBoolean(
-						"commerceservices.commerceplaceordermethodhook.enabled", true))))
+		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
+
+		.getConfiguration().getBoolean("commerceservices.commerceplaceordermethodhook.enabled", true))))
+
 		{
 			return;
 		}
@@ -273,10 +270,10 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 	protected void afterPlaceOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
 			throws InvalidCartException
 	{
-		if ((getCommercePlaceOrderMethodHooks() == null)
-				|| (!(parameter.isEnableHooks()))
-				|| (!(getConfigurationService().getConfiguration().getBoolean(
-						"commerceservices.commerceplaceordermethodhook.enabled", true))))
+		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
+
+		.getConfiguration().getBoolean("commerceservices.commerceplaceordermethodhook.enabled", true))))
+
 		{
 			return;
 		}

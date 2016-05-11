@@ -112,11 +112,12 @@
 							</c:forEach>
 						</div>
 						<fieldset>
-							<p>
-								<spring:theme code="text.marketplacePreferences.categories"
-									text="Choose wisely. Tell us your preferences. Choose wisely. Tell us your preferences. Choose wisely. Tell us your preferences. " />
-							</p>
-							
+							<c:if test="${not empty categoryList}">
+								<p>
+									<spring:theme code="text.marketplacePreferences.categories"
+										text="Choose wisely. Tell us your preferences. Choose wisely. Tell us your preferences. Choose wisely. Tell us your preferences. " />
+								</p>
+							</c:if>	
 							<div class="mplPref-category">
 								<c:if test="${not empty selectedCategoryList}">
 									<c:forEach items="${categoryList}" var="category"
@@ -147,10 +148,12 @@
 							</div>
 						</fieldset>
 						<fieldset>
-							<p>
-								<spring:theme code="text.marketplacePreferences.brand"
-									text="Tell us about the brands you love." />
-							</p>
+							<c:if test="${not empty brandList}">
+								<p>
+									<spring:theme code="text.marketplacePreferences.brand"
+										text="Tell us about the brands you love." />
+								</p>
+							</c:if>
 							<div class="mplPref-category">
 								<c:if test="${not empty selectedBrandList}">
 									<c:forEach items="${brandList}" var="brand"

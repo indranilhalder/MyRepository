@@ -362,6 +362,7 @@ addToBagFromWl: function(ussid, addedToCart) {
 sendAddToBag : function(formId, isBuyNow) {
 	var input_name = "qty";
 	var stock_id = "stock";
+	var ussid="ussid";
 	var dataString = $('#' + formId).serialize();
 	var quantity = $("#" + formId + " :input[name='" + input_name + "']")
 			.val();
@@ -370,7 +371,7 @@ sendAddToBag : function(formId, isBuyNow) {
 			.val();
 	var stock = $("#" + formId + " :input[name='" + stock_id + "']").val();
 	var isSuccess = false;
-	var ussid=$('#ussid').val();
+	var ussid = $("#" + formId + " :input[name='" + ussid + "']").val();
 	/*
 	 * if(parseInt(stock)<parseInt(quantity)){
 	 * $("#"+formId+"noInventory").html("<font color='#ff1c47'>" +

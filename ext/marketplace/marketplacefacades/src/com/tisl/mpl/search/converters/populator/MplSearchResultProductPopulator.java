@@ -218,6 +218,19 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 					BigDecimal.valueOf(mrpPriceValue.doubleValue()), getCommonI18NService().getCurrentCurrency());
 			target.setProductMRP(priceData);
 		}
+
+		// TISCR-405: set the savings for the current currency
+
+		if (null != mrpPriceValue && null != priceValue)
+		{
+			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY,
+					BigDecimal.valueOf(mrpPriceValue.doubleValue() - priceValue.doubleValue()),
+					getCommonI18NService().getCurrentCurrency());
+			target.setSavingsOnProduct(priceData);
+
+		}
+
+
 	}
 
 
