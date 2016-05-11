@@ -32,6 +32,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+
 
 
 /**
@@ -85,6 +87,7 @@ public class MplCartFacadeImplTest
 	@Test
 	public void testGetSessionCart()
 	{
+		//TISSEC-50
 		final CartData cartDataMock = Mockito.mock(CartData.class);
 		final CartModel cartModelMock = Mockito.mock(CartModel.class);
 		given(cartServiceMock.getSessionCart()).willReturn(cartModelMock);
@@ -93,13 +96,13 @@ public class MplCartFacadeImplTest
 		given(cartModelMock.getEntries()).willReturn(cartEntryModelMock);
 		final Collection<OrderEntryData> orderEntryDatasMock = new ArrayList<OrderEntryData>();
 		given(cartDataMock.getEntries()).willReturn((List<OrderEntryData>) orderEntryDatasMock);
-		final String ussid = "1234";
+		final String ussid = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter ussid
 		final AbstractOrderEntryModel abstractOrderEntryModelMock = Mockito.mock(AbstractOrderEntryModel.class);
 		given(abstractOrderEntryModelMock.getSelectedUSSID()).willReturn(ussid);
 		final SellerInformationData sellerInformationDataMock = Mockito.mock(SellerInformationData.class);
-		sellerInformationDataMock.setSellerID("1655894894894");
-		sellerInformationDataMock.setUssid("3456");
-		sellerInformationDataMock.setSellername("harish");
+		sellerInformationDataMock.setSellerID("");//TODO : Please enter seller id
+		sellerInformationDataMock.setUssid("");//TODO : Please enter ussid
+		sellerInformationDataMock.setSellername("");//TODO : Please enter seller name
 		final OrderEntryData orderEntryDataMock = Mockito.mock(OrderEntryData.class);
 		orderEntryDataMock.setSelectedSellerInformation(sellerInformationDataMock);
 		final ProductData productDataMock = Mockito.mock(ProductData.class);
@@ -118,9 +121,9 @@ public class MplCartFacadeImplTest
 		final long quantity = 1;
 		parameterMock.setCart(cartModelMock);
 		parameterMock.setQuantity(quantity);
-		final String ussid = "1234";
+		final String ussid = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter ussid
 		parameterMock.setUssid(ussid);
-		final String code = "code1";
+		final String code = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter code
 		parameterMock.setProduct(product);
 
 		mplCartFacadeImpl.addToCart(code, quantity, ussid);
@@ -132,7 +135,7 @@ public class MplCartFacadeImplTest
 	public void testGetSellerInfo() throws CMSItemNotFoundException
 	{
 		final CartData cartDataMock = Mockito.mock(CartData.class);
-		final String ussid = "1234";
+		final String ussid = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter ussid
 
 		mplCartFacadeImpl.getSellerInfo(cartDataMock, ussid);
 	}

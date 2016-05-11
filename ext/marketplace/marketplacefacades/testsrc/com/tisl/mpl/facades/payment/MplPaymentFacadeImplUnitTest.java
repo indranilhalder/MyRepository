@@ -136,9 +136,10 @@ public class MplPaymentFacadeImplUnitTest
 	@Test
 	public void testGetBankTerms()
 	{
+		//TISSEC-50
 		final List<EMITermRateData> emiTermRateList = new ArrayList<EMITermRateData>();
-		Mockito.when(mplPaymentService.getBankTerms("HDFC", Double.valueOf(1500.00))).thenReturn(emiTermRateList);
-		mplPaymentFacadeImpl.getBankTerms("HDFC", Double.valueOf(1500.00));
+		Mockito.when(mplPaymentService.getBankTerms("", Double.valueOf(1500.00))).thenReturn(emiTermRateList);//TODO : Please enter bank
+		mplPaymentFacadeImpl.getBankTerms("", Double.valueOf(1500.00));//TODO : Please enter bank
 	}
 
 

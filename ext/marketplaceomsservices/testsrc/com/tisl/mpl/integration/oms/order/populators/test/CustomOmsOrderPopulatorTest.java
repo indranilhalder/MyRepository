@@ -96,7 +96,8 @@ public class CustomOmsOrderPopulatorTest
 		final Date modifiedtime = new Date();
 		final Date creationtime = new Date();
 
-		final BigDecimal BigDec1 = new BigDecimal("1238126387123");
+		//TISSEC-50
+		final BigDecimal BigDec1 = new BigDecimal("");//TODO : Please enter value
 
 
 
@@ -104,40 +105,40 @@ public class CustomOmsOrderPopulatorTest
 		//final List<OrderLine> ondemandOrderEntrys = new ArrayList<OrderLine>();
 		final List<PaymentTransactionModel> ptmodelListMock = new ArrayList<PaymentTransactionModel>();
 
-		addressModelMock.setFirstname("Address Bijay");
-		addressModelMock.setLastname("Address Kumar");
-		addressModelMock.setPhone1("8850554563");
-		addressModelMock.setPhone2("7896541235");
+		addressModelMock.setFirstname("");//TODO : Please enter first name
+		addressModelMock.setLastname("");//TODO : Please enter last name
+		addressModelMock.setPhone1("");//TODO : Please enter phone1
+		addressModelMock.setPhone2("");//TODO : Please enter phone2
 
-		custModelMock.setCustomerID("cust1234");
-		custModelMock.setUid("CustUID1234");
-		custModelMock.setMiddleName("mahajan");
+		custModelMock.setCustomerID("");//TODO : Please enter customer id
+		custModelMock.setUid("");//TODO : Please enter uid
+		custModelMock.setMiddleName("");//TODO : Please enter middle name
 
 		userModelMock.setDefaultPaymentAddress(addressModelMock);
-		userModelMock.setPasswordQuestion("What is the name of your pet ?");
-		userModelMock.setUid("UserUID789");
+		userModelMock.setPasswordQuestion("");//TODO : Please enter password question
+		userModelMock.setUid("");//TODO : Please enter uid
 
-		paymentInfoModelMock.setCode("C001");
+		paymentInfoModelMock.setCode("");//TODO : Please enter code
 		paymentInfoModelMock.setUser(userModelMock);
 
-		ptmTypeModelMock.setMode("COD");
+		ptmTypeModelMock.setMode("");//TODO : Please enter mode
 
 		ptmEntryModelMock.setPaymentMode(ptmTypeModelMock);
 		ptmEntryModelMock.setAmount(BigDec1);
-		ptmEntryModelMock.setCode("CD009");
+		ptmEntryModelMock.setCode("");//TODO : Please enter code
 
 
-		ptmodelMock.setPaymentProvider("Provided by User");
-		ptmodelMock.setStatus("SUCCESS");
-		ptmodelMock.setCode("ptmc1234");
+		ptmodelMock.setPaymentProvider("");//TODO : Please enter payment provider
+		ptmodelMock.setStatus("");//TODO : Please enter status
+		ptmodelMock.setCode("");//TODO : Please enter code
 
 
 		ptmodelListMock.add(ptmodelMock);
 
 		orderMOdelMOck.setUser(userModelMock);
-		orderMOdelMOck.setCode("ordermodelcode1234");
+		orderMOdelMOck.setCode("");//TODO : Please enter code
 		orderMOdelMOck.setPaymentInfo(paymentInfoModelMock);
-		orderMOdelMOck.setGuid("gui1234");
+		orderMOdelMOck.setGuid("");//TODO : Please enter guid
 		orderMOdelMOck.setDeliveryAddress(addressModelMock);
 		orderMOdelMOck.setModifiedtime(modifiedtime);
 		orderMOdelMOck.setCreationtime(creationtime);
@@ -152,11 +153,11 @@ public class CustomOmsOrderPopulatorTest
 
 		// final ItemModel itemModelMock = Mockito.mock(ItemModel.class);
 
-		orderMOdelMOck.setCode("C001");
+		orderMOdelMOck.setCode("");//TODO : Please enter code
 		orderMOdelMOck.setConvenienceCharges(code);
 
-		orderMock.setEmailid("arun.k@gmail.com");
-		orderMock.setBaseStoreName("Tata Store");
+		orderMock.setEmailid("");//TODO : Please enter email id
+		orderMock.setBaseStoreName("");//TODO : Please enter store name
 
 		customOmsOrderPopulator.populate(orderMOdelMOck, orderMock);
 
@@ -174,16 +175,16 @@ public class CustomOmsOrderPopulatorTest
 		final Order orderMock = Mockito.mock(Order.class);
 
 		final AddressModel addressModelMock = Mockito.mock(AddressModel.class);
-		addressModelMock.setFirstname("Address Bijay");
-		addressModelMock.setLastname("Address Kumar");
+		addressModelMock.setFirstname("");//TODO : Please enter first name
+		addressModelMock.setLastname("");//TODO : Please enter last name
 		//orderMOdelMOck.setDe
 
 		orderMOdelMOck.setPaymentAddress(addressModelMock);
 
-		orderMock.setFirstName("Bijay");
-		orderMock.setLastName("Kumar");
-		orderMock.setShippingFirstName("ShipingBijay");
-		orderMock.setShippingLastName("ShippingKumar");
+		orderMock.setFirstName("");//TODO : Please enter first name
+		orderMock.setLastName("");//TODO : Please enter last name
+		orderMock.setShippingFirstName("");//TODO : Please enter shipping first name
+		orderMock.setShippingLastName("");//TODO : Please enter shipping last name
 
 		customOmsOrderPopulator.setFirstAndLastName(orderMOdelMOck, orderMock);
 	}
@@ -202,14 +203,14 @@ public class CustomOmsOrderPopulatorTest
 
 		//final String response = "CC";
 
-		userModelMock.setPasswordQuestion("What is the name of your pet ?");
-		userModelMock.setUid("UserUID789");
+		userModelMock.setPasswordQuestion("");//TODO : Please enter password question
+		userModelMock.setUid("");//TODO : Please enter uid
 
 		creditCardInfo.setUser(userModelMock);
 
 		netBankingInfo.setUser(userModelMock);
 
-		paymentInfoModelMock.setCode("C001");
+		paymentInfoModelMock.setCode("");//TODO : Please enter code
 		paymentInfoModelMock.setUser(userModelMock);
 
 		// given(customOmsOrderPopulator.getPaymentMode(paymentInfoModelMock)).willReturn(response);
@@ -223,12 +224,12 @@ public class CustomOmsOrderPopulatorTest
 		final OrderModel orderMOdelMOck = Mockito.mock(OrderModel.class);
 		final AddressModel addressModelMock = Mockito.mock(AddressModel.class);
 		final DeliveryModeModel deliveryModelMock = Mockito.mock(DeliveryModeModel.class);
-		final String mode = "COD";
+		final String mode = "";//TODO : Please enter mode
 
-		addressModelMock.setFirstname("Address Bijay");
-		addressModelMock.setLastname("Address Kumar");
+		addressModelMock.setFirstname("");//TODO : Please enter first name
+		addressModelMock.setLastname("");//TODO : Please enter last name
 
-		deliveryModelMock.setDescription("Delivered by abcd");
+		deliveryModelMock.setDescription("");//TODO : Please enter description
 
 		//orderMOdelMOck.setDe
 
@@ -241,19 +242,6 @@ public class CustomOmsOrderPopulatorTest
 		given(customOmsOrderPopulator.getShippingMethod(orderMOdelMOck)).willReturn(mode);
 
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

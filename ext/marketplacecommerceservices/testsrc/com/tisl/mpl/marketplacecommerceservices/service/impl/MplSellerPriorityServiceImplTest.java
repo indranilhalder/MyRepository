@@ -49,15 +49,15 @@ public class MplSellerPriorityServiceImplTest
 
 	@Test
 	public void testUpdatatingPriorityForListingIdAndCategory()
-	{
+	{ //TISSEC-50
 		final List<MplSellerPriorityModel> sellerPriorityModels = new ArrayList<MplSellerPriorityModel>();
 		final MplSellerPriorityModel sellerPriority = modelService.create(EmployeeModel.class);
 		sellerPriorityModels.add(sellerPriority);
 		assertEquals(sellerPriorityModels, mplSellerPriorityDao.getAllSellerPriorities());
 		assertNotNull(sellerPriority.getIsActive());
 		assertEquals(Boolean.TRUE, sellerPriority.getIsActive());
-		assertEquals(new SimpleDateFormat("22/11/2015"), sellerPriority.getPriorityStartDate());
-		assertEquals(new SimpleDateFormat("22/11/2016"), sellerPriority.getPriorityEndDate());
+		assertEquals(new SimpleDateFormat(""), sellerPriority.getPriorityStartDate());//TODO : Please enter start date
+		assertEquals(new SimpleDateFormat(""), sellerPriority.getPriorityEndDate());//TODO : Please enter end date
 		final CategoryModel categoryModel = modelService.create(CategoryModel.class);
 		assertEquals(categoryModel, sellerPriority.getCategoryId());
 		final ProductModel productModel = modelService.create(ProductModel.class);
@@ -78,8 +78,8 @@ public class MplSellerPriorityServiceImplTest
 		assertEquals(sellerPriorityModels, mplSellerPriorityDao.getAllSellerPriorities());
 		assertNotNull(sellerPriority.getIsActive());
 		assertEquals(Boolean.TRUE, sellerPriority.getIsActive());
-		assertEquals(new SimpleDateFormat("22/11/2015"), sellerPriority.getPriorityStartDate());
-		assertEquals(new SimpleDateFormat("22/11/2016"), sellerPriority.getPriorityEndDate());
+		assertEquals(new SimpleDateFormat(""), sellerPriority.getPriorityStartDate());//TODO : Please enter start date
+		assertEquals(new SimpleDateFormat(""), sellerPriority.getPriorityEndDate());//TODO : Please enter end date
 		final CategoryModel categoryModel = modelService.create(CategoryModel.class);
 		assertEquals(categoryModel, sellerPriority.getCategoryId());
 		final ProductModel productModel = modelService.create(ProductModel.class);
@@ -100,8 +100,8 @@ public class MplSellerPriorityServiceImplTest
 		assertEquals(sellerPriorityModels, mplSellerPriorityDao.getAllSellerPriorities());
 		assertNotNull(sellerPriority.getIsActive());
 		assertEquals(Boolean.TRUE, sellerPriority.getIsActive());
-		assertEquals(new SimpleDateFormat("22/11/2015"), sellerPriority.getPriorityStartDate());
-		assertEquals(new SimpleDateFormat("22/11/2016"), sellerPriority.getPriorityEndDate());
+		assertEquals(new SimpleDateFormat(""), sellerPriority.getPriorityStartDate());//TODO : Please enter start date
+		assertEquals(new SimpleDateFormat(""), sellerPriority.getPriorityEndDate());//TODO : Please enter end date
 		assertEquals(null, sellerPriority.getCategoryId());
 		assertEquals(null, sellerPriority.getListingId());
 		final SellerMasterModel sellerMasterModel = modelService.create(SellerMasterModel.class);
@@ -114,11 +114,11 @@ public class MplSellerPriorityServiceImplTest
 	private void validateUssidForSellers(final CategoryModel category, final SellerMasterModel sellerMasterModel)
 	{
 		final List<String> ussidList = new ArrayList<String>();
-		ussidList.add("US100");
+		ussidList.add("");//TODO : Please enter ussid
 		final CategoryModel testCategoryModel = modelService.create(CategoryModel.class);
 		final CategoryModel testCategoryModel1 = modelService.create(CategoryModel.class);
 		final ProductModel productModel = modelService.create(ProductModel.class);
-		sellerMasterModel.setId("s0001");
+		sellerMasterModel.setId("");//TODO : Please enter seller master model id
 		final List<CategoryModel> subCategorymodels = new ArrayList<CategoryModel>();
 		subCategorymodels.add(testCategoryModel);
 		subCategorymodels.add(testCategoryModel1);
@@ -128,8 +128,8 @@ public class MplSellerPriorityServiceImplTest
 		productModelList.add(productModel);
 		assertEquals(productModelList, testCategoryModel.getProducts());
 		final SellerInformationModel selleryModel1 = modelService.create(SellerInformationModel.class);
-		selleryModel1.setSellerArticleSKU("US100");
-		selleryModel1.setSellerID("s0001");
+		selleryModel1.setSellerArticleSKU("");//TODO : Please enter seller article sku
+		selleryModel1.setSellerID("");//TODO : Please enter seller id
 		assertThat(productModel.getSellerInformationRelator()).contains(selleryModel1);
 		assertEquals(sellerMasterModel.getId(), selleryModel1.getSellerID());
 		assertEquals(ussidList, selleryModel1.getSellerArticleSKU());
@@ -142,14 +142,14 @@ public class MplSellerPriorityServiceImplTest
 	private void validateUssidFromSkuId(final ProductModel listingId, final SellerMasterModel sellerMasterModel)
 	{
 		final List<String> ussidList = new ArrayList<String>();
-		ussidList.add("US100");
-		sellerMasterModel.setId("s0001");
+		ussidList.add("");//TODO : Please enter ussid
+		sellerMasterModel.setId("");//TODO : Please enter seller master model
 		//	final ProductModel productModel = modelService.create(ProductModel.class);
 		final List<ProductModel> productModelList = new ArrayList<ProductModel>();
 		productModelList.add(listingId);
 		final SellerInformationModel selleryModel1 = modelService.create(SellerInformationModel.class);
-		selleryModel1.setSellerArticleSKU("US100");
-		selleryModel1.setSellerID("s0001");
+		selleryModel1.setSellerArticleSKU("");//TODO : Please enter seller article sku
+		selleryModel1.setSellerID("");//TODO : Please enter seller id
 		assertThat(listingId.getSellerInformationRelator()).contains(selleryModel1);
 		assertEquals(sellerMasterModel.getId(), selleryModel1.getSellerID());
 		assertEquals(ussidList, selleryModel1.getSellerArticleSKU());
