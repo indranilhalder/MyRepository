@@ -450,6 +450,17 @@ tr.d0 td {
 	 //return false;
 	  }	 
  
+
+ if($(".quickViewSelect").text().match(/^(([a-zA-Z0-9]*)Select)$/g)){
+ 	$(".out_of_stock").css("display","none");
+ 	$(".outOfStock").css("display","none");
+ 	$(".tempAddToCartQuickView").css("display","block");
+
+ } else {
+ 	$(".tempAddToCartQuickView").css("display","none");
+ 	
+ }
+ 
  $('a.wishlist#wishlist_quick').popover({ 
 	    html : true,
 	    content: function() {
@@ -808,6 +819,11 @@ display:none;
 					disabled="disabled">
 					<spring:theme code="product.variants.out.of.stock" />
 				</button> --%>
+				
+			<button id="addToCartButton" type="${buttonType}"
+												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
+												<spring:theme code="basket.add.to.basket" />
+											</button>
 			</c:when>
 			<c:otherwise>
 			<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
