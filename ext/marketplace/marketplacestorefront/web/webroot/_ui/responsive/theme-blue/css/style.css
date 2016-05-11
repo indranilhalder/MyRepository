@@ -5060,7 +5060,7 @@ text-transform: uppercase;
     }
   .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
   .cart.wrapper #newAddressButtonUp,.cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top
+  .cart.wrapper .make_payment_top_nb,.cart.wrapper .cod_payment_button_top
    {
         width: 28%;
     float: right;
@@ -5071,7 +5071,7 @@ text-transform: uppercase;
     color: #fff;
     height: 40px !important; }
     .cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top{
+  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod_payment_button_top{
    margin-top: 60px;
        margin-bottom: -52px;
        display:none;}
@@ -5082,12 +5082,12 @@ text-transform: uppercase;
       .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
   .cart.wrapper #newAddressButtonUp,  .cart.wrapper .button#deliveryMethodSubmit, .cart.wrapper .button#deliveryAddressSubmit,
   .cart.wrapper #newAddressButton,.cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top{
+  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod_payment_button_top{
  font-weight: 500;
     font-size: 12px !important; }
   .cart.wrapper .button#deliveryMethodSubmitUp:hover, .cart.wrapper .button#deliveryAddressSubmitUp:hover,
   .cart.wrapper #newAddressButtonUp:hover,.cart.wrapper .make_payment_top_savedCard:hover,.cart.wrapper .make_payment_top_newCard:hover,
-  .cart.wrapper .make_payment_top_nb:hover, .cart.wrapper .cod-otp-button_top:hover,.cart.wrapper .cod_payment_button_top:hover {
+  .cart.wrapper .make_payment_top_nb:hover, .cart.wrapper .cod_payment_button_top:hover {
         background: #88102C !important; }
     @media (max-width: 650px) {
       .cart.wrapper button, .cart.wrapper .button, .confirmation button, .confirmation .button {
@@ -6019,7 +6019,7 @@ text-transform: uppercase;
             bottom: 25%;
 
             left: 55%; }
-            .cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb,.cart.wrapper .cod-otp-button_top, .cart.wrapper .cod_payment_button_top{
+            .cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod_payment_button_top{
             display:none !important;
             }
             .checkout-content.checkout-payment .left-block{
@@ -6607,8 +6607,8 @@ text-transform: uppercase;
     .checkout.wrapper.checkout-payment .left-block .button {
     width:57.42%;}
     @media(max-width:650px){
-    .checkout.wrapper .left-block .button {
-  width: 100%;
+    .checkout.wrapper.checkout-payment .left-block .button,.cart.wrapper button.cod-otp-button {
+  width: 100% !important;
    }
    .cart.wrapper .left-block .payments.tab-view .full,.cart.wrapper .left-block .payments.tab-view .half {
     margin-left: 0px !important;
@@ -16130,7 +16130,7 @@ body .account .right-account .order-history.order-details li.item .status {
         position: static;
         width: 100%;
         float: left;
-        padding: 0 20px 85px
+        padding: 5px 20px 85px;
     }
     body .account .right-account .order-history.order-details li.item .status .message {
     padding: 5px 10px !important;
@@ -16149,7 +16149,15 @@ body .account .right-account .order-history.order-details li.item .status>ul>li 
     line-height: 30px;
     cursor:pointer;
 }
-
+/*TISSIT-2006 start*/
+body .account .right-account .order-history.order-details li.item .status> ul.nav >li{
+	display: inline-block;
+    vertical-align: bottom;
+    float: none;
+    line-height: normal;
+    margin-left: -3px;
+}
+/*TISSIT-2006 end*/
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress {
     line-height: 1;
     position: relative;
@@ -20765,7 +20773,7 @@ font-weight:600;
   position: absolute !important;
   z-index: 100;
   right: 10px;
-  top: 35px;
+  top: 42px;
    text-transform:uppercase; }
 @media (max-width: 650px)
 {
@@ -20784,7 +20792,7 @@ font-weight:600;
     margin-left: 5px;
 }
 .secureTransaction{
-  top: 15px;}
+  top: 27px;}
   .checkout.wrapper .product-block li.item > ul li:first-child .delivery-price{
   bottom:0;}
 .top.checkout-top .content ul li span{
@@ -27511,6 +27519,8 @@ body .account .account-header select.menu-select optgroup option{
 	}
 	.cart.wrapper .product-block li.item > ul > li.qty select{
 	    min-width: 60px;
+	    width: auto;
+    	margin: 0;
 	}
 	.cart.wrapper .product-block li.item > ul > li:first-child div.product .product-name{
 	text-overflow: ellipsis;
