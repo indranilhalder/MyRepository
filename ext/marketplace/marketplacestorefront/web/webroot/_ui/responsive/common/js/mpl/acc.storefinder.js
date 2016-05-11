@@ -58,14 +58,6 @@ ACC.storefinder = {
 			 
 		});
 		
-		/*$(document).on("change","#storelocator-query",function(e){
-			 
-			//console.debug($("#storelocator-query").val())
-			var inputtext=$("#storelocator-query").val();
-			if(inputtext){ 
-			$('#storeSearchTextValue').text(inputtext);
-			}
-		})*/
 		$("#storelocator-query").keyup(function(){
 			if(!$("#storelocator-query").val()){
 				$("#storesnear").hide();
@@ -153,7 +145,6 @@ ACC.storefinder = {
 		          if(infoMsg["mplOpeningTime"] && infoMsg["mplClosingTime"]){
 		        	  infoString=infoString+'<p>PiQ up hrs : '+ infoMsg["mplOpeningTime"]+'-'+infoMsg["mplClosingTime"]+"</p>";
 		          }
-		         // console.log(infoMsg["mplWorkingDays"]);
 		          if(infoMsg["mplWorkingDays"]){
 		        	    var	collectionDays = infoMsg["mplWorkingDays"].split(",");
 						var weekDays = ["0","1","2","3","4","5","6"];
@@ -176,10 +167,8 @@ ACC.storefinder = {
 							infoString=infoString+"<p>Weekly Off : ";
 							var weekOff="";
 							for(var y = 0; y < missing.length; y++) {
-								console.log(collectionWeek[missing[y]]);
 								weekOff=weekOff+collectionWeek[missing[y]];
 								if(y != missing.length-1) {
-									console.log(',');
 									weekOff=weekOff+',';
 									 
 								}
@@ -194,12 +183,6 @@ ACC.storefinder = {
 		          infowindow.open(map, marker);
 		          map.setZoom(markerZoom);
 		          map.setCenter(marker.getPosition());
-		          if(!(storeData[i].onClickImgUrl)){
-		        	  console.debug("No On image.");
-		          }else{
-		        	  console.debug("locatorJson[i].onClickImgUrl");
-		        	  //marker.setIcon(locatorJson[i].onClickImgUrl);  
-		          };
 		        }
 		      })(marker, i));
 			marker.setMap(map);	 
@@ -208,7 +191,6 @@ ACC.storefinder = {
 			
 			//To control max zoom label
 			google.maps.event.addListenerOnce(map, 'bounds_changed', function(event){
-				console.info(this.getZoom());
 				  if(this.getZoom()>18){
 					  this.setZoom(18); 
 				  }
@@ -235,10 +217,8 @@ ACC.storefinder = {
 				geocoder.geocode({ 'address': q + ' India' }, function(results, status) {
 				    if (status == google.maps.GeocoderStatus.OK) {
 				    	var searchLocation = results[0].geometry.location;
-				    	//console.log("Check for logs.")
 				    	lat=searchLocation.lat();
 				    	lng=searchLocation.lng();
-				    	//console.log(lat);
 				    	ACC.storefinder.getInitStoreData(null,lat,lng);
 				    }else{
 				    	ACC.storefinder.getInitStoreData(null,lat,lng);
@@ -275,8 +255,6 @@ ACC.storefinder = {
 			data: ACC.storefinder.storeSearchData,
 			type: "get",
 			success: function (response){
-				console.info("ajax..got sucess full data.");
-				//console.info(response);
 				if(response){
 				ACC.storefinder.storeData = $.parseJSON(response);
 				ACC.storefinder.refreshNavigation();
@@ -370,7 +348,6 @@ ACC.storefinder = {
 	{  
 			storeData=ACC.storefinder.storeData["data"];
 			var storeId=$(this).data("id");
-			console.info(storeData);
 			ACC.storefinder.storeId = storeData[storeId];
 			ACC.storefinder.initGoogleMap();
 
@@ -414,7 +391,6 @@ removeGamma:function(map) {
 		controlDiv.style.padding='10px';
 		 // Setup the different icons and shadows
 	    var iconURLPrefix = ACC.config.commonResourcePath+"/images/";
-	    console.log(iconURLPrefix);
 	    var icons = [
 	      iconURLPrefix + 'Bestseller_Legend.png',
 	      iconURLPrefix + 'CottonWorld_Legend.png',
@@ -444,10 +420,7 @@ removeGamma:function(map) {
 		      div.appendChild(img1);
 		      controlUI.appendChild(div);
 		     }
-	     // div.innerHTML = '<img src="' + ACC.config.commonResourcePath +"/images/Bestseller_Legend.png" + '" style="googleMapLegends"> ';
 	      
-	      console.info(controlDiv);  
-	  // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 	    
 	}
 };
