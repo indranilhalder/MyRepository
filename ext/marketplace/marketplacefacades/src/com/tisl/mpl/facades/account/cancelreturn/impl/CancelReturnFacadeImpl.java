@@ -238,7 +238,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					final PaymentTransactionEntryModel paymentTransEntry = tranactions.iterator().next().getEntries().iterator()
 							.next();
 					if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
-							&& "COD".equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
+							&& MarketplacecommerceservicesConstants.CASH_ON_DELIVERY.equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
 
 					{
 						refundType = "N";
