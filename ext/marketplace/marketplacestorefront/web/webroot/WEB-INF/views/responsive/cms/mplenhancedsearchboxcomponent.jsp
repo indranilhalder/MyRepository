@@ -171,7 +171,7 @@
 		<spring:theme code="search.placeholder" var="searchPlaceholder" />
 
 		<ycommerce:testId code="header_search_input">
-			<input readonly type="text" id="js-site-search-input" tabindex="1"
+			<input type="text" id="js-site-search-input" tabindex="1"
 				class="form-control js-site-search-input" name="text" value=""
 				maxlength="250" placeholder="${searchPlaceholder}"
 				data-options='{"autocompleteUrl" : "${autocompleteUrl}","minCharactersBeforeRequest" : "${component.minCharactersBeforeRequest}","waitTimeBeforeRequest" : "${component.waitTimeBeforeRequest}","displayProductImages" : ${component.displayProductImages}}'>
