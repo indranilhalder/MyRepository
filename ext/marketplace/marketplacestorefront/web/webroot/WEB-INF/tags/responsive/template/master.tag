@@ -53,9 +53,10 @@
 					<c:set var="canonical" value="${baseURL}${reqURI}/"></c:set>
 				</c:otherwise>
 			</c:choose>
+			<link rel="canonical" href="${canonical}" />
 		</c:otherwise>
 	</c:choose>
-	<link rel="canonical" href="${canonical}" />
+	
 	<c:forEach items="${metatags}" var="metatagItem">
 		<c:if test="${metatagItem.name eq 'title'}">
 			<c:set var="metaTitle" value="${metatagItem.content}"/>
