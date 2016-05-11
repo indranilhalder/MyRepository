@@ -26,17 +26,17 @@
 	<c:if test="${component.layout eq 'FiveBrandImages'}">
 		<ul class="images">
 			<li class="short images">
-				<%-- <div class="toggle">
+			<%-- 	<div class="toggle">
 				<a href="${masterBrandUrl}">${component.masterBrandName}</a>
 				<c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url>
-			</div> 
-			<div>
+			</div>  --%>
+			<div class="view_brands">
 				<a href="${masterBrandUrl}"><h4>
 						<b> <spring:theme code="navigation.brand.viewAll" />${component.masterBrandName}
 
 						</b>
 					</h4></a>
-			</div> --%> <c:forEach items="${component.subBrandList}"
+			</div> <c:forEach items="${component.subBrandList}"
 					var="subBrand">
 					<!-- TISPRD-1381 Brand Issue Fix -->
 					<c:if test="${not empty subBrand.subBrandUrl}">
@@ -66,15 +66,15 @@
 				<%-- <div class="toggle">
 				<a href="${masterBrandUrl}">${component.masterBrandName} 
 				</a>
-				</div>
+				</div> --%>
 				
-					<div>
+					<div class="view_brands">
 						<a href="${masterBrandUrl}"><h4>
 								<b> <spring:theme code="navigation.brand.viewAll" />${component.masterBrandName}
 
 								</b>
 							</h4></a>
-					</div> --%>
+					</div>
 
 				<ul class="words" style="width: 50%; float: left">
 					<c:forEach items="${component.subBrands}" var="subBrand">
@@ -118,14 +118,14 @@
 			<li class="short images" id="atozbrandsdiplay">
 				<%-- <div class="toggle">
 				<a href="">${component.masterBrandName}</a>
-			</div> <c:url var="brandlistUrl" value="/brands/brandlist?cat=A-ZBrands" />
-			<div>
+			</div> <c:url var="brandlistUrl" value="/brands/brandlist?cat=A-ZBrands" /> --%>
+			<div class="view_brands">
 				<a href="${brandlistUrl}"><h4>
 						<b> <spring:theme code="navigation.brand.viewAllBrands" />
 
 						</b>
 					</h4></a>
-			</div> --%>
+			</div>
 			</li>
 		</ul>
 	</c:if>

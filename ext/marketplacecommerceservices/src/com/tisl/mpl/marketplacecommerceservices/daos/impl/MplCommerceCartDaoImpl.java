@@ -123,12 +123,12 @@ public class MplCommerceCartDaoImpl implements MplCommerceCartDao
 
 	/*
 	 * @Desc fetching state details for a state name
-	 * 
+	 *
 	 * @param stateName
-	 * 
+	 *
 	 * @return StateModel
-	 * 
-	 * 
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -137,11 +137,10 @@ public class MplCommerceCartDaoImpl implements MplCommerceCartDao
 		List<StateModel> stateModelList = null;
 		if (StringUtil.isNotEmpty(stateName))
 		{
-			final String queryString = "SELECT {sm.PK} FROM {" + StateModel._TYPECODE + " AS sm}" + " WHERE {sm:"
-					+ StateModel.DESCRIPTION + "}=?stateName";
+			final String queryString = "SELECT {pk} FROM {State} WHERE  LOWER({description}) = ?stateName";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("stateName", stateName);
+			query.addQueryParameter("stateName", stateName.trim().toLowerCase());
 			stateModelList = getFlexibleSearchService().<StateModel> search(query).getResult();
 		}
 		return stateModelList;
