@@ -297,6 +297,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 				{
 					LOG.debug("******** Special Price - Promotion Applicable ussid List:" + seller.getSellerArticleSKU());
 					updateSpecialPrice = false;
+					break;
 				}
 				else
 				{
