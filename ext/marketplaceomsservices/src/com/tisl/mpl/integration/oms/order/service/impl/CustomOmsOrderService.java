@@ -196,7 +196,7 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 			getOrdercreation().orderCreationDataToCRM(order);
 			LOG.info(" CRM order call for RMS verfication pending");
 			orderModel.setCrmSubmitStatus(MarketplaceomsservicesConstants.SUCCESS);
-			getModelService().save(order);
+			getModelService().save(orderModel);
 			LOG.debug("After CRM order call for Ticket for order :" + order.getOrderId());
 		}
 		catch (final Exception ex)
@@ -214,9 +214,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	/*
 	 * @Desc Used for generating xml
-	 * 
+	 *
 	 * @param order
-	 * 
+	 *
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)
