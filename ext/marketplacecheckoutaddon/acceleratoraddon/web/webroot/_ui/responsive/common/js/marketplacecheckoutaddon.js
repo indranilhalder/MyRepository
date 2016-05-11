@@ -49,7 +49,7 @@ function refresh(){
 	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").prop("disabled",false);
 	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").css("opacity","1");
 	$(".pay .spinner").remove();
-	$(".checkout-content.checkout-payment .left-block").css("margin-top","0px");
+	//$(".checkout-content.checkout-payment .left-block").css("margin-top","0px");
 	
 	$("#paymentMode, #bankNameForEMI, #selectedTerm, #bankCodeSelection").val("select");
 	document.getElementById('silentOrderPostForm').reset();
@@ -69,7 +69,7 @@ function refresh(){
 	$("#bankNameForEMI, #listOfEMiBank, #netbankingIssueError, #emiPromoError").css("display","none");
 	$("#convChargeFieldId, #convChargeField").css("display","none");
 	$(".card_ebsErrorSavedCard, .card_cvvErrorSavedCard, #maestroMessage, #newMaestroMessage").css("display","none");
-	$(".make_payment_top_nb, .make_payment_top_savedCard, .make_payment_top_newCard, .cod-otp-button_top, .cod_payment_button_top").css("display","none");
+	$(".make_payment_top_nb, .make_payment_top_savedCard, .make_payment_top_newCard, .cod_payment_button_top").css("display","none");
 	$("").css("display","none");
 	hideTable();
 	var selection = document.silentOrderPostForm.EMIBankCode;
@@ -144,7 +144,7 @@ function displayCODForm()
 	refresh();
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
-	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton, .cod-otp-button_top").css("display","block");
+	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
 	/*$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","block");*/	//Modified back as erroneously pushed by performance team
 	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 	//setCellNo();
@@ -947,7 +947,7 @@ function generateOTP(){
 			else{
 				$("#codMessage").css("display","none");
 				$("#otpNUM, #otpSentMessage, #sendOTPNumber, #enterOTP, #paymentFormButton, #submitPaymentFormCODButton, .make_payment, #sendOTPButton, #resendOTPMessage, .cod_payment_button_top").css("display","block");
-				$(".checkout-content.checkout-payment .left-block").css("margin-top","-48px");
+				//$(".checkout-content.checkout-payment .left-block").css("margin-top","-48px");
 				
 			}
 			
@@ -2925,7 +2925,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#expressCheckoutButtonId").css("cursor","default");
 		$("#expressCheckoutButtonId").css("opacity","0.5");
 		var pincodeEntered = $('#defaultPinCodeIds').val();
-		var pincodeServiceError = "This item is not serviceable for pincode "+pincodeEntered;
+		var pincodeServiceError = "This item is not serviceable for pincode "+pincodeEntered+"!";
 		//console.log(pincodeServiceError);
 		var elementId = $(".desktop li:nth-child(3) ul");
 		elementId.hide();
@@ -2960,7 +2960,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		var newUi = document.createElement("ul");
 		newUi.setAttribute("id", ussId);
 		var newSpan = document.createElement("span");
-		var text = document.createTextNode("This item is not serviceable for pincode "+selectedPincode);
+		var text = document.createTextNode("This item is not serviceable for pincode "+selectedPincode+"!");
 		newSpan.appendChild(text);
 		newUi.appendChild(newSpan);
 		$("#"+ussId+"_li").append(newUi);
