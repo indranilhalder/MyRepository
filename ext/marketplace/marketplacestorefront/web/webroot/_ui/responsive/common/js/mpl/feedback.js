@@ -1,4 +1,3 @@
-
 /*----------Start of  validate email in feedback-----------*/
 	function validateEmail()
     { 	 var x = document.getElementById("emailField");
@@ -112,6 +111,21 @@
 
 
 $(document).ready(function(){
+	
+	$('#js-site-search-input').on( 'click', function() {
+	    $(this).removeAttr('readonly').focus().select();
+	});
+	
+	$('#js-site-search-input').on( 'blur', function() {
+	    $( this ).prop( 'readonly', 'readonly' );
+	});
+	$('#mailtext').on( 'click', function() {
+		$(this).removeAttr('readonly').focus().select();
+	});
+	
+	$('#mailtext').on( 'blur', function() {
+		$( this ).prop( 'readonly', 'readonly' );
+	});
 	
 	//TISEEII-640 issue fix -- Start
 	$(".facet.js-facet .js-facet-name").each(function(){
@@ -1303,6 +1317,9 @@ $(document).ready(function(){
 		if ('ontouchstart' in window) {
 			$('body').addClass("touchDevice");
 	 		$("header .content nav > ul > li > ul > li > .toggle a").click(function(){
+	 			$(this).attr("href","#");
+	 		});
+	 		$("header.brand-header .content .bottom nav>ul>li>ul>li.level1>div.toggle>a").click(function(){
 	 			$(this).attr("href","#");
 	 		});
 			}

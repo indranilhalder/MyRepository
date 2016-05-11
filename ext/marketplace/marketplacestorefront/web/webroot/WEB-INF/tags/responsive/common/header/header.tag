@@ -205,7 +205,7 @@ function registerUser(eventObject)
 
 			<c:choose>
 				<c:when test="${empty showOnlySiteLogo }">
-					<div class="marketplace">
+					<div class="marketplace" data-logo="marketplace">
 						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
 							<cms:component component="${logo}"/>
 						</cms:pageSlot>
