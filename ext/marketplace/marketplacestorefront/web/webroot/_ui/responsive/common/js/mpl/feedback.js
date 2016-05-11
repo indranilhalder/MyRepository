@@ -1191,7 +1191,7 @@ $(document).ready(function(){
 		$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
 	});
 	
-	$(window).on("load resize",function(){
+	/*$(window).on("load resize",function(){
 		if($(window).width()<651)
 			{
 		$('.feature-collections ul.collections li.chef.sub .simple-banner-component').each(function(){
@@ -1203,7 +1203,7 @@ $(document).ready(function(){
 		
 		});
 			}
-	});
+	});*/
 	if ($("#searchPageDeptHierTree").children().length==0){
 		
 		$("#searchPageDeptHierTree").css("padding","0px");

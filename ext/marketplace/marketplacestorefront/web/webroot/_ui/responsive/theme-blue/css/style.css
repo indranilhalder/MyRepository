@@ -2613,7 +2613,7 @@ h2 {
         opacity: 0;
         position: absolute;
         right: 0;
-		top: 0;
+		top: 3px;
         -webkit-transition: opacity 0.15s;
         -moz-transition: opacity 0.15s;
         transition: opacity 0.15s;
@@ -16441,7 +16441,8 @@ body .compare>.wrapper {
     }		
     .comparison-table td:nth-child(2),		
     .comparison-table td:nth-child(3) {		
-        display: table-cell;		
+        display: table-cell;	
+        vertical-align:top;	
     }		
     .comparison-table.stats {		
         display: block;		
@@ -25219,10 +25220,12 @@ font-size: 18px;
 .feature-collections ul.collections li.chef h3 {
     font-size: 32px;
     padding-bottom: 20px;
- margin-top: 0px; 
+ 	margin-top: 0px; 
     font-weight: 500;
     width:200%;
     max-width: 200%;
+    word-break:break-word;
+    padding-top:20px;
 }
 .lookbooks .lookbook {
     margin-bottom: 30px;
@@ -25541,7 +25544,7 @@ padding-left: 0px;}
     margin: 10px 0;}
     .sort-refine-bar.wrapped-form.sort.mobile{
     position: absolute;
-    top:1px;
+    top:0px;
     left:32%;
     }
    .lookbook_wrapper .sort-refine-bar.wrapped-form.sort.mobile{
@@ -27394,12 +27397,7 @@ body.page-reviews .right-account .reviews .navigation p {
     clear: both;
 }
 @media (max-width: 650px)
-{
-.feature-collections ul.collections li.chef.sub h3 {
-    width: 100%;
-    max-width: 100%;
-	  word-break: break-word;
-} 
+{ 
 header>.content .top .toggle span {
 		width: calc(100% - 30px);
 		height: 2px;
