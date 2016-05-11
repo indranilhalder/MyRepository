@@ -205,7 +205,7 @@ ACC.storefinder = {
 	bindSearch:function(){
 
 		$(document).on("submit",'#storeFinderForm', function(e){
-			e.preventDefault()
+			e.preventDefault();
 			var q = $(".js-store-finder-search-input").val();
 
 			if(q.length>0){
@@ -237,6 +237,7 @@ ACC.storefinder = {
 
 		//$(".js-store-finder").hide();
 		$(document).on("click",'#findStoresNearMe', function(e){
+			e.preventDefault();
 			$("#storesnear").show();
 			$('#storeSearchTextValue').text('Your Location');
 			$('#storelocator-query').val('Current Location')
