@@ -78,6 +78,7 @@ function initialize(locatorJson,lat,lot)
     var markers = new Array();
 	  
   for (var i = 0; i < locatorJson.length; i++) { 
+	 if(locatorJson[i].active=='Y'){
 	 var icon="";
 	 var marker="";
 	 var mplStoreImage=locatorJson[i].mplStoreImage;
@@ -115,6 +116,7 @@ function initialize(locatorJson,lat,lot)
 							      })(marker, i));
 marker.setMap(map);	  
 autoCenter(markers,map);
+}
 }
   
 //Add a Home control that returns the user to London

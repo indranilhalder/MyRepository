@@ -49,6 +49,7 @@
 	
 	.input-group-btn>.store-btn{
 	 background:#A9143C;
+	 z-index:3;
 	}
 	.col-sm-6 .storeSearchTextValue{
 	  color:#A9143C;
@@ -61,6 +62,7 @@
 	.findStoresNearMe{
 	   margin-left: -10px; 
 	   white-space: pre;
+	   margin-top:8;
 	}
 	.js-store-finder{
 	 margin :0px 12px;

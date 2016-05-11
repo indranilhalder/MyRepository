@@ -110,8 +110,8 @@ ACC.storefinder = {
 		    var bounds = new google.maps.LatLngBounds();
 		    
 			for (var i = 0; i < storeData.length; i++) { 
-			 var localStoreInfo=storeData[i];
-				
+			var localStoreInfo=storeData[i];
+			if(localStoreInfo["active"]=='Y'){
 			var comIcon="";
 			if(!(localStoreInfo["regularImgUrl"])){
 				comIcon="";
@@ -187,6 +187,7 @@ ACC.storefinder = {
 		      })(marker, i));
 			marker.setMap(map);	 
 			}
+		}
 			map.fitBounds(bounds);
 			
 			//To control max zoom label
