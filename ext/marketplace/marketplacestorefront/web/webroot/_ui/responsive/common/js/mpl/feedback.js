@@ -112,21 +112,6 @@
 
 $(document).ready(function(){
 	
-	$('#js-site-search-input').on( 'click', function() {
-	    $(this).removeAttr('readonly').focus().select();
-	});
-	
-	$('#js-site-search-input').on( 'blur', function() {
-	    $( this ).prop( 'readonly', 'readonly' );
-	});
-	$('#mailtext').on( 'click', function() {
-		$(this).removeAttr('readonly').focus().select();
-	});
-	
-	$('#mailtext').on( 'blur', function() {
-		$( this ).prop( 'readonly', 'readonly' );
-	});
-	
 	//TISEEII-640 issue fix -- Start
 	$(".facet.js-facet .js-facet-name").each(function(){
 		var x = $(this).html().length; 
@@ -909,8 +894,26 @@ $(document).ready(function(){
 			  var url = $(this).attr("src");
 			  $(this).attr("src",url+"?wmode=transparent");
 		  });
-	
-	
+		  }
+	  if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
+		  $("#js-site-search-input").attr("readonly","readonly");
+		  $("#mailtext").attr("readonly","readonly");
+			$('#js-site-search-input').on( 'click', function() {
+			    $(this).removeAttr('readonly').focus().select();
+			});
+			
+			$('#js-site-search-input').on( 'blur', function() {
+			    $( this ).prop( 'readonly', 'readonly' );
+			});
+			$('#mailtext').on( 'click', function() {
+				$(this).removeAttr('readonly').focus().select();
+			});
+			
+			$('#mailtext').on( 'blur', function() {
+				$( this ).prop( 'readonly', 'readonly' );
+			});
+			
+		  
 	  }
 	  
 	 /*---END  of function for Internet Explorer video z-index overlapping ends----*/

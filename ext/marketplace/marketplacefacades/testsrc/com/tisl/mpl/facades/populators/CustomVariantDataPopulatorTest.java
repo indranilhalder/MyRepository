@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.facades.populators;
 
@@ -24,12 +24,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 
 
 /**
  * @author 592991
- * 
+ *
  */
 @UnitTest
 @RunWith(MockitoJUnitRunner.class)
@@ -49,7 +50,8 @@ public class CustomVariantDataPopulatorTest
 	@Test
 	public void shouldPopulateVariantForColorSwatch()
 	{
-		final String selectedSize = "S";
+		//TISSEC-50
+		final String selectedSize = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter selected size
 		final PcmProductVariantModel vmModel = Mockito.mock(PcmProductVariantModel.class);
 		final Collection<VariantProductModel> variantList = new ArrayList<VariantProductModel>();
 		final VariantOptionData variantOptionData = mock(VariantOptionData.class);
@@ -73,7 +75,7 @@ public class CustomVariantDataPopulatorTest
 	@Test
 	public void shouldPopulateVariant()
 	{
-		final String selectedSize = "S";
+		final String selectedSize = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter selected size
 		final PcmProductVariantModel vmModel = Mockito.mock(PcmProductVariantModel.class);
 		final Collection<VariantProductModel> variantList = new ArrayList<VariantProductModel>();
 		final VariantOptionData variantOptionData = mock(VariantOptionData.class);

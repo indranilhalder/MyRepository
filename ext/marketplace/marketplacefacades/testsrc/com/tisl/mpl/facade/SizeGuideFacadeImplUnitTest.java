@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.SizeGuideModel;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.SizeGuideServiceImpl;
 
@@ -38,7 +39,8 @@ public class SizeGuideFacadeImplUnitTest
 	@Test
 	public void testgetSizeguideList() throws CMSItemNotFoundException
 	{
-		final String ProductSource = "987654321";
+		//TISSEC-50
+		final String ProductSource = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter product source
 
 		final List<SizeGuideModel> sizeguideList = Arrays.asList(sizeGuideModel);
 

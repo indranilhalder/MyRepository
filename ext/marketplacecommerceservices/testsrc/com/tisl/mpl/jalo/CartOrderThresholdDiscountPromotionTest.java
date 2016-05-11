@@ -62,16 +62,16 @@ public class CartOrderThresholdDiscountPromotionTest extends ServicelayerTransac
 	public void setUp() throws Exception
 	{
 
-
-		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
+		//TISSEC-50
+		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("", "");//TODO : Please enter catalogue name,Please enter version
 		catalogVersionService.addSessionCatalogVersion(version);
 
 		userService.setCurrentUser(userService.getUserForUID("demo"));
-		currency = commonI18NService.getCurrency("EUR");
+		currency = commonI18NService.getCurrency("");//TODO : Please enter currency
 
-		promotionGroup = createPromotionGroup("mplPromoGrp");
+		promotionGroup = createPromotionGroup("");//TODO : Please enter promotion grp
 
-		product = productService.getProductForCode(version, "mplProductCatalog-23191");
+		product = productService.getProductForCode(version, "");//TODO : Please enter product code
 	}
 
 	private PromotionGroupModel createPromotionGroup(final String name)
@@ -89,7 +89,7 @@ public class CartOrderThresholdDiscountPromotionTest extends ServicelayerTransac
 		promo.setCode(code);
 		promo.setEnabled(Boolean.TRUE);
 		promo.setPriority(Integer.valueOf(1000));
-		promotionGroup = promotionsService.getPromotionGroup("mplPromoGrp");
+		promotionGroup = promotionsService.getPromotionGroup("");//TODO : Please enter promotion grp
 		final Collection<PromotionGroupModel> promotionGroups = new ArrayList<PromotionGroupModel>();
 		promotionGroups.add(promotionGroup);
 		promo.setPercentageDiscount(percentageDiscount);
