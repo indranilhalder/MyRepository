@@ -1,3 +1,32 @@
+var headerLoggedinStatus = false;
+$(function() {
+	
+	$.ajax({
+		url: ACC.config.encodedContextPath + "/setheader",
+		type: 'GET',
+		success: function (data)
+		{
+			headerLoggedinStatus = data.loggedInStatus;
+			$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
+			if (!headerLoggedinStatus) {
+				$("a.headeruserdetails").html("Sign In");
+			}
+			else {
+				var firstName = data.userFirstName;
+				if (firstName == null || firstName.trim() == '') {
+					$("a.headeruserdetails").html("Hi!");
+				} else {
+					$("a.headeruserdetails").html("Hi, " + firstName + "!");
+				}
+			}
+			$("input[name='CSRFToken']").each(function(){
+			//	console.log("old value ---"+this.value + "---new value--"+data.dts);
+		        	this.value = data.dts;          
+		    });
+		}
+	});
+});
+
 $("div.departmenthover").on(
 		"mouseover touchend",
 		function() {
@@ -131,6 +160,23 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
 			$("div.wishlist-info").html(html);
 		}
 	});
+});
+
+
+
+
+$("li.ajaxloginhi").on("mouseover touchend", function(e) {
+    e.stopPropagation();
+	if ($("ul.ajaxflyout").html().trim().length <= 0) {
+		$.ajax({
+			url: ACC.config.encodedContextPath + "/headerloginhi",
+			type: 'GET',
+			success: function (html)
+			{
+				$("ul.ajaxflyout").html(html);
+			}
+		});
+	}
 });
 //
 
@@ -465,6 +511,8 @@ function getBestPicksAjaxCall(){
 							
 							if(v.url){
 								renderHtml += "<a href='"+ appendIcid(v.url, v.icid)+ "' class='item'>";
+
+
 							}
 							
 							if(v.imageUrl){
@@ -510,6 +558,7 @@ function getBestPicksAjaxCall(){
 	});
 }
 
+
 // AJAX CALL BEST PICKS END
 
 //AJAX CALL PRODUCTS YOU CARE START
@@ -546,6 +595,8 @@ function getProductsYouCareAjaxCall(){
 						var URL = ACC.config.encodedContextPath+"/Categories/"+v.categoryName+"/c-"+v.categoryCode;
 						//for url
 						renderHtml += "<a href='"+ appendIcid(URL,v.icid)+ "' class='item'>";
+
+
 						//for image
 						renderHtml += "<div class='home-product-you-care-carousel-img'> <img src='"
 							+ v.mediaURL

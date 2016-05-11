@@ -19,6 +19,7 @@ function navigateToPage(queryString,textString)
 <c:if test="${facetData.code ne 'deptType'}">
 <c:if test="${facetData.code ne 'sellerId'}">
 <c:if test="${facetData.code ne 'allMobilePromotions'}">
+<c:if test="${facetData.code ne 'allCategories'}">
 <!--  fixed for TISSTRT-615-Fixed -->
 <c:if test="${facetData.code ne 'vouchers'}">
 <!-- End  fixed for TISSTRT-615-Fixed -->
@@ -351,6 +352,7 @@ function navigateToPage(queryString,textString)
 		
 	</li> </c:if> 
 			</ycommerce:testId>
+			</c:if>
 			</c:if>
 			</c:if>
 			</c:if>

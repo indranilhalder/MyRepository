@@ -2,6 +2,14 @@
 /*-------------- For account address --------------*/
 
 /*--------------Added to create a common tag for left navigation in my account-----------*/
+
+$(document).ready(function(){
+	//	Changes for TISPRD-1494
+	if(null!=document.getElementById("check_MyRewards") && undefined !=document.getElementById("check_MyRewards")){
+		document.getElementById("check_MyRewards").checked= true;
+	} 
+});
+ 
  $(document).ready(function(){
 	 /*To highlight the active link*/
 	 

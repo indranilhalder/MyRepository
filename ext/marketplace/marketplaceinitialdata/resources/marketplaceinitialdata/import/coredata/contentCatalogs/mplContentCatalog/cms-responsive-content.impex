@@ -49,6 +49,10 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 ;;ReviewPageTemplate;Review Page Template;account/reviewPage;ContentPage
 ##for sitemap
 ;;sitemapTemplate;Sitemap Page Template;layout/sitemapHTMLLayout;ContentPage
+##for appLandingPage
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;appLandingPageTemplate;App Landing Page Template;layout/appLandingPage;ContentPage
+
 ########## For Lets Get Personal ##########
 ;;AccountMyInterestPageTemplate;Account My Interest Page Template;my-account/myInterest;ContentPage
 ;;AccountMyStyleProfilePageTemplate;Account My Style Profile Page Template;my-account/myStyleProfile;ContentPage
@@ -88,7 +92,7 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 ;;AccountCouponDetailsPageTemplate;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;ReviewPageTemplate;$jarResourceCms/structure-view/structure_reviewPage.vm
 ;;sitemapTemplate;$jarResourceCms/structure-view/structure_sitemapPage.vm
-
+;;appLandingPageTemplate;$jarResourceCms/structure-view/structure_sitemapPage.vm
 
 
 
@@ -304,6 +308,22 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide
+
+#sitemap Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='appLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;TopContent;;;wide
+;Section1;;;narrow
+;Section2;;;wide
+;Section3;;;wide
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
+
 
 
 # Order History Page Template
@@ -567,6 +587,18 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;SearchBox-sitemapPage;SearchBox;;SearchBoxSlot;true
 ;;TopHeaderSlot-sitemapPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-sitemapPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='appLandingPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-appLandingPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-appLandingPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-appLandingPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-appLandingPage;MiniCart;;MiniCartSlot;true
+;;Footer-appLandingPage;Footer;;FooterSlot;true
+;;HeaderLinks-appLandingPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-appLandingPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-appLandingPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-appLandingPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountUpdateEmailPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;SiteLogo-AccountUpdateEmailPage;SiteLogo;;SiteLogoSlot;true
