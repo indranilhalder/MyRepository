@@ -14,6 +14,7 @@
 <%@ taglib prefix="htmlmeta" uri="http://hybris.com/tld/htmlmeta"%>
 <%@ taglib prefix="tealium" tagdir="/WEB-INF/tags/addons/tealiumIQ/shared/analytics" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %>
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
@@ -44,10 +45,17 @@
 		</c:when>
 		<c:otherwise>
 			<!-- Canonical Tag -->
-			<link rel="canonical" href="${baseURL}${reqURI}" />
+			<c:choose>
+				<c:when test="${regex:regExMatch(reqURI,'[/]$') }">
+					<c:set var="canonical" value="${baseURL}${reqURI}"></c:set>
+				</c:when>
+				<c:otherwise>
+					<c:set var="canonical" value="${baseURL}${reqURI}/"></c:set>
+				</c:otherwise>
+			</c:choose>
 		</c:otherwise>
 	</c:choose>
-	
+	<link rel="canonical" href="${canonical}" />
 	<c:forEach items="${metatags}" var="metatagItem">
 		<c:if test="${metatagItem.name eq 'title'}">
 			<c:set var="metaTitle" value="${metatagItem.content}"/>
@@ -77,7 +85,7 @@
 	
 	<!-- FB Open Graph data -->
 	<meta property="og:title" content="${metaTitle}" />
-	<meta property="og:url" content="${baseURL}${requestScope['javax.servlet.forward.request_uri']}" />
+	<meta property="og:url" content="${canonical}" />
 	<meta property="og:image" content="${seoImageURL}" />
 	<meta property="og:description" content="${metaDescription}" />
 	<meta property="og:site_name" content="${siteName}" />
