@@ -1409,10 +1409,12 @@ $(document).ready(function(){
 		$(window).resize(function(){
 			clearTimeout(resize_sbb);
 			resize_sbb = setTimeout(function(){
-				if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
-					$('header .content nav > ul > li:first-child + li').css('margin-left','25px');
-				} else {
-					$('header .content nav > ul > li:first-child + li').css('margin-left','0px');
+				if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') < 0) {
+					if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+						$('header .content nav > ul > li:first-child + li').css('margin-left','25px');
+					} else {
+						$('header .content nav > ul > li:first-child + li').css('margin-left','0px');
+					}
 				}
 			},100);
 		});
