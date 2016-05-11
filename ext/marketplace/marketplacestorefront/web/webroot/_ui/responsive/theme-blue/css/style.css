@@ -4162,9 +4162,9 @@ color:inherit;}
 	transition: color 0.15s;
 }
 
- .feature-collections ul.collections li.sub:last-child {
+/*  .feature-collections ul.collections li.sub:last-child {
 	padding-top: 45px;
-}
+} */
 .electronics-brand .video-wrapper .brand-description,.apparel-brand .video-wrapper .brand-description{
 padding-top:20px;
 }
@@ -19871,7 +19871,7 @@ color: #ff829a;
             header .content .bottom.active .bag a
             {
             	position:relative !important;
-            	left:15px;
+            	left:18px;
             }
 }
 
@@ -37385,47 +37385,33 @@ border-top: 3px solid #fff;
 	
 	#brandsYouLove .bulprev {
 		 left: 20px;
+		 
 	}
 	 #brandsYouLove .bulnext {
 	 	right: 20px;
+	 	
 	 }
-	 
-	 #brandsYouLove .bulnext:after, #brandsYouLove .bulprev:after{
-		    content: "";
-    display: block;
-    position: absolute;
-    height: 12px;
-    width: 12px;
-    -webkit-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    transform: rotate(45deg);
-    -webkit-transform-origin: 50% 25%;
-    -moz-transform-origin: 50% 25%;
-    -ms-transform-origin: 50% 25%;
-    -o-transform-origin: 50% 25%;
-    transform-origin: 50% 25%;
-    -webkit-transition: -webkit-transform 0.3s;
-    -moz-transition: -moz-transform 0.3s;
-    transition: transform 0.3s;
-    top: 1px;
-    right: 0;
-    bottom: 0;
-    margin: auto !important;
-    left: 0;
-    border-top: 3px solid #fff;
-    border-right: 3px solid #fff;
-	}
-	
-	#brandsYouLove .bulprev:after {
-	    top: 9px;
-	-webkit-transform: rotate(-135deg);
-    -moz-transform: rotate(-135deg);
-    -ms-transform: rotate(-135deg);
-    -o-transform: rotate(-135deg);
-    transform: rotate(-135deg);
-	}
+
+#brandsYouLove .bulnext:after, #brandsYouLove .bulprev:after {
+	font-family: "FontAwesome";
+	color: #fff;
+	display: block;
+	position: absolute;
+	display: block;
+	font-size: 28px;
+}
+
+#brandsYouLove .bulprev:after {
+	content: "\f104";
+	top: 0;
+	right: 3px;
+}
+
+#brandsYouLove .bulnext:after {
+	content: "\f105";
+	top: 0;
+	left: 3px;
+}
 
 .modal.size-guide .apparelSizes table{
 width: 100%;

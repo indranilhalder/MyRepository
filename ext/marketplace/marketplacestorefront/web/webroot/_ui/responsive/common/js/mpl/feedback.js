@@ -1399,4 +1399,8 @@ $(document).ready(function(){
 				$(".body-Content").css('padding-bottom','0px');
 			}
 		});		
+		
+		if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') < 0) {
+			$('header .content nav > ul > li:first-child + li').css('margin-left','25px');
+		}
 });
