@@ -332,9 +332,11 @@
 														</c:if>
 														
 														<!--Chairman Demo Changes: New Static Content Sheet: Checkout> Order Cancellation -->
-														<c:if test="${entry.itemCancellationStatus eq 'false' and entry.giveAway eq 'false' and entry.isBOGOapplied eq 'false'}">
-														<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
-														</c:if>
+														<!-- TISCR-410 -->
+															<c:if test="${entry.isCancellationMissed eq 'true'}">
+																<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+															</c:if>
+														<!-- TISCR-410 ends -->
 														<!--Chairman Demo Changes end-->
 														<!-- changes for TISSTRT-1173 -->
 														<c:if test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">

@@ -56,7 +56,7 @@ public interface CancelReturnFacade
 	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String ticketTypeCode, final String reasonCode, final String refundType, final String ussid,
 			final CustomerData customerData, final OrderModel subOrderModel);
-	
+
 	/**
 	 * @author Techouts
 	 * @param subOrderDetails
@@ -72,7 +72,7 @@ public interface CancelReturnFacade
 	 */
 	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String ticketTypeCode, final String reasonCode, final String refundType, final String ussid,
-			final CustomerData customerData, final OrderModel subOrderModel,ReturnItemAddressData returnAddress);
+			final CustomerData customerData, final OrderModel subOrderModel, ReturnItemAddressData returnAddress);
 
 
 	/**
@@ -82,7 +82,7 @@ public interface CancelReturnFacade
 	 * @throws Exception
 	 */
 	public List<OrderEntryData> associatedEntriesData(OrderModel order, String orderLineId) throws Exception;
-	
+
 	/**
 	 * @author Techouts
 	 * @param orderDetails
@@ -90,7 +90,7 @@ public interface CancelReturnFacade
 	 * @return ReturnLogisticsResponseData List
 	 */
 	public List<ReturnLogisticsResponseData> checkReturnLogistics(OrderData orderDetails, String pincode);
-	
+
 	/**
 	 * @author Techouts
 	 * @param subOrderDetails
@@ -107,7 +107,14 @@ public interface CancelReturnFacade
 	 */
 	public boolean implementReturnItem(OrderData subOrderDetails, OrderEntryData subOrderEntry, String reasonCode, String ussid,
 			String ticketTypeCode, CustomerData customerData, String refundType, boolean isReturn,
-			SalesApplication salesApplication,ReturnItemAddressData returnAddress);
+			SalesApplication salesApplication, ReturnItemAddressData returnAddress);
 
-	
+
+	/**
+	 * @param orderEntryStatus
+	 * @return String
+	 */
+	String getOrderStatusStage(String orderEntryStatus);
+
+
 }

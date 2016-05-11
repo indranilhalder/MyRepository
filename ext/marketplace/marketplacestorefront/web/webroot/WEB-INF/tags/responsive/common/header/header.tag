@@ -205,7 +205,7 @@ function registerUser(eventObject)
 
 			<c:choose>
 				<c:when test="${empty showOnlySiteLogo }">
-					<div class="marketplace">
+					<div class="marketplace" data-logo="marketplace">
 						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
 							<cms:component component="${logo}"/>
 						</cms:pageSlot>
@@ -291,7 +291,7 @@ function registerUser(eventObject)
 </c:if>
 <!-- Survey -->
 <div class="feedback-form modal fade" id="feedBackFormModal">
-	<div class="content" style="width: 60%; overflow: hidden;">
+	<div class="content" style="overflow: hidden;">
 		<button class="close" data-dismiss="modal"></button>
 		<div class="feedback-container">
 		<iframe src="${feebBackSurveyUrl}" 

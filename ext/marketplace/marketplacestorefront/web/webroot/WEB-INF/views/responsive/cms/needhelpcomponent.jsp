@@ -50,13 +50,16 @@
 			</div>
 		</div>
 	</div>
-
+	<div class="feedback-links">
+		<a id="feedback" href="#nogo"><spring:theme code="text.feedback.survey"/></a>
+		</div>
 	<script>
 		$(document).ready(function() {
 			$('.glyphicon-remove').click(function() {
 				helpMe();
 			});
 			$('#up').click(function() {
+					$(this).removeClass("minimize");
 					$("#h").toggle();
 			});
 			$(document).on("blur",".input-box input",function(){	

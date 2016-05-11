@@ -112,7 +112,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String DROPDOWN_CATEGORY = "MSH";
 
 	/**
-	 * @desc Main method for category landing pages SEO : Changed to accept new pattern and new pagination changes
+	 * @desc Main method for category landing pages SEO : Changed to accept new pattern and new pagination changes TISCR
+	 *       340
 	 * @param categoryCode
 	 * @param searchQuery
 	 * @param page
@@ -139,22 +140,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	{
 		categoryCode = categoryCode.toUpperCase();
 		String searchCode = new String(categoryCode);
-		//SEO: New pagination detection
-		final String uri = request.getRequestURI();
-		if (uri.contains("page"))
-		{
-			final Pattern p = Pattern.compile("page-[0-9]+");
-			final Matcher m = p.matcher(uri);
-			if (m.find())
-			{
-				final String pageNo = m.group().split("-")[1];
-				if (null != pageNo)
-				{
-					page = Integer.parseInt(pageNo);
-					page = page - 1;
-				}
-			}
-		}
+		//SEO: New pagination detection TISCR 340
+		page = getPaginatedPageNo(request);
 		//applying search filters
 		if (searchQuery != null)
 		{
@@ -529,5 +516,31 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 		}
 		return super.checkRequestUrl(request, response, resolvedUrlPath);
+	}
+
+	/**
+	 * @Desc SEO pagaination URI capture and page no determination TISCR 340
+	 * @param request
+	 * @return int
+	 */
+	private int getPaginatedPageNo(final HttpServletRequest request)
+	{
+		int page = 0;
+		final String uri = request.getRequestURI();
+		if (uri.contains("page"))
+		{
+			final Pattern p = Pattern.compile("page-[0-9]+");
+			final Matcher m = p.matcher(uri);
+			if (m.find())
+			{
+				final String pageNo = m.group().split("-")[1];
+				if (null != pageNo)
+				{
+					page = Integer.parseInt(pageNo);
+					page = page - 1;
+				}
+			}
+		}
+		return page;
 	}
 }
