@@ -37402,13 +37402,13 @@ border-top: 3px solid #fff;
 #brandsYouLove .bulprev:after {
 	content: "\f104";
 	top: 0;
-	right: 3px;
+	right: 11px;
 }
 
 #brandsYouLove .bulnext:after {
 	content: "\f105";
 	top: 0;
-	left: 3px;
+	left: 11px;
 }
 
 .modal.size-guide .apparelSizes table{
