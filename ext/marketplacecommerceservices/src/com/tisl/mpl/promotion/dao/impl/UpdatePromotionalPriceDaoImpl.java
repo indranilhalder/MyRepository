@@ -4,6 +4,7 @@
 package com.tisl.mpl.promotion.dao.impl;
 
 import de.hybris.platform.europe1.model.PriceRowModel;
+import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.SearchResult;
 
@@ -13,6 +14,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.promotion.dao.UpdatePromotionalPriceDao;
@@ -109,4 +111,26 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		}
 		return priceRow;
 	}
+
+	/**
+	 * Returns List of Price Row corresponding to a Promotion Code
+	 *
+	 * @param promoCode
+	 */
+	@Override
+	public List<PriceRowModel> fetchPromoPriceData(final String promoCode)
+	{
+		List<PriceRowModel> priceRowList = null;
+		if (StringUtils.isNotEmpty(promoCode))
+		{
+			final String queryString = "SELECT {pk} FROM {PriceRow} WHERE  {promotionIdentifier} = ?promoCode";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("promoCode", promoCode);
+			priceRowList = flexibleSearchService.<PriceRowModel> search(query).getResult();
+		}
+		return priceRowList;
+	}
+
+
 }
