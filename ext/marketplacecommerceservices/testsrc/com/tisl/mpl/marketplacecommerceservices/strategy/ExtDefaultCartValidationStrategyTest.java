@@ -72,16 +72,17 @@ public class ExtDefaultCartValidationStrategyTest
 	@Test
 	public void validateCartEntry()
 	{
-		productModel.setCode("987654321");
+		//TISSEC-50
+		productModel.setCode("");//TODO : Please enter code
 		cartEntryModel.setBasePrice(Double.valueOf(1234));
 		cartEntryModel.setCurrDelCharge(Double.valueOf(50));
-		cartEntryModel.setDescription("desc");
+		cartEntryModel.setDescription("");//TODO : Please enter description
 		cartEntryModel.setEntryNumber(Integer.valueOf(50));
 		final PointOfServiceModel pointOfService = new PointOfServiceModel();
-		pointOfService.setName("service");
+		pointOfService.setName("");//TODO : Please enter service
 		cartEntryModel.setDeliveryPointOfService(pointOfService);
-		cartModel.setCode("1234c");
-		cartModel.setGuid("guid123");
+		cartModel.setCode("");//TODO : Please enter cart code
+		cartModel.setGuid("");//TODO : Please enter guid
 		cartModel.setTotalPrice(Double.valueOf(2000));
 
 		given(productService.getProductForCode(cartEntryModel.getProduct().getCode())).willReturn(productModel);
@@ -138,15 +139,15 @@ public class ExtDefaultCartValidationStrategyTest
 	{
 		final PointOfServiceModel pointOfService = new PointOfServiceModel();
 		final BaseStoreModel baseStoreModel = new BaseStoreModel();
-		baseStoreModel.setSubmitOrderProcessCode("1234");
+		baseStoreModel.setSubmitOrderProcessCode("");//TODO : Please enter process code
 		baseStoreModel.setCodLowerLimit(Long.valueOf(500));
 		baseStoreModel.setConvenienceChargeForCOD(Long.valueOf(1000));
-		pointOfService.setName("seller name");
+		pointOfService.setName("");//TODO : Please enter name
 		pointOfService.setLatitude(Double.valueOf(79));
-		cartEntryModel.setSelectedUSSID("s00000000000000000000000001");
+		cartEntryModel.setSelectedUSSID("");//TODO : Please enter selected ussid
 		given(cartEntryModel.getDeliveryPointOfService()).willReturn(pointOfService);
 
-		cartEntryModel.setSelectedUSSID("s00000000000000000000000001");
+		cartEntryModel.setSelectedUSSID("");//TODO : Please enter selected ussid
 		given(baseStoreService.getCurrentBaseStore()).willReturn(baseStoreModel);
 
 	}

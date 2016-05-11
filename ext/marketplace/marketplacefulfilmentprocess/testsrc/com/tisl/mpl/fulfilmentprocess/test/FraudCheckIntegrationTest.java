@@ -67,8 +67,6 @@ import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.testframework.TestUtils;
 import de.hybris.platform.util.Config;
 import de.hybris.platform.util.Utilities;
-import com.tisl.mpl.fulfilmentprocess.constants.MarketplaceFulfilmentProcessConstants;
-import com.tisl.mpl.fulfilmentprocess.test.events.TestEventListenerCountingEvents;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -96,6 +94,9 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.ClassPathResource;
+
+import com.tisl.mpl.fulfilmentprocess.constants.MarketplaceFulfilmentProcessConstants;
+import com.tisl.mpl.fulfilmentprocess.test.events.TestEventListenerCountingEvents;
 
 
 /**
@@ -287,6 +288,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 
 	protected void placeTestOrder() throws InvalidCartException, CalculationException
 	{
+		//TISSEC-50
 		final CartModel cart = cartService.getSessionCart();
 		final UserModel user = userService.getCurrentUser();
 		cartService.addNewEntry(cart, productService.getProductForCode("testProduct1"), 1, null);
@@ -295,33 +297,33 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 
 		final AddressModel deliveryAddress = new AddressModel();
 		deliveryAddress.setOwner(user);
-		deliveryAddress.setFirstname("Der");
-		deliveryAddress.setLastname("Buck");
-		deliveryAddress.setTown("Muenchen");
-		deliveryAddress.setCountry(commonI18NService.getCountry("DE"));
+		deliveryAddress.setFirstname("");//TODO : Please enter first name
+		deliveryAddress.setLastname("");//TODO : Please enter last name
+		deliveryAddress.setTown("");//TODO : Please enter town
+		deliveryAddress.setCountry(commonI18NService.getCountry(""));//TODO : Please enter country code
 		modelService.save(deliveryAddress);
 
 		final DebitPaymentInfoModel paymentInfo = new DebitPaymentInfoModel();
 		paymentInfo.setOwner(cart);
-		paymentInfo.setBank("MeineBank");
+		paymentInfo.setBank("");//TODO : Please enter bank
 		paymentInfo.setUser(user);
-		paymentInfo.setAccountNumber("34434");
-		paymentInfo.setBankIDNumber("1111112");
-		paymentInfo.setBaOwner("Ich");
-		paymentInfo.setCode("testPaymentInfo1");
+		paymentInfo.setAccountNumber("");//TODO : Please enter account number
+		paymentInfo.setBankIDNumber("");//TODO : Please enter bank id number
+		paymentInfo.setBaOwner("");//TODO : Please enter Ba owner
+		paymentInfo.setCode("");//TODO : Please enter code
 		modelService.save(paymentInfo);
 
 		final ZoneDeliveryModeModel zoneDeliveryModeModel = new ZoneDeliveryModeModel();
-		zoneDeliveryModeModel.setCode("free");
+		zoneDeliveryModeModel.setCode("");//TODO : Please enter zone delivery code
 		zoneDeliveryModeModel.setNet(Boolean.TRUE);
 		final ZoneDeliveryModeValueModel zoneDeliveryModeValueModel = new ZoneDeliveryModeValueModel();
 		zoneDeliveryModeValueModel.setDeliveryMode(zoneDeliveryModeModel);
 		zoneDeliveryModeValueModel.setValue(Double.valueOf(0.00));
-		zoneDeliveryModeValueModel.setCurrency(commonI18NService.getCurrency("EUR"));
+		zoneDeliveryModeValueModel.setCurrency(commonI18NService.getCurrency(""));//TODO : Please enter currency code
 		zoneDeliveryModeValueModel.setMinimum(Double.valueOf(0.00));
 		final ZoneModel zoneModel = new ZoneModel();
 		zoneModel.setCode("de");
-		zoneModel.setCountries(Collections.singleton(commonI18NService.getCountry("DE")));
+		zoneModel.setCountries(Collections.singleton(commonI18NService.getCountry("")));//TODO : Please enter country code
 		modelService.save(zoneModel);
 		zoneDeliveryModeValueModel.setZone(zoneModel);
 		modelService.save(zoneDeliveryModeModel);
@@ -336,12 +338,12 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 
 		final CardInfo card = new CardInfo();
 		card.setCardType(CreditCardType.VISA);
-		card.setCardNumber("4111111111111111");
+		card.setCardNumber("");//TODO : Please enter card number
 		card.setExpirationMonth(Integer.valueOf(12));
 		card.setExpirationYear(Integer.valueOf(Calendar.getInstance().get(Calendar.YEAR) + 2));
-		card.setCv2Number("123");
+		card.setCv2Number("");//TODO : Please enter cv2 number
 		final PaymentTransactionModel paymentTransaction = paymentService.authorize("code3" + codeNo++, BigDecimal.ONE,
-				Currency.getInstance("EUR"), deliveryAddress, deliveryAddress, card).getPaymentTransaction();
+				Currency.getInstance(""), deliveryAddress, deliveryAddress, card).getPaymentTransaction();//TODO : Please enter currency
 
 		cart.setPaymentTransactions(Collections.singletonList(paymentTransaction));
 		modelService.save(cart);
@@ -358,7 +360,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 	protected void addReallyBudGuyAndSetAsCurrentUser()
 	{
 		final CustomerModel user = new CustomerModel();
-		user.setUid("bad.guy@gmail.com");
+		user.setUid("");//TODO : Please enter uid
 		modelService.save(user);
 		userService.setCurrentUser(user);
 	}
@@ -366,7 +368,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 	protected void addNormalUserAndSetAsCurrentUser()
 	{
 		final CustomerModel user = new CustomerModel();
-		user.setUid("average.customer");
+		user.setUid("");//TODO : Please enter uid
 		modelService.save(user);
 		userService.setCurrentUser(user);
 	}
@@ -374,12 +376,12 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 	protected void createCronJob()
 	{
 		final ServicelayerJobModel jobModel = new ServicelayerJobModel();
-		jobModel.setCode("cleanUpFraudOrderJobTest");
-		jobModel.setSpringId("cleanUpFraudOrderJob");
+		jobModel.setCode("");//TODO : Please enter job code
+		jobModel.setSpringId("");//TODO : Please enter job spring id
 		modelService.save(jobModel);
 
 		cronJob = new CronJobModel();
-		cronJob.setCode("cleanUpFraudOrderCronJobTest");
+		cronJob.setCode("");//TODO : Please enter cron job code
 		cronJob.setJob(jobModel);
 		cronJob.setSingleExecutable(Boolean.FALSE);
 		modelService.save(cronJob);
@@ -387,7 +389,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 
 	/**
 	 * Create core data, add default users, register events, create cron jobs
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Before
@@ -414,10 +416,10 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 	protected void setupSite()
 	{
 		final BaseStoreModel baseStore = modelService.create(BaseStoreModel.class);
-		baseStore.setUid("testStore");
+		baseStore.setUid("");//TODO : Please enter base store uid
 		modelService.save(baseStore);
 		final BaseSiteModel baseSite = modelService.create(BaseSiteModel.class);
-		baseSite.setUid("testSite");
+		baseSite.setUid("");//TODO : Please enter base site uid
 		baseSite.setStores(Collections.singletonList(baseStore));
 		modelService.save(baseSite);
 
@@ -520,7 +522,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 
 	/**
 	 * Test scenario: fraudCheckNode return FRAUD, but customer intervene and csAgent mark order as no fraudulent
-	 * 
+	 *
 	 * @throws CalculationException
 	 * @throws InvalidCartException
 	 */
@@ -569,7 +571,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 
 	/**
 	 * Test scenario: fraudCheck node return FRAUD, and after specific period of time order should have status CANCELLED
-	 * 
+	 *
 	 * @throws InvalidCartException
 	 * @throws CalculationException
 	 * @throws InterruptedException
@@ -677,7 +679,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 
 	/**
 	 * Test scenario: TODO
-	 * 
+	 *
 	 * @throws CalculationException
 	 * @throws InvalidCartException
 	 **/
@@ -760,7 +762,7 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 
 	/**
 	 * Auxiliary class which provide waiting till condition is fulfilled functionality. User have to implement
-	 * {@link #checkCondition} method 
+	 * {@link #checkCondition} method
 	 */
 	protected static abstract class AbstractAssertionLooper
 	{
@@ -776,9 +778,9 @@ public class FraudCheckIntegrationTest extends ServicelayerTest
 		/**
 		 * Wait until condition defined in {@link #checkCondition()} is fulfilled, but no more than maxTimeInSeconds. If
 		 * condition is not fulfilled, AssertionFailedError will be thrown.
-		 * 
+		 *
 		 * @param maxTimeInSeconds
-		 * 
+		 *
 		 */
 		public void waitUntilConditionIsTrue(final long maxTimeInSeconds)
 		{

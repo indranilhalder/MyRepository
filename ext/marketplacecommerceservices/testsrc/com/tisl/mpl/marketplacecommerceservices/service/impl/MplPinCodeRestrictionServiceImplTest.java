@@ -26,6 +26,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPincodeRestrictionDao;
 import com.tisl.mpl.model.RestrictionsetupModel;
@@ -64,15 +65,16 @@ public class MplPinCodeRestrictionServiceImplTest
 	@Test
 	public void getRestrictedUssidForCodandPrepaid()
 	{
+		//TISSEC-50
 		//final boolean booleanTshipCODRestricted = false;
 		final Map<String, Boolean> ussidMap = new HashMap<String, Boolean>();
 		//final Map<String, Boolean> sellerIdMap = new HashMap<String, Boolean>();
 		final List<String> articleSKUID = new ArrayList<String>();
-		articleSKUID.add("US1200");
+		articleSKUID.add("");//TODO :Please enter skuId
 		final List<String> sellerIdList = new ArrayList<String>();
-		sellerIdList.add("12800");
-		final String listingID = "987654321";
-		final String pincode = "123400";
+		sellerIdList.add("");//TODO :Please enter seller Id
+		final String listingID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter listing Id
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final PincodeServiceData serviceData = Mockito.mock(PincodeServiceData.class);
 		final CopyOnWriteArrayList<PincodeServiceData> reqList = new CopyOnWriteArrayList<PincodeServiceData>();
 		reqList.add(serviceData);
@@ -83,7 +85,7 @@ public class MplPinCodeRestrictionServiceImplTest
 		final CategoryModel categorymodel = Mockito.mock(CategoryModel.class);
 		categoryList.add(categorymodel);
 		given(defaultPromotionManager.getcategoryData(productModel)).willReturn(categoryList);
-		final String categoryCode = "fcMensWear";
+		final String categoryCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter category code
 		given(categorymodel.getCode()).willReturn(categoryCode);
 		categoryCodeList.add(categoryCode);
 		final RestrictionsetupModel restrictionModelMock = Mockito.mock(RestrictionsetupModel.class);
@@ -106,11 +108,11 @@ public class MplPinCodeRestrictionServiceImplTest
 	{
 
 		final List<String> articleSKUID = new ArrayList<String>();
-		articleSKUID.add("US1200");
+		articleSKUID.add("");//TODO :Please enter skuId
 		final List<String> sellerIdList = new ArrayList<String>();
-		sellerIdList.add("12800");
-		final String listingID = "987654321";
-		final String pincode = "123400";
+		sellerIdList.add("");//TODO :Please enter seller id
+		final String listingID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter listing id
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final PincodeServiceData serviceData = Mockito.mock(PincodeServiceData.class);
 		final CopyOnWriteArrayList<PincodeServiceData> reqList = new CopyOnWriteArrayList<PincodeServiceData>();
 		reqList.add(serviceData);
@@ -121,7 +123,7 @@ public class MplPinCodeRestrictionServiceImplTest
 		final CategoryModel categorymodel = Mockito.mock(CategoryModel.class);
 		categoryList.add(categorymodel);
 		given(defaultPromotionManager.getcategoryData(productModel)).willReturn(categoryList);
-		final String categoryCode = "fcMensWear";
+		final String categoryCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter category code
 		given(categorymodel.getCode()).willReturn(categoryCode);
 		categoryCodeList.add(categoryCode);
 		final RestrictionsetupModel restrictionModelMock = Mockito.mock(RestrictionsetupModel.class);
@@ -144,11 +146,11 @@ public class MplPinCodeRestrictionServiceImplTest
 	{
 		final Map<String, Boolean> sellerIdMap = new HashMap<String, Boolean>();
 		final List<String> articleSKUID = new ArrayList<String>();
-		articleSKUID.add("US1200");
+		articleSKUID.add("");//TODO :Please enter skuId
 		final List<String> sellerIdList = new ArrayList<String>();
-		sellerIdList.add("12800");
-		final String listingID = "987654321";
-		final String pincode = "123400";
+		sellerIdList.add("");//TODO :Please enter seller id
+		final String listingID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter listing Id
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final PincodeServiceData serviceData = Mockito.mock(PincodeServiceData.class);
 		final CopyOnWriteArrayList<PincodeServiceData> reqList = new CopyOnWriteArrayList<PincodeServiceData>();
 		reqList.add(serviceData);
@@ -159,7 +161,7 @@ public class MplPinCodeRestrictionServiceImplTest
 		final CategoryModel categorymodel = Mockito.mock(CategoryModel.class);
 		categoryList.add(categorymodel);
 		given(defaultPromotionManager.getcategoryData(productModel)).willReturn(categoryList);
-		final String categoryCode = "fcMensWear";
+		final String categoryCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter category code
 		given(categorymodel.getCode()).willReturn(categoryCode);
 		categoryCodeList.add(categoryCode);
 		final RestrictionsetupModel restrictionModelMock = Mockito.mock(RestrictionsetupModel.class);
@@ -182,12 +184,12 @@ public class MplPinCodeRestrictionServiceImplTest
 		//final Map<String, Boolean> ussidMap = new HashMap<String, Boolean>();
 		final Map<String, Boolean> sellerIdMap = new HashMap<String, Boolean>();
 		final List<String> articleSKUID = new ArrayList<String>();
-		articleSKUID.add("US1200");
+		articleSKUID.add("");//TODO :Please enter sku id
 		final List<String> sellerIdList = new ArrayList<String>();
 		//	final boolean booleanTshipCODRestricted = false;
-		sellerIdList.add("12800");
-		final String listingID = "987654321";
-		final String pincode = "123400";
+		sellerIdList.add("");//TODO :Please enter seller id
+		final String listingID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter listing id
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final PincodeServiceData serviceData = Mockito.mock(PincodeServiceData.class);
 		final CopyOnWriteArrayList<PincodeServiceData> reqList = new CopyOnWriteArrayList<PincodeServiceData>();
 		reqList.add(serviceData);
@@ -198,7 +200,7 @@ public class MplPinCodeRestrictionServiceImplTest
 		final CategoryModel categorymodel = Mockito.mock(CategoryModel.class);
 		categoryList.add(categorymodel);
 		given(defaultPromotionManager.getcategoryData(productModel)).willReturn(categoryList);
-		final String categoryCode = "fcMensWear";
+		final String categoryCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter category code
 		given(categorymodel.getCode()).willReturn(categoryCode);
 		categoryCodeList.add(categoryCode);
 		final RestrictionsetupModel restrictionModelMock = Mockito.mock(RestrictionsetupModel.class);
@@ -219,11 +221,11 @@ public class MplPinCodeRestrictionServiceImplTest
 	{
 
 		final List<String> articleSKUID = new ArrayList<String>();
-		articleSKUID.add("US1200");
+		articleSKUID.add("");//TODO :Please enter sku id
 		final List<String> sellerIdList = new ArrayList<String>();
-		sellerIdList.add("12800");
-		final String listingID = "987654321";
-		final String pincode = "123400";
+		sellerIdList.add("");//TODO :Please enter seller id
+		final String listingID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter listing id
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final PincodeServiceData serviceData = Mockito.mock(PincodeServiceData.class);
 		final CopyOnWriteArrayList<PincodeServiceData> reqList = new CopyOnWriteArrayList<PincodeServiceData>();
 		reqList.add(serviceData);
@@ -234,7 +236,7 @@ public class MplPinCodeRestrictionServiceImplTest
 		final CategoryModel categorymodel = Mockito.mock(CategoryModel.class);
 		categoryList.add(categorymodel);
 		given(defaultPromotionManager.getcategoryData(productModel)).willReturn(categoryList);
-		final String categoryCode = "fcMensWear";
+		final String categoryCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter category code
 		given(categorymodel.getCode()).willReturn(categoryCode);
 		categoryCodeList.add(categoryCode);
 		final RestrictionsetupModel restrictionModelMock = Mockito.mock(RestrictionsetupModel.class);
@@ -255,11 +257,11 @@ public class MplPinCodeRestrictionServiceImplTest
 		//		final Map<String, Boolean> ussidMap = new HashMap<String, Boolean>();
 		//		final Map<String, Boolean> sellerIdMap = new HashMap<String, Boolean>();
 		final List<String> articleSKUID = new ArrayList<String>();
-		articleSKUID.add("US1200");
+		articleSKUID.add("");//TODO :Please enter sku id
 		final List<String> sellerIdList = new ArrayList<String>();
-		sellerIdList.add("12800");
-		final String listingID = "987654321";
-		final String pincode = "123400";
+		sellerIdList.add("");//TODO :Please enter seller id
+		final String listingID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter listing id
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter pincode
 		final PincodeServiceData serviceData = Mockito.mock(PincodeServiceData.class);
 		final CopyOnWriteArrayList<PincodeServiceData> reqDataList = new CopyOnWriteArrayList<PincodeServiceData>();
 		reqDataList.add(serviceData);
@@ -270,7 +272,7 @@ public class MplPinCodeRestrictionServiceImplTest
 		final CategoryModel categorymodel = Mockito.mock(CategoryModel.class);
 		categoryList.add(categorymodel);
 		given(defaultPromotionManager.getcategoryData(productModel)).willReturn(categoryList);
-		final String categoryCode = "fcMensWear";
+		final String categoryCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter category code
 		given(categorymodel.getCode()).willReturn(categoryCode);
 		categoryCodeList.add(categoryCode);
 		final RestrictionsetupModel restrictionModelMock = Mockito.mock(RestrictionsetupModel.class);
@@ -289,11 +291,11 @@ public class MplPinCodeRestrictionServiceImplTest
 	{
 
 		final List<String> articleSKUID = new ArrayList<String>();
-		articleSKUID.add("US1200");
+		articleSKUID.add("");//TODO : Please enter sku id
 		final List<String> sellerIdList = new ArrayList<String>();
-		sellerIdList.add("12800");
-		final String listingID = "987654321";
-		final String pincode = "123400";
+		sellerIdList.add("");//TODO : Please enter seller id
+		final String listingID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter listing id
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final PincodeServiceData serviceData = Mockito.mock(PincodeServiceData.class);
 		final CopyOnWriteArrayList<PincodeServiceData> reqList = new CopyOnWriteArrayList<PincodeServiceData>();
 		reqList.add(serviceData);
@@ -304,7 +306,7 @@ public class MplPinCodeRestrictionServiceImplTest
 		final CategoryModel categorymodel = Mockito.mock(CategoryModel.class);
 		categoryList.add(categorymodel);
 		given(defaultPromotionManager.getcategoryData(productModel)).willReturn(categoryList);
-		final String categoryCode = "fcMensWear";
+		final String categoryCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter category code
 		given(categorymodel.getCode()).willReturn(categoryCode);
 		categoryCodeList.add(categoryCode);
 		final RestrictionsetupModel restrictionModelMock = Mockito.mock(RestrictionsetupModel.class);
@@ -326,11 +328,11 @@ public class MplPinCodeRestrictionServiceImplTest
 		 * new HashMap<String, Boolean>();
 		 */
 		final List<String> articleSKUID = new ArrayList<String>();
-		articleSKUID.add("US1200");
+		articleSKUID.add("");//TODO :Please enter sku id
 		final List<String> sellerIdList = new ArrayList<String>();
-		sellerIdList.add("12800");
-		final String listingID = "987654321";
-		final String pincode = "123400";
+		sellerIdList.add("");//TODO :Please enter seller id
+		final String listingID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter listing id
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final PincodeServiceData serviceData = Mockito.mock(PincodeServiceData.class);
 		final CopyOnWriteArrayList<PincodeServiceData> reqList = new CopyOnWriteArrayList<PincodeServiceData>();
 		reqList.add(serviceData);
@@ -341,7 +343,7 @@ public class MplPinCodeRestrictionServiceImplTest
 		final CategoryModel categorymodel = Mockito.mock(CategoryModel.class);
 		categoryList.add(categorymodel);
 		given(defaultPromotionManager.getcategoryData(productModel)).willReturn(categoryList);
-		final String categoryCode = "fcMensWear";
+		final String categoryCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter category code
 		given(categorymodel.getCode()).willReturn(categoryCode);
 		categoryCodeList.add(categoryCode);
 		final RestrictionsetupModel restrictionModelMock = Mockito.mock(RestrictionsetupModel.class);
