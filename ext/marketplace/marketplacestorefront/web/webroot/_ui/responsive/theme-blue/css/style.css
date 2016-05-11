@@ -19977,6 +19977,7 @@ display: inline-block;
   padding-bottom: 2px;
   float: left;
   width: 100%;
+  word-break:break-word;
 }
 .account-only.product .product-tile .short-info .company {
   font-size: 14px;
@@ -24042,8 +24043,12 @@ vertical-align: middle;
     margin-right: 20px;
     width: 100%;
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 500;
     text-transform: uppercase;
+    letter-spacing: 1.2px;
+    height: 40px;
+    line-height: 0.5;
+    font-size: 12px;
     }
 .feedBack-block .feed-back td #submit_button:hover{  
     cursor: pointer;
@@ -27526,8 +27531,8 @@ body .account .account-header select.menu-select optgroup option{
 	}
 	.cart.wrapper .product-block li.item > ul > li.qty select{
 	    min-width: 60px;
-	    width: auto;
-    	margin: 0;
+	    width:auto;
+	    margin:0;
 	}
 	.cart.wrapper .product-block li.item > ul > li:first-child div.product .product-name{
 	text-overflow: ellipsis;
@@ -31508,6 +31513,21 @@ span.material-icons{
 	z-index: 2;
     position: relative;
 }
+}
+
+.feedBack-block .feed-back-categories,.feedBack-block .feed-back{
+	width: 100%;
+	max-width:450px;
+}
+.feedBack-block .feed-back-categories select#feedCategory{
+	width:100%;
+	padding-right:22px;
+}
+.feedBack-block .feed-back-categories tr td:first-child,.feedBack-block .feed-back tr td:first-child{
+	width: 70px;
+}
+.feedBack-block .feed-back-categories tr td{
+	padding: 5px 0;
 }
 /*--------------maincss-----------*/
 .row

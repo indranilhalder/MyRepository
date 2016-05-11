@@ -38,6 +38,7 @@
 #compareProducts {
 	width: 80%;
 	float: left;
+	text-align: left;
 }
 
 #compareProducts .compare-item {
@@ -82,6 +83,7 @@
 	line-height: 15px;
 	font-weight: normal;
 	text-align: left;
+	padding: 13px 10px;
 }
 
 .compareBtn.enabled:hover {
@@ -145,6 +147,7 @@
 @media ( max-width :650px) {
 	#compareSection {
 		min-height: 100px;
+		padding: 15px 10px;
 	}
 	#compareProducts {
 		display: none;
@@ -155,7 +158,8 @@
 		right: 0px;
 		bottom: -10px;
 		height: 35px;
-		line-height: 1;
+		line-height: 0.5;
+		padding: 13px 7px;
 	}
 	.compare-wrapper {
 		width: 100%;
@@ -163,6 +167,10 @@
 	}
 	.closeLink {
 		right: 0px;
+		font-size: 14px;
+	}
+	.comapreProducts{
+	font-size:22px;
 	}
 	.compare-selectedProducts {
 		display: block;
@@ -187,6 +195,9 @@
 	}
 	.showSelections {
 		display: block;
+	}
+	#compareProducts .compare-item ul{
+	padding-left:5px;
 	}
 }
 
