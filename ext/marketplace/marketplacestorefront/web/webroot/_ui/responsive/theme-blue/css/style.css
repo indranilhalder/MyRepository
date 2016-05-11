@@ -670,6 +670,9 @@ h2 {
   font-size: 32px;
   font-weight: 500; }
 
+
+
+
 .cloud-grey {
   background-color: #e6e6e6; }
 
@@ -961,6 +964,7 @@ h2 {
                     text-decoration: underline; }
               header .content .right > ul > li.bag .mini-bag .item .price {
                 position: absolute;
+
                 right: 10px;
                 top: 10px;
                 width: 100px;
@@ -3454,9 +3458,9 @@ color:inherit;}
 	}
 }
 
-.shop-promos .promos li:nth-last-of-type(1) {
-	border-bottom: none;
-}
+
+
+
 
 .shop-promos .promos li img, .shop-promos .promos li:before {
 	position: absolute;
@@ -5056,7 +5060,7 @@ text-transform: uppercase;
     }
   .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
   .cart.wrapper #newAddressButtonUp,.cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top
+  .cart.wrapper .make_payment_top_nb,.cart.wrapper .cod_payment_button_top
    {
         width: 28%;
     float: right;
@@ -5067,7 +5071,7 @@ text-transform: uppercase;
     color: #fff;
     height: 40px !important; }
     .cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top{
+  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod_payment_button_top{
    margin-top: 60px;
        margin-bottom: -52px;
        display:none;}
@@ -5078,12 +5082,12 @@ text-transform: uppercase;
       .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
   .cart.wrapper #newAddressButtonUp,  .cart.wrapper .button#deliveryMethodSubmit, .cart.wrapper .button#deliveryAddressSubmit,
   .cart.wrapper #newAddressButton,.cart.wrapper .make_payment_top_savedCard,.cart.wrapper .make_payment_top_newCard,
-  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod-otp-button_top,.cart.wrapper .cod_payment_button_top{
+  .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod_payment_button_top{
  font-weight: 500;
     font-size: 12px !important; }
   .cart.wrapper .button#deliveryMethodSubmitUp:hover, .cart.wrapper .button#deliveryAddressSubmitUp:hover,
   .cart.wrapper #newAddressButtonUp:hover,.cart.wrapper .make_payment_top_savedCard:hover,.cart.wrapper .make_payment_top_newCard:hover,
-  .cart.wrapper .make_payment_top_nb:hover, .cart.wrapper .cod-otp-button_top:hover,.cart.wrapper .cod_payment_button_top:hover {
+  .cart.wrapper .make_payment_top_nb:hover, .cart.wrapper .cod_payment_button_top:hover {
         background: #88102C !important; }
     @media (max-width: 650px) {
       .cart.wrapper button, .cart.wrapper .button, .confirmation button, .confirmation .button {
@@ -6013,8 +6017,9 @@ text-transform: uppercase;
           .cart.wrapper .left-block .payments.tab-view .tabs > li .product-block.emi li.item .banks.active form fieldset .half.cvv label span, .confirmation .left-block .payments.tab-view .tabs > li .product-block.emi li.item .banks.active form fieldset .half.cvv label span {
             position: absolute;
             bottom: 25%;
+
             left: 55%; }
-            .cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb,.cart.wrapper .cod-otp-button_top, .cart.wrapper .cod_payment_button_top{
+            .cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod_payment_button_top{
             display:none !important;
             }
             .checkout-content.checkout-payment .left-block{
@@ -6602,8 +6607,8 @@ text-transform: uppercase;
     .checkout.wrapper.checkout-payment .left-block .button {
     width:57.42%;}
     @media(max-width:650px){
-    .checkout.wrapper .left-block .button {
-  width: 100%;
+    .checkout.wrapper.checkout-payment .left-block .button,.cart.wrapper button.cod-otp-button {
+  width: 100% !important;
    }
    .cart.wrapper .left-block .payments.tab-view .full,.cart.wrapper .left-block .payments.tab-view .half {
     margin-left: 0px !important;
@@ -17147,6 +17152,7 @@ color: #fff;}
   font-size:14px;
       text-align: left;	
 }
+
 #h h5{
 height:29px;
 line-height: 29px;}
@@ -17215,6 +17221,10 @@ ul.helpmeshop-list{
 	font-size:30px;
 	font-weight:400;
 }
+
+
+
+
 
 .home-brands-you-love-desc .left p, .home-brands-you-love-desc .right p {
     text-align: left;
@@ -20767,7 +20777,7 @@ font-weight:600;
   position: absolute !important;
   z-index: 100;
   right: 10px;
-  top: 35px;
+  top: 42px;
    text-transform:uppercase; }
 @media (max-width: 650px)
 {
@@ -20786,7 +20796,7 @@ font-weight:600;
     margin-left: 5px;
 }
 .secureTransaction{
-  top: 15px;}
+  top: 27px;}
   .checkout.wrapper .product-block li.item > ul li:first-child .delivery-price{
   bottom:0;}
 .top.checkout-top .content ul li span{
@@ -24615,7 +24625,7 @@ div#cartItems.products p{
 	min-height: 35px;
 	line-height: 18px;
 	border-top: 1px solid #ccc;
-	padding: 10px 5px 10px 5px;
+	padding: 10px 5px 10px 5px !important;
 }
 
 .trackorder-dropdown li:nth-of-type(1) {
@@ -27516,6 +27526,8 @@ body .account .account-header select.menu-select optgroup option{
 	}
 	.cart.wrapper .product-block li.item > ul > li.qty select{
 	    min-width: 60px;
+	    width: auto;
+    	margin: 0;
 	}
 	.cart.wrapper .product-block li.item > ul > li:first-child div.product .product-name{
 	text-overflow: ellipsis;
@@ -28617,14 +28629,6 @@ body.page-coupons .pagination li.active span,body.page-coupons .pagination li.ac
 
 /* Size Guide Ends */
 
-
-	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
-	    max-width: 60px;
-    display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-	}
-
 @media(min-width:791px) and (max-width:1350px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
 	    position: absolute;
@@ -28954,7 +28958,7 @@ body.page-reviews ul.gig-comments-header-right.gig-comments-linksContainer{
 body.page-reviews .gig-comment-footer-left ul.gig-comments-linksContainer li.gig-comment-shareLink{
    display: none;
 }
-header .content nav > ul > li > ul > li > ul > li > a.view_dept{
+header .content nav > ul > li > ul > li > ul > li > a.view_dept, header .content nav > ul > li > ul > li > ul > li > div.view_brands{
 	display:none;}
 header .content nav > ul > li > ul > li > ul.words > li:nth-child(2){
 	margin-top:0px;
@@ -28967,6 +28971,10 @@ position: absolute;
     top: 0;
 	font-size:18px;
 	font-weight:600;
+	display:block;
+	
+}
+body.touchDevice header .content nav > ul > li > ul > li > ul > li > div.view_brands{
 	display:block;
 	
 }
@@ -28992,10 +29000,11 @@ font-weight:bold;
     position: relative;
     top: 0px;
 }
-.shop-promos .promos li:nth-last-of-type(1) {
-    border-right: none;
-	border-bottom:1px solid #ACACAC;
-}
+
+
+
+
+
 @media (min-width: 651px){
 	.shop-promos .promos{
 	border-top: 1px solid #ccc;
@@ -29021,6 +29030,10 @@ font-weight:bold;
 	}
 
 @media (max-width: 650px){
+	.shop-promos .promos li:nth-last-of-type(1) {
+    border-right: none;
+	border-bottom:1px solid #ACACAC;
+}
 .shop-promos {
     padding: 10px;
 }
@@ -29033,6 +29046,9 @@ font-weight:bold;
 	    padding-left: 0px !important;
     	display: inline-block !important;
     	letter-spacing: 1.1px;
+}
+.shop-promos .promos li a p {
+    display: inline-block;
 }
 .shop-promos .promos li{
 	border-bottom: 1px solid #ACACAC;
@@ -29889,9 +29905,12 @@ span.material-icons {
 @media(max-width:790px){
 span.material-icons {
     left: 10px;
+	height: 50px;
+    vertical-align: top;
+    line-height: 55px;
 }
 li.logged_in.dropdown{
-padding-left: 13px !important;
+	padding-left: 13px !important;
 }
 }
 
@@ -29950,9 +29969,6 @@ header.compact .content span.material-icons{
     vertical-align: top;
     line-height: 53px;
 	}
-header.compact .content li.logged_in.dropdown{
-	 height: 50px;
-	}
 header.compact .content li.logged_in.dropdown .dropdown-menu{
 	 top: 50px;
 	}
@@ -29962,6 +29978,20 @@ left: auto;
 
 header:not(.compact) .content .marketplace.compact{
 	display:none;
+}
+@media (min-width:791px){
+	header.compact .content li.logged_in.dropdown{
+	 height: 50px;
+	}
+	header.compact .content .right ul > li {
+      padding: 0 15px;
+  }
+	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
+	    max-width: 60px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	}
 }
 @media (min-width:1081px){
 	header .content nav > ul > li > .toggle{
@@ -30586,37 +30616,24 @@ ul.less-stock li {
     vertical-align: top;
 }
 }
-/*site map css ends*/
-header.compact .content .right ul > li {
-      padding: 0 15px;
-  }
+/*site map css ends*/  
+  @media (min-width:1351px){
   header.compact .content li.logged_in.dropdown .dropdown-menu {
-  width: calc(100% - -236px);}
-  @media (max-width: 1350px) and (min-width: 791px){
-  header.compact .content li.logged_in.dropdown .dropdown-menu {
-  width: calc(100% - -216px);}
-  }
-  
-  header.compact .content .right > ul > li.wishlist .wishlist-info{
-  width:236px;}
-  
-  @media (max-width: 1350px) and (min-width: 791px){
-  header.compact .content .right>ul>li.wishlist .wishlist-info {
-      max-width: 216px;
-  }
-  }
-  header.compact .content .right > ul > li.sign-in .sign-in-info{
+  width: calc(100% - -239px);}
+    header.compact .content .right > ul > li.sign-in .sign-in-info{
   width:351px;}
+  header.compact .content .right > ul > li.wishlist .wishlist-info{
+  width:239px;}
+  }
   @media (max-width: 1350px) and (min-width: 791px){
+  header.compact .content li.logged_in.dropdown .dropdown-menu {
+  width: calc(100% - -219px);}
+  header.compact .content .right>ul>li.wishlist .wishlist-info {
+      max-width: 219px;
+  }
   header.compact .content .right > ul > li.sign-in .sign-in-info {
       max-width: 326px;
   }
-  }
-  @media (max-width: 479px){
-  .visuallySimilarItems li{
-  padding: 0 23%;}
-  .visuallySimilarItems li a.product-tile{
-  padding: 0px;}
   }
   header .banner > span.helpmeshopbanner{
   cursor:auto;}
@@ -30624,6 +30641,10 @@ header.compact .content .right ul > li {
     header .content nav > ul > li > .toggle:after{ 
       top:1px;
 }
+}
+header .content .search input {
+	background: #fff;
+	cursor: text;
 }
 /* Click to call changes start */
 .cicon {
@@ -31437,6 +31458,34 @@ p.savings span {
     margin-top: 5px;
     margin-bottom: 5px;
     color: #333;
+}
+body .right-account .order-history .cancellation-request-block .price .priceFormat{
+display:inline-block;} 
+
+@media (max-width:790px){
+ header .content .right > ul > li.wishlist > a:before {
+          font-family: 'icomoon';
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          font-weight: 100;
+          content: "\e602";
+          font-size: 14px;
+          color: #A9143C;
+          line-height: 18px;
+          margin-right: 5px;
+          top: 3px;
+          position: relative;
+          font-weight: bold; }
+li.store-locator-header a:before{
+		margin-right:9px;}
+.bell-icon:after{
+		margin-right:3px;}
+span.material-icons{
+		margin-left:-4px;}
+		.trackorder-dropdown li {
+    line-height: 18px !important;
+    border-bottom: none !important;
+}
 } 
 @media(max-width:650px){
 .bottom-pagination .pagination .next, .bottom-pagination .pagination .prev {
@@ -31584,6 +31633,7 @@ code, kbd, pre, samp {
 	position: relative;
 	min-height: 1px;
 	padding-left: 15px;
+
 	padding-right: 15px;
 }
 
@@ -36919,6 +36969,7 @@ span.sizesAvailableMSD {
 	border-bottom: 1px dotted #A9143C;
 	font-size: 12px;
 	overflow: hidden;
+	text-transform: uppercase;
 	}
 .productParentList:hover .sizesAvailableMSD { 
 	display: block !important;
@@ -37148,6 +37199,7 @@ input#otpMobileNUMField:focus {
 	border-radius: 0;
 	border: 1px solid #DFD1D5;
 }
+
 #bankNameForEMI, #bankCodeSelection{
 	padding: 0px 20px 0 10px;
 }
@@ -39122,10 +39174,9 @@ Samsung Galaxy S5 -----------
 		clear: both;
 		padding-top: 5px;
 	}
-
-
 /* CNC Page CSS End */
- #ia_products_hot .listing-leftmenu .checkbox-menu li label:before {
+
+#ia_products_hot .listing-leftmenu .checkbox-menu li label:before {
 	width: 10px;
 	height: 10px;
 	margin-top: 1px;
@@ -39148,6 +39199,10 @@ Samsung Galaxy S5 -----------
 
 .slider.product .frame .overflow .slide {
 	width: 100%;
+}
+
+div.MSDQuickView:before {
+	font-family: 'icomoon';
 }
 
 @media ( max-width :650px) {
