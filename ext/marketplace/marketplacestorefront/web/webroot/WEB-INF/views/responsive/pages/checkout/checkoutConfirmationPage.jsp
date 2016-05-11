@@ -63,7 +63,7 @@
 							code="text.account.order.orderPlaced" text="Order Placed: "/>&nbsp;${month} ${date} ${year} </strong> --%>
 					<!--TISCR-413-->
 					<spring:theme
-							code="text.account.order.orderPlaced.message" text="Expect your shipment: "/>&nbsp;In ${deliveryStartTime} - ${deliveryEndTime} days </strong>
+							code="text.account.order.orderPlaced.message" text="Expect your shipment: "/>&nbsp;In ${deliveryStartTime} - ${deliveryEndTime}<spring:theme code="mpl.pdp.delivery.posttext" /></strong>
 							
 					<!--TISCR-413 ends -->
 				</p>
