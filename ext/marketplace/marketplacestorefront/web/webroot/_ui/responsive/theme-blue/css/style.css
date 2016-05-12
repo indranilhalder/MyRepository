@@ -18994,7 +18994,7 @@ header.brand-header .content .bottom nav>ul>li>ul {
 
 @media ( max-width :790px) {
 	header.brand-header .content .bottom nav>ul>li>ul {
-		top: 55px;
+		top: 80px;
 		left:0;
 	}
 }
@@ -31534,6 +31534,14 @@ span.material-icons{
 .cart.wrapper .product-block li.item > ul > li.qty {
 	width: auto;
 }
+}
+@media(max-width:790px){
+	header.brand-header .content .bottom nav > ul > li#shopMicrositeSeller.active{
+    padding-top: 47px;}
+header.brand-header > .content .bottom nav > ul > li:nth-last-of-type(1).active > .toggle {
+    /* left: -162%; */
+	/* width:250%; */
+} 
 }
 /*--------------maincss-----------*/
 .row
