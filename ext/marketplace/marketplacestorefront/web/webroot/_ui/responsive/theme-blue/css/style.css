@@ -17265,7 +17265,7 @@ ul.social-connect > li a
 .words li.long .toggle a {
 	  text-transform: capitalize !important;}
 
- .owl-prev::after {
+ /* .owl-prev::after {
 	  content: "";
   display: block;
   position: absolute;
@@ -17314,7 +17314,7 @@ ul.social-connect > li a
   -webkit-transition: -webkit-transform 0.3s;
   -moz-transition: -moz-transform 0.3s;
   transition: transform 0.3s;
-}
+} */
 
 .color-swatch li {
     display: inline-block;
@@ -37313,7 +37313,7 @@ button.make_payment[disabled] {
 }
 
 /* caraousel arrows start */
-.owl-prev::after{
+/* .owl-prev::after{
     top: 0px;
     right: 0;
     bottom: 0;
@@ -37327,8 +37327,8 @@ button.make_payment[disabled] {
     border-bottom: 3px solid #fff;
     border-left: 3px solid #fff;
 
-}
-.owl-next::after{
+} */
+/* .owl-next::after{
  top: 1px;
     right: 0;
     bottom: 0;
@@ -37337,7 +37337,7 @@ button.make_payment[disabled] {
 border-top: 3px solid #fff;
     border-right: 3px solid #fff;
     
-	}
+	} */
 .owl-carousel .owl-controls .owl-buttons .owl-prev, .owl-carousel .owl-controls .owl-buttons .owl-next{
 	width: 30px;
     background: #a9143c;
@@ -37350,6 +37350,27 @@ border-top: 3px solid #fff;
 }
 .owl-carousel .owl-controls .owl-buttons .owl-next{
 	right:0;
+}
+
+.owl-prev::after,  .owl-next::after {
+	font-family: "FontAwesome";
+	color: #fff;
+	display: block;
+	position: absolute;
+	display: block;
+	font-size: 28px;
+}
+
+.owl-prev::after {
+	content: "\f104";
+	top: 0px;
+    left: 58px;
+}
+
+.owl-next::after {
+	content: "\f105";
+	top: 0;
+	left: 22px;
 }
 /* caraousel arrow end */
 
