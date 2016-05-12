@@ -12,6 +12,7 @@ import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -31,22 +32,37 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 	protected String resolveInternal(final CategoryModel source)
 	{
 		String url = getPattern();
+		String categoryCode = null;
 
 		if (url.contains("{baseSite-uid}"))
 		{
 			url = url.replace("{baseSite-uid}", getBaseSiteUid());
 		}
-		if (url.contains("{category-path}"))
+		if (url.contains("{category-code}"))
+		{
+			categoryCode = urlEncode(source.getCode()).replaceAll("\\+", "%20");
+			url = url.replace("{category-code}", categoryCode); //categoryCode code changed to direct source.getCode()
+		}
+		//TISPRO-348
+		if (url.contains("{category-path}") && StringUtils.isNotEmpty(categoryCode) && categoryCode.startsWith("MBH"))
+		{
+			final String categoryPath = buildPathStringForBrands(getCategoryPath(source));
+
+			url = url.replace("{category-path}", categoryPath);
+		}
+		else if (url.contains("{category-path}"))
 		{
 			final String categoryPath = buildPathString(getCategoryPath(source));
 
 			url = url.replace("{category-path}", categoryPath);
 		}
-		if (url.contains("{category-code}"))
-		{
-			final String categoryCode = urlEncode(source.getCode()).replaceAll("\\+", "%20");
-			url = url.replace("{category-code}", categoryCode); //categoryCode code changed to direct source.getCode()
-		}
+
+		//		if (url.contains("{category-code}"))
+		//		{
+		//			final String categoryCode = urlEncode(source.getCode()).replaceAll("\\+", "%20");
+		//			url = url.replace("{category-code}", categoryCode); //categoryCode code changed to direct source.getCode()
+		//		}
+		//TISPRO-348 ends
 		if (url.contains("{catalog-id}"))
 		{
 			url = url.replace("{catalog-id}", source.getCatalogVersion().getCatalog().getId());
@@ -123,6 +139,28 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 		return (path.iterator().next());
 	}
 
+
+	/**
+	 * TISPRO-348 This method is used for url resolving in case of brands
+	 *
+	 * @param path
+	 * @return String
+	 */
+	protected String buildPathStringForBrands(final List<CategoryModel> path)
+	{
+		final StringBuilder result = new StringBuilder();
+
+		for (int i = 1; i < path.size(); ++i)
+		{
+			if (i != 1)
+			{
+				result.append('-');
+			}
+			result.append(urlSafe(path.get(i).getName()));
+		}
+
+		return result.toString();
+	}
 
 
 
