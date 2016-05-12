@@ -515,7 +515,7 @@ input:focus {
       width: -webkit-calc(100% - 1px);
       width: calc(100% - 1px);
       line-height: 50px;
-      padding-left: 10px;
+      padding-left: 20px;
       font-size: 16px;
       margin: -1px;
       background-color: transparent;
@@ -523,7 +523,7 @@ input:focus {
       .select-view .select-list > .selected:after {
         position: absolute;
         top: 0px;
-        right: 5px;
+        right: 2px;
         font-weight: lighter;
     	font-size: 22px;
     	content: "\f107";
