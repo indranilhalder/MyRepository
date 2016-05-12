@@ -971,7 +971,7 @@ display:none;
 						</table>
 
 						 <input type="hidden" name="hidWishlist" id="hidWishlist_quick">
-						<span id="addedMessage_quick" style="display:none;color:blue"></span>
+						<span id="addedMessage_quick" style="display:none;color:#60A119"></span>
 						
 						<button type='button' onclick="addToWishlist_quick()" name='saveToWishlist' id='saveToWishlist' class="savetowishlistbutton"><spring:theme code="product.wishlistBt"/></button>
 					</div>
