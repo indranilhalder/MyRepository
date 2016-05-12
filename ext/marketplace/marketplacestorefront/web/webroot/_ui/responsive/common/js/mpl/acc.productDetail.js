@@ -991,18 +991,14 @@ $(function() {
 														 * null||pincodedata['stockCount']==0) {
 														 */
 														if (pincodedata['stockCount'] == 0) {
-															$(
-																	"#addToCartButton")
-																	.hide();
-															$("#outOfStockId")
-																	.show();
+															$("#addToCartButton").hide();
+															$("#outOfStockId").show();
 															$("#buyNowButton").hide();
 															$("#stock").val(0);
 
 														} else {
-															$(
-																	"#addToCartButton")
-																	.show();
+															$("#addToCartButton").show();
+															$('#buyNowButton').attr("disabled",false);
 															$("#buyNowButton").show();
 														}
 														if (pincodedata['cod'] == 'Y') {
