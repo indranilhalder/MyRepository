@@ -25,7 +25,7 @@ ACC.cartitem = {
 					
 					// for MSD	
 					var x = $(this).closest("li.item").prev();
-			        console.log(x);
+		//	        console.log(x);
 			        
 			        var productCodeMSD;
 			        var salesHierarchyCategoryMSD;
@@ -64,16 +64,16 @@ ACC.cartitem = {
 			        	//console.log( index + ": " + $( this ).text() );			        	
 			        	//console.log(z1);
 			        });
-			        console.log(salesHierarchyCategoryMSD);
+			       /* console.log(salesHierarchyCategoryMSD);
 			        console.log(rootCategoryMSD);
 			        console.log(productCodeMSD);
 			        console.log(basePriceForMSD);
-			        console.log(subPriceForMSD);		       
+			        console.log(subPriceForMSD);	*/	       
 			        
 			        var isMSDEnabled =  $("input[name=isMSDEnabled]").val();
-					console.log(isMSDEnabled);
+			//		console.log(isMSDEnabled);
 					var isApparelExist  = $("input[name=isApparelExist]").val();
-					console.log(isApparelExist);
+			//		console.log(isApparelExist);
 					
 					if(typeof isMSDEnabled === 'undefined')
 					{
@@ -136,7 +136,7 @@ ACC.cartitem = {
 //For MSD
 var trackMAD = function(ProductId,CategoryId,Price,Currency) {
 	var currentPageMSD = $("input[name=currentPageMSD]").val();
-	console.log(currentPageMSD);
+//	console.log(currentPageMSD);
 	if(currentPageMSD == 'CART')
 	{
 		try
