@@ -218,7 +218,7 @@ a.button, button, select {
   border: 2px solid #000;
   padding: 13px 18px;
   cursor: pointer;
-  font-family: "Montserrat", "Courier New";
+  font-family: "Montserrat";
   -webkit-transition: background 0.3s;
   -moz-transition: background 0.3s;
   transition: background 0.3s; }
@@ -237,7 +237,7 @@ a.button, button, select {
   border: 2px solid #000;
   padding: 13px 18px;
   cursor: text;
-  font-family: "Montserrat", "Courier New";
+  font-family: "Montserrat";
   -webkit-transition: background 0.3s;
   -moz-transition: background 0.3s;
   transition: background 0.3s;}
@@ -4257,7 +4257,7 @@ text-transform: uppercase;
 		padding:0px;
 		padding-top: 10px;
 		text-align: left;
-		font-family: "Montserrat", "Courier New";
+		font-family: "Montserrat";
 		font-style: normal;
 	}
 	
@@ -9687,7 +9687,8 @@ body .account .right-account .order-history .pagination li{
       -o-transform: translateX(-50%) translateY(-50%);
       transform: translateX(-50%) translateY(-50%); }
   .listing-leftmenu .search input {
-    width: 80%; }
+    width: 80%;
+    padding:0 5px; }
     .listing-leftmenu .search input::-webkit-input-placeholder {
       color: #000;
       font-size: 14px;
@@ -10498,7 +10499,7 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-detail .price {
     font-size: 16px;
-    font-family: "Montserrat", "Courier New";
+    font-family: "Montserrat";
     line-height: 2
 }
 .product-info .product-detail .price .normal,
@@ -14032,7 +14033,7 @@ body.get-in-touch .shop-promos {
     vertical-align: middle;
     text-align: center;
     width: 33.33%;
-    font-family: "Montserrat", "Courier New";
+    font-family: "Montserrat";
     font-size: 20px;
     font-weight: 500;
     cursor: pointer;
@@ -18436,7 +18437,8 @@ font-weight: 600;
 	  margin-top:0px;		
 	    height: 30px !important;		
 	    width:auto !important;	
-	    max-width:200px;	
+	    max-width:200px;
+	    padding-right: 25px;	
 }		
 #pageSizeOptions1{		
 	width:auto !important;	
@@ -18468,7 +18470,7 @@ font-weight: 600;
 .remove_filter:after{				
    content: "\00d7";
   color: #000;
-  font-family: "Montserrat", "Courier New";
+  font-family: "Montserrat";
   font-size: 20px;
   font-weight: 500;
   top: 2px;
@@ -19384,6 +19386,7 @@ header.brand-header .content .bottom nav {
   text-align: right;
   margin-top: 10px;
   padding-left:0px;
+  margin-left:0px;
 }
 header.brand-header .content .bottom nav > ul > li {
   float: right;
@@ -19973,7 +19976,7 @@ display: inline-block;
 }
 .product-tile .short-info .product-name {
   font-size: 16px;
-  font-family: "Montserrat", "Courier New";
+  font-family: "Montserrat";
   line-height: 1;
   padding-bottom: 2px;
   float: left;
@@ -19986,7 +19989,7 @@ display: inline-block;
 .product-tile .short-info .company, .product-tile .short-info .price {
   font-size: 14px;
 
-  font-family: "Montserrat", "Courier New";
+  font-family: "Montserrat";
   line-height: normal;
   float: left;
   font-weight: 500;
@@ -22553,7 +22556,7 @@ font-weight:600;
 }
 .ia_price{
 	font-size: 12px;
-    font-family: "Montserrat", "Courier New";
+    font-family: "Montserrat";
     line-height: 2;
     float: left;
     font-weight: 500;
@@ -27957,7 +27960,7 @@ body .account .right-account.rewards>div.customer-service h2, body .account .rig
 }
 
 body .account .right-account.rewards>div.customer-service h2 {
-	font-family: "Montserrat", "Courier New";
+	font-family: "Montserrat";
 }
 
 body .account .right-account.rewards>div.customer-service p {
@@ -28910,7 +28913,7 @@ body .account .right-account .order-history .bottom .pagination.mobile{
 }
 @media(max-width:650px){
 .feature-collections ul.collections li.chef h3 span {
-		font-family: "Montserrat", "Courier New";
+		font-family: "Montserrat";
 		font-style: normal;
 		font-size: 14px;
 	}
@@ -31526,6 +31529,11 @@ span.material-icons{
 }
 .feedBack-block .feed-back-categories tr td{
 	padding: 5px 0;
+}
+@media (max-width: 650px){
+.cart.wrapper .product-block li.item > ul > li.qty {
+	width: auto;
+}
 }
 /*--------------maincss-----------*/
 .row
@@ -36399,7 +36407,6 @@ fieldset#cardDate .form-group .control-label, fieldset#startDate .form-group .co
 #helplink {
 	font-weight: bold;
 	font-size: 18px;
-	font-family: "Helvetica Neue", "Helvetica", arial;
 }
 #helplink, #helplink:hover, #helplink:link {
 	color: #fff;
