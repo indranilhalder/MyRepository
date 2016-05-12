@@ -89,11 +89,14 @@ public class BuyAgetPercentageDiscountTest extends AbstractPromotionServiceTest
 	@Before
 	public void setUp() throws Exception
 	{
+		//TISSEC-50
 		MockitoAnnotations.initMocks(this);
 		final BuyAPercentageDiscount buyAPrecentageDiscount = new BuyAPercentageDiscount();
-		final CatalogVersionModel catVersion = catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
+
+		final CatalogVersionModel catVersion = catalogVersionService.getCatalogVersion("", "");//TODO : Please enter catalogue name,Please enter version
 		catalogVersionService.addSessionCatalogVersion(catVersion);
-		product1 = productService.getProductForCode(catVersion, "mplProductCatalog-23191");
+
+		product1 = productService.getProductForCode(catVersion, "");//TODO : Please enter product code
 
 
 		final Product p = new Product();
@@ -111,7 +114,8 @@ public class BuyAgetPercentageDiscountTest extends AbstractPromotionServiceTest
 
 		final UserModel user = userService.getUserForUID("demo");
 		userService.setCurrentUser(user);
-		commonI18NService.setCurrentCurrency(commonI18NService.getCurrency("EUR"));
+
+		commonI18NService.setCurrentCurrency(commonI18NService.getCurrency(""));//TODO : Please enter currency
 
 	}
 
@@ -162,7 +166,8 @@ public class BuyAgetPercentageDiscountTest extends AbstractPromotionServiceTest
 		calculationService.calculate(cart);
 		assertEquals("before updatePromotions(BuyAPrecentageDiscount)", 1000, cart.getTotalPrice().doubleValue(), 0.01);
 
-		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("mplPromoGrp");
+
+		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("");//TODO : Please enter promotion grp
 		final Collection<PromotionGroupModel> promotionGroups = new ArrayList<PromotionGroupModel>();
 		promotionGroups.add(promotionGroup);
 		promotionsService.updatePromotions(promotionGroups, cart, false, AutoApplyMode.APPLY_ALL, AutoApplyMode.APPLY_ALL,

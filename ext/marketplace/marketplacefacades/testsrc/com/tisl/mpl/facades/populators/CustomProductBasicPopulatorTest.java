@@ -58,16 +58,17 @@ public class CustomProductBasicPopulatorTest
 	@Test
 	public void testProductBasicPopulator()
 	{
+		//TISSEC-50
 
 		final ProductModel productModel = Mockito.mock(ProductModel.class);
 		final ModelService modelService = Mockito.mock(ModelService.class);
 		final VariantProductModel variantProductModel = Mockito.mock(VariantProductModel.class);
 		final ProductData productData = Mockito.mock(ProductData.class);
 		final Object object = Mockito.mock(Object.class);
-		given(modelService.getAttributeValue(variantProductModel, "name")).willReturn(object);
-		given(modelService.getAttributeValue(variantProductModel, "MANUFACTURERNAME")).willReturn(object);
-		given(modelService.getAttributeValue(variantProductModel, "LISTINGID")).willReturn(object);
-		given(modelService.getAttributeValue(variantProductModel, "MRP")).willReturn(object);
+		given(modelService.getAttributeValue(variantProductModel, "")).willReturn(object);//TODO : Please enter name
+		given(modelService.getAttributeValue(variantProductModel, "")).willReturn(object);//TODO : Please enter manufacture name
+		given(modelService.getAttributeValue(variantProductModel, "")).willReturn(object);//TODO : Please enter listing id
+		given(modelService.getAttributeValue(variantProductModel, "")).willReturn(object);//TODO : Please enter mrp
 		final Collection<SellerInformationModel> sellerInformationList = new ArrayList<SellerInformationModel>();
 		final SellerInformationModel sellerInformationModel = Mockito.mock(SellerInformationModel.class);
 		sellerInformationList.add(sellerInformationModel);
@@ -88,7 +89,7 @@ public class CustomProductBasicPopulatorTest
 		final PriceDataFactory priceDataFactory = Mockito.mock(PriceDataFactory.class);
 		given(priceData.getValue()).willReturn(new BigDecimal(0.0));
 		final PriceDataType priceType = Mockito.mock(PriceDataType.class);
-		given(priceDataFactory.create(priceType, new BigDecimal(0.0), "INR")).willReturn(pData);
+		given(priceDataFactory.create(priceType, new BigDecimal(0.0), "")).willReturn(pData);//TODO : Please enter currency
 		productBasicPopulator.populate(productModel, productData);
 	}
 

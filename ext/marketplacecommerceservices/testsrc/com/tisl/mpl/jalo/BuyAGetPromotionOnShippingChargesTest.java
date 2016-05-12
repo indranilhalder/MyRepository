@@ -92,9 +92,10 @@ public class BuyAGetPromotionOnShippingChargesTest extends AbstractPromotionTest
 	{
 		MockitoAnnotations.initMocks(this);
 		final BuyAGetPromotionOnShippingCharges buyAGetPromotionOnShippingCharges = new BuyAGetPromotionOnShippingCharges();
-		final CatalogVersionModel catVersion = catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
+		//TISSEC-50
+		final CatalogVersionModel catVersion = catalogVersionService.getCatalogVersion("", "");//TODO : Please enter catalogue name,Please enter version
 		catalogVersionService.addSessionCatalogVersion(catVersion);
-		product1 = productService.getProductForCode(catVersion, "987654341");
+		product1 = productService.getProductForCode(catVersion, "");//TODO : Please enter product code
 		final Product p = new Product();
 		p.setCode(product1.getCode());
 		p.setName(product1.getName());
@@ -108,7 +109,7 @@ public class BuyAGetPromotionOnShippingChargesTest extends AbstractPromotionTest
 
 		final UserModel user = userService.getUserForUID("demo");
 		userService.setCurrentUser(user);
-		commonI18NService.setCurrentCurrency(commonI18NService.getCurrency("EUR"));
+		commonI18NService.setCurrentCurrency(commonI18NService.getCurrency(""));//TODO : Please enter currency
 
 	}
 
@@ -159,7 +160,7 @@ public class BuyAGetPromotionOnShippingChargesTest extends AbstractPromotionTest
 		calculationService.calculate(cart);
 		assertEquals("before updatePromotions(BuyAPrecentageDiscount)", 1000, cart.getTotalPrice().doubleValue(), 0.01);
 
-		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("mplPromoGrp");
+		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("");//TODO : Please enter promotion grp
 		final Collection<PromotionGroupModel> promotionGroups = new ArrayList<PromotionGroupModel>();
 		promotionGroups.add(promotionGroup);
 		promotionsService.updatePromotions(promotionGroups, cart, false, AutoApplyMode.APPLY_ALL, AutoApplyMode.APPLY_ALL,

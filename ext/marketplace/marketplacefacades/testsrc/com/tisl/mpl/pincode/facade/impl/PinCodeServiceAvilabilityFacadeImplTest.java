@@ -22,6 +22,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 
@@ -51,13 +52,14 @@ public class PinCodeServiceAvilabilityFacadeImplTest
 	@Test
 	public void testGetResonseForPinCode()
 	{
+		//TISSEC-50
 		final List<PincodeServiceData> requestData = new ArrayList<PincodeServiceData>();
 		final List<String> ussidList = new ArrayList<String>();
 		final List<String> sellerIdList = new ArrayList<String>();
-		ussidList.add("123654098765485130011712");
-		sellerIdList.add("123654");
-		final String productCode = "987654321";
-		final String pin = "500030";
+		ussidList.add("");//TODO : Please enter ussid
+		sellerIdList.add("");//TODO : Please enter seller id
+		final String productCode = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter product code
+		final String pin = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter pincode
 		final PincodeServiceData reqData = new PincodeServiceData();
 		assertNotNull(reqData.getUssid());
 		assertFalse(requestData.isEmpty());
@@ -75,7 +77,7 @@ public class PinCodeServiceAvilabilityFacadeImplTest
 	@Test
 	public void testGetServiceablePinCodeCart()
 	{
-		final String pin = "500030";
+		final String pin = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter pincode
 		final List<PincodeServiceData> pincodeServiceData = new ArrayList<PincodeServiceData>();
 		assertNotNull(mplCommerceCartService.getServiceablePinCodeCart(pin, pincodeServiceData));
 		assertEquals(pincodeServiceData, pinCodeServiceAvilabilityFacadeImpl.getServiceablePinCodeCart(pin, pincodeServiceData));

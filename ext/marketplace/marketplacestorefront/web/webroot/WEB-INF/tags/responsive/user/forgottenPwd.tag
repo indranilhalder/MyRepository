@@ -56,7 +56,7 @@
 			</h1>
 			<div class="forgotPasswordSuccessPopup-desc">
 			<spring:theme code="email.confirmation.statement1"
-				text="It's okay. Happens to the best of us. We've sent you an email with the instructions to resetting the password. If you can't see it in your inbox, check the junk folder. Still can't find it? Our Sure Care folks are here to help.  " />
+				text="It's okay. Happens to the best of us. We've sent you an email with the instructions to resetting the password. If you can't see it in your inbox, check the junk folder. Still can't find it? Our Tata CLiQ Care folks are here to help.  " />
 			</div>
 		</div>
 		<button class="close" data-dismiss="modal"></button>
