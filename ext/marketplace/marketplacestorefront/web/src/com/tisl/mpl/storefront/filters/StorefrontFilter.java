@@ -106,9 +106,6 @@ public class StorefrontFilter extends OncePerRequestFilter
 	 */
 	private void getSEOAttributes(final HttpServletRequest request)
 	{
-		final String emailURL = configurationService.getConfiguration().getString(MessageConstants.EMAIL_URL);
-		request.setAttribute(ModelAttributetConstants.EMAIL_URL, emailURL);
-		final String twitterHandle = configurationService.getConfiguration().getString(MessageConstants.TWITTER_HANDLE).trim();
 		final String mediaCode = configurationService.getConfiguration().getString(MessageConstants.MEDIA_CODE).trim();
 		String seoMediaURL = null;
 		final String imageHost = configurationService.getConfiguration().getString(MessageConstants.MEDIA_HOST).trim();
@@ -130,10 +127,6 @@ public class StorefrontFilter extends OncePerRequestFilter
 			final String fullURL = sb.append(imageHost).append(seoMediaURL).toString();
 			request.setAttribute(ModelAttributetConstants.SEO_MEDIA_URL, fullURL);
 		}
-
-		request.setAttribute(ModelAttributetConstants.TWITTER_HANDLE, twitterHandle);
-		final String siteName = configurationService.getConfiguration().getString(MessageConstants.SITE_NAME).trim();
-		request.setAttribute(ModelAttributetConstants.SITE_NAME, siteName);
 	}
 
 	protected MediaModel getMediaByCode(final String mediaCode)
