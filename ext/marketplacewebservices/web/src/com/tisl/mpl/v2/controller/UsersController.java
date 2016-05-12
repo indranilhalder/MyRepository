@@ -86,7 +86,6 @@ import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -431,7 +430,6 @@ public class UsersController extends BaseCommerceController
 	/**
 	 * @param emailId
 	 * @param password
-	 * @param request
 	 * @return MplUserResultWsDto
 	 * @throws DuplicateUidException
 	 * @throws RequestParameterException
@@ -681,10 +679,6 @@ public class UsersController extends BaseCommerceController
 		return result;
 	}
 
-	private String encodeutf(final String data) throws UnsupportedEncodingException
-	{
-		return java.net.URLDecoder.decode(data, "UTF-8");
-	}
 
 	/**
 	 * Convert the guest customer to user
