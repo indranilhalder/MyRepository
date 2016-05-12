@@ -24,6 +24,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+
 
 /**
  * @author TCS
@@ -60,9 +62,10 @@ public class CustomImagePopulatorTest
 	@Test
 	public void testPopulateImageData()
 	{
+		//TISSEC-50
 		final VariantProductModel vmModel = Mockito.mock(VariantProductModel.class);
-		final String styleSwatch = "styleSwatch";
-		final String mediaFormatQualifier = "qualifier";
+		final String styleSwatch = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter style swatch
+		final String mediaFormatQualifier = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter media format qualifier
 		final VariantOptionData variantOptionData = Mockito.mock(VariantOptionData.class);
 		final MediaModel mediaModel = Mockito.mock(MediaModel.class);
 		final MediaContainerModel mediaContainer = Mockito.mock(MediaContainerModel.class);

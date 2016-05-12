@@ -50,11 +50,12 @@ public class MplPriceRowServiceImplTest
 	@Test
 	public void testmplPriceRowServiceimpl()
 	{
+		//TISSEC-50
 		final CatalogVersionModel catalogVersionModel = getCatalogVersion();
 
 		final List<PriceRowModel> priceRowDetails = new ArrayList<PriceRowModel>();
-		final String skuID = "skuID";
-		final String skuIDs = "skuIDs";
+		final String skuID = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter skuID
+		final String skuIDs = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter skuIDs
 
 		given(mplPriceRowDao.getPriceRowDetail(catalogVersionModel, skuID)).willReturn(priceRowDetails);
 

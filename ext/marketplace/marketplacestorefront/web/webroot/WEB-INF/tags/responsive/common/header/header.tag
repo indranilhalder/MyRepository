@@ -34,7 +34,7 @@ function registerUser(eventObject)
 	var encodedUID = encodeURIComponent(eventObject.UID);
 	var encodedTimestamp=encodeURIComponent(eventObject.timestamp);
 	var  encodedSignature=encodeURIComponent(eventObject.signature);
-	console.log("SOCIAL LOGIN REFERER:-"+ window.location.href)
+//	console.log("SOCIAL LOGIN REFERER:-"+ window.location.href)
 		 $.ajax({
 				url : ACC.config.encodedContextPath + "/oauth2callback/socialLogin/",
 				data : {
@@ -93,8 +93,8 @@ function registerUser(eventObject)
         }
         // onLogin Event handler
         function onLoginHandler(eventObj) {
-            console.log(eventObj.context.str + ' ' + eventObj.eventName + ' to ' + eventObj.provider
-                + '!\n' + eventObj.provider + ' user ID: ' +  eventObj.user.identities[eventObj.provider].providerUID);          
+           // console.log(eventObj.context.str + ' ' + eventObj.eventName + ' to ' + eventObj.provider
+          //      + '!\n' + eventObj.provider + ' user ID: ' +  eventObj.user.identities[eventObj.provider].providerUID);          
             
             registerUser(eventObj);      
             

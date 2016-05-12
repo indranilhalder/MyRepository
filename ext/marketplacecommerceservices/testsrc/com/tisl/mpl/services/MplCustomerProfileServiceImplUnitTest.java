@@ -25,6 +25,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCustomerProfileDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.impl.ExtendedUserDaoImpl;
@@ -91,7 +92,7 @@ public class MplCustomerProfileServiceImplUnitTest
 	public void testGetCustomerProfileDetail()
 	{
 		final CustomerModel oCustomerModel = new CustomerModel();
-		oCustomerModel.setOriginalUid("testuser1@test.com");
+		oCustomerModel.setOriginalUid("");//TODO : Please enter original uid
 
 		final CustomerModel oCustomerModelList = new CustomerModel();
 		final List<CustomerModel> customerModels = Arrays.asList(oCustomerModelList);
@@ -110,13 +111,14 @@ public class MplCustomerProfileServiceImplUnitTest
 	@Test
 	public void testUpdateCustomerProfile()
 	{
+		//TISSEC-50
 		customerModel = new CustomerModel();
 		Mockito.when(userService.getCurrentUser()).thenReturn(customerModel);
-		customerModel.setUid("testuser1@test.com");
-		customerModel.setName("Test");
+		customerModel.setUid("");//TODO : Please enter uid
+		customerModel.setName("");//TODO : Please enter name
 		customerModel.setTitle(null);
 		Mockito.doNothing().when(modelService).save(customerModel);
-		mplCustomerProfileService.updateCustomerProfile(customerModel, "testuser1@test.com", "Test");
+		mplCustomerProfileService.updateCustomerProfile(customerModel, "", "");//TODO : Please enter uid,Please enter name
 		LOG.info("Method : testUpdateCustomerProfile >>>>>>>");
 	}
 
@@ -126,8 +128,8 @@ public class MplCustomerProfileServiceImplUnitTest
 	{
 		customerModel = new CustomerModel();
 		Mockito.when(userService.getCurrentUser()).thenReturn(customerModel);
-		customerModel.setUid("testuser1@test.com");
-		customerModel.setName("Test");
+		customerModel.setUid("");//TODO :Please enter uid
+		customerModel.setName("");//TODO :Please enter name
 		customerModel.setTitle(null);
 		Mockito.doNothing().when(modelService).save(customerModel);
 		LOG.info("Method : testInternalSaveCustomer >>>>>>>");
@@ -146,13 +148,13 @@ public class MplCustomerProfileServiceImplUnitTest
 	@Test
 	public void testAdjustPassword() throws PasswordMismatchException
 	{
-		final String currPwdr = "currPwd@123456.com";
+		final String currPwdr = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter current password
 		customerModel = new CustomerModel();
 		user = new UserModel();
 		Mockito.when(userService.getCurrentUser()).thenReturn(customerModel);
 		Mockito.when(passwordEncoderService.encode(user, currPwdr, "md5")).thenReturn("djfjdhsdafsas647@*&sdfkj");
-		customerModel.setEncodedPassword("djfjdhsdafsas647@*&sdfkj");
-		assertEquals(customerModel.getEncodedPassword(), "djfjdhsdafsas647@*&sdfkj");
+		customerModel.setEncodedPassword("");//TODO : Please enter encoded password
+		assertEquals(customerModel.getEncodedPassword(), "");//TODO : Please enter encoded password
 		Mockito.doNothing().when(modelService).save(customerModel);
 		LOG.info("Method : testAdjustPassword >>>>>>>");
 	}
@@ -162,7 +164,7 @@ public class MplCustomerProfileServiceImplUnitTest
 	public void testGetUserForUID()
 	{
 		customerModel = new CustomerModel();
-		Mockito.when(userDao.findUserByUID("testuser1@test.com")).thenReturn(customerModel);
+		Mockito.when(userDao.findUserByUID("")).thenReturn(customerModel);//TODO : Please enter uid
 
 		assertNotNull(customerModel);
 		LOG.info("Method : testGetUserForUID >>>>>>>");
@@ -173,7 +175,7 @@ public class MplCustomerProfileServiceImplUnitTest
 	public void testCheckUidUniqueness() throws DuplicateUidException
 	{
 		user = new UserModel();
-		Mockito.when(userService.getUserForUID("testuser1@test.com")).thenReturn(user);
+		Mockito.when(userService.getUserForUID("")).thenReturn(user);//TODO : Please enter uid
 		assertNotNull(user);
 		LOG.info("Method : testCheckUidUniqueness >>>>>>>");
 	}

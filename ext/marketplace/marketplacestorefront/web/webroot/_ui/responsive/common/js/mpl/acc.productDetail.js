@@ -168,9 +168,9 @@
 		$(document).on("click", '.colorBox',
 			function() {
 			  var target = $(this).attr('data-producturl');
-			   console.log(target);
+			//   console.log(target);
 			  var productcode= $(this).attr('data-productcode');
-			   console.log(productcode);
+			//   console.log(productcode);
 			   $('body').on('hidden.bs.modal', '#popUpModal', function () {
 					  $(this).removeData('bs.modal');
 					});
@@ -186,13 +186,13 @@
 		
 		// Sise Guide Select Size
 		$(document).on("change", '.variant-select',function(){
-			console.log($(this).find('option:selected').data('productcode1'));
+		//	console.log($(this).find('option:selected').data('productcode1'));
 //			var value = $("#variant .dsa").attr("value");
 			var value = $(this).find('option:selected').data('producturl');
 			
-			console.log(value);
+	//		console.log(value);
 			var productcode = $(this).find('option:selected').data('productcode1')
-			console.log(productcode);
+	//		console.log(productcode);
 			
 		    // load the url and show modal on success
 		    $("#popUpModal .modal-content").load(value, function() { 
@@ -205,9 +205,9 @@
 		$(document).on("click", 'a[data-target=#popUpModal] ',
 				function() {
 				   var target = $(this).attr("href");
-				   console.log(target);
+			//	   console.log(target);
 				   var productcode= $(this).attr("data-productcode");
-				   console.log(productcode);
+			//	   console.log(productcode);
 			 	   //$("#popUpModal").modal('hide');
 				   $('body').on('hidden.bs.modal', '#popUpModal', function () {
 						  $(this).removeData('bs.modal');
@@ -1329,7 +1329,7 @@ function displayDeliveryDetails(sellerName) {
 					$("#expressli").show();
 				}
 				if (null != deliveryModes){
-				console.log(deliveryModes.indexOf("CNC") );
+		//		console.log(deliveryModes.indexOf("CNC") );
 				}
 				if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
 					
@@ -1554,7 +1554,7 @@ function getRating(key,productCode,category)
 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
 	 
 	$.getJSON(url, function(data){
-		console.log(data);
+	//	console.log(data);
 	  	var totalCount=data.streamInfo.ratingCount;
 		//Reverse the source array
 		var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
@@ -1821,7 +1821,7 @@ function buyboxDetailsForSizeGuide(productCode){
 	var sellerID= $("#sellerSelId").val();
 	var productCode = productCode;//$("#product").val();
 	
-	console.log(sellerID +" "+productCode);
+//	console.log(sellerID +" "+productCode);
 	var requiredUrl = ACC.config.encodedContextPath + "/p-buyboxDataForSizeGuide";
 	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
 	
@@ -2089,17 +2089,17 @@ function loadDefaultWishListName_SizeGuide() {
 				var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
 				if(isMSDEnabled === 'true')
 				{
-				console.log(isMSDEnabled);
+		//		console.log(isMSDEnabled);
 				var isApparelExist  = $("input[name=isApparelExist]").val();
-				console.log(isApparelExist);				
+		//		console.log(isApparelExist);				
 				var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-				console.log(salesHierarchyCategoryMSD);
+		//		console.log(salesHierarchyCategoryMSD);
 				var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-				console.log(rootCategoryMSD);				
+		//		console.log(rootCategoryMSD);				
 				var productCodeMSD =  $("input[name=productCodeMSD]").val();
-				console.log(productCodeMSD);				
+		//		console.log(productCodeMSD);				
 				var priceformad =  $("input[id=price-for-mad]").val();
-				console.log(priceformad);				
+		//		console.log(priceformad);				
 				
 				if(typeof isMSDEnabled === 'undefined')
 				{

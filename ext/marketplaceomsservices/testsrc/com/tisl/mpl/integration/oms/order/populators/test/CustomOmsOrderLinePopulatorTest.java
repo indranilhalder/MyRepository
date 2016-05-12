@@ -95,41 +95,42 @@ public class CustomOmsOrderLinePopulatorTest
 		final Double actualValue = new Double(1200);
 		final List<RichAttributeModel> richAttributeModelList = new ArrayList<RichAttributeModel>();
 
-		deliveryModeModel.setName("HOme");
-		deliveryModeModel.setCode("56777");
+		//TISSEC-50
+		deliveryModeModel.setName("");//TODO : Please enter name
+		deliveryModeModel.setCode("");//TODO : Please enter code
 		zoneDeliveryModeModel.setDeliveryMode(deliveryModeModel);
 
-		productModelMock.setDescription("Product delivered");
-		productModelMock.setName("shirt");
-		orderModel.setTotalTaxValuesInternal("10");
+		productModelMock.setDescription("");//TODO : Please enter description
+		productModelMock.setName("");//TODO : Please enter name
+		orderModel.setTotalTaxValuesInternal("");//TODO : Please enter total tax value
 		orderModel.setDeliveryCost(cost);
 		orderModel.setConvenienceCharges(convCharge);
 		orderModel.setStatus(orderStatus);
-		orderModel.setCode("o1234");
+		orderModel.setCode("");//TODO : Please enter code
 
 		orderEntryModelMock.setOrder(orderModel);
 		orderEntryModelMock.setCurrDelCharge(curDelCharge);
 		orderEntryModelMock.setOrder(orderModel);
-		orderEntryModelMock.setSelectedUSSID("123653098765485130011716");
+		orderEntryModelMock.setSelectedUSSID("");//TODO : Please enter selected ussid
 		orderEntryModelMock.setDeliveryMode(deliveryModeModel);
 		orderEntryModelMock.setBasePrice(baseprice);
 		orderEntryModelMock.setOrder(orderModel);
-		orderEntryModelMock.setProductPromoCode("promo");
+		orderEntryModelMock.setProductPromoCode("");//TODO : Please enter product promo code
 		orderEntryModelMock.setProdLevelPercentageDisc(discount);
 		orderEntryModelMock.setNetAmountAfterAllDisc(actualValue);
 		orderEntryModelMock.setCurrDelCharge(new Double(1520));
 		orderEntryModelMock.setProduct(productModelMock);
-		orderEntryModelMock.setCartPromoCode("PC8900");
+		orderEntryModelMock.setCartPromoCode("");//TODO : Please enter cart promo code
 		orderEntryModelMock.setCartLevelDisc(discount);
 		orderEntryModelMock.setGiveAway(new Boolean(true));
 		orderEntryModelMock.setAssociatedItems(itemList);
 
-		sellerInfoModelMock.setSellerSKU("987654321");
-		sellerInfoModelMock.setSellerID("1234456");
+		sellerInfoModelMock.setSellerSKU("");//TODO : Please enter seller sku
+		sellerInfoModelMock.setSellerID("");//TODO : Please enter seller id
 		sellerInfoModelMock.setProductSource(productModelMock);
 
 		richAttrModelMock.setSellerFulfilledShippingCharge(shippingCharge);
-		richAttrModelMock.setWarrantyPeriod("Two years");
+		richAttrModelMock.setWarrantyPeriod("");//TODO : Please enter warranty period
 
 		richAttributeModelList.add(richAttrModelMock);
 
@@ -150,8 +151,8 @@ public class CustomOmsOrderLinePopulatorTest
 
 		orderEntryModelMock.setConvenienceChargeApportion(new Double(1200));
 		orderEntryModelMock.setGiveAway(new Boolean(true));
-		orderEntryModelMock.setOrderLineId("OLID1234");
-		orderEntryModelMock.setTransactionID("TranID1234");
+		orderEntryModelMock.setOrderLineId("");//TODO : Please enter orderline id
+		orderEntryModelMock.setTransactionID("");//TODO : Please enter transaction id
 
 		//customOmsOrderLinePopulator.populate(orderEntryModelMock, orderLineMock);
 
@@ -165,18 +166,18 @@ public class CustomOmsOrderLinePopulatorTest
 		//final OrderLine orderLineMock = Mockito.mock(OrderLine.class);
 		//final ItemModel itemModelMock = Mockito.mock(ItemModel.class);
 
+		//TISSEC-50
+		richAttributeModelMock.setExchangeAllowedWindow("");//TODO : Please enter exchange allowed window
+		richAttributeModelMock.setWarrantyPeriod("");//TODO : Please enter warranty period
+		richAttributeModelMock.setReturnWindow("");//TODO : Please enter return window
+		richAttributeModelMock.setReplacementWindow("");//TODO : Please enter replacement window
+		richAttributeModelMock.setExchangeAllowedWindow("");//TODO : Please enter exchange allowed window
 
-		richAttributeModelMock.setExchangeAllowedWindow("2 hours");
-		richAttributeModelMock.setWarrantyPeriod("Six months");
-		richAttributeModelMock.setReturnWindow("two Dyas");
-		richAttributeModelMock.setReplacementWindow("Five Days");
-		richAttributeModelMock.setExchangeAllowedWindow("Four Days");
 
-
-		target.setCancellationAllowed("10 Dyas");
-		target.setReturnsAllowed("5 days");
-		target.setReplacementAllowed("5 Days");
-		target.setExchangeAllowed("2 Days");
+		target.setCancellationAllowed("");//TODO : Please enter cancellation allowed
+		target.setReturnsAllowed("");//TODO : Please enter returns allowed
+		target.setReplacementAllowed("");//TODO : Please enter replacement allowed
+		target.setExchangeAllowed("");//TODO : Please enter exchange allowed
 
 		richAttributeModelListMock.add(richAttributeModelMock);
 		//customOmsOrderLinePopulator.populateRichAttribute(richAttributeModelListMock, orderLineMock);

@@ -64,12 +64,16 @@ public class BuyAAboveXGetPercentageOrAmountOffTest extends ServicelayerTransact
 	@Before
 	public void setUp() throws Exception
 	{
-		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
+		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("", "");//TODO : Please enter catalogue name,Please enter version
 		catalogVersionService.addSessionCatalogVersion(version);
 		userService.setCurrentUser(userService.getUserForUID("demo"));//Add User ID
-		currency = commonI18NService.getCurrency("EUR");
-		promotionGroup = createPromotionGroup("mplPromoGrp");
-		product = productService.getProductForCode(version, "mplProductCatalog-987654341");
+
+
+
+		//TISSEC-50
+		currency = commonI18NService.getCurrency("");//TODO : Please enter currency
+		promotionGroup = createPromotionGroup("");//TODO : Please enter promotion group
+		product = productService.getProductForCode(version, "");//TODO : Please enter product code
 	}
 
 	private PromotionGroupModel createPromotionGroup(final String name)
@@ -87,7 +91,8 @@ public class BuyAAboveXGetPercentageOrAmountOffTest extends ServicelayerTransact
 		promo.setCode(code);
 		promo.setEnabled(Boolean.TRUE);
 		promo.setPriority(Integer.valueOf(1000));
-		promotionGroup = promotionsService.getPromotionGroup("mplPromoGrp");
+
+		promotionGroup = promotionsService.getPromotionGroup("");//TODO : Please enter promotion grp
 		final Collection<PromotionGroupModel> promotionGroups = new ArrayList<PromotionGroupModel>();
 		promotionGroups.add(promotionGroup);
 		promo.setPercentageOrAmount(Boolean.FALSE);

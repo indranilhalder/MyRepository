@@ -196,12 +196,12 @@
 		if(loginStatus){
 			if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {
 				localStorage.setItem("eventFired","true");
-				console.log("Login Success!!!");
+			//	console.log("Login Success!!!");
 				if(typeof utag == "undefined"){
 					console.log("Utag is undefined")
 				}
 				else{
-					console.log("Firing Tealium Event");
+		//			console.log("Firing Tealium Event");
 					utag.link({ "event_type" : "Login", "link_name" : "Login" });
 				}
 				

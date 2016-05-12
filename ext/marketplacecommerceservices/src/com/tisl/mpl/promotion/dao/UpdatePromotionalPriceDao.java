@@ -16,4 +16,6 @@ public interface UpdatePromotionalPriceDao
 {
 	List<PriceRowModel> fetchPricedData(List<String> product);
 
+	List<PriceRowModel> fetchPromoPriceData(String promoCode);
+
 }
