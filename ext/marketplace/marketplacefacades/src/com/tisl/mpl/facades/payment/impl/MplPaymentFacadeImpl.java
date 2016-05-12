@@ -3,20 +3,16 @@
  */
 package com.tisl.mpl.facades.payment.impl;
 
-import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.Registry;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.CartModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -46,17 +42,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.bin.service.BinService;
-import com.tisl.mpl.binDb.model.BinModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.BankforNetbankingModel;
-import com.tisl.mpl.core.model.EMIBankModel;
-import com.tisl.mpl.core.model.SavedCardModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplNetbankingData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.data.SavedCardData;
-import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
@@ -74,7 +65,6 @@ import com.tisl.mpl.juspay.response.StoredCard;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
-import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -127,7 +117,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public Map<String, Boolean> getPaymentModes(final String store,final boolean isMobile, final CartData cartDataMobile) throws EtailNonBusinessExceptions
+	public Map<String, Boolean> getPaymentModes(final String store, final boolean isMobile, final CartData cartDataMobile)
+			throws EtailNonBusinessExceptions
 	{
 
 		//Declare variable
@@ -139,7 +130,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 
 			boolean flag = false;
-			CartData cartData=null;
+			CartData cartData = null;
 			if (isMobile)
 			{
 				LOG.debug("Mobile payment modes cart Id................" + cartDataMobile.getCode());
@@ -149,8 +140,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			{
 				cartData = getMplCustomAddressFacade().getCheckoutCart();
 			}
-			
-			
+
+
 			for (final OrderEntryData entry : cartData.getEntries())
 			{
 
@@ -603,6 +594,14 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				customer = getMplPaymentService().getCustomer(uid);
 			}
 
+			//TISCR-421
+			String customerPhone = MarketplacecommerceservicesConstants.EMPTYSTRING;
+			if (null != customer.getDefaultShipmentAddress()
+					&& StringUtils.isNotEmpty(customer.getDefaultShipmentAddress().getCellphone()))
+			{
+				customerPhone = customer.getDefaultShipmentAddress().getCellphone();
+			}
+
 			final String customerEmail = customer.getOriginalUid();
 			//			String juspayOrderStatus = "";
 			String juspayOrderId = "";
@@ -620,9 +619,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				//creating InitOrderRequest of Juspay
 				// For netbanking firstname will be set as Bank Code
 				final InitOrderRequest request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice())
-						.withCustomerId(uid).withEmail(customerEmail).withUdf1(firstName).withUdf2(lastName).withUdf3(addressLine1)
-						.withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state).withUdf8(city)
-						.withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
+						.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
+						.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country)
+						.withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
 
 				LOG.info("Juspay Request Structure " + request);
 
@@ -1377,11 +1376,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
