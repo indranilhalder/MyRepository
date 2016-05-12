@@ -1,8 +1,8 @@
 //Added by TCS to retrieve the product,cat id amd price
 function callMSD(productID,catIdMSD,msdRESTURL)
 {
-	console.log("Product ID for MSD:- "+productID)
-	console.log("Category ID for MSD:- "+catIdMSD);	
+	/*console.log("Product ID for MSD:- "+productID)
+	console.log("Category ID for MSD:- "+catIdMSD);	*/
 	loadMAD(productID,catIdMSD,msdRESTURL);
 }
 
@@ -190,7 +190,7 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
                         dS = dS +    '</div>';                       
                         // This puts in our recommendations into the view-similar-items div                        
                         $("div.view-similar-items").html(dS).resize();                       
-                        console.log("MAD visually similar items loaded");
+                  //      console.log("MAD visually similar items loaded");
                         
                         
                         $(".visuallySimilarItems").owlCarousel({
@@ -244,7 +244,7 @@ function hideBothMSD(productElementMSD) {
 //Create pop-up Quickview window
 function popupwindowMSD(e,productId) {	
 	e.preventDefault();
-	console.log("MSD Quick View:- " + productId);
+//	console.log("MSD Quick View:- " + productId);
 	ACC.colorbox.open("QV",{
 		href:ACC.config.encodedContextPath+"/p/"+productId+"/quickView"
 });

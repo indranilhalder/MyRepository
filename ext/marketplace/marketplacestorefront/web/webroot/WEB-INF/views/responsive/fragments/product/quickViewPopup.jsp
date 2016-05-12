@@ -273,17 +273,17 @@ tr.d0 td {
 					var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
 					if(isMSDEnabled === 'true')
 					{
-					console.log(isMSDEnabled);
+			//		console.log(isMSDEnabled);
 					var isApparelExist  = $("input[name=isApparelExist]").val();
-					console.log(isApparelExist);				
+			//		console.log(isApparelExist);				
 					var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-					console.log(salesHierarchyCategoryMSD);
+			//		console.log(salesHierarchyCategoryMSD);
 					var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-					console.log(rootCategoryMSD);				
+			//		console.log(rootCategoryMSD);				
 					var productCodeMSD =  $("input[name=productCodeMSD]").val();
-					console.log(productCodeMSD);				
+			//		console.log(productCodeMSD);				
 					var priceformad =  $("input[id=price-for-mad]").val();
-					console.log(priceformad);				
+			//		console.log(priceformad);				
 					
 					if(typeof isMSDEnabled === 'undefined')
 					{
