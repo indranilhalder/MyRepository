@@ -17780,6 +17780,7 @@ header .content .bottom .search .select-list select
   font-size: 10px;
   padding: 0px;
   text-transform: none;
+  text-align:left;
 }
 .checkout-steps{
 	width:65%;
@@ -25162,12 +25163,12 @@ padding:0;
 	color: #fff;
      background-color: #A9143C;
 }
-.seller-details .otherSellersFont {
+/* .seller-details .otherSellersFont {
     font-weight: 500;
     font-size: 10px;
     padding: 0px;
     text-transform: none;
-}
+} */
 
 @media (max-width: 450px) {
 div.other-sellers .other-sellers-table tbody tr td h3, div.other-sellers .other-sellers-table tbody tr td .price {
