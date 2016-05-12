@@ -450,16 +450,13 @@ tr.d0 td {
 	 //return false;
 	  }	 
  
-
- if($(".quickViewSelect").text().match(/^(([a-zA-Z0-9]*)Select)$/g)){
+ var selectSizeVal = '${selectedSize}';
+ if(selectSizeVal=="")
+ {
  	$(".out_of_stock").css("display","none");
  	$(".outOfStock").css("display","none");
  	$(".tempAddToCartQuickView").css("display","block");
-
- } else {
- 	$(".tempAddToCartQuickView").css("display","none");
- 	
- }
+ } 
  
  $('a.wishlist#wishlist_quick').popover({ 
 	    html : true,
@@ -886,11 +883,11 @@ display:none;
 				<font color="red"><spring:theme code="product.product.outOfStock" /></font>
 				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick('${buyboxUssid}');scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			</span>
-				<button type="${buttonType}"
+				<%-- <button type="${buttonType}"
 					class="btn-block js-add-to-cart outOfStock"
 					disabled="disabled">
 					<spring:theme code="product.variants.out.of.stock" />
-				</button>
+				</button> --%>
 	</c:if>
 	</ycommerce:testId>    
 <!-- adding to wishlist -->
