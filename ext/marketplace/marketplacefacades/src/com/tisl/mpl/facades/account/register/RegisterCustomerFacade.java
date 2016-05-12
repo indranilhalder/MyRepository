@@ -40,12 +40,4 @@ public interface RegisterCustomerFacade
 	 */
 	boolean checkUniquenessOfEmail(ExtRegisterData data);
 
-	/**
-	 * @param data
-	 * @param isMobile
-	 * @param timestamp
-	 * @param signature
-	 * @return
-	 */
-	ExtRegisterData registerSocialforMobile(ExtRegisterData data, boolean isMobile, String timestamp, String signature);
 }
