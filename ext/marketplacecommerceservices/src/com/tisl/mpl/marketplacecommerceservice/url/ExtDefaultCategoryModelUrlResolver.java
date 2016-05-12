@@ -15,6 +15,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
@@ -44,17 +45,18 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 			url = url.replace("{category-code}", categoryCode); //categoryCode code changed to direct source.getCode()
 		}
 		//TISPRO-348
-		if (url.contains("{category-path}") && StringUtils.isNotEmpty(categoryCode) && categoryCode.startsWith("MBH"))
+		if (url.contains(MarketplacecommerceservicesConstants.CATEGORY_PATH) && StringUtils.isNotEmpty(categoryCode)
+				&& categoryCode.startsWith("MBH"))
 		{
 			final String categoryPath = buildPathStringForBrands(getCategoryPath(source));
 
-			url = url.replace("{category-path}", categoryPath);
+			url = url.replace(MarketplacecommerceservicesConstants.CATEGORY_PATH, categoryPath);
 		}
-		else if (url.contains("{category-path}"))
+		else if (url.contains(MarketplacecommerceservicesConstants.CATEGORY_PATH))
 		{
 			final String categoryPath = buildPathString(getCategoryPath(source));
 
-			url = url.replace("{category-path}", categoryPath);
+			url = url.replace(MarketplacecommerceservicesConstants.CATEGORY_PATH, categoryPath);
 		}
 
 		//		if (url.contains("{category-code}"))

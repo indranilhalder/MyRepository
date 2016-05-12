@@ -1512,6 +1512,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String DELIVERY_STARTTIME = "startTime".intern();
 	public static final String DELIVERY_ENDTIME = "endTime".intern();
+	public static final String CATEGORY_PATH = "{category-path}".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{
