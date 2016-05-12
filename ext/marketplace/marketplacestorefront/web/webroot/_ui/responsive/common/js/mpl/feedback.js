@@ -1,4 +1,3 @@
-
 /*----------Start of  validate email in feedback-----------*/
 	function validateEmail()
     { 	 var x = document.getElementById("emailField");
@@ -895,8 +894,26 @@ $(document).ready(function(){
 			  var url = $(this).attr("src");
 			  $(this).attr("src",url+"?wmode=transparent");
 		  });
-	
-	
+		  }
+	  if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
+		  $("#js-site-search-input").attr("readonly","readonly");
+		  $("#mailtext").attr("readonly","readonly");
+			$('#js-site-search-input').on( 'click', function() {
+			    $(this).removeAttr('readonly').focus().select();
+			});
+			
+			$('#js-site-search-input').on( 'blur', function() {
+			    $( this ).prop( 'readonly', 'readonly' );
+			});
+			$('#mailtext').on( 'click', function() {
+				$(this).removeAttr('readonly').focus().select();
+			});
+			
+			$('#mailtext').on( 'blur', function() {
+				$( this ).prop( 'readonly', 'readonly' );
+			});
+			
+		  
 	  }
 	  
 	 /*---END  of function for Internet Explorer video z-index overlapping ends----*/
@@ -1303,6 +1320,9 @@ $(document).ready(function(){
 		if ('ontouchstart' in window) {
 			$('body').addClass("touchDevice");
 	 		$("header .content nav > ul > li > ul > li > .toggle a").click(function(){
+	 			$(this).attr("href","#");
+	 		});
+	 		$("header.brand-header .content .bottom nav>ul>li>ul>li.level1>div.toggle>a").click(function(){
 	 			$(this).attr("href","#");
 	 		});
 			}

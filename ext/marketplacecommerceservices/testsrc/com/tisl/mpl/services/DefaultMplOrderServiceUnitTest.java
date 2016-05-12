@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.ReturnReasonModel;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
@@ -69,7 +70,8 @@ public class DefaultMplOrderServiceUnitTest
 	@Test
 	public void testFetchConsignment()
 	{
-		final String consignmentCode = "1235445";
+		//TISSEC-50
+		final String consignmentCode = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter consignment code
 		final ConsignmentModel consignmentModel = new ConsignmentModel();
 		Mockito.when(mplOrderDao.fetchConsignment(consignmentCode)).thenReturn(consignmentModel);
 		LOG.info("Method : testFetchConsignment >>>>>>>");

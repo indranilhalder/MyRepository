@@ -99,10 +99,13 @@ public class BuyAandBPercentageDiscountTest extends AbstractPromotionTest
 	{
 		MockitoAnnotations.initMocks(this);
 		final BuyAandBPrecentageDiscount buyAandBPrecentageDiscount = new BuyAandBPrecentageDiscount();
-		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
+
+		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("", "");//TODO : Please enter catalogue name,Please enter version
 		catalogVersionService.addSessionCatalogVersion(version);
-		product1 = productService.getProductForCode(version, "mplProductCatalog-23191");
-		product2 = productService.getProductForCode(version, "mplProductCatalog-149243");
+
+
+		//TISSEC-50
+		product2 = productService.getProductForCode(version, "");//TODO : Please enter product2
 
 		final Product p = new Product();
 		p.setCode(product1.getCode());
@@ -127,7 +130,8 @@ public class BuyAandBPercentageDiscountTest extends AbstractPromotionTest
 
 		final UserModel user = userService.getUserForUID("demo");
 		userService.setCurrentUser(user);
-		final CurrencyModel currency = commonI18NService.getCurrency("EUR");
+
+		final CurrencyModel currency = commonI18NService.getCurrency("");//TODO : Please enter currency
 		commonI18NService.setCurrentCurrency(currency);
 	}
 
@@ -180,7 +184,8 @@ public class BuyAandBPercentageDiscountTest extends AbstractPromotionTest
 		assertEquals("before updatePromotions(ProductPercentageDiscountPromotion)", FIRST_PRODUCT_NO_PROMO, cart.getTotalPrice()
 				.doubleValue(), 0.01);
 
-		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("mplPromoGrp");
+
+		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("");//TODO : Please enter promotion grp
 		final Collection<PromotionGroupModel> promotionGroups = new ArrayList<PromotionGroupModel>();
 		promotionGroups.add(promotionGroup);
 		promotionsService.updatePromotions(promotionGroups, cart, false, AutoApplyMode.APPLY_ALL, AutoApplyMode.APPLY_ALL,
