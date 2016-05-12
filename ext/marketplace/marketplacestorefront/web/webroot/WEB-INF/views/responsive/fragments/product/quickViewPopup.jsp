@@ -450,6 +450,14 @@ tr.d0 td {
 	 //return false;
 	  }	 
  
+ var selectSizeVal = '${selectedSize}';
+ if(selectSizeVal=="")
+ {
+ 	$(".out_of_stock").css("display","none");
+ 	$(".outOfStock").css("display","none");
+ 	$(".tempAddToCartQuickView").css("display","block");
+ } 
+ 
  $('a.wishlist#wishlist_quick').popover({ 
 	    html : true,
 	    content: function() {
@@ -808,6 +816,11 @@ display:none;
 					disabled="disabled">
 					<spring:theme code="product.variants.out.of.stock" />
 				</button> --%>
+				
+			<button id="addToCartButton" type="${buttonType}"
+												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
+												<spring:theme code="basket.add.to.basket" />
+											</button>
 			</c:when>
 			<c:otherwise>
 			<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
@@ -870,11 +883,11 @@ display:none;
 				<font color="red"><spring:theme code="product.product.outOfStock" /></font>
 				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick('${buyboxUssid}');scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			</span>
-				<button type="${buttonType}"
+				<%-- <button type="${buttonType}"
 					class="btn-block js-add-to-cart outOfStock"
 					disabled="disabled">
 					<spring:theme code="product.variants.out.of.stock" />
-				</button>
+				</button> --%>
 	</c:if>
 	</ycommerce:testId>    
 <!-- adding to wishlist -->
@@ -958,7 +971,7 @@ display:none;
 						</table>
 
 						 <input type="hidden" name="hidWishlist" id="hidWishlist_quick">
-						<span id="addedMessage_quick" style="display:none;color:blue"></span>
+						<span id="addedMessage_quick" style="display:none;color:#60A119"></span>
 						
 						<button type='button' onclick="addToWishlist_quick()" name='saveToWishlist' id='saveToWishlist' class="savetowishlistbutton"><spring:theme code="product.wishlistBt"/></button>
 					</div>
