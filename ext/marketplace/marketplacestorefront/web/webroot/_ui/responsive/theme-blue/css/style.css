@@ -10134,7 +10134,7 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-image-container .image-list img,
 .product-info .product-image-container .main-image>img {
-    width: 100%;
+    width: auto;
     height: auto;
     opacity: 1;
     z-index: 1;
@@ -35112,12 +35112,11 @@ main {
 
 .thumb {
 	position: relative;
-	width: 100%;
+	width: auto;
 	display:inline-block;
 	border: 1px solid transparent;
 	margin-bottom:2px;
-	padding: 1px 0;
-	 -webkit-transition: border-color 0.15s;
+	-webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;
     transition: border-color 0.15s;
 }
