@@ -519,7 +519,7 @@ input:focus {
       font-size: 16px;
       margin: -1px;
       background-color: transparent;
-      padding-right:15px; }
+      padding-right:20px; }
       .select-view .select-list > .selected:after {
         position: absolute;
         top: 0px;
@@ -2528,7 +2528,8 @@ h2 {
     }
     header > .content .bottom .brand-logo {
       float: left;
-      margin-bottom: 5px; }
+      margin-bottom: 5px;
+      max-width: 50%; }
       header > .content .bottom .brand-logo img {
         max-height: 40px;
 		 margin-top: 10px;}
@@ -4374,11 +4375,7 @@ text-transform: uppercase;
 	float: left;		
 	z-index: 1;		
 }		
-@media ( max-width : 650px) {		
-	.feature-collections ul.collections li.chef.sub .video-wrapper {		
-		width: calc(50% - 10px);		
-	}		
-}		
+		
 .trending {
   text-align: center; }
   .trending h1 {
@@ -10419,6 +10416,7 @@ body .account .right-account .order-history .pagination li{
     -moz-box-shadow: -3px 4px 5px 0px rgba(203,203,203,1);
     box-shadow: -3px 4px 5px 0px rgba(203,203,203,1);
     padding: 20px 0;
+    word-break: break-word;
 }
 .promo-block select {
     font-weight: 600;
@@ -19387,6 +19385,7 @@ header.brand-header .content .bottom nav {
   margin-top: 10px;
   padding-left:0px;
   margin-left:0px;
+  width: 50%;
 }
 header.brand-header .content .bottom nav > ul > li {
   float: right;
@@ -25225,8 +25224,8 @@ font-size: 18px;
     padding-bottom: 20px;
  	margin-top: 0px; 
     font-weight: 500;
-    width:200%;
-    max-width: 200%;
+    width:100%;
+    max-width: 100%;
     word-break:break-word;
     padding-top:20px;
 }
@@ -26851,9 +26850,21 @@ top: 14px;
 		margin-top:0;
 	}
 	.feature-collections ul.collections li.chef.sub .simple-banner-component h3 + a img.image{
-	width:95% !important;
+	width: auto !important;
+    margin: 0px auto;
+    max-width: 100%;
+    float: none;
 	}
 
+}
+@media ( max-width : 650px) {		
+	.feature-collections ul.collections li.chef.sub .video-wrapper {		
+		width: 100%;
+		padding-top:15px;		
+	}		
+	.feature-collections ul.collections li.chef.sub .simple-banner-component{
+	width:100%;
+	}
 }
 header .content .right > ul > li.bag + a{
 	position: absolute;

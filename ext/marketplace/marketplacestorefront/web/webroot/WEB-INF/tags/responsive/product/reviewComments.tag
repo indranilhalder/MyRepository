@@ -296,7 +296,8 @@ font-weight: normal;
 	text-decoration: none;
 	height: 40px;
 	line-height: 40px;
-	padding: 0 60px;
+	padding: 0;
+	width:245px;
 }
 #ratingDiv .gig-rating-button:hover {
     background: #cc8600;
