@@ -5437,6 +5437,13 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- End TISPRO-249 -->
+					<!-- TISPRO-318 -->
+					<attribute qualifier="bogoFreeItmCount" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- End TISPRO-318 -->
 				</attributes>
 			</itemtype>
 

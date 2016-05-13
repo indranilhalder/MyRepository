@@ -40,9 +40,12 @@ public class CustomerWebServiceImplTest
 		MockitoAnnotations.initMocks(this);
 		this.customerService = Mockito.mock(MplCustomerWebServiceImpl.class);
 		this.customerCreateWSDTO = Mockito.mock(CustomerCreateWSDTO.class);
-		this.customerCreateWSDTO.setCustCreationFlag("I");
-		this.customerCreateWSDTO.setCustomerID("000-237823-89289");
-		this.customerCreateWSDTO.setEmailID("ryan@tcs.com");
+
+		//TISSEC-50
+		this.customerCreateWSDTO.setCustCreationFlag("");//TODO : Please enter valid CCF
+		this.customerCreateWSDTO.setCustomerID("");//TODO : Please enter valid customer id
+		this.customerCreateWSDTO.setEmailID("");//TODO : Please enter valid email id
+
 
 	}
 
