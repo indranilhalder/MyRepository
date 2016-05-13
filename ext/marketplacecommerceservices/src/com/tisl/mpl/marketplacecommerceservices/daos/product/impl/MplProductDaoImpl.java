@@ -115,4 +115,40 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		return catalogVersionModel;
 	}
 
+	//TISPRD-1631 Changes Start
+	//Get Session Catalog Version
+	private CatalogVersionModel getCatalogVersionSession()
+	{
+		final CatalogVersionModel catalogVersionModel = catalogVersionService
+				.getSessionCatalogVersionForCatalog(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID);
+		return catalogVersionModel;
+	}
+
+
+	@Override
+	public List<ProductModel> findProductsByCodeHero(final String code)
+	{
+		LOG.debug("findProductsByCode: code********** " + code);
+		final CatalogVersionModel catalogVersion = getCatalogVersionSession();
+		final StringBuilder stringBuilder = new StringBuilder(70);
+		stringBuilder.append("SELECT  distinct {p:").append(ProductModel.PK).append("} ");
+		stringBuilder.append("FROM {").append(ProductModel._TYPECODE).append(" AS p ");
+		stringBuilder.append("JOIN ").append(SellerInformationModel._TYPECODE).append(" AS s ");
+		stringBuilder.append("ON {s:").append(SellerInformationModel.PRODUCTSOURCE).append("}={p:").append(ProductModel.PK)
+				.append("} } ");
+		final String inPart = "{p:" + ProductModel.CODE + "} = (?code) AND {p:" + ProductModel.CATALOGVERSION
+				+ "} = ?catalogVersion and  sysdate between {s.startdate} and {s.enddate} ";
+		stringBuilder.append("WHERE ").append(inPart);
+		LOG.debug("findProductsByCode: stringBuilder******* " + stringBuilder);
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
+		query.addQueryParameter("code", code);
+		query.addQueryParameter("catalogVersion", catalogVersion);
+		query.setResultClassList(Collections.singletonList(ProductModel.class));
+		final SearchResult<ProductModel> searchResult = getFlexibleSearchService().search(query);
+		LOG.debug("findProductsByCode: searchResult********** " + searchResult);
+		return searchResult.getResult();
+	}
+
+	//TISPRD-1631 Changes End
+
 }

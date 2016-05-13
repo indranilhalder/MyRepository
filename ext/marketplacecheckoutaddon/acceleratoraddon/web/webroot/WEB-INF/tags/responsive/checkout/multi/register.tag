@@ -66,8 +66,8 @@
 	</div>
 	
 	<div class="exist-account">
-	<span>Already have a TataCLiQ account?  </span>
-	<span><a href="/store/mpl/en/login"> &nbsp;  SignIn here</a></span>
+	<span>Already have a Tata CLiQ account?  </span>
+	<span><a href="/store/mpl/en/login"> &nbsp;  Sign in here</a></span>
 	</div>
 	
 </form:form>

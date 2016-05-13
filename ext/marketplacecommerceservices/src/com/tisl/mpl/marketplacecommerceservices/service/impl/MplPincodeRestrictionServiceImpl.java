@@ -533,36 +533,38 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 	 * @return categoryList
 	 */
 
-	@Deprecated
-	private List<String> getCategoryCodeList(final String listingID)
-	{
+	//Commented to handle SONAR fix - Avoid unused private methods
 
-
-		final List<String> categoryList = new ArrayList<String>();
-
-		try
-		{
-
-
-
-			final ProductModel productModel = productService.getProductForCode(listingID);
-			final List<CategoryModel> categories = defaultPromotionManager.getcategoryData(productModel);
-			for (final CategoryModel c : categories)
-			{
-				categoryList.add(c.getCode());
-			}
-		}
-
-		catch (final Exception e)
-		{
-
-			LOG.error("Exception while retrieving category list", e);
-		}
-		return categoryList;
-
-
-
-	}
+	//	@Deprecated
+	//	private List<String> getCategoryCodeList(final String listingID)
+	//	{
+	//
+	//
+	//		final List<String> categoryList = new ArrayList<String>();
+	//
+	//		try
+	//		{
+	//
+	//
+	//
+	//			final ProductModel productModel = productService.getProductForCode(listingID);
+	//			final List<CategoryModel> categories = defaultPromotionManager.getcategoryData(productModel);
+	//			for (final CategoryModel c : categories)
+	//			{
+	//				categoryList.add(c.getCode());
+	//			}
+	//		}
+	//
+	//		catch (final Exception e)
+	//		{
+	//
+	//			LOG.error("Exception while retrieving category list", e);
+	//		}
+	//		return categoryList;
+	//
+	//
+	//
+	//	}
 
 	/**
 	 * get restricted deliverymodes for a pincode
