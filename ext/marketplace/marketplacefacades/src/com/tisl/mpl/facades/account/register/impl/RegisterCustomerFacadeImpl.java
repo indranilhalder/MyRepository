@@ -56,7 +56,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.service.GigyaService;
 import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.wsdto.GigyaWsDTO;
 
 
 /**
@@ -368,7 +367,6 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 		try
 		{
 			ExtRegisterData data = new ExtRegisterData();
-			GigyaWsDTO gigyaWsDTO = new GigyaWsDTO();
 			validateParameterNotNullStandardMessage(MplConstants.REGISTER_DATA, registerData);
 			Assert.hasText(registerData.getLogin(), MplConstants.ASSERT_LOGIN_MSG);
 			if (extUserService.isEmailUniqueForSite(registerData.getLogin()))
@@ -408,24 +406,10 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					final String gigyaMethod = configurationService.getConfiguration()
 							.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 					LOG.debug("GIGYA METHOD" + gigyaMethod);
-					if (isMobile)
-					{
-						gigyaWsDTO = gigyaservice.notifyGigyaforMobile(newCustomer.getUid(), registerData.getUid(),
-								registerData.getFirstName(), registerData.getLastName(), registerData.getLogin(), gigyaMethod);
 
-						if (null != gigyaWsDTO)
-						{
-							data.setGigyaSessionsForMob(gigyaWsDTO);
-						}
+					gigyaservice.notifyGigya(newCustomer.getUid(), registerData.getUid(), registerData.getFirstName(),
+							registerData.getLastName(), registerData.getLogin(), gigyaMethod);
 
-						LOG.debug("GIGYA ACCESS TOKEN" + gigyaWsDTO.getSessionToken());
-						LOG.debug("GIGYA ACCESS KEY" + gigyaWsDTO.getSessionSecret());
-					}
-					else
-					{
-						gigyaservice.notifyGigya(newCustomer.getUid(), registerData.getUid(), registerData.getFirstName(),
-								registerData.getLastName(), registerData.getLogin(), gigyaMethod);
-					}
 				}
 				catch (final Exception e)
 				{
@@ -460,24 +444,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 						.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
 				LOG.debug("GIGYA METHOD" + gigyaMethod);
 
-				if (isMobile)
-				{
-					gigyaWsDTO = gigyaservice.notifyGigyaforMobile(customerModel.getUid(), registerData.getUid(),
-							registerData.getFirstName(), registerData.getLastName(), registerData.getLogin(), gigyaMethod);
-
-					if (null != gigyaWsDTO)
-					{
-						registerData.setGigyaSessionsForMob(gigyaWsDTO);
-					}
-
-					LOG.debug("GIGYA ACCESS TOKEN" + gigyaWsDTO.getSessionToken());
-					LOG.debug("GIGYA ACCESS KEY" + gigyaWsDTO.getSessionSecret());
-				}
-				else
-				{
-					gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
-							registerData.getLastName(), registerData.getLogin(), gigyaMethod);
-				}
+				gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
+						registerData.getLastName(), registerData.getLogin(), gigyaMethod);
 				return registerData;
 			}
 		}
