@@ -73,6 +73,7 @@ import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
+import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
@@ -136,6 +137,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	@Autowired
 	private MplCheckoutFacade mplCheckoutFacade;
 	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
+	@Autowired
+	private MPLRefundService mplRefundService;
 
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
@@ -143,7 +146,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	@Override
 	public boolean implementCancelOrReturn(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String reasonCode, final String ussid, final String ticketTypeCode, final CustomerData customerData,
-			final String refundType, final boolean isReturn, final SalesApplication salesApplication)
+			String refundType, final boolean isReturn, final SalesApplication salesApplication)
 	{
 
 		LOG.debug("Step 1 :*********************************** isReturn:" + isReturn);
@@ -228,9 +231,23 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				LOG.debug("Step 4:***********************************Ticket is to be created for sub order:"
 						+ subOrderDetails.getCode());
+				//TISPRD-1641
+				final List<PaymentTransactionModel> tranactions = subOrderModel.getPaymentTransactions();
+				if (CollectionUtils.isNotEmpty(tranactions))
+				{
+					final PaymentTransactionEntryModel paymentTransEntry = tranactions.iterator().next().getEntries().iterator()
+							.next();
+					if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
+							&& MarketplacecommerceservicesConstants.CASH_ON_DELIVERY.equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
+					{
+						refundType = "N";
+					}
+				}
 
+				//TISPRD-1641
 				final boolean ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode,
 						refundType, ussid, customerData, subOrderModel);
+
 
 				LOG.debug("Step 4.1:***********************************Ticket creation status for sub order:" + ticketCreationStatus);
 				LOG.debug("Step 5 :*********************************** Refund and OMS call started");
@@ -1885,7 +1902,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 							{
 
 								returnLogRespData.setIsReturnLogisticsAvailable(orderLine.getIsReturnLogisticsAvailable());
-								
+
 								if (orderLine.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
 								{
 									returnLogRespData
@@ -1963,7 +1980,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @param transactionId
 	 * @return List<OrderEntryData>
 	 */
-	private List<AbstractOrderEntryModel> associatedEntries(final OrderModel subOrderDetails, final String transactionId) throws Exception
+	private List<AbstractOrderEntryModel> associatedEntries(final OrderModel subOrderDetails, final String transactionId)
+			throws Exception
 	{
 		final List<AbstractOrderEntryModel> orderEntries = new ArrayList<>();
 
@@ -1974,11 +1992,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		for (final AbstractOrderEntryModel subEntry : subOrderDetails.getEntries())
 		{
 			//Start TISPRO-249
- 			final String parentTransactionId = ((subEntry.getIsBOGOapplied().booleanValue() || subEntry.getGiveAway().booleanValue()) && mplOrderService
- 					.checkIfBuyABGetCApplied(subEntry)) ? subEntry.getBuyABGetcParentTransactionId() : subEntry
- 					.getParentTransactionID();
- 			//End TISPRO-249
-			 
+			final String parentTransactionId = ((subEntry.getIsBOGOapplied().booleanValue() || subEntry.getGiveAway().booleanValue()) && mplOrderService
+					.checkIfBuyABGetCApplied(subEntry)) ? subEntry.getBuyABGetcParentTransactionId() : subEntry
+					.getParentTransactionID();
+			//End TISPRO-249
+
 
 			if (StringUtils.isNotEmpty(parentTransactionId)
 					&& (subEntry.getIsBOGOapplied().booleanValue() || subEntry.getGiveAway().booleanValue())
@@ -2015,9 +2033,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		return orderEntries;
 	}
-	
+
 	@Override
-	public List<OrderEntryData> associatedEntriesData(final OrderModel subOrderDetails, final String transactionId) throws Exception
+	public List<OrderEntryData> associatedEntriesData(final OrderModel subOrderDetails, final String transactionId)
+			throws Exception
 	{
 		final List<OrderEntryData> entryData = new ArrayList<OrderEntryData>();
 		for (final AbstractOrderEntryModel orderEntry : associatedEntries(subOrderDetails, transactionId))
@@ -2056,6 +2075,26 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			cancelProduct.add(orderEntry);
 		}
 		return cancelProduct;
+	}
+
+
+
+	/**
+	 * TISCR-410 : this method picks up the stage in which the order status is currently
+	 *
+	 * @param orderEntryStatus
+	 * @return String
+	 *
+	 */
+	@Override
+	public String getOrderStatusStage(final String orderEntryStatus)
+	{
+		String stage = null;
+		if (StringUtils.isNotEmpty(orderEntryStatus))
+		{
+			stage = getMplRefundService().getOrderStatusStage(orderEntryStatus);
+		}
+		return stage;
 	}
 
 
@@ -2284,5 +2323,24 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	{
 		this.orderEntryConverter = orderEntryConverter;
 	}
+
+	/**
+	 * @return the mplRefundService
+	 */
+	public MPLRefundService getMplRefundService()
+	{
+		return mplRefundService;
+	}
+
+	/**
+	 * @param mplRefundService
+	 *           the mplRefundService to set
+	 */
+	public void setMplRefundService(final MPLRefundService mplRefundService)
+	{
+		this.mplRefundService = mplRefundService;
+	}
+
+
 
 }

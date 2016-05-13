@@ -59,8 +59,13 @@
 					<strong>
 					<fmt:formatDate value="${orderData.created}" pattern="MMMM " var="month" />
 					<fmt:formatDate value="${orderData.created}" pattern=", yyyy " var="year" />
+					<%-- <spring:theme
+							code="text.account.order.orderPlaced" text="Order Placed: "/>&nbsp;${month} ${date} ${year} </strong> --%>
+					<!--TISCR-413-->
 					<spring:theme
-							code="text.account.order.orderPlaced" text="Order Placed: "/>&nbsp;${month} ${date} ${year} </strong>
+							code="text.account.order.orderPlaced.message" text="Expect your shipment: "/>&nbsp;In ${deliveryStartTime} - ${deliveryEndTime}<spring:theme code="mpl.pdp.delivery.posttext" /></strong>
+							
+					<!--TISCR-413 ends -->
 				</p>
 				
 
@@ -94,7 +99,6 @@
 			</div>
 		</div>
 		<!-- END OF TOP COMPONENT -->
-
 		<div class="wrapper">
 
 			<!-- START OF RIGHT BLOCK COMPONENT -->
@@ -193,7 +197,7 @@
 <script type="text/javascript">
 
 $( document ).ready(function() {
-    console.log( "MSD Tracking!" );
+  //  console.log( "MSD Tracking!" );
     var isMSDEnabled =  $("input[name=isMSDEnabled]").val();
     var isApparelExist  = $("input[name=isApparelExist]").val();
     
@@ -226,7 +230,7 @@ $( document ).ready(function() {
 					<c:if test="${not status.last}">,</c:if>
 				</c:forEach> 
 			  ];
-		console.log(orderDataForMSD);
+	//	console.log(orderDataForMSD);
 		try
 		{			 
 		  track(['buy',JSON.stringify(orderDataForMSD)]);		 

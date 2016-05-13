@@ -39,7 +39,7 @@ tr.d0 td {
 		var optionData = "<option value='select' disabled selected>Select</option>";
 		$("#emiTableTHead").hide();
 		$("#emiTableTbody").hide();
-		var requiredUrl = ACC.config.encodedContextPath + "/p" + "/enlistEMIBanks";
+		var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
 		var dataString = 'productVal=' + productVal;
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
@@ -67,7 +67,7 @@ tr.d0 td {
 		var contentData = '';
 		if (selectedBank != "select") {
 			$.ajax({
-				url : ACC.config.encodedContextPath + "/p/getTerms",
+				url : ACC.config.encodedContextPath + "/p-getTerms",
 				data : {
 					'selectedEMIBank' : selectedBank,
 					'productVal' : productVal
@@ -113,7 +113,7 @@ tr.d0 td {
 		
 		var productCode = $("#product_quick").val();
 		var requiredUrl = ACC.config.encodedContextPath + "/p"
-				+ "/viewWishlistsInPDP";
+				+ "-viewWishlistsInPDP";
 
 		var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
 		// for
@@ -243,7 +243,7 @@ tr.d0 td {
 	    	return false;
 	    }
 		var requiredUrl = ACC.config.encodedContextPath + "/p"
-				+ "/addToWishListInPDP";
+				+ "-addToWishListInPDP";
 	    var sizeSelected=true;
 	    if($("#isSizeSelectedQV").val()==''){
 	    	sizeSelected=false;
@@ -273,17 +273,17 @@ tr.d0 td {
 					var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
 					if(isMSDEnabled === 'true')
 					{
-					console.log(isMSDEnabled);
+			//		console.log(isMSDEnabled);
 					var isApparelExist  = $("input[name=isApparelExist]").val();
-					console.log(isApparelExist);				
+			//		console.log(isApparelExist);				
 					var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-					console.log(salesHierarchyCategoryMSD);
+			//		console.log(salesHierarchyCategoryMSD);
 					var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-					console.log(rootCategoryMSD);				
+			//		console.log(rootCategoryMSD);				
 					var productCodeMSD =  $("input[name=productCodeMSD]").val();
-					console.log(productCodeMSD);				
+			//		console.log(productCodeMSD);				
 					var priceformad =  $("input[id=price-for-mad]").val();
-					console.log(priceformad);				
+			//		console.log(priceformad);				
 					
 					if(typeof isMSDEnabled === 'undefined')
 					{
@@ -449,6 +449,14 @@ tr.d0 td {
 		//  alert("Please select size!");
 	 //return false;
 	  }	 
+ 
+ var selectSizeVal = '${selectedSize}';
+ if(selectSizeVal=="")
+ {
+ 	$(".out_of_stock").css("display","none");
+ 	$(".outOfStock").css("display","none");
+ 	$(".tempAddToCartQuickView").css("display","block");
+ } 
  
  $('a.wishlist#wishlist_quick').popover({ 
 	    html : true,
@@ -808,6 +816,11 @@ display:none;
 					disabled="disabled">
 					<spring:theme code="product.variants.out.of.stock" />
 				</button> --%>
+				
+			<button id="addToCartButton" type="${buttonType}"
+												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
+												<spring:theme code="basket.add.to.basket" />
+											</button>
 			</c:when>
 			<c:otherwise>
 			<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
@@ -870,11 +883,11 @@ display:none;
 				<font color="red"><spring:theme code="product.product.outOfStock" /></font>
 				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick('${buyboxUssid}');scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			</span>
-				<button type="${buttonType}"
+				<%-- <button type="${buttonType}"
 					class="btn-block js-add-to-cart outOfStock"
 					disabled="disabled">
 					<spring:theme code="product.variants.out.of.stock" />
-				</button>
+				</button> --%>
 	</c:if>
 	</ycommerce:testId>    
 <!-- adding to wishlist -->
@@ -958,7 +971,7 @@ display:none;
 						</table>
 
 						 <input type="hidden" name="hidWishlist" id="hidWishlist_quick">
-						<span id="addedMessage_quick" style="display:none;color:blue"></span>
+						<span id="addedMessage_quick" style="display:none;color:#60A119"></span>
 						
 						<button type='button' onclick="addToWishlist_quick()" name='saveToWishlist' id='saveToWishlist' class="savetowishlistbutton"><spring:theme code="product.wishlistBt"/></button>
 					</div>
@@ -1078,7 +1091,7 @@ function sendmail_quick(){
 	if(validEmail(email)){
 		//var emailList = email.split(";");
 		$.ajax({
-			url : ACC.config.encodedContextPath + "/p/sendEmail",
+			url : ACC.config.encodedContextPath + "/p-sendEmail",
 			data : dataString,			
 			type : "GET",
 			cache : false,

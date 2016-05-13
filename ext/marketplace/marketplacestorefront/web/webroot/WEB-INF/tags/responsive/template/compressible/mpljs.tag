@@ -4,8 +4,6 @@
 
 <%-- plugins --%>
 <script type="text/javascript"
-	src="${commonResourcePath}/js/mpl/tisl.home.js"></script>
-<script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/enquire.min.js"></script>
 <script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/Imager.min.js"></script>
@@ -149,29 +147,30 @@
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.myrecommendation.js"></script>
 </c:if>	
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.signinflyout.js"></script>
-
-
-
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/tisl.home.js"></script>
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.search.js"></script>
 
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/reviews')}">
     <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.reviewrating.js"></script>
 </c:if> 
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/acc.feedback.js"></script>
 
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" med="all" href="${themeResourcePath}/css/main-ie8.css"/>
+<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/mpl/html5shiv.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/mpl/respond.js"></script>
+<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/mpl/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/mpl/background-size-shim.js"></script>
+<![endif]-->
 
-
-
-
-
-
-
-
-
-
-
-
-
+<!--[if lt IE 10]>
+<script type="text/javascript" src="${commonResourcePath}/js/mpl/jquery.html5-placeholder-shim.js"></script>
+<![endif]-->
 
 <!-- Search feed back End -->
 

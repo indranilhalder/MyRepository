@@ -14,6 +14,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+
 
 public class ExtendedCustomerEmailResolutionServiceTest
 {
@@ -35,8 +37,9 @@ public class ExtendedCustomerEmailResolutionServiceTest
 	@Test
 	public void testEmailValidationForCustomer()
 	{
+		//TISSEC-50
 		final CustomerModel customer = mock(CustomerModel.class);
-		final String email = "priya2@tcs.com";
+		final String email = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter email
 		Mockito.when(customer.getOriginalUid()).thenReturn(email);
 		given(configurationService.getConfiguration()).willReturn(configuration);
 		Mockito.when(configuration.getString(DEFAULT_CUSTOMER_KEY, DEFAULT_CUSTOMER_EMAIL)).thenReturn("Successful");

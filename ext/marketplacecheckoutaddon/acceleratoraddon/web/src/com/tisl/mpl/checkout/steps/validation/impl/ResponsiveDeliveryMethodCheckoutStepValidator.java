@@ -50,11 +50,12 @@ public class ResponsiveDeliveryMethodCheckoutStepValidator extends AbstractCheck
 		 * GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 		 * "checkout.multi.deliveryAddress.notprovided"); return ValidationResults.REDIRECT_TO_DELIVERY_ADDRESS; }
 		 */
-		if (!getCheckoutFacade().hasShippingItems() && getCheckoutFlowFacade().hasPickUpItems())
-		{
-			return ValidationResults.REDIRECT_TO_PAYMENT_METHOD;
-		}
 
+		//Commented bellow code for TISPRDT-137 and TISPRD-696 defects  
+		/*
+		 * if (!getCheckoutFacade().hasShippingItems() && getCheckoutFlowFacade().hasPickUpItems()) { return
+		 * ValidationResults.REDIRECT_TO_PAYMENT_METHOD; }
+		 */
 		return ValidationResults.SUCCESS;
 	}
 

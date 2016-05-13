@@ -1,4 +1,3 @@
-
 /**
  *
  */
@@ -76,8 +75,9 @@ public class ExtDefaultCommerceCartRestorationStrategyTest
 	@Test
 	public void restoreCart() throws CommerceCartRestorationException
 	{
-		cartModel.setCheckUssid("123");
-		cartModel.setCode("987654321");
+		//TISSEC-50
+		cartModel.setCheckUssid("");//TODO : Please enter ussid
+		cartModel.setCode("");//TODO : Please enter code
 		cartModel.setDeliveryCost(Double.valueOf(123));
 		given(parameter.getCart()).willReturn(cartModel);
 		final List modifications = new ArrayList();
@@ -86,7 +86,7 @@ public class ExtDefaultCommerceCartRestorationStrategyTest
 			cartModel.setCalculated(Boolean.FALSE);
 			final PaymentTransactionModel payment = Mockito.mock(PaymentTransactionModel.class);
 			payment.setCode("COD");
-			payment.setPaymentProvider("AXIS BANK");
+			payment.setPaymentProvider("");//TODO : Please enter payment provider
 
 			final List<PaymentTransactionModel> paymentList = new ArrayList<PaymentTransactionModel>();
 			paymentList.add(payment);
@@ -94,7 +94,7 @@ public class ExtDefaultCommerceCartRestorationStrategyTest
 
 			extDefaultCommerceCartRestorationStrategy.clearPaymentTransactionsOnCart(cartModel);
 
-			cartModel.setGuid("guid ");
+			cartModel.setGuid("");//TODO : Please enter guid
 			modelService.save(cartModel);
 			cartService.setSessionCart(cartModel);
 			try
@@ -137,8 +137,8 @@ public class ExtDefaultCommerceCartRestorationStrategyTest
 	protected void rebuildSessionCart() throws CommerceCartModificationException
 	{
 		final CartModel newCart = Mockito.mock(CartModel.class);
-		newCart.setCheckUssid("123");
-		newCart.setCode("987654321");
+		newCart.setCheckUssid("");//TODO : Please enter ussid
+		newCart.setCode("");//TODO : Please enter code
 		newCart.setDeliveryCost(Double.valueOf(123));
 		newCart.setCalculated(Boolean.TRUE);
 		final List modifications = new ArrayList();
@@ -163,28 +163,28 @@ public class ExtDefaultCommerceCartRestorationStrategyTest
 		//final CartModel fromCartModel = new CartModel();
 		final CartModel toCartModel = new CartModel();
 		final List<CommerceCartModification> modifications = new ArrayList<CommerceCartModification>();
-		toCartModel.setCheckUssid("123");
-		toCartModel.setCode("987654321");
+		toCartModel.setCheckUssid("");//TODO : Please enter ussid
+		toCartModel.setCode("");//TODO : Please enter code
 		toCartModel.setDeliveryCost(Double.valueOf(123));
 
 		final CommerceCartParameter newCartParameter = new CommerceCartParameter();
 		parameter.setEnableHooks(true);
 		newCartParameter.setCart(toCartModel);
 		final ProductModel productModel = new ProductModel();
-		productModel.setCode("1234");
+		productModel.setCode("");//TODO : Please enter code
 		productModel.setMrp(Double.valueOf(4563));
-		productModel.setDescription("desc");
+		productModel.setDescription("");//TODO : Please enter description
 		newCartParameter.setProduct(productModel);
 
 		final PointOfServiceModel pointOfService = new PointOfServiceModel();
-		pointOfService.setDescription("DESC");
-		pointOfService.setDisplayName("ABC");
+		pointOfService.setDescription("");//TODO : Please enter description
+		pointOfService.setDisplayName("");//TODO : Please enter display name
 		newCartParameter.setPointOfService(pointOfService);
 		newCartParameter.setQuantity(123);
-		newCartParameter.setUssid("12345678900001");
+		newCartParameter.setUssid("");//TODO : Please enter ussid
 		final UnitModel unitModel = new UnitModel();
-		unitModel.setCode("CODE");
-		unitModel.setName("NAME");
+		unitModel.setCode("");//TODO : Please enter code
+		unitModel.setName("");//TODO : Please enter name
 		newCartParameter.setUnit(unitModel);
 		newCartParameter.setCreateNewEntry(false);
 
@@ -193,4 +193,3 @@ public class ExtDefaultCommerceCartRestorationStrategyTest
 	}
 
 }
-

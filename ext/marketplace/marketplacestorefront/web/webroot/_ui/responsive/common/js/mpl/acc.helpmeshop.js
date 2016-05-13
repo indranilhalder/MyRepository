@@ -107,7 +107,7 @@ var outputdata = [];
 						 if(data[i].name != null)
 							 {
 							 outputdata.push(data[i].name);
-							 console.log(data[i].name);
+				//			 console.log(data[i].name);
 							 }
 				        }
 					 

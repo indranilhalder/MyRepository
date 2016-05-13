@@ -32,8 +32,6 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
-import com.tisl.mpl.core.externaltax.impl.AcceleratorDetermineExternalTaxStrategy;
-import com.tisl.mpl.core.externaltax.mock.MockCalculateExternalTaxesStrategy;
 
 import java.util.Collection;
 
@@ -45,10 +43,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.tisl.mpl.core.externaltax.impl.AcceleratorDetermineExternalTaxStrategy;
+import com.tisl.mpl.core.externaltax.mock.MockCalculateExternalTaxesStrategy;
+
 
 /**
  * Integration test with an mock external tax service.
- * 
+ *
  */
 @IntegrationTest
 public class CheckoutWithExternalTaxesIntegrationTest extends ServicelayerTransactionalTest
@@ -118,13 +119,13 @@ public class CheckoutWithExternalTaxesIntegrationTest extends ServicelayerTransa
 		//set delivery address on cart
 		final AddressModel addressModel = new AddressModel();
 		addressModel.setBillingAddress(Boolean.FALSE);
-		addressModel.setCountry(commonI18NService.getCountry("US"));
-		addressModel.setStreetname("streetName");
-		addressModel.setStreetnumber("streetNumber");
-		addressModel.setPostalcode("postalCode");
-		addressModel.setTown("town");
-		addressModel.setFirstname("firstName");
-		addressModel.setLastname("lastName");
+		addressModel.setCountry(commonI18NService.getCountry(""));//TODO : Please enter country code
+		addressModel.setStreetname("");//TODO : Please enter streetName
+		addressModel.setStreetnumber("");//TODO : Please enter streetNumber
+		addressModel.setPostalcode("");//TODO : Please enter postalCode
+		addressModel.setTown("");//TODO : Please enter town
+		addressModel.setFirstname("");//TODO : Please enter firstName
+		addressModel.setLastname("");//TODO : Please enter lastName
 		addressModel.setOwner(ahertz);
 		modelService.save(addressModel);
 
@@ -154,15 +155,16 @@ public class CheckoutWithExternalTaxesIntegrationTest extends ServicelayerTransa
 		final CommerceCheckoutParameter parameter3 = new CommerceCheckoutParameter();
 		final CreditCardPaymentInfoModel paymentInfo = new CreditCardPaymentInfoModel();
 		paymentInfo.setBillingAddress(addressModel);
-		paymentInfo.setCode("1234");
+		//TISSEC-50
+		paymentInfo.setCode("");//TODO : Please enter code
 		paymentInfo.setOwner(ahertz);
-		paymentInfo.setSubscriptionId("1234");
+		paymentInfo.setSubscriptionId("");//TODO : Please enter subscription id
 		paymentInfo.setType(CreditCardType.VISA);
-		paymentInfo.setValidToMonth("01");
-		paymentInfo.setValidToYear("18");
+		paymentInfo.setValidToMonth("");//TODO : Please enter valid month
+		paymentInfo.setValidToYear("");//TODO : Please enter valid year
 		paymentInfo.setSubscriptionValidated(true);
-		paymentInfo.setCcOwner("owner");
-		paymentInfo.setNumber("4111111111111111");
+		paymentInfo.setCcOwner("");//TODO : Please enter owner
+		paymentInfo.setNumber("");//TODO : Please enter number
 		paymentInfo.setUser(ahertz);
 		parameter3.setPaymentInfo(paymentInfo);
 		parameter3.setCart(cart);

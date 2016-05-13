@@ -95,6 +95,22 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 					}
 
 				}
+				if (null != source.getConvenienceCharges())
+				{
+					target.setConvenienceChargeForCOD(createPrice(source, source.getConvenienceCharges()));
+				}
+				else
+				{
+					target.setConvenienceChargeForCOD(createPrice(source, Double.valueOf(0.0d)));
+				}
+				if (null != source.getTotalPriceWithConv())
+				{
+					target.setTotalPriceWithConvCharge(createPrice(source, source.getTotalPriceWithConv()));
+				}
+				else
+				{
+					target.setTotalPriceWithConvCharge(createPrice(source, Double.valueOf(0.0d)));
+				}
 			}
 			else
 			{
@@ -103,7 +119,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
-			LOG.error("Exception in DefaultExtendedCartPopulator due to " + ex);
+			LOG.error("Exception in DefaultExtendedCartPopulator due to ", ex);
 		}
 	}
 
