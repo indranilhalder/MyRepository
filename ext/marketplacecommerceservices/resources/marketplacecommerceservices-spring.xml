@@ -1651,6 +1651,18 @@
 
 	</bean>
 	<!-- UserGroupSaveInterceptor ends -->	
+	
+	<!-- TISPRD-1631 Changes Start (Extending Product Service) -->
+	
+<alias alias="productService" name="defaultProductService"/>
+	<bean id="defaultProductService" class="com.tisl.mpl.marketplacecommerceservices.services.product.impl.MplProductServiceImpl"
+			parent="abstractBusinessService">
+		<property name="productDao" ref="productDao"/>
+		<property name="unitDao" ref="unitDao"/>
+		<property name="priceService" ref="priceService"/>
+	</bean>
+	
+	<!-- TISPRD-1631 Changes End (Extending Product Service) -->
 
 
 </beans>
