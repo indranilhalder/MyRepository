@@ -222,7 +222,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 						subbranddata.setSub_brand_type(SELLER);
 						subbranddata.setSub_brand_url(subrand.getSubBrandUrl().substring(3));
 					}
-					else if (subrand.getSubBrandUrl().contains("/c/"))
+					else if (subrand.getSubBrandUrl().contains("/c/") || subrand.getSubBrandUrl().contains("/c-"))
 					{
 						subbranddata.setSub_brand_type(BRAND);
 						subbranddata.setSub_brand_url(subrand.getSubBrandUrl().substring(3));
