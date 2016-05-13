@@ -54,7 +54,7 @@ $(document).ready(function () {
 	        		else{
 	        			/* empty , Seller undefined */
 	        			/* Specified seller is not available in SSH1 category hierarchy */
-	        		}
+	        		}	
         		    
 			 	},
 				 error : function(secondLevelCategoryData){
@@ -71,6 +71,11 @@ $(document).ready(function () {
 	        			      p.addClass('active');
 	        			    }
 	        	});
+	    	if ('ontouchstart' in window) {
+		 		$("body").on("click","header.brand-header .content .bottom nav>ul>li>ul>li.level1>div.toggle>a", function(){
+		 			$(this).attr("href","#");
+		 		});
+				}
 	
 	});
 	</script>	

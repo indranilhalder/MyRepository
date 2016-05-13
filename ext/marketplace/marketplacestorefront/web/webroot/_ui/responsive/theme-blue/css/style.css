@@ -28985,7 +28985,7 @@ body.touchDevice header .content nav > ul > li > ul > li > ul.words{
 }
 body.touchDevice header .content nav > ul > li > ul > li > ul > li > a.view_dept{
 position: absolute;
-    top: 0;
+    top: 5px;
 	font-size:18px;
 	font-weight:600;
 	display:block;
