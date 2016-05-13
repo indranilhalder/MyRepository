@@ -56,7 +56,7 @@
 					</p>
 					</div>					
 				<input type="checkbox" id="check_MyRewards" name="check_MyRewards" value="true"/>
-				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" target="_blank" class="tata-rewards">My Tata Rewards Program</a> (You can opt-out anytime) By opting in I agree to <a href="${tncmytatarewards }" target="_blank"> T&C </a> and <a href="${tncmytatarewards }" target="_blank"> privacy policy</a> of My Tata Rewards program</label>
+				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" target="_blank" class="tata-rewards">Tata Treats Program</a> (You can opt-out anytime) By opting in I agree to <a href="${tncmytatarewards }" target="_blank"> T&C </a> and <a href="${tncmytatarewards }" target="_blank"> privacy policy</a> of Tata Treats program</label>
 		</div> 
 	
 	<div class="form-actions clearfix">
