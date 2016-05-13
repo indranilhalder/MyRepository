@@ -35,6 +35,7 @@
 	
 	
 	<c:set var="host" value="${header.host}"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('update_Email_url')" var="emailURL"/>
 	<c:set var="pageURL" value="${emailURL}"/>
 	<c:set var="protocolString" value="${fn:split(pageURL, '://')}"/>
 	<c:set var="baseURL" value="${protocolString[0]}://${host}"/>
@@ -72,6 +73,8 @@
 	    </c:when>
 	</c:choose>
 	
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.handle')" var="twitterHandle"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
 	<!-- Markup for Google+ -->
 	<meta itemprop="name" content="${metaTitle}">
 	<meta itemprop="description" content="${metaDescription}">
