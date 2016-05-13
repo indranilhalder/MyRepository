@@ -202,9 +202,9 @@ $("document").ready(function(){
         					dataApparel = data[0];
             				dataElectronics = data[1];
             				//added 
-            				console.log("Directly navigated to electronic");
+            			//	console.log("Directly navigated to electronic");
             				if($.isEmptyObject(dataApparel)){
-            					console.log("in empty apparel block");
+            			//		console.log("in empty apparel block");
             					var htmlData = "";
             					var index = 0;
             		    		$.each(dataElectronics , function( key, value ) {
@@ -219,10 +219,10 @@ $("document").ready(function(){
             					$("#electronicObjects").html(htmlData);
             					$("fieldset.objects-electronics").addClass("active");
             					//added
-            					console.log("Directly navigated to apparel");
+            			//		console.log("Directly navigated to apparel");
             				}else if($.isEmptyObject(dataElectronics)){
             					
-            					console.log("Empty electronics");
+            			//		console.log("Empty electronics");
             					$.each(dataApparel , function( key, value ) {
                 					index++;
                 					htmlData = htmlData+'<input type="checkbox" name="subBrand"'+'id="question-3-'
@@ -264,7 +264,7 @@ $("document").ready(function(){
    			});
     	
     	$("#apparelFinal").click(function(){
-    		console.log("Create profile with apparel only");
+    	//	console.log("Create profile with apparel only");
     		if($.isEmptyObject(dataElectronics)){
     			var selectedBrandCat = [];
         		$("input[name=subBrand]:checked").each(function() {

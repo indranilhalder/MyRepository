@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -41,12 +43,9 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           type
-	 * @param :
-	 *           allAttributes
+	 * @param : ctx
+	 * @param : type
+	 * @param : allAttributes
 	 * @return : item
 	 */
 	@Override
@@ -63,8 +62,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 	/**
 	 * @Description : Order Threshold Percentage or Amount Discount Cashback
-	 * @param :
-	 *           SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
+	 * @param : SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -106,7 +104,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 							MarketplacecommerceservicesConstants.THRESHOLD_TOTALS);
 					if (threshold != null)
 					{
-						final double orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order);
+						final double orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(arg0, order);
 
 						if (orderSubtotalAfterDiscounts >= threshold.doubleValue())
 						{
@@ -146,8 +144,10 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 								setAdjustedDiscounts((percentageDiscount * orderSubtotalAfterDiscounts) / 100);
 								final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
 										arg1.getOrder(), 1.0F);
-								result.addAction(arg0, getDefaultPromotionsManager().createCustomPromotionOrderAdjustTotalAction(arg0,
-										-getAdjustedDiscounts()));
+								result.addAction(
+										arg0,
+										getDefaultPromotionsManager().createCustomPromotionOrderAdjustTotalAction(arg0,
+												-getAdjustedDiscounts()));
 								promotionResults.add(result);
 							}
 						}
@@ -155,15 +155,12 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						{
 							if (LOG.isDebugEnabled())
 							{
-								LOG.debug(
-										"(" + getPK() + ")"
-												+ Localization
-														.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg1")
-												+ orderSubtotalAfterDiscounts
-												+ Localization.getLocalizedString(
-														"promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg2")
-												+ threshold + Localization
-														.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg3"));
+								LOG.debug("(" + getPK() + ")"
+										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg1")
+										+ orderSubtotalAfterDiscounts
+										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg2")
+										+ threshold
+										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg3"));
 							}
 							final float certainty = (float) (orderSubtotalAfterDiscounts / threshold.doubleValue());
 							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
@@ -193,12 +190,9 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	/**
 	 * This method is used for Localization Purpose
 	 *
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           result
-	 * @param :
-	 *           locale
+	 * @param : ctx
+	 * @param : result
+	 * @param : locale
 	 */
 	@Override
 	public String getResultDescription(final SessionContext ctx, final PromotionResult result, final Locale locale)
@@ -325,6 +319,56 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	protected MplPromotionHelper getMplPromotionHelper()
 	{
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
+	}
+
+	/**
+	 * The Method returns the total entry price post product discount Added for TISPRO-318
+	 *
+	 * @param arg0
+	 * @param order
+	 * @return orderSubtotalAfterDiscounts
+	 */
+	private double getSubtotalAfterDiscount(final SessionContext arg0, final AbstractOrder order)
+	{
+		double orderSubtotalAfterDiscounts = 0.0D;
+		double totalPrice = 0.0D;
+
+		try
+		{
+			if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
+			{
+				for (final AbstractOrderEntry entry : order.getEntries())
+				{
+					if (getMplPromotionHelper().validateEntryForFreebie(entry))
+					{
+						totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
+					}
+					else if ((null != entry.getAttribute(arg0, "isBOGOapplied")
+							&& BooleanUtils.toBoolean(entry.getAttribute(arg0, "isBOGOapplied").toString()) && null != entry
+								.getAttribute(arg0, "bogoFreeItmCount")))
+					{
+						final double freecount = Double.parseDouble(entry.getAttribute(arg0, "bogoFreeItmCount").toString());
+						totalPrice = totalPrice + (freecount * 0.01);
+					}
+				}
+
+				if (totalPrice != 0.0D)
+				{
+					orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order) - totalPrice;
+				}
+				else
+				{
+					orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order);
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error(exception.getMessage());
+			orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order);
+		}
+
+		return orderSubtotalAfterDiscounts;
 	}
 
 }

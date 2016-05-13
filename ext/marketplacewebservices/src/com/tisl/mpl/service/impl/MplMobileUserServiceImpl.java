@@ -17,7 +17,6 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -105,7 +104,6 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	private ExtendedUserService extUserService;
 	@Autowired
 	MplUserHelper mplUserHelper;
-	//	private static final String n = "\n";
 	private static final Logger LOG = Logger.getLogger(MplMobileUserServiceImpl.class);
 
 	private String gigyaUID;
@@ -319,10 +317,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws EtailNonBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	//	private MplUserResultWsDto registerNewUserSocial(final String login, final String socialMediaType)
-	//			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
-	private MplUserResultWsDto registerNewUserSocial(final String login, final String socialMediaType, final String uid)
-			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions, UnsupportedEncodingException
+	private MplUserResultWsDto registerNewUserSocial(final String login, final String socialMediaType)
+			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
 	{
 		final MplUserResultWsDto result = new MplUserResultWsDto();
 		boolean successFlag = false;
@@ -330,12 +326,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		ExtRegisterData registration = new ExtRegisterData();
 		registration.setLogin(login);
 		registration.setSocialMediaType(socialMediaType);
-		if (StringUtils.isNotEmpty(uid))
-		{
-			final String decodedUid = java.net.URLDecoder.decode(uid, "UTF-8");
-			setGigyaUID(decodedUid);
-		}
-		registration.setUid(getGigyaUID());
+
 		LOG.debug("*************** Mobile web service social media registration ***********" + login + socialMediaType);
 		try
 		{
@@ -364,18 +355,6 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				{
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9007);
 				}
-				if (null != registration.getGigyaSessionsForMob() && null != registration.getGigyaSessionsForMob().getSessionSecret())
-				{
-					result.setSessionSecret(registration.getGigyaSessionsForMob().getSessionSecret());
-				}
-				if (null != registration.getGigyaSessionsForMob() && null != registration.getGigyaSessionsForMob().getSessionToken())
-				{
-					result.setSessionToken(registration.getGigyaSessionsForMob().getSessionToken());
-				}
-				LOG.debug("****************** SESSSSION KEY ****************** "
-						+ registration.getGigyaSessionsForMob().getSessionSecret());
-				LOG.debug(" ******************  SESSSSION TOKEN ****************** "
-						+ registration.getGigyaSessionsForMob().getSessionToken());
 			}
 		}
 
@@ -493,660 +472,6 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9015);
 		}
 	}
-
-	/**
-	 * login via FB
-	 *
-	 * @param login
-	 * @return MplUserResultWsDto
-	 */
-	@Override
-	//public MplUserResultWsDto loginSocialFbUser(final String accessToken, final String login)
-	//	public MplUserResultWsDto loginSocialFbUser(final String login, final String uid) throws UnsupportedEncodingException
-	public MplUserResultWsDto loginSocialFbUser(final String login, final String uid, final String timestamp,
-			final String signature) throws UnsupportedEncodingException
-	{
-		final MplUserResultWsDto output = new MplUserResultWsDto();
-		String result = null;
-		UserDetails userDetails = null;
-		boolean successflag = false;
-
-		ExtRegisterData data = new ExtRegisterData();
-		data.setLogin(login);
-		data.setSocialMediaType(MarketplacewebservicesConstants.FACEBOOK);
-
-		if (StringUtils.isNotEmpty(uid))
-		{
-			final String decodedUid = java.net.URLDecoder.decode(uid, "UTF-8");
-			setGigyaUID(decodedUid);
-		}
-		data.setUid(getGigyaUID());
-
-		final MplUserResultWsDto validatedResult = mplUserHelper.validateEmail(login);
-		if (null != validatedResult.getStatus()
-				&& validatedResult.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
-		{
-			successflag = true;
-		}
-		try
-		{
-			//boolean acesstokenforemail = false;
-			//	acesstokenforemail = validateFacebookTokenwithEmailId(accessToken, login);
-			//	if (!acesstokenforemail
-			//			&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_EMAIL_TOKEN_ERROR))
-			//	{ //Throw error if social media token does not match with the emailId
-			//		throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9019);
-			//	}
-			//	else
-			//	{
-			//Check if the user exists in the system with login
-			//				userDetails = retrieveUserforMarketplace(login);
-			//				LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + userDetails);
-			//				result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
-			//				if (null != login && null != getCustomerId(login))
-			//				{
-			//					output.setCustomerId(getCustomerId(login));
-			//				}
-			//			}
-
-			final boolean isMobile = true;
-			//			data = registerCustomerFacade.registerSocial(data, isMobile);
-			data = registerCustomerFacade.registerSocialforMobile(data, isMobile, timestamp, signature);
-
-			if (null != data)
-			{
-				userDetails = retrieveUserforMarketplace(login);
-				LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + userDetails);
-			}
-			result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
-			if (null != login && null != getCustomerId(login))
-			{
-				output.setCustomerId(getCustomerId(login));
-			}
-			if (null != data && null != data.getGigyaSessionsForMob() && null != data.getGigyaSessionsForMob().getSessionSecret())
-			{
-				output.setSessionSecret(data.getGigyaSessionsForMob().getSessionSecret());
-			}
-			if (null != data && null != data.getGigyaSessionsForMob() && null != data.getGigyaSessionsForMob().getSessionToken())
-			{
-				output.setSessionToken(data.getGigyaSessionsForMob().getSessionToken());
-			}
-
-			LOG.debug("****************** SESSSSION KEY AT loginSocialFbUser ****************** "
-					+ data.getGigyaSessionsForMob().getSessionSecret());
-			LOG.debug(" ******************  SESSSSION TOKEN loginSocialFbUser ****************** "
-					+ data.getGigyaSessionsForMob().getSessionToken());
-		}
-		catch (final UsernameNotFoundException notFound)
-		{ //User name not found
-			throw new EtailNonBusinessExceptions(notFound, MarketplacecommerceservicesConstants.B9001);
-		}
-		catch (final DataAccessException repositoryProblem)
-		{
-			throw new EtailNonBusinessExceptions(repositoryProblem, MarketplacecommerceservicesConstants.B9000);
-		}
-
-		catch (final EtailBusinessExceptions businessException)
-		{
-
-			throw businessException;
-		}
-		catch (final AuthenticationException authException)
-		{
-			throw new EtailNonBusinessExceptions(authException, MarketplacecommerceservicesConstants.B9006);
-		}
-
-		catch (final EtailNonBusinessExceptions e)
-		{
-			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else
-			{
-				throw e;
-			}
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
-		}
-
-		//Return success flag
-		if (successflag)
-		{
-			result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
-		}
-		if (null != result)
-		{
-			output.setStatus(result);
-		}
-		return output;
-	}
-
-	/**
-	 * Social login--- Google Plus.. input is only login since password was not sent back to Mobile
-	 *
-	 * @param login
-	 * @return MplUserResultWsDto
-	 */
-	@Override
-	//	public MplUserResultWsDto loginSocialGoogleUser(final String accessToken, final String login, final String userId)
-	//public final MplUserResultWsDto loginSocialGoogleUser(final String login, final String uid) throws UnsupportedEncodingException
-	public final MplUserResultWsDto loginSocialGoogleUser(final String login, final String uid, final String timestamp,
-			final String signature) throws UnsupportedEncodingException
-	{
-		final MplUserResultWsDto output = new MplUserResultWsDto();
-		String result = null;
-		UserDetails userDetails = null;
-		boolean successflag = false;
-		ExtRegisterData data = new ExtRegisterData();
-
-		data.setLogin(login);
-		data.setSocialMediaType(MarketplacewebservicesConstants.GOOGLEPLUS);
-		if (StringUtils.isNotEmpty(uid))
-		{
-			final String decodedUid = java.net.URLDecoder.decode(uid, "UTF-8");
-			setGigyaUID(decodedUid);
-		}
-		data.setUid(getGigyaUID());
-
-		final MplUserResultWsDto validatedResult = mplUserHelper.validateEmail(login);
-		if (null != validatedResult.getStatus()
-				&& validatedResult.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
-		{
-			successflag = true;
-		}
-		try
-		{
-			//			boolean acesstokenforemail = false;
-			//			acesstokenforemail = validateGoogleTokenwithEmailId(accessToken, userId);
-			//			if (!acesstokenforemail
-			//					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_EMAIL_TOKEN_ERROR))
-			//			{ //Throw error if social media token does not match with the emailId
-			//				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9019);
-			//			}
-			//			else
-			//			{
-			//Check if the user exists in the system with login
-			userDetails = retrieveUserforMarketplace(login);
-			LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + userDetails);
-			successflag = true;
-
-			final boolean isMobile = true;
-			//				if (null != login && null != getCustomerId(login))
-			//				{
-			//					output.setCustomerId(getCustomerId(login));
-			//				}
-
-			//			data = registerCustomerFacade.registerSocial(data, isMobile);
-
-			data = registerCustomerFacade.registerSocialforMobile(data, isMobile, timestamp, signature);
-			if (null != data)
-			{
-				userDetails = retrieveUserforMarketplace(login);
-				LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + userDetails);
-			}
-			if (null != data && null != data.getGigyaSessionsForMob() && null != data.getGigyaSessionsForMob().getSessionSecret())
-			{
-				output.setSessionSecret(data.getGigyaSessionsForMob().getSessionSecret());
-			}
-			if (null != data && null != data.getGigyaSessionsForMob() && null != data.getGigyaSessionsForMob().getSessionToken())
-			{
-				output.setSessionToken(data.getGigyaSessionsForMob().getSessionToken());
-			}
-
-			if (null != login && null != getCustomerId(login))
-			{
-				output.setCustomerId(getCustomerId(login));
-			}
-
-			LOG.debug("****************** SESSSSION KEY  AT loginSocialGoogleUser ****************** "
-					+ data.getGigyaSessionsForMob().getSessionSecret());
-			LOG.debug(" ******************  SESSSSION TOKEN AT loginSocialGoogleUser ****************** "
-					+ data.getGigyaSessionsForMob().getSessionToken());
-		}
-		catch (final UsernameNotFoundException notFound)
-		{ //User name not found
-			throw new EtailNonBusinessExceptions(notFound, MarketplacecommerceservicesConstants.B9001);
-		}
-		catch (final DataAccessException repositoryProblem)
-		{
-			throw new EtailNonBusinessExceptions(repositoryProblem, MarketplacecommerceservicesConstants.B9000);
-		}
-		catch (final EtailBusinessExceptions businessException)
-		{
-			//User is null
-			throw businessException;
-		}
-
-		catch (final AuthenticationException authException)
-		{
-			throw new EtailNonBusinessExceptions(authException, MarketplacecommerceservicesConstants.B9006);
-		}
-
-		catch (final EtailNonBusinessExceptions e)
-		{
-			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else
-			{
-				throw e;
-			}
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
-		}
-		//Return success flag
-		if (successflag)
-		{
-			result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
-		}
-		if (null != result)
-		{
-			output.setStatus(result);
-		}
-		return output;
-	}
-
-	/**
-	 * Checking the access token for the given email id
-	 *
-	 * @param accessToken
-	 * @param emailId
-	 * @return boolean
-	 * @throws EtailNonBusinessExceptions
-	 * @throws EtailNonBusinessExceptions
-	 */
-	//	private boolean validateFacebookTokenwithEmailId(final String accessToken, final String emailId)
-	//			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
-	//	{
-	//		String fbemail = null;
-	//		String graph = null;
-	//		graph = getFBGraph(accessToken);
-	//		fbemail = getGraphData(graph);
-	//		boolean acesstokenforemail = false;
-	//		//Comparing the entered emailId by mobile and emailId parsed for graph of the token
-	//		if (!StringUtils.isEmpty(fbemail) && !StringUtils.isEmpty(graph) && StringUtils.equalsIgnoreCase(emailId, fbemail))
-	//		{
-	//			acesstokenforemail = true;
-	//		}
-	//
-	//		return acesstokenforemail;
-	//	}
-
-	/**
-	 * Validate access token then invoke social Registration -- Facebook
-	 *
-	 * @param emailId
-	 * @return MplUserResultWsDto
-	 */
-	@Override
-	//	public MplUserResultWsDto socialFbRegistration(final String accessToken, final String emailId)
-	public MplUserResultWsDto socialFbRegistration(final String emailId, final String uid)
-	{
-		boolean successflag = false;
-		MplUserResultWsDto socialRegister = new MplUserResultWsDto();
-		final MplUserResultWsDto validatedResult = mplUserHelper.validateEmail(emailId);
-		if (null != validatedResult.getStatus()
-				&& validatedResult.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.ERROR_FLAG))
-		{
-			return validatedResult;
-		}
-		try
-		{
-			//	boolean acesstokenforemail = false;
-			// validate socialMediaToken with facebook
-			//	acesstokenforemail = validateFacebookTokenwithEmailId(accessToken, emailId);
-			//once token is verified by social media register the user
-			//	if (acesstokenforemail && !StringUtils.isEmpty(emailId))
-			if (!StringUtils.isEmpty(emailId))
-			{
-				//socialRegister = registerNewUserSocial(emailId, MarketplacecommerceservicesConstants.FACEBOOK);
-				socialRegister = registerNewUserSocial(emailId, MarketplacecommerceservicesConstants.FACEBOOK, uid);
-				if (!StringUtils.isEmpty(socialRegister.getStatus())
-						&& socialRegister.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
-				{
-					successflag = true;
-				}
-			}
-			else
-			{
-				//throw error when the entered emailId is not for the entered social media token
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9019);
-			}
-		}
-
-		catch (final EtailBusinessExceptions e)
-		{
-			throw e;
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			//Set success flag as false
-			successflag = false;
-			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else
-			{
-				throw e;
-			}
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
-		}
-		if (successflag)
-		{
-			//Set success flag as true
-			socialRegister.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-		}
-		else
-		{
-			//Set success flag as false
-			socialRegister.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-		}
-
-		return socialRegister;
-	}
-
-
-	/**
-	 * Validate access token then invoke social Registration -- Google
-	 *
-	 * @param emailId
-	 * @return MplUserResultWsDto
-	 */
-	@Override
-	//	public MplUserResultWsDto socialGoogleRegistration(final String accessToken, final String emailId, final String socialUserId)
-	public MplUserResultWsDto socialGoogleRegistration(final String emailId, final String uid)
-	{
-		boolean successflag = false;
-		MplUserResultWsDto socialRegister = new MplUserResultWsDto();
-		try
-		{
-			socialRegister = mplUserHelper.validateEmail(emailId);
-			//boolean acesstokenforemail = false;
-			// validate socialMediaToken with google plus
-			//	acesstokenforemail = validateGoogleTokenwithEmailId(accessToken, socialUserId);
-			//once token is verified by social media register the user
-			//			if (acesstokenforemail && !StringUtils.isEmpty(emailId))
-			if (!StringUtils.isEmpty(emailId))
-			{
-				//socialRegister = registerNewUserSocial(emailId, MarketplacecommerceservicesConstants.GOOGLE);
-				socialRegister = registerNewUserSocial(emailId, MarketplacecommerceservicesConstants.GOOGLE, uid);
-
-				if (!StringUtils.isEmpty(socialRegister.getStatus())
-						&& socialRegister.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
-				{
-					successflag = true;
-				}
-
-			}
-			else
-			{
-				//throw error when the entered emailId is not for the entered social media token
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9019);
-			}
-		}
-
-		catch (final EtailBusinessExceptions businessException)
-		{
-			throw businessException;
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			//Set success flag as false
-			successflag = false;
-			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
-					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
-			}
-			else
-			{
-				throw e;
-			}
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
-		}
-		if (successflag)
-		{
-			//Set success flag as true
-			socialRegister.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-		}
-		return socialRegister;
-	}
-
-	/**
-	 * validating email id parsed from google token with the entered email id
-	 *
-	 * @param accessToken
-	 * @return boolean
-	 * @throws EtailNonBusinessExceptions
-	 * @throws EtailNonBusinessExceptions
-	 */
-	//	private boolean validateGoogleTokenwithEmailId(final String accessToken, final String socialUserId)
-	//			throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
-	//
-	//	{
-	//		String actualGoogleUserid = null;
-	//		actualGoogleUserid = getGoogleAuthEmail(accessToken);
-	//		boolean acesstokenforUserId = false;
-	//		//Comparing the entered emailId by mobile and emailId parsed for google oauth token
-	//		if (!StringUtils.isEmpty(actualGoogleUserid) && !StringUtils.isEmpty(socialUserId)
-	//				&& StringUtils.equalsIgnoreCase(socialUserId, actualGoogleUserid))
-	//		{
-	//			acesstokenforUserId = true;
-	//		}
-	//
-	//		return acesstokenforUserId;
-	//	}
-
-	/**
-	 * Obtaining the email id for a google oauth token
-	 *
-	 * @param socialMediaToken
-	 * @return String
-	 */
-	//	private String getGoogleAuthEmail(final String socialMediaToken)
-	//	{
-	//
-	//		String actualGoogleUserId = null;
-	//		try
-	//		{
-	//			final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
-	//					MarketplacewebservicesConstants.PROXYENABLED);
-	//			final String configuration = getConfigurationService().getConfiguration().getString(
-	//					MarketplacewebservicesConstants.SOCIAL_GOOGLEAPI_ME_INFO)
-	//					+ socialMediaToken;
-	//			final URL googleurl = new URL(configuration);
-	//			HttpURLConnection urlConnection = null;
-	//			//Proxy added
-	//			if (proxyEnableStatus.equalsIgnoreCase("true"))
-	//			{
-	//				final SocketAddress addr = new InetSocketAddress(getConfigurationService().getConfiguration().getString(
-	//						MarketplacewebservicesConstants.SOCIAL_DEV_LOGIN_PROXY), Integer.parseInt(getConfigurationService()
-	//						.getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_DEV_LOGIN_PROXY_PORT)));
-	//				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-	//				urlConnection = (HttpURLConnection) googleurl.openConnection(proxy);
-	//			}
-	//			else
-	//			{
-	//				urlConnection = (HttpURLConnection) googleurl.openConnection();
-	//			}
-	//
-	//			final String content = CharStreams.toString(new InputStreamReader(urlConnection.getInputStream(), Charsets.UTF_8));
-	//			if (!TextUtils.isEmpty(content))
-	//			{
-	//				final JSONObject response = new JSONObject(content);
-	//				if (null != response.get(MarketplacewebservicesConstants.SOCIAL_GOOGLE_USERID))
-	//				{
-	//					actualGoogleUserId = (String) response.get(MarketplacewebservicesConstants.SOCIAL_GOOGLE_USERID);
-	//				}
-	//			}
-	//		}
-	//		catch (final Exception e)
-	//		{
-	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9016);
-	//		}
-	//		return actualGoogleUserId;
-	//	}
-
-	/**
-	 * Getting FB graph for a token Graph will contain the user details for the token
-	 *
-	 * @param accessToken
-	 * @return String
-	 */
-	//	private String getFBGraph(final String accessToken)
-	//	{
-	//		String graph = null;
-	//		try
-	//		{
-	//
-	//			final String config = getConfigurationService().getConfiguration().getString(
-	//					MarketplacewebservicesConstants.SOCIAL_FB_ME_INFO)
-	//					+ accessToken
-	//					+ getConfigurationService().getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_FBAPI_ME_FIELDS);
-	//			final URL fburl = new URL(config);
-	//			final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
-	//					MarketplacewebservicesConstants.PROXYENABLED);
-	//			HttpURLConnection htypConnection = null;
-	//			//proxy added
-	//			if (proxyEnableStatus.equalsIgnoreCase("true"))
-	//			{
-	//				final SocketAddress addr = new InetSocketAddress(getConfigurationService().getConfiguration().getString(
-	//						MarketplacewebservicesConstants.SOCIAL_LOGIN_PROXY), Integer.parseInt(getConfigurationService()
-	//						.getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_LOGIN_PROXY_PORT)));
-	//				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-	//				htypConnection = (HttpURLConnection) fburl.openConnection(proxy);
-	//			}
-	//			else
-	//			{
-	//				htypConnection = (HttpURLConnection) fburl.openConnection();
-	//			}
-	//			if (null != htypConnection)
-	//			{
-	//				LOG.debug(MarketplacewebservicesConstants.FB_RESPONSE_CODE + htypConnection.getResponseCode());
-	//				final BufferedReader in = new BufferedReader(new InputStreamReader(htypConnection.getInputStream()));
-	//				String inputLine;
-	//				final StringBuffer b = new StringBuffer();
-	//				while ((inputLine = in.readLine()) != null)
-	//				{
-	//					b.append(inputLine + n);
-	//				}
-	//				in.close();
-	//				graph = b.toString();
-	//			}
-	//		}
-	//		catch (final Exception e)
-	//		{
-	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9018);
-	//		}
-	//		return graph;
-	//	}
-
-	/**
-	 * Parsing graph data and fetching email id from the graph
-	 *
-	 * @return String
-	 */
-	//	private String getGraphData(final String fbGraph)
-	//	{
-	//		String emailId = "";
-	//
-	//		try
-	//		{
-	//
-	//			final JSONObject json = new JSONObject(fbGraph);
-	//
-	//			if (json.has(MarketplacewebservicesConstants.SOCIAL_FB_EMAIL))
-	//			{
-	//				emailId = json.getString(MarketplacewebservicesConstants.SOCIAL_FB_EMAIL);
-	//			}
-	//
-	//		}
-	//		catch (final JSONException e)
-	//		{
-	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9017);
-	//		}
-	//		return emailId;
-	//	}
 
 	// fetchNewsLetter webservice code
 
@@ -1445,6 +770,220 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	public void setGigyaUID(final String gigyaUID)
 	{
 		this.gigyaUID = gigyaUID;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.service.MplMobileUserService#loginSocialUser(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public MplUserResultWsDto loginSocialUser(final String login, final String socialMedia)
+	{
+		final MplUserResultWsDto output = new MplUserResultWsDto();
+		String result = null;
+		UserDetails userDetails = null;
+		boolean successflag = false;
+		String socialMediatype = null;
+		final MplUserResultWsDto validatedResult = mplUserHelper.validateEmail(login);
+		if (null != validatedResult.getStatus()
+				&& validatedResult.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
+		{
+			successflag = true;
+		}
+		try
+		{
+			//Check if the user exists in the system with login
+
+			final UserModel user = getExtUserService().getUserForOriginalUid(login);
+			LOG.debug("addAddressToOrder : user : " + user);
+			// Check userModel null
+			CustomerModel currentCustomer = null;
+			if (null != user)
+			{
+				currentCustomer = (CustomerModel) user;
+			}
+			if (null != currentCustomer)
+			{
+
+				if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
+				{
+					socialMediatype = MarketplacewebservicesConstants.FACEBOOK_LOGIN;
+				}
+				else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
+				{
+					socialMediatype = MarketplacewebservicesConstants.GOOGLE_LOGIN;
+				}
+
+				if (StringUtils.equalsIgnoreCase(currentCustomer.getType().toString(), socialMediatype))
+				{
+					userDetails = retrieveUserforMarketplace(login);
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9320);
+				}
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+			}
+			LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + userDetails);
+			result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
+			if (null != login && null != getCustomerId(login))
+			{
+				output.setCustomerId(getCustomerId(login));
+			}
+		}
+		catch (final UsernameNotFoundException notFound)
+
+		{ //User name not found
+			throw new EtailNonBusinessExceptions(notFound, MarketplacecommerceservicesConstants.B9001);
+		}
+		catch (final DataAccessException repositoryProblem)
+
+		{
+			throw new EtailNonBusinessExceptions(repositoryProblem, MarketplacecommerceservicesConstants.B9000);
+		}
+
+		catch (final EtailBusinessExceptions businessException)
+		{
+			throw businessException;
+		}
+		catch (final AuthenticationException authException)
+		{
+			throw new EtailNonBusinessExceptions(authException, MarketplacecommerceservicesConstants.B9006);
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+
+		{
+			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
+					&& e.toString()
+							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
+					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
+			}
+			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
+					&& e.toString()
+							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
+					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
+			}
+			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
+					&& e.toString()
+							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
+					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
+			}
+			else
+			{
+				throw e;
+			}
+		}
+		catch (
+
+		final Exception e)
+
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+
+		//Return success flag
+		if (successflag)
+
+		{
+			result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
+		}
+		if (null != result)
+
+		{
+			output.setStatus(result);
+		}
+		return output;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.service.MplMobileUserService#socialMediaRegistration(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public MplUserResultWsDto socialMediaRegistration(final String emailId, final String socialMedia)
+	{
+		boolean successflag = false;
+		MplUserResultWsDto socialRegister = new MplUserResultWsDto();
+		final MplUserResultWsDto validatedResult = mplUserHelper.validateEmail(emailId);
+		if (null != validatedResult.getStatus()
+				&& validatedResult.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.ERROR_FLAG))
+		{
+			return validatedResult;
+		}
+		try
+		{
+			socialRegister = registerNewUserSocial(emailId, socialMedia);
+			if (!StringUtils.isEmpty(socialRegister.getStatus())
+					&& socialRegister.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
+			{
+				successflag = true;
+			}
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			//Set success flag as false
+			successflag = false;
+			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
+					&& e.toString()
+							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
+					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
+			}
+			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
+					&& e.toString()
+							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
+					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
+			}
+			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
+					&& e.toString()
+							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
+					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
+			}
+			else
+			{
+				throw e;
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+		if (successflag)
+		{
+			//Set success flag as true
+			socialRegister.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+		}
+		else
+		{
+			//Set success flag as false
+			socialRegister.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return socialRegister;
 	}
 
 

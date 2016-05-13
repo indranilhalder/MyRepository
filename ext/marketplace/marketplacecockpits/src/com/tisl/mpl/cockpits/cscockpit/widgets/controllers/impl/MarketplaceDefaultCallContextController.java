@@ -6,6 +6,8 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultCallContextC
 import de.hybris.platform.cscockpit.widgets.models.impl.SearchResultWidgetModel;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.servicelayer.user.impl.DefaulPasswordEncoderService;
 
 /**
  * @author 890223
@@ -52,6 +55,10 @@ public class MarketplaceDefaultCallContextController extends
 	
 	@Autowired
 	private SessionService sessionService;
+	
+	//TISPRD-1383
+	@Resource
+	private DefaulPasswordEncoderService passwordEncoderService;
 
 	int totalAttempts = 5;
 	/**
@@ -62,9 +69,12 @@ public class MarketplaceDefaultCallContextController extends
 	@Override
 	public String changeAgentPassword(String newPassword,String confirmPassword)
 	{
+		//TISPRD-1383 password encoding done dynamically CSCP
 		String message =null;
 		UserModel agent = UISessionUtils.getCurrentSession().getUser();
-		String previousPwd = getUserService().getPassword(agent);
+		String previousPwd = agent.getEncodedPassword();
+		String encodinType=agent.getPasswordEncoding();
+		String encodedConfirmPasswd=passwordEncoderService.encode(agent, confirmPassword, encodinType);
 		final EmployeeModel emp = (EmployeeModel) userService
 				.getUserForUID(agent.getUid());
 		if (totalAttempts <= 0) {
@@ -76,12 +86,12 @@ public class MarketplaceDefaultCallContextController extends
 			message ="DIFFER";
 			totalAttempts = totalAttempts - 1;
 		}
-		else if(  StringUtils.equals(newPassword, previousPwd) ){
+		else if(  StringUtils.equals(encodedConfirmPasswd, previousPwd) ){
 			message ="SAMEASPREVIOUS";
 			totalAttempts = totalAttempts - 1;
 		}
 		else if(passwordValidator(newPassword)){
-			getUserService().setPasswordWithDefaultEncoding(agent, newPassword);
+			getUserService().setPassword(agent, confirmPassword, encodinType);
 			Calendar cal = Calendar.getInstance();
 			Date today = cal.getTime();
 			emp.setLastPasswordChanged(today);

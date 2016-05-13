@@ -14,6 +14,7 @@
 <%@ taglib prefix="htmlmeta" uri="http://hybris.com/tld/htmlmeta"%>
 <%@ taglib prefix="tealium" tagdir="/WEB-INF/tags/addons/tealiumIQ/shared/analytics" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %>
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
@@ -34,6 +35,7 @@
 	
 	
 	<c:set var="host" value="${header.host}"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('update_Email_url')" var="emailURL"/>
 	<c:set var="pageURL" value="${emailURL}"/>
 	<c:set var="protocolString" value="${fn:split(pageURL, '://')}"/>
 	<c:set var="baseURL" value="${protocolString[0]}://${host}"/>
@@ -44,7 +46,15 @@
 		</c:when>
 		<c:otherwise>
 			<!-- Canonical Tag -->
-			<link rel="canonical" href="${baseURL}${reqURI}" />
+			<c:choose>
+				<c:when test="${regex:regExMatch(reqURI,'[/]$') }">
+					<c:set var="canonical" value="${baseURL}${reqURI}"></c:set>
+				</c:when>
+				<c:otherwise>
+					<c:set var="canonical" value="${baseURL}${reqURI}/"></c:set>
+				</c:otherwise>
+			</c:choose>
+			<link rel="canonical" href="${canonical}" />
 		</c:otherwise>
 	</c:choose>
 	
@@ -63,6 +73,8 @@
 	    </c:when>
 	</c:choose>
 	
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.handle')" var="twitterHandle"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
 	<!-- Markup for Google+ -->
 	<meta itemprop="name" content="${metaTitle}">
 	<meta itemprop="description" content="${metaDescription}">
@@ -77,7 +89,7 @@
 	
 	<!-- FB Open Graph data -->
 	<meta property="og:title" content="${metaTitle}" />
-	<meta property="og:url" content="${baseURL}${requestScope['javax.servlet.forward.request_uri']}" />
+	<meta property="og:url" content="${canonical}" />
 	<meta property="og:image" content="${seoImageURL}" />
 	<meta property="og:description" content="${metaDescription}" />
 	<meta property="og:site_name" content="${siteName}" />

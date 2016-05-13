@@ -21986,6 +21986,10 @@ body .account .new-address form div#checkBox label
 	  width: 100%;
   margin: 20px 0;
 }
+.send-email-container .actions{
+	width:100%;
+	text-align:center;
+}
 .forgot-password-container input:hover, .forgot-password-container select:hover, .click2chat-container input:hover, .click2chat-container select:hover, .click2call-container input:hover, .click2call-container select:hover , .create-new-wishlist-popup-container input:hover {
   border-color: #b9b9b9;
   -webkit-transition: border 0.15s;
@@ -22006,7 +22010,7 @@ body .account .new-address form div#checkBox label
   font-size:12px;
   font-weight:normal;
 }
-.forgot-password-container .actions .button, .manage-wishlist-container .actions button, .create-new-wishlist-popup-container .create_wishlist#CreateNewWishlist , .return-requestInvoice .cancellation-request-block .actions button{
+.forgot-password-container .actions .button, .manage-wishlist-container .actions button, .create-new-wishlist-popup-container .create_wishlist#CreateNewWishlist , .return-requestInvoice .cancellation-request-block .actions button,.send-email-container .actions button{
   font-size: 12px;
 
   font-weight: 500;
@@ -23708,7 +23712,7 @@ span.brand-subdesc {
 .forgotten-password.modal .content{
 	width:35%;
 }
-.add_to_cart_form .out_of_stock #add_to_wishlist, #add_to_wishlist-sizeguide{
+.add_to_cart_form .out_of_stock #add_to_wishlist, #add_to_wishlist-sizeguide,.out_of_stock #add_to_wishlist_quick{
    font-size: 12px;
     letter-spacing: 1px;
     height: 42px;
@@ -27283,7 +27287,7 @@ border: 2px solid #fff;
 .contact-us-header ul li.contactUsOptions:first-child {
 	display: inline-block;
 }
-.out_of_stock #add_to_wishlist_quick {
+/* .out_of_stock #add_to_wishlist_quick {
     font-size: 12px;
     letter-spacing: 1px;
     line-height: 55px;
@@ -27301,7 +27305,7 @@ border: 2px solid #fff;
     display: block;
     margin-top:5px;
     border:0px;
-}  
+}  */ 
 
 body.page-reviews .right-account .order-history .navigation {
 	border: 1px solid #f0f4f5;

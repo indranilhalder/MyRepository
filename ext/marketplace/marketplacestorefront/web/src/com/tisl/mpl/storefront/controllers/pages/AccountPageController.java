@@ -2641,7 +2641,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final Model model, final HttpServletRequest request, final HttpSession session,
 			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, ParseException
 	{
-		session.setAttribute("userFirstName", mplCustomerProfileForm.getFirstName().trim());
+
 		try
 		{
 			final String specificUrl = RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_UPDATE_PROFILE;
@@ -2754,6 +2754,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
 								MessageConstants.TEXT_ACCOUNT_PROFILE_CONFIRMATION_UPDATED, null);
 					}
+					setHeaderNameInSession(mplCustomerProfileData, session);
 				}
 				catch (final DuplicateUidException e)
 				{
@@ -2808,7 +2809,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 
 	}
-
 
 	/**
 	 * The method is called to check whether date for date of birth is valid or not
@@ -3048,8 +3048,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_UPDATE_NICK_NAME, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String updateNickName(final MplCustomerProfileForm mplCustomerProfileForm, final BindingResult bindingResult,
-			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttributes)
-			throws CMSItemNotFoundException, ParseException
+			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttributes,
+			final HttpSession session) throws CMSItemNotFoundException, ParseException
 	{
 		try
 		{
@@ -3100,6 +3100,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				try
 				{
 					mplCustomerProfileFacade.updateCustomerProfile(mplCustomerProfileData);
+					setHeaderNameInSession(mplCustomerProfileData, session);
+
 					final Map<String, String> preSavedDetailMap = new HashMap<String, String>();
 					mplCustomerProfileFacade.checkChangesForSendingEmail(preSavedDetailMap, currentCustomerData.getDisplayUid(),
 							profileUpdateUrl);
@@ -3136,6 +3138,30 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 
+	}
+
+	/**
+	 * @param mplCustomerProfileData
+	 * @param session
+	 */
+	private void setHeaderNameInSession(final MplCustomerProfileData mplCustomerProfileData, final HttpSession session)
+	{
+		String displayHeaderName = MarketplacecommerceservicesConstants.EMPTY;
+		if (StringUtils.isNotEmpty(mplCustomerProfileData.getNickName()))
+		{
+			displayHeaderName = mplCustomerProfileData.getNickName();
+		}
+		else if (StringUtils.isNotEmpty(mplCustomerProfileData.getFirstName()))
+		{
+			displayHeaderName = mplCustomerProfileData.getFirstName();
+		}
+
+		if (null == displayHeaderName || MarketplacecommerceservicesConstants.EMPTY.equals(displayHeaderName))
+		{
+			displayHeaderName = MarketplacecommerceservicesConstants.SINGLE_SPACE;
+		}
+
+		session.setAttribute(ModelAttributetConstants.USER_FIRST_NAME, displayHeaderName.trim());
 	}
 
 	/**

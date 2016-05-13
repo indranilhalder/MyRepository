@@ -236,7 +236,7 @@ function editAddress(addressId) {
     		
     		var nowValue = $("#cancellationreasonSelectBox_"+transactionId+" option:selected").val();
     		var reasonCode=Rejectionselectedvalue;
-    		console.log("Reasone code : "+Rejectionselectedvalue);
+    	//	console.log("Reasone code : "+Rejectionselectedvalue);
         	if(reasonCode==null)
         	{
         		//alert("Do let us know why you would like to cancel this item.");
