@@ -38,7 +38,7 @@
     					//resetConvChargeElsewhere(); Commented for TIS 400
     				//}
     				$(document).ready(function() {
-    					calculateDeliveryCost();
+    					selectDefaultDeliveryMethod();
     				});
     				var timeoutID;
     				function setup() {
