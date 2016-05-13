@@ -1,6 +1,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -8,9 +9,12 @@ import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Resource;
@@ -124,7 +128,7 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 		CopyOnWriteArrayList<PincodeServiceData> reqDataList = new CopyOnWriteArrayList<PincodeServiceData>(reqData);
 
 		final List<RestrictionsetupModel> restrictionsetupModelList = mplPincodeRestrictionDao.getRestrictedPincode(pincode,
-				articleSKUID, sellerIdList, listingID, getCategoryCodeList(listingID));
+				articleSKUID, sellerIdList, listingID, getCategoryCodeListCart(new ArrayList(Arrays.asList(listingID))));// Calling the same function as that of cart
 		final List<String> listingIdList = new ArrayList<String>();
 		listingIdList.add(listingID);
 
@@ -321,7 +325,7 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 	 */
 	private List<String> getCategoryCodeListCart(final List<String> productCodeList)
 	{
-		final List<String> categoryList = new ArrayList<String>();
+		final Set<String> categorySet = new HashSet<String>();
 		for (final String listingID : productCodeList)
 		{
 			if (listingID != null)
@@ -340,16 +344,19 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 						for (final CategoryModel categoryModel : categoryModelList)
 						{
 							//TISEE-6376
-							if (categoryModel != null && categoryModel.getCode() != null)
+							//Added to ignore classification categories
+							if (categoryModel != null && !(categoryModel instanceof ClassificationClassModel)
+									&& categoryModel.getCode() != null)
 							{
-								categoryList.add(categoryModel.getCode());
+								//Only add unique category codes. Hence using set
+								categorySet.add(categoryModel.getCode());
 							}
 						}
 					}
 				}
 			}
 		}
-		return categoryList;
+		return new ArrayList<String>(categorySet);
 	}
 
 	/**
@@ -475,7 +482,8 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 				}
 				//Start - Code additon TISPRO-167
 				// added for Category Id
-				final List<String> categoryList = getCategoryCodeList(pincodeServiceData.getProductCode());
+				final List<String> categoryList = getCategoryCodeListCart(new ArrayList(Arrays.asList(pincodeServiceData
+						.getProductCode())));//Using the same method as that of cart
 				if (CollectionUtils.isNotEmpty(categoryList))
 
 				{
@@ -525,53 +533,38 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 	 * @return categoryList
 	 */
 
-	private List<String> getCategoryCodeList(final String listingID)
-	{
+	//Commented to handle SONAR fix - Avoid unused private methods
 
-
-		final List<String> categoryList = new ArrayList<String>();
-		//		final JaloSession session = JaloSession.getCurrentSession();
-		//		session.createLocalSessionContext();
-		try
-		{
-
-			/*
-			 * Collection<CatalogVersion> vers = null;
-			 * 
-			 * 
-			 * final Collection<CatalogVersion> cvs = (Collection<CatalogVersion>) session
-			 * .getAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS);
-			 * 
-			 * 
-			 * for (final CatalogVersion ver : cvs) { if (VERSION_ONLINE.equals(ver.getVersion()) &&
-			 * 
-			 * 
-			 * 
-			 * CATALOG_ID.equals(ver.getCatalog().getId())) { vers = Collections.singleton(ver); break; } }
-			 * 
-			 * 
-			 * 
-			 * session.setAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS, vers);
-			 */
-
-			final ProductModel productModel = productService.getProductForCode(listingID);
-			final List<CategoryModel> categories = defaultPromotionManager.getcategoryData(productModel);
-			for (final CategoryModel c : categories)
-			{
-				categoryList.add(c.getCode());
-			}
-		}
-
-		catch (final Exception e)
-		{
-
-			LOG.error("Exception while retrieving category list", e);
-		}
-		return categoryList;
-
-
-
-	}
+	//	@Deprecated
+	//	private List<String> getCategoryCodeList(final String listingID)
+	//	{
+	//
+	//
+	//		final List<String> categoryList = new ArrayList<String>();
+	//
+	//		try
+	//		{
+	//
+	//
+	//
+	//			final ProductModel productModel = productService.getProductForCode(listingID);
+	//			final List<CategoryModel> categories = defaultPromotionManager.getcategoryData(productModel);
+	//			for (final CategoryModel c : categories)
+	//			{
+	//				categoryList.add(c.getCode());
+	//			}
+	//		}
+	//
+	//		catch (final Exception e)
+	//		{
+	//
+	//			LOG.error("Exception while retrieving category list", e);
+	//		}
+	//		return categoryList;
+	//
+	//
+	//
+	//	}
 
 	/**
 	 * get restricted deliverymodes for a pincode

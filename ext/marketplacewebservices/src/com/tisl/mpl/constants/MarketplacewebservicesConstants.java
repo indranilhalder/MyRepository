@@ -112,7 +112,7 @@ public class MarketplacewebservicesConstants
 			.intern();
 	public static final String ORIGINALUID = "originalUid".intern();
 	public static final String CARDREFNUMBER = "cardRefNo".intern();
-	
+
 	public static final String POS_ACTIVE = "active".intern();
 	public static final String POS_SELLERID = "sellerId".intern();
 	public static final String POS_NAME = "name".intern();
@@ -123,7 +123,7 @@ public class MarketplacewebservicesConstants
 
 	public static final String POS_QUERY_FOR_POSNAME = "select {pos:pk} from {PointOfService As pos} where {pos.name}=?name and {pos.active}=?active"
 			.intern();
-	
+
 	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.sellerId}=?sellerId and {pos.slaveId}=?slaveId and {pos.active}=?active"
 			.intern();
 
@@ -498,10 +498,13 @@ public class MarketplacewebservicesConstants
 	public static final String EXCUSERINVALID = "User not valid".intern();
 
 	public static final String COUPONRELISSUE = "Issue with voucher release ".intern();
-	
+
 	public static final String SLV_TYPE_STORE = "SLV_TYPE_STORE";
 	public static final String SLV_TYPE_WAREHOUSE = "SLV_TYPE_WAREHOUSE";
 	public static final String INACTIVE = "N";
 	public static final String ACTIVE = "Y";
 	public static final String SOMEWRONG = "Something went wrong".intern();
+
+	public static final String FACEBOOK_LOGIN = "FACEBOOK_LOGIN".intern();
+	public static final String GOOGLE_LOGIN = "GOOGLE_LOGIN".intern();
 }

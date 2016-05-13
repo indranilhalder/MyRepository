@@ -94,8 +94,8 @@
 	//change serp product details based on filters
 	function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
 		if(mrpPriceValue!="" && productPrice!=""){
-		console.log("in search js...for product"+product+"mrpPriceJSon"+mrpPriceValue+"price json"+productPrice);	
-		console.log("original prices for "+product+$("#price_"+product).text()+$("#priceEqual_"+product).text());
+	/*	console.log("in search js...for product"+product+"mrpPriceJSon"+mrpPriceValue+"price json"+productPrice);	
+		console.log("original prices for "+product+$("#price_"+product).text()+$("#priceEqual_"+product).text());*/
 		}
 
 		if(categoryTypeValue=='Apparel'||categoryTypeValue=='Footwear'){
@@ -117,9 +117,9 @@
 				minPriceSize = sizeMatched;
 				if(x[sizeMatched]!=undefined){
 				minPriceValue = x[sizeMatched];
-				console.log("size match for single variant"
+				/*console.log("size match for single variant"
 						+ minPriceSize + "price"
-						+ minPriceValue); 
+						+ minPriceValue); */
 				}
 				 
 
@@ -152,8 +152,8 @@
 
 
 
-		 console.log("nminPrice for product" +product+"price"+minPriceValue + "minsize"
-				+ minPriceSize); 
+		 /*console.log("nminPrice for product" +product+"price"+minPriceValue + "minsize"
+				+ minPriceSize); */
 		if(minPriceValue!=undefined){ 
 	    $("#price_"+product).html("");
 		$("#price_"+product).html("&#8377;"+minPriceValue);  
@@ -338,7 +338,7 @@
 	function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,minPriceValue,product) {
 	//  var mrpPriceValue = '${product.displayMrp}';
 		if(mrpPriceValue!=""){
-		console.log("###"+mrpPriceValue);
+	//	console.log("###"+mrpPriceValue);
 	    var productCode='${product.code}';
 		var mrpPrice1 = mrpPriceValue.replace("[[", "");
 		var mrpPrice2 = mrpPrice1.replace("]]", "");

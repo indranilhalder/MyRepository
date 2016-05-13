@@ -21,15 +21,18 @@ public class RegExFunction
 	 */
 	public static boolean regExMatch(final String toMatch, final String expression)
 	{
+		boolean flag = false;
 		final Pattern p = Pattern.compile(expression);
 		final Matcher m = p.matcher(toMatch);
 		if (m.find())
 		{
-			return true;
+			flag = true;
 		}
-		else
-		{
-			return false;
-		}
+		//SONAR fix
+		//else
+		//{
+		//	return false;
+		//}
+		return flag;
 	}
 }
