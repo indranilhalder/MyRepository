@@ -2779,7 +2779,8 @@ h2 {
           height: 50px;
           font-size: 16px;
           font-weight: 500;
-          width: 140px; }
+          width: 140px;
+          padding-right: 20px; }
         header > .content .bottom .search form input {
           border: 1px solid #AAA;
           border-left:1px solid #AAA;
@@ -10134,7 +10135,7 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-image-container .image-list img,
 .product-info .product-image-container .main-image>img {
-    width: 100%;
+    width: auto;
     height: auto;
     opacity: 1;
     z-index: 1;
@@ -10160,8 +10161,7 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-image-container .image-list li img {
     cursor: pointer;
-    min-height:101.6px;
- }
+}
 .product-info .product-image-container .image-list li span.thumb:hover, .product-info .product-image-container .image-list li .active{
     border-color: #000;
     -webkit-transition: border-color 0.3s;
@@ -19750,16 +19750,16 @@ div.other-sellers .navigation button.next:after {
         text-decoration: underline
     }
     div.other-sellers .other-sellers-table tbody tr td .add-to-bag {
-        font-size: 16px;
-        height: 60px;
-        line-height: 55px;
+        font-size: 12px;
+        height: 40px;
+        line-height: 34px;
         border-width: 3px
     }
     div.other-sellers .other-sellers-table tbody tr td .add-to-wishlist {
-        font-size: 18px
+        font-size: 12px
     }
     div.other-sellers .other-sellers-table tbody tr td .add-to-wishlist:before {
-        font-size: 16px
+        font-size: 12px
     }
     div.other-sellers .other-sellers-table tbody tr td:first-child,
     div.
@@ -31554,6 +31554,11 @@ header.brand-header > .content .bottom nav > ul > li:nth-last-of-type(1).active 
 	/* width:250%; */
 } 
 }
+@media(min-width:790px){
+	.product-info .product-image-container .image-list li img {
+    	    min-height: 101.6px;
+}
+}
 /*--------------maincss-----------*/
 .row
 {
@@ -35159,7 +35164,7 @@ main {
 
 .thumb {
 	position: relative;
-	width: 100%;
+	width: auto;
 	display:inline-block;
 	border: 1px solid transparent;
 	margin-bottom:2px;
