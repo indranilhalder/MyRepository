@@ -575,7 +575,14 @@ input:focus {
       transition: border 0.15s; }
       .select-view .select-list:hover > .selected {
         border-bottom: 2px solid #DFD1D5; }
-      .select-view .select-list:hover ul {
+      body:not(.touchDevice) .select-view .select-list:hover ul {
+        max-height: 500px;
+        border-color: #DFD1D5;
+        -webkit-transition: max-height 0.15s, border 0s;
+        -moz-transition: max-height 0.15s, border 0s;
+        transition: max-height 0.15s, border 0s; }
+      .select-view .select-list.touch_click ul {
+      	display: block !important;
         max-height: 500px;
         border-color: #DFD1D5;
         -webkit-transition: max-height 0.15s, border 0s;
@@ -1678,7 +1685,7 @@ h2 {
             color: #fff;
             }
           
-          header .content nav > ul > li:hover > ul {
+          body:not(.touchDevice) header .content nav > ul > li:hover > ul {
             background-color: #fff;
            /*  -webkit-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             -moz-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
@@ -1801,7 +1808,7 @@ h2 {
         transition: border 0.15s; }
         header .content .search .select-list:hover > .selected {
           border-bottom: 1px solid #DFD1D5; }
-        header .content .search .select-list:hover ul {
+        body:not(.touchDevice) header .content .search .select-list:hover ul {
           max-height: 500px;
           border-color: #DFD1D5;
           -webkit-transition: max-height 0.15s, border 0s;
@@ -4226,6 +4233,9 @@ text-transform: uppercase;
 		font-size: 10px;
 		font-weight: 600;
 		letter-spacing: .5px;
+	}
+	body.safariBrowser .feature-collections ul.collections li a {
+		font-weight: 500;
 	}
 	.feature-collections ul.collections li.sub:last-child {
 		width: 42%;
@@ -30652,11 +30662,7 @@ ul.less-stock li {
   }
   header .banner > span.helpmeshopbanner{
   cursor:auto;}
-  @media screen and (min-color-index:0) and (-webkit-min-device-pixel-ratio:2) { 
-    header .content nav > ul > li > .toggle:after{ 
-      top:1px;
-}
-}
+
 header .content .search input {
 	background: #fff;
 	cursor: text;
@@ -30841,6 +30847,9 @@ header .content .search input {
 	}
 	.r2-landing-banner h5 {
 		color: #fff;
+	}
+	body.safariBrowser header .content nav > ul > li > .toggle:after{ 
+      top:1px;
 	}
 }
 
@@ -31556,6 +31565,11 @@ header.brand-header > .content .bottom nav > ul > li:nth-last-of-type(1).active 
 	.product-info .product-image-container .image-list li img {
     	    min-height: 101.6px;
 }
+}
+
+.product-facet .filter-colour input[type="submit"] {
+    margin-left: 0;
+    margin-right: 0;
 }
 /*--------------maincss-----------*/
 .row
