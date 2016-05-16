@@ -19,7 +19,7 @@ public interface UpdatePromotionalPriceService
 
 	void disablePromotionalPrice(final List<Product> products, final List<Category> categories, final boolean isEnabled,
 			final Integer priority, final List<String> brands, Long quantity, List<String> rejectSellerList,
-			List<String> rejectBrandList);
+			List<String> rejectBrandList, String promoCode);
 
 
 

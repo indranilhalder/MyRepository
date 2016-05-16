@@ -611,6 +611,7 @@
 	<bean id="mplUpdatePromotionPriceService"
 		class="com.tisl.mpl.promotion.service.impl.UpdatePromotionalPriceServiceImpl">
 		<property name="modelService" ref="modelService" />
+		<property name="updateSplPriceHelperService" ref="updateSplPriceHelperService" />	
 	</bean>
 
 	<alias name="mplUpdatePromotionPriceDao" alias="mplUpdatePromotionPriceDao" />
@@ -1663,6 +1664,11 @@
 	</bean>
 	
 	<!-- TISPRD-1631 Changes End (Extending Product Service) -->
+	
+	<!-- Tata Cliq : Special Price Updation Logic Service-->
+	<bean id="updateSplPriceHelperService"
+		class="com.tisl.mpl.promotion.service.impl.DefaultUpdateSplPriceHelperService">
+	</bean>
 
 
 </beans>
