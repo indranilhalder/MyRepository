@@ -502,26 +502,26 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				{
 
 
-					for (final ConsignmentEntryModel consigmEntry : orderEntryModel.getConsignmentEntries())
-					{
+					//for (final ConsignmentEntryModel consigmEntry : orderEntryModel.getConsignmentEntries())
+					//{
 
-						if ((consigmEntry.getConsignment().getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || consigmEntry
-								.getConsignment().getStatus().equals(ConsignmentStatus.ORDER_UNCOLLECTED))
-								&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
+						if ((consignmentModel.getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || consignmentModel.getStatus().equals(ConsignmentStatus.ORDER_UNCOLLECTED))&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
 						{
+							if(shipment.getShipmentId().equals(orderEntryModel.getTransactionID()) && consignmentModel.getCode().equals(orderEntryModel.getTransactionID())){
+								LOG.debug("********Consignment Status**********" + consignmentModel.getStatus());
+								LOG.debug("********Transaction Id**********" + orderEntryModel.getTransactionID());
+								LOG.debug("********OrderLine Id**********" + orderEntryModel.getOrderLineId());
 
-							LOG.debug("********Consignment Status**********" + consigmEntry.getConsignment().getStatus());
-							LOG.debug("********Transaction Id**********" + orderEntryModel.getTransactionID());
-							LOG.debug("********OrderLine Id**********" + orderEntryModel.getOrderLineId());
-
-							customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
-									MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
-									MarketplaceomsordersConstants.REFUND_TYPE_CODE, orderModel);
-							customOmsCancelAdapter.initiateCancellation(MarketplaceomsordersConstants.TICKET_TYPE_CODE,
-									orderEntryModel.getTransactionID(), orderModel, MarketplaceomsordersConstants.REASON_CODE,
-									consignmentModel);
+								customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
+										MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
+										MarketplaceomsordersConstants.REFUND_TYPE_CODE, orderModel);
+								customOmsCancelAdapter.initiateCancellation(MarketplaceomsordersConstants.TICKET_TYPE_CODE,
+										orderEntryModel.getTransactionID(), orderModel, MarketplaceomsordersConstants.REASON_CODE,
+										consignmentModel);
+						
+							}
 						}
-					}
+					//}
 				}
 
 				final String trackOrderUrl = configurationService.getConfiguration().getString(
