@@ -38913,6 +38913,13 @@ Samsung Galaxy S5 -----------
 
 /* CNC Page CSS Start */
 
+#deliveryMethodSubmit1 {
+	color: #fff;
+	background: #A9143C; 
+	width: 100% !important;
+	margin-bottom: 10px;
+}
+
 .latlng {
 		display: none;
 	}
@@ -39357,6 +39364,7 @@ div.MSDQuickView:before {
 		min-width: 91px;
 		margin-left: -188px;
 	}
+  }
 }
 
 

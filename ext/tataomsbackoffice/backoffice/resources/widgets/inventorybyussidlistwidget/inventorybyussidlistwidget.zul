@@ -14,12 +14,11 @@ background-color:#29404f;
 	<listbox id="listView" rows="10"  emptyMessage="No result found in the result"
 		mold="paging" pagingPosition="top" pageSize="10">
 		<listhead>
-			<listheader label="SLAVE"></listheader>
-			<listheader label="ATS"></listheader>
-			<listheader label="ON HAND"></listheader>
-			<listheader label="RESERVED"></listheader>
-			<listheader label="ALLOCATED"></listheader>
-			<listheader label="INTRANSIT"></listheader>
+			<listheader label="${labels.inv.slave}"></listheader>
+			<listheader label="${labels.inv.ats}"></listheader>
+			<listheader label="${labels.inv.onhand}"></listheader>
+			<listheader label="${labels.inv.reservd}"></listheader>
+			<listheader label="${labels.inv.allctd}"></listheader>
 		</listhead>
 	</listbox>
 	
