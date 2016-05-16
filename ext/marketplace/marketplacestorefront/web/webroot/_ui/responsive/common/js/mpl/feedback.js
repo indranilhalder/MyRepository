@@ -1402,7 +1402,7 @@ $(document).ready(function(){
 		});		
 		
 		if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') < 0) {
-			$("body").addClass('safariBrowser');
+			$("body").attr('class','safariBrowser');
 			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 				$('header .content nav > ul > li:first-child + li').css('margin-left','25px');
 			}
