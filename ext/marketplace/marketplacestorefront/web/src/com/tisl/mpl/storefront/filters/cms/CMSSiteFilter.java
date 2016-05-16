@@ -348,7 +348,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 		urlBuilder.append(requestUrl);
 		if (StringUtils.isNotEmpty(httpRequest.getQueryString()))
 		{
-			urlBuilder.append("?").append(httpRequest.getQueryString());
+			urlBuilder.append('?').append(httpRequest.getQueryString());
 		}
 
 		return urlBuilder.toString();
