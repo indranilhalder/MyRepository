@@ -500,7 +500,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 				}
 			}
 
-			if (CollectionUtils.isNotEmpty(brandList))
+			if (CollectionUtils.isNotEmpty(brands) && CollectionUtils.isNotEmpty(brandList))
 			{
 				final String productBrand = brandList.get(0);
 				if (brands.contains(productBrand))
@@ -510,7 +510,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 			}
 
 
-			if (CollectionUtils.isNotEmpty(rejectBrandList))
+			if (CollectionUtils.isNotEmpty(rejectBrandList) && CollectionUtils.isNotEmpty(brandList))
 			{
 				final String productBrand = brandList.get(0);
 				if (rejectBrandList.contains(productBrand))

@@ -182,7 +182,7 @@ public class DefaultUpdateSplPriceHelperService implements UpdateSplPriceHelperS
 				}
 			}
 
-			if (CollectionUtils.isNotEmpty(brandList))
+			if (CollectionUtils.isNotEmpty(brands) && CollectionUtils.isNotEmpty(brandList))
 			{
 				final String productBrand = brandList.get(0);
 				if (brands.contains(productBrand))
@@ -191,7 +191,7 @@ public class DefaultUpdateSplPriceHelperService implements UpdateSplPriceHelperS
 				}
 			}
 
-			if (CollectionUtils.isNotEmpty(rejectBrandList))
+			if (CollectionUtils.isNotEmpty(rejectBrandList) && CollectionUtils.isNotEmpty(brandList))
 			{
 				final String productBrand = brandList.get(0);
 				if (rejectBrandList.contains(productBrand))
