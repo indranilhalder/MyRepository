@@ -939,8 +939,8 @@ public class OrdersController extends BaseCommerceController
 	{
 		final BillingAddressWsDTO billingAddress = new BillingAddressWsDTO();
 		final String countrycode = "91";
-		if (null != orderDetail.getDeliveryAddress().getId() && StringUtils.isNotEmpty(orderDetail.getDeliveryAddress().getId())
-				&& type == 2)
+		if (null != orderDetail.getDeliveryAddress() && null != orderDetail.getDeliveryAddress().getId() 
+				&& StringUtils.isNotEmpty(orderDetail.getDeliveryAddress().getId())	&& type == 2)
 		{
 			billingAddress.setDefaultAddress(Boolean.valueOf(orderDetail.getDeliveryAddress().isDefaultAddress()));
 			billingAddress.setAddressType(orderDetail.getDeliveryAddress().getAddressType());
@@ -1158,7 +1158,7 @@ public class OrdersController extends BaseCommerceController
 				}
 				//not required
 				//orderTrackingWsDTO.setCancelflag(MarketplacecommerceservicesConstants.YES);
-				if (StringUtils.isNotEmpty(orderDetail.getDeliveryAddress().getLastName())
+				if (null != orderDetail.getDeliveryAddress() && StringUtils.isNotEmpty(orderDetail.getDeliveryAddress().getLastName())
 						&& StringUtils.isNotEmpty(orderDetail.getDeliveryAddress().getFirstName()))
 				{
 					final String name = orderDetail.getDeliveryAddress().getFirstName().concat(" ")
