@@ -63,6 +63,7 @@ public class CustomProductPricePopulatorTest
 	@Test
 	public void testPricePoopulator()
 	{
+		//TISSEC-50
 		final ProductData productData = Mockito.mock(ProductData.class);
 		final List<SellerInformationData> sellerDataList = new ArrayList<SellerInformationData>();
 		final SellerInformationData sellerInformationData = Mockito.mock(SellerInformationData.class);
@@ -86,7 +87,7 @@ public class CustomProductPricePopulatorTest
 		final PriceDataFactory priceDataFactory = Mockito.mock(PriceDataFactory.class);
 		given(priceData.getValue()).willReturn(new BigDecimal(0.0));
 		final PriceDataType priceType = Mockito.mock(PriceDataType.class);
-		given(priceDataFactory.create(priceType, new BigDecimal(0.0), "INR")).willReturn(pData);
+		given(priceDataFactory.create(priceType, new BigDecimal(0.0), "")).willReturn(pData);//TODO : Please enter currency
 		pricePopulator.populate(productModel, productData);
 	}
 }

@@ -878,7 +878,7 @@
 	    $(".js-rename-wishlist").click(function(){
 			$("#editWishList,#editWishListOld").val($(this).parent().find('span').text());
 			
-			console.log($(this).parent().find('span').text());
+		//	console.log($(this).parent().find('span').text());
 		}); 
 	    
 		

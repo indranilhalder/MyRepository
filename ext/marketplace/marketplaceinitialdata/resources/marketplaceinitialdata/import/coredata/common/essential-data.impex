@@ -367,6 +367,17 @@ INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfig
 ;salesOrderCanRetInfoPopulateJob
 
 
+#For search Synomyms TISPRD-1634
+
+
+INSERT_UPDATE SolrUpdateSynonymsCronJob; code[unique=true];job(code);solrFacetSearchConfig(name);language(isoCode);sessionLanguage(isocode)
+;mplUpdateSynonymsCronJob;solrUpdateSynonymsJob;mplIndex;en;en
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+;mplUpdateSynonymsCronJob;0 0/15 * 1/1 * ? *
+
+
+
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 ; customerDetailsPopulateCronJob; 0 0 0 * * ?
 ; salesOrderPaymentInfoPopulateJob; 0 0 0 * * ?

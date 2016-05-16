@@ -54,9 +54,12 @@ public class InventoryReservationServiceImplTest
 	public void convertDatatoWsdto()
 	{
 		final List<CartSoftReservationData> cartdatalist = new ArrayList<CartSoftReservationData>();
-		final String cartId = "cart09876";
-		final String pincode = "700156";
-		final String requestType = "cart";
+
+		//TISSEC-50
+		final String cartId = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter cart id
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter pincode
+		final String requestType = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter req type
+
 		InventoryReservListResponse response = new InventoryReservListResponse();
 		final InventoryReservListRequest reqdata = new InventoryReservListRequest();
 		final List<InventoryReservRequest> reqlist = new ArrayList<InventoryReservRequest>();
@@ -64,24 +67,28 @@ public class InventoryReservationServiceImplTest
 		final InventoryReservRequest reqObj = new InventoryReservRequest();
 		try
 		{
-			cartObj.setUSSID("78945612312345");
-			cartObj.setIsAFreebie("Y");
-			cartObj.setStoreId("STORE1234");
-			cartObj.setFulfillmentType("TSHIP");
-			cartObj.setDeliveryMode("HD");
+
+
+			//TISSEC-50
+			cartObj.setUSSID("");//TODO : Please enter ussid
+			cartObj.setIsAFreebie("");//TODO : Please enter freebie flag
+			cartObj.setStoreId("");//TODO : Please enter store id
+			cartObj.setFulfillmentType("");//TODO : Please enter fulfillment type
+			cartObj.setDeliveryMode("");//TODO : Please enter delivery mode
 			cartObj.setQuantity(Integer.valueOf(4));
-			reqObj.setUSSID("789456123789456");
-			reqObj.setParentUSSID("789456123789456");
-			reqObj.setIsAFreebie("Y");
-			reqObj.setStoreId("STORE1234");
-			reqObj.setFulfillmentType("TSHIP");
-			reqObj.setDeliveryMode("HD");
-			reqObj.setQuantity("Integer.valueOf(4)");
+			reqObj.setUSSID("");//TODO : Please enter ussid
+			reqObj.setParentUSSID("");//TODO : Please enter parent ussid
+			reqObj.setIsAFreebie("");//TODO : Please enter freebie flag
+			reqObj.setStoreId("");//TODO : Please enter store id
+			reqObj.setFulfillmentType("");//TODO : Please enter fulfillment type
+			reqObj.setDeliveryMode("");//TODO : Please enter delivery mode
+			reqObj.setQuantity("");//TODO : Please enter quantity
 			freebieItemslist.add(reqObj);
 			reqlist.addAll(freebieItemslist);
 			reqdata.setCartId(cartId);
 			reqdata.setPinCode(pincode);
-			reqdata.setDuration("oms.inventory.reservation.cart.duration");
+
+			reqdata.setDuration("");//TODO : Please enter duration
 			reqdata.setItem(reqlist);
 			response = inventoryReservationServiceImpl.reserveInventoryAtCheckout(reqdata);
 		}
@@ -98,18 +105,23 @@ public class InventoryReservationServiceImplTest
 	public void reserveInventoryAtCheckout() throws JAXBException
 	{
 		final InventoryReservListRequest request = new InventoryReservListRequest();
-		request.setCartId("cart1234");
-		request.setPinCode("700156");
-		request.setDuration("0");
+
+		//TISSEC-50
+		request.setCartId("");//TODO : Please enter cart id
+		request.setPinCode("");//TODO : Please enter pincode
+		request.setDuration("");//TODO : Please enter duration
+
 		final List<InventoryReservRequest> itemList = new ArrayList<InventoryReservRequest>();
 		final InventoryReservRequest item = new InventoryReservRequest();
-		item.setDeliveryMode("HD");
-		item.setFulfillmentType("TSHIP");
-		item.setParentUSSID("12345678");
-		item.setQuantity("5");
-		item.setUSSID("s00000000001");
-		item.setStoreId("store1234");
-		item.setIsAFreebie("Y");
+
+
+		item.setDeliveryMode("");//TODO : Please enter delivery mode
+		item.setFulfillmentType("");//TODO : Please enter fulfillment type
+		item.setParentUSSID("");//TODO : Please enter parent ussid
+		item.setQuantity("");//TODO : Please enter quantity
+		item.setUSSID("");//TODO : Please enter ussid
+		item.setStoreId("");//TODO : Please enter store id
+		item.setIsAFreebie("");//TODO : Please enter freebie flag
 		itemList.add(item);
 		request.setItem(itemList);
 		final InventoryReservListResponse responsefromOMS = new InventoryReservListResponse();

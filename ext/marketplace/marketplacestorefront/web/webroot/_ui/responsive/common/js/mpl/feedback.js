@@ -111,22 +111,7 @@
 
 
 $(document).ready(function(){
-	
-	$('#js-site-search-input').on( 'click', function() {
-	    $(this).removeAttr('readonly').focus().select();
-	});
-	
-	$('#js-site-search-input').on( 'blur', function() {
-	    $( this ).prop( 'readonly', 'readonly' );
-	});
-	$('#mailtext').on( 'click', function() {
-		$(this).removeAttr('readonly').focus().select();
-	});
-	
-	$('#mailtext').on( 'blur', function() {
-		$( this ).prop( 'readonly', 'readonly' );
-	});
-	
+
 	//TISEEII-640 issue fix -- Start
 	$(".facet.js-facet .js-facet-name").each(function(){
 		var x = $(this).html().length; 
@@ -766,7 +751,7 @@ $(document).ready(function(){
 		$('.benefits ul li').each(function(count) {
 			var liHeight = ($('.sign-in .tabs li.active').height()+20)/3;
 			var liPadding = $('.benefits ul li').eq(count).find("div:last-child").height();
-			console.log("active"+liHeight);
+		//	console.log("active"+liHeight);
 			$('.benefits ul li').eq(count).css({
 													"height" : liHeight+1,
 													"padding" : (liHeight-liPadding)/2+"px 20px"
@@ -908,7 +893,26 @@ $(document).ready(function(){
 	
 	
 	  }
-	  
+	  if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
+		  $("#js-site-search-input").attr("readonly","readonly");
+		  $("#mailtext").attr("readonly","readonly");
+			$('#js-site-search-input').on( 'click', function() {
+			    $(this).removeAttr('readonly').focus().select();
+			});
+			
+			$('#js-site-search-input').on( 'blur', function() {
+			    $( this ).prop( 'readonly', 'readonly' );
+			});
+			$('#mailtext').on( 'click', function() {
+				$(this).removeAttr('readonly').focus().select();
+			});
+			
+			$('#mailtext').on( 'blur', function() {
+				$( this ).prop( 'readonly', 'readonly' );
+			});
+			
+		  
+	  }
 	 /*---END  of function for Internet Explorer video z-index overlapping ends----*/
 		
 		$(".checkout-shipping #addressForm input[type='checkbox']").change(function () {
@@ -976,12 +980,12 @@ $(document).ready(function(){
 								returnType : "JSON",
 								success : function(data) {
 									listSelect = "";
-									console.log(data);
+								//	console.log(data);
 									$.each(data, function(k, v) {
 										listSelect += '<option value="'+v+'">'
 												+ v + '</option>';
 									});
-									console.log(listSelect);
+								//	console.log(listSelect);
 									$("#feedCategory").html(listSelect);
 									$(".feed-back").show();
 								},

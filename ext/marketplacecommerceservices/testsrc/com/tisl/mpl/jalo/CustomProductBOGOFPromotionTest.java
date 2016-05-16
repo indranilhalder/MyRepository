@@ -71,11 +71,11 @@ public class CustomProductBOGOFPromotionTest extends AbstractPromotionTest
 		super.setUp();
 		MockitoAnnotations.initMocks(this);
 		final CustomProductBOGOFPromotion customProductBOGOFPromotion = new CustomProductBOGOFPromotion();
-
-		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
+		//TISSEC-50
+		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("", "");//TODO : Please enter catalogue name,Please enter version
 		catalogVersionService.addSessionCatalogVersion(version);
-		product1 = this.productService.getProductForCode(version, "mplProductCatalog-23191");
-		product2 = this.productService.getProductForCode(version, "mplProductCatalog-149243");
+		product1 = this.productService.getProductForCode(version, "");//TODO : Please enter product1
+		product2 = this.productService.getProductForCode(version, "");//TODO : Please enter product2
 
 
 		final Product p1 = new Product();
@@ -95,7 +95,7 @@ public class CustomProductBOGOFPromotionTest extends AbstractPromotionTest
 
 		final UserModel user = userService.getUserForUID("demo");
 		userService.setCurrentUser(user);
-		final CurrencyModel currency = commonI18NService.getCurrency("EUR");
+		final CurrencyModel currency = commonI18NService.getCurrency("");//TODO : Please enter currency
 		commonI18NService.setCurrentCurrency(currency);
 	}
 
@@ -110,7 +110,7 @@ public class CustomProductBOGOFPromotionTest extends AbstractPromotionTest
 		calculationService.calculate(cart);
 		Assert.assertEquals("cart total before updatePromotions", 906.69000000000005D, cart.getTotalPrice().doubleValue(), 0.01D);
 
-		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("mplPromoGrp");
+		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("");//TODO : Please enter promotion grp
 		final Collection promotionGroups = new ArrayList();
 		promotionGroups.add(promotionGroup);
 		promotionsService.updatePromotions(promotionGroups, cart, false, PromotionsManager.AutoApplyMode.APPLY_ALL,

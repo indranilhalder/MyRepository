@@ -59,7 +59,6 @@ import de.hybris.platform.task.RetryLaterException;
 import de.hybris.platform.task.TaskModel;
 import de.hybris.platform.task.impl.DefaultTaskService;
 import de.hybris.platform.util.Utilities;
-import com.tisl.mpl.fulfilmentprocess.test.actions.TestActionTemp;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -84,6 +83,8 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.ClassPathResource;
+
+import com.tisl.mpl.fulfilmentprocess.test.actions.TestActionTemp;
 
 
 @IntegrationTest
@@ -136,8 +137,7 @@ public class PaymentIntegrationTest extends ServicelayerTest
 				"/marketplacefulfilmentprocess/test/marketplacefulfilmentprocess-spring-test.xml"));
 		xmlReader.loadBeanDefinitions(new ClassPathResource(
 				"/marketplacefulfilmentprocess/test/marketplacefulfilmentprocess-spring-test-fraudcheck.xml"));
-		xmlReader
-				.loadBeanDefinitions(new ClassPathResource("/marketplacefulfilmentprocess/test/process/order-process-spring.xml"));
+		xmlReader.loadBeanDefinitions(new ClassPathResource("/marketplacefulfilmentprocess/test/process/order-process-spring.xml"));
 		modelService = (ModelService) getBean("modelService");
 		processService = (DefaultBusinessProcessService) getBean("businessProcessService");
 		definitonFactory = processService.getProcessDefinitionFactory();
@@ -272,6 +272,7 @@ public class PaymentIntegrationTest extends ServicelayerTest
 
 	protected OrderModel placeTestOrder(final boolean valid) throws InvalidCartException, CalculationException
 	{
+		//TISSEC-50
 		final CartModel cart = cartService.getSessionCart();
 		final UserModel user = userService.getCurrentUser();
 		cartService.addNewEntry(cart, productService.getProductForCode("testProduct1"), 1, null);
@@ -280,20 +281,20 @@ public class PaymentIntegrationTest extends ServicelayerTest
 
 		final AddressModel deliveryAddress = new AddressModel();
 		deliveryAddress.setOwner(user);
-		deliveryAddress.setFirstname("Der");
-		deliveryAddress.setLastname("Buck");
-		deliveryAddress.setTown("Muenchen");
-		deliveryAddress.setCountry(commonI18NService.getCountry("DE"));
+		deliveryAddress.setFirstname("");//TODO : Please enter first name
+		deliveryAddress.setLastname("");//TODO : Please enter last name
+		deliveryAddress.setTown("");//TODO : Please enter town
+		deliveryAddress.setCountry(commonI18NService.getCountry(""));//TODO : Please enter country code
 		modelService.save(deliveryAddress);
 
 		final DebitPaymentInfoModel paymentInfo = new DebitPaymentInfoModel();
 		paymentInfo.setOwner(cart);
-		paymentInfo.setBank("MeineBank");
+		paymentInfo.setBank("");//TODO : Please enter bank
 		paymentInfo.setUser(user);
-		paymentInfo.setAccountNumber("34434");
-		paymentInfo.setBankIDNumber("1111112");
-		paymentInfo.setBaOwner("Ich");
-		paymentInfo.setCode("testPaymentInfo1");
+		paymentInfo.setAccountNumber("");//TODO : Please enter account number
+		paymentInfo.setBankIDNumber("");//TODO : Please enter bank id number
+		paymentInfo.setBaOwner("");//TODO : Please enter Ba Owner
+		paymentInfo.setCode("");//TODO : Please enter code
 		modelService.save(paymentInfo);
 
 		cart.setDeliveryMode(deliveryService.getDeliveryModeForCode("free"));
@@ -302,7 +303,7 @@ public class PaymentIntegrationTest extends ServicelayerTest
 
 		final CardInfo card = new CardInfo();
 		card.setCardType(CreditCardType.VISA);
-		card.setCardNumber("4111111111111111");
+		card.setCardNumber("");//TODO : Please enter card number
 		card.setExpirationMonth(Integer.valueOf(12));
 		if (valid)
 		{

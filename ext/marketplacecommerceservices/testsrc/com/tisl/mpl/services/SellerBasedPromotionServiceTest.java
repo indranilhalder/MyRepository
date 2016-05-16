@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.dao.SellerBasedPromotionDao;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionServiceImpl;
@@ -32,7 +33,7 @@ public class SellerBasedPromotionServiceTest
 	private SellerBasedPromotionServiceImpl sellerBasedPromotionServiceImpl;
 	private SellerInformationModel sellerModel;
 	private CatalogVersionModel version;
-	private final static String CODE = "123654720";
+	private final static String CODE = MarketplacecclientservicesConstants.EMPTY;//TODO:Please enter code
 
 
 	@Before

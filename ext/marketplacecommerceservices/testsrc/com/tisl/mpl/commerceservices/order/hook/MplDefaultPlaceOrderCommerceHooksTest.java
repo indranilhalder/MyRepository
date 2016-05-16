@@ -39,6 +39,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
@@ -87,11 +88,13 @@ public class MplDefaultPlaceOrderCommerceHooksTest
 	{
 		final CommerceOrderResult commerceOrderResult = new CommerceOrderResult();
 		final List<OrderModel> orderList = new ArrayList<OrderModel>();
-		orderModel.setCode("1234567");
+
+		//TISSEC-50
+		orderModel.setCode("");//TODO : Please enter code
 		orderModel.setDeliveryCost(Double.valueOf(1234));
 		orderModel.setFraudulent(Boolean.FALSE);
-		/*orderModel.setPurchaseOrderNumber("1234567");*/
-		orderModel.setGuid("guid1234");
+
+		orderModel.setGuid("");//TODO : Please enter guid
 		orderModel.setPaymentInfo(codPaymentInfo);
 
 		commerceOrderResult.setOrder(orderModel);
@@ -100,13 +103,16 @@ public class MplDefaultPlaceOrderCommerceHooksTest
 
 		final ArrayList<JuspayEBSResponseModel> riskList = new ArrayList<JuspayEBSResponseModel>();
 		final JuspayEBSResponseModel risk = new JuspayEBSResponseModel();
-		risk.setEbs_bin_country("abc");
-		risk.setEbsRiskPercentage("20");
+
+		//TISSEC-50
+		risk.setEbs_bin_country("");//TODO : Please enter ebs bin country
+		risk.setEbsRiskPercentage("");//TODO : Please enter ebs risk percentage
 		riskList.add(risk);
 
 		final MplPaymentAuditModel mplAudit = new MplPaymentAuditModel();
 		mplAudit.setRisk(riskList);
-		given(mplOrderDao.getAuditList("guid1234")).willReturn(mplAudit);
+
+		given(mplOrderDao.getAuditList("")).willReturn(mplAudit);//TODO : Please enter guid
 		riskList.addAll(mplAudit.getRisk());
 		mplFraudModelService.updateFraudModel(orderModel, mplAudit);
 	}
@@ -115,20 +121,22 @@ public class MplDefaultPlaceOrderCommerceHooksTest
 	public void beforeSubmitOrder() throws InvalidCartException
 	{
 		final CommerceOrderResult paramCommerceOrderResult = new CommerceOrderResult();
-		orderModel.setCode("1234567");
+
+		orderModel.setCode("");//TODO : Please enter code
 		orderModel.setDeliveryCost(Double.valueOf(1234));
 		orderModel.setFraudulent(Boolean.FALSE);
-		/*orderModel.setPurchaseOrderNumber("1234567");*/
-		orderModel.setGuid("guid1234");
+
+		orderModel.setGuid("");//TODO : Please enter guid
 		orderModel.setPaymentInfo(codPaymentInfo);
 		createOrderEntry(orderModel);
 		given(paramCommerceOrderResult.getOrder()).willReturn(orderModel);
-		orderModel.setType("Parent");
 
+		orderModel.setGuid("");//TODO : Please enter guid
 		final String sequenceGeneratorApplicable = MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE.trim();
 		if (sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
 		{
-			final String orderIdSequence = "1234567";
+
+			final String orderIdSequence = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter order id sequence
 			given(mplCommerceCartService.generateOrderId()).willReturn(orderIdSequence);
 			orderModel.setCode(orderIdSequence);
 		}
@@ -139,11 +147,12 @@ public class MplDefaultPlaceOrderCommerceHooksTest
 		}
 
 		final List<OrderModel> orderList = new ArrayList<OrderModel>();
-		orderModel.setCode("13141516");
+
+		orderModel.setCode("");//TODO : Please enter code
 		orderModel.setDeliveryCost(Double.valueOf(1234));
 		orderModel.setFraudulent(Boolean.FALSE);
-		/*orderModel.setPurchaseOrderNumber("1234567");*/
-		orderModel.setGuid("guid1236");
+
+		orderModel.setGuid("");//TODO : Please enter guid
 		orderList.add(orderModel);
 		orderModel.setType("Parent");
 		modelService.save(orderModel);
@@ -160,10 +169,11 @@ public class MplDefaultPlaceOrderCommerceHooksTest
 		final Map<String, List<AbstractOrderEntryModel>> sellerEntryMap = new HashMap<String, List<AbstractOrderEntryModel>>();
 		final List<AbstractOrderEntryModel> abstractOrderEntryList = new ArrayList<AbstractOrderEntryModel>();
 		final AbstractOrderEntryModel abstractOrderEntryModel = new AbstractOrderEntryModel();
-		sellerEntryMap.get("1234567").add(abstractOrderEntryModel);
+
 		final ProductModel productModel = new ProductModel();
 		productModel.setMrp(Double.valueOf(2000));
-		productModel.setName("Van Hausen shirt");
+
+		productModel.setName("");//TODO : Please enter valid product name
 		abstractOrderEntryModel.setProduct(productModel);
 		abstractOrderEntryModel.setBasePrice(Double.valueOf(2000));
 		abstractOrderEntryModel.setTotalPrice(Double.valueOf(2000));
@@ -172,38 +182,52 @@ public class MplDefaultPlaceOrderCommerceHooksTest
 		buyBoxModel.setAvailable(Integer.valueOf(2500));
 		buyBoxModel.setMrp(Double.valueOf(850));
 		buyBoxModel.setPrice(Double.valueOf(2000));
-		buyBoxModel.setProduct("shirt");
-		buyBoxModel.setSellerArticleSKU("123456789000");
-		buyBoxModel.setSellerId("123456");
-		buyBoxModel.setSellerName("WS-RETAIL");
+
+
+		//TISSEC-50
+
+		buyBoxModel.setProduct("");//TODO : Please enter product
+		buyBoxModel.setSellerArticleSKU("");//TODO : Please enter seller article sku
+		buyBoxModel.setSellerId("");//TODO : Please enter seller id
+		buyBoxModel.setSellerName("");//TODO : Please enter seller name
+
 		buyBoxModel.setWeightage(Double.valueOf(2));
-		buyBoxModel.setSellerType("WHOLESELLER");
-		//final BuyBoxModel buyBoxModel = createBuyBoxModel(orderModel);
+
+		buyBoxModel.setSellerType("");//TODO : Please enter seller type
+
 		final AddressModel addressModel = new AddressModel();
-		addressModel.setFirstname("x");
-		addressModel.setLastname("y");
-		addressModel.setLine1("4/5 newtown");
-		addressModel.setLine2("hometown");
+
+
+		addressModel.setFirstname("");//TODO : Please enter first name
+		addressModel.setLastname("");//TODO : Please enter last name
+		addressModel.setLine1("");//TODO : Please enter line1
+		addressModel.setLine2("");//TODO : Please enter line2
 
 		final List<PaymentModeModel> paymentModeList = new ArrayList<PaymentModeModel>();
 		final PaymentModeModel paymentMode = new PaymentModeModel();
-		paymentMode.setCode("COD");
+
+		paymentMode.setCode("");//TODO : Please enter code
 		paymentModeList.add(paymentMode);
 
 		final DeliveryModeModel deliveryMode = new DeliveryModeModel();
-		deliveryMode.setCode("HD");
+
+		deliveryMode.setCode("");//TODO : Please enter delivery mode
 		deliveryMode.setSupportedPaymentModes(paymentModeList);
 
 		final MplZoneDeliveryModeValueModel mplZoneDeliveryModeModel = new MplZoneDeliveryModeValueModel();
-		mplZoneDeliveryModeModel.setProductCode("987654321");
+
+		mplZoneDeliveryModeModel.setProductCode("");//TODO : Please enter product code
 		mplZoneDeliveryModeModel.setDeliveryMode(deliveryMode);
 
 		abstractOrderEntryModel.setConvenienceChargeApportion(Double.valueOf(122));
-		abstractOrderEntryModel.setDescription("desc");
+
+		abstractOrderEntryModel.setDescription("");//TODO : Please enter description
 		abstractOrderEntryModel.setQuantity(Long.valueOf(1));
 		abstractOrderEntryModel.setCurrDelCharge(Double.valueOf(150));
-		abstractOrderEntryModel.setOrderLineId("12345678");
-		abstractOrderEntryModel.setParentTransactionID("transaction123");
+
+		abstractOrderEntryModel.setOrderLineId("");//TODO : Please enter order line id
+
+		abstractOrderEntryModel.setParentTransactionID("");//TODO : Please enter transaction id
 		abstractOrderEntryModel.setDeliveryAddress(addressModel);
 		abstractOrderEntryModel.setMplDeliveryMode(mplZoneDeliveryModeModel);
 
@@ -220,7 +244,8 @@ public class MplDefaultPlaceOrderCommerceHooksTest
 	private void createPaymentTransactionModel(final OrderModel orderModel)
 	{
 		final PaymentTransactionModel paymentTransactionModel = new PaymentTransactionModel();
-		paymentTransactionModel.setCode("cod");
+
+		paymentTransactionModel.setCode("");//TODO : Please enter code
 		final List<PaymentTransactionEntryModel> paymentTransactionEntrylist = createPaymentTransactionEntryModel(paymentTransactionModel);
 		paymentTransactionModel.setEntries(paymentTransactionEntrylist);
 
@@ -235,22 +260,25 @@ public class MplDefaultPlaceOrderCommerceHooksTest
 		final List<PaymentTransactionEntryModel> paymentTransactionEntrylist = new ArrayList<PaymentTransactionEntryModel>();
 		final PaymentTransactionEntryModel paymentTransactionEntryModel = new PaymentTransactionEntryModel();
 
-		//paymentTransactionEntryModel.setType(value);
+
 		paymentTransactionEntryModel.setPaymentTransaction(paymentTransactionModel);
 		final CurrencyModel currency = new CurrencyModel();
-		currency.setIsocode("IN");
-		currency.setSymbol("INR");
+
+		currency.setIsocode("");//TODO : Please enter valid iso code
+		currency.setSymbol("");//TODO : Please enter valid symbol
 		paymentTransactionEntryModel.setCurrency(currency);
 		paymentTransactionEntryModel.setTransactionStatus("payment.transactionStatus");
 
-		paymentTransactionEntryModel.setCode("COD");
+
+		paymentTransactionEntryModel.setCode("");//TODO : Please enter code
 		paymentTransactionEntryModel.setAmount(new BigDecimal(12345));
 		paymentTransactionEntryModel.setTransactionStatusDetails("payment.transactionStatusDetails");
 
 		paymentTransactionEntryModel.setType(PaymentTransactionType.AUTHORIZATION);
 
 		final PaymentTypeModel paymentTypeModel = new PaymentTypeModel();
-		paymentTypeModel.setMode("COD");
+
+		paymentTypeModel.setMode("");//TODO : Please enter mode
 		paymentTransactionEntryModel.setPaymentMode(paymentTypeModel);
 		paymentTransactionEntrylist.add(paymentTransactionEntryModel);
 		return paymentTransactionEntrylist;

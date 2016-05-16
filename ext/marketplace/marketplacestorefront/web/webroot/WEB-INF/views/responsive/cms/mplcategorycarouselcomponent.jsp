@@ -5,7 +5,7 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 
 
@@ -20,12 +20,12 @@
 
 			<c:forEach items="${component.categories}" var="category">
 
-				<c:url value="/Categories/${category.name}/c/${category.code}"
+				<c:url value="/Categories/${category.name}/c-${category.code}"
 					var="categoryUrl">
 					<c:if test="${not empty component.sellerName}">
 
 						<c:param name="q"
-							value=":relevance:sellerId:${component.sellerName}"></c:param>
+							value=":relevance:sellerId:${fn:toUpperCase(component.sellerName)}"></c:param>
 					</c:if>
 				</c:url>
 				<li>
@@ -76,12 +76,12 @@
 
 			<c:forEach items="${component.categories}" var="category">
 
-				<c:url value="/Categories/${category.name}/c/${category.code}"
+				<c:url value="/Categories/${category.name}/c-${category.code}"
 					var="categoryUrl">
 					<c:if test="${not empty component.sellerName}">
 
 						<c:param name="q"
-							value=":relevance:sellerId:${component.sellerName}"></c:param>
+							value=":relevance:sellerId:${fn:toUpperCase(component.sellerName)}"></c:param>
 					</c:if>
 				</c:url>
 				<div class="item slide">
