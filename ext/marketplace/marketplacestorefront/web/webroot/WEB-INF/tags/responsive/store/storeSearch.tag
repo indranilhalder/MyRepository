@@ -49,18 +49,24 @@
 	
 	.input-group-btn>.store-btn{
 	 background:#A9143C;
+	 z-index:3;
 	}
 	.col-sm-6 .storeSearchTextValue{
 	  color:#A9143C;
 	}
 	
 	@media (max-width: 1170px) {
+	 
+	 .input-group-btn>.store-btn{
+	   margin-top: 17px;
+	 }
 	 .container_store_finder {
 		margin: 0px 2px;
 	}
 	.findStoresNearMe{
 	   margin-left: -10px; 
 	   white-space: pre;
+	   margin-top:8px;
 	}
 	.js-store-finder{
 	 margin :0px 12px;

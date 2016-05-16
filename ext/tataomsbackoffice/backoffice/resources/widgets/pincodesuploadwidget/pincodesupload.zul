@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<widget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.zkoss.org/2005/zul">
+<style>
+	.uploadContainer{background:#fff;padding:20px;margin:20% 50px 0 0px;}
+	.div2{margin:0 0px 0 30%;}
+	.heading {font-weight:bold;display:block;font-size:16px;margin-bottom:15px;text-align:left;}
+	.error_class{font-size:13px;color:red;}
+</style>
+	
+	<div class="uploadContainer" height="145px;" width="100%">
+	    <div class="div2">
+	        <label sclass="heading" value="${labels.Pincode.label}"></label>
+	        <textbox id="text"  disabled="true" width="250px;"/>
+	        <button sclass="uploadTxtbox" label="${labels.pincode.uploadBtn}" upload="true,maxsize=302400" id="upload_button"></button> 
+	        <label id="error" sclass="error_class" value="${labels.Pincode.errorMsg}"  visible="false"> </label>
+        </div>
+    </div>
+</widget>
