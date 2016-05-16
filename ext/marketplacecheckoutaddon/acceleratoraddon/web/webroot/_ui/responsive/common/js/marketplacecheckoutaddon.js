@@ -2804,6 +2804,21 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 		}
 	 	});	 
 }
+
+function selectDefaultDeliveryMethod() {
+	 $('#deliveryradioul .delivery ul').each(function(){
+		 var length = $(this).find("li").length; 
+		 //console.log(length);
+		 if(length >= "1") {
+			  //console.log($(this).find("li:first").children("input:radio").attr("id"));
+			  var radioSplit = $(this).find("li:first").children("input:radio").attr("id").split("_");
+			  var radioId = radioSplit[0]+"_"+radioSplit[1];
+			  calculateDeliveryCost(radioId,radioSplit[2]);
+			  $("#"+$(this).find("li:first").children("input:radio").attr("id")).prop('checked', true);
+		 }
+	 });
+}
+
 ////TISST-13010
 function showPromotionTag()
 {
