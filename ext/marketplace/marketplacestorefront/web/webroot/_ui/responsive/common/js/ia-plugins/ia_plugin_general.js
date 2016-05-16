@@ -70,6 +70,7 @@ function init_iaplugin() {
   } 
 }
 
+
 /*Check referring values*/
 function refCheck() {
   if (document.URL.indexOf('req=') > -1) {
@@ -214,12 +215,14 @@ function buildParams(moreParams) {
   }
   if(spid !== "") {
     currentParams.site_product_id = spid;
+   
   }
   if(domain !== "") {
     currentParams.domain = domain;
   }
   
-  if(site_product_array.length > 0) { //if multiple site product ids
+ //undefined issue fix in prod console
+  if(typeof(site_product_array)!= 'undefined' && site_product_array.length > 0) { //if multiple site product ids
     var spids = {};
     currentParams.site_product_id = '';
     for(var i=0; i<site_product_array.length; i++) {
@@ -227,6 +230,7 @@ function buildParams(moreParams) {
     }
     currentParams.site_product_id = currentParams.site_product_id.substring(0, currentParams.site_product_id.length - 1);
   }
+  
   if(category_array.length > 0) { //if multiple site product ids
 	    var spids = {};
 	    currentParams.category_id = '';
