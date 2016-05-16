@@ -126,16 +126,29 @@ $(".A-ZBrands")
 					}
 				});
 
-$("span.helpmeshopbanner").on("click touchend", function() {
+//$("span.helpmeshopbanner").on("click touchend", function() {
+//
+//	$.ajax({
+//		url : ACC.config.encodedContextPath + "/helpmeshop",
+//		type : 'GET',
+//		success : function(html) {
+//			$("div#latestOffersContent").html(html);
+//		}
+//	});
+//});
+
+
+$("span.latestOffersBanner").on("click touchend", function() {
 
 	$.ajax({
 		url : ACC.config.encodedContextPath + "/helpmeshop",
 		type : 'GET',
 		success : function(html) {
-			$("div#helpmeshopcontent").html(html);
+			$("div#latestOffersContent").html(html);
 		}
 	});
 });
+
 
 $("a#tracklink").on("mouseover touchend", function(e) {
 	e.stopPropagation();
