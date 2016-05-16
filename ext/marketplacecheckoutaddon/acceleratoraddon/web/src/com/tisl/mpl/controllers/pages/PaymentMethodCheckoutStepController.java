@@ -243,12 +243,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 
 		//Populate deliveryPointOfService for freebie
-		if (cartModel.getEntries() != null && !freebieModelMap.isEmpty())
+		if (cartModel.getEntries() != null && MapUtils.isNotEmpty(freebieModelMap))
 		{
 			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 			{
 				if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
-						&& cartEntryModel.getAssociatedItems() != null && cartEntryModel.getAssociatedItems().size() > 0)
+						&& CollectionUtils.isNotEmpty(cartEntryModel.getAssociatedItems()))
 				{
 					//start populate deliveryPointOfService for freebie
 					if (LOG.isDebugEnabled())
@@ -1741,12 +1741,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 				responseData = getMplPaymentFacade().applyPromotions(cartData, cart);
-				if (cart != null && cart.getEntries() != null && !freebieModelMap.isEmpty())
+				if (cart != null && cart.getEntries() != null && MapUtils.isNotEmpty(freebieModelMap))
 				{
 					for (final AbstractOrderEntryModel cartEntryModel : cart.getEntries())
 					{
 						if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
-								&& cartEntryModel.getAssociatedItems() != null && cartEntryModel.getAssociatedItems().size() > 0)
+								&& CollectionUtils.isNotEmpty(cartEntryModel.getAssociatedItems()))
 						{
 							mplCheckoutFacade.saveDeliveryMethForFreebie(cart, freebieModelMap, freebieParentQtyMap);
 							//start populate deliveryPointOfService for freebie
