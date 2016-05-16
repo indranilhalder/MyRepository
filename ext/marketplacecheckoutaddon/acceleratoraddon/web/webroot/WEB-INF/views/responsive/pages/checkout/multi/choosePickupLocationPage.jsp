@@ -1121,7 +1121,7 @@
 				<c:choose>
 					<c:when test="${expCheckout gt 0}">
 						<a class="continue_btn" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">	
-							<div class="continue_btn_anchor">PROCEED TO ORDER</div>
+							<div class="continue_btn_anchor">PROCEED TO PAY</div>
 						</a>
 					</c:when>
 					<c:when test="${delModeCount gt 0}">
@@ -1133,7 +1133,7 @@
 					
 					<c:otherwise>
 					<a class="continue_btn" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
-							<div class="continue_btn_anchor">PROCEED TO ORDER</div>
+							<div class="continue_btn_anchor">PROCEED TO PAY</div>
 					</a>
 					</c:otherwise>
 				</c:choose>
@@ -1151,7 +1151,7 @@
 				<c:when test="${expCheckout gt 0}">
 					<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
 					<div class="continue_btn">
-						PROCEED TO ORDER
+						PROCEED TO PAY
 					</div>
 					</a>
 				</c:when>
@@ -1165,7 +1165,7 @@
 				<c:otherwise>
 				<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
 					<div class="continue_btn">
-						PROCEED TO ORDER
+						PROCEED TO PAY
 					</div>
 				</a>
 				</c:otherwise>
