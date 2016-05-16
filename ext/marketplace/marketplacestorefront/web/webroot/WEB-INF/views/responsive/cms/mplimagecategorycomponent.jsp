@@ -5,19 +5,20 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
-<c:url value="/Categories/${category.name}/c/${category.code}"
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<c:url value="/Categories/${category.name}/c-${category.code}"
 	var="categoryUrl">
 
 
 	<c:if test="${not empty component.filterBySellerName}"> 
 
 		<c:param name="q"
-			value=":relevance:sellerId:${component.filterBySellerName}"></c:param>
+			value=":relevance:sellerId:${fn:toUpperCase(component.filterBySellerName)}"></c:param>
  	</c:if> 
 	<c:if test="${not empty component.filterByBrandName}">
 
 		<c:param name="q"
-			value=":relevance:brand:${component.filterByBrandName}"></c:param>
+			value=":relevance:brand:${fn:toUpperCase(component.filterByBrandName)}"></c:param>
 	</c:if>
 	<c:param name="icid"
 			value="${component.pk}"></c:param>
