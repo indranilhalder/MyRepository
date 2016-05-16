@@ -19,4 +19,6 @@ public interface BrandService
 	Map<Character, List<CategoryModel>> getAllBrandsInAplhabeticalOrder(String rootBrandCode);
 
 	boolean checkEmailId(String emailId);
+
+	Map<Character, List<CategoryModel>> getAllBrandsFromCmsCockpit(String componentUid);
 }

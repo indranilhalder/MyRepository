@@ -71,10 +71,8 @@ $("div.departmenthover").on(
 
 		});
 
-$(".A-ZBrands")
-		.on(
-				"mouseover touchend",
-				function(e) {
+					$(".A-ZBrands").on("mouseover touchend",function(e) {
+					var componentUid = $("#componentUid").val();
 					if ($("li#atozbrandsdiplay").length) {
 						// console.log("Dipslaying A-Z Brands..");
 
@@ -82,7 +80,6 @@ $(".A-ZBrands")
 							for ( var key in localStorage) {
 								if (key.indexOf("atozbrandmenuhtml") >= 0) {
 									window.localStorage.removeItem(key);
-									// console.log("Deleting.." + key);
 								}
 							}
 						}
@@ -91,18 +88,15 @@ $(".A-ZBrands")
 								&& (html = window.localStorage
 										.getItem("atozbrandmenuhtml"))
 								&& html != "") {
-							// console.log("Local");
 							if ($("div#appendedAtoZBrands") == null
 									|| $("div#appendedAtoZBrands").length == 0) {
 								$("li#atozbrandsdiplay")
 										.append(decodeURI(html));
 							}
 						} else {
-							// console.log("Server");
-							$
-									.ajax({
-										url : ACC.config.encodedContextPath
-												+ "/atozbrands",
+							$.ajax({
+										url : ACC.config.encodedContextPath + "/atozbrands",
+										data : {"componentUid" : componentUid},		
 										type : 'GET',
 										success : function(html) {
 											//console.log(html)
