@@ -11,4 +11,10 @@
         <function-class>com.tisl.mpl.storefront.tags.RegExFunction</function-class>
         <function-signature> boolean regExMatch(java.lang.String , java.lang.String ) </function-signature>
     </function>
+    
+     <function>
+        <name>regExMatchAndRemove</name>
+        <function-class>com.tisl.mpl.storefront.tags.RegExFunction</function-class>
+        <function-signature> java.lang.String regExMatchAndRemove(java.lang.String , java.lang.String ) </function-signature>
+    </function>
 </taglib>
