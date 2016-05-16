@@ -240,9 +240,10 @@ public class DefaultUpdateSplPriceHelperService implements UpdateSplPriceHelperS
 				if (null != oModel)
 				{
 					categoryList.add(oModel);
-					if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+					final Collection<CategoryModel> subCategoryList = categoryService.getAllSubcategoriesForCategory(oModel);
+					if (CollectionUtils.isNotEmpty(subCategoryList))
 					{
-						categoryList.addAll(oModel.getCategories());
+						categoryList.addAll(subCategoryList);
 					}
 				}
 			}
