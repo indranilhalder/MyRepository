@@ -440,7 +440,17 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					entry.setCurrDelCharge(deliveryCost);
 					LOG.debug(" >>> Delivery cost for ussid  " + sellerArticleSKU + " of fulfilment type " + fulfillmentType + " is "
 							+ deliveryCost);
-					getModelService().save(entry);
+					
+					//if delivery mode is changed from  c-n-c to other and if it contains POS then we need to remove the POS from that entry 
+					 if (null != entry.getMplDeliveryMode() && null != entry.getMplDeliveryMode().getDeliveryMode()
+					   && !entry.getMplDeliveryMode().getDeliveryMode().getCode().equals(MarketplaceFacadesConstants.C_C)
+					   && null != entry.getDeliveryPointOfService())
+					 {
+						 entry.setDeliveryPointOfService(null);
+					 }
+					 
+					 getModelService().save(entry);
+					 break;	
 				}
 			}
 		}
