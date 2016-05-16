@@ -31506,7 +31506,11 @@ span.material-icons{
     border-bottom: none !important;
 }
 } 
-
+/*TISCR-438*/
+li.a-z-li a {
+    display: inline-block;
+    line-height: normal;
+}
 /*--------------maincss-----------*/
 .row
 {
