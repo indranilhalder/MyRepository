@@ -24168,7 +24168,7 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
 	font-size: 12px !important;
 	font-weight: 600;
 	    height: 20px !important;
-    line-height: 3px !important;
+    line-height: 2px !important;
         padding: 13px 18px;
     border:0px;
     }
@@ -27542,14 +27542,14 @@ body .account .account-header select.menu-select optgroup option{
 	.cart.wrapper .product-block li.item > ul.desktop > li.price{
 	    position: absolute;
     left: calc(30% - -10px);
-    top: 120px;
+    top: 140px;
     text-align:left;
     padding-top:0px;
     width: 70%;
     font-size: 14px;
 	}
 	.cart.wrapper .product-block li.item ul .item-edit-details{
-	bottom: -75px;
+	bottom: 1px;
 	}
 	.cart.wrapper .product-block li.item > ul > li.qty{
 	margin-top:30px;
@@ -27574,12 +27574,14 @@ body .account .account-header select.menu-select optgroup option{
 .product-block.wishlist .item .desktop #addToCartButton {
     font-weight: bold;
     max-width:200px;
+    width: auto !important;
+    margin-left: 0px !important;
 }
 .product-block.wishlist form#addToCartForm{
 	position: absolute;
     width: 100%;
-    bottom: -37%;
-    margin-left: -3px;
+    bottom: 1px;
+    left: 32%;
 }
 .cart.wrapper .product-block li.item ul form#addToCartForm .item-edit-details li:first-child{
 	width:80%;
@@ -31575,6 +31577,31 @@ header.brand-header > .content .bottom nav > ul > li:nth-last-of-type(1).active 
 .product-facet .filter-colour input[type="submit"] {
     margin-left: 0;
     margin-right: 0;
+}
+@media(max-width:650px){
+	.cart.wrapper .product-block li.item, .confirmation .product-block li.item{
+	padding: 10px 0;
+	}
+	.cart.wrapper .product-block li.item ul.desktop, .confirmation .product-block li.item ul.desktop{
+	display:table;
+	position:relative;
+	}
+	.cart.wrapper .product-block li.item > ul.desktop > li:first-child{
+	position:static;
+	float:none;
+	clear:both;
+	}
+	.cart.wrapper .product-block li.item > ul.desktop > li.qty{
+	display:table-footer-group;
+	float:none;
+	clear:both;
+	}
+	.cart.wrapper .product-block li.item > ul.desktop > li.delivery{
+	display: table-row-group;
+    padding-left: 32%;
+    width: 100%;
+    position:static;
+	}
 }
 /*--------------maincss-----------*/
 .row
