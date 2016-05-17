@@ -104,7 +104,7 @@ public class DefaultUpdateSplPriceHelperService implements UpdateSplPriceHelperS
 			final List<ProductPromotionModel> promotionData = new ArrayList<ProductPromotionModel>();
 
 
-			final Collection<CategoryModel> categoriesList = product.getSupercategories();
+			final Collection<CategoryModel> categoriesList = getDefaultPromotionsManager().getcategoryData(product);
 			final Collection<ProductPromotionModel> productPromoData = product.getPromotions();
 
 			if (CollectionUtils.isNotEmpty(categoriesList))
