@@ -2238,9 +2238,9 @@ public class CartsController extends BaseCommerceController
 						final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cartModel);
 
 						LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus);
-						final CartModel newCartModel = mplCartFacade.removeDeliveryMode(cartModel);
+						//final CartModel newCartModel = mplCartFacade.removeDeliveryMode(cartModel);
 
-						final List<AbstractOrderEntryModel> abstractOrderEntryList = newCartModel.getEntries();
+						final List<AbstractOrderEntryModel> abstractOrderEntryList = cartModel.getEntries();
 						final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
 						List<GetWishListProductWsDTO> gwlpFreeItemList = new ArrayList<GetWishListProductWsDTO>();
 						GetWishListProductWsDTO gwlp = null;
@@ -2264,29 +2264,29 @@ public class CartsController extends BaseCommerceController
 						{
 							cartDataDetails.setFreeItemsList(gwlpFreeItemList);
 						}
-						if (StringUtils.isNotEmpty(newCartModel.getSubtotal().toString()))
+						if (StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
 						{
-							final PriceData subtotalprice = discountUtility.createPrice(newCartModel,
-									Double.valueOf(newCartModel.getSubtotal().toString()));
+							final PriceData subtotalprice = discountUtility.createPrice(cartModel,
+									Double.valueOf(cartModel.getSubtotal().toString()));
 							if (null != subtotalprice && null != subtotalprice.getValue())
 							{
 								cartDataDetails.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2,
 										BigDecimal.ROUND_HALF_UP)));
 							}
 						}
-						if (StringUtils.isNotEmpty(newCartModel.getTotalPrice().toString()))
+						if (StringUtils.isNotEmpty(cartModel.getTotalPrice().toString()))
 						{
-							final PriceData totalPrice = discountUtility.createPrice(newCartModel,
-									Double.valueOf(newCartModel.getTotalPrice().toString()));
+							final PriceData totalPrice = discountUtility.createPrice(cartModel,
+									Double.valueOf(cartModel.getTotalPrice().toString()));
 							if (null != totalPrice && null != totalPrice.getValue())
 							{
 								cartDataDetails
 										.setTotalPrice(String.valueOf(totalPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 							}
 						}
-						if (StringUtils.isNotEmpty(newCartModel.getDeliveryCost().toString()))
+						if (StringUtils.isNotEmpty(cartModel.getDeliveryCost().toString()))
 						{
-							cartDataDetails.setDeliveryCharge(newCartModel.getDeliveryCost().toString());
+							cartDataDetails.setDeliveryCharge(cartModel.getDeliveryCost().toString());
 						}
 						if (deListedStatus)
 						{
