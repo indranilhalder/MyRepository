@@ -144,19 +144,28 @@ $("span.latestOffersBanner").on("click touchend", function() {
 		type : 'GET',
 		success : function(html) {
 			$("div#latestOffersContent").html(html);
-		}
+		},
+		
+		complete : function() {
+			$(".topConcierge").owlCarousel({
+				navigation:true,
+				navigationText : [],
+				pagination:false,
+				itemsDesktop : [5000,5], 
+				itemsDesktopSmall : [1400,5], 
+				itemsTablet: [650,1], 
+				itemsMobile : [480,1], 
+				rewindNav: false,
+				lazyLoad:true,
+				scrollPerPage:true
+			});
+		}, 
 	});
 });
 
 
-$('div#closeConceirge').on('click touchend',function(e) {
-	//$("#age").val("-Select-");
-	//$("#genderOrTitle").val("-Select-");
-	//$("#reasonOrEvent").val("-Select-");
-	//$("#typeOfProduct").val("");
-	//$(e.currentTarget).closest('.banner').removeClass('active');
-	$("#latestOffersContent").css("display","none");
-	
+$(document).on('click',"div#closeConceirge",function(e) {
+	$(this).parents('.banner').removeClass('active');
 });
 
 

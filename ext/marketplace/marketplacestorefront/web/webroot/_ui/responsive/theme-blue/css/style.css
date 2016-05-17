@@ -703,14 +703,14 @@ h2 {
          	display:none;
          }
     header .banner > span {
-      position: absolute;
+     /* position: absolute;*/
       text-align: center;
       background-color: #A9143C;
       text-transform: none;
       display: block;
       line-height: 30px;
       width: 100%;
-      top: -5px;
+      /*top: -5px;*/
       left: 0;
       padding-top: 5px;
       padding-bottom: 5px;
@@ -728,7 +728,7 @@ h2 {
         -webkit-transition: margin 0.3s 0.3s, opacity 0.3s 0.3s;
         -moz-transition: margin 0.3s 0.3s, opacity 0.3s 0.3s;
         transition: margin 0.3s 0.3s, opacity 0.3s 0.3s; }
-      header .banner > span:before {
+     /* header .banner > span:before {
         content: " ";
         height: 59px;
         width: 59px;
@@ -742,28 +742,21 @@ h2 {
         -moz-transform: translateX(-50%);
         -ms-transform: translateX(-50%);
         -o-transform: translateX(-50%);
-        transform: translateX(-50%); }
-      header .banner > span:after {
+        transform: translateX(-50%); }*/
+      header .banner > span p:after {
         font-family: 'FontAwesome';
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         font-weight: 100;
         content: "\f107";
-        display: block;
+        display: inline-block;
         text-align: center;
         vertical-align: middle;
-        font-size: 22px;
+        font-size: 20px;
         color: #fff;
         font-weight: normal;
-        position: absolute;
-        z-index: 1;
-        left: 50%;
-        top: 100%;
-        -webkit-transform: translateX(-50%) translateY(-50%);
-        -moz-transform: translateX(-50%) translateY(-50%);
-        -ms-transform: translateX(-50%) translateY(-50%);
-        -o-transform: translateX(-50%) translateY(-50%);
-        transform: translateX(-50%) translateY(-50%); }
+        margin-left: 5px;
+        }
     header .banner .content {
       position: relative;
       background-color: #fafafa;
@@ -771,7 +764,7 @@ h2 {
       overflow: hidden;
       height: auto;
       max-height: 0;
-      margin-top: 5px;
+    /*margin-top: 5px;*/
       text-align: center;
       -webkit-transition: max-height 0.3s;
       -moz-transition: max-height 0.3s;
@@ -833,7 +826,7 @@ h2 {
         -moz-transition: margin 0.3s, opacity 0.3s;
         transition: margin 0.3s, opacity 0.3s; }
     header .banner.active .content {
-      max-height: 300px;
+      max-height: 500px;
       -webkit-transition: max-height 0.3s 0.15s;
       -moz-transition: max-height 0.3s 0.15s;
       transition: max-height 0.3s 0.15s; }
@@ -29093,8 +29086,9 @@ font-weight:bold;
 
 .helpmeshopbanner p{
 display:inline-block;
+cursor: pointer;
 }
-.helpmeshopbanner p:before{
+/*.helpmeshopbanner p:before{
     font-family: 'icomoon';
     font-weight: 100;
     content: "\e608";
@@ -29103,7 +29097,7 @@ display:inline-block;
     color: #fff;
     font-weight: lighter;
     margin-right: 5px;
-}
+}*/
 /*New Homepage change starts*/
 .electronic-brand-slider #rotatingImageTimeout  .item img{
 width:100%;
@@ -31507,6 +31501,22 @@ span.material-icons{
 }
 } 
 
+.topConcierge {
+	margin-bottom: 10px;
+}
+#latestOffersContent {
+	padding: 0 10px;	
+}
+.topConcierge .latest-offer-carousal-image img {
+	width: 100%;
+} 
+.topConcierge .latest-offer-info span{
+    line-height: 1;
+    display: inline-block;
+    padding: 4px;
+    width: 100%;
+    word-break: break-word;
+}
 /*--------------maincss-----------*/
 .row
 {

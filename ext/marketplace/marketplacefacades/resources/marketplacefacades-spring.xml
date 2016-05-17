@@ -1494,4 +1494,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		class="com.tisl.mpl.facade.latestoffers.impl.LatestOffersFacadeImpl">
 		<!-- <property name="categoryConverter" ref="categoryConverter"/> -->
 	</bean> 
+	
+	
+	<bean id="offersCompCacheValueLoader"
+		class="com.tisl.mpl.facade.latestoffers.impl.OffersComponentCacheValueLoader"
+		scope="tenant">
+	</bean>	
 </beans>
