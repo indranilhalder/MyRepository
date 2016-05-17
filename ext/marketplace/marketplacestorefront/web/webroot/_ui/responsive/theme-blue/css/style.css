@@ -10560,10 +10560,12 @@ body .account .right-account .order-history .pagination li{
 @media (max-width: 790px) {
     .product-info .product-detail .other-sellers {
         text-align: left;
-        margin-bottom: 30px;
     }
     .product-info .product-detail .other-sellers.back {
         text-align: center
+    }
+    .product-info .product-content .swatch .color-swatch{
+    margin-top:10px;
     }
 }
 @media (min-width: 651px) {
@@ -39322,6 +39324,11 @@ transform:scale(0.8);
 -webkit-transform:scale(0.8);
 transform-origin:0 0;
 -webkit-transform-origin:0 0;}
+}
+.listing-leftmenu .checkbox-menu input.js-less-facet-values-link{
+	padding: 0px;
+    height: auto;
+    margin: 20px 0 0 0;
 }
 /* Order History CSS */
 
