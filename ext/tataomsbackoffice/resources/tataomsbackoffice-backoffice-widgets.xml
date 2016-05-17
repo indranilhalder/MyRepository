@@ -207,6 +207,11 @@
 					slotId="perspectives" template="true">
 
 				</widget>
+				
+				<!-- Added for pincodesUpload -->
+                <widget id="pincodes_upload" widgetDefinitionId="com.hybris.oms.widgets.pincodesuploadwidget"
+					slotId="perspectives" template="true">
+				 </widget>
 
 				<!-- Added for Pin code serviceability and LogisticsReport -->
 				<widget id="container_pincode_logistics_report"

@@ -106,7 +106,8 @@ public class LogisticDataUploadController extends DefaultWidgetController
 	public void selectHomeUploadZip(final UploadEvent uploadEvent) throws InterruptedException
 	{
 
-		if (!propertyFilePathValidation(tmpFilePath, validationErrorPath, tplCSVInboundPath, tplCSVOutboundPath))
+		if (!filePathProviderService.propertyFilePathValidation(PROPERTY_FILE_ERRORS, tmpFilePath, validationErrorPath,
+				tplCSVInboundPath, tplCSVOutboundPath))
 		{
 			return;
 		}
@@ -228,7 +229,8 @@ public class LogisticDataUploadController extends DefaultWidgetController
 	public void selectExpressUploadZip(final UploadEvent uploadEvent) throws InterruptedException
 	{
 
-		if (!propertyFilePathValidation(tmpFilePath, validationErrorPath, tplCSVInboundPath, tplCSVOutboundPath))
+		if (!filePathProviderService.propertyFilePathValidation(PROPERTY_FILE_ERRORS,tmpFilePath, validationErrorPath, tplCSVInboundPath,
+				tplCSVOutboundPath))
 		{
 			return;
 		}
@@ -273,8 +275,8 @@ public class LogisticDataUploadController extends DefaultWidgetController
 				LOG.info("Start Copying of ED file from another system to Commerce Server");
 				final long copyStartTime = System.nanoTime();
 				Files.copy(dest, media.getStreamData());
-				LOG.info("Total Time taken ED file for copying from host system To commerce  "
-						+ (System.nanoTime() - copyStartTime) / 1e6 + MIL_SEC);
+				LOG.info("Total Time taken ED file for copying from host system To commerce  " + (System.nanoTime() - copyStartTime)
+						/ 1e6 + MIL_SEC);
 				LOG.info("End of Copying of ED file from another system to Commerce Server");
 			}
 			catch (final IOException ioexception)
@@ -349,21 +351,5 @@ public class LogisticDataUploadController extends DefaultWidgetController
 		}
 
 	}
-
-	private boolean propertyFilePathValidation(final String... values) throws InterruptedException
-	{
-		for (int i = 0; i < values.length; i++)
-		{
-			if ("null".equals(values[i]) || "".equals(values[i]) || values[i] == null)
-			{
-				Messagebox.show("Unable to find " + PROPERTY_FILE_ERRORS[i], "Error", Messagebox.OK, Messagebox.ERROR);
-				LOG.info("Unable to find " + PROPERTY_FILE_ERRORS[i]);
-				return false;
-			}
-		}
-		return true;
-	}
-
-
 
 }

@@ -8,6 +8,7 @@ import javax.xml.bind.JAXBException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.RefundInitiatedNotificationService;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderRefundProcessModel;
@@ -17,6 +18,7 @@ import com.tisl.mpl.sms.MplSendSMSService;
 
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.returns.model.RefundEntryModel;
@@ -82,12 +84,13 @@ public class DefaultRefundInitiatedNotificationService implements
 		 */
 		LOG.info("Starting Order Refund Mail");
 		try {
-//			final OrderProcessModel orderProcessModel = (OrderProcessModel) getBusinessProcessService()
-//					.createProcess(
-//							"sendOrderRefundEmailProcess-"
-//									+ orderModel.getCode() + "-"
-//									+ System.currentTimeMillis(),
-//							"sendOrderRefundEmailProcess");
+			// final OrderProcessModel orderProcessModel = (OrderProcessModel)
+			// getBusinessProcessService()
+			// .createProcess(
+			// "sendOrderRefundEmailProcess-"
+			// + orderModel.getCode() + "-"
+			// + System.currentTimeMillis(),
+			// "sendOrderRefundEmailProcess");
 			final OrderRefundProcessModel orderRefundProcessModel = (OrderRefundProcessModel) getBusinessProcessService()
 					.createProcess(
 							"sendOrderRefundEmailProcess-"
@@ -138,8 +141,55 @@ public class DefaultRefundInitiatedNotificationService implements
 				orderNumber = subOrder.getParentReference().getCode();
 			}
 		}
-		final String mobileNumber = returnEntry.getReturnRequest().getOrder()
-				.getDeliveryAddress().getPhone1();
+		String mobileNumber = null;
+		
+		// in Case of CnC Order taking mobile number from CustomerModel
+		try {
+			if (null != returnEntry
+					&& null != returnEntry.getOrderEntry()
+					&& null != returnEntry.getOrderEntry().getMplDeliveryMode()
+					&& null != returnEntry.getOrderEntry().getMplDeliveryMode()
+							.getDeliveryMode()) {
+				if (returnEntry
+						.getOrderEntry()
+						.getMplDeliveryMode()
+						.getDeliveryMode()
+						.getCode()
+						.trim()
+						.equalsIgnoreCase(
+								MarketplaceCockpitsConstants.CLICK_AND_COLLECT
+										.trim())) {
+					try {
+						CustomerModel customermodel = (CustomerModel) orderModel
+								.getUser();
+						if (null != customermodel
+								&& null != customermodel.getMobileNumber()) {
+							LOG.debug(" Customer mobile Number: "
+									+ mobileNumber);
+							mobileNumber = customermodel.getMobileNumber();
+						}
+					} catch (Exception e) {
+						LOG.debug(" Customer mobile Number: " + mobileNumber);
+					}
+					if (null == mobileNumber || mobileNumber.isEmpty()
+							&& null != orderModel
+							&& null != orderModel.getPickupPersonMobile()) {
+						mobileNumber = orderModel.getPickupPersonMobile();
+						LOG.debug(" Customer mobile Number: " + mobileNumber);
+					}
+				} else if (null != returnEntry) {
+					try {
+						mobileNumber = returnEntry.getReturnRequest()
+								.getOrder().getDeliveryAddress().getPhone1();
+						LOG.debug("SMS Mobile Number : " + mobileNumber);
+					} catch (Exception e) {
+						LOG.info("Mobile Number null" + e);
+					}
+				}
+			}
+		} catch (Exception e) {
+			LOG.debug("Customer Mobile Number null ");
+		}
 
 		final SendSMSRequestData smsRequestDataRefundInitiated = new SendSMSRequestData();
 		smsRequestDataRefundInitiated

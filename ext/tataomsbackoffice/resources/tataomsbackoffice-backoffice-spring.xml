@@ -16,7 +16,17 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="tataomsbackofficeService" class="com.hybris.oms.tata.services.TataomsbackofficeService" />
+	 <!-- Added for code service-->
+	<bean id="tataomsbackofficeService" class="com.hybris.oms.tata.services.TataomsbackofficeService" >
+	     <property name="ordpnasgCode"  value="${tata.oms.ordpnasg.code:#{null}}" />
+    	 <property name="cncCode"  value="${tata.oms.cnc.code:#{null}}" />
+    	 <property name="sshipCode"  value="${tata.oms.sship.code:#{null}}" />
+     	 <property name="tshipCode"  value="${tata.oms.tship.code:#{null}}" />
+    	 <property name="edCode"  value="${tata.oms.ed.code:#{null}}" />
+    	 <property name="hdCode"  value="${tata.oms.hd.code:#{null}}" />
+    	 <property name="ordREJECCode"  value="${tata.oms.ordrejec.code:#{null}}" />
+    	 <property name="pymtSCSSCode"  value="${tata.oms.pymtscss.code:#{null}}" />
+     </bean>
 
 	<bean id="tataomsbackofficeLabelLocator" class="com.hybris.cockpitng.util.labels.ResourcesLabelLocator" scope="singleton" init-method="init" lazy-init="false">
   		<property name="location" value="/tataomsbackoffice-backoffice-labels/"/>
@@ -41,6 +51,8 @@
 	 <property name="tplOutbndCsvPath"  value="${tata.oms.tpl.upload.outbnd.path:#{null}}"/>
      <property name="validationErrFilePath"  value="${tata.oms.tpl.upload.err.path:#{null}}" />
      <property name="statesPropFilePath" value="${HYBRIS_CONFIG_DIR}"/>
+     <!-- for pincodes upload -->
+     <property name="pincodesUploadPath"  value="${tata.oms.pincodes.upload.path:#{null}}" />
     </bean>
     <bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
  </beans>

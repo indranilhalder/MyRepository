@@ -3,6 +3,9 @@
  */
 package com.hybris.oms.tata.services;
 
+import org.zkoss.zul.Messagebox;
+
+
 /**
  * @author Saood
  *
@@ -16,6 +19,46 @@ public class FilePathProviderService
 	private String tplOutbndCsvPath;
 	private String validationErrFilePath;
 	private String statesPropFilePath;
+	private String pincodesUploadPath;
+
+	/**
+	 *
+	 * @param ErrorMsg
+	 * @param values
+	 * @return boolean
+	 * @throws InterruptedException
+	 *            This method is called from controller for validate Data from localProprties file.
+	 */
+	public boolean propertyFilePathValidation(final String[] ErrorMsg, final String... values) throws InterruptedException
+	{
+		for (int i = 0; i < values.length; i++)
+		{
+			if ("null".equals(values[i]) || "".equals(values[i]) || values[i] == null)
+			{
+				Messagebox.show("Unable to find " + ErrorMsg[i] + " config inside PropertyFile", "Error", Messagebox.OK,
+						Messagebox.ERROR);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * @return the pincodesUploadPath
+	 */
+	public String getPincodesUploadPath()
+	{
+		return pincodesUploadPath;
+	}
+
+	/**
+	 * @param pincodesUploadPath
+	 *           the pincodesUploadPath to set
+	 */
+	public void setPincodesUploadPath(final String pincodesUploadPath)
+	{
+		this.pincodesUploadPath = pincodesUploadPath;
+	}
 
 	/**
 	 * @return the statesPropFilePath
