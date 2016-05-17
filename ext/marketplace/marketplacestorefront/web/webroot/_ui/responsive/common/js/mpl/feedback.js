@@ -1450,16 +1450,16 @@ $(document).ready(function(){
 		});
 
 		$('.select-view .select-list').click(function(){
-			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none' && $('body').hasClass('touchDevice')){
+			if($('body').hasClass('touchDevice')){
 				$('.select-view .select-list').removeClass('touch_click');
-				if($(this).children('ul.dropdown').height() > 0) {
+				if($(this).children('ul').height() > 2) {
 					$(this).removeClass('touch_click');
 				} else {
 					$(this).addClass('touch_click');
 				}
 			}
 				
-		})
+		});
 
 		$('.select-view .select-list ul').click(function(e){
 			$('.select-view .select-list').removeClass('touch_click');
