@@ -16,6 +16,7 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
+import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -27,7 +28,10 @@ import de.hybris.platform.commercefacades.search.data.SearchQueryData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commercesearch.model.SolrHeroProductDefinitionModel;
 import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductDefinitionService;
+import de.hybris.platform.commerceservices.search.facetdata.BreadcrumbData;
+import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetRefinement;
+import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
@@ -135,7 +139,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) String dropDownText, final Model model,
+			@RequestParam(value = "searchCategory", required = false) String dropDownText,
+			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
 	{
 		categoryCode = categoryCode.toUpperCase();
@@ -217,7 +222,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 
 				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-						categoryCode, searchQuery, page, showMode, sortCode, count);
+						categoryCode, searchQuery, page, showMode, sortCode, count, resetAll);
 
 				final List<ProductData> normalProductDatas = searchPageData.getResults();
 				//Set department hierarchy
@@ -255,7 +260,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 
 				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-						categoryCode, searchQuery, page, showMode, sortCode, count);
+						categoryCode, searchQuery, page, showMode, sortCode, count, resetAll);
 				final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, page, showMode, sortCode,
 						model, request, response);
 
@@ -457,15 +462,35 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @return ProductSearchPageData
 	 */
 	protected ProductSearchPageData<SearchStateData, ProductData> performSearch(final String categoryCode,
-			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int pageSize)
+			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int pageSize,
+			final boolean resetAll)
 	{
 		final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
-		searchQueryData.setValue(searchQuery);
+		//searchQueryData.setValue(searchQuery);
+
+		if (StringUtils.isEmpty(searchQuery))
+		{
+			final StringBuffer searchString = new StringBuffer();
+			searchString.append(":relevance:inStockFlag:true");
+			searchQueryData.setValue(XSSFilterUtil.filter(searchString.toString()));
+		}
+		else
+		{
+			searchQueryData.setValue(searchQuery);
+		}
+		if (resetAll)
+		{
+			searchQueryData.setValue(searchQuery);
+		}
 		searchState.setQuery(searchQueryData);
-		return productSearchFacade.categorySearch(categoryCode, searchState, pageableData);
+		//searchState.setResetAll(resetAll);
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = productSearchFacade
+				.categorySearch(categoryCode, searchState, pageableData);
+		searchPageData = updatePageData(searchPageData, categoryCode, searchQuery);
+		return searchPageData;
 	}
 
 	private int getfilterListCountForSize(final String searchQuery)
@@ -516,6 +541,81 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 		}
 		return super.checkRequestUrl(request, response, resolvedUrlPath);
+	}
+
+
+	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> updatePageData(
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData,
+			final String whichSearch, final String searchQuery)
+	{
+		// YTODO Auto-generated method stub
+		if (null != whichSearch)
+		{
+			final List<BreadcrumbData> removeBredCrumb = new ArrayList<BreadcrumbData>();
+			for (final BreadcrumbData updateBreadCrumb : searchPageData.getBreadcrumbs())
+			{
+				if (updateBreadCrumb.getFacetValueCode().equalsIgnoreCase(whichSearch))
+				{
+					removeBredCrumb.add(updateBreadCrumb);
+				}
+			}
+			for (final BreadcrumbData remove : removeBredCrumb)
+			{
+				searchPageData.getBreadcrumbs().remove(remove);
+			}
+
+
+		}
+		if (null != searchPageData)
+		{
+			BreadcrumbData removeBredCrumb = null;
+			boolean flag = false;
+			for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
+			{
+				if (facets.getCode().equalsIgnoreCase("inStockFlag") && facets.getValues().size() <= 1)
+				{
+					for (final BreadcrumbData bredCrumb : searchPageData.getBreadcrumbs())
+					{
+						if (bredCrumb.getFacetCode().equalsIgnoreCase("inStockFlag") && null != searchQuery
+								&& !searchQuery.contains("inStockFlag:true"))
+						{
+							removeBredCrumb = bredCrumb;
+							flag = true;
+						}
+						else if (bredCrumb.getFacetCode().equalsIgnoreCase("inStockFlag") && null == searchQuery)
+						{
+							removeBredCrumb = bredCrumb;
+							flag = true;
+						}
+
+					}
+					searchPageData.getBreadcrumbs().remove(removeBredCrumb);
+
+				}
+			}
+			if (flag)
+			{
+				for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
+				{
+					for (final FacetValueData<SearchStateData> facetValue : facets.getValues())
+					{
+						if (null != facetValue.getQuery() && facetValue.getQuery().getQuery() != null
+								&& facetValue.getQuery().getQuery().getValue() != null
+								&& facetValue.getQuery().getQuery().getValue().contains("inStockFlag:true"))
+						{
+							facetValue.getQuery().getQuery()
+									.setValue(facetValue.getQuery().getQuery().getValue().replace("inStockFlag:true:", ""));
+
+						}
+
+
+					}
+
+				}
+			}
+		}
+
+		return searchPageData;
 	}
 
 	/**
