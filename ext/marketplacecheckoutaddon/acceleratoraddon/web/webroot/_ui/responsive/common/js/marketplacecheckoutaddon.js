@@ -2799,7 +2799,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 			isCodSet = false;
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 
 	 		}
 	 	});	 
@@ -2865,7 +2865,7 @@ function checkPincodeServiceability(buttonType)
  		success : function(response) {
  			if(response=="N")
  				{
- 				alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 		//		alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  	 			$("#isPincodeServicableId").val('N');
  	 			reloadpage(selectedPincode,buttonType);
  				}
@@ -2877,7 +2877,7 @@ function checkPincodeServiceability(buttonType)
  			
  		},
  		error : function(resp) {
- 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  			$("#isPincodeServicableId").val('N');
  			reloadpage(selectedPincode,buttonType);
  		}
@@ -3124,7 +3124,7 @@ function checkIsServicable()
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
 	 		}
 	 	});
@@ -3312,7 +3312,7 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			populatePincodeDeliveryMode(response,buttonType);
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
 	 		}
 	 	});	 
@@ -3639,7 +3639,7 @@ function expressbutton()
 	 			populatePincodeDeliveryMode(response,'typeExpressCheckout');
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
 	 		}
 	 	});	 
