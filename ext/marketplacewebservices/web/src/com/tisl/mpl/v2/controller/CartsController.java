@@ -2531,32 +2531,11 @@ public class CartsController extends BaseCommerceController
 								cartId);
 						cartDetailsData.setProducts(gwlpList);
 
-
-						int otherDelModeCount = 0;
-						for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
-						{
-							if (null != cartEntryModel && null != cartEntryModel.getGiveAway()
-									&& !cartEntryModel.getGiveAway().booleanValue())
-							{
-								if (null == cartEntryModel.getDeliveryPointOfService())
-								{
-									otherDelModeCount++;
-								}
-							}
-						}
-						//check for delivery address if other than cnc delivery mode presents
-						if (otherDelModeCount > 0)
-						{
-							if (null != cartModel.getDeliveryAddress() && null != getShippingAddress(cartModel.getDeliveryAddress()))
-							{
-								cartDetailsData.setShippingAddress(getShippingAddress(cartModel.getDeliveryAddress()));
-							}
-							else
-							{
-								cartDetailsData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-								cartDetailsData.setError(MarketplacecommerceservicesConstants.NODELIVERYADDRESS);
-							}
-						}
+   					if (null != cartModel.getDeliveryAddress() && null != getShippingAddress(cartModel.getDeliveryAddress()))
+   					{
+   						cartDetailsData.setShippingAddress(getShippingAddress(cartModel.getDeliveryAddress()));
+   					}
+					
 						//set Pickup person details ,if cart contains
 						if (null != cartModel.getPickupPersonName())
 						{
@@ -3048,6 +3027,9 @@ public class CartsController extends BaseCommerceController
 							+ finalDeliveryCost);
 				}
 			}
+			//if cart doesn't contain cnc products clean up pickup person details
+		   cleanupPickUpDetails(cartId);
+		   
 			if (setFreebieDeliverMode(cartId))
 			{
 				LOG.debug("CartsController : selectDeliveryMode  : Step 3 Freebie delivery mode set done");
@@ -4042,5 +4024,59 @@ public class CartsController extends BaseCommerceController
 		}
 		return cartDataDetails;
 	}
+	
+	
+	/**
+	 * Removes the pickup person details if cart doesn't contains the CNC entries and 
+	 * removes delivery address if cart only contains CNC
+	 * 
+	 * @param cartId
+	 * @return void
+	 */
+	protected void cleanupPickUpDetails(final String cartId)
+	{
+		final CartModel cartModel = mplPaymentWebFacade.findCartValues(cartId);
+		int cncDelModeCount = 0;
+		int otherDelModeCount = 0;
+		for (final AbstractOrderEntryModel orderEntryModel : cartModel.getEntries())
+		{
+			if (null != orderEntryModel.getGiveAway() && !orderEntryModel.getGiveAway().booleanValue())
+			{
+				if (null != orderEntryModel.getMplDeliveryMode()
+						&& null != orderEntryModel.getMplDeliveryMode().getDeliveryMode()
+						&& MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase((orderEntryModel.getMplDeliveryMode()
+								.getDeliveryMode().getCode())))
+				{
+					++cncDelModeCount;
+				}
+				else
+				{
+					++otherDelModeCount;
+				}
+			}
+		}
+		//if entry does not have any click and collect,remove pickup details
+		if (cncDelModeCount == 0)
+		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Cart Entries does not have any CNC mode");
+			}
+			cartModel.setPickupPersonMobile(null);
+			cartModel.setPickupPersonName(null);
+		}
+		//if cart has only cnc and cart contains del address remove it
+		if (cncDelModeCount > 0 && otherDelModeCount == 0 && null != cartModel.getDeliveryAddress())
+		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Cart Entries have only CNC mode and del address is not empty");
+			}
+			cartModel.setDeliveryAddress(null);
+		}
+		modelService.save(cartModel);
+	}
+
+
 
 }

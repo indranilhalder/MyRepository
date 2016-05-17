@@ -142,8 +142,7 @@ public class PromotionalProductsComponentController extends AbstractCMSComponent
 	@SuppressWarnings(
 	{ "boxing", "deprecation" })
 	@Override
-	protected void fillModel(final HttpServletRequest request, final Model model,
-			final PromotionalProductsComponentModel component)
+	protected void fillModel(final HttpServletRequest request, final Model model, final PromotionalProductsComponentModel component)
 	{
 
 		final SellerMasterModel seller = component.getSeller();
@@ -160,8 +159,11 @@ public class PromotionalProductsComponentController extends AbstractCMSComponent
 		{
 			brandId = brand.getCode();
 		}
-
-		final String identifier = component.getPromotion().getCode();
+		String identifier = null;
+		if (null != component.getPromotion())
+		{
+			identifier = component.getPromotion().getCode();
+		}
 
 		try
 		{
@@ -206,7 +208,6 @@ public class PromotionalProductsComponentController extends AbstractCMSComponent
 		model.addAttribute("offerLinkId", categoryID);
 
 	}
-
 
 
 
