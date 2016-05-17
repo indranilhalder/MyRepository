@@ -121,9 +121,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 					orderTrackingWsDTO.setBillingAddress(GenericUtilityMethods.setAddress(orderDetails, 1));
 					orderTrackingWsDTO.setDeliveryAddress(GenericUtilityMethods.setAddress(orderDetails, 2));
 				   //add pickup person details
-					orderTrackingWsDTO.setPickupPersonName(orderDetails.getPickupName());				
-				    orderTrackingWsDTO.setPickupPersonMobile(orderDetails.getPickupPhoneNumber());
-					
+					if (StringUtils.isNotEmpty(orderDetails.getPickupName()))
+					{
+						orderTrackingWsDTO.setPickupPersonName(orderDetails.getPickupName());
+					}
+					if (StringUtils.isNotEmpty(orderDetails.getPickupPhoneNumber()))
+					{
+						orderTrackingWsDTO.setPickupPersonMobile(orderDetails.getPickupPhoneNumber());
+					}
 					if (null != orderDetails.getCreated())
 					{
 						orderTrackingWsDTO.setOrderDate(orderDetails.getCreated());
@@ -132,7 +137,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 					{
 						orderTrackingWsDTO.setOrderId(orderDetails.getCode());
 					}
-					if (StringUtils.isNotEmpty(orderDetails.getDeliveryAddress().getLastName())
+					if (null !=orderDetails.getDeliveryAddress() && StringUtils.isNotEmpty(orderDetails.getDeliveryAddress().getLastName())
 							&& StringUtils.isNotEmpty(orderDetails.getDeliveryAddress().getFirstName()))
 					{
 						final String name = orderDetails.getDeliveryAddress().getFirstName().concat(" ")

@@ -114,7 +114,7 @@ public class MicrositePageController extends AbstractSearchPageController
 
 	/*
 	 * This method will get category data from MplCategoryFacade for the given category name.
-	 *
+	 * 
 	 * @param sellerName category name comes from ajax url
 	 */
 	@RequestMapping(value = "/fetchSellerSalesHierarchyCategories/{sellerName}", method = RequestMethod.GET)
@@ -137,7 +137,7 @@ public class MicrositePageController extends AbstractSearchPageController
 		}
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
+			LOG.debug("Error occured in getShopBrandCategories:" + exception.getMessage());
 		}
 
 		return catData;

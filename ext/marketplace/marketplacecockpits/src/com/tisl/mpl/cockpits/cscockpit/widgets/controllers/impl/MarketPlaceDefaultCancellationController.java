@@ -246,8 +246,8 @@ public class MarketPlaceDefaultCancellationController extends
 									// in sync.
 									// getModelService().save(consignmentModel);
 									// newStatus=consignmentModel.getStatus();
-									mplJusPayRefundService.makeOMSStatusUpdate(
-											orderEntry, newStatus);
+									//TISPRD-1827
+									//mplJusPayRefundService.makeOMSStatusUpdate(orderEntry, newStatus);
 
 								}
 
