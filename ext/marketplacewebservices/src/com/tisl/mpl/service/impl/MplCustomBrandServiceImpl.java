@@ -227,7 +227,10 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 
 						subBrandurl = subrand.getSubBrandUrl();
 						subBrandCode = subBrandurl.substring(subBrandurl.lastIndexOf('/') + 1);
-						subbranddata.setSub_brand_code(subBrandCode);
+						if (null != subBrandCode)
+						{
+							subbranddata.setSub_brand_code(subBrandCode);
+						}
 					}
 					else if (subrand.getSubBrandUrl().contains("/c/") || subrand.getSubBrandUrl().contains("/c-"))
 					{
@@ -243,7 +246,10 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 						{
 							subBrandCode = subBrandurl.substring(subBrandurl.lastIndexOf('-') + 1);
 						}
-						subbranddata.setSub_brand_code(subBrandCode);
+						if (null != subBrandCode)
+						{
+							subbranddata.setSub_brand_code(subBrandCode);
+						}
 					}
 					else
 					{
