@@ -139,8 +139,8 @@
 										<option value="selectmonth">Month</option>
 										<c:forEach items="${monthList}" var="month"
 											varStatus="monthStatus">
-											<option value="${month.name}"
-												<c:if test="${not empty dobMonth && dobMonth eq month.name}">
+											<option value="${month.code}"
+												<c:if test="${not empty dobMonth && dobMonth eq month.code}">
 													selected="selected"
 												</c:if>
 											>${month.name}</option>
@@ -199,8 +199,8 @@
 										<option value="selectmonth">Month</option>
 										<c:forEach items="${monthList}" var="month"
 											varStatus="monthStatus">
-											<option value="${month.name}"
-												<c:if test="${not empty doaMonth && doaMonth eq month.name}">
+											<option value="${month.code}"
+												<c:if test="${not empty doaMonth && doaMonth eq month.code}">
 													selected="selected"
 												</c:if>
 											>${month.name}</option>
@@ -212,7 +212,7 @@
 							       skipBlankMessageKey="profile.select.year" items="${yearAnniversaryList}" selectCSSClass="form-control"/></div> --%>
 							       <form:select name="yearList" id="yearOfAnniversary" path="dateOfAnniversaryYear" onchange="selectBoxChange();">
 										<option value="selectyear">Year</option>
-										<c:forEach items="${yearAnniversaryList}" var="year"
+										<c:forEach items="${yearList}" var="year"
 											varStatus="yearStatus">
 											<option value="${year.name}"
 												<c:if test="${not empty doaYear && doaYear eq year.name}">

@@ -202,8 +202,12 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		}
 		else if (source.getOfferID() == null)
 		{
-			target.setUrl("/o/viewAllOffers?offer=" + encodedOfferId + "?searchCategory=" + offerCategoryID
-					+ buildUrlQueryString(source, target).replace("?", "&"));
+			//target.setUrl("/o/viewAllOffers" + buildUrlQueryString(source, target).replace("?", "&"));
+
+			//TISPRD-1867
+			target.setUrl("/view-all-offers" + buildUrlQueryString(source, target).replace("?", "&"));
+			//			target.setUrl("/o/viewAllOffers?offer=" + encodedOfferId + "?searchCategory=" + offerCategoryID
+			//					+ buildUrlQueryString(source, target).replace("?", "&"));
 		}
 
 	}

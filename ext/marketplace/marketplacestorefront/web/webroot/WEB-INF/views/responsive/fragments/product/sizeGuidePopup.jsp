@@ -264,7 +264,7 @@
 			</div>
 
 			<div class="details">
-	 	<span id="noProductForSelectedSeller"> <font color="#ff1c47">
+	 	<span id="noProductForSelectedSeller" style="display:none;"> <font color="#ff1c47">
 			<spring:theme code="product.product.size.guide.notavail"/></font>
 			</span>
 		<span id="productDetails"> 

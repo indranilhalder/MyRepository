@@ -46,15 +46,16 @@
 		</c:when>
 		<c:otherwise>
 			<!-- Canonical Tag -->
-			<c:choose>
-				<c:when test="${regex:regExMatch(reqURI,'[/]$') }">
+			<c:set var="canonical" value="${baseURL}${reqURI}"></c:set>
+<%-- 			<c:choose>
+				<c:when test="${regex:regExMatchAndRemove(reqURI,'[/]$') }">
 					<c:set var="canonical" value="${baseURL}${reqURI}"></c:set>
 				</c:when>
 				<c:otherwise>
 					<c:set var="canonical" value="${baseURL}${reqURI}/"></c:set>
 				</c:otherwise>
-			</c:choose>
-			<link rel="canonical" href="${canonical}" />
+			</c:choose> --%>
+			<link rel="canonical" href="${regex:regExMatchAndRemove(canonical,'[/]$') }" />
 		</c:otherwise>
 	</c:choose>
 	
