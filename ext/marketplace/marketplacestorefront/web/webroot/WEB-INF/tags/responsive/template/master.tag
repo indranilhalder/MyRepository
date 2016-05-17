@@ -14,7 +14,7 @@
 <%@ taglib prefix="htmlmeta" uri="http://hybris.com/tld/htmlmeta"%>
 <%@ taglib prefix="tealium" tagdir="/WEB-INF/tags/addons/tealiumIQ/shared/analytics" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %>
+<%-- <%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %> --%>
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
@@ -25,7 +25,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
 	
 	<%-- Additional meta tags --%>
 	<htmlmeta:meta items="${metatags}"/>
@@ -55,7 +55,7 @@
 					<c:set var="canonical" value="${baseURL}${reqURI}/"></c:set>
 				</c:otherwise>
 			</c:choose> --%>
-			<link rel="canonical" href="${regex:regExMatchAndRemove(canonical,'[/]$') }" />
+			<%-- <link rel="canonical" href="${regex:regExMatchAndRemove(canonical,'[/]$') }" /> --%>
 		</c:otherwise>
 	</c:choose>
 	
@@ -108,10 +108,11 @@
 	<!-- This is commented out as we are not using Google analytics -->
 	<%-- <analytics:analytics/> --%>
 	<%-- <generatedVariables:generatedVariables/> --%>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
 	
 	<!-- <script src="//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.sync.js"></script> -->
 <tealium:sync/> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi" />
 </head>
 
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
