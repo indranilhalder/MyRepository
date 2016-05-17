@@ -6,13 +6,13 @@ package com.tisl.mpl.promotion.service.impl;
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.jalo.Category;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.europe1.model.PriceRowModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.product.ProductService;
-import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.jalo.BuyAPercentageDiscount;
+import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.dao.impl.UpdatePromotionalPriceDaoImpl;
 import com.tisl.mpl.promotion.service.UpdatePromotionalPriceService;
@@ -423,47 +423,22 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	 */
 	private boolean validateProductData(final Product product, final Integer priority)
 	{
+		boolean flag = false;
 		try
 		{
-			final List<ProductPromotion> promotionData = (List<ProductPromotion>) product
-					.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_PROMOTIONS);
-			//	final boolean isHigherPromotionExists = true;
-			int maxPriority = priority.intValue();
-			if (CollectionUtils.isNotEmpty(promotionData))
+			final ProductModel oModel = productService.getProductForCode(getDefaultPromotionsManager().catalogData(),
+					product.getCode());
+			if (null != oModel)
 			{
-				for (final ProductPromotion promotion : promotionData)
-				{
-					if (promotion instanceof BuyAPercentageDiscount
-							&& null != promotion.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_QUANTITY)
-							&& Integer.parseInt(promotion.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_QUANTITY)
-									.toString()) == 1)
-					{
-						if (maxPriority < Integer.parseInt(promotion.getAttribute(
-								MarketplacecommerceservicesConstants.SPECIALPRICE_PRIORITY).toString())
-								&& promotion.isEnabled().booleanValue())
-						{
-							maxPriority = Integer.parseInt(promotion.getAttribute(
-									MarketplacecommerceservicesConstants.SPECIALPRICE_PRIORITY).toString());
-							//	isHigherPromotionExists = false;
-							break;
-						}
-					}
-
-				}
-				if ((priority.intValue() == maxPriority) || (priority.intValue() > maxPriority))
-				{
-					return true;
-				}
+				flag = updateSplPriceHelperService.validateProductData(oModel, priority);
 			}
-
 		}
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-		return false;
+		return flag;
 	}
-
 
 	/**
 	 * Validates Brand Specific Restriction
@@ -650,6 +625,11 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	public void setUpdateSplPriceHelperService(final UpdateSplPriceHelperService updateSplPriceHelperService)
 	{
 		this.updateSplPriceHelperService = updateSplPriceHelperService;
+	}
+
+	protected DefaultPromotionManager getDefaultPromotionsManager()
+	{
+		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
 
 

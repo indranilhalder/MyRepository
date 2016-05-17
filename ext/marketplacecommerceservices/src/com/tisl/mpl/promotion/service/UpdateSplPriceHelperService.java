@@ -4,6 +4,7 @@
 package com.tisl.mpl.promotion.service;
 
 import de.hybris.platform.category.jalo.Category;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,4 +30,15 @@ public interface UpdateSplPriceHelperService
 	 */
 	ConcurrentHashMap<List<String>, List<String>> getEligibleProductList(List<String> brands, List<String> rejectBrandList,
 			Integer priority, List<Category> categories);
+
+	/**
+	 * Validates Product Priority Logic
+	 *
+	 * TISPRO-352 : Fix
+	 *
+	 * @param product
+	 * @param priority
+	 * @return boolean
+	 */
+	boolean validateProductData(ProductModel product, Integer priority);
 }

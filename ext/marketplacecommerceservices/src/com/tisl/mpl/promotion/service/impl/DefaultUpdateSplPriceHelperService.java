@@ -276,6 +276,21 @@ public class DefaultUpdateSplPriceHelperService implements UpdateSplPriceHelperS
 		return categoryList;
 	}
 
+
+	/**
+	 * Validates Product Priority Logic
+	 *
+	 * TISPRO-352 : Fix
+	 *
+	 * @param product
+	 * @return boolean
+	 */
+	@Override
+	public boolean validateProductData(final ProductModel product, final Integer priority)
+	{
+		return validateCategoryProductData(product, priority);
+	}
+
 	/**
 	 * @return the categoryService
 	 */
@@ -297,4 +312,6 @@ public class DefaultUpdateSplPriceHelperService implements UpdateSplPriceHelperS
 	{
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
+
+
 }
