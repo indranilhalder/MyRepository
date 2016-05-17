@@ -62,7 +62,7 @@ import com.tisl.mpl.wsdto.PotentialRestrictionData;
  */
 public class MplPaymentWebServiceImpl implements MplPaymentWebService
 {
-	private static final Logger LOG = Logger.getLogger(MplPaymentWebService.class);
+	private static final Logger LOG = Logger.getLogger(MplPaymentWebServiceImpl.class);
 	@Resource(name = "mplPaymentWebDAO")
 	private MplPaymentWebDAO mplPaymentWebDAO;
 	//	@Resource(name = "productService")
@@ -466,14 +466,11 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 			// Converted Order Status Response from JSON
 			if (null != orderStatusResponseJuspay)
 			{
-				// Update Audit Table in respect or order id in order response structure
-				getMplPaymentService().updateAuditEntry(orderStatusResponseJuspay);
 
 				LOG.debug("updateCardTransactionDetails : paymentMode : " + paymentMode);
 
 				// Validate Payment Mode not null
-				if (!paymentMode.contains(MarketplacewebservicesConstants.COD)
-						&& !paymentMode.contains(MarketplacewebservicesConstants.INPUTNULL))
+				if (StringUtils.isNotEmpty(paymentMode) && !paymentMode.contains(MarketplacewebservicesConstants.COD))
 				{
 					final UserModel user = getExtendedUserService().getUserForOriginalUid(userID);
 
@@ -492,8 +489,18 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 
 							final Map<String, Double> paymentModeMap = new HashMap<String, Double>();
 							paymentModeMap.put(paymentMode, cartModel.getTotalPriceWithConv());
+
+
+							//final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+							//paymentInfo.put(paymentMode, Double.valueOf(totalPriceAfterConvCharge.getValue().doubleValue()));
+							getSessionService().setAttribute(MarketplacewebservicesConstants.PAYMENTMODE, paymentModeMap);
+
+
 							if (!paymentModeMap.isEmpty())
 							{
+								// Update Audit Table in respect or order id in order response structure
+								getMplPaymentService().updateAuditEntry(orderStatusResponseJuspay);
+
 								// Save payment Transaction Entry
 								getMplPaymentService().setPaymentTransaction(orderStatusResponseJuspay, paymentModeMap, cartModel);
 								try
@@ -555,10 +562,12 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 		}
 		catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
 		{
+			LOG.error("updateCardTransactionDetails mobile WS " + e.getMessage());
 			throw e;
 		}
 		catch (final Exception e)
 		{
+			LOG.error("updateCardTransactionDetails mobile WS " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
