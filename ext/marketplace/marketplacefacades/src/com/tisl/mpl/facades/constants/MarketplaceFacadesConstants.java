@@ -130,7 +130,9 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String COLLECTIONDAYS_CONFIG = "configurable-collectionDays";
 	public static final String CONFIGURABLE_RADIUS = "configurable-radius";
 
-
+	public static final String SAVE_STORE_TOPORUDCT_SUCCESS_MSG = "yes";
+	public static final String SAVE_STORE_TOPORUDCT_FAIL_MSG = "no";
+	
 	private MarketplaceFacadesConstants()
 	{
 		//empty
