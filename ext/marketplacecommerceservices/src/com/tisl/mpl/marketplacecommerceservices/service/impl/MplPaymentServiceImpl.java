@@ -2306,7 +2306,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		AddressModel address = null;
 		if (StringUtils.isNotEmpty(orderStatusResponse.getUdf1()))
 		{
-			if (sameAsShipping.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
+			if (sameAsShipping.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE) && null !=cart.getDeliveryAddress())
 			{
 				address = cart.getDeliveryAddress();
 				address.setBillingAddress(Boolean.TRUE);

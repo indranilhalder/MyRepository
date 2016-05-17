@@ -324,16 +324,16 @@ public interface ControllerConstants
 				public static final String COD = "COD";
 				public static final String S_S = "\\s*,\\s*";
 				public static final String DELIVERY_MODES = "deliveryModes";
-				public static final String CHECK_PINCODE = "/checkPincode";
-				public static final String SIZE_GUIDE = "/sizeGuide";
+				public static final String CHECK_PINCODE = "-checkPincode";
+				public static final String SIZE_GUIDE = "-sizeGuide";
 				public static final String NO_SELLERS = "No Sellers Defined For This Product";
 				public static final String NO_PRODUCT = "Selected Size is not available for this Seller";
 				public static final String PRODUCT_CODE_PATH_VARIABLE_PATTERN = "/{productCode:.*}";
-				//public static final String PRODUCT_CODE_PATH_NEW_PATTERN = "/**/p-{productCode:.*}";
+				public static final String PRODUCT_CODE_PATH_NEW_PATTERN = "/**/p-{productCode:.*}";
 				public static final String REVIEWS_PATH_VARIABLE_PATTERN = "{numberOfReviews:.*}";
 				public static final String IS_COD = "isCod";
 				public static final String ALL_OF_STOCK = "allOOStock";
-				public static final String BUYBOZFORSIZEGUIDEAJAX = "/buyboxDataForSizeGuide";
+				public static final String BUYBOZFORSIZEGUIDEAJAX = "-buyboxDataForSizeGuide";
 
 			}
 		}
@@ -341,4 +341,3 @@ public interface ControllerConstants
 
 
 }
-

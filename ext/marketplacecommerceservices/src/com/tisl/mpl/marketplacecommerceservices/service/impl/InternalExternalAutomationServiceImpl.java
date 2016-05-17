@@ -33,8 +33,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import javax.imageio.ImageIO;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +60,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 	//final Logger LOG = Logger.getLogger(this.getClass());
 	private static final Logger LOG = Logger.getLogger(InternalExternalAutomationServiceImpl.class);
+	private static final String encryptionKey = "MZygpewJsCpRrfOr";
 	/*
 	 * @Autowired private CMSPageService cmsPageService;
 	 */
@@ -169,8 +173,24 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											imageUrl = sb.toString();
 											imageSize = findIamgeSize(imageUrl);
 										}
-										campaignDataSeqBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-										campaignDataSeqBanner.setSize(imageSize);
+										if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
+										{
+											campaignDataSeqBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+										}
+										else
+										{
+											campaignDataSeqBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
+										}
+
+										if (null != imageSize)
+										{
+											campaignDataSeqBanner.setSize(imageSize);
+										}
+										else
+										{
+											campaignDataSeqBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+										}
+
 										CampaignDataList.add(campaignDataSeqBanner);
 									}
 									catch (final Exception e)
@@ -235,8 +255,23 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									imageUrl = sb.toString();
 									imageSize = findIamgeSize(imageUrl);
 								}
-								campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-								campaignDataBigPromoBanner.setSize(imageSize);
+								if (null != bigPromoBanner.getBannerImage().getMime() && null != bigPromoBanner.getBannerImage())
+								{
+									campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+								}
+								else
+								{
+									campaignDataBigPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
+								}
+								if (null != imageSize)
+								{
+									campaignDataBigPromoBanner.setSize(imageSize);
+								}
+
+								else
+								{
+									campaignDataBigPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+								}
 								CampaignDataList.add(campaignDataBigPromoBanner);
 							}
 							catch (final Exception e)
@@ -292,8 +327,24 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									imageUrl = sb.toString();
 									imageSize = findIamgeSize(imageUrl);
 								}
-								campaignDataBigFourPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-								campaignDataBigFourPromoBanner.setSize(imageSize);
+								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
+								{
+									campaignDataBigFourPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+								}
+								else
+								{
+									campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
+								}
+								if (null != imageSize)
+								{
+									campaignDataBigFourPromoBanner.setSize(imageSize);
+								}
+								else
+								{
+									campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+								}
+
+
 							}
 							catch (final Exception e)
 							{
@@ -387,7 +438,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 														.getURL());
 												sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 												imageUrl = sb.toString();
+
 												imageSize = findIamgeSize(imageUrl);
+
 											}
 											else if (special.getURL().startsWith(HTTPS))
 											{
@@ -397,12 +450,38 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												imageUrl = sb.toString();
 												imageSize = findIamgeSize(imageUrl);
 											}
-											campaignDataBigFourPromoBanner.setSize(imageSize);
-											campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+											if (null != imageSize)
+											{
+												campaignDataBigFourPromoBanner.setSize(imageSize);
+											}
+											else
+											{
+												campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+											}
+
+											if (null != special.getMime())
+											{
+												campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+											}
+											else
+											{
+
+												campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
+											}
+
 										}
 										else
 										{
-											campaignDataBigFourPromoBanner.setMediaType(differentBanner.getMedia().getMime());
+											if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getMime())
+											{
+												campaignDataBigFourPromoBanner.setMediaType(differentBanner.getMedia().getMime());
+											}
+											else
+											{
+
+												campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
+											}
+
 										}
 									}
 									catch (final Exception e)
@@ -448,7 +527,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									sb = new StringBuffer(simple.getMedia().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 									imageUrl = sb.toString();
+
 									imageSize = findIamgeSize(imageUrl);
+
 									campaignDataBigFourPromoBanner.setSize(imageSize);
 								}
 								else if (null != simple.getMedia() && null != simple.getMedia().getURL()
@@ -458,10 +539,26 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
 									imageSize = findIamgeSize(imageUrl);
-									campaignDataBigFourPromoBanner.setSize(imageSize);
+
+									if (null != imageSize)
+									{
+										campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+									}
+									else
+									{
+										campaignDataBigFourPromoBanner.setSize(imageSize);
+									}
 								}
-								campaignDataBigFourPromoBanner.setMediaType(simple.getMedia().getMime());
+								if (null != simple.getMedia() && null != simple.getMedia().getMime())
+								{
+									campaignDataBigFourPromoBanner.setMediaType(simple.getMedia().getMime());
+								}
+								else
+								{
+									campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
+								}
 							}
+
 							catch (final Exception e)
 							{
 								LOG.error("Cron Job Simple Banner Component Error ", e);
@@ -623,11 +720,34 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		}
 	}
 
+	public String decrypt(final String encrypted) throws Exception
+	{
+		final Cipher cipher = getCipher(Cipher.DECRYPT_MODE);
+		final byte[] plainBytes = cipher.doFinal(Base64.decodeBase64(encrypted));
+
+		return new String(plainBytes);
+	}
+
+	private Cipher getCipher(final int cipherMode) throws Exception
+	{
+		final String encryptionAlgorithm = "AES";
+		final SecretKeySpec keySpecification = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), encryptionAlgorithm);
+		final Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
+		cipher.init(cipherMode, keySpecification);
+
+		return cipher;
+	}
+
+
 	public String findIamgeSize(final String urlString)
 	{
 
 		final String username = "siteadmin";
-		final String password = "ASDF!@#$asdf1234";
+		//final String password = "ASDF!@#$asdf1234";
+
+		final String password = configurationService.getConfiguration().getString("internal.campaign.report.password");
+		//LOG.info("=============== Password read from Configuration File ================" + password);
+
 		String size = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
@@ -640,7 +760,11 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			connection.setReadTimeout(60 * 1000);
 			connection.setConnectTimeout(60 * 1000);
 			final sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
-			final String authorization = username + ":" + password;
+			//final String authorization = username + ":" + password;
+
+			//LOG.info("Password after decryption : " + decrypt(password));
+			final String authorization = username + ":" + decrypt(password);
+
 			final String encodedAuth = "Basic " + encoder.encode(authorization.getBytes());
 			connection.setRequestProperty("Authorization", encodedAuth);
 			//final int responseCode = connection.getResponseCode();
@@ -648,9 +772,16 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			//System.out.println("" + responseCode);
 			//final BufferedImage bimg = ImageIO.read(openURLForInput(url,username,password));
 			final BufferedImage bimg = ImageIO.read(connection.getInputStream());
-			final int width = bimg.getWidth();
-			final int height = bimg.getHeight();
-			size = width + " X " + height;
+			if (null != bimg)
+			{
+				final int width = bimg.getWidth();
+				final int height = bimg.getHeight();
+				size = width + " X " + height;
+			}
+			else
+			{
+				size = MarketplacecommerceservicesConstants.EMPTY;
+			}
 
 			//size = String.valueOf(width) + " X " + String.valueOf(height);
 			LOG.info("Size is :::::::" + size);

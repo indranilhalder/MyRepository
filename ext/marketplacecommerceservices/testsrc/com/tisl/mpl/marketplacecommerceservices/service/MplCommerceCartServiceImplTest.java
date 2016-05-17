@@ -39,6 +39,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
@@ -118,8 +119,9 @@ public class MplCommerceCartServiceImplTest
 	{
 		final SellerInformationData sellerInformationData = Mockito.mock(SellerInformationData.class);
 		final CartData cartDataMock = Mockito.mock(CartData.class);
-		cartDataMock.setDescription("DESC");
-		final String ussid = "1234";
+		//TISSEC-50
+		cartDataMock.setDescription("");//TODO :Please enter description
+		final String ussid = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
 		final List<SellerInformationData> sellerInfoDataMock = new ArrayList<SellerInformationData>();
 		sellerInformationData.setSellerID(ussid);
 		sellerInfoDataMock.add(sellerInformationData);
@@ -132,15 +134,16 @@ public class MplCommerceCartServiceImplTest
 	{
 		final AddressData addressDataMock = Mockito.mock(AddressData.class);
 		final List<AddressData> addressDatasMock = new ArrayList<AddressData>();
-		addressDataMock.setFirstName("abc");
-		addressDataMock.setLastName("mehra");
-		addressDataMock.setLine1("newtown");
-		addressDataMock.setLine2("sarachi");
-		addressDataMock.setPostalCode("700156");
-		addressDataMock.setTown("newtown");
-		addressDataMock.setCompanyName("tcs");
-		addressDataMock.setEmail("abc@gmail.com");
-		addressDataMock.setId("user123");
+		//TISSEC-50
+		addressDataMock.setFirstName("");//TODO :Please enter first name
+		addressDataMock.setLastName("");//TODO :Please enter last name
+		addressDataMock.setLine1("");//TODO :Please enter line1
+		addressDataMock.setLine2("");//TODO :Please enter line2
+		addressDataMock.setPostalCode("");//TODO :Please enter pincode
+		addressDataMock.setTown("");//TODO :Please enter town
+		addressDataMock.setCompanyName("");//TODO :Please enter company
+		addressDataMock.setEmail("");//TODO :Please enter email
+		addressDataMock.setId("");//TODO :Please enter id
 		addressDatasMock.add(0, addressDataMock);
 		final Map<String, String> expressCheckoutAddressMap = new HashMap<String, String>();
 		given(mplCommerceCartServiceImpl.getAddress(addressDatasMock)).willReturn(expressCheckoutAddressMap);
@@ -169,9 +172,9 @@ public class MplCommerceCartServiceImplTest
 		final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		final List<PinCodeResponseData> omsDeliveryResponse = new ArrayList<PinCodeResponseData>();
 
-		final String pinCode = "123456";
-		final String fulfilmentType = "TSHIP";
-		final String ussid = "123654098765485130011713";
+		final String pinCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
+		final String fulfilmentType = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter fulfillment type
+		final String ussid = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
 		final Integer stockCount = Integer.valueOf(67);
 		pinCodeResponseData.setStockCount(stockCount);
 		pinCodeResponseData.setFulfilmentType(fulfilmentType);
@@ -180,7 +183,7 @@ public class MplCommerceCartServiceImplTest
 		pinCodeResponseData.setIsServicable("Y");
 
 		final List<DeliveryDetailsData> deliveryData = new ArrayList<DeliveryDetailsData>();
-		final String inventory = "35";
+		final String inventory = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter inventory
 		final Boolean isCOD = Boolean.TRUE;
 		deliveryDetailsData.setInventory(inventory);
 		deliveryDetailsData.setIsCOD(isCOD);
@@ -191,7 +194,7 @@ public class MplCommerceCartServiceImplTest
 
 		final List<OrderEntryData> orderentry = new ArrayList<OrderEntryData>();
 		final Integer entryNumber = Integer.valueOf(123);
-		final String orderLineId = "254645";
+		final String orderLineId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter orderline id
 		final Long quantity = Long.valueOf(34);
 		orderEntryData.setEntryNumber(entryNumber);
 		orderEntryData.setOrderLineId(orderLineId);
@@ -201,16 +204,16 @@ public class MplCommerceCartServiceImplTest
 		given(cartDataMock.getEntries()).willReturn(orderentry);
 		final List<PinCodeResponseData> pincodeRes = new ArrayList<PinCodeResponseData>();
 		pincodeRes.add(pinCodeResponseData);
-		sellerInformationData.setUssid("123654098765485130011713");
-		deliveryDetailsData.setType("HD");
-		final String deliveryMode = "home-delivery";
-		given(mplDeliveryCostService.getDeliveryCost(deliveryMode, "INR", ussid)).willReturn(deliveryModel);
+		sellerInformationData.setUssid("");//TODO :Please enter ussid
+		deliveryDetailsData.setType("");//TODO :Please enter del type
+		final String deliveryMode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter del mode
+		given(mplDeliveryCostService.getDeliveryCost(deliveryMode, "Please enter currency code", ussid)).willReturn(deliveryModel);
 		final Double value = Double.valueOf(12);
 		final BigDecimal cost = BigDecimal.valueOf(34);
 		priceData.setValue(cost);
 		deliveryModel.setValue(value);
-		deliveryModeData.setCode("HD");
-		deliveryModeData.setName("home-delivery");
+		deliveryModeData.setCode("");//TODO :Please enter code
+		deliveryModeData.setName("");//TODO :Please enter name
 		deliveryModeData.setSellerArticleSKU(ussid);
 		deliveryModeData.setDeliveryCost(priceData);
 
@@ -225,7 +228,7 @@ public class MplCommerceCartServiceImplTest
 	public void testGetCartDetails()
 	{
 		final UserModel userModelMock = Mockito.mock(UserModel.class);
-		final String ussid = "1234";
+		final String ussid = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
 		final Collection<CartModel> cartModelMock = null;
 		given(userService.getUserForUID(ussid)).willReturn(userModelMock);
 		given(userModelMock.getCarts()).willReturn(cartModelMock);
@@ -236,8 +239,8 @@ public class MplCommerceCartServiceImplTest
 	public void testGetDefaultPinCode() throws CMSItemNotFoundException
 	{
 		final AddressData addressDataMock = Mockito.mock(AddressData.class);
-		final String defaultPinCodeId = "700160";
-		final String postalCodeMock = "700156";
+		final String defaultPinCodeId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter default pincode
+		final String postalCodeMock = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter postal code
 		addressDataMock.setPostalCode(postalCodeMock);
 		given(mplCommerceCartServiceImpl.getDefaultPinCode(addressDataMock, defaultPinCodeId)).willReturn(postalCodeMock);
 	}
@@ -256,20 +259,20 @@ public class MplCommerceCartServiceImplTest
 		final MplCustomerProfileData mplCustDataMock = Mockito.mock(MplCustomerProfileData.class);
 		final CartModel cartModelMock = Mockito.mock(CartModel.class);
 		CartData cartDataMock = Mockito.mock(CartData.class);
-		final String emailId = "abc@tcs.com";
-		final String baseSiteId = "base123";
-		final String uid = "uid34";
+		final String emailId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter email
+		final String baseSiteId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter base site id
+		final String uid = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter uid
 		final Collection<CartModel> cartModelList = new ArrayList<CartModel>();
 		final Double value = Double.valueOf(67);
 		final Double deliveryCost = Double.valueOf(150);
-		cartModelMock.setCode("465");
+		cartModelMock.setCode("");//TODO :Please enter code
 		cartModelMock.setConvenienceCharges(value);
 		cartModelMock.setDeliveryCost(deliveryCost);
 		cartModelList.add(cartModelMock);
 		mplCustDataMock.setDisplayUid(emailId);
 		Mockito.when(mplCustomerProfileService.getCustomerProfileDetail(emailId)).thenReturn(mplCustDataMock);
 		Mockito.when(mplCommerceCartServiceImpl.getCartDetails(uid)).thenReturn(cartModelList);
-		final String cartModelTypeCode = "Cart";
+		final String cartModelTypeCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter cart model type code
 		cartDataMock = modelService.create(cartModelTypeCode);
 		cartDataMock.setCode(String.valueOf(keyGenerator.generate()));
 		modelService.save(cartDataMock);
@@ -282,15 +285,15 @@ public class MplCommerceCartServiceImplTest
 		final CartModel cartModelMock = Mockito.mock(CartModel.class);
 		final CartData cartDataMock = Mockito.mock(CartData.class);
 		final Boolean success = Boolean.TRUE;
-		final String cartId = "c123";
-		final String productCode = "987654321";
+		final String cartId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter cart id
+		final String productCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter product code
 		final long quantity = 2;
-		final String ussid = "1234";
-		cartDataMock.setName("user");
-		cartDataMock.setSite("site");
+		final String ussid = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
+		cartDataMock.setName("");//TODO :Please enter name
+		cartDataMock.setSite("");//TODO :Please enter site
 		Mockito.when(mplCommerceCartDao.getCart(cartId)).thenReturn(cartModelMock);
-		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addItemToCart(cartId, productCode, quantity, ussid)))
-				.thenReturn((success));
+		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addItemToCart(cartId, productCode, quantity, ussid))).thenReturn(
+				(success));
 	}
 
 	@Test
@@ -298,9 +301,9 @@ public class MplCommerceCartServiceImplTest
 	{
 		final AbstractOrderEntryModel abstractOrderEntryModel = Mockito.mock(AbstractOrderEntryModel.class);
 		final CartModel cartModelMock = Mockito.mock(CartModel.class);
-		final String ussid = "123";
-		cartModelMock.setName("abc");
-		cartModelMock.setGuid("gu123");
+		final String ussid = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
+		cartModelMock.setName("");//TODO :Please enter name
+		cartModelMock.setGuid("");//TODO :Please enter guid
 		final List<AbstractOrderEntryModel> cartEntryModels = Arrays.asList(abstractOrderEntryModel);
 		Mockito.when(abstractOrderEntryModel.getSelectedUSSID()).thenReturn("123654098765485130011713");
 		cartEntryModels.add(abstractOrderEntryModel);
@@ -315,15 +318,15 @@ public class MplCommerceCartServiceImplTest
 		final OrderEntryData orderEntryData = Mockito.mock(OrderEntryData.class);
 		final PincodeServiceData pincodeServiceData = Mockito.mock(PincodeServiceData.class);
 		final CartData cartDataMock = Mockito.mock(CartData.class);
-		final String pincode = "500030";
-		cartDataMock.setName("user");
-		cartDataMock.setSite("site");
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
+		cartDataMock.setName("");//TODO :Please enter name
+		cartDataMock.setSite("");//TODO :Please enter site
 		final List<OrderEntryData> entryData = new ArrayList<OrderEntryData>();
 		final List<PinCodeResponseData> pinCodeResponseData = new ArrayList<PinCodeResponseData>();
 		final List<PincodeServiceData> reqData = new ArrayList<PincodeServiceData>();
-		final String transactionId = "1234567";
+		final String transactionId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter transaction id
 		final Integer entryNumber = Integer.valueOf(23);
-		final String orderLineId = "57978";
+		final String orderLineId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter orderline id
 		final Long quantity = Long.valueOf(4);
 		orderEntryData.setEntryNumber(entryNumber);
 		orderEntryData.setOrderLineId(pincode);
@@ -334,11 +337,11 @@ public class MplCommerceCartServiceImplTest
 		cartDataMock.setEntries(entryData);
 
 		final Double price = Double.valueOf(1000);
-		pincodeServiceData.setProductCode("987654321");
-		pincodeServiceData.setFullFillmentType("TSHIP");
-		pincodeServiceData.setTransportMode("Air");
-		pincodeServiceData.setSellerId("123654");
-		pincodeServiceData.setUssid("123654098765485130011713");
+		pincodeServiceData.setProductCode("");//TODO :Please enter product code
+		pincodeServiceData.setFullFillmentType("");//TODO :Please enter fulfillment type
+		pincodeServiceData.setTransportMode("");//TODO :Please enter transport mode
+		pincodeServiceData.setSellerId("");//TODO :Please enter seller id
+		pincodeServiceData.setUssid("");//TODO :Please enter ussid
 		pincodeServiceData.setIsCOD("Y");
 		pincodeServiceData.setPrice(price);
 		pincodeServiceData.setIsDeliveryDateRequired("Y");
@@ -353,14 +356,14 @@ public class MplCommerceCartServiceImplTest
 	public void getServiceablePinCodeCart()
 	{
 		final PincodeServiceData pincodeServiceData = Mockito.mock(PincodeServiceData.class);
-		final String pincode = "700156";
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final List<PincodeServiceData> requestData = new ArrayList<PincodeServiceData>();
-		final String fullFillmentType = "TSHIP";
-		final String productCode = "987654321";
-		final String sellerId = "123654";
-		final String ussid = "123654098765485130011713";
+		final String fullFillmentType = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter fulfillment type
+		final String productCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter product code1
+		final String sellerId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter seller id
+		final String ussid = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
 		final String isCOD = "Y";
-		final String transportMode = "homedelivery";
+		final String transportMode = "";//TODO :Please enter transport mode
 		final Double price = Double.valueOf(900);
 		pincodeServiceData.setFullFillmentType(fullFillmentType);
 		pincodeServiceData.setProductCode(productCode);
@@ -382,14 +385,14 @@ public class MplCommerceCartServiceImplTest
 		final PinCodeDeliveryModeResponse pincodeResponse = Mockito.mock(PinCodeDeliveryModeResponse.class);
 		final DeliveryDetailsData deliveryDetailsData = Mockito.mock(DeliveryDetailsData.class);
 		final PinCodeResponseData pinCodeResponseData = Mockito.mock(PinCodeResponseData.class);
-		final String pin = "700156";
+		final String pin = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pin
 		final List<PincodeServiceData> reqData = new ArrayList<PincodeServiceData>();
 		final List<PinCodeResponseData> responseList = new ArrayList<PinCodeResponseData>();
 		boolean servicable = false;
 		final List<PinCodeDeliveryModeResponse> deliveryModeResponse = new ArrayList<PinCodeDeliveryModeResponse>();
 
-		final String fullFillmentType = "TSHIP";
-		final String ussid = "123654098765485130011713";
+		final String fullFillmentType = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter fulfillment type
+		final String ussid = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
 		pincodeResponse.setFulfilmentType(fullFillmentType);
 		pincodeResponse.setUSSID(ussid);
 		deliveryModeResponse.add(pincodeResponse);
@@ -398,7 +401,7 @@ public class MplCommerceCartServiceImplTest
 		final List<DeliveryDetailsData> deliveryDataList = new ArrayList<DeliveryDetailsData>();
 		final List<DeliveryModeResOMSWsDto> deliveryModeMock = new ArrayList<DeliveryModeResOMSWsDto>();
 
-		final String inventory = "46";
+		final String inventory = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter inventory
 		final String isPincodeServiceable = "Y";
 		final String isCOD = "Y";
 		deliveryMode.setInventory(inventory);
@@ -414,7 +417,7 @@ public class MplCommerceCartServiceImplTest
 		pinCodeResponseData.setCod("Y");
 
 		stockCount.add(Integer.valueOf(200));
-		deliveryDetailsData.setType("Home-Delivery");
+		deliveryDetailsData.setType("");//TODO :Please enter type
 		deliveryDetailsData.setInventory("200");
 		deliveryDetailsData.setIsCOD(Boolean.TRUE);
 
@@ -423,7 +426,7 @@ public class MplCommerceCartServiceImplTest
 		pinCodeResponseData.setValidDeliveryModes(deliveryDataList);
 		pinCodeResponseData.setStockCount(Integer.valueOf(200));
 		pinCodeResponseData.setIsServicable("Y");
-		pinCodeResponseData.setUssid("123654098765485130011713");
+		pinCodeResponseData.setUssid("");//TODO :Please enter ussid
 		if (!servicable)
 		{
 			pinCodeResponseData.setIsServicable("N");
@@ -439,13 +442,13 @@ public class MplCommerceCartServiceImplTest
 		final ReservationItemWsDTO itemWsDto = Mockito.mock(ReservationItemWsDTO.class);
 		final CartSoftReservationData cartSoftReservationDataMock = Mockito.mock(CartSoftReservationData.class);
 		final CartData cartDataMock = Mockito.mock(CartData.class);
-		final String cartId = "750159";
-		final String pincode = "700156";
+		final String cartId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter cart id
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final ReservationListWsDTO wsDto = Mockito.mock(ReservationListWsDTO.class);
 		final List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
-		final String reservationStatus = "SUCCESS";
-		final String USSID = "123654098765485130011713";
-		final String availableQuantity = "112";
+		final String reservationStatus = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter reservation status
+		final String USSID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
+		final String availableQuantity = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter available quantity
 		itemWsDto.setAvailableQuantity(availableQuantity);
 		itemWsDto.setUSSID(USSID);
 		itemWsDto.setReservationStatus(reservationStatus);
@@ -453,11 +456,11 @@ public class MplCommerceCartServiceImplTest
 
 		final List<CartSoftReservationData> cartdatalistMock = new ArrayList<CartSoftReservationData>();
 
-		final String fulfillmentType = "SSHIP";
-		final String deliveryMode = "Home-delivery";
+		final String fulfillmentType = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter fulfillment type
+		final String deliveryMode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter delivery mode
 		final Integer quantity = Integer.valueOf(10);
 		final String isAFreebie = "Y";
-		final String type = "payment";
+		final String type = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter type
 
 		cartSoftReservationDataMock.setFulfillmentType(fulfillmentType);
 		cartSoftReservationDataMock.setDeliveryMode(deliveryMode);
@@ -481,8 +484,8 @@ public class MplCommerceCartServiceImplTest
 		final CartData cartDataMock = Mockito.mock(CartData.class);
 		final List<CartSoftReservationData> cartSoftReservationDataList = new ArrayList<CartSoftReservationData>();
 		priceData.setValue(BigDecimal.valueOf(100));
-		cartDataMock.setCode("2345");
-		cartDataMock.setDescription("desc");
+		cartDataMock.setCode("");//TODO :Please enter code
+		cartDataMock.setDescription("");//TODO :Please enter description
 		final List<OrderEntryData> entry = new ArrayList<OrderEntryData>();
 
 		final String transactionId = "";
@@ -492,14 +495,14 @@ public class MplCommerceCartServiceImplTest
 		orderEntryData.setQuantity(quantity);
 		orderEntryData.setTransactionId(transactionId);
 		String deliveryModeGlobalCode = null;
-		deliveryModeData.setCode("home - delivery");
+		deliveryModeData.setCode("");//TODO :Please enter code
 		entry.add(orderEntryData);
 		Mockito.when(cartDataMock.getEntries()).thenReturn(entry);
-		final String sellerArticleSKU = "5567678";
+		final String sellerArticleSKU = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter article sku
 		deliveryModeData.setSellerArticleSKU(sellerArticleSKU);
 		cartSoftReservationDataMock.setUSSID(sellerArticleSKU);
 		cartSoftReservationDataMock.setQuantity(Integer.valueOf(45));
-		deliveryModeGlobalCode = "HD";
+		deliveryModeGlobalCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter global code
 		cartSoftReservationDataMock.setDeliveryMode(deliveryModeGlobalCode);
 		cartSoftReservationDataList.add(cartSoftReservationDataMock);
 		given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartSoftReservationDataList);
@@ -524,40 +527,40 @@ public class MplCommerceCartServiceImplTest
 	 * wishlist2EntryModel.setUssid("123654098765485130011713");
 	 * given(mplCommerceCartServiceImpl.getGiftYourselfDetails(minGiftQuantity, allWishlists,
 	 * pincode)).willReturn(sortedWishList);
-	 *
+	 * 
 	 * final Map<String, List<Wishlist2EntryModel>> sortedWishListMap = new HashMap<String, List<Wishlist2EntryModel>>();
 	 * final List<GetWishListDataWsDTO> getWishListDataWsDTOList = new ArrayList<GetWishListDataWsDTO>(); final String
 	 * wishListName = "DefaultWishlist"; final List<Wishlist2EntryModel> wishlist2EntryModelList = new
 	 * ArrayList<Wishlist2EntryModel>();
-	 *
+	 * 
 	 * wishlist2EntryModelList.add(wishlist2EntryModel); sortedWishListMap.put((wishListName), wishlist2EntryModelList);
 	 * final List<GetWishListProductWsDTO> getWishListProductWsList = new ArrayList<GetWishListProductWsDTO>();
 	 * productModelMock.setArticleDescription("article 12"); productModelMock.setCode("987654321");
 	 * productModelMock.setManufacturerName("manufacturer21"); wishlist2EntryModel.setProduct(productModelMock); final
 	 * List<BrandModel> brandModelList = new ArrayList<BrandModel>(); brandModel.setDescription(
 	 * "Leading electronic Brand "); brandModel.setName("Samsung");
-	 *
+	 * 
 	 * brandModelList.add(brandModel); productModelMock.setBrands(brandModelList); final List<BuyBoxModel>
 	 * buyBoxModelList = buyBoxDao.getBuyBoxPriceForUssId(wishlist2EntryModel.getUssid());
 	 * buyBoxModel.setAvailable(Integer.valueOf(71)); buyBoxModel.setPrice(Double.valueOf(1234));
 	 * buyBoxModel.setSellerId("12345"); buyBoxModel.setSellerArticleSKU("123654098765485130011713");
 	 * buyBoxModel.setProduct("electronic");
-	 *
+	 * 
 	 * buyBoxModelList.add(buyBoxModel);
 	 * given(buyBoxDao.getBuyBoxPriceForUssId("123654098765485130011713")).willReturn(buyBoxModelList); Double finalPrice
 	 * = Double.valueOf(0.0); final Double mrpPrice = Double.valueOf(800); finalPrice = mrpPrice; final String color =
 	 * "red"; final String size = "34"; final String imageUrl = "www.getMyPic.com";
 	 * getWishListProductWsObj.setUSSID((wishlist2EntryModel.getUssid())); getWishListProductWsObj.setColor(color);
 	 * getWishListProductWsObj.setDate(wishlist2EntryModel.getAddedDate());
-	 *
+	 * 
 	 * getWishListProductWsObj.setImageURL(imageUrl); getWishListProductWsObj.setPrice(finalPrice);
 	 * getWishListProductWsObj.setProductBrand((brandModelList.get(0).getName()));
-	 *
+	 * 
 	 * getWishListProductWsObj.setProductcode("987654321");
 	 * getWishListProductWsObj.setSellerId((buyBoxModelList.get(0).getSellerId()));
 	 * getWishListProductWsObj.setSellerName((buyBoxModelList.get(0).getSellerName()));
 	 * getWishListProductWsObj.setSize(size); getWishListProductWsList.add(getWishListProductWsObj);
-	 *
+	 * 
 	 * getWishListDataWsDTOObj.setName(wishListName); getWishListDataWsDTOObj.setProducts(getWishListProductWsList);
 	 * getWishListDataWsDTOList.add(getWishListDataWsDTOObj);
 	 * given(mplCommerceCartServiceImpl.getTopTwoWishlistForUser(userModelMock, pincode)).willReturn(getWishListWsDTO); }
@@ -573,29 +576,29 @@ public class MplCommerceCartServiceImplTest
 
 		final List<MarketplaceDeliveryModeData> mpldeliveryModeData = new ArrayList<MarketplaceDeliveryModeData>();
 		final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
-		deliveryModeData.setName("home-delivery");
-		deliveryModeData.setSellerArticleSKU("123654098765485130011713");
+		deliveryModeData.setName("");//TODO : Please enter name
+		deliveryModeData.setSellerArticleSKU("");//TODO : Please enter article sku
 		deliveryModeData.setDeliveryCost(priceData);
 
 		mpldeliveryModeData.add(deliveryModeData);
-		deliveryModeMap.put("HD", mpldeliveryModeData);
+		deliveryModeMap.put("", mpldeliveryModeData);//TODO : Please enter del mode
 		Boolean codEligible = Boolean.TRUE;
 		final List<PinCodeResponseData> pinCodeEntry = new ArrayList<PinCodeResponseData>();
 		pinCodeResponseData.setCod("Y");
 		pinCodeResponseData.setIsServicable("Y");
-		final String ussid = "123654098765485130011713";
+		final String ussid = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter ussid
 		pinCodeResponseData.setUssid(ussid);
 		final List<DeliveryDetailsData> validDeliveryModes = new ArrayList<>();
-		deliveryDetailsData.setType("Home-delivery");
+		deliveryDetailsData.setType("");//TODO : Please enter type
 		deliveryDetailsData.setIsCOD(Boolean.TRUE);
-		deliveryDetailsData.setInventory("46");
+		deliveryDetailsData.setInventory("");//TODO : Please enter inventory
 		pinCodeResponseData.setValidDeliveryModes(validDeliveryModes);
 
 		pinCodeEntry.add(pinCodeResponseData);
 		codEligible = Boolean.FALSE;
 
 
-		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry)))
-				.thenReturn(Boolean.valueOf((codEligible.booleanValue())));
+		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry))).thenReturn(
+				Boolean.valueOf((codEligible.booleanValue())));
 	}
 }

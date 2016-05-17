@@ -86,12 +86,14 @@ public class BuyAGetPrecentageDiscountCashbackTest
 	@Before
 	public void setUp() throws Exception
 	{
+		//TISSEC-50
 		MockitoAnnotations.initMocks(this);
 		final BuyAGetPrecentageDiscountCashback cashbackPromo = new BuyAGetPrecentageDiscountCashback();
-		final CatalogVersionModel catVersion = catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
-		catalogVersionService.addSessionCatalogVersion(catVersion);
-		product1 = productService.getProductForCode(catVersion, "mplProductCatalog-987654341");
 
+		final CatalogVersionModel catVersion = catalogVersionService.getCatalogVersion("", "");//TODO : Please enter catalogue name,Please enter version
+		catalogVersionService.addSessionCatalogVersion(catVersion);
+
+		product1 = productService.getProductForCode(catVersion, "");//TODO : Please enter product
 		final Product p = new Product();
 		p.setCode(product1.getCode());
 		p.setName(product1.getName());
@@ -105,7 +107,8 @@ public class BuyAGetPrecentageDiscountCashbackTest
 
 		final UserModel user = userService.getUserForUID("demo");//Add User ID
 		userService.setCurrentUser(user);
-		commonI18NService.setCurrentCurrency(commonI18NService.getCurrency("INR"));
+
+		commonI18NService.setCurrentCurrency(commonI18NService.getCurrency(""));//TODO : Please enter currency
 	}
 
 
@@ -154,7 +157,9 @@ public class BuyAGetPrecentageDiscountCashbackTest
 		calculationService.calculate(cart);
 		assertEquals("before updatePromotions(BuyAPrecentageDiscount)", 1000, cart.getTotalPrice().doubleValue(), 0.01);
 
-		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("mplPromoGrp");
+
+		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("");//TODO : Please enter promotion grp
+
 		final Collection<PromotionGroupModel> promotionGroups = new ArrayList<PromotionGroupModel>();
 		promotionGroups.add(promotionGroup);
 		promotionsService.updatePromotions(promotionGroups, cart, false, AutoApplyMode.APPLY_ALL, AutoApplyMode.APPLY_ALL,

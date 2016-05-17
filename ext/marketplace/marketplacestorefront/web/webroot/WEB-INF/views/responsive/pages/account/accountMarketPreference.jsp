@@ -112,73 +112,75 @@
 							</c:forEach>
 						</div>
 						<fieldset>
-							<p>
-								<spring:theme code="text.marketplacePreferences.categories"
-									text="Choose wisely. Tell us your preferences. Choose wisely. Tell us your preferences. Choose wisely. Tell us your preferences. " />
-							</p>
-							
-							<div class="mplPref-category">
-								<c:if test="${not empty selectedCategoryList}">
-									<c:forEach items="${categoryList}" var="category"
-										varStatus="status">
-										<input type="checkbox" name="categoryData" id="categoryData-${status.index}" value="${category.code}"
-											<c:forEach items="${selectedCategoryList}" var="selectedCategory">
+							<c:if test="${not empty categoryList}">
+								<p>
+									<spring:theme code="text.marketplacePreferences.categories"
+										text="Choose wisely. Tell us your preferences. Choose wisely. Tell us your preferences. Choose wisely. Tell us your preferences. " />
+								</p>
+
+								<div class="mplPref-category">
+									<c:if test="${not empty selectedCategoryList}">
+										<c:forEach items="${categoryList}" var="category"
+											varStatus="status">
+											<input type="checkbox" name="categoryData"
+												id="categoryData-${status.index}" value="${category.code}"
+												<c:forEach items="${selectedCategoryList}" var="selectedCategory">
 												<c:if test="${not empty selectedCategory.code && category.code eq selectedCategory.code}">
 												checked="checked"
 												</c:if>
 											</c:forEach>>
-										<label for="categoryData-${status.index}">
-											<span>${category.name}</span>
-										</label>
-									</c:forEach>
-								</c:if>
-								<c:if test="${empty selectedCategoryList}">
+											<label for="categoryData-${status.index}"> <span>${category.name}</span>
+											</label>
+										</c:forEach>
+									</c:if>
+									<c:if test="${empty selectedCategoryList}">
 										<c:forEach items="${categoryList}" var="category"
 											varStatus="status">
-											<input type="checkbox" name="categoryData" id="categoryData-${status.index}" value="${category.code}" 
+											<input type="checkbox" name="categoryData"
+												id="categoryData-${status.index}" value="${category.code}"
 												<c:if test="${is_already_subscribed eq FALSE || is_already_subscribed eq false}">
 												checked="checked"
 												</c:if>>
-											<label for="categoryData-${status.index}">
-												<span>${category.name}</span>
+											<label for="categoryData-${status.index}"> <span>${category.name}</span>
 											</label>
 										</c:forEach>
-								</c:if>
-							</div>
+									</c:if>
+								</div>
+							</c:if>
 						</fieldset>
 						<fieldset>
-							<p>
-								<spring:theme code="text.marketplacePreferences.brand"
-									text="Tell us about the brands you love." />
-							</p>
-							<div class="mplPref-category">
-								<c:if test="${not empty selectedBrandList}">
-									<c:forEach items="${brandList}" var="brand"
-										varStatus="status">
-										<input type="checkbox" name="brandData" id="brandData-${status.index}" value="${brand.code}"
-											<c:forEach items="${selectedBrandList}" var="selectedBrand">
+							<c:if test="${not empty brandList}">
+								<p>
+									<spring:theme code="text.marketplacePreferences.brand"
+										text="Tell us about the brands you love." />
+								</p>
+								<div class="mplPref-category">
+									<c:if test="${not empty selectedBrandList}">
+										<c:forEach items="${brandList}" var="brand" varStatus="status">
+											<input type="checkbox" name="brandData"
+												id="brandData-${status.index}" value="${brand.code}"
+												<c:forEach items="${selectedBrandList}" var="selectedBrand">
 												<c:if test="${not empty selectedBrand.code && brand.code eq selectedBrand.code}">
 												checked="checked"
 												</c:if>
 											</c:forEach>>
-										<label for="brandData-${status.index}">
-											<span>${brand.name}</span>
-										</label>
-									</c:forEach>
-								</c:if>
-								<c:if test="${empty selectedBrandList}">
-									<c:forEach items="${brandList}" var="brand"
-										varStatus="status">
-										<input type="checkbox" name="brandData" id="brandData-${status.index}" value="${brand.code}" 
-											<c:if test="${is_already_subscribed eq FALSE || is_already_subscribed eq false}">
+											<label for="brandData-${status.index}"> <span>${brand.name}</span>
+											</label>
+										</c:forEach>
+									</c:if>
+									<c:if test="${empty selectedBrandList}">
+										<c:forEach items="${brandList}" var="brand" varStatus="status">
+											<input type="checkbox" name="brandData"
+												id="brandData-${status.index}" value="${brand.code}"
+												<c:if test="${is_already_subscribed eq FALSE || is_already_subscribed eq false}">
 												checked="checked"
 											</c:if>>
-										<label for="brandData-${status.index}">
-											<span>${brand.name}</span>
-										</label>
-									</c:forEach>
-								</c:if>
-							</div>
+											<label for="brandData-${status.index}"> <span>${brand.name}</span>
+											</label>
+										</c:forEach>
+									</c:if>
+								</div>
+							</c:if>
 						</fieldset>
 						<fieldset class="frequent">
 							<p>

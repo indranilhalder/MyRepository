@@ -161,11 +161,11 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		{
 			try
 			{
-				return "?q=" + URLEncoder.encode(searchQueryParam, "UTF-8");
+				return "/page-{pageNo}?q=" + URLEncoder.encode(searchQueryParam, "UTF-8");
 			}
 			catch (final UnsupportedEncodingException e)
 			{
-				return "?q=" + StringEscapeUtils.escapeHtml(searchQueryParam);
+				return "/page-{pageNo}?q=" + StringEscapeUtils.escapeHtml(searchQueryParam);
 			}
 		}
 		return "";
@@ -202,8 +202,12 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		}
 		else if (source.getOfferID() == null)
 		{
-			target.setUrl("/o/viewAllOffers?offer=" + encodedOfferId + "?searchCategory=" + offerCategoryID
-					+ buildUrlQueryString(source, target).replace("?", "&"));
+			//target.setUrl("/o/viewAllOffers" + buildUrlQueryString(source, target).replace("?", "&"));
+
+			//TISPRD-1867
+			target.setUrl("/view-all-offers" + buildUrlQueryString(source, target).replace("?", "&"));
+			//			target.setUrl("/o/viewAllOffers?offer=" + encodedOfferId + "?searchCategory=" + offerCategoryID
+			//					+ buildUrlQueryString(source, target).replace("?", "&"));
 		}
 
 	}

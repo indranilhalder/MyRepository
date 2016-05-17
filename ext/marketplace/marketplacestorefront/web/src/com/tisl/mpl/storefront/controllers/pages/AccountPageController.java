@@ -681,10 +681,26 @@ public class AccountPageController extends AbstractMplSearchPageController
 						for (OrderEntryData orderEntryData : subOrder.getEntries())
 						{
 							orderEntryData = getMplOrderFacade().fetchOrderEntryDetails(orderEntryData, sortInvoice, subOrder);
+
 							if (null == orderEntryData)
 							{
 								continue;
 							}
+
+							boolean cancellationMsgFlag = false;
+							if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
+							{
+								//TISCR-410 : To check whether to show missed cancellation deadline message to customer
+								final String orderEntryStatus = orderEntryData.getConsignment().getStatus().getCode();
+								final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
+
+								if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+								{
+									cancellationMsgFlag = true;
+								}
+							}
+							orderEntryData.setIsCancellationMissed(cancellationMsgFlag);
+
 							LOG.debug("Step7-************************Order History: post fetching and populating order entry details "
 									+ orderHistoryData.getCode());
 							//setting cancel product for BOGO
@@ -1027,6 +1043,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 								trackStatusReturnAWBMap.put(orderEntry.getOrderLineId(), consignmentModel.getReturnAWBNum());
 								trackStatusReturnLogisticMap.put(orderEntry.getOrderLineId(), consignmentModel.getReturnCarrier());
 								trackStatusTrackingURLMap.put(orderEntry.getOrderLineId(), consignmentModel.getTrackingURL());
+
+								//TISCR-410 : To check whether to show missed cancellation deadline message to customer
+								final String orderEntryStatus = consignmentModel.getStatus().getCode();
+								final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
+								boolean cancellationMsgFlag = false;
+								if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+								{
+									cancellationMsgFlag = true;
+								}
+								model.addAttribute(ModelAttributetConstants.DISPLAY_CANCELLATION_MSG, cancellationMsgFlag);
 							}
 
 						}
@@ -1040,12 +1066,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
+
 			////TISEE-6290
 			fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
 			model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
 
 			model.addAttribute(ModelAttributetConstants.TRACK_STATUS, trackStatusMap);
 			model.addAttribute(ModelAttributetConstants.CURRENT_STATUS, currentStatusMap);
+			//			model.addAttribute(ModelAttributetConstants.CANCEL_ENDPOINT_STATUS_NAME, configurationService.getConfiguration()
+			//					.getString(ModelAttributetConstants.CANCEL_ENDPOINT_STATUS, "HOTC"));
 			model.addAttribute(ModelAttributetConstants.ORDER_DELIVERY_DATE, formattedDeliveryDates);
 			model.addAttribute(ModelAttributetConstants.ORDER_DELIVERY_DATE_ACTUAL, formattedActualDeliveryDates);
 			model.addAttribute(ModelAttributetConstants.CANCEL_PRODUCT_MAP, currentProductMap);
@@ -1122,7 +1151,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ORDER_DETAIL_CMS_PAGE));
 		return getViewForPage(model);
 	}
-
 
 	@RequestMapping(value = RequestMappingUrlConstants.UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
 	@ResponseBody
@@ -2613,7 +2641,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final Model model, final HttpServletRequest request, final HttpSession session,
 			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, ParseException
 	{
-		session.setAttribute("userFirstName", mplCustomerProfileForm.getFirstName().trim());
+
 		try
 		{
 			final String specificUrl = RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_UPDATE_PROFILE;
@@ -2726,6 +2754,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
 								MessageConstants.TEXT_ACCOUNT_PROFILE_CONFIRMATION_UPDATED, null);
 					}
+					setHeaderNameInSession(mplCustomerProfileData, session);
 				}
 				catch (final DuplicateUidException e)
 				{
@@ -2780,7 +2809,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 
 	}
-
 
 	/**
 	 * The method is called to check whether date for date of birth is valid or not
@@ -3020,8 +3048,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_UPDATE_NICK_NAME, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String updateNickName(final MplCustomerProfileForm mplCustomerProfileForm, final BindingResult bindingResult,
-			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttributes)
-			throws CMSItemNotFoundException, ParseException
+			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttributes,
+			final HttpSession session) throws CMSItemNotFoundException, ParseException
 	{
 		try
 		{
@@ -3072,6 +3100,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				try
 				{
 					mplCustomerProfileFacade.updateCustomerProfile(mplCustomerProfileData);
+					setHeaderNameInSession(mplCustomerProfileData, session);
+
 					final Map<String, String> preSavedDetailMap = new HashMap<String, String>();
 					mplCustomerProfileFacade.checkChangesForSendingEmail(preSavedDetailMap, currentCustomerData.getDisplayUid(),
 							profileUpdateUrl);
@@ -3108,6 +3138,30 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 
+	}
+
+	/**
+	 * @param mplCustomerProfileData
+	 * @param session
+	 */
+	private void setHeaderNameInSession(final MplCustomerProfileData mplCustomerProfileData, final HttpSession session)
+	{
+		String displayHeaderName = MarketplacecommerceservicesConstants.EMPTY;
+		if (StringUtils.isNotEmpty(mplCustomerProfileData.getNickName()))
+		{
+			displayHeaderName = mplCustomerProfileData.getNickName();
+		}
+		else if (StringUtils.isNotEmpty(mplCustomerProfileData.getFirstName()))
+		{
+			displayHeaderName = mplCustomerProfileData.getFirstName();
+		}
+
+		if (null == displayHeaderName || MarketplacecommerceservicesConstants.EMPTY.equals(displayHeaderName))
+		{
+			displayHeaderName = MarketplacecommerceservicesConstants.SINGLE_SPACE;
+		}
+
+		session.setAttribute(ModelAttributetConstants.USER_FIRST_NAME, displayHeaderName.trim());
 	}
 
 	/**

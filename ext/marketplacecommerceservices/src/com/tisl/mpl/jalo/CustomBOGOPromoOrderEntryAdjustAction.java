@@ -133,6 +133,11 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 								cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISBOGOAPPLIED, Boolean.TRUE);
 								cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.FREECOUNT,
 										freeItemsForCatBogo.get(validProductUSSID));
+
+								if (freeProductCountForBogo > 0)//Added for TISPRO-318
+								{
+									cartEntry.setProperty(ctx, "bogoFreeItmCount", String.valueOf(freeProductCountForBogo));
+								}
 							}
 
 							final double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;

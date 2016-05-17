@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.SizeGuideModel;
 import com.tisl.mpl.facade.comparator.SizeGuideComparator;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
@@ -64,15 +65,16 @@ public class DefaultSizeGuideFacadeImplTest
 	@Test
 	public void testGetProductSizeguide() throws CMSItemNotFoundException
 	{
-		final String productCode = "P1";
-		final String categoryType = "Footwear";
+		//TISSEC-50
+		final String productCode = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter product code
+		final String categoryType = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter category type
 		final List<SizeGuideData> sizeGuideDataListForFootwear = new ArrayList<SizeGuideData>();
 		final List<SizeGuideModel> sizeModelList = new ArrayList<SizeGuideModel>();
 		final SizeGuideModel sizeGuideModel = modelService.create(SizeGuideModel.class);
 		sizeModelList.add(sizeGuideModel);
 		assertEquals(sizeModelList, sizeGuideService.getProductSizeGuideList(productCode));
 		final SizeGuideData sizeGuideData = sizeGuideConverter.convert(sizeGuideModel);
-		sizeGuideData.setDimension("5");
+		sizeGuideData.setDimension("");//TODO : Please enter dimension
 		sizeGuideDataListForFootwear.add(sizeGuideData);
 		Collections.sort(sizeGuideDataListForFootwear, sizeGuideComparator);
 		sizeGuideFacade.getProductSizeguide(productCode, categoryType);

@@ -1270,8 +1270,8 @@
 		<property name="threadContextService" ref="threadContextService" />
 		<property name="commerceCategoryService" ref="commerceCategoryService" />
 		<property name="baseSiteService" ref="baseSiteService" />
-			<!-- <property name="defaultPattern" value="/{product-name}/p-{product-code}" /> -->
-		<property name="defaultPattern" value="/{product-name}/p/{product-code}" />
+		<property name="defaultPattern" value="/{product-name}/p-{product-code}" />
+		<!-- <property name="defaultPattern" value="/{product-name}/p/{product-code}" /> -->
 		<!-- <property name="defaultPattern" value="/{category-path}/{product-name}/p/{product-code}" 
 			/> -->
 	</bean>
@@ -1282,8 +1282,8 @@
 		<property name="threadContextService" ref="threadContextService" />
 		<property name="commerceCategoryService" ref="commerceCategoryService" />
 		<property name="baseSiteService" ref="baseSiteService" />
-		<!-- <property name="pattern" value="/{category-path}/c-{category-code}" /> -->
-		<property name="pattern" value="/{category-path}/c/{category-code}" />
+		<property name="pattern" value="/{category-path}/c-{category-code}" />
+		<!-- <property name="pattern" value="/{category-path}/c/{category-code}" /> -->
 	</bean>
 
 	<bean id="mplWishlistDao"
@@ -1651,6 +1651,18 @@
 
 	</bean>
 	<!-- UserGroupSaveInterceptor ends -->	
+	
+	<!-- TISPRD-1631 Changes Start (Extending Product Service) -->
+	
+<alias alias="productService" name="defaultProductService"/>
+	<bean id="defaultProductService" class="com.tisl.mpl.marketplacecommerceservices.services.product.impl.MplProductServiceImpl"
+			parent="abstractBusinessService">
+		<property name="productDao" ref="productDao"/>
+		<property name="unitDao" ref="unitDao"/>
+		<property name="priceService" ref="priceService"/>
+	</bean>
+	
+	<!-- TISPRD-1631 Changes End (Extending Product Service) -->
 
 
 </beans>

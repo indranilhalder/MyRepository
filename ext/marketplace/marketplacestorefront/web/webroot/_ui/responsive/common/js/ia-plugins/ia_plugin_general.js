@@ -31,8 +31,8 @@ var category_array = [];
 /*widget modes that are just products*/
 productWidget = [ "complements", "similar", "bought_together", "normal", "hot", "best_selling", 
                   "new", "recent", "search", "hot_in_category", "hot_in_brand"];
-productWidgetTitle = ["Complete The Look", "More Stuff Like This", "Things That Go With This", "You Know You Want This", "Hot Now", "Best Sellers", 
-                      "Just In(credible)!", "Last Seen", "My Recommendations", "Hot Now", "Hot Now"];
+productWidgetTitle = ["Complete The Look", "More Stuff Like This", "Things That Go With This", "You Know You Want This", "Hot Now", "Hot Now", //Changes Done for Chairman's Demo
+                      "Just In-credible", "Last Seen", "My Recommendations", "Just In-credible", "Hot Now"];
 productWidgetElement = ["ia_products_complements", "ia_products_similar", "ia_products_bought_together", "ia_products", "ia_products_hot", "ia_products_best_selling", "ia_products_new", 
                         "ia_products_recent", "ia_products_search", "ia_products_hot_in_category", "ia_products_hot_in_brand"];
 
@@ -69,6 +69,7 @@ function init_iaplugin() {
     document.cookie='IAUSERTYPE=session; path=/';
   } 
 }
+
 
 /*Check referring values*/
 function refCheck() {
@@ -214,12 +215,14 @@ function buildParams(moreParams) {
   }
   if(spid !== "") {
     currentParams.site_product_id = spid;
+   
   }
   if(domain !== "") {
     currentParams.domain = domain;
   }
   
-  if(site_product_array.length > 0) { //if multiple site product ids
+ //undefined issue fix in prod console
+  if(typeof(site_product_array)!= 'undefined' && site_product_array.length > 0) { //if multiple site product ids
     var spids = {};
     currentParams.site_product_id = '';
     for(var i=0; i<site_product_array.length; i++) {
@@ -227,7 +230,8 @@ function buildParams(moreParams) {
     }
     currentParams.site_product_id = currentParams.site_product_id.substring(0, currentParams.site_product_id.length - 1);
   }
-  if(category_array.length > 0) { //if multiple site product ids
+  
+  if(typeof(category_array)!= 'undefined' && category_array.length > 0) { //if multiple site product ids
 	    var spids = {};
 	    currentParams.category_id = '';
 	    for(var i=0; i<category_array.length; i++) {
@@ -235,7 +239,7 @@ function buildParams(moreParams) {
 	    }
 	    currentParams.category_id = currentParams.category_id.substring(0, currentParams.category_id.length - 1);
 	  }
-  if(brand_array.length > 0) { //if multiple site product ids
+  if(typeof(brand_array)!= 'undefined' && brand_array.length > 0) { //if multiple site product ids
 	    var spids = {};
 	    currentParams.brand_id = '';
 	    for(var i=0; i<brand_array.length; i++) {

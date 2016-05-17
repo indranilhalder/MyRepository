@@ -41,6 +41,11 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	/**
 	 *
 	 */
+
+
+	/**
+	 *
+	 */
 	private MplProductSearchService<SolrSearchQueryData, SearchResultValueData, ProductCategorySearchPageData<SolrSearchQueryData, SearchResultValueData, CategoryModel>> mplProductSearchService;
 	/**
 	 *
@@ -98,6 +103,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	protected SolrSearchQueryData decodeState(final SearchStateData searchState)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
+
 		return searchQueryData;
 	}
 
@@ -331,6 +337,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	}
 
 
+
 	/**
 	 *
 	 * @param searchState
@@ -358,6 +365,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 		return searchQueryData;
 	}
+
 
 	/**
 	 * @param searchState
@@ -737,10 +745,10 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			{
 				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.BRAND);
 			}
-
 			solrSearchQueryTermData.setValue(categoryCode);
 			filterTerms.add(solrSearchQueryTermData);
 			searchQueryData.setFilterTerms(filterTerms);
+
 
 		}
 		return searchQueryData;
@@ -789,6 +797,11 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		searchQueryData.setSns(searchState.isSns());
 		return searchQueryData;
 	}
+
+	/**
+	 * @param solrSearchQueryTermData
+	 * @param searchQueryData
+	 */
 
 	@Override
 	public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> categorySearch(final String categoryCode,
@@ -955,6 +968,9 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 							}
 						});
 	}
+
+
+
 
 	protected SolrSearchQueryData decodeSearchAllOffers(final SearchStateData searchState)
 	{

@@ -10,11 +10,17 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.variants.model.VariantProductModel;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
+
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -23,6 +29,7 @@ import javax.annotation.Resource;
  */
 public class ExtDefaultProductModelUrlResolver extends DefaultProductModelUrlResolver
 {
+	private static final Logger LOG = Logger.getLogger(ExtDefaultProductModelUrlResolver.class);
 
 	@Resource
 	private ConfigurationService configurationService;
@@ -55,7 +62,25 @@ public class ExtDefaultProductModelUrlResolver extends DefaultProductModelUrlRes
 		{
 			url = url.replace("{product-code}", source.getCode());
 		}
+		url = url.toLowerCase();
+		//TISPRD-1874
+		try
+		{
+			url = URLDecoder.decode(url, "UTF-8");
+		}
+		catch (final UnsupportedEncodingException e)
+		{
+			LOG.error(e.getMessage());
+		}
+		//TISPRD-1874 ends
 
+		//		url = url.replaceAll("[^\\w/-]", "");
+		//		//TISSTRT-1297
+		//		if (url.contains("--"))
+		//		{
+		//			url = url.replaceAll("--", "-");
+		//		}
+		url = GenericUtilityMethods.changeUrl(url);
 		return url;
 	}
 

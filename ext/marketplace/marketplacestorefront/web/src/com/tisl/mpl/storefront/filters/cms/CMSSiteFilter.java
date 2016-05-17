@@ -97,8 +97,27 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 			// process normal request (i.e. normal browser non-cmscockpit request)
 			if (processNormalRequest(httpRequest, httpResponse))
 			{
-				// proceed filters
-				filterChain.doFilter(httpRequest, httpResponse);
+				String requestUrl = httpRequest.getRequestURL().toString();
+				if (requestUrl.contains("/c/"))
+				{
+					requestUrl = requestUrl.replaceAll("/c/", "/c-");
+					final String categoryUrl = urlBuilder(httpRequest, requestUrl);
+					//TISPRD-1876
+					httpResponse.sendRedirect(categoryUrl);
+				}
+				else if (requestUrl.contains("/p/"))
+				{
+					requestUrl = requestUrl.replaceAll("/p/", "/p-");
+					final String productUrl = urlBuilder(httpRequest, requestUrl);
+					//TISPRD-1876
+					httpResponse.sendRedirect(productUrl);
+				}
+				else
+				{
+					// proceed filters
+					filterChain.doFilter(httpRequest, httpResponse);
+				}
+
 			}
 		}
 		else if (StringUtils.contains(requestURL, PREVIEW_TOKEN))
@@ -137,7 +156,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	 * <li>Current Catalog Versions</li>
 	 * <li>Enabled language fallback</li>
 	 * </ul>
-	 * 
+	 *
 	 * @see ContextInformationLoader#initializeSiteFromRequest(String)
 	 * @see ContextInformationLoader#setCatalogVersions()
 	 * @param httpRequest
@@ -204,7 +223,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	 * <li>Load all fake information (like: User, User group, Language, Time ...)
 	 * <li>Generating target URL according to Preview Data
 	 * </ul>
-	 * 
+	 *
 	 * @param httpRequest
 	 *           current request
 	 * @return target URL
@@ -217,7 +236,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 		previewDataModel.setLanguage(filterPreviewLanguageForSite(httpRequest, previewDataModel.getLanguage()));
 		previewDataModel.setUiExperience(previewDataModel.getUiExperience());
 
-		//load necessary information 
+		//load necessary information
 		getContextInformationLoader().initializePreviewRequest(previewDataModel);
 		//load fake context information
 		getContextInformationLoader().loadFakeContextInformation(httpRequest, previewDataModel);
@@ -240,7 +259,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	/**
 	 * Filters the preview language to a language supported by the site. If the requested preview language is not
 	 * supported, returns the default site language instead.
-	 * 
+	 *
 	 * @param httpRequest
 	 *           current request
 	 * @param previewLanguage
@@ -265,7 +284,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	/**
 	 * Enables or disables language fall back
 	 * <p/>
-	 * 
+	 *
 	 * @param httpRequest
 	 *           current request
 	 * @param enabled
@@ -284,7 +303,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	/**
 	 * Generates target URL accordingly to valid Preview Data passed as a parameter
 	 * <p/>
-	 * 
+	 *
 	 * @param httpRequest
 	 *           current request
 	 * @param previewDataModel
@@ -314,10 +333,31 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 		return generatedPreviewUrl;
 	}
 
+
+
+	/**
+	 * This method builds the request url including the parameters //TISPRD-1876
+	 *
+	 * @param httpRequest
+	 * @param requestUrl
+	 * @return String
+	 */
+	protected String urlBuilder(final HttpServletRequest httpRequest, final String requestUrl)
+	{
+		final StringBuilder urlBuilder = new StringBuilder();
+		urlBuilder.append(requestUrl);
+		if (StringUtils.isNotEmpty(httpRequest.getQueryString()))
+		{
+			urlBuilder.append('?').append(httpRequest.getQueryString());
+		}
+
+		return urlBuilder.toString();
+	}
+
 	/**
 	 * Retrieves current mapping handler in order to generate proper target URL for CMS Page
 	 * <p/>
-	 * 
+	 *
 	 * @return current mapping handler
 	 */
 	protected UrlResolver<PreviewDataModel> getPreviewDataModelUrlResolver()

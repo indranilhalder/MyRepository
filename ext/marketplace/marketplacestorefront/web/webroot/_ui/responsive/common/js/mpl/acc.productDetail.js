@@ -168,9 +168,9 @@
 		$(document).on("click", '.colorBox',
 			function() {
 			  var target = $(this).attr('data-producturl');
-			   console.log(target);
+			//   console.log(target);
 			  var productcode= $(this).attr('data-productcode');
-			   console.log(productcode);
+			//   console.log(productcode);
 			   $('body').on('hidden.bs.modal', '#popUpModal', function () {
 					  $(this).removeData('bs.modal');
 					});
@@ -186,13 +186,13 @@
 		
 		// Sise Guide Select Size
 		$(document).on("change", '.variant-select',function(){
-			console.log($(this).find('option:selected').data('productcode1'));
+		//	console.log($(this).find('option:selected').data('productcode1'));
 //			var value = $("#variant .dsa").attr("value");
 			var value = $(this).find('option:selected').data('producturl');
 			
-			console.log(value);
+	//		console.log(value);
 			var productcode = $(this).find('option:selected').data('productcode1')
-			console.log(productcode);
+	//		console.log(productcode);
 			
 		    // load the url and show modal on success
 		    $("#popUpModal .modal-content").load(value, function() { 
@@ -205,9 +205,9 @@
 		$(document).on("click", 'a[data-target=#popUpModal] ',
 				function() {
 				   var target = $(this).attr("href");
-				   console.log(target);
+			//	   console.log(target);
 				   var productcode= $(this).attr("data-productcode");
-				   console.log(productcode);
+			//	   console.log(productcode);
 			 	   //$("#popUpModal").modal('hide');
 				   $('body').on('hidden.bs.modal', '#popUpModal', function () {
 						  $(this).removeData('bs.modal');
@@ -412,7 +412,7 @@ function openPop(ussidfromSeller) {
 	var productCode = $("#product").val();
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/viewWishlistsInPDP";
+			+ "-viewWishlistsInPDP";
 
 	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
 	// for
@@ -563,7 +563,7 @@ function addToWishlist() {
     	return false;
     }
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/addToWishListInPDP";
+			+ "-addToWishListInPDP";
     var sizeSelected=true;
     if( $("#variant,#sizevariant option:selected").val()=="#"){
     	sizeSelected=false;
@@ -906,7 +906,7 @@ $(function() {
 						var buyboxSeller = $("#ussid").val();
 						var pin = $("#pin").val();
 						var requiredUrl = ACC.config.encodedContextPath + "/p"
-								+ "/checkPincode";
+								+ "-checkPincode";
 
 						if (pin == "") {
 							$('#unsevisablePin,#unableprocessPin,#wrongPin')
@@ -991,18 +991,14 @@ $(function() {
 														 * null||pincodedata['stockCount']==0) {
 														 */
 														if (pincodedata['stockCount'] == 0) {
-															$(
-																	"#addToCartButton")
-																	.hide();
-															$("#outOfStockId")
-																	.show();
+															$("#addToCartButton").hide();
+															$("#outOfStockId").show();
 															$("#buyNowButton").hide();
 															$("#stock").val(0);
 
 														} else {
-															$(
-																	"#addToCartButton")
-																	.show();
+															$("#addToCartButton").show();
+															$('#buyNowButton').attr("disabled",false);
 															$("#buyNowButton").show();
 														}
 														if (pincodedata['cod'] == 'Y') {
@@ -1157,7 +1153,7 @@ function fetchPrice() {
 	$("#addToCartButton").show();
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
-	var requiredUrl = ACC.config.encodedContextPath + "/p" + "/" + productCode
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/buybox";
 	var dataString = 'productCode=' + productCode;
 	$.ajax({
@@ -1272,7 +1268,7 @@ function displayDeliveryDetails(sellerName) {
 
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
-	var requiredUrl = ACC.config.encodedContextPath + "/p" + "/" + productCode
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/getRichAttributes";
 	var dataString = 'buyboxid=' + buyboxSeller;
 	$.ajax({
@@ -1299,13 +1295,13 @@ function displayDeliveryDetails(sellerName) {
 				if (data['onlineExclusive']) {
 					$('.online-exclusive').show();
 				}
-				if (fulFillment.toLowerCase() == 'tship') {
+				if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
 					$('#fulFilledByTship').show();
 				} else {
 					$('#fulFilledBySship').show();
 					$('#fulFilledBySship').html(sellerName);
 				}
-				if (deliveryModes.indexOf("HD") == -1) {
+				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
 					$("#home").hide();
 					$("#homeli").hide();
 				} else {
@@ -1316,7 +1312,7 @@ function displayDeliveryDetails(sellerName) {
 					$("#homeli").show();
 				}
 				
-				if (deliveryModes.indexOf("ED") == -1) {
+				if (null != deliveryModes && deliveryModes.indexOf("ED") == -1) {
 					$("#express").hide();
 					$("#expressli").hide();
 				} else {
@@ -1328,8 +1324,10 @@ function displayDeliveryDetails(sellerName) {
 					$("#express").show();
 					$("#expressli").show();
 				}
-				console.log(deliveryModes.indexOf("CNC") );
-				if (deliveryModes.indexOf("CNC") == -1) {
+				if (null != deliveryModes){
+		//		console.log(deliveryModes.indexOf("CNC") );
+				}
+				if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
 					
 					$("#collect").hide();
 					$("#collectli").hide();
@@ -1348,9 +1346,26 @@ function displayDeliveryDetails(sellerName) {
 					$("#codId").hide();
 				}
 				if(null != data['returnWindow'])
+				{
+				//TISCR-414 - Chairmans demo feedback 10thMay CR starts
+				var rWindowValue = data['returnWindow'];
+				
+				if(rWindowValue=="LINGERIE1")
+					{
+					$("#lingerieKnowMoreLi1").show();
+					$("#defaultKnowMoreLi").hide();
+					}
+				else if(rWindowValue=="LINGERIE2")
+					{
+					$("#lingerieKnowMoreLi2").show();
+					$("#defaultKnowMoreLi").hide();
+					}
+				else
 					{
 					$("#returnWindow").text(data['returnWindow']);
 					}
+				//TISCR-414 - Chairmans demo feedback 10thMay CR ends
+				}
 				else
 					{
 					$("#returnWindow").text("0");
@@ -1430,7 +1445,7 @@ function openPopForBankEMI() {
 	var optionData = "<option value='select' disabled selected>Select</option>";
 	$("#emiTableTHead").hide();
 	$("#emiTableTbody").hide();
-	var requiredUrl = ACC.config.encodedContextPath + "/p" + "/enlistEMIBanks";
+	var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
 	var dataString = 'productVal=' + productVal;
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
@@ -1461,7 +1476,7 @@ function getSelectedEMIBankForPDP() {
 	var contentData = '';
 	if (selectedBank != "select") {
 		$.ajax({
-			url : ACC.config.encodedContextPath + "/p/getTerms",
+			url : ACC.config.encodedContextPath + "/p-getTerms",
 			data : {
 				'selectedEMIBank' : selectedBank,
 				'productVal' : productVal
@@ -1502,7 +1517,7 @@ function CheckonReload()
 {
 	var contentData = '';
 	 $.ajax({
-				url : ACC.config.encodedContextPath + "/p/checkUser",
+				url : ACC.config.encodedContextPath + "/p-checkUser",
 				data : {
 				},
 				type : "GET",
@@ -1535,7 +1550,7 @@ function getRating(key,productCode,category)
 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
 	 
 	$.getJSON(url, function(data){
-		console.log(data);
+	//	console.log(data);
 	  	var totalCount=data.streamInfo.ratingCount;
 		//Reverse the source array
 		var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
@@ -1624,7 +1639,7 @@ function getRating(key,productCode,category)
 function CheckUserLogedIn() {
 	var contentData = '';
  $.ajax({
-			url : ACC.config.encodedContextPath + "/p/checkUser",
+			url : ACC.config.encodedContextPath + "/p-checkUser",
 			data : {
 				
 			},
@@ -1704,7 +1719,7 @@ function sendmail(){
 	if(validEmail(email)){
 		//var emailList = email.split(";");
 		$.ajax({
-			url : ACC.config.encodedContextPath + "/p/sendEmail",
+			url : ACC.config.encodedContextPath + "/p-sendEmail",
 			data : dataString,			
 			type : "GET",
 			cache : false,
@@ -1802,8 +1817,8 @@ function buyboxDetailsForSizeGuide(productCode){
 	var sellerID= $("#sellerSelId").val();
 	var productCode = productCode;//$("#product").val();
 	
-	console.log(sellerID +" "+productCode);
-	var requiredUrl = ACC.config.encodedContextPath + "/p/buyboxDataForSizeGuide";
+//	console.log(sellerID +" "+productCode);
+	var requiredUrl = ACC.config.encodedContextPath + "/p-buyboxDataForSizeGuide";
 	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
 	
 		$.ajax({
@@ -1862,7 +1877,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#sellerSelArticleSKUVal").val(ussid);
 				$("#nosellerVal").val(nosellerData);
 				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice);
-				if(availableStock==0){
+				if(availableStock==0  && $(".variant-select-sizeGuidePopUp option:selected").val()!="#"){	//changes for TISPRO-338
 					$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
@@ -1893,7 +1908,7 @@ function openPop_SizeGuide() {
 	var productCode = $("#productCode").val(); // '${product.code}';
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/viewWishlistsInPDP";
+			+ "-viewWishlistsInPDP";
 
 	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
 	//alert("localdata: "+dataString);
@@ -2040,7 +2055,7 @@ function loadDefaultWishListName_SizeGuide() {
 		return false;
 	}
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/addToWishListInPDP";
+			+ "-addToWishListInPDP";
 	var sizeSelected=true;
 	if( $("#variant.size-g option:selected").val()=="#"){
 		sizeSelected=false;
@@ -2070,17 +2085,17 @@ function loadDefaultWishListName_SizeGuide() {
 				var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
 				if(isMSDEnabled === 'true')
 				{
-				console.log(isMSDEnabled);
+		//		console.log(isMSDEnabled);
 				var isApparelExist  = $("input[name=isApparelExist]").val();
-				console.log(isApparelExist);				
+		//		console.log(isApparelExist);				
 				var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-				console.log(salesHierarchyCategoryMSD);
+		//		console.log(salesHierarchyCategoryMSD);
 				var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-				console.log(rootCategoryMSD);				
+		//		console.log(rootCategoryMSD);				
 				var productCodeMSD =  $("input[name=productCodeMSD]").val();
-				console.log(productCodeMSD);				
+		//		console.log(productCodeMSD);				
 				var priceformad =  $("input[id=price-for-mad]").val();
-				console.log(priceformad);				
+		//		console.log(priceformad);				
 				
 				if(typeof isMSDEnabled === 'undefined')
 				{

@@ -10,6 +10,10 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerMasterService;
+import com.tisl.mpl.model.SellerMasterModel;
 
 
 /**
@@ -18,6 +22,15 @@ import org.apache.commons.collections.CollectionUtils;
  */
 public class MplPointOfServicePopulator extends PointOfServicePopulator
 {
+
+	/**
+	 * Constants used in this class only.
+	 */
+	private static final String ON_CLICK = "_onClick";
+	private static final String ON_HOVER = "_onHover";
+	private static final String REGULAR = "_Regular";
+	private static final String HTTP = "http";
+	private MplSellerMasterService mplSellerMasterService;
 
 	/**
 	 * Populates mpl new fiels fro PointOfService.
@@ -236,29 +249,101 @@ public class MplPointOfServicePopulator extends PointOfServicePopulator
 		//Added to handle image url.
 
 		final List<String> imageUrls = source.getMplImageUrls();
-
+		boolean hasNoSlaveRegalur = true;
+		boolean hasNoSlaveOnHover = true;
+		boolean hasNoSlaveOnClick = true;
 		if (CollectionUtils.isNotEmpty(imageUrls))
 		{
 			for (final String imgUrl : imageUrls)
 			{
-				if (imgUrl.toLowerCase().startsWith("http"))
+				if (imgUrl.toLowerCase().startsWith(HTTP))
 				{
-					if (imgUrl.contains("_Regular"))
+					if (imgUrl.contains(REGULAR))
 					{
+						hasNoSlaveRegalur = false;
 						target.setRegularImgUrl(imgUrl);
 					}
-					else if (imgUrl.contains("_onHover"))
+					else if (imgUrl.contains(ON_HOVER))
 					{
+						hasNoSlaveOnHover = false;
 						target.setOnHoverImgUrl(imgUrl);
 					}
-					else if (imgUrl.contains("_onClick"))
+					else if (imgUrl.contains(ON_CLICK))
 					{
+						hasNoSlaveOnClick = false;
 						target.setOnClickImgUrl(imgUrl);
 					}
 				}
 			}
 
 		}
+
+		//Add icons from Seller if it is not present in SlaveMaster.
+		if (hasNoSlaveRegalur || hasNoSlaveOnHover || hasNoSlaveOnClick)
+		{
+			polulateSellerIcon(source, target);
+		}
+
 	}
+
+	/**
+	 * This method to set seller icons if there is no slave icons present for that slave.
+	 *
+	 * @param source
+	 *           PointOfServiceModel.
+	 * @param target
+	 *           PointOfServiceData.
+	 */
+	private void polulateSellerIcon(final PointOfServiceModel source, final PointOfServiceData target)
+	{
+		if (StringUtils.isNotBlank(source.getSellerId()))
+		{
+			final SellerMasterModel sellerMasterModel = getMplSellerMasterService().getSellerMaster(source.getSellerId());
+			if (null != sellerMasterModel)
+			{
+				final List<String> sellerImageUrls = sellerMasterModel.getMplImageUrls();
+				if (CollectionUtils.isNotEmpty(sellerImageUrls))
+				{
+					for (final String sellerImageUrl : sellerImageUrls)
+					{
+						if (sellerImageUrl.toLowerCase().startsWith(HTTP))
+						{
+							if (StringUtils.isEmpty(target.getRegularImgUrl()) && sellerImageUrl.contains(REGULAR))
+							{
+								target.setRegularImgUrl(sellerImageUrl);
+							}
+							else if (StringUtils.isEmpty(target.getOnHoverImgUrl()) && sellerImageUrl.contains(ON_HOVER))
+							{
+								target.setOnHoverImgUrl(sellerImageUrl);
+							}
+							else if (StringUtils.isEmpty(target.getOnClickImgUrl()) && sellerImageUrl.contains(ON_CLICK))
+							{
+								target.setOnClickImgUrl(sellerImageUrl);
+							}
+						}
+					}
+
+				}
+			}
+		}
+	}
+
+	/**
+	 * @return the mplSellerMasterService
+	 */
+	public final MplSellerMasterService getMplSellerMasterService()
+	{
+		return mplSellerMasterService;
+	}
+
+	/**
+	 * @param mplSellerMasterService
+	 *           the mplSellerMasterService to set
+	 */
+	public final void setMplSellerMasterService(final MplSellerMasterService mplSellerMasterService)
+	{
+		this.mplSellerMasterService = mplSellerMasterService;
+	}
+
 
 }

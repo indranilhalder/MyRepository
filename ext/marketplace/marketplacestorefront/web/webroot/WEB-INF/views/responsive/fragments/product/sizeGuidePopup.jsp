@@ -264,7 +264,7 @@
 			</div>
 
 			<div class="details">
-	 	<span id="noProductForSelectedSeller"> <font color="#ff1c47">
+	 	<span id="noProductForSelectedSeller" style="display:none;"> <font color="#ff1c47">
 			<spring:theme code="product.product.size.guide.notavail"/></font>
 			</span>
 		<span id="productDetails"> 
@@ -293,7 +293,7 @@
 					<c:when test="${not empty variantOption.defaultUrl}">
 					
 						<li>
-						<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
+						<c:url value="/p-sizeGuide?productCode=${variantOption.code}" 
 								var="variantUrl" />
 							<!-- TISPRO-308 -->
 							<%--  <c:choose>
@@ -356,7 +356,7 @@
 
 <c:if test="${noVariant!=true&&notApparel!=true}">
  <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
-		<select id="variant" class="variant-select size-g">
+		<select id="variant" class="variant-select size-g variant-select-sizeGuidePopUp">            <!--changes for TISPRO-338 (variant-select-sizeGuidePopUp class added) -->
 			<c:choose>
 				<c:when test="${empty sizeSelectedSizeGuide}">
 					<option value="#" data-target="#popUpModal" selected="selected"><spring:theme code="text.select.size" /></option>
@@ -372,7 +372,7 @@
 							<c:if test="${currentColor eq color}">
 								<c:set var="currentColor" value="${color}" />
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
-									<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
+									<c:url value="/p-sizeGuide?productCode=${variantOption.code}" 
 								var="link" />
 								<c:set var="code" value="${variantOption.code}"/>
 									<c:choose>
@@ -407,7 +407,7 @@
 										<c:if test="${currentColor eq color}">
 
 											<c:forEach var="entry" items="${variantOption.sizeLink}">
-											<c:url value="/p/sizeGuide?productCode=${variantOption.code}" var="link" />
+											<c:url value="/p-sizeGuide?productCode=${variantOption.code}" var="link" />
 												<c:choose>
 													<c:when test="${(variantOption.code eq product.code)}">
 													<%-- 	<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option> --%>

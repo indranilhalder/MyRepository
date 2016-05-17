@@ -38,6 +38,12 @@
 	</c:if>
 </div>
 
-
+<script>
+$(document).ready(function(){
+	var removeHref = $("div[data-logo=marketplace]").find("a").attr("href");
+	var href = removeHref.split("?");
+	$("div[data-logo=marketplace]").find("a").attr("href",href[0]);
+});
+</script>
 
 

@@ -106,51 +106,46 @@ public class StorefrontFilter extends OncePerRequestFilter
 	 */
 	private void getSEOAttributes(final HttpServletRequest request)
 	{
-		final String emailURL = configurationService.getConfiguration().getString(MessageConstants.EMAIL_URL);
-		request.setAttribute(ModelAttributetConstants.EMAIL_URL, emailURL);
-		final String twitterHandle = configurationService.getConfiguration().getString(MessageConstants.TWITTER_HANDLE).trim();
 		final String mediaCode = configurationService.getConfiguration().getString(MessageConstants.MEDIA_CODE).trim();
-		String seoMediaURL = "";
+		String seoMediaURL = null;
 		final String imageHost = configurationService.getConfiguration().getString(MessageConstants.MEDIA_HOST).trim();
 		if (null != mediaCode)
 		{
 			final MediaModel media = getMediaByCode(mediaCode);
 			try
 			{
-				seoMediaURL = media.getURL2();
+				if (null != media)
+				{
+					seoMediaURL = media.getURL2();
+				}
 			}
 			catch (final Exception ex)
 			{
-				LOG.error("Exception at getSEOAttributes::::::::::::::" + ex);
+				LOG.error("Exception at getSEOAttributes::::::::::::::", ex);
 			}
 			final StringBuilder sb = new StringBuilder();
 			final String fullURL = sb.append(imageHost).append(seoMediaURL).toString();
 			request.setAttribute(ModelAttributetConstants.SEO_MEDIA_URL, fullURL);
 		}
-
-		request.setAttribute(ModelAttributetConstants.TWITTER_HANDLE, twitterHandle);
-		final String siteName = configurationService.getConfiguration().getString(MessageConstants.SITE_NAME).trim();
-		request.setAttribute(ModelAttributetConstants.SITE_NAME, siteName);
 	}
 
 	protected MediaModel getMediaByCode(final String mediaCode)
 	{
 		if (StringUtils.isNotEmpty(mediaCode))
 		{
-			for (final CatalogVersionModel catalogVersionModel : catalogVersionService.getSessionCatalogVersions())
+			final CatalogVersionModel catalogVersionModel = catalogVersionService
+					.getSessionCatalogVersionForCatalog("mplContentCatalog");
+			try
 			{
-				try
+				final MediaModel media = mediaService.getMedia(catalogVersionModel, mediaCode);
+				if (media != null)
 				{
-					final MediaModel media = mediaService.getMedia(catalogVersionModel, mediaCode);
-					if (media != null)
-					{
-						return media;
-					}
+					return media;
 				}
-				catch (final Exception ex)
-				{
-					LOG.error("Exception at getMediaByCode::::::::::::::" + ex);
-				}
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Exception at getMediaByCode::::::::::::::", ex);
 			}
 		}
 		return null;

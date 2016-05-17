@@ -101,11 +101,13 @@ public class BuyAandBGetPrecentageDiscountCashbackTest
 	{
 		MockitoAnnotations.initMocks(this);
 		final BuyAandBGetPrecentageDiscountCashback cashBackPromo = new BuyAandBGetPrecentageDiscountCashback();
-		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
-		catalogVersionService.addSessionCatalogVersion(version);
-		product1 = productService.getProductForCode(version, "mplProductCatalog-987654341");//Add Available Product Code
-		product2 = productService.getProductForCode(version, "mplProductCatalog-987654342");//Add Available Product Code
 
+		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("", "");//TODO : Please enter catalogue name,Please enter version
+		catalogVersionService.addSessionCatalogVersion(version);
+
+		//TISSEC-50
+		product1 = productService.getProductForCode(version, "");//TODO : Please enter product1
+		product2 = productService.getProductForCode(version, "");//TODO : Please enter product2
 		final Product p = new Product();
 		p.setCode(product1.getCode());
 		p.setName(product1.getName());
@@ -126,7 +128,8 @@ public class BuyAandBGetPrecentageDiscountCashbackTest
 
 		final UserModel user = userService.getUserForUID("demo");//Add User ID
 		userService.setCurrentUser(user);
-		final CurrencyModel currency = commonI18NService.getCurrency("INR");
+
+		final CurrencyModel currency = commonI18NService.getCurrency("");//TODO : Please enter currency
 		commonI18NService.setCurrentCurrency(currency);
 	}
 
@@ -178,7 +181,8 @@ public class BuyAandBGetPrecentageDiscountCashbackTest
 		assertEquals("before updatePromotions(ProductPercentageDiscountPromotion)", FIRST_PRODUCT_NO_PROMO, cart.getTotalPrice()
 				.doubleValue(), 0.01);
 
-		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("mplPromoGrp");
+
+		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("");//TODO : Please enter promotion grp
 		final Collection<PromotionGroupModel> promotionGroups = new ArrayList<PromotionGroupModel>();
 		promotionGroups.add(promotionGroup);
 		promotionsService.updatePromotions(promotionGroups, cart, false, AutoApplyMode.APPLY_ALL, AutoApplyMode.APPLY_ALL,
