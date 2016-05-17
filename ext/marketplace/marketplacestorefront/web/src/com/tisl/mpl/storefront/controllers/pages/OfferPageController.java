@@ -12,9 +12,13 @@ import de.hybris.platform.commercefacades.search.data.SearchQueryData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.servicelayer.session.Session;
+import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +39,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.controllers.pages.SearchPageController.UserPreferencesData;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -43,13 +48,14 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 @Controller
 @Scope("tenant")
-@RequestMapping(value = "/**/o")
+//@RequestMapping(value = "/**/o")
 public class OfferPageController extends AbstractSearchPageController
 {
 
 	@Resource(name = "defaultMplProductSearchFacade")
 	private DefaultMplProductSearchFacade searchFacade;
-
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
 	/*
 	 * @Resource(name = "cmsPageService") private MplCmsPageService mplCmsPageService;
 	 */
@@ -70,20 +76,27 @@ public class OfferPageController extends AbstractSearchPageController
 	protected static final Logger LOG = Logger.getLogger(OfferPageController.class);
 
 	protected static final String CATEGORY_ID_PATH_VARIABLE_PATTERN = "/{categoryID:.*}";
+	protected static final String CATEGORY_ID_PATH_VARIABLE_PATTERN_NEW = "/**/o/{categoryID:.*}";
 
 	protected static final String OFFER_LISTING_CMS_PAGE_ID = "offerPageListing";
 
 	protected static final String CHANNEL = "web";
 
-	@RequestMapping(value = CATEGORY_ID_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	//TISPRD-1867
+	private static final String NEW_OFFER_URL_PATTERN_PAGINATION = "/**/view-all-offers";
+	private static final String NEW_OFFER_NEW_URL_PATTERN_PAGINATION = "/**/view-all-offers/page-{pageNo}";
+
+	//TISPRD-1867
+	//@RequestMapping(value = CATEGORY_ID_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	@RequestMapping(value = CATEGORY_ID_PATH_VARIABLE_PATTERN_NEW, method = RequestMethod.GET)
 	public String offer(@PathVariable("categoryID") final String categoryID,
 			@RequestParam(value = "offer", required = false) final String offerID,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = "page", defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode, final Model model,
-			final HttpServletRequest request, final HttpServletResponse response)
-					throws UnsupportedEncodingException, CMSItemNotFoundException
+			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException,
+			CMSItemNotFoundException
 	{
 
 		try
@@ -108,8 +121,8 @@ public class OfferPageController extends AbstractSearchPageController
 		catch (final Exception exp)
 		{
 
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
+					MarketplacecommerceservicesConstants.E0000));
 
 			return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
 
@@ -118,24 +131,45 @@ public class OfferPageController extends AbstractSearchPageController
 	}
 
 	//Added to render all the offer related products
-	@RequestMapping(value = "/viewAllOffers", method = RequestMethod.GET)
+	//@RequestMapping(value = "/viewAllOffers/page-{pageNo}",
+	@RequestMapping(value =
+	{ NEW_OFFER_URL_PATTERN_PAGINATION, NEW_OFFER_NEW_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
 	public String displayOfferRelatedProducts(@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0", required = false) final int page,
+			@RequestParam(value = "page", defaultValue = "0", required = false) int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
-			@RequestParam(value = "sort", required = false) final String sortCode, final HttpServletRequest request,
+			@RequestParam(value = "sort", required = false) final String sortCode,
+			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException
 	{
 		try
 		{
 
-
+			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+			int count = getSearchPageSize();
+			if (preferencesData != null && preferencesData.getPageSize() != null)
+			{
+				count = preferencesData.getPageSize().intValue();
+			}
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForAllOffers(
-					searchQuery, page, showMode, sortCode, getSearchPageSize());
+					searchQuery, page, showMode, sortCode, count);
 			populateModel(model, searchPageData, ShowMode.Page);
-
 			model.addAttribute("hideDepartments", Boolean.TRUE);
 			model.addAttribute("otherProducts", true);
-
+			final String uri = request.getRequestURI();
+			if (uri.contains("page"))
+			{
+				final Pattern p = Pattern.compile("page-[0-9]+");
+				final Matcher m = p.matcher(uri);
+				if (m.find())
+				{
+					final String pageNo = m.group().split("-")[1];
+					if (null != pageNo)
+					{
+						page = Integer.parseInt(pageNo);
+						page = page - 1;
+					}
+				}
+			}
 			//Code to hide the applied facet for isOfferExisting
 			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
 			{
@@ -161,8 +195,8 @@ public class OfferPageController extends AbstractSearchPageController
 		}
 		catch (final Exception exp)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
+					MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
 
 		}
@@ -249,5 +283,35 @@ public class OfferPageController extends AbstractSearchPageController
 		{
 			return searchPageData;
 		}
+	}
+
+	protected UserPreferencesData updateUserPreferences(final Integer pageSize)
+	{
+		final UserPreferencesData preferencesData = getUserPreferences();
+
+		if (pageSize != null)
+		{
+			preferencesData.setPageSize(pageSize);
+		}
+
+		return preferencesData;
+	}
+
+	protected UserPreferencesData getUserPreferences()
+	{
+		final Session session = sessionService.getCurrentSession();
+		UserPreferencesData userPreferencesData = session.getAttribute("preferredCategoryPreferences");
+		if (userPreferencesData == null)
+		{
+			userPreferencesData = new UserPreferencesData();
+			setUserPreferences(userPreferencesData);
+		}
+		return userPreferencesData;
+	}
+
+	protected void setUserPreferences(final UserPreferencesData userPreferencesData)
+	{
+		final Session session = sessionService.getCurrentSession();
+		session.setAttribute("preferredCategoryPreferences", userPreferencesData);
 	}
 }

@@ -31,7 +31,6 @@ searchCategory_id		= $('#selectedSearchCategoryId').val(); // For Normal search
 searchCategory_idFromMicrosite		= $('#selectedSearchCategoryIdMicrosite').val(); // For Microsite search
 var daysDif = '';
 var is_new_product = false;
-
 if (searchCategory_id){
 	if(searchCategory_id.indexOf("MSH") > -1){
 	category_id = searchCategory_id;
@@ -81,12 +80,14 @@ if(site_page_type == 'myStyleProfile'){
 	});
 
 }
-if(currentPageURL.indexOf("/c/MSH") > -1 || currentPageURL.indexOf("/c/SSH") > -1)
+//changes start for url structure changes	
+if(currentPageURL.indexOf("/c-msh") > -1 || currentPageURL.indexOf("/c-ssh") > -1)
 {
   site_page_type = 'category_landing_page';
-  category_id = currentPageURL.split('/').pop();
+  category_id = currentPageURL.split('-').pop().toUpperCase();
+ 			  
   if(category_id.indexOf('?') > 0) {
-    category_id = category_id.substr(0, category_id.indexOf('?'));
+	 category_id = category_id.substr(0, category_id.indexOf('?'));
   }
 }
 if(currentPageURL.indexOf("/s/") > -1){
@@ -96,13 +97,14 @@ if(currentPageURL.indexOf("/s/") > -1){
     seller_id = seller_id.substr(0, seller_id.indexOf('?'));
   }
 }
-if(currentPageURL.indexOf("/c/MBH") > -1){
+if(currentPageURL.indexOf("/c-mbh") > -1){
   site_page_type = 'brand';
-  brand_id = currentPageURL.split('/').pop();  
+  brand_id = currentPageURL.split('-').pop().toUpperCase();  
     if(brand_id.indexOf('?') > 0) {
     brand_id = brand_id.substr(0, brand_id.indexOf('?'));
   }
 }
+//changes end
 if(currentPageURL.indexOf("/m/") > -1){
 	site_page_type = 'seller';
 	seller_id = $('#mSellerID').val();
