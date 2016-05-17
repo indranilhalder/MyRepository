@@ -519,11 +519,11 @@ input:focus {
       font-size: 16px;
       margin: -1px;
       background-color: transparent;
-      padding-right:15px; }
+      padding-right:20px; }
       .select-view .select-list > .selected:after {
         position: absolute;
         top: 0px;
-        right: 5px;
+        right: 2px;
         font-weight: lighter;
     	font-size: 22px;
     	content: "\f107";
@@ -10134,7 +10134,7 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-image-container .image-list img,
 .product-info .product-image-container .main-image>img {
-    width: 100%;
+    width: auto;
     height: auto;
     opacity: 1;
     z-index: 1;
@@ -16119,7 +16119,7 @@ body .account .right-account .order-history.order-details li.item .image {
     }
 }
 body .account .right-account .order-history.order-details li.item .status {
-    width: 55%;
+    width: 58%;
     position: absolute;
     top: 30px;
     right: 20px;
@@ -16278,7 +16278,7 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 }
 @media (max-width: 650px) {
     body .account .right-account .order-history.order-details li.item .status>ul>li {
-        font-size: 9px
+        font-size: 8px
     }
 }
 body .account .right-account .order-history.order-details li.item .status .message {
@@ -17780,6 +17780,7 @@ header .content .bottom .search .select-list select
   font-size: 10px;
   padding: 0px;
   text-transform: none;
+  text-align:left;
 }
 .checkout-steps{
 	width:65%;
@@ -19809,11 +19810,15 @@ color: #ff829a;
 	.modal#createNewList .content, .modal#manageMyList .content{
 	height: auto;
 	}
-	.product-tile .image .quickview{
-	display:none;}
 }
-
-
+@media (max-width:970px){
+	.product-tile .image .quickview {
+		display: none;
+	}
+	#colorbox, #cboxOverlay{
+	display:none !important;
+	}
+}
 @media (min-width:791px)
 {
 	 header .content .bottom.active .marketplace
@@ -21986,6 +21991,10 @@ body .account .new-address form div#checkBox label
 	  width: 100%;
   margin: 20px 0;
 }
+.send-email-container .actions{
+	width:100%;
+	text-align:center;
+}
 .forgot-password-container input:hover, .forgot-password-container select:hover, .click2chat-container input:hover, .click2chat-container select:hover, .click2call-container input:hover, .click2call-container select:hover , .create-new-wishlist-popup-container input:hover {
   border-color: #b9b9b9;
   -webkit-transition: border 0.15s;
@@ -22006,7 +22015,7 @@ body .account .new-address form div#checkBox label
   font-size:12px;
   font-weight:normal;
 }
-.forgot-password-container .actions .button, .manage-wishlist-container .actions button, .create-new-wishlist-popup-container .create_wishlist#CreateNewWishlist , .return-requestInvoice .cancellation-request-block .actions button{
+.forgot-password-container .actions .button, .manage-wishlist-container .actions button, .create-new-wishlist-popup-container .create_wishlist#CreateNewWishlist , .return-requestInvoice .cancellation-request-block .actions button,.send-email-container .actions button{
   font-size: 12px;
 
   font-weight: 500;
@@ -23708,7 +23717,7 @@ span.brand-subdesc {
 .forgotten-password.modal .content{
 	width:35%;
 }
-.add_to_cart_form .out_of_stock #add_to_wishlist, #add_to_wishlist-sizeguide{
+.add_to_cart_form .out_of_stock #add_to_wishlist, #add_to_wishlist-sizeguide,.out_of_stock #add_to_wishlist_quick{
    font-size: 12px;
     letter-spacing: 1px;
     height: 42px;
@@ -25162,12 +25171,12 @@ padding:0;
 	color: #fff;
      background-color: #A9143C;
 }
-.seller-details .otherSellersFont {
+/* .seller-details .otherSellersFont {
     font-weight: 500;
     font-size: 10px;
     padding: 0px;
     text-transform: none;
-}
+} */
 
 @media (max-width: 450px) {
 div.other-sellers .other-sellers-table tbody tr td h3, div.other-sellers .other-sellers-table tbody tr td .price {
@@ -27283,7 +27292,7 @@ border: 2px solid #fff;
 .contact-us-header ul li.contactUsOptions:first-child {
 	display: inline-block;
 }
-.out_of_stock #add_to_wishlist_quick {
+/* .out_of_stock #add_to_wishlist_quick {
     font-size: 12px;
     letter-spacing: 1px;
     line-height: 55px;
@@ -27301,7 +27310,7 @@ border: 2px solid #fff;
     display: block;
     margin-top:5px;
     border:0px;
-}  
+}  */ 
 
 body.page-reviews .right-account .order-history .navigation {
 	border: 1px solid #f0f4f5;
@@ -35107,12 +35116,11 @@ main {
 
 .thumb {
 	position: relative;
-	width: 100%;
+	width: auto;
 	display:inline-block;
 	border: 1px solid transparent;
 	margin-bottom:2px;
-	padding: 1px 0;
-	 -webkit-transition: border-color 0.15s;
+	-webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;
     transition: border-color 0.15s;
 }
@@ -38216,7 +38224,7 @@ select#micrositeSearchCategory, select#searchCategory{
 	margin-top: 7px; 
 	height: 28px;
 	padding-top: 6px;
-	background-color: rgb(0, 203, 233);
+	background-color: #A9143C;
 	color: #fff;
 	border: none;
 	position: absolute;
@@ -39204,4 +39212,144 @@ div.MSDQuickView:before {
 	#ia_products_hot .pagination {
 		top: -8px;
 	}
+/* Order History CSS */
+
+
+.ordermargingalignment {
+	height: 41px;
+	padding-top: 7px;
+	font-size: 12px;
+	font-weight: 300;
 }
+
+.orderheadingalignment {
+	font-size: 12px;
+}
+
+.orderbodyalignment {
+	font-size: 12px;
+}
+
+.attributes {
+	font-size: 12px;
+}
+
+.actions {
+	font-size: 12px;
+}
+.pickupeditbtn:after{
+
+     font-family: 'FontAwesome';
+    content:"\f040";
+    padding:0 5px 0 5px; 
+}
+.deliverymode {
+	font-size: 12px;
+	font-weight: 600;
+	min-height: 17px;
+}
+
+.error_text {
+	color: red;
+}
+
+#pickName {
+	height: 25px !important;
+	white-space: nowrap;
+}
+.order {
+	margin-top: 8px !important;
+}
+
+@media (max-width: 1019px) {
+	.mobileWidth {
+		width: 100%;
+	}
+	
+	.pickup_mob {
+		width: 100%;
+		margin-left: 10px;
+		margin-top: 5px;
+	}
+	
+	.pickMobileNo {
+		width: 94%;
+		margin-left: 10px;
+		margin-top: 5px;
+	}
+	
+	.pickup_name {
+		width: 100%;
+		margin-top: 5px;
+	}
+	
+	.pickUpName	 {
+		width: 100%;
+		margin-top: 5px;
+	}
+	
+	.pickup_Edit {
+		margin-left: -29px;
+	}
+	
+	.savebtnOther {
+		margin: 5px 0px 0px 20px !important;
+		height: 34px !important;
+		padding-top: 9px;
+	}
+	
+}
+@media (min-width: 1020px) {
+	.pickup_Edit {
+		margin-left: 181px;
+		margin-top: -22px;
+	}
+	
+	.pickup_name {
+		padding-top: 12px;
+		margin-left: 17px;
+		font-weight: bold;
+	}
+	
+	.pickUpName {
+		height: 28px;
+		margin-top: 6px;
+		z-index: 119;
+		margin-left: 47px;
+	}
+	
+	.pickupPersonNameError {
+		width: 115px; 
+		font-size: 10px;
+		margin-left: 49px;
+	}	
+	.pickup_mob {
+		margin-left: -86px;
+		padding-top: 14px;
+		width: 71px;
+		font-weight: bold;
+	}
+	
+	.pickMobileNo {
+		margin-left: -128px; 
+		height: 28px; 
+		margin-top: 7px; 
+		z-index: 10;
+	}
+	
+	.pickupPersonMobileError {
+		margin-left: -125px; 
+		width: 167px; 
+		font-size: 10px;
+	}
+	
+	.savebtn {
+		z-index: 99; 
+		min-width: 91px;
+		margin-left: -188px;
+	}
+}
+
+
+
+/* Order History CSS End */

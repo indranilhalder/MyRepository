@@ -724,4 +724,7 @@ public final class ModelAttributetConstants
 	//TISCR-410
 	public static final String DISPLAY_CANCELLATION_MSG = "cancellationMsg";
 
+	//TISSIT-2010
+	public static final String USER_FIRST_NAME = "userFirstName";
+
 }

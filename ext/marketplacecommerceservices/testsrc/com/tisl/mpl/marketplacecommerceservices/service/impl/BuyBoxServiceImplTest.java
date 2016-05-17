@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
@@ -54,8 +55,9 @@ public class BuyBoxServiceImplTest
 	@Test
 	public void testbuyboxPrice()
 	{
+		//TISSEC-50
 		final List<BuyBoxModel> buyBoxList = new ArrayList<BuyBoxModel>();
-		final String productCode = "987654321";
+		final String productCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter productCode
 		assertNotNull(buyBoxDao.buyBoxPrice(productCode));
 		assertFalse(buyBoxDao.buyBoxPrice(productCode).isEmpty());
 		assertEquals(buyBoxList, buyBoxDao.buyBoxPrice(productCode));
@@ -65,7 +67,7 @@ public class BuyBoxServiceImplTest
 	public void testBuyboxPricesForSearch()
 	{
 		final List<BuyBoxModel> buyBoxList = new ArrayList<BuyBoxModel>();
-		final String productCode = "987654321";
+		final String productCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter product code
 		assertNotNull(buyBoxDao.getBuyboxPricesForSearch(productCode));
 		assertFalse(buyBoxDao.getBuyboxPricesForSearch(productCode).isEmpty());
 		assertEquals(buyBoxList, buyBoxDao.getBuyboxPricesForSearch(productCode));
@@ -75,7 +77,7 @@ public class BuyBoxServiceImplTest
 	public void testBuyboxInventoryForSearch()
 	{
 		final List<BuyBoxModel> buyBoxList = new ArrayList<BuyBoxModel>();
-		final String productCode = "987654321";
+		final String productCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter product code
 		assertNotNull(buyBoxDao.getBuyboxAvailableInventoryForSearch(productCode, "variant"));
 		assertNotNull(buyBoxDao.getBuyboxAvailableInventoryForSearch(productCode, "variant"));
 		assertEquals(buyBoxList, buyBoxDao.getBuyboxAvailableInventoryForSearch(productCode, "variant"));
@@ -85,7 +87,7 @@ public class BuyBoxServiceImplTest
 	public void testInvalidatePkofBuybox() throws Exception
 	{
 		final List<BuyBoxModel> buyBoxList = new ArrayList<BuyBoxModel>();
-		final String dateStr = "06/27/2007";
+		final String dateStr = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter date
 		final DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		final Date currenttime = formatter.parse(dateStr);
 		assertNotNull(buyBoxDao.invalidatePkofBuybox(currenttime));
@@ -97,7 +99,7 @@ public class BuyBoxServiceImplTest
 	public void testBuyBoxPriceNoStock()
 	{
 		final List<BuyBoxModel> buyBoxList = new ArrayList<BuyBoxModel>();
-		final String productCode = "987654321";
+		final String productCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter product code
 		assertNotNull(buyBoxDao.buyBoxPriceNoStock(productCode));
 		assertFalse(buyBoxDao.buyBoxPriceNoStock(productCode).isEmpty());
 		assertEquals(buyBoxList, buyBoxDao.buyBoxPriceNoStock(productCode));
@@ -107,7 +109,7 @@ public class BuyBoxServiceImplTest
 	public void testRichAttributeData()
 	{
 		final RichAttributeModel richAttributeModel = new RichAttributeModel();
-		final String ussid = "123654098765485130011712";
+		final String ussid = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
 		assertNotNull(buyBoxDao.getRichAttributeData(ussid));
 		assertEquals(richAttributeModel, buyBoxDao.getRichAttributeData(ussid));
 	}
@@ -116,7 +118,7 @@ public class BuyBoxServiceImplTest
 	public void getsellersDetails()
 	{
 		final Set<Map<BuyBoxModel, RichAttributeModel>> resultset = new HashSet<Map<BuyBoxModel, RichAttributeModel>>();
-		final String productCode = "987654321";
+		final String productCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter product code
 		assertNotNull(buyBoxDao.getsellersDetails(productCode));
 		assertFalse(buyBoxDao.getsellersDetails(productCode).isEmpty());
 		assertEquals(resultset, buyBoxDao.getsellersDetails(productCode));
@@ -126,7 +128,7 @@ public class BuyBoxServiceImplTest
 	public void testGetpriceForUssid()
 	{
 		final BuyBoxModel buyBox = new BuyBoxModel();
-		final String ussid = "123654098765485130011712";
+		final String ussid = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
 		assertNotNull(buyBoxDao.priceForUssid(ussid));
 		assertEquals(buyBox, buyBoxDao.priceForUssid(ussid));
 	}

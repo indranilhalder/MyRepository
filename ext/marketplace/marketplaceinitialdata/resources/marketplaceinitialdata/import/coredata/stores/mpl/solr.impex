@@ -85,13 +85,13 @@ INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=tru
 
 
 # Non-facet properties
-INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;boost
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
 ;$solrIndexedType; itemtype               ;string ;            ;    ;    ;    ;    ;    ;
-;$solrIndexedType; code                   ;string ;            ;    ;    ;    ;true;    ;springELValueProvider;code;90
-;$solrIndexedType; name                   ;text   ;sortabletext;    ;true;    ;true;true;springELValueProvider;getTitle();50
+;$solrIndexedType; code                   ;string ;            ;    ;    ;    ;true;    ;springELValueProvider;code;
+;$solrIndexedType; name                   ;text   ;sortabletext;    ;true;    ;true;    ;springELValueProvider;getTitle();
 ;$solrIndexedType; description            ;text   ;            ;    ;true;    ;    ;    ;;
 ;$solrIndexedType; summary                ;text   ;            ;    ;true;    ;    ;    ;;
-;$solrIndexedType; keywords               ;text   ;            ;    ;true;    ;true;    ;productKeywordsValueProvider;;20
+;$solrIndexedType; keywords               ;text   ;            ;    ;true;    ;true;    ;productKeywordsValueProvider;;
 ;$solrIndexedType; url                    ;string ;            ;    ;true;    ;    ;    ;mplProductUrlValueProvider;
 ;$solrIndexedType; stockLevelStatus       ;string ;            ;    ;    ;    ;    ;    ;mplStockLevelStatusValueProvider;
 ;$solrIndexedType; baseProductColourGroup ;string ;            ;    ;    ;    ;    ;    ;mplProductColourGroupValueProvider;
@@ -127,9 +127,9 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; displayPromotion		  ;string ;	  	;	;	 ;true;;;mplSwatchPromotionValueProvider; 		
 									
 # Category fields
-INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);localized[default=false];multiValue[default=true];categoryField[default=true];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;boost;facet[default=false]
-;$solrIndexedType; categoryName     	  ;text   ;true		   ;	;	 ;true;			;mplCategoryNameValueProvider;10; 
-;$solrIndexedType; brandName        	  ;text   ;true		   ;	;	 ;true;			;mplBrandCategoryNameValueProvider;10;
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);localized[default=false];multiValue[default=true];categoryField[default=true];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facet[default=false]
+;$solrIndexedType; categoryName     	  ;text   ;true		   ;	;	 ;true;			;mplCategoryNameValueProvider;
+;$solrIndexedType; brandName        	  ;text   ;true		   ;	;	 ;true;			;mplBrandCategoryNameValueProvider;
 
 
 # Category facets

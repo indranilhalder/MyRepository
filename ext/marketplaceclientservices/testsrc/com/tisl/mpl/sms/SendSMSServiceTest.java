@@ -38,9 +38,9 @@ public class SendSMSServiceTest
 	{
 
 		final SendSMSRequestData sendSMSRequestData = new SendSMSRequestData();
-		sendSMSRequestData.setContent("123456");
-		sendSMSRequestData.setRecipientPhoneNumber("9876543212");
-		sendSMSRequestData.setStatus("OK");
+		sendSMSRequestData.setContent("");//TODO : Please enter content
+		sendSMSRequestData.setRecipientPhoneNumber("");//TODO : Please enter phn number
+		sendSMSRequestData.setStatus("");//TODO : Please enter status
 		//sendSMSService.sendSMS(sendSMSRequestData);
 
 	}

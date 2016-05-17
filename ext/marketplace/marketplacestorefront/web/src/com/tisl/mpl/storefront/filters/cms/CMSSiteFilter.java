@@ -164,6 +164,8 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 			requestUrl = requestUrl.replaceAll(ModelAttributetConstants.STORE_URL_OLD, "");
 			LOG.info("This url contains /store/mpl/en, hence reforming the url to:::::  " + requestUrl);
 		}
+		//TISPRD-1876
+		requestUrl = urlBuilder(httpRequest, requestUrl);
 
 		httpResponse.sendRedirect(requestUrl);
 	}
@@ -420,6 +422,27 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 		}
 
 		return generatedPreviewUrl;
+	}
+
+
+
+	/**
+	 * This method builds the request url including the parameters //TISPRD-1876
+	 *
+	 * @param httpRequest
+	 * @param requestUrl
+	 * @return String
+	 */
+	protected String urlBuilder(final HttpServletRequest httpRequest, final String requestUrl)
+	{
+		final StringBuilder urlBuilder = new StringBuilder();
+		urlBuilder.append(requestUrl);
+		if (StringUtils.isNotEmpty(httpRequest.getQueryString()))
+		{
+			urlBuilder.append('?').append(httpRequest.getQueryString());
+		}
+
+		return urlBuilder.toString();
 	}
 
 	/**

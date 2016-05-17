@@ -15,6 +15,7 @@
 			"displayName" : "${pos.displayName}",
 			"name" : "${pos.name}",
 			"url" : "${pos.url}",
+			"active" : "${pos.active}",
 			"phone" : "${pos.address.phone}",
 			"formattedDistance" : "${pos.formattedDistance}",
 			"line1" : "${pos.address.line1}",

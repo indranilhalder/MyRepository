@@ -42,10 +42,10 @@ public class DefaultSendSMSFacadeUnitTest
 	public void testsendSms()
 	{
 
-
+		//TISSEC-50
 		final SendSMSRequestData smsRequestData = new SendSMSRequestData();
-		smsRequestData.setContent("This is msg");
-		smsRequestData.setRecipientPhoneNumber("7896541236");
+		smsRequestData.setContent("");//TODO : Please enter content
+		smsRequestData.setRecipientPhoneNumber("");//TODO : Please enter recipient phn number
 
 
 		Mockito.doNothing().when(modelService).save(smsRequestData);

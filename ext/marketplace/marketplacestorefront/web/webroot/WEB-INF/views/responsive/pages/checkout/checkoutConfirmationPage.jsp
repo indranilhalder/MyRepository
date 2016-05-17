@@ -197,7 +197,7 @@
 <script type="text/javascript">
 
 $( document ).ready(function() {
-    console.log( "MSD Tracking!" );
+  //  console.log( "MSD Tracking!" );
     var isMSDEnabled =  $("input[name=isMSDEnabled]").val();
     var isApparelExist  = $("input[name=isApparelExist]").val();
     
@@ -230,7 +230,7 @@ $( document ).ready(function() {
 					<c:if test="${not status.last}">,</c:if>
 				</c:forEach> 
 			  ];
-		console.log(orderDataForMSD);
+	//	console.log(orderDataForMSD);
 		try
 		{			 
 		  track(['buy',JSON.stringify(orderDataForMSD)]);		 
