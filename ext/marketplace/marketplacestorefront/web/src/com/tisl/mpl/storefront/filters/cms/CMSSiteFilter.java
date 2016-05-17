@@ -103,7 +103,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 				if (requestUrl.contains("/c/") || requestUrl.contains("/p/")
 						|| requestUrl.contains(ModelAttributetConstants.STORE_URL_OLD))
 				{
-					checkUrlPattern(requestUrl, httpResponse);
+					checkUrlPattern(httpRequest, requestUrl, httpResponse);
 				}
 				else
 				{
@@ -149,7 +149,8 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	 * @throws IOException
 	 *
 	 */
-	private void checkUrlPattern(String requestUrl, final HttpServletResponse httpResponse) throws IOException
+	private void checkUrlPattern(final HttpServletRequest httpRequest, String requestUrl, final HttpServletResponse httpResponse)
+			throws IOException
 	{
 		if (requestUrl.contains("/c/"))
 		{
