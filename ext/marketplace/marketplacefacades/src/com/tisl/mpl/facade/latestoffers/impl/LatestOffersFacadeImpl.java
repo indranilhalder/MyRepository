@@ -33,7 +33,7 @@ public class LatestOffersFacadeImpl implements LatestOffersFacade
 
 	/**
 	 * This method fetches the CMSSlot Model and returns the required data for latest offers
-	 * 
+	 *
 	 * @param contentSlot
 	 * @return LatestOffersData
 	 */
@@ -91,6 +91,7 @@ public class LatestOffersFacadeImpl implements LatestOffersFacade
 					{
 						LOG.info("No instance of bestPickCarouselComponent found!!!");
 					}
+					LOG.debug(imageURL + "::::::::" + text);
 
 					//Setting Latest Offer Entries Data
 					entriesdata.setImageUrl(imageURL);

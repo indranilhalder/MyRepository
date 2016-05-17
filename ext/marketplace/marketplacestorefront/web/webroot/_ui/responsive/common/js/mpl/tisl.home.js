@@ -139,14 +139,24 @@ $(".A-ZBrands")
 
 
 $("span.latestOffersBanner").on("click touchend", function() {
-
 	$.ajax({
-		url : ACC.config.encodedContextPath + "/helpmeshop",
+		url : ACC.config.encodedContextPath + "/listOffers",
 		type : 'GET',
 		success : function(html) {
 			$("div#latestOffersContent").html(html);
 		}
 	});
+});
+
+
+$('div#closeConceirge').on('click touchend',function(e) {
+	//$("#age").val("-Select-");
+	//$("#genderOrTitle").val("-Select-");
+	//$("#reasonOrEvent").val("-Select-");
+	//$("#typeOfProduct").val("");
+	//$(e.currentTarget).closest('.banner').removeClass('active');
+	$("#latestOffersContent").css("display","none");
+	
 });
 
 
