@@ -531,7 +531,8 @@ function getBestPicksAjaxCall(){
 							
 						
 				});
-			renderHtml += "</div> <a href='/store/o/viewAllOffers' class='view-cliq-offers'> View Cliq Offers </a>";	
+			//renderHtml += "</div> <a href='/store/o/viewAllOffers' class='view-cliq-offers'> View Cliq Offers </a>";
+			renderHtml += "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
 			$("#bestPicks").html(renderHtml);
 			// console.log()
 		},
@@ -905,7 +906,7 @@ function getShowcaseContentAjaxCall(id) {
 					if (typeof response.bannerImageUrl !=="undefined") {
 						defaultHtml +="<div class='desc-section'>";
 						if(typeof response.bannerUrl !=="undefined"){
-							defaultHtml +="<a href='"+appendIcid(ACC.config.encodedContextPath+response.bannerUrl, response.icid)+"'>";
+							defaultHtml +="<a href='"+appendIcid(response.bannerUrl, response.icid)+"'>";
 						}
 						defaultHtml += "<img src='"+ response.bannerImageUrl
 						+ "'></img>";	
