@@ -473,7 +473,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		if (StringUtils.isEmpty(searchQuery))
 		{
-			final StringBuffer searchString = new StringBuffer();
+			final StringBuffer searchString = new StringBuffer(100);
 			searchString.append(":relevance:inStockFlag:true");
 			searchQueryData.setValue(XSSFilterUtil.filter(searchString.toString()));
 		}
