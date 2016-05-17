@@ -513,7 +513,7 @@ function getBestPicksAjaxCall() {
                     renderHtml += "</a>";
                 });
                 renderHtml +=
-                    "</div> <a href='/store/o/viewAllOffers' class='view-cliq-offers'> View Cliq Offers </a>";
+                    "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
                 $("#bestPicks").html(renderHtml);
                 // console.log()
             },
