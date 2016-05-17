@@ -429,7 +429,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 					.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_PROMOTIONS);
 			//	final boolean isHigherPromotionExists = true;
 			int maxPriority = priority.intValue();
-			if (null != promotionData && !promotionData.isEmpty())
+			if (CollectionUtils.isNotEmpty(promotionData))
 			{
 				for (final ProductPromotion promotion : promotionData)
 				{

@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.promotion.service.impl;
 
+import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
@@ -243,7 +244,7 @@ public class DefaultUpdateSplPriceHelperService implements UpdateSplPriceHelperS
 					final Collection<CategoryModel> subCategoryList = categoryService.getAllSubcategoriesForCategory(oModel);
 					if (CollectionUtils.isNotEmpty(subCategoryList))
 					{
-						categoryList.addAll(subCategoryList);
+						categoryList.addAll(populateSubCategoryData(subCategoryList));
 					}
 				}
 			}
@@ -252,6 +253,26 @@ public class DefaultUpdateSplPriceHelperService implements UpdateSplPriceHelperS
 		{
 			LOG.error(exception.getMessage());
 		}
+		return categoryList;
+	}
+
+	/**
+	 * Return Sub Categories except Classification Categories
+	 *
+	 * @param subCategoryList
+	 * @return categoryList
+	 */
+	private List<CategoryModel> populateSubCategoryData(final Collection<CategoryModel> subCategoryList)
+	{
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		for (final CategoryModel category : subCategoryList)
+		{
+			if (!(category instanceof ClassificationClassModel))
+			{
+				categoryList.add(category);
+			}
+		}
+
 		return categoryList;
 	}
 
