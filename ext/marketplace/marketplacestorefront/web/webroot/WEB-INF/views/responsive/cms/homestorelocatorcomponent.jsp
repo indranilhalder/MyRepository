@@ -37,7 +37,6 @@ function getDataFromServer(lat,lot){
   	    contentType : "application/json; charset=utf-8",
         success : function(data) {
         var response = JSON.stringify(data);
-        console.log("Ajax data sent successfully, <br/> The Data is "+response);
         locatorJson = JSON.parse(data).results;
         initialize(locatorJson,lat,lot);
         },
@@ -79,10 +78,10 @@ function initialize(locatorJson,lat,lot)
     var markers = new Array();
 	  
   for (var i = 0; i < locatorJson.length; i++) { 
+	 if(locatorJson[i].active=='Y'){
 	 var icon="";
 	 var marker="";
 	 var mplStoreImage=locatorJson[i].mplStoreImage;
-	 console.log(mplStoreImage)
 	 var normalMarkerIcon="";
 	 var onClickMarkerIcon="";
 	 var onHoverIcon="";
@@ -112,16 +111,12 @@ function initialize(locatorJson,lat,lot)
 							          infowindow.open(map, marker);
 							          map.setZoom(markerZoom);
 							          map.setCenter(marker.getPosition());
-							          if(!(locatorJson[i].onClickImgUrl)){
-							        	  console.debug("No On image.");
-							          }else{
-							        	  console.info("locatorJson[i].onClickImgUrl");
-							        	 // marker.setIcon(locatorJson[i].onHoverImgUrl);  
-							          }
+							          
 							        }
 							      })(marker, i));
 marker.setMap(map);	  
 autoCenter(markers,map);
+}
 }
   
 //Add a Home control that returns the user to London
@@ -213,9 +208,6 @@ function HomeLegendsControl(controlDiv, map) {
     var iconsLength = icons.length;
     
     var legendStyle = document.getElementById("legend");
-    
-    console.info("Style"+legendStyle);
-    
     var legend = document.getElementById('legend');
      
       for (var i = 0; i < icons.length; i++) { 
@@ -226,7 +218,6 @@ function HomeLegendsControl(controlDiv, map) {
 	      div.appendChild(img1);
          legend.appendChild(div);
     } 
-      console.info('info'+legend);
       controlDiv.style.padding = '10px';
       var controlUI = document.createElement('div');
       controlUI.style.backgroundColor = 'transparent';

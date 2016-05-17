@@ -21,9 +21,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tisl.mpl.facade.brand.BrandFacade;
-import com.tisl.mpl.facade.brand.impl.BrandComponentCacheKey;
 import com.tisl.mpl.facade.brand.impl.BrandComponentCacheValueLoader;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -53,8 +53,9 @@ public class AtoZBrandController
 	private BrandComponentCacheValueLoader brandCompCacheValueLoader;
 
 
+	@SuppressWarnings("boxing")
 	@RequestMapping(method = RequestMethod.GET)
-	public String get(final Model model)
+	public String get(@RequestParam("componentUid") final String componentUid, final Model model)
 	{
 
 		Map<Character, List<CategoryModel>> sortedMap = null;
@@ -103,22 +104,19 @@ public class AtoZBrandController
 		}
 		try
 		{
-			final BrandComponentCacheKey key = new BrandComponentCacheKey(CODE);
-
-			sortedMap = (Map<Character, List<CategoryModel>>) brandCompCacheRegion.getWithLoader(key, brandCompCacheValueLoader);
-
-			if (null == sortedMap)
-			{
-				sortedMap = brandFacade.getAllBrandsInAplhabeticalOrder(CODE);
-			}
+			//final BrandComponentCacheKey key = new BrandComponentCacheKey(CODE);
+			//sortedMap = (Map<Character, List<CategoryModel>>) brandCompCacheRegion.getWithLoader(key, brandCompCacheValueLoader);
+			//if (null == sortedMap)
+			//{
+			sortedMap = brandFacade.getAllBrandsFromCmsCockpit(componentUid);
 			//sortedMap = brandFacade.getAllBrandsInAplhabeticalOrder(CODE);
+			//}
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage());
 
 		}
-
 
 
 		//Sorted the map based on the keys

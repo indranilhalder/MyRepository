@@ -107,8 +107,10 @@ function registerUser(eventObject)
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" id="ia_site_id" value="${cmsSite.uid}"> 
 	<input type="hidden" id="ia_site_page_id" value="${cmsPage.uid}"> 
-	<input type="hidden" id="ia_category_code" value="${categoryCode}">
-	<input type="hidden" id="ia_product_code" value="${productCode}">
+	<!-- changes for url structure change for pdp-->
+	<input type="hidden" id="ia_category_code" value="${fn:toUpperCase(categoryCode)}">
+	<input type="hidden" id="ia_product_code" value="${fn:toUpperCase(productCode)}">
+	<!-- changes end -->
 	<input type="hidden" id="ia_product_rootCategory_type" value="${product.rootCategory}">
 	<input type="hidden" id="mSellerID" value="${mSellerID}">
 	<input type="hidden" id="rootEPForHttp" value="${rootEPForHttp}">

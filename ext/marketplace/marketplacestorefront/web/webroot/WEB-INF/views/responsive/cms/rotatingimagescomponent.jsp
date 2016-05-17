@@ -90,7 +90,7 @@ var homePageBannerTimeout='${timeout}';
 	</div>
 	</c:when>
 	<c:otherwise>
-	<div class="timeout-slider">
+	<div class="timeout-slider" style="height:575px;">
 	<div
 		class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference"
 		id="rotatingImageTimeout">
