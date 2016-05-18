@@ -37722,7 +37722,7 @@ span.mini-cart-close {
 	font-size: 11px;
     text-align: justify;
     padding:0 10px;
-        width: 75%;
+        width: auto;
         float:left;
 }
 .reward-popover-dash-border{
@@ -37747,7 +37747,7 @@ span.mini-cart-close {
     border-top-color: #a9143c;
 }
 #checkBox .popover.top{
-           max-width: 345px;
+           max-width: 242px;
     border: 1px solid #a9143c;
     border-radius: 5px;
     width: 345px !important;
