@@ -1698,7 +1698,7 @@ h2 {
   header .content .search {
     float: right;
     max-width: 640px;
-    min-width: 349px;
+ min-width: 349px; 
     width: -webkit-calc(100% - 685px);
     width: calc(100% - 685px); }
     header .content .search::after {
@@ -4391,7 +4391,7 @@ text-transform: uppercase;
   text-align: center; }
   .trending h1 {
     position: relative;
-    z-index: 100;
+    z-index: 1;
     left: 50%;
     margin: 60px 0 35px;
     padding: 0 30px;
@@ -19123,7 +19123,7 @@ header .content .brand-logo img{
   -ms-transform: initial;
   -o-transform: initial;
   transform: initial;
-  margin-top:10px;
+ /*  margin-top:10px; */
 }
 header .content .compact-toggle {
   position: absolute;
@@ -19827,11 +19827,16 @@ color: #ff829a;
 	.modal#createNewList .content, .modal#manageMyList .content{
 	height: auto;
 	}
-	.product-tile .image .quickview{
-	display:none;}
 }
 
-
+@media (max-width:970px){
+	.product-tile .image .quickview {
+		display: none;
+	}
+	#colorbox, #cboxOverlay{
+	display:none !important;
+	}
+} 
 @media (min-width:791px)
 {
 	 header .content .bottom.active .marketplace
@@ -19936,7 +19941,7 @@ color: #ff829a;
   	header .content .bottom.active .search
   	{
   		min-width:250px;
-  		-webkit-width:calc(100% - 536px);
+  		-webkit-width:calc(100% - 580px);
   		width:calc(100% - 580px);
   	}
   }      
@@ -21979,7 +21984,7 @@ body .account .new-address form div#checkBox label
 .manage-wishlist-container span{
     margin: 10px 0;
     max-width: 180px;
-    word-wrap: break-word;
+    word-break: break-word;
     display: block;
 }
 .forgot-password-container select {
@@ -31603,6 +31608,9 @@ header.brand-header > .content .bottom nav > ul > li:nth-last-of-type(1).active 
     width: 100%;
     position:static;
 	}
+	.cart.wrapper .product-block li.item > ul.desktop #addToCartButtonId {
+width:auto !important;
+margin-left: 0px !important; }
 }
 /*--------------maincss-----------*/
 .row

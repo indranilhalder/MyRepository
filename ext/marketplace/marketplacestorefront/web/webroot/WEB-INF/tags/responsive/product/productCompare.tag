@@ -69,6 +69,7 @@
 
 .compare-item .content li {
 	line-height: 22px;
+	word-break: break-word;
 }
 
 .compare-item .content li:last-child {
