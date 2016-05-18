@@ -515,11 +515,11 @@ input:focus {
       width: -webkit-calc(100% - 1px);
       width: calc(100% - 1px);
       line-height: 50px;
-      padding-left: 20px;
+      padding-left: 10px;
       font-size: 16px;
       margin: -1px;
       background-color: transparent;
-      padding-right:15px; }
+      padding-right:20px; }
       .select-view .select-list > .selected:after {
         position: absolute;
         top: 0px;
@@ -16119,7 +16119,7 @@ body .account .right-account .order-history.order-details li.item .image {
     }
 }
 body .account .right-account .order-history.order-details li.item .status {
-    width: 55%;
+    width: 58%;
     position: absolute;
     top: 30px;
     right: 20px;
@@ -16278,7 +16278,7 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 }
 @media (max-width: 650px) {
     body .account .right-account .order-history.order-details li.item .status>ul>li {
-        font-size: 9px
+        font-size: 8px
     }
 }
 body .account .right-account .order-history.order-details li.item .status .message {
@@ -19810,11 +19810,15 @@ color: #ff829a;
 	.modal#createNewList .content, .modal#manageMyList .content{
 	height: auto;
 	}
-	.product-tile .image .quickview{
-	display:none;}
 }
-
-
+@media (max-width:970px){
+	.product-tile .image .quickview {
+		display: none;
+	}
+	#colorbox, #cboxOverlay{
+	display:none !important;
+	}
+}
 @media (min-width:791px)
 {
 	 header .content .bottom.active .marketplace
@@ -38220,7 +38224,7 @@ select#micrositeSearchCategory, select#searchCategory{
 	margin-top: 7px; 
 	height: 28px;
 	padding-top: 6px;
-	background-color: rgb(0, 203, 233);
+	background-color: #A9143C;
 	color: #fff;
 	border: none;
 	position: absolute;
@@ -39208,4 +39212,144 @@ div.MSDQuickView:before {
 	#ia_products_hot .pagination {
 		top: -8px;
 	}
+/* Order History CSS */
+
+
+.ordermargingalignment {
+	height: 41px;
+	padding-top: 7px;
+	font-size: 12px;
+	font-weight: 300;
 }
+
+.orderheadingalignment {
+	font-size: 12px;
+}
+
+.orderbodyalignment {
+	font-size: 12px;
+}
+
+.attributes {
+	font-size: 12px;
+}
+
+.actions {
+	font-size: 12px;
+}
+.pickupeditbtn:after{
+
+     font-family: 'FontAwesome';
+    content:"\f040";
+    padding:0 5px 0 5px; 
+}
+.deliverymode {
+	font-size: 12px;
+	font-weight: 600;
+	min-height: 17px;
+}
+
+.error_text {
+	color: red;
+}
+
+#pickName {
+	height: 25px !important;
+	white-space: nowrap;
+}
+.order {
+	margin-top: 8px !important;
+}
+
+@media (max-width: 1019px) {
+	.mobileWidth {
+		width: 100%;
+	}
+	
+	.pickup_mob {
+		width: 100%;
+		margin-left: 10px;
+		margin-top: 5px;
+	}
+	
+	.pickMobileNo {
+		width: 94%;
+		margin-left: 10px;
+		margin-top: 5px;
+	}
+	
+	.pickup_name {
+		width: 100%;
+		margin-top: 5px;
+	}
+	
+	.pickUpName	 {
+		width: 100%;
+		margin-top: 5px;
+	}
+	
+	.pickup_Edit {
+		margin-left: -29px;
+	}
+	
+	.savebtnOther {
+		margin: 5px 0px 0px 20px !important;
+		height: 34px !important;
+		padding-top: 9px;
+	}
+	
+}
+@media (min-width: 1020px) {
+	.pickup_Edit {
+		margin-left: 181px;
+		margin-top: -22px;
+	}
+	
+	.pickup_name {
+		padding-top: 12px;
+		margin-left: 17px;
+		font-weight: bold;
+	}
+	
+	.pickUpName {
+		height: 28px;
+		margin-top: 6px;
+		z-index: 119;
+		margin-left: 47px;
+	}
+	
+	.pickupPersonNameError {
+		width: 115px; 
+		font-size: 10px;
+		margin-left: 49px;
+	}	
+	.pickup_mob {
+		margin-left: -86px;
+		padding-top: 14px;
+		width: 71px;
+		font-weight: bold;
+	}
+	
+	.pickMobileNo {
+		margin-left: -128px; 
+		height: 28px; 
+		margin-top: 7px; 
+		z-index: 10;
+	}
+	
+	.pickupPersonMobileError {
+		margin-left: -125px; 
+		width: 167px; 
+		font-size: 10px;
+	}
+	
+	.savebtn {
+		z-index: 99; 
+		min-width: 91px;
+		margin-left: -188px;
+	}
+}
+
+
+
+/* Order History CSS End */

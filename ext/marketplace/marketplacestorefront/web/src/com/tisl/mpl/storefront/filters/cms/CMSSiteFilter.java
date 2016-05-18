@@ -101,12 +101,16 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 				if (requestUrl.contains("/c/"))
 				{
 					requestUrl = requestUrl.replaceAll("/c/", "/c-");
-					httpResponse.sendRedirect(requestUrl);
+					final String categoryUrl = urlBuilder(httpRequest, requestUrl);
+					//TISPRD-1876
+					httpResponse.sendRedirect(categoryUrl);
 				}
 				else if (requestUrl.contains("/p/"))
 				{
 					requestUrl = requestUrl.replaceAll("/p/", "/p-");
-					httpResponse.sendRedirect(requestUrl);
+					final String productUrl = urlBuilder(httpRequest, requestUrl);
+					//TISPRD-1876
+					httpResponse.sendRedirect(productUrl);
 				}
 				else
 				{
@@ -327,6 +331,27 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 		}
 
 		return generatedPreviewUrl;
+	}
+
+
+
+	/**
+	 * This method builds the request url including the parameters //TISPRD-1876
+	 *
+	 * @param httpRequest
+	 * @param requestUrl
+	 * @return String
+	 */
+	protected String urlBuilder(final HttpServletRequest httpRequest, final String requestUrl)
+	{
+		final StringBuilder urlBuilder = new StringBuilder();
+		urlBuilder.append(requestUrl);
+		if (StringUtils.isNotEmpty(httpRequest.getQueryString()))
+		{
+			urlBuilder.append('?').append(httpRequest.getQueryString());
+		}
+
+		return urlBuilder.toString();
 	}
 
 	/**
