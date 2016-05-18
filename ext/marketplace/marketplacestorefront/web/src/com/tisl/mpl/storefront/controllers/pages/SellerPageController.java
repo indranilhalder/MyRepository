@@ -15,12 +15,16 @@ import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.search.data.SearchQueryData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
+import de.hybris.platform.commerceservices.search.facetdata.BreadcrumbData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.servicelayer.session.Session;
+import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -30,6 +34,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -49,6 +54,7 @@ import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.controllers.pages.SearchPageController.UserPreferencesData;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -72,6 +78,8 @@ public class SellerPageController extends AbstractSearchPageController
 	@Resource(name = "searchBreadcrumbBuilder")
 	private SearchBreadcrumbBuilder searchBreadcrumbBuilder;
 
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
 
 	@Resource(name = ModelAttributetConstants.ACCOUNT_BREADCRUMB_BUILDER)
 	private ResourceBreadcrumbBuilder sellerBreadcrumbBuilder;
@@ -94,13 +102,16 @@ public class SellerPageController extends AbstractSearchPageController
 	private static final String NEW_SELLER_URL_PATTERN_PAGINATION = "/{sellerID}/page-{page}";
 
 	//@RequestMapping(value = SELLER_ID_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	@SuppressWarnings("boxing")
 	@RequestMapping(value =
 	{ NEW_SELLER_URL_PATTERN_PAGINATION, SELLER_ID_PATH_VARIABLE_PATTERN }, method = RequestMethod.GET)
 	public String seller(@PathVariable("sellerID") final String sellerID,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
-			@RequestParam(value = "sort", required = false) final String sortCode, final Model model,
+			@RequestParam(value = "sort", required = false) final String sortCode,
+			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request) throws UnsupportedEncodingException
 	{
 		//Set the drop down text if the attribute is not empty or null
@@ -109,7 +120,8 @@ public class SellerPageController extends AbstractSearchPageController
 		model.addAttribute("searchCode", sellerID);
 		//Check if there is a landing page for the seller
 		final SellerMasterModel sellerMaster = mplSellerMasterService.getSellerMaster(sellerID);
-
+		pageSize = pageSize != null ? pageSize : 0;
+		updateUserPreferences(pageSize);
 		try
 		{
 
@@ -146,12 +158,26 @@ public class SellerPageController extends AbstractSearchPageController
 				 * offer facets
 				 */
 
-				final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
+				final PageableData pageableData = createPageableData(0, pageSize, null, ShowMode.Page);
 				final SearchStateData searchState = new SearchStateData();
 				final SearchQueryData searchQueryData = new SearchQueryData();
 				searchQueryData.setValue(sellerName);
+				//				if (resetAll)
+				//				{
+				//					searchQueryData.setValue(sellerName);
+				//				}
+				//				else
+				//				{
+				//					final StringBuffer searchString = new StringBuffer(sellerName);
+				//					searchString.append(":relevance:inStockFlag:true");
+				//					searchQueryData.setValue(XSSFilterUtil.filter(searchString.toString()));
+				//				}
 				searchState.setQuery(searchQueryData);
+
+
+				//searchState.setResetAll(resetAll);
 				searchPageData = searchFacade.dropDownSearch(searchState, sellerID, MarketplaceCoreConstants.SELLER_ID, pageableData);
+				searchPageData = updatePageData(searchPageData, sellerID, searchQuery);
 				final StringBuilder urlBuilder = new StringBuilder(200);
 				final List<FacetData<SearchStateData>> facets = searchPageData.getFacets();
 				//if (null != facets && facets.size() > 0)
@@ -202,9 +228,17 @@ public class SellerPageController extends AbstractSearchPageController
 				final String sellerLegalName = sellerMaster.getLegalName();
 
 				searchQueryData.setValue(sellerLegalName);
-				final SellerSearchEvaluator sellerSearch = new SellerSearchEvaluator(sellerID, XSSFilterUtil.filter(searchQuery),
-						page, showMode, sortCode);
-				sellerSearch.doSearch();
+				SellerSearchEvaluator sellerSearch = null;
+				if (!resetAll)
+				{
+					sellerSearch = new SellerSearchEvaluator(sellerID, XSSFilterUtil.filter(searchQuery), page, showMode, sortCode);
+				}
+				else
+				{
+					sellerSearch = new SellerSearchEvaluator(sellerID, XSSFilterUtil.filter(searchQuery), page, showMode, sortCode,
+							resetAll);
+				}
+				sellerSearch.doSearch(resetAll, searchQuery, pageSize);
 
 				populateModel(model, sellerSearch.getSearchPageData(), showMode);
 				model.addAttribute("dropDownText", sellerLegalName);
@@ -282,6 +316,25 @@ public class SellerPageController extends AbstractSearchPageController
 		public SellerSearchEvaluator(final String sellerID, final String searchQuery, final int page, final ShowMode showMode,
 				final String sortCode)
 		{
+			//this.searchQueryData.setValue(searchQuery);
+			if (StringUtils.isEmpty(searchQuery))
+			{
+				this.searchQueryData.setValue(":relevance:sellerId:" + sellerID + ":inStockFlag:true");
+			}
+			else
+			{
+				this.searchQueryData.setValue(searchQuery);
+			}
+			this.page = page;
+			this.showMode = showMode;
+			this.sortCode = sortCode;
+			this.sellerID = sellerID;
+		}
+
+		public SellerSearchEvaluator(final String sellerID, final String searchQuery, final int page, final ShowMode showMode,
+				final String sortCode, final boolean resetAll)
+		{
+			//this.searchQueryData.setValue(searchQuery);
 			this.searchQueryData.setValue(searchQuery);
 			this.page = page;
 			this.showMode = showMode;
@@ -289,30 +342,53 @@ public class SellerPageController extends AbstractSearchPageController
 			this.sellerID = sellerID;
 		}
 
-		public void doSearch()
+
+
+
+		public void doSearch(final boolean resetAll, final String searchQuery, final int pageSize)
 		{
 			//showCategoriesOnly = false;
+
 			if (searchQueryData.getValue() == null)
 			{
 
-				final PageableData pageableData = createPageableData(page, getSearchPageSize(), sortCode, showMode);
+				final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 
 				// Direct category link without filtering
 				final SearchStateData searchState = new SearchStateData();
-				final SearchQueryData searchQueryData = new SearchQueryData();
+				//				if (!resetAll)
+				//				{
+				//					final StringBuffer searchString = new StringBuffer();
+				//					searchString.append(":relevance:sellerId:" + sellerID + ":inStockFlag:true");
+				//					searchQueryData.setValue(XSSFilterUtil.filter(searchString.toString()));
+				//				}
+
 				searchState.setQuery(searchQueryData);
+				//searchState.setResetAll(resetAll);
 				searchPageData = searchFacade.dropDownSearchForSeller(searchState, sellerID, MarketplaceCoreConstants.SELLER_ID,
 						pageableData);
+
+				searchPageData = updatePageData(searchPageData, sellerID, searchQuery);
+
 
 			}
 			else
 			{
 
 				final SearchStateData searchState = new SearchStateData();
+				//				if (!resetAll)
+				//				{
+				//					final StringBuffer searchString = new StringBuffer();
+				//					searchString.append(":relevance:inStockFlag:true");
+				//					searchQueryData.setValue(XSSFilterUtil.filter(searchString.toString()));
+				//				}
 				searchState.setQuery(searchQueryData);
 
-				final PageableData pageableData = createPageableData(page, getSearchPageSize(), sortCode, showMode);
+				final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 				searchPageData = searchFacade.dropDownSearchForSellerListing(searchState, sellerID, pageableData);
+
+				searchPageData = updatePageData(searchPageData, sellerID, searchQuery);
+
 			}
 		}
 
@@ -326,5 +402,117 @@ public class SellerPageController extends AbstractSearchPageController
 		{
 			return searchPageData;
 		}
+	}
+
+	protected UserPreferencesData updateUserPreferences(final Integer pageSize)
+	{
+		final UserPreferencesData preferencesData = getUserPreferences();
+
+		if (pageSize != null)
+		{
+			preferencesData.setPageSize(pageSize);
+		}
+
+		return preferencesData;
+	}
+
+	protected UserPreferencesData getUserPreferences()
+	{
+		final Session session = sessionService.getCurrentSession();
+		UserPreferencesData userPreferencesData = session.getAttribute("preferredCategoryPreferences");
+		if (userPreferencesData == null)
+		{
+			userPreferencesData = new UserPreferencesData();
+			setUserPreferences(userPreferencesData);
+		}
+		return userPreferencesData;
+	}
+
+	protected void setUserPreferences(final UserPreferencesData userPreferencesData)
+	{
+		final Session session = sessionService.getCurrentSession();
+		session.setAttribute("preferredCategoryPreferences", userPreferencesData);
+	}
+
+	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> updatePageData(
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData,
+			final String whichSearch, final String searchQuery)
+	{
+		// YTODO Auto-generated method stub
+		if (null != whichSearch)
+		{
+			final List<BreadcrumbData> removeBredCrumb = new ArrayList<BreadcrumbData>();
+			for (final BreadcrumbData updateBreadCrumb : searchPageData.getBreadcrumbs())
+			{
+				if (updateBreadCrumb.getFacetValueCode().equalsIgnoreCase(whichSearch))
+				{
+					removeBredCrumb.add(updateBreadCrumb);
+				}
+			}
+			for (final BreadcrumbData remove : removeBredCrumb)
+			{
+				searchPageData.getBreadcrumbs().remove(remove);
+			}
+
+
+		}
+		if (null != searchPageData)
+		{
+			BreadcrumbData removeBredCrumb = null;
+			boolean flag = false;
+			for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
+			{
+				if (facets.getCode().equalsIgnoreCase("inStockFlag") && facets.getValues().size() <= 1)
+				{
+					for (final BreadcrumbData bredCrumb : searchPageData.getBreadcrumbs())
+					{
+						if (bredCrumb.getFacetCode().equalsIgnoreCase("inStockFlag") && null != searchQuery
+								&& !searchQuery.contains("inStockFlag:true"))
+						{
+							removeBredCrumb = bredCrumb;
+							flag = true;
+						}
+						else if (bredCrumb.getFacetCode().equalsIgnoreCase("inStockFlag") && null == searchQuery)
+						{
+							removeBredCrumb = bredCrumb;
+							flag = true;
+						}
+
+					}
+					searchPageData.getBreadcrumbs().remove(removeBredCrumb);
+
+				}
+			}
+			if (flag)
+			{
+				if (null != searchPageData.getCurrentQuery() && null != searchPageData.getCurrentQuery().getQuery()
+						&& null != searchPageData.getCurrentQuery().getQuery().getValue())
+				{
+					searchPageData.getCurrentQuery().getQuery()
+							.setValue(searchPageData.getCurrentQuery().getQuery().getValue().replace(":inStockFlag:true", ""));
+					searchPageData.getCurrentQuery().setUrl(
+							searchPageData.getCurrentQuery().getUrl().replace("%3AinStockFlag%3Atrue", ""));
+				}
+				for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
+				{
+					for (final FacetValueData<SearchStateData> facetValue : facets.getValues())
+					{
+						if (null != facetValue.getQuery() && facetValue.getQuery().getQuery() != null
+								&& facetValue.getQuery().getQuery().getValue() != null
+								&& facetValue.getQuery().getQuery().getValue().contains("inStockFlag:true"))
+						{
+							facetValue.getQuery().getQuery()
+									.setValue(facetValue.getQuery().getQuery().getValue().replace("inStockFlag:true:", ""));
+
+						}
+
+
+					}
+
+				}
+			}
+		}
+
+		return searchPageData;
 	}
 }

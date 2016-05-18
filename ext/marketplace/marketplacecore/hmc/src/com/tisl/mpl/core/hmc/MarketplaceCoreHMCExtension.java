@@ -277,7 +277,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 		boolean errorCheck = false;
 		try
 		{
-			if (null != item && item instanceof BuyAPercentageDiscount)
+			if (item instanceof BuyAPercentageDiscount)
 			{
 				LOG.debug("******** Special price check for BuyAPercentageDiscount:" + item.getAttribute("title"));
 				errorCheck = poulatePromoPriceData(item);
@@ -501,7 +501,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
 							+ " *** categoryList:" + categoryList);
 					getUpdatePromotionalPriceService().disablePromotionalPrice(productList, categoryList, isEnabled, priority,
-							brandList, quantity, rejectSellerList, rejectBrandList);
+							brandList, quantity, rejectSellerList, rejectBrandList, promoCode);
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& quantity > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
@@ -509,7 +509,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
 							+ " *** categoryList:" + categoryList);
 					getUpdatePromotionalPriceService().disablePromotionalPrice(productList, categoryList, isEnabled, priority,
-							brandList, quantity, rejectSellerList, rejectBrandList);
+							brandList, quantity, rejectSellerList, rejectBrandList, promoCode);
 				}
 			}
 		}
