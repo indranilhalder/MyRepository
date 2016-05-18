@@ -515,11 +515,11 @@ input:focus {
       width: -webkit-calc(100% - 1px);
       width: calc(100% - 1px);
       line-height: 50px;
-      padding-left: 20px;
-      font-size: 16px;
+      padding-left: 10px;
+      font-size: 13px;
       margin: -1px;
       background-color: transparent;
-      padding-right:15px; }
+      padding-right:20px; }
       .select-view .select-list > .selected:after {
         position: absolute;
         top: 0px;
@@ -534,9 +534,6 @@ input:focus {
       .select-view .select-list > .selected#micrositesearchBoxSpan:after {
     	color: #fff;
          }
-    @media (max-width: 900px) {
-      .select-view .select-list > .selected {
-        font-size: 14px; } }
     .select-view .select-list ul {
       max-height: 0;
       overflow: hidden;
@@ -1339,7 +1336,7 @@ h2 {
       -o-transform: translateY(-50%);
       transform: translateY(-50%); }
   header .content nav {
-    margin-left: 45px; } }
+    margin-left: 35px; } }
            @media (min-width:791px) {
     header .content nav > ul {
       clear: both; }
@@ -1374,16 +1371,16 @@ h2 {
             
         header .content nav > ul > li:first-child + li {
           margin-right: 0;
-              margin-left: 20px; }
+              margin-left: 30px; }
           header .content nav > ul > li:first-child + li > ul {
-            left: 365px;
+            left: 375px;
             width: 150px; }
           .brand header .content nav > ul > li:first-child + li > ul {
             left: 225px;
             width: 190px; }
             header .content nav > ul > li:first-child + li > ul:hover {
-              width: -webkit-calc(100% - 368px);
-              width: calc(100% - 368px);
+              width: -webkit-calc(100% - 378px);
+              width: calc(100% - 378px);
            }
         header .content nav > ul > li > .toggle {
           font-weight: 500;
@@ -1462,19 +1459,19 @@ h2 {
             header .content nav > ul > li:first-child + li {
               padding-right: 0; }
               header .content nav > ul > li:first-child + li > ul {
-                left: 346px;
+                left: 351px;
                 width: 150px; }
               .brand header .content nav > ul > li:first-child + li > ul {
                 left: 150px;
                 width: 145px; }
                 header .content nav > ul > li:first-child + li > ul:hover {
-                  width: -webkit-calc(100% - 350px);
-                  width: calc(100% - 350px);
+                  width: -webkit-calc(100% - 355px);
+                  width: calc(100% - 355px);
                    }}
 @media (min-width:856px) and (max-width: 990px) {
             header .content nav > ul > li:first-child + li > ul:hover {
-                width: -webkit-calc(100% - 350px);
-                width: calc(100% - 350px);
+                width: -webkit-calc(100% - 355px);
+                width: calc(100% - 355px);
             }
         }
         @media (min-width:791px) and (max-width: 855px) {		
@@ -1487,7 +1484,7 @@ h2 {
                 left: 220px
             }
             header .content nav > ul > li:first-child + li > ul {
-                left: 325px
+                left: 330px
             }
             .brand header .content nav > ul > li:first-child + li > ul {
                 left: 135px
@@ -1512,7 +1509,7 @@ h2 {
             width: 150px; }
             header .content nav > ul > li > ul > li > .toggle {
               position: relative;
-              padding-left: 20px; }
+              padding-left: 10px; }
               header .content nav > ul > li > ul > li > .toggle:after {
                 content: "";
                 display: block;
@@ -1765,9 +1762,9 @@ h2 {
       line-height: 50px;
        width: 40%;
       border-radius:0px;
-      width: -webkit-calc(100% - 187px);
-      width: calc(100% - 187px); } }
-      @media (min-width: 791px) and (max-width: 1024px) {
+      width: -webkit-calc(100% - 203px);
+      width: calc(100% - 203px); } }
+      @media (min-width: 791px) and (max-width: 1020px) {
         header .content .search input {
           width: -webkit-calc(100% - 123px);
           width: calc(100% - 123px); } }
@@ -1782,7 +1779,7 @@ h2 {
       border: 1px solid #bbb;
       margin-left: -1px;
       margin-right: -1px;
-      width: 139px;
+      width: 155px;
       z-index: 2;
       -webkit-transition: border 0.3s;
       -moz-transition: border 0.3s;
@@ -1800,9 +1797,13 @@ h2 {
           -webkit-transition: max-height 0.15s, border 0s;
           -moz-transition: max-height 0.15s, border 0s;
           transition: max-height 0.15s, border 0s; } }
-      @media (min-width: 791px) and (max-width: 1024px) {
+      @media (min-width: 791px) and (max-width: 1020px) {
         header .content .search .select-list {
           width: 75px; } }
+      @media (min-width: 1023px) and (max-width: 1100px) {
+        header .content .search{
+         width: -webkit-calc(100% - 585px);
+    width: calc(100% - 585px);} }
           @media (min-width: 791px) {
       header .content .search .search-results {
       width: 100%;
@@ -8192,7 +8193,7 @@ footer>ul>li h3:after {
 }
 
 footer>ul>li ul li {
-	line-height: 50px;
+	line-height: 25px;
 	vertical-align: middle;
 	height: 0; 
 	font-size: 13px;
@@ -8313,7 +8314,7 @@ footer .banner {
 		}
 	}
 	footer>ul>li ul li {
-		height: 50px;
+		height: 25px;
 	}
 	footer .banner {
 		float: left;
@@ -16930,7 +16931,7 @@ font-weight:normal;
       height: auto !important;		
       background-color: #fff;		
       line-height: 46px;		
-      padding-left: 20px;		
+      padding-left: 15px;		
       position: relative;		
       border: 2px solid transparent;		
       margin: 0 -2px -2px -2px;
@@ -19446,7 +19447,7 @@ display:none;
   text-transform: uppercase;
 }
 .select-list ul li{
-	font-size:16px;
+	font-size:13px;
 }
 
 div.pdp.other-sellers {
@@ -19828,7 +19829,7 @@ color: #ff829a;
           }
          header .content .bottom.active nav > ul > li:first-child + li > ul 
          {
-         	left:340px;
+         	left:350px;
          	
          }
          header .content  .bottom.active nav > ul > li:first-child + li > ul:hover
@@ -19883,7 +19884,7 @@ color: #ff829a;
           }
          header .content .bottom.active nav > ul > li:first-child + li > ul 
          {
-         	left:300px;
+         	left:305px;
          	
          }
          header .content  .bottom.active nav > ul > li:first-child + li > ul:hover
