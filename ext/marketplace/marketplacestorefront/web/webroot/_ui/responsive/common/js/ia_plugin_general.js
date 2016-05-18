@@ -218,8 +218,8 @@ function buildParams(moreParams) {
   if(domain !== "") {
     currentParams.domain = domain;
   }
-  
-  if(site_product_array.length > 0) { //if multiple site product ids
+  //undefined issue fix in prod console
+  if(typeof(site_product_array)!= 'undefined' && site_product_array.length > 0) { //if multiple site product ids
     var spids = {};
     currentParams.site_product_id = '';
     for(var i=0; i<site_product_array.length; i++) {
@@ -227,7 +227,7 @@ function buildParams(moreParams) {
     }
     currentParams.site_product_id = currentParams.site_product_id.substring(0, currentParams.site_product_id.length - 1);
   }
-  if(category_array.length > 0) { //if multiple site product ids
+  if(typeof(category_array)!= 'undefined' && category_array.length > 0) { //if multiple site product ids
 	    var spids = {};
 	    currentParams.category_id = '';
 	    for(var i=0; i<category_array.length; i++) {
@@ -235,7 +235,7 @@ function buildParams(moreParams) {
 	    }
 	    currentParams.category_id = currentParams.category_id.substring(0, currentParams.category_id.length - 1);
 	  }
-  if(brand_array.length > 0) { //if multiple site product ids
+  if(typeof(brand_array)!= 'undefined' && brand_array.length > 0) { //if multiple site product ids
 	    var spids = {};
 	    currentParams.brand_id = '';
 	    for(var i=0; i<brand_array.length; i++) {
