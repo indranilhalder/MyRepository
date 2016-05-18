@@ -64,7 +64,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NEW_PASSWORD = "newPassword";
 	public static final String PRICE_NOT_AVAILABLE = "Price not Available";
 	public static final String PWD = "pwd";
-
+	public static final String ZeroDeliveryCost="0.0";
+	
 	public static final String LIST_EMPTY = "List is Empty";
 
 	public static final String CustomerSpecificRestriction_REGISTERED = "REGISTERED";
