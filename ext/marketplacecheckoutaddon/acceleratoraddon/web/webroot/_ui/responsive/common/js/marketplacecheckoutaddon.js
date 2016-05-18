@@ -2868,6 +2868,7 @@ function checkPincodeServiceability(buttonType)
  				{
  				//TISTI-255
  		//		alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 		//	TISPRD-1666 - console replaced with alert and resp print
  				console.log('Response coming as N in checkPincodeServiceability');
  	 			$("#isPincodeServicableId").val('N');
  	 			reloadpage(selectedPincode,buttonType);
@@ -2882,6 +2883,8 @@ function checkPincodeServiceability(buttonType)
  		error : function(resp) {
  			//TISTI-255
  		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 		//	TISPRD-1666 - console replaced with alert and resp print
+ 			console.log(resp);
  			console.log('Some issue occured in checkPincodeServiceability');
  			$("#isPincodeServicableId").val('N');
  			reloadpage(selectedPincode,buttonType);
@@ -3131,6 +3134,9 @@ function checkIsServicable()
 	 		error : function(resp) {
 	 			//TISTI-255
 	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 		//	TISPRD-1666 - console replaced with alert and resp print
+	 			console.log(resp);
+	 			console.log('Some issue occured in checkPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
 	 		}
 	 	});
