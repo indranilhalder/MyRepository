@@ -89,11 +89,15 @@
 						<!-- SORT BY FOR MOBILE STARTS -->
 					<div class="sort-refine-bar wrapped-form sort mobile">
 					
-							<div class="form-group">
+							<!-- Start Fix to TISTI-198 -->
+							<c:set var="top" value="false" />
+							<!-- End Fix to TISTI-198 -->
 								<form id="sortForm${top ? '1' : '2'}" name="sortForm${top ? '1' : '2'}" method="get" action="#">
 									
 									<select id="sortOptions${top ? '1' : '2'}" name="sort" class="black-arrow-left">
-										
+										<!-- Start Fix to TISTI-198 -->
+										<c:set var="top" value="true" />
+										<!-- End Fix to TISTI-198 -->
 										<c:forEach items="${searchPageData.sorts}" var="sort">
 											<c:if test="${sort.code ne 'promotedpriority-asc' }">
 											<option value="${sort.code}" ${sort.selected? 'selected="selected"' : ''}>
