@@ -3,7 +3,6 @@ package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.promotions.PromotionsService;
@@ -28,6 +27,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -144,45 +144,69 @@ public class MplDisplayPromotionCodeValueProvider extends AbstractPropertyFieldV
 					final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
 							Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), pcmSizeVariantModel, true,
 							currentTimeRoundedToMinute);
-
-
-					final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions,
-							pcmSizeVariantModel);
-
-
-					for (final ProductPromotionModel promotion : restrictedPromotions)
+					//changes -TISPRD-1922
+					final List<Integer> promoPriorities = new ArrayList<Integer>();
+					if (CollectionUtils.isNotEmpty(productPromotions))
 					{
-						if (promotion.getChannel().contains(SalesApplication.WEB) || promotion.getChannel().isEmpty())
+						for (final ProductPromotionModel promotion : productPromotions)
 						{
-							promotions.add(promotion);
+
+							promoPriorities.add(promotion.getPriority());
 						}
 					}
+					//changes end
+
 
 					if (!promotions.isEmpty())
 					{
+						int maxPriority = 0;
+						if (CollectionUtils.isNotEmpty(promoPriorities))
+						{
+							Collections.max(promoPriorities);
+							if (promoPriorities.size() > 0)
+							{
+								maxPriority = promoPriorities.get(0).intValue();
+							}
+						}
+						final int finalMaxPromotedPriority = maxPriority;
+						if (promotions.size() == 1 && promotions.get(0).getPriority().intValue() < finalMaxPromotedPriority)
+						{
+							promotions.clear();
+						}
+
 						Collections.sort(promotions, new Comparator<ProductPromotionModel>()
 						{
 
 							@Override
 							public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
 							{
-
-								if (o1.getPriority() == o2.getPriority())
+								if (o1.getPriority().intValue() < finalMaxPromotedPriority
+										&& o2.getPriority().intValue() < finalMaxPromotedPriority)
 								{
-									return 0;
-								}
-								else if (o1.getPriority() < o2.getPriority())
-								{
-									return 1;
+									promotions.clear();
+									return -1;
 								}
 								else
 								{
-									return -1;
-								}
+									if (o1.getPriority() == o2.getPriority())
 
+									{
+										return 0;
+									}
+									else if (o1.getPriority().intValue() < o2.getPriority().intValue())
+
+									{
+										return 1;
+									}
+									else
+									{
+										return -1;
+									}
+								}
 							}
 						});
 					}
+
 					if (promotions.size() > 0 && !promotions.isEmpty())
 					{
 						addFieldValues(fieldValues, indexedProperty, null, promotions.get(0).getCode(), pcmSizeVariantModel);
