@@ -2805,6 +2805,51 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 		}
 	 	});	 
 }
+
+function selectDefaultDeliveryMethod() {
+	 $('#deliveryradioul .delivery ul').each(function(){
+		 var length = $(this).find("li").length; 
+		 //console.log(length);
+		 if(length >= "1") {
+			  //console.log($(this).find("li:first").children("input:radio").attr("id"));
+			  var radioSplit = $(this).find("li:first").children("input:radio").attr("id").split("_");
+			  var radioId = radioSplit[0]+"_"+radioSplit[1];
+			  calculateDeliveryCost(radioId,radioSplit[2]);
+			  $("#"+$(this).find("li:first").children("input:radio").attr("id")).prop('checked', true);
+			  if($(this).find("input[type='radio']:checked").attr("id").split("_")[2] == "click-and-collect") {
+			  		changeCTAButtonName($(this).find("input[type='radio']:checked").attr("id").split("_")[2]);
+			  	}
+		 }
+	 });
+}
+
+
+$('#deliveryradioul .delivery ul li input:radio').click(function(){
+	changeCTAButtonName("DefaultName");
+	$('#deliveryradioul .delivery ul').each(function(){
+		var length = $(this).find("li").length; 
+		if(length >= "1") {
+			if($(this).find("input[type='radio']:checked").attr("id").split("_")[2]== "click-and-collect") {
+				changeCTAButtonName($(this).find("input[type='radio']:checked").attr("id").split("_")[2]);
+			}
+		}
+	});	
+});
+
+
+
+
+function changeCTAButtonName(deliveryCode) {
+	//console.log(deliveryCode);
+	if(deliveryCode == "click-and-collect") {
+		$("#deliveryMethodSubmit").text("Choose Store");
+		$("#deliveryMethodSubmitUp").text("Choose Store");
+	} else if(deliveryCode== "DefaultName") {
+		$("#deliveryMethodSubmit").text("Choose Address");
+		$("#deliveryMethodSubmitUp").text("Choose Address");
+	}
+}
+
 ////TISST-13010
 function showPromotionTag()
 {
@@ -3917,4 +3962,3 @@ function sendTealiumData(){
 
 	   }     
 }
-
