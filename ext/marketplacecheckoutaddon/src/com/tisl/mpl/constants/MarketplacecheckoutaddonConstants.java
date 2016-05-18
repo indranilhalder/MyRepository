@@ -241,6 +241,9 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CHANGEDELIVERYMODE = "/changeDeliveryMode";
 	public static final String CONFIGURABLE_RADIUS = "configurable-radius";
 
+	public final static String NEWPAYMENTFORMMPLURL = "newPaymentFormMplUrl";
+	public final static String NEWPAYMENTVIEWURL = "/checkout/multi/payment-method/view";
+
 	private MarketplacecheckoutaddonConstants()
 	{
 		//empty to avoid instantiating this constant class
