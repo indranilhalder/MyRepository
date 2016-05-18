@@ -493,6 +493,14 @@ public class SearchPageController extends AbstractSearchPageController
 			}
 			if (flag)
 			{
+				if (null != searchPageData.getCurrentQuery() && null != searchPageData.getCurrentQuery().getQuery()
+						&& null != searchPageData.getCurrentQuery().getQuery().getValue())
+				{
+					searchPageData.getCurrentQuery().getQuery()
+							.setValue(searchPageData.getCurrentQuery().getQuery().getValue().replace(":inStockFlag:true", ""));
+					searchPageData.getCurrentQuery().setUrl(
+							searchPageData.getCurrentQuery().getUrl().replace("%3AinStockFlag%3Atrue", ""));
+				}
 				for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
 				{
 					for (final FacetValueData<SearchStateData> facetValue : facets.getValues())
@@ -588,6 +596,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
 				searchQuery, page, showMode, sortCode, count);
+		//searchPageData = updatePageData(searchPageData, null, searchQuery);
 		/* Storing the user preferred search results count - END */
 		final String searchCategory = request.getParameter(ModelAttributetConstants.SEARCH_CATEGORY);
 		String searchCode = searchCategory;
