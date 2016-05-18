@@ -734,7 +734,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	/**
 	 * @Description: Category Data corresponding to a Product for Promotion Intercepter
-	 * @param product
+	 * @param productdata
 	 * @return productCategoryData
 	 */
 

@@ -768,7 +768,7 @@ sendAddToBag : function(formId, isBuyNow) {
 				resetURL = resetURL[0];
 			}
 			
-			$("a.reset").attr("href",resetURL);
+			$("a.reset").attr("href",resetURL+"?resetAll=true");
 		}
 		}
 		
@@ -790,6 +790,14 @@ sendAddToBag : function(formId, isBuyNow) {
 						resetOfferURL = resetOfferURL[0];
 					}
 					$("a.reset").attr("href",resetOfferURL);
+				}
+				if(resetOfferURL.indexOf("/s") > -1)
+				{
+					resetOfferURL = resetOfferURL.split("&");
+					if(resetOfferURL instanceof Array){
+						resetOfferURL = resetOfferURL[0];
+					}
+					$("a.reset").attr("href",resetURL+"?resetAll=true");
 				}
 			}
 			}
