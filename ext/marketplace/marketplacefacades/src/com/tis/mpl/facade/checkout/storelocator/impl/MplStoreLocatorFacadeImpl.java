@@ -228,7 +228,8 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 		}
 		catch (Exception e)
 		{
-			LOG.debug("Exception while saving stores for a product at store locator page" + e.getMessage());
+			LOG.error("Exception while saving stores for a product at store locator page" + e.getMessage());
+			LOG.error("USSID is::::::::::::" + ussId + "Seller Id is:::::::::::" + sellerInfoModel.getSellerID());
 			result = MarketplaceFacadesConstants.SAVE_STORE_TOPORUDCT_FAIL_MSG;
 		}
 		return result;
@@ -487,7 +488,7 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 	 * @param ussId
 	 * @return abstractCartEntry 
 	 */
-	private AbstractOrderEntryModel getCartEntry(final String ussId)
+	public AbstractOrderEntryModel getCartEntry(final String ussId)
 	{
 		final CartModel cartModel1 = cartService.getSessionCart();
 		//find cartEntry for ussid

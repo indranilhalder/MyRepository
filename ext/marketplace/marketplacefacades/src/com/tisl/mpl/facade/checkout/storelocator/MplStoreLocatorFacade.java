@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.springframework.ui.Model;
 
-import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -57,5 +56,12 @@ public interface MplStoreLocatorFacade
 	 * @return yes if successfully otherwise no
 	 */
 	public String saveStoreForSelectedProduct(final PointOfServiceModel posModel, final String ussId);
+	
+	/**
+	 * Find CartEntryModel for a Ussid.
+	 * @param ussId
+	 * @return abstractOrderEntryModel
+	 */
+	public AbstractOrderEntryModel getCartEntry(final String ussId);
 	
 }

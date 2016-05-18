@@ -778,7 +778,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			final String ussId = storeLocationResponseData.getUssId();
 		
 			//find parent cartEntry for a ussid
-			AbstractOrderEntryModel parentCartEntry = getCartEntry(ussId);
+			AbstractOrderEntryModel parentCartEntry = mplStoreLocatorFacade.getCartEntry(ussId);
 			
 			if (MapUtils.isNotEmpty(freebieParentQtyMap))
 			{
@@ -2075,28 +2075,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 		return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/choose";
 
-	}
-	
-	/**
-	 * Finds CartEntry model for a ussid.
-	 * @param ussId
-	 * @return cartEntrymodel
-	 */
-	private AbstractOrderEntryModel getCartEntry(final String ussId)
-	{
-		final CartModel cartModel = getCartService().getSessionCart();
-		//find cartEntry for ussid
-		if (cartModel != null)
-		{
-			for (final AbstractOrderEntryModel abstractCartEntry : cartModel.getEntries())
-			{
-				if (null != abstractCartEntry && abstractCartEntry.getSelectedUSSID().equalsIgnoreCase(ussId))
-				{
-					return abstractCartEntry;
-				}
-			}
-		}
-		return null;
 	}
 
 	private void setExpressCheckout(final CartModel serviceCart)
