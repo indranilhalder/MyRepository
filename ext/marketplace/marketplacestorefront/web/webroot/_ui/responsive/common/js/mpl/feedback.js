@@ -1449,10 +1449,10 @@ $(document).ready(function(){
 			}
 		});
 
-		$('.select-view .select-list').click(function(){
+		$(document).on('click','.select-view .select-list',function(){
 			if($('body').hasClass('touchDevice')){
 				$('.select-view .select-list').removeClass('touch_click');
-				if($(this).children('ul').height() > 2) {
+				if($(this).children('ul').height() > 1) {
 					$(this).removeClass('touch_click');
 				} else {
 					$(this).addClass('touch_click');
@@ -1461,7 +1461,7 @@ $(document).ready(function(){
 				
 		});
 
-		$('.select-view .select-list ul').click(function(e){
+		$(document).on('click','.select-view .select-list',function(e){
 			$('.select-view .select-list').removeClass('touch_click');
 			e.stopPropagation();
 		});
