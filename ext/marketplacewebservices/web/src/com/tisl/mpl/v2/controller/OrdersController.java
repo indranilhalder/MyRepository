@@ -675,6 +675,15 @@ public class OrdersController extends BaseCommerceController
 				{
 					orderWsDTO.setCouponDiscount(orderDetail.getCouponDiscount().getValue().toString());
 				}
+				
+				if (null != orderDetail.getPickupName())
+				{
+					orderWsDTO.setPickupPersonName(orderDetail.getPickupName());
+				}
+				if (null != orderDetail.getPickupPhoneNumber())
+				{
+					orderWsDTO.setPickupPersonMobile(orderDetail.getPickupPhoneNumber());
+				}
 				/*
 				 * if (orderDetail.getTotalPriceWithTax() != null) {
 				 * orderWsDTO.setFinalAmount(orderDetail.getTotalPriceWithTax().getValue().toString()); } if
@@ -853,9 +862,16 @@ public class OrdersController extends BaseCommerceController
 								}
 								orderProductDTO.setSelectedDeliveryMode(selectedDeliveryModeWsDTO);
 							}
-
+							//add store details
+							if (null != entry.getDeliveryPointOfService())
+							{
+								orderProductDTO.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
+										PointOfServiceWsDTO.class, "DEFAULT"));
+							}
 							setSellerInfo(entry, orderProductDTO);
 							orderProductDTOList.add(orderProductDTO);
+							
+							
 
 						}
 					}
@@ -1144,8 +1160,14 @@ public class OrdersController extends BaseCommerceController
 				orderTrackingWsDTO.setBillingAddress(setAddress(orderDetail, 1));
 				orderTrackingWsDTO.setDeliveryAddress(setAddress(orderDetail, 2));
 				
-				orderTrackingWsDTO.setPickupPersonName(orderDetail.getPickupName());				
-			   	orderTrackingWsDTO.setPickupPersonMobile(orderDetail.getPickupPhoneNumber());
+				if (null != orderDetail.getPickupName())
+				{
+					orderTrackingWsDTO.setPickupPersonName(orderDetail.getPickupName());
+				}
+				if (null != orderDetail.getPickupPhoneNumber())
+				{
+					orderTrackingWsDTO.setPickupPersonMobile(orderDetail.getPickupPhoneNumber());
+				}
 				
 				orderTrackingWsDTO.setGiftWrapCharge(MarketplacecommerceservicesConstants.ZERO);
 				if (null != orderDetail.getCreated())
@@ -1247,8 +1269,11 @@ public class OrdersController extends BaseCommerceController
 								//								if (!entry.isGiveAway())
 								//								{
 								orderproductdto.setImageURL(setImageURL(product));
-								if(null !=entry.getDeliveryPointOfService()){
-									orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(), PointOfServiceWsDTO.class, "DEFAULT"));
+								
+								if (null != entry.getDeliveryPointOfService())
+								{
+									orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
+											PointOfServiceWsDTO.class, "DEFAULT"));
 								}
 								
 								if (StringUtils.isNotEmpty(entry.getAmountAfterAllDisc().toString()))
