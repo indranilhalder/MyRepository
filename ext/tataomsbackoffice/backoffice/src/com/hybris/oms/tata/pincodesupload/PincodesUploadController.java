@@ -2,7 +2,7 @@ package com.hybris.oms.tata.pincodesupload;
 
 /**
  *
- * This class is for uploading pincodes by using excel sheet or csv
+ * This class is for uploading pincodes by taking excel file or csv file
  */
 
 import java.io.File;
@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
@@ -58,8 +57,13 @@ public class PincodesUploadController extends DefaultWidgetController
 		pinCodeuploadFilePath = filePathProviderService.getPincodesUploadPath();
 	}
 
+	/**
+	 * this method will call while uploading file
+	 *
+	 * @param uploadEvent
+	 */
 	@ViewEvent(componentID = "upload_button", eventName = Events.ON_UPLOAD)
-	public void selectUploadPincodes(final UploadEvent uploadEvent) throws InterruptedException
+	public void selectUploadPincodes(final UploadEvent uploadEvent)
 	{
 		text.setText("");
 		error.setVisible(false);
@@ -68,53 +72,20 @@ public class PincodesUploadController extends DefaultWidgetController
 
 		if (fileName.endsWith(CSV) || fileName.endsWith(".xlsx"))
 		{
-			if (fileName.endsWith(CSV))
+			try
 			{
-				LOG.info("its csv File..........");
-
 				if (!filePathProviderService.propertyFilePathValidation(LIST_OF_ERROR, pinCodeuploadFilePath))
 				{
 					return;
-				}
-
-				if (media.getStringData().length() == 0)
-				{
-					LOG.info("File is Empty ...");
-					Messagebox.show("File is Empty ");
-					return;
-				}
-				else
-				{
-					LOG.info(media.getStringData().toString());
-					text.setText(fileName);
-					try
-					{
-						if (media != null)
-						{
-							final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyyhhmm");
-							final String TimeStamp = simpleDateFormat.format(new Date());
-							final String fileNameTimeStamp = "".concat("pincode-".concat(TimeStamp).concat(CSV));
-							final File dest = new File(pinCodeuploadFilePath.trim(), fileNameTimeStamp);
-							LOG.info("Now Media name is " + dest.getName());
-							final String s = media.getStringData();
-							FileUtils.writeStringToFile(dest, s);
-							Messagebox.show("csv File uploaded successfully");
-						}
-					}
-					catch (final Exception e1)
-					{
-						LOG.error("The media is null......" + e1.getMessage());
-					}
 				}
 			}
-			else
+			catch (final InterruptedException e)
 			{
-				LOG.info("its  Xlsx File..........");
+				LOG.error("pinCodeuploadFilePath not found" + e.getMessage());
+			}
 
-				if (!filePathProviderService.propertyFilePathValidation(LIST_OF_ERROR, pinCodeuploadFilePath))
-				{
-					return;
-				}
+			if (media.isBinary())
+			{
 				try
 				{
 					if (media.getStreamData().read() == -1)
@@ -123,32 +94,41 @@ public class PincodesUploadController extends DefaultWidgetController
 						Messagebox.show("File is Empty ");
 						return;
 					}
-					else
-					{
-						LOG.info("Data.. " + media.getStreamData());
-						text.setText(fileName);
-						try
-						{
-							if (media != null)
-							{
-								final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyyhhmm");
-								final String TimeStamp = simpleDateFormat.format(new Date());
-								final String fileNameTimeStamp = "".concat("pincode-".concat(TimeStamp).concat(CSV));
-								final File newdest = new File(pinCodeuploadFilePath.trim(), fileNameTimeStamp);
-								LOG.info("Now Media name is " + newdest.getName());
-								FileUtils.copyInputStreamToFile(media.getStreamData(), newdest);
-								Messagebox.show("xls File uploaded successfully ");
-							}
-						}
-						catch (final Exception e1)
-						{
-							LOG.error("The media is null......" + e1.getMessage());
-						}
-					}
 				}
-				catch (WrongValueException | IOException e)
+				catch (final IOException e1)
 				{
-					LOG.error("The media is null......" + e.getMessage());
+					LOG.error("unable to read null media " + e1.getMessage());
+				}
+				try
+				{
+					LOG.info(media.getStreamData().toString());
+					FileUtils.copyInputStreamToFile(media.getStreamData(), getFile());
+					text.setText(fileName);
+					Messagebox.show("File uploaded successfully");
+				}
+				catch (final IOException e)
+				{
+					LOG.error("unable to copyInputStreamToFile" + e.getMessage());
+				}
+			}
+			else
+			{
+				if (media.getStringData().length() == 0)
+				{
+					LOG.info("File is Empty ...");
+					Messagebox.show("File is Empty ");
+					return;
+				}
+				try
+				{
+					LOG.info(media.getStringData().toString());
+					FileUtils.writeStringToFile(getFile(), media.getStringData());
+					text.setText(fileName);
+					Messagebox.show("File uploaded successfully");
+				}
+				catch (final IOException e)
+				{
+					LOG.error("unable to writeStringToFile" + e.getMessage());
 				}
 			}
 		}
@@ -156,5 +136,20 @@ public class PincodesUploadController extends DefaultWidgetController
 		{
 			error.setVisible(true);
 		}
+	}
+
+	/**
+	 * this method is used for getting PincodeFormat file.
+	 *
+	 * @return File
+	 */
+	public File getFile()
+	{
+		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyyHHmm");
+		final String TimeStamp = simpleDateFormat.format(new Date());
+		final String fileNameTimeStamp = "Pincode-".concat(TimeStamp).concat(CSV);
+		final File destFile = new File(pinCodeuploadFilePath.trim(), fileNameTimeStamp);
+		LOG.info("Now Media name is " + destFile.getName());
+		return destFile;
 	}
 }

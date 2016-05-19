@@ -1962,3 +1962,12 @@ UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$
 
 UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];title;
 ;BrowseCategoryNavNode1;;Browse Category;
+
+
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];$picture
+;;BestPicksConcierge1Component;DuffleBag.png
+;;BestPicksConcierge2Component;KittenFloralShirtdress.png
+;;BestPicksConcierge3Component;LeatherBikerJacket.png
+;;BestPicksConcierge4Component;TailoredBeltedCoat.png
+;;BestPicksConcierge5Component;DuffleBag.png

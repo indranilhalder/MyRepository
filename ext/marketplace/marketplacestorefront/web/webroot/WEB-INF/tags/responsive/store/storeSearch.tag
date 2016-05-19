@@ -40,7 +40,7 @@
 	}
 	
 	.container_store_finder {
-		margin: 0px 22px;
+		margin: 0px 16px;
 	}
 	
 	.body-Content {
@@ -61,7 +61,7 @@
 	   margin-top: 17px;
 	 }
 	 .container_store_finder {
-		margin: 0px 2px;
+		margin: 0px 0px;
 	}
 	.findStoresNearMe{
 	   margin-left: -10px; 
