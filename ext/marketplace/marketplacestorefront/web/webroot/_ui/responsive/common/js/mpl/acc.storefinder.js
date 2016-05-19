@@ -387,42 +387,5 @@ removeGamma:function(map) {
 	    map.setOptions({
 	        styles: mapStyles
 	    });
-	},
-	StoreFinderLegendsControl:function (controlDiv,map){
-		//controlDiv.style.background='white';
-		controlDiv.style.padding='10px';
-		 // Setup the different icons and shadows
-	    var iconURLPrefix = ACC.config.commonResourcePath+"/images/";
-	    var icons = [
-	      iconURLPrefix + 'Bestseller_Legend.png',
-	      iconURLPrefix + 'CottonWorld_Legend.png',
-	      iconURLPrefix + 'Croma_Legend.png',
-	      iconURLPrefix + 'Dell_Legend.png',
-	      iconURLPrefix + 'Inc5_Legend.png',
-	      iconURLPrefix + 'Killer_Legend.png',
-	      iconURLPrefix + 'Lenovo_Legend.png',
-	      iconURLPrefix + 'Metro_Legend.png',
-	      iconURLPrefix + 'Tresmode_Legend.png',
-	      iconURLPrefix + 'Westside_Legend.png',
-	    ]
-	    var iconsLength = icons.length;
-	    var controlUI = document.createElement('div');
-	      controlUI.style.backgroundColor = 'transparent';
-	      controlUI.style.textAlign = 'center';
-	      controlUI.style.right='60px';
-	      controlUI.style.padding='10px';
-	      
-	      controlDiv.appendChild(controlUI);
-	      
-	    for (var i = 0; i < icons.length; i++) { 
-	    	 var div = document.createElement('div');
-		      var img1=document.createElement('img');
-		      img1.src=icons[i];
-		      img1.className='googleMapLegends';
-		      div.appendChild(img1);
-		      controlUI.appendChild(div);
-		     }
-	      
-	    
 	}
 };

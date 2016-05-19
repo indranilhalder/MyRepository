@@ -69,7 +69,7 @@ public class MplSolrProductSearchAutocompleteService implements ProductSearchAut
 
 			final SolrFacetSearchConfigModel solrFacetSearchConfigModel = getSolrFacetSearchConfigSelectionStrategy()
 					.getCurrentSolrFacetSearchConfig();
-
+			solrFacetSearchConfigModel.setQueryType("SEARCH");
 			final FacetSearchConfig facetSearchConfig = getFacetSearchConfigService()
 					.getConfiguration(solrFacetSearchConfigModel.getName());
 			final IndexedType indexedType = getIndexedType(facetSearchConfig);

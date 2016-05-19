@@ -482,7 +482,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 *
+	 * 
 	 * @param model ,redirectModel
 	 */
 
@@ -710,111 +710,123 @@ public class CartPageController extends AbstractPageController
 	{
 
 		final boolean isUserAnym = getUserFacade().isAnonymousUser();
-		if (!isUserAnym)
+		try
 		{
-			final String defaultPinCodeId = fetchPincode(isUserAnym);
-
-			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-			if (StringUtils.isNotEmpty(cartData.getGuid()))
+			if (!isUserAnym)
 			{
-				final Map<String, String> ussidMap = new HashMap<String, String>();
-				Map<String, List<String>> giftYourselfDeliveryModeDataMap = new HashMap<String, List<String>>();
+				final String defaultPinCodeId = fetchPincode(isUserAnym);
 
-				final List<ProductData> productDataList = new ArrayList<ProductData>();
-				List<Wishlist2EntryModel> entryModels = new ArrayList<Wishlist2EntryModel>();
-
-				final int minimum_gift_quantity = getSiteConfigService().getInt(MessageConstants.MINIMUM_GIFT_QUANTIY, 0);
-				LOG.debug("Class NameprepareDataForPag :" + className + " minimum_gift_quantity :" + minimum_gift_quantity);
-
-				final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
-
-				entryModels = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity, allWishlists, defaultPinCodeId); // Code moved to Facade and Impl
-
-				for (final Wishlist2EntryModel entryModel : entryModels)
+				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+				if (cartData != null && StringUtils.isNotEmpty(cartData.getGuid()))
 				{
-					boolean flag = true;
-					//TISEE-6376
-					if (entryModel.getProduct() != null)
+					final Map<String, String> ussidMap = new HashMap<String, String>();
+					Map<String, List<String>> giftYourselfDeliveryModeDataMap = new HashMap<String, List<String>>();
+
+					final List<ProductData> productDataList = new ArrayList<ProductData>();
+					List<Wishlist2EntryModel> entryModels = new ArrayList<Wishlist2EntryModel>();
+
+					final int minimum_gift_quantity = getSiteConfigService().getInt(MessageConstants.MINIMUM_GIFT_QUANTIY, 0);
+					LOG.debug("Class NameprepareDataForPag :" + className + " minimum_gift_quantity :" + minimum_gift_quantity);
+
+					final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
+
+					entryModels = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity, allWishlists, defaultPinCodeId); // Code moved to Facade and Impl
+
+					for (final Wishlist2EntryModel entryModel : entryModels)
 					{
-						ProductData productData = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-								ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-								ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
-								ProductOption.DELIVERY_MODE_AVAILABILITY));
-						if (!entryModel.getSizeSelected().booleanValue())
+						boolean flag = true;
+						//TISEE-6376
+						if (entryModel.getProduct() != null)
 						{
-							productData.setSize(StringUtils.EMPTY);
-						}
-						productData = wishlistFacade.getBuyBoxPrice(entryModel.getUssid(), productData);
-
-						final SellerInformationModel sellerInfoForWishlist = mplSellerInformationService.getSellerDetail(entryModel
-								.getUssid());
-						//TISPRO-165 Putting Fulfillment type for Treat Yourself Section
-						if (sellerInfoForWishlist != null
-								&& sellerInfoForWishlist.getRichAttribute() != null
-								&& sellerInfoForWishlist.getRichAttribute().size() > 0
-								&& ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0).getDeliveryFulfillModes() != null
-								&& ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0).getDeliveryFulfillModes()
-										.getCode() != null)
-
-						{
-							final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0)
-									.getDeliveryFulfillModes().getCode();
-
-							final String sellerName = sellerInfoForWishlist.getSellerName();
-							if (entryModel.getUssid() != null && null != sellerName)
+							ProductData productData = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
+									ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+									ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
+									ProductOption.DELIVERY_MODE_AVAILABILITY));
+							if (!entryModel.getSizeSelected().booleanValue())
 							{
-								ussidMap.put(productData.getCode(), entryModel.getUssid());
-								model.addAttribute("ussidMap", ussidMap);
-								model.addAttribute("sellerName", sellerName);
-								LOG.info("Category of the product selected >>>>>>>>>>>>>>>>>>" + productData.getRootCategory());
+								productData.setSize(StringUtils.EMPTY);
 							}
-							if (StringUtils.isNotEmpty(fulfillmentType))
-							{
-								model.addAttribute("fulfillmentType", fulfillmentType);
+							productData = wishlistFacade.getBuyBoxPrice(entryModel.getUssid(), productData);
 
-							}
-						}
-						for (final OrderEntryData cart : cartData.getEntries())
-						{
-							if ((cart.getSelectedUssid().equals(entryModel.getUssid())))
+							final SellerInformationModel sellerInfoForWishlist = mplSellerInformationService.getSellerDetail(entryModel
+									.getUssid());
+							//TISPRO-165 Putting Fulfillment type for Treat Yourself Section
+							if (sellerInfoForWishlist != null
+									&& sellerInfoForWishlist.getRichAttribute() != null
+									&& sellerInfoForWishlist.getRichAttribute().size() > 0
+									&& ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0)
+											.getDeliveryFulfillModes() != null
+									&& ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0)
+											.getDeliveryFulfillModes().getCode() != null)
+
 							{
-								flag = false;
-								break;
+								final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute())
+										.get(0).getDeliveryFulfillModes().getCode();
+
+								final String sellerName = sellerInfoForWishlist.getSellerName();
+								if (entryModel.getUssid() != null && null != sellerName)
+								{
+									ussidMap.put(productData.getCode(), entryModel.getUssid());
+									model.addAttribute("ussidMap", ussidMap);
+									model.addAttribute("sellerName", sellerName);
+									LOG.info("Category of the product selected >>>>>>>>>>>>>>>>>>" + productData.getRootCategory());
+								}
+								if (StringUtils.isNotEmpty(fulfillmentType))
+								{
+									model.addAttribute("fulfillmentType", fulfillmentType);
+
+								}
 							}
-						}
-						if (flag)
-						{
-							productDataList.add(productData);
-							model.addAttribute("ProductDatas", productDataList);
+							for (final OrderEntryData cart : cartData.getEntries())
+							{
+								if ((cart.getSelectedUssid().equals(entryModel.getUssid())))
+								{
+									flag = false;
+									break;
+								}
+							}
+							if (flag)
+							{
+								productDataList.add(productData);
+								model.addAttribute("ProductDatas", productDataList);
+							}
 						}
 					}
-				}
 
-				/* TISEE-435 : New Code Added */
-				giftYourselfDeliveryModeDataMap = getMplCartFacade().checkPincodeGiftCartData(defaultPinCodeId, entryModels);
-				if (MapUtils.isNotEmpty(giftYourselfDeliveryModeDataMap))
-				{
-					model.addAttribute("giftYourselfDeliveryModeDataMap", giftYourselfDeliveryModeDataMap);
-				}
-				else
-				{
-					model.addAttribute("giftYourselfDeliveryModeDataMap", null);
-				}
-				/* TISEE-435 : New Code Added section ends */
+					/* TISEE-435 : New Code Added */
+					giftYourselfDeliveryModeDataMap = getMplCartFacade().checkPincodeGiftCartData(defaultPinCodeId, entryModels);
+					if (MapUtils.isNotEmpty(giftYourselfDeliveryModeDataMap))
+					{
+						model.addAttribute("giftYourselfDeliveryModeDataMap", giftYourselfDeliveryModeDataMap);
+					}
+					else
+					{
+						model.addAttribute("giftYourselfDeliveryModeDataMap", null);
+					}
+					/* TISEE-435 : New Code Added section ends */
 
 
-				final ArrayList<Integer> quantityConfigurationList = getMplCartFacade().getQuantityConfiguratioList();
-				if (CollectionUtils.isNotEmpty(quantityConfigurationList))
-				{
-					model.addAttribute("configuredQuantityList", quantityConfigurationList);
-				}
-				else
-				{
-					LOG.debug("CartPageController : product quanity is empty");
-				}
+					final ArrayList<Integer> quantityConfigurationList = getMplCartFacade().getQuantityConfiguratioList();
+					if (CollectionUtils.isNotEmpty(quantityConfigurationList))
+					{
+						model.addAttribute("configuredQuantityList", quantityConfigurationList);
+					}
+					else
+					{
+						LOG.debug("CartPageController : product quanity is empty");
+					}
 
+				}
 			}
 		}
+		catch (final Exception e)
+		{
+
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+
+		}
+
 		return ControllerConstants.Views.Fragments.Cart.GiftList;
 
 	}
@@ -1214,7 +1226,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1271,7 +1283,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
@@ -1499,10 +1511,10 @@ public class CartPageController extends AbstractPageController
 		return selectedPincode;
 	}
 
-
 	/**
+	 * Method to handel Exceptions in Server-Side from Network
 	 *
-	 * @return
+	 * @return void
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.NETWORK_ERROR, method = RequestMethod.GET)
 	@RequireHardLogIn
@@ -1523,8 +1535,7 @@ public class CartPageController extends AbstractPageController
 			LOG.info("NETWORK_ERROR: ", ex);
 		}
 	}
-
-
+	
 	// Public getter used in a test
 	@Override
 	public SiteConfigService getSiteConfigService()

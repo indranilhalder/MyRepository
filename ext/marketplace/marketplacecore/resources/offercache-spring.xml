@@ -15,11 +15,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/util
-           http://www.springframework.org/schema/util/spring-util.xsd"
-           >
-           
-    <bean name="brandCompCacheRegion" class="de.hybris.platform.regioncache.region.impl.EHCacheRegion">
-		<constructor-arg name="name" value="AtoZBrandCompCacheRegion" /> 
+           http://www.springframework.org/schema/util/spring-util.xsd">
+	
+	<bean name="offerCompCacheRegion" class="de.hybris.platform.regioncache.region.impl.EHCacheRegion">
+		<constructor-arg name="name" value="OfferCompCacheRegion" /> 
 		<constructor-arg name="maxEntries" value="1000" />
 		<constructor-arg name="evictionPolicy" value="LFU" />
 		<constructor-arg name="exclusiveComputation" value="false"/>
@@ -30,6 +29,5 @@
 		</property>
 	</bean> 
 	
-	<bean id="brandCompCacheRegionRegistrar" class="de.hybris.platform.regioncache.region.CacheRegionRegistrar" c:region-ref="brandCompCacheRegion" />
-	
+	<bean id="offerCompCacheRegionRegistrar" class="de.hybris.platform.regioncache.region.CacheRegionRegistrar" c:region-ref="offerCompCacheRegion" />
 </beans>           
