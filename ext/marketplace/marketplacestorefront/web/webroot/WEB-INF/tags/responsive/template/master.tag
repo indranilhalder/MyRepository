@@ -77,6 +77,7 @@
 	
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.handle')" var="twitterHandle"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
 	<!-- Markup for Google+ -->
 	<meta itemprop="name" content="${metaTitle}">
 	<meta itemprop="description" content="${metaDescription}">
@@ -98,7 +99,7 @@
 	
 	<%-- Favourite Icon --%>
 	<spring:theme code="img.favIcon" text="/" var="favIconPath"/>
-    <link rel="shortcut icon" type="image/x-icon" media="all" href="${originalContextPath}${favIconPath}" />
+    <link rel="shortcut icon" type="image/x-icon" media="all" href="${themeResourcePath}/${favIconPath}" />
 
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
 	<template:styleSheets/>

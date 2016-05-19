@@ -48,7 +48,7 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 @Controller
 @Scope("tenant")
-@RequestMapping(value = "/**/o")
+//@RequestMapping(value = "/**/o")
 public class OfferPageController extends AbstractSearchPageController
 {
 
@@ -76,15 +76,19 @@ public class OfferPageController extends AbstractSearchPageController
 	protected static final Logger LOG = Logger.getLogger(OfferPageController.class);
 
 	protected static final String CATEGORY_ID_PATH_VARIABLE_PATTERN = "/{categoryID:.*}";
+	protected static final String CATEGORY_ID_PATH_VARIABLE_PATTERN_NEW = "/**/o/{categoryID:.*}";
 
 	protected static final String OFFER_LISTING_CMS_PAGE_ID = "offerPageListing";
 
 	protected static final String CHANNEL = "web";
 
-	private static final String NEW_OFFER_URL_PATTERN_PAGINATION = "/viewAllOffers";
-	private static final String NEW_OFFER_NEW_URL_PATTERN_PAGINATION = "/viewAllOffers/page-{pageNo}";
+	//TISPRD-1867
+	private static final String NEW_OFFER_URL_PATTERN_PAGINATION = "/**/view-all-offers";
+	private static final String NEW_OFFER_NEW_URL_PATTERN_PAGINATION = "/**/view-all-offers/page-{pageNo}";
 
-	@RequestMapping(value = CATEGORY_ID_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	//TISPRD-1867
+	//@RequestMapping(value = CATEGORY_ID_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	@RequestMapping(value = CATEGORY_ID_PATH_VARIABLE_PATTERN_NEW, method = RequestMethod.GET)
 	public String offer(@PathVariable("categoryID") final String categoryID,
 			@RequestParam(value = "offer", required = false) final String offerID,
 			@RequestParam(value = "q", required = false) final String searchQuery,
@@ -141,18 +145,6 @@ public class OfferPageController extends AbstractSearchPageController
 		{
 
 
-
-			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
-			int count = getSearchPageSize();
-			if (preferencesData != null && preferencesData.getPageSize() != null)
-			{
-				count = preferencesData.getPageSize().intValue();
-			}
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForAllOffers(
-					searchQuery, page, showMode, sortCode, count);
-			populateModel(model, searchPageData, ShowMode.Page);
-			model.addAttribute("hideDepartments", Boolean.TRUE);
-			model.addAttribute("otherProducts", true);
 			final String uri = request.getRequestURI();
 			if (uri.contains("page"))
 			{
@@ -168,6 +160,17 @@ public class OfferPageController extends AbstractSearchPageController
 					}
 				}
 			}
+			int count = getSearchPageSize();
+			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+			if (preferencesData != null && preferencesData.getPageSize() != null)
+			{
+				count = preferencesData.getPageSize().intValue();
+			}
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForAllOffers(
+					searchQuery, page, showMode, sortCode, count);
+			populateModel(model, searchPageData, ShowMode.Page);
+			model.addAttribute("hideDepartments", Boolean.TRUE);
+			model.addAttribute("otherProducts", true);
 			//Code to hide the applied facet for isOfferExisting
 			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
 			{

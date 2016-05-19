@@ -19,6 +19,7 @@ import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentMod
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
+import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
 import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
@@ -47,6 +48,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,6 +65,8 @@ import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
+import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
+import com.tisl.mpl.facades.data.LatestOffersData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
@@ -70,6 +74,7 @@ import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
+import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -113,6 +118,11 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "homepageComponentService")
 	private HomepageComponentService homepageComponentService;
+
+	@Resource(name = "latestOffersFacade")
+	private LatestOffersFacade latestOffersFacade;
+	@Autowired
+	private DefaultCMSContentSlotService contentSlotService;
 
 	private static final String VERSION = "version";
 	private static final String HOMEPAGE = "homepage";
@@ -908,5 +918,38 @@ public class HomePageController extends AbstractPageController
 		}
 
 		return header;
+	}
+
+
+
+	@RequestMapping(value = "/listOffers", method = RequestMethod.GET)
+	public String get(final Model model)
+	{
+		LatestOffersData latestOffersData = new LatestOffersData();
+		try
+		{
+			final ContentSlotModel homepageHeaderConcierge = contentSlotService.getContentSlotForId("HeaderLinksSlot");
+			latestOffersData = latestOffersFacade.getLatestOffers(homepageHeaderConcierge);
+			model.addAttribute("latestOffersData", latestOffersData);
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		//return getBestPicksJson;
+
+		return ControllerConstants.Views.Fragments.Home.LatestOffers;
 	}
 }

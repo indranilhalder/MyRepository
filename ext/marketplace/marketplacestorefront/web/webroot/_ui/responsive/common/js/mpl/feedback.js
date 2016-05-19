@@ -112,6 +112,7 @@
 
 $(document).ready(function(){
 
+
 	//TISEEII-640 issue fix -- Start
 	$(".facet.js-facet .js-facet-name").each(function(){
 		var x = $(this).html().length; 
@@ -267,6 +268,10 @@ $(document).ready(function(){
 			$(".toggle-filterSerp").click(function(){
 				$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
 				$(this).toggleClass("active");
+
+
+
+
 				});
 			$(".product-facet .facet-list li input.applied-color").each(function(){
 				var appliedColor = $(this).attr("value");
@@ -300,7 +305,7 @@ $(document).ready(function(){
 				}
 			});
 			
-			$(".toggle:not(.helpmeshopbanner)").on("click",function(e){
+			$(".toggle").on("click",function(e){
 				var p = $(e.currentTarget).parent();
 			    if(p.hasClass('active')) {
 			      p.removeClass('active');
@@ -890,8 +895,6 @@ $(document).ready(function(){
 			  var url = $(this).attr("src");
 			  $(this).attr("src",url+"?wmode=transparent");
 		  });
-	
-	
 	  }
 	  if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
 		  $("#js-site-search-input").attr("readonly","readonly");
