@@ -5,6 +5,7 @@
 package com.tisl.mpl.facades.populators;
 
 import de.hybris.platform.catalog.enums.ArticleApprovalStatus;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.converters.populator.AbstractProductPopulator;
 import de.hybris.platform.commercefacades.product.data.BrandData;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -151,20 +153,20 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 			productData.setProductMRP(formPriceData(productModel.getMrp()));
 		}
 
-		if (null != productModel.getBrands())
-		{
-			final List<BrandModel> brands = new ArrayList<BrandModel>(productModel.getBrands());
-			final BrandData brandData = new BrandData();
-			if (!brands.isEmpty())
-			{
-				brandData.setBrandname(brands.get(0).getName());
-				brandData.setBrandtype(brands.get(0).getTypeDescription());
-				productData.setBrand(brandData);
+		//Brand name population - TISPRO-363
+		productData.setBrand(populateBrandData(productModel));
 
-			}
-
-
-		}
+		//		if (null != productModel.getBrands())
+		//		{
+		//			final List<BrandModel> brands = new ArrayList<BrandModel>(productModel.getBrands());
+		//			final BrandData brandData = new BrandData();
+		//			if (!brands.isEmpty())
+		//			{
+		//				brandData.setBrandname(brands.get(0).getName());
+		//				brandData.setBrandtype(brands.get(0).getTypeDescription());
+		//				productData.setBrand(brandData);
+		//			}
+		//		}
 		//Populating SEO title and description
 		if (null != productModel.getSeoContents())
 		{
@@ -185,6 +187,45 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 		//}
 
 
+	}
+
+	/**
+	 * @description method is to populate brand data in pdp
+	 * @param productModel
+	 * @return BrandData
+	 */
+	private BrandData populateBrandData(final ProductModel productModel)
+	{
+		final BrandData brandData = new BrandData();
+		final List<CategoryModel> categoryModels = new ArrayList<CategoryModel>(productModel.getSupercategories());
+		if (!CollectionUtils.isEmpty(categoryModels))
+		{
+			for (final CategoryModel categoryModel : categoryModels)
+			{
+				if (null != categoryModel.getCode() && categoryModel.getCode().startsWith(MarketplaceFacadesConstants.BRANDCODE))
+				{
+					brandData.setBrandname(categoryModel.getName());
+					brandData.setBrandtype(categoryModel.getDescription());
+					break;
+				}
+			}
+		}
+
+		//This is fallback case i.e. if brand category is missing in CategorySystem then it will pick from product core attribute
+		if (null == brandData.getBrandname())
+		{
+			if (null != productModel.getBrands())
+			{
+				final List<BrandModel> brands = new ArrayList<BrandModel>(productModel.getBrands());
+				if (!brands.isEmpty())
+				{
+					brandData.setBrandname(brands.get(0).getName());
+					brandData.setBrandtype(brands.get(0).getTypeDescription());
+				}
+			}
+		}
+
+		return brandData;
 	}
 
 	protected boolean isApproved(final SOURCE productModel)
