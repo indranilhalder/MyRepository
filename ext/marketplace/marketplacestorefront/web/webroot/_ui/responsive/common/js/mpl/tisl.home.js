@@ -40,11 +40,10 @@ $("div.departmenthover").on("mouseover touchend", function() {
             }
         }
     }
-    if (window.localStorage && (html = window.localStorage.getItem(
-
-        "deptmenuhtml-" + code)) && html != "") {
+    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
         // console.log("Local");
         $("ul." + id).html(decodeURI(html));
+        LazyLoad();
     } else {
         $.ajax({
             url: ACC.config.encodedContextPath +
@@ -73,6 +72,7 @@ $("div.departmenthover").on("mouseover touchend", function() {
 });
 
 $(".A-ZBrands").on("mouseover touchend", function(e) {
+	var componentUid = $("#componentUid").val();
     if ($("li#atozbrandsdiplay").length) {
         // console.log("Dipslaying A-Z Brands..");
 
@@ -85,9 +85,7 @@ $(".A-ZBrands").on("mouseover touchend", function(e) {
                 }
             }
         }
-        if (window.localStorage && (html = window.localStorage.getItem(
-
-            "atozbrandmenuhtml")) && html != "") {
+        if (window.localStorage && (html = window.localStorage.getItem("atozbrandmenuhtml")) && html != "") {
             // console.log("Local");
             if ($("div#appendedAtoZBrands") == null || $(
                 "div#appendedAtoZBrands").length == 0) {
@@ -100,6 +98,9 @@ $(".A-ZBrands").on("mouseover touchend", function(e) {
                 url: ACC.config.encodedContextPath +
                     "/atozbrands",
                 type: 'GET',
+                data : {
+					 "componentUid" : componentUid
+					},
                 success: function(html) {
                     //console.log(html)
                     if ($("div#appendedAtoZBrands") == null ||
@@ -231,12 +232,12 @@ function getBrandsYouLoveAjaxCall() {
                     if (!v.showByDefault) {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item' id='" +
-                            v.compId + "'><img src='" + v.brandLogoUrl +
+                            v.compId + "'><img class='lazy' data-original='" + v.brandLogoUrl +
                             "'></img></div>";
                     } else {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item active' id='" +
-                            v.compId + "'><img src='" + v.brandLogoUrl +
+                            v.compId + "'><img class='lazy' data-original='" + v.brandLogoUrl +
                             "'></img></div>";
                         defaultComponentId = v.compId;
                     }
@@ -291,6 +292,7 @@ function getBrandsYouLoveAjaxCall() {
     // Get Brands You Love Content AJAX
 
 function getBrandsYouLoveContentAjaxCall(id) {
+	
         if (window.localStorage && (html = window.localStorage.getItem(
             "brandContent-" + id)) && html != "") {
             // console.log("Local");
@@ -298,6 +300,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
             //$('#brandsYouLove').append(defaultHtml);
             $('.home-brands-you-love-desc').remove();
             $('#brandsYouLove').append(decodeURI(html));
+            LazyLoad();
         } else {
             $.ajax({
                 type: "GET",
@@ -327,7 +330,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                             "<div class='home-brands-you-love-side-image left'><a href='" +
                             ACC.config.encodedContextPath +
                             response.firstProductUrl +
-                            "'><img src='" + response.firstProductImageUrl +
+                            "'><img class='lazy' data-original='" + response.firstProductImageUrl +
                             "'></img>";
                         if (typeof response.firstProductTitle !==
                             "undefined") {
@@ -356,7 +359,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                                 "<div class='visit-store-wrapper'>" +
                                 response.bannerText + "</div>";
                         }
-                        defaultHtml += "<img src='" + response.bannerImageUrl +
+                        defaultHtml += "<img class='lazy' data-original='" + response.bannerImageUrl +
                             "'></img></div></div>";
                     }
                     if (typeof response.secondproductImageUrl !==
@@ -365,7 +368,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                             "<div class='home-brands-you-love-side-image right'><a href='" +
                             ACC.config.encodedContextPath +
                             response.secondProductUrl +
-                            "'><img src='" + response.secondproductImageUrl +
+                            "'><img class='lazy' data-original='" + response.secondproductImageUrl +
                             "'></img>";
                         if (typeof response.secondProductTitle !==
                             "undefined") {
@@ -551,7 +554,7 @@ function getBestPicksAjaxCall() {
                     }
                     if (v.imageUrl) {
                         renderHtml +=
-                            "<div class='home-best-pick-carousel-img'> <img src='" +
+                            "<div class='home-best-pick-carousel-img'> <img class='lazy' data-original='" +
                             v.imageUrl + "'></img></div>";
                     }
                     if (v.text) {
@@ -581,6 +584,9 @@ function getBestPicksAjaxCall() {
                     rewindNav: false,
                     lazyLoad: true,
                     scrollPerPage: true
+                });
+                $("img.lazy").lazyload({
+                	effect : "fadeIn"
                 });
             }
         });
@@ -618,7 +624,7 @@ function getProductsYouCareAjaxCall() {
                         "' class='item'>";
                     //for image
                     renderHtml +=
-                        "<div class='home-product-you-care-carousel-img'> <img src='" +
+                        "<div class='home-product-you-care-carousel-img'> <img class='lazy' data-original='" +
                         v.mediaURL + "'></img></div>";
                     renderHtml +=
                         "<div class='short-info'><h3 class='product-name'><span>" +
@@ -673,7 +679,7 @@ function getNewAndExclusiveAjaxCall() {
                 renderHtml +=
                     "<div class='item slide'><div class='newExclusiveElement'><a href='" +
                     ACC.config.encodedContextPath +
-                    value.productUrl + "'><img src='" +
+                    value.productUrl + "'><img class='lazy' data-original='" +
                     value.productImageUrl +
                     "'></img><p class='New_Exclusive_title'>" +
                     value.productTitle +
@@ -792,7 +798,7 @@ function getStayQuedHomepage() {
                 '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">' +
                 promoText1 + '<a href="' + bannerUrlLink +
                 '" class="button maroon">' + linkText +
-                '</a></div><div class="qued-image"><img src="' +
+                '</a></div><div class="qued-image"><img class="lazy" data-original="' +
                 bannerImage + '" class="img-responsive"></div>';
             $('#stayQued').html(renderHtml);
         },
@@ -867,6 +873,7 @@ function getShowcaseContentAjaxCall(id) {
             // console.log("Local");
             $('.about-one showcase-section').remove();
             $('#showcase').append(decodeURI(html));
+            LazyLoad();
         } else {
             $.ajax({
                 type: "GET",
@@ -894,7 +901,7 @@ function getShowcaseContentAjaxCall(id) {
                             "undefined") {
                             defaultHtml += "<a href='" + appendIcid(response.bannerUrl, response.icid) + "'>";
                         }
-                        defaultHtml += "<img src='" + response.bannerImageUrl +
+                        defaultHtml += "<img class='lazy' data-original='" + response.bannerImageUrl +
                             "'></img>";
                         if (typeof response.bannerUrl !==
                             "undefined") {
@@ -912,7 +919,7 @@ function getShowcaseContentAjaxCall(id) {
                             " <div class='desc-section'><a href='" +
                             ACC.config.encodedContextPath +
                             response.firstProductUrl +
-                            "'><img src='" + response.firstProductImageUrl +
+                            "'><img class='lazy' data-original='" + response.firstProductImageUrl +
                             "'></img>";
                         defaultHtml +=
                             "<div class='showcase-center'>";
@@ -1022,3 +1029,13 @@ if ($('#brandsYouLove').children().length == 0 && $('#pageTemplateId').val() ==
 }
 setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
 });
+//call lazy load after ajaz for page stops
+$(document).ajaxStop(function(){
+	LazyLoad();
+});
+
+function LazyLoad(){
+	$("img.lazy").lazyload({
+    	effect : "fadeIn"
+    });
+}
