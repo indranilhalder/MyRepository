@@ -823,7 +823,7 @@ h2 {
         -moz-transition: margin 0.3s, opacity 0.3s;
         transition: margin 0.3s, opacity 0.3s; }
     header .banner.active .content {
-      max-height: 500px;
+      max-height: 1000px;
       -webkit-transition: max-height 0.3s 0.15s;
       -moz-transition: max-height 0.3s 0.15s;
       transition: max-height 0.3s 0.15s; }
@@ -2770,14 +2770,14 @@ h2 {
           border-width: 1px;
           border-color: #AAA;
           height: 50px;
-          font-size: 16px;
+          font-size: 13px;
           font-weight: 500;
           width: 140px; }
         header > .content .bottom .search form input {
           border: 1px solid #AAA;
           border-left:1px solid #AAA;
           height: 50px;
-          font-size: 14px;
+          font-size: 13px;
           line-height: 24px;
           border-radius:0px;
           width: -webkit-calc(100% - 195px);
@@ -9908,7 +9908,7 @@ body .account .right-account .order-history .pagination li{
           margin: 10px 0;
           text-align: center; }
                 
-  .short-info {
+  .short-info, .latest-offer-info {
     position: relative;
     margin-top:15px;
      width:100%; }
