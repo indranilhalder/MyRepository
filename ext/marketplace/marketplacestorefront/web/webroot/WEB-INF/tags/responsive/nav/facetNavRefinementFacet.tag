@@ -119,7 +119,7 @@ function navigateToPage(queryString,textString)
 								
 								<input type="hidden" name="isFacet" value="true"/>
 								
-								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); height:36px; width:36px;">
+								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg');border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
 								</form>
 								<%-- <a   onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" >
 							<!-- 	<a href="onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')"> -->
@@ -219,9 +219,9 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-								
+					
 								<input type="hidden" name="isFacet" value="true"/>
-								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); height:36px; width:36px;">
+								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
 								</form>
 								<%-- <a href="#">
 								<a href="/search/helpmeshop&amp;text=${searchPageData.freeTextSearch}&amp;q=${facetValue.query.query.value}">
