@@ -1118,6 +1118,25 @@
 		</div>
 		
 		<div class="right-block shipping right-block-width" style="margin-top: 74px;">
+				<c:choose>
+					<c:when test="${expCheckout gt 0}">
+						<a class="continue_btn" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">	
+							<div class="continue_btn_anchor"><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></div>
+						</a>
+					</c:when>
+					<c:when test="${delModeCount gt 0}">
+					
+					<form:form id="selectDeliveryMethodForm1" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
+									<button class="continue_btn" id="deliveryMethodSubmit1" type="submit" class="checkout-next" style="border: none;"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
+					</form:form>
+					</c:when>
+					
+					<c:otherwise>
+					<a class="continue_btn" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
+							<div class="continue_btn_anchor"><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></div>
+					</a>
+					</c:otherwise>
+				</c:choose>
 				<div class="checkout-order-summary">
 					<multi-checkout:orderTotals cartData="${cartData}"
 						showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
@@ -1132,7 +1151,7 @@
 				<c:when test="${expCheckout gt 0}">
 					<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
 					<div class="continue_btn">
-						CONTINUE
+						<spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/>
 					</div>
 					</a>
 				</c:when>
@@ -1146,7 +1165,7 @@
 				<c:otherwise>
 				<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
 					<div class="continue_btn">
-						CONTINUE
+						<spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/>
 					</div>
 				</a>
 				</c:otherwise>

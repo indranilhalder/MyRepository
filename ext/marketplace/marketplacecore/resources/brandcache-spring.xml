@@ -18,7 +18,7 @@
            http://www.springframework.org/schema/util/spring-util.xsd"
            >
            
-           <bean name="brandCompCacheRegion" class="de.hybris.platform.regioncache.region.impl.EHCacheRegion">
+    <bean name="brandCompCacheRegion" class="de.hybris.platform.regioncache.region.impl.EHCacheRegion">
 		<constructor-arg name="name" value="AtoZBrandCompCacheRegion" /> 
 		<constructor-arg name="maxEntries" value="1000" />
 		<constructor-arg name="evictionPolicy" value="LFU" />
@@ -31,4 +31,5 @@
 	</bean> 
 	
 	<bean id="brandCompCacheRegionRegistrar" class="de.hybris.platform.regioncache.region.CacheRegionRegistrar" c:region-ref="brandCompCacheRegion" />
+	
 </beans>           

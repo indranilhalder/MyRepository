@@ -785,7 +785,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		String result = null;
 		UserDetails userDetails = null;
 		boolean successflag = false;
-		String socialMediatype = null;
+
 		final MplUserResultWsDto validatedResult = mplUserHelper.validateEmail(login);
 		if (null != validatedResult.getStatus()
 				&& validatedResult.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
@@ -794,41 +794,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		}
 		try
 		{
-			//Check if the user exists in the system with login
-
-			final UserModel user = getExtUserService().getUserForOriginalUid(login);
-			LOG.debug("addAddressToOrder : user : " + user);
-			// Check userModel null
-			CustomerModel currentCustomer = null;
-			if (null != user)
-			{
-				currentCustomer = (CustomerModel) user;
-			}
-			if (null != currentCustomer)
-			{
-
-				if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
-				{
-					socialMediatype = MarketplacewebservicesConstants.FACEBOOK_LOGIN;
-				}
-				else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
-				{
-					socialMediatype = MarketplacewebservicesConstants.GOOGLE_LOGIN;
-				}
-
-				if (StringUtils.equalsIgnoreCase(currentCustomer.getType().toString(), socialMediatype))
-				{
-					userDetails = retrieveUserforMarketplace(login);
-				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9320);
-				}
-			}
-			else
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
-			}
+			userDetails = retrieveUserforMarketplace(login);
 			LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + userDetails);
 			result = MarketplacecommerceservicesConstants.SUCCESS_FLAG;
 			if (null != login && null != getCustomerId(login))
