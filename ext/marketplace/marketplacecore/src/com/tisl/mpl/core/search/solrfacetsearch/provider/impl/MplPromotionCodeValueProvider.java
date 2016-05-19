@@ -202,15 +202,6 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 
 			final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
 					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
-			final List<Integer> promoPriorities = new ArrayList<Integer>();
-			if (CollectionUtils.isNotEmpty(productPromotions))
-			{
-				for (final ProductPromotionModel promotion : productPromotions)
-				{
-
-					promoPriorities.add(promotion.getPriority());
-				}
-			}
 			final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
 
 			for (final ProductPromotionModel promotion : restrictedPromotions)
@@ -223,23 +214,12 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 
 			if (!promotions.isEmpty())
 			{
-				int maxPriority = 0;
-				if (CollectionUtils.isNotEmpty(promoPriorities))
-				{
-					Collections.max(promoPriorities);
-					if (promoPriorities.size() > 0)
-					{
-						maxPriority = promoPriorities.get(0).intValue();
-					}
-				}
-				final int finalMaxPromotedPriority = maxPriority;
+
+
 				if (CollectionUtils.isNotEmpty(buyBoxService.getBuyboxPricesForSearch(product.getCode()))
 						&& buyBoxService.getBuyboxPricesForSearch(product.getCode()).get(0).getAvailable().intValue() > 0)
 				{
-					if (promotions.size() == 1 && promotions.get(0).getPriority().intValue() < finalMaxPromotedPriority)
-					{
-						promotions.clear();
-					}
+
 
 					Collections.sort(promotions, new Comparator<ProductPromotionModel>()
 					{
@@ -248,30 +228,23 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 						public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
 						{
 
-							if (o1.getPriority().intValue() < finalMaxPromotedPriority
-									&& o2.getPriority().intValue() < finalMaxPromotedPriority)
+
+							if (o1.getPriority() == o2.getPriority())
+
 							{
-								promotions.clear();
-								return -1;
+								return 0;
+							}
+							else if (o1.getPriority().intValue() < o2.getPriority().intValue())
+
+							{
+								return 1;
 							}
 							else
 							{
-								if (o1.getPriority() == o2.getPriority())
-
-								{
-									return 0;
-								}
-								else if (o1.getPriority().intValue() < o2.getPriority().intValue())
-
-								{
-									return 1;
-								}
-								else
-								{
-									return -1;
-								}
+								return -1;
 							}
 						}
+
 					});
 				}
 				else
@@ -306,17 +279,6 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
 
 			final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
-			//changes -TISPRD-1922
-			final List<Integer> promoPriorities = new ArrayList<Integer>();
-			if (CollectionUtils.isNotEmpty(productPromotions))
-			{
-				for (final ProductPromotionModel promotion : productPromotions)
-				{
-
-					promoPriorities.add(promotion.getPriority());
-				}
-			}
-			//changes end
 
 			for (final ProductPromotionModel promotion : restrictedPromotions)
 			{
@@ -326,23 +288,11 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 
 			if (!promotions.isEmpty())
 			{
-				int maxPriority = 0;
-				if (CollectionUtils.isNotEmpty(promoPriorities))
-				{
-					Collections.max(promoPriorities);
-					if (promoPriorities.size() > 0)
-					{
-						maxPriority = promoPriorities.get(0).intValue();
-					}
-				}
-				final int finalMaxPromotedPriority = maxPriority;
+
 				if (CollectionUtils.isNotEmpty(buyBoxService.getBuyboxPricesForSearch(product.getCode()))
 						&& buyBoxService.getBuyboxPricesForSearch(product.getCode()).get(0).getAvailable().intValue() > 0)
 				{
-					if (promotions.size() == 1 && promotions.get(0).getPriority().intValue() < finalMaxPromotedPriority)
-					{
-						promotions.clear();
-					}
+
 
 					Collections.sort(promotions, new Comparator<ProductPromotionModel>()
 					{
@@ -350,30 +300,23 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 						@Override
 						public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
 						{
-							if (o1.getPriority().intValue() < finalMaxPromotedPriority
-									&& o2.getPriority().intValue() < finalMaxPromotedPriority)
+
+							if (o1.getPriority() == o2.getPriority())
+
 							{
-								promotions.clear();
-								return -1;
+								return 0;
+							}
+							else if (o1.getPriority().intValue() < o2.getPriority().intValue())
+
+							{
+								return 1;
 							}
 							else
 							{
-								if (o1.getPriority() == o2.getPriority())
-
-								{
-									return 0;
-								}
-								else if (o1.getPriority().intValue() < o2.getPriority().intValue())
-
-								{
-									return 1;
-								}
-								else
-								{
-									return -1;
-								}
+								return -1;
 							}
 						}
+
 					});
 				}
 			}
