@@ -15233,7 +15233,7 @@ body .account .right-account div.new-address input[type="radio"]+label.commercia
 }
 body .account .right-account form.new-card fieldset:first-of-type,
 body .account .right-account div.new-address fieldset:first-of-type {
-    margin-bottom: 20px
+    margin-bottom: 15px
 }
 body .account .right-account form.new-card .checkout-only,
 body .account .right-account div.new-address .checkout-only {
