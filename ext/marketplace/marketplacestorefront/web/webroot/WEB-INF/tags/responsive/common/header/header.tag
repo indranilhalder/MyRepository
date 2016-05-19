@@ -296,16 +296,7 @@ function registerUser(eventObject)
 	<div class="content" style="overflow: hidden;">
 		<button class="close" data-dismiss="modal"></button>
 		<div class="feedback-container">
-		<iframe src="${feebBackSurveyUrl}" 
-				width="100%" 
-				height="600px" 
-				frameborder="0" 
-				marginheight="0" 
-				marginwidth="0">
-				Loading…
-		</iframe>
 		</div>
-
 	</div>
 	<div class="overlay" data-dismiss="modal"></div>
 </div>
