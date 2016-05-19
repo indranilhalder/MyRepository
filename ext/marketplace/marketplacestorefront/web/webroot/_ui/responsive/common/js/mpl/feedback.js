@@ -304,7 +304,7 @@ $(document).ready(function(){
 				}
 			});
 			
-			$(".toggle:not(.helpmeshopbanner)").on("click",function(e){
+			$(".toggle").on("click",function(e){
 				var p = $(e.currentTarget).parent();
 			    if(p.hasClass('active')) {
 			      p.removeClass('active');
