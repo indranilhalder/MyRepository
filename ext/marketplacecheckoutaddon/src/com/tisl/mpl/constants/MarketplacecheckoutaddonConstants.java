@@ -240,6 +240,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String COUPONINVALID = "Applied coupon is not valid";
 	public static final String CHANGEDELIVERYMODE = "/changeDeliveryMode";
 	public static final String CONFIGURABLE_RADIUS = "configurable-radius";
+	public static final String NETWORK_ERROR = "/networkError";
 
 	private MarketplacecheckoutaddonConstants()
 	{

@@ -2799,7 +2799,13 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 			isCodSet = false;
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			
+	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
 
 	 		}
 	 	});	 
@@ -2877,9 +2883,17 @@ function checkPincodeServiceability(buttonType)
  			
  		},
  		error : function(resp) {
- 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 			//TISTI-255
+ 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 			console.log(resp);
  			$("#isPincodeServicableId").val('N');
  			reloadpage(selectedPincode,buttonType);
+ 			
+ 			var errorDetails=JSON.stringify(resp);
+ 			console.log("errorDetails 1>> "+errorDetails);
+ 			
+ 			handleExceptionOnServerSide(errorDetails);
+ 			console.log('Some issue occured in checkPincodeServiceability');
  		}
  	});
 
@@ -3124,7 +3138,14 @@ function checkIsServicable()
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
+	 			
+	 			console.log('Some issue occured in checkPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
 	 		}
 	 	});
@@ -3312,8 +3333,13 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			populatePincodeDeliveryMode(response,buttonType);
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
+	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
 	 		}
 	 	});	 
 	}
@@ -3639,8 +3665,13 @@ function expressbutton()
 	 			populatePincodeDeliveryMode(response,'typeExpressCheckout');
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
+	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
 	 		}
 	 	});	 
 	}
@@ -3904,3 +3935,25 @@ function sendTealiumData(){
 	   }     
 }
 
+
+//ADD Server side error track // TISPRD-1666
+
+function handleExceptionOnServerSide(errorDetails){
+	 setTimeout( function(){
+			$.ajax({
+		 		url: ACC.config.encodedContextPath + "/cart/networkError",
+		 		type: "GET",
+		 		cache: false,
+		 		data:  { 'errorDetails' : errorDetails},
+		 		success : function(errorResponse) {
+		 			
+		 			console.log(errorResponse);
+		 		},
+		 		error : function(errorResp) {
+		 			console.log(errorResp);
+		 		}
+		 	});
+			 },
+			1000);
+		
+}

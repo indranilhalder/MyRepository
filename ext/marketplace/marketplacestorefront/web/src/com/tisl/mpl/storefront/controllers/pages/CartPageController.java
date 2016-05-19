@@ -701,11 +701,12 @@ public class CartPageController extends AbstractPageController
 		model.addAttribute("pageType", PageType.CART.name());
 
 	}
-	
+
 
 
 	@RequestMapping(value = "/giftlist", method = RequestMethod.GET)
-	public String showGiftList(final Model model) throws CMSItemNotFoundException,EtailNonBusinessExceptions, EtailBusinessExceptions, Exception
+	public String showGiftList(final Model model) throws CMSItemNotFoundException, EtailNonBusinessExceptions,
+			EtailBusinessExceptions, Exception
 	{
 
 		final boolean isUserAnym = getUserFacade().isAnonymousUser();
@@ -724,7 +725,7 @@ public class CartPageController extends AbstractPageController
 
 				final int minimum_gift_quantity = getSiteConfigService().getInt(MessageConstants.MINIMUM_GIFT_QUANTIY, 0);
 				LOG.debug("Class NameprepareDataForPag :" + className + " minimum_gift_quantity :" + minimum_gift_quantity);
-				
+
 				final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
 
 				entryModels = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity, allWishlists, defaultPinCodeId); // Code moved to Facade and Impl
@@ -811,7 +812,7 @@ public class CartPageController extends AbstractPageController
 				{
 					LOG.debug("CartPageController : product quanity is empty");
 				}
-			
+
 			}
 		}
 		return ControllerConstants.Views.Fragments.Cart.GiftList;
@@ -1497,6 +1498,32 @@ public class CartPageController extends AbstractPageController
 
 		return selectedPincode;
 	}
+
+
+	/**
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.NETWORK_ERROR, method = RequestMethod.GET)
+	@RequireHardLogIn
+	public @ResponseBody void checkNetworkError(final String errorDetails)
+	{
+		try
+		{
+			LOG.error("**** errorDetails ****** " + errorDetails);
+			LOG.debug("**** errorDetails ****** " + errorDetails);
+			LOG.info("**** errorDetails ****** " + errorDetails);
+		}
+
+		catch (final Exception ex)
+		{
+
+			LOG.error("NETWORK_ERROR: ", ex);
+			LOG.debug("NETWORK_ERROR: ", ex);
+			LOG.info("NETWORK_ERROR: ", ex);
+		}
+	}
+
 
 	// Public getter used in a test
 	@Override
