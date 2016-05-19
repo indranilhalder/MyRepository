@@ -31514,7 +31514,9 @@ span.material-icons{
     border-bottom: none !important;
 }
 } 
-
+body.page-homepage .feature-collections{
+	z-index:9;
+}
 /*--------------maincss-----------*/
 .row
 {
