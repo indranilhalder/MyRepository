@@ -212,6 +212,13 @@
 			$(".compare-selectedProducts span").toggleClass("hideSelections");
 			$(".compare-selectedProducts span").toggleClass("showSelections");
 		});
+		
+		var screenwidth=$(window).width();
+		var items=4;
+		if(screenwidth < 650){
+			var items=2;
+		}
+		$('#number-items').html(items);
 
 	});
 </script>
@@ -219,7 +226,7 @@
 	<div id="compareError" class="compareError"></div>
 	<div class="compare-wrapper">
 		<h2 class="comapreProducts">Compare Products</h2>
-		<p class="compare-titleContent">Compare upto 4 products</p>
+		<p class="compare-titleContent">Compare upto <span id="number-items"></span> products</p>
 		<a class="closeLink">Close</a>
 		<p class="compare-selectedProducts">
 			<span class="showSelections">See Selections</span> <span
