@@ -4,7 +4,6 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.regioncache.region.CacheRegion;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tisl.mpl.facade.brand.BrandFacade;
-import com.tisl.mpl.facade.brand.impl.BrandComponentCacheValueLoader;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
@@ -44,13 +42,14 @@ public class AtoZBrandController
 	@Resource(name = "brandFacade")
 	private BrandFacade brandFacade;
 
-	private static final String CODE = "MBH1";
+	//SONAR Fix
+	//private static final String CODE = "MBH1";
 
-	@Resource(name = "brandCompCacheRegion")
-	private CacheRegion brandCompCacheRegion;
+	//@Resource(name = "brandCompCacheRegion")
+	//private CacheRegion brandCompCacheRegion;
 
-	@Resource(name = "brandCompCacheValueLoader")
-	private BrandComponentCacheValueLoader brandCompCacheValueLoader;
+	//@Resource(name = "brandCompCacheValueLoader")
+	//private BrandComponentCacheValueLoader brandCompCacheValueLoader;
 
 
 	@SuppressWarnings("boxing")
