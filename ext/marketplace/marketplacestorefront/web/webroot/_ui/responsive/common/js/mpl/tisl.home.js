@@ -960,6 +960,7 @@ $(document).on("click", ".showcaseItem", function() {
 $(window).on('resize', function() {
     if ($(window).width() > 790) {
         $('#stayQued').css('min-height', 'auto');
+    }
 });
 
 function appendIcid(url, icid) {
