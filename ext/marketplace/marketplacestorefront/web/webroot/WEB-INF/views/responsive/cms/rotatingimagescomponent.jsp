@@ -69,7 +69,7 @@ var homePageBannerTimeout='${timeout}';
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
-								title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
+								<%-- title="${not empty banner.headline ? banner.headline : banner.media.altText}" --%> />
 								</a>
 							</c:when>
 							<c:otherwise>
@@ -77,7 +77,7 @@ var homePageBannerTimeout='${timeout}';
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
-								title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
+								<%-- title="${not empty banner.headline ? banner.headline : banner.media.altText}" --%> />
 							</a>
 							</c:otherwise>
 						</c:choose>
@@ -147,7 +147,7 @@ var homePageBannerTimeout='${timeout}';
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
-								title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
+								<%-- title="${not empty banner.headline ? banner.headline : banner.media.altText}" --%> />
 								</a>
 							</c:when>
 							<c:otherwise>
@@ -155,7 +155,7 @@ var homePageBannerTimeout='${timeout}';
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
-								title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
+								<%-- title="${not empty banner.headline ? banner.headline : banner.media.altText}" --%> />
 							</a>
 							</c:otherwise>
 						</c:choose>

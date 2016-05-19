@@ -4,6 +4,7 @@ $(function() {
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/setheader",
 		type: 'GET',
+		cache:false,
 		success: function (data)
 		{
 			headerLoggedinStatus = data.loggedInStatus;

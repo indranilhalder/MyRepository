@@ -12,7 +12,7 @@ $(document).ready(function(){
  
  $(document).ready(function(){
 	 /*To highlight the active link*/
-	 
+	    $("#currentPassword").val('');
 		var pageName = $("#pageName").val();
 		var pageNameDropdown = $("#pageNameDropdown").val();
 		if(pageName=="overViews"){
