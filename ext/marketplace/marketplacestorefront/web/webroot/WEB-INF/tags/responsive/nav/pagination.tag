@@ -89,6 +89,7 @@
 						<!-- SORT BY FOR MOBILE STARTS -->
 					<div class="sort-refine-bar wrapped-form sort mobile">
 							<div class="form-group">
+									<!-- Start Fix to TISTI-198 -->
 											<c:set var="top" value="false" />
 								<!-- End Fix to TISTI-198 -->
 								<form id="sortForm${top ? '1' : '2'}" name="sortForm${top ? '1' : '2'}" method="get" action="#">
