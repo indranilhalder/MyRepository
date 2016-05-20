@@ -1681,7 +1681,7 @@ h2 {
             -moz-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px; */
           	height: 450px;
-            z-index: 3;
+            z-index: 10001;
             -webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
             -moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
             transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s; }
