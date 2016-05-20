@@ -93,6 +93,7 @@ public class CancelReturnFacadeImplUnitTest
 	@Test
 	public void testImplementCancelRefund()
 	{
+
 		boolean cancellable = true;
 		boolean consignmentPresent = true;
 		final List<OrderEntryData> allEntries = new ArrayList<OrderEntryData>();
@@ -113,11 +114,11 @@ public class CancelReturnFacadeImplUnitTest
 
 		orderLineData.setOrderId(subOrderModel.getParentReference().getCode());
 		orderLineData.setReasonCode("R");
-		orderLineData.setRequestID("123456789" + "" + System.currentTimeMillis());//TODO: Change with a valid request ID
+		orderLineData.setRequestID("" + "" + System.currentTimeMillis());//TODO: Please enter request id
 		orderLineData.setReturnCancelFlag("C");
-
-		orderLineData.setReturnCancelRemarks("RETURN");
-		orderLineData.setTransactionId("321-321-879");
+		//TISSEC-50
+		orderLineData.setReturnCancelRemarks("");//TODO : Please enter return cancel remarks
+		orderLineData.setTransactionId("");//TODO : Please enter transaction id
 		orderLineList.add(orderLineData);
 
 		if (!orderLineList.isEmpty() && consignmentPresent)
@@ -134,8 +135,8 @@ public class CancelReturnFacadeImplUnitTest
 				final MplOrderIsCancellableResponse.OrderLine orderResponse = new MplOrderIsCancellableResponse.OrderLine();
 				orderResponse.setOrderId(subOrderModel.getParentReference().getCode());
 				orderResponse.setIsCancellable("N");
-				orderResponse.setRemarks("TEST REMARKS");
-				orderResponse.setTransactionId("11111");
+				orderResponse.setRemarks("");//TODO : Please enter remarks
+				orderResponse.setTransactionId("");//TODO : Please enter transaction id
 				responseList.add(orderResponse);
 			}
 			for (final MplOrderIsCancellableResponse.OrderLine orderLine : responseList)
@@ -161,7 +162,7 @@ public class CancelReturnFacadeImplUnitTest
 					assosiatedEntryList.add(eachEntry);
 				}
 			}
-			if (subOrderEntry.getMplDeliveryMode().getSellerArticleSKU().equalsIgnoreCase("123456789"))
+			if (subOrderEntry.getMplDeliveryMode().getSellerArticleSKU().equalsIgnoreCase(""))//TODO : Please enter article sku
 			{
 				final SendTicketLineItemData sendTicketLineItemData = new SendTicketLineItemData();
 				sendTicketLineItemData.setLineItemId(subOrderEntry.getOrderLineId());

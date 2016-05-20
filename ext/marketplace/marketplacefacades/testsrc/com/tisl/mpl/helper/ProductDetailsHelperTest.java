@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.ClickAndCollectEnum;
 import com.tisl.mpl.core.enums.ExpressDeliveryEnum;
 import com.tisl.mpl.core.enums.HomeDeliveryEnum;
@@ -81,7 +82,8 @@ public class ProductDetailsHelperTest
 	@Test
 	public void testDeliveryModeLlist()
 	{
-		final String skuid = "123654098765485130011712";
+		//TISSEC-50
+		final String skuid = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter skuid
 		final List<MarketplaceDeliveryModeData> deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
 		assertNotNull(rich.getHomeDelivery());
 		assertEquals(rich.getHomeDelivery(), HomeDeliveryEnum.YES);
@@ -131,7 +133,7 @@ public class ProductDetailsHelperTest
 	@Test
 	public void testAddToWishListInPopup()
 	{
-		final String wishName = "My Wishlist 1";
+		final String wishName = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter wishlist name
 		assertNotNull(wishlistFacade.getWishlistForName(wishName));
 		final Wishlist2Model existingWishlist = new Wishlist2Model();
 		assertNotNull(existingWishlist);
@@ -144,7 +146,7 @@ public class ProductDetailsHelperTest
 	public void testShowWishListsInPopUp()
 	{
 		final List<WishlistData> wishList = new ArrayList<WishlistData>();
-		final String productCode = "987654321";
+		final String productCode = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter product code
 		assertNotNull(userService.getCurrentUser());
 		final UserModel user = new UserModel();
 		assertNotNull(user.getName());

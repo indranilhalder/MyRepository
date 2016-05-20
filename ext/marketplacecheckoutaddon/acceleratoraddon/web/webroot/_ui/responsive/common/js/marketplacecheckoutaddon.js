@@ -2799,7 +2799,8 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 			isCodSet = false;
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//TISTI-255
+	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 
 	 		}
 	 	});	 
@@ -2910,7 +2911,10 @@ function checkPincodeServiceability(buttonType)
  		success : function(response) {
  			if(response=="N")
  				{
- 				alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 				//TISTI-255
+ 		//		alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 		//	TISPRD-1666 - console replaced with alert and resp print
+ 				console.log('Response coming as N in checkPincodeServiceability');
  	 			$("#isPincodeServicableId").val('N');
  	 			reloadpage(selectedPincode,buttonType);
  				}
@@ -2922,7 +2926,11 @@ function checkPincodeServiceability(buttonType)
  			
  		},
  		error : function(resp) {
- 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 			//TISTI-255
+ 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 		//	TISPRD-1666 - console replaced with alert and resp print
+ 			console.log(resp);
+ 			console.log('Some issue occured in checkPincodeServiceability');
  			$("#isPincodeServicableId").val('N');
  			reloadpage(selectedPincode,buttonType);
  		}
@@ -2953,7 +2961,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 	//response='Y|123456|[{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011717","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"ED","inventory":"2","deliveryDate":null},{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"4","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12},{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011719","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"12","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12}]';
 	//response='N|123456|[{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011717","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"ED","inventory":"2","deliveryDate":null},{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"2","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":2},{"fulfilmentType":null,"isPrepaidEligible":null,"ussid":"123653098765485130011719","pinCode":null,"validDeliveryModes":null,"cod":null,"transportMode":null,"isCODLimitFailed":null,"deliveryDate":null,"isServicable":"N","stockCount":null}]';	
 
-	console.log(response);
+//	console.log(response);
 	
 	var values=response.split("|");
 	var isServicable=values[0];
@@ -3169,7 +3177,11 @@ function checkIsServicable()
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//TISTI-255
+	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 		//	TISPRD-1666 - console replaced with alert and resp print
+	 			console.log(resp);
+	 			console.log('Some issue occured in checkPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
 	 		}
 	 	});
@@ -3357,7 +3369,8 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			populatePincodeDeliveryMode(response,buttonType);
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//TISTI-255
+	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
 	 		}
 	 	});	 
@@ -3684,7 +3697,8 @@ function expressbutton()
 	 			populatePincodeDeliveryMode(response,'typeExpressCheckout');
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//TISTI-255
+	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
 	 		}
 	 	});	 
@@ -3948,4 +3962,3 @@ function sendTealiumData(){
 
 	   }     
 }
-

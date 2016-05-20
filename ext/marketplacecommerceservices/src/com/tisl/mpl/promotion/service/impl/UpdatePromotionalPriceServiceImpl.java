@@ -6,23 +6,26 @@ package com.tisl.mpl.promotion.service.impl;
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.jalo.Category;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.europe1.model.PriceRowModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.product.ProductService;
-import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -30,10 +33,11 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.jalo.BuyAPercentageDiscount;
+import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.dao.impl.UpdatePromotionalPriceDaoImpl;
 import com.tisl.mpl.promotion.service.UpdatePromotionalPriceService;
+import com.tisl.mpl.promotion.service.UpdateSplPriceHelperService;
 
 
 /**
@@ -57,6 +61,8 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	@Autowired
 	private ConfigurationService configurationService;
 
+	private UpdateSplPriceHelperService updateSplPriceHelperService;
+
 
 	public ModelService getModelService()
 	{
@@ -70,29 +76,39 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		this.modelService = modelService;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.promotion.service.UpdatePromotionalPriceService#updatePromotionalPrice(java.util.Collection,
-	 * java.util.Collection, java.lang.Double, java.util.Date, java.util.Date, boolean)
+
+	/**
+	 * The Method Updates Special Price in Price Row for eligible Products
+	 *
+	 * @param products
+	 * @param categories
+	 * @param value
+	 * @param startDate
+	 * @param endtDate
+	 * @param percent
+	 * @param priority
+	 * @param sellers
+	 * @param brands
 	 */
 	@Override
 	public void updatePromotionalPrice(final List<Product> products, final List<Category> categories, final Double value,
 			final Date startDate, final Date endtDate, final boolean percent, final Integer priority, final List<String> sellers,
-			final List<String> brands)
+			final List<String> brands, final String promoCode, final List<String> rejectSellerList,
+			final List<String> rejectBrandList)
 	{
 
 		try
 		{
+			clearExistingData(promoCode);
 			final List<String> product = new ArrayList<String>();
 			List<String> stagedProductList = new ArrayList<String>();
 			final List<String> promoproductList = new ArrayList<String>();
 
-			if (products != null && !products.isEmpty())
+			if (CollectionUtils.isNotEmpty(products))
 			{
 				for (final Product itrProduct : products)
 				{
-					if (getBrandsForProduct(itrProduct, brands) && validateProductData(itrProduct, priority))
+					if (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct, priority))
 					{
 						product.add(itrProduct.getAttribute("pk").toString());
 						promoproductList.add(itrProduct.getAttribute(CODE).toString()); //For staged Product Details
@@ -100,22 +116,20 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 				}
 			}
 
-			if (categories != null && !categories.isEmpty())
+			if (CollectionUtils.isNotEmpty(categories))
 			{
-				for (final Category category : categories)
+				//TISPRO-352 : Fix
+				final ConcurrentHashMap<List<String>, List<String>> categoryDetailsMap = updateSplPriceHelperService
+						.getEligibleProductList(brands, rejectBrandList, priority, categories);
+				if (MapUtils.isNotEmpty(categoryDetailsMap))
 				{
-
-					for (final Product itrProduct : category.getProducts())
+					for (final ConcurrentHashMap.Entry<List<String>, List<String>> entry : categoryDetailsMap.entrySet())
 					{
-						if (getBrandsForProduct(itrProduct, brands) && validateCategoryProductData(itrProduct, priority))////call same method for product
-						{
-							product.add(itrProduct.getAttribute("pk").toString());
-							promoproductList.add(itrProduct.getAttribute(CODE).toString()); //For staged Product Details
-						}
+						product.addAll(entry.getKey());
+						promoproductList.addAll(entry.getValue());
+						LOG.debug("Key = " + entry.getKey() + ", Value = " + entry.getValue());
 					}
-
 				}
-
 			}
 
 			LOG.debug("******** Special Price - Promotion Applicable product List:" + product);
@@ -136,13 +150,13 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 				{
 					//updating price row
 					boolean isEligibletoDisable = false;
-					if (sellers.isEmpty())
+					if (CollectionUtils.isEmpty(sellers) && CollectionUtils.isEmpty(rejectSellerList))
 					{
 						updateSpecialPrice = true;//set the flag true if there is no seller restriction
 					}
 					else
 					{
-						updateSpecialPrice = isPriceToUpdate(price, sellers);
+						updateSpecialPrice = isPriceToUpdate(price, sellers, rejectSellerList);
 						if (!updateSpecialPrice)
 						{
 							isEligibletoDisable = true;
@@ -157,6 +171,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 							price.setPromotionEndDate(endtDate);
 							price.setIsPercentage(Boolean.valueOf(percent));
 							price.setPromotionValue(value);
+							price.setPromotionIdentifier(promoCode);
 						}
 						else
 						{
@@ -164,6 +179,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 							price.setPromotionEndDate(endtDate);
 							price.setIsPercentage(Boolean.valueOf(percent));
 							price.setPromotionValue(value);
+							price.setPromotionIdentifier(promoCode);
 						}
 						modelService.save(price);
 					}
@@ -174,6 +190,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						price.setPromotionEndDate(null);
 						price.setIsPercentage(null);
 						price.setPromotionValue(null);
+						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 
 						LOG.debug("Saving Price Row ");
 						modelService.save(price);
@@ -186,6 +203,37 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/**
+	 * The Method clears Existing PriceRow Data
+	 *
+	 * @param promoCode
+	 */
+	private void clearExistingData(final String promoCode)
+	{
+		if (StringUtils.isNotEmpty(promoCode))
+		{
+			final List<PriceRowModel> priceRowList = updatePromotionalPriceDao.fetchPromoPriceData(promoCode);
+			final List<PriceRowModel> finalList = new ArrayList<PriceRowModel>();
+			if (CollectionUtils.isNotEmpty(priceRowList))
+			{
+				for (final PriceRowModel price : priceRowList)
+				{
+					price.setPromotionStartDate(null);
+					price.setPromotionEndDate(null);
+					price.setIsPercentage(null);
+					price.setPromotionValue(null);
+					price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
+					finalList.add(price);
+				}
+
+				if (CollectionUtils.isNotEmpty(finalList))
+				{
+					modelService.saveAll(finalList);
+				}
+			}
 		}
 	}
 
@@ -218,67 +266,103 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	 * @Description: To check whether to update the special price or not if seller restriction exists
 	 * @param price
 	 * @param sellers
+	 * @param rejectSellerList
 	 * @return: updateSpecialPrice
 	 */
-	private boolean isPriceToUpdate(final PriceRowModel price, final List<String> sellers)
+	private boolean isPriceToUpdate(final PriceRowModel price, final List<String> sellers, final List<String> rejectSellerList)
 	{
 		boolean updateSpecialPrice = false;
 		final List<SellerInformationModel> sellerModels = new ArrayList<SellerInformationModel>(price.getProduct()
 				.getSellerInformationRelator());
-		for (final SellerInformationModel seller : sellerModels)
+
+		if (CollectionUtils.isNotEmpty(sellers))
 		{
-			if (!sellers.isEmpty() && sellers.contains(seller.getSellerID())
-					&& price.getSellerArticleSKU().equalsIgnoreCase(seller.getSellerArticleSKU()))
+			for (final SellerInformationModel seller : sellerModels)
 			{
-				LOG.debug("******** Special Price - Promotion Applicable ussid List:" + seller.getSellerArticleSKU());
-				updateSpecialPrice = true;
+				if (sellers.contains(seller.getSellerID())
+						&& price.getSellerArticleSKU().equalsIgnoreCase(seller.getSellerArticleSKU()))
+				{
+					LOG.debug("******** Special Price - Promotion Applicable ussid List:" + seller.getSellerArticleSKU());
+					updateSpecialPrice = true;
+				}
 			}
 		}
+		else if (CollectionUtils.isNotEmpty(rejectSellerList))
+		{
+			for (final SellerInformationModel seller : sellerModels)
+			{
+				if (rejectSellerList.contains(seller.getSellerID())
+						&& price.getSellerArticleSKU().equalsIgnoreCase(seller.getSellerArticleSKU()))
+				{
+					LOG.debug("******** Special Price - Promotion Applicable ussid List:" + seller.getSellerArticleSKU());
+					updateSpecialPrice = false;
+					break;
+				}
+				else
+				{
+					updateSpecialPrice = true;
+				}
+			}
+		}
+
 
 		return updateSpecialPrice;
 	}
 
+
+
+
+	/**
+	 * The Method disables Special Price in Price Row for eligible Products
+	 *
+	 * @param promoCode
+	 * @param products
+	 * @param categories
+	 * @param isEnabled
+	 * @param priority
+	 * @param quantity
+	 * @param brands
+	 */
 	@Override
 	public void disablePromotionalPrice(final List<Product> products, final List<Category> categories, final boolean isEnabled,
-			final Integer priority, final List<String> brands, final Long quantity)
+			final Integer priority, final List<String> brands, final Long quantity, final List<String> rejectSellerList,
+			final List<String> rejectBrandList, final String promoCode)
 	{
 		try
 		{
+			clearExistingData(promoCode);
 			final List<String> product = new ArrayList<String>();
 			List<String> stagedProductList = new ArrayList<String>();
 			final List<String> promoproductList = new ArrayList<String>();
 
-			if (products != null && !products.isEmpty())
+			if (CollectionUtils.isNotEmpty(products))
 			{
 				for (final Product itrProduct : products)
 				{
-					if (getBrandsForProduct(itrProduct, brands) && validateProductData(itrProduct, priority))
+					if (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct, priority))
 					{
 						product.add(itrProduct.getAttribute("pk").toString());
 						promoproductList.add(itrProduct.getAttribute(CODE).toString());
 					}
-
-
 				}
 			}
 
-			if (categories != null && !categories.isEmpty())
+			if (CollectionUtils.isNotEmpty(categories))
 			{
-				for (final Category category : categories)
+				//TISPRO-352 : Fix
+				final ConcurrentHashMap<List<String>, List<String>> categoryDetailsMap = updateSplPriceHelperService
+						.getEligibleProductList(brands, rejectBrandList, priority, categories);
+				if (MapUtils.isNotEmpty(categoryDetailsMap))
 				{
-					for (final Product itrProduct : category.getProducts())
+					for (final ConcurrentHashMap.Entry<List<String>, List<String>> entry : categoryDetailsMap.entrySet())
 					{
-						if (getBrandsForProduct(itrProduct, brands) && validateCategoryProductData(itrProduct, priority))//call same method for product
-						{
-							product.add(itrProduct.getAttribute("pk").toString());
-							promoproductList.add(itrProduct.getAttribute(CODE).toString());
-						}
-
+						product.addAll(entry.getKey());
+						promoproductList.addAll(entry.getValue());
+						LOG.debug("Key = " + entry.getKey() + ", Value = " + entry.getValue());
 					}
-
 				}
-
 			}
+
 
 			LOG.debug("******** Special Price - Disable Promotion Applicable product List:" + product);
 
@@ -300,6 +384,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						price.setPromotionEndDate(null);
 						price.setIsPercentage(null);
 						price.setPromotionValue(null);
+						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 					}
 					else if (null != quantity && quantity.longValue() > 1) //For TISPRD-383 : If Validated remove Special Price Details
 					{
@@ -307,6 +392,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						price.setPromotionEndDate(null);
 						price.setIsPercentage(null);
 						price.setPromotionValue(null);
+						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 					}
 					modelService.save(price);
 				}
@@ -328,189 +414,41 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		}
 	}
 
-
+	/**
+	 * Validate Product Promotion Priority
+	 *
+	 * @param product
+	 * @param priority
+	 * @return boolean
+	 */
 	private boolean validateProductData(final Product product, final Integer priority)
 	{
+		boolean flag = false;
 		try
 		{
-			final List<ProductPromotion> promotionData = (List<ProductPromotion>) product
-					.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_PROMOTIONS);
-			//	final boolean isHigherPromotionExists = true;
-			int maxPriority = priority.intValue();
-			if (null != promotionData && !promotionData.isEmpty())
+			final ProductModel oModel = productService.getProductForCode(getDefaultPromotionsManager().catalogData(),
+					product.getCode());
+			if (null != oModel)
 			{
-				for (final ProductPromotion promotion : promotionData)
-				{
-					if (promotion instanceof BuyAPercentageDiscount
-							&& null != promotion.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_QUANTITY)
-							&& Integer.parseInt(promotion.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_QUANTITY)
-									.toString()) == 1)
-					{
-						if (maxPriority < Integer.parseInt(promotion.getAttribute(
-								MarketplacecommerceservicesConstants.SPECIALPRICE_PRIORITY).toString())
-								&& promotion.isEnabled().booleanValue())
-						{
-							maxPriority = Integer.parseInt(promotion.getAttribute(
-									MarketplacecommerceservicesConstants.SPECIALPRICE_PRIORITY).toString());
-							//	isHigherPromotionExists = false;
-							break;
-						}
-					}
-
-				}
-				if ((priority.intValue() == maxPriority) || (priority.intValue() > maxPriority))
-				{
-					return true;
-				}
-
-
-			}
-
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-
-
-		return false;
-	}
-
-
-	private boolean validateCategoryProductData(final Product product, final Integer priority)
-	{
-		try
-		{
-			int maxPriority = priority.intValue();
-			final List<ProductPromotion> promotionData = new ArrayList<ProductPromotion>();
-			final List<Category> categoriesList = getImmediateSuperCategory(product);
-
-			final List<ProductPromotion> productPromoData = (List<ProductPromotion>) product
-					.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_PROMOTIONS);
-			if (CollectionUtils.isNotEmpty(categoriesList))
-			{
-				for (final Category category : categoriesList)
-				{
-					promotionData.addAll(checkCategoryData(category));
-				}
-
-				if (CollectionUtils.isNotEmpty(productPromoData))
-				{
-					promotionData.addAll(productPromoData);
-				}
-
-				if (CollectionUtils.isNotEmpty(promotionData))
-				{
-					for (final ProductPromotion promotion : promotionData)
-					{
-						if (promotion instanceof BuyAPercentageDiscount
-								&& null != promotion.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_QUANTITY)
-								&& Integer.parseInt(promotion.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_QUANTITY)
-										.toString()) == 1)
-						{
-							if (maxPriority < Integer.parseInt(promotion.getAttribute(
-									MarketplacecommerceservicesConstants.SPECIALPRICE_PRIORITY).toString())
-									&& promotion.isEnabled().booleanValue())
-							{
-								maxPriority = Integer.parseInt(promotion.getAttribute(
-										MarketplacecommerceservicesConstants.SPECIALPRICE_PRIORITY).toString());
-								//	isHigherPromotionExists = false;
-								break;
-							}
-						}
-
-					}
-					if ((priority.intValue() == maxPriority) || (priority.intValue() > maxPriority))
-					{
-						return true;
-					}
-
-
-				}
-
+				flag = updateSplPriceHelperService.validateProductData(oModel, priority);
 			}
 		}
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-		return false;
-
+		return flag;
 	}
 
 	/**
-	 * @param category
+	 * Validates Brand Specific Restriction
+	 *
+	 * @param product
+	 * @param brands
+	 * @param rejectBrandList
+	 * @return allow
 	 */
-	private List<ProductPromotion> checkCategoryData(final Category category)
-	{
-		List<ProductPromotion> promotionData = new ArrayList<ProductPromotion>();
-		try
-		{
-			if (null != category && null != category.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_PROMOTIONS))
-			{
-				promotionData = (List<ProductPromotion>) category
-						.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_PROMOTIONS);
-			}
-		}
-		catch (final JaloInvalidParameterException exception)
-		{
-			throw new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000);
-		}
-		catch (final JaloSecurityException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-		return promotionData;
-
-	}
-
-
-	//SONAR Fixes
-	//	@Deprecated
-	//	private boolean validateCategoryProductData(final Product product, final Integer priority)
-	//	{
-	//		try
-	//		{
-	//			//final String quantity = configurationService.getConfiguration().getString("promotion.quantity.value");
-	//			final List<ProductPromotion> promotionData = (List<ProductPromotion>) product.getAttribute("promotions");
-	//
-	//			if (null != promotionData && !promotionData.isEmpty())
-	//			{
-	//				for (final ProductPromotion promotion : promotionData)
-	//				{
-	//					if (promotion instanceof BuyAPercentageDiscount && null != promotion.getAttribute("quantity")
-	//							&& Integer.parseInt(promotion.getAttribute("quantity").toString()) == 1)
-	//					{
-	//						if (Integer.parseInt(promotion.getAttribute("priority").toString()) >= priority.intValue()
-	//								&& promotion.isEnabled().booleanValue())
-	//						{
-	//							return false;
-	//						}
-	//						else if (Integer.parseInt(promotion.getAttribute("priority").toString()) == priority.intValue()
-	//								&& !promotion.isEnabled().booleanValue())//disabling scenario
-	//						{
-	//							return true;
-	//						}
-	//					}
-	//
-	//				}
-	//
-	//			}
-	//		}
-	//		catch (final Exception e)
-	//		{
-	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-	//		}
-	//
-	//
-	//		return true;
-	//	}
-
-	private boolean getBrandsForProduct(final Product product, final List<String> brands)
+	private boolean getBrandsForProduct(final Product product, final List<String> brands, final List<String> rejectBrandList)
 	{
 		boolean allow = false;
 		List<String> brandList = null;
@@ -518,7 +456,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		try
 		{
 
-			if (brands.isEmpty())//no need to proceed if there is no brand restriction
+			if (brands.isEmpty() && rejectBrandList.isEmpty())//no need to proceed if there is no brand restriction
 			{
 				return true;
 			}
@@ -537,10 +475,24 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 				}
 			}
 
-			if (null != brandList && !brandList.isEmpty())
+			if (CollectionUtils.isNotEmpty(brands) && CollectionUtils.isNotEmpty(brandList))
 			{
 				final String productBrand = brandList.get(0);
 				if (brands.contains(productBrand))
+				{
+					allow = true;
+				}
+			}
+
+
+			if (CollectionUtils.isNotEmpty(rejectBrandList) && CollectionUtils.isNotEmpty(brandList))
+			{
+				final String productBrand = brandList.get(0);
+				if (rejectBrandList.contains(productBrand))
+				{
+					allow = false;
+				}
+				else
 				{
 					allow = true;
 				}
@@ -564,10 +516,14 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		return allow;
 	}
 
-
+	/**
+	 * Jalo Method to return super categories of a product
+	 *
+	 * @param product
+	 * @return superCategories
+	 */
 	private List<Category> getImmediateSuperCategory(final Product product)
 	{
-
 		List<Category> superCategories = new ArrayList<Category>();
 
 		if (product != null)
@@ -592,10 +548,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 		}
 
-
 		return superCategories;
-
-
 	}
 
 
@@ -653,6 +606,30 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	public void setConfigurationService(final ConfigurationService configurationService)
 	{
 		this.configurationService = configurationService;
+	}
+
+
+	/**
+	 * @return the updateSplPriceHelperService
+	 */
+	public UpdateSplPriceHelperService getUpdateSplPriceHelperService()
+	{
+		return updateSplPriceHelperService;
+	}
+
+
+	/**
+	 * @param updateSplPriceHelperService
+	 *           the updateSplPriceHelperService to set
+	 */
+	public void setUpdateSplPriceHelperService(final UpdateSplPriceHelperService updateSplPriceHelperService)
+	{
+		this.updateSplPriceHelperService = updateSplPriceHelperService;
+	}
+
+	protected DefaultPromotionManager getDefaultPromotionsManager()
+	{
+		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
 
 

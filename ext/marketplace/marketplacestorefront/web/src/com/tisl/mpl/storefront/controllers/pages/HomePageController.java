@@ -873,25 +873,32 @@ public class HomePageController extends AbstractPageController
 		if (!userFacade.isAnonymousUser())
 		{
 			header.put("loggedInStatus", true);
-			final Object sessionFirstName = session.getAttribute(userFirstName);
-			if (sessionFirstName == null)
+			final Object sessionDisplayName = session.getAttribute(userFirstName);
+			if (sessionDisplayName == null)
 			{
 				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-				String firstName = currentCustomer.getFirstName();
-				if (StringUtils.contains(firstName, '@'))
+				String firstName = currentCustomer.getName();
+				if (StringUtils.isNotEmpty(firstName))
+				{
+					if (StringUtils.contains(firstName, '@'))
+					{
+						firstName = StringUtils.EMPTY;
+					}
+					else if (StringUtils.length(firstName) > 25)
+					{
+						firstName = StringUtils.substring(firstName, 0, 25);
+					}
+				}
+				else
 				{
 					firstName = StringUtils.EMPTY;
-				}
-				else if (StringUtils.length(firstName) > 25)
-				{
-					firstName = StringUtils.substring(firstName, 0, 25);
 				}
 				header.put(userFirstName, firstName);
 				session.setAttribute(userFirstName, firstName);
 			}
 			else
 			{
-				header.put(userFirstName, sessionFirstName);
+				header.put(userFirstName, sessionDisplayName);
 			}
 		}
 		else

@@ -278,7 +278,7 @@
 					});
 				}
 				document.onload = selectState("${returnPincodeCheckForm.state}");
-				console.log("${stateDataList}");
+		//		console.log("${stateDataList}");
 				$("#state").css("height", "40px");
 				$("#state").css("width", "100%");
 			});

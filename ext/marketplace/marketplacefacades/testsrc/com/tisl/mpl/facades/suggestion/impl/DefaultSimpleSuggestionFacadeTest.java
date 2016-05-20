@@ -44,6 +44,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.suggestion.SimpleSuggestionService;
 
 
@@ -104,10 +105,11 @@ public class DefaultSimpleSuggestionFacadeTest
 	@Test
 	public void testGetReferencedProductsForBoughtCategory()
 	{
+		//TISSEC-50
 		final UserModel user = mock(UserModel.class);
 		final CategoryModel category = mock(CategoryModel.class);
 
-		final String categoryCode = "code";
+		final String categoryCode = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter category code
 		given(categoryService.getCategoryForCode(categoryCode)).willReturn(category);
 		final Integer limit = NumberUtils.INTEGER_ONE;
 		final boolean excludeBoughtProducts = true;

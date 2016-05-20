@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.SendEmailRequestData;
 
 
@@ -33,12 +34,13 @@ public class WsEmailServiceUnitTest
 	@Test
 	public void sendEmail()
 	{
-		final String senderEmail = "priya2@tcs.com";
-		final String senderName = "Priyanka";
-		final String recipientEmail = "Welcome@tcs.com";
-		final String replyTo = "priya2@tcs.com";
-		final String subject = "Email Sending";
-		final String content = "Mail has been sent";
+		//TISSEC-50
+		final String senderEmail = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter sender email
+		final String senderName = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter sender name
+		final String recipientEmail = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter recipient email
+		final String replyTo = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter reply to email
+		final String subject = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter subject
+		final String content = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter content
 
 		sendEmailRequestData.setSenderEmail(senderEmail);
 		sendEmailRequestData.setSenderName(senderName);

@@ -43,6 +43,7 @@ public class MplPaymentServiceImplUnitTest
 	@Before
 	public void setUp()
 	{
+		//TISSEC-50
 		MockitoAnnotations.initMocks(this);
 
 		this.mplPaymentServiceImpl = new MplPaymentServiceImpl();
@@ -103,7 +104,7 @@ public class MplPaymentServiceImplUnitTest
 		final List<EMIBankModel> emiBankList = Arrays.asList(emiBankModel);
 		Mockito.when(mplPaymentDao.getEMIBanks(Double.valueOf(100), null)).thenReturn(emiBankList);
 		Mockito.when(emiBankModel.getName()).thenReturn(bank);
-		Mockito.when(bank.getBankName()).thenReturn("HDFC");
+		Mockito.when(bank.getBankName()).thenReturn("");//TODO : Please enter bank
 		mplPaymentServiceImpl.getEMIBanks(Double.valueOf(100));
 	}
 
@@ -112,11 +113,11 @@ public class MplPaymentServiceImplUnitTest
 	public void testGetBankTerms()
 	{
 		final List<EMIBankModel> emiTermList = Arrays.asList(emiBankModel);
-		Mockito.when(mplPaymentDao.getEMIBankTerms("HDFC")).thenReturn(emiTermList);
+		Mockito.when(mplPaymentDao.getEMIBankTerms("")).thenReturn(emiTermList);//TODO : Please enter bank
 		final Collection<EMITermRowModel> emiTerms = Arrays.asList(emiTermRowModel);
 		Mockito.when(emiBankModel.getEMITermRates()).thenReturn(emiTerms);
 		Mockito.when(emiTermRowModel.getTermInMonths()).thenReturn(Integer.valueOf(12));
 		Mockito.when(emiTermRowModel.getInterestRate()).thenReturn(Double.valueOf(12));
-		mplPaymentServiceImpl.getBankTerms("HDFC", Double.valueOf(1000));
+		mplPaymentServiceImpl.getBankTerms("", Double.valueOf(1000));//TODO : Please enter bank
 	}
 }

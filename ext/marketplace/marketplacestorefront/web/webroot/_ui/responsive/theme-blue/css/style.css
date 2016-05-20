@@ -519,11 +519,11 @@ input:focus {
       font-size: 16px;
       margin: -1px;
       background-color: transparent;
-      padding-right:15px; }
+      padding-right:20px; }
       .select-view .select-list > .selected:after {
         position: absolute;
         top: 0px;
-        right: 5px;
+        right: 2px;
         font-weight: lighter;
     	font-size: 22px;
     	content: "\f107";
@@ -10134,7 +10134,7 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-image-container .image-list img,
 .product-info .product-image-container .main-image>img {
-    width: 100%;
+    width: auto;
     height: auto;
     opacity: 1;
     z-index: 1;
@@ -17780,6 +17780,7 @@ header .content .bottom .search .select-list select
   font-size: 10px;
   padding: 0px;
   text-transform: none;
+  text-align:left;
 }
 .checkout-steps{
 	width:65%;
@@ -18969,7 +18970,7 @@ header.brand-header .content .bottom .marketplace {
 
 header.brand-header .content .bottom nav {
 	color: #fff;
-    padding-left: 100px;
+    padding-left: 75px;
     margin-left: 20px;
 }
 
@@ -19809,11 +19810,15 @@ color: #ff829a;
 	.modal#createNewList .content, .modal#manageMyList .content{
 	height: auto;
 	}
-	.product-tile .image .quickview{
-	display:none;}
 }
-
-
+@media (max-width:970px){
+	.product-tile .image .quickview {
+		display: none;
+	}
+	#colorbox, #cboxOverlay{
+	display:none !important;
+	}
+}
 @media (min-width:791px)
 {
 	 header .content .bottom.active .marketplace
@@ -21986,6 +21991,10 @@ body .account .new-address form div#checkBox label
 	  width: 100%;
   margin: 20px 0;
 }
+.send-email-container .actions{
+	width:100%;
+	text-align:center;
+}
 .forgot-password-container input:hover, .forgot-password-container select:hover, .click2chat-container input:hover, .click2chat-container select:hover, .click2call-container input:hover, .click2call-container select:hover , .create-new-wishlist-popup-container input:hover {
   border-color: #b9b9b9;
   -webkit-transition: border 0.15s;
@@ -22006,7 +22015,7 @@ body .account .new-address form div#checkBox label
   font-size:12px;
   font-weight:normal;
 }
-.forgot-password-container .actions .button, .manage-wishlist-container .actions button, .create-new-wishlist-popup-container .create_wishlist#CreateNewWishlist , .return-requestInvoice .cancellation-request-block .actions button{
+.forgot-password-container .actions .button, .manage-wishlist-container .actions button, .create-new-wishlist-popup-container .create_wishlist#CreateNewWishlist , .return-requestInvoice .cancellation-request-block .actions button,.send-email-container .actions button{
   font-size: 12px;
 
   font-weight: 500;
@@ -23708,7 +23717,7 @@ span.brand-subdesc {
 .forgotten-password.modal .content{
 	width:35%;
 }
-.add_to_cart_form .out_of_stock #add_to_wishlist, #add_to_wishlist-sizeguide{
+.add_to_cart_form .out_of_stock #add_to_wishlist, #add_to_wishlist-sizeguide,.out_of_stock #add_to_wishlist_quick{
    font-size: 12px;
     letter-spacing: 1px;
     height: 42px;
@@ -25162,12 +25171,12 @@ padding:0;
 	color: #fff;
      background-color: #A9143C;
 }
-.seller-details .otherSellersFont {
+/* .seller-details .otherSellersFont {
     font-weight: 500;
     font-size: 10px;
     padding: 0px;
     text-transform: none;
-}
+} */
 
 @media (max-width: 450px) {
 div.other-sellers .other-sellers-table tbody tr td h3, div.other-sellers .other-sellers-table tbody tr td .price {
@@ -27283,7 +27292,7 @@ border: 2px solid #fff;
 .contact-us-header ul li.contactUsOptions:first-child {
 	display: inline-block;
 }
-.out_of_stock #add_to_wishlist_quick {
+/* .out_of_stock #add_to_wishlist_quick {
     font-size: 12px;
     letter-spacing: 1px;
     line-height: 55px;
@@ -27301,7 +27310,7 @@ border: 2px solid #fff;
     display: block;
     margin-top:5px;
     border:0px;
-}  
+}  */ 
 
 body.page-reviews .right-account .order-history .navigation {
 	border: 1px solid #f0f4f5;
@@ -29805,9 +29814,13 @@ padding-bottom: 20px;}
 clear:both;
 }
 @media (min-width: 791px){
-header .content .marketplace, header .content .brand-logo {
+header .content .marketplace{
        width: 130px;
        margin-right: 25px;
+  }
+header .content .brand-logo {
+       width: auto;
+       margin-right: 0px;
   }
 header .content .bottom.active .marketplace a img {
 width: 90px !important;
@@ -35107,12 +35120,11 @@ main {
 
 .thumb {
 	position: relative;
-	width: 100%;
+	width: auto;
 	display:inline-block;
 	border: 1px solid transparent;
 	margin-bottom:2px;
-	padding: 1px 0;
-	 -webkit-transition: border-color 0.15s;
+	-webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;
     transition: border-color 0.15s;
 }
@@ -39174,19 +39186,18 @@ Samsung Galaxy S5 -----------
 		clear: both;
 		padding-top: 5px;
 	}
-	
 	@media (max-width: 728px) {
 	 .continue_btn_anchor {
 	  display: none;
 	 }
 	}
-	
-	
+
+
 	.continue_btn_anchor {
 	 height: 38px !important;
 	 width: 100% !important;
 	 text-align: center !important;
-	 line-height: 38px !important; 
+	 line-height: 38px !important;
 	 background: #A9143C !important;
 	 color: #fff !important;
 	 margin-bottom: 10px;
@@ -39385,9 +39396,6 @@ div.MSDQuickView:before {
 
 
 /* Order History CSS End */
-
-
-
 /* Return Order Page Css */
 
 .addAddress input[type="text"] {
@@ -39429,7 +39437,7 @@ div.MSDQuickView:before {
 	font-weight: 500;
    }
    .error_text{
-   	color: red;
+	color: red;
    }
    .inputBoxHeight {
   height: 80px !important;
@@ -39440,8 +39448,8 @@ div.MSDQuickView:before {
 }
 
 .returnPickupHead {
-	height: 100px; 
-	line-height: 100px; 
+	height: 100px;
+	line-height: 100px;
 	font-size: 36px;
 }
 
@@ -39450,5 +39458,5 @@ div.MSDQuickView:before {
 	text-align: center;
 	color:#A9143C;
 }
-	
+
 /* Return order Page CSS END */
