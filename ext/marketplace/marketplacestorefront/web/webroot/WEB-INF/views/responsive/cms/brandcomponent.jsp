@@ -13,6 +13,7 @@
 		value="${fn:replace(component.masterBrandName,' ', '') }" />
 	<c:if test="${component.layout eq 'AtoZ'}">
 		<c:set var="cssClass" value="A-ZBrands" />
+		<input type="hidden" id="componentUid" value="${component.uid}"/>
 	</c:if>
 	<div class="toggle ${cssClass}">
 		<c:url var="masterBrandUrl" value="${component.masterBrandURL}" />
