@@ -611,6 +611,7 @@
 	<bean id="mplUpdatePromotionPriceService"
 		class="com.tisl.mpl.promotion.service.impl.UpdatePromotionalPriceServiceImpl">
 		<property name="modelService" ref="modelService" />
+		<property name="updateSplPriceHelperService" ref="updateSplPriceHelperService" />	
 	</bean>
 
 	<alias name="mplUpdatePromotionPriceDao" alias="mplUpdatePromotionPriceDao" />
@@ -1651,6 +1652,23 @@
 
 	</bean>
 	<!-- UserGroupSaveInterceptor ends -->	
+	
+	<!-- TISPRD-1631 Changes Start (Extending Product Service) -->
+	
+<alias alias="productService" name="defaultProductService"/>
+	<bean id="defaultProductService" class="com.tisl.mpl.marketplacecommerceservices.services.product.impl.MplProductServiceImpl"
+			parent="abstractBusinessService">
+		<property name="productDao" ref="productDao"/>
+		<property name="unitDao" ref="unitDao"/>
+		<property name="priceService" ref="priceService"/>
+	</bean>
+	
+	<!-- TISPRD-1631 Changes End (Extending Product Service) -->
+	
+	<!-- Tata Cliq : Special Price Updation Logic Service-->
+	<bean id="updateSplPriceHelperService"
+		class="com.tisl.mpl.promotion.service.impl.DefaultUpdateSplPriceHelperService">
+	</bean>
 
 
 </beans>

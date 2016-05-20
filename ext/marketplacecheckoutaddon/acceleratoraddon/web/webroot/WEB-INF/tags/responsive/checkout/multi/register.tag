@@ -47,16 +47,16 @@
 		 <div id="checkBox">
 					<div class="reward-popover">
 					<p class="reward-popover-container">
-					<span class="reward-popover-left">We work with brands to create great Rewards that start your savings on the very first purchase. Once enrolled, you can unlock these 
-					<span><a class="reward-popover-dash-border" href="#" target="_blank">rewards </a></span><span> &nbsp; instantly!</span>
+					<span class="reward-popover-left">'Tata Treats' an exclusive program to celebrate your patronage with the Tata Group.
+					<!-- <span><a class="reward-popover-dash-border" href="#" target="_blank">rewards </a></span><span> &nbsp; instantly!</span> -->
 					</span>
-					<span class="reward-popover-img">
+					<%-- <span class="reward-popover-img">
 					<img src="${commonResourcePath}/images/Logo-Rewards.png">
-					</span>
+					</span> --%>
 					</p>
 					</div>					
 				<input type="checkbox" id="check_MyRewards" name="check_MyRewards" value="true"/>
-				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" target="_blank" class="tata-rewards">My Tata Rewards Program</a> (You can opt-out anytime) By opting in I agree to <a href="${tncmytatarewards }" target="_blank"> T&C </a> and <a href="${tncmytatarewards }" target="_blank"> privacy policy</a> of My Tata Rewards program</label>
+				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" target="_blank" class="tata-rewards">Tata Treats</a> (You can opt-out anytime) By opting in I agree to <a href="${tncmytatarewards }" target="_blank"> T&C </a> of Tata Treats.</label>
 		</div> 
 	
 	<div class="form-actions clearfix">
@@ -66,8 +66,8 @@
 	</div>
 	
 	<div class="exist-account">
-	<span>Already have a TataCLiQ account?  </span>
-	<span><a href="/store/mpl/en/login"> &nbsp;  SignIn here</a></span>
+	<span>Already have a Tata CLiQ account?  </span>
+	<span><a href="/store/mpl/en/login"> &nbsp;  Sign in here</a></span>
 	</div>
 	
 </form:form>

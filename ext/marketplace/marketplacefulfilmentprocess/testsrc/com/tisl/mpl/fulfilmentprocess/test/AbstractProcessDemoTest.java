@@ -13,19 +13,6 @@
  */
 package com.tisl.mpl.fulfilmentprocess.test;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Currency;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.junit.Before;
-import org.junit.Ignore;
-
 import de.hybris.platform.basecommerce.enums.InStockStatus;
 import de.hybris.platform.basecommerce.enums.StockLevelUpdateType;
 import de.hybris.platform.catalog.CatalogService;
@@ -63,6 +50,20 @@ import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.stock.model.StockLevelHistoryEntryModel;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Currency;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Ignore;
+
 import com.tisl.mpl.fulfilmentprocess.constants.MarketplaceFulfilmentProcessConstants;
 
 
@@ -106,7 +107,8 @@ public abstract class AbstractProcessDemoTest extends ServicelayerTest
 		final CatalogModel catalog = createCatalog("test");
 		final CatalogVersionModel catalogVersion = createCatalogVersion(catalog, "online", Boolean.TRUE);
 		final UnitModel pieces = getOrCreateUnit("pieces");
-		final CurrencyModel currency = createOrGetCurrency("EUR");
+		//TISSEC-50
+		final CurrencyModel currency = createOrGetCurrency("");//TODO : Please enter currency
 		final VendorModel vendor = createVendor("testVendor");
 		final WarehouseModel warehouse1 = createWarehouse("testWarehouse1", vendor);
 		final WarehouseModel warehouse2 = createWarehouse("testWarehouse2", vendor);
@@ -271,36 +273,37 @@ public abstract class AbstractProcessDemoTest extends ServicelayerTest
 		cartService.addToCart(cart, product2, 2, pieces);
 
 		final CountryModel country = modelService.create(CountryModel.class);
-		country.setName("Germany");
-		country.setIsocode("DEU");
+		//TISSEC-50
+		country.setName("");//TODO : Please enter country name
+		country.setIsocode("");//TODO : Please enter iso code
 		modelService.save(country);
 
 		final AddressModel address = new AddressModel();
-		address.setTown("Town");
-		address.setStreetname("Street");
-		address.setStreetnumber("2");
-		address.setPostalcode("12333");
-		address.setLastname("hybris");
-		address.setFirstname("hybris");
+		address.setTown("");//TODO : Please enter town
+		address.setStreetname("");//TODO : Please enter street
+		address.setStreetnumber("");//TODO : Please enter street number
+		address.setPostalcode("");//TODO : Please enter postal code
+		address.setLastname("");//TODO : Please enter last name
+		address.setFirstname("");//TODO : Please enter first name
 		address.setEmail(email);
 		address.setCountry(country);
 		final CreditCardPaymentInfoModel paymentInfo = new CreditCardPaymentInfoModel();
-		paymentInfo.setCcOwner("test");
+		paymentInfo.setCcOwner("");//TODO : Please enter cc owner
 		paymentInfo.setType(CreditCardType.VISA);
-		paymentInfo.setNumber("4111-1111-1111-1111");
-		paymentInfo.setValidToMonth("10");
-		paymentInfo.setValidToYear("1812");
+		paymentInfo.setNumber("");//TODO : Please enter card number
+		paymentInfo.setValidToMonth("");//TODO : Please enter valid to month
+		paymentInfo.setValidToYear("");//TODO : Please enter valid to year
 		final OrderModel order = orderService.placeOrder(cart, address, paymentAddress, paymentInfo);
 
 
 		final CardInfo card = new CardInfo();
 		card.setCardType(CreditCardType.VISA);
-		card.setCardNumber("4111-1111-1111-1111");
+		card.setCardNumber("");//TODO : Please enter card number
 		card.setExpirationMonth(Integer.valueOf(12));
 		card.setExpirationYear(Integer.valueOf(Calendar.getInstance().get(Calendar.YEAR) + 2));
 
 		final PaymentTransactionModel paymentTransaction = paymentService.authorize("code1", BigDecimal.ONE,
-				Currency.getInstance("EUR"), address, address, card).getPaymentTransaction();
+				Currency.getInstance(""), address, address, card).getPaymentTransaction();//TODO : Please enter card number
 		order.setPaymentTransactions(Collections.singletonList(paymentTransaction));
 		modelService.save(order);
 

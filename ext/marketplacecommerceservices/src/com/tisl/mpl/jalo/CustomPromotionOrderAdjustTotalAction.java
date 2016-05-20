@@ -14,9 +14,11 @@ import de.hybris.platform.util.DiscountValue;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 
 
 public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromotionOrderAdjustTotalAction
@@ -95,7 +97,9 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 			}
 			else
 			{
-				amtTobeDeductedAtlineItemLevel = (percentageDiscount * netSellingPrice) / 100;
+
+				final double freeItemPrice = getfreeItemPrice(ctx, entry); //Added for TISPRO-318
+				amtTobeDeductedAtlineItemLevel = (percentageDiscount * (netSellingPrice - freeItemPrice)) / 100;
 				totalAmtDeductedOnItemLevel += amtTobeDeductedAtlineItemLevel;
 			}
 
@@ -143,6 +147,39 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 		setMarkedApplied(ctx, true);
 
 		return true;
+	}
+
+
+	/**
+	 * Added for TISPRO-318
+	 * 
+	 * @param ctx
+	 * @param entry
+	 * @return freeItemPrice
+	 */
+	private double getfreeItemPrice(final SessionContext ctx, final AbstractOrderEntry entry)
+	{
+		double freeItemPrice = 0;
+		try
+		{
+			if (getMplPromotionHelper().validateEntryForFreebie(entry))
+			{
+				freeItemPrice = entry.getTotalPrice().doubleValue();
+			}
+			else if ((null != entry.getAttribute(ctx, "isBOGOapplied")
+					&& BooleanUtils.toBoolean(entry.getAttribute(ctx, "isBOGOapplied").toString()) && null != entry.getAttribute(ctx,
+					"bogoFreeItmCount")))
+			{
+				final double freecount = Double.parseDouble(entry.getAttribute(ctx, "bogoFreeItmCount").toString());
+				freeItemPrice = (freecount * 0.01);
+			}
+		}
+		catch (final Exception exception)
+		{
+			log.debug(exception.getMessage());
+			freeItemPrice = 0;
+		}
+		return freeItemPrice;
 	}
 
 	/**
@@ -211,6 +248,12 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 	protected DefaultPromotionManager getDefaultPromotionsManager()
 	{
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
+	}
+
+	//For Referring to Promotion Helper Class
+	protected MplPromotionHelper getMplPromotionHelper()
+	{
+		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
 
 }

@@ -22,10 +22,10 @@
 
 		</style>
 		<hbox>
-			<label sclass="search-label" value="USSID"></label>
+			<label sclass="search-label" value="${labels.inv.ussid}"></label>
 			<textbox id="searchText" sclass="search-area" />
 			<button id="searchButton" style="background-color: #1169F6; border: medium none;" sclass="search-button"
-				label="Search" />
+				label="${labels.inv.searchbtn}" />
 
 		</hbox>
 	</div>

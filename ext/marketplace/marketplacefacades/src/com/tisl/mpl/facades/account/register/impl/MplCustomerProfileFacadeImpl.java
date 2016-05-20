@@ -26,6 +26,7 @@ import de.hybris.platform.store.services.BaseStoreService;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -529,6 +530,8 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 		{
 			//	creating list with month
 			final List<MonthData> monthList = new ArrayList<MonthData>();
+			final String[] monthNameArray =
+			{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 			for (int i = 1; i < 13; i++)
 			{
 				String val = String.valueOf(i);
@@ -538,7 +541,7 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 				}
 				final MonthData oMonthData = new MonthData();
 				oMonthData.setCode(val);
-				oMonthData.setName(val);
+				oMonthData.setName(monthNameArray[i - 1]);
 				monthList.add(oMonthData);
 			}
 			return monthList;
@@ -558,12 +561,14 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 	{
 		try
 		{
-			//	creating list with year
+			//			creating list with year
 
-			//	final int year = Calendar.getInstance().get(Calendar.YEAR);
-			final int year = 2050;
+			final int endYear = Calendar.getInstance().get(Calendar.YEAR);
+			//final int year = 2050;
 			final List<YearData> yearList = new ArrayList<YearData>();
-			for (int i = 1950; i <= year; i++)
+			final int yearGap = Integer.parseInt(configurationService.getConfiguration().getString("account.yearlist.gap", "100"));
+			final int startYear = endYear - yearGap;
+			for (int i = startYear; i <= endYear; i++)
 			{
 				final String val = String.valueOf(i);
 				final YearData oYearData = new YearData();

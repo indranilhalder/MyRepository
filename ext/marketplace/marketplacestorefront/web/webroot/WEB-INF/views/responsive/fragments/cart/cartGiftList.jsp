@@ -37,7 +37,7 @@ $( document ).ready(function() {
 	$(".addToBagButton").click(function(e){
 		//alert("hi");
 		var element = $(e.target);
-		console.log($(element).closest("form.add_to_cart_form").serialize());
+	//	console.log($(element).closest("form.add_to_cart_form").serialize());
 		var dataString= $(element).closest("form.add_to_cart_form").serialize()
 		
 		var productCode=$('#addToCartForm').find("input[name='productCodePost']").val();

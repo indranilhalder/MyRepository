@@ -544,6 +544,26 @@ public class MplPromotionHelper
 	}
 
 
+	/**
+	 * The Method checks if The entry is BOGO Free Product
+	 *
+	 * Added for TISPRO-318
+	 * 
+	 * @param entry
+	 * @return flag
+	 */
+	public boolean checkIfBOGOProduct(final AbstractOrderEntry entry)
+	{
+		boolean flag = false;
+		if ((entry.getTotalPrice().doubleValue() / 0.01) == entry.getQuantity().doubleValue())
+		{
+			flag = true;
+		}
+
+		return flag;
+	}
+
+
 	protected SellerBasedPromotionService getSellerBasedPromotionService()
 	{
 		return Registry.getApplicationContext().getBean("sellerBasedPromotionService", SellerBasedPromotionService.class);

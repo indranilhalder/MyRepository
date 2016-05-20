@@ -3,6 +3,7 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -140,25 +141,53 @@ public class MplSellerInformationFacadeImpl implements MplSellerInformationFacad
 	 * get Seller Collection days by seller ID
 	 */
 	@Override
-	public String getSellerColloctionDays(String sellerId)
+	public String getSellerColloctionDays(final String sellerId)
 	{
-	  // get the sellerMaster model form 
+		// get the sellerMaster model by sellerID
 		final SellerMasterModel sellerMaster = getSellerMasterBySellerId(sellerId);
-		String collectionDays=null;
-		if (sellerMaster != null)
+		String collectionDays = null;
+		if (sellerMaster != null && StringUtils.isNotBlank(sellerMaster.getCollectionDays()))
 		{
-			collectionDays = sellerMaster.getCollectionDays();
-		}
-		else 
-		{
-			// read default collection days from configuration 
-			if(mplConfigFacade != null)
+			//Check that the value stored in DB column is a valid integer and is > 0.
+			try
 			{
-				collectionDays =mplConfigFacade.getCongigValue(MarketplaceFacadesConstants.COLLECTIONDAYS_CONFIG);
+				final int collDays = Integer.parseInt(sellerMaster.getCollectionDays());
+				if (collDays > 0)
+				{
+					LOG.info("Using collection days from SellerMaster Model for sellerId: " + sellerId);
+					collectionDays = sellerMaster.getCollectionDays();
+				}
 			}
-			
+			catch (final NumberFormatException e)
+			{
+				LOG.warn("Invalid Value of Collection Days: " + sellerMaster.getCollectionDays() + "; sellerId: " + sellerId);
+				LOG.error("Invalid Value of Collection Days: " + sellerMaster.getCollectionDays() + "; sellerId: " + sellerId);
+			}
 		}
+		if (collectionDays == null)
+		{
+			//Get collection days from mplConfig
+			if (mplConfigFacade != null)
+			{
+				LOG.info("Using Collection Days as set in mplconfig for seller: " + sellerId);
+				try
+				{
+					collectionDays = mplConfigFacade.getCongigValue(MarketplaceFacadesConstants.COLLECTIONDAYS_CONFIG);
+				}
+				catch (final Exception e)
+				{
+					LOG.warn("Encountered error while fetching Collection Days from mplConfig. Using Default value. " + e.toString());
+					LOG.error("Encountered error while fetching Collection Days from mplConfig. Using Default value. " + e.toString());
+				}
+			}
+		}
+		//If could not retrieve a Collection days by any means. then Use the default value.
+		if (collectionDays == null)
+		{
+			LOG.info("Using Default value of collection days for sellerId: " + sellerId);
+			collectionDays = String.valueOf(MarketplaceFacadesConstants.DEFAULT_COLLECTION_DAYS);
+		}
+
 		return collectionDays;
 	}
-
 }

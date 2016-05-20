@@ -70,10 +70,10 @@ public class MplPasswordValidator implements Validator
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.NEW_PASSWORD, "register.pwd.invalid");
 		}
-		else if (StringUtils.length(newPasswd) > 16)
+		/*else if (StringUtils.length(newPasswd) > 16)
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.NEW_PASSWORD, "register.pwd.invalid.long");
-		}
+		}*/
 		else if (checkWhiteSpace(newPasswd))
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.NEW_PASSWORD, "register.pwd.invalid.space");

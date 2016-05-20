@@ -20,6 +20,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MyRecommendationsConfigurationModel;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.service.MyStyleProfileService;
@@ -58,11 +59,13 @@ public class DefaultMyStyleProfileFacadeImplUnitTest
 	@Test
 	public void testSaveCategoryData()
 	{
+
 		final CategoryModel categoryModel = modelService.create(CategoryModel.class);
 		final List<CategoryModel> categoryList = Arrays.asList(categoryModel);
 
 		final List<String> categoryCodeList = new ArrayList<String>();
-		categoryCodeList.add("MSH1");
+		//TISSEC-50
+		categoryCodeList.add("");//TODO : Please enter category code
 		final String categoryCode = categoryCodeList.get(0);
 
 		final CategoryModel category = new CategoryModel();
@@ -80,7 +83,7 @@ public class DefaultMyStyleProfileFacadeImplUnitTest
 		final CategoryModel categoryModel = modelService.create(CategoryModel.class);
 		final List<CategoryModel> categoryList = Arrays.asList(categoryModel);
 		final List<String> categoryCodeList = new ArrayList<String>();
-		categoryCodeList.add("MSH1");
+		categoryCodeList.add("");//TODO : Please enter category code
 		final String categoryCode = categoryCodeList.get(0);
 
 		final CategoryModel category = new CategoryModel();
@@ -109,7 +112,7 @@ public class DefaultMyStyleProfileFacadeImplUnitTest
 	{
 		final MyRecommendationsConfigurationModel myModel = modelService.create(MyRecommendationsConfigurationModel.class);
 		final List<MyRecommendationsConfigurationModel> myModelList = Arrays.asList(myModel);
-		final String genderData = "MALE";
+		final String genderData = MarketplacecommerceservicesConstants.EMPTY;//TODO: Please enter gender data
 		Mockito.when(myStyleProfileService.fetchRecommendedData(genderData)).thenReturn(myModelList);
 		LOG.info("Method : testFetchRecommendedData >>>>>>>");
 	}
@@ -119,8 +122,8 @@ public class DefaultMyStyleProfileFacadeImplUnitTest
 	{
 		final MyRecommendationsConfigurationModel myModel = modelService.create(MyRecommendationsConfigurationModel.class);
 		final List<MyRecommendationsConfigurationModel> myModelList = Arrays.asList(myModel);
-		final String genderData = "MALE";
-		final String catCode = "MSH1";
+		final String genderData = MarketplacecommerceservicesConstants.EMPTY;//TODO: Please enter gender data
+		final String catCode = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter category code
 		Mockito.when(myStyleProfileService.fetchBrands(genderData, catCode)).thenReturn(myModelList);
 		LOG.info("Method : testFetchBrands >>>>>>>");
 	}
@@ -133,7 +136,7 @@ public class DefaultMyStyleProfileFacadeImplUnitTest
 		final List<CategoryModel> categoryList = Arrays.asList(categoryModel);
 
 		final List<String> categoryCodeList = new ArrayList<String>();
-		categoryCodeList.add("MSH1");
+		categoryCodeList.add("");//TODO : Please enter category code
 		final String categoryCode = categoryCodeList.get(0);
 
 		final CategoryModel category = new CategoryModel();
@@ -148,7 +151,7 @@ public class DefaultMyStyleProfileFacadeImplUnitTest
 	@Test
 	public void testSaveGenderData()
 	{
-		final String genderData = "MALE";
+		final String genderData = MarketplacecommerceservicesConstants.EMPTY;//TODO: Please enter gender data
 		Mockito.doNothing().when(myStyleProfileService).saveGenderData(genderData);
 		LOG.info("Method : testSaveGenderData >>>>>>>");
 	}
@@ -168,7 +171,7 @@ public class DefaultMyStyleProfileFacadeImplUnitTest
 		final List<CategoryModel> categoryList = Arrays.asList(categoryModel);
 
 		final List<String> categoryCodeList = new ArrayList<String>();
-		categoryCodeList.add("MSH1");
+		categoryCodeList.add("");//TODO : Please enter category code
 		final String categoryCode = categoryCodeList.get(0);
 
 		final CategoryModel category = new CategoryModel();
@@ -195,7 +198,7 @@ public class DefaultMyStyleProfileFacadeImplUnitTest
 		final List<CategoryModel> categoryList = Arrays.asList(categoryModel);
 
 		final List<String> categoryCodeList = new ArrayList<String>();
-		categoryCodeList.add("MBH1");
+		categoryCodeList.add("");//TODO : Please enter category code
 		final String categoryCode = categoryCodeList.get(0);
 
 		final CategoryModel category = new CategoryModel();
@@ -214,7 +217,7 @@ public class DefaultMyStyleProfileFacadeImplUnitTest
 		final List<CategoryModel> categoryList = Arrays.asList(categoryModel);
 
 		final List<String> categoryCodeList = new ArrayList<String>();
-		categoryCodeList.add("MSH1");
+		categoryCodeList.add("");//TODO : Please enter category code
 		final String categoryCode = categoryCodeList.get(0);
 
 		final CategoryModel category = new CategoryModel();
@@ -225,7 +228,7 @@ public class DefaultMyStyleProfileFacadeImplUnitTest
 		final List<CategoryModel> brandList = Arrays.asList(brandModel);
 
 		final List<String> brandCodeList = new ArrayList<String>();
-		brandCodeList.add("MBH1");
+		brandCodeList.add("");//TODO : Please enter category code
 		final String brandCode = brandCodeList.get(0);
 
 		final CategoryModel brand = new CategoryModel();

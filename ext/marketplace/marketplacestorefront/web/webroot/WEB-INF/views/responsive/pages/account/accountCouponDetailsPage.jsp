@@ -337,7 +337,7 @@
 			$("#couponHistory").show();
 		});
 		var x = $(".coupon-container li").length;
-		console.log(x);
+	//	console.log(x);
 		if (x == 0) {
 			$("#transactionHistory").css("top", "10px");
 

@@ -66,11 +66,12 @@ public class BuyXofAgetBFreeTest extends AbstractPromotionTest
 		final BuyXItemsofproductAgetproductBforfree buyXItemsofproductAgetproductBforfree = new BuyXItemsofproductAgetproductBforfree();
 		ProductModel product3;
 
-		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
+		//TISSEC-50
+		final CatalogVersionModel version = catalogVersionService.getCatalogVersion("", "");//TODO : Please enter catalogue name,Please enter version
 		catalogVersionService.addSessionCatalogVersion(version);
 
-		product1 = productService.getProductForCode(version, "mplProductCatalog-23191");
-		product3 = productService.getProductForCode(version, "mplProductCatalog-266685");
+		product1 = productService.getProductForCode(version, "");//TODO : Please enter product1
+		product3 = productService.getProductForCode(version, "");//TODO : Please enter product2
 		final Product p = new Product();
 		p.setCode(product3.getCode());
 		p.setName(product3.getName());
@@ -83,7 +84,7 @@ public class BuyXofAgetBFreeTest extends AbstractPromotionTest
 
 		final UserModel user = userService.getUserForUID("demo");
 		userService.setCurrentUser(user);
-		final CurrencyModel currency = commonI18NService.getCurrency("EUR");
+		final CurrencyModel currency = commonI18NService.getCurrency("");//TODO : Please enter currency
 		commonI18NService.setCurrentCurrency(currency);
 	}
 
@@ -104,7 +105,7 @@ public class BuyXofAgetBFreeTest extends AbstractPromotionTest
 		calculationService.calculate(cart);
 		assertEquals("cart total before updatePromotions", 906.69, cart.getTotalPrice().doubleValue(), 0.01);
 
-		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("mplPromoGrp");
+		final PromotionGroupModel promotionGroup = promotionsService.getPromotionGroup("");//TODO : Please enter promotion grp
 		final Collection<PromotionGroupModel> promotionGroups = new ArrayList<PromotionGroupModel>();
 		promotionGroups.add(promotionGroup);
 		promotionsService.updatePromotions(promotionGroups, cart, false, AutoApplyMode.APPLY_ALL, AutoApplyMode.APPLY_ALL,

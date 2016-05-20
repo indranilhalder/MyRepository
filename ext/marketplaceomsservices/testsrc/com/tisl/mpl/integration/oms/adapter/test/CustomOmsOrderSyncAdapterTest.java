@@ -53,54 +53,55 @@ public class CustomOmsOrderSyncAdapterTest
 	public void update()
 	{
 		final Order order = new Order();
-		order.setBaseStoreName("store");
+		//TISSEC-50
+		order.setBaseStoreName("");//TODO : Please enter store name
 		order.setCancellable(true);
-		order.setCartID("123456");
-		order.setChannel("web");
-		order.setCurrencyCode("INR");
-		order.setCustomerID("CUST1234");
-		order.setEmailid("ABC@tcs.com");
-		order.setCustomerLocale("locale123");
-		order.setFirstName("x");
+		order.setCartID("");//TODO : Please enter cart id
+		order.setChannel("");//TODO : Please enter channel
+		order.setCurrencyCode("");//TODO : Please enter currency code
+		order.setCustomerID("");//TODO : Please enter customer id
+		order.setEmailid("");//TODO : Please enter email id
+		order.setCustomerLocale("");//TODO : Please enter customer locale
+		order.setFirstName("");//TODO : Please enter fisrt name
 		final Date issueDate = new Date();
 		issueDate.setDate(1);
 		issueDate.setHours(13);
 		issueDate.setMonth(10);
 		issueDate.setYear(2015);
 		order.setIssueDate(issueDate);
-		order.setLastName("y");
-		order.setMiddleName("z");
-		order.setOrderId("123456789");
-		order.setOrderType("type");
+		order.setLastName("");//TODO : Please enter last name
+		order.setMiddleName("");//TODO : Please enter middle name
+		order.setOrderId("");//TODO : Please enter order id
+		order.setOrderType("");//TODO : Please enter order type
 		final List<PaymentInfo> paymentInfos = new ArrayList<PaymentInfo>();
 		final PaymentInfo paymentInfo = new PaymentInfo();
-		paymentInfo.setId("id123");
+		paymentInfo.setId("");//TODO : Please enter id
 		paymentInfo.setPaymentCost(1234);
-		paymentInfo.setPaymentMode("Credit card");
+		paymentInfo.setPaymentMode("");//TODO : Please enter payment mode
 		paymentInfos.add(paymentInfo);
 		order.setPaymentInfos(paymentInfos);
-		order.setPhoneNumber("987654321");
-		order.setState("Delhi");
-		order.setUsername("abc");
-		order.setUssId("S00000000001");
+		order.setPhoneNumber("");//TODO : Please enter phone number
+		order.setState("");//TODO : Please enter state
+		order.setUsername("");//TODO : Please enter username
+		order.setUssId("");//TODO : Please enter ussid
 
 		final List<OrderLine> orderLines = new ArrayList<OrderLine>();
 		final OrderLine orderLine = new OrderLine();
 		orderLine.setApprotionedPrice(1234);
-		orderLine.setDeliveryType("ED");
+		orderLine.setDeliveryType("");//TODO : Please enter delivery type
 		orderLine.setExchangeAllowed("Y");
-		orderLine.setFulfillmentMode("TSHIP");
-		orderLine.setGiftMessage("giftMessage");
+		orderLine.setFulfillmentMode("");//TODO : Please enter fulfillment mode
+		orderLine.setGiftMessage("");//TODO : Please enter giftMessage
 		orderLine.setGiftPrice(2000);
-		orderLine.setInvoiceNo("8905");
+		orderLine.setInvoiceNo("");//TODO : Please enter invoice no
 		orderLine.setIsCOD(true);
 		orderLine.setIsAFreebie("N");
-		orderLine.setOrderLineId("7895432123");
-		orderLine.setOrderLineStatus("Pending");
-		orderLine.setParentTransactionID("S0000000000000000001");
-		orderLine.setSkuId("123456789");
+		orderLine.setOrderLineId("");//TODO : Please enter orderline id
+		orderLine.setOrderLineStatus("");//TODO : Please enter orderline status
+		orderLine.setParentTransactionID("");//TODO : Please enter parent transaction id
+		orderLine.setSkuId("");//TODO : Please enter sku id
 		orderLine.setShippingCharge(125);
-		orderLine.setTransportMode("AIR");
+		orderLine.setTransportMode("");//TODO : Please enter transport mode
 		orderLines.add(orderLine);
 		order.setOrderLines(orderLines);
 
@@ -119,54 +120,54 @@ public class CustomOmsOrderSyncAdapterTest
 	public void processOrderStatus()
 	{
 		final Order order = new Order();
-		order.setBaseStoreName("store");
+		order.setBaseStoreName("");//TODO : Please enter store name
 		order.setCancellable(true);
-		order.setCartID("123456");
-		order.setChannel("web");
-		order.setCurrencyCode("INR");
-		order.setCustomerID("CUST1234");
-		order.setEmailid("ABC@tcs.com");
-		order.setCustomerLocale("locale123");
-		order.setFirstName("x");
+		order.setCartID("");//TODO : Please enter cart id
+		order.setChannel("");//TODO : Please enter channel
+		order.setCurrencyCode("");//TODO : Please enter currency
+		order.setCustomerID("");//TODO : Please enter customer id
+		order.setEmailid("");//TODO : Please enter email id
+		order.setCustomerLocale("");//TODO : Please enter customer locale
+		order.setFirstName("");//TODO : Please enter first name
 		final Date issueDate = new Date();
 		issueDate.setDate(1);
 		issueDate.setHours(13);
 		issueDate.setMonth(10);
 		issueDate.setYear(2015);
 		order.setIssueDate(issueDate);
-		order.setLastName("y");
-		order.setMiddleName("z");
-		order.setOrderId("123456789");
-		order.setOrderType("type");
+		order.setLastName("");//TODO : Please enter last name
+		order.setMiddleName("");//TODO : Please enter middle name
+		order.setOrderId("");//TODO : Please enter order id
+		order.setOrderType("");//TODO : Please enter order type
 		final List<PaymentInfo> paymentInfos = new ArrayList<PaymentInfo>();
 		final PaymentInfo paymentInfo = new PaymentInfo();
-		paymentInfo.setId("id123");
+		paymentInfo.setId("");//TODO : Please enter id
 		paymentInfo.setPaymentCost(1234);
-		paymentInfo.setPaymentMode("Credit card");
+		paymentInfo.setPaymentMode("");//TODO : Please enter payment mode
 		paymentInfos.add(paymentInfo);
 		order.setPaymentInfos(paymentInfos);
-		order.setPhoneNumber("987654321");
-		order.setState("Delhi");
-		order.setUsername("abc");
-		order.setUssId("S00000000001");
+		order.setPhoneNumber("");//TODO : Please enter phone number
+		order.setState("");//TODO : Please enter state
+		order.setUsername("");//TODO : Please enter username
+		order.setUssId("");//TODO : Please enter ussid
 
 		final List<OrderLine> orderLines = new ArrayList<OrderLine>();
 		final OrderLine orderLine = new OrderLine();
 		orderLine.setApprotionedPrice(1234);
-		orderLine.setDeliveryType("ED");
+		orderLine.setDeliveryType("");//TODO : Please enter delivery type
 		orderLine.setExchangeAllowed("Y");
-		orderLine.setFulfillmentMode("TSHIP");
-		orderLine.setGiftMessage("giftMessage");
+		orderLine.setFulfillmentMode("");//TODO : Please enter fulfillment mode
+		orderLine.setGiftMessage("");//TODO : Please enter giftMessage
 		orderLine.setGiftPrice(2000);
-		orderLine.setInvoiceNo("8905");
+		orderLine.setInvoiceNo("");//TODO : Please enter invoice no
 		orderLine.setIsCOD(true);
 		orderLine.setIsAFreebie("N");
-		orderLine.setOrderLineId("7895432123");
-		orderLine.setOrderLineStatus("Pending");
-		orderLine.setParentTransactionID("S0000000000000000001");
-		orderLine.setSkuId("123456789");
+		orderLine.setOrderLineId("");//TODO : Please enter orderline id
+		orderLine.setOrderLineStatus("");//TODO : Please enter orderline status
+		orderLine.setParentTransactionID("");//TODO : Please enter parent transaction id
+		orderLine.setSkuId("");//TODO : Please enter sku id
 		orderLine.setShippingCharge(125);
-		orderLine.setTransportMode("AIR");
+		orderLine.setTransportMode("");//TODO : Please enter transport mode
 		orderLines.add(orderLine);
 		order.setOrderLines(orderLines);
 
