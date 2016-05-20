@@ -10,7 +10,7 @@
 
 
   <div class="close" id="closeConceirge">close</div>
-  <h1><spring:theme code="header.latestOffers.offersOfWeek.title" /></h1>
+  <h1><%-- <spring:theme code="header.latestOffers.offersOfWeek.title" /> --%>${latestOffersData.headerText}</h1>
  	
  <div class="topConcierge">
  	<c:forEach items="${latestOffersData.latestOfferEntry}" var="latestOffersEntry">
