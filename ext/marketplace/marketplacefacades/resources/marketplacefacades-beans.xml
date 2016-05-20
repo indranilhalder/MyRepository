@@ -839,6 +839,7 @@
 	
 	<bean class="com.tisl.mpl.facades.data.LatestOffersData">
 		<property name="title" type="String"></property>
+		<property name="headerText" type="String"></property>
 		<property name="latestOfferEntry" type="java.util.List&lt;com.tisl.mpl.facades.data.LatestOffersEntriesData>"></property>
 	</bean>
 	

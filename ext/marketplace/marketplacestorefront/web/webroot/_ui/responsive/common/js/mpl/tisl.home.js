@@ -159,6 +159,16 @@ $("span.latestOffersBanner").on("click touchend", function() {
 				rewindNav: false,
 				scrollPerPage:true
 			});
+			
+			var tcitemLength = $(".topConcierge .owl-item").length,tcitemWidth = $(".topConcierge .owl-item").outerWidth() ;
+			if (tcitemLength < 5) {
+				$(".topConcierge .owl-wrapper").css({
+				"width":tcitemLength*tcitemWidth,
+				"margin" : "auto"
+				});
+			}
+			
+			
 		}, 
 	});
 });
@@ -1020,17 +1030,24 @@ function LazyLoad(){
     });
 }
 
+$(document).ready(function() {
 var resize_stop;
 $(window).on('resize', function() {
 	  clearTimeout(resize_stop);
 	  resize_stop = setTimeout(function() {
 		  $('.home-brands-you-love-carousel-brands.active').click();
+		  
+		  var tcitemLength = $(".topConcierge .owl-item").length,tcitemWidth = $(".topConcierge .owl-item").outerWidth() ;
+			if (tcitemLength < 5) {
+				$(".topConcierge .owl-wrapper").css({
+				"width":tcitemLength*tcitemWidth,
+				"margin" : "auto"
+				});
+			}
+			
 	  }, 250);
 });
 
-
-$(document).ready(function() {
-	
 	
 	if (!$.cookie("enhanced-search-list") && window.localStorage) {
         for (var key in localStorage) {
