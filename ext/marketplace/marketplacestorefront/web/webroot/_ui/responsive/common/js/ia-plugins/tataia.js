@@ -415,12 +415,13 @@ if (searchCategory_id){
 			    type : 'post',
 			    cache : false,
 			    success : function(data) {
-					if(data.indexOf("cnt:") >= 0){
-					$("#status"+site_product_id).html("");
-					$("#status"+site_product_id).html("<font color='#00CBE9'>Bagged and ready!</font>");
-					$("#status"+site_product_id).show().fadeOut(5000);
-					//ACC.product.displayAddToCart(data,formId,false);
-					$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
+			    	if(data.indexOf("cnt:") >= 0){
+			    		$("#status"+site_product_id).html("");
+			    		//$("#status"+site_product_id).html("<font color='#00CBE9'>Bagged and ready!</font>");
+			    		//$("#status"+site_product_id).show().fadeOut(5000);
+			    		//ACC.product.displayAddToCart(data,formId,false);
+			    		ACC.product.showTransientCart(site_uss_id); 
+			    		$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 					
 					//TISEE-882
 					if(window.location.href.toLowerCase().indexOf('cart')>=0)
@@ -589,39 +590,39 @@ if (searchCategory_id){
 				 
 				  /*  TISPRO-303 Changes-checking with 'type' */
 				 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
-					 html += '<li onmouseover="showBoth(this)" onmouseout="hideBoth(this)" class="look slide ' + widgetElement + '_list_elements productParentList" style="display: inline-block; width: 221px; margin-left: 10px; margin-right: 10px; height: 500px; margin-bottom: 20px;position: relative;">';
-					 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; margin: 10px 0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;width: 108px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 26%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; margin: 35px 108px; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 109px;font-size:12px;"><span>Add To Bag</span></div>';
+					 html += '<li onmouseover="showBoth(this)" onmouseout="hideBoth(this)" class="look slide product-tile ' + widgetElement + '_list_elements productParentList" style="display: inline-block; position: relative;">';
+					 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
 					
 				 }else{
-					 html += '<li onmouseover="showQuickview(this)" onmouseout="hideQuickView(this)" class="look slide ' + widgetElement + '_list_elements productParentList" style="display: inline-block; width: 221px; margin-left: 10px; margin-right: 10px; height: 500px; margin-bottom: 20px;position: relative;">';
-					 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; margin: 10px 0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 218px;font-size:12px;"><span>Quick View</span></div>';
+					 html += '<li onmouseover="showQuickview(this)" onmouseout="hideQuickView(this)" class="look slide product-tile ' + widgetElement + '_list_elements productParentList" style="display: inline-block; width: 100%;position: relative;">';
+					 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
 					 
 				 }
-				  html += '<a href="'+IAurl+'" class="product-tile" style="height: 423px; position: relative;">';
+				  html += '<a href="'+IAurl+'" class="product-tile" style="position: relative;">';
 				  if(obj.image_url.indexOf("/") > -1){
-					  html += '<div class="image" style="position: relative; left: 0; line-height: 347px; height: 347px;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="'+obj.image_url+'" alt="'+obj.name+'"/>';
+					  html += '<div class="image" style="position: relative; left: 0;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="'+obj.image_url+'" alt="'+obj.name+'"/>';
 					 if(is_new_product == true){
-					  html += '<img class="new brush-strokes-sprite sprite-New" style="z-index: 0; display: block;margin-left: 14px;margin-top: 5px;" src="/store/_ui/responsive/common/images/transparent.png"/>';
+						 html += '<div style="z-index: 1;" class="new"><span>New</span></div>';
 					 }
 					 if(obj.online_exclusive == true){
-						  html += '<div class="online-exclusive" style="bottom: 17px !important;"><img class="brush-strokes-sprite sprite-Vector_Smart_Object" src="/store/_ui/responsive/common/images/transparent.png"><span>online exclusive</span></div>';  
+						  html += '<div class="online-exclusive"><span>online exclusive</span></div>';  
 					  }
 					  html += '</div>';
 					  
 				  }else{
-					  html += '<div class="image" style="position: relative; left: 0; line-height: 347px; height: 347px;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg" alt="'+obj.name+'"/>';
+					  html += '<div class="image" style="position: relative; left: 0;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg" alt="'+obj.name+'"/>';
 					  if(is_new_product == true){
-						  html += '<img class="new brush-strokes-sprite sprite-New" style="z-index: 0; display: block;margin-left: 14px;margin-top: 5px;" src="/store/_ui/responsive/common/images/transparent.png"/>';
+						  html += '<div style="z-index: 1;" class="new"><span>New</span></div>';
 						 }
 					  if(obj.online_exclusive == true){
-						  html += '<div class="online-exclusive" style="bottom: 18px !important;"><img class="brush-strokes-sprite sprite-Vector_Smart_Object" src="/store/_ui/responsive/common/images/transparent.png"><span>online exclusive</span></div>';  
+						  html += '<div class="online-exclusive"><span>online exclusive</span></div>';  
 					  }
 					  html += '</div>';
 					 
 				  }
 				  //html += '<div class="image" style="position: absolute; left: 0; line-height: 347px; height: 347px; width: 221px; background:center no-repeat url('+obj.image_url+'); background-size:contain;"></div>';
-				  html += '<div class="short-info ia_short-info" style="position: relative; bottom: 0; left: 0; height: 66px; width: 221px;">';
-				  html += '<ul class="color-swatch" style="top: -3px; !important;margin-right: 9px;">';
+				  html += '<div class="short-info ia_short-info" style="position: relative; padding:0;">';
+				  html += '<ul class="color-swatch" style="top: -3px; ">';
 				  if(obj.colors.length < 3){
 						jQuery.each(obj.colors, function (icount, itemColor) {	
 							if(icount == 1){
@@ -697,7 +698,7 @@ if (searchCategory_id){
 					  } else {
 					  obj.sizes.sort() /*Not a string-based size array, sort normally*/
 					  }
-					   	html += '</div><span style="padding-bottom: 0;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
+					   	html += '</div><span style="padding-bottom: 0;line-height:2;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
 					  }
 					  } 
 				  html += '</div></div></a>';
@@ -892,7 +893,7 @@ if (searchCategory_id){
 			        html += catHtml;
 			        
 			      }
-			      html += '<ul id="'+widgetElement+'_list" class="product-list" style="width: 964px; float: left;margin-top: 15px; ">';
+			      html += '<ul id="'+widgetElement+'_list" class="product-list" style="width: 100%; float: left;margin-top: 55px; ">';
 			      
 			    }
 
@@ -929,12 +930,12 @@ if (searchCategory_id){
 			      html += pageData[0]; //start off with first page
 			      html += '</ul>';
 
-			      html += '<ul id="' + widgetElement + 'page_numbers" class="pagination" style="position: absolute; right: 0;line-height: 0px;cursor: pointer;margin-top: 15px;margin-right: 20px;">';
-			      html += '<li id="iapage1" class="number first active iapage" style="padding: 8px;"><a>1</a></li>';
+			      html += '<ul id="' + widgetElement + 'page_numbers" class="pagination" style="position: absolute; right: 0;line-height: 0px;cursor: pointer;margin-top: 15px;padding:0px;">';
+			      html += '<li id="iapage1" class="number first active iapage" style="padding: 5px;"><a>1</a></li>';
 			      for(var i=1; i<pageData.length;i++) {
-			        html += '<li id="iapage'+(i+1)+'" class="number iapage" style="padding: 8px;"><a>'+(i+1)+'</a></li>';
+			        html += '<li id="iapage'+(i+1)+'" class="number iapage" style="padding: 5px;"><a>'+(i+1)+'</a></li>';
 			      }
-			      html += '<li id="iapage_next" class="next" style="padding: 6px;"><a>Next <span class="lookbook-only"></span></a></li>';
+			      html += '<li id="iapage_next" class="next" style="padding: 5px;"><a>Next <span class="lookbook-only"></span></a></li>';
 			      html += '</ul>';
 			      html += '</div>';
 			    }
