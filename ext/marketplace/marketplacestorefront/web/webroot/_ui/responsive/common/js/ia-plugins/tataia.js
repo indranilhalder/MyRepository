@@ -661,6 +661,7 @@ if (searchCategory_id){
 					  else if(obj.price != null && parseInt(obj.price) > parseInt(obj.discounted_price) && parseInt(obj.price) > 0){
 						  html += '<p class="old moprice">₹'+parseInt(obj.price)+'</p>';
 					  }
+					  //TISPRO-317 changes
 					  html += '<p class="sale discprice">₹'+parseInt(obj.discounted_price)+'</p>';
 				  }
 				  }
@@ -701,7 +702,7 @@ if (searchCategory_id){
 					   	html += '</div><span style="padding-bottom: 0;line-height:2;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
 					  }
 					  } 
-				  html += '</div></div></a>';
+				  html += '</div></a>';
 				  html += '<p style="font-size: 12px;margin-top: 33px;color: rgb(255, 28, 71);" id="status'+obj.site_product_id+'"></p>';
 				  html += '</li>';
 				  return html;
