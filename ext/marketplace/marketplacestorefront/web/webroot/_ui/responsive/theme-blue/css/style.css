@@ -1681,7 +1681,7 @@ h2 {
             -moz-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px; */
           	height: 450px;
-            z-index: 3;
+            z-index: 10001;
             -webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
             -moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
             transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s; }
@@ -1730,7 +1730,7 @@ h2 {
       float: left; }
     header .content .search button {
       position: relative;
-      width: 50px;
+      width: 51px;
       border: 1px solid #bbb;
       border-left: none;
       float:right; }
@@ -1769,12 +1769,12 @@ h2 {
       line-height: 50px;
        width: 40%;
       border-radius:0px;
-      width: -webkit-calc(100% - 203px);
-      width: calc(100% - 203px); } }
+      width: -webkit-calc(100% - 204px);
+      width: calc(100% - 204px); } }
       @media (min-width: 791px) and (max-width: 990px) {
         header .content .search input {
-          width: -webkit-calc(100% - 123px);
-          width: calc(100% - 123px); } }
+          width: -webkit-calc(100% - 124px);
+          width: calc(100% - 124px); } }
           @media (min-width: 791px) {
     header .content .search .no-results-callout {
       position: absolute;
