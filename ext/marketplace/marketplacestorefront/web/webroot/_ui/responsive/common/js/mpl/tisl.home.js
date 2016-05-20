@@ -1027,3 +1027,118 @@ $(window).on('resize', function() {
 		  $('.home-brands-you-love-carousel-brands.active').click();
 	  }, 250);
 });
+
+
+$(document).ready(function() {
+	
+	
+	if (!$.cookie("enhanced-search-list") && window.localStorage) {
+        for (var key in localStorage) {
+            if (key.indexOf("enhancedSearchData") >= 0) {
+                window.localStorage.removeItem(key);
+
+            }
+        }
+    }
+    if (window.localStorage && (data = window.localStorage.getItem("enhancedSearchData")) && data != "") {
+        populateEnhancedSearch(JSON.parse(data));
+    } 
+    else {
+	$.ajax({
+		url : ACC.config.encodedContextPath + "/view/MplEnhancedSearchBoxComponentController/searchdropdown",
+		type : 'GET',
+		//dataType: "json",
+		success : function(enhancedSearchData){
+			 populateEnhancedSearch(enhancedSearchData);
+			
+			if (window.localStorage) {
+                $.cookie("enhanced-search-list", "true", {
+                    expires: 1,
+                    path: "/store"
+
+                });
+                window.localStorage.setItem(
+                    "enhancedSearchData",
+                    JSON.stringify(enhancedSearchData));
+            }
+			
+		},
+		error : function(error){
+		}
+	});
+    }
+    
+    
+    
+});
+
+
+
+function populateEnhancedSearch(enhancedSearchData)
+{
+	var searchCode=$("#searchCodeForDropdown").val();
+	var notPresentCategory=true;
+	var notPresentBrand=true;
+	var notPresentSeller=true;
+	if(enhancedSearchData.categoryData.length > 0){
+		$(".select-view #searchCategory").append('<optgroup label="Departments"></optgroup>');
+		for (var i=0; i<enhancedSearchData.categoryData.length; i++){
+			var code=enhancedSearchData.categoryData[i].code;
+			var name=enhancedSearchData.categoryData[i].name;
+			var className='';
+			if(searchCode==code)
+			{
+				className="selected";
+				notPresentCategory=false;
+			}
+			$("ul[label=Departments]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$("optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+		}
+		var selectedText = $(".select-list .dropdown li.selected").text();
+		$("#searchBoxSpan").html(selectedText);
+	}
+	
+	if(enhancedSearchData.brandData.length > 0){
+		$(".select-view #searchCategory").append('<optgroup label="Brands"></optgroup>');
+		for (var i=0; i<enhancedSearchData.brandData.length; i++){
+			var code=enhancedSearchData.brandData[i].code;
+			var name=enhancedSearchData.brandData[i].name;
+			var className='';
+			if(searchCode==code)
+			{
+				className="selected";
+				notPresentBrand=false;
+			}
+			$("ul[label=Brands]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$("optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			
+		}
+		var selectedText = $(".select-list .dropdown li.selected").text();
+		$("#searchBoxSpan").html(selectedText);
+	}
+	
+	if(enhancedSearchData.sellerData.length > 0){
+		$(".select-view #searchCategory").append('<optgroup label="Sellers"></optgroup>');
+		for (var i=0; i<enhancedSearchData.sellerData.length; i++){
+			var code=enhancedSearchData.sellerData[i].id;
+			var name=enhancedSearchData.sellerData[i].name;
+			var className='';
+			if(searchCode==code)
+			{
+				className="selected";
+				notPresentSeller=false;
+			}
+			$("ul[label=Sellers]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$("optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+		}
+		var selectedText = $(".select-list .dropdown li.selected").text();
+		$("#searchBoxSpan").html(selectedText);
+	}
+	
+	if(notPresentCategory==true && notPresentBrand==true && notPresentSeller==true)
+	{
+		$(".select-list .dropdown li#all").addClass("selected");
+		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
+	}
+}
+
