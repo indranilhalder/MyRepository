@@ -118,6 +118,7 @@ import com.tisl.mpl.wsdto.StatusResponseDTO;
 import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
+import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
 
 /**
@@ -726,8 +727,14 @@ public class OrdersController extends BaseCommerceController
 				}
 				//// Move entire payment info code to new method.
 				setPaymentInfo(orderDetail, orderWsDTO); //TODO set payment Info
-				orderWsDTO.setBillingAddress(setAddress(orderDetail, 1));
-				orderWsDTO.setShippingAddress(setAddress(orderDetail, 2));
+				if (null != orderDetail.getMplPaymentInfo() && null != orderDetail.getMplPaymentInfo().getBillingAddress())
+				{
+					orderWsDTO.setBillingAddress(setAddress(orderDetail, 1));
+				}
+				if (null != orderDetail.getDeliveryAddress())
+				{
+					orderWsDTO.setShippingAddress(setAddress(orderDetail, 2));
+				}
 				for (final OrderData sellerOrder : orderDetail.getSellerOrderList())
 				{
 					if (CollectionUtils.isNotEmpty(sellerOrder.getEntries()))
@@ -1157,9 +1164,14 @@ public class OrdersController extends BaseCommerceController
 
 			else
 			{
-				orderTrackingWsDTO.setBillingAddress(setAddress(orderDetail, 1));
-				orderTrackingWsDTO.setDeliveryAddress(setAddress(orderDetail, 2));
-				
+				if (null != orderDetail.getMplPaymentInfo() && null != orderDetail.getMplPaymentInfo().getBillingAddress())
+				{
+					orderTrackingWsDTO.setBillingAddress(setAddress(orderDetail, 1));
+				}
+				if (null != orderDetail.getDeliveryAddress())
+				{
+					orderTrackingWsDTO.setDeliveryAddress(setAddress(orderDetail, 2));
+				}
 				if (null != orderDetail.getPickupName())
 				{
 					orderTrackingWsDTO.setPickupPersonName(orderDetail.getPickupName());
@@ -2037,17 +2049,29 @@ public class OrdersController extends BaseCommerceController
 			{ "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
 	@RequestMapping(value = "/users/{userId}/updatePickupDetails",method = RequestMethod.POST)
-	public String updatePickupDetails(@RequestParam(required=true,value = "orderId") final String orderId,@PathVariable String userId,@PathVariable String baseSiteId,
-			@RequestParam(required=true,value = "name") final String name, @RequestParam(required=true,value = "mobile") final String mobile,@RequestParam(value="access_token") String token)
+	public WebSerResponseWsDTO updatePickupDetails(@RequestParam(required=true,value = "orderId") final String orderId,
+			@RequestParam(required=true,value = "name") final String name, @RequestParam(required=true,value = "mobile") final String mobile)
 	{
 		
+		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		if (orderId != null && name != null && mobile != null)
 		{
-			mplOrderFacade.editPickUpInfo(orderId, name, mobile);
+			String message=mplOrderFacade.editPickUpInfo(orderId, name, mobile);
+			if ("sucess".equalsIgnoreCase(message))
+			{
+				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				final EtailBusinessExceptions error = new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9519);
+				ExceptionUtil.etailBusinessExceptionHandler(error, null);
+				result.setError(error.getErrorMessage());
+				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);				
+			}
 		}
 		//redirect to order details page to get the all the information of an order
-		String redirectURL="redirect:/v2/"+baseSiteId+"/users/"+userId+"/getSelectedOrder/"+orderId+"?access_token="+token;
-		return redirectURL;
+		//String redirectURL="redirect:/v2/"+baseSiteId+"/users/"+userId+"/getSelectedOrder/"+orderId+"?access_token="+token;
+		return result;
 	}
  
 	/**
