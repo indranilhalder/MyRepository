@@ -279,7 +279,11 @@ function HomeLegendsControl(controlDiv, map) {
         }
   
   .home-googleMap {
-	width: 104%;
+	width: 96%;
+	margin-left: auto;
+    margin-right: auto;
+	height:450px;
+	text-align: center;
   }
     .overLayStoreFinderText h1{
     margin-left: 0px;
