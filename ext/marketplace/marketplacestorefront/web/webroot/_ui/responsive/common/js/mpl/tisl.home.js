@@ -157,9 +157,7 @@ $("span.latestOffersBanner").on("click touchend", function() {
 				itemsTablet: [650,1], 
 				itemsMobile : [480,1], 
 				rewindNav: false,
-				lazyLoad:true,
 				scrollPerPage:true
-
 			});
 		}, 
 	});
@@ -264,7 +262,6 @@ function getBrandsYouLoveAjaxCall() {
                     itemsTablet: [790, 3],
                     itemsMobile: [480, 3],
                     rewindNav: false,
-                    lazyLoad: true,
                     mouseDrag: false,
                     touchDrag: false
                 });
@@ -556,7 +553,7 @@ function getBestPicksAjaxCall() {
                     }
                     if (v.imageUrl) {
                         renderHtml +=
-                            "<div class='home-best-pick-carousel-img'> <img class='lazy' data-original='" +
+                            "<div class='home-best-pick-carousel-img'> <img class='lazyOwl' data-src='" +
                             v.imageUrl + "'></img></div>";
                     }
                     if (v.text) {
@@ -567,7 +564,8 @@ function getBestPicksAjaxCall() {
                     renderHtml += "</a>";
                 });
                 renderHtml +=
-                    "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
+                   // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
+                	"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
                 $("#bestPicks").html(renderHtml);
                 // console.log()
             },
@@ -586,9 +584,6 @@ function getBestPicksAjaxCall() {
                     rewindNav: false,
                     lazyLoad: true,
                     scrollPerPage: true
-                });
-                $("img.lazy").lazyload({
-                	effect : "fadeIn"
                 });
             }
         });
@@ -626,7 +621,7 @@ function getProductsYouCareAjaxCall() {
                         "' class='item'>";
                     //for image
                     renderHtml +=
-                        "<div class='home-product-you-care-carousel-img'> <img class='lazy' data-original='" +
+                        "<div class='home-product-you-care-carousel-img'> <img class='lazyOwl' data-src='" +
                         v.mediaURL + "'></img></div>";
                     renderHtml +=
                         "<div class='short-info'><h3 class='product-name'><span>" +
@@ -681,7 +676,7 @@ function getNewAndExclusiveAjaxCall() {
                 renderHtml +=
                     "<div class='item slide'><div class='newExclusiveElement'><a href='" +
                     ACC.config.encodedContextPath +
-                    value.productUrl + "'><img class='lazy' data-original='" +
+                    value.productUrl + "'><img class='lazyOwl' data-src='" +
                     value.productImageUrl +
                     "'></img><p class='New_Exclusive_title'>" +
                     value.productTitle +
@@ -707,26 +702,17 @@ function getNewAndExclusiveAjaxCall() {
                 itemsDesktopSmall: false,
                 itemsTablet: false,
                 itemsMobile: false,
-                scrollPerPage: true
+                scrollPerPage: true,
+                lazyLoad: true
             });
             setTimeout(function() {
                 /*if($(window).width() > 773) {
 					$('#newAndExclusive').css('min-height',$('#newAndExclusive').parent().height()+'px');
 				}*/
                 //alert($('#newAndExclusive').height() +"|||"+$('#stayQued').height())
-                if ($(window).width() > 773) {
-                    if ($('#newAndExclusive').height() >
-                        $('#stayQued').height()) {
                         $('#stayQued').css('min-height',
                             $('#newAndExclusive').outerHeight() +
                             'px');
-                    } else {
-                        $('#newAndExclusive').css(
-                            'min-height', $(
-                                '#stayQued').outerHeight() +
-                            'px');
-                    }
-                }
             }, 2500);
         }
     });
@@ -968,16 +954,7 @@ $(document).on("click", ".showcaseItem", function() {
     getShowcaseContentAjaxCall(id);
 });
 $(window).on('resize', function() {
-    if ($(window).width() > 773) {
-        if ($('#newAndExclusive').height() > $('#stayQued').height()) {
-            $('#stayQued').css('min-height', $('#newAndExclusive').outerHeight() +
-                'px');
-        } else {
-            $('#newAndExclusive').css('min-height', $('#stayQued').outerHeight() +
-                'px');
-        }
-    } else {
-        $('#newAndExclusive').css('min-height', 'auto');
+    if ($(window).width() > 790) {
         $('#stayQued').css('min-height', 'auto');
     }
 });
@@ -1030,6 +1007,7 @@ if ($('#brandsYouLove').children().length == 0 && $('#pageTemplateId').val() ==
     getBrandsYouLoveAjaxCall();
 }
 setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
+
 });
 //call lazy load after ajaz for page stops
 $(document).ajaxStop(function(){
@@ -1042,6 +1020,13 @@ function LazyLoad(){
     });
 }
 
+var resize_stop;
+$(window).on('resize', function() {
+	  clearTimeout(resize_stop);
+	  resize_stop = setTimeout(function() {
+		  $('.home-brands-you-love-carousel-brands.active').click();
+	  }, 250);
+});
 
 
 $(document).ready(function() {
@@ -1156,7 +1141,4 @@ function populateEnhancedSearch(enhancedSearchData)
 		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
 	}
 }
-
-
-
 
