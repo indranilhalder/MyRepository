@@ -415,12 +415,13 @@ if (searchCategory_id){
 			    type : 'post',
 			    cache : false,
 			    success : function(data) {
-					if(data.indexOf("cnt:") >= 0){
-					$("#status"+site_product_id).html("");
-					$("#status"+site_product_id).html("<font color='#00CBE9'>Bagged and ready!</font>");
-					$("#status"+site_product_id).show().fadeOut(5000);
-					//ACC.product.displayAddToCart(data,formId,false);
-					$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
+			    	if(data.indexOf("cnt:") >= 0){
+			    		$("#status"+site_product_id).html("");
+			    		//$("#status"+site_product_id).html("<font color='#00CBE9'>Bagged and ready!</font>");
+			    		//$("#status"+site_product_id).show().fadeOut(5000);
+			    		//ACC.product.displayAddToCart(data,formId,false);
+			    		ACC.product.showTransientCart(site_uss_id); 
+			    		$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 					
 					//TISEE-882
 					if(window.location.href.toLowerCase().indexOf('cart')>=0)
