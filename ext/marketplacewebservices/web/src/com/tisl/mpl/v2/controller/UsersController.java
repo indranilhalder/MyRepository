@@ -1818,9 +1818,8 @@ public class UsersController extends BaseCommerceController
 		final URL requestUrl = new URL(request.getRequestURL().toString());
 		final String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
 		final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString;
-		final String specificUrl = MarketplacewebservicesConstants.FORGOTPASSWORD_URL + MarketplacewebservicesConstants.LINK_LOGIN
-				+ MarketplacewebservicesConstants.QS + MarketplacewebservicesConstants.AFFILIATEID
-				+ MarketplacewebservicesConstants.EQUALS + affiliateId;
+		final String specificUrl = MarketplacewebservicesConstants.LINK_LOGIN + MarketplacewebservicesConstants.QS
+				+ MarketplacewebservicesConstants.AFFILIATEID + MarketplacewebservicesConstants.EQUALS + affiliateId;
 		final String securePasswordUrl = baseUrl + specificUrl;
 		//final String inviteFriendUrl = urlForEmailContext(request, specificUrl);
 		try
@@ -6606,8 +6605,7 @@ public class UsersController extends BaseCommerceController
 			//final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + ""; Do not add empty strings
 			final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString;
 
-			final String profileUpdatePath = MarketplacecommerceservicesConstants.ContextURI + specificUrl;
-			profileUpdateUrl = baseUrl + profileUpdatePath;
+			profileUpdateUrl = baseUrl + specificUrl;
 		}
 		catch (final MalformedURLException e)
 		{
