@@ -99,7 +99,7 @@ public class ComparePageController extends AbstractPageController
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<Integer, Map<String, String>> getComparableProducts(@RequestParam("productCode") final String productCode,
-			final HttpSession session)
+			final HttpSession session, @RequestParam("maximumSize") final int maximumSize)
 
 	{
 		List<ProductData> sessionCompareList = new ArrayList();//3
@@ -114,7 +114,7 @@ public class ComparePageController extends AbstractPageController
 		final ProductData productData = productFacade.getProductForOptions(productModel, PRODUCT_OPTIONS);
 
 		//Check if the compare list size is less than 4 and product is comparable
-		if (sessionCompareList.size() < 4 && addToCompareList(productModel, sessionCompareList))
+		if (sessionCompareList.size() < maximumSize && addToCompareList(productModel, sessionCompareList))
 		{
 			final BuyBoxData buyBoxData = buyBoxFacade.buyboxPrice(productData.getCode());
 			if (buyBoxData != null)

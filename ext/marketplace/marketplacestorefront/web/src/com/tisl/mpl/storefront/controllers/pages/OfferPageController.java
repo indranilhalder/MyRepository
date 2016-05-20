@@ -144,17 +144,7 @@ public class OfferPageController extends AbstractSearchPageController
 		try
 		{
 
-			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
-			int count = getSearchPageSize();
-			if (preferencesData != null && preferencesData.getPageSize() != null)
-			{
-				count = preferencesData.getPageSize().intValue();
-			}
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForAllOffers(
-					searchQuery, page, showMode, sortCode, count);
-			populateModel(model, searchPageData, ShowMode.Page);
-			model.addAttribute("hideDepartments", Boolean.TRUE);
-			model.addAttribute("otherProducts", true);
+
 			final String uri = request.getRequestURI();
 			if (uri.contains("page"))
 			{
@@ -170,6 +160,17 @@ public class OfferPageController extends AbstractSearchPageController
 					}
 				}
 			}
+			int count = getSearchPageSize();
+			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+			if (preferencesData != null && preferencesData.getPageSize() != null)
+			{
+				count = preferencesData.getPageSize().intValue();
+			}
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForAllOffers(
+					searchQuery, page, showMode, sortCode, count);
+			populateModel(model, searchPageData, ShowMode.Page);
+			model.addAttribute("hideDepartments", Boolean.TRUE);
+			model.addAttribute("otherProducts", true);
 			//Code to hide the applied facet for isOfferExisting
 			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
 			{

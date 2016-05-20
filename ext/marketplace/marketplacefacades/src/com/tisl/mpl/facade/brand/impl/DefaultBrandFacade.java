@@ -5,6 +5,7 @@ package com.tisl.mpl.facade.brand.impl;
 
 import de.hybris.platform.category.model.CategoryModel;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,22 @@ public class DefaultBrandFacade implements BrandFacade
 		return brandService.checkEmailId(emailId);
 
 
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.brand.BrandFacade#getAllBrandsFromCmsCockpit(java.lang.String)
+	 */
+	@Override
+	public Map<Character, List<CategoryModel>> getAllBrandsFromCmsCockpit(final String componentUid)
+	{
+		if (brandService.getAllBrandsFromCmsCockpit(componentUid) != null)
+		{
+			return brandService.getAllBrandsFromCmsCockpit(componentUid);
+		}
+		return Collections.EMPTY_MAP;
 	}
 
 
