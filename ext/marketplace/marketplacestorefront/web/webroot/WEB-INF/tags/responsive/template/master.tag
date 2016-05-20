@@ -14,7 +14,7 @@
 <%@ taglib prefix="htmlmeta" uri="http://hybris.com/tld/htmlmeta"%>
 <%@ taglib prefix="tealium" tagdir="/WEB-INF/tags/addons/tealiumIQ/shared/analytics" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %>
+<%-- <%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %> --%>
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
@@ -27,6 +27,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
+	
 	<%-- Additional meta tags --%>
 	<htmlmeta:meta items="${metatags}"/>
 	
@@ -35,6 +36,7 @@
 	
 	
 	<c:set var="host" value="${header.host}"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('update_Email_url')" var="emailURL"/>
 	<c:set var="pageURL" value="${emailURL}"/>
 	<c:set var="protocolString" value="${fn:split(pageURL, '://')}"/>
 	<c:set var="baseURL" value="${protocolString[0]}://${host}"/>
@@ -45,15 +47,16 @@
 		</c:when>
 		<c:otherwise>
 			<!-- Canonical Tag -->
-			<c:choose>
-				<c:when test="${regex:regExMatch(reqURI,'[/]$') }">
+			<c:set var="canonical" value="${baseURL}${reqURI}"></c:set>
+<%-- 			<c:choose>
+				<c:when test="${regex:regExMatchAndRemove(reqURI,'[/]$') }">
 					<c:set var="canonical" value="${baseURL}${reqURI}"></c:set>
 				</c:when>
 				<c:otherwise>
 					<c:set var="canonical" value="${baseURL}${reqURI}/"></c:set>
 				</c:otherwise>
-			</c:choose>
-			<link rel="canonical" href="${canonical}" />
+			</c:choose> --%>
+			<%-- <link rel="canonical" href="${regex:regExMatchAndRemove(canonical,'[/]$') }" /> --%>
 		</c:otherwise>
 	</c:choose>
 	
@@ -72,6 +75,9 @@
 	    </c:when>
 	</c:choose>
 	
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.handle')" var="twitterHandle"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
 	<!-- Markup for Google+ -->
 	<meta itemprop="name" content="${metaTitle}">
 	<meta itemprop="description" content="${metaDescription}">
@@ -93,7 +99,7 @@
 	
 	<%-- Favourite Icon --%>
 	<spring:theme code="img.favIcon" text="/" var="favIconPath"/>
-    <link rel="shortcut icon" type="image/x-icon" media="all" href="${originalContextPath}${favIconPath}" />
+    <link rel="shortcut icon" type="image/x-icon" media="all" href="${themeResourcePath}/${favIconPath}" />
 
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
 	<template:styleSheets/>
@@ -104,10 +110,14 @@
 	<!-- This is commented out as we are not using Google analytics -->
 	<%-- <analytics:analytics/> --%>
 	<%-- <generatedVariables:generatedVariables/> --%>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
 	
 	<!-- <script src="//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.sync.js"></script> -->
 <tealium:sync/> 
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi" /> 
+<meta name="viewport" content="width=640, initial-scale=1" />-->
+
+
 </head>
 
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">

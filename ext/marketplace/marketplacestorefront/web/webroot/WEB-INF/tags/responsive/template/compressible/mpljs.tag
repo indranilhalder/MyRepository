@@ -148,6 +148,8 @@
 </c:if>	
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.signinflyout.js"></script>
 <script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/jquery.lazyload.min.js"></script>	
+<script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/tisl.home.js"></script>
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.search.js"></script>
 
@@ -264,7 +266,6 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/feedback.js"></script>
-	
 	
 <!--[if lt IE 9]>
 <script type="text/javascript" src="${commonResourcePath}/js/html5shiv.js"></script>

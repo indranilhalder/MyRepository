@@ -169,10 +169,10 @@
 		<div class="select-size">
 		<c:choose>
 		    <c:when test="${selectedSize!=null}"> 
-			<span class="selected">${product.size}</span>
+			<span class="selected quickViewSelect">${product.size}</span>
 			</c:when>
 			<c:otherwise>
-			<span class="selected"><spring:theme
+			<span class="selected quickViewSelect"><spring:theme
 							code="text.select.size" /></span>
 			</c:otherwise>
 			</c:choose>

@@ -11,58 +11,6 @@
 
 <template:page pageTitle="${pageTitle}">
 
-
-<style>
-	.addAddress input[type="text"] {
-		width: 100% !important;
-	}
-	
-	.deliver_message {
-		color: red;
-	}
-	
-	.error_text {
-		color: red;
-	}
-	.top.checkout-top .content ul li {
-		font-weight: 600 !important;
-		font-family: 'Avenir Next' !important;
-	}
-	.panel-default {
-		border-color: #DDD;
-		margin-bottom: 20px;
-		background-color: #FFF;
-		border: 1px solid #CBC9C9 !important;
-		border-radius: 4px;
-		box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
-	}
-	label {
-		display: inline-block;
-		max-width: 100%;
-		margin-bottom: 5px;
-		font-weight: 700;
-		margin-top: 10px;
-	}
-	.btn-info {
-	    background-color: #5BC0DE !important;
-	    border-color: #46B8DA !important;
-	    margin-top: 10px;
-		margin-bottom: 5px;
-		color: #fff !important;
-		font-weight: 500;
-    }
-    .error_text{
-    	color: red;
-    }
-    .inputBoxHeight {
-	  height: 80px !important;
-	}
-	
-	.btn-info {
-		background-color: #A9143C !important;
-	}
-</style>
-
 <script type="text/javascript">
 		$(document).ready(function() {
 			$("#proceedBtnNew").click(function(){
@@ -180,11 +128,10 @@
 			class="/checkout-content cart checkout wrapper">
 			<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 			<div class="top checkout-top">
-				<div class="content" style="height: 100px;">
-					<ul class="nav">
-						<li  style="margin-top: -128px;">Add PickUp
-							Person Address</li>
-					</ul>
+				<div class="content returnPickupHead">
+					<div class="pickupHeading">
+				      Add PickUp Person Address
+				     </div>
 				</div>
 			</div>
 
@@ -200,18 +147,18 @@
 							
 							<div class="row">
 								<div class="col-md-4 inputBoxHeight">
-										<label>First Name*</label>
+										<label class="returnLabel">First Name*</label>
 										<form:input path="firstName" placeholder="Enter first Name" class="firstName" />
 										<div class="error_text firstNameError"></div>
 									</div>
 									<div class="col-md-4 inputBoxHeight">
-										<label>Last Name*</label><br>
+										<label class="returnLabel">Last Name*</label><br>
 										<form:input path="lastName" placeholder="Enter Last Name" class="lastName" />
 										<div class="error_text lastNameError"></div>
 									</div>
 									<div class="col-md-4 inputBoxHeight">
 	
-										<label>Mobile No*</label><br>
+										<label class="returnLabel">Mobile No*</label><br>
 										<form:input path="mobileNo" maxlength="10" placeholder="Enter Mobile No" class="mobileNo" />
 										<div class="error_text mobileNumberError"></div>
 									</div>
@@ -219,7 +166,7 @@
 								
 								<div class="row">
 									<div class="col-md-12 inputBoxHeight">
-										<label>Address Line1*</label><br>
+										<label class="returnLabel">Address Line1*</label><br>
 										<form:input path="addressLane1" class="Address1" placeholder="Enter Address Line" />
 										<div class="error_text address1Error"></div>
 									</div>
@@ -228,7 +175,7 @@
 								
 								<div class="row">
 									<div class="col-md-12 inputBoxHeight">
-										<label>Address Line2*</label><br>
+										<label class="returnLabel">Address Line2*</label><br>
 										<form:input path="addressLane2" class="Address2"
 											placeholder="Enter Address Line"
 											 />
@@ -238,13 +185,13 @@
 								
 								<div class="row">
 									<div class="col-md-4 inputBoxHeight">
-										<label>Pincode*</label><br>
+										<label class="returnLabel">Pincode*</label><br>
 										<form:input maxlength="6" path="pincode" placeholder="Enter PinCode" />
 										<div class="error_text pincodeNoError"></div>
 									</div>
 									
 									<div class="col-md-8 inputBoxHeight">
-										<label>LandMark*</label><br>
+										<label class="returnLabel">LandMark*</label><br>
 										<form:input path="landmark" placeholder="Enter Your Nearest Land mark" />
 										<div class="error_text landMarkError"></div>
 									</div>
@@ -252,21 +199,21 @@
 								
 								<div class="row">
 									<div class="col-md-4 inputBoxHeight">
-										<label>Country*</label><br>
+										<label class="returnLabel">Country*</label><br>
 										<form:input path="country" placeholder="Enter Country" class="country"
 											/>
 										<div class="error_text countryError"></div>
 									</div>
 									
 									<div class="col-md-4 inputBoxHeight">
-										<label>City*</label><br>
+										<label class="returnLabel">City*</label><br>
 										<form:input path="city" placeholder="Enter city" class="city"
 											 />
 										<div class="error_text cityError"></div>
 									</div>
 									
 									<div class="col-md-4 inputBoxHeight">
-										<label>State*</label><br><%-- ${returnPincodeCheckForm.state} --%>
+										<label class="returnLabel">State*</label><br><%-- ${returnPincodeCheckForm.state} --%>
 										<form:select path="state"  items="${stateDataList}" itemValue="code" itemLabel="name"></form:select>
 <%-- 										<form:input path="state" placeholder="Enter State" class="state" --%>
 <%-- 											 /> --%>
@@ -331,7 +278,7 @@
 					});
 				}
 				document.onload = selectState("${returnPincodeCheckForm.state}");
-				console.log("${stateDataList}");
+		//		console.log("${stateDataList}");
 				$("#state").css("height", "40px");
 				$("#state").css("width", "100%");
 			});

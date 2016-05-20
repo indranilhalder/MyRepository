@@ -855,7 +855,27 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						//TISEE-5293
 						Double apportionPrice = Double.valueOf(entryData.getAmountAfterAllDisc().getValue().doubleValue());
 						final Long entryQuantity = entryData.getQuantity();
-						apportionPrice = Double.valueOf(apportionPrice.doubleValue() / entryQuantity.doubleValue());
+						//TISPRDT-155
+						if (!entryData.isIsBOGOapplied())
+						{
+							apportionPrice = Double.valueOf(apportionPrice.doubleValue() / entryQuantity.doubleValue());
+
+						}
+						else
+						{
+							final int freeItem = entryData.getFreeCount().intValue();
+							final int entryQuantitywithoutFree = (int) (entryQuantity.longValue() - freeItem);
+							final Double priceforFreeItems = Double.valueOf(freeItem * 0.01);
+							apportionPrice = Double.valueOf(apportionPrice.doubleValue() - priceforFreeItems.doubleValue());
+
+							if (entryQuantitywithoutFree > 1)
+							{
+								apportionPrice = Double.valueOf(apportionPrice.doubleValue() / entryQuantitywithoutFree);
+							}
+
+							apportionPrice = Double.valueOf(Math.round(apportionPrice.doubleValue()));
+
+						}
 						pincodeServiceData.setPrice(apportionPrice);
 					}
 					else if (sellerData.getSpPrice() != null && StringUtils.isNotEmpty(sellerData.getSpPrice().getValue().toString()))
@@ -1465,7 +1485,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Override
 	public CartModel removeDeliveryMode(final CartModel cart)
 	{
-		boolean hasDeliveryMode = false;
+		//		boolean hasDeliveryMode = false;
 		try
 		{
 			for (final AbstractOrderEntryModel entry : cart.getEntries())
@@ -1474,7 +1494,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				{
 					entry.setMplDeliveryMode(null);
 					modelService.save(entry);
-					hasDeliveryMode = true;
+					//hasDeliveryMode = true;
 				}
 
 				if (entry.getDeliveryPointOfService() != null)
@@ -1484,11 +1504,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				}
 			}
 			//call recalculate on cart, only if there's a change in deliverymode.
-			if (hasDeliveryMode)
-			{
-				commerceCartService.recalculateCart(cart);
-				modelService.save(cart);
-			}
+			//			if (hasDeliveryMode)
+			//			{
+			commerceCartService.recalculateCart(cart);
+			modelService.save(cart);
+			//			}
 
 
 
@@ -2225,8 +2245,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/**
 	 * this method calls service to get inventories for stores.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param storeLocationRequestDataList
 	 * @return returns Stores with inventories.
 	 */

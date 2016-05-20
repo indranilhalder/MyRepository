@@ -25,6 +25,7 @@ import de.hybris.platform.commerceservices.enums.SiteTheme;
 import de.hybris.platform.commerceservices.enums.UiExperienceLevel;
 import de.hybris.platform.commerceservices.i18n.CommerceCommonI18NService;
 import de.hybris.platform.core.model.c2l.LanguageModel;
+import de.hybris.platform.regioncache.region.CacheRegion;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
@@ -39,6 +40,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.tisl.mpl.facade.latestoffers.impl.OffersComponentCacheKey;
+import com.tisl.mpl.facade.latestoffers.impl.OffersComponentCacheValueLoader;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.interceptors.BeforeViewHandler;
@@ -87,6 +90,12 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 
 	private String defaultThemeName;
 
+	@Resource(name = "offerCompCacheRegion")
+	private CacheRegion offerCompCacheRegion;
+
+	@Resource(name = "offersCompCacheValueLoader")
+	private OffersComponentCacheValueLoader offersCompCacheValueLoader;
+
 
 
 	@Override
@@ -97,10 +106,9 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final String siteName = currentSite.getUid();
 		final String themeName = getThemeNameForSite(currentSite);
 		final String uiExperienceCode = uiExperienceService.getUiExperienceLevel().getCode();
-		final String uiExperienceCodeLower = uiExperienceViewResolver.getUiExperienceViewPrefix().isEmpty()
-				? uiExperienceCode.toLowerCase()
-				: StringUtils.remove(
-						uiExperienceViewResolver.getUiExperienceViewPrefix().get(uiExperienceService.getUiExperienceLevel()), "/");
+		final String uiExperienceCodeLower = uiExperienceViewResolver.getUiExperienceViewPrefix().isEmpty() ? uiExperienceCode
+				.toLowerCase() : StringUtils.remove(
+				uiExperienceViewResolver.getUiExperienceViewPrefix().get(uiExperienceService.getUiExperienceLevel()), "/");
 		final Object urlEncodingAttributes = request.getAttribute(WebConstants.URL_ENCODING_ATTRIBUTES);
 		final String contextPath = StringUtils.remove(request.getContextPath(),
 				(urlEncodingAttributes != null) ? urlEncodingAttributes.toString() : "");
@@ -159,6 +167,11 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 			modelAndView.addObject("overrideUiExperienceCode", overrideUiExperienceLevel.getCode());
 		}
 
+		//Header Title
+		final OffersComponentCacheKey key = new OffersComponentCacheKey();
+		final String title = (String) offerCompCacheRegion.getWithLoader(key, offersCompCacheValueLoader);
+		modelAndView.addObject("headerConciergeTitle", title);
+
 		modelAndView.addObject("isMinificationEnabled",
 				Boolean.valueOf(siteConfigService.getBoolean("storefront.minification.enabled", false)));
 
@@ -166,10 +179,11 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final DeviceData currentDetectedDevice = deviceDetectionFacade.getCurrentDetectedDevice();
 		modelAndView.addObject("detectedDevice", currentDetectedDevice);
 
-		final List<String> dependantAddOns = requiredAddOnsNameProvider
-				.getAddOns(request.getSession().getServletContext().getServletContextName());
+		final List<String> dependantAddOns = requiredAddOnsNameProvider.getAddOns(request.getSession().getServletContext()
+				.getServletContextName());
 
-		modelAndView.addObject("addOnCommonCssPaths", getAddOnCommonCSSPaths(addOnContextPath, uiExperienceCodeLower, dependantAddOns));
+		modelAndView.addObject("addOnCommonCssPaths",
+				getAddOnCommonCSSPaths(addOnContextPath, uiExperienceCodeLower, dependantAddOns));
 		modelAndView.addObject("addOnThemeCssPaths",
 				getAddOnThemeCSSPaths(addOnContextPath, themeName, uiExperienceCodeLower, dependantAddOns));
 		modelAndView.addObject("addOnJavaScriptPaths",
@@ -258,5 +272,6 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		this.defaultThemeName = defaultThemeName;
 	}
 
-}
 
+
+}

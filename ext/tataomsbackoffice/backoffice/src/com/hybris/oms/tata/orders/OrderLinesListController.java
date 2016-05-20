@@ -480,7 +480,8 @@ public class OrderLinesListController
 	@Command
 	public void slaveinfoBtnAction()
 	{
-		OrderLineBUC orderLineBuc;
+		OrderLineBUC orderLineBuc=null;
+		Logistics logistic=null;
 		if (orderBUCFacade == null)
 		{
 			LOG.info("Not enjected object for orderBUCFacade");
@@ -504,7 +505,6 @@ public class OrderLinesListController
 			}
 
 			final SlaveInfo p1slave = (SlaveInfo) p1SlaveIDListbox.getSelectedItem().getValue();
-			//final Logistics p1logistics = (Logistics) p1LogisticsIDListbox.getSelectedItem().getValue();
 			orderLineBuc = new OrderLineBUC();
 			if (p2slavesVisibleStatus)
 			{
@@ -519,8 +519,16 @@ public class OrderLinesListController
 					}
 				}
 			}
-			orderLineBuc.setPrimaryLogisticID(p1LogisticsName);
-			orderLineBuc.setSecondaryLogisticID(p2LogisticsName);
+			if(p1LogisticsIDListbox.getSelectedItem()!=null)
+			{
+			logistic = (Logistics) p1LogisticsIDListbox.getSelectedItem().getValue();
+			orderLineBuc.setPrimaryLogisticID(logistic.getLogisticsid());
+			}
+			if(p2LogisticsIDListbox.getSelectedItem()!=null)
+			{
+			logistic = (Logistics) p2LogisticsIDListbox.getSelectedItem().getValue();
+			orderLineBuc.setSecondaryLogisticID(logistic.getLogisticsid());
+			}
 			orderLineBuc.setPrimarySlaveID(p1slave.getSlaveid());
 			orderLineBuc.setTransactionId(transTrackOLBus.getTransactionId());
 			orderLineBuc.setTransactionLineStatus(transTrackOLBus.getTransactionLineStatus());

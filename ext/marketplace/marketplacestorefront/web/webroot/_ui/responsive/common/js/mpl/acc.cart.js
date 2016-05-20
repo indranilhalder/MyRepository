@@ -29,7 +29,11 @@ $(function() {
 				    $("div#wishlistBanner").removeAttr("style");
 				    $("ul#giftYourselfProducts").html(data);
 				}
-			}
+			},
+			 error : function(resp) { 
+
+
+			 } 
 		});
 	}
 });

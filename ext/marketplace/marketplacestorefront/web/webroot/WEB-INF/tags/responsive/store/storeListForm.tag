@@ -78,9 +78,6 @@ padding-bottom:5px;
                 <div><img alt="" src="${commonResourcePath}/images/Tresmode_Legend.png" class="googleMapLegends"></div>
                 <div><img alt="" src="${commonResourcePath}/images/Westside_Legend.png" class="googleMapLegends"></div>
           </div> 
-          <div id="legend1" class="legend">
-                           
-          </div>
        </div>
     <!-- </div> -->
   </div>

@@ -12,7 +12,7 @@ $(document).ready(function(){
  
  $(document).ready(function(){
 	 /*To highlight the active link*/
-	 
+	    $("#currentPassword").val('');
 		var pageName = $("#pageName").val();
 		var pageNameDropdown = $("#pageNameDropdown").val();
 		if(pageName=="overViews"){
@@ -236,7 +236,7 @@ function editAddress(addressId) {
     		
     		var nowValue = $("#cancellationreasonSelectBox_"+transactionId+" option:selected").val();
     		var reasonCode=Rejectionselectedvalue;
-    		console.log("Reasone code : "+Rejectionselectedvalue);
+    	//	console.log("Reasone code : "+Rejectionselectedvalue);
         	if(reasonCode==null)
         	{
         		//alert("Do let us know why you would like to cancel this item.");
@@ -868,7 +868,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid password according to Password Policy (Password should meet the basic criteria of minimum 8 characters long up to 16 characters. Password should consist of atleast one alphabet, one numeric, one special symbols and Password doesn't consist of spaces and password should consists of atleast one UPPER and one LOWER case alphabet )</font>";
+			document.getElementById("errNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Passwords must be at least 8 characters long and contain a combination of upper/lower case letters, numbers and symbols</font>";
 			flag = false;
 		}
 		else if (document.getElementById("newPassword").value != document

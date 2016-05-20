@@ -25,4 +25,15 @@ public interface MplProductDao extends ProductDao
 	 * @return List<ProductModel>
 	 */
 	List<ProductModel> findProductsByCodeNew(String code);
+
+	//Changes for TISPRD-1631 Start
+	/**
+	 * @param code
+	 * @return List<ProductModel>
+	 * @description Get products based on selected catalog version in Backoffice
+	 */
+
+	List<ProductModel> findProductsByCodeHero(final String code);
+	//Changes for TISPRD-1631 End
+
 }
