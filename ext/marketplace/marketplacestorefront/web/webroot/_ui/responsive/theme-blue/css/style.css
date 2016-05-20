@@ -30852,7 +30852,6 @@ header .content .search input {
 		width: 90%;
 		margin: auto;
 		font-size: 30px;
-		text-transform: uppercase;
 		line-height: 40px;
 		padding: 20px;
 		font-weight: 700;
@@ -30961,8 +30960,8 @@ img.r2-app-mob-up {
 	font-size: 14px;
 	line-height: 20px;
 	letter-spacing: 2px;
-	padding: 32px;
-	margin: 0px;
+	    padding-top: 15px;
+	margin: 0px auto;
 }
 }
 .r2-app-slider {
@@ -30988,7 +30987,7 @@ img.r2-app-mob-up {
 	margin-top: 40px;
 	font-size: 31px;
 	text-transform: uppercase;
-	padding-top: 100px;
+	padding-top: 200px;
 	line-height: 40px;
 	width: 100%;
 	font-weight: 700;
@@ -31018,7 +31017,6 @@ img.r2-app-brand-img {
 }
 
 .r2-mob-carousel h2 {
-	text-transform: uppercase;
 	font-size: 31px;
 	font-weight: 700;
     margin-top: 20px;
@@ -31026,7 +31024,6 @@ img.r2-app-brand-img {
 }
 
 .r2-mob-carousel p {
-	text-transform: lowercase;
 	font-size: 14px;
 	line-height: 24px;
 }
@@ -31047,7 +31044,6 @@ h1.r2-landing-heading {
 	width: 90%;
 	margin: auto;
 	font-size: 30px;
-	text-transform: uppercase;
 	line-height: 40px;
 	padding: 20px;
 	font-weight: 700;
@@ -31057,16 +31053,27 @@ h1.r2-landing-heading {
 	font-size: 14px;
 	line-height: 20px;
 	color: #333;
+	    padding: 0px 45px;
 }
+
 
 .r2-landing-banner h1 {
 	color: #333;
+}
+@media (min-width:791px){
+	.r2-landing-brands p {
+	    padding: 0px 45px;
+}
+.r2-landing-brands .r2-marginAuto.r2-center.r2-padding p {
+	        padding: 0px 183px;
+}
 }
 @media (max-width: 790px){
 img.r2-app-brand-img {
     margin-left: 20px;
     margin-bottom: 0px;
 }
+
 }
 @media ( min-width : 768px) and (max-width: 791px) {
 	img.r2-app-brand-img {
@@ -31144,8 +31151,9 @@ img.r2-app-brand-img {
 	}
 	.r2-app-landing article p {
 		font-size: 18px;
-		padding-top: 40px;
+		padding-top: 200px;
 		text-align:left;
+		padding-left: 15px;
 	}
 	.r2-app-landing article div a span:first-child {
 		font-size: 25px;
@@ -31219,13 +31227,11 @@ img.r2-app-brand-img {
 		margin-top: -70px;
 	}
 	.r2-mob-carousel h2 {
-		text-transform: uppercase;
 		font-size: 45px;
 		font-weight: 700;
 	}
 	.r2-mob-carousel p {
 		line-height: 25px;
-		text-transform: lowercase;
 		font-size: 14px;
 	}
 }
@@ -31386,16 +31392,17 @@ img.r2-app-brand-img {
 	float: left;
 }
 
-.r2-buy-banner p {
-	padding: 35px;
+.r2-app-landing .r2-buy-banner p {
+	/* padding: 35px; */
 	line-height: 20px;
 	color: #fff;
 	text-transform: uppercase;
-	background: #A91E3E;
+	/* background: #A91E3E; */
 	font-weight: 600;
 	letter-spacing: 1.5px;
 	text-align: center;
 	font-size: 16px;
+	margin:0 auto;
 }
 
 @media ( max-width : 790px) {
