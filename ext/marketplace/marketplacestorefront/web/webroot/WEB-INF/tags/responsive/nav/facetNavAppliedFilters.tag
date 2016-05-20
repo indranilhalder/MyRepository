@@ -50,7 +50,7 @@ for(var i = 0; i < arr.length; i++)
 							Exclude OutofStock&nbsp;<a href="${removeQueryUrl}" ><span class="remove_filter"></span></a>
 						</li>
 					</c:if>
-					<c:if test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId'}">
+					<c:if test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' &&  breadcrumb.facetName ne 'isOffersExisting'}">
 						<li>
 							<c:url value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}" var="removeQueryUrl"/>
 							<input type="hidden" class="applied-color" value="${breadcrumb.facetValueName}">

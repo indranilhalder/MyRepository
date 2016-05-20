@@ -38,13 +38,10 @@
 <style>
 #zoomId img {
  width: 70%;
-}
-#zoomId {
-	max-height: 600px;
+ padding-top: 50px;
 }
 #zoom_gallery .image-list {
     display: inline-block;
-    width: 11%;
     float: left;
 }
 #codId{
