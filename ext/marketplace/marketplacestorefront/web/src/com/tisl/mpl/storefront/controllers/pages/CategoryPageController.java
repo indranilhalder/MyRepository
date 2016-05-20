@@ -595,6 +595,15 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			if (flag)
 			{
+
+				if (null != searchPageData.getCurrentQuery() && null != searchPageData.getCurrentQuery().getQuery()
+						&& null != searchPageData.getCurrentQuery().getQuery().getValue())
+				{
+					searchPageData.getCurrentQuery().getQuery()
+							.setValue(searchPageData.getCurrentQuery().getQuery().getValue().replace(":inStockFlag:true", ""));
+					searchPageData.getCurrentQuery().setUrl(
+							searchPageData.getCurrentQuery().getUrl().replace("%3AinStockFlag%3Atrue", ""));
+				}
 				for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
 				{
 					for (final FacetValueData<SearchStateData> facetValue : facets.getValues())

@@ -836,4 +836,17 @@
 		<property name="ussid" type="String"/>
 	</bean>
 	
+	
+	<bean class="com.tisl.mpl.facades.data.LatestOffersData">
+		<property name="title" type="String"></property>
+		<property name="latestOfferEntry" type="java.util.List&lt;com.tisl.mpl.facades.data.LatestOffersEntriesData>"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.LatestOffersEntriesData">
+		<property name="imageUrl" type="String"></property>
+		<property name="text" type="String"></property>
+		<property name="url" type="String"></property>
+		<property name="icid" type="String"></property>
+	</bean>
+	
 </beans>
