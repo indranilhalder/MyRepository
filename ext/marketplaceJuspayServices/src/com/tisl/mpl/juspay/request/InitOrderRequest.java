@@ -9,6 +9,8 @@ public class InitOrderRequest
 	private String customerEmail;
 	//TISCR-421
 	private String customerPhone;
+	private String session_id;
+
 	private String returnUrl;
 
 	/**
@@ -54,6 +56,13 @@ public class InitOrderRequest
 	public InitOrderRequest withCustomerPhone(final String customerPhone)
 	{
 		this.customerPhone = customerPhone;
+		return this;
+	}
+
+
+	public InitOrderRequest withsessionId(final String sessionId)
+	{
+		this.session_id = sessionId;
 		return this;
 	}
 
@@ -303,13 +312,30 @@ public class InitOrderRequest
 
 
 
+	/**
+	 * @return the sessionId
+	 */
+	public String getSessionId()
+	{
+		return session_id;
+	}
+
+	/**
+	 * @param sessionId
+	 *           the sessionId to set
+	 */
+	public void setSessionId(final String sessionId)
+	{
+		this.session_id = sessionId;
+	}
+
 	@Override
 	public String toString()
 	{
 		return "InitOrderRequest{" + "amount=" + amount + ", orderId='" + orderId + '\'' + ", customerId='" + customerId + '\''
-				+ ", customerEmail='" + customerEmail + '\'' + ", customerPhone='" + customerPhone + '\'' + ", returnUrl='"
-				+ returnUrl + '\'' + ", udf1='" + udf1 + '\'' + ", udf2='" + udf2 + '\'' + ", udf3='" + udf3 + '\'' + ", udf4='"
-				+ udf4 + '\'' + ", udf5='" + udf5 + '\'' + ", udf6='" + udf6 + '\'' + ", udf7='" + udf7 + '\'' + ", udf8='" + udf8
-				+ '\'' + ", udf9='" + udf9 + '\'' + ", udf10='" + udf10 + '\'' + '}';
+				+ ", customerEmail='" + customerEmail + '\'' + ", customerPhone='" + customerPhone + '\'' + ", session_id='"
+				+ session_id + '\'' + ", returnUrl='" + returnUrl + '\'' + ", udf1='" + udf1 + '\'' + ", udf2='" + udf2 + '\''
+				+ ", udf3='" + udf3 + '\'' + ", udf4='" + udf4 + '\'' + ", udf5='" + udf5 + '\'' + ", udf6='" + udf6 + '\''
+				+ ", udf7='" + udf7 + '\'' + ", udf8='" + udf8 + '\'' + ", udf9='" + udf9 + '\'' + ", udf10='" + udf10 + '\'' + '}';
 	}
 }

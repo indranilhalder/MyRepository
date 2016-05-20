@@ -18,16 +18,33 @@
 				</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
+	
+	<!-- TISCR-421 Starts -->
+	
+	<script type="text/javascript" async="true" src="https://elistva.com/api/script.js?aid=${account_id}&sid=${session_id}">
+	</script>
+
+	<noscript>
+	        <p style="background:url(//elistva.com/api/assets/clear.png?aid=${account_id}&sid=${session_id}"></p>
+	</noscript>
+	
+	<object type="application/x-shockwave-flash" data="//elistva.com/api/udid.swf?aid=${account_id}&sid=${session_id}" width="1" height="1">
+	        <param name="movie" value="//elistva.com/api/udid.swf?aid=${account_id}&sid=${session_id}" />
+	</object>
+	
+	<!-- TISCR-421 Ends -->
+
 	<div class="checkout-headline" id="checkout-headline">
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
-	<div class="checkout-content checkout-payment cart checkout wrapper">		
+	<div class="checkout-content checkout-payment cart checkout wrapper">
 		<multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}">
 			<jsp:body>
 				<script>
     				$(document).ready(function(){
     					<%-- var updateItHereLink = "<%=request.getParameter("Id")%>";  --%>
     					var updateItHereLink=window.location.href;
+    	
     					
     					if(updateItHereLink.indexOf("updateItHereLink")>=0)
     					{
@@ -133,6 +150,7 @@
     				      startTimer();
     				}
 				</script>
+				
 				<!-- TISCR-305 starts -->					
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard" id="make_saved_cc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 					<button type="button" class="button btn-block payment-button make_payment_top_newCard" id="make_cc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>

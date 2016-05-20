@@ -1514,6 +1514,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DELIVERY_ENDTIME = "endTime".intern();
 	public static final String CATEGORY_PATH = "{category-path}".intern();
 
+	//TISCR-421
+	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
+	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class

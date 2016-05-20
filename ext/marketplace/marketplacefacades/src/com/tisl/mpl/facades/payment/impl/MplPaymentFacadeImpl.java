@@ -3,16 +3,20 @@
  */
 package com.tisl.mpl.facades.payment.impl;
 
+import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -21,7 +25,9 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 
+import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +40,9 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +50,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.bin.service.BinService;
+import com.tisl.mpl.binDb.model.BinModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.BankforNetbankingModel;
+import com.tisl.mpl.core.model.EMIBankModel;
+import com.tisl.mpl.core.model.SavedCardModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplNetbankingData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.data.SavedCardData;
+import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
@@ -65,6 +78,7 @@ import com.tisl.mpl.juspay.response.StoredCard;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
+import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -586,6 +600,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
 							getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+			final String sessionId = getMd5Encoding(getRandomAlphaNum(getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.EBS_SESSION_ID_KEY)));
 
 			//getting the current customer to fetch customer Id and customer email
 			CustomerModel customer = getModelService().create(CustomerModel.class);
@@ -621,7 +637,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				final InitOrderRequest request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice())
 						.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
 						.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country)
-						.withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
+						.withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl)
+						.withsessionId(sessionId);
 
 				LOG.info("Juspay Request Structure " + request);
 
@@ -670,6 +687,34 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 	}
 
+
+	@SuppressWarnings("unused")
+	private String getMd5Encoding(final String input)
+	{
+		MessageDigest messageDigest;
+		String result = null;
+		try
+		{
+			messageDigest = MessageDigest.getInstance(getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.JUSPAY_ENCODING_TYPE));
+			messageDigest.reset();
+			messageDigest.update(input.getBytes(Charset.forName("UTF8")));
+			final byte[] resultByte = messageDigest.digest();
+			result = new String(Hex.encodeHex(resultByte));
+		}
+		catch (final NoSuchAlgorithmException e)
+		{
+			LOG.error("Error while encoding=======");
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unused")
+	private String getRandomAlphaNum(final String len)
+	{
+		return RandomStringUtils.randomAlphanumeric(Integer.parseInt(len)).toUpperCase();
+	}
 
 
 	/**
@@ -1376,11 +1421,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
