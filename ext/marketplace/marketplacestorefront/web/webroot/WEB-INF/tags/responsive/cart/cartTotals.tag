@@ -142,4 +142,5 @@ function isNumber(evt) {
             
           </ul>
           </div>
-		<a href="/store" class="continue-shopping"> Continue Shopping</a>
+		<!-- <a href="/store" class="continue-shopping"> Continue Shopping</a> --><!-- store url change -->
+		<a href="/" class="continue-shopping"> Continue Shopping</a>
