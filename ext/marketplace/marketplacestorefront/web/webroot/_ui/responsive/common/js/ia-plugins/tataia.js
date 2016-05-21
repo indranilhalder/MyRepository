@@ -581,8 +581,10 @@ if (searchCategory_id){
 						}
 				  });
 			}
+			  /* IA Changes Start for store/mpl/en */
 
-				  var IAurl = obj.url + '/store/mpl/en/p/'+obj.site_product_id+'/?iaclick=true&req=' + rid; /*iaclick=true for tracking our clicks vs. other services, pass request id to track clicks*/
+				  var IAurl = obj.url + '/p/'+obj.site_product_id+'/?iaclick=true&req=' + rid; /*iaclick=true for tracking our clicks vs. other services, pass request id to track clicks*/
+				  /* IA Changes End for store/mpl/en */ 
 				  if(spid.length > 0) { /*pass if product page or if this is applicable for whatever other reason*/
 				    IAurl += '&rspid=' + spid;
 				  }
@@ -910,8 +912,10 @@ if (searchCategory_id){
 			      });
 			      if(widgetMode === "hot" && site_page_type == "homepage"){
 			          html += '</ul></div>';
-			          html += '</div></div><a href="http://'+window.location.host+'/store/mpl/en/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			          /* IA Changes Start for store/mpl/en */
+			          html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
 			          }
+			      /* IA Changes End for store/mpl/en */
 			          else{
 			        	  html += '</ul></div>';
 			              html += '</div></div>'; 
