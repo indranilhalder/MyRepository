@@ -19,9 +19,9 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('appLandingPage.pathForPlay')" var="pathToReferForPlay"/>     
 		<section class="r2-landing-banner">
 			<div class="col-md-6 col-sm-12 col-xs-12 xol-lg-6 r2-app-mob">
-				<img src="${commonResourcePath}/images/banner-2.png"
+				<img src="${commonResourcePath}/images/banner-2.1.png"
 					class="r2-app-mob-up hidden-xs hidden-sm"> <img
-					src="${commonResourcePath}/images/banner-app-2.png"
+					src="${commonResourcePath}/images/banner-app-2.1.png"
 					class="r2-app-brand-img r2-marginTop img-responsive visible-xs visible-sm">
 			</div>
 
@@ -29,7 +29,7 @@
 				<h1>
 					THE tata cliq <br>mobile app is here.
 				</h1>
-				<h5>Now Available for both iOS and Android devices.</h5>
+				<h5>Available for both Android and iOS devices</h5>
 				<div class="container r2-marginTop r2-marginBottom r2-padding">
 					<span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <a
 						href="${pathToReferForMac}"> <img class="img-responsive"
@@ -44,10 +44,11 @@
 
 				<div class="col-md-8 r2-marginBottom">
 					<article>
-						<p class="r2-minusmarginLeft">TataCliq is the new amazing
-							shopping experience from Tata. Tons of features at your
-							fingertips wherever you are.</p>
-						<ul class="r2-paddingTop">
+						<p class="r2-minusmarginLeft">Shop from a wide range of CAMELS
+						 (Certified Authentic Merchandise Everybody Loves) and
+						  get great deals across apparel, footwear, mobiles, tech gadgets and appliances. 
+						  And we have loads of exclusives in store for you.</p>
+						<!-- <ul class="r2-paddingTop">
 							<li>Hundreds of your favourite brands</li>
 							<li>A seamless and secure shopping experience</li>
 							<li>Great savings and Personalised offers</li>
@@ -56,26 +57,26 @@
 							<a class="button maroon r2-left r2-marginTop"><span
 								class="glyphicon glyphicon-earphone r2-left "></span><span>Download
 									the app by calling 0011 225577 8844</span></a>
-						</div>
+						</div> -->
 					</article>
 				</div>
 			</div>
 		</section>
 
 		<div class="r2-buy-banner r2-marginTop r2-paddingTop row">
-			<p>"One of the best shopping experiences on the market day" -
-				Wired magazine</p>
+			<p>REAL GOOD BRANDS AT FEEL GOOD PRICES</p>
 		</div>
 
 		<section class="r2-app-slider r2-left">
 			<div class="col-md-12">
 				<h1>
-					20% Off for your<br> first purchase
+					Welcome to India's only<br> PHYGITAL shopping destination
 				</h1>
-				<p class="r2-paddingTop  r2-padding-bottom">Lorem ipsum dolor
-					sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
-					dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis
-					parturient montes, nascetur ridiculus mus.</p>
+				<p class="r2-paddingTop  r2-padding-bottom">We've paired the joys (and assurance) of buying stuff PHYSICALLY with the
+				 convenience of DIGITAL shopping, to bring you a PHYGITAL world! Shop anywhere,
+				 anytime with Tata CLiQ, the go-to shop for fashion, technology, and accessories.
+				 We not only deliver to your doorstep, but make it easier for you to PIQ up,
+				 exchange and return stuff whenever, wherever you are.</p>
 			</div>
 
 			<div class="r2-mob-carousel r2-paddingTop r2-marginTop">
@@ -106,48 +107,50 @@
 
 					<div class="r2-whiteText row">
 						<h2 class="r2-paddingTop col-sm-12 col-xs-12 ">Browse</h2>
-						<p class="col-sm-12 col-xs-12 ">Lorem ipsum dolor sit amet,
-							consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-							Aenean massa.</p>
+						<p class="col-sm-12 col-xs-12 ">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+							Aenean commodo ligula eget dolor. Aenean massa.</p>
 					</div>
 					<div class="r2-whiteText row">
 						<h2 class="r2-paddingTop col-sm-12 col-xs-12 ">Shop</h2>
-						<p class="col-sm-12 col-xs-12 ">Lorem ipsum dolor sit amet,
-							consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-							Aenean massa.</p>
+						<p class="col-sm-12 col-xs-12 ">
+								Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+									Aenean commodo ligula eget dolor. Aenean massa.</p>
 					</div>
 					<div class="r2-whiteText row">
-						<h2 class="r2-paddingTop col-sm-12 col-xs-12 ">Share</h2>
-						<p class="col-sm-12 col-xs-12 ">Lorem ipsum dolor sit amet,
-							consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-							Aenean massa.</p>
+						<h2 class="r2-paddingTop col-sm-12 col-xs-12 ">#QueMag</h2>
+						<p class="col-sm-12 col-xs-12 ">Flip through our cool magazine to get 
+						the latest trends and tips on fashion,
+						tech, culture and lifestyle.</p>
 					</div>
 				</div>
 				<div
 					class="hidden-xs hidden-sm row r2-paddingTop r2-center r2-marginTop">
 					<div class="container r2-marginTop ">
 						<div class="col-md-4 r2-whiteText r2-marginTop">
-							<img src="${commonResourcePath}/images/mob-slider1.png" class="r2-marginTop">
+							<img src="${commonResourcePath}/images/mob-slider1.1.png" class="r2-marginTop">
 							<div class="col-md-12 r2-marginAuto">
-								<h2>Browse</h2>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-									Aenean commodo ligula eget dolor. Aenean massa.</p>
+								<h2>Store Locator</h2>
+								<p>PIQ up, return or exchange stuff at
+									a store near ou with the help of
+							out interactive map.</p>
 							</div>
 						</div>
 						<div class="col-md-4 r2-whiteText r2-marginTop">
-							<img src="${commonResourcePath}/images/mob-slider2.png" class="r2-marginTop">
+							<img src="${commonResourcePath}/images/mob-slider2.1.png" class="r2-marginTop">
 							<div class="col-md-12 r2-marginAuto">
-								<h2>Shop</h2>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-									Aenean commodo ligula eget dolor. Aenean massa.</p>
+								<h2>Image Search</h2>
+								<p>Click or pick a picture and find
+						similar products from our
+						exclusive, handpicked collections.</p>
 							</div>
 						</div>
 						<div class="col-md-4 r2-whiteText r2-marginTop">
-							<img src="${commonResourcePath}/images/mob-slider3.png" class="r2-marginTop">
+							<img src="${commonResourcePath}/images/mob-slider3.1.png" class="r2-marginTop">
 							<div class="col-md-12 r2-marginAuto">
-								<h2>Share</h2>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-									Aenean commodo ligula eget dolor. Aenean massa.</p>
+								<h2>#QueMag</h2>
+								<p>Flip through our cool magazine to get 
+						the latest trends and tips on fashion,
+						tech, culture and lifestyle.</p>
 							</div>
 
 						</div>
@@ -160,34 +163,35 @@
 
 		<section class="r2-landing-brands">
 			<div class="col-md-6 col-sm-12 col-xs-12 col-lg-6">
-				<img src="${commonResourcePath}/images/app-feature.png"
+				<img src="${commonResourcePath}/images/app-feature1.png"
 					class="r2-app-brand-img hidden-xs"> <img
-					src="${commonResourcePath}/images/app-feature-mob.png"
+					src="${commonResourcePath}/images/app-feature-mob1.png"
 					class="r2-app-brand-img visible-xs">
 			</div>
 			<div
 				class="col-md-6 col-sm-12 col-xs-12 col-lg-6 r2-right-align r2-padding">
-				<img src="${commonResourcePath}/images/app-brands.png" class="r2-app-brand-img">
+				<img src="${commonResourcePath}/images/app-brands1.png" class="r2-app-brand-img">
 				<div class="col-md-8 r2-marginAuto r2-center r2-right">
-					<h1 class="r2-landing-heading">Brands you love</h1>
-					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-						Aenean commodo ligula eget dolor. Aenean massa.Lorem ipsum dolor
-						sit amet, consectetuer adipiscing elit.</p>
+					<h1 class="r2-landing-heading">Brand Studio</h1>
+					<p>Browse our brand stores for a 
+						curated shopping experience 
+						that'll keep you hooked.</p>
 				</div>
 			</div>
 			<div
 				class="col-md-7 col-sm-6 col-xs-12 col-lg-7 r2-marginAuto r2-center r2-padding">
-				<h1 class="r2-landing-heading">Hundreds of features</h1>
-				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-					Aenean commodo ligula eget dolor. Aenean massa. Aenean massa.Lorem
-					ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+				<h1 class="r2-landing-heading">We're the #SureThing</h1>
+				<p>What you want is what you'll get: camels and exclusive 
+					collections hand-picked just for you, straight from the 
+					brands; so you are sure its all top of the line and 100% 
+					authentic.</p>
 			</div>
 		</section>
 
 
 		<section class="r2-landing-banner r2-left">
 			<div class="col-md-6 col-sm-12 col-xs-12 xol-lg-6 r2-app-mob">
-				<img src="${commonResourcePath}/images/app_last.png"
+				<img src="${commonResourcePath}/images/app_last1.png"
 					class="img-responsive r2-app-mob-down">
 			</div>
 
@@ -196,22 +200,22 @@
 					THE tata cliq <br>mobile app is here.
 				</h1>
 				<h5>Download it now on your favourite device and indulge in a
-					seamless shopping experience.</h5>
+					seamless shopping experience</h5>
 				<div class="container r2-marginTop r2-marginBottom r2-padding">
 					<span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <img
 						class="img-responsive" src="${commonResourcePath}/images/desktop_badge_mac.png">
 					</span> <span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <img
-						class="img-responsive" src="${commonResourcePath}/images/desktop_badge_play.png"><
+						class="img-responsive" src="${commonResourcePath}/images/desktop_badge_play.png">
 					</span>
 				</div>
 
 				<div class="col-md-8 r2-marginBottom">
 					<article>
-						<div class="r2-minusmarginLeft r2-padding-bottom">
+						<!-- <div class="r2-minusmarginLeft r2-padding-bottom">
 							<a class="button maroon r2-left"><span
 								class="glyphicon glyphicon-earphone r2-left "></span><span>Download
 									the app by calling 0011 225577 8844</span></a>
-						</div>
+						</div> -->
 					</article>
 				</div>
 			</div>

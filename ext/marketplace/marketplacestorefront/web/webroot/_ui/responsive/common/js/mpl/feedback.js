@@ -304,6 +304,11 @@ $(document).ready(function(){
 					$(this).parents(".brands").hide();
 				}
 			});
+			$(".feature-collections .collections .chef").each(function(){
+				if($(this).children().length == 0) {
+					$(this).hide();
+				}
+			});
 			
 			$(".toggle").on("click",function(e){
 				var p = $(e.currentTarget).parent();
@@ -455,7 +460,8 @@ $(document).ready(function(){
 			 
 			 if($('body').hasClass('template-pages-layout-micrositePage1')){
 	
-				 $(this).find('header').first().addClass('compact');
+				 //$(this).find('header').first().addClass('compact');
+				 $(this).find('header').first().find('.compact-toggle').addClass('open');
 				 $(this).find('header').first().find('.compact-toggle').click(function(){
 					 $(this).parents('header').toggleClass('compact');
 					 $(this).parents('header').find('.compact-toggle').toggleClass('open');
@@ -469,14 +475,14 @@ $(document).ready(function(){
 					 $(this).parents('header').find('.compact-toggle').toggleClass('open');
 				 });*/
 			 }
-			 $(window).scroll(function () {
+			/* $(window).scroll(function () {
 			 if($("header .content .bottom").hasClass("active")){
 					$("header > .content .top .compact-toggle.open").css("display","none");
 				}
 				else{
 					$("header > .content .top .compact-toggle.open").css("display","inline-block");
 				}
-			 });
+			 });*/
 	/*---END of Micro site brand header toggle functionality ---*/
 			 
 	/*-------Start of Marketplace preferences--------*/
@@ -718,14 +724,14 @@ $(document).ready(function(){
 	    $(".brandCategory").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/store/mpl/en/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
 	    });
 	    
 	    
 	    $(".cmsManagedBrands").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/store/mpl/en/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
 	    });
 	    
 	

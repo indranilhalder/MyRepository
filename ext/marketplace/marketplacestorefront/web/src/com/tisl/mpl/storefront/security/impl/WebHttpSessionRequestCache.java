@@ -37,7 +37,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 /**
  * Extension of HttpSessionRequestCache that allows pass through of cookies from the current request. This is required
  * to allow the GUIDInterceptor to see the secure cookie written during authentication.
- * 
+ *
  * The <tt>RequestCache</tt> stores the <tt>SavedRequest</tt> in the HttpSession, this is then restored perfectly.
  * Unfortunately the saved request also hides new cookies that have been written since the saved request was created.
  * This implementation allows the current request's cookie values to override the cookies within the saved request.
@@ -166,7 +166,7 @@ public class WebHttpSessionRequestCache extends HttpSessionRequestCache implemen
 	{
 		if (UrlUtils.isAbsoluteUrl(url))
 		{
-			String relUrl = url.substring(url.indexOf("://") + 3);
+			String relUrl = url;
 			String modifiedContextPath = contextPath;
 			final String urlEncodingAttributes = getSessionService().getAttribute(WebConstants.URL_ENCODING_ATTRIBUTES);
 			if (urlEncodingAttributes != null && !url.contains(urlEncodingAttributes)

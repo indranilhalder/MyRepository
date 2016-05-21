@@ -159,6 +159,16 @@ $("span.latestOffersBanner").on("click touchend", function() {
 				rewindNav: false,
 				scrollPerPage:true
 			});
+			
+			var tcitemLength = $(".topConcierge .owl-item").length,tcitemWidth = $(".topConcierge .owl-item").outerWidth() ;
+			if (tcitemLength < 5) {
+				$(".topConcierge .owl-wrapper").css({
+				"width":tcitemLength*tcitemWidth,
+				"margin" : "auto"
+				});
+			}
+			
+			
 		}, 
 	});
 });
@@ -308,7 +318,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                     $(".home-brands-you-love-carousel").css(
                         "margin-bottom", "120px");
                     $("#brandsYouLove").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -591,7 +601,6 @@ function getBestPicksAjaxCall() {
     // AJAX CALL BEST PICKS END
     //AJAX CALL PRODUCTS YOU CARE START
 
-
 function getProductsYouCareAjaxCall() {
         var env = $("#previewVersion").val();
         if (env == "true") {
@@ -870,7 +879,7 @@ function getShowcaseContentAjaxCall(id) {
                     $(".showcase-switch").css("margin-bottom",
                         "80px");
                     $("#showcase").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -1020,17 +1029,24 @@ function LazyLoad(){
     });
 }
 
+$(document).ready(function() {
 var resize_stop;
 $(window).on('resize', function() {
 	  clearTimeout(resize_stop);
 	  resize_stop = setTimeout(function() {
 		  $('.home-brands-you-love-carousel-brands.active').click();
+		  
+		  var tcitemLength = $(".topConcierge .owl-item").length,tcitemWidth = $(".topConcierge .owl-item").outerWidth() ;
+			if (tcitemLength < 5) {
+				$(".topConcierge .owl-wrapper").css({
+				"width":tcitemLength*tcitemWidth,
+				"margin" : "auto"
+				});
+			}
+			
 	  }, 250);
 });
 
-
-$(document).ready(function() {
-	
 	
 	if (!$.cookie("enhanced-search-list") && window.localStorage) {
         for (var key in localStorage) {
