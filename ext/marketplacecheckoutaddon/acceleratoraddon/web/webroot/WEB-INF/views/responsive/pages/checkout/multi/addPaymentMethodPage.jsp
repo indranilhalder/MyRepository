@@ -226,7 +226,7 @@
 							<!-- <li class="change-payment">Change Payment Method</li> -->
 						<ycommerce:testId code="paymentDetailsForm">
 								
-							<form:form id="silentOrderPostForm" name="silentOrderPostForm" class="create_update_payment_form" commandName="paymentForm" action="${paymentFormMplUrl}" autocomplete="off" method="POST">
+							<form:form id="silentOrderPostForm" name="silentOrderPostForm" class="create_update_payment_form" commandName="paymentForm" action="${newPaymentFormMplUrl}" autocomplete="off" method="POST">
 								<form:hidden path="paymentMode"/>
 								<input type="hidden" name="orderPage_receiptResponseURL" value="${silentOrderPageData.parameters['orderPage_receiptResponseURL']}"/>
 								<input type="hidden" name="orderPage_declineResponseURL" value="${silentOrderPageData.parameters['orderPage_declineResponseURL']}"/>

@@ -43,7 +43,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
 
-	private static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+	//store url change
+	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 	//private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
 

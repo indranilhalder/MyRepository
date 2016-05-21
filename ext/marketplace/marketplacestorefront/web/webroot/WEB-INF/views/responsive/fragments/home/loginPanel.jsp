@@ -139,11 +139,15 @@
 			if(hostName.indexOf(':') >=0)
 			{
 				// for IP , it will not be https 
-				document.flyOutloginForm.action="/store/mpl/en/j_spring_security_check";
+				//document.flyOutloginForm.action="/store/mpl/en/j_spring_security_check";
+				document.flyOutloginForm.action="/j_spring_security_check";	//url changes for /store removal
+				document.flyOutloginForm.submit();
 			}
 			else
 			{
-				document.flyOutloginForm.action="https://"+hostName+"/store/mpl/en/j_spring_security_check";
+				//document.flyOutloginForm.action="https://"+hostName+"/store/mpl/en/j_spring_security_check";
+				document.flyOutloginForm.action="https://"+hostName+"/j_spring_security_check";		//url changes for /store removal
+				document.flyOutloginForm.submit();
 			}
 			
 			return true;
