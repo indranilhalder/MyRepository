@@ -836,4 +836,40 @@
 		<property name="ussid" type="String"/>
 	</bean>
 	
+	
+	<bean class="com.tisl.mpl.facades.data.LatestOffersData">
+		<property name="title" type="String"></property>
+		<property name="headerText" type="String"></property>
+		<property name="latestOfferEntry" type="java.util.List&lt;com.tisl.mpl.facades.data.LatestOffersEntriesData>"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.LatestOffersEntriesData">
+		<property name="imageUrl" type="String"></property>
+		<property name="text" type="String"></property>
+		<property name="url" type="String"></property>
+		<property name="icid" type="String"></property>
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.facades.data.EnhancedSearchCategoryData">
+		<property name="code" type="String"></property>
+		<property name="name" type="String"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.EnhancedSearchBrandData">
+		<property name="code" type="String"></property>
+		<property name="name" type="String"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.EnhancedSearchSellerData">
+		<property name="id" type="String"></property>
+		<property name="name" type="String"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.EnhancedSearchData">
+		<property name="categoryData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchCategoryData>"></property>
+		<property name="brandData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchBrandData>"></property>
+		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
+	</bean>
+	
 </beans>

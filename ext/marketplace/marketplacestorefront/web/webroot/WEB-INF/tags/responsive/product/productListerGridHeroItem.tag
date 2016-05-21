@@ -34,7 +34,7 @@
 				<c:if test="${!product.isOnlineExclusive && product.isOfferExisting}">
 					<div style="z-index: 2;" class="on-sale">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="/store/_ui/responsive/common/images/transparent.png"> <span>On Sale</span>
+							src="/store/_ui/responsive/common/images/transparent.png"> <span>On Offer</span>
 					</div>
 				</c:if>
 				

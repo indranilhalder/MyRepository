@@ -1511,6 +1511,31 @@ public class CartPageController extends AbstractPageController
 		return selectedPincode;
 	}
 
+	/**
+	 * Method to handel Exceptions in Server-Side from Network
+	 *
+	 * @return void
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.NETWORK_ERROR, method = RequestMethod.GET)
+	@RequireHardLogIn
+	public @ResponseBody void checkNetworkError(final String errorDetails)
+	{
+		try
+		{
+			LOG.error("**** errorDetails ****** " + errorDetails);
+			LOG.debug("**** errorDetails ****** " + errorDetails);
+			LOG.info("**** errorDetails ****** " + errorDetails);
+		}
+
+		catch (final Exception ex)
+		{
+
+			LOG.error("NETWORK_ERROR: ", ex);
+			LOG.debug("NETWORK_ERROR: ", ex);
+			LOG.info("NETWORK_ERROR: ", ex);
+		}
+	}
+	
 	// Public getter used in a test
 	@Override
 	public SiteConfigService getSiteConfigService()

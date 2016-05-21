@@ -2800,7 +2800,14 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
-	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+//	 			TISPRD-1666 - console replaced with alert and resp print
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			
+	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
 
 	 		}
 	 	});	 
@@ -2912,8 +2919,8 @@ function checkPincodeServiceability(buttonType)
  			if(response=="N")
  				{
  				//TISTI-255
- 		//		alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
- 		//	TISPRD-1666 - console replaced with alert and resp print
+ 				//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 				//	TISPRD-1666 - console replaced with alert and resp print
  				console.log('Response coming as N in checkPincodeServiceability');
  	 			$("#isPincodeServicableId").val('N');
  	 			reloadpage(selectedPincode,buttonType);
@@ -2927,12 +2934,17 @@ function checkPincodeServiceability(buttonType)
  		},
  		error : function(resp) {
  			//TISTI-255
- 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
- 		//	TISPRD-1666 - console replaced with alert and resp print
+ 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  			console.log(resp);
- 			console.log('Some issue occured in checkPincodeServiceability');
  			$("#isPincodeServicableId").val('N');
  			reloadpage(selectedPincode,buttonType);
+ 			
+// 			TISPRD-1666 - console replaced with alert and resp print
+ 			var errorDetails=JSON.stringify(resp);
+ 			console.log("errorDetails 1>> "+errorDetails);
+ 			
+ 			handleExceptionOnServerSide(errorDetails);
+ 			console.log('Some issue occured in checkPincodeServiceability');
  		}
  	});
 
@@ -3178,9 +3190,14 @@ function checkIsServicable()
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
-	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
-	 		//	TISPRD-1666 - console replaced with alert and resp print
+	 			//TISPRD-1666 - console replaced with alert and resp print
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
+	 			
 	 			console.log('Some issue occured in checkPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
 	 		}
@@ -3370,8 +3387,14 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
-	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//TISPRD-1666 - console replaced with alert and resp print
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
+	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
 	 		}
 	 	});	 
 	}
@@ -3698,8 +3721,14 @@ function expressbutton()
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
-	 		//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//TISPRD-1666 - console replaced with alert and resp print
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
+	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
 	 		}
 	 	});	 
 	}
@@ -3961,4 +3990,27 @@ function sendTealiumData(){
 		// TODO: handle exception
 
 	   }     
+}
+
+
+//ADD Server side error track // TISPRD-1666
+
+function handleExceptionOnServerSide(errorDetails){
+	 setTimeout( function(){
+			$.ajax({
+		 		url: ACC.config.encodedContextPath + "/cart/networkError",
+		 		type: "GET",
+		 		cache: false,
+		 		data:  { 'errorDetails' : errorDetails},
+		 		success : function(errorResponse) {
+		 			
+		 			console.log(errorResponse);
+		 		},
+		 		error : function(errorResp) {
+		 			console.log(errorResp);
+		 		}
+		 	});
+			 },
+			1000);
+		
 }

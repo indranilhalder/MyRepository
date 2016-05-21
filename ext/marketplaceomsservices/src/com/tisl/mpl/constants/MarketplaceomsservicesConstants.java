@@ -30,14 +30,16 @@ public final class MarketplaceomsservicesConstants extends GeneratedMarketplaceo
 	public static final String SUCCESS = "SUCCESS";
 
 	public static final String QUERYPART = "{p:";
-	
-	public static final String CNC= "CNC";
-    public static final String HOTCOURI= "HOTCOURI";
-    public static final String OTFRDLVY= "OTFRDLVY";
-    public static final String DELIVERD= "DELIVERD";
-    public static final String RETTOORG= "RETTOORG";
-    public static final String LOSTINTT= "LOSTINTT";
-    public static final String UNDLVERD= "UNDLVERD";
+
+	public static final String CNC = "CNC";
+	public static final String HOTCOURI = "HOTCOURI";
+	public static final String OTFRDLVY = "OTFRDLVY";
+	public static final String DELIVERD = "DELIVERD";
+	public static final String RETTOORG = "RETTOORG";
+	public static final String LOSTINTT = "LOSTINTT";
+	public static final String UNDLVERD = "UNDLVERD";
+	public static final String TAX_CATEGORY = "N/A";
+
 
 	private MarketplaceomsservicesConstants()
 	{
