@@ -304,6 +304,11 @@ $(document).ready(function(){
 					$(this).parents(".brands").hide();
 				}
 			});
+			$(".feature-collections .collections .chef").each(function(){
+				if($(this).children().length == 0) {
+					$(this).hide();
+				}
+			});
 			
 			$(".toggle").on("click",function(e){
 				var p = $(e.currentTarget).parent();
