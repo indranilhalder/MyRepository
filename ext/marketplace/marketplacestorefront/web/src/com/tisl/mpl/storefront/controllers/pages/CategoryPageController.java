@@ -595,6 +595,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			if (flag)
 			{
+
 				if (null != searchPageData.getCurrentQuery() && null != searchPageData.getCurrentQuery().getQuery()
 						&& null != searchPageData.getCurrentQuery().getQuery().getValue())
 				{

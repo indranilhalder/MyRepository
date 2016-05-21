@@ -296,7 +296,8 @@ font-weight: normal;
 	text-decoration: none;
 	height: 40px;
 	line-height: 40px;
-	padding: 0 60px;
+	padding: 0;
+	width:245px;
 }
 #ratingDiv .gig-rating-button:hover {
     background: #cc8600;
@@ -372,6 +373,17 @@ margin-top:10px;
 .gig-selfreview-header, .gig-selfreview-summary-container, .gig-selfreview-body-container {
 	display: none;
   } 
+  @media(max-width:650px){
+  .gig-rating-averageRating,.gig-rating-dimension-title{
+  margin-right:8px;
+  }
+  *.gig-rating-star{
+  width:17px;
+  }
+  .tabs-block .tabs>li ul.star-review{
+  padding-left:10px;
+  }
+  }
 </style> 
 
 </c:if>	

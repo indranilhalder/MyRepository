@@ -112,7 +112,7 @@ public class MplBuyBoxUtility
 	{
 
 		String productCode = productModel.getCode();
-
+		boolean outOfStockFlagForSellers = false;
 		// Run comparator and Get list of products codes for variants.
 		List<PcmProductVariantModel> sortedVariantsList = new ArrayList<PcmProductVariantModel>();
 		if (productModel instanceof PcmProductVariantModel)
@@ -142,16 +142,35 @@ public class MplBuyBoxUtility
 			final List<BuyBoxModel> buyBoxModelList = buyBoxService.getBuyboxPricesForSearch(productCode);
 			if (productModel instanceof PcmProductVariantModel)
 			{
-				priceValueMap = getLeastPriceModel(buyBoxModelList, priceValueMap);
+				//checking whether the product is Out of Stock or not --------- Changes for TISPRD-1691
+				outOfStockFlagForSellers = isOutOfStock(buyBoxModelList);
+				if (outOfStockFlagForSellers)
+				{
+					priceValueMap = getLeastPriceModelForOutOfStockProduct(buyBoxModelList, priceValueMap);
+				}
+				else
+				{
+					priceValueMap = getLeastPriceModel(buyBoxModelList, priceValueMap);
+				}
 			}
 			finalpriceValueMap.putAll(priceValueMap);
 		}
 		else
 		{
+			final boolean allOutOfStockVariants = chcekOutOfStockForAllVariants(sortedVariantsList);
 			for (final PcmProductVariantModel productVariant : sortedVariantsList)
 			{
 				final List<BuyBoxModel> buyBoxModelList = buyBoxService.getBuyboxPricesForSearch(productVariant.getCode());
-				priceValueMap = getLeastPriceModel(buyBoxModelList, priceValueMap);
+
+				//checking whether the product is Out of Stock or not --------- Changes for TISPRD-1691
+				if (allOutOfStockVariants)
+				{
+					priceValueMap = getLeastPriceModelForOutOfStockProduct(buyBoxModelList, priceValueMap);
+				}
+				else
+				{
+					priceValueMap = getLeastPriceModel(buyBoxModelList, finalpriceValueMap);
+				}
 				finalpriceValueMap.putAll(priceValueMap);
 			}
 		}
@@ -159,7 +178,17 @@ public class MplBuyBoxUtility
 		if (finalpriceValueMap.isEmpty())
 		{
 			final List<BuyBoxModel> buyBoxModelList = buyBoxService.getBuyboxPricesForSearch(productCode);
-			priceValueMap = getLeastPriceModel(buyBoxModelList, priceValueMap);
+
+			//checking whether the product is Out of Stock or not --------- Changes for TISPRD-1691
+			outOfStockFlagForSellers = isOutOfStock(buyBoxModelList);
+			if (outOfStockFlagForSellers)
+			{
+				priceValueMap = getLeastPriceModelForOutOfStockProduct(buyBoxModelList, priceValueMap);
+			}
+			else
+			{
+				priceValueMap = getLeastPriceModel(buyBoxModelList, finalpriceValueMap);
+			}
 			finalpriceValueMap.putAll(priceValueMap);
 		}
 		final List<Map.Entry<BuyBoxModel, Double>> priceList = new LinkedList<Map.Entry<BuyBoxModel, Double>>(
@@ -184,32 +213,29 @@ public class MplBuyBoxUtility
 	}
 
 
-	private Map<BuyBoxModel, Double> getLeastPriceModel(final List<BuyBoxModel> buyBoxModelList,
-			final Map<BuyBoxModel, Double> priceValueMap)
-	{
 
-		if (buyBoxModelList != null)
+
+
+	/**
+	 * checking oos for all variants
+	 *
+	 * @param sortedVariantsList
+	 */
+	private boolean chcekOutOfStockForAllVariants(final List<PcmProductVariantModel> sortedVariantsList)
+	{
+		boolean allOutOfStockForAllVariants = true;
+		for (final PcmProductVariantModel variant : sortedVariantsList)
 		{
-			for (final BuyBoxModel buyBox : buyBoxModelList)
+
+			final List<BuyBoxModel> buyBoxModelList = buyBoxService.getBuyboxPricesForSearch(variant.getCode());
+			final boolean allOutOfStock = isOutOfStock(buyBoxModelList);
+			if (!allOutOfStock)
 			{
-				if (null != buyBox.getSpecialPrice() && buyBox.getSpecialPrice().doubleValue() > 0.0)
-				{
-					priceValueMap.put(buyBox, buyBox.getSpecialPrice());
-				}
-				else if (null != buyBox.getPrice() && buyBox.getPrice().doubleValue() > 0.0)
-				{
-					priceValueMap.put(buyBox, buyBox.getPrice());
-				}
-				else
-				{
-					priceValueMap.put(buyBox, buyBox.getMrp());
-				}
+				allOutOfStockForAllVariants = false;
 			}
 		}
-		return priceValueMap;
-
+		return allOutOfStockForAllVariants;
 	}
-
 
 	public List<PcmProductVariantModel> compareVariants(final ProductModel baseProduct,
 			final PcmProductVariantModel selectedVariantModel)
@@ -375,5 +401,110 @@ public class MplBuyBoxUtility
 			variantColor = variantProductModel.getColour() != null ? variantProductModel.getColour() : "";
 		}
 		return variantColor;
+	}
+
+	/**
+	 * get least price corresponding to a product(oos products will not come into account)
+	 *
+	 * @param buyBoxModelList
+	 * @param priceValueMap
+	 * @return priceValueMap
+	 */
+	private Map<BuyBoxModel, Double> getLeastPriceModel(final List<BuyBoxModel> buyBoxModelList,
+			final Map<BuyBoxModel, Double> priceValueMap)
+	{
+
+		if (buyBoxModelList != null)
+		{
+			for (final BuyBoxModel buyBox : buyBoxModelList)
+
+			{
+				if (buyBox.getAvailable() > 0)
+				{
+					if (null != buyBox.getSpecialPrice() && buyBox.getSpecialPrice().doubleValue() > 0.0)
+					{
+						priceValueMap.put(buyBox, buyBox.getSpecialPrice());
+					}
+					else if (null != buyBox.getPrice() && buyBox.getPrice().doubleValue() > 0.0)
+					{
+						priceValueMap.put(buyBox, buyBox.getPrice());
+					}
+					else
+					{
+						priceValueMap.put(buyBox, buyBox.getMrp());
+					}
+				}
+
+			}
+		}
+		return priceValueMap;
+
+	}
+
+
+	/**
+	 * getting all the price values for all out of stock product
+	 *
+	 * @param buyBoxModelList
+	 * @param priceValueMap
+	 * @return priceValueMap
+	 */
+	private Map<BuyBoxModel, Double> getLeastPriceModelForOutOfStockProduct(final List<BuyBoxModel> buyBoxModelList,
+			final Map<BuyBoxModel, Double> priceValueMap)
+	{
+
+		if (buyBoxModelList != null)
+		{
+			for (final BuyBoxModel buyBox : buyBoxModelList)
+
+			{
+				if (null != buyBox.getSpecialPrice() && buyBox.getSpecialPrice().doubleValue() > 0.0)
+				{
+					priceValueMap.put(buyBox, buyBox.getSpecialPrice());
+				}
+				else if (null != buyBox.getPrice() && buyBox.getPrice().doubleValue() > 0.0)
+				{
+					priceValueMap.put(buyBox, buyBox.getPrice());
+				}
+				else
+				{
+					priceValueMap.put(buyBox, buyBox.getMrp());
+				}
+
+
+			}
+		}
+		return priceValueMap;
+
+	}
+
+	/**
+	 * checking all the sellers corresponding to a product is oos or not
+	 *
+	 * @param buyBoxModelList
+	 * @return isOutOfStock
+	 */
+
+	public boolean isOutOfStock(final List<BuyBoxModel> buyBoxModelList)
+	{
+
+		boolean isOutOfStock = true;
+
+		if (null != buyBoxModelList)
+		{
+			for (final BuyBoxModel buyBox : buyBoxModelList)
+			{
+				if (buyBox.getAvailable() > 0)
+				{
+					isOutOfStock = false;
+					break;
+				}
+
+			}
+
+		}
+
+		return isOutOfStock;
+
 	}
 }

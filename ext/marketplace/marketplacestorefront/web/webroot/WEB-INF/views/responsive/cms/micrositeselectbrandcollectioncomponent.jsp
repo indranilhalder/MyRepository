@@ -35,7 +35,7 @@ $(document).ready(function () {
 	            		$container = $('#topul');
 	            			if(secondLevelCategoryData.subCategories!=null){
 	            				$.each(secondLevelCategoryData.subCategories, function(i, v) {
-	            					$container.append('<li class="level1"><div class="toggle" ><a href= "'+siteName+'' + v.url + '">'+v.name+'</a></div><ul class="words words'+v.code+'"></ul>');
+	            					$container.append('<li class="level1"><div class="toggle" ><a href= "'+siteName+'' + v.url + '">'+v.name+'</a></div><ul class="words words'+v.code+'"><li><a href="'+siteName+'' + v.url + '" class="view_dept">View '+v.name+' </a></li></ul>');
 	            					if(v.subCategories!=null){
 	    	        		 			$.each(v.subCategories, function(j, v1) {	
 	    	        		 				$( "ul.words"+v.code).append('<li class="short words"><div class="toggle"><a href="'+siteName+''+v1.url+'" style="">'+v1.name+'</a></div></li>');
@@ -54,7 +54,7 @@ $(document).ready(function () {
 	        		else{
 	        			/* empty , Seller undefined */
 	        			/* Specified seller is not available in SSH1 category hierarchy */
-	        		}
+	        		}	
         		    
 			 	},
 				 error : function(secondLevelCategoryData){
@@ -71,6 +71,11 @@ $(document).ready(function () {
 	        			      p.addClass('active');
 	        			    }
 	        	});
+	    	if ('ontouchstart' in window) {
+		 		$("body").on("click","header.brand-header .content .bottom nav>ul>li>ul>li.level1>div.toggle>a", function(){
+		 			$(this).attr("href","#");
+		 		});
+				}
 	
 	});
 	</script>	
