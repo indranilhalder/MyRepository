@@ -2067,6 +2067,7 @@ public class OrdersController extends BaseCommerceController
 				final EtailBusinessExceptions error = new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9519);
 				ExceptionUtil.etailBusinessExceptionHandler(error, null);
 				result.setError(error.getErrorMessage());
+				result.setCode(error.getErrorCode());
 				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);				
 			}
 		}
