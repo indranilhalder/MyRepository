@@ -2049,6 +2049,7 @@ public class OrdersController extends BaseCommerceController
 			{ "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
 	@RequestMapping(value = "/users/{userId}/updatePickupDetails",method = RequestMethod.POST)
+	@ResponseBody
 	public WebSerResponseWsDTO updatePickupDetails(@RequestParam(required=true,value = "orderId") final String orderId,
 			@RequestParam(required=true,value = "name") final String name, @RequestParam(required=true,value = "mobile") final String mobile)
 	{
