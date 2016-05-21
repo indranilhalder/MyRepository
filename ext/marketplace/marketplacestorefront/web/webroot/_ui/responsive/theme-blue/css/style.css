@@ -39436,13 +39436,13 @@ transform-origin:0 0;
 	
 	.pickup_mob {
 		width: 100%;
-		margin-left: 10px;
+		margin-left: 15px;
 		margin-top: 5px;
 	}
 	
 	.pickMobileNo {
 		width: 94%;
-		margin-left: 10px;
+		margin-left: 15px;
 		margin-top: 5px;
 	}
 	
@@ -39457,25 +39457,34 @@ transform-origin:0 0;
 	}
 	
 	.pickup_Edit {
-		margin-left: -29px;
+		margin-left: -45px;
 	}
 	
 	.savebtnOther {
-		margin: 5px 0px 0px 20px !important;
+		margin: 5px 0px 0px 45px !important;
 		height: 34px !important;
 		padding-top: 9px;
 	}
 	
+	.pickupPersonMobileError {
+		margin-left: 15px;
+    	margin-top: 3px;
+	}
+	
+	.pickupPersonNameError {
+		margin-top: 3px;
+	}
 }
 @media (min-width: 1020px) {
 	.pickup_Edit {
 		margin-left: 181px;
 		margin-top: -22px;
+		margin-bottom: 40px;
 	}
 	
 	.pickup_name {
-		padding-top: 12px;
-		margin-left: 17px;
+		padding-top: 21px;
+		/* margin-left: 17px; */
 		font-weight: bold;
 	}
 	
@@ -39487,35 +39496,38 @@ transform-origin:0 0;
 	}
 	
 	.pickupPersonNameError {
-		/* width: 115px;  */
+		width: 115px;
 		font-size: 10px;
-		/* margin-left: 49px; */
+		margin-left: 49px;
+		margin-top: 3px;
 	}	
 	.pickup_mob {
-		margin-left: -86px;
-		padding-top: 14px;
+		margin-left: -82px;
+		padding-top: 21px;
 		width: 71px;
 		font-weight: bold;
 	}
 	
 	.pickMobileNo {
-		margin-left: -128px; 
+		margin-left: -110px; 
 		height: 28px; 
 		margin-top: 7px; 
 		z-index: 10;
 	}
 	
 	.pickupPersonMobileError {
-		/* margin-left: -125px;  */
+		margin-left: -111px;
 		width: 167px; 
 		font-size: 10px;
+		margin-top: 3px;
 	}
 	
 	.savebtn {
 		z-index: 99; 
 		min-width: 91px;
-		margin-left: -188px;
-	}
+		margin-left: -235px;
+	    height: 40px;
+	    line-height: 29px;
   }
 }
 
