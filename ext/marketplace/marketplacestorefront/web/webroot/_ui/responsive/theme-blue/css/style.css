@@ -2118,15 +2118,16 @@ h2 {
     font-size: 12px;
     min-height: 40px; }
     header .banner > span {
-      position: absolute;
+      /* position: absolute; */
       text-align: center;
       background-color: #A9143C;
+      font-size: 13px;
       text-transform: none;
       letter-spacing: 1px;
       display: block;
       line-height: 30px;
       width: 100%;
-      top: -5px;
+      /* top: -5px; */
       left: 0;
       padding-top: 5px;
       padding-bottom: 5px;
@@ -2142,7 +2143,7 @@ h2 {
       overflow: hidden;
       height: auto;
       max-height: 0;
-      margin-top: 5px;
+    /*   margin-top: 5px; */
       text-align: center;
       -webkit-transition: max-height 0.3s;
       -moz-transition: max-height 0.3s;
@@ -2152,7 +2153,7 @@ h2 {
         font-size: 11px;
         font-weight: 600;
         position: absolute;
-        top: 15px;
+        top: 25px;
         right: 25px;
         cursor: pointer; }
         header .banner .content .close:before {
@@ -18336,7 +18337,7 @@ font-weight: 600;
 	width: calc(100% - 20px);
 	color:#000;
 	opacity:0.9;
-	font-size:14px;					
+	font-size:12px;					
 	text-transform:capitalize !important;
 		margin-bottom:10px;			
 }		
@@ -19142,6 +19143,7 @@ header.compact .content .compact-toggle {
 }
 body.template-pages-layout-micrositePage1 header .content .compact-toggle {
   opacity: 1;
+  display: none;
 }
 header .content .compact-toggle.open:before{
 -webkit-transform: rotate(180deg);
@@ -19315,7 +19317,7 @@ header > .content .compact-toggle:before {
   border-right: 4px solid transparent;
   border-top: 4px solid #A9143C;
 }
-header .banner > span:before {
+/* header .banner > span:before {
   content: " ";
   height: 59px;
   width: 59px;
@@ -19330,7 +19332,7 @@ header .banner > span:before {
   -ms-transform: translateX(-50%);
   -o-transform: translateX(-50%);
   transform: translateX(-50%);
-}
+} */
 header .banner > span:before, header .banner > span:after {
   margin-top: 0;
   display: block;
@@ -19345,21 +19347,22 @@ header .banner > span:after {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 100;
   content: "\f107";
-  display: block;
+  display: inline-block;
   text-align: center;
   vertical-align: middle;
-  font-size: 22px;
+  font-size: 20px;
   color: #fff;
   font-weight: normal;
-  position: absolute;
+  /* position: absolute; */
   z-index: 1;
-  left: 50%;
+  /* left: 50%;
   top: 100%;
   -webkit-transform: translateX(-50%) translateY(-50%);
   -moz-transform: translateX(-50%) translateY(-50%);
   -ms-transform: translateX(-50%) translateY(-50%);
   -o-transform: translateX(-50%) translateY(-50%);
-  transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%); */
+  margin-left:5px;
 }
 header.brand-header .content {
   padding-top: 15px;
@@ -19983,9 +19986,9 @@ display: inline-block;
   display: none;
 }
 .product-tile .short-info .product-name {
-  font-size: 16px;
+  font-size: 14px;
   font-family: "Montserrat";
-  line-height: 1;
+  line-height: 1.5;
   padding-bottom: 2px;
   float: left;
   width: 100%;
@@ -24712,12 +24715,13 @@ width:100% !important;}
 }
 .product-tile .details.short-info .brand, .product-tile .short-info .company{
 	margin-bottom: 15px;
-	font-size:14px;
+	font-size:12px;
 	min-height:10px;
 	text-align:left;
 	float: left;
     width: 50%;
     word-break:break-word;
+    color: #A9A9A9;
 }
 body .account .right-account .my-reviews .product-tile .short-info .company{
 	 width: 100%;
@@ -27939,7 +27943,7 @@ body.page-reviews .my-reviews .product-tile .short-info .product-name {
     font-size: 14px;
 }
 body.page-reviews .review-list .product-tile .short-info .product-name {
-    font-size: 16px;
+    font-size: 14px;
     margin-bottom: 5px;
 }
 body .account .right-account .my-reviews .wrapper p.noReview {
@@ -29230,7 +29234,8 @@ a.button.trending-button:hover{
 }
 #newAndExclusive .New_Exclusive_title{
 	font-weight:600;
-	font-size:16px;
+	font-size:14px;
+	line-height:1.5;
 }
 #newAndExclusive .New_Exclusive_title,#newAndExclusive .New_Exclusive_price{
 	margin:10px 0;
@@ -29883,7 +29888,8 @@ width: 90px !important;
 }
 .home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name {
 	margin-top: 10px;
-	font-size: 16px;
+	font-size: 14px;
+	line-height:1.5;
     font-weight: 600;
     padding-bottom: 8px;
 }
@@ -30829,7 +30835,7 @@ header .content .search input {
     background-repeat: no-repeat;
     background-position: center;
 }
-@media(max-width:650px){
+/* @media(max-width:650px){
 	header .banner > span.helpmeshopbanner {
     line-height: normal;
     height: 40px;
@@ -30839,7 +30845,7 @@ header .content .search input {
     display: table-cell;
     vertical-align: middle;
     height: 30px;
-}}
+}} */
 /*App landing page css starts*/
 @media ( min-width : 791px) {
 	.r2-landing-banner h1 {
