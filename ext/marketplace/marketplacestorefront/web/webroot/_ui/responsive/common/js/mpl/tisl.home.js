@@ -601,7 +601,6 @@ function getBestPicksAjaxCall() {
     // AJAX CALL BEST PICKS END
     //AJAX CALL PRODUCTS YOU CARE START
 
-
 function getProductsYouCareAjaxCall() {
         var env = $("#previewVersion").val();
         if (env == "true") {

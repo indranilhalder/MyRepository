@@ -89,7 +89,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.YcommercewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -309,8 +308,8 @@ public class ProductsController extends BaseController
 				if (null != requestUrl.getHost() && null != requestUrl.getProtocol())
 				{
 					baseUrl = requestUrl.getProtocol() + MarketplacecommerceservicesConstants.COLON_SLASH + requestUrl.getHost()
-							+ portString + MarketplacecommerceservicesConstants.EMPTYSPACE
-							+ MarketplacewebservicesConstants.FORGOTPASSWORD_URL;
+							+ portString + MarketplacecommerceservicesConstants.EMPTYSPACE;
+					//+ MarketplacewebservicesConstants.FORGOTPASSWORD_URL;
 				}
 			}
 			product = mplProductWebService.getProductdetailsForProductCode(productCode, baseUrl);
