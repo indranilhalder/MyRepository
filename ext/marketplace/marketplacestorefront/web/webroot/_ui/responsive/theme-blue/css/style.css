@@ -1681,7 +1681,7 @@ h2 {
             -moz-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px; */
           	height: 450px;
-            z-index: 3;
+            z-index: 10001;
             -webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
             -moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
             transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s; }
@@ -1730,7 +1730,7 @@ h2 {
       float: left; }
     header .content .search button {
       position: relative;
-      width: 50px;
+      width: 51px;
       border: 1px solid #bbb;
       border-left: none;
       float:right; }
@@ -1769,12 +1769,12 @@ h2 {
       line-height: 50px;
        width: 40%;
       border-radius:0px;
-      width: -webkit-calc(100% - 203px);
-      width: calc(100% - 203px); } }
+      width: -webkit-calc(100% - 204px);
+      width: calc(100% - 204px); } }
       @media (min-width: 791px) and (max-width: 990px) {
         header .content .search input {
-          width: -webkit-calc(100% - 123px);
-          width: calc(100% - 123px); } }
+          width: -webkit-calc(100% - 124px);
+          width: calc(100% - 124px); } }
           @media (min-width: 791px) {
     header .content .search .no-results-callout {
       position: absolute;
@@ -2198,7 +2198,7 @@ h2 {
       -moz-transition: top 0.15s;
       transition: top 0.15s; }
     header .banner.active .content {
-      max-height: 500px;
+      max-height: 1000px;
       -webkit-transition: max-height 0.3s 0.15s;
       -moz-transition: max-height 0.3s 0.15s;
       transition: max-height 0.3s 0.15s; }
@@ -30852,7 +30852,6 @@ header .content .search input {
 		width: 90%;
 		margin: auto;
 		font-size: 30px;
-		text-transform: uppercase;
 		line-height: 40px;
 		padding: 20px;
 		font-weight: 700;
@@ -30961,8 +30960,8 @@ img.r2-app-mob-up {
 	font-size: 14px;
 	line-height: 20px;
 	letter-spacing: 2px;
-	padding: 32px;
-	margin: 0px;
+	    padding-top: 15px;
+	margin: 0px auto;
 }
 }
 .r2-app-slider {
@@ -30988,7 +30987,7 @@ img.r2-app-mob-up {
 	margin-top: 40px;
 	font-size: 31px;
 	text-transform: uppercase;
-	padding-top: 100px;
+	padding-top: 200px;
 	line-height: 40px;
 	width: 100%;
 	font-weight: 700;
@@ -31018,7 +31017,6 @@ img.r2-app-brand-img {
 }
 
 .r2-mob-carousel h2 {
-	text-transform: uppercase;
 	font-size: 31px;
 	font-weight: 700;
     margin-top: 20px;
@@ -31026,7 +31024,6 @@ img.r2-app-brand-img {
 }
 
 .r2-mob-carousel p {
-	text-transform: lowercase;
 	font-size: 14px;
 	line-height: 24px;
 }
@@ -31047,7 +31044,6 @@ h1.r2-landing-heading {
 	width: 90%;
 	margin: auto;
 	font-size: 30px;
-	text-transform: uppercase;
 	line-height: 40px;
 	padding: 20px;
 	font-weight: 700;
@@ -31057,16 +31053,27 @@ h1.r2-landing-heading {
 	font-size: 14px;
 	line-height: 20px;
 	color: #333;
+	    padding: 0px 45px;
 }
+
 
 .r2-landing-banner h1 {
 	color: #333;
+}
+@media (min-width:791px){
+	.r2-landing-brands p {
+	    padding: 0px 45px;
+}
+.r2-landing-brands .r2-marginAuto.r2-center.r2-padding p {
+	        padding: 0px 183px;
+}
 }
 @media (max-width: 790px){
 img.r2-app-brand-img {
     margin-left: 20px;
     margin-bottom: 0px;
 }
+
 }
 @media ( min-width : 768px) and (max-width: 791px) {
 	img.r2-app-brand-img {
@@ -31144,8 +31151,9 @@ img.r2-app-brand-img {
 	}
 	.r2-app-landing article p {
 		font-size: 18px;
-		padding-top: 40px;
+		padding-top: 200px;
 		text-align:left;
+		padding-left: 15px;
 	}
 	.r2-app-landing article div a span:first-child {
 		font-size: 25px;
@@ -31219,13 +31227,11 @@ img.r2-app-brand-img {
 		margin-top: -70px;
 	}
 	.r2-mob-carousel h2 {
-		text-transform: uppercase;
 		font-size: 45px;
 		font-weight: 700;
 	}
 	.r2-mob-carousel p {
 		line-height: 25px;
-		text-transform: lowercase;
 		font-size: 14px;
 	}
 }
@@ -31386,16 +31392,17 @@ img.r2-app-brand-img {
 	float: left;
 }
 
-.r2-buy-banner p {
-	padding: 35px;
+.r2-app-landing .r2-buy-banner p {
+	/* padding: 35px; */
 	line-height: 20px;
 	color: #fff;
 	text-transform: uppercase;
-	background: #A91E3E;
+	/* background: #A91E3E; */
 	font-weight: 600;
 	letter-spacing: 1.5px;
 	text-align: center;
 	font-size: 16px;
+	margin:0 auto;
 }
 
 @media ( max-width : 790px) {
@@ -31542,7 +31549,7 @@ span.material-icons{
     display: block;
 	z-index: 2;
     position: relative;
-}
+} }
 body.page-homepage .feature-collections{
 	z-index:9;
 }
@@ -31553,7 +31560,8 @@ body.page-homepage .feature-collections{
 	padding: 0 10px;	
 }
 .topConcierge .latest-offer-carousal-image img {
-	width: 100%;
+	width: auto;
+	max-width:100%;
 } 
 .topConcierge .latest-offer-info span{
     line-height: 1;

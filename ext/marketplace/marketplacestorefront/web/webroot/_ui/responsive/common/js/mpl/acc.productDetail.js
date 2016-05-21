@@ -582,9 +582,10 @@ function addToWishlist() {
 				var msg=$('#wishlistSuccess').text();
 				$('#addedMessage').show();
 				$('#addedMessage').html(msg);
-				setTimeout(function() {
+				/*setTimeout(function() {
 					  $("#addedMessage").fadeOut().empty();
-					}, 1500);
+					}, 1500);*/
+				$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
 				populateMyWishlistFlyOut(wishName);
 				
 				//For MSD
