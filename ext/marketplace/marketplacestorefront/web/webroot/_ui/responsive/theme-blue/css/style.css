@@ -761,6 +761,20 @@ h2 {
         font-weight: normal;
         margin-left: 5px;
         }
+      header .banner.active > span p:after {
+        font-family: 'FontAwesome';
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-weight: 100;
+        content: "\f106";
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 20px;
+        color: #fff;
+        font-weight: normal;
+        margin-left: 5px;
+        }
     header .banner .content {
       position: relative;
       background-color: #fafafa;
