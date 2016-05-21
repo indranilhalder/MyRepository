@@ -55,13 +55,20 @@ public class LatestOffersFacadeImpl implements LatestOffersFacade
 			{
 				final ImageCarouselComponentModel latestOffersCarouselComponent = (ImageCarouselComponentModel) component;
 				String title = "";
+				String headerText = "";
 
 				if (StringUtils.isNotEmpty(latestOffersCarouselComponent.getTitle()))
 				{
 					title = latestOffersCarouselComponent.getTitle();
 				}
 
+				if (StringUtils.isNotEmpty(latestOffersCarouselComponent.getHeaderText()))
+				{
+					headerText = latestOffersCarouselComponent.getHeaderText();
+				}
+
 				offerData.setTitle(title);
+				offerData.setHeaderText(headerText);
 				final List<CMSMediaParagraphComponentModel> latestOffersItemList = latestOffersCarouselComponent.getCollectionItems();
 
 				for (final CMSMediaParagraphComponentModel latestOffersItem : latestOffersItemList)

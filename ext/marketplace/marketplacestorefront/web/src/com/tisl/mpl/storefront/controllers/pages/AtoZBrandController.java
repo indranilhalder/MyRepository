@@ -13,7 +13,6 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -146,64 +145,51 @@ public class AtoZBrandController
 
 
 		//if (GroupBrandsAToE.size() == 0 || GroupBrandsFToJ.size() == 0)
-		if (MapUtils.isEmpty(GroupBrandsAToE) || MapUtils.isEmpty(GroupBrandsFToJ))
-		{
-
-			startAlphabet = 'A';
-			endAlphabet = 'J';
-			groupedAlphabets.put(startAlphabet, endAlphabet);
-			final Map<Character, List<CategoryModel>> GroupBrandsAToJ = getBrandsForRange('A', 'J', sortedMap);
-			model.addAttribute(ModelAttributetConstants.A_J_Brands, GroupBrandsAToJ);
-
-			groupedAlphabets.remove('F');
-
-
-
-		}
-
-
-		//else if (GroupBrandsKToO.size() == 0)
-		else if (MapUtils.isEmpty(GroupBrandsKToO))
-		{
-
-			startAlphabet = 'F';
-			endAlphabet = 'O';
-			groupedAlphabets.put(startAlphabet, endAlphabet);
-			final Map<Character, List<CategoryModel>> GroupBrandsFToO = getBrandsForRange('F', 'O', sortedMap);
-			model.addAttribute(ModelAttributetConstants.F_O_Brands, GroupBrandsFToO);
-
-			groupedAlphabets.remove('K');
-
-		}
-
-		//else if (GroupBrandsPToT.size() == 0)
-		else if (MapUtils.isEmpty(GroupBrandsPToT))
-		{
-
-			startAlphabet = 'K';
-			endAlphabet = 'T';
-			groupedAlphabets.put(startAlphabet, endAlphabet);
-			final Map<Character, List<CategoryModel>> GroupBrandsKToT = getBrandsForRange('K', 'T', sortedMap);
-			model.addAttribute(ModelAttributetConstants.K_T_Brands, GroupBrandsKToT);
-
-			groupedAlphabets.remove('P');
-
-		}
-
-		//else if (GroupBrandsUToZ.size() == 0)
-		else if (MapUtils.isEmpty(GroupBrandsUToZ))
-		{
-
-			startAlphabet = 'P';
-			endAlphabet = 'Z';
-			groupedAlphabets.put(startAlphabet, endAlphabet);
-			final Map<Character, List<CategoryModel>> GroupBrandsPToZ = getBrandsForRange('P', 'Z', sortedMap);
-
-			model.addAttribute(ModelAttributetConstants.P_Z_Brands, GroupBrandsPToZ);
-
-			groupedAlphabets.remove('U');
-
-		}
+		/*
+		 * if (MapUtils.isEmpty(GroupBrandsAToE) || MapUtils.isEmpty(GroupBrandsFToJ)) {
+		 * 
+		 * startAlphabet = 'A'; endAlphabet = 'J'; groupedAlphabets.put(startAlphabet, endAlphabet); final Map<Character,
+		 * List<CategoryModel>> GroupBrandsAToJ = getBrandsForRange('A', 'J', sortedMap);
+		 * model.addAttribute(ModelAttributetConstants.A_J_Brands, GroupBrandsAToJ);
+		 * 
+		 * groupedAlphabets.remove('F');
+		 * 
+		 * 
+		 * 
+		 * }
+		 * 
+		 * 
+		 * //else if (GroupBrandsKToO.size() == 0) else if (MapUtils.isEmpty(GroupBrandsKToO)) {
+		 * 
+		 * startAlphabet = 'F'; endAlphabet = 'O'; groupedAlphabets.put(startAlphabet, endAlphabet); final Map<Character,
+		 * List<CategoryModel>> GroupBrandsFToO = getBrandsForRange('F', 'O', sortedMap);
+		 * model.addAttribute(ModelAttributetConstants.F_O_Brands, GroupBrandsFToO);
+		 * 
+		 * groupedAlphabets.remove('K');
+		 * 
+		 * }
+		 * 
+		 * //else if (GroupBrandsPToT.size() == 0) else if (MapUtils.isEmpty(GroupBrandsPToT)) {
+		 * 
+		 * startAlphabet = 'K'; endAlphabet = 'T'; groupedAlphabets.put(startAlphabet, endAlphabet); final Map<Character,
+		 * List<CategoryModel>> GroupBrandsKToT = getBrandsForRange('K', 'T', sortedMap);
+		 * model.addAttribute(ModelAttributetConstants.K_T_Brands, GroupBrandsKToT);
+		 * 
+		 * groupedAlphabets.remove('P');
+		 * 
+		 * }
+		 * 
+		 * //else if (GroupBrandsUToZ.size() == 0) else if (MapUtils.isEmpty(GroupBrandsUToZ)) {
+		 * 
+		 * startAlphabet = 'P'; endAlphabet = 'Z'; groupedAlphabets.put(startAlphabet, endAlphabet); final Map<Character,
+		 * List<CategoryModel>> GroupBrandsPToZ = getBrandsForRange('P', 'Z', sortedMap);
+		 * 
+		 * model.addAttribute(ModelAttributetConstants.P_Z_Brands, GroupBrandsPToZ);
+		 * 
+		 * groupedAlphabets.remove('U');
+		 * 
+		 * }
+		 */
 
 		//Sorted the map based on the keys
 		final Map<Character, Character> sortedGroupedAlphabetsMap = new TreeMap<Character, Character>(groupedAlphabets);

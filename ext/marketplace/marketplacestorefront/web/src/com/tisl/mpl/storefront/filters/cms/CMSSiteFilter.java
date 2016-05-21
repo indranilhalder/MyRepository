@@ -48,6 +48,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
+
 
 /**
  * Responsible for setting up application - to main responsibility belongs:
@@ -97,20 +99,11 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 			// process normal request (i.e. normal browser non-cmscockpit request)
 			if (processNormalRequest(httpRequest, httpResponse))
 			{
-				String requestUrl = httpRequest.getRequestURL().toString();
-				if (requestUrl.contains("/c/"))
+				final String requestUrl = httpRequest.getRequestURL().toString();
+				if (requestUrl.contains("/c/") || requestUrl.contains("/p/")
+						|| requestUrl.contains(ModelAttributetConstants.STORE_URL_OLD))
 				{
-					requestUrl = requestUrl.replaceAll("/c/", "/c-");
-					final String categoryUrl = urlBuilder(httpRequest, requestUrl);
-					//TISPRD-1876
-					httpResponse.sendRedirect(categoryUrl);
-				}
-				else if (requestUrl.contains("/p/"))
-				{
-					requestUrl = requestUrl.replaceAll("/p/", "/p-");
-					final String productUrl = urlBuilder(httpRequest, requestUrl);
-					//TISPRD-1876
-					httpResponse.sendRedirect(productUrl);
+					checkUrlPattern(httpRequest, requestUrl, httpResponse);
 				}
 				else
 				{
@@ -145,6 +138,105 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 			filterChain.doFilter(httpRequest, httpResponse);
 		}
 	}
+
+
+
+	/**
+	 * This method handles url pattern redirection
+	 *
+	 * @param requestUrl
+	 * @param httpResponse
+	 * @throws IOException
+	 *
+	 */
+	private void checkUrlPattern(final HttpServletRequest httpRequest, String requestUrl, final HttpServletResponse httpResponse)
+			throws IOException
+	{
+		if (requestUrl.contains("/c/"))
+		{
+			requestUrl = requestUrl.replaceAll("/c/", "/c-");
+		}
+		if (requestUrl.contains("/p/"))
+		{
+			requestUrl = requestUrl.replaceAll("/p/", "/p-");
+		}
+		if (requestUrl.contains(ModelAttributetConstants.STORE_URL_OLD))
+		{
+			requestUrl = requestUrl.replaceAll(ModelAttributetConstants.STORE_URL_OLD, "");
+			LOG.info("This url contains /store/mpl/en, hence reforming the url to:::::  " + requestUrl);
+		}
+		//TISPRD-1876
+		requestUrl = urlBuilder(httpRequest, requestUrl);
+
+		httpResponse.sendRedirect(requestUrl);
+	}
+
+
+
+
+	/**
+	 * This method creates a custom HttpServletRequestWrapper to override RequestUrl, RequestUri and ServletPath
+	 *
+	 * @param httpRequest
+	 * @return HttpServletRequestWrapper
+	 */
+	//	private HttpServletRequestWrapper createWrappedRequest(final HttpServletRequest httpRequest)
+	//	{
+	//		final HttpServletRequestWrapper wrapped = new HttpServletRequestWrapper(httpRequest)
+	//		{
+	//			@Override
+	//			public StringBuffer getRequestURL()
+	//			{
+	//				StringBuffer originalUrl = ((HttpServletRequest) getRequest()).getRequestURL();
+	//				if (originalUrl.toString().contains(ModelAttributetConstants.STORE_URL_OLD))
+	//				{
+	//					final String newreqUri = originalUrl.toString().replaceAll(ModelAttributetConstants.STORE_URL_OLD, "/");
+	//
+	//					originalUrl = new StringBuffer(newreqUri);
+	//				}
+	//
+	//				return new StringBuffer(originalUrl);
+	//			}
+	//
+	//			@Override
+	//			public String getRequestURI()
+	//			{
+	//				String originalUri = ((HttpServletRequest) getRequest()).getRequestURI();
+	//				if (originalUri.contains(ModelAttributetConstants.STORE_URL_OLD))
+	//				{
+	//					final String newreqUri = originalUri.replaceAll(ModelAttributetConstants.STORE_URL_OLD, "/");
+	//
+	//					originalUri = newreqUri;
+	//				}
+	//
+	//				return originalUri;
+	//			}
+	//
+	//			@Override
+	//			public String getServletPath()
+	//			{
+	//				String originalServletPath = ((HttpServletRequest) getRequest()).getServletPath();
+	//				LOG.info("******originalServletPath******" + originalServletPath);
+	//				if (originalServletPath.contains(ModelAttributetConstants.STORE_URL_OLD))
+	//				{
+	//					final String newreqUri = originalServletPath.replaceAll(ModelAttributetConstants.STORE_URL_OLD, "/");
+	//
+	//
+	//					originalServletPath = newreqUri;
+	//					LOG.info("**********-------------************The request url contains /store/mpl/en Hence redirecting.......to **********************"
+	//							+ originalServletPath);
+	//				}
+	//
+	//				return originalServletPath;
+	//			}
+	//
+	//
+	//		};
+	//		LOG.info("***********wrapped.getRequestURI()***************" + wrapped.getRequestURI()
+	//				+ "**********wrapped.getRequestURL()************" + wrapped.getRequestURL().toString());
+	//
+	//		return wrapped;
+	//	}
 
 	/**
 	 * Processing normal request (i.e. when user goes directly to that application - not from cmscockpit)
