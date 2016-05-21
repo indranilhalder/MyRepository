@@ -559,8 +559,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		{
 			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 			{
-				if (null != cartEntryModel && null != cartEntryModel.getGiveAway() && !cartEntryModel.getGiveAway().booleanValue())
+				if (null != cartEntryModel && null != cartEntryModel.getGiveAway() && !cartEntryModel.getGiveAway().booleanValue()
+						&& null != deliveryMethodForm && CollectionUtils.isNotEmpty(deliveryMethodForm.getDeliveryMethodEntry()))
 				{
+					try
+					{
 					final ProductModel productModel = cartEntryModel.getProduct();
 					final ProductData productData = productFacade.getProductForOptions(productModel,
 							Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
@@ -597,6 +600,23 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					{
 						//count other modes
 						delModeCount++;
+					}
+					}
+					catch (final ArrayIndexOutOfBoundsException exception)
+					{
+						LOG.error("Error in Store selection Page", exception);
+						return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+					}
+					catch (final EtailBusinessExceptions e)
+					{
+						ExceptionUtil.etailBusinessExceptionHandler(e, null);
+						LOG.error("EtailBusinessExceptions Error in Store selection Page ", e);
+						return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Error in Store selection Page ", e);
+						return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 					}
 				}
 			}
