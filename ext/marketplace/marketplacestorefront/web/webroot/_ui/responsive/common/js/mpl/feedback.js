@@ -724,14 +724,14 @@ $(document).ready(function(){
 	    $(".brandCategory").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/store/mpl/en/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
 	    });
 	    
 	    
 	    $(".cmsManagedBrands").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/store/mpl/en/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
 	    });
 	    
 	
