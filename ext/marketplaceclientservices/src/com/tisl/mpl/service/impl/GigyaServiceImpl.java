@@ -221,11 +221,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 			final GSObject userAction = new GSObject();
 			String firstName = null;
@@ -354,11 +354,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_LOGOUT);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_LOGOUT);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 
 			if (getSecretkey() != null && getApikey() != null)
@@ -449,8 +449,8 @@ public class GigyaServiceImpl implements GigyaService
 		try
 		{
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 			String loginUserInfo = null;
 
@@ -548,8 +548,9 @@ public class GigyaServiceImpl implements GigyaService
 				}
 				request.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
 				request.setAPIDomain(getDomain());
-				request.setParam("userInfo at the time of mobile login", loginUserInfo);
-
+				//request.setParam("userInfo at the time of mobile login", loginUserInfo);
+				//--- TISPRO-404 FIX---reverting changes for web
+				request.setParam("userInfo", loginUserInfo);
 				// Step 3 - SENDING THE REQUEST
 				final GSResponse response = request.send();
 
@@ -562,8 +563,8 @@ public class GigyaServiceImpl implements GigyaService
 					}
 					else
 					{
-						LOG.debug(
-								"GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->" + (response.getErrorMessage()));
+						LOG.debug("GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->"
+								+ (response.getErrorMessage()));
 					}
 
 				}
@@ -599,11 +600,11 @@ public class GigyaServiceImpl implements GigyaService
 		try
 		{
 			// Define the API-Key and Secret key .
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 			final GSObject userAction = new GSObject();
 			String firstName = null;
