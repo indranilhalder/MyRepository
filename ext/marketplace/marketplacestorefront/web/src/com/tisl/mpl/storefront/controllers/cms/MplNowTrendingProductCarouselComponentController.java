@@ -54,8 +54,8 @@ public class MplNowTrendingProductCarouselComponentController extends
 	private CMSSiteService cmsSiteService;
 
 
-
-	private static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-96x96.jpg";
+	//store url changes
+	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-96x96.jpg";
 
 	protected static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
 			ProductOption.VARIANT_FULL);

@@ -20,7 +20,13 @@ ACC.comparenow = {
 				.click(
 						function() {
 							var checkboxId = $(this).attr('id');
-
+							//Added
+							var screenwidth=$(window).width();
+							var items=4;
+							if(screenwidth < 650){
+								var items=2;
+							}
+							//End
 							if ($(this).prop("checked") == true) {
 								// AJAX CALL
 								$
@@ -29,7 +35,7 @@ ACC.comparenow = {
 											dataType : "json",
 											url : ACC.config.encodedContextPath
 													+ "/compare/add/?productCode="
-													+ checkboxId,
+													+ checkboxId+"&maximumSize="+items,
 
 											success : function(response) {
 												//
@@ -219,13 +225,18 @@ ACC.comparenow = {
 														}
 													}
 													if (!present) {
-														if (selected.length < 4)
-															selected
-																	.push(productCode);
+														var screenwidth=$(window).width();
+														var items=4;
+														if(screenwidth < 650){
+															var items=2;
+														}
+														
+														if (selected.length < items)
+															selected.push(productCode);
 														else {
 															$('#compareError')
 																	.html(
-																			"You can add maximum 4 products to compare");
+																			"You can add maximum "+items+" products to compare");
 
 															$(this).prop(
 																	'checked',
