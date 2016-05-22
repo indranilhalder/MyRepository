@@ -192,7 +192,7 @@
 
 		<section class="r2-landing-banner r2-left">
 			<div class="col-md-6 col-sm-12 col-xs-12 xol-lg-6 r2-app-mob">
-				<img src="${commonResourcePath}/images/app_last1.png"
+				<img src="${commonResourcePath}/images/app_last11.png"
 					class="img-responsive r2-app-mob-down">
 			</div>
 
