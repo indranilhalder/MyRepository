@@ -1674,7 +1674,17 @@
 		parent="abstractJobPerformable"
 			autowire="byName">
 		<property name="modelService" ref="modelService" />
-		</bean>
+	</bean>
+	<bean id="brandProductExportJob" class="com.tisl.mpl.integration.job.BrandProductExtractJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<bean id="priceInventoryExportJob" class="com.tisl.mpl.integration.job.PriceInventoryExtractJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+	</bean>
 	<bean id="iaFeedUtil" class="com.tisl.mpl.integration.job.IAFeedUtility">
 	</bean>
 <!-- IA STAGED DATA SOURCE -->
