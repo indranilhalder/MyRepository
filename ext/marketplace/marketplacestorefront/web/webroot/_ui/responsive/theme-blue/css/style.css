@@ -31058,7 +31058,7 @@ img.r2-app-brand-img {
 
 img.r2-app-mob-down {
 	margin-top: -80px;
-	margin-left: 70px;
+	margin-left: 0px;
 }
 
 h1.r2-landing-heading {
@@ -31198,8 +31198,8 @@ img.r2-app-brand-img {
 		margin-left: -100px;
 	}
 	img.r2-app-mob-down {
-		margin-top: -230px;
-		margin-left: 370px;
+	    margin-left: 0;
+    margin-top: -50px;
 	}
 	.r2-app-landing .r2-buy-banner p {
 		margin: 0px;
@@ -31511,7 +31511,7 @@ width:130%;}
 	padding-bottom:35px;
 }
 	.r2-app-brand-img:first-child {
-		margin-left: -40px;
+		margin-left: 0px;
 		margin-top: -225px;
 	}
 	.r2-landing-brands .r2-marginAuto.r2-center.r2-padding p {
@@ -31519,6 +31519,10 @@ width:130%;}
 }
 	.r2-app-landing article p {
 		padding-top: 200px;
+	}
+	img.r2-app-mob-down {
+	margin-left: 0;
+    margin-top: -125px;
 	}
 }
 /*App landing page css ends*/

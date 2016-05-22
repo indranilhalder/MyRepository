@@ -148,7 +148,7 @@
 						<div class="col-md-4 r2-whiteText r2-marginTop">
 							<img src="${commonResourcePath}/images/mob-slider3.1.png" class="r2-marginTop">
 							<div class="col-md-12 r2-marginAuto">
-								<h2 style="margin-top: 50px;">#QueMag</h2>
+								<h2 style="margin-top: 55px;">#QueMag</h2>
 								<p>Flip through our cool magazine to get 
 						the latest trends and tips on fashion,
 						tech, culture and lifestyle.</p>
