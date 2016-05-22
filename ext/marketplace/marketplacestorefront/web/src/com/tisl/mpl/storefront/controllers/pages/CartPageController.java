@@ -1140,9 +1140,24 @@ public class CartPageController extends AbstractPageController
 							}
 							if (responseData != null)
 							{
-								for (final PinCodeResponseData pinCodeResponseData : responseData)
+								for (PinCodeResponseData pinCodeResponseData : responseData)
 								{
-									if (pinCodeResponseData != null
+										//  TISPRD-1951  START //
+
+											// Checking whether inventory is availbale or not
+											// if inventory is not available for particular delivery Mode
+											// then removing that deliveryMode in Choose DeliveryMode Page
+											try
+											{
+											  pinCodeResponseData=getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+											}
+											catch(final Exception e)
+											{
+												LOG.error("Exception occured while checking inventory ");
+											}
+										//  TISPRD-1951  END // 		
+
+											if (pinCodeResponseData != null
 											&& pinCodeResponseData.getIsServicable() != null
 											&& pinCodeResponseData.getIsServicable()
 													.equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
@@ -1445,8 +1460,22 @@ public class CartPageController extends AbstractPageController
 					responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
 				}
 
-				for (final PinCodeResponseData pinCodeResponseData : responseData)
+				for (PinCodeResponseData pinCodeResponseData : responseData)
 				{
+					//  TISPRD-1951  START //
+
+						// Checking whether inventory is availbale or not
+						// if inventory is not available for particular delivery Mode
+						// then removing that deliveryMode in Choose DeliveryMode Page
+						try
+						{
+						  pinCodeResponseData=getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+						}
+						catch(final Exception e)
+						{
+							LOG.error("Exception occured while checking inventory ");
+						}
+					//  TISPRD-1951  END // 		
 					if (pinCodeResponseData != null
 							&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
 					{
