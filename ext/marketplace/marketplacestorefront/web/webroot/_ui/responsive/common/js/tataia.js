@@ -513,12 +513,39 @@ function popupwindow(productId) {
 		href: ACC.config.encodedContextPath+"/p/"+productId+"/quickView",
 		onComplete: function(){
 			$(".imageList ul li img").css("height", "102px");
+			ia_quickviewGallery();
 		}
 });
 	  params = {'count' : '0', 'site_product_id': productId};
 	  params = buildParams(params);
 	  callRecApi(params, rootEP + '/SocialGenomix/recommendations/products/jsonp');
 }
+
+function ia_quickviewGallery() {
+	$(document).ready(function(){
+		var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
+		var thumbnailImageHeight = (mainImageHeight / 5);
+		$(".imageList ul li img").css("height", thumbnailImageHeight);
+	 	$("#previousImage").css("opacity","0.5");
+	 	$("#nextImage").css("opacity","1");
+	 	var listHeight = $(".imageList li").height();
+	 	if($("#previousImage").length){
+	 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+	 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
+	 	}
+	 	$(".imageListCarousel").show();
+	 	
+	 	if ('ontouchstart' in window) {
+	 		$(".quick-view-popup #variantForm .select-size span.selected").next("ul").hide();
+			  $(".quick-view-popup #variantForm .select-size span.selected").click(function(){
+				  $(this).next("ul").toggleClass("select_height_toggle");
+			  });
+			}
+	 
+	});
+	
+}
+
 function compareDateWithToday(SaleDate) {
 	var today = new Date();
 	var dd = today.getDate();
