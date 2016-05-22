@@ -2676,6 +2676,8 @@ h2 {
             -webkit-transition: max-height 0.3s;
             -moz-transition: max-height 0.3s;
             transition: max-height 0.3s; }
+            header > .content .bottom nav > ul > li > ul > li > ul > li#atozbrandsdiplay #group {
+       margin-right:10px !important; } 
             header > .content .bottom nav > ul > li > ul > li > ul > li > a {
               display: block;
               padding-left: 20px;
