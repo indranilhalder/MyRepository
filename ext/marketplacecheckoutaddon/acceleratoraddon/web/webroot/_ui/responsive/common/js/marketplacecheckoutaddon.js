@@ -3037,7 +3037,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		
 		var jsonObj=deliveryModeJsonObj[key].validDeliveryModes;
 		
-		var inventory=0;
+		var inventory=deliveryModeJsonObj[key].stockCount;
 		var quantityValue=$("#quantity_"+ussId).val();
 		var stockAvailable =false;
 		
