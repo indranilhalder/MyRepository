@@ -1669,6 +1669,21 @@
 	<bean id="updateSplPriceHelperService"
 		class="com.tisl.mpl.promotion.service.impl.DefaultUpdateSplPriceHelperService">
 	</bean>
+<!-- IA  export job 22 May 16 -->
+	<bean id="catProdExportJob" class="com.tisl.mpl.integration.job.CategoryProductExtractJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+		</bean>
+	<bean id="iaFeedUtil" class="com.tisl.mpl.integration.job.IAFeedUtility">
+	</bean>
+<!-- IA STAGED DATA SOURCE -->
 
-
+<bean id="iaDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@10.10.64.34:1621/MPLDEVDB" />
+		<property name="username" value="mpldev2com" />
+		<property name="password" value="mpldev2com123" />
+	</bean> 
 </beans>

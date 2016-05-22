@@ -1514,6 +1514,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DELIVERY_STARTTIME = "startTime".intern();
 	public static final String DELIVERY_ENDTIME = "endTime".intern();
 	public static final String CATEGORY_PATH = "{category-path}".intern();
+	public static final String IAFEED_QUERY = "mpl.ia.query.";
+	public static final String IA_CATEGORY_PRODUCT = "categoryproduct";
+	public static final String IA_BRAND_PRODUCT = "brandproduct";
+	public static final String IA_PRICE_INVENTORY = "priceinventory";
+	public static final String DOT = ".";
+	public static final String IA_FILE_EXTENSION = "csv";
+	public static final String IA_FILENAME_PRODUCTCATEGORY = "ia.filename.productcategory";
+	public static final String IA_FILENAME_BRANDPRODUCT = "ia.filename.brandproduct";
+	public static final String IA_FILENAME_PRICEINVENTORY = "ia.filename.priceinventory";
+	public static final String IA_EXPORT_FOLDER = "ia.path.export";
+	public static final String ENCODING = "UTF-8";
 
 	private MarketplacecommerceservicesConstants()
 	{

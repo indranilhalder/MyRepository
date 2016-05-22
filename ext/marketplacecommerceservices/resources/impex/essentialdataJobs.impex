@@ -1,6 +1,7 @@
 INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
 ;customerDetailsPopulateCronJob;customerDetailsPopulateJob;false;de
 ;salesOrderPaymentInfoPopulateJob;salesOrderPaymentInfoJob;false;de
+;CategoryProductExtractJob;catProdExportJob;false;en
 
 ;salesOrderCanRetInfoPopulateJob;salesOrderCancelPaymentInfoJob;false;de
 ;merchantMasterPopulateCronJob;merchantmaster;false;de
