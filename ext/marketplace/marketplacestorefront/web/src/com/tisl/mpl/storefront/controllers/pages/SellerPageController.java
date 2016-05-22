@@ -356,15 +356,7 @@ public class SellerPageController extends AbstractSearchPageController
 
 				// Direct category link without filtering
 				final SearchStateData searchState = new SearchStateData();
-				//				if (!resetAll)
-				//				{
-				//					final StringBuffer searchString = new StringBuffer();
-				//					searchString.append(":relevance:sellerId:" + sellerID + ":inStockFlag:true");
-				//					searchQueryData.setValue(XSSFilterUtil.filter(searchString.toString()));
-				//				}
-
 				searchState.setQuery(searchQueryData);
-				//searchState.setResetAll(resetAll);
 				searchPageData = searchFacade.dropDownSearchForSeller(searchState, sellerID, MarketplaceCoreConstants.SELLER_ID,
 						pageableData);
 
@@ -376,12 +368,6 @@ public class SellerPageController extends AbstractSearchPageController
 			{
 
 				final SearchStateData searchState = new SearchStateData();
-				//				if (!resetAll)
-				//				{
-				//					final StringBuffer searchString = new StringBuffer();
-				//					searchString.append(":relevance:inStockFlag:true");
-				//					searchQueryData.setValue(XSSFilterUtil.filter(searchString.toString()));
-				//				}
 				searchState.setQuery(searchQueryData);
 
 				final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
@@ -456,62 +442,7 @@ public class SellerPageController extends AbstractSearchPageController
 
 
 		}
-		if (null != searchPageData)
-		{
-			BreadcrumbData removeBredCrumb = null;
-			boolean flag = false;
-			for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
-			{
-				if (facets.getCode().equalsIgnoreCase("inStockFlag") && facets.getValues().size() <= 1)
-				{
-					for (final BreadcrumbData bredCrumb : searchPageData.getBreadcrumbs())
-					{
-						if (bredCrumb.getFacetCode().equalsIgnoreCase("inStockFlag") && null != searchQuery
-								&& !searchQuery.contains("inStockFlag:true"))
-						{
-							removeBredCrumb = bredCrumb;
-							flag = true;
-						}
-						else if (bredCrumb.getFacetCode().equalsIgnoreCase("inStockFlag") && null == searchQuery)
-						{
-							removeBredCrumb = bredCrumb;
-							flag = true;
-						}
 
-					}
-					searchPageData.getBreadcrumbs().remove(removeBredCrumb);
-
-				}
-			}
-			if (flag)
-			{
-				if (null != searchPageData.getCurrentQuery() && null != searchPageData.getCurrentQuery().getQuery()
-						&& null != searchPageData.getCurrentQuery().getQuery().getValue())
-				{
-					searchPageData.getCurrentQuery().getQuery()
-							.setValue(searchPageData.getCurrentQuery().getQuery().getValue().replace(":inStockFlag:true", ""));
-					searchPageData.getCurrentQuery().setUrl(
-							searchPageData.getCurrentQuery().getUrl().replace("%3AinStockFlag%3Atrue", ""));
-				}
-				for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
-				{
-					for (final FacetValueData<SearchStateData> facetValue : facets.getValues())
-					{
-						if (null != facetValue.getQuery() && facetValue.getQuery().getQuery() != null
-								&& facetValue.getQuery().getQuery().getValue() != null
-								&& facetValue.getQuery().getQuery().getValue().contains("inStockFlag:true"))
-						{
-							facetValue.getQuery().getQuery()
-									.setValue(facetValue.getQuery().getQuery().getValue().replace("inStockFlag:true:", ""));
-
-						}
-
-
-					}
-
-				}
-			}
-		}
 
 		return searchPageData;
 	}
