@@ -31,7 +31,7 @@ public class SendUnColletedOrderToCRMEventListener extends AbstractEventListener
 	@Override
 	protected void onEvent(SendUnColletedOrderToCRMEvent sendUnColletedToCRMEvent)
 	{
-
+		try{
 		LOG.debug("I am in Event class customOmsCancelAdapter.....:"+customOmsCancelAdapter);
 		for (final AbstractOrderEntryModel orderEntryModel : sendUnColletedToCRMEvent.getOrderModel().getEntries())
 		{
@@ -46,6 +46,10 @@ public class SendUnColletedOrderToCRMEventListener extends AbstractEventListener
 				MarketplaceomsordersConstants.REFUND_TYPE_CODE, sendUnColletedToCRMEvent.getOrderModel());
 					}
 				}
-	  }
+	      }
+		}
+		catch(Exception e){
+			LOG.error("Exception Occer Create CRM Ticket"+e.getMessage());
+		}
 	}
 }

@@ -488,27 +488,27 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 
 				         LOG.debug("Calling cancel Initiation process started");
 								final SendUnColletedOrderToCRMEvent sendUnColletedOrderToCRMEvent = new SendUnColletedOrderToCRMEvent(shipment,consignmentModel,orderModel,shipmentNewStatus);
-								final UnColletedOrderToInitiateRefundEvent unColletedOrderToInitiateRefundEvent= new UnColletedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,shipmentNewStatus);
-								final String trackOrderUrl = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderModel.getCode();
-								final OrderProcessModel orderProcessModel = new OrderProcessModel();
-								orderProcessModel.setOrder(orderModel);
-								orderProcessModel.setOrderTrackUrl(trackOrderUrl);
-								final OrderRefundCreditedEvent orderRefundCreditedEvent = new OrderRefundCreditedEvent(orderProcessModel);
+								final UnColletedOrderToInitiateRefundEvent unColletedOrderToInitiateRefundEvent= new UnColletedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,shipmentNewStatus,eventService,configurationService);
 								try
 								{
 									LOG.debug("Create CRM Ticket for Un-Colleted Orders");
 									eventService.publishEvent(sendUnColletedOrderToCRMEvent);
+								}
+								catch(final Exception e)
+								{
+									LOG.error("Exception during CRM Ticket for Un-Colleted Orders >> " + e.getMessage());	
+								}
+								try
+								{
 									LOG.debug("Refund Initiation  for Un-Colleted Orders");
 									eventService.publishEvent(unColletedOrderToInitiateRefundEvent);
-									LOG.debug("Refund Email Trigger for Un-Colleted Orders");
-									eventService.publishEvent(orderRefundCreditedEvent);
 								}
-
-								catch (final Exception e1)
+								catch(final Exception e)
 								{
-									LOG.error("Exception during Un-Colleted Order sending >> " + e1.getMessage());
+									LOG.error("Exception during Refund Initiation  for Un-Colleted Orders >> " + e.getMessage());	
 								}
-			}
+							
+			      }
 
 			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus)
 					&& shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED))

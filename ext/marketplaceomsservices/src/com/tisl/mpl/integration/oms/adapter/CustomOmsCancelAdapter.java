@@ -2,7 +2,7 @@
  *
  */
 package com.tisl.mpl.integration.oms.adapter;
-
+import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.basecommerce.enums.CancelReason;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.basecommerce.enums.OrderCancelEntryStatus;
@@ -36,12 +36,16 @@ import de.hybris.platform.ordermodify.model.OrderEntryModificationRecordEntryMod
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.returns.ReturnService;
+import de.hybris.platform.returns.model.RefundEntryModel;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.time.TimeService;
 import de.hybris.platform.servicelayer.user.UserService;
-
+import de.hybris.platform.basecommerce.enums.RefundReason;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,7 +61,8 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-
+import de.hybris.platform.basecommerce.enums.ReturnAction;
+import de.hybris.platform.basecommerce.enums.ReturnStatus;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsordersConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
@@ -97,6 +102,13 @@ public class CustomOmsCancelAdapter implements Serializable
 
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService;
+	
+	@Autowired
+	private FlexibleSearchService flexibleSearchService;
+	
+	@Autowired
+	private ReturnService returnService;
+
 	private ModelChangeNotifier<ConsignmentModel> consignmentProcessNotifier;
 	private TimeService timeService;
 	private OrderCancelStateMappingStrategy stateMappingStrategy;
@@ -580,7 +592,7 @@ public class CustomOmsCancelAdapter implements Serializable
 	{
 
 		PaymentTransactionModel paymentTransactionModel = null;
-		ConsignmentStatus newStatus = null;
+		
 		updateConsignmentStatus(consignmentModel, subOrderModel, ConsignmentStatus.CANCELLATION_INITIATED);
 		if (orderRequestRecord.getRefundableAmount() != null
 				&& orderRequestRecord.getRefundableAmount().doubleValue() > NumberUtils.DOUBLE_ZERO.doubleValue())
@@ -603,7 +615,7 @@ public class CustomOmsCancelAdapter implements Serializable
 								.getOrderEntriesModificationEntries())
 						{
 							final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
-						
+							ConsignmentStatus newStatus = null;
 							if (orderEntry != null)
 							{
 								if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
@@ -644,7 +656,7 @@ public class CustomOmsCancelAdapter implements Serializable
 										Double.valueOf(refundAmount), newStatus);
 
 								updateConsignmentStatus(consignmentModel, subOrderModel, newStatus);
-
+								createRefundEntry(newStatus, consignmentModel, subOrderModel);
 							}
 						}
 					}
@@ -656,6 +668,7 @@ public class CustomOmsCancelAdapter implements Serializable
 					mplJusPayRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
 							JuspayRefundType.CANCELLED, uniqueRequestId);
 					updateConsignmentStatus(consignmentModel, subOrderModel, ConsignmentStatus.REFUND_INITIATED);
+					createRefundEntry(ConsignmentStatus.REFUND_INITIATED, consignmentModel, subOrderModel);
 				}
 			}
 			catch (final Exception e)
@@ -665,6 +678,7 @@ public class CustomOmsCancelAdapter implements Serializable
 				mplJusPayRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
 						JuspayRefundType.CANCELLED, uniqueRequestId);
 				updateConsignmentStatus(consignmentModel, subOrderModel, ConsignmentStatus.REFUND_INITIATED);
+				createRefundEntry(ConsignmentStatus.REFUND_INITIATED, consignmentModel, subOrderModel);
 			}
 		}
 	}
@@ -684,7 +698,86 @@ public class CustomOmsCancelAdapter implements Serializable
 		getConsignmentProcessNotifier().notify(consignmentModel);
 		LOG.info("Consignment updated with::" + consignmentModel.getStatus());
 	}
+	private void createRefundEntry(final ConsignmentStatus newStatus, final ConsignmentModel consignmentModel,
+			final OrderModel orderModel)
+	{
+			try
+			{
+				LOG.debug("createRefundEntry");
+				final AbstractOrderEntryModel orderEntry = consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
+				RefundEntryModel refundEntryModel = new RefundEntryModel();
+				refundEntryModel.setOrderEntry(orderEntry);
+				if (CollectionUtils.isEmpty(flexibleSearchService.getModelsByExample(refundEntryModel)))
+				{
+					final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(orderModel);
+					returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
 
+
+					refundEntryModel = modelService.create(RefundEntryModel.class);
+					refundEntryModel.setOrderEntry(orderEntry);
+					refundEntryModel.setReturnRequest(returnRequestModel);
+					//TISEE-5246
+					//refundEntryModel.setReason(RefundReason.SITEERROR);
+					if (ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus))
+					{
+						refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
+					}
+					else if (ConsignmentStatus.RETURN_TO_ORIGIN.equals(newStatus))
+					{
+						refundEntryModel.setReason(RefundReason.RETURNTOORIGIN);
+					}
+					//CM 1: Added as part of R2.1 to handle new order status 'RETURNINITIATED_BY_RTO','QC_FAILED','RETURN_CLOSED'
+					else if (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
+					{
+						refundEntryModel.setReason(RefundReason.RETURNTOORIGIN);
+					}
+					else if (ConsignmentStatus.QC_FAILED.equals(newStatus))
+					{
+						refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
+					}
+					else if (ConsignmentStatus.RETURN_CLOSED.equals(newStatus))
+					{
+						refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
+					}
+					else
+					{
+						refundEntryModel.setReason(RefundReason.SITEERROR);
+					}
+					refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
+					refundEntryModel.setAction(ReturnAction.IMMEDIATE);
+					refundEntryModel.setNotes("Return Initiated by Seller Portal");
+					refundEntryModel.setExpectedQuantity(orderEntry.getQuantity());//Single line quantity
+					refundEntryModel.setReceivedQuantity(orderEntry.getQuantity());//Single line quantity
+					refundEntryModel.setRefundedDate(new Date());
+					final List<PaymentTransactionModel> tranactions = orderModel.getPaymentTransactions();
+					if (CollectionUtils.isNotEmpty(tranactions))
+					{
+						final PaymentTransactionEntryModel entry = tranactions.iterator().next().getEntries().iterator().next();
+
+						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
+								&& "COD".equalsIgnoreCase(entry.getPaymentMode().getMode()))
+						{
+							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+						}
+						else
+						{
+							final Double amount = orderEntry.getNetAmountAfterAllDisc()
+									+ (orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge() : 0D);
+
+							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+						}
+
+					}
+
+					modelService.save(refundEntryModel);
+					modelService.save(returnRequestModel);
+				}
+			}
+			catch (final Exception e)
+			{
+				LOG.error(e.getMessage(), e);
+			}
+	}
 	protected OrderHistoryEntryModel createHistoryLog(final String description, final OrderModel order, final String lineId)
 	{
 		final OrderHistoryEntryModel historyEntry = modelService.create(OrderHistoryEntryModel.class);
