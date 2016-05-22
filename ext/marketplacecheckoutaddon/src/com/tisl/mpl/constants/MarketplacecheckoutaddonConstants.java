@@ -210,9 +210,6 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CHANNEL_WEB = "WEB";
 
 	public static final String UPDATE_CHECK_PINCODE = "/updatePincodeCheck";
-	
-	public static final String ADDPOSORDERENTRY = "/addPosToOrderEntry";
-	public static final String ADDPICKUPPERSONDETAILS = "/addPickupPersonDetails";
 
 	//Payment Messages
 	public static final String CVV_HELP = "payment.cards.CVVHelpContent";
@@ -244,9 +241,6 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CHANGEDELIVERYMODE = "/changeDeliveryMode";
 	public static final String CONFIGURABLE_RADIUS = "configurable-radius";
 	public static final String NETWORK_ERROR = "/networkError";
-
-	public static final String SAVE_STORE_TOPORUDCT_SUCCESS_MSG = "yes";
-	public static final String SAVE_STORE_TOPORUDCT_FAIL_MSG = "no";
 
 	public final static String NEWPAYMENTFORMMPLURL = "newPaymentFormMplUrl";
 	public final static String NEWPAYMENTVIEWURL = "/checkout/multi/payment-method/view";
