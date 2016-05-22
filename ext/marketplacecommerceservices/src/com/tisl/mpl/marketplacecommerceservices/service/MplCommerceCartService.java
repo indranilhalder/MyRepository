@@ -420,4 +420,15 @@ public interface MplCommerceCartService
 			List<StoreLocationRequestData> storeLocationRequestDataList);
 
 
+	/**
+	 * This Method is used to get Valid Delivery Modes by Inventory
+	 * 
+	 * @param pinCodeResponseData
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	public abstract PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData)
+			throws EtailNonBusinessExceptions;
+	
+	
 }
