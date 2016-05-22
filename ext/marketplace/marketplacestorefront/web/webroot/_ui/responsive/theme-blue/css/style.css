@@ -19357,7 +19357,7 @@ header .banner > span:before, header .banner > span:after {
   -moz-transition: margin 0.3s 0.3s, opacity 0.3s 0.3s;
   transition: margin 0.3s 0.3s, opacity 0.3s 0.3s;
 }
-header .banner > span:after {
+header .banner > span p:after {
   font-family: 'fontAwesome';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -19379,6 +19379,20 @@ header .banner > span:after {
   -o-transform: translateX(-50%) translateY(-50%);
   transform: translateX(-50%) translateY(-50%); */
   margin-left:5px;
+}
+header .banner.active > span p:after {
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f106";
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+    color: #fff;
+    font-weight: normal;
+    margin-left: 5px;
 }
 header.brand-header .content {
   padding-top: 15px;
@@ -31008,7 +31022,6 @@ img.r2-app-mob-up {
 .r2-app-slider>div>h1 {
 	margin-top: 40px;
 	font-size: 31px;
-	text-transform: uppercase;
 	padding-top: 200px;
 	line-height: 40px;
 	width: 100%;
@@ -31226,7 +31239,6 @@ img.r2-app-brand-img {
 	.r2-app-slider>div>h1 {
 		margin-top: 190px;
 		font-size: 45px;
-		text-transform: uppercase;
 		padding-top: 100px;
 		line-height: 60px;
 		width: 100%;
