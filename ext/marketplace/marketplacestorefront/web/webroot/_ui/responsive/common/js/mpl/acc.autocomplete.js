@@ -171,7 +171,7 @@ ACC.autocomplete = {
 										code: obj.code,
 										desc: obj.description,	
 										//url:  "/mpl/en/search/?text=" + data.searchTerm + "&searchCategory=" + obj,
-										url: ACC.config.encodedContextPath + "search/?q=" + suggestedString + "%3Arelevance%3Abrand%3A" +  obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+										url: ACC.config.encodedContextPath + "/search/?q=" + suggestedString + "%3Arelevance%3Abrand%3A" +  obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
 										term: data.searchTerm,
 										type: "brands",
 										index: i,
