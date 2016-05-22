@@ -594,9 +594,9 @@ public class SearchPageController extends AbstractSearchPageController
 			count = preferencesData.getPageSize().intValue();
 		}
 
-		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
 				searchQuery, page, showMode, sortCode, count);
-		//searchPageData = updatePageData(searchPageData, null, searchQuery);
+		searchPageData = updatePageData(searchPageData, null, searchQuery);
 		/* Storing the user preferred search results count - END */
 		final String searchCategory = request.getParameter(ModelAttributetConstants.SEARCH_CATEGORY);
 		String searchCode = searchCategory;
@@ -1230,9 +1230,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 

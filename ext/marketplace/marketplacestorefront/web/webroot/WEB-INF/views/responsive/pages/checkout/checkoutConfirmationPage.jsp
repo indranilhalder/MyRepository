@@ -11,6 +11,9 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user"%>
  <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+ <script>
+	sessionStorage.setItem("confirmationPageVisited", "True");
+</script>
 <template:page pageTitle="${pageTitle}" >
 
 <!--- START: INSERTED for MSD --->
