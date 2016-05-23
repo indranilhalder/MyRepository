@@ -1470,7 +1470,7 @@ $(document).ready(function(){
 				
 		});
 
-		$(document).on('click','.select-view .select-list',function(e){
+		$(document).on('click','.select-view .select-list ul',function(e){
 			$('.select-view .select-list').removeClass('touch_click');
 			e.stopPropagation();
 		});
