@@ -233,8 +233,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
 					}
 				}
-				if (abstractOrderEntryModel.getGiveAway() != null
-						& !abstractOrderEntryModel.getGiveAway().booleanValue() && abstractOrderEntryModel.getSelectedUSSID() != null)
+				if (abstractOrderEntryModel.getGiveAway() != null & !abstractOrderEntryModel.getGiveAway().booleanValue()
+						&& abstractOrderEntryModel.getSelectedUSSID() != null)
 				{
 					freebieModelMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getMplDeliveryMode());
 					freebieParentQtyMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getQuantity());
@@ -267,15 +267,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								{
 									if (LOG.isDebugEnabled())
 									{
-										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + cartEntryModel.getAssociatedItems().get(0));
+										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+												+ cartEntryModel.getAssociatedItems().get(0));
 									}
 									posModel = cEntry.getDeliveryPointOfService();
 								}
 							}
 						}
-						else 
+						else
 						{
-							String parentUssId = findParentUssId(cartEntryModel, cartModel);
+							final String parentUssId = findParentUssId(cartEntryModel, cartModel);
 							if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
 							{
 								if (null != cEntry.getDeliveryPointOfService())
@@ -303,7 +304,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 			}
 		}
-				
+
 		//creating new Payment Form
 		final PaymentForm paymentForm = new PaymentForm();
 		try
@@ -938,7 +939,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					MarketplacecheckoutaddonConstants.CHECKOUTRESPONSEURL, MarketplacecheckoutaddonConstants.CHECKOUTCALLBACKURL);
 			model.addAttribute(MarketplacecheckoutaddonConstants.SOPPAGEDATA, silentOrderPageData);
 			paymentForm.setParameters(silentOrderPageData.getParameters());
-			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORMMPLURL, MarketplacecheckoutaddonConstants.PAYMENTVIEWURL);
+			model.addAttribute(MarketplacecheckoutaddonConstants.NEWPAYMENTFORMMPLURL,
+					MarketplacecheckoutaddonConstants.NEWPAYMENTVIEWURL);
 
 			setupMplPaymentPage(model);
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORM, paymentForm);
@@ -946,7 +948,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		catch (final IllegalArgumentException e)
 		{
-			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORMMPLURL, "");
+			model.addAttribute(MarketplacecheckoutaddonConstants.NEWPAYMENTFORMMPLURL, "");
 			model.addAttribute(MarketplacecheckoutaddonConstants.SOPPAGEDATA, null);
 			LOG.error(MarketplacecheckoutaddonConstants.LOGWARN, e);
 			GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.GLOBALERROR);
@@ -1775,7 +1777,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								}
 								else
 								{
-									String parentUssId = findParentUssId(cartEntryModel, cart);
+									final String parentUssId = findParentUssId(cartEntryModel, cart);
 									if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
 									{
 										if (null != cEntry.getDeliveryPointOfService())

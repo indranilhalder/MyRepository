@@ -16,7 +16,6 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
-import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -29,9 +28,7 @@ import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commercesearch.model.SolrHeroProductDefinitionModel;
 import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductDefinitionService;
 import de.hybris.platform.commerceservices.search.facetdata.BreadcrumbData;
-import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetRefinement;
-import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
@@ -469,24 +466,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
-		//searchQueryData.setValue(searchQuery);
-
-		if (StringUtils.isEmpty(searchQuery))
-		{
-			final StringBuffer searchString = new StringBuffer(100);
-			searchString.append(":relevance:inStockFlag:true");
-			searchQueryData.setValue(XSSFilterUtil.filter(searchString.toString()));
-		}
-		else
-		{
-			searchQueryData.setValue(searchQuery);
-		}
-		if (resetAll)
-		{
-			searchQueryData.setValue(searchQuery);
-		}
+		searchQueryData.setValue(searchQuery);
 		searchState.setQuery(searchQueryData);
-		//searchState.setResetAll(resetAll);
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = productSearchFacade
 				.categorySearch(categoryCode, searchState, pageableData);
 		searchPageData = updatePageData(searchPageData, categoryCode, searchQuery);
@@ -496,8 +477,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private int getfilterListCountForSize(final String searchQuery)
 	{
 		final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
-		//		model.addAttribute("sizeCount", Integer.valueOf(Iterables.frequency(splitStr, "size")));
-		//		model.addAttribute("searchQueryValue", searchQuery);
 		final String[] temp = searchQuery.split(":");
 		final int countFreq = Iterables.frequency(splitStr, "size");
 		//  int preCount=0
@@ -565,54 +544,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 
 
-		}
-		if (null != searchPageData)
-		{
-			BreadcrumbData removeBredCrumb = null;
-			boolean flag = false;
-			for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
-			{
-				if (facets.getCode().equalsIgnoreCase("inStockFlag") && facets.getValues().size() <= 1)
-				{
-					for (final BreadcrumbData bredCrumb : searchPageData.getBreadcrumbs())
-					{
-						if (bredCrumb.getFacetCode().equalsIgnoreCase("inStockFlag") && null != searchQuery
-								&& !searchQuery.contains("inStockFlag:true"))
-						{
-							removeBredCrumb = bredCrumb;
-							flag = true;
-						}
-						else if (bredCrumb.getFacetCode().equalsIgnoreCase("inStockFlag") && null == searchQuery)
-						{
-							removeBredCrumb = bredCrumb;
-							flag = true;
-						}
-
-					}
-					searchPageData.getBreadcrumbs().remove(removeBredCrumb);
-
-				}
-			}
-			if (flag)
-			{
-				for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
-				{
-					for (final FacetValueData<SearchStateData> facetValue : facets.getValues())
-					{
-						if (null != facetValue.getQuery() && facetValue.getQuery().getQuery() != null
-								&& facetValue.getQuery().getQuery().getValue() != null
-								&& facetValue.getQuery().getQuery().getValue().contains("inStockFlag:true"))
-						{
-							facetValue.getQuery().getQuery()
-									.setValue(facetValue.getQuery().getQuery().getValue().replace("inStockFlag:true:", ""));
-
-						}
-
-
-					}
-
-				}
-			}
 		}
 
 		return searchPageData;
