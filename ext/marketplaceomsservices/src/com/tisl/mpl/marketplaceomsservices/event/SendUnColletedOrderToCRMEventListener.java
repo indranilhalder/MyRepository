@@ -32,7 +32,7 @@ public class SendUnColletedOrderToCRMEventListener extends AbstractEventListener
 	protected void onEvent(SendUnColletedOrderToCRMEvent sendUnColletedToCRMEvent)
 	{
 		try{
-		LOG.debug("I am in Event class customOmsCancelAdapter.....:"+customOmsCancelAdapter);
+		LOG.debug("SendUnColletedOrderToCRMEventListener Event class:"+customOmsCancelAdapter);
 		for (final AbstractOrderEntryModel orderEntryModel : sendUnColletedToCRMEvent.getOrderModel().getEntries())
 		{
 				if ((sendUnColletedToCRMEvent.getConsignmentModel().getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || sendUnColletedToCRMEvent.getConsignmentModel().getStatus().equals(ConsignmentStatus.ORDER_UNCOLLECTED))&& sendUnColletedToCRMEvent.getShipmentNewStatus().equals(ConsignmentStatus.CANCELLATION_INITIATED))
@@ -49,7 +49,7 @@ public class SendUnColletedOrderToCRMEventListener extends AbstractEventListener
 	      }
 		}
 		catch(Exception e){
-			LOG.error("Exception Occer Create CRM Ticket"+e.getMessage());
+			LOG.error("Exception Occer Create CRM Ticket"+sendUnColletedToCRMEvent.getConsignmentModel().getCode() +" -- " +e.getMessage());
 		}
 	}
 }

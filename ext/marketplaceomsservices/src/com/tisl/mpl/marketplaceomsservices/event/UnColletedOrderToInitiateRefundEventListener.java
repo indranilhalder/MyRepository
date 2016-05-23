@@ -39,7 +39,7 @@ public class UnColletedOrderToInitiateRefundEventListener extends AbstractEventL
 	protected void onEvent(UnColletedOrderToInitiateRefundEvent unColletedOrderToInitiateRefundEvent)
 	{
 	try{
-		LOG.debug("I am in Event class customOmsCancelAdapter.....:"+customOmsCancelAdapter);
+		LOG.debug("UnColletedOrderToInitiateRefundEventListener Event class  :"+customOmsCancelAdapter);
 		  for (final AbstractOrderEntryModel orderEntryModel : unColletedOrderToInitiateRefundEvent.getOrderModel().getEntries())
 		  {
 				if ((unColletedOrderToInitiateRefundEvent.getConsignmentModel().getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || unColletedOrderToInitiateRefundEvent.getConsignmentModel().getStatus().equals(ConsignmentStatus.ORDER_UNCOLLECTED))&& unColletedOrderToInitiateRefundEvent.getShipmentNewStatus().equals(ConsignmentStatus.CANCELLATION_INITIATED))
@@ -60,12 +60,12 @@ public class UnColletedOrderToInitiateRefundEventListener extends AbstractEventL
 							LOG.debug("Refund Email Trigger for Un-Colleted Orders");
 							eventService.publishEvent(orderRefundCreditedEvent);
 							}else{
-								LOG.debug("Unable to  TriggerRefund Email  for Un-Colleted Orders"+refundStatus);
+								LOG.debug("Unable to  TriggerRefund Email  for Un-Colleted Orders"+unColletedOrderToInitiateRefundEvent.getConsignmentModel().getCode());
 							}
 						}
 						catch (final Exception e)
 						{
-							LOG.error("Exception during Refund Email Trigger for Un-Colleted Orders >> " + e.getMessage());
+							LOG.error("Exception during Refund Email Trigger for Un-Colleted Orders >> "+ unColletedOrderToInitiateRefundEvent.getConsignmentModel().getCode() +" -- " + e.getMessage());
 						}
 	
 					}

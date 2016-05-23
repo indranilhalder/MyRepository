@@ -480,7 +480,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 			LOG.debug("Delivery Mode CNC and Order Status  :" + shipment.getOlqsStatus() + " :Not Required to update Consignment");
 			final ConsignmentStatus shipmentNewStatus = getConsignmentStatusMappingStrategy().getHybrisEnumFromDto(shipment);
 			final ConsignmentStatus shipmentCurrentStatus = consignmentModel.getStatus();
-			
+			boolean checkConsignmentStatus = false;
 			if ((consignmentModel.getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || consignmentModel.getStatus().equals(
 					ConsignmentStatus.ORDER_UNCOLLECTED))
 					&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
@@ -500,6 +500,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 								}
 								try
 								{
+									checkConsignmentStatus=true;
 									LOG.debug("Refund Initiation  for Un-Colleted Orders");
 									eventService.publishEvent(unColletedOrderToInitiateRefundEvent);
 								}
@@ -527,20 +528,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}
 				
 			}
-			if ((consignmentModel.getStatus().equals(ConsignmentStatus.REFUND_INITIATED) || consignmentModel.getStatus().equals(
-					ConsignmentStatus.REFUND_IN_PROGRESS))
-					&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
-			{
-				LOG.debug("Already Consignment Status Updated for Order Collected.");
-				return true;
-			}
-			else
-			{
 				createRefundEntry(shipmentNewStatus, consignmentModel, orderModel);
 				if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
 				{
-
-
+					if(!checkConsignmentStatus){
 					LOG.info("updateConsignment:: Inside ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus) >>> shipmentCurrentStatus >>"
 							+ shipmentCurrentStatus
 							+ "<<shipmentNewStatus>>"
@@ -558,12 +549,9 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					LOG.info("****************************************Order synced succesfully - Now sending notificatioon to customer *******************");
 					//call send notification method
 					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
-
-
+					}
 					return true;
 				}
-
-			}
 		}
 		catch (final Exception e)
 		{
