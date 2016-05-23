@@ -2676,6 +2676,8 @@ h2 {
             -webkit-transition: max-height 0.3s;
             -moz-transition: max-height 0.3s;
             transition: max-height 0.3s; }
+            header > .content .bottom nav > ul > li > ul > li > ul > li#atozbrandsdiplay #group {
+       margin-right:10px !important; } 
             header > .content .bottom nav > ul > li > ul > li > ul > li > a {
               display: block;
               padding-left: 20px;
@@ -19355,7 +19357,7 @@ header .banner > span:before, header .banner > span:after {
   -moz-transition: margin 0.3s 0.3s, opacity 0.3s 0.3s;
   transition: margin 0.3s 0.3s, opacity 0.3s 0.3s;
 }
-header .banner > span:after {
+header .banner > span p:after {
   font-family: 'fontAwesome';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -19377,6 +19379,20 @@ header .banner > span:after {
   -o-transform: translateX(-50%) translateY(-50%);
   transform: translateX(-50%) translateY(-50%); */
   margin-left:5px;
+}
+header .banner.active > span p:after {
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f106";
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+    color: #fff;
+    font-weight: normal;
+    margin-left: 5px;
 }
 header.brand-header .content {
   padding-top: 15px;
@@ -20439,11 +20455,11 @@ body .marketplace-mystyle div.marketplaces.my-brands div.item a img {
     height: auto;
     padding: 0 5px;
 }
-body .marketplace-mystyle div.marketplaces .owl-prev:after, body .marketplace-mystyle div.marketplaces .owl-next:after {
+/* body .marketplace-mystyle div.marketplaces .owl-prev:after, body .marketplace-mystyle div.marketplaces .owl-next:after {
     height: 10px;
     width: 10px;
     border-width: 2px;
-}
+} */
 body .marketplace-mystyle div.marketplaces.interests>ul>li {
     width: 80%;
     margin: 0 auto;
@@ -31006,7 +31022,6 @@ img.r2-app-mob-up {
 .r2-app-slider>div>h1 {
 	margin-top: 40px;
 	font-size: 31px;
-	text-transform: uppercase;
 	padding-top: 200px;
 	line-height: 40px;
 	width: 100%;
@@ -31047,6 +31062,7 @@ img.r2-app-brand-img {
 	font-size: 14px;
 	line-height: 24px;
 }
+
 @media (max-width: 790px){
 .r2-landing-banner:last-child {
 	background-image: url('../images/landing_last-mobile.png');
@@ -31057,7 +31073,7 @@ img.r2-app-brand-img {
 
 img.r2-app-mob-down {
 	margin-top: -80px;
-	margin-left: 70px;
+	margin-left: 0px;
 }
 
 h1.r2-landing-heading {
@@ -31083,9 +31099,6 @@ h1.r2-landing-heading {
 @media (min-width:791px){
 	.r2-landing-brands p {
 	    padding: 0px 45px;
-}
-.r2-landing-brands .r2-marginAuto.r2-center.r2-padding p {
-	        padding: 0px 183px;
 }
 }
 @media (max-width: 790px){
@@ -31171,7 +31184,7 @@ img.r2-app-brand-img {
 	}
 	.r2-app-landing article p {
 		font-size: 18px;
-		padding-top: 200px;
+		padding-top: 40px;
 		text-align:left;
 		padding-left: 15px;
 	}
@@ -31200,8 +31213,8 @@ img.r2-app-brand-img {
 		margin-left: -100px;
 	}
 	img.r2-app-mob-down {
-		margin-top: -230px;
-		margin-left: 50px;
+	    margin-left: 0;
+    margin-top: -50px;
 	}
 	.r2-app-landing .r2-buy-banner p {
 		margin: 0px;
@@ -31224,9 +31237,8 @@ img.r2-app-brand-img {
 		margin: auto;
 	}
 	.r2-app-slider>div>h1 {
-		margin-top: 150px;
+		margin-top: 190px;
 		font-size: 45px;
-		text-transform: uppercase;
 		padding-top: 100px;
 		line-height: 60px;
 		width: 100%;
@@ -31247,7 +31259,7 @@ img.r2-app-brand-img {
 		margin-top: -70px;
 	}
 	.r2-mob-carousel h2 {
-		font-size: 45px;
+		font-size: 30px;
 		font-weight: 700;
 	}
 	.r2-mob-carousel p {
@@ -31265,8 +31277,8 @@ img.r2-app-brand-img {
 
 @media ( min-width : 1098px) {
 	.r2-landing-banner img.r2-app-mob-up {
-		margin-top: 130px !important;
-		margin-left: -150px !important;
+		    margin-top: 65px !important;
+    margin-left: -250px !important;
 	}
 }
 
@@ -31313,7 +31325,7 @@ img.r2-app-brand-img {
 
 @media ( max-width : 1024px) and (min-width: 990px) {
 	.r2-landing-brands>div:first-child .r2-app-brand-img {
-		margin-left: -300px;
+		margin-left: -35px;
 	}
 	.r2-mob-carousel h2 {
 		margin-top: 60px;
@@ -31329,6 +31341,9 @@ img.r2-app-brand-img {
 	}
 	.r2-mob-carousel h2 {
 		margin-top: 60px;
+	}
+	.r2-mob-carousel h2:last-child {
+		margin-top: 55px;
 	}
 	.r2-landing-banner h1 {
 		color: #fff;
@@ -31413,7 +31428,7 @@ img.r2-app-brand-img {
 }
 
 .r2-app-landing .r2-buy-banner p {
-	/* padding: 35px; */
+	padding: 7px;
 	line-height: 20px;
 	color: #fff;
 	text-transform: uppercase;
@@ -31423,6 +31438,7 @@ img.r2-app-brand-img {
 	text-align: center;
 	font-size: 16px;
 	margin:0 auto;
+	width:100%;
 }
 
 @media ( max-width : 790px) {
@@ -31501,6 +31517,28 @@ img.r2-app-brand-img {
 .r2-app-landing article p {
     padding-top: 0px;
 }}
+@media (min-width:1025px){
+.r2-app-brand-img.r2-app-brand-img-left{
+width:130%;}
+.r2-mob-carousel p {
+	margin: 0 65px 140px;
+	padding-bottom:35px;
+}
+	.r2-app-brand-img:first-child {
+		margin-left: 0px;
+		margin-top: -225px;
+	}
+	.r2-landing-brands .r2-marginAuto.r2-center.r2-padding p {
+	        padding: 0px 183px;
+}
+	.r2-app-landing article p {
+		padding-top: 200px;
+	}
+	img.r2-app-mob-down {
+	margin-left: 0;
+    margin-top: -125px;
+	}
+}
 /*App landing page css ends*/
 .totalPayable{
 	font-size:14px;
@@ -37885,7 +37923,7 @@ span.mini-cart-close {
     border: 1px solid #a9143c;
     border-radius: 5px;
     width: 345px !important;
-    left: 189px !important;
+    left: 153px !important;
     margin: auto;
     margin-top: -10px;
 }
@@ -37927,14 +37965,14 @@ font-size: 11px;
     font-size: 11px;
     line-height: 12px;
 display:inline;}
-@media(max-width:903px) and (min-width:791px){
+/* @media(max-width:903px) and (min-width:791px){
 	#checkBox .popover.top{
     left: 66px !important;
 }
-}
+} */
 @media(max-width:790px) and (min-width:651px){
 	#checkBox .popover.top{
-    left: 209px !important;
+    left: 174px !important;
 }
 }
 @media(max-width:650px) and (min-width:386px){
