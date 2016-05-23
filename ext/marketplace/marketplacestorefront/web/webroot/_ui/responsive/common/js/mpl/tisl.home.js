@@ -1084,8 +1084,14 @@ $(window).on('resize', function() {
 	});
     }
     
-    
-    
+   $(".lazy-brands").on("mouseover touchend", function(e) {
+	   var lazyImgs = $(this).find("ul.images").find("img.lazy");
+	   $(lazyImgs).each(function(){
+		   var original = $(this).attr("data-src");
+		   $(this).attr("src",original);
+		   $(this).removeAttr("data-src");
+	   });
+   }); 
 });
 
 
