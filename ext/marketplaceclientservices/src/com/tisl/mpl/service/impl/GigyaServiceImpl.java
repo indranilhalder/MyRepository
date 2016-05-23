@@ -207,10 +207,10 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * This method helps in Logging the User in the Gigya Side and Registers New User
-	 *
+	 * 
 	 * @param CustomerModel customerModel
-	 *
-	 *
+	 * 
+	 * 
 	 * @return List<String> cookieData
 	 */
 	@Override
@@ -343,7 +343,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.GigyaService#RatingLogoutHelper(de.hybris.platform.core.model.user.CustomerModel)
 	 */
 	@Override
@@ -420,7 +420,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.GigyaService#validateSignature(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -589,7 +589,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.GigyaService#gigyaLoginHelperforMobile(de.hybris.platform.core.model.user.CustomerModel,
 	 * boolean)
 	 */
@@ -663,7 +663,7 @@ public class GigyaServiceImpl implements GigyaService
 				request.setAPIDomain(getDomain());
 				if (loginUserInfo.toString() != null)
 				{
-					request.setParam("userInfo mobile login via Web", loginUserInfo.toString());
+					request.setParam("userInfo", loginUserInfo.toString());
 				}
 				// Step 3 - Sending the request
 				LOG.debug(MarketplacecclientservicesConstants.WAIT_RESPONSE);
