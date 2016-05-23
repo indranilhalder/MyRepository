@@ -65,7 +65,7 @@ public class BrandProductExtractJob extends AbstractJobPerformable<CronJobModel>
 		{
 
 			{
-				LOG.debug("*********1st call to CRM JOB*************");
+
 				iaFeedUtil.executeExport(FEEDNAME);
 			}
 			cronJob.setEndTime(new Date());

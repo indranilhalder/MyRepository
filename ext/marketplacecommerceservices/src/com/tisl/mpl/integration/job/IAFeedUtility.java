@@ -11,7 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,6 +46,9 @@ public class IAFeedUtility
 
 	@Resource
 	private DataSource iaDataSource;
+	Connection vjdbcConnection = null;
+	Statement vjdbcStmt = null;
+	PreparedStatement pst = null;
 
 	public void executeExport(final String dataExportQuery)
 	{
@@ -51,8 +56,8 @@ public class IAFeedUtility
 		final String productExportQuery = getDataExportQuery(dataExportQuery);
 		LOG.info("Analytics - Product Export query :" + productExportQuery);
 		//	HybrisDataSource currentDataSource = null;
-		Connection vjdbcConnection = null;
-		Statement vjdbcStmt = null;
+		//		Connection vjdbcConnection = null;
+		//		Statement vjdbcStmt = null;
 		ResultSet analyticsResult = null;
 		try
 		{
@@ -67,6 +72,7 @@ public class IAFeedUtility
 			final List<Map<Integer, String>> listOfMaps = new ArrayList<Map<Integer, String>>();
 			final int columnCount = analyticsResult.getMetaData() != null ? analyticsResult.getMetaData().getColumnCount() : 0;
 			final Map<Integer, String> dataColumnMap = new HashMap<Integer, String>();
+			final List<String> rowIdList = new ArrayList<String>();
 
 			if (columnCount > 0)
 			{
@@ -89,14 +95,20 @@ public class IAFeedUtility
 				while (analyticsResult.next())
 				{
 					dataMap = new HashMap<Integer, String>();
-
+					rowIdList.add(analyticsResult.getString(columnCount));
 					for (int i = 1; i < columnCount; i++)
 					{
 						dataMap.put(Integer.valueOf(i - 1), analyticsResult.getString(i));
 					}
 					listOfMaps.add(dataMap);
 				}
+				for (final String s : rowIdList)
+				{
+					LOG.debug(s);
+				}
+
 				writeExportDataIntoFile(dataExportQuery, listOfMaps);
+				updateProcessed(rowIdList, dataExportQuery);
 			}
 		}
 		catch (final Exception e)
@@ -130,12 +142,59 @@ public class IAFeedUtility
 
 	}
 
+	/**
+	 * @param rowIdList
+	 * @param dataExportQuery
+	 */
+	private void updateProcessed(final List<String> rowIdList, final String dataExportQuery)
+	{
+		// YTODO Auto-generated method stub
+		try
+		{
+			vjdbcConnection = iaDataSource.getConnection();
+			pst = vjdbcConnection.prepareStatement(getDataUpdateQuery(dataExportQuery));
+			final int batchValue = configurationService.getConfiguration()
+					.getInt(MarketplacecommerceservicesConstants.IA_BATCHVALUE);
+			int count = 0;
+			LOG.debug("No of rows to be updated: " + rowIdList.size());
+
+			for (int i = 0; i < rowIdList.size(); i++)
+			{
+				pst.setString(1, rowIdList.get(i));
+				pst.addBatch();
+				count++;
+				if (count == batchValue || i == (rowIdList.size() - 1))
+				{
+					pst.executeBatch();
+					pst.clearBatch();
+					LOG.debug("Batch Updated. No of Rows: " + count);
+					count = 0;
+				}
+			}
+			pst.executeBatch();
+		}
+		catch (final SQLException e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public String getDataExportQuery(final String queryName)
 	{
 		//		final InputStream propFileValue = null;
 		final String query = configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.IAFEED_QUERY + queryName);
+		LOG.info("query" + query);
+		return query;
+	}
 
+	public String getDataUpdateQuery(final String queryName)
+	{
+		//		final InputStream propFileValue = null;
+		final String query = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.IAFEED_UPDATEQUERY + queryName);
+		LOG.info("query" + query);
 		return query;
 	}
 
@@ -153,28 +212,29 @@ public class IAFeedUtility
 		String exportFileName = null;
 		final Date date = new Date();
 		//	final SimpleDateFormat ft = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_S");
-		final SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd-HHmm-");
+		final SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd-HHmmss-SSS");
 
 		if (MarketplacecommerceservicesConstants.IA_CATEGORY_PRODUCT.equalsIgnoreCase(dataExportQuery))
 		{
 			exportFileName = exportFilePath
-					+ ft.format(date)
-					+ configurationService.getConfiguration().getString(
-							MarketplacecommerceservicesConstants.IA_FILENAME_PRODUCTCATEGORY) + MarketplacecommerceservicesConstants.DOT
+
+			+ configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.IA_FILENAME_PRODUCTCATEGORY)
+					+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
 					+ MarketplacecommerceservicesConstants.IA_FILE_EXTENSION;
 		}
 		else if (MarketplacecommerceservicesConstants.IA_BRAND_PRODUCT.equalsIgnoreCase(dataExportQuery))
 		{
-			exportFileName = exportFilePath + ft.format(date)
+			exportFileName = exportFilePath
 					+ configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.IA_FILENAME_BRANDPRODUCT)
-					+ MarketplacecommerceservicesConstants.DOT + MarketplacecommerceservicesConstants.IA_FILE_EXTENSION;
+					+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
+					+ MarketplacecommerceservicesConstants.IA_FILE_EXTENSION;
 		}
 		else if (MarketplacecommerceservicesConstants.IA_PRICE_INVENTORY.equalsIgnoreCase(dataExportQuery))
 		{
 			exportFileName = exportFilePath
-					+ ft.format(date)
-					+ configurationService.getConfiguration().getString(
-							MarketplacecommerceservicesConstants.IA_FILENAME_PRICEINVENTORY) + MarketplacecommerceservicesConstants.DOT
+
+			+ configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.IA_FILENAME_PRICEINVENTORY)
+					+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
 					+ MarketplacecommerceservicesConstants.IA_FILE_EXTENSION;
 		}
 		if (exportFileName != null)
@@ -208,6 +268,7 @@ public class IAFeedUtility
 
 				}
 			}
+
 			catch (UnsupportedEncodingException | FileNotFoundException e)
 			{
 				LOG.error("Error occurred while creating the export file" + e.getMessage());
