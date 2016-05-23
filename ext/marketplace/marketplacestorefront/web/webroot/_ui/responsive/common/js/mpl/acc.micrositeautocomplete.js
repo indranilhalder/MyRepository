@@ -42,6 +42,7 @@ ACC.micrositeautocomplete = {
 							.appendTo(ul);
 				}*/
 				
+				
 				if (item.type == "autoSuggestion"){
 					
 					var renderHtml = "<a href='" + ACC.config.encodedContextPath + "/search/?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
