@@ -24,7 +24,7 @@
 				 <c:if test="${product.isProductNew eq true}">
 					<div style="z-index: 1;" class="new">
 					<img class="brush-strokes-sprite sprite-New"
-					src="/store/_ui/responsive/common/images/transparent.png"><span>New</span>
+					src="/_ui/responsive/common/images/transparent.png"><span>New</span>
 					</div>  </c:if> <a
 					class="thumb" href="${productUrl}" title="${product.name}"> <product:productPrimaryImage
 						product="${product}" format="searchPage" /> <%-- 	<product:productSearchPrimaryImage product="${product}" format="searchPage" index="1"/> --%>
@@ -34,14 +34,14 @@
 				<c:if test="${!product.isOnlineExclusive && product.isOfferExisting}">
 					<div style="z-index: 2;" class="on-sale">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="/store/_ui/responsive/common/images/transparent.png"> <span>On Offer</span>
+							src="/_ui/responsive/common/images/transparent.png"> <span>On Offer</span>
 					</div>
 				</c:if>
 				
 				<c:if test="${product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="/store/_ui/responsive/common/images/transparent.png"> <span>online
+							src="/_ui/responsive/common/images/transparent.png"> <span>online
 							exclusive</span>
 					</div>
 				</c:if>

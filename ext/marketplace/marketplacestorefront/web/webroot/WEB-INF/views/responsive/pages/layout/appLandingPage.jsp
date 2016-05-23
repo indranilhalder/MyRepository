@@ -63,11 +63,12 @@
 			</div>
 		</section>
 
-		<div class="r2-buy-banner r2-marginTop r2-paddingTop row">
-			<p>REAL GOOD BRANDS AT FEEL GOOD PRICES</p>
-		</div>
 
 		<section class="r2-app-slider r2-left">
+				<div class="r2-buy-banner r2-marginTop r2-paddingTop row">
+			<p>REAL GOOD BRANDS AT FEEL GOOD PRICES</p>
+		</div>
+		
 			<div class="col-md-12">
 				<h1>
 					Welcome to India's only<br> PHYGITAL shopping destination
@@ -131,8 +132,8 @@
 							<div class="col-md-12 r2-marginAuto">
 								<h2>Store Locator</h2>
 								<p>PIQ up, return or exchange stuff at
-									a store near ou with the help of
-							out interactive map.</p>
+									a store near you with the help of
+							our interactive map.</p>
 							</div>
 						</div>
 						<div class="col-md-4 r2-whiteText r2-marginTop">
@@ -147,7 +148,7 @@
 						<div class="col-md-4 r2-whiteText r2-marginTop">
 							<img src="${commonResourcePath}/images/mob-slider3.1.png" class="r2-marginTop">
 							<div class="col-md-12 r2-marginAuto">
-								<h2>#QueMag</h2>
+								<h2 style="margin-top: 55px;">#QueMag</h2>
 								<p>Flip through our cool magazine to get 
 						the latest trends and tips on fashion,
 						tech, culture and lifestyle.</p>
@@ -164,7 +165,7 @@
 		<section class="r2-landing-brands">
 			<div class="col-md-6 col-sm-12 col-xs-12 col-lg-6">
 				<img src="${commonResourcePath}/images/app-feature1.png"
-					class="r2-app-brand-img hidden-xs"> <img
+					class="r2-app-brand-img hidden-xs r2-app-brand-img-left"> <img
 					src="${commonResourcePath}/images/app-feature-mob1.png"
 					class="r2-app-brand-img visible-xs">
 			</div>
@@ -191,7 +192,7 @@
 
 		<section class="r2-landing-banner r2-left">
 			<div class="col-md-6 col-sm-12 col-xs-12 xol-lg-6 r2-app-mob">
-				<img src="${commonResourcePath}/images/app_last1.png"
+				<img src="${commonResourcePath}/images/app_last11.png"
 					class="img-responsive r2-app-mob-down">
 			</div>
 

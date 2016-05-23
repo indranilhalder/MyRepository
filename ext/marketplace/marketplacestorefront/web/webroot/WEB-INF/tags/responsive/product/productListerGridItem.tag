@@ -33,7 +33,7 @@
 					<div style="z-index: 1;" class="new">
 						<img class="brush-strokes-sprite sprite-New"
 
-							src="/store/_ui/responsive/common/images/transparent.png"><span>New</span>
+							src="/_ui/responsive/common/images/transparent.png"><span>New</span>
 					</div>
 				</c:if>
 
@@ -48,14 +48,14 @@
 						<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">
 				<%-- 	<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}"> --%>
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="/store/_ui/responsive/common/images/transparent.png">
+							src="/_ui/responsive/common/images/transparent.png">
 						<span>On Offer</span>
 					</div>
 		         </c:if>
 				<c:if test="${product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="/store/_ui/responsive/common/images/transparent.png">
+							src="/_ui/responsive/common/images/transparent.png">
 						<span>online exclusive</span>
 					</div>
 				</c:if>
