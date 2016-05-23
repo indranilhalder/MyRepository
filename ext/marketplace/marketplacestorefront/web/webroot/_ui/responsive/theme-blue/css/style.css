@@ -22565,9 +22565,9 @@ font-weight:600;
 	padding-top: 6px;
 	margin:0px auto;
 	height:auto;
-
-
-	
+}
+.product-tile .image .quickview .disabled.serp-addtobag {
+	display:none;
 }
 .product-tile .image .quickview .serp-addtobag span:before {
     font-family: 'icomoon';
