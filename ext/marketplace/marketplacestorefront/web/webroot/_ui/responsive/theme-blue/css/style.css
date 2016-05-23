@@ -2182,7 +2182,7 @@ h2 {
           margin-right: 5px; }
       header .banner .content h1 {
         font-size: 28px;
-        padding: 50px 0 0; }
+        padding: 25px 0; }
       header .banner .content form {
         padding: 15px 0 10px;
         display: inline-block;
@@ -19499,6 +19499,9 @@ display:none;
 .select-list ul li{
 	font-size:13px;
 }
+.trending .select-list ul li{
+	font-size:16px;
+}
 
 div.pdp.other-sellers {
     background-color: #fff;
@@ -29414,6 +29417,9 @@ width:100%;
 border-bottom: 2px solid transparent;
     padding: 5px;
 }
+.home-brands-you-love-carousel-brands img.lazy[src*=base64] {
+    max-height: 36px;
+}
 .home-brands-you-love-carousel-brands img:hover{
 cursor:pointer;
 }
@@ -29842,6 +29848,7 @@ a.button, button {
 }
 .qued-image img {
     float: right;
+    max-width:100%;
 }
 .qued-image img:nth-child(2) {
     position: relative;
@@ -31616,6 +31623,9 @@ body.page-homepage .feature-collections{
 }
 #latestOffersContent {
 	padding: 0 10px;	
+}
+.topConcierge .owl-item {
+    padding: 0 5px;
 }
 .topConcierge .latest-offer-carousal-image img {
 	width: auto;
