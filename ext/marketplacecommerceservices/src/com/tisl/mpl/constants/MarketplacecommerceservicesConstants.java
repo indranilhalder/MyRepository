@@ -1525,6 +1525,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String IA_FILENAME_BRANDPRODUCT = "ia.filename.brandproduct";
 	public static final String IA_FILENAME_PRICEINVENTORY = "ia.filename.priceinventory";
 	public static final String IA_EXPORT_FOLDER = "ia.path.export";
+	public static final String IA_CATEGORYEXPORT_FOLDER = "ia.path.catexport";
+	public static final String IA_BRANDEXPORT_FOLDER = "ia.path.brandexport";
+	public static final String IA_PRICE_INVENTORYEXPORT_FOLDER = "ia.path.priceinventoryexport";
 	public static final String ENCODING = "UTF-8";
 	public static final String IA_BATCHVALUE = "mpl.ia.batchvalue";
 

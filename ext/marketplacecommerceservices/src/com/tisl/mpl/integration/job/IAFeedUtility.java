@@ -3,8 +3,11 @@
  */
 package com.tisl.mpl.integration.job;
 
+import de.hybris.platform.core.Registry;
+import de.hybris.platform.jdbcwrapper.HybrisDataSource;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.util.CSVWriter;
+import de.hybris.platform.virtualjdbc.db.VjdbcDataSourceImplFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
@@ -44,26 +46,27 @@ public class IAFeedUtility
 	private ConfigurationService configurationService;
 
 
-	@Resource
-	private DataSource iaDataSource;
+	//@Resource
+	//private DataSource iaDataSource;
 	Connection vjdbcConnection = null;
 	Statement vjdbcStmt = null;
 	PreparedStatement pst = null;
+	HybrisDataSource currentDataSource = null;
 
 	public void executeExport(final String dataExportQuery)
 	{
 		LOG.info("Current export query key: " + dataExportQuery);
 		final String productExportQuery = getDataExportQuery(dataExportQuery);
 		LOG.info("Analytics - Product Export query :" + productExportQuery);
-		//	HybrisDataSource currentDataSource = null;
-		//		Connection vjdbcConnection = null;
-		//		Statement vjdbcStmt = null;
+		Connection vjdbcConnection = null;
+		Statement vjdbcStmt = null;
 		ResultSet analyticsResult = null;
 		try
 		{
 			// getting database connection from vjdbc
-			//	currentDataSource = Registry.getCurrentTenantNoFallback().getDataSource(VjdbcDataSourceImplFactory.class.getName());
-			vjdbcConnection = iaDataSource.getConnection();
+			currentDataSource = Registry.getCurrentTenantNoFallback().getDataSource(VjdbcDataSourceImplFactory.class.getName());
+			//	vjdbcConnection = iaDataSource.getConnection();
+			vjdbcConnection = currentDataSource.getConnection();
 			vjdbcStmt = vjdbcConnection.createStatement();
 			analyticsResult = vjdbcStmt.executeQuery(productExportQuery);
 
@@ -151,7 +154,8 @@ public class IAFeedUtility
 		// YTODO Auto-generated method stub
 		try
 		{
-			vjdbcConnection = iaDataSource.getConnection();
+			//	vjdbcConnection = iaDataSource.getConnection();
+			vjdbcConnection = currentDataSource.getConnection();
 			pst = vjdbcConnection.prepareStatement(getDataUpdateQuery(dataExportQuery));
 			final int batchValue = configurationService.getConfiguration()
 					.getInt(MarketplacecommerceservicesConstants.IA_BATCHVALUE);
@@ -171,7 +175,8 @@ public class IAFeedUtility
 					count = 0;
 				}
 			}
-			pst.executeBatch();
+			pst.close();
+
 		}
 		catch (final SQLException e)
 		{
@@ -201,14 +206,7 @@ public class IAFeedUtility
 	public void writeExportDataIntoFile(final String dataExportQuery, final List<Map<Integer, String>> listOfMaps)
 	{
 
-		final String exportFilePath = configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.IA_EXPORT_FOLDER);
-		final File exportDir = new File(exportFilePath);
-		// Creating export directory if not exists.
-		if (!exportDir.isDirectory())
-		{
-			exportDir.mkdir();
-		}
+
 		String exportFileName = null;
 		final Date date = new Date();
 		//	final SimpleDateFormat ft = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_S");
@@ -216,6 +214,15 @@ public class IAFeedUtility
 
 		if (MarketplacecommerceservicesConstants.IA_CATEGORY_PRODUCT.equalsIgnoreCase(dataExportQuery))
 		{
+
+			final String exportFilePath = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.IA_CATEGORYEXPORT_FOLDER);
+			final File exportDir = new File(exportFilePath);
+			// Creating export directory if not exists.
+			if (!exportDir.isDirectory())
+			{
+				exportDir.mkdir();
+			}
 			exportFileName = exportFilePath
 
 			+ configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.IA_FILENAME_PRODUCTCATEGORY)
@@ -224,6 +231,14 @@ public class IAFeedUtility
 		}
 		else if (MarketplacecommerceservicesConstants.IA_BRAND_PRODUCT.equalsIgnoreCase(dataExportQuery))
 		{
+			final String exportFilePath = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.IA_BRANDEXPORT_FOLDER);
+			final File exportDir = new File(exportFilePath);
+			// Creating export directory if not exists.
+			if (!exportDir.isDirectory())
+			{
+				exportDir.mkdir();
+			}
 			exportFileName = exportFilePath
 					+ configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.IA_FILENAME_BRANDPRODUCT)
 					+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
@@ -231,6 +246,16 @@ public class IAFeedUtility
 		}
 		else if (MarketplacecommerceservicesConstants.IA_PRICE_INVENTORY.equalsIgnoreCase(dataExportQuery))
 		{
+
+			final String exportFilePath = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.IA_PRICE_INVENTORYEXPORT_FOLDER);
+
+			final File exportDir = new File(exportFilePath);
+			// Creating export directory if not exists.
+			if (!exportDir.isDirectory())
+			{
+				exportDir.mkdir();
+			}
 			exportFileName = exportFilePath
 
 			+ configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.IA_FILENAME_PRICEINVENTORY)
@@ -256,7 +281,7 @@ public class IAFeedUtility
 			{
 				DataImpexScriptWriter = new CSVWriter(exportFile, MarketplacecommerceservicesConstants.ENCODING, true);
 				DataImpexScriptWriter.setFieldseparator('^');
-				DataImpexScriptWriter.setCommentchar('#');
+				//	DataImpexScriptWriter.setCommentchar('#');
 				DataImpexScriptWriter.setLinebreak("\r\n");
 				if (listOfMaps != null && listOfMaps.size() > 0)
 				{
