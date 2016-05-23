@@ -1689,12 +1689,12 @@
 	</bean>
 <!-- IA STAGED DATA SOURCE -->
 
-<!-- <bean id="iaDataSource"
+ <bean id="iaDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url" value="jdbc:oracle:thin:@10.10.64.34:1621/MPLDEVDB" />
 		<property name="username" value="mpldev2com" />
 		<property name="password" value="mpldev2com123" />
-	</bean>  -->
+	</bean>  
 	
 </beans>

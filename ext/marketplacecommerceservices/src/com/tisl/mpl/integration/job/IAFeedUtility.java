@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
@@ -47,14 +48,16 @@ public class IAFeedUtility
 
 
 	//@Resource
-	//private DataSource iaDataSource;
+	private DataSource iaDataSource;
 	Connection vjdbcConnection = null;
+	Connection connection = null;
 	Statement vjdbcStmt = null;
 	PreparedStatement pst = null;
-	HybrisDataSource currentDataSource = null;
+
 
 	public void executeExport(final String dataExportQuery)
 	{
+		HybrisDataSource currentDataSource = null;
 		LOG.info("Current export query key: " + dataExportQuery);
 		final String productExportQuery = getDataExportQuery(dataExportQuery);
 		LOG.info("Analytics - Product Export query :" + productExportQuery);
@@ -111,7 +114,10 @@ public class IAFeedUtility
 				}
 
 				writeExportDataIntoFile(dataExportQuery, listOfMaps);
-				updateProcessed(rowIdList, dataExportQuery);
+				if (null != dataExportQuery && dataExportQuery.equals(MarketplacecommerceservicesConstants.PRICEINVENTORY_FEED))
+				{
+					updateProcessed(rowIdList, dataExportQuery);
+				}
 			}
 		}
 		catch (final Exception e)
@@ -155,8 +161,8 @@ public class IAFeedUtility
 		try
 		{
 			//	vjdbcConnection = iaDataSource.getConnection();
-			vjdbcConnection = currentDataSource.getConnection();
-			pst = vjdbcConnection.prepareStatement(getDataUpdateQuery(dataExportQuery));
+			connection = iaDataSource.getConnection();
+			pst = connection.prepareStatement(getDataUpdateQuery(dataExportQuery));
 			final int batchValue = configurationService.getConfiguration()
 					.getInt(MarketplacecommerceservicesConstants.IA_BATCHVALUE);
 			int count = 0;
@@ -176,6 +182,8 @@ public class IAFeedUtility
 				}
 			}
 			pst.close();
+			connection.commit();
+			connection.close();
 
 		}
 		catch (final SQLException e)

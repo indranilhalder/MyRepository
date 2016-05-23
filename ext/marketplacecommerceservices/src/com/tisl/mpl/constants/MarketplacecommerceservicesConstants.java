@@ -1530,6 +1530,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String IA_PRICE_INVENTORYEXPORT_FOLDER = "ia.path.priceinventoryexport";
 	public static final String ENCODING = "UTF-8";
 	public static final String IA_BATCHVALUE = "mpl.ia.batchvalue";
+	public static final Object PRICEINVENTORY_FEED = "priceinventory";
 
 	private MarketplacecommerceservicesConstants()
 	{
