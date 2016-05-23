@@ -22629,7 +22629,7 @@ ul.ia_feature_brands li{
     clear: both;
 }
 div.productInfo ul li.product-size-list {
-    height: 16px;
+    min-height: 16px;
 }
 
 .productInfo li {
@@ -25057,7 +25057,7 @@ width:auto;
     margin-top:5px;
 } 
 div.productInfo ul li.product-size-list{
-height:16px;
+min-height:16px;
 }
 div.productInfo ul li span.product-size{
 display:none;
