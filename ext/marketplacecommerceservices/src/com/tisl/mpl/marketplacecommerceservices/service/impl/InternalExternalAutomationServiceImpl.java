@@ -760,9 +760,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			connection.setConnectTimeout(60 * 1000);
 			final sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
 			//final String authorization = username + ":" + password;
-
-			LOG.info("Username and Password after decryption : " + "====Username=====" + decrypt(username) + "====Password==:"
-					+ decrypt(password));
 			final String authorization = decrypt(username) + ":" + decrypt(password);
 
 			final String encodedAuth = "Basic " + encoder.encode(authorization.getBytes());
