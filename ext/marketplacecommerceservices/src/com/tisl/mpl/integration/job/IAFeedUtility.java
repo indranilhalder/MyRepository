@@ -47,7 +47,7 @@ public class IAFeedUtility
 	private ConfigurationService configurationService;
 
 
-	//@Resource
+	@Resource
 	private DataSource iaDataSource;
 	Connection vjdbcConnection = null;
 	Connection connection = null;
@@ -68,8 +68,8 @@ public class IAFeedUtility
 		{
 			// getting database connection from vjdbc
 			currentDataSource = Registry.getCurrentTenantNoFallback().getDataSource(VjdbcDataSourceImplFactory.class.getName());
-			//	vjdbcConnection = iaDataSource.getConnection();
 			vjdbcConnection = currentDataSource.getConnection();
+			// vjdbcConnection = currentDataSource.getConnection();
 			vjdbcStmt = vjdbcConnection.createStatement();
 			analyticsResult = vjdbcStmt.executeQuery(productExportQuery);
 
@@ -86,7 +86,7 @@ public class IAFeedUtility
 				{
 					if (i == 1)
 					{
-						dataColumnMap.put(Integer.valueOf(i - 1), '#' + analyticsResult.getMetaData().getColumnName(i));
+						dataColumnMap.put(Integer.valueOf(i - 1), analyticsResult.getMetaData().getColumnName(i));
 					}
 					else
 					{
@@ -181,9 +181,8 @@ public class IAFeedUtility
 					count = 0;
 				}
 			}
-			pst.close();
 			connection.commit();
-			connection.close();
+
 
 		}
 		catch (final SQLException e)
@@ -191,6 +190,27 @@ public class IAFeedUtility
 			// YTODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally
+		{
+			try
+			{
+
+				if (pst != null)
+				{
+					pst.close();
+				}
+				if (connection != null)
+				{
+					connection.close();
+				}
+
+			}
+			catch (final Exception e)
+			{
+				LOG.warn("Error occurred while closing the database connection in IA Feed export job" + e.getMessage());
+			}
+		}
+
 	}
 
 	public String getDataExportQuery(final String queryName)
@@ -283,6 +303,7 @@ public class IAFeedUtility
 				{
 					LOG.error("error occurred while creating the export file" + e.getMessage());
 				}
+
 			}
 			CSVWriter DataImpexScriptWriter;
 			try
