@@ -139,11 +139,15 @@
 			if(hostName.indexOf(':') >=0)
 			{
 				// for IP , it will not be https 
-				document.flyOutloginForm.action="/store/mpl/en/j_spring_security_check";
+				//document.flyOutloginForm.action="/store/mpl/en/j_spring_security_check";
+				document.flyOutloginForm.action="/j_spring_security_check";	//url changes for /store removal
+				document.flyOutloginForm.submit();
 			}
 			else
 			{
-				document.flyOutloginForm.action="https://"+hostName+"/store/mpl/en/j_spring_security_check";
+				//document.flyOutloginForm.action="https://"+hostName+"/store/mpl/en/j_spring_security_check";
+				document.flyOutloginForm.action="https://"+hostName+"/j_spring_security_check";		//url changes for /store removal
+				document.flyOutloginForm.submit();
 			}
 			
 			return true;
@@ -187,29 +191,6 @@
 			}
 		});
 		
-		$(".header-myAccountSignOut").click(function(){
-			window.localStorage.removeItem("eventFired");
-		});
-		
-		
-		//TISPRO-183 -- Firing Tealium event only after successful user login
-		if(loginStatus){
-			if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {
-				localStorage.setItem("eventFired","true");
-			//	console.log("Login Success!!!");
-				if(typeof utag == "undefined"){
-					console.log("Utag is undefined")
-				}
-				else{
-		//			console.log("Firing Tealium Event");
-					utag.link({ "event_type" : "Login", "link_name" : "Login" });
-				}
-				
-				//fireTealiumEvent();
-				
-				
-				
-			}  
-		}
+	
 
 </script>

@@ -111,7 +111,8 @@
 
 
 $(document).ready(function(){
-	
+
+
 	//TISEEII-640 issue fix -- Start
 	$(".facet.js-facet .js-facet-name").each(function(){
 		var x = $(this).html().length; 
@@ -267,11 +268,11 @@ $(document).ready(function(){
 			$(".toggle-filterSerp").click(function(){
 				$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
 				$(this).toggleClass("active");
-				$(".facet-name.js-facet-name h4").toggleClass("active");
-				$(".product-facet.js-product-facet.listing-leftmenu").find('.facet-list.js-facet-list').removeClass('active');
-				$(".product-facet.js-product-facet.listing-leftmenu").find('div#searchPageDeptHierTree').hide();
-				
-			});
+
+
+
+
+				});
 			$(".product-facet .facet-list li input.applied-color").each(function(){
 				var appliedColor = $(this).attr("value");
 				$(".product-facet li.filter-colour a").each(function(){
@@ -303,8 +304,13 @@ $(document).ready(function(){
 					$(this).parents(".brands").hide();
 				}
 			});
+			$(".feature-collections .collections .chef").each(function(){
+				if($(this).children().length == 0) {
+					$(this).hide();
+				}
+			});
 			
-			$(".toggle:not(.helpmeshopbanner)").on("click",function(e){
+			$(".toggle").on("click",function(e){
 				var p = $(e.currentTarget).parent();
 			    if(p.hasClass('active')) {
 			      p.removeClass('active');
@@ -454,7 +460,8 @@ $(document).ready(function(){
 			 
 			 if($('body').hasClass('template-pages-layout-micrositePage1')){
 	
-				 $(this).find('header').first().addClass('compact');
+				 //$(this).find('header').first().addClass('compact');
+				 $(this).find('header').first().find('.compact-toggle').addClass('open');
 				 $(this).find('header').first().find('.compact-toggle').click(function(){
 					 $(this).parents('header').toggleClass('compact');
 					 $(this).parents('header').find('.compact-toggle').toggleClass('open');
@@ -468,14 +475,14 @@ $(document).ready(function(){
 					 $(this).parents('header').find('.compact-toggle').toggleClass('open');
 				 });*/
 			 }
-			 $(window).scroll(function () {
+			/* $(window).scroll(function () {
 			 if($("header .content .bottom").hasClass("active")){
 					$("header > .content .top .compact-toggle.open").css("display","none");
 				}
 				else{
 					$("header > .content .top .compact-toggle.open").css("display","inline-block");
 				}
-			 });
+			 });*/
 	/*---END of Micro site brand header toggle functionality ---*/
 			 
 	/*-------Start of Marketplace preferences--------*/
@@ -717,14 +724,14 @@ $(document).ready(function(){
 	    $(".brandCategory").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/store/mpl/en/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
 	    });
 	    
 	    
 	    $(".cmsManagedBrands").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/store/mpl/en/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
 	    });
 	    
 	
@@ -755,7 +762,7 @@ $(document).ready(function(){
 		$('.benefits ul li').each(function(count) {
 			var liHeight = ($('.sign-in .tabs li.active').height()+20)/3;
 			var liPadding = $('.benefits ul li').eq(count).find("div:last-child").height();
-	//		console.log("active"+liHeight);
+		//	console.log("active"+liHeight);
 			$('.benefits ul li').eq(count).css({
 													"height" : liHeight+1,
 													"padding" : (liHeight-liPadding)/2+"px 20px"
@@ -894,7 +901,7 @@ $(document).ready(function(){
 			  var url = $(this).attr("src");
 			  $(this).attr("src",url+"?wmode=transparent");
 		  });
-		  }
+	  }
 	  if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
 		  $("#js-site-search-input").attr("readonly","readonly");
 		  $("#mailtext").attr("readonly","readonly");
@@ -915,7 +922,6 @@ $(document).ready(function(){
 			
 		  
 	  }
-	  
 	 /*---END  of function for Internet Explorer video z-index overlapping ends----*/
 		
 		$(".checkout-shipping #addressForm input[type='checkbox']").change(function () {
@@ -983,12 +989,12 @@ $(document).ready(function(){
 								returnType : "JSON",
 								success : function(data) {
 									listSelect = "";
-							//		console.log(data);
+								//	console.log(data);
 									$.each(data, function(k, v) {
 										listSelect += '<option value="'+v+'">'
 												+ v + '</option>';
 									});
-							//		console.log(listSelect);
+								//	console.log(listSelect);
 									$("#feedCategory").html(listSelect);
 									$(".feed-back").show();
 								},
@@ -1198,7 +1204,7 @@ $(document).ready(function(){
 		$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
 	});
 	
-	$(window).on("load resize",function(){
+	/*$(window).on("load resize",function(){
 		if($(window).width()<651)
 			{
 		$('.feature-collections ul.collections li.chef.sub .simple-banner-component').each(function(){
@@ -1210,7 +1216,7 @@ $(document).ready(function(){
 		
 		});
 			}
-	});
+	});*/
 	if ($("#searchPageDeptHierTree").children().length==0){
 		
 		$("#searchPageDeptHierTree").css("padding","0px");
@@ -1322,9 +1328,6 @@ $(document).ready(function(){
 	 		$("header .content nav > ul > li > ul > li > .toggle a").click(function(){
 	 			$(this).attr("href","#");
 	 		});
-	 		$("header.brand-header .content .bottom nav>ul>li>ul>li.level1>div.toggle>a").click(function(){
-	 			$(this).attr("href","#");
-	 		});
 			}
 		
 		if($('.lookbook_wrapper .bottom-pagination').children().length==0){
@@ -1406,4 +1409,69 @@ $(document).ready(function(){
 				$(".body-Content").css('padding-bottom','0px');
 			}
 		});		
+		
+		if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') < 0) {
+			$("body").addClass('safariBrowser');
+			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+				$('header .content nav > ul > li:first-child + li').css('margin-left','25px');
+			}
+		}
+		var resize_sbb;
+		$(window).resize(function(){
+			clearTimeout(resize_sbb);
+			resize_sbb = setTimeout(function(){
+				if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') < 0) {
+					if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+						$('header .content nav > ul > li:first-child + li').css('margin-left','25px');
+					} else {
+						$('header .content nav > ul > li:first-child + li').css('margin-left','0px');
+					}
+				}
+			},100);
+		});
+		
+		$('header .content nav > ul > li').click(function(){
+			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none' && $('body').hasClass('touchDevice')){
+				$('header .content nav > ul > li').children('ul').css("height","0px");
+				if($(this).children('ul').height() > 0) {
+					$(this).children('ul').css("height","0px");
+				} else {
+					$(this).children('ul').css("height","450px");
+				}
+			}
+				
+		});
+
+		$('header .content nav > ul > li ul').click(function(e){
+			e.stopPropagation();
+		});
+
+		
+		$(document).click(function(e){
+			e.stopPropagation();
+			if(!$(e.target).parents().is('nav') && $('body').hasClass('touchDevice') && $('header div.bottom .marketplace.linear-logo').css('display') == 'none') {
+				$('header .content nav > ul > li').children('ul').css("height","0px");
+			} 
+				
+			if(!$(e.target).parents().hasClass('select-list') && $('body').hasClass('touchDevice')) {
+				$('.select-view .select-list').removeClass('touch_click');
+			}
+		});
+
+		$(document).on('click','.select-view .select-list',function(){
+			if($('body').hasClass('touchDevice')){
+				$('.select-view .select-list').removeClass('touch_click');
+				if($(this).children('ul').height() > 1) {
+					$(this).removeClass('touch_click');
+				} else {
+					$(this).addClass('touch_click');
+				}
+			}
+				
+		});
+
+		$(document).on('click','.select-view .select-list ul',function(e){
+			$('.select-view .select-list').removeClass('touch_click');
+			e.stopPropagation();
+		});
 });

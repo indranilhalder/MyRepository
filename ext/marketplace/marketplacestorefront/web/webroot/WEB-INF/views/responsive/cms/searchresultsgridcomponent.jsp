@@ -30,8 +30,8 @@
 		<input type="hidden" id="selectedSearchCategoryId" value="${param.searchCategory}">
 		<input type="hidden" id="selectedSearchCategoryIdMicrosite" value="${param.micrositeSearchCategory}">
 		<input type="hidden" id="helpMeShopSearchCatId" value="${searchCategory}">
-		<div class="best-selling"  id="ia_products_search"></div>
-	<!-- For Infinite Analytics End -->
+				<!--  <div class="best-selling"  id="ia_products_search"></div> -->		
+				 	<!-- For Infinite Analytics End -->
 	
   <!-- Competing Products Section -->
 <c:if test="${not empty competingProductsSearchPageData && not empty competingProductsSearchPageData.results}">

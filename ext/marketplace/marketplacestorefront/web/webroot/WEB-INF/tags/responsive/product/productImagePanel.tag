@@ -35,7 +35,7 @@
 	function closing() {
 		$("#zoomModal, #videoModal").modal('hide');
 		//$("#zoomModal, #videoModal").removeClass("active");
-		 $("#videoFrame")[0].src += "&autoplay=0";
+		 $("#player").attr('src',"&autoplay=0");
 	}
 	$(document).ready(function(){
 		if ($(window).width() > 789) {
@@ -57,7 +57,7 @@
 <div class="main-image span-14 productImage"> 
 
 <div style="z-index:1;display:none"  class="online-exclusive" >
-	<img class="brush-strokes-sprite sprite-Vector_Smart_Object" src="/store/_ui/responsive/common/images/transparent.png">
+	<img class="brush-strokes-sprite sprite-Vector_Smart_Object" src="/_ui/responsive/common/images/transparent.png">
 	<span>online exclusive</span>
 </div>
 	<div class="productImagePrimary" id="primary_image">	
@@ -65,7 +65,7 @@
 		 <%-- <span id="codId" style="display:none;"> <img  alt="cod" src="${commonResourcePath}/images/cod.png" style="width:60px;">  </span> --%> 
 		 <div id ="newProduct" style="z-index: 1;display:none;" class="new">
 					<img class="brush-strokes-sprite sprite-New"
-					src="/store/_ui/responsive/common/images/transparent.png"><span>New</span>
+					src="/_ui/responsive/common/images/transparent.png"><span>New</span>
 					</div>
 		 
 		 

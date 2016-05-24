@@ -259,6 +259,7 @@ public interface ControllerConstants
 				String WishlistPanel = "fragments/home/wishlistPanel";
 				String LoginPanel = "fragments/home/loginPanel";
 				String MyAccountPanel = "fragments/home/myaccountPanel";
+				String LatestOffers = "fragments/home/latestOffersPanel";
 			}
 
 			interface Cart

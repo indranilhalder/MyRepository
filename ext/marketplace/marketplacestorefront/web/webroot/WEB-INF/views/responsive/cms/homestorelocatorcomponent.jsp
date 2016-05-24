@@ -1,31 +1,35 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
  
 <script>
-
-$(document).ready(function(){
-	 //Default Value fro latitue and longitude.
-	 var lat='${latitude}';
-	 var lot='${longitude}';
-	 
-	 if (navigator.geolocation) {
-	    navigator.geolocation.getCurrentPosition(function(position) {
-	         lat=position.coords.latitude;
-	    	 lot=position.coords.longitude;
-	    	 getDataFromServer(lat,lot);
-	    },function() {
-	    	getDataFromServer(lat,lot);
-	    },{ 
-			enableHighAccuracy: true,
-			timeout : 30000
-	});
-	  }else{
-		  getDataFromServer(lat,lot);
-	  }
+var isLoaded = false;
+$(document).scroll(function(){
+	if($(this).scrollTop()>=$('#home-googleMap').position().top-1000){
+		 //Default Value fro latitue and longitude.
+		 //lazyload maps 
+		 if(!isLoaded){
+			 var lat='${latitude}';
+			 var lot='${longitude}';
+			 
+			 if (navigator.geolocation) {
+			    navigator.geolocation.getCurrentPosition(function(position) {
+			         lat=position.coords.latitude;
+			    	 lot=position.coords.longitude;
+			    	 getDataFromServer(lat,lot);
+			    },function() {
+			    	getDataFromServer(lat,lot);
+			    },{ 
+					enableHighAccuracy: true,
+					timeout : 30000
+			});
+			  }else{
+				  getDataFromServer(lat,lot);
+			  } 
+			 isLoaded = true;
+		 }
+	}
 });
 
 function getDataFromServer(lat,lot){
@@ -281,7 +285,11 @@ function HomeLegendsControl(controlDiv, map) {
         }
   
   .home-googleMap {
-	width: 104%;
+	width: 96%;
+	margin-left: auto;
+    margin-right: auto;
+	height:450px;
+	text-align: center;
   }
     .overLayStoreFinderText h1{
     margin-left: 0px;

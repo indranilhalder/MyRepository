@@ -16,8 +16,9 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorfacades.flow.impl.SessionOverrideCheckoutFlowFacade;
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
-import de.hybris.platform.acceleratorservices.constants.GeneratedAcceleratorServicesConstants.Enumerations.CheckoutFlowEnum;
-import de.hybris.platform.acceleratorservices.constants.GeneratedAcceleratorServicesConstants.Enumerations.CheckoutPciOptionEnum;
+import de.hybris.platform.acceleratorservices.controllers.page.PageType;
+import de.hybris.platform.acceleratorservices.enums.CheckoutFlowEnum;
+import de.hybris.platform.acceleratorservices.enums.CheckoutPciOptionEnum;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
@@ -25,6 +26,8 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.UpdateQuantityForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
@@ -1508,6 +1511,31 @@ public class CartPageController extends AbstractPageController
 		return selectedPincode;
 	}
 
+	/**
+	 * Method to handel Exceptions in Server-Side from Network
+	 *
+	 * @return void
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.NETWORK_ERROR, method = RequestMethod.GET)
+	@RequireHardLogIn
+	public @ResponseBody void checkNetworkError(final String errorDetails)
+	{
+		try
+		{
+			LOG.error("**** errorDetails ****** " + errorDetails);
+			LOG.debug("**** errorDetails ****** " + errorDetails);
+			LOG.info("**** errorDetails ****** " + errorDetails);
+		}
+
+		catch (final Exception ex)
+		{
+
+			LOG.error("NETWORK_ERROR: ", ex);
+			LOG.debug("NETWORK_ERROR: ", ex);
+			LOG.info("NETWORK_ERROR: ", ex);
+		}
+	}
+	
 	// Public getter used in a test
 	@Override
 	public SiteConfigService getSiteConfigService()

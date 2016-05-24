@@ -13,6 +13,7 @@
 		value="${fn:replace(component.masterBrandName,' ', '') }" />
 	<c:if test="${component.layout eq 'AtoZ'}">
 		<c:set var="cssClass" value="A-ZBrands" />
+		<input type="hidden" id="componentUid" value="${component.uid}"/>
 	</c:if>
 	<div class="toggle ${cssClass}">
 		<c:url var="masterBrandUrl" value="${component.masterBrandURL}" />
@@ -48,8 +49,8 @@
 					<%-- <c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url> --%>
 					<a href="${subBrandUrl}">
 						<div class="multibrand-wrapper">
-							<img class="multibrand-logo" src="${subBrand.subBrandImage.URL}" />
-							<img class="logo" src="${subBrand.subBrandLogo.URL}">
+							<img class="multibrand-logo lazy" data-src="${subBrand.subBrandImage.URL}" />
+							<img class="logo lazy" data-src="${subBrand.subBrandLogo.URL}">
 							<p class="multibrand-name">${subBrand.subBrandName}</p>
 						</div>
 					</a>
@@ -91,8 +92,8 @@
 						<div>
 
 							<c:if test="${(not empty subBrand.subBrandImage) && (count<1)}">
-								<img width="200" height="300"
-									src="${subBrand.subBrandImage.URL}" />
+								<img class="lazy" width="200" height="300"
+									data-src="${subBrand.subBrandImage.URL}" />
 								<br>
 								<c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url>
 								<a

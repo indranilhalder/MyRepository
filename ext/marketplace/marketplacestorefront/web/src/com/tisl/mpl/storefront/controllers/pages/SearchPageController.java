@@ -40,7 +40,6 @@ import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.BreadcrumbData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetRefinement;
-import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
@@ -205,8 +204,7 @@ public class SearchPageController extends AbstractSearchPageController
 	public String textSearch(@RequestParam(value = "text", defaultValue = "") final String searchText,
 			@RequestParam(value = ModelAttributetConstants.SEARCH_CATEGORY, required = false) final String dropDownValue,
 			@RequestParam(value = "micrositeSearchCategory", required = false) final String micrositedropDownValue,
-			@RequestParam(value = "mSellerID", required = false) final String mSellerID,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final HttpServletRequest request,
+			@RequestParam(value = "mSellerID", required = false) final String mSellerID, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException
 	{
 		//---------------start--------------
@@ -224,22 +222,8 @@ public class SearchPageController extends AbstractSearchPageController
 		{
 			searchCategory = dropDownValue;
 		}
-		if (resetAll)
-		{
-			searchQueryData.setValue(XSSFilterUtil.filter(searchText));
-		}
-		else
-		{
-			final StringBuffer searchString = new StringBuffer(searchText);
-			searchString.append(":relevance:inStockFlag:true");
-			searchQueryData.setValue(XSSFilterUtil.filter(searchString.toString()));
-		}
-
-		//model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, dropDownValue);
-		//searchQueryData.setValue(XSSFilterUtil.filter(searchText));
+		searchQueryData.setValue(XSSFilterUtil.filter(searchText));
 		searchState.setQuery(searchQueryData);
-		//searchState.setResetAll(resetAll);
-
 		try
 		{
 
@@ -250,7 +234,8 @@ public class SearchPageController extends AbstractSearchPageController
 				if (micrositedropDownValue.equalsIgnoreCase(MarketplaceCoreConstants.ALL_CATEGORY))
 				{
 
-					searchPageData = searchFacade.dropDownSearchForSeller(searchState, mSellerID, "ALL", pageableData);
+					//	searchPageData = searchFacade.dropDownSearchForSeller(searchState, mSellerID, "ALL", pageableData);
+					searchPageData = searchFacade.dropDownSearchForMicrosite(searchState, mSellerID, "ALL", pageableData);
 
 				}
 				else
@@ -312,22 +297,8 @@ public class SearchPageController extends AbstractSearchPageController
 					{
 						final SearchStateData searchStateAll = new SearchStateData();
 						final SearchQueryData searchQueryDataAll = new SearchQueryData();
-						//						searchQueryDataAll.setValue(XSSFilterUtil.filter(searchText));
-						//						searchStateAll.setQuery(searchQueryDataAll);
-						//searchStateAll.setResetAll(resetAll);
-
-						final StringBuffer searchString = new StringBuffer(searchText);
-						searchString.append(":relevance:inStockFlag:true");
-						if (resetAll)
-						{
-							searchQueryDataAll.setValue(XSSFilterUtil.filter(searchText));
-						}
-						else
-						{
-							searchQueryDataAll.setValue(XSSFilterUtil.filter(searchString.toString()));
-						}
+						searchQueryDataAll.setValue(XSSFilterUtil.filter(searchText));
 						searchStateAll.setQuery(searchQueryDataAll);
-
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
 								.textSearch(searchStateAll, pageableData);
 						searchCategory = ALL;
@@ -464,63 +435,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 		}
-		if (null != searchPageData)
-		{
-			boolean flag = false;
-			BreadcrumbData removeBredCrumb = null;
-			for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
-			{
-				if (facets.getCode().equalsIgnoreCase("inStockFlag") && facets.getValues().size() <= 1)
-				{
-					for (final BreadcrumbData bredCrumb : searchPageData.getBreadcrumbs())
-					{
-						if (bredCrumb.getFacetCode().equalsIgnoreCase("inStockFlag") && null != searchQuery
-								&& !searchQuery.contains("inStockFlag:true"))
-						{
-							removeBredCrumb = bredCrumb;
-							flag = true;
-						}
-						else if (bredCrumb.getFacetCode().equalsIgnoreCase("inStockFlag") && null == searchQuery)
-						{
-							removeBredCrumb = bredCrumb;
-							flag = true;
-						}
 
-					}
-					searchPageData.getBreadcrumbs().remove(removeBredCrumb);
-
-				}
-			}
-			if (flag)
-			{
-				if (null != searchPageData.getCurrentQuery() && null != searchPageData.getCurrentQuery().getQuery()
-						&& null != searchPageData.getCurrentQuery().getQuery().getValue())
-				{
-					searchPageData.getCurrentQuery().getQuery()
-							.setValue(searchPageData.getCurrentQuery().getQuery().getValue().replace(":inStockFlag:true", ""));
-					searchPageData.getCurrentQuery().setUrl(
-							searchPageData.getCurrentQuery().getUrl().replace("%3AinStockFlag%3Atrue", ""));
-				}
-				for (final FacetData<SearchStateData> facets : searchPageData.getFacets())
-				{
-					for (final FacetValueData<SearchStateData> facetValue : facets.getValues())
-					{
-						if (null != facetValue.getQuery() && facetValue.getQuery().getQuery() != null
-								&& facetValue.getQuery().getQuery().getValue() != null
-								&& facetValue.getQuery().getQuery().getValue().contains("inStockFlag:true"))
-						{
-							facetValue.getQuery().getQuery()
-									.setValue(facetValue.getQuery().getQuery().getValue().replace("inStockFlag:true:", ""));
-
-						}
-
-
-					}
-
-				}
-			}
-
-		}
 		return searchPageData;
 	}
 
@@ -567,26 +482,6 @@ public class SearchPageController extends AbstractSearchPageController
 		final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
 		model.addAttribute("sizeCount", Integer.valueOf(Iterables.frequency(splitStr, "size")));
 		model.addAttribute("searchQueryValue", searchQuery);
-		final String[] temp = searchQuery.split(":");
-		final int countFreq = Iterables.frequency(splitStr, "size");
-		//  int preCount=0
-		int countValue = 0;
-		for (int i = 0; i < temp.length; i++)
-		{
-			if (temp[i].equals("size"))
-			{
-				countValue++;
-				//countFreq = 1;
-			}
-			else if (countValue >= 1)
-			{
-				if (countValue == countFreq)
-				{
-					break;
-				}
-			}
-		}
-
 		int count = getSearchPageSize();
 		final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
 		if (preferencesData != null && preferencesData.getPageSize() != null)
@@ -594,9 +489,9 @@ public class SearchPageController extends AbstractSearchPageController
 			count = preferencesData.getPageSize().intValue();
 		}
 
-		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
 				searchQuery, page, showMode, sortCode, count);
-		//searchPageData = updatePageData(searchPageData, null, searchQuery);
+		searchPageData = updatePageData(searchPageData, null, searchQuery);
 		/* Storing the user preferred search results count - END */
 		final String searchCategory = request.getParameter(ModelAttributetConstants.SEARCH_CATEGORY);
 		String searchCode = searchCategory;
@@ -1230,9 +1125,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 

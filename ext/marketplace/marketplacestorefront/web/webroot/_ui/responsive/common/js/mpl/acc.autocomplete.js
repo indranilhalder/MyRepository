@@ -35,7 +35,7 @@ ACC.autocomplete = {
 				}
 			},_renderItem : function (ul, item){
 			if (item.type == "autoSuggestion"){
-					var renderHtml = "<a href='?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
+					var renderHtml = "<a href='/search?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
 					return $("<li>")
 							.data("item.autocomplete", item)
 							.append(renderHtml)
@@ -171,7 +171,7 @@ ACC.autocomplete = {
 										code: obj.code,
 										desc: obj.description,	
 										//url:  "/mpl/en/search/?text=" + data.searchTerm + "&searchCategory=" + obj,
-										url:  "/mpl/en/search/?q=" + suggestedString + "%3Arelevance%3Abrand%3A" +  obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+										url: ACC.config.encodedContextPath + "/search/?q=" + suggestedString + "%3Arelevance%3Abrand%3A" +  obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
 										term: data.searchTerm,
 										type: "brands",
 										index: i,
@@ -223,7 +223,8 @@ ACC.autocomplete = {
 										//url: ACC.config.contextPath + obj.url + "/?q=" + data.searchTerm + "&text=" + data.searchTerm +"&searchCategory="+selectedCat,
 										//Fix for TISPRO-237 :: Search - Getting wrong top line when SERP is loaded from SNS
 										//url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
-										url:  "/mpl/en/search/?q=" + suggestedString + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+									//	url:  "/mpl/en/search/?q=" + suggestedString + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+										url:   ACC.config.encodedContextPath + "/search/?q=" + suggestedString + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
 										term: data.searchTerm,
 										type: "category",
 										index: i,

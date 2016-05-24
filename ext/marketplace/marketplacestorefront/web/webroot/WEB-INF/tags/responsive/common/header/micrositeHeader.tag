@@ -57,9 +57,14 @@
 
 				<!--   changes for Sticky Header in MyBag -->
 				<div class="bag">
-      				  <a href="/store/mpl/en/cart" class="mini-cart-link myBag-sticky"
+      				  <!-- <a href="/store/mpl/en/cart" class="mini-cart-link myBag-sticky"
 					data-mini-cart-url="/store/mpl/en/cart/rollover/MiniCart"
 					data-mini-cart-refresh-url="/store/mpl/en/cart/miniCart/SUBTOTAL"
+					data-mini-cart-name="Cart" data-mini-cart-empty-name="Empty Cart"
+					style="position: static;"> -->
+					<a href="/cart" class="mini-cart-link myBag-sticky"
+					data-mini-cart-url="/cart/rollover/MiniCart"
+					data-mini-cart-refresh-url="/cart/miniCart/SUBTOTAL"
 					data-mini-cart-name="Cart" data-mini-cart-empty-name="Empty Cart"
 					style="position: static;"><spring:theme
 							code="minicart.mybag" />&nbsp;(<span
