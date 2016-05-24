@@ -596,10 +596,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
 							getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
-			//getting the sessionID from session set during payment page loading
-			final String sessionId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
-			//removing from session
-			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
 
 			//getting the current customer to fetch customer Id and customer email
 			CustomerModel customer = getModelService().create(CustomerModel.class);
@@ -630,8 +626,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			final InitOrderRequest request;
 			if (flag)
 			{
-				if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEB))
+				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
 				{
+					//getting the sessionID from session set during payment page loading
+					final String sessionId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
+					//removing from session
+					getSessionService().removeAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
+
 					//creating InitOrderRequest of Juspay
 					// For netbanking firstname will be set as Bank Code
 					//TISCR-421:With sessionID for WEB orders
@@ -1401,11 +1402,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
