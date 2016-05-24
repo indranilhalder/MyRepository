@@ -56,8 +56,11 @@ import com.tisl.mpl.core.model.InvoiceDetailModel;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 //import com.tisl.mpl.fulfilmentprocess.events.OrderRefundEvent;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCheckInvoice;
+import com.tisl.mpl.marketplacecommerceservices.event.OrderCollectedByPersonEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderRefundCreditedEvent;
 import com.tisl.mpl.marketplaceomsservices.event.SendNotificationEvent;
+import com.tisl.mpl.marketplaceomsservices.event.SendUnColletedOrderToCRMEvent;
+import com.tisl.mpl.marketplaceomsservices.event.UnColletedOrderToInitiateRefundEvent;
 import com.tisl.mpl.sms.MplSendSMSService;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 
@@ -477,109 +480,58 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 			LOG.debug("Delivery Mode CNC and Order Status  :" + shipment.getOlqsStatus() + " :Not Required to update Consignment");
 			final ConsignmentStatus shipmentNewStatus = getConsignmentStatusMappingStrategy().getHybrisEnumFromDto(shipment);
 			final ConsignmentStatus shipmentCurrentStatus = consignmentModel.getStatus();
-
-
-
+			boolean checkConsignmentStatus = false;
 			if ((consignmentModel.getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || consignmentModel.getStatus().equals(
 					ConsignmentStatus.ORDER_UNCOLLECTED))
 					&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
 			{
 
-
-
-
-
-
-
-
-
-
-
-
-				LOG.debug("Calling cancel Initiation process started");
-
-				for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
-				{
-
-
-					//for (final ConsignmentEntryModel consigmEntry : orderEntryModel.getConsignmentEntries())
-					//{
-
-						if ((consignmentModel.getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) || consignmentModel.getStatus().equals(ConsignmentStatus.ORDER_UNCOLLECTED))&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
-						{
-							if(shipment.getShipmentId().equals(orderEntryModel.getTransactionID()) && consignmentModel.getCode().equals(orderEntryModel.getTransactionID())){
-								LOG.debug("********Consignment Status**********" + consignmentModel.getStatus());
-								LOG.debug("********Transaction Id**********" + orderEntryModel.getTransactionID());
-								LOG.debug("********OrderLine Id**********" + orderEntryModel.getOrderLineId());
-
-								customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
-										MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
-										MarketplaceomsordersConstants.REFUND_TYPE_CODE, orderModel);
-								customOmsCancelAdapter.initiateCancellation(MarketplaceomsordersConstants.TICKET_TYPE_CODE,
-										orderEntryModel.getTransactionID(), orderModel, MarketplaceomsordersConstants.REASON_CODE,
-										consignmentModel);
-						
-							}
-						}
-					//}
-				}
-
-				final String trackOrderUrl = configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-						+ orderModel.getCode();
-				final OrderProcessModel orderProcessModel = new OrderProcessModel();
-				orderProcessModel.setOrder(orderModel);
-				orderProcessModel.setOrderTrackUrl(trackOrderUrl);
-				final OrderRefundCreditedEvent orderRefundCreditedEvent = new OrderRefundCreditedEvent(orderProcessModel);
-				try
-				{
-					eventService.publishEvent(orderRefundCreditedEvent);
-				}
-
-				catch (final Exception e1)
-				{
-					LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
-				}
-				//	customOmsCancelAdapter.frameCancelPushNotification(orderModel, orderEntryModel.getOrderLineId(),MarketplaceomsordersConstants.REASON_CODE);
-			}
+				         LOG.debug("Calling cancel Initiation process started");
+								final SendUnColletedOrderToCRMEvent sendUnColletedOrderToCRMEvent = new SendUnColletedOrderToCRMEvent(shipment,consignmentModel,orderModel,shipmentNewStatus);
+								final UnColletedOrderToInitiateRefundEvent unColletedOrderToInitiateRefundEvent= new UnColletedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,shipmentNewStatus,eventService,configurationService);
+								try
+								{
+									LOG.debug("Create CRM Ticket for Un-Colleted Orders");
+									eventService.publishEvent(sendUnColletedOrderToCRMEvent);
+								}
+								catch(final Exception e)
+								{
+									LOG.error("Exception during CRM Ticket for Un-Colleted Orders >> " + e.getMessage());	
+								}
+								try
+								{
+									checkConsignmentStatus=true;
+									LOG.debug("Refund Initiation  for Un-Colleted Orders");
+									eventService.publishEvent(unColletedOrderToInitiateRefundEvent);
+								}
+								catch(final Exception e)
+								{
+									LOG.error("Exception during Refund Initiation  for Un-Colleted Orders >> " + e.getMessage());	
+								}
+							
+			      }
 
 			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus)
 					&& shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED))
 			{
-				boolean emailCheckFlag = false;
-				AbstractOrderEntryModel abstractOrderEntryModel = null;
-				LOG.debug("Calling delivered Initiation process started");
-				for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
+				final OrderProcessModel orderProcessModel = new OrderProcessModel();
+				orderProcessModel.setOrder(orderModel);
+				final  OrderCollectedByPersonEvent orderCollectedByPersonEvent = new OrderCollectedByPersonEvent(orderProcessModel);
+				try
 				{
-					for (final ConsignmentEntryModel consigmEntry : orderEntryModel.getConsignmentEntries())
-					{
-						if (consigmEntry.getConsignment().getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION)
-								&& shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED))
-						{
-							emailCheckFlag = true;
-							abstractOrderEntryModel = orderEntryModel;
-						}
-					}
+					eventService.publishEvent(orderCollectedByPersonEvent);
+					sendOrderNotification(shipment, consignmentModel,orderModel,shipmentNewStatus);
 				}
-				if (emailCheckFlag && null != abstractOrderEntryModel)
+				catch (final Exception e1)
 				{
-					customOmsCollectedAdapter.sendNotificationForOrderCollected(orderModel, consignmentModel, abstractOrderEntryModel);
+					LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
 				}
+				
 			}
-			if ((consignmentModel.getStatus().equals(ConsignmentStatus.REFUND_INITIATED) || consignmentModel.getStatus().equals(
-					ConsignmentStatus.REFUND_IN_PROGRESS))
-					&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
-			{
-				LOG.debug("Already Consignment Status Updated for Order Collected.");
-				return true;
-			}
-			else
-			{
 				createRefundEntry(shipmentNewStatus, consignmentModel, orderModel);
 				if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
 				{
-
-
+					if(!checkConsignmentStatus){
 					LOG.info("updateConsignment:: Inside ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus) >>> shipmentCurrentStatus >>"
 							+ shipmentCurrentStatus
 							+ "<<shipmentNewStatus>>"
@@ -597,12 +549,9 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					LOG.info("****************************************Order synced succesfully - Now sending notificatioon to customer *******************");
 					//call send notification method
 					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
-
-
+					}
 					return true;
 				}
-
-			}
 		}
 		catch (final Exception e)
 		{
