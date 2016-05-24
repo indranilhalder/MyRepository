@@ -16,7 +16,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/js/popover.js"></script>
-<script type="text/javascript" src="http://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
  <style type="text/css">
 tr.d0 td {
   background-color:#E0E0E0 ;
