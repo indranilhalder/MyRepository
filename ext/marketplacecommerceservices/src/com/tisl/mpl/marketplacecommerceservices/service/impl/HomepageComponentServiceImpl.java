@@ -77,6 +77,16 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 					title = bestPickCarouselComponent.getTitle();
 				}
 
+				//Added for making the button link cmsmanaged
+				if (StringUtils.isNotEmpty(bestPickCarouselComponent.getButtonText()))
+				{
+					bestPicks.put("buttonText", bestPickCarouselComponent.getButtonText());
+				}
+				if (StringUtils.isNotEmpty(bestPickCarouselComponent.getButtonLink()))
+				{
+					bestPicks.put("buttonLink", bestPickCarouselComponent.getButtonLink());
+				}
+
 				bestPicks.put("title", title);
 
 				final JSONArray subComponentJsonArray = new JSONArray();
