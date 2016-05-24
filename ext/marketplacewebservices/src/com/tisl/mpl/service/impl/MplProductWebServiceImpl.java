@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.service.impl;
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
@@ -116,6 +117,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private static final String WARRANTY = "Warranty";
 	private static final String HTTP = "http";
 	private static final String HTTPS = "https";
+
 	private static final Logger LOG = Logger.getLogger(MplProductWebServiceImpl.class);
 
 	/*
@@ -605,14 +607,26 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		KnowMoreDTO knowMoreItem = null;
 		final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
 		final String cliqCareMail = configurationService.getConfiguration().getString("cliq.care.mail");
+		String lingerieReturnMsg = null;
+		boolean isProductLingerie = false;
+		if (null != productModel && StringUtils.isNotEmpty(buyBoxData.getSellerArticleSKU()))
+		{
+
+			lingerieReturnMsg = getReturnWindowLingerie(productModel, buyBoxData.getSellerArticleSKU());
+			if (null != lingerieReturnMsg)
+			{
+				isProductLingerie = true;
+			}
+			if (!isProductLingerie)
+			{
+				returnWindow = getReturnWindow(productModel, buyBoxData.getSellerArticleSKU());
+			}
+		}
+
 		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND)))
 		{
 			knowMoreSec = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND);
 
-			if (null != productModel && StringUtils.isNotEmpty(buyBoxData.getSellerArticleSKU()))
-			{
-				returnWindow = getReturnWindow(productModel, buyBoxData.getSellerArticleSKU());
-			}
 			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD)))
 			{
 				knowMoreTh = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD);
@@ -633,12 +647,24 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			knowMoreItem.setKnowMoreItem(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_FIRST));
 			knowMoreList.add(knowMoreItem);
 		}
-		if (StringUtils.isNotEmpty(knowMoreSec) && StringUtils.isNotEmpty(returnWindow) && StringUtils.isNotEmpty(knowMoreTh))
+
+		if (isProductLingerie && StringUtils.isNotEmpty(lingerieReturnMsg))
 		{
 			knowMoreItem = new KnowMoreDTO();
-			knowMoreItem.setKnowMoreItem(knowMoreSec + MarketplacecommerceservicesConstants.SPACE + returnWindow
-					+ MarketplacecommerceservicesConstants.SPACE + knowMoreTh);
+			knowMoreItem.setKnowMoreItem(lingerieReturnMsg);
 			knowMoreList.add(knowMoreItem);
+		}
+
+		else
+		{
+
+			if (StringUtils.isNotEmpty(knowMoreSec) && StringUtils.isNotEmpty(returnWindow) && StringUtils.isNotEmpty(knowMoreTh))
+			{
+				knowMoreItem = new KnowMoreDTO();
+				knowMoreItem.setKnowMoreItem(knowMoreSec + MarketplacecommerceservicesConstants.SPACE + returnWindow
+						+ MarketplacecommerceservicesConstants.SPACE + knowMoreTh);
+				knowMoreList.add(knowMoreItem);
+			}
 		}
 		if (StringUtils.isNotEmpty(knowMoreFourth) && StringUtils.isNotEmpty(cliqCareNumber)
 				&& StringUtils.isNotEmpty(knowMoreFifth) && StringUtils.isNotEmpty(cliqCareMail))
@@ -683,6 +709,37 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			}
 		}
 		return returnWindow;
+	}
+
+	/**
+	 * return window calculation for lingerie products
+	 *
+	 * @param productModel
+	 * @param winningUssid
+	 * @return String
+	 */
+	private String getReturnWindowLingerie(final ProductModel productModel, final String winningUssid)
+	{
+		//TISCR-414 - Chairmans demo feedback 10thMay CR starts
+		String returnWindowMsg = null;
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>(productModel.getSupercategories());
+		final String configLingerieCategoris1 = configurationService.getConfiguration().getString("pdp.lingerie1.code");
+		final String configLingerieCategoris2 = configurationService.getConfiguration().getString("pdp.lingerie2.code");
+
+		if (StringUtils.isNotEmpty(configLingerieCategoris1) && buyBoxFacade.isCatLingerie(categoryList, configLingerieCategoris1))
+		{
+			returnWindowMsg = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_LINGERIE1);
+
+		}
+		else if (StringUtils.isNotEmpty(configLingerieCategoris2)
+				&& buyBoxFacade.isCatLingerie(categoryList, configLingerieCategoris2))
+		{
+			returnWindowMsg = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_LINGERIE2);
+		}
+
+		return returnWindowMsg;
+
+		//TISCR-414 - Chairmans demo feedback 10thMay CR ends
 	}
 
 	/**

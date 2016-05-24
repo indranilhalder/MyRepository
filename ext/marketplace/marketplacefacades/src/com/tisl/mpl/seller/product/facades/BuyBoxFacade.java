@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.seller.product.facades;
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.core.model.product.ProductModel;
 
@@ -33,5 +34,8 @@ public interface BuyBoxFacade
 	public BuyBoxModel getpriceForUssid(String ussid);
 
 	public BuyBoxData buyboxForSizeGuide(final String productCode, final String sellerId) throws EtailNonBusinessExceptions;
+
+	public boolean isCatLingerie(final List<CategoryModel> categoryList, final String configLingerieCategoris)
+			throws EtailNonBusinessExceptions;
 
 }
