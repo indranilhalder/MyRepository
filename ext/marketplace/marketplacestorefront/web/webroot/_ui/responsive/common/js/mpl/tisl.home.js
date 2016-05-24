@@ -574,9 +574,27 @@ function getBestPicksAjaxCall() {
                     }
                     renderHtml += "</a>";
                 });
+                
                 renderHtml +=
+                    // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
+                 	"</div> <a href='";
+                if(typeof response.buttonLink!=="undefined"){
+                	 renderHtml +=response.buttonLink+"'";
+                }
+                else{
+                	renderHtml +=ACC.config.encodedContextPath+"/offersPage'";
+                }
+                
+                renderHtml +="class='view-cliq-offers'>";
+                if(typeof response.buttonText!=="undefined"){
+                	 renderHtml +=response.buttonText;
+                }
+                else{
+                	 renderHtml +=" View Cliq Offers ";
+                }
+                renderHtml +="</a>";
                    // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
-                	"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
+                	//"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
                 $("#bestPicks").html(renderHtml);
                 // console.log()
             },
