@@ -1500,4 +1500,6 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		class="com.tisl.mpl.facade.latestoffers.impl.OffersComponentCacheValueLoader"
 		scope="tenant">
 	</bean>	
+	
+	<bean id="mplStoreLocatorFacade" class="com.tis.mpl.facade.checkout.storelocator.impl.MplStoreLocatorFacadeImpl"/>
 </beans>
