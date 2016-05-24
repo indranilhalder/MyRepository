@@ -67,6 +67,9 @@
 					code="login.link.forgottenPwd" /></a> <input type="hidden"
 				name="Mobileno" id="Mobileno" value="${Mobileno}" />
 		</div>
+		<div class="forgotten-password">
+			New to Tatacliq? <a id="newToTata" href="javascript:void(0);">Register here</a>
+		</div>
 
 
 		<%-- <input type="hidden" id="recaptchaChallangeAnswered"
@@ -119,6 +122,11 @@
 				var s = document.getElementsByTagName('script')[0];
 				s.parentNode.insertBefore(po, s);
 			})();
+			$(document).ready(function(){
+				$("#newToTata").click(function(){
+					$("#SignUp_link").click();
+				});
+			});
 		</script>
 
 	</form:form>
