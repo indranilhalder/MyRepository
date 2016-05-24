@@ -426,7 +426,8 @@ var allSellers='${allsellers}';
 			</div>
 			<!-- Returning to the PDP page -->
 			<p class="other-sellers back">
-			<a href="${request.contextPath}/${product.url}"><spring:theme code="product.returnpdp"></spring:theme></a></p>
+			<c:url var="productUrl" value="${product.url}"/>
+			<a href="${productUrl}"><spring:theme code="product.returnpdp"></spring:theme></a></p>
 </div>
 <div class="product-content">
 	<!-- Displaying product variants -->

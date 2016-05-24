@@ -716,8 +716,7 @@ public final class ModelAttributetConstants
 
 	public static final String SUB_ORDER_STATUS = "subOrderStatus";
 	public static final String FILTER_DELIVERYMODE = "filterDeliveryMode";
-	public static final String CANCEL_ENDPOINT_STATUS = "valid.order.statuses.CANCEL_ENDPOINT";
-	public static final String CANCEL_ENDPOINT_STATUS_NAME = "cancelEndpointStatus";
+	public static final String STORE_URL_OLD = "/store/mpl/en";
 
 	//Feebback Survey
 	public static final String FEED_BACK_SURVEY_URL = "feebBackSurveyUrl";

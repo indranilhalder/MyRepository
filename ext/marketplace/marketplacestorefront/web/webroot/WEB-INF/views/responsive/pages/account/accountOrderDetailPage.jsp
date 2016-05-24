@@ -466,10 +466,9 @@
 																		</div>
 																	<div class="col-md-1"></div>	
 																	<div class="col-md-1">
-																	<input type="button" value="Save" class="savebtn savebtnOther"
-																		onclick="editPickUpDetails('${subOrder.code}')" />
 																    </div>	
-																    
+																    <input type="button" value="Save" class="savebtn savebtnOther"
+																		onclick="editPickUpDetails('${subOrder.code}')" />
 
 															
 													   </div>

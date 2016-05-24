@@ -5,7 +5,7 @@
 <div id="groups"
 	style="min-height: 28px; border-bottom: 4px solid; letter-spacing: 1px; font-size: 17px;">
 	<c:forEach items="${groupedAlphabets}" var="entry">
-		<div id="group" style="float: left; margin-right: 10px;">
+		<div id="group" style="float: left; margin-right: 30px;">
 
 			<a class="brandGroupLink" href="#"
 				data-tab="${entry.key}-${entry.value}">${entry.key}-${entry.value}</a>
@@ -22,7 +22,7 @@
 			<ul class="a-z-ul">
 				<h3>${entry.key}</h3>
 				<c:set var="values" value="${entry.value}" />
-				<c:forEach items="${values}" var="item" begin='1' end='10'>
+				<c:forEach items="${values}" var="item">
 					<c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
 					<li class="a-z-li"><a href="${brandlistUrl}">${item.name}</a></li>
 
@@ -38,7 +38,7 @@
 			<ul class="a-z-ul">
 				<h3>${entry.key}</h3>
 				<c:set var="values" value="${entry.value}" />
-				<c:forEach items="${values}" var="item" begin='0' end='9'>
+				<c:forEach items="${values}" var="item">
 					<%-- <c:url var="subBrandUrl" value="${item.subBrandUrl}"></c:url> --%>
 					<c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
 					<li class="a-z-li"><a href="${brandlistUrl}">${item.name}</a></li>
@@ -56,7 +56,7 @@
 			<ul class="a-z-ul">
 				<h3>${entry.key}</h3>
 				<c:set var="values" value="${entry.value}" />
-				<c:forEach items="${values}" var="item" begin='0' end='9'>
+				<c:forEach items="${values}" var="item" >
 					<%-- 	<c:url var="subBrandUrl" value="${item.subBrandUrl}"></c:url> --%>
 					<c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
 					<li class="a-z-li"><a href="${brandlistUrl}">${item.name}</a></li>
@@ -74,7 +74,7 @@
 			<ul class="a-z-ul">
 				<h3>${entry.key}</h3>
 				<c:set var="values" value="${entry.value}" />
-				<c:forEach items="${values}" var="item" begin='0' end='9'>
+				<c:forEach items="${values}" var="item">
 
 
 					<%-- <c:url var="subBrandUrl" value="${item.subBrandUrl}"></c:url> --%>
@@ -93,7 +93,7 @@
 			<ul class="a-z-ul">
 				<h3>${entry.key}</h3>
 				<c:set var="values" value="${entry.value}" />
-				<c:forEach items="${values}" var="item" begin='0' end='9'>
+				<c:forEach items="${values}" var="item">
 					<c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
 					<li class="a-z-li"><a href="${brandlistUrl}">${item.name}</a></li>
 
@@ -106,7 +106,7 @@
 
 
 
-	<div id="A-J" class="range"
+	<%-- <div id="A-J" class="range"
 		style="padding-top: 40px; font-size: 12px; letter-spacing: 1px;">
 		<c:forEach items="${AToJBrands}" var="entry">
 
@@ -171,7 +171,7 @@
 				<h3>${entry.key}</h3>
 				<c:set var="values" value="${entry.value}" />
 				<c:forEach items="${values}" var="item" begin='0' end='9'>
-					<%-- 	<c:url var="subBrandUrl" value="${item.subBrandUrl}"></c:url> --%>
+						<c:url var="subBrandUrl" value="${item.subBrandUrl}"></c:url>
 					<c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
 					<li class="a-z-li" style="color: blue; padding: 0px !important"><a
 						href="${brandlistUrl}">${item.name}</a></li>
@@ -180,6 +180,6 @@
 			</ul>
 
 		</c:forEach>
-	</div>
+	</div> --%>
 
 </div>

@@ -93,6 +93,7 @@ import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.MplCartWebService;
@@ -131,6 +132,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	@Resource(name = "mplDataMapper")
 	protected DataMapper mplDataMapper;
 
+	@Resource(name = "mplDeliveryCostService")
+	private MplDeliveryCostService mplDeliveryCostService;
+	
 	/**
 	 * @return the wishlistFacade
 	 */
@@ -1296,9 +1300,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 												delivery.setName(deliveryMode.getName());
 											}
 											if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
-													&& gwlp.getFullfillmentType().equalsIgnoreCase("tship"))
+													&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
 											{
-												delivery.setDeliveryCost("0.0");
+												delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
 											}
 											else
 											{
@@ -1333,7 +1337,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							Collection<MplZoneDeliveryModeValueModel> deliverymodeList = null;
 							try
 							{
-								if (null != abstractOrderEntry.getMplZoneDeliveryModeValue())
+								if (null != abstractOrderEntry.getMplZoneDeliveryModeValue() && !abstractOrderEntry.getMplZoneDeliveryModeValue().isEmpty())
 								{
 									deliverymodeList = abstractOrderEntry.getMplZoneDeliveryModeValue();
 									for (final MplZoneDeliveryModeValueModel deliveryMode : deliverymodeList)
@@ -1372,11 +1376,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 												delivery.setName(deliveryMode.getDeliveryMode().getName());
 											}
 											if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
-													&& gwlp.getFullfillmentType().equalsIgnoreCase("tship"))
+													&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
 											{
 												LOG.debug("************ Mobile webservice Tship product ************* Delivery cost 0"
 														+ gwlp.getFullfillmentType());
-												delivery.setDeliveryCost("0.0");
+												delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
 											}
 											else
 											{
@@ -1393,6 +1397,76 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 										}
 										deliveryList.add(delivery);
 
+									}
+								}else{
+									String ussid=	abstractOrderEntry.getSelectedUSSID();									
+									if (ussid != null && !ussid.isEmpty())
+									{
+										abstractOrderEntry.setSelectedUSSID(ussid);
+										final List<MplZoneDeliveryModeValueModel> MplZoneDeliveryModeValueModel = getMplDeliveryCostService()
+												.getDeliveryModesAndCost(MarketplacecommerceservicesConstants.INR, ussid);
+										abstractOrderEntry.setMplZoneDeliveryModeValue(MplZoneDeliveryModeValueModel);
+										modelService.save(abstractOrderEntry);
+									}
+									
+									deliverymodeList = abstractOrderEntry.getMplZoneDeliveryModeValue();
+									for (final MplZoneDeliveryModeValueModel deliveryMode : deliverymodeList)
+									{
+										delivery = new MobdeliveryModeWsDTO();
+										if (null != deliveryMode.getDeliveryMode()
+												&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()))
+										{
+											delivery.setCode(deliveryMode.getDeliveryMode().getCode());
+
+											//TISEE-950
+											String startValue = null;
+											String endValue = null;
+											if (null != deliveryMode.getDeliveryMode())
+											{
+												startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode
+														.getDeliveryMode().getStart().toString()
+														: MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+
+												endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
+														.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+
+											}
+											if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode())
+													&& StringUtils.isNotEmpty(startValue) && StringUtils.isNotEmpty(endValue)
+													&& StringUtils.isNotEmpty(deliveryMode.getSellerArticleSKU())
+													&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()))
+											{
+												delivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
+														deliveryMode.getSellerArticleSKU(), deliveryMode.getDeliveryMode().getCode(),
+														startValue, endValue));
+											}
+											if (null != deliveryMode.getDeliveryMode()
+													&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getName()))
+											{
+												delivery.setName(deliveryMode.getDeliveryMode().getName());
+											}
+											if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
+													&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
+											{
+												LOG.debug("************ Mobile webservice Tship product ************* Delivery cost 0"
+														+ gwlp.getFullfillmentType());
+												delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
+											}
+											else
+											{
+												LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
+														+ deliveryMode.getValue().toString() + "for" + gwlp.getFullfillmentType());
+												if (null != abstractOrderEntry.getGiveAway()
+														&& !abstractOrderEntry.getGiveAway().booleanValue() && null != deliveryMode.getValue()
+														&& null != abstractOrderEntry.getQuantity())
+												{
+													delivery.setDeliveryCost(deliveryMode.getValue().toString());
+
+												}
+											}
+										}
+										deliveryList.add(delivery);
+									
 									}
 								}
 							}
@@ -1447,11 +1521,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 								}
 								if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
-										&& gwlp.getFullfillmentType().equalsIgnoreCase("tship") && delivery != null)
+										&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP) && delivery != null)
 								{
 									LOG.debug("************ Mobile webservice Tship product ************* Delivery cost 0"
 											+ gwlp.getFullfillmentType());
-									delivery.setDeliveryCost("0.0");
+									delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
 								}
 								else
 								{
@@ -2263,4 +2337,22 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//		}
 	//		throw new CartEntryException("Entry not found", CartEntryException.NOT_FOUND, String.valueOf(number));
 	//	}
+	
+	/**
+	 * @return the mplDeliveryCostService
+	 */
+	public MplDeliveryCostService getMplDeliveryCostService()
+	{
+		return mplDeliveryCostService;
+	}
+
+	/**
+	 * @param mplDeliveryCostService
+	 *           the mplDeliveryCostService to set
+	 */
+	public void setMplDeliveryCostService(final MplDeliveryCostService mplDeliveryCostService)
+	{
+		this.mplDeliveryCostService = mplDeliveryCostService;
+	}
+
 }

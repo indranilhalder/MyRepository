@@ -67,7 +67,8 @@ public class ComparePageController extends AbstractPageController
 	private static final String COMPARE_PAGE_ID = "compare";
 	private static final String HASH = "#";
 	private static final String LAST_LINK_CLASS = "active";
-	private static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-96x96.jpg";
+	//store url changes
+	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-96x96.jpg";
 	private static final String COMPARE_LIST = "compareList";
 
 	private List<CategoryModel> referenceCategories = new ArrayList<CategoryModel>();

@@ -126,6 +126,14 @@ public class StorefrontLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandle
 			}
 		}
 
+		//		if (targetUrl.contains(ModelAttributetConstants.STORE_URL_OLD))
+		//		{
+		//			final String newreqUri = targetUrl.replaceAll(ModelAttributetConstants.STORE_URL_OLD, "/");
+		//
+		//
+		//			targetUrl = newreqUri;
+		//		}
+
 		return targetUrl;
 	}
 }

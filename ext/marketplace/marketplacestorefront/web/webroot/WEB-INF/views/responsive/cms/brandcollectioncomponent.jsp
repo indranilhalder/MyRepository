@@ -17,7 +17,7 @@
 			<ul>
 
 				<c:forEach items="${brandComponentCollection}" var="brand">
-					<li><cms:component component="${brand}" evaluateRestriction="true" /></li>
+					<li class="lazy-brands"><cms:component component="${brand}" evaluateRestriction="true" /></li>
 
 				</c:forEach>
 			</ul>

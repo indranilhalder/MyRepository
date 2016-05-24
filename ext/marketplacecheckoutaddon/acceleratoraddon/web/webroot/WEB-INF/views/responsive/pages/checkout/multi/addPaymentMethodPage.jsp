@@ -9,6 +9,13 @@
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address" %>
+<script>
+	//Refresh the page if compare page is already visted
+	if (sessionStorage.getItem("confirmationPageVisited") != null) {
+		sessionStorage.removeItem("confirmationPageVisited");
+		window.location.reload(true); // force refresh page1
+	}
+</script>
 <c:url value="${currentStepUrl}" var="choosePaymentMethodUrl" />
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
@@ -242,7 +249,7 @@
 							<!-- <li class="change-payment">Change Payment Method</li> -->
 						<ycommerce:testId code="paymentDetailsForm">
 								
-							<form:form id="silentOrderPostForm" name="silentOrderPostForm" class="create_update_payment_form" commandName="paymentForm" action="${paymentFormMplUrl}" autocomplete="off" method="POST">
+							<form:form id="silentOrderPostForm" name="silentOrderPostForm" class="create_update_payment_form" commandName="paymentForm" action="${newPaymentFormMplUrl}" autocomplete="off" method="POST">
 								<form:hidden path="paymentMode"/>
 								<input type="hidden" name="orderPage_receiptResponseURL" value="${silentOrderPageData.parameters['orderPage_receiptResponseURL']}"/>
 								<input type="hidden" name="orderPage_declineResponseURL" value="${silentOrderPageData.parameters['orderPage_declineResponseURL']}"/>

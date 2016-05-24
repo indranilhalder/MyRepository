@@ -157,10 +157,18 @@ $("span.latestOffersBanner").on("click touchend", function() {
 				itemsTablet: [650,1], 
 				itemsMobile : [480,1], 
 				rewindNav: false,
-				lazyLoad:true,
 				scrollPerPage:true
-
 			});
+			
+			var tcitemLength = $(".topConcierge .owl-item").length,tcitemWidth = $(".topConcierge .owl-item").outerWidth() ;
+			if (tcitemLength < 5) {
+				$(".topConcierge .owl-wrapper").css({
+				"width":tcitemLength*tcitemWidth,
+				"margin" : "auto"
+				});
+			}
+			
+			
 		}, 
 	});
 });
@@ -234,12 +242,12 @@ function getBrandsYouLoveAjaxCall() {
                     if (!v.showByDefault) {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item' id='" +
-                            v.compId + "'><img class='lazy' data-original='" + v.brandLogoUrl +
+                            v.compId + "'><img class='lazyOwl' data-src='" + v.brandLogoUrl +
                             "'></img></div>";
                     } else {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item active' id='" +
-                            v.compId + "'><img class='lazy' data-original='" + v.brandLogoUrl +
+                            v.compId + "'><img class='lazyOwl' data-src='" + v.brandLogoUrl +
                             "'></img></div>";
                         defaultComponentId = v.compId;
                     }
@@ -264,9 +272,9 @@ function getBrandsYouLoveAjaxCall() {
                     itemsTablet: [790, 3],
                     itemsMobile: [480, 3],
                     rewindNav: false,
-                    lazyLoad: true,
                     mouseDrag: false,
-                    touchDrag: false
+                    touchDrag: false,
+                    lazyLoad: true
                 });
                 var index = $(
                     ".home-brands-you-love-carousel-brands.active"
@@ -311,7 +319,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                     $(".home-brands-you-love-carousel").css(
                         "margin-bottom", "120px");
                     $("#brandsYouLove").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -332,7 +340,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                             "<div class='home-brands-you-love-side-image left'><a href='" +
                             ACC.config.encodedContextPath +
                             response.firstProductUrl +
-                            "'><img class='lazy' data-original='" + response.firstProductImageUrl +
+                            "'><img src='" + response.firstProductImageUrl +
                             "'></img>";
                         if (typeof response.firstProductTitle !==
                             "undefined") {
@@ -361,7 +369,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                                 "<div class='visit-store-wrapper'>" +
                                 response.bannerText + "</div>";
                         }
-                        defaultHtml += "<img class='lazy' data-original='" + response.bannerImageUrl +
+                        defaultHtml += "<img src='" + response.bannerImageUrl +
                             "'></img></div></div>";
                     }
                     if (typeof response.secondproductImageUrl !==
@@ -370,7 +378,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                             "<div class='home-brands-you-love-side-image right'><a href='" +
                             ACC.config.encodedContextPath +
                             response.secondProductUrl +
-                            "'><img class='lazy' data-original='" + response.secondproductImageUrl +
+                            "'><img src='" + response.secondproductImageUrl +
                             "'></img>";
                         if (typeof response.secondProductTitle !==
                             "undefined") {
@@ -556,7 +564,7 @@ function getBestPicksAjaxCall() {
                     }
                     if (v.imageUrl) {
                         renderHtml +=
-                            "<div class='home-best-pick-carousel-img'> <img class='lazy' data-original='" +
+                            "<div class='home-best-pick-carousel-img'> <img class='lazyOwl' data-src='" +
                             v.imageUrl + "'></img></div>";
                     }
                     if (v.text) {
@@ -566,9 +574,27 @@ function getBestPicksAjaxCall() {
                     }
                     renderHtml += "</a>";
                 });
+                
                 renderHtml +=
+                    // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
+                 	"</div> <a href='";
+                if(typeof response.buttonLink!=="undefined"){
+                	 renderHtml +=response.buttonLink+"'";
+                }
+                else{
+                	renderHtml +=ACC.config.encodedContextPath+"/offersPage'";
+                }
+                
+                renderHtml +="class='view-cliq-offers'>";
+                if(typeof response.buttonText!=="undefined"){
+                	 renderHtml +=response.buttonText;
+                }
+                else{
+                	 renderHtml +=" View Cliq Offers ";
+                }
+                renderHtml +="</a>";
                    // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
-                	"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
+                	//"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
                 $("#bestPicks").html(renderHtml);
                 // console.log()
             },
@@ -588,15 +614,11 @@ function getBestPicksAjaxCall() {
                     lazyLoad: true,
                     scrollPerPage: true
                 });
-                $("img.lazy").lazyload({
-                	effect : "fadeIn"
-                });
             }
         });
     }
     // AJAX CALL BEST PICKS END
     //AJAX CALL PRODUCTS YOU CARE START
-
 
 function getProductsYouCareAjaxCall() {
         var env = $("#previewVersion").val();
@@ -627,7 +649,7 @@ function getProductsYouCareAjaxCall() {
                         "' class='item'>";
                     //for image
                     renderHtml +=
-                        "<div class='home-product-you-care-carousel-img'> <img class='lazy' data-original='" +
+                        "<div class='home-product-you-care-carousel-img'> <img class='lazyOwl' data-src='" +
                         v.mediaURL + "'></img></div>";
                     renderHtml +=
                         "<div class='short-info'><h3 class='product-name'><span>" +
@@ -682,7 +704,7 @@ function getNewAndExclusiveAjaxCall() {
                 renderHtml +=
                     "<div class='item slide'><div class='newExclusiveElement'><a href='" +
                     ACC.config.encodedContextPath +
-                    value.productUrl + "'><img class='lazy' data-original='" +
+                    value.productUrl + "'><img class='lazyOwl' data-src='" +
                     value.productImageUrl +
                     "'></img><p class='New_Exclusive_title'>" +
                     value.productTitle +
@@ -708,7 +730,8 @@ function getNewAndExclusiveAjaxCall() {
                 itemsDesktopSmall: false,
                 itemsTablet: false,
                 itemsMobile: false,
-                scrollPerPage: true
+                scrollPerPage: true,
+                lazyLoad: true
             });
             setTimeout(function() {
                 /*if($(window).width() > 773) {
@@ -875,7 +898,7 @@ function getShowcaseContentAjaxCall(id) {
                     $(".showcase-switch").css("margin-bottom",
                         "80px");
                     $("#showcase").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -1012,6 +1035,7 @@ if ($('#brandsYouLove').children().length == 0 && $('#pageTemplateId').val() ==
     getBrandsYouLoveAjaxCall();
 }
 setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
+
 });
 //call lazy load after ajaz for page stops
 $(document).ajaxStop(function(){
@@ -1024,10 +1048,138 @@ function LazyLoad(){
     });
 }
 
+$(document).ready(function() {
 var resize_stop;
 $(window).on('resize', function() {
 	  clearTimeout(resize_stop);
 	  resize_stop = setTimeout(function() {
 		  $('.home-brands-you-love-carousel-brands.active').click();
+		  
+		  var tcitemLength = $(".topConcierge .owl-item").length,tcitemWidth = $(".topConcierge .owl-item").outerWidth() ;
+			if (tcitemLength < 5) {
+				$(".topConcierge .owl-wrapper").css({
+				"width":tcitemLength*tcitemWidth,
+				"margin" : "auto"
+				});
+			}
+			
 	  }, 250);
 });
+
+	
+	if (!$.cookie("enhanced-search-list") && window.localStorage) {
+        for (var key in localStorage) {
+            if (key.indexOf("enhancedSearchData") >= 0) {
+                window.localStorage.removeItem(key);
+
+            }
+        }
+    }
+    if (window.localStorage && (data = window.localStorage.getItem("enhancedSearchData")) && data != "") {
+        populateEnhancedSearch(JSON.parse(data));
+    } 
+    else {
+	$.ajax({
+		url : ACC.config.encodedContextPath + "/view/MplEnhancedSearchBoxComponentController/searchdropdown",
+		type : 'GET',
+		//dataType: "json",
+		success : function(enhancedSearchData){
+			 populateEnhancedSearch(enhancedSearchData);
+			
+			if (window.localStorage) {
+                $.cookie("enhanced-search-list", "true", {
+                    expires: 1,
+                    path: "/store"
+
+                });
+                window.localStorage.setItem(
+                    "enhancedSearchData",
+                    JSON.stringify(enhancedSearchData));
+            }
+			
+		},
+		error : function(error){
+		}
+	});
+    }
+    
+   $(".lazy-brands").on("mouseover touchend", function(e) {
+	   var lazyImgs = $(this).find("ul.images").find("img.lazy");
+	   $(lazyImgs).each(function(){
+		   var original = $(this).attr("data-src");
+		   $(this).attr("src",original);
+		   $(this).removeAttr("data-src");
+	   });
+   }); 
+});
+
+
+
+function populateEnhancedSearch(enhancedSearchData)
+{
+	var searchCode=$("#searchCodeForDropdown").val();
+	var notPresentCategory=true;
+	var notPresentBrand=true;
+	var notPresentSeller=true;
+	if(enhancedSearchData.categoryData.length > 0){
+		$(".select-view #searchCategory").append('<optgroup label="Departments"></optgroup>');
+		for (var i=0; i<enhancedSearchData.categoryData.length; i++){
+			var code=enhancedSearchData.categoryData[i].code;
+			var name=enhancedSearchData.categoryData[i].name;
+			var className='';
+			if(searchCode==code)
+			{
+				className="selected";
+				notPresentCategory=false;
+			}
+			$("ul[label=Departments]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$("optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+		}
+		var selectedText = $(".select-list .dropdown li.selected").text();
+		$("#searchBoxSpan").html(selectedText);
+	}
+	
+	if(enhancedSearchData.brandData.length > 0){
+		$(".select-view #searchCategory").append('<optgroup label="Brands"></optgroup>');
+		for (var i=0; i<enhancedSearchData.brandData.length; i++){
+			var code=enhancedSearchData.brandData[i].code;
+			var name=enhancedSearchData.brandData[i].name;
+			var className='';
+			if(searchCode==code)
+			{
+				className="selected";
+				notPresentBrand=false;
+			}
+			$("ul[label=Brands]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$("optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			
+		}
+		var selectedText = $(".select-list .dropdown li.selected").text();
+		$("#searchBoxSpan").html(selectedText);
+	}
+	
+	if(enhancedSearchData.sellerData.length > 0){
+		$(".select-view #searchCategory").append('<optgroup label="Sellers"></optgroup>');
+		for (var i=0; i<enhancedSearchData.sellerData.length; i++){
+			var code=enhancedSearchData.sellerData[i].id;
+			var name=enhancedSearchData.sellerData[i].name;
+			var className='';
+			if(searchCode==code)
+			{
+				className="selected";
+				notPresentSeller=false;
+			}
+			$("ul[label=Sellers]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$("optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+		}
+		var selectedText = $(".select-list .dropdown li.selected").text();
+		$("#searchBoxSpan").html(selectedText);
+	}
+	
+	if(notPresentCategory==true && notPresentBrand==true && notPresentSeller==true)
+	{
+		$(".select-list .dropdown li#all").addClass("selected");
+		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
+	}
+}
+
