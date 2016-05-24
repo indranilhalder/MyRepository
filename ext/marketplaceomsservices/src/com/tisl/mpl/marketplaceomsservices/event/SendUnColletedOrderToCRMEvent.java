@@ -8,8 +8,8 @@ import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commerceservices.event.AbstractCommerceUserEvent;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
-import de.hybris.platform.servicelayer.event.ClusterAwareEvent;
-import de.hybris.platform.servicelayer.event.events.AbstractEvent;
+
+
 
 import com.hybris.oms.domain.shipping.Shipment;
 
