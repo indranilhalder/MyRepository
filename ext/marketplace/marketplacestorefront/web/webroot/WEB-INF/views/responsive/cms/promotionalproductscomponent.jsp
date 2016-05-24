@@ -32,7 +32,7 @@
 										<c:if test="${product.isProductNew eq true}">
 											<img class="new brush-strokes-sprite sprite-New"
 												style="z-index: 1; display: block;"
-												src="/store/_ui/responsive/common/images/transparent.png">
+												src="/_ui/responsive/common/images/transparent.png">
 										</c:if>
 										<a class="thumb" href="${productUrl}" title="${product.name}">
 											 <product:productPrimaryImage
@@ -43,7 +43,7 @@
 										<c:if test="${product.isOnlineExclusive}">
 											<div style="z-index: 1;" class="online-exclusive">
 												<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-													src="/store/_ui/responsive/common/images/transparent.png">
+													src="/_ui/responsive/common/images/transparent.png">
 												<span>online exclusive</span>
 											</div>
 										</c:if>
