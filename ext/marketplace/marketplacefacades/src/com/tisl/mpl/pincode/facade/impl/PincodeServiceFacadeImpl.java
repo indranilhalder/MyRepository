@@ -31,6 +31,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -206,7 +207,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			LOG.debug("**********configrableRadius:" + configurableRadius);
 		final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius, pincodeSellerId);
 		LOG.debug("StoreList size is :" + storeList.size());
-		if (null != storeList && storeList.size() > 0)
+		if (CollectionUtils.isNotEmpty(storeList))
 		{
 			storeLocationRequestData = new StoreLocationRequestData();
 			final List<String> locationList = new ArrayList<String>();
@@ -351,7 +352,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				LOG.debug("**********configrableRadius:" + configurableRadius);
 				final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
 						seller.getSellerID());
-				if (null != storeList && storeList.size() > 0)
+				if (CollectionUtils.isNotEmpty(storeList))
 				{
 					final List<String> locationList = new ArrayList<String>();
 					for (final Location location : storeList)
@@ -395,11 +396,11 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		try
 		{
 			posModels = pincodeService.getStoresForPincode(gps, rad);
-			if (null != posModels && posModels.size() > 0)
+			if (CollectionUtils.isNotEmpty(posModels))
 			{
 				//convert model to data
 				posData = converters.convertAll(posModels, pointOfServiceConverter);
-				if (null != posData && posData.size() > 0)
+				if (CollectionUtils.isNotEmpty(posData))
 				{
 					return posData;
 				}
