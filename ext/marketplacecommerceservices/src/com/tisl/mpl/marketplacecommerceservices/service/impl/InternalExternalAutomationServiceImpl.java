@@ -742,8 +742,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	public String findIamgeSize(final String urlString)
 	{
 
-		final String username = "siteadmin";
-		//final String password = "ASDF!@#$asdf1234";
+		final String username = configurationService.getConfiguration().getString("internal.campaign.report.username");
 
 		final String password = configurationService.getConfiguration().getString("internal.campaign.report.password");
 		//LOG.info("=============== Password read from Configuration File ================" + password);
@@ -762,8 +761,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			final sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
 			//final String authorization = username + ":" + password;
 
-			//LOG.info("Password after decryption : " + decrypt(password));
-			final String authorization = username + ":" + decrypt(password);
+			LOG.info("Username and Password after decryption : " + "====Username=====" + decrypt(username) + "====Password==:"
+					+ decrypt(password));
+			final String authorization = decrypt(username) + ":" + decrypt(password);
 
 			final String encodedAuth = "Basic " + encoder.encode(authorization.getBytes());
 			connection.setRequestProperty("Authorization", encodedAuth);
@@ -855,9 +855,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			//System.out.println("=======+++++++++===============================");
 
 			// Get information about the request
-
-			//	username = "siteadmin";
-			//password = "ASDF!@#$asdf1234";
 
 			// Return the information (a data holder that is used by Authenticator)
 			return new PasswordAuthentication(username, password.toCharArray());
