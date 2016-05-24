@@ -16,6 +16,7 @@
 <span id="productUrl" style="display:none">${request.contextPath}${product.url}</span>
 <span id="googleClientid" style="display:none">${googleClientid}</span>
 <span id="facebookAppid" style="display:none">${facebookAppid}</span>
+
 <script>
 
 			$(".g-interactivepost").attr("data-contenturl",window.location.host+$('#productUrl').text());
