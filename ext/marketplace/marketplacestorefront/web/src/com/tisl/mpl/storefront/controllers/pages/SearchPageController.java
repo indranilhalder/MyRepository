@@ -481,26 +481,6 @@ public class SearchPageController extends AbstractSearchPageController
 		final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
 		model.addAttribute("sizeCount", Integer.valueOf(Iterables.frequency(splitStr, "size")));
 		model.addAttribute("searchQueryValue", searchQuery);
-		final String[] temp = searchQuery.split(":");
-		final int countFreq = Iterables.frequency(splitStr, "size");
-		//  int preCount=0
-		int countValue = 0;
-		for (int i = 0; i < temp.length; i++)
-		{
-			if (temp[i].equals("size"))
-			{
-				countValue++;
-				//countFreq = 1;
-			}
-			else if (countValue >= 1)
-			{
-				if (countValue == countFreq)
-				{
-					break;
-				}
-			}
-		}
-
 		int count = getSearchPageSize();
 		final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
 		if (preferencesData != null && preferencesData.getPageSize() != null)
@@ -1144,9 +1124,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 * 
+	 *
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 * 
+	 *
 	 * return list; }
 	 */
 

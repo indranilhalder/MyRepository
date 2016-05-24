@@ -49,8 +49,8 @@
 					<%-- <c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url> --%>
 					<a href="${subBrandUrl}">
 						<div class="multibrand-wrapper">
-							<img class="multibrand-logo" src="${subBrand.subBrandImage.URL}" />
-							<img class="logo" src="${subBrand.subBrandLogo.URL}">
+							<img class="multibrand-logo lazy" data-src="${subBrand.subBrandImage.URL}" />
+							<img class="logo lazy" data-src="${subBrand.subBrandLogo.URL}">
 							<p class="multibrand-name">${subBrand.subBrandName}</p>
 						</div>
 					</a>
@@ -92,8 +92,8 @@
 						<div>
 
 							<c:if test="${(not empty subBrand.subBrandImage) && (count<1)}">
-								<img width="200" height="300"
-									src="${subBrand.subBrandImage.URL}" />
+								<img class="lazy" width="200" height="300"
+									data-src="${subBrand.subBrandImage.URL}" />
 								<br>
 								<c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url>
 								<a
