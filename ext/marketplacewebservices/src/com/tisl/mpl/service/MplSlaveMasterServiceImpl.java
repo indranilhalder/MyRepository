@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 		String status = MarketplacecommerceservicesConstants.SUCCESSS_RESP;
 		final List<SlaveInfoDTO> list = sellerSlaveDto.getSlaveInfo();
 		CountryModel countryModel = null;
-		if (!list.isEmpty())
+		if (CollectionUtils.isNotEmpty(list))
 		{
 			for (final SlaveInfoDTO slaveInfoDto : list)
 			{

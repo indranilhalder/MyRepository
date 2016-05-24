@@ -2182,7 +2182,7 @@ h2 {
           margin-right: 5px; }
       header .banner .content h1 {
         font-size: 28px;
-        padding: 50px 0 0; }
+        padding: 25px 0; }
       header .banner .content form {
         padding: 15px 0 10px;
         display: inline-block;
@@ -10555,7 +10555,8 @@ body .account .right-account .order-history .pagination li{
     color: #000;
 }
 .product-info .product-detail .other-sellers {
-    font-size: 12px;
+    font-size: 14px;
+    letter-spacing: 0;
 }
 .product-info .product-detail .other-sellers a,
 .other-sellers-link {
@@ -10567,10 +10568,16 @@ body .account .right-account .order-history .pagination li{
     font-weight: 600;
     line-height: 1.5;
 }
-
+button.otherSellersFont {
+    height: auto;
+    padding: 0;
+    line-height: normal;
+}
 @media (max-width: 790px) {
     .product-info .product-detail .other-sellers {
         text-align: left;
+        font-weight: 500;
+    text-transform: none;
     }
     .product-info .product-detail .other-sellers.back {
         text-align: center
@@ -19499,6 +19506,9 @@ display:none;
 .select-list ul li{
 	font-size:13px;
 }
+.trending .select-list ul li{
+	font-size:16px;
+}
 
 div.pdp.other-sellers {
     background-color: #fff;
@@ -22334,9 +22344,6 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
         -webkit-transition: font-weight 0.3s;
         -moz-transition: font-weight 0.3s;
         transition: font-weight 0.3s; }
-	.a-z-ul{
-	margin-bottom:20px;
-	}
 	.a-z-ul h3{
 	float:left;
 	font-size:24px;
@@ -22558,9 +22565,9 @@ font-weight:600;
 	padding-top: 6px;
 	margin:0px auto;
 	height:auto;
-
-
-	
+}
+.product-tile .image .quickview .disabled.serp-addtobag {
+	display:none;
 }
 .product-tile .image .quickview .serp-addtobag span:before {
     font-family: 'icomoon';
@@ -22626,7 +22633,8 @@ ul.ia_feature_brands li{
     clear: both;
 }
 div.productInfo ul li.product-size-list {
-    height: 16px;
+    min-height: 16px;
+    line-height:1.3;
 }
 
 .productInfo li {
@@ -25054,7 +25062,8 @@ width:auto;
     margin-top:5px;
 } 
 div.productInfo ul li.product-size-list{
-height:16px;
+min-height:16px;
+line-height:1.3;
 }
 div.productInfo ul li span.product-size{
 display:none;
@@ -29414,6 +29423,9 @@ width:100%;
 border-bottom: 2px solid transparent;
     padding: 5px;
 }
+.home-brands-you-love-carousel-brands img.lazy[src*=base64] {
+    max-height: 36px;
+}
 .home-brands-you-love-carousel-brands img:hover{
 cursor:pointer;
 }
@@ -29598,7 +29610,7 @@ p.showcase-para {
 }
 .showcase-center h3{
 	font-weight:600;
-	font-size:16px;
+	font-size:14px;
 }
 .showcase-center h3, .showcase-center p{
 	line-height: 20px;
@@ -29842,6 +29854,7 @@ a.button, button {
 }
 .qued-image img {
     float: right;
+    max-width:100%;
 }
 .qued-image img:nth-child(2) {
     position: relative;
@@ -31616,6 +31629,9 @@ body.page-homepage .feature-collections{
 }
 #latestOffersContent {
 	padding: 0 10px;	
+}
+.topConcierge .owl-item {
+    padding: 0 5px;
 }
 .topConcierge .latest-offer-carousal-image img {
 	width: auto;
@@ -39501,13 +39517,13 @@ transform-origin:0 0;
 	
 	.pickup_mob {
 		width: 100%;
-		margin-left: 10px;
+		margin-left: 15px;
 		margin-top: 5px;
 	}
 	
 	.pickMobileNo {
 		width: 94%;
-		margin-left: 10px;
+		margin-left: 15px;
 		margin-top: 5px;
 	}
 	
@@ -39522,25 +39538,34 @@ transform-origin:0 0;
 	}
 	
 	.pickup_Edit {
-		margin-left: -29px;
+		margin-left: -45px;
 	}
 	
 	.savebtnOther {
-		margin: 5px 0px 0px 20px !important;
+		margin: 5px 0px 0px 45px !important;
 		height: 34px !important;
 		padding-top: 9px;
 	}
 	
+	.pickupPersonMobileError {
+		margin-left: 15px;
+    	margin-top: 3px;
+	}
+	
+	.pickupPersonNameError {
+		margin-top: 3px;
+	}
 }
 @media (min-width: 1020px) {
 	.pickup_Edit {
 		margin-left: 181px;
 		margin-top: -22px;
+		margin-bottom: 40px;
 	}
 	
 	.pickup_name {
-		padding-top: 12px;
-		margin-left: 17px;
+		padding-top: 21px;
+		/* margin-left: 17px; */
 		font-weight: bold;
 	}
 	
@@ -39552,35 +39577,38 @@ transform-origin:0 0;
 	}
 	
 	.pickupPersonNameError {
-		/* width: 115px;  */
+		width: 115px;
 		font-size: 10px;
-		/* margin-left: 49px; */
+		margin-left: 49px;
+		margin-top: 3px;
 	}	
 	.pickup_mob {
-		margin-left: -86px;
-		padding-top: 14px;
+		margin-left: -82px;
+		padding-top: 21px;
 		width: 71px;
 		font-weight: bold;
 	}
 	
 	.pickMobileNo {
-		margin-left: -128px; 
+		margin-left: -110px; 
 		height: 28px; 
 		margin-top: 7px; 
 		z-index: 10;
 	}
 	
 	.pickupPersonMobileError {
-		/* margin-left: -125px;  */
+		margin-left: -111px;
 		width: 167px; 
 		font-size: 10px;
+		margin-top: 3px;
 	}
 	
 	.savebtn {
 		z-index: 99; 
 		min-width: 91px;
-		margin-left: -188px;
-	}
+		margin-left: -235px;
+	    height: 40px;
+	    line-height: 29px;
   }
 }
 

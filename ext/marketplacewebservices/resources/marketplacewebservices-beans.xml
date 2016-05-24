@@ -1388,6 +1388,8 @@
 		<property name="orderStatusMessage" type="String" />
 		<!-- <property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" /> -->
 		<property name="couponDiscount" type="String" />
+		<property name="pickupPersonName" type="String" />
+		<property name="pickupPersonMobile" type="String" />
 	</bean>
 <bean class="com.tisl.mpl.wsdto.FreebieWsDTO">
 		<property name="name" type="String" />

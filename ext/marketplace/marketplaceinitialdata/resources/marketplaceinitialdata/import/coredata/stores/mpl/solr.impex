@@ -424,8 +424,6 @@ $solrIndexedType=solrIndexedType(identifier[default=$solrIndexedTypeIdentifier])
 INSERT_UPDATE GlobalSolrSearchProfile;code;indexedType(identifier)[unique=true];
 ;mpl-globalcatalog-srch-profile;$solrIndexedTypeIdentifier;
 
-INSERT_UPDATE SolrBoostRule;solrIndexedProperty(name, $solrIndexedType)[unique=true];operator(code)[unique=true];propertyValue[unique=true];boostFactor;solrSearchProfiles(code)[unique=true]
-;inStockFlag;EQUAL_TO;true;100;mpl-globalcatalog-srch-profile
 
 # TISPRO-371 Start update and delete index solr cron job into single composite cronjob
 INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode)

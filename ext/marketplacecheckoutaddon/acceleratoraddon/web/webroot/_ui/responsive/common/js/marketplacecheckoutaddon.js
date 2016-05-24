@@ -2836,7 +2836,7 @@ function selectDefaultDeliveryMethod() {
 }
 
 
-$('#deliveryradioul .delivery ul li input:radio').click(function(){
+$('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li input:radio').click(function(){
 	changeCTAButtonName("DefaultName");
 	$('#deliveryradioul .delivery ul').each(function(){
 		var length = $(this).find("li").length; 
