@@ -1193,9 +1193,13 @@ if (searchCategory_id){
 			    document.getElementById(widgetElement).innerHTML = "";    
 			    var html = "";
 			    var respData = response.data.brands;
-
-			    html += '<div class="wrapper"><h1 class="">'+brandWidgetTitle[jQuery.inArray(widgetMode, brandWidget)]+'</h1><ul class="feature-brands ia_feature_brands">';
+			    /* response check addition for 'Hot Brands' start*/
+			    if(response.data.brands.length > 0){
+			    	html += '<div class="wrapper"><h1 class="">'+brandWidgetTitle[jQuery.inArray(widgetMode, brandWidget)]+'</h1><ul class="feature-brands ia_feature_brands">';
+			    	}
+			    /* response check addition for 'Hot Brands' end*/
 			    numRec = 0;
+			   
 			    jQuery.each(respData, function () {
 			    	queryUrl = this.url + '?req=' + response.request_id;
 			      if(numRec < 3) {
@@ -1216,7 +1220,7 @@ if (searchCategory_id){
 			        return false;
 			      }
 			    });
-
+			    
 			    html += '</ul></div></div>';
 			    document.getElementById(widgetElement).innerHTML = html;
 			  } else if (jQuery.inArray(widgetMode, categoryWidget) > -1) {
