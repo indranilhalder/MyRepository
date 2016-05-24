@@ -604,6 +604,7 @@ public class CustomOmsCancelAdapter implements Serializable
 									refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
 									refundTransactionMappingModel.setCreationtime(new Date());
 									refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED);
+									refundTransactionMappingModel.setRefundAmount(orderRequestRecord.getRefundableAmount());
 									modelService.save(refundTransactionMappingModel);
 								}
 								else

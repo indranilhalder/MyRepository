@@ -35,7 +35,6 @@ ACC.autocomplete = {
 				}
 			},_renderItem : function (ul, item){
 			if (item.type == "autoSuggestion"){
-				   alert("hii");
 					var renderHtml = "<a href='/search?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
 					return $("<li>")
 							.data("item.autocomplete", item)
