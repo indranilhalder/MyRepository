@@ -103,10 +103,10 @@ $( document ).ready(function() {
 								<c:choose>
 								
 									<c:when test="${fn:toLowerCase(fulfillmentType) eq 'tship'}">
-										<p class="size">Fullfilled by: <spring:theme code="product.default.fulfillmentType"></spring:theme></p>
+										<p class="size"><spring:theme code="mpl.myBag.fulfillment"/> <spring:theme code="product.default.fulfillmentType"></spring:theme></p>
 									</c:when>
 									<c:otherwise>
-										<p class="size">Fullfilled by: ${sellerName}</p>
+										<p class="size"><spring:theme code="mpl.myBag.fulfillment"/> ${sellerName}</p>
 									</c:otherwise>
 								</c:choose>
 						</div> <form:form method="post" id="addToCartForm"

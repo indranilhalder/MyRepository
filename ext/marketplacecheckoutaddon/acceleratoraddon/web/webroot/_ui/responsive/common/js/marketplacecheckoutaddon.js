@@ -2275,13 +2275,13 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	if(result == undefined || result == "")
 	{	
 		$("#address3Error").show();
-		$("#address3Error").html("<p>Landmark cannot be blank</p>");
+		$("#address3Error").html("<p>Address line 3 cannot be blank</p>");
 		validate= false;
 	}
 	else if(regAddress.test(result) == false)  
 	{ 
 		$("#address3Error").show();
-		$("#address3Error").html("<p>LandMark must be alphanumeric only</p>");	
+		$("#address3Error").html("<p>Address line 3 must be alphanumeric only</p>");	
 		validate= false;
 	}  
 	else
@@ -3594,7 +3594,7 @@ function validateAddressLine2(addressLine, errorHandle){
 
 function validateLandmark(addressLine, errorHandle){
 	if(addressLine==""){
-		errorHandle.innerHTML = "Please enter a Landmark.";
+		errorHandle.innerHTML = "Please enter a address line 3.";
         return false;
 	}
 	errorHandle.innerHTML = "";

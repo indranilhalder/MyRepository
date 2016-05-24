@@ -178,6 +178,10 @@ public class ExtDefaultCartValidationStrategy extends DefaultCartValidationStrat
 			return getCommerceStockService().getStockLevelForProductAndPointOfService(cartEntryModel.getSelectedUSSID(),
 					pointOfService);
 		}
+		if (cartEntryModel.getGiveAway() != null && cartEntryModel.getGiveAway().booleanValue())
+		{
+			return null;
+		}
 
 		return getCommerceStockService().getStockLevelForProductAndBaseStore(cartEntryModel.getSelectedUSSID(),
 				getBaseStoreService().getCurrentBaseStore());
