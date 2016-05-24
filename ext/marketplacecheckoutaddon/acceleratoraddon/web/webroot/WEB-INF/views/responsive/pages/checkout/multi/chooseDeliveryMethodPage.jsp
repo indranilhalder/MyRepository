@@ -28,7 +28,8 @@
 		<spring:theme code="checkout.multi.secure.checkout" text="Secure Checkout"></spring:theme>
 	</div> --%>
 	<div class="checkout-content cart checkout wrapper">
-	<script type="text/javascript" src="/store/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
+	<!-- store url fix -->
+	<script type="text/javascript" src="/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
 		<c:if test="${showDeliveryMethod eq true}">
 		
 			<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}">
@@ -38,7 +39,7 @@
     					//resetConvChargeElsewhere(); Commented for TIS 400
     				//}
     				$(document).ready(function() {
-    					calculateDeliveryCost();
+    					selectDefaultDeliveryMethod();
     				});
     				var timeoutID;
     				function setup() {

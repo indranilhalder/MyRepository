@@ -11,6 +11,9 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user"%>
  <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+ <script>
+	sessionStorage.setItem("confirmationPageVisited", "True");
+</script>
 <template:page pageTitle="${pageTitle}" >
 
 <!--- START: INSERTED for MSD --->
@@ -82,7 +85,7 @@
 					<spring:theme code="checkout.orderConfirmation.checkOrderStatus" />
 				</p> --%>
 				<p>
-				<spring:theme code="checkout.orderConfirmation.track" />&nbsp;<a href="/store/mpl/en/my-account/orders"><spring:theme code="checkout.orderConfirmation.myAccountLink" /></a>
+				<spring:theme code="checkout.orderConfirmation.track" />&nbsp;<a href="/my-account/orders"><spring:theme code="checkout.orderConfirmation.myAccountLink" /></a>
 				</p>
 				<%-- <p><multi:pickupGroups2 orderData="${orderData}"/></p> --%>
 				<%--                 <p><spring:theme code="text.account.order.orderNumber" text="Order number is {0}" arguments="${orderData.code}"/></p>

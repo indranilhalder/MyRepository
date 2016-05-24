@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.ForgetPasswordFacade;
@@ -92,7 +91,8 @@ public class ForgottenPasswordsController extends BaseController
 	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
 	@RequestMapping(value = "/forgotPasswordforEmail", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public UserResultWsDto forgotPassword(@RequestParam final String emailid, final String fields, final HttpServletRequest request)
+	public UserResultWsDto forgotPassword(@RequestParam final String emailid, final String fields,
+			final HttpServletRequest request)
 	{
 		final UserResultWsDto userResultWsDto = new UserResultWsDto();
 		String message = "";
@@ -109,9 +109,7 @@ public class ForgottenPasswordsController extends BaseController
 				final String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
 				//final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + ""; Do not add empty strings
 				final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString;
-				final String securePasswordPath = MarketplacewebservicesConstants.FORGOTPASSWORD_URL
-						+ MarketplacecommerceservicesConstants.LINK_PASSWORD_CHANGE;
-				final String securePasswordUrl = baseUrl + securePasswordPath;
+				final String securePasswordUrl = baseUrl + MarketplacecommerceservicesConstants.LINK_PASSWORD_CHANGE;
 				forgetPasswordFacade.forgottenPasswordForEmail(emailid, securePasswordUrl);
 				userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}

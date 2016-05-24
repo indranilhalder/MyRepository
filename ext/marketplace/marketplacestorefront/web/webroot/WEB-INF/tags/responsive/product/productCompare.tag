@@ -38,6 +38,7 @@
 #compareProducts {
 	width: 80%;
 	float: left;
+	text-align: left;
 }
 
 #compareProducts .compare-item {
@@ -68,6 +69,7 @@
 
 .compare-item .content li {
 	line-height: 22px;
+	word-break: break-word;
 }
 
 .compare-item .content li:last-child {
@@ -82,6 +84,7 @@
 	line-height: 15px;
 	font-weight: normal;
 	text-align: left;
+	padding: 13px 10px;
 }
 
 .compareBtn.enabled:hover {
@@ -145,6 +148,7 @@
 @media ( max-width :650px) {
 	#compareSection {
 		min-height: 100px;
+		padding: 15px 10px;
 	}
 	#compareProducts {
 		display: none;
@@ -155,7 +159,8 @@
 		right: 0px;
 		bottom: -10px;
 		height: 35px;
-		line-height: 1;
+		line-height: 0.5;
+		padding: 13px 7px;
 	}
 	.compare-wrapper {
 		width: 100%;
@@ -163,6 +168,10 @@
 	}
 	.closeLink {
 		right: 0px;
+		font-size: 14px;
+	}
+	.comapreProducts{
+	font-size:22px;
 	}
 	.compare-selectedProducts {
 		display: block;
@@ -188,6 +197,9 @@
 	.showSelections {
 		display: block;
 	}
+	#compareProducts .compare-item ul{
+	padding-left:5px;
+	}
 }
 
 @media ( min-width :651px) and (max-width:1050px) {
@@ -212,6 +224,13 @@
 			$(".compare-selectedProducts span").toggleClass("hideSelections");
 			$(".compare-selectedProducts span").toggleClass("showSelections");
 		});
+		
+		var screenwidth=$(window).width();
+		var items=4;
+		if(screenwidth < 650){
+			var items=2;
+		}
+		$('#number-items').html(items);
 
 	});
 </script>
@@ -219,7 +238,7 @@
 	<div id="compareError" class="compareError"></div>
 	<div class="compare-wrapper">
 		<h2 class="comapreProducts">Compare Products</h2>
-		<p class="compare-titleContent">Compare upto 4 products</p>
+		<p class="compare-titleContent">Compare upto <span id="number-items"></span> products</p>
 		<a class="closeLink">Close</a>
 		<p class="compare-selectedProducts">
 			<span class="showSelections">See Selections</span> <span

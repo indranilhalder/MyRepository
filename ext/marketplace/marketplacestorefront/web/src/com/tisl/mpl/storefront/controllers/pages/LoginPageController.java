@@ -90,6 +90,8 @@ public class LoginPageController extends AbstractLoginPageController
 	private FrontEndErrorHelper frontEndErrorHelper;
 	private static final Logger LOG = Logger.getLogger(LoginPageController.class);
 
+	private static final String LOGIN_SUCCESS = "loginSuccess";
+
 
 	/**
 	 * @return the registerPageValidator
@@ -443,7 +445,8 @@ public class LoginPageController extends AbstractLoginPageController
 					final String password = java.net.URLEncoder.encode(form.getPwd(), "UTF-8");
 					form.setPwd(password);
 					getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
-
+					final HttpSession session = request.getSession();
+					session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);
 					//	updating the isRegistered flag in friends model (in case of valid affiliated id)
 					if (null != form.getAffiliateId() && !StringUtils.isBlank(form.getAffiliateId()))
 					{
@@ -483,8 +486,8 @@ public class LoginPageController extends AbstractLoginPageController
 				returnPage = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			}
 
-//			model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.N_CAPS_VAL);
-			
+			//			model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.N_CAPS_VAL);
+
 		}
 		return returnPage;
 	}

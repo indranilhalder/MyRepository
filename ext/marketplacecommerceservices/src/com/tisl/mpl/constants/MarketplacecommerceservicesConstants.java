@@ -64,7 +64,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NEW_PASSWORD = "newPassword";
 	public static final String PRICE_NOT_AVAILABLE = "Price not Available";
 	public static final String PWD = "pwd";
-
+	public static final String ZeroDeliveryCost="0.0";
+	
 	public static final String LIST_EMPTY = "List is Empty";
 
 	public static final String CustomerSpecificRestriction_REGISTERED = "REGISTERED";
@@ -839,7 +840,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9516 = "B9516";
 	public static final String B9517 = "B9517";
 	public static final String B9518 = "B9518";
-
+	public static final String B9519 = "B9519";
+	
 	public static final String B9103 = "B9103";
 
 	public static final String B9320 = "B9320";
@@ -1495,7 +1497,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String PROMO_PRODUCT_UPLOAD_SEPARATOR = ",".intern();
 
-	public static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+	//store url change
+	public static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
 

@@ -28,12 +28,16 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
@@ -47,6 +51,27 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 	private FieldNameProvider fieldNameProvider;
 	private PromotionsService promotionService;
 	private TimeService timeService;
+
+
+	private BuyBoxService buyBoxService;
+
+	/**
+	 * @return the buyBoxService
+	 */
+	public BuyBoxService getBuyBoxService()
+	{
+		return buyBoxService;
+	}
+
+	/**
+	 * @param buyBoxService
+	 *           the buyBoxService to set
+	 */
+	@Resource
+	public void setBuyBoxService(final BuyBoxService buyBoxService)
+	{
+		this.buyBoxService = buyBoxService;
+	}
 
 	protected FieldNameProvider getFieldNameProvider()
 	{
@@ -177,7 +202,6 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 
 			final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
 					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
-
 			final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
 
 			for (final ProductPromotionModel promotion : restrictedPromotions)
@@ -191,30 +215,43 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 			if (!promotions.isEmpty())
 			{
 
-				Collections.sort(promotions, new Comparator<ProductPromotionModel>()
+
+				if (CollectionUtils.isNotEmpty(buyBoxService.getBuyboxPricesForSearch(product.getCode()))
+						&& buyBoxService.getBuyboxPricesForSearch(product.getCode()).get(0).getAvailable().intValue() > 0)
 				{
 
-					@Override
-					public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
+
+					Collections.sort(promotions, new Comparator<ProductPromotionModel>()
 					{
 
-						if (o1.getPriority() == o2.getPriority())
+						@Override
+						public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
 						{
-							return 0;
-						}
-						else if (o1.getPriority() < o2.getPriority())
-						{
-							return 1;
-						}
-						else
-						{
-							return -1;
+
+
+							if (o1.getPriority() == o2.getPriority())
+
+							{
+								return 0;
+							}
+							else if (o1.getPriority().intValue() < o2.getPriority().intValue())
+
+							{
+								return 1;
+							}
+							else
+							{
+								return -1;
+							}
 						}
 
-					}
-				});
+					});
+				}
+				else
+				{
+					promotions.clear();
+				}
 			}
-
 
 			if (promotions.size() > 0 && !promotions.isEmpty())
 
@@ -226,8 +263,6 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 		}
 		return fieldValues;
 	}
-
-
 
 	protected List<FieldValue> createFieldValues(final ProductModel product, final IndexConfig indexConfig,
 			final IndexedProperty indexedProperty)
@@ -254,30 +289,41 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 			if (!promotions.isEmpty())
 			{
 
-				Collections.sort(promotions, new Comparator<ProductPromotionModel>()
+				if (CollectionUtils.isNotEmpty(buyBoxService.getBuyboxPricesForSearch(product.getCode()))
+						&& buyBoxService.getBuyboxPricesForSearch(product.getCode()).get(0).getAvailable().intValue() > 0)
 				{
 
-					@Override
-					public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
+
+					Collections.sort(promotions, new Comparator<ProductPromotionModel>()
 					{
 
-						if (o1.getPriority() == o2.getPriority())
+						@Override
+						public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
 						{
-							return 0;
-						}
-						else if (o1.getPriority() < o2.getPriority())
-						{
-							return 1;
-						}
-						else
-						{
-							return -1;
+
+							if (o1.getPriority() == o2.getPriority())
+
+							{
+								return 0;
+							}
+							else if (o1.getPriority().intValue() < o2.getPriority().intValue())
+
+							{
+								return 1;
+							}
+							else
+							{
+								return -1;
+							}
 						}
 
-					}
-				});
+					});
+				}
 			}
-
+			else
+			{
+				promotions.clear();
+			}
 
 			if (promotions.size() > 0 && !promotions.isEmpty())
 
@@ -361,8 +407,6 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 					}
 
 					///brand restriction check
-
-
 					for (final AbstractPromotionRestrictionModel restriction : productPromotion.getRestrictions())
 					{
 
@@ -555,19 +599,7 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 	}
 
 
-	/*
-	 * public static class PromotionComparator implements Comparator {
-	 *
-	 *
-	 * public int compare(final Object arg0, final Object arg1) { // YTODO Auto-generated method stub final Integer
-	 * number1 = promo1.getPriority(); final Integer number2 = promo2.getPriority();
-	 *
-	 * if (number1 != null && number2 != null) { return Integer.compare(number1, number2);
-	 *
-	 * } }
-	 *
-	 * }
-	 */
+
 
 
 }

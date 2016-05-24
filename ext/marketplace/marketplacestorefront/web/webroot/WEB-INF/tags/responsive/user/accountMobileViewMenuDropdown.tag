@@ -34,7 +34,7 @@
 				code="header.flyout.cards" />
 		</option>
 		<option value=/store/mpl/en/my-account/address-book
-			data-href="account-addresses.php" selected><spring:theme
+			data-href="account-addresses.php"><spring:theme
 				code="header.flyout.address" />
 		</option>
 		<option value=/store/mpl/en/my-account/reviews
@@ -42,7 +42,7 @@
 							code="header.flyout.review" />
 		</option>
 		<option value=/store/mpl/en/my-account/myInterest
-			data-href="account-addresses.php" selected><spring:theme
+			data-href="account-addresses.php"><spring:theme
 				code="header.flyout.recommendations" />
 		</option>
 	</optgroup>

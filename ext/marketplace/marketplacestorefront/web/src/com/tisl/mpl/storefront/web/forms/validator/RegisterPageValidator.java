@@ -77,10 +77,10 @@ public class RegisterPageValidator implements Validator
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.PWD, "register.pwd.invalid");
 		}
-		else if (StringUtils.length(pwd) > 16)
+		/*else if (StringUtils.length(pwd) > 16)
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.PWD, "register.pwd.invalid.long");
-		}
+		}*/
 		else if (checkWhiteSpace(pwd))
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.PWD, "register.pwd.invalid.space");

@@ -67,7 +67,8 @@ public class ComparePageController extends AbstractPageController
 	private static final String COMPARE_PAGE_ID = "compare";
 	private static final String HASH = "#";
 	private static final String LAST_LINK_CLASS = "active";
-	private static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-96x96.jpg";
+	//store url changes
+	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-96x96.jpg";
 	private static final String COMPARE_LIST = "compareList";
 
 	private List<CategoryModel> referenceCategories = new ArrayList<CategoryModel>();
@@ -98,7 +99,7 @@ public class ComparePageController extends AbstractPageController
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<Integer, Map<String, String>> getComparableProducts(@RequestParam("productCode") final String productCode,
-			final HttpSession session)
+			final HttpSession session, @RequestParam("maximumSize") final int maximumSize)
 
 	{
 		List<ProductData> sessionCompareList = new ArrayList();//3
@@ -113,7 +114,7 @@ public class ComparePageController extends AbstractPageController
 		final ProductData productData = productFacade.getProductForOptions(productModel, PRODUCT_OPTIONS);
 
 		//Check if the compare list size is less than 4 and product is comparable
-		if (sessionCompareList.size() < 4 && addToCompareList(productModel, sessionCompareList))
+		if (sessionCompareList.size() < maximumSize && addToCompareList(productModel, sessionCompareList))
 		{
 			final BuyBoxData buyBoxData = buyBoxFacade.buyboxPrice(productData.getCode());
 			if (buyBoxData != null)

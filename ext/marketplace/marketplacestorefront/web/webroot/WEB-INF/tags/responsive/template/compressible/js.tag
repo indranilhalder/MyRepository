@@ -8,6 +8,30 @@
 
 <script>
 var loginStatus = '${sessionScope.loginSuccess}';
+
+$(document).on("click", ".header-myAccountSignOut", function() {
+	window.localStorage.removeItem("eventFired");
+});
+
+//TISPRO-183 -- Firing Tealium event only after successful user login
+if(loginStatus){
+	if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {
+		localStorage.setItem("eventFired","true");
+	//	console.log("Login Success!!!");
+		if(typeof utag == "undefined"){
+			console.log("Utag is undefined")
+		}
+		else{
+			//console.log("Firing Tealium Event")
+			utag.link({ "event_type" : "Login", "link_name" : "Login" });
+		}
+		
+		//fireTealiumEvent();
+		
+		
+		
+	}  
+}
 </script>
 
 <script type="text/javascript"
@@ -29,12 +53,12 @@ var loginStatus = '${sessionScope.loginSuccess}';
 
 
 
-<c:if test="${isIAEnabled}">
+<%-- <c:if test="${isIAEnabled}">
 <script type="text/javascript"
 	src="${commonResourcePath}/js/ia_plugin_general.js" defer="defer"></script>
 <script type="text/javascript" src="${commonResourcePath}/js/tataia.js" defer="defer"></script>
 </c:if>
-
+ --%>
 
 
 <!--- START: INSERTED for MSD --->

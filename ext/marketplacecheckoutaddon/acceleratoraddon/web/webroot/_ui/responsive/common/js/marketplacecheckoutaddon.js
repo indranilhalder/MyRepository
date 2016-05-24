@@ -385,7 +385,8 @@ function submitForm(){
 							$("#otpSentMessage").css("display","none");
 							$(".pay .payment-button,.cod_payment_button_top").prop("disabled",true);
 							$(".pay .payment-button,.cod_payment_button_top").css("opacity","0.5");
-							$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 100px; height: 30px;">');
+							//store url change
+							$(".pay").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 100px; height: 30px;">');
 							$(".pay .spinner").css("left",(($(".pay#paymentFormButton").width()+$(".pay#paymentFormButton .payment-button").width())/2)+10);
 							$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 							$("#silentOrderPostForm").submit();
@@ -881,7 +882,8 @@ function displayFormForCC(){
   
 
 function mobileBlacklist(){
-	$("#sendOTPButton").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
+	//store url change
+	$("#sendOTPButton").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
 	if($("#sendOTPButton #resendOTPMessage").css("display") == 'block') {
 		$("#sendOTPButton .spinner").css("bottom","33px")
 	}
@@ -1202,7 +1204,8 @@ $("#otpMobileNUMField").focus(function(){
   function createJuspayOrderForSavedCard(){
 		$(".pay button, #make_saved_cc_payment_up").prop("disabled",true);
 		$(".pay button, #make_saved_cc_payment_up").css("opacity","0.5");
-		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
+		//store url change
+		$(".pay").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.saved-card-button").width()+$(".pay.saved-card-button button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	  // TISPRO-153		
@@ -1296,7 +1299,8 @@ $("#otpMobileNUMField").focus(function(){
   function createJuspayOrderForNewCard(){
 		$(".pay button, #make_cc_payment_up").prop("disabled",true);
 		$(".pay button, #make_cc_payment_up").css("opacity","0.5");
-		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
+		//store url change
+		$(".pay").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		// TISPRO-153
@@ -2626,7 +2630,8 @@ function submitNBForm(){
 	else{
 		$(".pay button, .make_payment_top_nb").prop("disabled",true);
 		$(".pay button, .make_payment_top_nb").css("opacity","0.5");
-		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
+		//store url change
+		$(".pay").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.top-padding").width()+$(".pay.top-padding button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.00; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		
@@ -2799,11 +2804,64 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 			isCodSet = false;
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//TISTI-255
+//	 			TISPRD-1666 - console replaced with alert and resp print
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			
+	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
 
 	 		}
 	 	});	 
 }
+
+function selectDefaultDeliveryMethod() {
+	 $('#deliveryradioul .delivery ul').each(function(){
+		 var length = $(this).find("li").length; 
+		 //console.log(length);
+		 if(length >= "1") {
+			  //console.log($(this).find("li:first").children("input:radio").attr("id"));
+			  var radioSplit = $(this).find("li:first").children("input:radio").attr("id").split("_");
+			  var radioId = radioSplit[0]+"_"+radioSplit[1];
+			  calculateDeliveryCost(radioId,radioSplit[2]);
+			  $("#"+$(this).find("li:first").children("input:radio").attr("id")).prop('checked', true);
+			  if($(this).find("input[type='radio']:checked").attr("id").split("_")[2] == "click-and-collect") {
+			  		changeCTAButtonName($(this).find("input[type='radio']:checked").attr("id").split("_")[2]);
+			  	}
+		 }
+	 });
+}
+
+
+$('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li input:radio').click(function(){
+	changeCTAButtonName("DefaultName");
+	$('#deliveryradioul .delivery ul').each(function(){
+		var length = $(this).find("li").length; 
+		if(length >= "1") {
+			if($(this).find("input[type='radio']:checked").attr("id").split("_")[2]== "click-and-collect") {
+				changeCTAButtonName($(this).find("input[type='radio']:checked").attr("id").split("_")[2]);
+			}
+		}
+	});	
+});
+
+
+
+
+function changeCTAButtonName(deliveryCode) {
+	//console.log(deliveryCode);
+	if(deliveryCode == "click-and-collect") {
+		$("#deliveryMethodSubmit").text("Choose Store");
+		$("#deliveryMethodSubmitUp").text("Choose Store");
+	} else if(deliveryCode== "DefaultName") {
+		$("#deliveryMethodSubmit").text("Choose Address");
+		$("#deliveryMethodSubmitUp").text("Choose Address");
+	}
+}
+
 ////TISST-13010
 function showPromotionTag()
 {
@@ -2865,7 +2923,10 @@ function checkPincodeServiceability(buttonType)
  		success : function(response) {
  			if(response=="N")
  				{
- 				alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 				//TISTI-255
+ 				//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 				//	TISPRD-1666 - console replaced with alert and resp print
+ 				console.log('Response coming as N in checkPincodeServiceability');
  	 			$("#isPincodeServicableId").val('N');
  	 			reloadpage(selectedPincode,buttonType);
  				}
@@ -2877,9 +2938,18 @@ function checkPincodeServiceability(buttonType)
  			
  		},
  		error : function(resp) {
- 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 			//TISTI-255
+ 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+ 			console.log(resp);
  			$("#isPincodeServicableId").val('N');
  			reloadpage(selectedPincode,buttonType);
+ 			
+// 			TISPRD-1666 - console replaced with alert and resp print
+ 			var errorDetails=JSON.stringify(resp);
+ 			console.log("errorDetails 1>> "+errorDetails);
+ 			
+ 			handleExceptionOnServerSide(errorDetails);
+ 			console.log('Some issue occured in checkPincodeServiceability');
  		}
  	});
 
@@ -3124,7 +3194,16 @@ function checkIsServicable()
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//TISTI-255
+	 			//TISPRD-1666 - console replaced with alert and resp print
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
+	 			
+	 			console.log('Some issue occured in checkPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
 	 		}
 	 	});
@@ -3312,8 +3391,15 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			populatePincodeDeliveryMode(response,buttonType);
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//TISTI-255
+	 			//TISPRD-1666 - console replaced with alert and resp print
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
+	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
 	 		}
 	 	});	 
 	}
@@ -3639,8 +3725,15 @@ function expressbutton()
 	 			populatePincodeDeliveryMode(response,'typeExpressCheckout');
 	 		},
 	 		error : function(resp) {
-	 			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
+	 			//TISTI-255
+	 			//TISPRD-1666 - console replaced with alert and resp print
+	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
+	 			console.log(resp);
+	 			var errorDetails=JSON.stringify(resp);
+	 			console.log("errorDetails 1>> "+errorDetails);
+	 			
+	 			handleExceptionOnServerSide(errorDetails);
 	 		}
 	 	});	 
 	}
@@ -3904,3 +3997,25 @@ function sendTealiumData(){
 	   }     
 }
 
+
+//ADD Server side error track // TISPRD-1666
+
+function handleExceptionOnServerSide(errorDetails){
+	 setTimeout( function(){
+			$.ajax({
+		 		url: ACC.config.encodedContextPath + "/cart/networkError",
+		 		type: "GET",
+		 		cache: false,
+		 		data:  { 'errorDetails' : errorDetails},
+		 		success : function(errorResponse) {
+		 			
+		 			console.log(errorResponse);
+		 		},
+		 		error : function(errorResp) {
+		 			console.log(errorResp);
+		 		}
+		 	});
+			 },
+			1000);
+		
+}
