@@ -269,7 +269,8 @@ public class PaymentService
 		params.put(MarketplaceJuspayServicesConstants.ORDERID, initOrderRequest.getOrderId());
 		//TISCR-421
 		params.put(MarketplaceJuspayServicesConstants.CUSTOMERPHONE, initOrderRequest.getCustomerPhone());
-		params.put(MarketplaceJuspayServicesConstants.SESSIONID, initOrderRequest.getSessionId());
+		params.put(MarketplaceJuspayServicesConstants.SESSIONID,
+				initOrderRequest.getSessionId() == null ? "" : initOrderRequest.getSessionId());
 
 		// Optional parameters
 		params.put("udf1", initOrderRequest.getUdf1() == null ? "" : initOrderRequest.getUdf1());

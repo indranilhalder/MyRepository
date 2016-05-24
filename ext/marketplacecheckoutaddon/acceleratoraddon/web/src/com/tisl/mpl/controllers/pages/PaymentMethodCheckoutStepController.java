@@ -1319,10 +1319,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		model.addAttribute(MarketplacecheckoutaddonConstants.EBS_ACCOUNT_ID, getConfigurationService().getConfiguration()
 				.getString(MarketplacecheckoutaddonConstants.EBS_ACCOUNT_ID_KEY));
 
-		model.addAttribute(
-				MarketplacecheckoutaddonConstants.EBS_SESSION_ID,
-				getMd5Encoding(getRandomAlphaNum(getConfigurationService().getConfiguration().getString(
-						MarketplacecheckoutaddonConstants.EBS_SESSION_ID_KEY))));
+		//Juspay-EBS session id
+		final String sessionId = getMd5Encoding(getRandomAlphaNum(getConfigurationService().getConfiguration().getString(
+				MarketplacecheckoutaddonConstants.EBS_SESSION_ID_KEY)));
+		getSessionService().setAttribute(MarketplacecheckoutaddonConstants.EBS_SESSION_ID, sessionId);
+		model.addAttribute(MarketplacecheckoutaddonConstants.EBS_SESSION_ID, sessionId);
 
 		//getting the current customer to fetch customer Id and customer email
 		final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();

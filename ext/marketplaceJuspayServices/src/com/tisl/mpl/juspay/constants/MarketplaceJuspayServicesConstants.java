@@ -45,5 +45,5 @@ public final class MarketplaceJuspayServicesConstants extends GeneratedMarketpla
 	public final static String VERSION = "payment.juspay.version";
 	public final static String CUSTOMERPHONE = "customer_phone";
 	public final static String CUSTOMEREMAIL = "customer_email";
-	public final static String SESSIONID = "session_id";
+	public final static String SESSIONID = "metadata.session_id";
 }

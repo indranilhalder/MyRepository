@@ -1517,6 +1517,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISCR-421
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
+	public static final String EBS_SESSION_ID = "session_id";
 
 	private MarketplacecommerceservicesConstants()
 	{

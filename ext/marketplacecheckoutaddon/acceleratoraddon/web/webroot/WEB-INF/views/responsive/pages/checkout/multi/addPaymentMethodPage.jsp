@@ -19,8 +19,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
 	
-	<!-- TISCR-421 Starts -->
-	
+	<!-- TISCR-421 Starts -->	
 	<script type="text/javascript" async="true" src="https://elistva.com/api/script.js?aid=${account_id}&sid=${session_id}">
 	</script>
 
@@ -31,7 +30,6 @@
 	<object type="application/x-shockwave-flash" data="//elistva.com/api/udid.swf?aid=${account_id}&sid=${session_id}" width="1" height="1">
 	        <param name="movie" value="//elistva.com/api/udid.swf?aid=${account_id}&sid=${session_id}" />
 	</object>
-	
 	<!-- TISCR-421 Ends -->
 
 	<div class="checkout-headline" id="checkout-headline">

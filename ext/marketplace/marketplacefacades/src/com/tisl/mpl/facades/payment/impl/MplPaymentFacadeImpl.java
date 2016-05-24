@@ -25,9 +25,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 
-import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,9 +38,7 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -600,8 +596,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
 							getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
-			final String sessionId = getMd5Encoding(getRandomAlphaNum(getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.EBS_SESSION_ID_KEY)));
+			//getting the sessionID from session set during payment page loading
+			final String sessionId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
+			//removing from session
+			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
 
 			//getting the current customer to fetch customer Id and customer email
 			CustomerModel customer = getModelService().create(CustomerModel.class);
@@ -629,16 +627,27 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			//Create entry in Audit table
 			flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
-
+			final InitOrderRequest request;
 			if (flag)
 			{
-				//creating InitOrderRequest of Juspay
-				// For netbanking firstname will be set as Bank Code
-				final InitOrderRequest request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice())
-						.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
-						.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country)
-						.withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl)
-						.withsessionId(sessionId);
+				if (channel.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_WEB))
+				{
+					//creating InitOrderRequest of Juspay
+					// For netbanking firstname will be set as Bank Code
+					//TISCR-421:With sessionID for WEB orders
+					request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
+							.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
+							.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
+							.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl).withsessionId(sessionId);
+				}
+				else
+				{
+					//TISCR-421:Without sessionTD for MOBILE or other orders
+					request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
+							.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
+							.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
+							.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
+				}
 
 				LOG.info("Juspay Request Structure " + request);
 
@@ -685,35 +694,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			throw new EtailNonBusinessExceptions(e, "E0007");
 		}
-	}
-
-
-	@SuppressWarnings("unused")
-	private String getMd5Encoding(final String input)
-	{
-		MessageDigest messageDigest;
-		String result = null;
-		try
-		{
-			messageDigest = MessageDigest.getInstance(getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.JUSPAY_ENCODING_TYPE));
-			messageDigest.reset();
-			messageDigest.update(input.getBytes(Charset.forName("UTF8")));
-			final byte[] resultByte = messageDigest.digest();
-			result = new String(Hex.encodeHex(resultByte));
-		}
-		catch (final NoSuchAlgorithmException e)
-		{
-			LOG.error("Error while encoding=======");
-		}
-
-		return result;
-	}
-
-	@SuppressWarnings("unused")
-	private String getRandomAlphaNum(final String len)
-	{
-		return RandomStringUtils.randomAlphanumeric(Integer.parseInt(len)).toUpperCase();
 	}
 
 
@@ -1421,11 +1401,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
