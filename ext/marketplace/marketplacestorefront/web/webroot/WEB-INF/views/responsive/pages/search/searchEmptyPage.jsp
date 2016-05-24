@@ -41,11 +41,12 @@ $(document).ready(function() {
 			</li>
 			
 			<li class="call">
+			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('cliq.care.number')" var="requestcallback"/>
 				<span><spring:theme code="needhelp.callus"/></span>
 				<%-- <a href="#">${contactNumber}</a> --%>
 			<a href="${request.contextPath}/clickto/call" id="callMe"
 					data-title="<div class='headline'><span class='headline-text'>Click 2 Call</span></div>">
-					1-800-123-4567
+					${requestcallback}
 				</a>
 			</li>
 
