@@ -214,8 +214,12 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		{
 			if(shipment.getShipmentId().equals(orderEntryModel.getTransactionID()) && consignmentModel.getCode().equals(orderEntryModel.getTransactionID())){
 				
-				storeName =(StringUtils.isEmpty(orderEntryModel.getDeliveryPointOfService().getDisplayName())) ? MarketplacecommerceservicesConstants.EMPTY
-						: orderEntryModel.getDeliveryPointOfService().getDisplayName();
+					
+				if(null != orderEntryModel.getDeliveryPointOfService() && null!=orderEntryModel.getDeliveryPointOfService().getDisplayName()){
+					storeName =orderEntryModel.getDeliveryPointOfService().getDisplayName();	
+				}else{
+					storeName =MarketplaceomsordersConstants.EMPTY;
+				}
 				
 				final DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 				final Date currentDate = new Date();
