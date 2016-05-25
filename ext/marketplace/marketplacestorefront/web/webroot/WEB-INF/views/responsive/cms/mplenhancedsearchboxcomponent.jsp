@@ -124,7 +124,7 @@
 				</c:if> --%>
 			</select>
 
-			<div class="select-list">
+			<div class="select-list enhanced-search">
 				<input type="hidden" id="searchCodeForDropdown" value="${searchCode}" />
 				<span class="selected selected-dropdownText searchBox" id="searchBoxSpan"><spring:theme code="text.all"/></span>
 
