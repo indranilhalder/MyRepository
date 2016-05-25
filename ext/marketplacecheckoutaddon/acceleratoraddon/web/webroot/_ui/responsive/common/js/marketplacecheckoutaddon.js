@@ -142,6 +142,7 @@ function displayCODForm()
 {
 	var codEligible=$("#codEligible").val();
 	refresh();
+	applyPromotion(null);
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
 	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
