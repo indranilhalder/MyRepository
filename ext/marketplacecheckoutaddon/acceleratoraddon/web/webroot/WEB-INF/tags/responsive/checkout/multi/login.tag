@@ -45,7 +45,7 @@
 				value="${Mobileno}" /> 
 	</div>
 	<div class="forgotten-password">
-			New to Tatacliq? <a id="newToTata" href="javascript:void(0);">Register here</a>
+			New to Tatacliq? &nbsp;<a id="newToTata" href="javascript:void(0);">Register here</a>
 	</div>
 	  
 
