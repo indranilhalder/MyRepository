@@ -2281,4 +2281,20 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 
 	}
+
+
+	/**
+	 * @This Method is used to get Valid Delivery Modes by Inventory
+	 * @param pinCodeResponseData
+	 * @throws EtailNonBusinessExceptions
+	 * @return PinCodeResponseData
+	 */
+	@Override
+	public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData)
+			throws EtailNonBusinessExceptions
+	{
+		return mplCommerceCartService.getVlaidDeliveryModesByInventory(pinCodeResponseData);
+
+
+	}
 }

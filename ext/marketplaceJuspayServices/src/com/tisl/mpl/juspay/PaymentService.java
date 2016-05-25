@@ -191,8 +191,8 @@ public class PaymentService
 	private String makeServiceCall(final String endPoint, final String encodedParams)
 	{
 
-		final String proxyEnableStatus = getConfigurationService().getConfiguration()
-				.getString(MarketplaceJuspayServicesConstants.PROXYENABLED);
+		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
+				MarketplaceJuspayServicesConstants.PROXYENABLED);
 		HttpsURLConnection connection = null;
 		final StringBuilder buffer = new StringBuilder();
 
@@ -200,10 +200,10 @@ public class PaymentService
 		{
 			if (proxyEnableStatus.equalsIgnoreCase("true"))
 			{
-				final String proxyName = getConfigurationService().getConfiguration()
-						.getString(MarketplaceJuspayServicesConstants.GENPROXY);
-				final int proxyPort = Integer.parseInt(
-						getConfigurationService().getConfiguration().getString(MarketplaceJuspayServicesConstants.GENPROXYPORT));
+				final String proxyName = getConfigurationService().getConfiguration().getString(
+						MarketplaceJuspayServicesConstants.GENPROXY);
+				final int proxyPort = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+						MarketplaceJuspayServicesConstants.GENPROXYPORT));
 				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
 				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
 				final URL url = new URL(endPoint);
@@ -265,8 +265,12 @@ public class PaymentService
 		final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		params.put(MarketplaceJuspayServicesConstants.AMOUNT, String.valueOf(initOrderRequest.getAmount()));
 		params.put(MarketplaceJuspayServicesConstants.CUSTOMERID, initOrderRequest.getCustomerId());
-		params.put("customer_email", initOrderRequest.getCustomerEmail());
+		params.put(MarketplaceJuspayServicesConstants.CUSTOMEREMAIL, initOrderRequest.getCustomerEmail());
 		params.put(MarketplaceJuspayServicesConstants.ORDERID, initOrderRequest.getOrderId());
+		//TISCR-421
+		params.put(MarketplaceJuspayServicesConstants.CUSTOMERPHONE, initOrderRequest.getCustomerPhone());
+		params.put(MarketplaceJuspayServicesConstants.SESSIONID,
+				initOrderRequest.getSessionId() == null ? "" : initOrderRequest.getSessionId());
 
 		// Optional parameters
 		params.put("udf1", initOrderRequest.getUdf1() == null ? "" : initOrderRequest.getUdf1());
@@ -335,9 +339,10 @@ public class PaymentService
 					.withCardReference((String) jsonResponse.get(MarketplaceJuspayServicesConstants.CARDREF))
 					.withCardNumber((String) jsonResponse.get(MarketplaceJuspayServicesConstants.CARDNUMBER))
 					.withCardExpYear((String) jsonResponse.get("card_exp_year"))
-					.withCardExpMonth((String) jsonResponse.get("card_exp_month")).withCardIsin((String) jsonResponse.get("card_isin"))
-					.withCardBrand((String) jsonResponse.get("card_brand")).withCardIssuer((String) jsonResponse.get("card_issuer"))
-					.withCardType((String) jsonResponse.get("card_type")).withNickname((String) jsonResponse.get("nickname"))
+					.withCardExpMonth((String) jsonResponse.get("card_exp_month"))
+					.withCardIsin((String) jsonResponse.get("card_isin")).withCardBrand((String) jsonResponse.get("card_brand"))
+					.withCardIssuer((String) jsonResponse.get("card_issuer")).withCardType((String) jsonResponse.get("card_type"))
+					.withNickname((String) jsonResponse.get("nickname"))
 					.withNameOnCard((String) jsonResponse.get(MarketplaceJuspayServicesConstants.NAMEONCARD));
 			cardResponse.setCard(card);
 		}
@@ -387,8 +392,7 @@ public class PaymentService
 		}
 	}
 
-	protected GetOrderStatusResponse assembleOrderStatusResponse(final JSONObject jsonResponse,
-			final GetOrderStatusResponse target)
+	protected GetOrderStatusResponse assembleOrderStatusResponse(final JSONObject jsonResponse, final GetOrderStatusResponse target)
 	{
 		final GetOrderStatusResponse orderStatusResponse = target;
 		orderStatusResponse.setMerchantId((String) jsonResponse.get("merchant_id"));
@@ -653,9 +657,11 @@ public class PaymentService
 						.withCardReference((String) cardObject.get(MarketplaceJuspayServicesConstants.CARDREF))
 						.withCardNumber((String) cardObject.get(MarketplaceJuspayServicesConstants.CARDNUMBER))
 						.withCardExpYear((String) cardObject.get("card_exp_year"))
-						.withCardExpMonth((String) cardObject.get("card_exp_month")).withCardIsin((String) cardObject.get("card_isin"))
-						.withNameOnCard(cardObject.get(MarketplaceJuspayServicesConstants.NAMEONCARD) != null
-								? cardObject.get(MarketplaceJuspayServicesConstants.NAMEONCARD).toString() : "")
+						.withCardExpMonth((String) cardObject.get("card_exp_month"))
+						.withCardIsin((String) cardObject.get("card_isin"))
+						.withNameOnCard(
+								cardObject.get(MarketplaceJuspayServicesConstants.NAMEONCARD) != null ? cardObject.get(
+										MarketplaceJuspayServicesConstants.NAMEONCARD).toString() : "")
 						.withCardToken((String) cardObject.get(MarketplaceJuspayServicesConstants.CARDTOKEN))
 						.withCardBrand((String) cardObject.get("card_brand")).withCardIssuer((String) cardObject.get("card_issuer"))
 						.withCardType((String) cardObject.get("card_type")).withNickname((String) cardObject.get("nickname"));

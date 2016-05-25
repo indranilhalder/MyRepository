@@ -1018,7 +1018,7 @@ function editAddress(addressId) {
         }
         if (addressForm.line3.value == null || addressForm.line3.value == "") {
         	$("#errddressline3").css({"display":"block"});
-        	document.getElementById("erraddressline3").innerHTML = "<font color='#ff1c47' size='2'>Please enter landmark</font>";
+        	document.getElementById("erraddressline3").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 3</font>";
         	flagAd3 = false;
         }
         if (addressForm.postcode.value == null || addressForm.postcode.value == "") {
