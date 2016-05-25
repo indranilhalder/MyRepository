@@ -245,6 +245,23 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					&& (cartData != null && cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
 			{
 				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
+			  //  TISPRD-1951  START //
+
+							// Checking whether inventory is availbale or not
+							// if inventory is not available for particular delivery Mode
+							// then removing that deliveryMode in Choose DeliveryMode Page
+							for (PinCodeResponseData pinCodeResponseData : responseData)
+							{
+								try
+								{
+									pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+								}
+								catch (final Exception e)
+								{
+									LOG.debug("Exception occured while checking inventory ");
+								}
+							}
+				//  TISPRD-1951  END //
 				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartData, responseData);
 				fullfillmentDataMap = getMplCartFacade().getFullfillmentMode(cartData);
 

@@ -7,6 +7,10 @@ public class InitOrderRequest
 	private String orderId;
 	private String customerId;
 	private String customerEmail;
+	//TISCR-421
+	private String customerPhone;
+	private String session_id;
+
 	private String returnUrl;
 
 	/**
@@ -46,6 +50,19 @@ public class InitOrderRequest
 	public InitOrderRequest withEmail(final String customerEmail)
 	{
 		this.customerEmail = customerEmail;
+		return this;
+	}
+
+	public InitOrderRequest withCustomerPhone(final String customerPhone)
+	{
+		this.customerPhone = customerPhone;
+		return this;
+	}
+
+
+	public InitOrderRequest withsessionId(final String sessionId)
+	{
+		this.session_id = sessionId;
 		return this;
 	}
 
@@ -154,6 +171,16 @@ public class InitOrderRequest
 	public void setCustomerEmail(final String customerEmail)
 	{
 		this.customerEmail = customerEmail;
+	}
+
+	public String getCustomerPhone()
+	{
+		return customerPhone;
+	}
+
+	public void setCustomerPhone(final String customerPhone)
+	{
+		this.customerPhone = customerPhone;
 	}
 
 	public String getReturnUrl()
@@ -283,13 +310,32 @@ public class InitOrderRequest
 		this.requestPayload = requestPayload;
 	}
 
+
+
+	/**
+	 * @return the sessionId
+	 */
+	public String getSessionId()
+	{
+		return session_id;
+	}
+
+	/**
+	 * @param sessionId
+	 *           the sessionId to set
+	 */
+	public void setSessionId(final String sessionId)
+	{
+		this.session_id = sessionId;
+	}
+
 	@Override
 	public String toString()
 	{
 		return "InitOrderRequest{" + "amount=" + amount + ", orderId='" + orderId + '\'' + ", customerId='" + customerId + '\''
-				+ ", customerEmail='" + customerEmail + '\'' + ", returnUrl='" + returnUrl + '\'' + ", udf1='" + udf1 + '\''
-				+ ", udf2='" + udf2 + '\'' + ", udf3='" + udf3 + '\'' + ", udf4='" + udf4 + '\'' + ", udf5='" + udf5 + '\''
-				+ ", udf6='" + udf6 + '\'' + ", udf7='" + udf7 + '\'' + ", udf8='" + udf8 + '\'' + ", udf9='" + udf9 + '\''
-				+ ", udf10='" + udf10 + '\'' + '}';
+				+ ", customerEmail='" + customerEmail + '\'' + ", customerPhone='" + customerPhone + '\'' + ", metadata.session_id='"
+				+ session_id + '\'' + ", returnUrl='" + returnUrl + '\'' + ", udf1='" + udf1 + '\'' + ", udf2='" + udf2 + '\''
+				+ ", udf3='" + udf3 + '\'' + ", udf4='" + udf4 + '\'' + ", udf5='" + udf5 + '\'' + ", udf6='" + udf6 + '\''
+				+ ", udf7='" + udf7 + '\'' + ", udf8='" + udf8 + '\'' + ", udf9='" + udf9 + '\'' + ", udf10='" + udf10 + '\'' + '}';
 	}
 }

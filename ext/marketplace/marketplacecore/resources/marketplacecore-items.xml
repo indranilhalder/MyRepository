@@ -3573,6 +3573,18 @@
  						<description>Header Of The Component if needed</description>
  						<persistence type="property" />
  					</attribute>
+ 					<attribute qualifier="buttonText" type="java.lang.String"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<description>Text on the button if needed</description>
+ 						<persistence type="property" />
+ 					</attribute>
+ 					<attribute qualifier="buttonLink" type="java.lang.String"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<description>Button Link if required</description>
+ 						<persistence type="property" />
+ 					</attribute>
  				</attributes>
  			</itemtype>
 

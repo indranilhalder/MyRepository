@@ -127,7 +127,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public Map<String, Boolean> getPaymentModes(final String store,final boolean isMobile, final CartData cartDataMobile) throws EtailNonBusinessExceptions
+	public Map<String, Boolean> getPaymentModes(final String store, final boolean isMobile, final CartData cartDataMobile)
+			throws EtailNonBusinessExceptions
 	{
 
 		//Declare variable
@@ -139,7 +140,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 
 			boolean flag = false;
-			CartData cartData=null;
+			CartData cartData = null;
 			if (isMobile)
 			{
 				LOG.debug("Mobile payment modes cart Id................" + cartDataMobile.getCode());
@@ -149,8 +150,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			{
 				cartData = getMplCustomAddressFacade().getCheckoutCart();
 			}
-			
-			
+
+
 			for (final OrderEntryData entry : cartData.getEntries())
 			{
 
@@ -603,6 +604,14 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				customer = getMplPaymentService().getCustomer(uid);
 			}
 
+			//TISCR-421
+			String customerPhone = MarketplacecommerceservicesConstants.EMPTYSTRING;
+			if (null != customer.getDefaultShipmentAddress()
+					&& StringUtils.isNotEmpty(customer.getDefaultShipmentAddress().getCellphone()))
+			{
+				customerPhone = customer.getDefaultShipmentAddress().getCellphone();
+			}
+
 			final String customerEmail = customer.getOriginalUid();
 			//			String juspayOrderStatus = "";
 			String juspayOrderId = "";
@@ -614,15 +623,32 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			//Create entry in Audit table
 			flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
-
+			final InitOrderRequest request;
 			if (flag)
 			{
-				//creating InitOrderRequest of Juspay
-				// For netbanking firstname will be set as Bank Code
-				final InitOrderRequest request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice())
-						.withCustomerId(uid).withEmail(customerEmail).withUdf1(firstName).withUdf2(lastName).withUdf3(addressLine1)
-						.withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state).withUdf8(city)
-						.withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
+				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
+				{
+					//getting the sessionID from session set during payment page loading
+					final String sessionId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
+					//removing from session
+					getSessionService().removeAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
+
+					//creating InitOrderRequest of Juspay
+					// For netbanking firstname will be set as Bank Code
+					//TISCR-421:With sessionID for WEB orders
+					request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
+							.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
+							.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
+							.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl).withsessionId(sessionId);
+				}
+				else
+				{
+					//TISCR-421:Without sessionTD for MOBILE or other orders
+					request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
+							.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
+							.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
+							.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
+				}
 
 				LOG.info("Juspay Request Structure " + request);
 
@@ -670,7 +696,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			throw new EtailNonBusinessExceptions(e, "E0007");
 		}
 	}
-
 
 
 	/**
