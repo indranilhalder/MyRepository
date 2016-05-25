@@ -35,6 +35,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.StateModel;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 
 
@@ -76,11 +77,11 @@ public interface MplCommerceCartService
 
 	/*
 	 * @Desc fetching fulfilmentmode
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @return Map<String, String>
-	 *
+	 * 
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, String> getFullfillmentMode(CartData cartData) throws CMSItemNotFoundException;
@@ -88,11 +89,11 @@ public interface MplCommerceCartService
 
 	/*
 	 * @Desc fetching fulfilmentmode TISEE-6290
-	 *
+	 * 
 	 * @param orderData
-	 *
+	 * 
 	 * @return Map<String, String>
-	 *
+	 * 
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, String> getOrderEntryFullfillmentMode(OrderData orderData) throws CMSItemNotFoundException;
@@ -150,8 +151,8 @@ public interface MplCommerceCartService
 	 *            ,InvalidCartException
 	 *
 	 */
-	CartModel createCart(final String emailId, final String baseSiteId)
-			throws InvalidCartException, CommerceCartModificationException;
+	CartModel createCart(final String emailId, final String baseSiteId) throws InvalidCartException,
+			CommerceCartModificationException;
 
 	/**
 	 * Method for adding item to cart for Mobile service
@@ -171,8 +172,8 @@ public interface MplCommerceCartService
 	 *            less than or equals to 0
 	 */
 
-	boolean addItemToCart(String cartId, String productCode, long quantity, String ussid)
-			throws InvalidCartException, CommerceCartModificationException;
+	boolean addItemToCart(String cartId, String productCode, long quantity, String ussid) throws InvalidCartException,
+			CommerceCartModificationException;
 
 	/**
 	 * @description: It is responsible to find possible delivery mode
@@ -217,13 +218,13 @@ public interface MplCommerceCartService
 
 	/*
 	 * @Desc fetching reservation details
-	 *
+	 * 
 	 * @param cartId
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @param pincode
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	ReservationListWsDTO getReservation(final String cartId, final CartData cartData, final String pincode, final String type)
@@ -231,13 +232,13 @@ public interface MplCommerceCartService
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
-	 *
+	 * 
 	 * @param userModel
-	 *
+	 * 
 	 * @param pincode
-	 *
+	 * 
 	 * @return GetWishListWsDTO
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	GetWishListWsDTO getTopTwoWishlistForUser(final UserModel userModel, final String pincode,
@@ -245,13 +246,13 @@ public interface MplCommerceCartService
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 *
+	 * 
 	 * @param deliveryModeMap
-	 *
+	 * 
 	 * @param pincodeResponseData
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
@@ -281,29 +282,29 @@ public interface MplCommerceCartService
 
 	/*
 	 * @Desc fetching state details for a state name
-	 *
+	 * 
 	 * @param stateName
-	 *
+	 * 
 	 * @return StateModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	StateModel fetchStateDetails(String stateName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc to generate Sub order id
-	 *
+	 * 
 	 * @return String
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	String generateSubOrderId() throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc to generate Order Line id and transaction id
-	 *
+	 * 
 	 * @return String
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	String generateOrderLineId() throws EtailNonBusinessExceptions;
@@ -311,9 +312,9 @@ public interface MplCommerceCartService
 
 	/*
 	 * @Desc to generate Order Id
-	 *
+	 * 
 	 * @return String
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	String generateOrderId() throws EtailNonBusinessExceptions;
@@ -333,15 +334,15 @@ public interface MplCommerceCartService
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
-	 *
+	 * 
 	 * @param abstractOrderModel
-	 *
+	 * 
 	 * @param requestType
-	 *
+	 * 
 	 * @param defaultPinCodeId
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean isInventoryReserved(AbstractOrderModel abstractOrderModel, String requestType, String defaultPinCodeId)
@@ -360,15 +361,15 @@ public interface MplCommerceCartService
 
 	/*
 	 * @Desc : used to fetch delivery mode description details TISEE-950
-	 *
+	 * 
 	 * @param ussId
-	 *
+	 * 
 	 * @param deliveryMode
-	 *
+	 * 
 	 * @param startTime
-	 *
+	 * 
 	 * @param endTime
-	 *
+	 * 
 	 * @return String
 	 */
 	String getDeliveryModeDescription(final String ussId, final String deliveryMode, final String startTime, final String endTime);
@@ -376,11 +377,11 @@ public interface MplCommerceCartService
 
 	/*
 	 * @Desc checking wishlist entry is valid or not , delisted , end date , online from TISEE-5185
-	 *
+	 * 
 	 * @param wishlistEntryModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean isWishlistEntryValid(final Wishlist2EntryModel wishlistEntryModel) throws EtailNonBusinessExceptions;
@@ -413,6 +414,15 @@ public interface MplCommerceCartService
 			Map<String, Long> freebieParentQtyMap) throws EtailNonBusinessExceptions;
 
 	/**
+	 * @Desc Used as part of oms fallback
+	 * @param pincode
+	 * @param pincodeServiceDataList
+	 * @return PinCodeDeliveryModeListResponse
+	 */
+	PinCodeDeliveryModeListResponse callPincodeServiceabilityCommerce(final String pincode,
+			final List<PincodeServiceData> pincodeServiceDataList);
+
+	/**
 	 * @param storeLocationRequestDataList
 	 * @return
 	 */
@@ -422,13 +432,13 @@ public interface MplCommerceCartService
 
 	/**
 	 * This Method is used to get Valid Delivery Modes by Inventory
-	 * 
+	 *
 	 * @param pinCodeResponseData
 	 * @return
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public abstract PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData)
 			throws EtailNonBusinessExceptions;
-	
-	
+
+
 }

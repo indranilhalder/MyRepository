@@ -1515,6 +1515,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String DELIVERY_STARTTIME = "startTime".intern();
 	public static final String DELIVERY_ENDTIME = "endTime".intern();
+
+	//OMS FALLBACK Start
+	public static final String SINGLE_QUOTE = "\'";
+	public static final String FALLBACK_ORDER_HEADER_REPORT = "ORDER,USER,ORDER_DATE,TRANSACTION_IDs,ORDER STATUS".intern();
+	public static final String FALLBACK_REPORT_LOCATION = "oms.fallback.report.location".intern();
+	public static final String FALLBACK_REPORT_EXTENSION = "oms.fallback.report.extension".intern();
+	public static final String FALLBACK_REPORT_NAME = "OrderInQueueReport".intern();
+	//OMS FALLBACK End
+
 	public static final String CATEGORY_PATH = "{category-path}".intern();
 	public static final String CATEGORY_PATH_EMPTY = "/{category-path}".intern();
 

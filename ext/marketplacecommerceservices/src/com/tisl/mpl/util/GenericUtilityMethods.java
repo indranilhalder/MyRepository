@@ -597,11 +597,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -805,5 +805,27 @@ public class GenericUtilityMethods
 			url = url.replaceAll("--", "-");
 		}
 		return url;
+	}
+
+	/**
+	 *
+	 * @param sellerDataList
+	 * @return sellerArticleSKUs
+	 */
+	public static String getcommaSepUSSIDs(final List<String> ussidList)
+	{
+		String sellerArticleSKUs = null;
+		if (null != ussidList && !ussidList.isEmpty())
+		{
+			final StringBuilder sellerArticleSKUsBuilder = new StringBuilder();
+			for (final String ussid : ussidList)
+			{
+				sellerArticleSKUsBuilder.append('\'').append(ussid).append('\'').append(',');
+			}
+
+			sellerArticleSKUs = sellerArticleSKUsBuilder.toString();
+		}
+
+		return sellerArticleSKUs;
 	}
 }
