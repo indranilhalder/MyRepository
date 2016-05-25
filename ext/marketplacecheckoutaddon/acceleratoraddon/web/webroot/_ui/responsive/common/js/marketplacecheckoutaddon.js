@@ -142,6 +142,7 @@ function displayCODForm()
 {
 	var codEligible=$("#codEligible").val();
 	refresh();
+	//TISPRD-2138
 	applyPromotion(null);
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
