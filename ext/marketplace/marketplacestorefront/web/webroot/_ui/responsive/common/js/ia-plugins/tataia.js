@@ -1197,6 +1197,10 @@ if (searchCategory_id){
 			    if(response.data.brands.length > 0){
 			    	html += '<div class="wrapper"><h1 class="">'+brandWidgetTitle[jQuery.inArray(widgetMode, brandWidget)]+'</h1><ul class="feature-brands ia_feature_brands">';
 			    	}
+			    else
+			    	{
+			    	$("#ia_brands_hot_searches").css("background-color","#FFFFFF"); 
+			    	}
 			    /* response check addition for 'Hot Brands' end*/
 			    numRec = 0;
 			   
