@@ -151,7 +151,6 @@ import com.tisl.mpl.order.data.CartDataList;
 import com.tisl.mpl.order.data.OrderEntryDataList;
 import com.tisl.mpl.product.data.PromotionResultDataList;
 import com.tisl.mpl.request.support.impl.PaymentProviderRequestSupportedStrategy;
-import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.stock.CommerceStockFacade;
 import com.tisl.mpl.user.data.AddressDataList;
