@@ -209,13 +209,13 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
 		final String logisticPartner = (StringUtils.isEmpty(consignmentModel.getCarrier())) ? MarketplacecommerceservicesConstants.SPACE
 				: consignmentModel.getCarrier();
-		
-		for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
+		if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
 		{
+		  for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
+		  {
 			if(shipment.getShipmentId().equals(orderEntryModel.getTransactionID()) && consignmentModel.getCode().equals(orderEntryModel.getTransactionID())){
 				
-					
-				if(null != orderEntryModel.getDeliveryPointOfService() && null!=orderEntryModel.getDeliveryPointOfService().getDisplayName()){
+				if(null != orderEntryModel.getDeliveryPointOfService() && !StringUtils.isEmpty(orderEntryModel.getDeliveryPointOfService().getDisplayName())){
 					storeName =orderEntryModel.getDeliveryPointOfService().getDisplayName();	
 				}else{
 					storeName =MarketplaceomsordersConstants.EMPTY;
@@ -239,6 +239,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			}
 		
 		}
+	}
 		
 		
 		 
@@ -277,7 +278,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		// Notifications: ORDERCOLLETED : SMS
 			if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
 			{
-						LOG.info("******************** Sending notification for ORDER COLLECTED");
+						LOG.info("Sending notification for ORDER COLLECTED order Id:"+orderNumber);
 						sendNotificationForCNCOrderColleted(orderNumber, mobileNumber, contactNumber, firstName,storeName,deliverdDate,pickUpMobileNumber,pickUpPersonName);
 			}
 
