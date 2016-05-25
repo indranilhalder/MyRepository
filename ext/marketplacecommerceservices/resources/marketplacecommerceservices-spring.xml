@@ -1663,7 +1663,7 @@
 
 	</bean>
 	<!-- UserGroupSaveInterceptor ends -->	
-	
+	<bean id="fallbackOrderPojo" class="com.tisl.mpl.pojo.FallbackOrderPojo" />
 	<!-- TISPRD-1631 Changes Start (Extending Product Service) -->
 	
 <alias alias="productService" name="defaultProductService"/>
