@@ -94,6 +94,14 @@ public class MultiStepCheckoutController extends AbstractCheckoutStepController
 			{
 				return REDIRECT_URL_CART;
 			}
+
+			//TISPRO-431
+			if (validateCart(redirectModel))
+			{
+				LOG.debug("Express checkout not allowed");
+				return REDIRECT_URL_CART;
+			}
+
 			if (getCheckoutFlowFacade().hasValidCart())
 			{
 				switch (mplCheckoutFacade.performExpressCheckout(expressCheckoutAddressSelector))
