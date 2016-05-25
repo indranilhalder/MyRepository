@@ -1552,4 +1552,17 @@
 			</list>
 			</property>
 	</bean>
+	
+	 
+  <!-- ============== configure beans for CRM Ticket and Refund Initiation Events ============== -->
+  <bean id="sendUnColletedOrderToCRMEventListener"
+		class="com.tisl.mpl.marketplaceomsservices.event.SendUnColletedOrderToCRMEventListener"
+		parent="abstractSiteEventListener">
+	</bean>
+	
+	<bean id="unColletedOrderToInitiateRefundEventListener"
+		class="com.tisl.mpl.marketplaceomsservices.event.UnColletedOrderToInitiateRefundEventListener"
+		parent="abstractSiteEventListener">
+	</bean>
+	
 </beans>

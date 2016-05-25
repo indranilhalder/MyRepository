@@ -4193,4 +4193,56 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return responseList;
 	}
 
+	
+	/**
+	 * This Method is used to get Valid Delivery Modes by Inventory
+	 *
+	 * @param pinCodeResponseData
+	 * @throws EtailNonBusinessExceptions
+	 * @return PinCodeResponseData
+	 */
+	@Override
+	public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData)
+			throws EtailNonBusinessExceptions
+	{
+		LOG.info("Inside getVlaidDeliveryModesByInventory Method");
+		try
+		{
+			final List<DeliveryDetailsData> validDeliveryDetailsData = new ArrayList<DeliveryDetailsData>();
+			if (null != pinCodeResponseData)
+			{
+				for (final DeliveryDetailsData deliveryDetailsData : pinCodeResponseData.getValidDeliveryModes())
+				{
+					Long inventory = null;
+					Long selectedQuantity = null;
+					final CartModel cartmodel = cartService.getSessionCart();
+					// Iterating all cart entries and checking  inventory is available or not
+					// If inventory is available then only displaying that delivery mode in Delivery selection Page
+					if (null != cartmodel)
+					{
+						for (final AbstractOrderEntryModel abstractOrderEntryModel : cartmodel.getEntries())
+						{
+							if (abstractOrderEntryModel.getSelectedUSSID().equalsIgnoreCase(pinCodeResponseData.getUssid()))
+							{
+								inventory = Long.valueOf(deliveryDetailsData.getInventory());
+								selectedQuantity = abstractOrderEntryModel.getQuantity();
+								if (inventory.longValue() >= selectedQuantity.longValue())
+								{
+									validDeliveryDetailsData.add(deliveryDetailsData);
+								}
+							}
+						}
+					}
+					pinCodeResponseData.setValidDeliveryModes(validDeliveryDetailsData);
+				}
+			}
+			return pinCodeResponseData;
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occurred while checking inventory ");
+		}
+		return pinCodeResponseData;
+
+	}
 }

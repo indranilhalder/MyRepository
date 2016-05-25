@@ -5,7 +5,7 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
-<script type="text/javascript" src="http://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -16,6 +16,7 @@
 <span id="productUrl" style="display:none">${request.contextPath}${product.url}</span>
 <span id="googleClientid" style="display:none">${googleClientid}</span>
 <span id="facebookAppid" style="display:none">${facebookAppid}</span>
+
 <script>
 
 			$(".g-interactivepost").attr("data-contenturl",window.location.host+$('#productUrl').text());

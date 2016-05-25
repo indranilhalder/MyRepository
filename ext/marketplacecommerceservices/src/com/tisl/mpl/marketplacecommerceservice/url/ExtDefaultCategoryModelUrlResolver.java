@@ -49,8 +49,14 @@ public class ExtDefaultCategoryModelUrlResolver extends DefaultCategoryModelUrlR
 				&& categoryCode.startsWith("MBH"))
 		{
 			final String categoryPath = buildPathStringForBrands(getCategoryPath(source));
-
-			url = url.replace(MarketplacecommerceservicesConstants.CATEGORY_PATH, categoryPath);
+			if (StringUtils.isEmpty(categoryPath))
+			{
+				url = url.replace(MarketplacecommerceservicesConstants.CATEGORY_PATH_EMPTY, categoryPath);
+			}
+			else
+			{
+				url = url.replace(MarketplacecommerceservicesConstants.CATEGORY_PATH, categoryPath);
+			}
 		}
 		else if (url.contains(MarketplacecommerceservicesConstants.CATEGORY_PATH))
 		{

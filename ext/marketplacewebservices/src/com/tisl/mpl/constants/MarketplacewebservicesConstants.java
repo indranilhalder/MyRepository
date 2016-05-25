@@ -507,4 +507,6 @@ public class MarketplacewebservicesConstants
 
 	public static final String FACEBOOK_LOGIN = "FACEBOOK_LOGIN".intern();
 	public static final String GOOGLE_LOGIN = "GOOGLE_LOGIN".intern();
+	public static final String KNOW_MORE_LINGERIE1 = "know.more.second.lingerie1".intern();
+	public static final String KNOW_MORE_LINGERIE2 = "know.more.second.lingerie2".intern();
 }

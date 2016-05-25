@@ -79,7 +79,26 @@
 	<bean id="customOmsCancelAdapter" class="com.tisl.mpl.integration.oms.adapter.CustomOmsCancelAdapter" >
 		<property name="consignmentProcessNotifier" ref="consignmentProcessNotifier" />
 		<property name="timeService" ref="timeService" />
-
+		
+		 <property name="stateMappingStrategy" ref="stateMappingStrategy" />
+		<property name="orderCancelRecordsHandler" ref="orderCancelRecordsHandler" />
+	    <property name="cancelDenialStrategies">
+			<list>
+				<ref bean="marketplaceOrderCancellationStrategy" />
+			</list>
+		</property>
+		<property name="orderCancelDao" ref="orderCancelDao" />
+		<property name="orderHistoryService" ref="orderHistoryService"/>
+		<property name="userService" ref="userService"/>
+		<property name="requestExecutorsMap">
+			<map>
+				<entry key="PENDINGORHOLDINGAREA" value-ref="immediateCancelRequestExecutor"/>
+				<entry key="SENTTOWAREHOUSE" value-ref="warehouseProcessingCancelRequestExecutor"/>
+				<entry key="SHIPPING" value-ref="warehouseProcessingCancelRequestExecutor"/>
+				<entry key="PARTIALLYSHIPPED" value-ref="warehouseProcessingCancelRequestExecutor"/>
+			</map>
+		</property> 
+		
 	</bean>
 	
 	<bean id="customOmsCollectedAdapter" class="com.tisl.mpl.integration.oms.adapter.CustomOmsCollectedAdapter" />
