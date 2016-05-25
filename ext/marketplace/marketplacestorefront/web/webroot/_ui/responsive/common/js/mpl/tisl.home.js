@@ -574,9 +574,27 @@ function getBestPicksAjaxCall() {
                     }
                     renderHtml += "</a>";
                 });
+                
                 renderHtml +=
+                    // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
+                 	"</div> <a href='";
+                if(typeof response.buttonLink!=="undefined"){
+                	 renderHtml +=response.buttonLink+"'";
+                }
+                else{
+                	renderHtml +=ACC.config.encodedContextPath+"/offersPage'";
+                }
+                
+                renderHtml +="class='view-cliq-offers'>";
+                if(typeof response.buttonText!=="undefined"){
+                	 renderHtml +=response.buttonText;
+                }
+                else{
+                	 renderHtml +=" View Cliq Offers ";
+                }
+                renderHtml +="</a>";
                    // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
-                	"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
+                	//"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
                 $("#bestPicks").html(renderHtml);
                 // console.log()
             },
@@ -1114,8 +1132,8 @@ function populateEnhancedSearch(enhancedSearchData)
 				className="selected";
 				notPresentCategory=false;
 			}
-			$("ul[label=Departments]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$("optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".enhanced-search ul[label=Departments]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$(".select-view #searchCategory optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
 		$("#searchBoxSpan").html(selectedText);
@@ -1132,8 +1150,8 @@ function populateEnhancedSearch(enhancedSearchData)
 				className="selected";
 				notPresentBrand=false;
 			}
-			$("ul[label=Brands]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$("optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".enhanced-search ul[label=Brands]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$(".select-view #searchCategory optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 			
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
@@ -1151,8 +1169,8 @@ function populateEnhancedSearch(enhancedSearchData)
 				className="selected";
 				notPresentSeller=false;
 			}
-			$("ul[label=Sellers]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$("optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".enhanced-search ul[label=Sellers]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$(".select-view #searchCategory optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
 		$("#searchBoxSpan").html(selectedText);
