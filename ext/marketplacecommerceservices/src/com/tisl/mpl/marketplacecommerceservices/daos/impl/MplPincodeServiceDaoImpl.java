@@ -48,11 +48,9 @@ public class MplPincodeServiceDaoImpl implements MplPincodeServiceDao
 	public List<PincodeServiceabilityDataModel> getPincodeServicableDataAtCommerce(final String pin,
 			final List<PincodeServiceData> pincodeServiceDataList)
 	{
-
 		try
 		{
-
-			final StringBuilder query = new StringBuilder(500);
+			final StringBuilder query = new StringBuilder(600);
 			int count = 0;
 			for (final PincodeServiceData pincodeServiceData : pincodeServiceDataList)
 			{
@@ -60,11 +58,12 @@ public class MplPincodeServiceDaoImpl implements MplPincodeServiceDao
 				{
 					query.append(" UNION ALL ");
 				}
-
 				query.append(" {{").append("select {pk} from {PincodeServiceabilityData} where {pincode} ='").append(pin)
-						.append(MarketplacecommerceservicesConstants.SINGLE_QUOTE).append(" and {sellerId}='")
+						.append(MarketplacecommerceservicesConstants.SINGLE_QUOTE).append(" and upper({sellerId})='")
 						.append(pincodeServiceData.getSellerId()).append(MarketplacecommerceservicesConstants.SINGLE_QUOTE)
-						.append(" and {fulfillmentType}='").append(pincodeServiceData.getFullFillmentType().toUpperCase())
+						.append(" and upper({fulfillmentType})='").append(pincodeServiceData.getFullFillmentType().toUpperCase())
+						.append(MarketplacecommerceservicesConstants.SINGLE_QUOTE).append(" and upper({transportMode})='")
+						.append(pincodeServiceData.getTransportMode().toUpperCase())
 						.append(MarketplacecommerceservicesConstants.SINGLE_QUOTE).append(" and {deliveryMode} in (")
 						.append(getdeliveryModes(pincodeServiceData.getDeliveryModes())).append(')').append("}} ");
 
@@ -72,18 +71,15 @@ public class MplPincodeServiceDaoImpl implements MplPincodeServiceDao
 			}
 
 			final String queryString = "select AA.pk from (" + query.toString() + " ) AA";
-			LOG.debug("==================" + queryString);
+			LOG.debug("=========getPincodeServicableDataAtCommerce========" + queryString);
 			List<PincodeServiceabilityDataModel> PincodeServiceabilityDataModelList = null;
 			final SearchResult<PincodeServiceabilityDataModel> searchRes = flexibleSearchService.search(queryString);
 			if (searchRes != null && searchRes.getCount() > 0)
 			{
 				PincodeServiceabilityDataModelList = searchRes.getResult();
 			}
-
 			return PincodeServiceabilityDataModelList;
-
 		}
-
 		catch (final Exception ex)
 		{
 			LOG.debug(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);

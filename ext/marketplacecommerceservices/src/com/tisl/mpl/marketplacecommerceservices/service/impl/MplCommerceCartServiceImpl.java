@@ -2157,6 +2157,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				if (pincodeServiceData.getSellerId().equalsIgnoreCase(fallbackPincodeData.getSellerId())
 						&& pincodeServiceData.getFullFillmentType().equalsIgnoreCase(fallbackPincodeData.getFulfillmentType())
+						&& pincodeServiceData.getTransportMode().equalsIgnoreCase(fallbackPincodeData.getTransportMode())
 						&& compareDeliveryModes(deliveryMode, fallbackPincodeData.getDeliveryMode()))
 				{
 					infoPresent = true;
@@ -2275,6 +2276,18 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartdatalist, cartGuid, pincode,
 							type);
 					LOG.debug("inventoryReservListResponse Mobile###############################" + inventoryReservListResponse);
+				}
+				catch (final ClientEtailNonBusinessExceptions e)
+				{
+					LOG.error("::::::Mobility  ClientEtailNonBusinessExceptions in calling OMS Inventory reservation:::::::::"
+							+ e.getErrorCode());
+					if (null != e.getErrorCode()
+							&& (MarketplacecclientservicesConstants.O0003_EXCEP.equalsIgnoreCase(e.getErrorCode())
+									|| MarketplacecclientservicesConstants.O0004_EXCEP.equalsIgnoreCase(e.getErrorCode()) || MarketplacecclientservicesConstants.O0007_EXCEP
+										.equalsIgnoreCase(e.getErrorCode())))
+					{
+						inventoryReservListResponse = callInventoryReservationCommerce(cartdatalist);
+					}
 				}
 				catch (final Exception e)
 				{
@@ -3296,13 +3309,54 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final String defaultPinCodeId) throws EtailNonBusinessExceptions
 	{
 		final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
+		final List<CartSoftReservationData> cartSoftForCncReservationDatalist = new ArrayList<CartSoftReservationData>();
+
 
 		boolean inventoryReservationStatus = true;
+		InventoryReservListResponse inventoryReservListResponse = null;
 
 		if (requestType != null && !cartSoftReservationDatalist.isEmpty() && defaultPinCodeId != null)
 		{
-			final InventoryReservListResponse inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(
-					cartSoftReservationDatalist, abstractOrderModel.getGuid(), defaultPinCodeId, requestType);
+			try
+			{
+				inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,
+						abstractOrderModel.getGuid(), defaultPinCodeId, requestType);
+			}
+			catch (final ClientEtailNonBusinessExceptions e)
+			{
+				LOG.error("::::::Exception in calling OMS Inventory reservation:::::::::" + e.getErrorCode());
+				if (null != e.getErrorCode()
+						&& (MarketplacecclientservicesConstants.O0003_EXCEP.equalsIgnoreCase(e.getErrorCode())
+								|| MarketplacecclientservicesConstants.O0004_EXCEP.equalsIgnoreCase(e.getErrorCode()) || MarketplacecclientservicesConstants.O0007_EXCEP
+									.equalsIgnoreCase(e.getErrorCode())))
+				{
+					//prepare cartSoftReservationData object only for HD and Ed
+					//skip reservation call for cnc
+					int cncModeCount = 0;
+					for (final CartSoftReservationData cartSoftReservationData : cartSoftReservationDatalist)
+					{
+						if (null != cartSoftReservationData
+								&& !cartSoftReservationData.getDeliveryMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+						{
+							cartSoftForCncReservationDatalist.add(cartSoftReservationData);
+						}
+						else
+						{
+							cncModeCount++;
+						}
+					}
+					if (CollectionUtils.isNotEmpty(cartSoftReservationDatalist)
+							&& (cartSoftReservationDatalist.size() == cncModeCount))
+					{
+						return true;
+					}
+					if (cartSoftForCncReservationDatalist.size() > 0)
+					{
+						inventoryReservListResponse = callInventoryReservationCommerce(cartSoftForCncReservationDatalist);
+					}
+				}
+			}
+
 			LOG.debug("inventoryReservListResponse " + inventoryReservListResponse);
 
 			if (inventoryReservListResponse != null && CollectionUtils.isNotEmpty(inventoryReservListResponse.getItem()))
@@ -3336,6 +3390,75 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			inventoryReservationStatus = false;
 		}
 		return inventoryReservationStatus;
+	}
+
+	/**
+	 * @Desc Used as part of oms fallback for inventory soft reservation
+	 * @param cartDataList
+	 * @return InventoryReservListResponse
+	 */
+	@Override
+	public InventoryReservListResponse callInventoryReservationCommerce(final List<CartSoftReservationData> cartDataList)
+	{
+
+		LOG.info("*********************** Commerce Inventory Reservation *************");
+
+		final Map<String, Integer> reqUssidQuantityMap = new HashMap<String, Integer>();
+		Map<String, Integer> availableStockMap = null;
+		final List<String> ussidList = new ArrayList<String>();
+
+		for (final CartSoftReservationData reserveObj : cartDataList)
+		{
+			//TISTI-128
+			if (!(reserveObj.getIsAFreebie() != null && reserveObj.getIsAFreebie().equals(MarketplacecommerceservicesConstants.Y)))
+			{
+				ussidList.add(reserveObj.getUSSID());
+				reqUssidQuantityMap.put(reserveObj.getUSSID(), reserveObj.getQuantity());
+			}
+		}
+
+		String sellerArticleSKUs = GenericUtilityMethods.getcommaSepUSSIDs(ussidList);
+		if (null != sellerArticleSKUs && sellerArticleSKUs.length() > 0)
+		{
+			sellerArticleSKUs = sellerArticleSKUs.substring(0, sellerArticleSKUs.length() - 1);
+			availableStockMap = mplStockService.getAllStockLevelDetail(sellerArticleSKUs);
+		}
+
+		//Preparing response
+		final InventoryReservListResponse inventoryReservListResponse = new InventoryReservListResponse();
+		final List<InventoryReservResponse> inventoryReservResponseList = new ArrayList<InventoryReservResponse>();
+
+		for (final Map.Entry<String, Integer> entry : reqUssidQuantityMap.entrySet())
+		{
+			final InventoryReservResponse inventoryReservResponse = new InventoryReservResponse();
+			inventoryReservResponse.setUSSID(entry.getKey());
+
+			final Integer inventoryInComm = (availableStockMap == null || availableStockMap.get(entry.getKey()) == null) ? Integer
+					.valueOf(0) : availableStockMap.get(entry.getKey());
+
+			final String inventoryReservationStatus = (null != inventoryInComm && entry.getValue().intValue() <= inventoryInComm
+					.intValue()) ? MarketplacecommerceservicesConstants.SUCCESS : MarketplacecommerceservicesConstants.FAILURE;
+
+			inventoryReservResponse.setReservationStatus(inventoryReservationStatus);
+			inventoryReservResponseList.add(inventoryReservResponse);
+		}
+		inventoryReservListResponse.setItem(inventoryReservResponseList);
+
+		try
+		{
+			final StringWriter stringWriter = new StringWriter();
+			final JAXBContext jaxbContext = JAXBContext.newInstance(InventoryReservListResponse.class);
+			final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			jaxbMarshaller.marshal(inventoryReservListResponse, stringWriter);
+			LOG.debug("************Commerce inventory response xml in case of OMS Fallback*************************"
+					+ stringWriter.toString());
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage());
+		}
+		return inventoryReservListResponse;
 	}
 
 	/*
