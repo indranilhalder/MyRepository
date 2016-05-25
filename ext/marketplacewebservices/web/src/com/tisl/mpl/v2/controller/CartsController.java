@@ -304,8 +304,6 @@ public class CartsController extends BaseCommerceController
 	@Resource(name = "mplSlaveMasterFacade")
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
 
-	@Autowired
-	private MplSellerInformationFacade mplSellerInformationFacade;
 
 
 	/**
