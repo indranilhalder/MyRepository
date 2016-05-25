@@ -247,7 +247,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 			{
 				response = pinCodeDeliveryModeService.prepPinCodeDeliveryModetoOMS(pin, reqData);
 			}
-			//ExceptionHandling OMS FallBack
+			//ExceptionHandling OMS FallBack..
 			catch (final ClientEtailNonBusinessExceptions e)
 			{
 				LOG.error("::::::Exception in calling OMS Pincode service::CSCOCKPIT:::::::" + e.getErrorCode());

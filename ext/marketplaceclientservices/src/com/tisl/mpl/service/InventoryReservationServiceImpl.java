@@ -297,7 +297,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				}
 
 			}
-			//ExceptionHandling OMS FallBack
+			//ExceptionHandling OMS FallBack..
 			catch (final ClientHandlerException cex)
 			{
 				LOG.error("ClientHandlerException " + MarketplacecclientservicesConstants.EXCEPTION_IS, cex);
