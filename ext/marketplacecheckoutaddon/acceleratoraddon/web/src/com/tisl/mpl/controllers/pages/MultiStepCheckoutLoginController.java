@@ -89,6 +89,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
 
+	private static final String LOGIN_SUCCESS = "loginSuccess";
 
 	/**
 	 * @return the resourceBreadcrumbBuilder
@@ -372,7 +373,8 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 			{
 				getRegisterCustomerFacade().register(data);
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
-
+				final HttpSession session = request.getSession();
+				session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);
 				//	updating the isRegistered flag in friends model (in case of valid affiliated id)
 				if (null != form.getAffiliateId() && !StringUtils.isBlank(form.getAffiliateId()))
 				{

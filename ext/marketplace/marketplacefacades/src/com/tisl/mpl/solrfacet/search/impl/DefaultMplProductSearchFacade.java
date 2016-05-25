@@ -988,4 +988,57 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		return searchQueryData;
 	}
 
+	/**
+	 * search from microsite
+	 *
+	 * @param searchState
+	 * @param sellerId
+	 * @param type
+	 * @param pageableData
+	 * @return
+	 */
+	@Override
+	public ProductCategorySearchPageData dropDownSearchForMicrosite(final SearchStateData searchState, final String sellerId,
+			final String type, final PageableData pageableData)
+	{
+		// YTODO Auto-generated method stub
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(
+														decodeSellerStateDropDownForMicrosite(searchState, sellerId), pageableData));
+							}
+						});
+	}
+
+	/**
+	 *
+	 * @param searchState
+	 * @param sellerId
+	 * @return
+	 */
+	protected final SolrSearchQueryData decodeSellerStateDropDownForMicrosite(final SearchStateData searchState,
+			final String sellerId)
+	{
+		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
+
+		if (sellerId != null)
+		{
+
+
+			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
+			solrSearchQueryTermData.setKey("sellerId");
+			solrSearchQueryTermData.setValue(sellerId);
+			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
+			searchQueryData.setSns(searchState.isSns());
+		}
+		return searchQueryData;
+	}
+
 }

@@ -396,4 +396,15 @@ public interface MplCartFacade extends CartFacade
 	 * @return
 	 */
 	List<StoreLocationResponseData> getStoreLocationsforCnC(List<StoreLocationRequestData> storeLocationRequestDataList);
+	
+	/**
+	 * This Method is used to get Valid Delivery Modes by Inventory
+	 * 
+	 * @param pinCodeResponseData
+	 * @return PinCodeResponseData
+	 * @throws EtailNonBusinessExceptions
+	 */
+	public PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData)
+			throws EtailNonBusinessExceptions;
+	
 }
