@@ -213,6 +213,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				pincodeResfromOMS = sendPinCodeDeliveryModetoOMS(pincodeRequest);
 			}
 		}
+		catch (final ClientEtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
 		catch (final Exception e)
 		{
 			//pincodeResfromOMS = null;
@@ -495,13 +499,13 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	/*
 	 * @desc used for validate connect timeout and read time out exceptions from oms rest call for pincode serviceabilty
 	 * and inventory reservation
-	 * 
+	 *
 	 * @param ex
-	 * 
+	 *
 	 * @param exceptionType
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws ClientEtailNonBusinessExceptions
 	 */
 	@Override
