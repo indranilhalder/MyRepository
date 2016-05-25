@@ -18140,14 +18140,6 @@ body .account .right-account form .half.account-profileEmail,body .account .righ
     .feature-categories .content-block {
   margin: 0 40px;
 }
-.electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-prev::after{
-	
-right:0px;
-}
-.electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-next::after{
-	
-left:0px;
-}
 .electronic-brand-slider .carousel{
 	padding:0px 10px;
 }
@@ -21748,9 +21740,6 @@ body .lookbook_wrapper .page-header h2 {
     font-size: 24px;
     color: #A9143C;
 }
-body .lookbook_wrapper .owl-carousel .owl-controls .owl-buttons .owl-prev, body .lookbook_wrapper .owl-carousel .owl-controls .owl-buttons .owl-next{
-	width:35px;
-}
 body .lookbook_wrapper .listing.wrapper .right-block {
     width: 100%;
 }
@@ -21896,12 +21885,6 @@ body .lookbook_wrapper .lookbook-pagination {
 {
 .lookbooks {
     padding: 0 20px;
-}
-body .lookbook_wrapper .owl-carousel .owl-controls .owl-buttons .owl-prev {
-    left: 12px;
-}
-body .lookbook_wrapper .owl-carousel .owl-controls .owl-buttons .owl-next {
-    right: 12px;
 }
 .carousel.shopByLookCarousel{
 	padding:0 35px;
@@ -25095,9 +25078,6 @@ margin-bottom:10px;
 }
 div.content-block-slider.electronic-brand-slider{
 	margin:10px 20px;
-}
-.electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-prev::after {
-    right: -5px;
 }
 .electronics-brand .feature-categories.custom-feature {
     margin: 0 10px;
