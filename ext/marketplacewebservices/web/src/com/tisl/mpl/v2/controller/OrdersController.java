@@ -1531,8 +1531,8 @@ public class OrdersController extends BaseCommerceController
 													if (!entry.isGiveAway() && !entry.isIsBOGOapplied() && returnWindow < actualReturnWindow
 															&& !checkOrderStatus(consignmentStatus,
 																	MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
-															&& consignmentStatus
-																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED))
+															&& (consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || consignmentStatus
+																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
 
 													{
 														//orderproductdto.setReturnPolicy(sellerEntry.getReturnPolicy());
