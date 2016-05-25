@@ -2186,14 +2186,14 @@
 							optional="true" />
 					</attribute>
 					<!-- Start : New Attribute for identifying Fall Back Orders Plan B-->	
-					<attribute autocreate="true" qualifier="isFallBack"
+	<!-- 				<attribute autocreate="true" qualifier="isFallBack"
 						type="java.lang.Boolean">
 						<persistence type="property" qualifier="isFallBack">
 						</persistence>
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 						<defaultvalue>false</defaultvalue>
-					</attribute>
+					</attribute> -->
 					<!-- End : New Attribute for identifying Fall Back Orders Plan B-->
 					<!-- Start : New Attribute for identifying Fall Back Orders Plan C-->	
 					<attribute autocreate="true" qualifier="isSentToOMS"
