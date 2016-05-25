@@ -79,8 +79,9 @@ public interface MplCartWebService
 	 * @throws EtailBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	List<GetWishListProductWsDTO> productDetails(List<AbstractOrderEntryModel> aoem, boolean isPinCodeCheckRequired,
-			String pincode, boolean resetReqd, String cartId) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+	List<GetWishListProductWsDTO> productDetails(CartModel cartModel, CartData cartData, List<AbstractOrderEntryModel> aoem,
+			boolean isPinCodeCheckRequired, String pincode, boolean resetReqd, String cartId) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions;
 
 	/**
 	 * pincode response from OMS at cart level
@@ -107,7 +108,7 @@ public interface MplCartWebService
 
 	/**
 	 * Service to get cart details with POS
-	 * 
+	 *
 	 * @param cartId
 	 * @param addressListDTO
 	 * @param pincode
