@@ -34,7 +34,10 @@ import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.StateModel;
+import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.InventoryReservListResponse;
+import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 
 
@@ -150,8 +153,8 @@ public interface MplCommerceCartService
 	 *            ,InvalidCartException
 	 *
 	 */
-	CartModel createCart(final String emailId, final String baseSiteId)
-			throws InvalidCartException, CommerceCartModificationException;
+	CartModel createCart(final String emailId, final String baseSiteId) throws InvalidCartException,
+			CommerceCartModificationException;
 
 	/**
 	 * Method for adding item to cart for Mobile service
@@ -171,8 +174,8 @@ public interface MplCommerceCartService
 	 *            less than or equals to 0
 	 */
 
-	boolean addItemToCart(String cartId, String productCode, long quantity, String ussid)
-			throws InvalidCartException, CommerceCartModificationException;
+	boolean addItemToCart(String cartId, String productCode, long quantity, String ussid) throws InvalidCartException,
+			CommerceCartModificationException;
 
 	/**
 	 * @description: It is responsible to find possible delivery mode
@@ -413,6 +416,15 @@ public interface MplCommerceCartService
 			Map<String, Long> freebieParentQtyMap) throws EtailNonBusinessExceptions;
 
 	/**
+	 * @Desc Used as part of oms fallback
+	 * @param pincode
+	 * @param pincodeServiceDataList
+	 * @return PinCodeDeliveryModeListResponse
+	 */
+	PinCodeDeliveryModeListResponse callPincodeServiceabilityCommerce(final String pincode,
+			final List<PincodeServiceData> pincodeServiceDataList);
+
+	/**
 	 * @param storeLocationRequestDataList
 	 * @return
 	 */
@@ -422,13 +434,19 @@ public interface MplCommerceCartService
 
 	/**
 	 * This Method is used to get Valid Delivery Modes by Inventory
-	 * 
+	 *
 	 * @param pinCodeResponseData
 	 * @return
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public abstract PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData)
 			throws EtailNonBusinessExceptions;
-	
-	
+
+	/**
+	 * @Desc Used as part of oms fallback for inventory soft reservation
+	 * @param cartDataList
+	 * @return InventoryReservListResponse
+	 */
+	InventoryReservListResponse callInventoryReservationCommerce(final List<CartSoftReservationData> cartDataList);
+
 }

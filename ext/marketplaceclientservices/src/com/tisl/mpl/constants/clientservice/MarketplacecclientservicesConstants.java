@@ -207,6 +207,32 @@ public class MarketplacecclientservicesConstants
 	public static final String TARGETENV = "targetEnv";
 	public static final String MOBILE = "mobile";
 
+	// Strat OMS Fallback constants PLAN C
+	public static final String OMS_PINCODESERVICEABILITY_CON_TIMEOUT = "oms.pincodeserviceability.connection.timeout";
+	public static final String OMS_PINCODESERVICEABILITY_READ_TIMEOUT = "oms.pincodeserviceability.read.timeout";
+	public static final String OMS_INVETNORY_SOFTRESERV_CON_TIMEOUT = "oms.inventory.softreserv.connection.timeout";
+	public static final String OMS_INVETNORY_SOFTRESERV_READ_TIMEOUT = "oms.inventory.softreserv.read.timeout";
+	public static final String OMS_SEND_ORDER_CON_TIMEOUT = "oms.send.order.connection.timeout";
+	public static final String OMS_SEND_ORDER_READ_TIMEOUT = "oms.send.order.read.timeout";
+	public static final String OMS_HTTP_ERROR_CODE = "oms.http.error.code";
+	public static final String DELIVERY_DATE_FORMATTER = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+	public static final String O0001_EXCEP = "O0001";
+	public static final String O0002_EXCEP = "O0002";
+	public static final String O0003_EXCEP = "O0003";
+	public static final String O0004_EXCEP = "O0004";
+	public static final String O0005_EXCEP = "O0005";
+	public static final String O0006_EXCEP = "O0006";
+	public static final String O0007_EXCEP = "O0007";
+
+	public static final String OMS_FALLBACK_CONNECT_TIMEOUT_EXCEP = "oms.fallback.connect.timeout.exceptions";
+	public static final String OMS_FALLBACK_READ_TIMEOUT_EXCEP = "oms.fallback.read.timeout.exceptions";
+
+	public static final String EXCEPTION_TYPE_PINCODE = "pincode";
+	public static final String EXCEPTION_TYPE_INVENTORY = "inventory";
+
+	// Strat OMS Fallback constants PLAN C
+
 	public static final String UIDSIG = "UIDSig";
 	public static final String UIDTIMESTAMP = "UIDTimestamp";
 }
