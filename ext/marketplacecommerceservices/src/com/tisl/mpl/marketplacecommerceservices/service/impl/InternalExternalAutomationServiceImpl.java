@@ -739,7 +739,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	public String decrypt(final String encrypted) throws Exception
 	{
 		final Cipher cipher = getCipher(Cipher.DECRYPT_MODE);
-		final byte[] plainBytes = cipher.doFinal(Base64.decodeBase64(encrypted));
+		final byte[] plainBytes = cipher.doFinal(Base64.decodeBase64(encrypted.getBytes()));
 
 		return new String(plainBytes);
 	}
