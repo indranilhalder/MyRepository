@@ -3,10 +3,13 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.helpers.impl;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.PincodeModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.location.Location;
@@ -32,13 +35,16 @@ import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceSearchCommandControllerImpl;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 import com.tisl.mpl.wsdto.DeliveryModeResOMSWsDto;
@@ -69,15 +75,6 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	@Resource(name = "pinCodeDeliveryModeService")
 	private PinCodeDeliveryModeService pinCodeDeliveryModeService;
 
-	/** The mpl checkout facade. */
-	/*
-	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
-	 */
-
-	/*
-	 * @Autowired private MplSellerInformationService mplSellerInformationService;
-	 */
-
 	/** The price data factory. */
 	@Autowired
 	private PriceDataFactory priceDataFactory;
@@ -86,6 +83,10 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	private BuyBoxService buyBoxService;
 	@Autowired
 	private BuyBoxFacade buyBoxFacade;
+
+	@Resource(name = "mplCommerceCartService")
+	private MplCommerceCartService mplCommerceCartService;
+
 
 	@Autowired
 	private PincodeService pincodeService;
@@ -247,7 +248,6 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 			{
 				response = pinCodeDeliveryModeService.prepPinCodeDeliveryModetoOMS(pin, reqData);
 			}
-			//**ExceptionHandling OMS FallBack..
 			catch (final ClientEtailNonBusinessExceptions e)
 			{
 				LOG.error("::::::Exception in calling OMS Pincode service::CSCOCKPIT:::::::" + e.getErrorCode());
@@ -334,18 +334,12 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 
 				}
 			}
-
 		}
-
 		catch (final ClientEtailNonBusinessExceptions ex)
 		{
-
 			LOG.error("*********OMS service is down");
-
 			responseList = null;
-
 		}
-
 		return responseList;
 	}
 
@@ -565,5 +559,23 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		final PriceData pData = priceDataFactory.create(PriceDataType.BUY, priceData.getValue(), currency);
 		return pData;
 	}
+
+	/**
+	 * @return the mplCommerceCartService
+	 */
+	public MplCommerceCartService getMplCommerceCartService()
+	{
+		return mplCommerceCartService;
+	}
+
+	/**
+	 * @param mplCommerceCartService
+	 *           the mplCommerceCartService to set
+	 */
+	public void setMplCommerceCartService(final MplCommerceCartService mplCommerceCartService)
+	{
+		this.mplCommerceCartService = mplCommerceCartService;
+	}
+
 
 }
