@@ -309,6 +309,8 @@ public class IAFeedUtility
 			try
 			{
 				DataImpexScriptWriter = new CSVWriter(exportFile, MarketplacecommerceservicesConstants.ENCODING, true);
+				DataImpexScriptWriter.setFieldseparator(',');
+				//	DataImpexScriptWriter.setCommentchar('#');
 				DataImpexScriptWriter.setLinebreak("\r\n");
 				if (listOfMaps != null && listOfMaps.size() > 0)
 				{
