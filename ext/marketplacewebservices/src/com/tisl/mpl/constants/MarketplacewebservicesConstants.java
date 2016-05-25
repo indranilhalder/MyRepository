@@ -76,7 +76,7 @@ public class MarketplacewebservicesConstants
 	public static final String SOCIAL_LOGIN_PROXY_PORT = "social_login_proxy_port".intern();
 	public static final String SOCIAL_DEV_LOGIN_PROXY = "proxy.address".intern();
 	public static final String SOCIAL_DEV_LOGIN_PROXY_PORT = "proxy.port".intern();
-	public static final String SITEADMIN_UID = "siteadmin".intern();
+
 	public static final String SITEADMIN_PWD = "1qaz@WSX3edc".intern();
 	public static final String SOCIAL_GOOGLEAPI_ME_INFO = "social_login_googleapi_uri_me_info_mobile".intern();
 	public static final String SOCIAL_FBAPI_ME_FIELDS = "social_login_fb_fields".intern();
