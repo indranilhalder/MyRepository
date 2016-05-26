@@ -243,6 +243,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String COUPONINVALID = "Applied coupon is not valid";
 	public static final String CHANGEDELIVERYMODE = "/changeDeliveryMode";
 	public static final String CONFIGURABLE_RADIUS = "configurable-radius";
+
 	public static final String NETWORK_ERROR = "/networkError";
 
 	public static final String SAVE_STORE_TOPORUDCT_SUCCESS_MSG = "yes";
@@ -250,6 +251,14 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	public final static String NEWPAYMENTFORMMPLURL = "newPaymentFormMplUrl";
 	public final static String NEWPAYMENTVIEWURL = "/checkout/multi/payment-method/view";
+	
+	//TISCR-421
+	public static final String EBS_ACCOUNT_ID = "account_id";
+	public static final String EBS_ACCOUNT_ID_KEY = "payment.ebs.accountId";
+	public static final String EBS_SESSION_ID = "session_id";
+	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
+	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
+
 
 	private MarketplacecheckoutaddonConstants()
 	{

@@ -568,29 +568,38 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	}
 
 	//TISCR-414 - Chairmans demo feedback 10thMay CR
-	private boolean isCatLingerie(final List<CategoryModel> categoryList, final String configLingerieCategoris)
+	@Override
+	public boolean isCatLingerie(final List<CategoryModel> categoryList, final String configLingerieCategoris)
+			throws EtailNonBusinessExceptions
+
 	{
 		boolean isLingerie = false;
-
-		if (null != categoryList && !categoryList.isEmpty())
+		try
 		{
-			final List<String> categoryCodeList = new ArrayList<String>();
-			for (final CategoryModel catModel : categoryList)
+			if (null != categoryList && !categoryList.isEmpty())
 			{
-				categoryCodeList.add(catModel.getCode());
-			}
-			if (StringUtils.isNotEmpty(configLingerieCategoris))
-			{
-				final String[] longeriesCatCodeData = configLingerieCategoris.split(",");
-				for (int index = 0; index < longeriesCatCodeData.length; index++)
+				final List<String> categoryCodeList = new ArrayList<String>();
+				for (final CategoryModel catModel : categoryList)
 				{
-					if (categoryCodeList.contains(longeriesCatCodeData[index].trim()))
+					categoryCodeList.add(catModel.getCode());
+				}
+				if (StringUtils.isNotEmpty(configLingerieCategoris))
+				{
+					final String[] longeriesCatCodeData = configLingerieCategoris.split(",");
+					for (int index = 0; index < longeriesCatCodeData.length; index++)
 					{
-						isLingerie = true;
-						break;
+						if (categoryCodeList.contains(longeriesCatCodeData[index].trim()))
+						{
+							isLingerie = true;
+							break;
+						}
 					}
 				}
 			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 		return isLingerie;
 	}
@@ -624,7 +633,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 *
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 

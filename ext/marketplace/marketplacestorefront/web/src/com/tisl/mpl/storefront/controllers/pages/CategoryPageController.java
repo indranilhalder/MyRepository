@@ -477,25 +477,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private int getfilterListCountForSize(final String searchQuery)
 	{
 		final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
-		final String[] temp = searchQuery.split(":");
-		final int countFreq = Iterables.frequency(splitStr, "size");
-		//  int preCount=0
-		int countValue = 0;
-		for (int i = 0; i < temp.length; i++)
-		{
-			if (temp[i].equals("size"))
-			{
-				countValue++;
-				//countFreq = 1;
-			}
-			else if (countValue >= 1)
-			{
-				if (countValue == countFreq)
-				{
-					break;
-				}
-			}
-		}
 		return Iterables.frequency(splitStr, "size");
 	}
 
