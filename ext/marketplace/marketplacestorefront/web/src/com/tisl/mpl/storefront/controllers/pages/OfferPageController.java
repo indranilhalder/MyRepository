@@ -134,7 +134,7 @@ public class OfferPageController extends AbstractSearchPageController
 	//@RequestMapping(value = "/viewAllOffers/page-{pageNo}",
 	@RequestMapping(value =
 	{ NEW_OFFER_URL_PATTERN_PAGINATION, NEW_OFFER_NEW_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
-	public String displayOfferRelatedProducts(@RequestParam(value = "q", required = false) final String searchQuery,
+	public String displayOfferRelatedProducts(@RequestParam(value = "q", required = false)  String searchQuery,
 			@RequestParam(value = "page", defaultValue = "0", required = false) int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
@@ -143,7 +143,11 @@ public class OfferPageController extends AbstractSearchPageController
 	{
 		try
 		{
-
+                       if (request.getServletPath().indexOf(':') != -1 && searchQuery == null)
+			{
+				searchQuery = request.getServletPath().substring(request.getServletPath().indexOf('=') + 1,
+						request.getServletPath().lastIndexOf('&'));
+			}
 
 			final String uri = request.getRequestURI();
 			if (uri.contains("page"))
