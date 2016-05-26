@@ -95,6 +95,7 @@ public final class MplConstants
 	public static final String PIPE = "|";
 
 
+
 	//	for wishlist
 	public static class USER
 	{

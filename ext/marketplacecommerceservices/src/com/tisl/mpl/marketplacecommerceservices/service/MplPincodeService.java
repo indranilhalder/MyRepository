@@ -50,6 +50,7 @@ public interface MplPincodeService
 	 */
 	List<PincodeServiceabilityDataModel> fetchData();
 
+
 	/**
 	 * The date range between which Orders in queue needs to be fetched
 	 *
@@ -57,5 +58,6 @@ public interface MplPincodeService
 	 * @param date
 	 */
 	void fetchOrderData(Date lastRunDate, Date date);
+
 
 }

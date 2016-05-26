@@ -207,6 +207,7 @@ public class MarketplacecclientservicesConstants
 	public static final String TARGETENV = "targetEnv";
 	public static final String MOBILE = "mobile";
 
+
 	// Strat OMS Fallback constants PLAN C
 	public static final String OMS_PINCODESERVICEABILITY_CON_TIMEOUT = "oms.pincodeserviceability.connection.timeout";
 	public static final String OMS_PINCODESERVICEABILITY_READ_TIMEOUT = "oms.pincodeserviceability.read.timeout";
@@ -235,4 +236,5 @@ public class MarketplacecclientservicesConstants
 
 	public static final String UIDSIG = "UIDSig";
 	public static final String UIDTIMESTAMP = "UIDTimestamp";
+
 }

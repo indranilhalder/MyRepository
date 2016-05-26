@@ -11,6 +11,7 @@ import de.hybris.platform.storelocator.location.Location;
 
 import java.util.List;
 
+import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 
 
@@ -64,4 +65,12 @@ public interface PincodeServiceFacade
 	 * @param sellerId
 	 */
 	List<Location> getSortedLocationsNearby(final GPS gps, final double distance, final String sellerId);
+	
+	/**
+	 * Prepared list of StoreLocationRequestData object, this will be used to call oms to get ATS with ussid.
+	 * @param pincode
+	 * @param sellerUssId
+	 * @return StoreLocationRequestData
+	 */
+	List<StoreLocationRequestData> getStoresFromCommerce(final String pincode, final String sellerUssId);
 }
