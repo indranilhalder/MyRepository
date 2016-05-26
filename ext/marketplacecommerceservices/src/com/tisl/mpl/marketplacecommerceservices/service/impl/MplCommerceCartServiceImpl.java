@@ -81,6 +81,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.CollectionUtils;
@@ -143,7 +144,7 @@ import com.tisl.mpl.wsdto.StoreLocatorAtsResponse;
 import com.tisl.mpl.wsdto.StoreLocatorAtsResponseObject;
 import com.tisl.mpl.wsdto.StoreLocatorResponseItem;
 
-import net.sourceforge.pmd.util.StringUtil;
+
 
 
 
@@ -2307,10 +2308,21 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							}
 							else
 							{
+								LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" + cartId);
 								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 							}
 						}
 					}
+					else
+					{
+						LOG.debug("Inventory reservationData for Mobile from OMS is empty###### =" + cartId);
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
+					}
+				}
+				else
+				{
+					LOG.debug("InventoryReservListResponse for mobile is null ##### =" + cartId);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 				}
 			}
 		}

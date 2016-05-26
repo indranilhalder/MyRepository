@@ -843,7 +843,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9517 = "B9517";
 	public static final String B9518 = "B9518";
 	public static final String B9519 = "B9519";
-
+	public static final String B9520 = "B9520";
 	public static final String B9103 = "B9103";
 
 	public static final String B9320 = "B9320";
