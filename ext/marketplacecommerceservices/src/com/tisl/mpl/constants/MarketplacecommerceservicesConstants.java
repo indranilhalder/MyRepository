@@ -64,7 +64,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NEW_PASSWORD = "newPassword";
 	public static final String PRICE_NOT_AVAILABLE = "Price not Available";
 	public static final String PWD = "pwd";
+
 	public static final String ZeroDeliveryCost = "0.0";
+
 
 	public static final String LIST_EMPTY = "List is Empty";
 
@@ -1502,6 +1504,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
 
+
 	//TISCR-410
 	public static final String ORDERSTAGEQUERY = "select {o.pk} from {OrderStatusCodeMaster as o} where {o.statusCode}=?orderEntryStatus";
 	public static final String ORDERENTRYSTATUS = "orderEntryStatus".intern();
@@ -1509,6 +1512,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//
 	//	public static final String CAMPAIGN_HEADER_2 = "PRODUCTS,CATEGORIES,EXCLUDED PRODUCTS,CATEGORY MIN AMOUNT,QUANTITY,MAX DISCOUNT,IS PERCENTAGE,PERCENTAGE,DISCOUNT PRICES,GIFT PRODUCTS,START DATE,END DATE,RESTRICTIONS,FIRED MESSAGE,COULD FIRE MESSAGE,SECOND PRODUCTS,SECOND CATEGORIES,THRESH TOTALS,TSHIP,SSHIP,DISCOUNT TYPE,DELIVERY MODE,FREE COUNT,URL"
 	//			.intern();
+
+
 
 
 	public static final String TYPE = "type";
@@ -1532,6 +1537,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
 	public static final String EBS_SESSION_ID = "session_id";
 
+
+	
+	
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class

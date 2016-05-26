@@ -2205,7 +2205,6 @@
 						<defaultvalue>true</defaultvalue>
 					</attribute>
 					<!-- End : New Attribute for identifying Fall Back Orders Plan C-->
-					
 					<attribute qualifier="serialNum" autocreate="true"
 						type="java.lang.String">
 						<modifiers initial="true" read="true" write="true"
@@ -2226,9 +2225,6 @@
 					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
-
-
-
 
 				</attributes>
 			</itemtype>
@@ -8208,6 +8204,7 @@
 				</attributes>
 				</itemtype>
 		</typegroup>	
+
 		<typegroup name = "MplConfiguration">
 				<itemtype code="mplConfig" autocreate="true" generate="true">
 					<deployment table="MplConfig" typecode="15998" />
@@ -8228,6 +8225,5 @@
 						</attributes>
 			  </itemtype>
 	   </typegroup>	
-	   
 	</itemtypes>
 </items>

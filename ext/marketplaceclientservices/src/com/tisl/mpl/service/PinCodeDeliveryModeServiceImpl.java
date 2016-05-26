@@ -19,6 +19,7 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+
 //import com.hybris.oms.api.comm.dto.PincodeServiceabilityCheck;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -64,10 +65,6 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	 *
 	 */
 	private static final String CLICK_AND_COLLECT = "Click And Collect";
-
-	/**
-	 *
-	 */
 	private static final String ED = "ED";
 
 	/**
@@ -79,12 +76,6 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	 *
 	 */
 	private static final String CNC = "CNC";
-
-	/**
-	 *
-	 */
-	//private static final String ERROR_400 = "ERROR_400";
-
 	private static final Logger LOG = Logger.getLogger(PinCodeDeliveryModeServiceImpl.class);
 	//OMS Pin code serviceablity
 	@Resource(name = "configurationService")
@@ -350,6 +341,68 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 
 	}
 
+
+
+	/*
+	 * @desc used for validate connect timeout and read time out exceptions from oms rest call for pincode serviceabilty
+	 * and inventory reservation
+	 *
+	 * @param ex
+	 *
+	 * @param exceptionType
+	 *
+	 * @return void
+	 *
+	 * @throws ClientEtailNonBusinessExceptions
+	 */
+	@Override
+	public void validateOMSException(final Exception ex, final String exceptionType) throws ClientEtailNonBusinessExceptions
+	{
+		final String connectTimeoutException = getConfigurationService().getConfiguration().getString(
+				MarketplacecclientservicesConstants.OMS_FALLBACK_CONNECT_TIMEOUT_EXCEP);
+		final String readTimeoutException = getConfigurationService().getConfiguration().getString(
+				MarketplacecclientservicesConstants.OMS_FALLBACK_READ_TIMEOUT_EXCEP);
+
+		boolean readErrorFlag = false;
+		boolean connectErrorFlag = false;
+
+		final String[] connectionExceptions = (StringUtils.isNotEmpty(connectTimeoutException)) ? connectTimeoutException
+				.split(",") : null;
+		final String[] readExceptions = (StringUtils.isNotEmpty(readTimeoutException)) ? readTimeoutException.split(",") : null;
+
+		if (connectionExceptions != null && readExceptions != null)
+		{
+			for (final String exception : connectionExceptions)
+			{
+				if (StringUtils.isNotEmpty(ex.getMessage()) && ex.getMessage().contains(exception))
+				{
+					connectErrorFlag = true;
+					break;
+				}
+			}
+			if (connectErrorFlag)
+			{
+				final String excep = (exceptionType.equalsIgnoreCase(MarketplacecclientservicesConstants.EXCEPTION_TYPE_PINCODE)) ? MarketplacecclientservicesConstants.O0001_EXCEP
+						: MarketplacecclientservicesConstants.O0003_EXCEP;
+				throw new ClientEtailNonBusinessExceptions(excep, ex);
+			}
+
+			for (final String exception : readExceptions)
+			{
+				if (StringUtils.isNotEmpty(ex.getMessage()) && ex.getMessage().contains(exception))
+				{
+					readErrorFlag = true;
+					break;
+				}
+			}
+			if (readErrorFlag)
+			{
+				final String excep = (exceptionType.equalsIgnoreCase(MarketplacecclientservicesConstants.EXCEPTION_TYPE_PINCODE)) ? MarketplacecclientservicesConstants.O0002_EXCEP
+						: MarketplacecclientservicesConstants.O0004_EXCEP;
+				throw new ClientEtailNonBusinessExceptions(excep, ex);
+			}
+		}
+	}
 	/**
 	 * this method prepares request object and calls oms to get inventories for stores.
 	 *
@@ -415,7 +468,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 		{
 			//pincodeResfromOMS = null;
 			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + e);
-			throw new ClientEtailNonBusinessExceptions(e);
+			throw new ClientEtailNonBusinessExceptions("O0001", e);
 		}
 
 		return storeLocatorResfromOMS;
@@ -464,20 +517,53 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 			}
 			else
 			{
-				final Client client = Client.create();
-				final WebResource webResource = client.resource(UriBuilder.fromUri(
-						configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_URL))
-						.build());
-				final JAXBContext context = JAXBContext.newInstance(StoreLocatorATS.class);
-				final Marshaller m = context.createMarshaller();
-				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-				final StringWriter sw = new StringWriter();
-				m.marshal(storeLocatorRequest, sw);
-				final String xmlString = sw.toString();
+				ClientResponse response = null;
+				try
+				{
+					final Client client = Client.create();
+					
+					//Start : Code added for OMS fallback cases
+					final String connectionTimeout = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.OMS_PINCODESERVICEABILITY_CON_TIMEOUT, "5000").trim();
+					final String readTimeout = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.OMS_PINCODESERVICEABILITY_READ_TIMEOUT, "5000").trim();
+					final String httpErrorCode = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 
-				LOG.debug("*********************** StoreLocator Real Time Serviceability request xml :" + xmlString);
-				final ClientResponse response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml")
-						.header("X-tenantId", "single").entity(xmlString).post(ClientResponse.class);
+					client.setConnectTimeout(Integer.valueOf(connectionTimeout));
+					client.setReadTimeout(Integer.valueOf(readTimeout));
+					//End : Code added for OMS fallback cases
+					
+					final WebResource webResource = client.resource(UriBuilder.fromUri(
+							configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_URL))
+							.build());
+					final JAXBContext context = JAXBContext.newInstance(StoreLocatorATS.class);
+					final Marshaller m = context.createMarshaller();
+					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+					final StringWriter sw = new StringWriter();
+					m.marshal(storeLocatorRequest, sw);
+					final String xmlString = sw.toString();
+
+					LOG.debug("*********************** StoreLocator Real Time Serviceability request xml :" + xmlString);
+					response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml")
+							.header("X-tenantId", "single").entity(xmlString).post(ClientResponse.class);
+					
+					LOG.info("*****StoreATS response status code :" + response.getStatus());
+					if (httpErrorCode.contains(String.valueOf(response.getStatus())))
+					{
+						throw new ClientEtailNonBusinessExceptions("O0007");
+					}
+				}
+				catch (final ClientEtailNonBusinessExceptions ex)
+				{
+					LOG.error("Http Error in calling OMS - " + ex.getMessage());
+					throw ex;
+				}
+				catch (final Exception ex)
+				{
+					LOG.error("Error in calling OMS - " + ex.getMessage());
+					throw ex;
+				}
 
 				final String output = response.getEntity(String.class);
 				LOG.debug("*********************** StoreLocator Real Time Serviceability response xml :" + output);
@@ -488,72 +574,25 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
 			}
 		}
+		catch (final ClientEtailNonBusinessExceptions ex)
+		{
+			LOG.error("Http Error in calling OMS - " + ex.getMessage());
+			throw ex;
+		}
 		catch (final Exception ex)
 		{
-			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
+			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
+
+			if (ex.getMessage().contains("connect timed out") || ex.getMessage().contains("Connection refused"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0001", ex);
+			}
+			if (ex.getMessage().contains("read timed out"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0002", ex);
+			}
 			throw new ClientEtailNonBusinessExceptions(ex);
 		}
 		return responsefromOMS;
-	}
-
-	/*
-	 * @desc used for validate connect timeout and read time out exceptions from oms rest call for pincode serviceabilty
-	 * and inventory reservation
-	 *
-	 * @param ex
-	 *
-	 * @param exceptionType
-	 *
-	 * @return void
-	 *
-	 * @throws ClientEtailNonBusinessExceptions
-	 */
-	@Override
-	public void validateOMSException(final Exception ex, final String exceptionType) throws ClientEtailNonBusinessExceptions
-	{
-		final String connectTimeoutException = getConfigurationService().getConfiguration().getString(
-				MarketplacecclientservicesConstants.OMS_FALLBACK_CONNECT_TIMEOUT_EXCEP);
-		final String readTimeoutException = getConfigurationService().getConfiguration().getString(
-				MarketplacecclientservicesConstants.OMS_FALLBACK_READ_TIMEOUT_EXCEP);
-
-		boolean readErrorFlag = false;
-		boolean connectErrorFlag = false;
-
-		final String[] connectionExceptions = (StringUtils.isNotEmpty(connectTimeoutException)) ? connectTimeoutException
-				.split(",") : null;
-		final String[] readExceptions = (StringUtils.isNotEmpty(readTimeoutException)) ? readTimeoutException.split(",") : null;
-
-		if (connectionExceptions != null && readExceptions != null)
-		{
-			for (final String exception : connectionExceptions)
-			{
-				if (StringUtils.isNotEmpty(ex.getMessage()) && ex.getMessage().contains(exception))
-				{
-					connectErrorFlag = true;
-					break;
-				}
-			}
-			if (connectErrorFlag)
-			{
-				final String excep = (exceptionType.equalsIgnoreCase(MarketplacecclientservicesConstants.EXCEPTION_TYPE_PINCODE)) ? MarketplacecclientservicesConstants.O0001_EXCEP
-						: MarketplacecclientservicesConstants.O0003_EXCEP;
-				throw new ClientEtailNonBusinessExceptions(excep, ex);
-			}
-
-			for (final String exception : readExceptions)
-			{
-				if (StringUtils.isNotEmpty(ex.getMessage()) && ex.getMessage().contains(exception))
-				{
-					readErrorFlag = true;
-					break;
-				}
-			}
-			if (readErrorFlag)
-			{
-				final String excep = (exceptionType.equalsIgnoreCase(MarketplacecclientservicesConstants.EXCEPTION_TYPE_PINCODE)) ? MarketplacecclientservicesConstants.O0002_EXCEP
-						: MarketplacecclientservicesConstants.O0004_EXCEP;
-				throw new ClientEtailNonBusinessExceptions(excep, ex);
-			}
-		}
 	}
 }
