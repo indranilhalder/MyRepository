@@ -772,7 +772,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				//cart has CNC.
 				LOG.info("Cart Entries contain CNC mode");
 				//calls oms to get inventories for given stores.
-				response = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
+				//response = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
 				List<ProudctWithPointOfServicesData> productWithPOS = new ArrayList<ProudctWithPointOfServicesData>();
 				try
 				{
