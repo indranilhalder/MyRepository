@@ -4571,7 +4571,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					responseList.add(responseData);
 				}
 			}
-			return responseList;
+			//return responseList;
 		}
 		catch (final ClientEtailNonBusinessExceptions ex)
 		{
@@ -4579,6 +4579,20 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final StoreLocationResponseData responseData = new StoreLocationResponseData();
 			// responseData.setIsServicable(MarketplacecommerceservicesConstants.NOT_APPLICABLE);
 			responseList.add(responseData);
+			if (null != ex.getErrorCode() && ex.getErrorCode().equalsIgnoreCase("O0001"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0001", ex);
+			}
+			else if (null != ex.getErrorCode() && ex.getErrorCode().equalsIgnoreCase("O0002"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0002", ex);
+			}
+			else
+			{
+				throw new ClientEtailNonBusinessExceptions(ex);
+			}
+
+
 		}
 		return responseList;
 	}
