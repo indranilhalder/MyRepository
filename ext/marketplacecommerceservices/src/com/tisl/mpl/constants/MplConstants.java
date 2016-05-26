@@ -85,11 +85,15 @@ public final class MplConstants
 	public static final String SINGLE_QUOTES = "'";
 	public static final String COMMA = ",";
 
+	//for cnc if oms is down
+	public static final String DEFAULT_CNC_INVENTORY_COUNT = "10";
+	public static final String DEFAULT_CNC_NO_INVENTORY = "0";
 
 	//MplVariantComparator
 	public static final String DOUBLE = "\\D+";
 
 	public static final String PIPE = "|";
+
 
 
 	//	for wishlist

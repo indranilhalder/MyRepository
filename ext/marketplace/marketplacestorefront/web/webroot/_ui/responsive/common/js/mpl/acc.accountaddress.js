@@ -257,7 +257,7 @@ function editAddress(addressId) {
         			url: ACC.config.encodedContextPath + "/my-account/cancelSuccess",
         			type: "GET",
         			beforeSend:function() {
-        				$("body").append("<div id='no-click' style='opacity:0.40; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div><img src='/store/_ui/responsive/common/images/spinner.gif' class='spinner' style=' z-index: 10001;position: fixed;top: 50%;left:50%;height: 30px;'>");
+        				$("body").append("<div id='no-click' style='opacity:0.40; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div><img src='/_ui/responsive/common/images/spinner.gif' class='spinner' style=' z-index: 10001;position: fixed;top: 50%;left:50%;height: 30px;'>");
         			},
         			data: { 'orderCode' : orderCode, 'transactionId' : transactionId, 'reasonCode' : reasonCode, 'ticketTypeCode' : ticketTypeCode, 'ussid' : ussid },
         			cache: false,
@@ -1018,7 +1018,7 @@ function editAddress(addressId) {
         }
         if (addressForm.line3.value == null || addressForm.line3.value == "") {
         	$("#errddressline3").css({"display":"block"});
-        	document.getElementById("erraddressline3").innerHTML = "<font color='#ff1c47' size='2'>Please enter landmark</font>";
+        	document.getElementById("erraddressline3").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 3</font>";
         	flagAd3 = false;
         }
         if (addressForm.postcode.value == null || addressForm.postcode.value == "") {

@@ -54,7 +54,9 @@ import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,8 +69,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.beans.BindingException;
@@ -233,8 +237,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
 					}
 				}
-				if (abstractOrderEntryModel.getGiveAway() != null
-						& !abstractOrderEntryModel.getGiveAway().booleanValue() && abstractOrderEntryModel.getSelectedUSSID() != null)
+				if (abstractOrderEntryModel.getGiveAway() != null & !abstractOrderEntryModel.getGiveAway().booleanValue()
+						&& abstractOrderEntryModel.getSelectedUSSID() != null)
 				{
 					freebieModelMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getMplDeliveryMode());
 					freebieParentQtyMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getQuantity());
@@ -267,15 +271,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								{
 									if (LOG.isDebugEnabled())
 									{
-										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + cartEntryModel.getAssociatedItems().get(0));
+										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+												+ cartEntryModel.getAssociatedItems().get(0));
 									}
 									posModel = cEntry.getDeliveryPointOfService();
 								}
 							}
 						}
-						else 
+						else
 						{
-							String parentUssId = findParentUssId(cartEntryModel, cartModel);
+							final String parentUssId = findParentUssId(cartEntryModel, cartModel);
 							if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
 							{
 								if (null != cEntry.getDeliveryPointOfService())
@@ -303,7 +308,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 			}
 		}
-				
+
 		//creating new Payment Form
 		final PaymentForm paymentForm = new PaymentForm();
 		try
@@ -938,7 +943,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					MarketplacecheckoutaddonConstants.CHECKOUTRESPONSEURL, MarketplacecheckoutaddonConstants.CHECKOUTCALLBACKURL);
 			model.addAttribute(MarketplacecheckoutaddonConstants.SOPPAGEDATA, silentOrderPageData);
 			paymentForm.setParameters(silentOrderPageData.getParameters());
-			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORMMPLURL, MarketplacecheckoutaddonConstants.PAYMENTVIEWURL);
+			model.addAttribute(MarketplacecheckoutaddonConstants.NEWPAYMENTFORMMPLURL,
+					MarketplacecheckoutaddonConstants.NEWPAYMENTVIEWURL);
 
 			setupMplPaymentPage(model);
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORM, paymentForm);
@@ -946,7 +952,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		catch (final IllegalArgumentException e)
 		{
-			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORMMPLURL, "");
+			model.addAttribute(MarketplacecheckoutaddonConstants.NEWPAYMENTFORMMPLURL, "");
 			model.addAttribute(MarketplacecheckoutaddonConstants.SOPPAGEDATA, null);
 			LOG.error(MarketplacecheckoutaddonConstants.LOGWARN, e);
 			GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.GLOBALERROR);
@@ -1310,6 +1316,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYREDIRECT, getConfigurationService().getConfiguration()
 				.getString(MarketplacecheckoutaddonConstants.JUSPAYREDIRECTKEY));
 
+		//TISCR-421 : getting accountId to be sent to EBS
+		model.addAttribute(MarketplacecheckoutaddonConstants.EBS_ACCOUNT_ID, getConfigurationService().getConfiguration()
+				.getString(MarketplacecheckoutaddonConstants.EBS_ACCOUNT_ID_KEY));
+
+		//Juspay-EBS session id
+		final String sessionId = getMd5Encoding(getRandomAlphaNum(getConfigurationService().getConfiguration().getString(
+				MarketplacecheckoutaddonConstants.EBS_SESSION_ID_KEY)));
+		getSessionService().setAttribute(MarketplacecheckoutaddonConstants.EBS_SESSION_ID, sessionId);
+		model.addAttribute(MarketplacecheckoutaddonConstants.EBS_SESSION_ID, sessionId);
+
 		//getting the current customer to fetch customer Id and customer email
 		final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
 
@@ -1422,6 +1438,33 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		setupMplMessages(model);
 	}
 
+	@SuppressWarnings("unused")
+	private String getRandomAlphaNum(final String len)
+	{
+		return RandomStringUtils.randomAlphanumeric(Integer.parseInt(len)).toUpperCase();
+	}
+
+	@SuppressWarnings("unused")
+	private String getMd5Encoding(final String input)
+	{
+		MessageDigest messageDigest;
+		String result = null;
+		try
+		{
+			messageDigest = MessageDigest.getInstance(getConfigurationService().getConfiguration().getString(
+					MarketplacecheckoutaddonConstants.JUSPAY_ENCODING_TYPE));
+			messageDigest.reset();
+			messageDigest.update(input.getBytes(Charset.forName("UTF8")));
+			final byte[] resultByte = messageDigest.digest();
+			result = new String(Hex.encodeHex(resultByte));
+		}
+		catch (final NoSuchAlgorithmException e)
+		{
+			LOG.error("Error while encoding=======");
+		}
+
+		return result;
+	}
 
 	/**
 	 * To add CVV text help messages
@@ -1775,7 +1818,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								}
 								else
 								{
-									String parentUssId = findParentUssId(cartEntryModel, cart);
+									final String parentUssId = findParentUssId(cartEntryModel, cart);
 									if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
 									{
 										if (null != cEntry.getDeliveryPointOfService())

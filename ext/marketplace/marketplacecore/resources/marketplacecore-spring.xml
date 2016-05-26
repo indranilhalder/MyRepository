@@ -1515,6 +1515,8 @@
 		<bean id="mplConfigDao" class="com.tisl.mpl.core.mplconfig.dao.impl.MplConfigDaoImpl" >
 	</bean>
 	<!-- ============== configure beans for mplConfig ============== -->
+	
+	<import	resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_omsFallback-spring.xml" />
   <!--  TISPRO-325 changes -->
   <bean id="sizeAttributeSortProvider"
 	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.DefaultSizeFacetTopValuesProvider">
@@ -1563,6 +1565,12 @@
 	<bean id="unCollectedOrderToInitiateRefundEventListener"
 		class="com.tisl.mpl.marketplaceomsservices.event.UnCollectedOrderToInitiateRefundEventListener"
 		parent="abstractSiteEventListener">
+	</bean>
+	
+	<!-- For COM Fallback Mechanism when OMS is down-->
+	<bean id="fallBackReportJob" class="com.tisl.mpl.core.pincode.jobs.FallBackReportJob"
+		autowire="byName">
+		<property name="mplPincodeService" ref="mplPincodeService" />
 	</bean>
 	
 </beans>

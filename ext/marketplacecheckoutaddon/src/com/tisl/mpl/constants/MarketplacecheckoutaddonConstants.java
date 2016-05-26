@@ -39,7 +39,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String CHECKOUTCALLBACKURL = "/integration/merchant_callback";
 	public final static String SOPPAGEDATA = "silentOrderPageData";
 	public final static String PAYMENTFORMMPLURL = "paymentFormMplUrl";
-	public final static String PAYMENTVIEWURL = "/store/mpl/en/checkout/multi/payment-method/view";
+	public final static String PAYMENTVIEWURL = "/checkout/multi/payment-method/view";
 	public final static String LOGERROR = "Failed to load Payment Page";
 	public final static String ERRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.generalError";
 	public final static String PAYMENTTRANERRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.PaymentTransactionError";
@@ -243,10 +243,23 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String COUPONINVALID = "Applied coupon is not valid";
 	public static final String CHANGEDELIVERYMODE = "/changeDeliveryMode";
 	public static final String CONFIGURABLE_RADIUS = "configurable-radius";
+
 	public static final String NETWORK_ERROR = "/networkError";
+
 	public static final String SAVE_STORE_TOPORUDCT_SUCCESS_MSG = "yes";
 	public static final String SAVE_STORE_TOPORUDCT_FAIL_MSG = "no";
+
+	public final static String NEWPAYMENTFORMMPLURL = "newPaymentFormMplUrl";
+	public final static String NEWPAYMENTVIEWURL = "/checkout/multi/payment-method/view";
 	
+	//TISCR-421
+	public static final String EBS_ACCOUNT_ID = "account_id";
+	public static final String EBS_ACCOUNT_ID_KEY = "payment.ebs.accountId";
+	public static final String EBS_SESSION_ID = "session_id";
+	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
+	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
+
+
 	private MarketplacecheckoutaddonConstants()
 	{
 		//empty to avoid instantiating this constant class

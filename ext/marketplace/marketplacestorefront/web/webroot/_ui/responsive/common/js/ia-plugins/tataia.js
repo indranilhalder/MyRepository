@@ -514,12 +514,39 @@ if (searchCategory_id){
 					href: ACC.config.encodedContextPath+"/p/"+productId+"/quickView",
 					onComplete: function(){
 						$(".imageList ul li img").css("height", "102px");
+						ia_quickviewGallery();
 					}
 			});
 				  params = {'count' : '0', 'site_product_id': productId};
 				  params = buildParams(params);
 				  callRecApi(params, rootEP + '/SocialGenomix/recommendations/products/jsonp');
 			}
+			
+			function ia_quickviewGallery() {
+				$(document).ready(function(){
+					var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
+					var thumbnailImageHeight = (mainImageHeight / 5);
+					$(".imageList ul li img").css("height", thumbnailImageHeight);
+				 	$("#previousImage").css("opacity","0.5");
+				 	$("#nextImage").css("opacity","1");
+				 	var listHeight = $(".imageList li").height();
+				 	if($("#previousImage").length){
+				 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+				 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
+				 	}
+				 	$(".imageListCarousel").show();
+				 	
+				 	if ('ontouchstart' in window) {
+				 		$(".quick-view-popup #variantForm .select-size span.selected").next("ul").hide();
+						  $(".quick-view-popup #variantForm .select-size span.selected").click(function(){
+							  $(this).next("ul").toggleClass("select_height_toggle");
+						  });
+						}
+				 
+				});
+				
+			}
+			
 			function compareDateWithToday(SaleDate) {
 				var today = new Date();
 				var dd = today.getDate();
@@ -581,45 +608,65 @@ if (searchCategory_id){
 						}
 				  });
 			}
+			  /* IA Changes Start for store/mpl/en */
 
-				  var IAurl = obj.url + '/store/mpl/en/p/'+obj.site_product_id+'/?iaclick=true&req=' + rid; /*iaclick=true for tracking our clicks vs. other services, pass request id to track clicks*/
+				  var IAurl = obj.url + '/p/'+obj.site_product_id+'/?iaclick=true&req=' + rid; /*iaclick=true for tracking our clicks vs. other services, pass request id to track clicks*/
+				  /* IA Changes End for store/mpl/en */ 
 				  if(spid.length > 0) { /*pass if product page or if this is applicable for whatever other reason*/
 				    IAurl += '&rspid=' + spid;
 				  }
 				  var html = '';
 				 
 				  /*  TISPRO-303 Changes-checking with 'type' */
-				 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
-					 html += '<li onmouseover="showBoth(this)" onmouseout="hideBoth(this)" class="look slide product-tile ' + widgetElement + '_list_elements productParentList" style="display: inline-block; position: relative;">';
-					 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
-					
-				 }else{
-					 html += '<li onmouseover="showQuickview(this)" onmouseout="hideQuickView(this)" class="look slide product-tile ' + widgetElement + '_list_elements productParentList" style="display: inline-block; width: 100%;position: relative;">';
-					 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
-					 
-				 }
-				  html += '<a href="'+IAurl+'" class="product-tile" style="position: relative;">';
-				  if(obj.image_url.indexOf("/") > -1){
-					  html += '<div class="image" style="position: relative; left: 0;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="'+obj.image_url+'" alt="'+obj.name+'"/>';
-					 if(is_new_product == true){
-						 html += '<div style="z-index: 1;" class="new"><span>New</span></div>';
+					 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2) && (obj.type == 'Electronics')){ 
+						 html += '<li onmouseover="showBoth(this)" onmouseout="hideBoth(this)" class="look slide product-tile ' + widgetElement + '_list_elements productParentList" style="display: inline-block; position: relative;">';
+						 //html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
+						
+					 }else{
+						 html += '<li onmouseover="showQuickview(this)" onmouseout="hideQuickView(this)" class="look slide product-tile ' + widgetElement + '_list_elements productParentList" style="display: inline-block;position: relative;">';
+						// html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
+						 
 					 }
-					 if(obj.online_exclusive == true){
-						  html += '<div class="online-exclusive"><span>online exclusive</span></div>';  
-					  }
-					  html += '</div>';
-					  
-				  }else{
-					  html += '<div class="image" style="position: relative; left: 0;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg" alt="'+obj.name+'"/>';
-					  if(is_new_product == true){
-						  html += '<div style="z-index: 1;" class="new"><span>New</span></div>';
+					  html += '<a href="'+IAurl+'" class="product-tile" style="position: relative;">';
+					  if(obj.image_url.indexOf("/") > -1){
+						  html += '<div class="image" style="position: relative; left: 0;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="'+obj.image_url+'" alt="'+obj.name+'"/>';
+						 if(is_new_product == true){
+							 html += '<div style="z-index: 1;" class="new"><span>New</span></div>';
 						 }
-					  if(obj.online_exclusive == true){
-						  html += '<div class="online-exclusive"><span>online exclusive</span></div>';  
+						 if(obj.online_exclusive == true){
+							  html += '<div class="online-exclusive"><span>online exclusive</span></div>';  
+						  }
+						 /* TISPRD-2119 Changes for Quick View position*/
+						 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
+							 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
+							
+						 }else{
+							 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
+							 
+						 }
+						 /* TISPRD-2119 Changes for Quick View position end*/
+						  html += '</div>';
+						  
+					  }else{
+						  html += '<div class="image" style="position: relative; left: 0;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg" alt="'+obj.name+'"/>';
+						  if(is_new_product == true){
+							  html += '<div style="z-index: 1;" class="new"><span>New</span></div>';
+							 }
+						  if(obj.online_exclusive == true){
+							  html += '<div class="online-exclusive"><span>online exclusive</span></div>';  
+						  }
+						  /* TISPRD-2119 Changes for Quick View position*/
+							 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)&& (obj.type == 'Electronics')){ 
+								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0;left: 0px; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block; width: 50%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: inline-block;right:0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 50%;font-size:12px;"><span>Add To Bag</span></div>';
+								
+							 }else{
+								 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
+								 
+							 }
+							 /* TISPRD-2119 Changes for Quick View position end*/
+						  html += '</div>';
+						 
 					  }
-					  html += '</div>';
-					 
-				  }
 				  //html += '<div class="image" style="position: absolute; left: 0; line-height: 347px; height: 347px; width: 221px; background:center no-repeat url('+obj.image_url+'); background-size:contain;"></div>';
 				  html += '<div class="short-info ia_short-info" style="position: relative; padding:0;">';
 				  html += '<ul class="color-swatch" style="top: -3px; ">';
@@ -910,8 +957,10 @@ if (searchCategory_id){
 			      });
 			      if(widgetMode === "hot" && site_page_type == "homepage"){
 			          html += '</ul></div>';
-			          html += '</div></div><a href="http://'+window.location.host+'/store/mpl/en/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			          /* IA Changes Start for store/mpl/en */
+			          html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
 			          }
+			      /* IA Changes End for store/mpl/en */
 			          else{
 			        	  html += '</ul></div>';
 			              html += '</div></div>'; 
@@ -1144,9 +1193,17 @@ if (searchCategory_id){
 			    document.getElementById(widgetElement).innerHTML = "";    
 			    var html = "";
 			    var respData = response.data.brands;
-
-			    html += '<div class="wrapper"><h1 class="">'+brandWidgetTitle[jQuery.inArray(widgetMode, brandWidget)]+'</h1><ul class="feature-brands ia_feature_brands">';
+			    /* response check addition for 'Hot Brands' start*/
+			    if(response.data.brands.length > 0){
+			    	html += '<div class="wrapper"><h1 class="">'+brandWidgetTitle[jQuery.inArray(widgetMode, brandWidget)]+'</h1><ul class="feature-brands ia_feature_brands">';
+			    	}
+			    else
+			    	{
+			    	$("#ia_brands_hot_searches").css("background-color","#FFFFFF"); 
+			    	}
+			    /* response check addition for 'Hot Brands' end*/
 			    numRec = 0;
+			   
 			    jQuery.each(respData, function () {
 			    	queryUrl = this.url + '?req=' + response.request_id;
 			      if(numRec < 3) {
@@ -1167,7 +1224,7 @@ if (searchCategory_id){
 			        return false;
 			      }
 			    });
-
+			    
 			    html += '</ul></div></div>';
 			    document.getElementById(widgetElement).innerHTML = html;
 			  } else if (jQuery.inArray(widgetMode, categoryWidget) > -1) {
@@ -1294,3 +1351,4 @@ if (searchCategory_id){
     //console.log("widget mode we don't account for: " + widgetMode);
   }
 }
+			$(document).on('click',".IAQuickView,.iaAddToCartButton",function(e){e.preventDefault();})

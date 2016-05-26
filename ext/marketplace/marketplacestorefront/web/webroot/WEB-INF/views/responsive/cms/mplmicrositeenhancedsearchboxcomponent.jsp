@@ -11,18 +11,30 @@
 	
 		 var selectedItemText = $("#micrositeSearchCategory").find('option:selected').text();
 		 $("#micrositesearchBoxSpan").html(selectedItemText);
-		$('.select-view .select-list').hover(function(){
+		$('.select-view .microsite-search').hover(function(){
 			 $(this).find('ul').slideDown();
 		 });
 		
-			$(".micrositeDropdown li").click(function() {
+		//	$(".micrositeDropdown li").click(function() {
 			
-				$("#micrositeSearchCategory").val(this.id);
-				$(this).addClass("selected");
-				$(this).parents('.select-list').find('ul').slideUp();
-				$("#js-site-micrositesearch-input").focus(); 
-			});
+			//	$("#micrositeSearchCategory").val(this.id);
+			//	$(this).addClass("selected");
+			//	$(this).parents('.select-list').find('ul').slideUp();
+			//	$("#js-site-micrositesearch-input").focus(); 
+			//});
 		
+			
+			// Changes done for Dropdown change while clicking on category or brand value on 24-05-2016
+			$(document).on('click',".microsite-search .micrositeDropdown li",function(e) {
+				$("#micrositeSearchCategory").val(this.id);				
+				$(".microsite-search .micrositeDropdown li").removeClass("selected");
+				$(this).addClass("selected");
+				$("#micrositesearchBoxSpan").html($(this).text());
+				$(this).parents('.microsite-search').find('ul').slideUp();
+				$("#js-site-micrositesearch-input").focus(); 
+			});		
+			
+			
 			
 			 //Added For TISPRO-264
 			$("#micrositesearchButton").click(function(event) {
@@ -44,15 +56,19 @@
 							  };
 						}
 						 //Added For TISPRO-264
-						else if(dropdownValue=="all"){							
-								actionText = (actionText + '/mpl/en/search/');								
+						else if(dropdownValue=="all"){	
+							// Changes done for SEO URL change on 24-05-2016
+								actionText = (actionText + '/search/');	
+								
 							}
 						
 						else if (dropdownValue.startsWith("category-")) {
 							actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue.replace("category-",""));
+							
 						}
 						else if (dropdownValue.startsWith("brand-")) {
 							actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue.replace("brand-",""));
+							
 						}
 						
 					}
@@ -135,7 +151,7 @@
 			<select id="micrositeSearchCategory" class="select-view" name="micrositeSearchCategory">
 				<option value="all" class="micrositeSellerName"></option>				
 
-				<c:forEach items="${categoryList }" var="category">
+				<c:forEach items="${categoryList}" var="category">
 					<option value="category-${category.code }"
 						<c:if test="${category.code eq categoryCode }"> 
 					selected = "selected"
@@ -160,7 +176,7 @@
 		
 			</select>
 
-			<div class="select-list">
+			<div class="select-list microsite-search">
 				<span class="selected selected-dropdownText micrositeSellerName" id="micrositesearchBoxSpan"></span>
 
 				<ul class="micrositeDropdown" label="All">
@@ -168,7 +184,7 @@
 				</ul>
 			   
 				<ul class="micrositeDropdown" label="Departments">
-					<c:forEach items="${categoryList }" var="category">
+					 <c:forEach items="${categoryList }" var="category">
 						<li id="category-${category.code }"
 							<c:if test="${category.code eq categoryCode }"> 
 					class = "selected"
@@ -177,6 +193,7 @@
 						class = "selected"
 					</c:if>>${category.name }</li>
 					</c:forEach>
+					
 				</ul>
 				
 				<ul class="micrositeDropdown" label="Brands">
@@ -191,6 +208,7 @@
 					</c:if>>
 							${brand.name}</li>
 					</c:forEach>
+					 
 				</ul>
 		
 			</div>
@@ -222,4 +240,3 @@
 <%-- <div style="color:#333;position:absolute;top:6px;"><cms:pageSlot position="MiniCart" var="component">
 									<cms:component component="${component}" />
 								</cms:pageSlot></div> --%>
-

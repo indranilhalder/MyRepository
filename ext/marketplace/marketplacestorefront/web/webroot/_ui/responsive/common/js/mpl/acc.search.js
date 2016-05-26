@@ -244,15 +244,12 @@
 
 	//find Onsale product based on filters		
 	function findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product) {		
-//		alert("**Inside findOnSaleBasedOnMinPrice****")		
 		//Taking Promotion from minimum size minPriceSize		
 		var sizeMatched = checkSizeCount(list, serpSizeList);		
 		var promo1 = productPromotion.replace("[[", "");		
 		var promo2 = promo1.replace("]]", "");		
 		var arr = new Array();		
-		arr = promo2.split(',');		
-
-
+		arr = promo2.split(',');	
 		
 		if(arr!= undefined) {		
 			
@@ -263,26 +260,16 @@
 			var x = JSON.parse(temp2);		
 					
 			if (sizeMatched != "") {		
-				if (x[sizeMatched] != undefined) {		
-				
-
-
-
-
-
-
-
+				if (x[sizeMatched] != undefined) {
 					 $("#on-sale_" + product).show();//showing on_sale tag		
 					break;		
 				}		
 				else {		
-					//alert("UUUU");		
 					continue;		
 				}		
 
 			}		
-			else {		
-				//alert("2.....")		
+			else {		s
 				 $("#on-sale_"+ product).show();//showing on_sale tag		
 				break;		
 		}		
@@ -302,6 +289,7 @@
 
 	function findSizeBasedOnMinPrice(priceValue, priceArray) {
 		for (pIndex = 0; pIndex < priceArray.length; pIndex++) {
+			if(priceArray[pIndex]!=""){
 			var proceJson = JSON.parse(priceArray[pIndex]);
 			var minPriceSize = 0.0;
 			for (l = 0; l < serpSizeList.length; l++) {
@@ -311,18 +299,19 @@
 					return minPriceSize;
 				}
 			}
+			}
 		}
 	}
 	//update product stock
 
 
 	function updateProductStock(sizeStockLevel,sizeMatched, serpSizeList,minPriceSize,product) {
-		//var sizeStockLevel = "${product.displayStock}";
 		var stock1 = sizeStockLevel.replace("[[", "");
 		var stock2 = stock1.replace("]]", "");
 		var stockArray = new Array();
 		stockArray = stock2.split(',');
 		for (i = 0; i < stockArray.length; i++) {
+			if(stockArray[i]!=""){
 			var stckData = JSON.parse(stockArray[i]);
 			if (sizeMatched != "") {
 				if (stckData[sizeMatched] != undefined) {
@@ -340,6 +329,7 @@
 					}
 				}
 			}
+		}
 		}
 	}
 
