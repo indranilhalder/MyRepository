@@ -143,7 +143,11 @@ public class OfferPageController extends AbstractSearchPageController
 	{
 		try
 		{
-
+                       if (request.getServletPath().indexOf(':') != -1 && searchQuery == null)
+			{
+				searchQuery = request.getServletPath().substring(request.getServletPath().indexOf('=') + 1,
+						request.getServletPath().lastIndexOf('&'));
+			}
 
 			final String uri = request.getRequestURI();
 			if (uri.contains("page"))
