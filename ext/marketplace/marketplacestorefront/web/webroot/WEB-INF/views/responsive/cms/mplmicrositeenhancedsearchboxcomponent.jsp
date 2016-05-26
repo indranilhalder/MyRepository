@@ -11,7 +11,7 @@
 	
 		 var selectedItemText = $("#micrositeSearchCategory").find('option:selected').text();
 		 $("#micrositesearchBoxSpan").html(selectedItemText);
-		$('.select-view .select-list').hover(function(){
+		$('.select-view .microsite-search').hover(function(){
 			 $(this).find('ul').slideDown();
 		 });
 		
@@ -25,12 +25,12 @@
 		
 			
 			// Changes done for Dropdown change while clicking on category or brand value on 24-05-2016
-			$(document).on('click',".select-list .micrositeDropdown li",function(e) {
+			$(document).on('click',".microsite-search .micrositeDropdown li",function(e) {
 				$("#micrositeSearchCategory").val(this.id);				
-				$(".select-list .micrositeDropdown li").removeClass("selected");
+				$(".microsite-search .micrositeDropdown li").removeClass("selected");
 				$(this).addClass("selected");
 				$("#micrositesearchBoxSpan").html($(this).text());
-				$(this).parents('.select-list').find('ul').slideUp();
+				$(this).parents('.microsite-search').find('ul').slideUp();
 				$("#js-site-micrositesearch-input").focus(); 
 			});		
 			
@@ -176,7 +176,7 @@
 		
 			</select>
 
-			<div class="select-list">
+			<div class="select-list microsite-search">
 				<span class="selected selected-dropdownText micrositeSellerName" id="micrositesearchBoxSpan"></span>
 
 				<ul class="micrositeDropdown" label="All">
