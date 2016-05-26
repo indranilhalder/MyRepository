@@ -3259,7 +3259,8 @@ function checkSignInValidation(path){
 	}
 	else if(!emailPattern.test(emailId)){
 		$("#signinEmailIdDiv").show();
-		$("#signinEmailIdDiv").html("Please enter all mandatory fields");
+		//TISPRO-479 Change the text message
+		$("#signinEmailIdDiv").html("Please enter a valid email id");
 		validationResult=false;
 	}
 	else if(password==null || password=="" || password.length==0){
@@ -3316,7 +3317,7 @@ function checkSignUpValidation(path){
 		validationResult=false;	
 	}else if(!emailPattern.test(emailId)){
 		$("#signupEmailIdDiv").show();
-		$("#signupEmailIdDiv").html("Please enter a valid email ID");
+		$("#signupEmailIdDiv").html("Please enter a valid email id");
 		validationResult=false;	
 	}else{
 		$("#signupEmailIdDiv").hide();
