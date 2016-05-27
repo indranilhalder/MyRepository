@@ -1412,9 +1412,9 @@ $(document).ready(function(){
 		
 		if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') < 0) {
 			$("body").addClass('safariBrowser');
-			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+			/*if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 				$('header .content nav > ul > li:first-child + li').css('margin-left','25px');
-			}
+			}*/
 		}
 		var resize_sbb;
 		$(window).resize(function(){
@@ -1430,7 +1430,7 @@ $(document).ready(function(){
 			},100);
 		});
 		
-		$('header .content nav > ul > li').click(function(){
+		$('header .content nav > ul > li').on('touchend',function(){
 			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none' && $('body').hasClass('touchDevice')){
 				$('header .content nav > ul > li').children('ul').css("height","0px");
 				if($(this).children('ul').height() > 0) {
@@ -1442,12 +1442,12 @@ $(document).ready(function(){
 				
 		});
 
-		$('header .content nav > ul > li ul').click(function(e){
+		$('header .content nav > ul > li ul').on('touchend',function(e){
 			e.stopPropagation();
 		});
 
 		
-		$(document).click(function(e){
+		$(document).on('touchend',function(e){
 			e.stopPropagation();
 			if(!$(e.target).parents().is('nav') && $('body').hasClass('touchDevice') && $('header div.bottom .marketplace.linear-logo').css('display') == 'none') {
 				$('header .content nav > ul > li').children('ul').css("height","0px");
@@ -1458,10 +1458,10 @@ $(document).ready(function(){
 			}
 		});
 
-		$(document).on('click','.select-view .select-list',function(){
+		$(document).on('touchend','.select-view .select-list',function(){
 			if($('body').hasClass('touchDevice')){
 				$('.select-view .select-list').removeClass('touch_click');
-				if($(this).children('ul').height() > 1) {
+				if($(this).children('ul').height() > 2) {
 					$(this).removeClass('touch_click');
 				} else {
 					$(this).addClass('touch_click');
@@ -1470,8 +1470,12 @@ $(document).ready(function(){
 				
 		});
 
-		$(document).on('click','.select-view .select-list ul',function(e){
+		$(document).on('touchend','.select-view .select-list ul',function(e){
 			$('.select-view .select-list').removeClass('touch_click');
 			e.stopPropagation();
 		});
+		
+		$(document).on('touchend','.select-view .select-list ul li',function(e){
+			$(this).click();
+		});		
 });

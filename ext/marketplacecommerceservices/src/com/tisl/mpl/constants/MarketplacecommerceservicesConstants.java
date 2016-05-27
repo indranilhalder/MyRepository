@@ -64,7 +64,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NEW_PASSWORD = "newPassword";
 	public static final String PRICE_NOT_AVAILABLE = "Price not Available";
 	public static final String PWD = "pwd";
+
 	public static final String ZeroDeliveryCost = "0.0";
+
 
 	public static final String LIST_EMPTY = "List is Empty";
 
@@ -1502,6 +1504,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
 
+
 	//TISCR-410
 	public static final String ORDERSTAGEQUERY = "select {o.pk} from {OrderStatusCodeMaster as o} where {o.statusCode}=?orderEntryStatus";
 	public static final String ORDERENTRYSTATUS = "orderEntryStatus".intern();
@@ -1511,10 +1514,21 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//			.intern();
 
 
+
+
 	public static final String TYPE = "type";
 
 	public static final String DELIVERY_STARTTIME = "startTime".intern();
 	public static final String DELIVERY_ENDTIME = "endTime".intern();
+
+	//OMS FALLBACK Start
+	public static final String SINGLE_QUOTE = "\'";
+	public static final String FALLBACK_ORDER_HEADER_REPORT = "ORDER,USER,ORDER_DATE,TRANSACTION_IDs,ORDER STATUS".intern();
+	public static final String FALLBACK_REPORT_LOCATION = "oms.fallback.report.location".intern();
+	public static final String FALLBACK_REPORT_EXTENSION = "oms.fallback.report.extension".intern();
+	public static final String FALLBACK_REPORT_NAME = "OrderInQueueReport".intern();
+	//OMS FALLBACK End
+
 	public static final String CATEGORY_PATH = "{category-path}".intern();
 	public static final String CATEGORY_PATH_EMPTY = "/{category-path}".intern();
 
@@ -1523,6 +1537,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
 	public static final String EBS_SESSION_ID = "session_id";
 
+
+	
+	
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class

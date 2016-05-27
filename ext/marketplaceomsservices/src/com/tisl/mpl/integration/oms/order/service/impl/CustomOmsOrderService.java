@@ -7,6 +7,7 @@ import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandConf
 import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandFactory;
 import de.hybris.platform.integration.oms.order.data.OrderPlacementResult;
 import de.hybris.platform.integration.oms.order.service.impl.DefaultOmsOrderService;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.ticket.enums.CsTicketCategory;
@@ -19,7 +20,7 @@ import de.hybris.platform.util.localization.Localization;
 import java.io.StringWriter;
 import java.util.Date;
 
-import javax.ws.rs.core.Response;
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
@@ -29,10 +30,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.commons.client.RestCallException;
 import com.hybris.oms.api.order.OrderFacade;
+import com.hybris.oms.domain.exception.RestClientException;
 import com.hybris.oms.domain.order.Order;
 import com.hybris.oms.domain.order.UpdatedSinceList;
 import com.hybris.oms.domain.pickupinfo.PickupInfo;
 import com.hybris.oms.picupinfo.facade.PickupInfoFacade;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
@@ -54,6 +57,8 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	private MplCustomerWebService mplCustomerWebService;
 	@Autowired
 	private PickupInfoFacade pickupInfoRestClient;
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 
 
 	@Override
@@ -91,8 +96,20 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	{
 		OrderPlacementResult result = null;
 		Order order = null;
+		String httpErrorCode = MarketplacecommerceservicesConstants.EMPTY;
+
+		//Exceptions declared in properties file
+		boolean errorFlag = false;
+		String[] exceptions = null;
+
 		try
 		{
+			exceptions = getOmsException();//getting Fallback exceptions
+
+			LOG.info("Fallback Exceptions Are**::" + exceptions);
+
+			httpErrorCode = getConfigurationService().getConfiguration()
+					.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 			order = getOrderConverter().convert(orderModel);
 			//Order request xml and response xml changes made for Audit purpose
 			final String requestXml = getOrderAuditXml(order);
@@ -119,19 +136,41 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 			}
 			getModelService().save(orderModel);
 			result = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
-
 		}
-		catch (final RestCallException e)
+		catch (final RestClientException rce)
 		{
-			if ((e.getResponse() != null) && (Response.Status.SERVICE_UNAVAILABLE.equals(e.getResponse().getStatus())))
+			LOG.error("RestClientException occured while creating order", rce);
+			result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, rce);
+		}
+		catch (final ClientHandlerException cex)
+		{
+			LOG.error("ClientHandlerException occured while creating order", cex);
+			result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, cex);
+		}
+		catch (final RestCallException ex)
+		{
+			LOG.error("RestCallException occured while creating order", ex);
+
+			for (final String exception : exceptions)
 			{
-				result = new OrderPlacementResult(OrderPlacementResult.Status.FAILED, e);
+				if (ex.getMessage().contains(exception))
+				{
+					errorFlag = true;
+					break;
+				}
+			}
+			if ((ex.getResponse() != null && ex.getResponse().getStatus() != null && (httpErrorCode.contains(String.valueOf(ex
+					.getResponse().getStatus().getStatusCode()))))
+					|| errorFlag)
+			{
+				result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, ex);
 			}
 		}
 		catch (final Exception ex)
 		{
 			LOG.error("CreateOmsOrder >> Exception occured while placing order due to ", ex);
-			result = new OrderPlacementResult(OrderPlacementResult.Status.FAILED, ex);
+			LOG.error("***CreateOmsOrder >> Error Is***" + ex.getMessage());
+			result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, ex);
 		}
 		if (OrderPlacementResult.Status.SUCCESS.equals(result.getResult()))
 		{
@@ -142,6 +181,63 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 		return result;
 
 	}
+
+	//	@Override
+	//	public OrderPlacementResult createOmsOrder(final OrderModel orderModel)
+	//	{
+	//		OrderPlacementResult result = null;
+	//		Order order = null;
+	//		try
+	//		{
+	//			order = getOrderConverter().convert(orderModel);
+	//			//Order request xml and response xml changes made for Audit purpose
+	//			final String requestXml = getOrderAuditXml(order);
+	//			if (StringUtils.isNotEmpty(requestXml))
+	//			{
+	//				orderModel.setRequestXML(requestXml);
+	//			}
+	//			else
+	//			{
+	//				LOG.debug("createOmsOrder requestXml is null or empty ");
+	//			}
+	//			getModelService().save(orderModel);
+	//
+	//			final Order orderResponse = getOrderRestClient().createOrder(order);
+	//			final String responseXml = getOrderAuditXml(orderResponse);
+	//
+	//			if (StringUtils.isNotEmpty(responseXml))
+	//			{
+	//				orderModel.setResponseXML(responseXml);
+	//			}
+	//			else
+	//			{
+	//				LOG.debug("createOmsOrder responseXml is null or empty ");
+	//			}
+	//			getModelService().save(orderModel);
+	//			result = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
+	//
+	//		}
+	//		catch (final RestCallException e)
+	//		{
+	//			if ((e.getResponse() != null) && (Response.Status.SERVICE_UNAVAILABLE.equals(e.getResponse().getStatus())))
+	//			{
+	//				result = new OrderPlacementResult(OrderPlacementResult.Status.FAILED, e);
+	//			}
+	//		}
+	//		catch (final Exception ex)
+	//		{
+	//			LOG.error("CreateOmsOrder >> Exception occured while placing order due to ", ex);
+	//			result = new OrderPlacementResult(OrderPlacementResult.Status.FAILED, ex);
+	//		}
+	//		if (OrderPlacementResult.Status.SUCCESS.equals(result.getResult()))
+	//		{
+	//			orderModel.setOrderExportTime(new Date());
+	//			getModelService().save(orderModel);
+	//		}
+	//
+	//		return result;
+	//
+	//	}
 
 	@Override
 	public UpdatedSinceList<String> getUpdatedOrderIds(final Date updatedSince)
@@ -214,9 +310,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	/*
 	 * @Desc Used for generating xml
-	 *
+	 * 
 	 * @param order
-	 *
+	 * 
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)
@@ -364,6 +460,27 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 		}
 	}
 
+	private String[] getOmsException()
+	{
+		final String connectTimeoutException = getConfigurationService().getConfiguration().getString(
+				MarketplacecclientservicesConstants.OMS_FALLBACK_CONNECT_TIMEOUT_EXCEP);
+		final String readTimeoutException = getConfigurationService().getConfiguration().getString(
+				MarketplacecclientservicesConstants.OMS_FALLBACK_READ_TIMEOUT_EXCEP);
+
+		final StringBuffer stb = new StringBuffer(300);
+
+		if (StringUtils.isNotEmpty(connectTimeoutException))
+		{
+			stb.append(connectTimeoutException);
+		}
+		if (StringUtils.isNotEmpty(readTimeoutException))
+		{
+			stb.append(',');
+			stb.append(readTimeoutException);
+		}
+		return stb.toString().split(",");
+	}
+
 	/**
 	 * @return the mplCustomerWebService
 	 */
@@ -379,5 +496,22 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	public void setMplCustomerWebService(final MplCustomerWebService mplCustomerWebService)
 	{
 		this.mplCustomerWebService = mplCustomerWebService;
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
 	}
 }

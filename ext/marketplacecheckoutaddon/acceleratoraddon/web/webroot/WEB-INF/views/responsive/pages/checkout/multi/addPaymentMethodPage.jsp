@@ -388,7 +388,7 @@
 										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
 									</div>
 								</button>
-								<p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p>
+								<%-- <p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
 									<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 							</div>
 													

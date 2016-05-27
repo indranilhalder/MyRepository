@@ -143,8 +143,16 @@ Check if user has logged into the site
 function checkUser() {
 	  user_type = getCookie("mpl-userType");
 	  if(user_type.indexOf("facebook") === 0 || user_type.indexOf("FACEBOOK_LOGIN") === 0) {
-	    uid = fbID;
-
+	  //  uid = fbID;
+		//TISPRD-2183 FIX
+		  window.fbAsyncInit = function() {
+				FB.getLoginStatus(function(response) {
+				if(response.status === "connected") {
+					uid = FB.getUserID();
+					}
+				});
+			};
+			 //TISPRD-2183 FIX end
 	    /*New login, use current credentials*/
 	    if(getCookie("IAUSERTYPE") !== 'REGISTERED' || getCookie("IAUSERTYPE") !== 'site_user') {
 	        /*New elevated id we're not familiar with, get a new session id before continuing */          
@@ -166,7 +174,17 @@ function checkUser() {
 	        } else {
 	          callEventApi('login', null);
 	        }
-	        callFBApi(uid, FB.getAccessToken(), ssid);
+	        //callFBApi(uid, FB.getAccessToken(), ssid);
+	        //TISPRD-2183 FIX
+	        window.fbAsyncInit = function() {
+				FB.getLoginStatus(function(response) {
+				if(response.status === "connected") {
+					uid = FB.getUserID();
+					callFBApi(uid, FB.getAccessToken(), ssid);
+					}
+				});
+			};
+			 //TISPRD-2183 FIX end
 	      }
 	  } else {
 	    if(getCookie("IAUSERTYPE").indexOf("facebook") === 0 || getCookie("IAUSERTYPE").indexOf("FACEBOOK_LOGIN") === 0) { 
