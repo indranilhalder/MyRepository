@@ -1474,6 +1474,8 @@ $(document).ready(function(){
 			$('.select-view .select-list').removeClass('touch_click');
 			e.stopPropagation();
 		});
+		//TISPRO-480
+		$('.sign-in-dropdown').mouseleave(function(){$('.sign-in-dropdown input').blur();});
 		
 		$(document).on('touchend','.select-view .select-list ul li',function(e){
 			$(this).click();
