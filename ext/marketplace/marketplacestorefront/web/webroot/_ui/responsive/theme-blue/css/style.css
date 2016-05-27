@@ -26620,7 +26620,8 @@ ul.links .product .Best-Sellers {
 	.cart.wrapper .product-block li.item > ul > li.qty select{
 	padding-left:2px;
 	padding-right: 10px;
-	}
+	} }
+	@media(min-width:651px){
 	.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_month,.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_year{
 	padding-left:5px;
 	}
@@ -39646,7 +39647,6 @@ transform-origin:0 0;
 }
 .top.checkout-top .content ul li {
 	font-weight: 600 !important;
-	font-family: 'Avenir Next' !important;
 }
 .panel-default {
 	border-color: #DDD;
