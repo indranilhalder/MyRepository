@@ -40,29 +40,28 @@ public class ResponsivePaymentCheckoutStepValidator extends AbstractCheckoutStep
 
 		//commented getMplCustomAddressFacade().hasNoDeliveryAddress() if condition block as part of Release 2.1 we have
 		//one more delivery mode as click and collect which does not require delivery Address.
-		/*if (getMplCustomAddressFacade().hasNoDeliveryAddress())
-		{
-			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
-					"checkout.multi.deliveryAddress.notprovided");
-			return ValidationResults.REDIRECT_TO_DELIVERY_METHOD;
-		}*/
+		/*
+		 * if (getMplCustomAddressFacade().hasNoDeliveryAddress()) { GlobalMessages.addFlashMessage(redirectAttributes,
+		 * GlobalMessages.INFO_MESSAGES_HOLDER, "checkout.multi.deliveryAddress.notprovided"); return
+		 * ValidationResults.REDIRECT_TO_DELIVERY_METHOD; }
+		 */
 
 		if (getMplCustomAddressFacade().hasNoDeliveryMode())
 		{
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
 					"checkout.multi.deliveryMethod.notprovided");
-			return ValidationResults.REDIRECT_TO_DELIVERY_METHOD;
+			return ValidationResults.REDIRECT_TO_CART;
 		}
 
 		// Commented to refer marketplacefacade
 		/*
 		 * if (!getCheckoutFlowFacade().hasValidCart()) { LOG.info("Missing, empty or unsupported cart"); return
 		 * ValidationResults.REDIRECT_TO_CART; }
-		 * 
+		 *
 		 * if (getCheckoutFlowFacade().hasNoDeliveryAddress()) { GlobalMessages.addFlashMessage(redirectAttributes,
 		 * GlobalMessages.INFO_MESSAGES_HOLDER, "checkout.multi.deliveryAddress.notprovided"); return
 		 * ValidationResults.REDIRECT_TO_DELIVERY_ADDRESS; }
-		 * 
+		 *
 		 * if (getCheckoutFlowFacade().hasNoDeliveryMode()) { GlobalMessages.addFlashMessage(redirectAttributes,
 		 * GlobalMessages.INFO_MESSAGES_HOLDER, "checkout.multi.deliveryMethod.notprovided"); return
 		 * ValidationResults.REDIRECT_TO_DELIVERY_METHOD; }
