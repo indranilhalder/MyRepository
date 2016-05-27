@@ -103,6 +103,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 			final List<String> product = new ArrayList<String>();
 			List<String> stagedProductList = new ArrayList<String>();
 			final List<String> promoproductList = new ArrayList<String>();
+			final List<PriceRowModel> priceList = new ArrayList<PriceRowModel>();
 
 			if (CollectionUtils.isNotEmpty(products))
 			{
@@ -181,7 +182,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 							price.setPromotionValue(value);
 							price.setPromotionIdentifier(promoCode);
 						}
-						modelService.save(price);
+						priceList.add(price);
 					}
 					else if (!updateSpecialPrice && isEligibletoDisable)
 					{
@@ -193,9 +194,14 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 
 						LOG.debug("Saving Price Row ");
-						modelService.save(price);
+						priceList.add(price);
 					}
 
+				}
+
+				if (CollectionUtils.isNotEmpty(priceList))
+				{
+					modelService.saveAll(priceList);
 				}
 			}
 
@@ -334,6 +340,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 			final List<String> product = new ArrayList<String>();
 			List<String> stagedProductList = new ArrayList<String>();
 			final List<String> promoproductList = new ArrayList<String>();
+			final List<PriceRowModel> priceList = new ArrayList<PriceRowModel>();
 
 			if (CollectionUtils.isNotEmpty(products))
 			{
@@ -394,7 +401,12 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						price.setPromotionValue(null);
 						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 					}
-					modelService.save(price);
+					priceList.add(price);
+				}
+
+				if (CollectionUtils.isNotEmpty(priceList))
+				{
+					modelService.save(priceList);
 				}
 
 			}

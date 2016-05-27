@@ -440,17 +440,17 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					entry.setCurrDelCharge(deliveryCost);
 					LOG.debug(" >>> Delivery cost for ussid  " + sellerArticleSKU + " of fulfilment type " + fulfillmentType + " is "
 							+ deliveryCost);
-					
-					//if delivery mode is changed from  c-n-c to other and if it contains POS then we need to remove the POS from that entry 
-					 if (null != entry.getMplDeliveryMode() && null != entry.getMplDeliveryMode().getDeliveryMode()
-					   && !entry.getMplDeliveryMode().getDeliveryMode().getCode().equals(MarketplaceFacadesConstants.C_C)
-					   && null != entry.getDeliveryPointOfService())
-					 {
-						 entry.setDeliveryPointOfService(null);
-					 }
-					 
-					 getModelService().save(entry);
-					 break;	
+
+					//if delivery mode is changed from  c-n-c to other and if it contains POS then we need to remove the POS from that entry
+					if (null != entry.getMplDeliveryMode() && null != entry.getMplDeliveryMode().getDeliveryMode()
+							&& !entry.getMplDeliveryMode().getDeliveryMode().getCode().equals(MarketplaceFacadesConstants.C_C)
+							&& null != entry.getDeliveryPointOfService())
+					{
+						entry.setDeliveryPointOfService(null);
+					}
+
+					getModelService().save(entry);
+					break;
 				}
 			}
 		}
@@ -549,18 +549,16 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	public boolean hasNoDeliveryMode()
 	{
 		final CartModel cartModel = cartService.getSessionCart();
-		boolean deliveryModeNotSelected = false;
+		//boolean deliveryModeNotSelected = false;
 		if (cartModel != null && cartModel.getEntries() != null)
 		{
 			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 			{
 				if (cartEntryModel != null && cartEntryModel.getMplDeliveryMode() == null)
 				{
-					deliveryModeNotSelected = true;
-					break;
+					return true;
 				}
 			}
-			return hasShippingItems() && deliveryModeNotSelected;
 		}
 		return false;
 	}
