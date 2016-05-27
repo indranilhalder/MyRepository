@@ -1801,7 +1801,7 @@ h2 {
       margin-left: -1px;
       margin-right: -1px;
       width: 155px;
-      z-index: 2;
+      z-index: 3;
       -webkit-transition: border 0.3s;
       -moz-transition: border 0.3s;
       transition: border 0.3s; }
@@ -2167,8 +2167,8 @@ h2 {
         font-size: 11px;
         font-weight: 600;
         position: absolute;
-        top: 25px;
-        right: 25px;
+        top: 10px;
+        right: 15px;
         cursor: pointer; }
         header .banner .content .close:before {
           font-family: 'FontAwesome';
@@ -19262,7 +19262,7 @@ header > .content .top {
 }
 body.template-pages-layout-micrositePage1 header .content .compact-toggle {
   opacity: 1;
-  display: none;
+  display: none !important;
 }
 header .content .compact-toggle.open:before{
 -webkit-transform: rotate(180deg);
@@ -19519,7 +19519,7 @@ display:none;
 .select-list ul li{
 	font-size:13px;
 }
-.trending .select-list ul li{
+.select-list ul#ia_category_select li{
 	font-size:16px;
 }
 
@@ -37673,7 +37673,7 @@ color:#fff; }
   color:#fff;}
 /*mini transient bag css changes starts*/
 header .content .right>ul>li.transient-mini-bag {
-	z-index: 5;
+	z-index: 500;
 }
 header .content .right>ul>li.transient-mini-bag .mini-transient-bag {
 	position: absolute;
