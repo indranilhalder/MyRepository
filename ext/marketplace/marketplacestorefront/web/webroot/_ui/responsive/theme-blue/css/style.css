@@ -22353,9 +22353,11 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 	font-size:24px;
 	font-weight:600;
 	  padding-top: 4px;
+	  height: 26px;
 	}
 	.a-z-li{
-	padding-left:30px;}
+	padding-left:30px;
+	height: 26px;}
 	
 	li.short.images .range{
 	font-size: 12px; 
@@ -30441,7 +30443,7 @@ line-height: normal;
    #movedToWishlist_Cart {
  	position: absolute;
     line-height: 14px;
-    bottom: -3px;
+    bottom: -10px;
     width: 180px;
     left: -10px;
     z-index: 10;
