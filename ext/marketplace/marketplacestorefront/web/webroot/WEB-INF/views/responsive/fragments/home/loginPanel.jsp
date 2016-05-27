@@ -124,7 +124,8 @@
 		$("#errorHolder").text("Please enter all mandatory fields");
 		return false;
 		}else if(!emailPattern.test($("input[name=j_username]").val())){
-			$("#errorHolder").text("Please enter all mandatory fields");
+			//TISPRO-479 Change the text message
+			$("#errorHolder").text("Please enter a valid email id");
 			return false;
 			}
 			else if($("input[name=j_password]").val() == ""){
