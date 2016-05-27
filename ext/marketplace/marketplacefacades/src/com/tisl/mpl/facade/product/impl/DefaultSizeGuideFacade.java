@@ -151,10 +151,9 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 			}
 			if (null != productModel)
 			{
-				productData = productFacade.getProductForOptions(productModel,
-						Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-								ProductOption.CATEGORIES, ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL,
-								ProductOption.CLASSIFICATION));
+				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
+						ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+						ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
 			}
 
 			Map<String, List<SizeGuideData>> sizeGuideDatas = null;
@@ -180,9 +179,35 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 					for (final SizeGuideData sizeGuideValue : sizeDataValues)
 					{
 						sizeGuideWsDataValue = new SizeGuideWsDataValue();
-						sizeGuideWsDataValue.setDimensionValue(sizeGuideValue.getDimensionValue());
-						sizeGuideWsDataValue.setDimensionUnit(sizeGuideValue.getDimensionUnit());
-						sizeGuideWsDataValue.setDimensionSize(sizeGuideValue.getDimensionSize());
+						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionValue()))
+						{
+							sizeGuideWsDataValue.setDimensionValue(sizeGuideValue.getDimensionValue());
+						}
+						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionUnit()))
+						{
+							sizeGuideWsDataValue.setDimensionUnit(sizeGuideValue.getDimensionUnit());
+						}
+						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionSize()))
+						{
+							sizeGuideWsDataValue.setDimensionSize(sizeGuideValue.getDimensionSize());
+						}
+						if (StringUtils.isNotEmpty(sizeGuideValue.getAge()))
+						{
+							sizeGuideWsDataValue.setAge(sizeGuideValue.getAge());
+						}
+						if (StringUtils.isNotEmpty(sizeGuideValue.getEuroSize()))
+						{
+							sizeGuideWsDataValue.setEuroSize(sizeGuideValue.getEuroSize());
+						}
+						if (StringUtils.isNotEmpty(sizeGuideValue.getUsSize()))
+						{
+							sizeGuideWsDataValue.setUsSize(sizeGuideValue.getUsSize());
+						}
+						if (productData.getRootCategory().equalsIgnoreCase(FOOTWEAR)
+								&& StringUtils.isNotEmpty(sizeGuideValue.getDimension()))
+						{
+							sizeGuideWsDataValue.setFootlength(sizeGuideValue.getDimension());
+						}
 						//single image is needed to show per product
 						ImageURL = sizeGuideValue.getImageURL();
 						sizeGuideDataValueList.add(sizeGuideWsDataValue);
