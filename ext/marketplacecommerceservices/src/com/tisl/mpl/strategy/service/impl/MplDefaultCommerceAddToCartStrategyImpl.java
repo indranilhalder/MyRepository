@@ -57,11 +57,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Adding product to cart
-	 *
+	 * 
 	 * @param parameter
-	 *
+	 * 
 	 * @return CommerceCartModification
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	@Override
@@ -209,10 +209,12 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 			{
 				if (StringUtils.isNotEmpty(cartEntryModel.getSelectedUSSID())
 						&& StringUtils.isNotEmpty(sellerModel.getSellerArticleSKU())
+						&& cartEntryModel.getSelectedUSSID().equals(sellerModel.getSellerArticleSKU())
 						&& StringUtils.isNotEmpty(sellerModel.getSellerName()))
 				{
 
 					cartEntryModel.setSellerInfo(sellerModel.getSellerName());
+
 					getModelService().save(cartEntryModel);
 					break;
 
@@ -225,19 +227,19 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Fetching eligible quantity for a ussid which can be added in cart
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @param productModel
-	 *
+	 * 
 	 * @param quantityToAdd
-	 *
+	 * 
 	 * @param pointOfServiceModel
-	 *
+	 * 
 	 * @param ussid
-	 *
+	 * 
 	 * @return long
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAllowedCartAdjustmentForProduct(final CartModel cartModel, final ProductModel productModel,
@@ -266,11 +268,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Fetching available stock information for a ussid from Stock Level
-	 *
+	 * 
 	 * @param ussid
-	 *
+	 * 
 	 * @return long
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAvailableStockLevel(final String ussid) throws CommerceCartModificationException
