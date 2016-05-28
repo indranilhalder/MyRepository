@@ -103,7 +103,7 @@
 
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
 	<template:styleSheets/>
-	<script async="async" type="text/javascript"
+	<script type="text/javascript"
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 	<%-- Inject any additional CSS required by the page --%>
 	<jsp:invoke fragment="pageCss"/>
