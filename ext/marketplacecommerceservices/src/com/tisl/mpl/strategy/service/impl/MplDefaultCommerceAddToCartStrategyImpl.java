@@ -207,13 +207,14 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 		{
 			for (final SellerInformationModel sellerModel : productModel.getSellerInformationRelator())
 			{
-				if (!cartEntryModel.getSelectedUSSID().isEmpty() && !sellerModel.getSellerArticleSKU().isEmpty())
+				if (StringUtils.isNotEmpty(cartEntryModel.getSelectedUSSID())
+						&& StringUtils.isNotEmpty(sellerModel.getSellerArticleSKU())
+						&& StringUtils.isNotEmpty(sellerModel.getSellerName()))
 				{
-					if (StringUtils.isNotEmpty(sellerModel.getSellerName()))
-					{
-						cartEntryModel.setSellerInfo(sellerModel.getSellerName());
-						getModelService().save(cartEntryModel);
-					}
+
+					cartEntryModel.setSellerInfo(sellerModel.getSellerName());
+					getModelService().save(cartEntryModel);
+					break;
 
 
 				}
