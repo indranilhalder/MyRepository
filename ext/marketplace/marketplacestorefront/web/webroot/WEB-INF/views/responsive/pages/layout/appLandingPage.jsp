@@ -91,7 +91,7 @@
 					</ol> -->
 					<!-- Wrapper for slides -->
 					<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference" id="appLanding_carousel">
-						<div class="item">
+						<!-- <div class="item">
 							<img src="${commonResourcePath}/images/mob-slider1.png" class="r2-marginTop">
 						</div>
 
@@ -101,21 +101,31 @@
 
 						<div class="item">
 							<img src="${commonResourcePath}/images/mob-slider3.png" class="r2-marginTop">
+						</div> -->
+						
+						<div class="item">
+							<img src="${commonResourcePath}/images/mob-slider1.1.png" class="r2-marginTop">
 						</div>
 
+						<div class="item">
+							<img src="${commonResourcePath}/images/mob-slider2.1.png" class="r2-marginTop">
+						</div>
+
+						<div class="item">
+							<img src="${commonResourcePath}/images/mob-slider3.1.png" class="r2-marginTop">
+						</div>
 					</div>
 
 
 					<div class="r2-whiteText row">
-						<h2 class="r2-paddingTop col-sm-12 col-xs-12 ">Browse</h2>
-						<p class="col-sm-12 col-xs-12 ">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-							Aenean commodo ligula eget dolor. Aenean massa.</p>
+						<h2 class="r2-paddingTop col-sm-12 col-xs-12 ">Store Locator</h2>
+						<p class="col-sm-12 col-xs-12 ">PIQ up, return or exchange stuff at a store near you with the help of
+							our interactive map.</p>
 					</div>
 					<div class="r2-whiteText row">
-						<h2 class="r2-paddingTop col-sm-12 col-xs-12 ">Shop</h2>
-						<p class="col-sm-12 col-xs-12 ">
-								Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-									Aenean commodo ligula eget dolor. Aenean massa.</p>
+						<h2 class="r2-paddingTop col-sm-12 col-xs-12 ">Image Search</h2>
+						<p class="col-sm-12 col-xs-12 ">Click or pick a picture and find similar products from our
+						exclusive, handpicked collections.</p>
 					</div>
 					<div class="r2-whiteText row">
 						<h2 class="r2-paddingTop col-sm-12 col-xs-12 ">#QueMag</h2>
