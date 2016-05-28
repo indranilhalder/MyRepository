@@ -24,7 +24,7 @@
 <header>	
 	<!-- For Gigya Social Login -->
 	<c:if test="${isGigyaEnabled=='Y'}">
-	<SCRIPT async="async" type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}">
+	<SCRIPT type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}">
 	
 	</SCRIPT>
 	
