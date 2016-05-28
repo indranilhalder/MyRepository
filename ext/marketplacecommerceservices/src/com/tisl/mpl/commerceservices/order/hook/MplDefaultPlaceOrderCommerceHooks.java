@@ -65,7 +65,6 @@ import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
-import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplFraudModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
@@ -116,8 +115,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private static final String middleDigits = "000";
 	private static final String middlecharacters = "-";
 
-	@Autowired
-	private BuyBoxService buyBoxService;
+
 
 	@Autowired
 	private OrderStatusSpecifier orderStatusSpecifier;
@@ -1500,19 +1498,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	/**
 	 * @return the buyBoxService
 	 */
-	public BuyBoxService getBuyBoxService()
-	{
-		return buyBoxService;
-	}
 
-	/**
-	 * @param buyBoxService
-	 *           the buyBoxService to set
-	 */
-	public void setBuyBoxService(final BuyBoxService buyBoxService)
-	{
-		this.buyBoxService = buyBoxService;
-	}
 
 	/**
 	 * @return the orderStatusSpecifier
