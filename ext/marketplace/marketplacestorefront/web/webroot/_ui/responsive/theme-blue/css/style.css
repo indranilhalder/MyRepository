@@ -22353,9 +22353,11 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 	font-size:24px;
 	font-weight:600;
 	  padding-top: 4px;
+	  height: 26px;
 	}
 	.a-z-li{
-	padding-left:30px;}
+	padding-left:30px;
+	height: 26px;}
 	
 	li.short.images .range{
 	font-size: 12px; 
@@ -26618,7 +26620,8 @@ ul.links .product .Best-Sellers {
 	.cart.wrapper .product-block li.item > ul > li.qty select{
 	padding-left:2px;
 	padding-right: 10px;
-	}
+	} }
+	@media(min-width:651px){
 	.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_month,.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_year{
 	padding-left:5px;
 	}
@@ -30441,7 +30444,7 @@ line-height: normal;
    #movedToWishlist_Cart {
  	position: absolute;
     line-height: 14px;
-    bottom: -3px;
+    bottom: -10px;
     width: 180px;
     left: -10px;
     z-index: 10;
@@ -39644,7 +39647,6 @@ transform-origin:0 0;
 }
 .top.checkout-top .content ul li {
 	font-weight: 600 !important;
-	font-family: 'Avenir Next' !important;
 }
 .panel-default {
 	border-color: #DDD;

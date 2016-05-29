@@ -1658,13 +1658,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		CartData cartData = new CartData();
 		String concatAddress = MarketplacecommerceservicesConstants.EMPTY;
 
-		if (null != getMplCustomAddressFacade().getCheckoutCart())
-		{
-			cartData = getMplCustomAddressFacade().getCheckoutCart();
-		}
-		//Getting the fields from delivery address
 		try
 		{
+			if (null != getMplCustomAddressFacade().getCheckoutCart())
+			{
+				cartData = getMplCustomAddressFacade().getCheckoutCart();
+			}
+			//Getting the fields from delivery address
+
 			if (null != cartData && cartData.getDeliveryAddress() != null)
 			{
 				final String firstName = cartData.getDeliveryAddress().getFirstName();

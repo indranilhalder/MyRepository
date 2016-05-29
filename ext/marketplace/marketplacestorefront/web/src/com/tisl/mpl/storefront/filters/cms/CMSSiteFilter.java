@@ -74,6 +74,7 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 	protected static final int MISSING_CMS_SITE_ERROR_STATUS = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 	protected static final String MISSING_CMS_SITE_ERROR_MESSAGE = "Cannot find CMSSite associated with current URL";
 	protected static final String INCORRECT_CMS_SITE_CHANNEL_ERROR_MESSAGE = "Matched CMSSite for current URL has unsupported channel";
+	protected static final String LOCATION = "Location";
 
 	private CMSSiteService cmsSiteService;
 	private SessionService sessionService;
@@ -167,8 +168,10 @@ public class CMSSiteFilter extends OncePerRequestFilter implements CMSFilter
 		}
 		//TISPRD-1876
 		requestUrl = urlBuilder(httpRequest, requestUrl);
-
-		httpResponse.sendRedirect(requestUrl);
+		//For permanent 301 redirection
+		httpResponse.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+		httpResponse.setHeader(LOCATION, requestUrl);
+		//httpResponse.sendRedirect(requestUrl);
 	}
 
 
