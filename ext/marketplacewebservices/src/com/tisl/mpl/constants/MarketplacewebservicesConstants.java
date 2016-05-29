@@ -512,6 +512,5 @@ public class MarketplacewebservicesConstants
 
 	public static final String DROPDOWN_BRAND = "MBH".intern();
 	public static final String DROPDOWN_CATEGORY = "MSH".intern();
-	public static final String DROPDOWN_MICROSITE_BRAND = "brand-".intern();
-	public static final String DROPDOWN_MICROSITE_CATEGORY = "category-".intern();
+
 }
