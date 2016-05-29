@@ -2313,10 +2313,21 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							}
 							else
 							{
+								LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" + cartId);
 								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 							}
 						}
 					}
+					else
+					{
+						LOG.debug("Inventory reservationData for Mobile from OMS is empty###### =" + cartId);
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
+					}
+				}
+				else
+				{
+					LOG.debug("InventoryReservListResponse for mobile is null ##### =" + cartId);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 				}
 			}
 		}
