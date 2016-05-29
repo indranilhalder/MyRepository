@@ -242,12 +242,12 @@ function getBrandsYouLoveAjaxCall() {
                     if (!v.showByDefault) {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item' id='" +
-                            v.compId + "'><img class='lazyOwl' data-src='" + v.brandLogoUrl +
+                            v.compId + "'><img src='" + v.brandLogoUrl +
                             "'></img></div>";
                     } else {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item active' id='" +
-                            v.compId + "'><img class='lazyOwl' data-src='" + v.brandLogoUrl +
+                            v.compId + "'><img src='" + v.brandLogoUrl +
                             "'></img></div>";
                         defaultComponentId = v.compId;
                     }
@@ -274,7 +274,6 @@ function getBrandsYouLoveAjaxCall() {
                     rewindNav: false,
                     mouseDrag: false,
                     touchDrag: false,
-                    lazyLoad: true
                 });
                 var index = $(
                     ".home-brands-you-love-carousel-brands.active"
