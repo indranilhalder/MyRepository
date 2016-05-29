@@ -509,4 +509,9 @@ public class MarketplacewebservicesConstants
 	public static final String GOOGLE_LOGIN = "GOOGLE_LOGIN".intern();
 	public static final String KNOW_MORE_LINGERIE1 = "know.more.second.lingerie1".intern();
 	public static final String KNOW_MORE_LINGERIE2 = "know.more.second.lingerie2".intern();
+
+	public static final String DROPDOWN_BRAND = "MBH".intern();
+	public static final String DROPDOWN_CATEGORY = "MSH".intern();
+	public static final String DROPDOWN_MICROSITE_BRAND = "brand-".intern();
+	public static final String DROPDOWN_MICROSITE_CATEGORY = "category-".intern();
 }
