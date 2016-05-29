@@ -5825,6 +5825,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 									final CategoryData oData = new CategoryData();
 									oData.setCode(catModel.getCode());
 									oData.setName(catModel.getName());
+									if (null != catModel.getThumbnail())
+									{
+										oData.setImage(catModel.getThumbnail().getURL());
+									}
 									categoryDataMap.put(catModel.getCode(), oData);
 								}
 							}

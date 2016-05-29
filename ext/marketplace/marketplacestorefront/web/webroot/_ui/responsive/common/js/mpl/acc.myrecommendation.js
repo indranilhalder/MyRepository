@@ -131,6 +131,15 @@ $("document").ready(function(){
     				$("fieldset.brands").addClass("brands active");
     				$.each(data , function( key, value ) {
     					index++;
+    					var brandImage="";
+    					var brandImageHover="";
+	        			 if (null!=value.image){
+	        				 brandImage="<img src='"+value.image+"'>";
+	        				 brandImageHover="<img class='hover-image' src='"+value.image+"'>";
+	        			 }else{
+	        				 brandImage= "<img src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
+	        				 brandImageHover = "<img class='hover-image' src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
+	        			 }
     					if($.inArray(key,prevSelectedBrands)!= -1){
     						htmlData = htmlData+'<input type="checkbox" class="allBrands" checked="checked" name="brand" '+'id="question-2-'
     						+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
@@ -139,8 +148,8 @@ $("document").ready(function(){
     					}else{
     						htmlData = htmlData+'<input type="checkbox" class="allBrands" name="brand" '+'id="question-2-'
     						+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
-    						+'<img src="'+ACC.config.commonResourcePath+'/images/logob-bNuon.png">' +
-    						'<img class="hover-image" src="'+ACC.config.commonResourcePath+'/images/logou-uNuon.png">'+"<span>"+value.name+"</span>"+'</label>';
+    						+brandImage +
+    						brandImageHover +"<span>"+value.name+"</span>"+'</label>';
     					}
     				});
     				$("#brandContainer").html(htmlData);
