@@ -58,7 +58,7 @@ $("div.departmenthover").on("mouseover touchend", function() {
                 if (window.localStorage) {
                     $.cookie("dept-list", "true", {
                         expires: 1,
-                        path: "/store"
+                        path: "/"
 
                     });
                     window.localStorage.setItem(
@@ -114,7 +114,7 @@ $(".A-ZBrands").on("mouseover touchend", function(e) {
                     if (window.localStorage) {
                         $.cookie("dept-list", "true", {
                             expires: 1,
-                            path: "/store"
+                            path: "/"
 
                         });
                         window.localStorage.setItem(
@@ -1088,7 +1088,7 @@ $(window).on('resize', function() {
 			if (window.localStorage) {
                 $.cookie("enhanced-search-list", "true", {
                     expires: 1,
-                    path: "/store"
+                    path: "/"
 
                 });
                 window.localStorage.setItem(

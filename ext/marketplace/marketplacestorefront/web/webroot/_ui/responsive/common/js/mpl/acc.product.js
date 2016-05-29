@@ -165,6 +165,8 @@ ACC.product = {
 			event.preventDefault();
 			return false;
 		});
+		
+		/*
 		//change
 		$(document).ready(function(){
 			$('form[id^="addToCartForm"]').each(function() {
@@ -198,7 +200,7 @@ ACC.product = {
 	    		  }
 	    		});
 	 			});
-			});
+			}); */
 
 		 $(document).on('click','.serp_add_to_cart_form .js-add-to-cart',function(event){
 				if(!$(this).hasClass("disabled")) {

@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -606,11 +607,32 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			//TISCR-421
 			String customerPhone = MarketplacecommerceservicesConstants.EMPTYSTRING;
-			if (null != customer.getDefaultShipmentAddress()
-					&& StringUtils.isNotEmpty(customer.getDefaultShipmentAddress().getCellphone()))
+			//Code fix to send phone number to EBS
+			final AddressModel deliveryAddress = cart.getDeliveryAddress();
+			final AddressModel defaultAddress = customer.getDefaultShipmentAddress();
+			if (null != deliveryAddress)
 			{
-				customerPhone = customer.getDefaultShipmentAddress().getCellphone();
+				if (StringUtils.isNotEmpty(deliveryAddress.getPhone1()))
+				{
+					customerPhone = deliveryAddress.getPhone1();
+				}
+				else if (StringUtils.isNotEmpty(deliveryAddress.getPhone2()))
+				{
+					customerPhone = deliveryAddress.getPhone2();
+				}
 			}
+			else if (null != defaultAddress)
+			{
+				if (StringUtils.isNotEmpty(defaultAddress.getPhone1()))
+				{
+					customerPhone = defaultAddress.getPhone1();
+				}
+				else if (StringUtils.isNotEmpty(defaultAddress.getPhone2()))
+				{
+					customerPhone = defaultAddress.getPhone2();
+				}
+			}
+			//Code fix ends
 
 			final String customerEmail = customer.getOriginalUid();
 			//			String juspayOrderStatus = "";
@@ -697,7 +719,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 	}
 
-
 	/**
 	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
 	 *
@@ -756,22 +777,24 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				.withMerchantId(
 						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
-		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-		final CartModel cart = getCartService().getSessionCart();
-		String orderStatus = null;
-		boolean updAuditErrStatus = false;
-
-		//creating OrderStatusRequest
-		final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
-
-		LOG.info(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID).toString());
-		orderStatusRequest.withOrderId(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID)
-				.toString());
-
-		//creating OrderStatusResponse
-		GetOrderStatusResponse orderStatusResponse = new GetOrderStatusResponse();
 		try
 		{
+			final Map<String, Double> paymentMode = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.PAYMENTMODE);
+			final CartModel cart = getCartService().getSessionCart();
+			String orderStatus = null;
+			boolean updAuditErrStatus = false;
+
+			//creating OrderStatusRequest
+			final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
+
+			LOG.info(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID).toString());
+			orderStatusRequest.withOrderId(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID)
+					.toString());
+
+			//creating OrderStatusResponse
+			GetOrderStatusResponse orderStatusResponse = new GetOrderStatusResponse();
+
 			//getting the response by calling get Order Status service
 			orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
 			if (null != orderStatusResponse)
@@ -801,7 +824,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Failed to save order status in payment transaction with error: " + e);
+			LOG.error("Failed to save order status in payment transaction with error: ", e);
 			throw new EtailNonBusinessExceptions(e);
 		}
 
@@ -1402,11 +1425,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
