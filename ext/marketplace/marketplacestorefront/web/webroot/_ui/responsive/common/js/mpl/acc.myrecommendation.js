@@ -31,6 +31,13 @@ $("document").ready(function(){
     				        		$("fieldset.products").addClass("products active");
     				        		 $.each(data , function( key, value ) {
     				        			 index++;
+    				        			 var catImage="";
+    				        			 if (null!=value.image){
+    				        				 catImage="<img src='"+value.image+"'>";
+    				        			 }else{
+    				        				 catImage= "<img src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
+    				        			 }
+    				        			 
     				        			if($.inArray(key,prevSelectedCats)!= -1){
     				        				htmlData=htmlData+"<input class='category-selection' data-l1='"+value.name+"' checked='checked' type='checkbox' name='categoryCode'"+"id='question-1-"
        				                     +index
@@ -50,8 +57,7 @@ $("document").ready(function(){
        				                     +"<label for='question-1-"
        				                     +index
        				                     +"'>"
-       				                     +"<img "
-       				                     +"src='"+ACC.config.commonResourcePath+"/images/qRectangle_3_copy_9.jpeg'>"
+       				                     +catImage
        				                     +"<span>"+value.name+"</span>"
        				                     +"</label>";
     				        			} 
