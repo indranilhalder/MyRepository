@@ -25,15 +25,17 @@ Disallow: <c:url value="*selectedsize=*"/>
 Disallow: <c:url value="*/quickView"/>
 Disallow: <c:url value="*/quickview"/>
 Disallow: <c:url value="*/page-1"/>
+Disallow: <c:url value="/p-sizeGuide"/>
+Disallow: <c:url value="*msdclick=*"/>
 
-<br>
+
 
 <%-- Request-rate: 1/10              # maximum rate is one page every 10 seconds
 Crawl-delay: 10                 # 10 seconds between page requests
 Visit-time: 0400-0845           # only visit between 04:00 and 08:45 UTC
 
 # Allow search crawlers to discover the sitemap --%>
-Sitemap: <c:url value="${baseURL}/sitemap.xml" />
+Sitemap: <c:url value="${baseURL}/que/Sitemap_Cliq.xml" />
 Sitemap: <c:url value="${baseURL}/que/sitemap_index.xml" />
 
 
