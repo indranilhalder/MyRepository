@@ -255,7 +255,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									imageUrl = sb.toString();
 									imageSize = findIamgeSize(imageUrl);
 								}
-								if (null != bigPromoBanner.getBannerImage().getMime() && null != bigPromoBanner.getBannerImage())
+								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
 								{
 									campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
 								}
@@ -407,7 +407,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										if (differentBanner instanceof MplBigFourPromoBannerComponentModel)
 										{
 											final MediaModel special = ((MplBigFourPromoBannerComponentModel) differentBanner)
-													.getBannerImage();
+													.getBannerImage() != null ? ((MplBigFourPromoBannerComponentModel) differentBanner)
+													.getBannerImage() : null;
+
 											if (special != null)
 											{
 												campaignDataBigFourPromoBanner.setMediaType(special.getMime());
@@ -433,7 +435,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										}
 										else if (differentBanner instanceof MplBigPromoBannerComponentModel)
 										{
-											final MediaModel special = ((MplBigPromoBannerComponentModel) differentBanner).getBannerImage();
+											final MediaModel special = ((MplBigPromoBannerComponentModel) differentBanner).getBannerImage() != null ? ((MplBigPromoBannerComponentModel) differentBanner)
+													.getBannerImage() : null;
 
 											if (null != special)
 											{
