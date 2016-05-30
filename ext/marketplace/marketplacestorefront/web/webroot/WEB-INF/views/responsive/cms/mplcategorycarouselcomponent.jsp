@@ -48,14 +48,14 @@
 							</c:forEach>
 							<c:if test="${mediaFound eq 'false'}">
 								<a href="${categoryUrl}"><img
-									src="/store/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
+									src="/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
 									class="image" /></a>
 							</c:if>
 						</c:when>
 
 						<c:otherwise>
 							<a href="${categoryUrl}"><img
-								src="/store/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
+								src="/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
 								class="image" /></a>
 						</c:otherwise>
 					</c:choose><span>${category.name}</span> <a class="shop_link"
@@ -105,14 +105,14 @@
 							</c:forEach>
 							<c:if test="${mediaFound eq 'false'}">
 								<a href="${categoryUrl}"><img
-									src="/store/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
+									src="/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
 									class="image" /></a>
 							</c:if>
 						</c:when>
 
 						<c:otherwise>
 							<a href="${categoryUrl}"><img
-								src="/store/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
+								src="/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
 								class="image" /></a>
 						</c:otherwise>
 

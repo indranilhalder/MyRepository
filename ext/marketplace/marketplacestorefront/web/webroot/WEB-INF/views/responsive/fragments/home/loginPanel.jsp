@@ -124,7 +124,8 @@
 		$("#errorHolder").text("Please enter all mandatory fields");
 		return false;
 		}else if(!emailPattern.test($("input[name=j_username]").val())){
-			$("#errorHolder").text("Please enter all mandatory fields");
+			//TISPRO-479 Change the text message
+			$("#errorHolder").text("Please enter a valid email id");
 			return false;
 			}
 			else if($("input[name=j_password]").val() == ""){
@@ -191,29 +192,6 @@
 			}
 		});
 		
-		$(".header-myAccountSignOut").click(function(){
-			window.localStorage.removeItem("eventFired");
-		});
-		
-		
-		//TISPRO-183 -- Firing Tealium event only after successful user login
-		if(loginStatus){
-			if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {
-				localStorage.setItem("eventFired","true");
-			//	console.log("Login Success!!!");
-				if(typeof utag == "undefined"){
-					console.log("Utag is undefined")
-				}
-				else{
-		//			console.log("Firing Tealium Event");
-					utag.link({ "event_type" : "Login", "link_name" : "Login" });
-				}
-				
-				//fireTealiumEvent();
-				
-				
-				
-			}  
-		}
+	
 
 </script>

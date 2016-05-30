@@ -42,6 +42,7 @@ ACC.micrositeautocomplete = {
 							.appendTo(ul);
 				}*/
 				
+				
 				if (item.type == "autoSuggestion"){
 					
 					var renderHtml = "<a href='" + ACC.config.encodedContextPath + "/search/?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
@@ -155,7 +156,7 @@ ACC.micrositeautocomplete = {
 									code: data.brands[0].code,
 									desc: data.brands[0].description,	
 									//url:  "/mpl/en/search/?text=" + data.searchTerm + "&searchCategory=" + data.brands[0],
-									url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Abrand%3A" +  data.brands[0].code+"&search_category="+selectedCat+"&best_search_keyword="+term,
+									url:  "/search/?q=" + data.searchTerm + "%3Arelevance%3Abrand%3A" +  data.brands[0].code+"&search_category="+selectedCat+"&best_search_keyword="+term,
 									term: data.searchTerm,
 									type: "brands",
 									index: 0,
@@ -170,7 +171,7 @@ ACC.micrositeautocomplete = {
 										code: obj.code,
 										desc: obj.description,	
 										//url:  "/mpl/en/search/?text=" + data.searchTerm + "&searchCategory=" + obj,
-										url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Abrand%3A" +  obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term,
+										url:  "/search/?q=" + data.searchTerm + "%3Arelevance%3Abrand%3A" +  obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term,
 										term: data.searchTerm,
 										type: "brands",
 										index: i,
@@ -188,7 +189,7 @@ ACC.micrositeautocomplete = {
 										code: data.categories[0].code,
 										desc: data.categories[0].description,	
 										//url:  "/mpl/en/search/?text=" + data.searchTerm + "&searchCategory=" + data.brands[0],
-										url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Abrand%3A" +  data.categories[0].code+"&search_category="+selectedCat+"&best_search_keyword="+term,
+										url:  "/search/?q=" + data.searchTerm + "%3Arelevance%3Abrand%3A" +  data.categories[0].code+"&search_category="+selectedCat+"&best_search_keyword="+term,
 										term: data.searchTerm,
 										type: "category",
 										index: 0,
@@ -203,7 +204,7 @@ ACC.micrositeautocomplete = {
 										code: obj.code,
 										desc: obj.description,	
 										//url: ACC.config.contextPath + obj.url + "/?q=" + data.searchTerm + "&text=" + data.searchTerm +"&searchCategory="+selectedCat,
-										url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term,
+										url:  "/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term,
 										term: data.searchTerm,
 										type: "category",
 										index: i,

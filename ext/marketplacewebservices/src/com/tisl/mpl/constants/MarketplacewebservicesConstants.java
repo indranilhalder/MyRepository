@@ -76,7 +76,7 @@ public class MarketplacewebservicesConstants
 	public static final String SOCIAL_LOGIN_PROXY_PORT = "social_login_proxy_port".intern();
 	public static final String SOCIAL_DEV_LOGIN_PROXY = "proxy.address".intern();
 	public static final String SOCIAL_DEV_LOGIN_PROXY_PORT = "proxy.port".intern();
-	public static final String SITEADMIN_UID = "siteadmin".intern();
+
 	public static final String SITEADMIN_PWD = "1qaz@WSX3edc".intern();
 	public static final String SOCIAL_GOOGLEAPI_ME_INFO = "social_login_googleapi_uri_me_info_mobile".intern();
 	public static final String SOCIAL_FBAPI_ME_FIELDS = "social_login_fb_fields".intern();
@@ -507,4 +507,10 @@ public class MarketplacewebservicesConstants
 
 	public static final String FACEBOOK_LOGIN = "FACEBOOK_LOGIN".intern();
 	public static final String GOOGLE_LOGIN = "GOOGLE_LOGIN".intern();
+	public static final String KNOW_MORE_LINGERIE1 = "know.more.second.lingerie1".intern();
+	public static final String KNOW_MORE_LINGERIE2 = "know.more.second.lingerie2".intern();
+
+	public static final String DROPDOWN_BRAND = "MBH".intern();
+	public static final String DROPDOWN_CATEGORY = "MSH".intern();
+
 }

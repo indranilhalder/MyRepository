@@ -1,34 +1,42 @@
 <%@ page contentType="text/plain" language="java" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
-# For all robots
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<c:set var="req" value="${pageContext.request}" />
+<c:set var="host" value="${header.host}"/>
+<c:set var="baseURL" value="${req.scheme}://${host}"/>
 User-agent: *
 
-# Block access to specific groups of pages
-<%-- Disallow: <c:url value="/cart" />
+<%--# Block access to specific groups of pages
+Disallow: <c:url value="/cart" />
 Disallow: <c:url value="/checkout" />
 Disallow: <c:url value="/my-account" /> --%>
 Disallow: <c:url value="/search/" />
-Disallow: <c:url value="/*req=*"/>
-Disallow: <c:url value="/*q=*"/>
-Disallow: <c:url value="/*offer=*"/>
-Disallow: <c:url value="/*iaclick=*"/>
-Disallow: <c:url value="/*searchCategory=*"/>
-Disallow: <c:url value="/*searchcategory=*"/>
-Disallow: <c:url value="/*pageSize=*"/>
-Disallow: <c:url value="/*pagesize=*"/>
-Disallow: <c:url value="/*selectedSize=*"/>
-Disallow: <c:url value="/*selectedsize=*"/>
-Disallow: <c:url value="/*/quickView"/>
-Disallow: <c:url value="/*/quickview"/>
+Disallow: <c:url value="*req=*"/>
+Disallow: <c:url value="*icid=*"/>
+Disallow: <c:url value="*q=*"/>
+Disallow: <c:url value="*offer=*"/>
+Disallow: <c:url value="*iaclick=*"/>
+Disallow: <c:url value="*searchCategory=*"/>
+Disallow: <c:url value="*searchcategory=*"/>
+Disallow: <c:url value="*pageSize=*"/>
+Disallow: <c:url value="*pagesize=*"/>
+Disallow: <c:url value="*selectedSize=*"/>
+Disallow: <c:url value="*selectedsize=*"/>
+Disallow: <c:url value="*/quickView"/>
+Disallow: <c:url value="*/quickview"/>
+Disallow: <c:url value="*/page-1"/>
+Disallow: <c:url value="/p-sizeGuide"/>
+Disallow: <c:url value="*msdclick=*"/>
 
 
-Request-rate: 1/10              # maximum rate is one page every 10 seconds
+
+<%-- Request-rate: 1/10              # maximum rate is one page every 10 seconds
 Crawl-delay: 10                 # 10 seconds between page requests
 Visit-time: 0400-0845           # only visit between 04:00 and 08:45 UTC
 
-# Allow search crawlers to discover the sitemap
-Sitemap: <c:url value="/sitemap.xml" />
+# Allow search crawlers to discover the sitemap --%>
+Sitemap: <c:url value="${baseURL}/que/Sitemap_Cliq.xml" />
+Sitemap: <c:url value="${baseURL}/que/sitemap_index.xml" />
 
 
 # Block CazoodleBot as it does not present correct accept content headers

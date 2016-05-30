@@ -7,6 +7,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.impl.AbstractCommerceAddToCartStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -20,6 +21,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,6 +30,7 @@ import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplStockDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStrategy;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.strategy.service.MplCheckCartLevelStrategy;
 
 
@@ -113,6 +116,7 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 								.getDeliveryModesAndCost(MarketplacecommerceservicesConstants.INR, ussid);
 						cartEntryModel.setMplZoneDeliveryModeValue(MplZoneDeliveryModeValueModel);
 					}
+					//setSellerInformationinCartEntry(cartEntryModel, productModel);
 				}
 				else
 				{
@@ -135,7 +139,9 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 					}
 				}
 
+
 				getModelService().save(cartEntryModel);
+				setSellerInformationinCartEntry(cartEntryModel, productModel);
 				getCommerceCartCalculationStrategy().calculateCart(cartModel);
 				getModelService().save(cartEntryModel);
 
@@ -188,6 +194,35 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 		{
 			afterAddToCart(parameter, modification);
 		}
+	}
+
+	/**
+	 * @param cartEntryModel
+	 * @param productModel
+	 */
+	private AbstractOrderEntryModel setSellerInformationinCartEntry(final CartEntryModel cartEntryModel,
+			final ProductModel productModel)
+	{
+		if (CollectionUtils.isNotEmpty(productModel.getSellerInformationRelator()))
+		{
+			for (final SellerInformationModel sellerModel : productModel.getSellerInformationRelator())
+			{
+				if (StringUtils.isNotEmpty(cartEntryModel.getSelectedUSSID())
+						&& StringUtils.isNotEmpty(sellerModel.getSellerArticleSKU())
+						&& cartEntryModel.getSelectedUSSID().equals(sellerModel.getSellerArticleSKU())
+						&& StringUtils.isNotEmpty(sellerModel.getSellerName()))
+				{
+
+					cartEntryModel.setSellerInfo(sellerModel.getSellerName());
+
+					getModelService().save(cartEntryModel);
+					break;
+
+
+				}
+			}
+		}
+		return cartEntryModel;
 	}
 
 	/*

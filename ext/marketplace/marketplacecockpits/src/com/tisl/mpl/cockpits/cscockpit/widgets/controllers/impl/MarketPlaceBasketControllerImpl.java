@@ -366,13 +366,50 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 						cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
 						cartdatalist.add(cartSoftReservationRequestData);
 					}
-					// Added inventory request type to set the duration type for cart only
-					InventoryReservListResponse response = inventoryReservationService
-							.convertDatatoWsdto(cartdatalist, cart.getGuid(),
-									pincode,MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
 					
-					for(InventoryReservResponse entry: response.getItem()){
-						
+					// 	Added inventory request type to set the duration type for cart only
+					
+					InventoryReservListResponse inventoryReservListResponse = null;
+					try
+					{
+						inventoryReservListResponse = inventoryReservationService
+								.convertDatatoWsdto(cartdatalist, cart.getGuid(),
+										pincode,MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
+					}
+					catch (final ClientEtailNonBusinessExceptions e)
+					{
+						LOG.error("::::::CSCockpit Exception in calling OMS Inventory reservation:::::::::" + e.getErrorCode());
+						if (null != e.getErrorCode()
+								&& (  MarketplacecclientservicesConstants.O0003_EXCEP.equalsIgnoreCase(e.getErrorCode()) 
+									||MarketplacecclientservicesConstants.O0004_EXCEP.equalsIgnoreCase(e.getErrorCode()) 
+									|| MarketplacecclientservicesConstants.O0007_EXCEP.equalsIgnoreCase(e.getErrorCode())))
+						{
+							inventoryReservListResponse = mplCommerceCartService.callInventoryReservationCommerce(cartdatalist);
+						}
+					}
+					// Added inventory request type to set the duration type for cart only
+					/*//InventoryReservListResponse response = inventoryReservationService
+							.convertDatatoWsdto(cartdatalist, cart.getGuid(),
+									pincode,MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);*/
+					if(inventoryReservListResponse!=null && CollectionUtils.isNotEmpty(inventoryReservListResponse.getItem()))
+					{
+						for(InventoryReservResponse entry: inventoryReservListResponse.getItem()){
+							
+							if(!"success".equalsIgnoreCase(entry.getReservationStatus()) ){
+								errorMessages.add(new ResourceMessage("placeOrder.validation.cartItemNotReserved",
+										Arrays.asList(entry.getUSSID(), entry.getAvailableQuantity()==null?entry.getReservationStatus():entry.getAvailableQuantity())));
+							} else{
+								cart.setCartReservationDate(new Date());
+								modelService.save(cart);
+								modelService.refresh(cart);
+							}
+						}
+					}
+					else
+					{
+						throw new Exception("Error in Inventory Reservation in CSCockpit");
+					}
+					/*for(InventoryReservResponse entry: response.getItem()){
 						if(!"success".equalsIgnoreCase(entry.getReservationStatus()) ){
 							errorMessages.add(new ResourceMessage("placeOrder.validation.cartItemNotReserved",
 									Arrays.asList(entry.getUSSID(), entry.getAvailableQuantity()==null?entry.getReservationStatus():entry.getAvailableQuantity())));
@@ -381,10 +418,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 							cart.setCartReservationDate(new Date());
 							modelService.save(cart);
 							modelService.refresh(cart);
-							
 						}
-					}
-	
+					}*/
 				} catch (Exception ex) {
 					isCartReserved = Boolean.FALSE;
 					cart.setCartReservationDate(null);

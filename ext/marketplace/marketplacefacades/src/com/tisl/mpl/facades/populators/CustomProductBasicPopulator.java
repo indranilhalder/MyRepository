@@ -5,7 +5,6 @@
 package com.tisl.mpl.facades.populators;
 
 import de.hybris.platform.catalog.enums.ArticleApprovalStatus;
-import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.converters.populator.AbstractProductPopulator;
 import de.hybris.platform.commercefacades.product.data.BrandData;
@@ -24,7 +23,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -197,19 +195,19 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 	private BrandData populateBrandData(final ProductModel productModel)
 	{
 		final BrandData brandData = new BrandData();
-		final List<CategoryModel> categoryModels = new ArrayList<CategoryModel>(productModel.getSupercategories());
-		if (!CollectionUtils.isEmpty(categoryModels))
-		{
-			for (final CategoryModel categoryModel : categoryModels)
-			{
-				if (null != categoryModel.getCode() && categoryModel.getCode().startsWith(MarketplaceFacadesConstants.BRANDCODE))
-				{
-					brandData.setBrandname(categoryModel.getName());
-					brandData.setBrandtype(categoryModel.getDescription());
-					break;
-				}
-			}
-		}
+		//		final List<CategoryModel> categoryModels = new ArrayList<CategoryModel>(productModel.getSupercategories());
+		//		if (!CollectionUtils.isEmpty(categoryModels))
+		//		{
+		//			for (final CategoryModel categoryModel : categoryModels)
+		//			{
+		//				if (null != categoryModel.getCode() && categoryModel.getCode().startsWith(MarketplaceFacadesConstants.BRANDCODE))
+		//				{
+		//					brandData.setBrandname(categoryModel.getName());
+		//					brandData.setBrandtype(categoryModel.getDescription());
+		//					break;
+		//				}
+		//			}
+		//		}
 
 		//This is fallback case i.e. if brand category is missing in CategorySystem then it will pick from product core attribute
 		if (null == brandData.getBrandname())

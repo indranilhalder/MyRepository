@@ -168,8 +168,8 @@ public class MplKeywordNameValueProvider extends AbstractPropertyFieldValueProvi
 				}
 			}
 
-			if (pcmproductVariantModel.getProductCategoryType() != null
-					&& pcmproductVariantModel.getProductCategoryType().equalsIgnoreCase("Clothing"))
+			else
+
 			{
 
 

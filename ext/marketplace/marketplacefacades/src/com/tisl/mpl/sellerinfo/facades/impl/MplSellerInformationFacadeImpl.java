@@ -161,7 +161,7 @@ public class MplSellerInformationFacadeImpl implements MplSellerInformationFacad
 			catch (final NumberFormatException e)
 			{
 				LOG.warn("Invalid Value of Collection Days: " + sellerMaster.getCollectionDays() + "; sellerId: " + sellerId);
-				LOG.error("Invalid Value of Collection Days: " + sellerMaster.getCollectionDays() + "; sellerId: " + sellerId);
+				//LOG.error("Invalid Value of Collection Days: " + sellerMaster.getCollectionDays() + "; sellerId: " + sellerId);
 			}
 		}
 		if (collectionDays == null)
@@ -177,7 +177,7 @@ public class MplSellerInformationFacadeImpl implements MplSellerInformationFacad
 				catch (final Exception e)
 				{
 					LOG.warn("Encountered error while fetching Collection Days from mplConfig. Using Default value. " + e.toString());
-					LOG.error("Encountered error while fetching Collection Days from mplConfig. Using Default value. " + e.toString());
+					//LOG.error("Encountered error while fetching Collection Days from mplConfig. Using Default value. " + e.toString());
 				}
 			}
 		}

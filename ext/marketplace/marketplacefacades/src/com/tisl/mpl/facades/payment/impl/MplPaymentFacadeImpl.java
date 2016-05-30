@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -127,7 +128,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public Map<String, Boolean> getPaymentModes(final String store,final boolean isMobile, final CartData cartDataMobile) throws EtailNonBusinessExceptions
+	public Map<String, Boolean> getPaymentModes(final String store, final boolean isMobile, final CartData cartDataMobile)
+			throws EtailNonBusinessExceptions
 	{
 
 		//Declare variable
@@ -139,7 +141,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 
 			boolean flag = false;
-			CartData cartData=null;
+			CartData cartData = null;
 			if (isMobile)
 			{
 				LOG.debug("Mobile payment modes cart Id................" + cartDataMobile.getCode());
@@ -149,8 +151,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			{
 				cartData = getMplCustomAddressFacade().getCheckoutCart();
 			}
-			
-			
+
+
 			for (final OrderEntryData entry : cartData.getEntries())
 			{
 
@@ -603,6 +605,35 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				customer = getMplPaymentService().getCustomer(uid);
 			}
 
+			//TISCR-421
+			String customerPhone = MarketplacecommerceservicesConstants.EMPTYSTRING;
+			//Code fix to send phone number to EBS
+			final AddressModel deliveryAddress = cart.getDeliveryAddress();
+			final AddressModel defaultAddress = customer.getDefaultShipmentAddress();
+			if (null != deliveryAddress)
+			{
+				if (StringUtils.isNotEmpty(deliveryAddress.getPhone1()))
+				{
+					customerPhone = deliveryAddress.getPhone1();
+				}
+				else if (StringUtils.isNotEmpty(deliveryAddress.getPhone2()))
+				{
+					customerPhone = deliveryAddress.getPhone2();
+				}
+			}
+			else if (null != defaultAddress)
+			{
+				if (StringUtils.isNotEmpty(defaultAddress.getPhone1()))
+				{
+					customerPhone = defaultAddress.getPhone1();
+				}
+				else if (StringUtils.isNotEmpty(defaultAddress.getPhone2()))
+				{
+					customerPhone = defaultAddress.getPhone2();
+				}
+			}
+			//Code fix ends
+
 			final String customerEmail = customer.getOriginalUid();
 			//			String juspayOrderStatus = "";
 			String juspayOrderId = "";
@@ -614,15 +645,32 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			//Create entry in Audit table
 			flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
-
+			final InitOrderRequest request;
 			if (flag)
 			{
-				//creating InitOrderRequest of Juspay
-				// For netbanking firstname will be set as Bank Code
-				final InitOrderRequest request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice())
-						.withCustomerId(uid).withEmail(customerEmail).withUdf1(firstName).withUdf2(lastName).withUdf3(addressLine1)
-						.withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state).withUdf8(city)
-						.withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
+				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
+				{
+					//getting the sessionID from session set during payment page loading
+					final String sessionId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
+					//removing from session
+					getSessionService().removeAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
+
+					//creating InitOrderRequest of Juspay
+					// For netbanking firstname will be set as Bank Code
+					//TISCR-421:With sessionID for WEB orders
+					request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
+							.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
+							.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
+							.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl).withsessionId(sessionId);
+				}
+				else
+				{
+					//TISCR-421:Without sessionTD for MOBILE or other orders
+					request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
+							.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
+							.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
+							.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
+				}
 
 				LOG.info("Juspay Request Structure " + request);
 
@@ -670,8 +718,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			throw new EtailNonBusinessExceptions(e, "E0007");
 		}
 	}
-
-
 
 	/**
 	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
@@ -731,22 +777,24 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				.withMerchantId(
 						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
-		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-		final CartModel cart = getCartService().getSessionCart();
-		String orderStatus = null;
-		boolean updAuditErrStatus = false;
-
-		//creating OrderStatusRequest
-		final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
-
-		LOG.info(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID).toString());
-		orderStatusRequest.withOrderId(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID)
-				.toString());
-
-		//creating OrderStatusResponse
-		GetOrderStatusResponse orderStatusResponse = new GetOrderStatusResponse();
 		try
 		{
+			final Map<String, Double> paymentMode = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.PAYMENTMODE);
+			final CartModel cart = getCartService().getSessionCart();
+			String orderStatus = null;
+			boolean updAuditErrStatus = false;
+
+			//creating OrderStatusRequest
+			final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
+
+			LOG.info(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID).toString());
+			orderStatusRequest.withOrderId(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID)
+					.toString());
+
+			//creating OrderStatusResponse
+			GetOrderStatusResponse orderStatusResponse = new GetOrderStatusResponse();
+
 			//getting the response by calling get Order Status service
 			orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
 			if (null != orderStatusResponse)
@@ -776,7 +824,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Failed to save order status in payment transaction with error: " + e);
+			LOG.error("Failed to save order status in payment transaction with error: ", e);
 			throw new EtailNonBusinessExceptions(e);
 		}
 
@@ -1377,11 +1425,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 

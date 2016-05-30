@@ -6,7 +6,7 @@
 <%@ attribute name="supportShowPaged" required="true" type="java.lang.Boolean" %>
 <%@ attribute name="msgKey" required="false" %>
 <%@ attribute name="numberPagesShown" required="false" type="java.lang.Integer" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="pagination" tagdir="/WEB-INF/tags/responsive/nav/pagination" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -14,13 +14,17 @@
 
 
 <c:set var="themeMsgKey" value="${not empty msgKey ? msgKey : 'search.page'}"/>
-
 <c:if test="${searchPageData.pagination.totalNumberOfResults == 0 && top }">
 	<div class="paginationBar top clearfix">
 		<ycommerce:testId code="searchResults_productsFound_label">
 			<div class="totalResults"><h2><spring:theme code="${themeMsgKey}.totalResults" arguments="${searchPageData.pagination.totalNumberOfResults}"/></h2></div>
 		</ycommerce:testId>
 	</div>
+</c:if>
+<c:set var="url" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+<c:if test="${fn:contains(url, 'page')}">
+ <c:set var="subStringIndex" value="${fn:indexOf(url,'page-')}"/>
+<c:set var="url" value="${fn:substring(url, 0, subStringIndex)}" />
 </c:if>
 
 <c:if test="${searchPageData.pagination.totalNumberOfResults > 0}">
@@ -145,7 +149,7 @@
 					</div>
 					<div class="form-group wrapped-form view">
 
-				<form id="pageSize_form${top ? '1' : '2'}" name="pageSize_form${top ? '1' : '2'}" method="get" action="#" class="pageSizeForm">
+				<form id="pageSize_form${top ? '1' : '2'}" name="pageSize_form${top ? '1' : '2'}" method="get" action="${url}" class="pageSizeForm">
 					<label for="pageSizeOptions${top ? '1' : '2'}">
 						<spring:theme code="${themeMsgKey}.display"/>:	</label>
 						<select class="black-arrow" id="pageSizeOptions${top ? '1' : '2'}" name="pageSize" class="pageSizeOptions">

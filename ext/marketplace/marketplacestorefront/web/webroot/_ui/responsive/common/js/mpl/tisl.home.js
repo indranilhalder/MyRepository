@@ -58,7 +58,7 @@ $("div.departmenthover").on("mouseover touchend", function() {
                 if (window.localStorage) {
                     $.cookie("dept-list", "true", {
                         expires: 1,
-                        path: "/store"
+                        path: "/"
 
                     });
                     window.localStorage.setItem(
@@ -114,7 +114,7 @@ $(".A-ZBrands").on("mouseover touchend", function(e) {
                     if (window.localStorage) {
                         $.cookie("dept-list", "true", {
                             expires: 1,
-                            path: "/store"
+                            path: "/"
 
                         });
                         window.localStorage.setItem(
@@ -242,12 +242,12 @@ function getBrandsYouLoveAjaxCall() {
                     if (!v.showByDefault) {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item' id='" +
-                            v.compId + "'><img class='lazy' data-original='" + v.brandLogoUrl +
+                            v.compId + "'><img src='" + v.brandLogoUrl +
                             "'></img></div>";
                     } else {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item active' id='" +
-                            v.compId + "'><img class='lazy' data-original='" + v.brandLogoUrl +
+                            v.compId + "'><img src='" + v.brandLogoUrl +
                             "'></img></div>";
                         defaultComponentId = v.compId;
                     }
@@ -273,7 +273,7 @@ function getBrandsYouLoveAjaxCall() {
                     itemsMobile: [480, 3],
                     rewindNav: false,
                     mouseDrag: false,
-                    touchDrag: false
+                    touchDrag: false,
                 });
                 var index = $(
                     ".home-brands-you-love-carousel-brands.active"
@@ -339,7 +339,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                             "<div class='home-brands-you-love-side-image left'><a href='" +
                             ACC.config.encodedContextPath +
                             response.firstProductUrl +
-                            "'><img class='lazy' data-original='" + response.firstProductImageUrl +
+                            "'><img src='" + response.firstProductImageUrl +
                             "'></img>";
                         if (typeof response.firstProductTitle !==
                             "undefined") {
@@ -368,7 +368,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                                 "<div class='visit-store-wrapper'>" +
                                 response.bannerText + "</div>";
                         }
-                        defaultHtml += "<img class='lazy' data-original='" + response.bannerImageUrl +
+                        defaultHtml += "<img src='" + response.bannerImageUrl +
                             "'></img></div></div>";
                     }
                     if (typeof response.secondproductImageUrl !==
@@ -377,7 +377,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                             "<div class='home-brands-you-love-side-image right'><a href='" +
                             ACC.config.encodedContextPath +
                             response.secondProductUrl +
-                            "'><img class='lazy' data-original='" + response.secondproductImageUrl +
+                            "'><img src='" + response.secondproductImageUrl +
                             "'></img>";
                         if (typeof response.secondProductTitle !==
                             "undefined") {
@@ -573,9 +573,27 @@ function getBestPicksAjaxCall() {
                     }
                     renderHtml += "</a>";
                 });
+                
                 renderHtml +=
+                    // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
+                 	"</div> <a href='";
+                if(typeof response.buttonLink!=="undefined"){
+                	 renderHtml +=response.buttonLink+"'";
+                }
+                else{
+                	renderHtml +=ACC.config.encodedContextPath+"/offersPage'";
+                }
+                
+                renderHtml +="class='view-cliq-offers'>";
+                if(typeof response.buttonText!=="undefined"){
+                	 renderHtml +=response.buttonText;
+                }
+                else{
+                	 renderHtml +=" View Cliq Offers ";
+                }
+                renderHtml +="</a>";
                    // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
-                	"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
+                	//"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
                 $("#bestPicks").html(renderHtml);
                 // console.log()
             },
@@ -1070,7 +1088,7 @@ $(window).on('resize', function() {
 			if (window.localStorage) {
                 $.cookie("enhanced-search-list", "true", {
                     expires: 1,
-                    path: "/store"
+                    path: "/"
 
                 });
                 window.localStorage.setItem(
@@ -1084,8 +1102,14 @@ $(window).on('resize', function() {
 	});
     }
     
-    
-    
+   $(".lazy-brands").on("mouseover touchend", function(e) {
+	   var lazyImgs = $(this).find("ul.images").find("img.lazy");
+	   $(lazyImgs).each(function(){
+		   var original = $(this).attr("data-src");
+		   $(this).attr("src",original);
+		   $(this).removeAttr("data-src");
+	   });
+   }); 
 });
 
 
@@ -1107,8 +1131,8 @@ function populateEnhancedSearch(enhancedSearchData)
 				className="selected";
 				notPresentCategory=false;
 			}
-			$("ul[label=Departments]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$("optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".enhanced-search ul[label=Departments]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$(".select-view #searchCategory optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
 		$("#searchBoxSpan").html(selectedText);
@@ -1125,8 +1149,8 @@ function populateEnhancedSearch(enhancedSearchData)
 				className="selected";
 				notPresentBrand=false;
 			}
-			$("ul[label=Brands]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$("optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".enhanced-search ul[label=Brands]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$(".select-view #searchCategory optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 			
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
@@ -1144,8 +1168,8 @@ function populateEnhancedSearch(enhancedSearchData)
 				className="selected";
 				notPresentSeller=false;
 			}
-			$("ul[label=Sellers]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$("optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".enhanced-search ul[label=Sellers]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
+			$(".select-view #searchCategory optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
 		$("#searchBoxSpan").html(selectedText);

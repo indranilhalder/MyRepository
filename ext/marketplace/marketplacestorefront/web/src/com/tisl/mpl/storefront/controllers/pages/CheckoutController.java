@@ -107,6 +107,9 @@ public class CheckoutController extends AbstractCheckoutController
 	private static final String DISCOUNT_MSSG = " discount on purchase of Promoted Product";
 	private static final String CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL = "orderConfirmation";
 	private static final String CONTINUE_URL_KEY = "continueUrl";
+	//TISSEC-51
+	public static final String FORWARD_PREFIX = "forward:";
+
 	//private static final String NBZ_ERROR_CMS_PAGE = "nonBusinessErrorFound";
 	@Resource(name = "productFacade")
 	private ProductFacade productFacade;
@@ -371,11 +374,11 @@ public class CheckoutController extends AbstractCheckoutController
 	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-	 *
+	 * 
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
-	 *
+	 * 
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
@@ -525,10 +528,14 @@ public class CheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
 			LOG.error("Error while processing order code due to ", ex);
+			//TISSEC-51
+			return FORWARD_PREFIX + "/404";
 		}
 		catch (final Exception ex)
 		{
 			LOG.error("EtailNonBusinessExceptions occured while sending sms ", ex);
+			//TISSEC-51
+			return FORWARD_PREFIX + "/404";
 		}
 
 		return ControllerConstants.Views.Pages.Checkout.CheckoutConfirmationPage;

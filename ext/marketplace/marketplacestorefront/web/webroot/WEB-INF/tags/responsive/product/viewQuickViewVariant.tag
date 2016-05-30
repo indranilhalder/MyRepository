@@ -77,15 +77,31 @@
 			<li>
 			<a href="${variantUrl}" class="js-reference-item cboxElement"
 				data-quickview-title="<spring:theme code="popup.quick.view.select"/>">
-				<c:forEach items="${variantOption.colourCode}" var="color">
+				<%-- <c:forEach items="${variantOption.colourCode}" var="color">
 								<span  style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"  title="${variantOption.colour}"></span>
-				<%-- 	<img src="${variantOption.image.url}" alt="" /> --%>
+					<img src="${variantOption.image.url}" alt="" />
 					<c:if test="${variantOption.code eq product.code}">
 					   
 						 <c:set var="currentColor" value="${color}" />
 						<!--  set current selected color -->
 					</c:if>
+				</c:forEach> --%>
+				<!-- TISPRO-467 -->
+				<c:forEach items="${variantOption.colourCode}" var="color">
+					<c:choose>
+						<c:when test="${color=='multi'}">
+							<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
+						</c:when>
+						<c:otherwise>
+							<span  style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"  title="${variantOption.colour}"></span>
+						</c:otherwise>
+					</c:choose>
+					<c:if test="${variantOption.code eq product.code}">
+						<c:set var="currentColor" value="${color}" />
+						<!--  set current selected color -->
+					</c:if>
 				</c:forEach>
+				
 			</a>
 			</li>
 		</c:if>

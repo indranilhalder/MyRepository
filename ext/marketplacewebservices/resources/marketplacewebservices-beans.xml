@@ -1160,6 +1160,10 @@
 		<property name="dimensionSize" type="String" />
 		<property name="dimensionValue" type="String" />
 		<property name="dimensionUnit" type="String" />
+		<property name="euroSize" type="String" />
+		<property name="usSize" type="String" />
+		<property name="footlength" type="String" />
+		<property name="age" type="String" />
 	</bean>
 
 	<!-- About Us -->
@@ -1388,6 +1392,8 @@
 		<property name="orderStatusMessage" type="String" />
 		<!-- <property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" /> -->
 		<property name="couponDiscount" type="String" />
+		<property name="pickupPersonName" type="String" />
+		<property name="pickupPersonMobile" type="String" />
 	</bean>
 <bean class="com.tisl.mpl.wsdto.FreebieWsDTO">
 		<property name="name" type="String" />
