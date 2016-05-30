@@ -30,11 +30,13 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +72,7 @@ import com.tisl.mpl.facades.data.LatestOffersData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -123,10 +126,13 @@ public class HomePageController extends AbstractPageController
 	private LatestOffersFacade latestOffersFacade;
 	@Autowired
 	private DefaultCMSContentSlotService contentSlotService;
+	@Autowired
+	private ConfigurationService configurationService;
 
 	private static final String VERSION = "version";
 	private static final String HOMEPAGE = "homepage";
 	private static final String TITLE = "title";
+	private static final String Y = "Y";
 
 
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
@@ -503,6 +509,8 @@ public class HomePageController extends AbstractPageController
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject newAndExclusiveJson = new JSONObject();
+		final String allowNew = configurationService.getConfiguration().getString("attribute.new.display");
+		Date existDate = null;
 		try
 		{
 			final ContentSlotModel homepageSection4BSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
@@ -535,7 +543,33 @@ public class HomePageController extends AbstractPageController
 						for (final ProductModel newAndExclusiveProducts : newAndExclusiveComponent.getProducts())
 						{
 
+							for (final SellerInformationModel seller : newAndExclusiveProducts.getSellerInformationRelator())
+							{
+								if ((null != seller.getStartDate() && new Date().after(seller.getStartDate())
+										&& null != seller.getEndDate() && new Date().before(seller.getEndDate()))
+										&& (null != allowNew && allowNew.equalsIgnoreCase("Y")))
+								{
+
+									//Find the oldest startDate of the seller
+									if (null == existDate)
+									{
+										existDate = seller.getStartDate();
+									}
+									else if (existDate.after(seller.getStartDate()))
+									{
+										existDate = seller.getStartDate();
+									}
+
+								}
+							}
+
 							final JSONObject newAndExclusiveProductJson = new JSONObject();
+							//New Attribute
+							if (null != existDate && isNew(existDate))
+							{
+
+								newAndExclusiveProductJson.put("isNew", Y);
+							}
 							ProductData product = null;
 							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
 							newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
@@ -585,6 +619,33 @@ public class HomePageController extends AbstractPageController
 		}
 		return newAndExclusiveJson;
 
+	}
+
+
+	private boolean isNew(final Date existDate)
+	{
+		boolean newAttr = false;
+		if (null != existDate)
+		{
+			final Date sysDate = new Date();
+			final long dayDiff = calculateDays(existDate, sysDate);
+
+			LOG.info("******" + existDate + "  --- dayDiff: " + dayDiff);
+			final String validDaysSt = configurationService.getConfiguration().getString("attribute.new.validDays");
+			final int validDays = validDaysSt == null ? 0 : Integer.parseInt(validDaysSt);
+
+			if (validDays > dayDiff)
+			{
+				newAttr = true;
+			}
+		}
+
+		return newAttr;
+	}
+
+	private long calculateDays(final Date dateEarly, final Date dateLater)
+	{
+		return (dateLater.getTime() - dateEarly.getTime()) / (24 * 60 * 60 * 1000);
 	}
 
 	//product-price
