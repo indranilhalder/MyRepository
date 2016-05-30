@@ -210,7 +210,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CHANNEL_WEB = "WEB";
 
 	public static final String UPDATE_CHECK_PINCODE = "/updatePincodeCheck";
-	
+
 	public static final String ADDPOSORDERENTRY = "/addPosToOrderEntry";
 	public static final String ADDPICKUPPERSONDETAILS = "/addPickupPersonDetails";
 
@@ -251,13 +251,16 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	public final static String NEWPAYMENTFORMMPLURL = "newPaymentFormMplUrl";
 	public final static String NEWPAYMENTVIEWURL = "/checkout/multi/payment-method/view";
-	
+
 	//TISCR-421
 	public static final String EBS_ACCOUNT_ID = "account_id";
 	public static final String EBS_ACCOUNT_ID_KEY = "payment.ebs.accountId";
 	public static final String EBS_SESSION_ID = "session_id";
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
+
+	//TISPRO-497
+	public static final String CARTAMOUNTINVALID = "cartAmountInvalid";
 
 
 	private MarketplacecheckoutaddonConstants()

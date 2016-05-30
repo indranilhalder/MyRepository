@@ -1536,8 +1536,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
 	public static final String EBS_SESSION_ID = "session_id";
 
-
-
+	//TISPRO-497
+	public static final String CARTAMOUNTINVALID = "cartAmountInvalid";
+	public static final String CART_TOTAL_INVALID_MESSAGE = "Cannot Apply Coupon - Order Amount is less than Coupon Amount!";
 
 	private MarketplacecommerceservicesConstants()
 	{

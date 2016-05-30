@@ -268,7 +268,6 @@ public class CartPageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
@@ -847,9 +846,9 @@ public class CartPageController extends AbstractPageController
 
 		model.addAttribute("isOmsEnabled", Boolean.valueOf(getSiteConfigService().getBoolean("oms.enabled", false)));
 		//TISST-13012
-		if (StringUtils.isNotEmpty(cartData.getGuid()))
+		if (StringUtils.isNotEmpty(cartData.getGuid()) && null != cartData.getTotalPrice()
+				&& null != cartData.getTotalPriceWithConvCharge())
 		{
-
 			//TIS-404
 			final String payNowInventoryCheck = getSessionService().getAttribute(
 					MarketplacecheckoutaddonConstants.PAYNOWINVENTORYNOTPRESENT);
@@ -870,6 +869,10 @@ public class CartPageController extends AbstractPageController
 			final String cartItemDelisted = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID);
 
+			//TISPRO-497
+			final String cartAmountInvalid = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.CARTAMOUNTINVALID);
+
 			final String payNowCouponCheck = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID);
 
 			//TISEE-3676
@@ -878,6 +881,13 @@ public class CartPageController extends AbstractPageController
 			{
 				getSessionService().removeAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID);
 				GlobalMessages.addErrorMessage(model, MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_MESSAGE);
+			}
+			//TISPRO-497
+			else if (StringUtils.isNotEmpty(cartAmountInvalid)
+					&& cartAmountInvalid.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
+			{
+				getSessionService().removeAttribute(MarketplacecommerceservicesConstants.CARTAMOUNTINVALID);
+				GlobalMessages.addErrorMessage(model, MarketplacecommerceservicesConstants.CART_TOTAL_INVALID_MESSAGE);
 			}
 			else if (StringUtils.isNotEmpty(payNowInventoryCheck)
 					&& payNowInventoryCheck.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
@@ -1142,22 +1152,22 @@ public class CartPageController extends AbstractPageController
 							{
 								for (PinCodeResponseData pinCodeResponseData : responseData)
 								{
-										//  TISPRD-1951  START //
+									//  TISPRD-1951  START //
 
-											// Checking whether inventory is availbale or not
-											// if inventory is not available for particular delivery Mode
-											// then removing that deliveryMode in Choose DeliveryMode Page
-											try
-											{
-											  pinCodeResponseData=getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
-											}
-											catch(final Exception e)
-											{
-												LOG.error("Exception occured while checking inventory ");
-											}
-										//  TISPRD-1951  END // 		
+									// Checking whether inventory is availbale or not
+									// if inventory is not available for particular delivery Mode
+									// then removing that deliveryMode in Choose DeliveryMode Page
+									try
+									{
+										pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+									}
+									catch (final Exception e)
+									{
+										LOG.error("Exception occured while checking inventory ");
+									}
+									//  TISPRD-1951  END //
 
-											if (pinCodeResponseData != null
+									if (pinCodeResponseData != null
 											&& pinCodeResponseData.getIsServicable() != null
 											&& pinCodeResponseData.getIsServicable()
 													.equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
@@ -1464,18 +1474,18 @@ public class CartPageController extends AbstractPageController
 				{
 					//  TISPRD-1951  START //
 
-						// Checking whether inventory is availbale or not
-						// if inventory is not available for particular delivery Mode
-						// then removing that deliveryMode in Choose DeliveryMode Page
-						try
-						{
-						  pinCodeResponseData=getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
-						}
-						catch(final Exception e)
-						{
-							LOG.error("Exception occured while checking inventory ");
-						}
-					//  TISPRD-1951  END // 		
+					// Checking whether inventory is availbale or not
+					// if inventory is not available for particular delivery Mode
+					// then removing that deliveryMode in Choose DeliveryMode Page
+					try
+					{
+						pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Exception occured while checking inventory ");
+					}
+					//  TISPRD-1951  END //
 					if (pinCodeResponseData != null
 							&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
 					{
@@ -1564,7 +1574,7 @@ public class CartPageController extends AbstractPageController
 			LOG.info("NETWORK_ERROR: ", ex);
 		}
 	}
-	
+
 	// Public getter used in a test
 	@Override
 	public SiteConfigService getSiteConfigService()
