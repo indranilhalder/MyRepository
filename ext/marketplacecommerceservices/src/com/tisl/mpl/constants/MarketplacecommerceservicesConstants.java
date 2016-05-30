@@ -1024,7 +1024,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CUSTOMERSURVEYS = "Consumer Surveys";
 	public static final String TYPE_CATEGORY = "category".intern();
 	public static final String TYPE_BRAND = "brand".intern();
-	public static final String FRIEND_EMAIL_MESSAGE_TEXT = "Hey,|I was blown away by the incredible shopping experience at Tata Mall. I highly recommend that you register as a member as well";
 	public static final String INVITE_FRIENDS_MESSAGE_KEY = "account.invite.friends.default.message.text";
 
 	public static final String PROMOALERTSENTGROUP = "promotionusergroup".intern();
@@ -1538,8 +1537,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EBS_SESSION_ID = "session_id";
 
 
-	
-	
+
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
