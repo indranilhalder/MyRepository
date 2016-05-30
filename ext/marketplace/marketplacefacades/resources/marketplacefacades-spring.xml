@@ -1502,4 +1502,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>	
 	
 	<bean id="mplStoreLocatorFacade" class="com.tis.mpl.facade.checkout.storelocator.impl.MplStoreLocatorFacadeImpl"/>
+	
+	
+	<alias name="defaultMplCommerceIndexedPropertyPopulator" alias="commerceIndexedPropertyPopulator" />
+	<bean id="defaultMplCommerceIndexedPropertyPopulator"
+		class="com.tisl.mpl.search.converters.populator.MplCommerceIndexedPropertyPopulator" />
 </beans>
