@@ -35,7 +35,15 @@
 					<div class="item slide">
 					<button type="button" class="close pull-right my-dept" data-categoryId="${category.value.code}"></button>
 						<div class="img">
-							<img class="" src="${commonResourcePath}/images/dept-2.png">
+						<!-- TISPRD-2335 -->
+						<c:choose>
+							<c:when test="${category.value.image ne null}">
+								<img class="" src="${category.value.image}">
+							</c:when>
+							<c:otherwise>
+								<img class="" src="${commonResourcePath}/images/missing-product-515x515.jpg">
+							</c:otherwise>
+						</c:choose>
 						</div>
 						<c:url var="categoryurl" value="${category.value.name}/c/${category.value.code}"/>
 						<a href="${categoryurl}">${category.value.name}</a>
@@ -62,7 +70,17 @@
 					<div class="item slide">
 						<button type="button" class="close pull-right my-brand" data-brandId="${brand.key}"></button>
 						<div class="img">
-							<a href=""><img class="" src="${commonResourcePath}/images/dept-2.png"></a>
+							<a href="">
+							<!-- TISPRD-2335 -->
+								<c:choose>
+									<c:when test="${brand.value.image ne null}">
+										<img class="" src="${brand.value.image}">
+									</c:when>
+									<c:otherwise>
+										<img class="" src="${commonResourcePath}/images/missing-product-515x515.jpg">
+									</c:otherwise>
+								</c:choose>
+							</a>
 						</div>
 						<c:url var="categoryurl" value="${brand.value.name}/c/${brand.key}"/>
 						<a href="${categoryurl}">${brand.value.name}</a>
