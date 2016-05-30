@@ -166,7 +166,7 @@ ACC.product = {
 			return false;
 		});
 		//change
-		$(document).ready(function(){
+	/*	$(document).ready(function(){
 			
 			var requiredserpUrl = ACC.config.encodedContextPath + "/search"+ "/showAllCartEntries";
 			var resultData;
@@ -201,7 +201,7 @@ ACC.product = {
 	             }
 			});
 
-			});
+			});*/
 
 		 $(document).on('click','.serp_add_to_cart_form .js-add-to-cart',function(event){
 				if(!$(this).hasClass("disabled")) {
