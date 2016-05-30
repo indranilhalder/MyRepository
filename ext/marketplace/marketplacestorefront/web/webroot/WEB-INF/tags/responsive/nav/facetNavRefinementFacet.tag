@@ -87,9 +87,9 @@ function navigateToPage(queryString,textString)
 		<label class="brandSelectAll" for="brandSelectAll">Uncheck All</label>
 		</c:when>
 		
-		<c:otherwise>
+		<%--	<c:otherwise>
 		<label class="brandSelectAll" for="brandSelectAll">Check All</label>
-		</c:otherwise>
+		</c:otherwise>  --%>
 		
 		
 		</c:choose>
