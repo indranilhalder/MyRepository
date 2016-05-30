@@ -16,7 +16,7 @@
 				<c:when test="${fn:contains(pageData.currentQuery.query.value, 'category')}">
 					<nav:facetNavRefinementFacet facetData="${facet}"/>
 			   	</c:when>
-			   	<c:when test="${(not empty departments &&  fn:length(departments) lt 2) || (empty departments)}">
+			   	<c:when test="${(not empty departments &&  fn:length(departments) lt 2) || (empty departments && empty offers)}">
 					<nav:facetNavRefinementFacet facetData="${facet}"/>
 			   	</c:when>
 		   		<c:otherwise>
