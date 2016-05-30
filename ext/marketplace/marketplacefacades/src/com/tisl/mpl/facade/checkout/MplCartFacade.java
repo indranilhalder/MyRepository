@@ -295,8 +295,8 @@ public interface MplCartFacade extends CartFacade
 	 * @param cart
 	 * @return
 	 */
-	//CartModel removeDeliveryMode(CartModel cart);  TISPT-104
-	boolean removeDeliveryMode(CartModel cart);
+
+	CartModel removeDeliveryMode(CartModel cart);
 
 	boolean removeDeliveryMode2(CartModel cart);
 

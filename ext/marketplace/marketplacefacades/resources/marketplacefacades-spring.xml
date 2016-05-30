@@ -599,6 +599,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="productService" ref="productService"/>
 		<property name="cartService" ref="cartService"/>
 		<property name="mplExtendedCartConverter" ref="mplExtendedCartConverter"/>
+		<property name="mplExtendedPromoCartConverter" ref="mplExtendedPromoCartConverter"/> <!-- TISPT-104 -->
 		<property name="modelService" ref="modelService" />
 		<property name="mplDefaultCommerceCartCalculationStrategy" ref="mplDefaultCommerceCartCalculationStrategy" />
 
@@ -781,7 +782,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="checkoutCustomerStrategy" ref="checkoutCustomerStrategy"/>
 		<property name="countryConverter" ref="countryConverter"/>
 		<property name="mplExtendedCartConverter" ref="mplExtendedCartConverter"/>
-	
+		<property name="mplExtendedPromoCartConverter" ref="mplExtendedPromoCartConverter"/> <!-- TISPT-104 -->
 	</bean>
 		<!-- for mobility change starts -->
 	
@@ -903,7 +904,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		</property>
 		
 	</bean>
-
+	
 	<bean id="mplExtendedCartPopulator"
 			class="com.tisl.mpl.converter.populator.DefaultExtendedCartPopulator"
 			parent="defaultCartPopulator">
@@ -911,6 +912,32 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			<property name="mplDeliveryModeConverter" ref="mplDeliveryModeConverter"/>
 			<property name="promotionsService" ref="promotionsService"/>
 	</bean>		
+	
+	<!-- Start TISPT-104 -->
+	
+	<alias name="defaultMplExtendedPromoCartConverter" alias="mplExtendedPromoCartConverter"/>
+	<bean id="defaultMplExtendedPromoCartConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.commercefacades.order.data.CartData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplExtendedPromoCartPopulator"/>
+				<ref bean="orderAppliedVouchersPopulator"/>
+				<ref bean="pickupOrderEntryGroupPopulator"/>
+				<ref bean="deliveryOrderEntryGroupPopulator"/>
+			</list>
+		</property>
+		
+	</bean>
+	
+	<bean id="mplExtendedPromoCartPopulator"
+			class="com.tisl.mpl.converter.populator.DefaultExtendedPromoCartPopulator"
+			parent="defaultCartPopulator">
+			
+			<property name="mplDeliveryModeConverter" ref="mplDeliveryModeConverter"/>
+			<property name="promotionsService" ref="promotionsService"/>
+	</bean>	
+	
+	<!-- End TISPT-104 -->
 			
 		<!-- append b2b specific populator to the default orderConverter-->
 	<bean parent="modifyPopulatorList">

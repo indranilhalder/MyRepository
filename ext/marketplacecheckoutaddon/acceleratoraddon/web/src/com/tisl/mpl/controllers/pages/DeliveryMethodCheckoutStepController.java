@@ -172,7 +172,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 
-
+	//TISPT-104
+	@Autowired
+	private Converter<CartModel, CartData> mplExtendedPromoCartConverter;
 
 
 	@Autowired
@@ -237,7 +239,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			}
 
 			//TISST-13012
-			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
+			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart); //TISPT-104
 			if (cartItemDelistedStatus)
 			{
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
@@ -1945,12 +1947,16 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		try
 		{
 			Double discountValue = Double.valueOf(0.0);
-			getMplCartFacade().removeDeliveryMode(getCartService().getSessionCart());
-
-			final Double subTotal = getCartService().getSessionCart().getSubtotal();
-
 			final CartModel cartModel = getCartService().getSessionCart();
-			final CartData cartData = mplExtendedCartConverter.convert(cartModel);
+			getMplCartFacade().removeDeliveryMode(cartModel); //TISPT-104 Scenario needs to be covered if user redirect from payment page to delivery mode selection page
+			applyPromotions();
+			//TISPT-104
+
+			final CartModel cart = getCartService().getSessionCart();
+			final Double subTotal = cart.getSubtotal();
+			//final CartData cartData = mplExtendedCartConverter.convert(cartModel); //TISPT-104
+
+			final CartData cartData = mplExtendedPromoCartConverter.convert(cart);
 
 			if (null != cartData && cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
 			{

@@ -5,9 +5,7 @@ package com.tisl.mpl.facade.checkout.impl;
 
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.catalog.CatalogService;
-import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -18,18 +16,12 @@ import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
-import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.converters.Converters;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.AbstractOrderModel;
-import de.hybris.platform.core.model.order.CartModel;
-import de.hybris.platform.core.model.product.PincodeModel;
-import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.product.ProductService;
@@ -42,9 +34,6 @@ import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
-import de.hybris.platform.storelocator.model.PointOfServiceModel;
-import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
-import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -71,7 +60,6 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -83,7 +71,6 @@ import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculation
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
-import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 
@@ -102,6 +89,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	private MplCommerceCartService mplCommerceCartService;
 	private ModelService modelService;
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
+
+	@Resource(name = "mplExtendedPromoCartConverter")
+	private Converter<CartModel, CartData> mplExtendedPromoCartConverter;
 
 	@Autowired
 	private CommerceCartService commerceCartService;
@@ -648,8 +638,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				getModelService().saveAll(entries);
 			}
 
+			//final CartData cartData = mplExtendedCartConverter.convert(cartModel);
 
-			final CartData cartData = mplExtendedCartConverter.convert(cartModel);
+			final CartData cartData = getMplExtendedPromoCartConverter().convert(cartModel); //TISPT-104
+
+
 			////TISST-13010
 			if (cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
 			{
@@ -1492,7 +1485,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * CartModel )
 	 */
 	@Override
-	public boolean removeDeliveryMode(final CartModel cart)
+	public CartModel removeDeliveryMode(final CartModel cart)
 	{
 		boolean reCalculationRequired = false;
 		boolean deliverypointOfService = false;
@@ -1535,7 +1528,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			LOG.info("Some issue may be happend while removing Dellivery mode from Cart to remove Delivery Specific promotion", e);
 		}
 
-		return reCalculationRequired;
+		return cart;
 	}
 
 	@Override
@@ -2221,7 +2214,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		//setChannelForCart(cart);
 		cart = setChannelAndExpressCheckout(cart);
 		final boolean isDelisted = isCartEntryDelisted(cart);
-		final boolean isDeliveryModeRemoved = removeDeliveryMode(cart);
+		removeDeliveryMode(cart);
 		//final boolean hasSubtotalChanged = setCartSubTotal(cart);
 		//TODO Add release voucher code
 		//Do calculate the cart, if any of the following conditions met. Else return the cart as it is.
@@ -2236,7 +2229,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		//		}
 		//		return cart;
 
-		return (isDelisted || isDeliveryModeRemoved) ? true : false; //TISPT-104
+		return (isDelisted) ? true : false; //TISPT-104
 
 	}
 
@@ -2322,5 +2315,24 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return mplCommerceCartService.getVlaidDeliveryModesByInventory(pinCodeResponseData);
 
 
+	}
+
+
+	/**
+	 * @return the mplExtendedPromoCartConverter
+	 */
+	public Converter<CartModel, CartData> getMplExtendedPromoCartConverter()
+	{
+		return mplExtendedPromoCartConverter;
+	}
+
+
+	/**
+	 * @param mplExtendedPromoCartConverter
+	 *           the mplExtendedPromoCartConverter to set
+	 */
+	public void setMplExtendedPromoCartConverter(final Converter<CartModel, CartData> mplExtendedPromoCartConverter)
+	{
+		this.mplExtendedPromoCartConverter = mplExtendedPromoCartConverter;
 	}
 }
