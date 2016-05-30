@@ -421,7 +421,8 @@ function reorderRecommendationGrid(widgetElement, respData, requestId) {
 }
 
 /*TCS-provided add to cart code*/
-function submitAddToCart(site_productid,site_ussid){
+//Add to Bag changes incorporated given by IA start
+function submitAddToCart(site_productid,site_ussid,iaref){
     var site_product_id = site_productid;
     var site_uss_id = site_ussid;
    
@@ -432,13 +433,13 @@ function submitAddToCart(site_productid,site_ussid){
     type : 'post',
     cache : false,
     success : function(data) {
-		if(data.indexOf("cnt:") >= 0){
-		$("#status"+site_product_id).html("");
-		//$("#status"+site_product_id).html("<font color='#00CBE9'>Bagged and ready!</font>");
-		//$("#status"+site_product_id).show().fadeOut(5000);
-		//ACC.product.displayAddToCart(data,formId,false);
-		ACC.product.showTransientCart(site_uss_id); 
-		$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
+    	if(data.indexOf("cnt:") >= 0){
+    		$("#status"+site_product_id).html("");
+    		//$("#status"+site_product_id).html("<font color='#00CBE9'>Bagged and ready!</font>");
+    		//$("#status"+site_product_id).show().fadeOut(5000);
+    		//ACC.product.displayAddToCart(data,formId,false);
+    		ACC.product.showTransientCart(site_uss_id); 
+    		$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 		
 		//TISEE-882
 		if(window.location.href.toLowerCase().indexOf('cart')>=0)
@@ -484,14 +485,22 @@ function submitAddToCart(site_productid,site_ussid){
 
   });
   if(spid.indexOf(site_product_id) === -1) {
-	    params = {'count' : '0'};
+	//Add to Bag changes incorporated given by IA
+	    params = {'count' : '0','referring_site_product_id' : site_product_id};
+	    if(iaref) {
+	    	params.referring_request_id = iaref;
+	    }
 	    params = buildParams(params);
 	    callRecApi(params, rootEP + '/SocialGenomix/recommendations/products/jsonp');
-	    //console.log(params);
-	  }
-	  callEventApi('add_to_cart', { "pname" : ['site_product_id','quantity'],
+	    callEventApi('add_to_cart', { "pname" : ['site_product_id','quantity'],
 	                                "pvalue" : [spid, '1'] });
-}
+  } else {
+	     callEventApi('add_to_cart', { "pname" : ['site_product_id','quantity'],
+	                                "pvalue" : [spid, '1'] });
+ }
+ }
+//Add to Bag changes incorporated given by IA end
+
 
 /*Make quickview visible and on top*/
 function showQuickview(productElement) {
