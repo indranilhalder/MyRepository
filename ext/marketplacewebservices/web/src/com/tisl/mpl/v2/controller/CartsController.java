@@ -141,6 +141,7 @@ import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
+import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
@@ -2423,6 +2424,8 @@ public class CartsController extends BaseCommerceController
 		CartData cartData = null;
 		List<AbstractOrderEntryModel> aoem = null;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
+		List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
+		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		try
 		{
 			if (customerFacade.getCurrentCustomer() != null)
@@ -2449,8 +2452,42 @@ public class CartsController extends BaseCommerceController
 					aoem = cartModel.getEntries();
 					LOG.debug("productCheckout CartModel to CartData of :" + cartId);
 					cartData = getMplExtendedCartConverter().convert(cartModel);
-					final List<GetWishListProductWsDTO> gwlpList = mplCartWebService.productDetails(cartModel, cartData, aoem, true,
-							postalCode, true, cartId);
+
+					/**** Pincode check Details ***/
+					try
+					{
+						if (null != postalCode && !postalCode.isEmpty())
+						{
+							//gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
+							LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + postalCode);
+							final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(
+									mplCartFacade.getSessionCartWithEntryOrderingMobile(cartData, true), postalCode);
+							deliveryModeDataMap = mplCartFacade.getDeliveryMode(
+									mplCartFacade.getSessionCartWithEntryOrderingMobile(cartData, true), pinCodeRes);
+							LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
+						}
+					}
+					catch (final CMSItemNotFoundException e)
+					{
+						LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR_OMS_CHECK, e);
+					}
+					catch (final Exception e)
+					{
+						LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR_OMS_CHECK, e);
+					}
+
+					/* Product Details */
+					if (null != postalCode && !postalCode.isEmpty())
+					{
+						gwlpList = mplCartWebService
+								.productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, true, false);
+					}
+					else
+					{
+						gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, false,
+								false);
+					}
+
 					cartDetailsData.setProducts(gwlpList);
 					/*** End of Product Details ***/
 					/*** Address details ***/
@@ -2539,6 +2576,8 @@ public class CartsController extends BaseCommerceController
 		CartData cartData = null;
 		List<AbstractOrderEntryModel> aoem = null;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
+		List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
+		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		try
 		{
 			if (customerFacade.getCurrentCustomer() != null)
@@ -2562,8 +2601,41 @@ public class CartsController extends BaseCommerceController
 					final boolean deListedStatus = mplCartFacade.isCartEntryDelisted(cartModel);
 					aoem = cartModel.getEntries();
 					cartData = getMplExtendedCartConverter().convert(cartModel);
-					final List<GetWishListProductWsDTO> gwlpList = mplCartWebService.productDetails(cartModel, cartData, aoem, true,
-							pincode, false, cartId);
+
+					/**** Pincode check Details ***/
+					try
+					{
+						if (null != pincode && !pincode.isEmpty())
+						{
+							//gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
+							LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
+							final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(
+									mplCartFacade.getSessionCartWithEntryOrderingMobile(cartData, true), pincode);
+							deliveryModeDataMap = mplCartFacade.getDeliveryMode(
+									mplCartFacade.getSessionCartWithEntryOrderingMobile(cartData, true), pinCodeRes);
+							LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
+						}
+					}
+					catch (final CMSItemNotFoundException e)
+					{
+						LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR_OMS_CHECK, e);
+					}
+					catch (final Exception e)
+					{
+						LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR_OMS_CHECK, e);
+					}
+
+					/* Product Details */
+					if (null != pincode && !pincode.isEmpty())
+					{
+						gwlpList = mplCartWebService
+								.productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, true, false);
+					}
+					else
+					{
+						gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, false,
+								false);
+					}
 					cartDetailsData.setProducts(gwlpList);
 
 					if (null != cartModel.getDeliveryAddress() && null != getShippingAddress(cartModel.getDeliveryAddress()))

@@ -658,6 +658,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		boolean addedToCart = false;
 		int count = 0;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
+		final List<Wishlist2EntryModel> entryModelList = new ArrayList<Wishlist2EntryModel>();
 		try
 		{
 			CartModel cartModel = null;
@@ -733,6 +734,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						+ addedToCart);
 
 				final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
+
 				for (final Wishlist2Model wishlist2Model : allWishlists)
 				{
 					for (final Wishlist2EntryModel entryModel : wishlist2Model.getEntries())
@@ -742,11 +744,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							entryModel.setAddToCartFromWl(Boolean.valueOf(addedToCartWl));
 							LOG.debug("*********** Add to cart from WL mobile web service *************" + addedToCart + "::USSID::"
 									+ USSID);
-							modelService.save(entryModel);
+							entryModelList.add(entryModel);
 							break;
 						}
 					}
 				}
+				//For saving all the data at once rather in loop;
+				modelService.saveAll(entryModelList);
 			}
 			else
 			{
@@ -996,16 +1000,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public List<GetWishListProductWsDTO> productDetails(final CartModel cartModel, final CartData cartData,
-			final List<AbstractOrderEntryModel> abstractOrderEntryList, final boolean isPinCodeCheckRequired, final String pincode,
-			final boolean resetReqd, final String cartId) throws EtailBusinessExceptions, EtailNonBusinessExceptions
+	public List<GetWishListProductWsDTO> productDetails(final String cartId, final CartModel cartModel, final CartData cartData,
+			final List<AbstractOrderEntryModel> abstractOrderEntryList,
+			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
+			final boolean resetReqd) throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
-		LOG.debug(String.format("productDetails: |  pincode : %s |  cartId : %s ", pincode, cartId));
+		LOG.debug(String.format("productDetails: |  cartId : %s ", cartId));
 		LOG.debug("isPinCodeCheckRequired : " + isPinCodeCheckRequired + " resetReqd : " + resetReqd);
 		CartModel finalCart = null;
 		final List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
 		ProductData productData1 = null;
-		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<>();
+		final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<>();
+
 		try
 		{
 			cartModel.setChannel(SalesApplication.MOBILE);
@@ -1029,29 +1035,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				promotionResult = new ArrayList(finalCart.getAllPromotionResults());
 			}
 
-			/**** Product Details ***/
-			try
-			{
-				if (isPinCodeCheckRequired)
-				{
-					LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
-					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(
-							mplCartFacade.getSessionCartWithEntryOrdering(true), pincode);
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(mplCartFacade.getSessionCartWithEntryOrdering(true),
-							pinCodeRes);
-					LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
-				}
-			}
-			catch (final CMSItemNotFoundException e)
-			{
-				LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR_OMS_CHECK, e);
-			}
-			catch (final Exception e)
-			{
-				LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR_OMS_CHECK, e);
-			}
-
-
+			//Removed checkedPincode
 			if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
 			{
 				for (final AbstractOrderEntryModel abstractOrderEntry : finalCart.getEntries())
@@ -1219,7 +1203,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						{
 							try
 							{
-								final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<>();
+
 								if (null != deliveryModeDataMap && !deliveryModeDataMap.isEmpty())
 								{
 									for (final Map.Entry<String, List<MarketplaceDeliveryModeData>> entry : deliveryModeDataMap.entrySet())
@@ -1840,18 +1824,44 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		CartData cartData = null;
 		/* Product Details */
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
+		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<>();
 		try
 		{
 			aoem = cartModel.getEntries();
 			cartData = getMplExtendedCartConverter().convert(cartModel);
+			/**** Pincode check Details ***/
+			try
+			{
+				if (null != pincode && !pincode.isEmpty())
+				{
+					//gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
+					LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
+					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(
+							mplCartFacade.getSessionCartWithEntryOrderingMobile(cartData, true), pincode);
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(
+							mplCartFacade.getSessionCartWithEntryOrderingMobile(cartData, true), pinCodeRes);
+					LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
+				}
+			}
+			catch (final CMSItemNotFoundException e)
+			{
+				LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR_OMS_CHECK, e);
+			}
+			catch (final Exception e)
+			{
+				LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR_OMS_CHECK, e);
+			}
+
+			/* Product Details */
 			if (null != pincode && !pincode.isEmpty())
 			{
-				gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
+				gwlpList = productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, true, false);
 			}
 			else
 			{
-				gwlpList = productDetails(cartModel, cartData, aoem, false, null, true, cartId);
+				gwlpList = productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, false, false);
 			}
+
 			if (null != gwlpList && !gwlpList.isEmpty())
 			{
 				for (final GetWishListProductWsDTO entry : gwlpList)
@@ -1916,6 +1926,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				cartDataDetails.setOfferDetails(cartOfferList);
 			}
+
+
 		}
 		catch (final Exception e)
 		{
@@ -1924,6 +1936,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		/*** End Of Offer Details ***/
 		return cartDataDetails;
 	}
+
 
 	/**
 	 * @param cartModel
@@ -1939,18 +1952,46 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		CartData cartData = null;
 		/* Product Details */
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
+		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<>();
 		try
 		{
 			aoem = cartModel.getEntries();
 			cartData = getMplExtendedCartConverter().convert(cartModel);
+
+			/**** Pincode check Details ***/
+			try
+			{
+				if (null != pincode && !pincode.isEmpty())
+				{
+					//gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
+					LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
+					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(
+							mplCartFacade.getSessionCartWithEntryOrderingMobile(cartData, true), pincode);
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(
+							mplCartFacade.getSessionCartWithEntryOrderingMobile(cartData, true), pinCodeRes);
+					LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
+				}
+			}
+			catch (final CMSItemNotFoundException e)
+			{
+				LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR_OMS_CHECK, e);
+			}
+			catch (final Exception e)
+			{
+				LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR_OMS_CHECK, e);
+			}
+
+			/* Product Details */
 			if (null != pincode && !pincode.isEmpty())
 			{
-				gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, false, cartId);
+				gwlpList = productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, true, false);
 			}
 			else
 			{
-				gwlpList = productDetails(cartModel, cartData, aoem, false, null, false, cartId);
+				gwlpList = productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, false, false);
 			}
+
+
 			if (null != gwlpList && !gwlpList.isEmpty())
 			{
 				for (final GetWishListProductWsDTO entry : gwlpList)
