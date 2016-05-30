@@ -578,16 +578,27 @@ function automateMyrecomendationBrandModification(catids){
 			$("fieldset.brands").addClass("brands active");
 			$.each(data , function( key, value ) {
 				index++;
+				//TISPRD-2335
+				var myInterestBrandImage="";
+				var myInterestBrandImageHover="";
+    			 if (null!=value.image){
+    				 myInterestBrandImage="<img src='"+value.image+"'>";
+    				 myInterestBrandImageHover="<img class='hover-image' src='"+value.image+"'>";
+    			 }else{
+    				 myInterestBrandImage= "<img src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
+    				 myInterestBrandImageHover = "<img class='hover-image' src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
+    			 }
+   			 	
 				if($.inArray(key,prevSelectedBrands)!= -1){
 					htmlData = htmlData+'<input type="checkbox" class="allBrands" checked="checked" name="brand" '+'id="question-2-'
 					+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
-					+'<img src="'+ACC.config.commonResourcePath+'/images/logob-bNuon.png">' +
-					'<img class="hover-image" src="'+ACC.config.commonResourcePath+'/images/logou-uNuon.png">'+"<span>"+value.name+"</span>"+'</label>';
+					+ myInterestBrandImage +
+					myInterestBrandImageHover +"<span>"+value.name+"</span>"+'</label>';
 				}else{
 					htmlData = htmlData+'<input type="checkbox" class="allBrands" name="brand" '+'id="question-2-'
 					+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
-					+'<img src="'+ACC.config.commonResourcePath+'/images/logob-bNuon.png">' +
-					'<img class="hover-image" src="'+ACC.config.commonResourcePath+'/images/logou-uNuon.png">'+"<span>"+value.name+"</span>"+'</label>';
+					+ myInterestBrandImage +
+					myInterestBrandImageHover +"<span>"+value.name+"</span>"+'</label>';
 				}
 			});
 			$("#brandContainer").html(htmlData);
@@ -619,6 +630,13 @@ function automateMyrecomendationBrandModification(catids){
 	        		$("fieldset.products").addClass("products active");
 	        		 $.each(data , function( key, value ) {
 	        			 index++;
+	        			//TISPRD-2335
+	     				var genderImage="";
+	         			 if (null!=value.image){
+	         				 genderImage="<img src='"+value.image+"'>";
+	         			 }else{
+	         				genderImage= "<img src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
+	         			 }
 	        			if($.inArray(key,prevSelectedCats)!= -1){
 	        				htmlData=htmlData+"<input class='category-selection' data-l1='"+value.name+"' checked='checked' type='checkbox' name='categoryCode'"+"id='question-1-"
 		                     +index
@@ -627,7 +645,7 @@ function automateMyrecomendationBrandModification(catids){
 		                     +index
 		                     +"'>"
 		                     +"<img "
-		                     +"src='"+ACC.config.commonResourcePath+"/images/qRectangle_3_copy_9.jpeg'>"
+		                     +genderImage
 		                     +"<span>"+value.name+"</span>"
 		                     +"</label>";
 	        				
@@ -639,7 +657,7 @@ function automateMyrecomendationBrandModification(catids){
 		                     +index
 		                     +"'>"
 		                     +"<img "
-		                     +"src='"+ACC.config.commonResourcePath+"/images/qRectangle_3_copy_9.jpeg'>"
+		                     +genderImage
 		                     +"<span>"+value.name+"</span>"
 		                     +"</label>";
 	        			} 

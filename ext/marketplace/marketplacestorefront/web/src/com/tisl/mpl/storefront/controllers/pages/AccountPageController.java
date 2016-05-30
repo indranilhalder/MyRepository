@@ -6090,6 +6090,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 					selCategoryData.setCode(categoryLineItem.getCode());
 					jsoncatArray.add(categoryLineItem.getCode());
 					selCategoryData.setName(categoryLineItem.getName());
+					//TISPRD-2335
+					if (null != categoryLineItem.getThumbnail())
+					{
+						selCategoryData.setImage(categoryLineItem.getThumbnail().getURL());
+					}
+
 					// Media needs to be set for Pic Display
 					categoryDataMap.put(categoryLineItem.getCode(), selCategoryData);
 				}
@@ -6117,6 +6123,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 					preferredCategoryList.add(categoryLineItem.getName());
 					selCategoryData.setCode(categoryLineItem.getCode());
 					selCategoryData.setName(categoryLineItem.getName());
+					//TISPRD-2335
+					if (null != categoryLineItem.getThumbnail())
+					{
+						selCategoryData.setImage(categoryLineItem.getThumbnail().getURL());
+					}
+
 					//Media needs to be set for Pic Display
 					brandDataMap.put(categoryLineItem.getCode(), selCategoryData);
 				}
