@@ -1671,7 +1671,8 @@ h2 {
                     header .content nav > ul > li > ul > li > ul > li.images > a .logo {
                       display: block;
                       margin: 0 auto;
-                      height: 30px; }
+                      height: 30px;
+                      max-width:100%; }
             header .content nav > ul > li > ul > li:hover > .toggle {
               background-color: #A9143C; }
               header .content nav > ul > li > ul > li:hover > .toggle a {
@@ -9594,6 +9595,8 @@ body .account .right-account .order-history .pagination li{
 @media (min-width: 651px) {
   .listing-leftmenu {
     margin-bottom: 30px; }
+ #ia_products_hot .listing-leftmenu, #ia_products_search .listing-leftmenu {
+    margin-bottom: 0px; }
     
     .bottom-pagination .pagination .next:after {
     position: absolute;
@@ -18765,7 +18768,7 @@ header.compact {
 }
 
 header.compact .banner {
-	top: -32px
+	top: -37px
 }
 
 header.compact .content .marketplace>a {
@@ -21277,7 +21280,8 @@ body .account.preferences input[type=checkbox]:checked + label ,body .account.pr
     top: 0;
     left: 0;
     width: 100%;
-    font-weight: 500
+    font-weight: 500;
+    text-align:center;
 }
 @media (max-width: 650px) {
     .questionnaire-form fieldset h3 {
@@ -21285,7 +21289,8 @@ body .account.preferences input[type=checkbox]:checked + label ,body .account.pr
     }
 }
 .questionnaire-form fieldset .question {
-    margin: 80px auto
+    margin: 80px auto;
+     text-align: left;
 }
 @media (max-width: 650px) {
     .questionnaire-form fieldset .question {
@@ -21298,24 +21303,27 @@ body .account.preferences input[type=checkbox]:checked + label ,body .account.pr
     display: table
 }
 .questionnaire-form fieldset .question label {
-    width: 19%;
-    float: left;
+    width: 18.5%;
+    /* float: left; */
     margin: 0 .5% 20px;
     padding: 0;
-    position: relative
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
 }
 @media (max-width: 650px) {
     .questionnaire-form fieldset .question label {
-        width: 48%;
-        float: left;
+        width: 47.3%;
+       /*  float: left; */
         margin: 0 1% 0px
     }
     .questionnaire-form fieldset .question label span {
-        font-size: 10px
+        font-size: 10px;
     }
 }
 .questionnaire-form fieldset .question label img {
-    width: 100%
+    width: 100%;
 }
 .questionnaire-form fieldset .question label span {
     font-size: 18px;
@@ -21448,7 +21456,8 @@ body .account.preferences input[type=checkbox]:checked + label ,body .account.pr
 }
 .questionnaire-form fieldset.gender .question label {
     width: 48%;
-    margin: 0 1% 20px
+    margin: 0 1% 20px;
+    float:left;
 }
 .questionnaire-form fieldset.gender .question label span {
     position: absolute;
@@ -22678,11 +22687,12 @@ ul.color-swatch li span{
     border: 1px solid rgb(204, 211, 217);
 }
 span.sizesAvailable { 
-	display: none !important; 
+	opacity:0;
 	}
 .productParentList:hover .sizesAvailable { 
 	position:relative !important;
 	display: block !important;
+	opacity:1;
 	border-top: 1px dotted #A9143C;
 	border-bottom: 1px dotted #A9143C;
 	font-size: 12px;
@@ -22696,7 +22706,7 @@ span.sizesAvailable {
     font-weight: 500;
     text-align: center;
 }
-.hotSelected{
+.hotSelected, .sortSelected{
 	font-weight:500 !important;
 	font-size:16px !important ;
 }
@@ -34254,7 +34264,7 @@ button.close {
     height: 0
 }
 
-embed{ /*for the damn thouder plugin*/
+embed{
     display: none;
 }
 
@@ -37229,7 +37239,7 @@ div.MSDQuickView, div.MSDQuickView:before {
 
  /*for MSD*/  
 span.sizesAvailableMSD { 
-	display: none; 
+	opacity:0;
 	border-top: 1px dotted #A9143C;
 	border-bottom: 1px dotted #A9143C;
 	font-size: 12px;
@@ -37238,6 +37248,7 @@ span.sizesAvailableMSD {
 	}
 .productParentList:hover .sizesAvailableMSD { 
 	display: block !important;
+	opacity:1;
 	border-top: 1px dotted #A9143C;
 	border-bottom: 1px dotted #A9143C;
 	font-size: 12px;
@@ -39484,28 +39495,41 @@ Samsung Galaxy S5 -----------
 
 
 /* CNC Page CSS End */
+#ia_products_hot .left-block, #ia_products_search .left-block{
+	margin-bottom:15px;
+}
 
-#ia_products_hot .listing-leftmenu .checkbox-menu li label:before {
-	width: 10px;
-	height: 10px;
+#ia_products_hot .listing-leftmenu .checkbox-menu li label:before, #ia_products_search .listing-leftmenu .checkbox-menu li label:before {
+	width: 9px;
+	height: 9px;
 	margin-top: 1px;
 	border: none;
 }
 
-#ia_products_hot .listing-leftmenu .checkbox-menu li label {
+#ia_products_hot .listing-leftmenu .checkbox-menu li label, #ia_products_search .listing-leftmenu .checkbox-menu li label {
 	color: #000;
-	font-size: 14px;
+	font-size: 12px;
 	padding-left: 18px;
+	opacity:0.9;
 }
 
-#ia_products_hot .listing-leftmenu .checkbox-menu li label:hover {
+#ia_products_hot .listing-leftmenu .checkbox-menu li label:hover, #ia_products_search .listing-leftmenu .checkbox-menu li label:hover {
 	color: #a9143c;
 }
 
-#ia_products_hot input[type="checkbox"]:checked+label:before {
+#ia_products_hot input[type="checkbox"]:checked+label:before, #ia_products_search input[type="checkbox"]:checked+label:before {
 	border: 1px solid #fff;
 }
-
+#ia_products_search .select-view .select-list{
+	width:210px;
+}
+#ia_products_search .select-list.ia_select-list-sort {
+    margin-right: 15px;
+}
+#ia_products_hot .pagination li.next,#ia_products_hot .pagination li.prev,
+#ia_products_search .pagination li.next,#ia_products_search .pagination li.prev{
+    border: none;
+}
 .slider.product .frame .overflow .slide {
 	width: 100%;
 }
@@ -39515,7 +39539,7 @@ div.MSDQuickView:before {
 }
 
 @media ( max-width :650px) {
-	#ia_products_hot .pagination {
+	#ia_products_hot .pagination, #ia_products_search .pagination {
 		top: -8px;
 	}
 }
