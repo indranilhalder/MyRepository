@@ -456,10 +456,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	@Override
 	public String getResultDescription(final SessionContext ctx, final PromotionResult promotionResult, final Locale locale)
 	{
-		String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
-		String firedData = MarketplacecommerceservicesConstants.EMPTYSPACE;
 		String currency = MarketplacecommerceservicesConstants.EMPTYSPACE;
-
 		final AbstractOrder order = promotionResult.getOrder(ctx);
 
 		int finalNumberOfProducts = 0;
@@ -476,8 +473,6 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 			if (promotionResult.getFired(ctx))
 			{
-				firedData = messageData();
-
 				if (null != ctx.getCurrency() && null != ctx.getCurrency().getIsocode())
 				{
 					currency = ctx.getCurrency().getIsocode();
@@ -490,13 +485,15 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 				if (checkDiscountVal.doubleValue() > 0.0D)
 				{
 					final Object[] args =
-					{ this.getQuantity(ctx), percentage, Double.valueOf(promotionResult.getTotalDiscount(ctx)), firedData, currency };
+					{ this.getQuantity(ctx), percentage, Double.valueOf(promotionResult.getTotalDiscount(ctx)),
+							MarketplacecommerceservicesConstants.EMPTYSPACE, currency };
 					return formatMessage(this.getMessageFired(ctx), args, locale);
 				}
 				else
 				{
 					final Object[] args =
-					{ this.getQuantity(ctx), percentage, MarketplacecommerceservicesConstants.EMPTYSPACE, firedData, currency };
+					{ this.getQuantity(ctx), percentage, MarketplacecommerceservicesConstants.EMPTYSPACE,
+							MarketplacecommerceservicesConstants.EMPTYSPACE, currency };
 					return formatMessage(this.getMessageFired(ctx), args, locale);
 				}
 
@@ -567,21 +564,19 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 				final Object[] args = new Object[6];
 				if (minimumCategoryValue > 0.00D)
 				{
-					data = messageData();
 					args[0] = Integer.valueOf(finalNumberOfProducts);
 					args[1] = qualifyingCount;
 					args[2] = percentage;
 					args[3] = Double.valueOf(minimumCategoryValue);
-					args[4] = data;
+					args[4] = MarketplacecommerceservicesConstants.EMPTYSPACE;
 				}
 				else
 				{
-					data = messageData();
 					args[0] = Integer.valueOf(finalNumberOfProducts);
 					args[1] = qualifyingCount;
 					args[2] = percentage;
 					args[3] = MarketplacecommerceservicesConstants.EMPTYSPACE;
-					args[4] = data;
+					args[4] = MarketplacecommerceservicesConstants.EMPTYSPACE;
 				}
 				if (!deliveryModes.isEmpty())
 				{
@@ -620,41 +615,12 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		builder.append(getPercentageDiscount(ctx)).append('|');
 	}
 
-	/**
-	 * @Description: Message Localization
-	 * @return: String
-	 */
-	private String messageData()
-	{
-		String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
-
-		if (null != getProducts() && !getProducts().isEmpty() && getProducts().size() > 0)
-		{
-			for (final Product product : getProducts())
-			{
-				data = data + product.getName() + ",";
-			}
-		}
-		else if (null != getCategories() && !getCategories().isEmpty() && getCategories().size() > 0)
-		{
-			for (final Category category : getCategories())
-			{
-				data = data + category.getName() + ",";
-			}
-
-		}
-		return data;
-	}
-
 
 	//For Referring to Promotion Helper Class
 	protected MplPromotionHelper getMplPromotionHelper()
 	{
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
-
-
-
 
 
 	/**
