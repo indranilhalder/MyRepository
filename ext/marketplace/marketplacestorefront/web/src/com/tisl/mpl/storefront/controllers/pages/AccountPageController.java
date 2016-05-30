@@ -5747,10 +5747,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 							final CategoryData categoryData = new CategoryData();
 							categoryData.setCode(oModel.getConfiguredCategory().getCode());
 							categoryData.setName(oModel.getConfiguredCategory().getName());
+							//TISPRD-2335
 							if (null != oModel.getConfiguredCategory().getThumbnail())
 							{
 								categoryData.setImage(oModel.getConfiguredCategory().getThumbnail().getURL());
 							}
+
 							categoryDataMap.put(oModel.getConfiguredCategory().getCode(), categoryData);
 						}
 					}
@@ -5825,10 +5827,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 									final CategoryData oData = new CategoryData();
 									oData.setCode(catModel.getCode());
 									oData.setName(catModel.getName());
+									//TISPRD-2335
 									if (null != catModel.getThumbnail())
 									{
 										oData.setImage(catModel.getThumbnail().getURL());
 									}
+
 									categoryDataMap.put(catModel.getCode(), oData);
 								}
 							}
@@ -5929,6 +5933,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 											final CategoryData oData = new CategoryData();
 											oData.setCode(catModel.getCode());
 											oData.setName(catModel.getName());
+											//TISPRD-2335
+											if (null != catModel.getThumbnail())
+											{
+												oData.setImage(catModel.getThumbnail().getURL());
+											}
+
 											categoryDataMapApparel.put(catModel.getCode(), oData);
 										}
 									}
@@ -5967,6 +5977,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 											final CategoryData oData = new CategoryData();
 											oData.setCode(catModel.getCode());
 											oData.setName(catModel.getName());
+											//TISPRD-2335
+											if (null != catModel.getThumbnail())
+											{
+												oData.setImage(catModel.getThumbnail().getURL());
+											}
+
 											categoryDataMapElectronics.put(catModel.getCode(), oData);
 										}
 									}
@@ -5996,6 +6012,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 									final CategoryData oData = new CategoryData();
 									oData.setCode(catModel.getCode());
 									oData.setName(catModel.getName());
+									//TISPRD-2335
+									if (null != catModel.getThumbnail())
+									{
+										oData.setImage(catModel.getThumbnail().getURL());
+									}
+
 									categoryDataMap.put(catModel.getCode(), oData);
 								}
 							}
