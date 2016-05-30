@@ -7,7 +7,7 @@ $("document").ready(function(){
     	var dataApparel = null;
 		var dataElectronics = null;
 		var resourcePath = ACC.config.commonResourcePath;
-    	
+		
     	$("#question-0-0,#question-0-1").click(function()
     				{
     					 var genderData="genderData="+$(this).val();
@@ -36,7 +36,7 @@ $("document").ready(function(){
     				        			 if (null!=value.image){
     				        				 catImage="<img src='"+value.image+"'>";
     				        			 }else{
-    				        				 catImage= "<img src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
+    				        				 catImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
     				        			 }
     				        			 
     				        			if($.inArray(key,prevSelectedCats)!= -1){
@@ -138,8 +138,8 @@ $("document").ready(function(){
 	        				 brandImage="<img src='"+value.image+"'>";
 	        				 brandImageHover="<img class='hover-image' src='"+value.image+"'>";
 	        			 }else{
-	        				 brandImage= "<img src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
-	        				 brandImageHover = "<img class='hover-image' src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
+	        				 brandImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+	        				 brandImageHover = "<img class='hover-image' src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
 	        			 }
 	        			 
     					if($.inArray(key,prevSelectedBrands)!= -1){
@@ -213,7 +213,7 @@ $("document").ready(function(){
         				
         				var htmlData = "";
         				var index = 0;
-        				var subCategoryImage="<img src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
+        				var subCategoryImage="<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
         				if(categorySelected == "both"){
         					
         					$("fieldset.objects-apparel").addClass("active");
@@ -585,8 +585,8 @@ function automateMyrecomendationBrandModification(catids){
     				 myInterestBrandImage="<img src='"+value.image+"'>";
     				 myInterestBrandImageHover="<img class='hover-image' src='"+value.image+"'>";
     			 }else{
-    				 myInterestBrandImage= "<img src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
-    				 myInterestBrandImageHover = "<img class='hover-image' src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
+    				 myInterestBrandImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+    				 myInterestBrandImageHover = "<img class='hover-image' src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
     			 }
    			 	
 				if($.inArray(key,prevSelectedBrands)!= -1){
@@ -635,7 +635,7 @@ function automateMyrecomendationBrandModification(catids){
 	         			 if (null!=value.image){
 	         				 genderImage="<img src='"+value.image+"'>";
 	         			 }else{
-	         				genderImage= "<img src='/_ui/desktop/theme-blue/images/missing-product-515x515.jpg'>";
+	         				genderImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
 	         			 }
 	        			if($.inArray(key,prevSelectedCats)!= -1){
 	        				htmlData=htmlData+"<input class='category-selection' data-l1='"+value.name+"' checked='checked' type='checkbox' name='categoryCode'"+"id='question-1-"

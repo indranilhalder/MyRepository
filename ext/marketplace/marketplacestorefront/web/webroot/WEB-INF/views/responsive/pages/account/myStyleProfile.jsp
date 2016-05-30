@@ -41,7 +41,7 @@
 								<img class="" src="${category.value.image}">
 							</c:when>
 							<c:otherwise>
-								<img class="" src="/_ui/desktop/theme-blue/images/missing-product-515x515.jpg">
+								<img class="" src="${commonResourcePath}/images/missing-product-515x515.jpg">
 							</c:otherwise>
 						</c:choose>
 						</div>
@@ -77,7 +77,7 @@
 										<img class="" src="${brand.value.image}">
 									</c:when>
 									<c:otherwise>
-										<img class="" src="/_ui/desktop/theme-blue/images/missing-product-515x515.jpg">
+										<img class="" src="${commonResourcePath}/images/missing-product-515x515.jpg">
 									</c:otherwise>
 								</c:choose>
 							</a>
