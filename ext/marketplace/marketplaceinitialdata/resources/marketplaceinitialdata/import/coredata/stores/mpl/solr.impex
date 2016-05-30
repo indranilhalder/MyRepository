@@ -190,16 +190,16 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 			 }
 		WHERE {c.code} LIKE 'MSH%' AND {p:varianttype} IS NULL 
 		AND (
-			 {p:modifiedtime} >= ?lastIndexTime OR 
-			 {cr:modifiedtime} >= ?lastIndexTime OR
-             {c2p:modifiedtime} >= ?lastIndexTime
+			 {p:modifiedtime} + 120/1440 >= ?lastIndexTime OR 
+			 {cr:modifiedtime} + 120/1440 >= ?lastIndexTime OR
+             {c2p:modifiedtime} + 120/1440 >= ?lastIndexTime
 			 )
 	}}
 	UNION
 	{{
 		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:code} IN (
 			{{
-				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} >= ?lastIndexTime
+				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} + 120/1440 >= ?lastIndexTime
 																	 AND {bbox.delisted} != 1 
 																	 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
 																	 AND {bbox.available} > 0
@@ -211,7 +211,7 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:PK} IN (
 			{{
 				SELECT DISTINCT {ppromorel.source} from {ProductPromotion as ppromo},{ ProductPromotionRelation as ppromorel} 
-																	 WHERE {ppromo:modifiedtime} >= ?lastIndexTime
+																	 WHERE {ppromo:modifiedtime} + 120/1440 >= ?lastIndexTime
 																	 AND {ppromo.PK} = {ppromorel.target}
 			}}
 		)
@@ -443,4 +443,4 @@ INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isoco
 					   
 INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;year;relative;active;maxAcceptableDelay
 # Run the mplIndexingCompositeCronjob every 15 minutes
-;mplIndexingCompositeCronjob;0;15;-1;-1;-1;-1;true;true;-1
+;mplIndexingCompositeCronjob;0;0;2;-1;-1;-1;true;true;-1
