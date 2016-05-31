@@ -39,6 +39,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -195,7 +196,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									}
 									catch (final Exception e)
 									{
-										LOG.error(e.getMessage());
+										LOG.error("Big promo banner Exception 11111 : " + e.getMessage());
 									}
 								}
 								else if (banner instanceof MplBigFourPromoBannerComponentModel)
@@ -255,7 +256,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									imageUrl = sb.toString();
 									imageSize = findIamgeSize(imageUrl);
 								}
-								if (null != bigPromoBanner.getBannerImage().getMime() && null != bigPromoBanner.getBannerImage())
+								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
 								{
 									campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
 								}
@@ -276,7 +277,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							}
 							catch (final Exception e)
 							{
-								LOG.error(e.getMessage());
+								LOG.error("Big promo banner Exception 222 " + e.getMessage());
 							}
 							CampaignDataList.add(campaignDataBigPromoBanner);
 						}
@@ -348,7 +349,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							}
 							catch (final Exception e)
 							{
-								LOG.error(e.getMessage());
+								LOG.error("Error in Big Four PromoBanner111111" + e.getMessage());
 							}
 							CampaignDataList.add(campaignDataBigFourPromoBanner);
 						}
@@ -407,86 +408,102 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										if (differentBanner instanceof MplBigFourPromoBannerComponentModel)
 										{
 											final MediaModel special = ((MplBigFourPromoBannerComponentModel) differentBanner)
-													.getBannerImage();
-											campaignDataBigFourPromoBanner.setMediaType(special.getMime());
-											if (null != special.getURL())
+													.getBannerImage() != null ? ((MplBigFourPromoBannerComponentModel) differentBanner)
+													.getBannerImage() : null;
+
+											if (special != null)
 											{
-												sb = new StringBuffer(((MplBigFourPromoBannerComponentModel) differentBanner)
-														.getBannerImage().getURL());
-												sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
-												imageUrl = sb.toString();
-												imageSize = findIamgeSize(imageUrl);
+												campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+												if (null != special.getURL())
+												{
+													sb = new StringBuffer(((MplBigFourPromoBannerComponentModel) differentBanner)
+															.getBannerImage().getURL());
+													sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+													imageUrl = sb.toString();
+													imageSize = findIamgeSize(imageUrl);
+												}
+												else if (special.getURL().startsWith(HTTPS))
+												{
+													sb = new StringBuffer(((MplBigFourPromoBannerComponentModel) differentBanner)
+															.getBannerImage().getURL());
+													sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+													imageUrl = sb.toString();
+													imageSize = findIamgeSize(imageUrl);
+												}
+												campaignDataBigFourPromoBanner.setSize(imageSize);
+												campaignDataBigFourPromoBanner.setMediaType(special.getMime());
 											}
-											else if (special.getURL().startsWith(HTTPS))
-											{
-												sb = new StringBuffer(((MplBigFourPromoBannerComponentModel) differentBanner)
-														.getBannerImage().getURL());
-												sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
-												imageUrl = sb.toString();
-												imageSize = findIamgeSize(imageUrl);
-											}
-											campaignDataBigFourPromoBanner.setSize(imageSize);
-											campaignDataBigFourPromoBanner.setMediaType(special.getMime());
 										}
 										else if (differentBanner instanceof MplBigPromoBannerComponentModel)
 										{
-											final MediaModel special = ((MplBigPromoBannerComponentModel) differentBanner).getBannerImage();
-											campaignDataBigFourPromoBanner.setMediaType(special.getMime());
-											if (null != special.getURL())
-											{
-												sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
-														.getURL());
-												sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
-												imageUrl = sb.toString();
+											final MediaModel special = ((MplBigPromoBannerComponentModel) differentBanner).getBannerImage() != null ? ((MplBigPromoBannerComponentModel) differentBanner)
+													.getBannerImage() : null;
 
-												imageSize = findIamgeSize(imageUrl);
+											if (null != special)
+											{
+												if (null != special.getMime())
+												{
+													campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+												}
 
-											}
-											else if (special.getURL().startsWith(HTTPS))
-											{
-												sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
-														.getURL());
-												sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
-												imageUrl = sb.toString();
-												imageSize = findIamgeSize(imageUrl);
-											}
-											if (null != imageSize)
-											{
-												campaignDataBigFourPromoBanner.setSize(imageSize);
+
+												if (null != special.getURL())
+												{
+													sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
+															.getURL());
+													sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+													imageUrl = sb.toString();
+
+													imageSize = findIamgeSize(imageUrl);
+
+												}
+												else if (special.getURL().startsWith(HTTPS))
+												{
+													sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
+															.getURL());
+													sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+													imageUrl = sb.toString();
+													imageSize = findIamgeSize(imageUrl);
+												}
+												if (null != imageSize)
+												{
+													campaignDataBigFourPromoBanner.setSize(imageSize);
+												}
+												else
+												{
+													campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+												}
+
+												if (null != special.getMime())
+												{
+													campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+												}
+												else
+												{
+
+													campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
+												}
+
 											}
 											else
 											{
-												campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
-											}
+												if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getMime())
+												{
+													campaignDataBigFourPromoBanner.setMediaType(differentBanner.getMedia().getMime());
+												}
+												else
+												{
 
-											if (null != special.getMime())
-											{
-												campaignDataBigFourPromoBanner.setMediaType(special.getMime());
-											}
-											else
-											{
+													campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
+												}
 
-												campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
-											}
-
-										}
-										else
-										{
-											if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getMime())
-											{
-												campaignDataBigFourPromoBanner.setMediaType(differentBanner.getMedia().getMime());
-											}
-											else
-											{
-
-												campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
 											}
 
 										}
 									}
 									catch (final Exception e)
 									{
-										LOG.error(e.getMessage());
+										LOG.error("Error in Big Four PromoBanner 222222" + e.getMessage());
 									}
 									CampaignDataList.add(campaignDataBigFourPromoBanner);
 								}
@@ -521,6 +538,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							campaignDataBigFourPromoBanner.setCategory(imagesBannerCategory);
 							try
 							{
+
 								if (null != simple.getMedia() && null != simple.getMedia().getURL()
 										&& !simple.getMedia().getURL().startsWith(HTTP))
 								{
@@ -540,6 +558,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									imageUrl = sb.toString();
 									imageSize = findIamgeSize(imageUrl);
 
+
 									if (null != imageSize)
 									{
 										campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
@@ -557,6 +576,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								{
 									campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
 								}
+
 							}
 
 							catch (final Exception e)
@@ -572,7 +592,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		}
 		catch (final Exception e)
 		{
-			LOG.error(e.getMessage());
+			LOG.error("Exception in creating Banner Image :" + e.getMessage());
 		}
 		return CampaignDataList;
 	}
@@ -585,9 +605,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	{
 		try
 		{
+			LOG.info("in createCSVExcel::");
 			final File file = new File(getOutputFilePath());
 			file.getParentFile().mkdirs();
+			LOG.info("in createCSVExcel, before populateCSV()::");
 			populateCSV(campaignDataConsolidatedList, file);
+
 		}
 
 		catch (final Exception e)
@@ -605,6 +628,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedTmpList, final File file)
 	{
+		LOG.info("in createCSVExcel.populateCSV()::");
 		FileWriter fileWriter = null;
 		String CSVHeader = "";
 		final List<InternalCampaignReportData> campaignDataConsolidatedList = new ArrayList<InternalCampaignReportData>();
@@ -632,6 +656,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				}
 			}
 		}
+		LOG.info("in createCSVExcel.populateCSV() 222::");
 		try
 		{
 			fileWriter = new FileWriter(file, false);
@@ -701,6 +726,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				fileWriter.append(NEW_LINE_SEPARATOR);
 			}
+
+			LOG.info("in createCSVExcel.populateCSV() 333::");
 		}
 		catch (final Exception e)
 		{
@@ -723,7 +750,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	public String decrypt(final String encrypted) throws Exception
 	{
 		final Cipher cipher = getCipher(Cipher.DECRYPT_MODE);
-		final byte[] plainBytes = cipher.doFinal(Base64.decodeBase64(encrypted));
+		final byte[] plainBytes = cipher.doFinal(Base64.decodeBase64(encrypted.getBytes()));
 
 		return new String(plainBytes);
 	}
@@ -742,8 +769,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	public String findIamgeSize(final String urlString)
 	{
 
-		final String username = "siteadmin";
-		//final String password = "ASDF!@#$asdf1234";
+		final String username = configurationService.getConfiguration().getString("internal.campaign.report.username");
 
 		final String password = configurationService.getConfiguration().getString("internal.campaign.report.password");
 		//LOG.info("=============== Password read from Configuration File ================" + password);
@@ -759,14 +785,16 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			// int timeOut = connection.getReadTimeout();
 			connection.setReadTimeout(60 * 1000);
 			connection.setConnectTimeout(60 * 1000);
-			final sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
-			//final String authorization = username + ":" + password;
-
-			//LOG.info("Password after decryption : " + decrypt(password));
-			final String authorization = username + ":" + decrypt(password);
-
-			final String encodedAuth = "Basic " + encoder.encode(authorization.getBytes());
-			connection.setRequestProperty("Authorization", encodedAuth);
+			final String isAuthenticationRequired = configurationService.getConfiguration().getString(
+					"internal.campaign.report.isAuthenticationRequired");
+			if (StringUtils.isNotEmpty(isAuthenticationRequired)
+					&& isAuthenticationRequired.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+			{
+				final sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
+				final String authorization = decrypt(username) + ":" + decrypt(password);
+				final String encodedAuth = "Basic " + encoder.encode(authorization.getBytes());
+				connection.setRequestProperty("Authorization", encodedAuth);
+			}
 			//final int responseCode = connection.getResponseCode();
 			//final int responseCode = connection.
 			//System.out.println("" + responseCode);
@@ -840,6 +868,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
 		output_file_path.append(timestamp);
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.extension", ""));
+		LOG.info("in createCSVExcel.getOutputFilePath()::");
 		return output_file_path.toString();
 	}
 
@@ -855,9 +884,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			//System.out.println("=======+++++++++===============================");
 
 			// Get information about the request
-
-			//	username = "siteadmin";
-			//password = "ASDF!@#$asdf1234";
 
 			// Return the information (a data holder that is used by Authenticator)
 			return new PasswordAuthentication(username, password.toCharArray());

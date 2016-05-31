@@ -174,6 +174,7 @@ INSERT_UPDATE SolrIndexerQuery;solrIndexedType(identifier)[unique=true];identifi
 													WHERE {bbox.product}={p.code} 
 													AND {bbox.delisted} != 1 
 													AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+													AND {bbox.available} > 0
 										}} 
 									) 
 						AND {p.varianttype} IS NULL   
@@ -189,18 +190,19 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 			 }
 		WHERE {c.code} LIKE 'MSH%' AND {p:varianttype} IS NULL 
 		AND (
-			 {p:modifiedtime} >= ?lastIndexTime OR 
-			 {cr:modifiedtime} >= ?lastIndexTime OR
-             {c2p:modifiedtime} >= ?lastIndexTime
+			 {p:modifiedtime} + 120/1440 >= ?lastIndexTime OR 
+			 {cr:modifiedtime} + 120/1440 >= ?lastIndexTime OR
+             {c2p:modifiedtime} + 120/1440 >= ?lastIndexTime
 			 )
 	}}
 	UNION
 	{{
 		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:code} IN (
 			{{
-				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} >= ?lastIndexTime
+				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} + 120/1440 >= ?lastIndexTime
 																	 AND {bbox.delisted} != 1 
 																	 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+																	 AND {bbox.available} > 0
 			}}
 		)
 	}}
@@ -209,7 +211,7 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:PK} IN (
 			{{
 				SELECT DISTINCT {ppromorel.source} from {ProductPromotion as ppromo},{ ProductPromotionRelation as ppromorel} 
-																	 WHERE {ppromo:modifiedtime} >= ?lastIndexTime
+																	 WHERE {ppromo:modifiedtime} + 120/1440 >= ?lastIndexTime
 																	 AND {ppromo.PK} = {ppromorel.target}
 			}}
 		)
@@ -220,6 +222,7 @@ where tbl.code IN (
 					{{ SELECT {bbox.product} FROM {BuyBox AS bbox} 
 								WHERE {bbox.delisted} != 1 
 								AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+								AND {bbox.available} > 0
 					}} 
 				)
 
@@ -229,14 +232,37 @@ where tbl.code IN (
   SELECT distinct{p.PK} FROM {Product AS p} 
 						WHERE {p.code} IN ( 
 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
-													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
+													WHERE 	{bbox:modifiedtime} + 120/1440>= ?lastIndexTime 
 													AND ({bbox.product}={p.code} 
-													AND ({bbox.delisted} = 1 OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})))
+													AND ({bbox.delisted} = 1 
+														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})
+														OR {bbox.available} <= 0)
 													AND {bbox.product} NOT IN (
 													{{
 														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 
 															WHERE {bbox.delisted} != 1 
 															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+															AND {bbox.available} > 0
+													}})
+										}} 
+									) 
+						AND {p.varianttype} IS NULL	     
+";anonymous
+;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"
+  SELECT distinct{p.PK} FROM {Product AS p} 
+						WHERE {p.code} IN ( 
+										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
+													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
+													AND ({bbox.product}={p.code} 
+													AND ({bbox.delisted} = 1 
+														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})
+														OR {bbox.available} <= 0)
+													AND {bbox.product} NOT IN (
+													{{
+														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 
+															WHERE {bbox.delisted} != 1 
+															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+															AND {bbox.available} > 0
 													}})
 										}} 
 									) 
@@ -416,7 +442,7 @@ INSERT_UPDATE HelpMeShopOccasion;code[unique=true];displayName;filterName
 ;weddingwear;Going for wedding;Wedding Wear;	
 
 
-
+ 
 ## Solr Boost Rules
 $solrIndexedTypeIdentifier=mplProductType
 $solrIndexedType=solrIndexedType(identifier[default=$solrIndexedTypeIdentifier])
@@ -437,4 +463,4 @@ INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isoco
 					   
 INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;year;relative;active;maxAcceptableDelay
 # Run the mplIndexingCompositeCronjob every 15 minutes
-;mplIndexingCompositeCronjob;0;15;-1;-1;-1;-1;true;true;-1
+;mplIndexingCompositeCronjob;0;0;2;-1;-1;-1;true;true;-1

@@ -19,7 +19,10 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,18 +30,21 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.util.StringUtils;
 
 import com.hybris.oms.domain.shipping.Shipment;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MarketplaceomsordersConstants;
 import com.tisl.mpl.core.model.OrderUpdateProcessModel;
 import com.tisl.mpl.core.model.OrderUpdateSmsProcessModel;
 import com.tisl.mpl.data.SendSMSRequestData;
 import com.tisl.mpl.marketplaceomsservices.daos.EmailAndSmsNotification;
 import com.tisl.mpl.model.PaymentTypeModel;
+import com.tisl.mpl.sms.MplSendSMSService;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
 
@@ -53,6 +59,9 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 	//	@Autowired
 	//	private EventService eventService;
+
+	@Autowired
+	private MplSendSMSService sendSMSService;
 
 	private ConfigurationService configurationService;
 	@Autowired
@@ -164,6 +173,10 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	{
 		String mobileNumber;
 		String firstName;
+		String storeName = null;
+		String deliverdDate = null;
+		String pickUpMobileNumber = null;
+		String pickUpPersonName = null;
 
 		LOG.info("*************Inside sendNotification *******************");
 		final String orderNumber = (StringUtils.isEmpty(shipment.getOrderId())) ? MarketplacecommerceservicesConstants.EMPTY
@@ -197,6 +210,46 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
 		final String logisticPartner = (StringUtils.isEmpty(consignmentModel.getCarrier())) ? MarketplacecommerceservicesConstants.SPACE
 				: consignmentModel.getCarrier();
+
+		for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
+		{
+			if (shipment.getShipmentId().equals(orderEntryModel.getTransactionID())
+					&& consignmentModel.getCode().equals(orderEntryModel.getTransactionID()))
+			{
+
+
+				/*
+				 * storeName =(StringUtils.isEmpty(orderEntryModel.getDeliveryPointOfService().getDisplayName())) ?
+				 * MarketplacecommerceservicesConstants.EMPTY :
+				 * orderEntryModel.getDeliveryPointOfService().getDisplayName();
+				 */
+				storeName = (orderEntryModel.getDeliveryPointOfService() != null && StringUtils.isNotEmpty(orderEntryModel
+						.getDeliveryPointOfService().getDisplayName())) ? orderEntryModel.getDeliveryPointOfService().getDisplayName()
+						: MarketplacecommerceservicesConstants.EMPTY;
+				final DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+				final Date currentDate = new Date();
+				if (null != consignmentModel.getDeliveryDate())
+				{
+					final String formatDate = dateFormatter.format(consignmentModel.getDeliveryDate());
+					deliverdDate = (StringUtils.isEmpty(formatDate)) ? dateFormatter.format(currentDate) : formatDate;
+				}
+				else
+				{
+					deliverdDate = dateFormatter.format(currentDate);
+				}
+
+				pickUpMobileNumber = (StringUtils.isEmpty(orderModel.getPickupPersonMobile())) ? MarketplaceomsordersConstants.EMPTY
+						: orderModel.getPickupPersonMobile();
+
+				pickUpPersonName = (StringUtils.isEmpty(orderModel.getPickupPersonName())) ? MarketplaceomsordersConstants.CUSTOMER_NAME
+						: orderModel.getPickupPersonName();
+
+			}
+
+		}
+
+
+
 		LOG.info("*************checking multiple if *******************");
 		try
 		{
@@ -227,6 +280,14 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			{
 				LOG.info("******************** Sending notification for UNDELIVERED");
 				sendNotificationForUndelivered(orderModel, orderNumber, mobileNumber, contactNumber, firstName);
+			}
+
+			// Notifications: ORDERCOLLETED : SMS
+			if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
+			{
+				LOG.info("******************** Sending notification for ORDER COLLECTED");
+				sendNotificationForCNCOrderColleted(orderNumber, mobileNumber, contactNumber, firstName, storeName, deliverdDate,
+						pickUpMobileNumber, pickUpPersonName);
 			}
 
 			LOG.info("*************End of method*******************");
@@ -369,8 +430,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, String.valueOf(childOrders.size()))); if (null !=
 	 * orderNumber && !orderNumber.isEmpty()) { pushData.setOrderId(orderNumber); }
 	 * mplSNSMobilePushService.setUpNotification(customer.getOriginalUid(), pushData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
 	 */
 
@@ -1080,6 +1141,72 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	{
 
 		return emailAndSmsNotification.checkSmsSent(awbNumber, shipmentStatus);
+
+	}
+
+	/**
+	 * @param orderNumber
+	 * @param mobileNumber
+	 * @param contactNumber
+	 * @param firstName
+	 * @param storeName
+	 * @param deliverdDate
+	 * @param pickUpMobileNumber
+	 * @param pickUpPersonName
+	 */
+
+	private void sendNotificationForCNCOrderColleted(final String orderNumber, final String mobileNumber,
+			final String contactNumber, final String firstName, final String storeName, final String deliverdDate,
+			final String pickUpMobileNumber, final String pickUpPersonName)
+	{
+		try
+		{
+			final String contentForSMS = MarketplaceomsordersConstants.ORDER_COLLECTED_SMS
+					.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED, pickUpPersonName)
+					.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED, orderNumber)
+					.replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED, storeName)
+					.replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, deliverdDate);
+
+			final String contentSMSForCustomer = MarketplaceomsordersConstants.ORDER_COLLECTED_SMS_CUSTOMER
+					.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED_CUSTOMER, firstName)
+					.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED_CUSTOMER, pickUpPersonName)
+					.replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED_CUSTOMER, storeName)
+					.replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED_CUSTOMER, deliverdDate)
+					.replace(MarketplaceomsordersConstants.SMS_VARIABLE_FOUR_ORD_COLLECTED_CUSTOMER, orderNumber);
+
+
+			if (mobileNumber != null && pickUpMobileNumber != null && ObjectUtils.notEqual(mobileNumber, pickUpMobileNumber))
+			{
+				final SendSMSRequestData smsRequestData = new SendSMSRequestData();
+				smsRequestData.setSenderID(MarketplaceomsordersConstants.SMS_SENDER_ID);
+				smsRequestData.setContent(contentForSMS);
+				smsRequestData.setRecipientPhoneNumber(pickUpMobileNumber);
+				//Send SMS to PickupPerson
+				sendSMSService.sendSMS(smsRequestData);
+				LOG.debug("Sending SMS to Pickup Person Mobile Successfully >> ");
+
+				final SendSMSRequestData smsRequestDataforCustomer = new SendSMSRequestData();
+				smsRequestDataforCustomer.setSenderID(MarketplaceomsordersConstants.SMS_SENDER_ID);
+				smsRequestDataforCustomer.setContent(contentSMSForCustomer);
+				smsRequestDataforCustomer.setRecipientPhoneNumber(mobileNumber);
+				//Send SMS to Customer
+				sendSMSService.sendSMS(smsRequestDataforCustomer);
+				LOG.debug("Sending SMS to Customer Mobile Successfully >> ");
+			}
+			else
+			{
+				final SendSMSRequestData smsRequestData = new SendSMSRequestData();
+				smsRequestData.setSenderID(MarketplaceomsordersConstants.SMS_SENDER_ID);
+				smsRequestData.setContent(contentForSMS);
+				smsRequestData.setRecipientPhoneNumber(mobileNumber);
+				sendSMSService.sendSMS(smsRequestData);
+				LOG.debug("Sending SMS to Customer Mobile Successfully >> ");
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception during sending SMS for ORDER_COLLECTED >> " + e.getMessage());
+		}
 
 	}
 

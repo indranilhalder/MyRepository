@@ -41,6 +41,7 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 	private Converter<SolrSearchQueryData, SearchQueryData> searchQueryConverter;
 	private static final Logger LOG = Logger.getLogger(MplSolrSearchStatePopulator.class);
 	private static final String IS_OFFER_EXISTING = "isOffersExisting";
+	private static final String PROMOTED_PRODUCT = "promotedProduct";
 
 	protected String getSearchPath()
 	{
@@ -95,6 +96,10 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		{
 			populateOfferListingUrl(source, target);
 		}
+		else if (checkIfNewProductsPage(source.getFilterTerms()) && source.getOfferID() == null || (source.getOfferID() != null))
+		{
+			target.setUrl("/search/viewOnlineProducts" + buildUrlQueryString(source, target).replace("?", "&"));
+		}
 		//		else if (source.getOfferID() != null)
 		//		{
 		//
@@ -105,6 +110,23 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 			populateFreeTextSearchUrl(source, target);
 		}
 
+
+	}
+
+
+	private boolean checkIfNewProductsPage(final List<SolrSearchQueryTermData> filterTerms)
+	{
+		// YTODO Auto-generated method stub
+		boolean isNew = false;
+		for (final SolrSearchQueryTermData term : filterTerms)
+		{
+			if (term.getKey().equalsIgnoreCase(PROMOTED_PRODUCT))
+			{
+				isNew = true;
+				break;
+			}
+		}
+		return isNew;
 
 	}
 

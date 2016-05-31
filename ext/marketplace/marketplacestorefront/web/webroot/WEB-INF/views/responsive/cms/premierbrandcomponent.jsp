@@ -18,6 +18,8 @@
 			<c:forEach items="${component.brandList}" var="brandList">
 
 				<li><c:url var="subBrandUrl" value="${brandList.subBrandUrl}"></c:url>
+				<c:choose>
+				<c:when test="${not empty  subBrandUrl}">
 					<a href="${subBrandUrl}"><img class="image"
 						src="${brandList.subBrandImage.URL}" />
                         <c:if test="${not empty component.text }">
@@ -32,6 +34,22 @@
 						  </c:if>
 						 
 						</a>
+						</c:when>
+						<c:otherwise>
+						<img class="image"
+						src="${brandList.subBrandImage.URL}" />
+                        <c:if test="${not empty component.text }">
+						<span class="brand-subdesc">${component.text}</span>
+						</c:if>
+						<!-- logo added for TISPRD-1348  -->
+						 <c:if test="${not empty brandList.subBrandLogo.URL }">
+						 <img class="logo" src="${brandList.subBrandLogo.URL }" />
+						 </c:if>
+						  <c:if test="${not empty brandList.subBrandName}">
+						  <span class="link-copy"><b>SHOP ${brandList.subBrandName}</b></span> 
+						  </c:if>
+						</c:otherwise>
+						</c:choose>
 						</li>
 
 			</c:forEach>

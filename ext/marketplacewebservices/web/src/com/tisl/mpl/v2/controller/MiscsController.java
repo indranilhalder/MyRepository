@@ -13,7 +13,6 @@
  */
 package com.tisl.mpl.v2.controller;
 
-import de.hybris.platform.acceleratorcms.model.components.SearchBoxComponentModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
@@ -85,6 +84,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
@@ -114,7 +114,6 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.basic.DateConverter;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
-import com.tisl.mpl.constants.YcommercewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
@@ -1083,160 +1082,136 @@ public class MiscsController extends BaseController
 	{
 		MplAutoCompleteResultWsData resultData = new MplAutoCompleteResultWsData();
 		final AutoCompleteResultWsData wsData = new AutoCompleteResultWsData();
-		String dropDownText = YcommercewebservicesConstants.EMPTY;
 		List<ProductData> suggestedProducts = new ArrayList<ProductData>();
-
-		SearchBoxComponentModel component;
+		final PageableData pageableData = null;
+		final SearchStateData searchState = new SearchStateData();
+		final SearchQueryData searchQueryData = new SearchQueryData();
+		final List<String> suggestion = new ArrayList<String>();
 		try
 		{
-			component = (SearchBoxComponentModel) cmsComponentService
-					.getSimpleCMSComponent(YcommercewebservicesConstants.SEARCHBOXCOMPONENT);
-
-			if (component.isDisplaySuggestions())
+			LOG.debug("searchAndSuggest---------" + searchString);
+			final List<AutocompleteSuggestionData> suggestions = productSearchFacade.getAutocompleteSuggestions(searchString);
+			if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
 			{
-				//wsData.setSuggestions(subList(productSearchFacade.getAutocompleteSuggestions(searchString), component
-				//.getMaxSuggestions().intValue()));
-				final List<AutocompleteSuggestionData> suggestions = subList(
-						productSearchFacade.getAutocompleteSuggestions(searchString), component.getMaxSuggestions().intValue());
+				wsData.setSuggestions(suggestions);
+			}
+			else
+			{
+				String substr = "";
+				substr = searchString.substring(0, searchString.length() - 1);
+				wsData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(substr));
+			}
+			LOG.debug("searchAndSuggest-------------Size" + suggestions.size());
 
-				//if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
-				if (CollectionUtils.isNotEmpty(suggestions))
+			//resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(term));
+
+			/*********** Fixing for Defect TISPRO-58 and TISPRD-346 Start */
+			String tempSuggestion = "";
+			final List<AutocompleteSuggestionData> suggestionsList = wsData.getSuggestions();
+			if (CollectionUtils.isNotEmpty(suggestionsList))
+			{
+				final String firstSuggestion = suggestionsList.get(0).getTerm();
+
+				final StringTokenizer termWordCount = new StringTokenizer(searchString, " ");
+				final int count = termWordCount.countTokens();
+
+				final String[] suggestedTerm = firstSuggestion.split(" ");
+				for (int i = 0; i < count; i++)
 				{
-					wsData.setSuggestions(suggestions);
-				}
-				else
-				{
-					String substr = "";
-					substr = searchString.substring(0, searchString.length() - 1);
-
-					wsData.setSuggestions(subList(productSearchFacade.getAutocompleteSuggestions(substr), component
-							.getMaxSuggestions().intValue()));
-
-				}
-				final SearchStateData searchState = new SearchStateData();
-				final SearchQueryData searchQueryData = new SearchQueryData();
-				searchQueryData
-						.setValue(wsData.getSuggestions().size() > 0 ? wsData.getSuggestions().get(0).getTerm() : searchString);
-				searchState.setQuery(searchQueryData);
-				searchState.setSns(true);
-				final PageableData pageableData = null;
-				ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
-
-				if (!(wsData.getSuggestions().isEmpty()))
-				{
-					boolean categoryMatch = false;
-					boolean sellerMatch = false;
-					if (MarketplaceCoreConstants.ALL_CATEGORY.equalsIgnoreCase(category))
+					if (i > 0)
 					{
-						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
-								.textSearch(searchState, pageableData);
-
-						wsData.setCategories(subList(searchPageData.getSnsCategories(), component.getMaxSuggestions().intValue()));
-						wsData.setBrands(subList(searchPageData.getAllBrand(), component.getMaxSuggestions().intValue()));
-						wsData.setSellerDetails(searchPageData.getAllSeller());
-						resultData = populateDTOData(wsData);
+						tempSuggestion = tempSuggestion + " " + suggestedTerm[i];
 					}
 					else
 					{
-						if (category.startsWith(YcommercewebservicesConstants.DROPDOWN_CATEGORY))
-						{
-							categoryMatch = true;
-							dropDownText = category.replaceFirst(YcommercewebservicesConstants.DROPDOWN_CATEGORY,
-									YcommercewebservicesConstants.EMPTY);
-							searchPageData = searchFacade.categorySearch(dropDownText, searchState, pageableData);
-							wsData.setCategories(subList(searchPageData.getSnsCategories(), component.getMaxSuggestions().intValue()));
-							wsData.setBrands(subList(searchPageData.getAllBrand(), component.getMaxSuggestions().intValue()));
-							resultData.setTopCategories(searchSuggestUtilityMethods.getCategoryDetails(wsData));
-							resultData.setTopBrands(searchSuggestUtilityMethods.getBrandDetails(wsData));
-
-							//resultData.setSuggestedTerm(wsData.getSearchTerm());
-						}
-						else if (!categoryMatch && !sellerMatch && category.startsWith(YcommercewebservicesConstants.DROPDOWN_BRAND))
-						{
-							dropDownText = category.replaceFirst(YcommercewebservicesConstants.DROPDOWN_BRAND,
-									YcommercewebservicesConstants.EMPTY);
-							/*
-							 * searchPageData = searchFacade.dropDownSearch(searchState, dropDownText,
-							 * MarketplaceCoreConstants.BRAND, pageableData);
-							 */
-							searchPageData = searchFacade.categorySearch(dropDownText, searchState, pageableData);
-							wsData.setBrands(subList(searchPageData.getAllBrand(), component.getMaxSuggestions().intValue()));
-							wsData.setCategories(subList(searchPageData.getSnsCategories(), component.getMaxSuggestions().intValue()));
-							resultData.setTopCategories(searchSuggestUtilityMethods.getCategoryDetails(wsData));
-							resultData.setTopBrands(searchSuggestUtilityMethods.getBrandDetails(wsData));
-							//wsData.setBrands(subList(searchPageData.getAllBrand(), component.getMaxSuggestions().intValue()));
-							//resultData.setSuggestedTerm(wsData.getSearchTerm());
-						}
-						else if (!sellerMatch && category.startsWith(YcommercewebservicesConstants.DROPDOWN_SELLER))
-						{
-							sellerMatch = true;
-							dropDownText = category.replaceFirst(YcommercewebservicesConstants.DROPDOWN_SELLER,
-									YcommercewebservicesConstants.EMPTY);
-							searchPageData = searchFacade.dropDownSearch(searchState, dropDownText, "sellerId", pageableData);
-							wsData.setSellerDetails(searchPageData.getAllSeller());
-							wsData.setBrands(subList(searchPageData.getAllBrand(), component.getMaxSuggestions().intValue()));
-							wsData.setCategories(subList(searchPageData.getSnsCategories(), component.getMaxSuggestions().intValue()));
-							resultData.setTopSellers(searchSuggestUtilityMethods.getSellerDetails(wsData));
-							resultData.setTopCategories(searchSuggestUtilityMethods.getCategoryDetails(wsData));
-							resultData.setTopBrands(searchSuggestUtilityMethods.getBrandDetails(wsData));
-							resultData.setSuggestedTerm(wsData.getSearchTerm());
-						}
-
+						tempSuggestion = suggestedTerm[i];
 					}
+				}
+			}
+			else
+			{
+				tempSuggestion = searchString;
+			}
 
-					if (null != searchPageData && null != searchPageData.getResults())
-					{
-						suggestedProducts = searchPageData.getResults();
-					}
+			searchQueryData.setValue(tempSuggestion);
+			/*********** Fixing for Defect TISPRO-58 and TISPRD-346 End */
+			//searchQueryData.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
+			searchState.setQuery(searchQueryData);
+			searchState.setSns(true);
 
-
-					if (null != suggestedProducts)
-					{
-						cleanSearchResults(suggestedProducts);
-						wsData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions().intValue()));
-						wsData.setProducts(subList(suggestedProducts, component.getMaxProducts().intValue()));
-						/*
-						 * wsData.setSearchTerm(wsData.getSuggestions().size() > 0 ? wsData.getSuggestions().get(0).getTerm()
-						 * : searchString);
-						 */
-						resultData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-						resultData.setPopularProducts(searchSuggestUtilityMethods.getTopProductDetails(wsData));
-						//resultData.setSuggestedTerm(wsData.getSearchTerm());
-						final List<String> suggestion = new ArrayList<String>();
-						for (final AutocompleteSuggestionData suggestionObj : wsData.getSuggestions())
-						{
-							if (null != suggestionObj.getTerm())
-							{
-								suggestion.add(suggestionObj.getTerm());
-							}
-						}
-						if (!suggestion.isEmpty())
-						{
-							resultData.setSuggestionText(suggestion);
-						}
-					}
+			ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+			if (CollectionUtils.isNotEmpty(wsData.getSuggestions()))
+			{
+				if (category.startsWith(MarketplaceCoreConstants.ALL_CATEGORY))
+				{
+					searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+							.textSearch(searchState, pageableData);
+					wsData.setCategories(searchPageData.getSnsCategories());
+					wsData.setBrands(searchPageData.getAllBrand());
+					wsData.setSellerDetails(searchPageData.getAllSeller());
+					resultData = populateDTOData(wsData);
+					//allSearchFlag = true;
 				}
 				else
 				{
-					resultData = setErrorStatus();
+					if (category.startsWith(MarketplacewebservicesConstants.DROPDOWN_CATEGORY)
+							|| category.startsWith(MarketplacewebservicesConstants.DROPDOWN_BRAND))
+					{
+						searchPageData = searchFacade.categorySearch(category, searchState, pageableData);
+					}
+					else
+					{
+						searchPageData = searchFacade.dropDownSearch(searchState, category,
+								MarketplacewebservicesConstants.POS_SELLERID, pageableData);
+					}
+					wsData.setCategories(searchPageData.getSnsCategories());
+					wsData.setBrands(searchPageData.getAllBrand());
+					wsData.setSellerDetails(searchPageData.getAllSeller());
+
+					resultData.setTopSellers(searchSuggestUtilityMethods.getSellerDetails(wsData));
+					resultData.setTopCategories(searchSuggestUtilityMethods.getCategoryDetails(wsData));
+					resultData.setTopBrands(searchSuggestUtilityMethods.getBrandDetails(wsData));
+
+
 				}
+				suggestedProducts = searchPageData.getResults();
+				//this is done to remove some of the data issues where we
+				//have null images or price
+				if (suggestedProducts != null)
+				{
+					cleanSearchResults(suggestedProducts);
+					//resultData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions()));
+					//wsData.setProductNames(suggestedProducts);
+					wsData.setProducts(suggestedProducts);
+					//wsData.setSearchTerm(wsData.getSuggestions().size() > 0 ? wsData.getSuggestions().get(0).getTerm() : searchString);
+
+					resultData.setPopularProducts(searchSuggestUtilityMethods.getTopProductDetails(wsData));
+					resultData.setSuggestedTerm(wsData.getSearchTerm());
+
+					for (final AutocompleteSuggestionData suggestionObj : wsData.getSuggestions())
+					{
+						if (null != suggestionObj.getTerm())
+						{
+							suggestion.add(suggestionObj.getTerm());
+						}
+					}
+					if (!suggestion.isEmpty())
+					{
+						resultData.setSuggestionText(suggestion);
+					}
+				}
+				resultData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
 			{
 				resultData = setErrorStatus();
 			}
 		}
-		catch (final CMSItemNotFoundException exception)
+		catch (final EtailNonBusinessExceptions eb)
 		{
-			LOG.error(exception.getMessage());
-		}
-		catch (final EtailBusinessExceptions exception)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(exception, null);
-		}
-		catch (final EtailNonBusinessExceptions exception)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(exception);
+			LOG.debug("Error occured in getAutocompleteSuggestions :" + eb.getMessage());
+			ExceptionUtil.etailNonBusinessExceptionHandler(eb);
+			resultData = setErrorStatus();
 		}
 		return resultData;
 	}
@@ -1391,16 +1366,14 @@ public class MiscsController extends BaseController
 					final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 					if (null != pinCodeModelObj)
 					{
-					
+
 						final LocationDTO dto = new LocationDTO();
 						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
 						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
 						final Location myLocation = new LocationDtoWrapper(dto);
 						LOG.debug("Selected Location for Latitude..:" + myLocation.getGPS().getDecimalLatitude());
 						LOG.debug("Selected Location for Longitude..:" + myLocation.getGPS().getDecimalLongitude());
-						response = pinCodeFacade.getResonseForPinCode(
-								productCodeStr,
-								pin,
+						response = pinCodeFacade.getResonseForPinCode(productCodeStr, pin,
 								pincodeServiceFacade.populatePinCodeServiceData(productCodeStr, myLocation.getGPS()));
 					}
 					if (null != response)

@@ -54,6 +54,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -128,7 +129,9 @@ public class SearchPageController extends AbstractSearchPageController
 	private static final String LAST_LINK_CLASS = "active";
 	public static final String REDIRECT_PREFIX = "redirect:";
 	private static final String BLANKSTRING = "";
-
+	//TISPRO-511
+	private static final String NEW_PRODUCTS_URL_PATTERN_PAGINATION = "/**/viewOnlineProducts";
+	private static final String NEW_PRODUCTS_NEW_URL_PATTERN_PAGINATION = "/**/viewOnlineProducts/page-{pageNo}";
 
 	@Resource(name = "mplCartFacade")
 	private MplCartFacade mplCartFacade;
@@ -708,9 +711,10 @@ public class SearchPageController extends AbstractSearchPageController
 	 */
 
 
-	@RequestMapping(value = "/viewOnlineProducts", method = RequestMethod.GET)
-	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0", required = false) final int page,
+	@RequestMapping(value =
+	{ NEW_PRODUCTS_URL_PATTERN_PAGINATION, NEW_PRODUCTS_NEW_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
+	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) String searchQuery,
+			@RequestParam(value = "page", defaultValue = "0", required = false) int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) String sortCode, final HttpServletRequest request, final Model model)
 			throws CMSItemNotFoundException
@@ -718,18 +722,34 @@ public class SearchPageController extends AbstractSearchPageController
 
 		try
 		{
-
-
+			//tispro-511
+			final String uri = request.getRequestURI();
+			if (uri.contains("page"))
+			{
+				final Pattern p = Pattern.compile("page-[0-9]+");
+				final Matcher m = p.matcher(uri);
+				if (m.find())
+				{
+					final String pageNo = m.group().split("-")[1];
+					if (null != pageNo)
+					{
+						page = Integer.parseInt(pageNo);
+						page = page - 1;
+					}
+				}
+			}
+			if (request.getServletPath().indexOf(':') != -1 && searchQuery == null)
+			{
+				searchQuery = request.getServletPath().substring(request.getServletPath().indexOf('=') + 1,
+						request.getServletPath().lastIndexOf('&'));
+			}
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForOnlineProducts(
+					searchQuery, page, showMode, sortCode, getSearchPageSize());
 			if (StringUtils.isEmpty(sortCode))
 
 			{
 				sortCode = "promotedpriority-asc";
 			}
-
-
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForOnlineProducts(
-					searchQuery, page, showMode, sortCode, getSearchPageSize());
-
 			storeContinueUrl(request);
 
 			populateModel(model, searchPageData, ShowMode.Page);
@@ -797,7 +817,7 @@ public class SearchPageController extends AbstractSearchPageController
 			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int searchPageSize)
 	{
 
-		final PageableData pageableData = createPageableData(page, page, sortCode, ShowMode.Page);
+		final PageableData pageableData = createPageableData(page, searchPageSize, sortCode, ShowMode.Page);
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
 
@@ -884,9 +904,34 @@ public class SearchPageController extends AbstractSearchPageController
 			final SearchStateData searchState = new SearchStateData();
 			final SearchQueryData searchQueryData = new SearchQueryData();
 			/*********** Fixing for Defect TISPRO-58 and TISPRD-346 Start */
-			final String strSuggestion = resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm()
-					: BLANKSTRING;
-			searchQueryData.setValue(strSuggestion.contains(term) ? strSuggestion : term);
+			String tempSuggestion = "";
+			final List<AutocompleteSuggestionData> suggestionsList = resultData.getSuggestions();
+			if (CollectionUtils.isNotEmpty(suggestionsList))
+			{
+				final String firstSuggestion = suggestionsList.get(0).getTerm();
+
+				final StringTokenizer termWordCount = new StringTokenizer(term, " ");
+				final int count = termWordCount.countTokens();
+
+				final String[] suggestedTerm = firstSuggestion.split(" ");
+				for (int i = 0; i < count; i++)
+				{
+					if (i > 0)
+					{
+						tempSuggestion = tempSuggestion + " " + suggestedTerm[i];
+					}
+					else
+					{
+						tempSuggestion = suggestedTerm[i];
+					}
+				}
+			}
+			else
+			{
+				tempSuggestion = term;
+			}
+
+			searchQueryData.setValue(tempSuggestion);
 			/*********** Fixing for Defect TISPRO-58 and TISPRD-346 End */
 			//searchQueryData.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
 			searchState.setQuery(searchQueryData);
@@ -1125,9 +1170,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 * 
+	 *
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 * 
+	 *
 	 * return list; }
 	 */
 

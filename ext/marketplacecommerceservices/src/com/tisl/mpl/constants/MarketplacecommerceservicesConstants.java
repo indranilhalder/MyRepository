@@ -64,7 +64,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NEW_PASSWORD = "newPassword";
 	public static final String PRICE_NOT_AVAILABLE = "Price not Available";
 	public static final String PWD = "pwd";
+
 	public static final String ZeroDeliveryCost = "0.0";
+
 
 	public static final String LIST_EMPTY = "List is Empty";
 
@@ -1022,7 +1024,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CUSTOMERSURVEYS = "Consumer Surveys";
 	public static final String TYPE_CATEGORY = "category".intern();
 	public static final String TYPE_BRAND = "brand".intern();
-	public static final String FRIEND_EMAIL_MESSAGE_TEXT = "Hey,|I was blown away by the incredible shopping experience at Tata Mall. I highly recommend that you register as a member as well";
 	public static final String INVITE_FRIENDS_MESSAGE_KEY = "account.invite.friends.default.message.text";
 
 	public static final String PROMOALERTSENTGROUP = "promotionusergroup".intern();
@@ -1502,6 +1503,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
 
+
 	//TISCR-410
 	public static final String ORDERSTAGEQUERY = "select {o.pk} from {OrderStatusCodeMaster as o} where {o.statusCode}=?orderEntryStatus";
 	public static final String ORDERENTRYSTATUS = "orderEntryStatus".intern();
@@ -1511,12 +1513,49 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//			.intern();
 
 
+
+
 	public static final String TYPE = "type";
 
 	public static final String DELIVERY_STARTTIME = "startTime".intern();
 	public static final String DELIVERY_ENDTIME = "endTime".intern();
+
+	//OMS FALLBACK Start
+	public static final String SINGLE_QUOTE = "\'";
+	public static final String FALLBACK_ORDER_HEADER_REPORT = "ORDER,USER,ORDER_DATE,TRANSACTION_IDs,ORDER STATUS".intern();
+	public static final String FALLBACK_REPORT_LOCATION = "oms.fallback.report.location".intern();
+	public static final String FALLBACK_REPORT_EXTENSION = "oms.fallback.report.extension".intern();
+	public static final String FALLBACK_REPORT_NAME = "OrderInQueueReport".intern();
+	//OMS FALLBACK End
+
 	public static final String CATEGORY_PATH = "{category-path}".intern();
+
+	public static final String IAFEED_QUERY = "mpl.ia.query.";
+	public static final String IAFEED_UPDATEQUERY = "mpl.ia.updatequery.";
+	public static final String IA_CATEGORY_PRODUCT = "categoryproduct";
+	public static final String IA_BRAND_PRODUCT = "brandproduct";
+	public static final String IA_PRICE_INVENTORY = "priceinventory";
+	public static final String DOT = ".";
+	public static final String IA_FILE_EXTENSION = "csv";
+	public static final String IA_FILENAME_PRODUCTCATEGORY = "ia.filename.productcategory";
+	public static final String IA_FILENAME_BRANDPRODUCT = "ia.filename.brandproduct";
+	public static final String IA_FILENAME_PRICEINVENTORY = "ia.filename.priceinventory";
+	public static final String IA_EXPORT_FOLDER = "ia.path.export";
+	public static final String IA_CATEGORYEXPORT_FOLDER = "ia.path.catexport";
+	public static final String IA_BRANDEXPORT_FOLDER = "ia.path.brandexport";
+	public static final String IA_PRICE_INVENTORYEXPORT_FOLDER = "ia.path.priceinventoryexport";
+	public static final String ENCODING = "UTF-8";
+	public static final String IA_BATCHVALUE = "mpl.ia.batchvalue";
+
+	public static final Object PRICEINVENTORY_FEED = "priceinventory";
+
 	public static final String CATEGORY_PATH_EMPTY = "/{category-path}".intern();
+
+	//TISCR-421
+	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
+	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
+	public static final String EBS_SESSION_ID = "session_id";
+
 
 	private MarketplacecommerceservicesConstants()
 	{
