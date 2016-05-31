@@ -69,8 +69,8 @@
 	</c:when>
 
 	<c:otherwise>
-		<c:if test="${currentPageType !='homepage'  || currentPageType !='product' || currentPageType !='viewSellers' }">
-			<%=HybrisDataConverter.getGenericPageScript()%>
+		<c:if test="${currentPageType !='homepage'  && currentPageType !='product' && currentPageType !='viewSellers' }">
+			<%=HybrisDataConverter.getGenericPageScript()%> 
 		</c:if>
 	</c:otherwise>
 </c:choose>
