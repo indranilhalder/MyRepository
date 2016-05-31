@@ -72,6 +72,7 @@ import com.tisl.mpl.facades.data.LatestOffersData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -508,6 +509,8 @@ public class HomePageController extends AbstractPageController
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject newAndExclusiveJson = new JSONObject();
+		final String allowNew = configurationService.getConfiguration().getString("attribute.new.display");
+		Date existDate = null;
 		try
 		{
 			final ContentSlotModel homepageSection4BSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
@@ -539,8 +542,33 @@ public class HomePageController extends AbstractPageController
 					{
 						for (final ProductModel newAndExclusiveProducts : newAndExclusiveComponent.getProducts())
 						{
-
+							//START :code added for 'NEW' tag on the product image
+							for (final SellerInformationModel seller : newAndExclusiveProducts.getSellerInformationRelator())
+							{
+								if (null != seller.getStartDate() && new Date().after(seller.getStartDate())
+										&& null != seller.getEndDate() && new Date().before(seller.getEndDate()))
+								{
+									if (null != allowNew && allowNew.equalsIgnoreCase(Y))
+									{
+										//Find the oldest startDate of the seller
+										if (null == existDate)
+										{
+											existDate = seller.getStartDate();
+										}
+										else if (existDate.after(seller.getStartDate()))
+										{
+											existDate = seller.getStartDate();
+										}
+									}
+								}
+							}
 							final JSONObject newAndExclusiveProductJson = new JSONObject();
+							if (null != existDate && isNew(existDate))
+							{
+								newAndExclusiveProductJson.put("isNew", Y);
+							}
+							//END :code added for 'NEW' tag on the product image
+
 
 							ProductData product = null;
 							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
@@ -569,6 +597,7 @@ public class HomePageController extends AbstractPageController
 							}
 							newAndExclusiveProductJson.put("productPrice", price);
 							newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+							existDate = null;
 
 						}
 						newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
