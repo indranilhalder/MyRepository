@@ -39,6 +39,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -255,7 +256,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									imageUrl = sb.toString();
 									imageSize = findIamgeSize(imageUrl);
 								}
-								if (null != bigPromoBanner.getBannerImage().getMime() && null != bigPromoBanner.getBannerImage())
+								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
 								{
 									campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
 								}
@@ -407,7 +408,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										if (differentBanner instanceof MplBigFourPromoBannerComponentModel)
 										{
 											final MediaModel special = ((MplBigFourPromoBannerComponentModel) differentBanner)
-													.getBannerImage();
+													.getBannerImage() != null ? ((MplBigFourPromoBannerComponentModel) differentBanner)
+													.getBannerImage() : null;
+
 											if (special != null)
 											{
 												campaignDataBigFourPromoBanner.setMediaType(special.getMime());
@@ -433,7 +436,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										}
 										else if (differentBanner instanceof MplBigPromoBannerComponentModel)
 										{
-											final MediaModel special = ((MplBigPromoBannerComponentModel) differentBanner).getBannerImage();
+											final MediaModel special = ((MplBigPromoBannerComponentModel) differentBanner).getBannerImage() != null ? ((MplBigPromoBannerComponentModel) differentBanner)
+													.getBannerImage() : null;
 
 											if (null != special)
 											{
@@ -601,9 +605,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	{
 		try
 		{
+			LOG.info("in createCSVExcel::");
 			final File file = new File(getOutputFilePath());
 			file.getParentFile().mkdirs();
+			LOG.info("in createCSVExcel, before populateCSV()::");
 			populateCSV(campaignDataConsolidatedList, file);
+
 		}
 
 		catch (final Exception e)
@@ -621,6 +628,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedTmpList, final File file)
 	{
+		LOG.info("in createCSVExcel.populateCSV()::");
 		FileWriter fileWriter = null;
 		String CSVHeader = "";
 		final List<InternalCampaignReportData> campaignDataConsolidatedList = new ArrayList<InternalCampaignReportData>();
@@ -648,6 +656,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				}
 			}
 		}
+		LOG.info("in createCSVExcel.populateCSV() 222::");
 		try
 		{
 			fileWriter = new FileWriter(file, false);
@@ -717,6 +726,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				fileWriter.append(NEW_LINE_SEPARATOR);
 			}
+
+			LOG.info("in createCSVExcel.populateCSV() 333::");
 		}
 		catch (final Exception e)
 		{
@@ -774,12 +785,16 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			// int timeOut = connection.getReadTimeout();
 			connection.setReadTimeout(60 * 1000);
 			connection.setConnectTimeout(60 * 1000);
-			final sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
-			//final String authorization = username + ":" + password;
-			final String authorization = decrypt(username) + ":" + decrypt(password);
-
-			final String encodedAuth = "Basic " + encoder.encode(authorization.getBytes());
-			connection.setRequestProperty("Authorization", encodedAuth);
+			final String isAuthenticationRequired = configurationService.getConfiguration().getString(
+					"internal.campaign.report.isAuthenticationRequired");
+			if (StringUtils.isNotEmpty(isAuthenticationRequired)
+					&& isAuthenticationRequired.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+			{
+				final sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
+				final String authorization = decrypt(username) + ":" + decrypt(password);
+				final String encodedAuth = "Basic " + encoder.encode(authorization.getBytes());
+				connection.setRequestProperty("Authorization", encodedAuth);
+			}
 			//final int responseCode = connection.getResponseCode();
 			//final int responseCode = connection.
 			//System.out.println("" + responseCode);
@@ -853,6 +868,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
 		output_file_path.append(timestamp);
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.extension", ""));
+		LOG.info("in createCSVExcel.getOutputFilePath()::");
 		return output_file_path.toString();
 	}
 

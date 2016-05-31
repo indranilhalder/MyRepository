@@ -473,6 +473,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 			if (promotionResult.getFired(ctx))
 			{
+
+				//firedData = messageData();
 				if (null != ctx.getCurrency() && null != ctx.getCurrency().getIsocode())
 				{
 					currency = ctx.getCurrency().getIsocode();
@@ -615,6 +617,33 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		builder.append(getPercentageDiscount(ctx)).append('|');
 	}
 
+
+	/**
+	 * @Description: Method Blocked for Performance Fix
+	 * @return: String
+	 *
+	 */
+	//	private String messageData()
+	//	{
+	//		String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
+	//
+	//		if (null != getProducts() && !getProducts().isEmpty() && getProducts().size() > 0)
+	//		{
+	//			for (final Product product : getProducts())
+	//			{
+	//				data = data + product.getName() + ",";
+	//			}
+	//		}
+	//		else if (null != getCategories() && !getCategories().isEmpty() && getCategories().size() > 0)
+	//		{
+	//			for (final Category category : getCategories())
+	//			{
+	//				data = data + category.getName() + ",";
+	//			}
+	//
+	//		}
+	//		return data;
+	//	}
 
 	//For Referring to Promotion Helper Class
 	protected MplPromotionHelper getMplPromotionHelper()
