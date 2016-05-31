@@ -15,18 +15,12 @@ package com.tisl.mpl.storefront.filters;
 
 import de.hybris.platform.acceleratorstorefrontcommons.history.BrowseHistory;
 import de.hybris.platform.acceleratorstorefrontcommons.history.BrowseHistoryEntry;
-import de.hybris.platform.catalog.CatalogVersionService;
-import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.misc.CMSFilter;
 import de.hybris.platform.commercefacades.storesession.StoreSessionFacade;
-import de.hybris.platform.core.model.media.MediaModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.media.MediaService;
 
 import java.io.IOException;
 import java.util.Collections;
 
-import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -53,13 +47,16 @@ public class StorefrontFilter extends OncePerRequestFilter
 	private BrowseHistory browseHistory;
 	private CookieGenerator cookieGenerator;
 
-	@Resource
-	private ConfigurationService configurationService;
+	/*
+	 * @Resource private ConfigurationService configurationService;
+	 */
 	private static final Logger LOG = Logger.getLogger(StorefrontFilter.class);
-	@Resource(name = "mediaService")
-	private MediaService mediaService;
-	@Resource(name = "catalogVersionService")
-	private CatalogVersionService catalogVersionService;
+
+	//@Resource(name = "mediaService")
+	//private MediaService mediaService;
+
+	//@Resource(name = "catalogVersionService")
+	//private CatalogVersionService catalogVersionService;
 
 
 	@Override
@@ -68,7 +65,7 @@ public class StorefrontFilter extends OncePerRequestFilter
 	{
 		final HttpSession session = request.getSession();
 		final String queryString = request.getQueryString();
-
+		LOG.debug("Inside doFilterInternal");
 		if (isSessionNotInitialized(session, queryString))
 		{
 			initDefaults(request);
@@ -87,8 +84,8 @@ public class StorefrontFilter extends OncePerRequestFilter
 			if (StringUtils.isBlank(request.getHeader(AJAX_REQUEST_HEADER_NAME)))
 			{
 				final String requestURL = request.getRequestURL().toString();
-				session.setAttribute(ORIGINAL_REFERER,
-						StringUtils.isNotBlank(queryString) ? requestURL + "?" + queryString : requestURL);
+				session.setAttribute(ORIGINAL_REFERER, StringUtils.isNotBlank(queryString) ? requestURL + "?" + queryString
+						: requestURL);
 			}
 
 			getBrowseHistory().addBrowseHistoryEntry(new BrowseHistoryEntry(request.getRequestURI(), null));
@@ -128,27 +125,27 @@ public class StorefrontFilter extends OncePerRequestFilter
 	//		}
 	//	}
 
-	protected MediaModel getMediaByCode(final String mediaCode)
-	{
-		if (StringUtils.isNotEmpty(mediaCode))
-		{
-			final CatalogVersionModel catalogVersionModel = catalogVersionService
-					.getSessionCatalogVersionForCatalog("mplContentCatalog");
-			try
-			{
-				final MediaModel media = mediaService.getMedia(catalogVersionModel, mediaCode);
-				if (media != null)
-				{
-					return media;
-				}
-			}
-			catch (final Exception ex)
-			{
-				LOG.error("Exception at getMediaByCode::::::::::::::", ex);
-			}
-		}
-		return null;
-	}
+	//	protected MediaModel getMediaByCode(final String mediaCode)
+	//	{
+	//		if (StringUtils.isNotEmpty(mediaCode))
+	//		{
+	//			final CatalogVersionModel catalogVersionModel = catalogVersionService
+	//					.getSessionCatalogVersionForCatalog("mplContentCatalog");
+	//			try
+	//			{
+	//				final MediaModel media = mediaService.getMedia(catalogVersionModel, mediaCode);
+	//				if (media != null)
+	//				{
+	//					return media;
+	//				}
+	//			}
+	//			catch (final Exception ex)
+	//			{
+	//				LOG.error("Exception at getMediaByCode::::::::::::::", ex);
+	//			}
+	//		}
+	//		return null;
+	//	}
 
 	protected boolean isGetMethod(final HttpServletRequest httpRequest)
 	{
