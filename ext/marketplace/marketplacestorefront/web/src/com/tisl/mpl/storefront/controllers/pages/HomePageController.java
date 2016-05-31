@@ -511,6 +511,7 @@ public class HomePageController extends AbstractPageController
 		final JSONObject newAndExclusiveJson = new JSONObject();
 		final String allowNew = configurationService.getConfiguration().getString("attribute.new.display");
 		Date existDate = null;
+
 		try
 		{
 			final ContentSlotModel homepageSection4BSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
@@ -538,38 +539,39 @@ public class HomePageController extends AbstractPageController
 					}
 					newAndExclusiveJson.put(TITLE, title);
 					final JSONArray newAndExclusiveJsonArray = new JSONArray();
+
 					if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
 					{
 						for (final ProductModel newAndExclusiveProducts : newAndExclusiveComponent.getProducts())
 						{
-
+							//START :code added for 'NEW' tag on the product image
 							for (final SellerInformationModel seller : newAndExclusiveProducts.getSellerInformationRelator())
 							{
-								if ((null != seller.getStartDate() && new Date().after(seller.getStartDate())
+								if (null != seller.getStartDate() && new Date().after(seller.getStartDate())
 										&& null != seller.getEndDate() && new Date().before(seller.getEndDate()))
-										&& (null != allowNew && allowNew.equalsIgnoreCase("Y")))
 								{
-
-									//Find the oldest startDate of the seller
-									if (null == existDate)
+									if (null != allowNew && allowNew.equalsIgnoreCase(Y))
 									{
-										existDate = seller.getStartDate();
+										//Find the oldest startDate of the seller
+										if (null == existDate)
+										{
+											existDate = seller.getStartDate();
+										}
+										else if (existDate.after(seller.getStartDate()))
+										{
+											existDate = seller.getStartDate();
+										}
 									}
-									else if (existDate.after(seller.getStartDate()))
-									{
-										existDate = seller.getStartDate();
-									}
-
 								}
 							}
-
 							final JSONObject newAndExclusiveProductJson = new JSONObject();
 							//New Attribute
 							if (null != existDate && isNew(existDate))
 							{
-
 								newAndExclusiveProductJson.put("isNew", Y);
 							}
+							//END :code added for 'NEW' tag on the product image
+
 							ProductData product = null;
 							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
 							newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
@@ -597,6 +599,7 @@ public class HomePageController extends AbstractPageController
 							}
 							newAndExclusiveProductJson.put("productPrice", price);
 							newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+							existDate = null;
 						}
 						newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
 					}
@@ -620,7 +623,6 @@ public class HomePageController extends AbstractPageController
 		return newAndExclusiveJson;
 
 	}
-
 
 	private boolean isNew(final Date existDate)
 	{
