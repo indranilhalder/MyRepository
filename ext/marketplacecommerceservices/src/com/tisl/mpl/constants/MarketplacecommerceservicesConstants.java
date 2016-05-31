@@ -695,6 +695,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0019 = "E0019";
 	public static final String E0020 = "E0020";
 	public static final String E0021 = "E0021";
+	public static final String E0022 = "E0022";
 	//System/Non Business constants
 
 	//pdp error constants
@@ -1539,8 +1540,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EBS_SESSION_ID = "session_id";
 
 
-	
-	
+
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
