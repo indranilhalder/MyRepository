@@ -1932,7 +1932,8 @@ public class CartsController extends BaseCommerceController
 			final long start = System.nanoTime();
 			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl);
 			final long elapsedTime = System.nanoTime() - start;
-			LOG.debug("************ addProductToCart completed*********" + elapsedTime);
+			final float seconds = elapsedTime / 1000000000;
+			LOG.debug("************ addProductToCart completed sec*********" + seconds);
 
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -1991,7 +1992,8 @@ public class CartsController extends BaseCommerceController
 				final long start = System.nanoTime();
 				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode);
 				final long elapsedTime = System.nanoTime() - start;
-				LOG.debug("************cartDetails completed*********" + elapsedTime);
+				final float seconds = elapsedTime / 1000000000;
+				LOG.debug("************cartDetails completed*********" + seconds);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -2428,7 +2430,7 @@ public class CartsController extends BaseCommerceController
 		final CartDataDetailsWsDTO cartDetailsData = new CartDataDetailsWsDTO();
 		CartModel cartModel = null;
 		CartData cartData = null;
-		List<AbstractOrderEntryModel> aoem = null;
+		CartData cartDataOrdered = null;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
@@ -2452,12 +2454,9 @@ public class CartsController extends BaseCommerceController
 			{
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cartModel);
 				LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus);
-				//	final CartModel newCartModel = mplCartFacade.removeDeliveryMode(cartModel);
 				/*** Product Details ***/
-				aoem = cartModel.getEntries();
 				LOG.debug("productCheckout CartModel to CartData of :" + cartId);
 				cartData = getMplExtendedCartConverter().convert(cartModel);
-
 				/**** Pincode check Details ***/
 				try
 				{
@@ -2465,10 +2464,9 @@ public class CartsController extends BaseCommerceController
 					{
 						//gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + postalCode);
-						final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(
-								mplCartFacade.getSessionCartWithEntryOrderingMobile(cartData, true), postalCode);
-						deliveryModeDataMap = mplCartFacade.getDeliveryMode(
-								mplCartFacade.getSessionCartWithEntryOrderingMobile(cartData, true), pinCodeRes);
+						cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartData, true);
+						final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(cartDataOrdered, postalCode);
+						deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
 						LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
 					}
 				}
@@ -2484,11 +2482,13 @@ public class CartsController extends BaseCommerceController
 				/* Product Details */
 				if (null != postalCode && !postalCode.isEmpty())
 				{
-					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, true, false);
+					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, cartModel.getEntries(),
+							deliveryModeDataMap, true, false);
 				}
 				else
 				{
-					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, false, false);
+					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, cartModel.getEntries(),
+							deliveryModeDataMap, false, false);
 				}
 
 				cartDetailsData.setProducts(gwlpList);
@@ -2519,7 +2519,8 @@ public class CartsController extends BaseCommerceController
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
 			final long elapsedTime = System.nanoTime() - start;
-			LOG.debug("************productCheckout completed*********" + elapsedTime);
+			final float seconds = elapsedTime / 1000000000;
+			LOG.debug("************productCheckout completed*********" + seconds);
 		}
 		catch (final ConversionException ce)
 		{
@@ -2573,7 +2574,6 @@ public class CartsController extends BaseCommerceController
 		CartModel cartModel = null;
 		CartData cartData = null;
 		CartData cartDataOrdered = null;
-		List<AbstractOrderEntryModel> aoem = null;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
@@ -2596,11 +2596,8 @@ public class CartsController extends BaseCommerceController
 			// Validate Cart Model is not null
 			if (null != cartModel)
 			{
-
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelisted(cartModel);
-				aoem = cartModel.getEntries();
 				cartData = getMplExtendedCartConverter().convert(cartModel);
-
 				/**** Pincode check Details ***/
 				try
 				{
@@ -2626,11 +2623,13 @@ public class CartsController extends BaseCommerceController
 				/* Product Details */
 				if (null != pincode && !pincode.isEmpty())
 				{
-					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, true, false);
+					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, cartModel.getEntries(),
+							deliveryModeDataMap, true, false);
 				}
 				else
 				{
-					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, aoem, deliveryModeDataMap, false, false);
+					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, cartModel.getEntries(),
+							deliveryModeDataMap, false, false);
 				}
 				cartDetailsData.setProducts(gwlpList);
 
@@ -2712,7 +2711,8 @@ public class CartsController extends BaseCommerceController
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
 			final long elapsedTime = System.nanoTime() - start;
-			LOG.debug("************ displayOrderSummary completed*********" + elapsedTime);
+			final float seconds = elapsedTime / 1000000000;
+			LOG.debug("************ displayOrderSummary completed*********" + seconds);
 
 		}
 		catch (final ModelSavingException me)
