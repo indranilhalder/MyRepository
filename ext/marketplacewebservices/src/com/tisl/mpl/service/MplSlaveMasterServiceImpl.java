@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.dao.MplSlaveMasterDAO;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.wsdto.SellerSlaveDTO;
 import com.tisl.mpl.wsdto.SlaveInfoDTO;
@@ -109,9 +110,14 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 
 							posModel.setType(PointOfServiceTypeEnum.STORE);
 
-							if (StringUtils.isNotEmpty(slaveInfoDto.getActive()))
+							if ("N".equalsIgnoreCase(slaveInfoDto.getActive()) || "Y".equalsIgnoreCase(slaveInfoDto.getActive()))
 							{
 								posModel.setActive(slaveInfoDto.getActive());
+							}
+							else
+							{
+								status = MarketplacecommerceservicesConstants.ERROR_FLAG;
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E0022);
 							}
 						}
 						else
@@ -119,9 +125,14 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 
 							posModel.setType(PointOfServiceTypeEnum.WAREHOUSE);
 
-							if (StringUtils.isNotEmpty(slaveInfoDto.getActive()))
+							if ("N".equalsIgnoreCase(slaveInfoDto.getActive()) || "Y".equalsIgnoreCase(slaveInfoDto.getActive()))
 							{
 								posModel.setActive(MarketplacewebservicesConstants.INACTIVE);
+							}
+							else
+							{
+								status = MarketplacecommerceservicesConstants.ERROR_FLAG;
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E0022);
 							}
 						}
 						if (StringUtils.isNotEmpty(slaveInfoDto.getClicknCollect()))
@@ -601,9 +612,14 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 
 							posModel.setType(PointOfServiceTypeEnum.STORE);
 
-							if (StringUtils.isNotEmpty(slaveInfoDto.getActive()))
+							if ("N".equalsIgnoreCase(slaveInfoDto.getActive()) || "Y".equalsIgnoreCase(slaveInfoDto.getActive()))
 							{
 								posModel.setActive(slaveInfoDto.getActive());
+							}
+							else
+							{
+								status = MarketplacecommerceservicesConstants.ERROR_FLAG;
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E0022);
 							}
 						}
 						else
@@ -611,9 +627,14 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 
 							posModel.setType(PointOfServiceTypeEnum.WAREHOUSE);
 
-							if (StringUtils.isNotEmpty(slaveInfoDto.getActive()))
+							if ("N".equalsIgnoreCase(slaveInfoDto.getActive()) || "Y".equalsIgnoreCase(slaveInfoDto.getActive()))
 							{
 								posModel.setActive(MarketplacewebservicesConstants.INACTIVE);
+							}
+							else
+							{
+								status = MarketplacecommerceservicesConstants.ERROR_FLAG;
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E0022);
 							}
 						}
 						if (StringUtils.isNotEmpty(slaveInfoDto.getClicknCollect()))
