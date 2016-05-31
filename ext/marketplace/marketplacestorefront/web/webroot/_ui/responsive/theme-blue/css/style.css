@@ -9903,7 +9903,7 @@ body .account .right-account .order-history .pagination li{
       width: 100%;
       height: auto;
       margin-bottom: 5px; }
-    .product-tile .image .new {
+    .product-tile .image .new,.newExclusiveElement .new {
       position: absolute;
     top: 0px;
     background-color: #a9143c;
@@ -9917,13 +9917,13 @@ body .account .right-account .order-history .pagination li{
           top:0px;
        right:5px; }
        .product-tile .image .online-exclusive img.brush-strokes-sprite, .product-tile .image .on-sale img.brush-strokes-sprite,
-       .product-tile .image .new img.brush-strokes-sprite{
+       .product-tile .image .new img.brush-strokes-sprite, .newExclusiveElement .new img.brush-strokes-sprite{
      display:none;
        } 
    .shop-sale.wrapper .product-tile .image .online-exclusive, .shop-sale.wrapper .product-tile .image .on-sale {
       bottom: -5px; }
       .product-tile .image .online-exclusive span, .product-tile .image .on-sale span,.product-tile .image .new span,
-       .product-info .product-image-container .new span{
+       .product-info .product-image-container .new span, .newExclusiveElement .new span{
         color: #fff;
         display: table-cell;
     	vertical-align: middle;
@@ -9933,6 +9933,9 @@ body .account .right-account .order-history .pagination li{
         padding: 0 8px;
         text-transform: uppercase;
         line-height:normal;
+      }
+      #newAndExclusive .newExclusiveElement > a:hover .new span{
+      color:#fff;
       }
     .product-tile .image .online-exclusive {
      background-color: #fbba21;
@@ -29308,6 +29311,7 @@ a.button.trending-button:hover{
 #newAndExclusive .newExclusiveElement > a{
     display: block;
     padding-bottom: 5px;
+    position:relative;
 }
 #newAndExclusive .newExclusiveElement > a:hover *{
    color:#a9143c;
