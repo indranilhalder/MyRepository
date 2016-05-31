@@ -1181,4 +1181,3 @@ function populateEnhancedSearch(enhancedSearchData)
 		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
 	}
 }
-
