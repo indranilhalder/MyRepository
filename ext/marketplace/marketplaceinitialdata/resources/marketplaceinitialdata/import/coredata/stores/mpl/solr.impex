@@ -232,6 +232,26 @@ where tbl.code IN (
   SELECT distinct{p.PK} FROM {Product AS p} 
 						WHERE {p.code} IN ( 
 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
+													WHERE 	{bbox:modifiedtime} + 120/1440>= ?lastIndexTime 
+													AND ({bbox.product}={p.code} 
+													AND ({bbox.delisted} = 1 
+														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})
+														OR {bbox.available} <= 0)
+													AND {bbox.product} NOT IN (
+													{{
+														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 
+															WHERE {bbox.delisted} != 1 
+															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+															AND {bbox.available} > 0
+													}})
+										}} 
+									) 
+						AND {p.varianttype} IS NULL	     
+";anonymous
+;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"
+  SELECT distinct{p.PK} FROM {Product AS p} 
+						WHERE {p.code} IN ( 
+										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
 													AND ({bbox.product}={p.code} 
 													AND ({bbox.delisted} = 1 
@@ -422,7 +442,7 @@ INSERT_UPDATE HelpMeShopOccasion;code[unique=true];displayName;filterName
 ;weddingwear;Going for wedding;Wedding Wear;	
 
 
-
+ 
 ## Solr Boost Rules
 $solrIndexedTypeIdentifier=mplProductType
 $solrIndexedType=solrIndexedType(identifier[default=$solrIndexedTypeIdentifier])
