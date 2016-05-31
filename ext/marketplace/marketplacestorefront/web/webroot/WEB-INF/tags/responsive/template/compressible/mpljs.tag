@@ -159,6 +159,9 @@
 </c:if> 
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.feedback.js"></script>
+	
+	<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/tealium.js"></script>
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" med="all" href="${themeResourcePath}/css/main-ie8.css"/>

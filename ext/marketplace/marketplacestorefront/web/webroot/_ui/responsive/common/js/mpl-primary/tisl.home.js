@@ -1,5 +1,20 @@
 var headerLoggedinStatus = false;
 $(function() {
+  
+      $.ajax({
+         url: ACC.config.encodedContextPath + "/fetchToken",
+         type: 'GET',
+         async:false,
+         cache:false,
+         success: function(data) {
+             $("input[name='CSRFToken']").each(function() {
+                 this.value = data;
+             });
+             ACC.config.CSRFToken = data;
+         }
+     });
+});
+$(function() {
 
     $.ajax({
         url: ACC.config.encodedContextPath + "/setheader",
@@ -22,13 +37,10 @@ $(function() {
                         firstName + "!");
                 }
             }
-            $("input[name='CSRFToken']").each(function() {
-                //	console.log("old value ---"+this.value + "---new value--"+data.dts);
-                this.value = data.dts;
-            });
         }
     });
 });
+ 
 $("div.departmenthover").on("mouseover touchend", function() {
     var id = this.id;
     var code = id.substring(4);
@@ -700,16 +712,10 @@ function getNewAndExclusiveAjaxCall() {
                 "<div class='carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
             $.each(response.newAndExclusiveProducts, function(
                 key, value) {
-            	if(value.isNew == 'Y')
-            	{
-            	renderNewHtml = "<div style='z-index: 1;' class='new'><img class='brush-strokes-sprite sprite-New' src='/_ui/responsive/common/images/transparent.png'><span>New</span></div>";
-            	} else {
-            		renderNewHtml = '';
-            	}
                 renderHtml +=
                     "<div class='item slide'><div class='newExclusiveElement'><a href='" +
                     ACC.config.encodedContextPath +
-                    value.productUrl + "'>"+renderNewHtml+"<img class='lazyOwl' data-src='" +
+                    value.productUrl + "'><img class='lazyOwl' data-src='" +
                     value.productImageUrl +
                     "'></img><p class='New_Exclusive_title'>" +
                     value.productTitle +
@@ -1186,4 +1192,20 @@ function populateEnhancedSearch(enhancedSearchData)
 		$(".select-list .dropdown li#all").addClass("selected");
 		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
 	}
+	
+	//Added for tealium
+	if($('#ia_site_page_id').val()=="homepage"){
+		//Added for tealium
+		   $.ajax({
+		        url: ACC.config.encodedContextPath + "/getTealiumDataHome",
+		        type: 'GET',
+		        cache:false,
+		        success: function(data) {
+		           //console.log(data);
+		           $('#tealiumHome').html(data);
+		        }
+		    });
+	}
+	//Tealium end
 }
+

@@ -537,7 +537,8 @@ function addToWishlistFromCart() {
 									<spring:theme code="cart.pincode.blank"/>
 								</c:when>
 								
-		            			<c:otherwise>
+		            			<%-- Commented as part of performance fix TISPT-104
+		            			 <c:otherwise>
 		            		    	<c:if
 										test="${not empty productDeliveryModeMap}">
 										<c:forEach items="${productDeliveryModeMap}"
@@ -556,7 +557,7 @@ function addToWishlistFromCart() {
 											</c:choose>
 										</c:forEach>
 									</c:if>
-		            		    </c:otherwise>
+		            		    </c:otherwise> --%>
 							</c:choose>
 		            	</ul>
 		            </li>

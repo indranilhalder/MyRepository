@@ -161,7 +161,8 @@
 					</div>
 				</div>
 				<!-- for showing  coupons history-start -->
-				<div class="your-activity coupon-history">
+				<!-- Commented for Performance -->
+				<%-- <div class="your-activity coupon-history">
 
 					<c:choose>
 						<c:when test="${not empty searchPageDatahist.results}">
@@ -282,7 +283,7 @@
 						</span>
 
 					</div>
-				</div>
+				</div> 
 				<div class="couponHistoryLinkDiv">
 					<a href="#nogo" id="couponHistory" class="couponHistoryLink"> <spring:theme
 							code="text.account.coupons.usage.history"
@@ -290,7 +291,7 @@
 						id="couponHistoryHide" class="couponHistoryLink"> <spring:theme
 							code="text.account.coupons.back.history"
 							text="Back to Coupon Details" /></a>
-				</div>
+				</div>--%>
 
 
 				<!-- for showing  coupons history-end -->
