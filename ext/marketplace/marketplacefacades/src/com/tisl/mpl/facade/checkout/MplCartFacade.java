@@ -295,6 +295,7 @@ public interface MplCartFacade extends CartFacade
 	 * @param cart
 	 * @return
 	 */
+
 	CartModel removeDeliveryMode(CartModel cart);
 
 	boolean removeDeliveryMode2(CartModel cart);
@@ -386,7 +387,8 @@ public interface MplCartFacade extends CartFacade
 	boolean isCartEntryDelistedMobile(final CartModel cartModel) throws CommerceCartModificationException,
 			EtailNonBusinessExceptions;
 
-	public CartModel getCalculatedCart() throws CommerceCartModificationException, EtailNonBusinessExceptions;
+
+	CartModel getCalculatedCart() throws CommerceCartModificationException, EtailNonBusinessExceptions;
 
 	OrderEntryData getCartEntryByUssid(final String ussid, CartData cart);
 
@@ -417,5 +419,6 @@ public interface MplCartFacade extends CartFacade
 	 */
 	public CartData getSessionCartWithEntryOrderingMobile(final CartData data, final boolean recentlyAddedFirst)
 			throws EtailNonBusinessExceptions;
+
 
 }

@@ -105,21 +105,17 @@ public class MplCouponDaoImpl implements MplCouponDao
 			final Map queryParams = new HashMap();
 			queryParams.put(MarketplacecouponConstants.CUSTOMERPK, customer);
 
-			queryBiulder
-					.append(
-							"select {v.pk} from {Promotionvoucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} AND ( {ur.users} like ('%")
+			queryBiulder.append(
+					"select {v.pk} from {Promotionvoucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} AND ( {ur.users} like ('%")
 					//for checking current user and user group
 					//.append(" AND ( {ur.users} like ('%")
-					.append(customer.getPk().getLongValue())
-					.append("%')")
-					.append(groupBiulder.toString())
+					.append(customer.getPk().getLongValue()).append("%')").append(groupBiulder.toString())
 					//check voucher invalidation table
 					.append(
 							" )AND {v.redemptionQuantityLimitPerUser} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} AND {vin.user}='")
 					//.append(" ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} ")
 					//.append(" AND  {vin.user}='")
-					.append(customer.getPk().getLongValue())
-					.append(
+					.append(customer.getPk().getLongValue()).append(
 							"'  }}) AND {v.redemptionQuantityLimit} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}}) ORDER BY {dr.startdate} DESC");
 			//.append(" }})")
 			//.append(" AND {v.redemptionQuantityLimit} >")
@@ -131,7 +127,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData(MarketplacecouponConstants.BYDATE, CLOSED_VOUCHER
 
-			) });
+					) });
 
 
 			return getPagedFlexibleSearchService().search(sortQueries, MarketplacecouponConstants.BYDATE, queryParams, pageableData);
@@ -217,21 +213,25 @@ public class MplCouponDaoImpl implements MplCouponDao
 		try
 		{
 			final StringBuilder queryBiulder = new StringBuilder(500);
-			final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+			//final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 			//final Calendar calendar = Calendar.getInstance();
 			//calendar.add(Calendar.MONTH, -6);
 			//final Date sixMonthsBeforeDate = calendar.getTime();
 			//final String dateSixMonthsBefore = formatter.format(sixMonthsBeforeDate);
-			final String currentDate = formatter.format(new Date());
+			//final String currentDate = formatter.format(new Date());
 			//final double totalSaving = 0;
 			//final int totalCount = 0;
 
+			//Fix for TISPRO-530 --- Only work with Oracle DB
 			queryBiulder.append("SELECT COUNT(distinct{vi.voucher}),SUM({vi.savedAmount}) FROM {VoucherInvalidation as vi JOIN ")
 					.append("Order AS odr ON {vi.order}={odr.pk}} WHERE {vi.user} LIKE ").append("('%")
-					.append(customer.getPk().getLongValue()).append("%')").append("AND {odr.date} > to_date('").append(currentDate)
-					.append("', 'MM/DD/YYYY') - INTERVAL '6' MONTH");
+					//.append(customer.getPk().getLongValue()).append("%')").append("AND {odr.date} > to_date('").append(currentDate)
+					//.append("', 'MM/DD/YYYY') - INTERVAL '6' MONTH");
+					.append(customer.getPk().getLongValue()).append("%')")
+					.append(" AND {odr.date} > TRUNC (ADD_MONTHS (SYSDATE, -6), 'MM')");
 
 			final String queryString = queryBiulder.toString();
+			LOG.info("Query is ::: " + queryString);
 			final FlexibleSearchQuery voucherInvalidationSumQuery = new FlexibleSearchQuery(queryString);
 			voucherInvalidationSumQuery.setResultClassList(Arrays.asList(Integer.class, Double.class));
 			final SearchResult<List<Object>> result = flexibleSearchService.search(voucherInvalidationSumQuery);

@@ -171,7 +171,7 @@ $(document).ready(function() {
    	getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 var stockMap="${skuIdsWithNoStock}"; 
 	
-	 fetchPrice();
+	 //fetchPrice();
      setSellerLimits(1);
      $(".selectQty").change(function() {
  		$("#qty").val($(".selectQty :selected").val());

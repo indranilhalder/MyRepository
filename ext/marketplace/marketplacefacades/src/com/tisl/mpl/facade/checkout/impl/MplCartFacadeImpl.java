@@ -102,6 +102,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	private MplCommerceCartService mplCommerceCartService;
 	private ModelService modelService;
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
+	private Converter<CartModel, CartData> mplExtendedPromoCartConverter;
 
 	@Autowired
 	private CommerceCartService commerceCartService;
@@ -136,7 +137,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	private MplConfigService mplConfigService;
 	@Resource
 	MplCommerceCartCalculationStrategy mplDefaultCommerceCartCalculationStrategy;
-
 
 
 	public MplCommerceCartCalculationStrategy getMplDefaultCommerceCartCalculationStrategy()
@@ -661,6 +661,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		double totalPrice = 0.0;
 		Double discountValue = Double.valueOf(0.0);
 		final CartModel cartModel = getCartService().getSessionCart();
+		boolean cartSaveRequired = false; //TISPT 80
 		if (cartModel != null)
 		{
 			final List<AbstractOrderEntryModel> entries = cartModel.getEntries();
@@ -669,12 +670,24 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				final double entryTotal = entry.getQuantity().doubleValue() * entry.getBasePrice().doubleValue();
 				subtotal += entryTotal;
 				//TISEE-581
-				entry.setPrevDelCharge(Double.valueOf(0));
-				entry.setCurrDelCharge(Double.valueOf(0));
-				getModelService().save(entry);
+				if (entry.getPrevDelCharge().doubleValue() > 0 || entry.getCurrDelCharge().doubleValue() > 0)
+				{
+					cartSaveRequired = true;
+					entry.setPrevDelCharge(Double.valueOf(0));
+					entry.setCurrDelCharge(Double.valueOf(0));
+				}
+				//getModelService().save(entry); //TISPT 80
+			}
+			if (cartSaveRequired)
+			{
+				getModelService().saveAll(entries);
 			}
 
-			final CartData cartData = mplExtendedCartConverter.convert(cartModel);
+			//final CartData cartData = mplExtendedCartConverter.convert(cartModel);
+
+			final CartData cartData = getMplExtendedPromoCartConverter().convert(cartModel); //TISPT-104
+
+
 			////TISST-13010
 			if (cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
 			{
@@ -1519,40 +1532,47 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Override
 	public CartModel removeDeliveryMode(final CartModel cart)
 	{
-		//		boolean hasDeliveryMode = false;
+		boolean reCalculationRequired = false;
+		boolean deliverypointOfService = false;
 		try
 		{
-			for (final AbstractOrderEntryModel entry : cart.getEntries())
+			final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+			if (CollectionUtils.isNotEmpty(entryList))
 			{
-				if (entry.getMplDeliveryMode() != null)
+				for (final AbstractOrderEntryModel entry : entryList)
 				{
-					entry.setMplDeliveryMode(null);
-					modelService.save(entry);
-					//hasDeliveryMode = true;
-				}
-
-				if (entry.getDeliveryPointOfService() != null)
-				{
-					entry.setDeliveryPointOfService(null);
-					modelService.save(entry);
+					if (entry.getMplDeliveryMode() != null)
+					{
+						entry.setMplDeliveryMode(null);
+						//modelService.save(entry); TISPT-104
+						reCalculationRequired = true;
+					}
+					if (entry.getDeliveryPointOfService() != null)
+					{
+						entry.setDeliveryPointOfService(null);
+						//modelService.save(entry); TISPT-104
+						deliverypointOfService = true;
+					}
 				}
 			}
+			if (reCalculationRequired || deliverypointOfService) //TISPT-104
+			{
+				modelService.saveAll(entryList);
+			}
+
+			//TISPT-104
 			//call recalculate on cart, only if there's a change in deliverymode.
 			//			if (hasDeliveryMode)
 			//			{
-			commerceCartService.recalculateCart(cart);
-			modelService.save(cart);
+			commerceCartService.recalculateCart(cart); //TISPT-104
+			//modelService.save(cart);
 			//			}
-
-
-
 		}
 		catch (final Exception e)
 		{
-			// YTODO Auto-generated catch block
-			LOG.info("Some issue may be happend while removing Dellivery mode from Cart to remove Delivery Specific promotion");
+			LOG.info("Some issue may be happend while removing Dellivery mode from Cart to remove Delivery Specific promotion", e);
 		}
-		// YTODO Auto-generated method stub
+
 		return cart;
 	}
 
@@ -2235,48 +2255,58 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Override
 	public CartModel getCalculatedCart() throws CommerceCartModificationException, EtailNonBusinessExceptions
 	{
-		final CartModel cart = getCartService().getSessionCart();
-
-		setChannelForCart(cart);
-		final boolean isDelisted = isCartEntryDelisted(cart);
-		final boolean isDeliveryModeRemoved = removeDeliveryMode2(cart);
-		final boolean hasSubtotalChanged = setCartSubTotal2(cart);
+		CartModel cart = getCartService().getSessionCart();
+		//setChannelForCart(cart);
+		cart = setChannelAndExpressCheckout(cart);
+		isCartEntryDelisted(cart);
+		removeDeliveryMode(cart); // Cart recalculation method invoked inside this method
+		//final boolean hasSubtotalChanged = setCartSubTotal(cart);
 		//TODO Add release voucher code
 		//Do calculate the cart, if any of the following conditions met. Else return the cart as it is.
-		if (isDelisted || isDeliveryModeRemoved || hasSubtotalChanged)
-		{
-			cart.setCalculated(Boolean.FALSE);
-			setCartEntriesCalculation(cart);
-			final CommerceCartParameter parameter = new CommerceCartParameter();
-			parameter.setCart(cart);
-			getMplDefaultCommerceCartCalculationStrategy().calculateCart(parameter);
-			getCartService().setSessionCart(cart);
-		}
-		return cart;
+		//		if (isDelisted || isDeliveryModeRemoved)
+		//		{
+		//			cart.setCalculated(Boolean.FALSE);
+		//			setCartEntriesCalculation(cart);
+		//			final CommerceCartParameter parameter = new CommerceCartParameter();
+		//			parameter.setCart(cart);
+		//			getMplDefaultCommerceCartCalculationStrategy().calculateCart(parameter);
+		//			getCartService().setSessionCart(cart);
+		//		}
+		//		return cart;
+
+		return cart; //TISPT-104
+
 	}
 
-	private void setCartEntriesCalculation(final CartModel oldCart)
+	/*
+	 * private void setCartEntriesCalculation(final CartModel oldCart) { for (final AbstractOrderEntryModel entry :
+	 * oldCart.getEntries()) { entry.setCalculated(Boolean.FALSE); } }
+	 */
+
+
+
+	//TISPT-104
+	private CartModel setChannelAndExpressCheckout(final CartModel cartModel)
 	{
-		for (final AbstractOrderEntryModel entry : oldCart.getEntries())
+		cartModel.setIsExpressCheckoutSelected(Boolean.FALSE);
+		if (cartModel.getDeliveryAddress() != null)
 		{
-			entry.setCalculated(Boolean.FALSE);
+			cartModel.setDeliveryAddress(null);
 		}
-	}
-
-
-	private void setChannelForCart(final CartModel model)
-
-
-	{
-		if (!model.getChannel().equals(SalesApplication.WEB))
-
+		if (!cartModel.getChannel().equals(SalesApplication.WEB))
 		{
-			model.setChannel(SalesApplication.WEB);
-			getModelService().save(model);
+			cartModel.setChannel(SalesApplication.WEB);
 		}
 
+		modelService.save(cartModel);
+
+		return cartModel;
 	}
 
+	/*
+	 * private void setChannelForCart(final CartModel model) { if (!model.getChannel().equals(SalesApplication.WEB)) {
+	 * model.setChannel(SalesApplication.WEB); getModelService().save(model); } }
+	 */
 	/**
 	 * this method calls service to get inventories for stores.
 	 *
@@ -2328,7 +2358,27 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			throws EtailNonBusinessExceptions
 	{
 		return mplCommerceCartService.getVlaidDeliveryModesByInventory(pinCodeResponseData);
-
-
 	}
+
+
+	/**
+	 * @return the mplExtendedPromoCartConverter
+	 */
+	public Converter<CartModel, CartData> getMplExtendedPromoCartConverter()
+	{
+		return mplExtendedPromoCartConverter;
+	}
+
+
+	/**
+	 * @param mplExtendedPromoCartConverter
+	 *           the mplExtendedPromoCartConverter to set
+	 */
+	public void setMplExtendedPromoCartConverter(final Converter<CartModel, CartData> mplExtendedPromoCartConverter)
+	{
+		this.mplExtendedPromoCartConverter = mplExtendedPromoCartConverter;
+	}
+
+
+
 }

@@ -57,7 +57,22 @@ tr.d0 td {
 <input type="hidden" value="${product.rootCategory}" name="rootCategoryMSD" />   
 <input type="hidden" name="productCodeMSD" class="cartMSD"	value="${product.code}" />							
 <!-- End MSD -->  
-
+<!-- Tealium -->
+<input type="hidden" id="product_unit_price" value="${product_unit_price}" />
+<input type="hidden" id="site_section" value="${site_section}" />
+<input type="hidden" id="product_list_price" value="${product_list_price}" />
+<input type="hidden" id="product_name" value="${product_name}" />
+<input type="hidden" id="product_sku" value="${product_sku}" />
+<input type="hidden" id="page_category_name" value="${page_category_name}" />
+<input type="hidden" id="category_id" value="${category_id}" />
+<input type="hidden" id="page_section_name" value="${page_section_name}" />
+<input type="hidden" id="page_name" value="${page_name}" />
+<input type="hidden" id="product_id" value="${product_id}" />
+<input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}" />
+<input type="hidden" id="product_brand" value="${product_brand}" />
+<input type="hidden" id="site_section_detail" value="${site_section_detail}" />
+<input type="hidden" id="product_category" value="${product_category}" />	
+<!-- End Tealium -->
 
 
 
