@@ -735,7 +735,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					entryModel.setAddToCartFromWl(Boolean.valueOf(addedToCartWl));
 					LOG.debug("*********** Add to cart from WL mobile web service *************" + addedToCart + "::USSID::" + USSID);
 					entryModelList.add(entryModel);
-					break;
 				}
 				//For saving all the data at once rather in loop;
 				modelService.saveAll(entryModelList);
