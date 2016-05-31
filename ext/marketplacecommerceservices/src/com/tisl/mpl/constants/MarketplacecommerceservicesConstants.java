@@ -1555,6 +1555,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
 	public static final String EBS_SESSION_ID = "session_id";
+	public static final String WISHLIST_BY_USSID = "SELECT {wishentry.pk} FROM {Wishlist2entry as wishentry}, {Wishlist2 as wish}  WHERE {wish.user} = ?user AND {wishentry.wishlist}={wish.pk} AND {wishentry.ussid}= ?ussid ORDER BY {creationtime} desc";
 
 
 	private MarketplacecommerceservicesConstants()

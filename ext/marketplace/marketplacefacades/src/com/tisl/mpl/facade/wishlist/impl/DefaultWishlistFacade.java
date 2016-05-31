@@ -132,6 +132,24 @@ public class DefaultWishlistFacade implements WishlistFacade
 	}
 
 	/**
+	 * @description to get all wishlist
+	 * @return List<Wishlist2Model>
+	 */
+	@Override
+	public List<Wishlist2EntryModel> getAllWishlistByUssid(final String ussid)
+	{
+		try
+		{
+			final UserModel user = userService.getCurrentUser();
+			return mplWishlistService.getWishlistByUserAndUssid(user, ussid);
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/**
 	 * @description to create new wishlist
 	 * @return wishlist2Model
 	 */
@@ -269,7 +287,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#getBuyBoxPrice(java.lang.String,
 	 * de.hybris.platform.commercefacades.product.data.ProductData)
 	 */
@@ -307,7 +325,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#removeProductFromWL(java.lang.String)
 	 */
 	@Override

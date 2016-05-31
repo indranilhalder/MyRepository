@@ -5,6 +5,7 @@ package com.tisl.mpl.facade.wishlist;
 
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.util.List;
@@ -41,4 +42,11 @@ public interface WishlistFacade
 	 * @return
 	 */
 	ProductData getBuyBoxPrice(String ussid, ProductData productData1);
+
+	/**
+	 * @param ussid
+	 * @param wishlistEntry
+	 * @return
+	 */
+	public List<Wishlist2EntryModel> getAllWishlistByUssid(final String ussid);
 }

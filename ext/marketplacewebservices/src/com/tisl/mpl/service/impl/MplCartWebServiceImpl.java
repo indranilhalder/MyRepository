@@ -55,7 +55,6 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.variants.model.VariantProductModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
-import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -659,10 +658,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		int count = 0;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		final List<Wishlist2EntryModel> entryModelList = new ArrayList<Wishlist2EntryModel>();
+		CartModel cartModel = null;
+		ProductModel productModel = null;
 		try
 		{
-			CartModel cartModel = null;
-			ProductModel productModel = null;
+
 			if (userFacade.isAnonymousUser())
 			{
 				LOG.debug("addProducToCart:  AnonymousUser ");
@@ -678,11 +678,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 			if (cartModel == null)
 			{
-
 				LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartId);
-
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
-
 			}
 			else
 			{
@@ -732,22 +729,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				addedToCart = mplCommerceCartService.addItemToCart(cartId, productCode, quant, USSID);
 				LOG.debug("*********** Products added status in cart *************  ::::USSID::::" + USSID + ":::added???"
 						+ addedToCart);
-
-				final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
-
-				for (final Wishlist2Model wishlist2Model : allWishlists)
+				final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID);
+				for (final Wishlist2EntryModel entryModel : allWishlistEntry)
 				{
-					for (final Wishlist2EntryModel entryModel : wishlist2Model.getEntries())
-					{
-						if (entryModel.getUssid().equalsIgnoreCase(USSID))
-						{
-							entryModel.setAddToCartFromWl(Boolean.valueOf(addedToCartWl));
-							LOG.debug("*********** Add to cart from WL mobile web service *************" + addedToCart + "::USSID::"
-									+ USSID);
-							entryModelList.add(entryModel);
-							break;
-						}
-					}
+					entryModel.setAddToCartFromWl(Boolean.valueOf(addedToCartWl));
+					LOG.debug("*********** Add to cart from WL mobile web service *************" + addedToCart + "::USSID::" + USSID);
+					entryModelList.add(entryModel);
+					break;
 				}
 				//For saving all the data at once rather in loop;
 				modelService.saveAll(entryModelList);
@@ -759,35 +747,19 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				result.setDelistedMessage(delistMessage);
 			}
 
-			if (addedToCart)
+			if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty())
 			{
-				if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty())
+				//result.setCount(Integer.valueOf(cartModel.getEntries().size()).toString()); Unnecessary wrapper object creation
+				for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 				{
-					//result.setCount(Integer.valueOf(cartModel.getEntries().size()).toString()); Unnecessary wrapper object creation
-					for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+					if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
 					{
-						if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
-						{
-							count++;
-						}
+						count++;
 					}
-					result.setCount(String.valueOf(count));
 				}
+				result.setCount(String.valueOf(count));
 			}
-			else
-			{
-				if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty())
-				{
-					for (final AbstractOrderEntryModel entry : cartModel.getEntries())
-					{
-						if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
-						{
-							count++;
-						}
-					}
-					result.setCount(String.valueOf(count));
-				}
-			}
+
 			if (!addedToCart && !delisted)
 			{
 				LOG.debug(MarketplacecommerceservicesConstants.FAILURE_CARTADD);
