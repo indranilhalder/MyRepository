@@ -21,15 +21,15 @@ public class ExceptionUtil
 
 		final StringBuffer message = new StringBuffer(40);
 		final StringBuffer actualStackMessage = new StringBuffer(40);
-		message.append(posNBExp.toString());
+		//message.append(posNBExp.toString());
 		//message.append("\n");  Avoid appending characters as strings in StringBuffer.append
-		message.append('\n');
+		//message.append('\n');
 		final List<StackTraceElement> stackTraces = Arrays.asList(posNBExp.getStackTrace());//posNBExp.getStackTraceList();
 		if (null == stackTraces)
 		{
 			return "";
 		}
-		message.append("\n\n*** Customized stack trace ***\n\n");
+		//message.append("\n\n*** Customized stack trace ***\n\n");
 		actualStackMessage.append("\n\n*** Actual stack trace ***\n\n");
 		try
 		{
@@ -38,10 +38,11 @@ public class ExceptionUtil
 				final String className = element.getClassName();
 				final String str = String.format("at %s.%s(%s:%s)\n", className, element.getMethodName(), element.getFileName(),
 						Integer.valueOf(element.getLineNumber()));
-				if ((className.startsWith("com.tisl.mpl.") && !className.startsWith("com.tisl.mpl.exception.")))
-				{
-					message.append(str);
-				}
+				//Commented to stop customized log printing
+				//				if ((className.startsWith("com.tisl.mpl.") && !className.startsWith("com.tisl.mpl.exception.")))
+				//				{
+				//					message.append(str);
+				//				}
 				actualStackMessage.append(str);
 			}
 		}

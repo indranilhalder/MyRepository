@@ -39,9 +39,6 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.CookieGenerator;
 
-import com.tisl.mpl.storefront.constants.MessageConstants;
-import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
-
 
 /**
  * Filter that initializes the session for the marketplacestorefront. This is a spring configured filter that is
@@ -90,44 +87,46 @@ public class StorefrontFilter extends OncePerRequestFilter
 			if (StringUtils.isBlank(request.getHeader(AJAX_REQUEST_HEADER_NAME)))
 			{
 				final String requestURL = request.getRequestURL().toString();
-				session.setAttribute(ORIGINAL_REFERER, StringUtils.isNotBlank(queryString) ? requestURL + "?" + queryString
-						: requestURL);
+				session.setAttribute(ORIGINAL_REFERER,
+						StringUtils.isNotBlank(queryString) ? requestURL + "?" + queryString : requestURL);
 			}
 
 			getBrowseHistory().addBrowseHistoryEntry(new BrowseHistoryEntry(request.getRequestURI(), null));
 		}
-		getSEOAttributes(request);
+		//Fix for TISPT-113
+		//getSEOAttributes(request);
 
 		filterChain.doFilter(request, response);
 	}
 
+	//Fix for TISPT-113
 	/**
 	 * @param request
 	 */
-	private void getSEOAttributes(final HttpServletRequest request)
-	{
-		final String mediaCode = configurationService.getConfiguration().getString(MessageConstants.MEDIA_CODE).trim();
-		String seoMediaURL = null;
-		final String imageHost = configurationService.getConfiguration().getString(MessageConstants.MEDIA_HOST).trim();
-		if (null != mediaCode)
-		{
-			final MediaModel media = getMediaByCode(mediaCode);
-			try
-			{
-				if (null != media)
-				{
-					seoMediaURL = media.getURL2();
-				}
-			}
-			catch (final Exception ex)
-			{
-				LOG.error("Exception at getSEOAttributes::::::::::::::", ex);
-			}
-			final StringBuilder sb = new StringBuilder();
-			final String fullURL = sb.append(imageHost).append(seoMediaURL).toString();
-			request.setAttribute(ModelAttributetConstants.SEO_MEDIA_URL, fullURL);
-		}
-	}
+	//	private void getSEOAttributes(final HttpServletRequest request)
+	//	{
+	//		final String mediaCode = configurationService.getConfiguration().getString(MessageConstants.MEDIA_CODE).trim();
+	//		String seoMediaURL = null;
+	//		final String imageHost = configurationService.getConfiguration().getString(MessageConstants.MEDIA_HOST).trim();
+	//		if (null != mediaCode)
+	//		{
+	//			final MediaModel media = getMediaByCode(mediaCode);
+	//			try
+	//			{
+	//				if (null != media)
+	//				{
+	//					seoMediaURL = media.getURL2();
+	//				}
+	//			}
+	//			catch (final Exception ex)
+	//			{
+	//				LOG.error("Exception at getSEOAttributes::::::::::::::", ex);
+	//			}
+	//			final StringBuilder sb = new StringBuilder();
+	//			final String fullURL = sb.append(imageHost).append(seoMediaURL).toString();
+	//			request.setAttribute(ModelAttributetConstants.SEO_MEDIA_URL, fullURL);
+	//		}
+	//	}
 
 	protected MediaModel getMediaByCode(final String mediaCode)
 	{
