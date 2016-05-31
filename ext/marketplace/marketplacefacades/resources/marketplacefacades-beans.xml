@@ -293,6 +293,7 @@
 	<bean class="com.tisl.mpl.facades.product.data.CategoryData">
 		<property name="name" type="String" />
 		<property name="code" type="String" />
+		<property name="image" type="String" />
 		<property name="status" type="Boolean" />
 	</bean>
 	<bean class="com.tisl.mpl.facades.product.data.SendInvoiceData">

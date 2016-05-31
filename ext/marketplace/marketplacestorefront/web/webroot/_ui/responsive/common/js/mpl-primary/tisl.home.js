@@ -1,5 +1,20 @@
 var headerLoggedinStatus = false;
 $(function() {
+  
+      $.ajax({
+         url: ACC.config.encodedContextPath + "/fetchToken",
+         type: 'GET',
+         async:false,
+         cache:false,
+         success: function(data) {
+             $("input[name='CSRFToken']").each(function() {
+                 this.value = data;
+             });
+             ACC.config.CSRFToken = data;
+         }
+     });
+});
+$(function() {
 
     $.ajax({
         url: ACC.config.encodedContextPath + "/setheader",
@@ -22,13 +37,10 @@ $(function() {
                         firstName + "!");
                 }
             }
-            $("input[name='CSRFToken']").each(function() {
-                //	console.log("old value ---"+this.value + "---new value--"+data.dts);
-                this.value = data.dts;
-            });
         }
     });
 });
+ 
 $("div.departmenthover").on("mouseover touchend", function() {
     var id = this.id;
     var code = id.substring(4);
@@ -1180,5 +1192,20 @@ function populateEnhancedSearch(enhancedSearchData)
 		$(".select-list .dropdown li#all").addClass("selected");
 		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
 	}
+	
+	//Added for tealium
+	if($('#ia_site_page_id').val()=="homepage"){
+		//Added for tealium
+		   $.ajax({
+		        url: ACC.config.encodedContextPath + "/getTealiumDataHome",
+		        type: 'GET',
+		        cache:false,
+		        success: function(data) {
+		           //console.log(data);
+		           $('#tealiumHome').html(data);
+		        }
+		    });
+	}
+	//Tealium end
 }
 
