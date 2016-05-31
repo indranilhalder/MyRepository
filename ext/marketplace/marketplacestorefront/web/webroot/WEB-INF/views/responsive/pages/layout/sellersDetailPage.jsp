@@ -216,6 +216,7 @@ function firstToUpperCase( str ) {
 	border-collapse: separate;
 	box-shadow: 0 0 9px #a9143c;
 	visibility: hidden;
+	z-index:1;
 }
 .tooltip_pop:after {
 	content: "";
