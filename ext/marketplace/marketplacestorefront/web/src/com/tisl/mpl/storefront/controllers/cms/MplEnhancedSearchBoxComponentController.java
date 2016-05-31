@@ -77,7 +77,7 @@ public class MplEnhancedSearchBoxComponentController extends AbstractCMSComponen
 			/*
 			 * final List<SearchDropDownCatagory> categoryList =
 			 * enumerationService.getEnumerationValues(SearchDropDownCatagory.class);
-			 *
+			 * 
 			 * final List<SearchDropDownBrand> brands = enumerationService.getEnumerationValues(SearchDropDownBrand.class);
 			 * final List<SearchDropDownSeller> seller =
 			 * enumerationService.getEnumerationValues(SearchDropDownSeller.class);
@@ -146,7 +146,11 @@ public class MplEnhancedSearchBoxComponentController extends AbstractCMSComponen
 			{
 				final EnhancedSearchSellerData sellerData = new EnhancedSearchSellerData();
 				sellerData.setId(sellerModel.getId());
-				sellerData.setName(sellerModel.getLegalName());
+				//sellerData.setName(sellerModel.getLegalName());
+				//TISPRD-1792
+				final String sellerName = sellerModel.getFirstname() == null ? sellerModel.getLegalName() : sellerModel
+						.getFirstname();
+				sellerData.setName(sellerName);
 				sellerDataList.add(sellerData);
 			}
 

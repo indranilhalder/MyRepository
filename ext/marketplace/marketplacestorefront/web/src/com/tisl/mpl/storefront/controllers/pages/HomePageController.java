@@ -30,11 +30,13 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,10 +125,13 @@ public class HomePageController extends AbstractPageController
 	private LatestOffersFacade latestOffersFacade;
 	@Autowired
 	private DefaultCMSContentSlotService contentSlotService;
+	@Autowired
+	private ConfigurationService configurationService;
 
 	private static final String VERSION = "version";
 	private static final String HOMEPAGE = "homepage";
 	private static final String TITLE = "title";
+	private static final String Y = "Y";
 
 
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
@@ -514,7 +519,6 @@ public class HomePageController extends AbstractPageController
 				components = homepageSection4BSlot.getCmsComponents();
 			}
 
-
 			for (final AbstractCMSComponentModel component : components)
 			{
 				LOG.info("Found Component>>>>with id :::" + component.getUid());
@@ -530,12 +534,14 @@ public class HomePageController extends AbstractPageController
 					}
 					newAndExclusiveJson.put(TITLE, title);
 					final JSONArray newAndExclusiveJsonArray = new JSONArray();
+
 					if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
 					{
 						for (final ProductModel newAndExclusiveProducts : newAndExclusiveComponent.getProducts())
 						{
 
 							final JSONObject newAndExclusiveProductJson = new JSONObject();
+
 							ProductData product = null;
 							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
 							newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
@@ -563,6 +569,7 @@ public class HomePageController extends AbstractPageController
 							}
 							newAndExclusiveProductJson.put("productPrice", price);
 							newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+
 						}
 						newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
 					}
@@ -585,6 +592,32 @@ public class HomePageController extends AbstractPageController
 		}
 		return newAndExclusiveJson;
 
+	}
+
+	private boolean isNew(final Date existDate)
+	{
+		boolean newAttr = false;
+		if (null != existDate)
+		{
+			final Date sysDate = new Date();
+			final long dayDiff = calculateDays(existDate, sysDate);
+
+			LOG.info("******" + existDate + "  --- dayDiff: " + dayDiff);
+			final String validDaysSt = configurationService.getConfiguration().getString("attribute.new.validDays");
+			final int validDays = validDaysSt == null ? 0 : Integer.parseInt(validDaysSt);
+
+			if (validDays > dayDiff)
+			{
+				newAttr = true;
+			}
+		}
+
+		return newAttr;
+	}
+
+	private long calculateDays(final Date dateEarly, final Date dateLater)
+	{
+		return (dateLater.getTime() - dateEarly.getTime()) / (24 * 60 * 60 * 1000);
 	}
 
 	//product-price

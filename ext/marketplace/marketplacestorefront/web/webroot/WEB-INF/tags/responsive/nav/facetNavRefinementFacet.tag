@@ -89,7 +89,7 @@ function navigateToPage(queryString,textString)
 		
 		<%--	<c:otherwise>
 		<label class="brandSelectAll" for="brandSelectAll">Check All</label>
-		</c:otherwise>  --%>
+		</c:otherwise> --%>
 		
 		
 		</c:choose>
@@ -110,7 +110,7 @@ function navigateToPage(queryString,textString)
 						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
-								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
+								<c:when test="${colorAry[0]='Multi' || colorAry[0]=='multi'}">
 								<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
