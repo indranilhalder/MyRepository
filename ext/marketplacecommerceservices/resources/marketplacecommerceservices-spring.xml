@@ -1681,7 +1681,7 @@
 		class="com.tisl.mpl.promotion.service.impl.DefaultUpdateSplPriceHelperService">
 	</bean>
 <!-- IA  export job 22 May 16 -->
-	<bean id="catProdExportJob" class="com.tisl.mpl.integration.job.CategoryProductExtractJob"
+	<!-- <bean id="catProdExportJob" class="com.tisl.mpl.integration.job.CategoryProductExtractJob"
 		parent="abstractJobPerformable"
 			autowire="byName">
 		<property name="modelService" ref="modelService" />
@@ -1697,7 +1697,7 @@
 		<property name="modelService" ref="modelService" />
 	</bean>
 	<bean id="iaFeedUtil" class="com.tisl.mpl.integration.job.IAFeedUtility">
-	</bean>
+	</bean> -->
 <!-- IA STAGED DATA SOURCE -->
 
  <!--<bean id="iaDataSource"
@@ -1708,13 +1708,13 @@
 		<property name="password" value="mpldev2com123" />
 	</bean>  -->
 	
-	<bean id="iaDataSource"
+<!-- 	<bean id="iaDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url" value="${jdbc.iastg.url}" />
 		<property name="username" value="${jdbc.iastg.user}" />
 		<property name="password" value="${jdbc.iastg.pass}" />
-	</bean>
+	</bean> -->
 	
 
 </beans>
