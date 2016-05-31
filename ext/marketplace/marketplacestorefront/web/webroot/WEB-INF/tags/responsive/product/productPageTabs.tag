@@ -17,9 +17,9 @@ var mrpValue = '${product.productMRP.formattedValue}';
 var sellersList = '${product.seller}';
 var productCode = '${product.code}';
 var buyboxskuId='';  
- $( document ).ready(function() { 		
+ /* $( document ).ready(function() { 		
 	fetchPrice();		
- });
+ }); */
   
  
 	

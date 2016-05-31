@@ -32,11 +32,13 @@ import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.BaseOptionData;
+import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ClassificationData;
 import de.hybris.platform.commercefacades.product.data.FeatureData;
 import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
@@ -91,6 +93,7 @@ import com.granule.json.JSONArray;
 import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
+import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -277,9 +280,9 @@ public class ProductPageController extends AbstractPageController
 		String returnStatement = null;
 		try
 		{
-			if(null!=productCode)
+			if (null != productCode)
 			{
-				productCode = productCode.toUpperCase();	
+				productCode = productCode.toUpperCase();
 			}
 			LOG.debug("**************************************opening pdp for*************" + productCode);
 			final ProductModel productModel = productService.getProductForCode(productCode);
@@ -318,6 +321,13 @@ public class ProductPageController extends AbstractPageController
 				model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 				model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
 
+				//AKAMAI fix
+				if (productModel instanceof PcmProductVariantModel)
+				{
+					final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+					model.addAttribute("productSize", variantProductModel.getSize());
+				}
+
 				returnStatement = getViewForPage(model);
 			}
 
@@ -345,6 +355,122 @@ public class ProductPageController extends AbstractPageController
 
 
 		return returnStatement;
+	}
+
+	/**
+	 * @param productData
+	 * @param breadcrumbs
+	 *
+	 */
+	private void populateTealiumData(final ProductData productData, final Model model, final List<Breadcrumb> breadcrumbs)
+	{
+		final List<String> productCategoryList = new ArrayList<String>();
+		final List<String> productCategoryIdList = new ArrayList<String>();
+		String productCategory = "";
+		String productBrand = "";
+		String productSku = "";
+		String productPrice = "";
+		String productName = "";
+		String categoryId = "";
+		String productUnitPrice = "";
+		String productSubCategoryName = "";
+		if (productData != null && productData.getCategories() != null)
+		{
+			for (final CategoryData category : productData.getCategories())
+			{
+				productCategoryList.add(category.getName());
+				productCategoryIdList.add(category.getCode());
+			}
+		}
+		final Object[] productCategoryStrings = productCategoryList.toArray();
+		//Object[] productCategoryIdStrings = productCategoryIdList.toArray();
+
+		if (productCategoryStrings.length > 0)
+		{
+			productCategory = (String) productCategoryStrings[0];
+			categoryId = productCategoryIdList.get(0);
+		}
+
+		if (productCategoryStrings.length >= 2)
+		{
+			productSubCategoryName = (String) productCategoryStrings[1];
+		}
+
+		if (productData != null)
+		{
+			if (productData.getCode() != null)
+			{
+				productSku = productData.getCode();
+
+				if (buyBoxFacade != null)
+				{
+					final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productSku);
+					if (buyboxdata != null)
+					{
+						final PriceData specialPrice = buyboxdata.getSpecialPrice();
+						final PriceData mrp = buyboxdata.getMrp();
+						final PriceData mop = buyboxdata.getPrice();
+
+						if (mrp != null)
+						{
+							productUnitPrice = mrp.getValue().toPlainString();
+						}
+						if (specialPrice != null)
+						{
+							productPrice = specialPrice.getValue().toPlainString();
+						}
+						else
+						{
+							productPrice = mop.getValue().toPlainString();
+						}
+					}
+				}
+
+			}
+
+			if (productData.getName() != null)
+			{
+				productName = productData.getName();
+			}
+
+
+			if (productData.getBrand() != null)
+			{
+				productBrand = productData.getBrand().getBrandname();
+			}
+
+
+		}
+		model.addAttribute("product_unit_price", productUnitPrice);
+		if (CollectionUtils.isNotEmpty(breadcrumbs))
+		{
+			model.addAttribute("site_section", breadcrumbs.get(0).getName());
+			String breadcrumbName = "";
+			int count = 1;
+			for (final Breadcrumb breadcrumb : breadcrumbs)
+			{
+				breadcrumbName += breadcrumb.getName();
+				if (count < breadcrumbs.size())
+				{
+					breadcrumbName += ":";
+
+				}
+				count++;
+			}
+			model.addAttribute("page_name", "Product Details:" + breadcrumbName);
+		}
+		model.addAttribute("product_list_price", productPrice);
+		model.addAttribute("product_name", productName);
+		model.addAttribute("product_sku", productSku);
+		model.addAttribute("page_category_name", "");
+		model.addAttribute("category_id", categoryId);
+		model.addAttribute("page_section_name", "");
+		model.addAttribute("product_id", productData.getCode());
+		model.addAttribute("page_subcategory_name", productSubCategoryName);
+		model.addAttribute("product_brand", productBrand);
+		model.addAttribute("site_section_detail", productData.getRootCategory());
+		model.addAttribute("product_category", productCategory);
+
 	}
 
 	/**
@@ -673,9 +799,9 @@ public class ProductPageController extends AbstractPageController
 	public String showZoomImages(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam(value = "galleryPosition", required = false) final String galleryPosition, final Model model)
 	{
-		if(null!=productCode)
+		if (null != productCode)
 		{
-			productCode = productCode.toUpperCase();	
+			productCode = productCode.toUpperCase();
 		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		final ProductData productData = productFacade.getProductForOptions(productModel,
@@ -717,9 +843,9 @@ public class ProductPageController extends AbstractPageController
 		String returnStatement = null;
 		try
 		{
-			if(null!=productCode)
+			if (null != productCode)
 			{
-				productCode = productCode.toUpperCase();	
+				productCode = productCode.toUpperCase();
 			}
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
@@ -792,6 +918,13 @@ public class ProductPageController extends AbstractPageController
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+
+			//AKAMAI fix
+			if (productModel instanceof PcmProductVariantModel)
+			{
+				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+				model.addAttribute("productSize", variantProductModel.getSize());
+			}
 			returnStatement = getViewForPage(model);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -850,9 +983,9 @@ public class ProductPageController extends AbstractPageController
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
 			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
-		if(null!=productCode)
+		if (null != productCode)
 		{
-			productCode = productCode.toUpperCase();	
+			productCode = productCode.toUpperCase();
 		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
@@ -902,6 +1035,12 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			//AKAMAI fix
+			if (productModel instanceof PcmProductVariantModel)
+			{
+				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+				model.addAttribute("productSizeQuick", variantProductModel.getSize());
+			}
 			//returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
 		}
 		catch (final EtailBusinessExceptions e)
@@ -932,9 +1071,9 @@ public class ProductPageController extends AbstractPageController
 			throws CMSItemNotFoundException
 
 	{
-		if(null!=productCode)
+		if (null != productCode)
 		{
-			productCode = productCode.toUpperCase();	
+			productCode = productCode.toUpperCase();
 		}
 		String returnStatement = null;
 		getReviewValidator().validate(form, result);
@@ -975,9 +1114,9 @@ public class ProductPageController extends AbstractPageController
 	public String reviewHtml(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@PathVariable("numberOfReviews") final String numberOfReviews, final Model model, final HttpServletRequest request)
 	{
-		if(null!=productCode)
+		if (null != productCode)
 		{
-			productCode = productCode.toUpperCase();	
+			productCode = productCode.toUpperCase();
 		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		final List<ReviewData> reviews;
@@ -1007,9 +1146,9 @@ public class ProductPageController extends AbstractPageController
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/writeReview", method = RequestMethod.GET)
 	public String writeReview(@PathVariable String productCode, final Model model) throws CMSItemNotFoundException
 	{
-		if(null!=productCode)
+		if (null != productCode)
 		{
-			productCode = productCode.toUpperCase();	
+			productCode = productCode.toUpperCase();
 		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		model.addAttribute(new ReviewForm());
@@ -1035,9 +1174,9 @@ public class ProductPageController extends AbstractPageController
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttrs)
 			throws CMSItemNotFoundException
 	{
-		if(null!=productCode)
+		if (null != productCode)
 		{
-			productCode = productCode.toUpperCase();	
+			productCode = productCode.toUpperCase();
 		}
 		String returnStatement = null;
 		getReviewValidator().validate(form, result);
@@ -1145,7 +1284,8 @@ public class ProductPageController extends AbstractPageController
 			/* Configurable tabs to be displayed in the PDP page */
 			model.addAttribute(ModelAttributetConstants.VALID_TABS, validTabs);
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
-			model.addAttribute(WebConstants.BREADCRUMBS_KEY, productBreadcrumbBuilder.getBreadcrumbs(productModel));
+			final List<Breadcrumb> breadcrumbs = productBreadcrumbBuilder.getBreadcrumbs(productModel);
+			model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
 			//For Gigya
 			model.addAttribute(ModelAttributetConstants.GIGYA_API_KEY, gigyaAPIKey);
 			model.addAttribute(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
@@ -1165,6 +1305,7 @@ public class ProductPageController extends AbstractPageController
 			final String metaTitle = productData.getSeoMetaTitle();
 			final String productCode = productData.getCode();
 			setUpMetaData(model, metaDescription, metaTitle, productCode);
+			populateTealiumData(productData, model, breadcrumbs);
 		}
 		//populateVariantSizes(productData);
 		catch (final EtailBusinessExceptions e)
@@ -1421,9 +1562,9 @@ public class ProductPageController extends AbstractPageController
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
 		try
 		{
-			if(null!=productCode)
+			if (null != productCode)
 			{
-				productCode = productCode.toUpperCase();	
+				productCode = productCode.toUpperCase();
 			}
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
 			if (buyboxdata != null)
@@ -1472,9 +1613,9 @@ public class ProductPageController extends AbstractPageController
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam("buyboxid") final String buyboxid)
 	{
-		if(null!=productCode)
+		if (null != productCode)
 		{
-			productCode = productCode.toUpperCase();	
+			productCode = productCode.toUpperCase();
 		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		RichAttributeData richAttributeData = null;
@@ -1733,9 +1874,9 @@ public class ProductPageController extends AbstractPageController
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode) throws JSONException,
 			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
-		if(null!=productCode)
+		if (null != productCode)
 		{
-			productCode = productCode.toUpperCase();	
+			productCode = productCode.toUpperCase();
 		}
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER));

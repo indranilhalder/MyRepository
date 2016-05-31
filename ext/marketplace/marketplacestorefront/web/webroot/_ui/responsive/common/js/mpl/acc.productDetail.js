@@ -1144,7 +1144,8 @@ $(function() {
 /**
  * This method is used to display delivery modes against a sku id
  */
-function fetchPrice() {
+$( document ).ready(function() { 
+//function fetchPrice() {
 	var categoryType = $("#categoryType").val();
 	var selectedSize = "";
 	if ($("#variant,#sizevariant option:selected").val() != "#") {
@@ -1261,7 +1262,9 @@ function fetchPrice() {
 		}
 
 	});
-}
+//}
+}); 
+
 /**
  * This method is used to display delivery modes against a sku id
  */
@@ -2127,3 +2130,20 @@ function loadDefaultWishListName_SizeGuide() {
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
+
+	
+	//AKAMAI Fix	
+	$(document).ready(function(){		
+		var url = window.location.href;		
+		if (url.indexOf("selectedSize=true")>=0 && typeof productSizeVar !== "undefined")//>= 0  ==-1
+			{
+			$("#variant option:contains("+productSizeVar+")").attr('selected', true); 
+			$("#sizevariant option:contains("+productSizeVar+")").attr('selected', true); 
+			}
+		
+		
+		
+		
+		
+		});
+	
