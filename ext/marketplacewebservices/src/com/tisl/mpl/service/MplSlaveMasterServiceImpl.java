@@ -85,8 +85,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 				}
 				if (posModel != null)
 				{
-					if (StringUtils.isNotEmpty(slaveInfoDto.getType())
-							&& slaveInfoDto.getType().equalsIgnoreCase(MarketplacewebservicesConstants.SLV_TYPE_STORE))
+					if (StringUtils.isNotEmpty(slaveInfoDto.getType()))
 					{
 						//update the store
 						if (StringUtils.isNotEmpty(slaveInfoDto.getSellerid()))
@@ -105,9 +104,25 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 						{
 							posModel.setDisplayName(slaveInfoDto.getName());
 						}
-						if (StringUtils.isNotEmpty(slaveInfoDto.getType()))
+						if (slaveInfoDto.getType().equalsIgnoreCase(MarketplacewebservicesConstants.SLV_TYPE_STORE))
 						{
+
 							posModel.setType(PointOfServiceTypeEnum.STORE);
+
+							if (StringUtils.isNotEmpty(slaveInfoDto.getActive()))
+							{
+								posModel.setActive(slaveInfoDto.getActive());
+							}
+						}
+						else
+						{
+
+							posModel.setType(PointOfServiceTypeEnum.WAREHOUSE);
+
+							if (StringUtils.isNotEmpty(slaveInfoDto.getActive()))
+							{
+								posModel.setActive(MarketplacewebservicesConstants.INACTIVE);
+							}
 						}
 						if (StringUtils.isNotEmpty(slaveInfoDto.getClicknCollect()))
 						{
@@ -289,8 +304,6 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 								posModel.setReturnPin(slaveInfoDto.getReturnPin());
 							}
 						}
-						posModel.setActive(MarketplacewebservicesConstants.ACTIVE);
-
 						if (StringUtils.isNotEmpty(slaveInfoDto.getEmail0()))
 						{
 							if (!slaveInfoDto.getEmail0().equalsIgnoreCase(posModel.getEmail0()))
@@ -544,12 +557,6 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 							LOG.debug("Exception while saving model: " + e.getMessage());
 						}
 					}
-					else if (StringUtils.isNotEmpty(slaveInfoDto.getType())
-							&& slaveInfoDto.getType().equalsIgnoreCase(MarketplacewebservicesConstants.SLV_TYPE_WAREHOUSE))
-					{
-						posModel.setActive(MarketplacewebservicesConstants.INACTIVE);
-						modelService.save(posModel);
-					}
 					else
 					{
 						status = MarketplacecommerceservicesConstants.ERROR_FLAG;
@@ -559,8 +566,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 				}
 				else
 				{
-					if (StringUtils.isNotEmpty(slaveInfoDto.getType())
-							&& slaveInfoDto.getType().equalsIgnoreCase(MarketplacewebservicesConstants.SLV_TYPE_STORE))
+					if (StringUtils.isNotEmpty(slaveInfoDto.getType()))
 					{
 						posModel = (PointOfServiceModel) modelService.create(PointOfServiceModel.class);
 
@@ -586,10 +592,29 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 						//Added logic to handle POS to connect to BaseStore.
 						if (StringUtils.isNotEmpty(slaveInfoDto.getType()))
 						{
-							posModel.setType(PointOfServiceTypeEnum.STORE);
 							//Set BaseStore Type also
 							final BaseStoreModel baseStoreModel = baseStoreService.getCurrentBaseStore();
 							posModel.setBaseStore(baseStoreModel);
+						}
+						if (slaveInfoDto.getType().equalsIgnoreCase(MarketplacewebservicesConstants.SLV_TYPE_STORE))
+						{
+
+							posModel.setType(PointOfServiceTypeEnum.STORE);
+
+							if (StringUtils.isNotEmpty(slaveInfoDto.getActive()))
+							{
+								posModel.setActive(slaveInfoDto.getActive());
+							}
+						}
+						else
+						{
+
+							posModel.setType(PointOfServiceTypeEnum.WAREHOUSE);
+
+							if (StringUtils.isNotEmpty(slaveInfoDto.getActive()))
+							{
+								posModel.setActive(MarketplacewebservicesConstants.INACTIVE);
+							}
 						}
 						if (StringUtils.isNotEmpty(slaveInfoDto.getClicknCollect()))
 						{
@@ -680,10 +705,6 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 						if (StringUtils.isNotEmpty(slaveInfoDto.getReturnPin()))
 						{
 							posModel.setReturnPin(slaveInfoDto.getReturnPin());
-						}
-						if (StringUtils.isNotEmpty(slaveInfoDto.getActive()))
-						{
-							posModel.setActive(slaveInfoDto.getActive());
 						}
 						if (StringUtils.isNotEmpty(slaveInfoDto.getEmail0()))
 						{
