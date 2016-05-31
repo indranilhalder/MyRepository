@@ -29,11 +29,12 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
+
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.util.StringUtils;
 
 import com.hybris.oms.domain.shipping.Shipment;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -58,10 +59,10 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 	//	@Autowired
 	//	private EventService eventService;
-	
+
 	@Autowired
 	private MplSendSMSService sendSMSService;
-	
+
 	private ConfigurationService configurationService;
 	@Autowired
 	private MplSNSMobilePushServiceImpl mplSNSMobilePushService;
@@ -173,9 +174,9 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		String mobileNumber;
 		String firstName;
 		String storeName = null;
-		String deliverdDate= null;
-		String pickUpMobileNumber= null;
-		String pickUpPersonName= null;
+		String deliverdDate = null;
+		String pickUpMobileNumber = null;
+		String pickUpPersonName = null;
 
 		LOG.info("*************Inside sendNotification *******************");
 		final String orderNumber = (StringUtils.isEmpty(shipment.getOrderId())) ? MarketplacecommerceservicesConstants.EMPTY
@@ -213,36 +214,42 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		{
 		  for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
 		  {
-			if(shipment.getShipmentId().equals(orderEntryModel.getTransactionID()) && consignmentModel.getCode().equals(orderEntryModel.getTransactionID())){
-				
-				if(null != orderEntryModel.getDeliveryPointOfService() && !StringUtils.isEmpty(orderEntryModel.getDeliveryPointOfService().getDisplayName())){
-					storeName =orderEntryModel.getDeliveryPointOfService().getDisplayName();	
-				}else{
-					storeName =MarketplaceomsordersConstants.EMPTY;
-				}
-				
+			if (shipment.getShipmentId().equals(orderEntryModel.getTransactionID())
+					&& consignmentModel.getCode().equals(orderEntryModel.getTransactionID()))
+			{
+
+				/*
+				 * storeName =(StringUtils.isEmpty(orderEntryModel.getDeliveryPointOfService().getDisplayName())) ?
+				 * MarketplacecommerceservicesConstants.EMPTY :
+				 * orderEntryModel.getDeliveryPointOfService().getDisplayName();
+				 */
+				storeName = (orderEntryModel.getDeliveryPointOfService() != null && StringUtils.isNotEmpty(orderEntryModel
+						.getDeliveryPointOfService().getDisplayName())) ? orderEntryModel.getDeliveryPointOfService().getDisplayName()
+						: MarketplacecommerceservicesConstants.EMPTY;
 				final DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 				final Date currentDate = new Date();
 				if (null != consignmentModel.getDeliveryDate())
 				{
-					final String formatDate  = dateFormatter.format(consignmentModel.getDeliveryDate());
-					deliverdDate =(StringUtils.isEmpty(formatDate) )? dateFormatter.format(currentDate): formatDate; 
-				}else{
-					deliverdDate =dateFormatter.format(currentDate);
+					final String formatDate = dateFormatter.format(consignmentModel.getDeliveryDate());
+					deliverdDate = (StringUtils.isEmpty(formatDate)) ? dateFormatter.format(currentDate) : formatDate;
 				}
-				
+				else
+				{
+					deliverdDate = dateFormatter.format(currentDate);
+				}
+
 				pickUpMobileNumber = (StringUtils.isEmpty(orderModel.getPickupPersonMobile())) ? MarketplaceomsordersConstants.EMPTY
 						: orderModel.getPickupPersonMobile();
-				
-				pickUpPersonName = (StringUtils.isEmpty(orderModel.getPickupPersonName())) ?MarketplaceomsordersConstants.CUSTOMER_NAME:orderModel.getPickupPersonName() ;
-				
+
+				pickUpPersonName = (StringUtils.isEmpty(orderModel.getPickupPersonName())) ? MarketplaceomsordersConstants.CUSTOMER_NAME
+						: orderModel.getPickupPersonName();
+
 			}
-		
+
 		}
-	}
-		
-		
-		 
+
+
+
 		LOG.info("*************checking multiple if *******************");
 		try
 		{
@@ -274,12 +281,13 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				LOG.info("******************** Sending notification for UNDELIVERED");
 				sendNotificationForUndelivered(orderModel, orderNumber, mobileNumber, contactNumber, firstName);
 			}
-			
-		// Notifications: ORDERCOLLETED : SMS
+
+			// Notifications: ORDERCOLLETED : SMS
 			if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
 			{
-						LOG.info("Sending notification for ORDER COLLECTED order Id:"+orderNumber);
-						sendNotificationForCNCOrderColleted(orderNumber, mobileNumber, contactNumber, firstName,storeName,deliverdDate,pickUpMobileNumber,pickUpPersonName);
+				LOG.info("******************** Sending notification for ORDER COLLECTED");
+				sendNotificationForCNCOrderColleted(orderNumber, mobileNumber, contactNumber, firstName, storeName, deliverdDate,
+						pickUpMobileNumber, pickUpPersonName);
 			}
 
 			LOG.info("*************End of method*******************");
@@ -422,8 +430,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, String.valueOf(childOrders.size()))); if (null !=
 	 * orderNumber && !orderNumber.isEmpty()) { pushData.setOrderId(orderNumber); }
 	 * mplSNSMobilePushService.setUpNotification(customer.getOriginalUid(), pushData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
 	 */
 
@@ -1135,7 +1143,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		return emailAndSmsNotification.checkSmsSent(awbNumber, shipmentStatus);
 
 	}
-	
+
 	/**
 	 * @param orderNumber
 	 * @param mobileNumber
@@ -1146,10 +1154,10 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * @param pickUpMobileNumber
 	 * @param pickUpPersonName
 	 */
-	
-	private void sendNotificationForCNCOrderColleted(String orderNumber, String mobileNumber,
-			String contactNumber, String firstName, String storeName, String deliverdDate, String pickUpMobileNumber,
-			String pickUpPersonName)
+
+	private void sendNotificationForCNCOrderColleted(final String orderNumber, final String mobileNumber,
+			final String contactNumber, final String firstName, final String storeName, final String deliverdDate,
+			final String pickUpMobileNumber, final String pickUpPersonName)
 	{
 		try
 		{
