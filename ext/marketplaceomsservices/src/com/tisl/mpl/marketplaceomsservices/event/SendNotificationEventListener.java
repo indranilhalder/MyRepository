@@ -247,6 +247,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			}
 
 		}
+		}
 
 
 
