@@ -210,9 +210,10 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
 		final String logisticPartner = (StringUtils.isEmpty(consignmentModel.getCarrier())) ? MarketplacecommerceservicesConstants.SPACE
 				: consignmentModel.getCarrier();
-
-		for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
+		if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
 		{
+		  for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
+		  {
 			if (shipment.getShipmentId().equals(orderEntryModel.getTransactionID())
 					&& consignmentModel.getCode().equals(orderEntryModel.getTransactionID()))
 			{
