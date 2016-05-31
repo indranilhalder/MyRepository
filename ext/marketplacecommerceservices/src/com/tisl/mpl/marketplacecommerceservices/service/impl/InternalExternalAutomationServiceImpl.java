@@ -610,6 +610,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			file.getParentFile().mkdirs();
 			LOG.info("in createCSVExcel, before populateCSV()::");
 			populateCSV(campaignDataConsolidatedList, file);
+
 		}
 
 		catch (final Exception e)
