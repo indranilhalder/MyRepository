@@ -1193,19 +1193,5 @@ function populateEnhancedSearch(enhancedSearchData)
 		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
 	}
 	
-	//Added for tealium
-	if($('#ia_site_page_id').val()=="homepage"){
-		//Added for tealium
-		   $.ajax({
-		        url: ACC.config.encodedContextPath + "/getTealiumDataHome",
-		        type: 'GET',
-		        cache:false,
-		        success: function(data) {
-		           //console.log(data);
-		           $('#tealiumHome').html(data);
-		        }
-		    });
-	}
-	//Tealium end
 }
 
