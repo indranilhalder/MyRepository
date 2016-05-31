@@ -22701,7 +22701,7 @@ span.sizesAvailable {
 	font-size: 12px;
 	font-weight: 500;
 	overflow: hidden;
-    text-overflow: ellipsis;
+    word-break: break-word;
     width: 221px; 
  }
 .ia_trending{
@@ -25577,35 +25577,17 @@ padding-left: 0px;}
 	font-weight:500;
 	font-size:14px;
 	margin-top: 8px;
-	width:28%;}
-	.toggle-filterSerp:after{
-	content: "\f00d";
-    font-family: 'FontAwesome';
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-weight: 100;
-    color: transparent;
-    position: relative;
-    display: inline-block;
-    height: 0;
-    width: 0;
-    border-bottom: 5px solid transparent;
-    border-left: 5px solid #000;
-    border-top: 5px solid transparent;
-    margin-left: 5px;
-    vertical-align:middle;
-    -webkit-transition: -webkit-transform 0.3s;
-    -moz-transition: -moz-transform 0.3s;
-    transition: transform 0.3s;}
-    .toggle-filterSerp.active:after{
-     -webkit-transform: rotate(90deg);
-        -moz-transform: rotate(90deg);
-        -ms-transform: rotate(90deg);
-        -o-transform: rotate(90deg);
-        transform: rotate(90deg);
+	width:28%;
+	background-image: url('../images/arrow-black-left.png');
+    background-position: 67px 48%;
+    background-repeat: no-repeat;}
+   .toggle-filterSerp.active{
+        width: 30%;
+            background-position: 67px 50%;
+   		 background-image: url('../images/arrow-black.png');
         -webkit-transition: -webkit-transform 0.15s;
         -moz-transition: -moz-transform 0.15s;
-        transition: transform 0.15s;  }
+        transition: transform 0.15s;  } 
 .listing.wrapper .search-result{
 	display:none;}
 .listing.wrapper .right-block .best-selling h1{
