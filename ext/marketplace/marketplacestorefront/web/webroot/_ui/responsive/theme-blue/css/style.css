@@ -27281,7 +27281,7 @@ content: "";
     -moz-transform: rotate(-135deg);
     transform: rotate(-135deg);
     border-collapse: separate;
-    box-shadow: 1px 1px 0px rgb(0, 203, 246);
+    box-shadow: 1px 1px 0px #a9143c;
     position: absolute;
     left: 40%;
     margin-left: -4px;
