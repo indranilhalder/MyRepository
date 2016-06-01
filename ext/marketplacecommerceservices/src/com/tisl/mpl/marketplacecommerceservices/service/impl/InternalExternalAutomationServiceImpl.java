@@ -123,6 +123,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 						// 1.For Mpl Sequntial Banners only
 						if (componentItr instanceof MplSequentialBannerComponentModel)
 						{
+							LOG.info("Inside MplSequentialBannerComponentModel starts");
 							campaignDataSeqBanner = new InternalCampaignReportData();
 							// Storing data for generating Internal Report
 							campaignDataSeqBanner.setAssetName(componentItr.getName());
@@ -143,6 +144,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							{
 								if (banner instanceof MplBigPromoBannerComponentModel)
 								{
+									LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel starts");
 									String CategorySeqBanner = "";
 									final MplBigPromoBannerComponentModel bigPromoBanner = (MplBigPromoBannerComponentModel) banner;
 									if (contentPageItr.getCategoryAssociated() != null)
@@ -193,6 +195,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										}
 
 										CampaignDataList.add(campaignDataSeqBanner);
+										LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel ends");
 									}
 									catch (final Exception e)
 									{
@@ -209,10 +212,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									LOG.info("MplBigFourPromoBannerComponentModel ......" + banner.getMedia());
 								}
 							}
+							LOG.info("Stepping out from MplSequentialBannerComponentModel");
 						}
 						//2.Mpl Big Promo BannerComponent Model only
 						if (componentItr instanceof MplBigPromoBannerComponentModel)
 						{
+							LOG.info("Inside MplBigPromoBannerComponentModel starts");
 							campaignDataBigPromoBanner = new InternalCampaignReportData();
 							final MplBigPromoBannerComponentModel bigPromoBanner = (MplBigPromoBannerComponentModel) componentItr;
 							String CategoryBigPromoBanner = "";
@@ -274,16 +279,20 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									campaignDataBigPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
 								}
 								CampaignDataList.add(campaignDataBigPromoBanner);
+								LOG.info("Inside MplBigPromoBannerComponentModel ends");
 							}
 							catch (final Exception e)
 							{
 								LOG.error("Big promo banner Exception 222 " + e.getMessage());
 							}
-							CampaignDataList.add(campaignDataBigPromoBanner);
+							//CampaignDataList.add(campaignDataBigPromoBanner);
+
+							LOG.info("Stepping out from MplBigPromoBannerComponentModel");
 						}
 						//3. Mpl BigFour PromoBanner ComponentModel
 						if (componentItr instanceof MplBigFourPromoBannerComponentModel)
 						{
+							LOG.info("Inside MplBigFourPromoBannerComponentModel starts");
 							campaignDataBigFourPromoBanner = new InternalCampaignReportData();
 							final MplBigFourPromoBannerComponentModel bigPromoBanner = (MplBigFourPromoBannerComponentModel) componentItr;
 							String CategoryBigFourPromoBanner = "";
@@ -345,17 +354,20 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
 								}
 
-
+								CampaignDataList.add(campaignDataBigFourPromoBanner);
+								LOG.info("Inside MplBigFourPromoBannerComponentModel ends");
 							}
 							catch (final Exception e)
 							{
 								LOG.error("Error in Big Four PromoBanner111111" + e.getMessage());
 							}
-							CampaignDataList.add(campaignDataBigFourPromoBanner);
+							//CampaignDataList.add(campaignDataBigFourPromoBanner);
+							LOG.info("Stepping out from MplBigFourPromoBannerComponentModel");
 						}
 						//4. Rotating Banner Component
 						if (componentItr instanceof RotatingImagesComponentModel)
 						{
+							LOG.info("Inside RotatingImagesComponentModel starts");
 							final RotatingImagesComponentModel banner = (RotatingImagesComponentModel) componentItr;
 							final List<BannerComponentModel> bannerComponentList = banner.getBanners();
 							for (final BannerComponentModel differentBanner : bannerComponentList)
@@ -500,19 +512,22 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											}
 
 										}
+										CampaignDataList.add(campaignDataBigFourPromoBanner);
+										LOG.info("Inside RotatingImagesComponentModel ends");
 									}
 									catch (final Exception e)
 									{
 										LOG.error("Error in Big Four PromoBanner 222222" + e.getMessage());
 									}
-									CampaignDataList.add(campaignDataBigFourPromoBanner);
+									//CampaignDataList.add(campaignDataBigFourPromoBanner);
 								}
 							}
+							LOG.info("Stepping out from RotatingImagesComponentModel");
 						}
 						//5. Simple banner component
 						if (componentItr instanceof SimpleBannerComponentModel)
 						{
-							final SimpleBannerComponentModel simple = (SimpleBannerComponentModel) componentItr;
+							LOG.info("Inside SimpleBannerComponentModel");
 							campaignDataBigFourPromoBanner = new InternalCampaignReportData();
 							String imagesBannerCategory = "";
 
@@ -538,6 +553,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							campaignDataBigFourPromoBanner.setCategory(imagesBannerCategory);
 							try
 							{
+								final SimpleBannerComponentModel simple = (SimpleBannerComponentModel) componentItr;
 
 								if (null != simple.getMedia() && null != simple.getMedia().getURL()
 										&& !simple.getMedia().getURL().startsWith(HTTP))
@@ -576,19 +592,23 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								{
 									campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
 								}
-
+								CampaignDataList.add(campaignDataBigFourPromoBanner);
+								LOG.info("Inside SimpleBannerComponentModel ends");
 							}
 
 							catch (final Exception e)
 							{
 								LOG.error("Cron Job Simple Banner Component Error ", e);
 							}
-							CampaignDataList.add(campaignDataBigFourPromoBanner);
+							//CampaignDataList.add(campaignDataBigFourPromoBanner);
+							LOG.info("Stepping out from SimpleBannerComponentModel");
 						}
 					}
 				}
 			}
+			LOG.info("Before calling createCSVExcel()");
 			createCSVExcel(CampaignDataList);
+			LOG.info("After Completion of createCSVExcel()");
 		}
 		catch (final Exception e)
 		{
@@ -766,7 +786,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	}
 
 
-	public String findIamgeSize(final String urlString)
+	public String findIamgeSize(final String urlString) throws Exception
 	{
 
 		final String username = configurationService.getConfiguration().getString("internal.campaign.report.username");
