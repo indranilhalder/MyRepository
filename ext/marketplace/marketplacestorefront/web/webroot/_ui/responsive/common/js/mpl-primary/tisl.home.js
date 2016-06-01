@@ -220,7 +220,6 @@ $("li.ajaxloginhi").on("mouseover touchend", function(e) {
             url: ACC.config.encodedContextPath +
                 "/headerloginhi",
             type: 'GET',
-            cache:false,
             success: function(html) {
                 $("ul.ajaxflyout").html(html);
             }
@@ -722,7 +721,7 @@ function getNewAndExclusiveAjaxCall() {
                 renderHtml +=
                     "<div class='item slide'><div class='newExclusiveElement'><a href='" +
                     ACC.config.encodedContextPath +
-                    value.productUrl +"'>"+renderNewHtml+"<img class='lazyOwl' data-src='" +
+                    value.productUrl + "'>"+renderNewHtml+"<img class='lazyOwl' data-src='" +
                     value.productImageUrl +
                     "'></img><p class='New_Exclusive_title'>" +
                     value.productTitle +
@@ -1201,4 +1200,3 @@ function populateEnhancedSearch(enhancedSearchData)
 	}
 	
 }
-
