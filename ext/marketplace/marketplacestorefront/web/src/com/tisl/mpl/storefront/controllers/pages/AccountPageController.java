@@ -215,7 +215,6 @@ import com.tisl.mpl.storefront.web.forms.validator.MplPasswordValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplUpdateEmailFormValidator;
 import com.tisl.mpl.storefront.web.forms.validator.ReturnItemFormValidator;
 import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
-import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
@@ -409,8 +408,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@Autowired
 	private DefaultMplReviewFacade mplReviewrFacade;
 
-	@Autowired
-	private DiscountUtility discountUtility;
+	/*
+	 * @Autowired private DiscountUtility discountUtility;
+	 */
 
 
 	@Autowired
@@ -1220,58 +1220,60 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			populateModelForCoupon(model, searchPageDataVoucher, showMode);
 
-			final int pageSizeVoucherHistory = Integer.valueOf(configurationService.getConfiguration()
-					.getString(MessageConstants.PAZE_SIZE_COUPONS, "20").trim());
+			LOG.info("Page for value is" + pageFor);
+			//Coupon history commented for Performance -- TISPT-153
+			//final int pageSizeVoucherHistory = Integer.valueOf(configurationService.getConfiguration()
+			//		.getString(MessageConstants.PAZE_SIZE_COUPONS, "20").trim());
 
 
 			/* Coupon history and saved sum count calculation */
-			final PageableData pageableDataVoucherHistory = createPageableData(pageHistory, pageSizeVoucherHistory, sortCode,
-					showMode);
-			final Map<String, Double> countSavedSumMap = mplCouponFacade.getInvalidatedCouponCountSaved(customer);
+			//final PageableData pageableDataVoucherHistory = createPageableData(pageHistory, pageSizeVoucherHistory, sortCode,
+			//		showMode);
+			//final Map<String, Double> countSavedSumMap = mplCouponFacade.getInvalidatedCouponCountSaved(customer);
 
-			final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = mplCouponFacade
-					.getVoucherHistoryTransactions(customer, pageableDataVoucherHistory);
+			//final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = mplCouponFacade
+			//		.getVoucherHistoryTransactions(customer, pageableDataVoucherHistory);
 
-			populateModelForCouponHistory(model, searchPageDataVoucherHistoryFinal, showMode);
+			//populateModelForCouponHistory(model, searchPageDataVoucherHistoryFinal, showMode);
 
-			final Collection<OrderModel> orders = customer.getOrders();
-			final List<OrderModel> orderList = new ArrayList<OrderModel>();
-			if (CollectionUtils.isNotEmpty(orders))
-			{
-				orderList.addAll(orders);
-
-			}
-			if (null != countSavedSumMap)
-			{
-
-				for (final Map.Entry<String, Double> iterator : countSavedSumMap.entrySet())
-				{
-
-					Double value = 0.0d;
-					if (null != iterator.getValue())
-					{
-						value = Double.valueOf(Math.round(iterator.getValue() * 100.0) / 100.0);
-					}
-					if (CollectionUtils.isNotEmpty(orderList))
-					{
-						model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM,
-								discountUtility.createPrice(orderList.get(0), value));
-					}
-					else
-					{
-						model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, value);
-					}
-					model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT, iterator.getKey());
-				}
-
-			}
+			//			final Collection<OrderModel> orders = customer.getOrders();
+			//			final List<OrderModel> orderList = new ArrayList<OrderModel>();
+			//			if (CollectionUtils.isNotEmpty(orders))
+			//			{
+			//				orderList.addAll(orders);
+			//
+			//			}
+			//			if (null != countSavedSumMap)
+			//			{
+			//
+			//				for (final Map.Entry<String, Double> iterator : countSavedSumMap.entrySet())
+			//				{
+			//
+			//					Double value = 0.0d;
+			//					if (null != iterator.getValue())
+			//					{
+			//						value = Double.valueOf(Math.round(iterator.getValue() * 100.0) / 100.0);
+			//					}
+			//					if (CollectionUtils.isNotEmpty(orderList))
+			//					{
+			//						model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM,
+			//								discountUtility.createPrice(orderList.get(0), value));
+			//					}
+			//					else
+			//					{
+			//						model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, value);
+			//					}
+			//					model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT, iterator.getKey());
+			//				}
+			//
+			//			}
 
 			storeCmsPageInModel(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
 			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
 			model.addAttribute(ModelAttributetConstants.PAGE_INDEX_HIST, pageHistory);
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
-			model.addAttribute(ModelAttributetConstants.PAGE_SIZE_HISTORY, pageSizeVoucherHistory);
+			//model.addAttribute(ModelAttributetConstants.PAGE_SIZE_HISTORY, pageSizeVoucherHistory);
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_COUPONDETAILS));
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
@@ -5747,6 +5749,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 							final CategoryData categoryData = new CategoryData();
 							categoryData.setCode(oModel.getConfiguredCategory().getCode());
 							categoryData.setName(oModel.getConfiguredCategory().getName());
+							//TISPRD-2335
+							if (null != oModel.getConfiguredCategory().getThumbnail())
+							{
+								categoryData.setImage(oModel.getConfiguredCategory().getThumbnail().getURL());
+							}
+
 							categoryDataMap.put(oModel.getConfiguredCategory().getCode(), categoryData);
 						}
 					}
@@ -5821,6 +5829,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 									final CategoryData oData = new CategoryData();
 									oData.setCode(catModel.getCode());
 									oData.setName(catModel.getName());
+									//TISPRD-2335
+									if (null != catModel.getThumbnail())
+									{
+										oData.setImage(catModel.getThumbnail().getURL());
+									}
+
 									categoryDataMap.put(catModel.getCode(), oData);
 								}
 							}
@@ -5921,6 +5935,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 											final CategoryData oData = new CategoryData();
 											oData.setCode(catModel.getCode());
 											oData.setName(catModel.getName());
+											//TISPRD-2335
+											if (null != catModel.getThumbnail())
+											{
+												oData.setImage(catModel.getThumbnail().getURL());
+											}
+
 											categoryDataMapApparel.put(catModel.getCode(), oData);
 										}
 									}
@@ -5959,6 +5979,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 											final CategoryData oData = new CategoryData();
 											oData.setCode(catModel.getCode());
 											oData.setName(catModel.getName());
+											//TISPRD-2335
+											if (null != catModel.getThumbnail())
+											{
+												oData.setImage(catModel.getThumbnail().getURL());
+											}
+
 											categoryDataMapElectronics.put(catModel.getCode(), oData);
 										}
 									}
@@ -5988,6 +6014,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 									final CategoryData oData = new CategoryData();
 									oData.setCode(catModel.getCode());
 									oData.setName(catModel.getName());
+									//TISPRD-2335
+									if (null != catModel.getThumbnail())
+									{
+										oData.setImage(catModel.getThumbnail().getURL());
+									}
+
 									categoryDataMap.put(catModel.getCode(), oData);
 								}
 							}
@@ -6060,6 +6092,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 					selCategoryData.setCode(categoryLineItem.getCode());
 					jsoncatArray.add(categoryLineItem.getCode());
 					selCategoryData.setName(categoryLineItem.getName());
+					//TISPRD-2335
+					if (null != categoryLineItem.getThumbnail())
+					{
+						selCategoryData.setImage(categoryLineItem.getThumbnail().getURL());
+					}
+
 					// Media needs to be set for Pic Display
 					categoryDataMap.put(categoryLineItem.getCode(), selCategoryData);
 				}
@@ -6087,6 +6125,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 					preferredCategoryList.add(categoryLineItem.getName());
 					selCategoryData.setCode(categoryLineItem.getCode());
 					selCategoryData.setName(categoryLineItem.getName());
+					//TISPRD-2335
+					if (null != categoryLineItem.getThumbnail())
+					{
+						selCategoryData.setImage(categoryLineItem.getThumbnail().getURL());
+					}
+
 					//Media needs to be set for Pic Display
 					brandDataMap.put(categoryLineItem.getCode(), selCategoryData);
 				}

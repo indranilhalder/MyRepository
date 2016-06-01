@@ -35,129 +35,6 @@ tr.d0 td {
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/acc.productDetail.js"></script> --%>
  <script>
- function openPopForBankEMI_quick() {
-		var productVal = $("#productPrice").val();
-		var optionData = "<option value='select' disabled selected>Select</option>";
-		$("#emiTableTHead").hide();
-		$("#emiTableTbody").hide();
-		var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
-		var dataString = 'productVal=' + productVal;
-		$.ajax({
-			contentType : "application/json; charset=utf-8",
-			url : requiredUrl,
-			data : dataString,
-			dataType : "json",
-			success : function(data) {
-				for (var i = 0; i < data.length; i++) {
-					optionData += "<option value='" + data[i] + "'>" + data[i]
-							+ "</option>";
-				}
-				$("#bankNameForEMI").html(optionData);
-
-			},
-			error : function(xhr, status, error) {
-
-			}
-		});
-	}
- 
- 
- function getSelectedEMIBankForPDP() {
-	 var productVal = $("#productPrice").val();
-		var selectedBank = $('#bankNameForEMI :selected').text();
-		var contentData = '';
-		if (selectedBank != "select") {
-			$.ajax({
-				url : ACC.config.encodedContextPath + "/p-getTerms",
-				data : {
-					'selectedEMIBank' : selectedBank,
-					'productVal' : productVal
-				},
-				type : "GET",
-				cache : false,
-				success : function(data) {
-					if (data != null) {
-						$("#emiTableTHead").show();
-						$("#emiTableTbody").show();
-						for (var index = 0; index < data.length; index++) {
-							contentData += '<tr>';
-							contentData += "<td>" + data[index].term + "</td>";
-							contentData += "<td>" + data[index].interestRate
-									+ "</td>";
-							contentData += "<td>" + data[index].monthlyInstallment
-									+ "</td>";
-							contentData += "<td>" + data[index].interestPayable
-									+ "</td>";
-							contentData += '</tr>';
-						}
-
-						$("#emiTableTbody").html(contentData);
-					} else {
-						$('#emiNoData').show();
-					}
-				},
-				error : function(resp) {
-					$('#emiSelectBank').show();
-				}
-			});
-		} else {
-
-		}
-	}
- function openPop_quick(ussidfromSeller) {
-		$('#addedMessage_quick').hide();
-		if (ussidfromSeller == null || ussidfromSeller == "") {
-			ussidValue = $("#ussid_quick").val();
-		} else {
-			ussidValue = ussidfromSeller;
-		}
-		
-		var productCode = $("#product_quick").val();
-		var requiredUrl = ACC.config.encodedContextPath + "/p"
-				+ "-viewWishlistsInPDP";
-
-		var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
-		// for
-		// ussid
-
-		$.ajax({
-			contentType : "application/json; charset=utf-8",
-			url : requiredUrl,
-			data : dataString,
-			dataType : "json",
-			success : function(data) {
-				if (data == null) {
-					$("#wishListNonLoggedInId_quick").show();
-					$("#wishListDetailsId_quick").hide();
-				}
-
-				else if (data == "" || data == []) {
-
-					loadDefaultWishListName_quick();
-
-				} else {
-					LoadWishLists_quick(ussidValue, data, productCode);
-				}
-			},
-			error : function(xhr, status, error) {
-				$("#wishListNonLoggedInId_quick").show();
-				$("#wishListDetailsId_quick").hide();
-			}
-		});
-	}
-
-	function loadDefaultWishListName_quick() {
-		var wishListContent = "";
-		var wishName = $("#defaultWishId_quick").text();
-		$("#wishListNonLoggedInId_quick").hide();
-		$("#wishListDetailsId_quick").show();
-
-		wishListContent = wishListContent
-				+ "<tr><td><input type='text' id='defaultWishName_quick' value='"
-				+ wishName + "'/></td></td></tr>";
-		$("#wishlistTbodyId_quick").html(wishListContent);
-	   
-	}
 
 	function gotoLogin() {
 		window.open(ACC.config.encodedContextPath + "/login", "_self");
@@ -167,159 +44,6 @@ tr.d0 td {
 
 	// load wishlist of a particular user on opening popup
 
-	function LoadWishLists_quick(ussid, data, productCode) {
-		// modified for ussid
-		var wishListContent = "";
-		var wishName = "";
-		$this = this;
-		$("#wishListNonLoggedInId_quick").hide();
-		$("#wishListDetailsId_quick").show();
-
-		for ( var i in data) {
-			var index = -1;
-			var checkExistingUssidInWishList = false;
-			var wishList = data[i];
-			wishName = wishList['particularWishlistName'];
-			wishListList[i] = wishName;
-			var entries = wishList['ussidEntries'];
-			for ( var j in entries) {
-				var entry = entries[j];
-
-				if (entry == ussid) {
-
-					checkExistingUssidInWishList = true;
-					break;
-
-				}
-			}
-			if (checkExistingUssidInWishList) {
-				index++;
-	            
-				wishListContent = wishListContent
-						+ "<tr class='d0'><td ><input type='radio' name='wishlistradio' id='radio_"
-						+ i
-						+ "' style='display: none' onclick='selectWishlist_quick("
-						+ i + ")' disabled><label for='radio_"
-						+ i + "'>"+wishName+"</label></td></tr>";
-			} else {
-				index++;
-			  
-				wishListContent = wishListContent
-						+ "<tr><td><input type='radio' name='wishlistradio' id='radio_"
-						+ i
-						+ "' style='display: none' onclick='selectWishlist_quick("
-						+ i + ")'><label for='radio_"
-						+ i + "'>"+wishName+"</label></td></tr>";
-			}
-
-		}
-
-		$("#wishlistTbodyId_quick").html(wishListContent);
-
-	}
-
-
-	function selectWishlist_quick(i) {
-		$("#hidWishlist_quick").val(i);
-	}
-
-	function addToWishlist_quick() {
-		var productCodePost = $("#product_quick").val();
-	//	var productCodePost = $("#productCodePostQuick").val();
-		var wishName = "";
-		
-	   
-		if (wishListList == "") {
-			wishName = $("#defaultWishName_quick").val().trim();
-		} else {
-			wishName = wishListList[$("#hidWishlist_quick").val().trim()];
-		}
-		if(wishName=="" || wishName.trim()==""){
-			var msg=$('#wishlistnotblank_quick').text();
-			$('#addedMessage_quick').show();
-			$('#addedMessage_quick').html(msg);
-			return false;
-		}
-	    if(wishName==undefined||wishName==null){
-	    	return false;
-	    }
-		var requiredUrl = ACC.config.encodedContextPath + "/p"
-				+ "-addToWishListInPDP";
-	    var sizeSelected=true;
-	    if($("#isSizeSelectedQV").val()==''){
-	    	sizeSelected=false;
-		}
-	    
-		var dataString = 'wish=' + wishName + '&product=' + productCodePost
-				+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
-      
-		$.ajax({
-			contentType : "application/json; charset=utf-8",
-			url : requiredUrl,
-			data : dataString,
-			dataType : "json",
-			success : function(data) {
-				if (data == true) {
-					$("#radio_" + $("#hidWishlist_quick").val()).prop("disabled", true);
-					var msg=$('#wishlistSuccess_quick').text();
-					$('#addedMessage_quick').show();
-					$('#addedMessage_quick').html(msg);
-					setTimeout(function() {
-						  $("#addedMessage_quick").fadeOut().empty();
-						}, 1500);
-					populateMyWishlistFlyOut(wishName);
-					
-					
-					//For MSD
-					var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
-					if(isMSDEnabled === 'true')
-					{
-			//		console.log(isMSDEnabled);
-					var isApparelExist  = $("input[name=isApparelExist]").val();
-			//		console.log(isApparelExist);				
-					var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-			//		console.log(salesHierarchyCategoryMSD);
-					var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-			//		console.log(rootCategoryMSD);				
-					var productCodeMSD =  $("input[name=productCodeMSD]").val();
-			//		console.log(productCodeMSD);				
-					var priceformad =  $("input[id=price-for-mad]").val();
-			//		console.log(priceformad);				
-					
-					if(typeof isMSDEnabled === 'undefined')
-					{
-						isMSDEnabled = false;						
-					}
-					
-					if(typeof isApparelExist === 'undefined')
-					{
-						isApparelExist = false;						
-					}	
-					
-					if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
-						{					
-						ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
-						}	
-					}
-					//End MSD
-					
-					
-					
-					
-					//openPop(ussidValue);
-				//	$('#myModal').modal('hide');
-				//	
-				}
-			},
-		});
-		
-		setTimeout(function() {
-			$('a.wishlist#wishlist_quick').popover('hide');
-			$('input.wishlist#add_to_wishlist_quick').popover('hide');
-			}, 1500);
-	}
-	
- 
  
  var imagePageLimit = ${imgCount};
 /*  $(document).ready(function(){
@@ -370,7 +94,16 @@ tr.d0 td {
  	}
  	
  }
+ 
+ 
+//AKAMAI Fix
+ var productSizeQuickVar = '${productSizeQuick}';
+ 
+ 
  $( document ).ready(function() {
+	 
+	//AKAMAI Fix
+	 setSizeforAkamai();
 	 
 	 getRating_Qview('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 

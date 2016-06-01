@@ -169,10 +169,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@Resource(name = "productService")
 	private ProductService productService;
 
+	//@Autowired
+	//private Converter<CartModel, CartData> mplExtendedCartConverter;
+
+	//TISPT-104
 	@Autowired
-	private Converter<CartModel, CartData> mplExtendedCartConverter;
-
-
+	private Converter<CartModel, CartData> mplExtendedPromoCartConverter;
 
 
 	@Autowired
@@ -237,16 +239,17 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			}
 
 			//TISST-13012
-			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
+			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart); //TISPT-104
 			if (cartItemDelistedStatus)
 			{
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
 
 			//TISBOX-1618
-			applyPromotions();
-			getMplCartFacade().removeDeliveryMode(getCartService().getSessionCart());
-			getMplCouponFacade().releaseVoucherInCheckout(getCartService().getSessionCart());
+			final CartModel cartModel = getCartService().getSessionCart();
+			getMplCouponFacade().releaseVoucherInCheckout(cartModel);
+			getMplCartFacade().removeDeliveryMode(cartModel); //TISPT-104 // Cart recalculation method invoked inside this method
+			//applyPromotions();
 			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 
@@ -332,7 +335,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		return returnPage;
 	}
 
-
 	/**
 	 * This method gets called when the "Use Selected Delivery Method" button is clicked. It sets the selected delivery
 	 * mode on the checkout facade and reloads the page highlighting the selected delivery Mode.
@@ -351,7 +353,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		Double finalDeliveryCost = Double.valueOf(0.0);
 
 		String returnPage = MarketplacecommerceservicesConstants.EMPTY;
-		int count = 0;
+		//int count = 0;
 		Boolean selectPickupDetails = Boolean.FALSE;
 		try
 
@@ -361,7 +363,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			if (deliveryMethodForm.getDeliveryMethodEntry() == null)
 			{
 				//if cart contains cnc and home/express delivery modes
-				count++;
+				//count++;
 				final HttpSession session = request.getSession();
 				deliveryMethodForm = (DeliveryMethodForm) session.getAttribute("deliveryMethodForm");
 				String pickupPersonName = null;
@@ -385,8 +387,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				//populate mplZone delivery mode
 				finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm);
 				final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
-				final boolean calculationStatus = getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost,
-						deliveryChargePromotionMap); //TIS 400
+				//final boolean calculationStatus =
+				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap); //TIS 400
 
 			}
 			if (getUserFacade().isAnonymousUser())
@@ -592,11 +594,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				{
 					try
 					{
-						final ProductModel productModel = cartEntryModel.getProduct();
-						final ProductData productData = productFacade.getProductForOptions(productModel,
-								Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
-						final String deliveryCode = deliveryMethodForm.getDeliveryMethodEntry().get(cartEntryModel.getEntryNumber())
-								.getDeliveryCode();
+						//final ProductModel productModel = cartEntryModel.getProduct(); / Performance fix TISPT-104
+						//final ProductData productData = productFacade.getProductForOptions(productModel,
+						//		Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE)); // Performance fix TISPT-104
+
+						final String deliveryCode = deliveryMethodForm.getDeliveryMethodEntry()
+								.get(cartEntryModel.getEntryNumber().intValue()).getDeliveryCode();
 						if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
 						{
 							count++;
@@ -622,7 +625,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							final Location myLocation = new LocationDtoWrapper(dto);
 							//first calls commerce to get all the stores for a sellerId based on the given pincode
 							final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequesrData(
-									cartEntryModel.getSelectedUSSID(), myLocation.getGPS(), configurableRadius);
+									cartEntryModel.getSelectedUSSID(), myLocation.getGPS(), Double.valueOf(configurableRadius));
 							storeLocationRequestDataList.add(storeLocationRequestData);
 						}
 						else
@@ -686,16 +689,19 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					for (final DeliveryMethodEntry deliveryEntry : deliveryMethodForm.getDeliveryMethodEntry())
 					{
 						deliveryCode = deliveryEntry.getDeliveryCode();
-						if (StringUtils.isNotEmpty(deliveryCode))
+
+						if (StringUtils.isNotEmpty(deliveryCode)
+								&& deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT)) // Code optimized as part of performance fix TISPT-104
 						{
-							Double deliveryCost = 0.0;
-							if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
-							{
-								deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-										deliveryEntry.getSellerArticleSKU());
-								deliveryCost = 0.0;
-							}
+							getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode, deliveryEntry.getSellerArticleSKU());
 						}
+
+						/*
+						 * TISPT-104 if (StringUtils.isNotEmpty(deliveryCode)) { Double deliveryCost = Double.valueOf(0.00D);
+						 * if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT)) {
+						 * deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+						 * deliveryEntry.getSellerArticleSKU()); deliveryCost = Double.valueOf(0.00D); } }
+						 */
 					}
 				}
 				applyPromotions();
@@ -714,8 +720,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					//populate mplzone delivery mode
 					finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm);
 					final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
-					final boolean calculationStatus = getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost,
-							deliveryChargePromotionMap); //TIS 400
+					//final boolean calculationStatus = getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost,deliveryChargePromotionMap); //TIS 400
+					getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap);
 				}
 				catch (final EtailBusinessExceptions e)
 				{
@@ -800,29 +806,16 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				final StringBuffer pickupPerson = new StringBuffer();
 
 				pickupPerson.append((null != customer.getFirstName()) ? customer.getFirstName() : "").append(" ")
-
-
-
-
-				.append((null != customer.getLastName()) ? customer.getLastName() : "");
-
-
-
+						.append((null != customer.getLastName()) ? customer.getLastName() : "");
 
 				final String pickupPersonName = pickupPerson.toString();
-
 				final String pickUpPersonMobile = (null != customer.getMobileNumber()) ? customer.getMobileNumber() : "";
-
-
-
-
-
 
 				model.addAttribute("pickupPersonName", pickupPersonName.trim());
 				model.addAttribute("pickUpPersonMobile", pickUpPersonMobile);
-				model.addAttribute("delModeCount", delModeCount);
-				model.addAttribute("cnccount", count);
-				model.addAttribute("expCheckout", expCheckout);
+				model.addAttribute("delModeCount", Integer.valueOf(delModeCount));
+				model.addAttribute("cnccount", Integer.valueOf(count));
+				model.addAttribute("expCheckout", Integer.valueOf(expCheckout));
 				model.addAttribute("defaultPincode", defaultPincode);
 				model.addAttribute("pwpos", productWithPOS);
 				model.addAttribute("CSRFToken", CSRFTokenManager.getTokenForSession(request.getSession()));
@@ -1929,7 +1922,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					throws NoSuchAlgorithmException, CalculationException
 	{
 
-		LOG.info("deliveryCost " + deliveryCost);
+		//LOG.info("deliveryCost " + deliveryCost);
 		//TISST-13010
 		String totalPriceFormatted = MarketplacecommerceservicesConstants.EMPTY;
 		String formatDeliveryCost = MarketplacecommerceservicesConstants.EMPTY;
@@ -1937,12 +1930,18 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		try
 		{
 			Double discountValue = Double.valueOf(0.0);
-			getMplCartFacade().removeDeliveryMode(getCartService().getSessionCart());
-
-			final Double subTotal = getCartService().getSessionCart().getSubtotal();
-
 			final CartModel cartModel = getCartService().getSessionCart();
-			final CartData cartData = mplExtendedCartConverter.convert(cartModel);
+			//TISPT-104 Scenario needs to be covered if user redirect from payment page to delivery mode selection page
+			// Cart recalculation method is invoked here
+			getMplCartFacade().removeDeliveryMode(cartModel); //TISPT-104 Scenario needs to be covered if user redirect from payment page to delivery mode selection page
+			//applyPromotions(); //TISPT-104
+
+
+			final CartModel cart = getCartService().getSessionCart();
+			final Double subTotal = cart.getSubtotal();
+			//final CartData cartData = mplExtendedCartConverter.convert(cartModel); //TISPT-104
+
+			final CartData cartData = mplExtendedPromoCartConverter.convert(cart);
 
 			if (null != cartData && cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
 			{
@@ -2081,7 +2080,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		try
 		{
 			//calls commerce db to get all the stores in sorting order.
-			storeList = pincodeServiceFacade.getSortedLocationsNearby(gps, configurableRadius, sellerId);
+			storeList = pincodeServiceFacade.getSortedLocationsNearby(gps, configurableRadius.doubleValue(), sellerId); // Code optimized as part of performance fix TISPT-104
 		}
 		catch (final Exception e)
 		{
@@ -2340,51 +2339,15 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					if (null != seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod()))
 					{
 						data.setIsCOD(seller.getIsCod());
-
-
 					}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 					LOG.debug("Current locations for Seller Id**********" + seller.getSellerID());
 					@SuppressWarnings("boxing")
-					final List<Location> storeList = pincodeServiceFacade.getSortedLocationsNearby(gps, configurableRadius,
-							seller.getSellerID());
+					final List<Location> storeList = pincodeServiceFacade.getSortedLocationsNearby(gps,
+							configurableRadius.doubleValue(), seller.getSellerID()); // Code optimized as part of performance fix TISPT-104
 					LOG.debug("StoreList size is :" + storeList.size());
 					if (CollectionUtils.isNotEmpty(storeList))
-
-
-
-
 					{
 						final List<String> locationList = new ArrayList<String>();
 						for (final Location location : storeList)
@@ -2514,12 +2477,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				deliveryCode = deliveryEntry.getDeliveryCode();
 				if (StringUtils.isNotEmpty(deliveryCode))
 				{
-					Double deliveryCost = 0.0;
+					Double deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
+
 					if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
 					{
 						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
 								deliveryEntry.getSellerArticleSKU());
-						deliveryCost = 0.0;
+						deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
 					}
 					else
 					{
@@ -2560,56 +2524,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 
 		return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/choose";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	}
 
 	private void setExpressCheckout(final CartModel serviceCart)
@@ -2680,4 +2594,3 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	}
 
 }
-

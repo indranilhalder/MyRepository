@@ -1529,14 +1529,32 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//OMS FALLBACK End
 
 	public static final String CATEGORY_PATH = "{category-path}".intern();
+
+	public static final String IAFEED_QUERY = "mpl.ia.query.";
+	public static final String IAFEED_UPDATEQUERY = "mpl.ia.updatequery.";
+	public static final String IA_CATEGORY_PRODUCT = "categoryproduct";
+	public static final String IA_BRAND_PRODUCT = "brandproduct";
+	public static final String IA_PRICE_INVENTORY = "priceinventory";
+	public static final String DOT = ".";
+	public static final String IA_FILE_EXTENSION = "csv";
+	public static final String IA_FILENAME_PRODUCTCATEGORY = "ia.filename.productcategory";
+	public static final String IA_FILENAME_BRANDPRODUCT = "ia.filename.brandproduct";
+	public static final String IA_FILENAME_PRICEINVENTORY = "ia.filename.priceinventory";
+	public static final String IA_EXPORT_FOLDER = "ia.path.export";
+	public static final String IA_CATEGORYEXPORT_FOLDER = "ia.path.catexport";
+	public static final String IA_BRANDEXPORT_FOLDER = "ia.path.brandexport";
+	public static final String IA_PRICE_INVENTORYEXPORT_FOLDER = "ia.path.priceinventoryexport";
+	public static final String ENCODING = "UTF-8";
+	public static final String IA_BATCHVALUE = "mpl.ia.batchvalue";
+
+	public static final Object PRICEINVENTORY_FEED = "priceinventory";
+
 	public static final String CATEGORY_PATH_EMPTY = "/{category-path}".intern();
 
 	//TISCR-421
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
 	public static final String EBS_SESSION_ID = "session_id";
-
-
 
 
 	private MarketplacecommerceservicesConstants()

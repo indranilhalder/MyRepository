@@ -79,7 +79,7 @@ public interface MplCouponFacade
 	 * @throws VoucherOperationException
 	 * @throws EtailNonBusinessExceptions
 	 */
-	void releaseVoucherInCheckout(CartModel cart) throws VoucherOperationException, EtailNonBusinessExceptions;
+	boolean releaseVoucherInCheckout(CartModel cart) throws VoucherOperationException, EtailNonBusinessExceptions;
 
 
 	/**

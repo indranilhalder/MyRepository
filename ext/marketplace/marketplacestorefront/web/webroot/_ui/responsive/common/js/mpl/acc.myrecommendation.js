@@ -7,7 +7,7 @@ $("document").ready(function(){
     	var dataApparel = null;
 		var dataElectronics = null;
 		var resourcePath = ACC.config.commonResourcePath;
-    	
+		
     	$("#question-0-0,#question-0-1").click(function()
     				{
     					 var genderData="genderData="+$(this).val();
@@ -31,6 +31,14 @@ $("document").ready(function(){
     				        		$("fieldset.products").addClass("products active");
     				        		 $.each(data , function( key, value ) {
     				        			 index++;
+    				        			 //TISPRD-2335
+    				        			 var catImage="";
+    				        			 if (null!=value.image){
+    				        				 catImage="<img src='"+value.image+"'>";
+    				        			 }else{
+    				        				 catImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+    				        			 }
+    				        			 
     				        			if($.inArray(key,prevSelectedCats)!= -1){
     				        				htmlData=htmlData+"<input class='category-selection' data-l1='"+value.name+"' checked='checked' type='checkbox' name='categoryCode'"+"id='question-1-"
        				                     +index
@@ -38,8 +46,7 @@ $("document").ready(function(){
        				                     +"<label for='question-1-"
        				                     +index
        				                     +"'>"
-       				                     +"<img "
-       				                     +"src='"+ACC.config.commonResourcePath+"/images/qRectangle_3_copy_9.jpeg'>"
+       				                     +catImage
        				                     +"<span>"+value.name+"</span>"
        				                     +"</label>";
     				        				
@@ -50,8 +57,7 @@ $("document").ready(function(){
        				                     +"<label for='question-1-"
        				                     +index
        				                     +"'>"
-       				                     +"<img "
-       				                     +"src='"+ACC.config.commonResourcePath+"/images/qRectangle_3_copy_9.jpeg'>"
+       				                     +catImage
        				                     +"<span>"+value.name+"</span>"
        				                     +"</label>";
     				        			} 
@@ -125,16 +131,27 @@ $("document").ready(function(){
     				$("fieldset.brands").addClass("brands active");
     				$.each(data , function( key, value ) {
     					index++;
+    					//TISPRD-2335
+    					var brandImage="";
+    					var brandImageHover="";
+	        			 if (null!=value.image){
+	        				 brandImage="<img src='"+value.image+"'>";
+	        				 brandImageHover="<img class='hover-image' src='"+value.image+"'>";
+	        			 }else{
+	        				 brandImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+	        				 brandImageHover = "<img class='hover-image' src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+	        			 }
+	        			 
     					if($.inArray(key,prevSelectedBrands)!= -1){
     						htmlData = htmlData+'<input type="checkbox" class="allBrands" checked="checked" name="brand" '+'id="question-2-'
     						+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
-    						+'<img src="'+ACC.config.commonResourcePath+'/images/logob-bNuon.png">' +
-    						'<img class="hover-image" src="'+ACC.config.commonResourcePath+'/images/logou-uNuon.png">'+"<span>"+value.name+"</span>"+'</label>';
+    						+ brandImage +
+    						brandImageHover +"<span>"+value.name+"</span>"+'</label>';
     					}else{
     						htmlData = htmlData+'<input type="checkbox" class="allBrands" name="brand" '+'id="question-2-'
     						+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
-    						+'<img src="'+ACC.config.commonResourcePath+'/images/logob-bNuon.png">' +
-    						'<img class="hover-image" src="'+ACC.config.commonResourcePath+'/images/logou-uNuon.png">'+"<span>"+value.name+"</span>"+'</label>';
+    						+brandImage +
+    						brandImageHover +"<span>"+value.name+"</span>"+'</label>';
     					}
     				});
     				$("#brandContainer").html(htmlData);
@@ -196,6 +213,7 @@ $("document").ready(function(){
         				
         				var htmlData = "";
         				var index = 0;
+        				var subCategoryImage="<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
         				if(categorySelected == "both"){
         					
         					$("fieldset.objects-apparel").addClass("active");
@@ -209,10 +227,15 @@ $("document").ready(function(){
             					var index = 0;
             		    		$.each(dataElectronics , function( key, value ) {
             						index++;
+            						//TISPRD-2335
+            	        			 if (null!=value.image){
+            	        				 subCategoryImage="<img src='"+value.image+"'>";
+            	        			 }
+            	        			 
             						htmlData = htmlData+'<input type="checkbox" name="subCatBrand"'+'id="question-4-'
             						+index+'" value='+key+'>'
             						+'<label for="question-4-'
-            						+index+'">'+'<img src="'+ACC.config.commonResourcePath+'/images/dept-2.png">'+"<span>"+value.name+"</span>"+'</label>';
+            						+index+'">'+subCategoryImage+"<span>"+value.name+"</span>"+'</label>';
             					});
             		    		$("#objHeadingElectronics").text("What types of electronics are you interested in?");
             		    		$("fieldset.objects-apparel").removeClass("active");
@@ -225,10 +248,15 @@ $("document").ready(function(){
             			//		console.log("Empty electronics");
             					$.each(dataApparel , function( key, value ) {
                 					index++;
+                					
+            	        			 if (null!=value.image){
+            	        				 subCategoryImage="<img src='"+value.image+"'>";
+            	        			 }
+            	        			 
                 					htmlData = htmlData+'<input type="checkbox" name="subBrand"'+'id="question-3-'
                 					+index+'" value='+key+'>'
                 					+'<label for="question-3-'
-                					+index+'">'+'<img src="'+ACC.config.commonResourcePath+'/images/dept-2.png">'+"<span>"+value.name+"</span>"+'</label>';
+                					+index+'">'+subCategoryImage+"<span>"+value.name+"</span>"+'</label>';
                 				});
                 				$("#apparelObjects").html(htmlData);
                 				$("#apparelFinal").text("Create Style Profile");
@@ -237,10 +265,13 @@ $("document").ready(function(){
             				}else{
             					$.each(dataApparel , function( key, value ) {
                 					index++;
+                					if (null!=value.image){
+           	        				 subCategoryImage="<img src='"+value.image+"'>";
+           	        			 	}
                 					htmlData = htmlData+'<input type="checkbox" name="subBrand"'+'id="question-3-'
                 					+index+'" value='+key+'>'
                 					+'<label for="question-3-'
-                					+index+'">'+'<img src="'+ACC.config.commonResourcePath+'/images/dept-2.png">'+"<span>"+value.name+"</span>"+'</label>';
+                					+index+'">'+subCategoryImage+"<span>"+value.name+"</span>"+'</label>';
                 				});
                 				$("#apparelObjects").html(htmlData);
             				}
@@ -248,10 +279,13 @@ $("document").ready(function(){
         					$("fieldset.objects").addClass("active");
         					$.each(data[0] , function( key, value ) {
             					index++;
+            					if (null!=value.image){
+       	        				 subCategoryImage="<img src='"+value.image+"'>";
+       	        			 	}
             					htmlData = htmlData+'<input type="checkbox" name="subBrandFinal"'+'id="question-3-'
             					+index+'" value='+key+'>'
             					+'<label for="question-3-'
-            					+index+'">'+'<img src="'+ACC.config.commonResourcePath+'/images/dept-2.png">'+"<span>"+value.name+"</span>"+'</label>';
+            					+index+'">'+subCategoryImage+"<span>"+value.name+"</span>"+'</label>';
             				});
             				$("#objects").html(htmlData);
         				}
@@ -544,16 +578,27 @@ function automateMyrecomendationBrandModification(catids){
 			$("fieldset.brands").addClass("brands active");
 			$.each(data , function( key, value ) {
 				index++;
+				//TISPRD-2335
+				var myInterestBrandImage="";
+				var myInterestBrandImageHover="";
+    			 if (null!=value.image){
+    				 myInterestBrandImage="<img src='"+value.image+"'>";
+    				 myInterestBrandImageHover="<img class='hover-image' src='"+value.image+"'>";
+    			 }else{
+    				 myInterestBrandImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+    				 myInterestBrandImageHover = "<img class='hover-image' src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+    			 }
+   			 	
 				if($.inArray(key,prevSelectedBrands)!= -1){
 					htmlData = htmlData+'<input type="checkbox" class="allBrands" checked="checked" name="brand" '+'id="question-2-'
 					+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
-					+'<img src="'+ACC.config.commonResourcePath+'/images/logob-bNuon.png">' +
-					'<img class="hover-image" src="'+ACC.config.commonResourcePath+'/images/logou-uNuon.png">'+"<span>"+value.name+"</span>"+'</label>';
+					+ myInterestBrandImage +
+					myInterestBrandImageHover +"<span>"+value.name+"</span>"+'</label>';
 				}else{
 					htmlData = htmlData+'<input type="checkbox" class="allBrands" name="brand" '+'id="question-2-'
 					+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
-					+'<img src="'+ACC.config.commonResourcePath+'/images/logob-bNuon.png">' +
-					'<img class="hover-image" src="'+ACC.config.commonResourcePath+'/images/logou-uNuon.png">'+"<span>"+value.name+"</span>"+'</label>';
+					+ myInterestBrandImage +
+					myInterestBrandImageHover +"<span>"+value.name+"</span>"+'</label>';
 				}
 			});
 			$("#brandContainer").html(htmlData);
@@ -585,6 +630,13 @@ function automateMyrecomendationBrandModification(catids){
 	        		$("fieldset.products").addClass("products active");
 	        		 $.each(data , function( key, value ) {
 	        			 index++;
+	        			//TISPRD-2335
+	     				var genderImage="";
+	         			 if (null!=value.image){
+	         				 genderImage="<img src='"+value.image+"'>";
+	         			 }else{
+	         				genderImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+	         			 }
 	        			if($.inArray(key,prevSelectedCats)!= -1){
 	        				htmlData=htmlData+"<input class='category-selection' data-l1='"+value.name+"' checked='checked' type='checkbox' name='categoryCode'"+"id='question-1-"
 		                     +index
@@ -593,7 +645,7 @@ function automateMyrecomendationBrandModification(catids){
 		                     +index
 		                     +"'>"
 		                     +"<img "
-		                     +"src='"+ACC.config.commonResourcePath+"/images/qRectangle_3_copy_9.jpeg'>"
+		                     +genderImage
 		                     +"<span>"+value.name+"</span>"
 		                     +"</label>";
 	        				
@@ -605,7 +657,7 @@ function automateMyrecomendationBrandModification(catids){
 		                     +index
 		                     +"'>"
 		                     +"<img "
-		                     +"src='"+ACC.config.commonResourcePath+"/images/qRectangle_3_copy_9.jpeg'>"
+		                     +genderImage
 		                     +"<span>"+value.name+"</span>"
 		                     +"</label>";
 	        			} 

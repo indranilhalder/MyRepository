@@ -217,14 +217,15 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 					&& consignmentModel.getCode().equals(orderEntryModel.getTransactionID()))
 			{
 
-				//storeName = (StringUtils.isEmpty(orderEntryModel.getDeliveryPointOfService().getDisplayName())) ? MarketplacecommerceservicesConstants.EMPTY: orderEntryModel.getDeliveryPointOfService().getDisplayName();
 
-
+				/*
+				 * storeName =(StringUtils.isEmpty(orderEntryModel.getDeliveryPointOfService().getDisplayName())) ?
+				 * MarketplacecommerceservicesConstants.EMPTY :
+				 * orderEntryModel.getDeliveryPointOfService().getDisplayName();
+				 */
 				storeName = (orderEntryModel.getDeliveryPointOfService() != null && StringUtils.isNotEmpty(orderEntryModel
 						.getDeliveryPointOfService().getDisplayName())) ? orderEntryModel.getDeliveryPointOfService().getDisplayName()
 						: MarketplacecommerceservicesConstants.EMPTY;
-
-
 				final DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 				final Date currentDate = new Date();
 				if (null != consignmentModel.getDeliveryDate())
@@ -429,8 +430,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, String.valueOf(childOrders.size()))); if (null !=
 	 * orderNumber && !orderNumber.isEmpty()) { pushData.setOrderId(orderNumber); }
 	 * mplSNSMobilePushService.setUpNotification(customer.getOriginalUid(), pushData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
 	 */
 
