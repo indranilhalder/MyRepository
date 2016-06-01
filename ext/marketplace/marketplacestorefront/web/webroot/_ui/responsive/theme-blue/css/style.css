@@ -18157,10 +18157,7 @@ body .account .right-account>ul.menu>li>div img {
 	width:100%;
 	float:none !important;
 }
-body .account .right-account .order-history .product-block li.item .product-name a 
-{
-	text-decoration:none;
-}
+
 body .account .right-account .order-history .product-block li.item .product-name a:hover
 {
 	color:#A9143C;
@@ -22208,7 +22205,6 @@ body .right-account .order-history .cancellation-request-block .return-form .ret
 @media (max-width: 790px) {
     body .right-account .order-history .cancellation-request-block .return-form .return-container {
         padding: 30px 35px;
-        border-bottom: 2px solid #f0f4f5
     }
 }
 body .right-account .order-history .cancellation-request-block .return-form .return-container .questions {
@@ -22227,11 +22223,6 @@ body .right-account .order-history .cancellation-request-block .return-form .ret
     }
    body .right-account .order-history .cancellation-request-block .return-form .return-container .questions label {
         font-weight: 600
-    }
-    body .right-account .order-history .cancellation-request-block .return-form .return-container .questions select {
-
-        font-size: 16px;
-        font-weight: 500
     }
 }
 body .right-account .order-history .cancellation-request-block .return-form .buttons {
@@ -31709,7 +31700,7 @@ body.page-homepage .feature-collections{
 	.cart.wrapper .product-block li.item, .confirmation .product-block li.item{
 	padding: 10px 0;
 	}
-	.cart.wrapper .product-block li.item ul.desktop, .confirmation .product-block li.item ul.desktop{
+	.cart.wrapper .product-block li.item ul.desktop{
 	display:table;
 	position:relative;
 	}
@@ -31735,7 +31726,7 @@ margin-left: 0px !important; }}
 /*TISCR-438*/
 li.a-z-li a {
     display: inline-block;
-    line-height: normal;
+    line-height: 12px;
 }
 body.safariBrowser .product-info .product-image-container .image-list li span.thumb:hover, body.safariBrowser .product-info .product-image-container .image-list li .active {
 	padding-bottom: 1px;	
@@ -31748,6 +31739,10 @@ body.touchDevice .select-view .select-list.touch_click ul {
     border-left: 1px solid #e3e3e3;
     border-bottom: 1px solid #e3e3e3;
 } 
+body .account .right-account .order-history .product-block li.item .product-name a 
+{
+	text-decoration:none;
+}
 /*--------------maincss-----------*/
 .row
 {
