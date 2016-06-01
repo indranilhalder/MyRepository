@@ -171,7 +171,7 @@ $(document).ready(function() {
    	getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 var stockMap="${skuIdsWithNoStock}"; 
 	
-	 fetchPrice();
+	 //fetchPrice();
      setSellerLimits(1);
      $(".selectQty").change(function() {
  		$("#qty").val($(".selectQty :selected").val());
@@ -216,6 +216,7 @@ function firstToUpperCase( str ) {
 	border-collapse: separate;
 	box-shadow: 0 0 9px #a9143c;
 	visibility: hidden;
+	z-index:1;
 }
 .tooltip_pop:after {
 	content: "";

@@ -87,9 +87,9 @@ function navigateToPage(queryString,textString)
 		<label class="brandSelectAll" for="brandSelectAll">Uncheck All</label>
 		</c:when>
 		
-		<c:otherwise>
+		<%--	<c:otherwise>
 		<label class="brandSelectAll" for="brandSelectAll">Check All</label>
-		</c:otherwise>
+		</c:otherwise> --%>
 		
 		
 		</c:choose>
@@ -296,6 +296,19 @@ function navigateToPage(queryString,textString)
 					
 						<c:if test="${facetData.multiSelect}">
 							<ycommerce:testId code="facetNav_selectForm"> 
+							<!-- Added for TISPRO-490 Start here -->							
+							<c:if test="${facetData.code eq 'dialColour'}">
+							<form action="#" method="get"> 
+								<input type="hidden" name="offer" value="${offer}"/>
+								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+								<input type="hidden" name="isFacet" value="true"/>								
+								<input type="submit" title="${facetValue.name}" value="" style="background-color:${facetValue.name}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;" />														
+					
+							</form>							
+							</c:if>
+							<!-- Added for TISPRO-490 End here -->		
 							<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
@@ -303,6 +316,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 								
 								<input type="hidden" name="isFacet" value="true"/>
+								<c:if test="${facetData.code ne 'dialColour'}"> <!-- Added for TISPRO-490  -->		
 								<label>
 									<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" />
 									<c:if test="${facetData.code == 'inStockFlag'}">
@@ -332,6 +346,7 @@ function navigateToPage(queryString,textString)
 										</span>
 									</c:if>
 								</label>
+								</c:if>
 							</form>
 							</ycommerce:testId>
 						</c:if>

@@ -21,6 +21,7 @@ import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.VoucherModelService;
@@ -80,6 +81,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	private MplVoucherService mplVoucherService;
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
+	@Resource(name = "modelService")
+	private ModelService modelService;
 
 	@Resource(name = "voucherDisplayConverter")
 	private Converter<VoucherModel, VoucherDisplayData> voucherDisplayConverter;
@@ -538,18 +541,40 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @throws VoucherOperationException
 	 */
 	@Override
-	public void releaseVoucherInCheckout(final CartModel cart) throws VoucherOperationException, EtailNonBusinessExceptions
+	public boolean releaseVoucherInCheckout(final CartModel cart) throws VoucherOperationException, EtailNonBusinessExceptions
 	{
 		final List<DiscountModel> discountList = cart.getDiscounts();
-
-		if (CollectionUtils.isNotEmpty(discountList) && discountList.get(0) instanceof PromotionVoucherModel)
+		boolean recalculateRequired = false;
+		try
 		{
-			final String couponCode = ((PromotionVoucherModel) discountList.get(0)).getVoucherCode(); //Only 1 coupon can be applied
-			releaseVoucher(couponCode, cart);
-			recalculateCartForCoupon(cart);
-		}
-	}
+			if (CollectionUtils.isNotEmpty(discountList) && discountList.get(0) instanceof PromotionVoucherModel)
+			{
+				final String couponCode = ((PromotionVoucherModel) discountList.get(0)).getVoucherCode(); //Only 1 coupon can be applied
+				getVoucherService().releaseVoucher(couponCode, cart); //Releases the voucher from the cart
+				final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+				for (final AbstractOrderEntryModel entry : entryList)//Resets the coupon details against the entries
+				{
+					entry.setCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+					entry.setCouponValue(Double.valueOf(0.00D));
+				}
+				if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
+				{
+					getModelService().saveAll(entryList);
+				}
 
+				//releaseVoucher(couponCode, cart); Commented as part of Performance fix TISPT-104
+				//recalculateCartForCoupon(cart); Commented as part of Performance fix TISPT-104
+				recalculateRequired = true; //TISPT-104
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception in releaseVoucherInCheckout ", ex); //TISPT-104
+			throw new EtailNonBusinessExceptions(ex);
+		}
+
+		return recalculateRequired;
+	}
 
 	/**
 	 * @Description: This method returns list of all CouponTransactions corresponding to a specific customer to the
@@ -855,6 +880,29 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		this.sessionService = sessionService;
 	}
+
+
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
+
+
 
 
 }

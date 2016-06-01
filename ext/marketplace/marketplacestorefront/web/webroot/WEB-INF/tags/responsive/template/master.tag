@@ -69,31 +69,35 @@
 		</c:if>
 	</c:forEach>
 	
-	<c:choose>
+	<%-- <c:choose>
 	    <c:when test="${not empty seoMediaURL}">
 	        <c:set var="seoImageURL" value="${protocolString[0]}://${seoMediaURL}"/>
 	    </c:when>
-	</c:choose>
+	</c:choose> --%>
 	
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.handle')" var="twitterHandle"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
+	<!-- Changes for TISPT-113 -->
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('media.dammedia.host')" var="mediaHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('seo.media.url')" var="seoMediaURL"/>
+	
 	<!-- Markup for Google+ -->
 	<meta itemprop="name" content="${metaTitle}">
 	<meta itemprop="description" content="${metaDescription}">
-	<meta itemprop="image" content="${seoImageURL}">
+	<meta itemprop="image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}">
 	
 	<!-- Twitter Card data -->
 	<meta name="twitter:card" content="${baseURL}/">
 	<meta name="twitter:site" content="${twitterHandle}">
 	<meta name="twitter:title" content="${metaTitle}">
 	<meta name="twitter:description" content="${metaDescription}">
-	<meta name="twitter:image:src" content="${seoImageURL}">
+	<meta name="twitter:image:src" content="${protocolString[0]}://${mediaHost}${seoMediaURL}">
 	
 	<!-- FB Open Graph data -->
 	<meta property="og:title" content="${metaTitle}" />
 	<meta property="og:url" content="${canonical}" />
-	<meta property="og:image" content="${seoImageURL}" />
+	<meta property="og:image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}" />
 	<meta property="og:description" content="${metaDescription}" />
 	<meta property="og:site_name" content="${siteName}" />
 	
