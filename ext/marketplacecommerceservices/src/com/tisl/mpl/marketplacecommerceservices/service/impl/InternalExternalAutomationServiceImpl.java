@@ -199,7 +199,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									}
 									catch (final Exception e)
 									{
-										LOG.error("Big promo banner Exception 11111 : " + e.getMessage());
+										LOG.error("MplBigPromoBannerComponentModel Exception: " + e.getMessage());
+
 									}
 								}
 								else if (banner instanceof MplBigFourPromoBannerComponentModel)
@@ -283,7 +284,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							}
 							catch (final Exception e)
 							{
-								LOG.error("Big promo banner Exception 222 " + e.getMessage());
+								LOG.error("MplBigPromoBannerComponentModel Exception: " + e.getMessage());
 							}
 							//CampaignDataList.add(campaignDataBigPromoBanner);
 
@@ -359,7 +360,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							}
 							catch (final Exception e)
 							{
-								LOG.error("Error in Big Four PromoBanner111111" + e.getMessage());
+								LOG.error("MplBigFourPromoBannerComponentModel Exception: " + e.getMessage());
 							}
 							//CampaignDataList.add(campaignDataBigFourPromoBanner);
 							LOG.info("Stepping out from MplBigFourPromoBannerComponentModel");
@@ -517,7 +518,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									}
 									catch (final Exception e)
 									{
-										LOG.error("Error in Big Four PromoBanner 222222" + e.getMessage());
+										LOG.error("RotatingImagesComponentModel Exception: " + e.getMessage());
 									}
 									//CampaignDataList.add(campaignDataBigFourPromoBanner);
 								}
@@ -598,7 +599,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 							catch (final Exception e)
 							{
-								LOG.error("Cron Job Simple Banner Component Error ", e);
+								LOG.error("SimpleBannerComponentModel Exception: ", e);
 							}
 							//CampaignDataList.add(campaignDataBigFourPromoBanner);
 							LOG.info("Stepping out from SimpleBannerComponentModel");
@@ -612,7 +613,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception in creating Banner Image :" + e.getMessage());
+			LOG.error("Exception in creating Banner Image: " + e.getMessage());
 		}
 		return CampaignDataList;
 	}
@@ -839,16 +840,19 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		catch (final MalformedURLException e)
 		{
 			LOG.info("Malformed URL: " + e.getMessage());
+			throw e;
 		}
 		catch (final IOException e)
 		{
 			LOG.info("IO Exception: " + e.getMessage());
-			e.printStackTrace();
+			//e.printStackTrace();
+			throw e;
 		}
 		catch (final Exception e)
 		{
 			LOG.info("Exception is: " + e.getMessage());
-			e.printStackTrace();
+			//e.printStackTrace();
+			throw e;
 		}
 		return size;
 
