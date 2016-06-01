@@ -457,7 +457,6 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	public String getResultDescription(final SessionContext ctx, final PromotionResult promotionResult, final Locale locale)
 	{
 		String currency = MarketplacecommerceservicesConstants.EMPTYSPACE;
-
 		final AbstractOrder order = promotionResult.getOrder(ctx);
 
 		int finalNumberOfProducts = 0;
@@ -474,6 +473,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 			if (promotionResult.getFired(ctx))
 			{
+
 				//firedData = messageData();
 				if (null != ctx.getCurrency() && null != ctx.getCurrency().getIsocode())
 				{
@@ -617,6 +617,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		builder.append(getPercentageDiscount(ctx)).append('|');
 	}
 
+
 	/**
 	 * @Description: Method Blocked for Performance Fix
 	 * @return: String
@@ -644,15 +645,11 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	//		return data;
 	//	}
 
-
 	//For Referring to Promotion Helper Class
 	protected MplPromotionHelper getMplPromotionHelper()
 	{
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
-
-
-
 
 
 	/**

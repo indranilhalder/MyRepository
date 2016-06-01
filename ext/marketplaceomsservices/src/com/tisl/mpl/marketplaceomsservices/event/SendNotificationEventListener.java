@@ -218,6 +218,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 					&& consignmentModel.getCode().equals(orderEntryModel.getTransactionID()))
 			{
 
+
 				/*
 				 * storeName =(StringUtils.isEmpty(orderEntryModel.getDeliveryPointOfService().getDisplayName())) ?
 				 * MarketplacecommerceservicesConstants.EMPTY :

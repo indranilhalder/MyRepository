@@ -423,7 +423,8 @@ if (searchCategory_id){
 			}
 
 			/*TCS-provided add to cart code*/
-			function submitAddToCart(site_productid,site_ussid){
+			//Add to Bag changes incorporated given by IA start
+			function submitAddToCart(site_productid,site_ussid,iaref){
 			    var site_product_id = site_productid;
 			    var site_uss_id = site_ussid;
 			   
@@ -486,14 +487,21 @@ if (searchCategory_id){
 
 			  });
 			  if(spid.indexOf(site_product_id) === -1) {
-				    params = {'count' : '0'};
+				//Add to Bag changes incorporated given by IA
+				    params = {'count' : '0','referring_site_product_id' : site_product_id};
+				    if(iaref) {
+				    	params.referring_request_id = iaref;
+				    }
 				    params = buildParams(params);
 				    callRecApi(params, rootEP + '/SocialGenomix/recommendations/products/jsonp');
-				    //console.log(params);
-				  }
-				  callEventApi('add_to_cart', { "pname" : ['site_product_id','quantity'],
+				    callEventApi('add_to_cart', { "pname" : ['site_product_id','quantity'],
 				                                "pvalue" : [spid, '1'] });
-			}
+			  } else {
+				     callEventApi('add_to_cart', { "pname" : ['site_product_id','quantity'],
+				                                "pvalue" : [spid, '1'] });
+			 }
+			 }
+			//Add to Bag changes incorporated given by IA end
 
 			/*Make quickview visible and on top*/
 			function showQuickview(productElement) {

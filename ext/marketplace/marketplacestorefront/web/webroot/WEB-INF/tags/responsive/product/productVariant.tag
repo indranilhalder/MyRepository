@@ -12,8 +12,8 @@
 	tagdir="/WEB-INF/tags/responsive/storepickup"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
-<script type="text/javascript"
-	src="${commonResourcePath}/js/acc.sellerDetails.js"></script>
+<%-- <script type="text/javascript"
+	src="${commonResourcePath}/js/acc.sellerDetails.js"></script> --%>
 <script>
 /* $(document).ready(function(){
 	var currentColour = '${product.colour}';

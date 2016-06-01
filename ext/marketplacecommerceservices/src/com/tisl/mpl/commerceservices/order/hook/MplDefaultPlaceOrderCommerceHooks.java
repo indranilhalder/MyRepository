@@ -59,14 +59,12 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
-import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
-import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplFraudModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
@@ -117,8 +115,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private static final String middleDigits = "000";
 	private static final String middlecharacters = "-";
 
-	@Autowired
-	private BuyBoxService buyBoxService;
+
 
 	@Autowired
 	private OrderStatusSpecifier orderStatusSpecifier;
@@ -140,7 +137,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -222,7 +219,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -236,7 +233,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -309,9 +306,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 *
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	private void setParentTransBuyABGetC(final List<OrderModel> subOrderList) throws InvalidCartException
@@ -368,9 +365,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 *
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
 	 * @throws Exception
 	 */
 
@@ -735,9 +732,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 *
+	 * 
 	 * @param orderList
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions
@@ -782,14 +779,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		// Populating parent transaction id for freebie items
 		for (final OrderModel subOrderModel : subOrderList)
 		{
+			final List<String> assignedParentList = new ArrayList<String>();
 			for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
 			{
-				if (subOrderEntryModel.getGiveAway().booleanValue()
-						&& CollectionUtils.isNotEmpty(subOrderEntryModel.getAssociatedItems()))
+				List<String> associatedItemList = subOrderEntryModel.getAssociatedItems();
+				if (subOrderEntryModel.getGiveAway().booleanValue() && CollectionUtils.isNotEmpty(associatedItemList))
 				{
-					final String parentUssId = getParentUssid(subOrderEntryModel.getAssociatedItems(), subOrderModel);
+					associatedItemList = updateAssociatedItem(associatedItemList, assignedParentList);
+					final String parentUssId = getParentUssid(associatedItemList, subOrderModel);
 					String parentTransactionId = null;
-
+					assignedParentList.add(parentUssId);
 					if (subOrderEntryModel.getParentTransactionID() == null && parentUssId != null
 							&& freebieParentMap.get(parentUssId) != null)
 					{
@@ -827,6 +826,22 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param associatedItemList
+	 * @param assignedParentList
+	 * @return
+	 */
+	private List<String> updateAssociatedItem(final List<String> associatedItemList, final List<String> assignedParentList)
+	{
+		// YTODO Auto-generated method stub
+		final List<String> updatedAssociatedList = new ArrayList<String>(associatedItemList);
+		for (final String parentUssid : assignedParentList)
+		{
+			updatedAssociatedList.remove(parentUssid);
+		}
+		return updatedAssociatedList;
 	}
 
 	/**
@@ -1123,6 +1138,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @param prevDelCharge
 	 * @throws Exception
 	 */
+	@SuppressWarnings("javadoc")
 	private void createOrderLine(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
 			final OrderModel clonedSubOrder, final double cartApportionValue, final double productApportionvalue,
 			final double price, final boolean isbogo, @SuppressWarnings("unused") final double bogoQualifying,
@@ -1132,7 +1148,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	{
 
-		final BuyBoxModel buyBoxInfo = getBuyBoxService().getpriceForUssid(abstractOrderEntryModel.getSelectedUSSID());
+		//final BuyBoxModel buyBoxInfo = getBuyBoxService().getpriceForUssid(abstractOrderEntryModel.getSelectedUSSID());
 		for (int qty = 0; qty < quantity; qty++)
 		{
 
@@ -1142,10 +1158,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final SellerInformationModel sellerDetails = cachedSellerInfoMap.get(abstractOrderEntryModel.getSelectedUSSID());
 			final String sellerID = sellerDetails.getSellerID();
 
-			if (null != buyBoxInfo && null != buyBoxInfo.getSellerName())
+			if (abstractOrderEntryModel.getSellerInfo() != null)
 			{
-				orderEntryModel.setSellerInfo(buyBoxInfo.getSellerName());
+				orderEntryModel.setSellerInfo(abstractOrderEntryModel.getSellerInfo());
 			}
+
 
 			final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
 					.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
@@ -1499,19 +1516,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	/**
 	 * @return the buyBoxService
 	 */
-	public BuyBoxService getBuyBoxService()
-	{
-		return buyBoxService;
-	}
 
-	/**
-	 * @param buyBoxService
-	 *           the buyBoxService to set
-	 */
-	public void setBuyBoxService(final BuyBoxService buyBoxService)
-	{
-		this.buyBoxService = buyBoxService;
-	}
 
 	/**
 	 * @return the orderStatusSpecifier

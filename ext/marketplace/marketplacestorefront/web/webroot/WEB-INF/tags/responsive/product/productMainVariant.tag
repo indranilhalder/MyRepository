@@ -59,6 +59,9 @@ $("#variant").change(function() {
 		window.location.href = url;
 	}
 });
+
+//AKAMAI Fix
+var productSizeVar = '${productSize}';
 </script> 
 
 

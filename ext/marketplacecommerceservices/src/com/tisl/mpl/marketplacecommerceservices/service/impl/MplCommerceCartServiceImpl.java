@@ -4634,43 +4634,57 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		try
 		{
 			final List<DeliveryDetailsData> validDeliveryDetailsData = new ArrayList<DeliveryDetailsData>();
-			if (null != pinCodeResponseData)
+			final CartModel cartModel = cartService.getSessionCart();
+			// Start Modified as part of performance fix
+			if (null != pinCodeResponseData && CollectionUtils.isNotEmpty(pinCodeResponseData.getValidDeliveryModes())
+					&& cartModel != null && CollectionUtils.isNotEmpty(cartModel.getEntries()))
 			{
 				for (final DeliveryDetailsData deliveryDetailsData : pinCodeResponseData.getValidDeliveryModes())
 				{
-					Long inventory = null;
-					Long selectedQuantity = null;
-					final CartModel cartmodel = cartService.getSessionCart();
-					// Iterating all cart entries and checking  inventory is available or not
-					// If inventory is available then only displaying that delivery mode in Delivery selection Page
-					if (null != cartmodel)
+					long inventory = 0;
+					long selectedQuantity = 0;
+					for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
 					{
-						for (final AbstractOrderEntryModel abstractOrderEntryModel : cartmodel.getEntries())
+						if (deliveryDetailsData != null && abstractOrderEntryModel != null
+								&& abstractOrderEntryModel.getSelectedUSSID().equalsIgnoreCase(pinCodeResponseData.getUssid()))
 						{
-							if (abstractOrderEntryModel.getSelectedUSSID().equalsIgnoreCase(pinCodeResponseData.getUssid()))
+							inventory = (deliveryDetailsData.getInventory() != null) ? Long
+									.parseLong(deliveryDetailsData.getInventory()) : inventory;
+							selectedQuantity = (abstractOrderEntryModel.getQuantity() != null) ? abstractOrderEntryModel.getQuantity()
+									.longValue() : selectedQuantity;
+							if (inventory >= selectedQuantity)
 							{
-								inventory = Long.valueOf(deliveryDetailsData.getInventory());
-								selectedQuantity = abstractOrderEntryModel.getQuantity();
-								if (inventory.longValue() >= selectedQuantity.longValue())
-								{
-									validDeliveryDetailsData.add(deliveryDetailsData);
-								}
+								validDeliveryDetailsData.add(deliveryDetailsData);
 							}
 						}
 					}
 					pinCodeResponseData.setValidDeliveryModes(validDeliveryDetailsData);
 				}
 			}
+			// End Modified as part of performance fix TISPT-104
+			/*
+			 * final List<DeliveryDetailsData> validDeliveryDetailsData = new ArrayList<DeliveryDetailsData>(); if (null !=
+			 * pinCodeResponseData) { for (final DeliveryDetailsData deliveryDetailsData :
+			 * pinCodeResponseData.getValidDeliveryModes()) { Long inventory = null; Long selectedQuantity = null; final
+			 * CartModel cartmodel = cartService.getSessionCart(); // Iterating all cart entries and checking inventory is
+			 * available or not // If inventory is available then only displaying that delivery mode in Delivery selection
+			 * Page if (null != cartmodel) { for (final AbstractOrderEntryModel abstractOrderEntryModel :
+			 * cartmodel.getEntries()) { if
+			 * (abstractOrderEntryModel.getSelectedUSSID().equalsIgnoreCase(pinCodeResponseData.getUssid())) { inventory =
+			 * Long.valueOf(deliveryDetailsData.getInventory()); selectedQuantity = abstractOrderEntryModel.getQuantity();
+			 * if (inventory.longValue() >= selectedQuantity.longValue()) {
+			 * validDeliveryDetailsData.add(deliveryDetailsData); } } } }
+			 * pinCodeResponseData.setValidDeliveryModes(validDeliveryDetailsData); } }
+			 */
 			return pinCodeResponseData;
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occurred while checking inventory ");
+			LOG.error("Exception occurred in getVlaidDeliveryModesByInventory while checking inventory ", e);
 		}
 		return pinCodeResponseData;
 
 	}
-
 
 	/**
 	 * @return the baseStoreService

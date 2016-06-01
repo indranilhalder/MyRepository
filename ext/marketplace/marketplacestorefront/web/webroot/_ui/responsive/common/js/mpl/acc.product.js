@@ -165,6 +165,8 @@ ACC.product = {
 			event.preventDefault();
 			return false;
 		});
+
+
 		//change
 	/*	$(document).ready(function(){
 			
@@ -183,21 +185,37 @@ ACC.product = {
 				var isPresent=false;
 				var productCodePost="productCodePost";
 	 			var input = $("#"+this.id+" :input[name='" + productCodePost +"']"); 
+
+
 	 			var productId="productCodePost";
 				var product =input.val(); 
 	            var dataString = 'productCode=' + product;
+
+
+
+
+
+
 	            for ( var sProduct in resultData) {
 					var entry = resultData[sProduct];
 					if (product == entry) {
 						isPresent = true;
 						break;
 
+
+
 					}
 				}
 	             if(isPresent){
+
 	            	 
 	            	 $("#addToCartButton"+product +".js-add-to-cart").hide();
 	    				$("#addToCartButton"+product +".disabled.js-add-to-cart").show();
+
+
+
+
+
 	             }
 			});
 
