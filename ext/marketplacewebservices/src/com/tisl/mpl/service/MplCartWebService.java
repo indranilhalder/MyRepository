@@ -82,7 +82,6 @@ public interface MplCartWebService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	List<GetWishListProductWsDTO> productDetails(String cartId, CartModel cartModel, CartData cartData,
-			List<AbstractOrderEntryModel> abstractOrderEntryList,
 			Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMapfinal, boolean isPinCodeCheckRequired,
 			boolean resetReqd) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 

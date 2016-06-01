@@ -2482,13 +2482,11 @@ public class CartsController extends BaseCommerceController
 				/* Product Details */
 				if (null != postalCode && !postalCode.isEmpty())
 				{
-					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, cartModel.getEntries(),
-							deliveryModeDataMap, true, false);
+					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, deliveryModeDataMap, true, false);
 				}
 				else
 				{
-					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, cartModel.getEntries(),
-							deliveryModeDataMap, false, false);
+					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, deliveryModeDataMap, false, false);
 				}
 
 				cartDetailsData.setProducts(gwlpList);
@@ -2559,7 +2557,8 @@ public class CartsController extends BaseCommerceController
 	 * Returns order summary for mobile.
 	 *
 	 * @param cartId
-	 * @param request
+	 * @param pincode
+	 * @param userId
 	 * @return cData
 	 */
 	@Secured(
@@ -2623,13 +2622,11 @@ public class CartsController extends BaseCommerceController
 				/* Product Details */
 				if (null != pincode && !pincode.isEmpty())
 				{
-					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, cartModel.getEntries(),
-							deliveryModeDataMap, true, false);
+					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, deliveryModeDataMap, true, false);
 				}
 				else
 				{
-					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, cartModel.getEntries(),
-							deliveryModeDataMap, false, false);
+					gwlpList = mplCartWebService.productDetails(cartId, cartModel, cartData, deliveryModeDataMap, false, false);
 				}
 				cartDetailsData.setProducts(gwlpList);
 
