@@ -8122,6 +8122,15 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="pincodeServIDX" unique="false">
+						<key attribute="pincode" />
+						<key attribute="sellerId" />
+						<key attribute="deliveryMode" />
+						<key attribute="fulfillmentType" />
+						<key attribute="transportMode" />
+					</index>
+				</indexes>
 			</itemtype>
 
 

@@ -39,7 +39,7 @@ public class TealiumController extends AbstractController
 	@ResponseBody
 	public String getTealiumDataHomepage() throws Exception
 	{
-		final StringBuilder tealiumData = new StringBuilder();
+		final StringBuilder tealiumData = new StringBuilder(1000); // SONAR FIX
 		try
 		{
 			final HttpServletRequest request = getRequest();
@@ -120,7 +120,7 @@ public class TealiumController extends AbstractController
 	@ResponseBody
 	public String getTealiumDataProductPage() throws Exception
 	{
-		final StringBuilder tealiumData = new StringBuilder();
+		final StringBuilder tealiumData = new StringBuilder(1000);
 		try
 		{
 			final HttpServletRequest request = getRequest();
