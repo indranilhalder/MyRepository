@@ -165,42 +165,61 @@ ACC.product = {
 			event.preventDefault();
 			return false;
 		});
-		
-		/*
+
+
 		//change
-		$(document).ready(function(){
+	/*	$(document).ready(function(){
+			
+			var requiredserpUrl = ACC.config.encodedContextPath + "/search"+ "/showAllCartEntries";
+			var resultData;
+			$.ajax({
+    			contentType : "application/json; charset=utf-8",
+    			url : requiredserpUrl,
+    			dataType : "json",
+    			success : function(data) {
+    				resultData = data;
+    		  }
+    		});
+			//Iterate cart entries product list and disable product addToCart button
 			$('form[id^="addToCartForm"]').each(function() {
 				var isPresent=false;
 				var productCodePost="productCodePost";
-	 			 var input = $("#"+this.id+" :input[name='" + productCodePost +"']"); 
-	 			// var requiredserpUrl = ACC.config.encodedContextPath + "/search"+ "/showCartData";
-	 			 var requiredserpUrl = ACC.config.encodedContextPath + "/search"+ "/showAllCartEntries";
-	 			 var productId="productCodePost";
-				 var product =input.val(); 
-	             var dataString = 'productCode=' + product;
-	             $.ajax({
-	    			contentType : "application/json; charset=utf-8",
-	    			url : requiredserpUrl,
-	    			//data : dataString,
-	    			dataType : "json",
-	    			success : function(data) {
-	    				for ( var sProduct in data) {
-	    					var entry = data[sProduct];
-	    					if (product == entry) {
-	    						isPresent = true;
-	    						break;
+	 			var input = $("#"+this.id+" :input[name='" + productCodePost +"']"); 
 
-	    					}
-	    				}
-	    	             if(isPresent){
-	    	            	 
-	    	            	 $("#addToCartButton"+product +".js-add-to-cart").hide();
-	    	    				$("#addToCartButton"+product +".disabled.js-add-to-cart").show();
-	    	             }
-	    		  }
-	    		});
-	 			});
-			}); */
+
+	 			var productId="productCodePost";
+				var product =input.val(); 
+	            var dataString = 'productCode=' + product;
+
+
+
+
+
+
+	            for ( var sProduct in resultData) {
+					var entry = resultData[sProduct];
+					if (product == entry) {
+						isPresent = true;
+						break;
+
+
+
+					}
+				}
+	             if(isPresent){
+
+	            	 
+	            	 $("#addToCartButton"+product +".js-add-to-cart").hide();
+	    				$("#addToCartButton"+product +".disabled.js-add-to-cart").show();
+
+
+
+
+
+	             }
+			});
+
+			});*/
 
 		 $(document).on('click','.serp_add_to_cart_form .js-add-to-cart',function(event){
 				if(!$(this).hasClass("disabled")) {

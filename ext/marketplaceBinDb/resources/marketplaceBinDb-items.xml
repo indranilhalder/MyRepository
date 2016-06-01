@@ -86,6 +86,12 @@
 				<persistence type="property"  />
 			</attribute>
 		</attributes>
+		<!-- Fix for TISPT-103 -->
+		<indexes>
+			<index name="BINDBIDX">
+			<key attribute="BinNo"/>
+			</index>
+		</indexes> 
 	</itemtype>
 	
 </itemtypes>

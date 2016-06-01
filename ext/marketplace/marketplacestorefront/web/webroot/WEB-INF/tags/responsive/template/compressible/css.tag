@@ -4,9 +4,10 @@
 
 
 <%--  AddOn Common CSS files --%>
-<c:forEach items="${addOnCommonCssPaths}" var="addOnCommonCss">
+<!--  TISPRO-502 -->
+<%-- <c:forEach items="${addOnCommonCssPaths}" var="addOnCommonCss">
 	<link rel="stylesheet" type="text/css" media="all" href="${addOnCommonCss}"/>
-</c:forEach>
+</c:forEach> --%>
 
 
 
@@ -15,9 +16,10 @@
 <%-- Theme CSS files --%>
 
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/style.css"/>
-<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jquery-picZoomer.css"/>
+<!--  TISPRO-502 -->
+<%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jquery-picZoomer.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/reset.css"/>
-<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jqtree.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jqtree.css"/> --%>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
 <!--[if gte IE 9]>
