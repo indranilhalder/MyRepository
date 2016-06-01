@@ -16,4 +16,4 @@
 	</c:otherwise>
 </c:choose>
 
-<img src="${imageUrl}" alt="${alt}" title="${title}" />
+<img class="picZoomer-pic" src="${imageUrl}" alt="${alt}" title="${title}" />
