@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.core.coupon.dao;
 
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
@@ -27,5 +28,7 @@ public interface MplCouponListingDao
 	 * @return
 	 */
 	Set<Map<VoucherModel, DateRestrictionModel>> findClosedVoucher();
+
+	List<VoucherModel> findVoucherWithRestrictions(ProductModel product);
 
 }
