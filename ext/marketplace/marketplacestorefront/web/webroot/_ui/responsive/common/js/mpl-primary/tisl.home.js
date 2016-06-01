@@ -648,9 +648,12 @@ function getProductsYouCareAjaxCall() {
                 renderHtml +=
                     "<div class='home-product-you-care-carousel'>";
                 $.each(response.categories, function(k, v) {
+                    //console.log('Category name: '+v.categoryName);
+                    //console.log('Category code: '+v.categoryCode);
+                    //console.log('Category media url: '+v.mediaURL);
                     var URL = ACC.config.encodedContextPath +
-                    /*"/Categories/" + v.categoryName*/ v.categoryPath +   //TISPRD_2315
-                    "/c-" + v.categoryCode.toLowerCase();
+                        "/Categories/" + v.categoryName +
+                        "/c-" + v.categoryCode;
                     //for url
                     renderHtml += "<a href='" + appendIcid(
                             URL, v.icid) +

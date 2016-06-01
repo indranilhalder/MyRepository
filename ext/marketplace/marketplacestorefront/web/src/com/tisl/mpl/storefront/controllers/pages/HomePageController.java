@@ -925,6 +925,13 @@ public class HomePageController extends AbstractPageController
 		final Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
 	}
+	
+	@ResponseBody
+ 	@RequestMapping(value = "/fetchToken", method = RequestMethod.GET)
+ 	public Object fetchToken(final HttpSession session)
+ 	{
+ 		return CSRFTokenManager.getTokenForSession(session);
+ 	}
 
 	/**
 	 * @description Used to store emailid for newslettersubscription
@@ -940,7 +947,7 @@ public class HomePageController extends AbstractPageController
 		final CartData cartData = cartFacade.getMiniCart();
 		header.put("cartcount", String.valueOf(cartData.getTotalItems()));
 
-		header.put("dts", CSRFTokenManager.getTokenForSession(session));
+		//header.put("dts", CSRFTokenManager.getTokenForSession(session));
 
 		//customer name in the header
 		if (!userFacade.isAnonymousUser())
