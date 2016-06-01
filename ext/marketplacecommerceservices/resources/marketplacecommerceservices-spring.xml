@@ -59,8 +59,15 @@
 	<bean id="mplDeliveryInformationDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplDeliveryInformationDaoImpl">
 	</bean>
-
-
+<!-- Optimization Fix PDP Start -->
+<bean id="mplMediDao"
+		class="com.tils.mpl.media.impl.MplMediaDaoImpl">
+	</bean>
+	
+	<bean id="mplMediService"
+		class="com.tils.mpl.media.impl.MplMediaServiceImpl">
+	</bean>
+<!-- Optimization Fix PDP End -->
 	<!-- PDP RestrictedPincode end -->
 	<!-- The hybris platform provides one single Spring application context 
 		for beans located at the jalo layer. Each extension can add beans to this 
