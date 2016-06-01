@@ -806,7 +806,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
 		CartModel cart = null;
-		CartModel newCartModel = null;
+		final CartModel newCartModel = null;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		try
 		{
@@ -826,20 +826,21 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
 				LOG.debug("Cart Delisted Status " + deListedStatus);
-				newCartModel = mplCartFacade.removeDeliveryMode(cart);
+				///newCartModel = mplCartFacade.removeDeliveryMode(cart); already used in productDetails
+
 				cartDataDetails = cartDetails(newCartModel, addressListWsDTO, pincode, cartId);
 				if (deListedStatus)
 				{
 					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
 					cartDataDetails.setDelistedMessage(delistMessage);
 				}
-				if (newCartModel.getPickupPersonName() != null)
+				if (cart.getPickupPersonName() != null)
 				{
-					cartDataDetails.setPickupPersonName(newCartModel.getPickupPersonName());
+					cartDataDetails.setPickupPersonName(cart.getPickupPersonName());
 				}
-				if (newCartModel.getPickupPersonMobile() != null)
+				if (cart.getPickupPersonMobile() != null)
 				{
-					cartDataDetails.setPickupPersonMobile(newCartModel.getPickupPersonMobile());
+					cartDataDetails.setPickupPersonMobile(cart.getPickupPersonMobile());
 				}
 
 			}
@@ -975,8 +976,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
 			final boolean resetReqd) throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
-		LOG.debug(String.format("productDetails: |  cartId : %s ", cartId));
-		LOG.debug("isPinCodeCheckRequired : " + isPinCodeCheckRequired + " resetReqd : " + resetReqd);
+		LOG.debug(String.format("productDetails: |  cartId : %s | isPinCodeCheckRequired %s", cartId, resetReqd));
 		CartModel finalCart = null;
 		final List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
 		ProductData productData1 = null;
@@ -989,8 +989,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			getModelService().save(cartModel);
 			if (resetReqd)
 			{
-				LOG.debug("productDetails:********  resetReqd is true: Remove delivery mode");
-				LOG.debug("************ Mobile Removing the delivery mode mobile **************" + cartId);
+				LOG.debug("productDetails:********  resetReqd is true*******Mobile Removing the delivery mode mobile ******" + cartId);
 				finalCart = mplCartFacade.removeDeliveryMode(cartModel);
 			}
 			else
