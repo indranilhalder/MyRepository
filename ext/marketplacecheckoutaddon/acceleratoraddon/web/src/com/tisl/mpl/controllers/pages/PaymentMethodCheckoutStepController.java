@@ -855,6 +855,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				redirectFlag = true;
 			}
 
+			//TISPRO-497
+			final Double cartTotal = cart.getTotalPrice();
+			final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+
+			if (!redirectFlag && cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+				redirectFlag = true;
+			}
+
 			if (redirectFlag)
 			{
 				return "redirect";
@@ -2019,7 +2029,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		String uid = "";
 		if (null != customer)
 		{
-
 			uid = customer.getUid();
 		}
 		//final Double cartTotals = cart.getTotalPriceWithConv();
@@ -2058,6 +2067,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (!redirectFlag && !mplCheckoutFacade.isCouponValid(cart))
 			{
 				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+				redirectFlag = true;
+			}
+
+			//TISPRO-497
+			final Double cartTotal = cart.getTotalPrice();
+			final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+
+			if (!redirectFlag && cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
 				redirectFlag = true;
 			}
 
