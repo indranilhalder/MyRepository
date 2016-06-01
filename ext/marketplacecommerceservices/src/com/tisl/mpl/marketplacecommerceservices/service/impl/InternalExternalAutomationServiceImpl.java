@@ -617,6 +617,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		return CampaignDataList;
 	}
 
+
 	/*
 	 * All banner components are fed to create excel or csv
 	 */
