@@ -122,21 +122,20 @@ if (searchCategory_id){
 				site_page_type = 'orderConfirmation';
 			}
 			//******************************************************************************* 
-
-
-			/*Get prior information from IA-set Cookies and start timers*/
-			init_iaplugin();
-
-
-			/*Only proceed on page types with recommendations*/
+              /*Only proceed on page types with recommendations*/
 			site_page_array = [ "homepage", "search", "searchEmpty", "cartPage",
 			                    "orderConfirmation", "wishlist", "seller", "brand",
 			                    "productpage", "product", "category_landing_page", "viewSellers",
 			                    "viewAllTrending","marketplace"];
 
-			if(jQuery.inArray(site_page_type, site_page_array) > -1) {
-			  callTataRec();
-			}
+			/*Get prior information from IA-set Cookies and start timers*/
+                        setTimeout(function(){
+                                init_iaplugin();
+
+                                if(jQuery.inArray(site_page_type, site_page_array) > -1) {
+                                  callTataRec();
+                                }
+                        }, 2000);
 			 
 			/*
 			Check if user has logged into the site
