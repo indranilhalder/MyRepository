@@ -1933,7 +1933,7 @@ public class CartsController extends BaseCommerceController
 			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl);
 			final long elapsedTime = System.nanoTime() - start;
 			final float seconds = elapsedTime / 1000000000;
-			LOG.debug(String.format("addProductToCart %s ns ---%s s", elapsedTime,seconds);
+			LOG.debug(String.format("addProductToCart %s ns ---%s s", elapsedTime, seconds));
 
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -1993,7 +1993,7 @@ public class CartsController extends BaseCommerceController
 				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode);
 				final long elapsedTime = System.nanoTime() - start;
 				final float seconds = elapsedTime / 1000000000;
-				LOG.debug(String.format("cartDetails %s ns ---%s s", elapsedTime,seconds);
+				LOG.debug(String.format("cartDetails %s ns ---%s s", elapsedTime, seconds));
 
 			}
 		}
@@ -2518,7 +2518,7 @@ public class CartsController extends BaseCommerceController
 			}
 			final long elapsedTime = System.nanoTime() - start;
 			final float seconds = elapsedTime / 1000000000;
-			LOG.debug(String.format("productCheckout %s ns ---%s s", elapsedTime,seconds);
+			LOG.debug(String.format("productCheckout %s ns ---%s s", elapsedTime, seconds));
 		}
 		catch (final ConversionException ce)
 		{
@@ -2709,7 +2709,7 @@ public class CartsController extends BaseCommerceController
 			}
 			final long elapsedTime = System.nanoTime() - start;
 			final float seconds = elapsedTime / 1000000000;
-			LOG.debug(String.format("displayOrderSummary %s ns ---%s s", elapsedTime,seconds);
+			LOG.debug(String.format("displayOrderSummary %s ns ---%s s", elapsedTime, seconds));
 
 		}
 		catch (final ModelSavingException me)
