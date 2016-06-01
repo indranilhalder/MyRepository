@@ -130,7 +130,12 @@ if($(window).width() < 650) {
 </head>
 
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
-
+<!-- For Gigya Social Login -->
+	<c:if test="${isGigyaEnabled=='Y'}">
+	<SCRIPT type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}">
+	
+	</SCRIPT>
+	</c:if>
 <!-- <script type="text/javascript">
     (function(a,b,c,d){
     a='//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.js';
@@ -154,12 +159,7 @@ if($(window).width() < 650) {
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
 
-<!-- For Gigya Social Login -->
-	<c:if test="${isGigyaEnabled=='Y'}">
-	<SCRIPT type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}">
-	
-	</SCRIPT>
-	
+
 	<script>
 function registerUser(eventObject)
 {
@@ -234,7 +234,7 @@ function registerUser(eventObject)
         
         onLoad();
     </script>
-</c:if>
+
 	<!-- End  Gigya Social Login -->
 	<tealium:sync/> 
 </body>
