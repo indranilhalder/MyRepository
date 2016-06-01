@@ -2135,11 +2135,25 @@ function loadDefaultWishListName_SizeGuide() {
 	//AKAMAI Fix	
 	$(document).ready(function(){		
 		var url = window.location.href;		
+		
 		if (url.indexOf("selectedSize=true")>=0 && typeof productSizeVar !== "undefined")//>= 0  ==-1
 			{
-			$("#variant option:contains("+productSizeVar+")").attr('selected', true); 
-			$("#sizevariant option:contains("+productSizeVar+")").attr('selected', true); 
-			}
+			/*$("#variant option:contains("+productSizeVar+")").attr('selected', true); 
+			$("#sizevariant option:contains("+productSizeVar+")").attr('selected', true); */
+			$("#variant option").each(function() {
+				  if($(this).text().trim() == productSizeVar) {
+				    $(this).attr('selected', 'selected');            
+				  }                        
+				});
+			
+		
+		//Other Sellers
+		$("#sizevariant option").each(function() {
+			  if($(this).text().trim() == productSizeVar) {
+			    $(this).attr('selected', 'selected');            
+			  }                        
+			});
+		}
 		
 		
 		

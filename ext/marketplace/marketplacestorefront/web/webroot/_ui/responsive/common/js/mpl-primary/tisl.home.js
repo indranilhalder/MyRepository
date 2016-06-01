@@ -712,10 +712,16 @@ function getNewAndExclusiveAjaxCall() {
                 "<div class='carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
             $.each(response.newAndExclusiveProducts, function(
                 key, value) {
+            	if(value.isNew == 'Y')
+            	{
+            	renderNewHtml = "<div style='z-index: 1;' class='new'><img class='brush-strokes-sprite sprite-New' src='/_ui/responsive/common/images/transparent.png'><span>New</span></div>";
+            	} else {
+            		renderNewHtml = '';
+            	}
                 renderHtml +=
                     "<div class='item slide'><div class='newExclusiveElement'><a href='" +
                     ACC.config.encodedContextPath +
-                    value.productUrl + "'><img class='lazyOwl' data-src='" +
+                    value.productUrl + "'>"+renderNewHtml+"<img class='lazyOwl' data-src='" +
                     value.productImageUrl +
                     "'></img><p class='New_Exclusive_title'>" +
                     value.productTitle +
@@ -1193,19 +1199,4 @@ function populateEnhancedSearch(enhancedSearchData)
 		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
 	}
 	
-	//Added for tealium
-	if($('#ia_site_page_id').val()=="homepage"){
-		//Added for tealium
-		   $.ajax({
-		        url: ACC.config.encodedContextPath + "/getTealiumDataHome",
-		        type: 'GET',
-		        cache:false,
-		        success: function(data) {
-		           //console.log(data);
-		           $('#tealiumHome').html(data);
-		        }
-		    });
-	}
-	//Tealium end
 }
-
