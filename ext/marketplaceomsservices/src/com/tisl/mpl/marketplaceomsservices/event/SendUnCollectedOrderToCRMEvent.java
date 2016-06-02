@@ -17,14 +17,14 @@ import com.hybris.oms.domain.shipping.Shipment;
  * @author Tech
  *
  */
-public class SendUnColletedOrderToCRMEvent extends AbstractCommerceUserEvent<BaseSiteModel>
+public class SendUnCollectedOrderToCRMEvent extends AbstractCommerceUserEvent<BaseSiteModel>
 {
 	private final Shipment shipment;
 	private final ConsignmentModel consignmentModel;
 	private final OrderModel orderModel;
 	private final ConsignmentStatus shipmentNewStatus;
 	
-	public SendUnColletedOrderToCRMEvent(final Shipment shipment, final ConsignmentModel consignmentModel, final OrderModel orderModel, final ConsignmentStatus shipmentNewStatus)
+	public SendUnCollectedOrderToCRMEvent(final Shipment shipment, final ConsignmentModel consignmentModel, final OrderModel orderModel, final ConsignmentStatus shipmentNewStatus)
 	{
 
 		this.shipment = shipment;

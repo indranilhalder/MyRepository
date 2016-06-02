@@ -1531,8 +1531,8 @@ public class OrdersController extends BaseCommerceController
 													if (!entry.isGiveAway() && !entry.isIsBOGOapplied() && returnWindow < actualReturnWindow
 															&& !checkOrderStatus(consignmentStatus,
 																	MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
-															&& consignmentStatus
-																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED))
+															&& (consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || consignmentStatus
+																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
 
 													{
 														//orderproductdto.setReturnPolicy(sellerEntry.getReturnPolicy());
@@ -1731,6 +1731,7 @@ public class OrdersController extends BaseCommerceController
 						}
 					}
 					orderTrackingWsDTO.setProducts(orderproductdtos);
+					orderTrackingWsDTO.setIsPickupUpdatable(getOrderDetailsFacade.isPickUpButtonEditable(orderDetail));
 					orderTrackingWsDTO.setStatusDisplay(orderDetail.getStatusDisplay());
 					orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
@@ -2042,37 +2043,84 @@ public class OrdersController extends BaseCommerceController
 	 * @param orderId
 	 * @param name
 	 * @param mobile
-	 * @return OrderTrackingWsDTO (will be get on redirection)
+	 * @return WebSerResponseWsDTO
 	 */
 
 	@Secured(
-			{ "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	{ "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
-	@RequestMapping(value = "/users/{userId}/updatePickupDetails",method = RequestMethod.POST)
+	@RequestMapping(value = "/users/{userId}/updatePickupDetails", method = RequestMethod.POST)
 	@ResponseBody
-	public WebSerResponseWsDTO updatePickupDetails(@RequestParam(required=true,value = "orderId") final String orderId,
-			@RequestParam(required=true,value = "name") final String name, @RequestParam(required=true,value = "mobile") final String mobile)
+	public WebSerResponseWsDTO updatePickupDetails(@RequestParam(required = true, value = "orderId") final String orderId,
+			@RequestParam(required = true, value = "name") final String name,
+			@RequestParam(required = true, value = "mobile") final String mobile)
 	{
-		
+
+		LOG.debug("UpdatePickupDetails mobile method :" + orderId + "name :" + name + "mobile :" + mobile);
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
-		if (orderId != null && name != null && mobile != null)
+		try
 		{
-			String message=mplOrderFacade.editPickUpInfo(orderId, name, mobile);
-			if ("sucess".equalsIgnoreCase(message))
+			if (orderId != null && name != null && mobile != null)
 			{
-				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				final String message = mplOrderFacade.editPickUpInfo(orderId, name, mobile);
+				if ("sucess".equalsIgnoreCase(message))
+				{
+					result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					LOG.info("PickUpDetails Updated Successfully for order id :" + orderId);
+					try
+					{
+						mplOrderFacade.createCrmTicketUpdatePickDetails(orderId);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Error while creating crm ticket" + e);
+					}
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9519);
+				}
 			}
 			else
 			{
-				final EtailBusinessExceptions error = new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9519);
-				ExceptionUtil.etailBusinessExceptionHandler(error, null);
-				result.setError(error.getErrorMessage());
-				result.setCode(error.getErrorCode());
-				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);				
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9521);
 			}
 		}
-		//redirect to order details page to get the all the information of an order
-		//String redirectURL="redirect:/v2/"+baseSiteId+"/users/"+userId+"/getSelectedOrder/"+orderId+"?access_token="+token;
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				result.setError(e.getMessage());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
 		return result;
 	}
  

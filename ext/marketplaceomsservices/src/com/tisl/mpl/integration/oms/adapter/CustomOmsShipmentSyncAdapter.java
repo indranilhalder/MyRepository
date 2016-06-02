@@ -59,8 +59,8 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplCheckInvoice;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderCollectedByPersonEvent;
 
 import com.tisl.mpl.marketplaceomsservices.event.SendNotificationEvent;
-import com.tisl.mpl.marketplaceomsservices.event.SendUnColletedOrderToCRMEvent;
-import com.tisl.mpl.marketplaceomsservices.event.UnColletedOrderToInitiateRefundEvent;
+import com.tisl.mpl.marketplaceomsservices.event.SendUnCollectedOrderToCRMEvent;
+import com.tisl.mpl.marketplaceomsservices.event.UnCollectedOrderToInitiateRefundEvent;
 import com.tisl.mpl.sms.MplSendSMSService;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 
@@ -487,26 +487,26 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 			{
 
 				         LOG.debug("Calling cancel Initiation process started");
-								final SendUnColletedOrderToCRMEvent sendUnColletedOrderToCRMEvent = new SendUnColletedOrderToCRMEvent(shipment,consignmentModel,orderModel,shipmentNewStatus);
-								final UnColletedOrderToInitiateRefundEvent unColletedOrderToInitiateRefundEvent= new UnColletedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,shipmentNewStatus,eventService,configurationService);
+								final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,shipmentNewStatus);
+								final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent= new UnCollectedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,shipmentNewStatus,eventService,configurationService);
 								try
 								{
-									LOG.debug("Create CRM Ticket for Un-Colleted Orders");
-									eventService.publishEvent(sendUnColletedOrderToCRMEvent);
+									LOG.debug("Create CRM Ticket for Un-Collected Orders");
+									eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 								}
 								catch(final Exception e)
 								{
-									LOG.error("Exception during CRM Ticket for Un-Colleted Orders >> " + e.getMessage());	
+									LOG.error("Exception during CRM Ticket for Un-Collected Order Id >> " + orderModel.getCode()+" ::" + e.getMessage());	
 								}
 								try
 								{
 									checkConsignmentStatus=true;
-									LOG.debug("Refund Initiation  for Un-Colleted Orders");
-									eventService.publishEvent(unColletedOrderToInitiateRefundEvent);
+									LOG.debug("Refund Initiation  for Un-Collected Orders");
+									eventService.publishEvent(unCollectedOrderToInitiateRefundEvent);
 								}
 								catch(final Exception e)
 								{
-									LOG.error("Exception during Refund Initiation  for Un-Colleted Orders >> " + e.getMessage());	
+									LOG.error("Exception during Refund Initiation  for Un-Collected Orders >> "+ orderModel.getCode()+" ::" + e.getMessage());	
 								}
 							
 			      }
@@ -524,7 +524,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}
 				catch (final Exception e1)
 				{
-					LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
+					LOG.error("Exception during sending mail or SMS for Order Id:  >> " + orderModel.getCode()+" ::" + e1.getMessage());
 				}
 				
 			}
