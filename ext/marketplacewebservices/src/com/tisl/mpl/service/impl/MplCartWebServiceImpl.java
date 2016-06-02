@@ -699,14 +699,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9066);
 						}
-						//selected product
-						selectedProductModel = productModel;
+
 					}
-					if (null != pr.getGiveAway() && !pr.getGiveAway().booleanValue())
-					{
-						count++;
-					}
+
 				}
+
+				//selected product
+				selectedProductModel = productService.getProductForCode(productCode);
 				if (selectedProductModel != null)
 				{
 					//checking all delisted entries in the cart
@@ -721,12 +720,22 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							break;
 						}
 					}
-					result.setCount(String.valueOf(count));
+
 				}
 				else
 				{
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9067);
 				}
+
+				//counting no of items in cart not freebie
+				for (final AbstractOrderEntryModel pr : cartModel.getEntries())
+				{
+					if (null != pr.getGiveAway() && !pr.getGiveAway().booleanValue())
+					{
+						count++;
+					}
+				}
+				result.setCount(String.valueOf(count));
 			}
 
 			if (!delisted)
