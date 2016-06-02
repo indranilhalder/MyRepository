@@ -148,12 +148,12 @@
 							<div class="row">
 								<div class="col-md-4 inputBoxHeight">
 										<label class="returnLabel">First Name*</label>
-										<form:input path="firstName" placeholder="Enter first Name" class="firstName" />
+										<form:input path="firstName" maxlength="40" placeholder="Enter first Name" class="firstName" />
 										<div class="error_text firstNameError"></div>
 									</div>
 									<div class="col-md-4 inputBoxHeight">
 										<label class="returnLabel">Last Name*</label><br>
-										<form:input path="lastName" placeholder="Enter Last Name" class="lastName" />
+										<form:input path="lastName" maxlength="40" placeholder="Enter Last Name" class="lastName"  />
 										<div class="error_text lastNameError"></div>
 									</div>
 									<div class="col-md-4 inputBoxHeight">
@@ -167,7 +167,7 @@
 								<div class="row">
 									<div class="col-md-12 inputBoxHeight">
 										<label class="returnLabel">Address Line1*</label><br>
-										<form:input path="addressLane1" class="Address1" placeholder="Enter Address Line" />
+										<form:input path="addressLane1" class="Address1" maxlength="40" placeholder="Enter Address Line1" />
 										<div class="error_text address1Error"></div>
 									</div>
 								</div>
@@ -176,8 +176,8 @@
 								<div class="row">
 									<div class="col-md-12 inputBoxHeight">
 										<label class="returnLabel">Address Line2*</label><br>
-										<form:input path="addressLane2" class="Address2"
-											placeholder="Enter Address Line"
+										<form:input path="addressLane2" maxlength="40" class="Address2"
+											placeholder="Enter Address Line2"
 											 />
 										<div class="error_text address2Error"></div>
 									</div>
@@ -192,7 +192,7 @@
 									
 									<div class="col-md-8 inputBoxHeight">
 										<label class="returnLabel">LandMark*</label><br>
-										<form:input path="landmark" placeholder="Enter Your Nearest Land mark" />
+										<form:input path="landmark" maxlength="40" placeholder="Enter Your Nearest Land mark" />
 										<div class="error_text landMarkError"></div>
 									</div>
 								</div>
@@ -207,7 +207,7 @@
 									
 									<div class="col-md-4 inputBoxHeight">
 										<label class="returnLabel">City*</label><br>
-										<form:input path="city" placeholder="Enter city" class="city"
+										<form:input path="city" maxlength="40" placeholder="Enter city" class="city"
 											 />
 										<div class="error_text cityError"></div>
 									</div>
