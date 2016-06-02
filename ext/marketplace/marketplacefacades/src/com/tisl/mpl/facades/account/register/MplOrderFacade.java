@@ -153,7 +153,25 @@ public interface MplOrderFacade
 
 	/**
 	 * Sorted DeliveryMode
+	 *
 	 * @return DeliverYMode List Type
 	 */
 	public List<String> filterDeliveryMode();
+
+	/**
+	 * TISPT-175
+	 *
+	 * @param orderCode
+	 * @return OrderModel
+	 */
+	OrderModel getOrder(String orderCode);
+
+	/**
+	 *
+	 * TISPT-175
+	 *
+	 * @param orderModel
+	 * @return OrderData
+	 */
+	OrderData getOrderDetailsForCode(OrderModel orderModel);
 }

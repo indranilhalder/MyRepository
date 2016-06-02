@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.facade.wishlist;
 
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
@@ -27,7 +28,8 @@ public interface WishlistFacade
 
 	Wishlist2Model createNewWishlist(final UserModel user, final String name, final String description);
 
-	boolean addProductToWishlist(final Wishlist2Model wishlist, final String productCode, final String ussid, boolean sizeSelected);
+	boolean addProductToWishlist(final Wishlist2Model wishlist, final String productCode, final String ussid,
+			boolean sizeSelected);
 
 	Wishlist2Model getWishlistForName(final String wishlistName);
 
@@ -41,4 +43,9 @@ public interface WishlistFacade
 	 * @return
 	 */
 	ProductData getBuyBoxPrice(String ussid, ProductData productData1);
+
+	/**
+	 * @param orderDetails
+	 */
+	void remProdFromWLForConf(OrderData orderDetails); //TISPT-175 : changing to reduce populator call multiple times
 }
