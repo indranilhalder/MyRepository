@@ -136,6 +136,7 @@ if($(window).width() < 650) {
 	
 	</SCRIPT>
 	</c:if>
+	<tealium:sync/> 
 <!-- <script type="text/javascript">
     (function(a,b,c,d){
     a='//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.js';
@@ -236,7 +237,7 @@ function registerUser(eventObject)
     </script>
 
 	<!-- End  Gigya Social Login -->
-	<tealium:sync/> 
+	
 </body>
 
 <debug:debugFooter/>
