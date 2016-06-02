@@ -659,7 +659,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		final List<Wishlist2EntryModel> entryModelList = new ArrayList<Wishlist2EntryModel>();
 		CartModel cartModel = null;
+		boolean delisted = false;
 		ProductModel productModel = null;
+		ProductModel selectedProductModel = null;
 		try
 		{
 
@@ -685,8 +687,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				for (final AbstractOrderEntryModel pr : cartModel.getEntries())
 				{
-					final ProductModel prdctModel = pr.getProduct();
-					if (productCode.equals(prdctModel.getCode()) && USSID.equals(pr.getSelectedUSSID()))
+					productModel = pr.getProduct();
+					if (productCode.equals(productModel.getCode()) && USSID.equals(pr.getSelectedUSSID()))
 					{
 						final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 						if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
@@ -697,36 +699,39 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9066);
 						}
-						break;
+						//selected product
+						selectedProductModel = productModel;
+					}
+					if (null != pr.getGiveAway() && !pr.getGiveAway().booleanValue())
+					{
+						count++;
 					}
 				}
-			}
-			productModel = productService.getProductForCode(productCode);
-			if (productModel == null)
-			{
-				LOG.debug(MarketplacecommerceservicesConstants.INVALID_PRODUCT_CODE + productCode);
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9067);
-			}
-			if (quant <= 0)
-			{
-				LOG.debug(MarketplacecommerceservicesConstants.INVALID_PRODUCT_QUANTITY + quantity);
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9068);
-			}
-			boolean delisted = false;
-			for (final SellerInformationModel seller : productModel.getSellerInformationRelator())
-			{
-				if (seller.getSellerArticleSKU().equalsIgnoreCase(USSID)
-						&& (seller.getSellerAssociationStatus() != null && (seller.getSellerAssociationStatus().getCode()
-								.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO) || (seller.getEndDate() != null && new Date()
-								.after(seller.getEndDate())))))
+				if (selectedProductModel != null)
 				{
-					delisted = true;
-					break;
+					//checking all delisted entries in the cart
+					for (final SellerInformationModel seller : selectedProductModel.getSellerInformationRelator())
+					{
+						if (seller.getSellerArticleSKU().equalsIgnoreCase(USSID)
+								&& (seller.getSellerAssociationStatus() != null && (seller.getSellerAssociationStatus().getCode()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO) || (seller.getEndDate() != null && new Date()
+										.after(seller.getEndDate())))))
+						{
+							delisted = true;
+							break;
+						}
+					}
+					result.setCount(String.valueOf(count));
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9067);
 				}
 			}
+
 			if (!delisted)
 			{
-				addedToCart = mplCommerceCartService.addItemToCart(cartId, productCode, quant, USSID);
+				addedToCart = mplCommerceCartService.addItemToCart(cartId, cartModel, selectedProductModel, quant, USSID);
 				LOG.debug("*********** Products added status in cart *************  ::::USSID::::" + USSID + ":::added???"
 						+ addedToCart);
 				final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID);
@@ -744,19 +749,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				LOG.debug("*********** Items delisted *************" + delistMessage);
 				delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
 				result.setDelistedMessage(delistMessage);
-			}
-
-			if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty())
-			{
-				//result.setCount(Integer.valueOf(cartModel.getEntries().size()).toString()); Unnecessary wrapper object creation
-				for (final AbstractOrderEntryModel entry : cartModel.getEntries())
-				{
-					if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
-					{
-						count++;
-					}
-				}
-				result.setCount(String.valueOf(count));
 			}
 
 			if (!addedToCart && !delisted)

@@ -1933,6 +1933,7 @@ public class CartsController extends BaseCommerceController
 			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl);
 			final long elapsedTime = System.nanoTime() - start;
 			final float seconds = elapsedTime / 1000000000;
+
 			LOG.debug(String.format("addProductToCart %s ns ---%s s", elapsedTime, seconds));
 
 		}
@@ -1994,7 +1995,6 @@ public class CartsController extends BaseCommerceController
 				final long elapsedTime = System.nanoTime() - start;
 				final float seconds = elapsedTime / 1000000000;
 				LOG.debug(String.format("cartDetails %s ns ---%s s", elapsedTime, seconds));
-
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -2428,15 +2428,16 @@ public class CartsController extends BaseCommerceController
 			throws CommerceCartModificationException
 	{
 		final CartDataDetailsWsDTO cartDetailsData = new CartDataDetailsWsDTO();
-		CartModel cartModel = null;
-		CartData cartData = null;
-		CartData cartDataOrdered = null;
-		String delistMessage = MarketplacewebservicesConstants.EMPTY;
-		List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
-		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
+		final CartModel cartModel = null;
+		final CartData cartData = null;
+		final CartData cartDataOrdered = null;
+		final String delistMessage = MarketplacewebservicesConstants.EMPTY;
+		final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
+		final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		try
 		{
 			final long start = System.nanoTime();
+
 			if (userFacade.isAnonymousUser())
 			{
 				LOG.debug("CartDetails:  AnonymousUser ");
@@ -2519,6 +2520,7 @@ public class CartsController extends BaseCommerceController
 			final long elapsedTime = System.nanoTime() - start;
 			final float seconds = elapsedTime / 1000000000;
 			LOG.debug(String.format("productCheckout %s ns ---%s s", elapsedTime, seconds));
+
 		}
 		catch (final ConversionException ce)
 		{
@@ -2650,8 +2652,10 @@ public class CartsController extends BaseCommerceController
 							Double.valueOf(cartModel.getSubtotal().toString()));
 					if (null != subtotalprice && null != subtotalprice.getValue())
 					{
+
 						cartDetailsData
 								.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+
 					}
 				}
 				else
@@ -2700,6 +2704,10 @@ public class CartsController extends BaseCommerceController
 					cartDetailsData.setDelistedMessage(delistMessage);
 				}
 
+
+				final long elapsedTime = System.nanoTime() - start;
+				final float seconds = elapsedTime / 1000000000;
+				LOG.debug(String.format("addProductToCart %s ns ---%s s", elapsedTime, seconds));
 			}
 			else
 			{
@@ -2707,10 +2715,6 @@ public class CartsController extends BaseCommerceController
 				cartDetailsData.setError(MarketplacewebservicesConstants.CARTMODELEMPTY);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
-			final long elapsedTime = System.nanoTime() - start;
-			final float seconds = elapsedTime / 1000000000;
-			LOG.debug(String.format("displayOrderSummary %s ns ---%s s", elapsedTime, seconds));
-
 		}
 		catch (final ModelSavingException me)
 		{
@@ -3268,6 +3272,7 @@ public class CartsController extends BaseCommerceController
 			return null;
 		}
 	}
+
 
 	@SuppressWarnings(MarketplacewebservicesConstants.DEPRECATION)
 	@Secured(
