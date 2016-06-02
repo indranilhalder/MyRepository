@@ -1556,6 +1556,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
 	public static final String EBS_SESSION_ID = "session_id";
 
+	//TISPT-169
+	public static final String NBBANKSQUERY = "select {b:pk} from {bankForNetbanking As b},{bank as m} where {b.isAvailable}='1' and {b.name}={m.pk} order by {m.bankname}"
+			.intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

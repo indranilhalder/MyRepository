@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplNetbankingData;
 import com.tisl.mpl.data.MplPromoPriceData;
@@ -40,27 +41,32 @@ public interface MplPaymentFacade
 	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
-	Map<String, Boolean> getPaymentModes(String store,final boolean isMobile, final CartData cartDataMobile) throws EtailNonBusinessExceptions;
+	Map<String, Boolean> getPaymentModes(String store, final boolean isMobile, final CartData cartDataMobile)
+			throws EtailNonBusinessExceptions;
 
 
 	/**
 	 * This method searches all those banks for Netbanking which have Priority field set as true and returns them in a
 	 * map with key-value pair as bankName-bankCode
 	 *
+	 * @param netBankingList
+	 *           // TISPT-169
 	 * @return Map<String, String>
 	 *
 	 */
-	List<MplNetbankingData> getBanksByPriority() throws EtailNonBusinessExceptions;
+	List<MplNetbankingData> getBanksByPriority(List<BankforNetbankingModel> netBankingList) throws EtailNonBusinessExceptions;
 
 
 	/**
 	 * This method searches all those banks for Netbanking which have Priority field set as false and returns them in a
 	 * map with key-value pair as bankName-bankCode
 	 *
+	 * @param netBankingList
+	 *           // TISPT-169
 	 * @return Map<String, String>
 	 *
 	 */
-	Map<String, String> getOtherBanks() throws EtailNonBusinessExceptions;
+	Map<String, String> getOtherBanks(List<BankforNetbankingModel> netBankingList) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -277,5 +283,14 @@ public interface MplPaymentFacade
 	 */
 
 	Boolean setBankForSavedCard(final String bankName) throws EtailNonBusinessExceptions;
+
+	/*
+	 * @Description : Fetching bank name for net banking-- TISPT-169
+	 *
+	 * @return Map<String, List<MplNetbankingData>>
+	 *
+	 * @throws Exception
+	 */
+	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
 
 }

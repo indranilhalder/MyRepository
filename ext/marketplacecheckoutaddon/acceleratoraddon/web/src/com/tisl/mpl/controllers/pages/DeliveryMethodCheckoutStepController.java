@@ -740,8 +740,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					//TISST-13012
 					try
 					{
-						final boolean cartItemDelistedStatus = getMplCartFacade()
-								.isCartEntryDelisted(getCartService().getSessionCart());
+						//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart()); TISPT-169
+						final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cartModel);
 						if (cartItemDelistedStatus)
 						{
 							return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;

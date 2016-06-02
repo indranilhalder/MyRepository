@@ -121,7 +121,7 @@ public class MplPaymentFacadeImplUnitTest
 		Mockito.when(bankForNetbankingModel.getName()).thenReturn(bank);
 		Mockito.when(bank.getBankName()).thenReturn("HDFC Bank");
 		Mockito.when(bankForNetbankingModel.getNbCode()).thenReturn("HDFB");
-		mplPaymentFacadeImpl.getBanksByPriority();
+		//mplPaymentFacadeImpl.getBanksByPriority();
 	}
 
 	//	@Test
@@ -151,7 +151,7 @@ public class MplPaymentFacadeImplUnitTest
 		Mockito.when(bankForNetbankingModel.getName()).thenReturn(bank);
 		Mockito.when(bank.getBankName()).thenReturn("HDFC Bank");
 		Mockito.when(bankForNetbankingModel.getNbCode()).thenReturn("HDFB");
-		mplPaymentFacadeImpl.getBanksByPriority();
+		//mplPaymentFacadeImpl.getBanksByPriority();
 	}
 
 }
