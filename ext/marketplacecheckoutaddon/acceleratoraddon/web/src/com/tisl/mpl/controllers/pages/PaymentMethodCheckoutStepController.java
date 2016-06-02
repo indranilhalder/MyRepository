@@ -96,6 +96,7 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.enums.CodCheckMessage;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
+import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
@@ -318,7 +319,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 			//TISST-13012
-			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
+			//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart()); TISPT-169
+			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart);
+
 			if (cartItemDelistedStatus)
 			{
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
@@ -327,7 +330,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//Getting Payment modes
 			final Map<String, Boolean> paymentModeMap = getMplPaymentFacade().getPaymentModes(
 					MarketplacecheckoutaddonConstants.MPLSTORE, false, null);
-			if (!paymentModeMap.isEmpty())
+			//if (!paymentModeMap.isEmpty())
+			if (MapUtils.isNotEmpty(paymentModeMap)) // Code optimizaion fpr performance fix TISPT-169
 			{
 				//Adding payment modes in model to be accessed from jsp
 				model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODES, paymentModeMap);
@@ -855,6 +859,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				redirectFlag = true;
 			}
 
+			//TISPRO-497
+			final Double cartTotal = cart.getTotalPrice();
+			final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+
+			if (!redirectFlag && cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+				redirectFlag = true;
+			}
+
 			if (redirectFlag)
 			{
 				return "redirect";
@@ -1072,10 +1086,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	private void setupMplNetbankingForm(final Model model) throws EtailBusinessExceptions, Exception
 	{
 		List<MplNetbankingData> popularBankList = new ArrayList<MplNetbankingData>();
+		// TISPT-169
+		List<BankforNetbankingModel> netBankingList = new ArrayList<BankforNetbankingModel>(); //TISPT-169
+
 		try
 		{
+			netBankingList = getMplPaymentFacade().getNetBankingBanks(); // TISPT-169
 			//getting the popular banks
-			popularBankList = getMplPaymentFacade().getBanksByPriority();
+			popularBankList = getMplPaymentFacade().getBanksByPriority(netBankingList); // TISPT-169
 			model.addAttribute(MarketplacecheckoutaddonConstants.POPULARBANKS, popularBankList);
 
 		}
@@ -1091,7 +1109,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		catch (final Exception e)
 		{
-			//logging error message
 			LOG.error(MarketplacecommerceservicesConstants.B6002, e);
 		}
 
@@ -1099,7 +1116,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		try
 		{
 			//getting the other banks
-			otherBankCodeMap = getMplPaymentFacade().getOtherBanks();
+			otherBankCodeMap = getMplPaymentFacade().getOtherBanks(netBankingList); // TISPT-169
 			model.addAttribute(MarketplacecheckoutaddonConstants.OTHERBANKS, otherBankCodeMap);
 
 		}
@@ -2019,7 +2036,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		String uid = "";
 		if (null != customer)
 		{
-
 			uid = customer.getUid();
 		}
 		//final Double cartTotals = cart.getTotalPriceWithConv();
@@ -2058,6 +2074,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (!redirectFlag && !mplCheckoutFacade.isCouponValid(cart))
 			{
 				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+				redirectFlag = true;
+			}
+
+			//TISPRO-497
+			final Double cartTotal = cart.getTotalPrice();
+			final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+
+			if (!redirectFlag && cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
 				redirectFlag = true;
 			}
 

@@ -135,7 +135,7 @@ $(document).ready(function(){
 	</span>
 </form:form>
 <span id="addtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
-<span id="addtobagerror" style="display:none"><spring:theme code="product.error"/></span>
+<span id="addtobagerror" style="display:none"><spring:theme code="product.wishlist.outOfStock"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
 <span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span>
 

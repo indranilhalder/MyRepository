@@ -64,6 +64,7 @@ function initialize(locatorJson,lat,lot)
   	zoom:initialZoom,
   	zoomControl:true,
   	scrollwheel: false,
+  	panControl: false,
   	zoomControlOptions:{
   		position:google.maps.ControlPosition.RIGHT_TOP
   	},
@@ -190,7 +191,7 @@ function staticLegends(map){
     var homeLegendsControlDiv = document.createElement('div');
     var homeLegendsControl = new HomeLegendsControl(homeLegendsControlDiv, map);
     homeLegendsControlDiv.index = 2;
-	map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(homeLegendsControlDiv);
+	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(homeLegendsControlDiv);
 }
 
 //Add a Home control that returns the user to London
@@ -201,17 +202,20 @@ function HomeLegendsControl(controlDiv, map) {
       iconURLPrefix + 'Bestseller_Legend.png',
       iconURLPrefix + 'CottonWorld_Legend.png',
       iconURLPrefix + 'Croma_Legend.png',
-      iconURLPrefix + 'Dell_Legend.png',
       iconURLPrefix + 'Inc5_Legend.png',
+      iconURLPrefix + 'Jack_Jones_Legend.png',
       iconURLPrefix + 'Killer_Legend.png',
       iconURLPrefix + 'Lenovo_Legend.png',
       iconURLPrefix + 'Metro_Legend.png',
+      iconURLPrefix + 'Mochi_Legend.png',
+      iconURLPrefix + 'Only_Legend.png',
+      iconURLPrefix + 'TheMobileStore_Legend.png',
       iconURLPrefix + 'Tresmode_Legend.png',
+      iconURLPrefix + 'VeroModa_Legend.png',
       iconURLPrefix + 'Westside_Legend.png',
     ]
     var iconsLength = icons.length;
     
-    var legendStyle = document.getElementById("legend");
     var legend = document.getElementById('legend');
      
       for (var i = 0; i < icons.length; i++) { 
@@ -222,11 +226,10 @@ function HomeLegendsControl(controlDiv, map) {
 	      div.appendChild(img1);
          legend.appendChild(div);
     } 
-      controlDiv.style.padding = '10px';
+       controlDiv.style.padding = '40px 28px';
       var controlUI = document.createElement('div');
       controlUI.style.backgroundColor = 'transparent';
       controlUI.style.textAlign = 'center';
-      controlUI.style.right='60px';
       controlDiv.appendChild(controlUI);
       controlUI.appendChild(legend);
   
@@ -305,6 +308,7 @@ function HomeLegendsControl(controlDiv, map) {
 } */
 #legend {
 background: transparent;
+/* padding-right: 30px; */
 }
 
 .overLayStoreFinderText a {
