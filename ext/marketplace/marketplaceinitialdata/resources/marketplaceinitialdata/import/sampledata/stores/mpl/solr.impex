@@ -150,7 +150,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; sellerId            	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSellerIdValueProvider             ;                						;                           ;
 ;$solrIndexedType; deliveryMode           ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplDeliveryModeValueProvider         ;    									;                           ;
 ;$solrIndexedType; collectionIds          ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplOccasionIDValueProvider           ;                						;                           ;
-;$solrIndexedType; vouchers		          ;string ;     ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplVoucherCodeValueProvider		    ;	;                         	;
+# ;$solrIndexedType; vouchers		          ;string ;     ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplVoucherCodeValueProvider		    ;	;                         	;
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;facet[default=true]
 ;$solrIndexedType; snsCategory            ;string ;     ;    ;     ;true ;true ;	 ;mplSnscategoryValueProvider;
@@ -415,14 +415,18 @@ INSERT_UPDATE SolrBoostRule;solrIndexedProperty(name, $solrIndexedType)[unique=t
 ;inStockFlag;EQUAL_TO;true;100;mpl-globalcatalog-srch-profile
 
 # TISPRO-371 Start update and delete index solr cron job into single composite cronjob
-INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode)
- ;mplIndexingCompositeCronjob;compositeJobPerformable;en
+INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode);runningOnClusterNode
+ ;mplIndexingCompositeCronjob;compositeJobPerformable;en;1
  
 #Items to run from the Composite Cron Job
  INSERT_UPDATE CompositeEntry;code[unique=true];executablecronjob(code);compositecronjob(code);compositecronjobpos
  ;delete-mplIndex-cronJob;delete-mplIndex-cronJob;mplIndexingCompositeCronjob;1
  ;update-mplIndex-cronJob;update-mplIndex-cronJob;mplIndexingCompositeCronjob;2
- 
+
+INSERT_UPDATE CronJob;code[unique=true];runningOnClusterNode
+# Run the update-mplIndex-cronJob every 15 minutes
+;update-mplIndex-cronJob;1
+;delete-mplIndex-cronJob;1 
 					   
 INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;year;relative;active;maxAcceptableDelay
 # Run the mplIndexingCompositeCronjob every 15 minutes
