@@ -282,7 +282,7 @@ public class CheckoutController extends AbstractCheckoutController
 		OrderData orderDetails = null;
 		try
 		{
-			orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model : reduce same call from two places
+			orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
 			orderDetails = mplOrderFacade.getOrderDetailsForCode(orderModel); //TISPT-175 --- order details : reduce same call from two places
 			//wishlistFacade.removeProductFromWL(orderCode);
 			wishlistFacade.remProdFromWLForConf(orderDetails); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
