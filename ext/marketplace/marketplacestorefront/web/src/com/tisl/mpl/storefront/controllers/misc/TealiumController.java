@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -31,7 +32,7 @@ public class TealiumController extends AbstractController
 
 	private static final Logger LOG = Logger.getLogger(TealiumController.class);
 
-	private final String UTAG_SCRIPT_PROD = "<script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/prod/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
+	private final String UTAG_SCRIPT_PROD = "</script><script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/prod/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
 	private final String UTAG_SCRIPT_DEV = "</script><script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
 
 
@@ -42,55 +43,14 @@ public class TealiumController extends AbstractController
 		final StringBuilder tealiumData = new StringBuilder(1000); // SONAR FIX
 		try
 		{
-			final HttpServletRequest request = getRequest();
-			final String visitorIP = getVisitorIpAddress(request);
-			final HttpSession session = request.getSession();
-			String sessionId = session.getId();
-			String userType = null;
-			String userId = null;
-			final String domainName = request.getServerName();
-			final Cookie[] cookies = request.getCookies();
-			if (cookies != null)
-			{
-				for (final Cookie cookie : cookies)
-				{
-					if (cookie.getName().equals("mpl-user"))
-					{
-						userId = cookie.getValue();
-					}
-					if (cookie.getName().equals("mpl-userType"))
-					{
-						userType = cookie.getValue();
-					}
-				}
-			}
-			if (sessionId.contains("."))
-			{
-				final String[] parts = sessionId.split("\\.");
-				sessionId = parts[0];
-
-			}
-
-			final JSONObject utag = new JSONObject();
-			utag.put("site_region", "en");
-			utag.put("user_type", userType);
-			utag.put("user_id", userId);
+			final JSONObject utag = populateCommonTealiumData();
 			utag.put("page_type", "home");
 			utag.put("page_name", "Homepage");
-			utag.put("session_id", sessionId);
-			utag.put("session_id", sessionId);
-			utag.put("visitor_ip", visitorIP);
-			utag.put("site_currency", "INR");
 			utag.put("site_section", "home");
-			utag.put("IA_company", domainName);
-
-
 			final String utagData = utag.toJSONString();
-			getTealiumScript(domainName);
 			tealiumData.append("<script type='text/javascript'> var utag_data =");
 			tealiumData.append(utagData);
-
-			tealiumData.append(getTealiumScript(domainName));
+			tealiumData.append(getTealiumScript((String) utag.get("IA_company")));
 		}
 		catch (final Exception ex)
 		{
@@ -101,21 +61,6 @@ public class TealiumController extends AbstractController
 		return tealiumData.toString();
 	}
 
-	/**
-	 *
-	 */
-	private String getTealiumScript(final String domainName)
-	{
-		String utagScript = UTAG_SCRIPT_DEV;
-
-		if (domainName.equalsIgnoreCase("www.tatacliq.com"))
-		{
-			utagScript = UTAG_SCRIPT_PROD;
-		}
-
-		return utagScript;
-	}
-
 	@RequestMapping(value = "/getTealiumDataProduct", method = RequestMethod.GET)
 	@ResponseBody
 	public String getTealiumDataProductPage() throws Exception
@@ -123,49 +68,38 @@ public class TealiumController extends AbstractController
 		final StringBuilder tealiumData = new StringBuilder(1000);
 		try
 		{
-			final HttpServletRequest request = getRequest();
-			final String visitorIP = getVisitorIpAddress(request);
-			final HttpSession session = request.getSession();
-			String sessionId = session.getId();
-			String userType = null;
-			String userId = null;
-			final String domainName = request.getServerName();
-			final Cookie[] cookies = request.getCookies();
-			if (cookies != null)
-			{
-				for (final Cookie cookie : cookies)
-				{
-					if (cookie.getName().equals("mpl-user"))
-					{
-						userId = cookie.getValue();
-					}
-					if (cookie.getName().equals("mpl-userType"))
-					{
-						userType = cookie.getValue();
-					}
-				}
-			}
-			if (sessionId.contains("."))
-			{
-				final String[] parts = sessionId.split("\\.");
-				sessionId = parts[0];
-
-			}
-			final JSONObject utag = new JSONObject();
-			utag.put("site_region", "en");
+			final JSONObject utag = populateCommonTealiumData();
 			utag.put("page_type", "product");
-			utag.put("session_id", sessionId);
-			utag.put("site_currency", "INR");
-			utag.put("user_type", userType);
-			utag.put("user_id", userId);
-			utag.put("visitor_ip", visitorIP);
-			utag.put("IA_company", domainName);
 			final String utagData = utag.toJSONString();
-			getTealiumScript(domainName);
 			tealiumData.append("<script type='text/javascript'> var utag_data =");
 			tealiumData.append(utagData);
 			tealiumData.append("<TealiumScript>");
-			tealiumData.append(getTealiumScript(domainName));
+			tealiumData.append(getTealiumScript((String) utag.get("IA_company")));
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception while populating tealium data ::::" + ex.getMessage());
+
+		}
+		LOG.debug(tealiumData.toString());
+		return tealiumData.toString();
+	}
+
+	@RequestMapping(value = "/getTealiumDataGeneric", method = RequestMethod.GET)
+	@ResponseBody
+	public String getTealiumDataGenericPages(@RequestParam("pageName") final String pageName) throws Exception
+	{
+		final StringBuilder tealiumData = new StringBuilder(1000); // SONAR FIX
+		try
+		{
+			final JSONObject utag = populateCommonTealiumData();
+			utag.put("page_type", "generic");
+			utag.put("page_name", pageName);
+			utag.put("site_section", pageName);
+			final String utagData = utag.toJSONString();
+			tealiumData.append("<script type='text/javascript'> var utag_data =");
+			tealiumData.append(utagData);
+			tealiumData.append(getTealiumScript((String) utag.get("IA_company")));
 		}
 		catch (final Exception ex)
 		{
@@ -197,5 +131,63 @@ public class TealiumController extends AbstractController
 		return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 	}
 
+	private JSONObject populateCommonTealiumData()
+	{
+
+		final HttpServletRequest request = getRequest();
+		final String visitorIP = getVisitorIpAddress(request);
+		final HttpSession session = request.getSession();
+		String sessionId = session.getId();
+		String userType = null;
+		String userId = null;
+		final String domainName = request.getServerName();
+		final Cookie[] cookies = request.getCookies();
+		if (cookies != null)
+		{
+			for (final Cookie cookie : cookies)
+			{
+				if (cookie.getName().equals("mpl-user"))
+				{
+					userId = cookie.getValue();
+				}
+				if (cookie.getName().equals("mpl-userType"))
+				{
+					userType = cookie.getValue();
+				}
+			}
+		}
+		if (sessionId.contains("."))
+		{
+			final String[] parts = sessionId.split("\\.");
+			sessionId = parts[0];
+
+		}
+
+		final JSONObject utag = new JSONObject();
+		utag.put("site_region", "en");
+		utag.put("user_type", userType);
+		utag.put("user_id", userId);
+		utag.put("session_id", sessionId);
+		utag.put("visitor_ip", visitorIP);
+		utag.put("site_currency", "INR");
+		utag.put("IA_company", domainName);
+
+		return utag;
+	}
+
+	/**
+	 *
+	 */
+	private String getTealiumScript(final String domainName)
+	{
+		String utagScript = UTAG_SCRIPT_DEV;
+
+		if (domainName.equalsIgnoreCase("www.tatacliq.com"))
+		{
+			utagScript = UTAG_SCRIPT_PROD;
+		}
+
+		return utagScript;
+	}
 
 }

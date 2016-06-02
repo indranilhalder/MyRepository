@@ -305,11 +305,11 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -603,6 +603,47 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 		}
 	}
 
+	/*
+	 * @Description : Fetching bank name for net banking-- TISPT-169
+	 *
+	 * @return List<BankforNetbankingModel>
+	 *
+	 * @throws Exception
+	 */
+	@Override
+	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.NBBANKSQUERY;
+
+			//forming the flexible search query
+			final FlexibleSearchQuery bankListQuery = new FlexibleSearchQuery(queryString);
+
+			//fetching bank list from DB using flexible search query
+			final List<BankforNetbankingModel> bankList = flexibleSearchService.<BankforNetbankingModel> search(bankListQuery)
+					.getResult();
+
+			return bankList;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+	}
 
 	//getters and setters
 	/**
