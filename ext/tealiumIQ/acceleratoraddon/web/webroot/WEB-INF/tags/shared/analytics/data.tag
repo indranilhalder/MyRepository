@@ -20,7 +20,7 @@
 	</c:otherwise>
 </c:choose>
 
-
+<input type="hidden" id="pageType" value="${currentPageType }"/>
 <%--                    ---------------------                            --%>
 
 
@@ -68,9 +68,9 @@
 		<%=HybrisDataConverter.getErrorScript()%>
 	</c:when>
 
-	<c:otherwise>
+	<%-- <c:otherwise>
 		<c:if test="${currentPageType !='homepage'  && currentPageType !='product' && currentPageType !='viewSellers' }">
 			<%=HybrisDataConverter.getGenericPageScript()%> 
 		</c:if>
-	</c:otherwise>
+	</c:otherwise> --%>
 </c:choose>

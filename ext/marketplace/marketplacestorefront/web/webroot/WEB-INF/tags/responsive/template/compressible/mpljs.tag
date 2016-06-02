@@ -150,7 +150,7 @@
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/jquery.lazyload.min.js"></script>	
 <script type="text/javascript"
-	src="${commonResourcePath}/js/mpl/tisl.home.js"></script>
+	src="${commonResourcePath}/js/mpl-primary/tisl.home.js"></script>
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.search.js"></script>
 
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/reviews')}">

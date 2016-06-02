@@ -26,7 +26,6 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.EmailVal
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.PasswordValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ProfileValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.verification.AddressVerificationResultHandler;
-import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
@@ -1081,7 +1080,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			final List<CancellationReasonModel> cancellationReason = getMplOrderFacade().getCancellationReason();
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER, orderDetail);
-			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, isEditable());
+			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, getOrderDetailsFacade.getPickUpButtonDisableOptions());
 			model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE, getMplOrderFacade().filterDeliveryMode());
 			model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 			model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
@@ -6966,30 +6965,4 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	public List<ConsignmentStatus> isEditable()
-	{
-		final List<ConsignmentStatus> neededStatus = new ArrayList<ConsignmentStatus>();
-		neededStatus.add(ConsignmentStatus.RETURN_INITIATED);
-		neededStatus.add(ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND);
-		neededStatus.add(ConsignmentStatus.RETURN_TO_ORIGIN);
-		neededStatus.add(ConsignmentStatus.LOST_IN_TRANSIT);
-		neededStatus.add(ConsignmentStatus.REVERSE_AWB_ASSIGNED);
-		neededStatus.add(ConsignmentStatus.RETURN_RECEIVED);
-		neededStatus.add(ConsignmentStatus.RETURN_CLOSED);
-		neededStatus.add(ConsignmentStatus.RETURN_CANCELLED);
-		neededStatus.add(ConsignmentStatus.REDISPATCH_INITIATED);
-		neededStatus.add(ConsignmentStatus.CLOSED_ON_RETURN_TO_ORIGIN);
-		neededStatus.add(ConsignmentStatus.REFUND_INITIATED);
-		neededStatus.add(ConsignmentStatus.REFUND_IN_PROGRESS);
-		neededStatus.add(ConsignmentStatus.RETURN_REJECTED);
-		neededStatus.add(ConsignmentStatus.QC_FAILED);
-		neededStatus.add(ConsignmentStatus.CLOSED_ON_CANCELLATION);
-		neededStatus.add(ConsignmentStatus.CANCELLATION_INITIATED);
-		neededStatus.add(ConsignmentStatus.RETURN_COMPLETED);
-		neededStatus.add(ConsignmentStatus.ORDER_CANCELLED);
-		neededStatus.add(ConsignmentStatus.ORDER_COLLECTED);
-		neededStatus.add(ConsignmentStatus.ORDER_UNCOLLECTED);
-		neededStatus.add(ConsignmentStatus.RETURNINITIATED_BY_RTO);
-		return neededStatus;
-	}
 }
