@@ -512,5 +512,8 @@ public class MarketplacewebservicesConstants
 
 	public static final String DROPDOWN_BRAND = "MBH".intern();
 	public static final String DROPDOWN_CATEGORY = "MSH".intern();
+	public static final String LOG_TIME = "%s ns ---%s s".intern();
+
+
 
 }

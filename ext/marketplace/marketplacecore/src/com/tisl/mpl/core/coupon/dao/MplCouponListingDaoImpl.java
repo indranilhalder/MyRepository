@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.core.coupon.dao;
 
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
@@ -59,6 +60,22 @@ public class MplCouponListingDaoImpl implements MplCouponListingDao
 	{
 		// YTODO Auto-generated method stub
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.core.coupon.dao.MplCouponListingDao#findVoucherWithRestrictions()
+	 */
+	@Override
+	public List<VoucherModel> findVoucherWithRestrictions(final ProductModel product)
+	{
+		final String queryString = "select {d.voucher} from {DateRestriction as d} " + "where sysdate >= {d.startdate}	"
+				+ "and sysdate <= {d.enddate}	" + "and {d.voucher} IN ({{" + "select {pr.voucher}  from {ProductRestriction as pr} "
+				+ " where {pr.products} like '%" + product.getPk() + "%'	}})";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+		return getFlexibleSearchService().<VoucherModel> search(query).getResult();
 	}
 
 

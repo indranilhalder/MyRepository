@@ -303,16 +303,22 @@
 	function openPopForAdddPosToCartEntry(ussId,posName){
 		//var productCode = $("#product").val();
 		//alert(ussId+"@@@"+posName);
+		$(".continue_btn, .continue_btn_a").css("pointer-events", "none");
+		$(".continue_btn, .continue_btn_a").css("cursor", "default"); 
+		$(".continue_btn, .continue_btn_a").attr("data-id", $(".continue_btn, .continue_btn_a").attr("href"));
+		$(".continue_btn, .continue_btn_a").removeAttr("href");
 		var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPosToOrderEntry";
 		var dataString = 'ussId=' + ussId+ '&posName=' + posName;
 			$.ajax({
 			url : requiredUrl,
 			data : dataString,
 			success : function(data) {
-				
+				$(".continue_btn, .continue_btn_a").css("pointer-events", "all");
+				$(".continue_btn, .continue_btn_a").css("cursor", "pointer"); 
+				$(".continue_btn, .continue_btn_a").attr("href", $(".continue_btn, .continue_btn_a").attr("data-id"));
 			},
 			error : function(xhr, status, error) {
-				alert(error);	
+				alert("Oops something went wrong!!!");	
 			}
 		});
 	}

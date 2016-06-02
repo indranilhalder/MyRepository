@@ -41,7 +41,7 @@ $(document).ready(function(){
 		        tealiumData+='"site_section_detail":"'+$("#site_section_detail").val()+'",';
 		        tealiumData+='"product_category":["'+$("#product_category").val()+'"]}';
 		        data=data.replace("}<TealiumScript>",tealiumData);
-		        console.log(data);
+		        //console.log(data);
 		           $('#tealiumHome').html(data);
 		        }
 		    });
