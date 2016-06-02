@@ -190,16 +190,16 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 			 }
 		WHERE {c.code} LIKE 'MSH%' AND {p:varianttype} IS NULL 
 		AND (
-			 {p:modifiedtime} + 120/1440 >= ?lastIndexTime OR 
-			 {cr:modifiedtime} + 120/1440 >= ?lastIndexTime OR
-             {c2p:modifiedtime} + 120/1440 >= ?lastIndexTime
+			 {p:modifiedtime}  >= ?lastIndexTime OR 
+			 {cr:modifiedtime}  >= ?lastIndexTime OR
+             {c2p:modifiedtime}  >= ?lastIndexTime
 			 )
 	}}
 	UNION
 	{{
 		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:code} IN (
 			{{
-				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} + 120/1440 >= ?lastIndexTime
+				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} >= ?lastIndexTime
 																	 AND {bbox.delisted} != 1 
 																	 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
 																	 AND {bbox.available} > 0
@@ -211,7 +211,7 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:PK} IN (
 			{{
 				SELECT DISTINCT {ppromorel.source} from {ProductPromotion as ppromo},{ ProductPromotionRelation as ppromorel} 
-																	 WHERE {ppromo:modifiedtime} + 120/1440 >= ?lastIndexTime
+																	 WHERE {ppromo:modifiedtime}  >= ?lastIndexTime
 																	 AND {ppromo.PK} = {ppromorel.target}
 			}}
 		)
@@ -232,7 +232,7 @@ where tbl.code IN (
   SELECT distinct{p.PK} FROM {Product AS p} 
 						WHERE {p.code} IN ( 
 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
-													WHERE 	{bbox:modifiedtime} + 120/1440>= ?lastIndexTime 
+													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
 													AND ({bbox.product}={p.code} 
 													AND ({bbox.delisted} = 1 
 														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})
@@ -462,6 +462,7 @@ INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isoco
  
 INSERT_UPDATE CronJob;code[unique=true];runningOnClusterNode
 # Run the update-mplIndex-cronJob every 15 minutes
+;full-mplIndex-cronJob;1
 ;update-mplIndex-cronJob;1
 ;delete-mplIndex-cronJob;1 
 					   

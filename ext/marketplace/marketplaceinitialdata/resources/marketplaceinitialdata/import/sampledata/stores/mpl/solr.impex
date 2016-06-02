@@ -425,6 +425,7 @@ INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isoco
 
 INSERT_UPDATE CronJob;code[unique=true];runningOnClusterNode
 # Run the update-mplIndex-cronJob every 15 minutes
+;full-mplIndex-cronJob;1
 ;update-mplIndex-cronJob;1
 ;delete-mplIndex-cronJob;1 
 					   
