@@ -64,7 +64,7 @@ $(document).ready(
 
 			// Generic Page Script
 			var pageType = $('#pageType').val();
-			var pageId=$('#ia_site_page_id').val();
+			var pageName=$('#pageName').val();
 			if (pageType != 'homepage' && pageType != 'productDetails'
 					&& pageType != 'viewSellers' && pageType != 'productsearch'
 					&& pageType != 'category' && pageType != 'cart'
@@ -82,7 +82,7 @@ $(document).ready(
 							url : ACC.config.encodedContextPath
 									+ "/getTealiumDataGeneric",
 							type : 'GET',
-							data:'pageName='+pageId,
+							data:'pageName='+pageName,
 							cache : false,
 							success : function(data) {
 								// console.log(data);
