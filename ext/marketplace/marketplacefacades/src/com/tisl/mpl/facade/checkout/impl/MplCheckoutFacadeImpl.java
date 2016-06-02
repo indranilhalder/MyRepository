@@ -1223,6 +1223,106 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		return result;
 	}
 
+
+
+	/**
+	 * This method returns orderData based on orderModel
+	 * 
+	 * @param orderModel
+	 * @return OrderData
+	 */
+	@Override
+	public OrderData getOrderDetailsForCode(final OrderModel orderModel)
+	{
+		try
+		{
+			OrderData orderData = null;
+
+			final PriceData deliveryCost = createPrice(orderModel, orderModel.getDeliveryCost());
+			//TISBOX-1417 Displaying COD value in order confirmation page
+			PriceData convenienceCharge = null;
+			PriceData totalPriceWithConvenienceCharge = null;
+			if (orderModel.getConvenienceCharges() != null)
+			{
+				convenienceCharge = createPrice(orderModel, orderModel.getConvenienceCharges());
+			}
+
+			if (orderModel.getTotalPriceWithConv() != null)
+			{
+				totalPriceWithConvenienceCharge = createPrice(orderModel, orderModel.getTotalPriceWithConv());
+			}
+
+
+			//skip the order if product is missing in the order entries
+			for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
+			{
+				if (null == orderEntry.getProduct()) // it means somehow product is deleted from the order entry.
+				{
+					LOG.info("************************Skipping order history for order :" + orderModel.getCode() + " and for user: "
+							+ orderModel.getUser().getName() + " **************************");
+					return null;
+				}
+			}
+
+			orderData = getOrderConverter().convert(orderModel);
+			orderData.setDeliveryCost(deliveryCost);
+
+			if (convenienceCharge != null)
+			{
+				orderData.setConvenienceChargeForCOD(convenienceCharge);
+			}
+
+			if (totalPriceWithConvenienceCharge != null)
+			{
+				orderData.setTotalPriceWithConvCharge(totalPriceWithConvenienceCharge);
+			}
+
+			final List<OrderData> sellerOrderList = new ArrayList<OrderData>();
+			for (final OrderModel sellerOrder : orderModel.getChildOrders())
+			{
+				final PriceData childDeliveryCost = createPrice(sellerOrder, sellerOrder.getDeliveryCost());
+				final OrderData sellerOrderData = getOrderConverter().convert(sellerOrder);
+				//orderData.setDeliveryCost(childDeliveryCost);
+				sellerOrderData.setDeliveryCost(childDeliveryCost);
+				sellerOrderData.setPickupName(orderModel.getPickupPersonName());
+				sellerOrderData.setPickupPhoneNumber(orderModel.getPickupPersonMobile());
+				sellerOrderList.add(sellerOrderData);
+			}
+			orderData.setSellerOrderList(sellerOrderList);
+			return orderData;
+		}
+		catch (final IllegalArgumentException ex)
+		{
+
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final NullPointerException ex)
+
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final UnknownIdentifierException ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 	public VoucherModelService getVoucherModelService()
 	{
 		return voucherModelService;

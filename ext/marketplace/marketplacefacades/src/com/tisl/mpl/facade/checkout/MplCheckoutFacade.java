@@ -223,4 +223,12 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean isCouponValid(final CartModel cart) throws EtailNonBusinessExceptions;
+
+	/**
+	 * TISPT-175
+	 *
+	 * @param orderModel
+	 * @return OrderData
+	 */
+	OrderData getOrderDetailsForCode(OrderModel orderModel);
 }
