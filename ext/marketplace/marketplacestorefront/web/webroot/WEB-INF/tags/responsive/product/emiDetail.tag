@@ -30,9 +30,16 @@
 			</div>
 			<div class="modal-body" id="modelId">
 
-				<select name="bankNameForEMI" id="bankNameForEMI"
-	onchange="getSelectedEMIBankForPDP()">
+<!-- TISPRO-533 -->
+
+
+<!-- <select name="bankNameForEMI" id="bankNameForEMI"
+onchange="getSelectedEMIBankForPDP()">
+</select> -->
+
+<select name="bankNameForEMI" id="bankNameForEMI">
 </select>
+
 
 <div id="emiTableDiv" class="other-sellers">
 	<table id="EMITermTable" class="other-sellers-table emi-table">
