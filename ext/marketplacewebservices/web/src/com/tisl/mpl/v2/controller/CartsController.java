@@ -1927,6 +1927,7 @@ public class CartsController extends BaseCommerceController
 		try
 		{
 			final long start = System.nanoTime();
+
 			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl);
 			final long elapsedTime = System.nanoTime() - start;
 			final float seconds = elapsedTime / 1000000000;
@@ -2075,10 +2076,10 @@ public class CartsController extends BaseCommerceController
 			}
 			/*
 			 * String cartIdentifier; Collection<CartModel> cartModelList = null;
-			 *
+			 * 
 			 * cartModelList = mplCartFacade.getCartDetails(customerFacade.getCurrentCustomer().getUid());
-			 *
-			 *
+			 * 
+			 * 
 			 * if (null != cartModelList && cartModelList.size() > 0) { for (final CartModel cartModel : cartModelList) {
 			 * if (userFacade.isAnonymousUser()) { cartIdentifier = cartModel.getGuid(); } else { cartIdentifier =
 			 * cartModel.getCode(); } if (cartIdentifier.equals(cartId)) {
@@ -2423,16 +2424,15 @@ public class CartsController extends BaseCommerceController
 			throws CommerceCartModificationException
 	{
 		final CartDataDetailsWsDTO cartDetailsData = new CartDataDetailsWsDTO();
-		final CartModel cartModel = null;
-		final CartData cartData = null;
-		final CartData cartDataOrdered = null;
-		final String delistMessage = MarketplacewebservicesConstants.EMPTY;
-		final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
-		final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
+		CartModel cartModel = null;
+		CartData cartData = null;
+		CartData cartDataOrdered = null;
+		String delistMessage = MarketplacewebservicesConstants.EMPTY;
+		List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
+		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		try
 		{
 			final long start = System.nanoTime();
-
 			if (userFacade.isAnonymousUser())
 			{
 				LOG.debug("CartDetails:  AnonymousUser ");
@@ -3803,7 +3803,7 @@ public class CartsController extends BaseCommerceController
 			final PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSByName(slaveId);
 			if (null != posModel)
 			{
-				String response = mplStoreLocatorFacade.saveStoreForSelectedProduct(posModel, USSID);
+				final String response = mplStoreLocatorFacade.saveStoreForSelectedProduct(posModel, USSID);
 				LOG.debug("from addStoreToCCEntry response :" + response);
 				if ("yes".equalsIgnoreCase(response))
 				{
@@ -3812,7 +3812,9 @@ public class CartsController extends BaseCommerceController
 					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					return cartDataDetails;
-				}else{
+				}
+				else
+				{
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9520);
 				}
 			}

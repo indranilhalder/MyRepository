@@ -731,7 +731,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 			if (!delisted)
 			{
-				addedToCart = mplCommerceCartService.addItemToCart(cartId, cartModel, selectedProductModel, quant, USSID);
+				addedToCart = mplCartFacade.addItemToCart(cartId, cartModel, selectedProductModel, quant, USSID);
 				LOG.debug("*********** Products added status in cart *************  ::::USSID::::" + USSID + ":::added???"
 						+ addedToCart);
 				final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID);
