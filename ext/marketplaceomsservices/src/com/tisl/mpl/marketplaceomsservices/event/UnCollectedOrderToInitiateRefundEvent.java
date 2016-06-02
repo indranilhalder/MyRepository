@@ -16,7 +16,7 @@ import com.hybris.oms.domain.shipping.Shipment;
  * @author Tech
  *
  */
-public class UnColletedOrderToInitiateRefundEvent extends AbstractEvent
+public class UnCollectedOrderToInitiateRefundEvent extends AbstractEvent
 {
 	private final Shipment shipment;
 	private final ConsignmentModel consignmentModel;
@@ -25,7 +25,7 @@ public class UnColletedOrderToInitiateRefundEvent extends AbstractEvent
 	private final EventService eventService;
 	private final  ConfigurationService configurationService;
 	
-	public UnColletedOrderToInitiateRefundEvent(final Shipment shipment, final ConsignmentModel consignmentModel, final OrderModel orderModel, final ConsignmentStatus shipmentNewStatus,final EventService eventService,ConfigurationService configurationService)
+	public UnCollectedOrderToInitiateRefundEvent(final Shipment shipment, final ConsignmentModel consignmentModel, final OrderModel orderModel, final ConsignmentStatus shipmentNewStatus,final EventService eventService,ConfigurationService configurationService)
 	{
 
 		this.shipment = shipment;
