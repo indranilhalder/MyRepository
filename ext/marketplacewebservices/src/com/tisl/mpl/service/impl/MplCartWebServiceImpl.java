@@ -35,6 +35,7 @@ import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.CartException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.converters.Populator;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -1105,13 +1106,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							LOG.debug("*************** Mobile webservice size is empty ********************");
 						}
 						/* capacity */
-						ProductModel productModel = null;
-						if (null != abstractOrderEntry.getProduct()
-								&& StringUtils.isNotEmpty(abstractOrderEntry.getProduct().getCode()))
-						{
-							productModel = productService.getProductForCode(abstractOrderEntry.getProduct().getCode());
-						}
-						if (productModel instanceof PcmProductVariantModel)
+						if (abstractOrderEntry.getProduct() instanceof PcmProductVariantModel)
 						{
 							LOG.debug("*************** Mobile webservice product is of type PCMPRoductVariant ********************");
 
