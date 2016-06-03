@@ -170,6 +170,8 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 
 							///brand restriction check
 
+							// TISPRD-2488
+							boolean isSellerRestrPresent = false;
 
 							for (final AbstractPromotionRestrictionModel restriction : productPromotion.getRestrictions())
 							{
@@ -177,11 +179,15 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 								boolean excluseBrandRestrictionPresent = false;
 
 								//checking if BOGO promotion present or not and removing the promotion if seller restriction not present
-								if (!(restriction instanceof EtailSellerSpecificRestrictionModel) && isFreeBee)
+								/*
+								 * if (!(restriction instanceof EtailSellerSpecificRestrictionModel) && isFreeBee) {
+								 * toRemovePromotionList.add(productPromotion); excludePromotion = true; break; }
+								 */
+
+								//checking if BOGO promotion present or not and removing the promotion if seller restriction not present
+								if (restriction instanceof EtailSellerSpecificRestrictionModel)
 								{
-									toRemovePromotionList.add(productPromotion);
-									excludePromotion = true;
-									break;
+									isSellerRestrPresent = true;
 								}
 
 								//checking Exclude brandRestriction
@@ -236,7 +242,12 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 									}
 								}
 
+							}
 
+							if (!isSellerRestrPresent && isFreeBee)
+							{
+								toRemovePromotionList.add(productPromotion);
+								excludePromotion = true;
 							}
 
 
