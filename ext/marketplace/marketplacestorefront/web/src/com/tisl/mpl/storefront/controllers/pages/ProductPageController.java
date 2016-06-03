@@ -360,53 +360,55 @@ public class ProductPageController extends AbstractPageController
 	/**
 	 * @param productData
 	 * @param breadcrumbs
-	 *
+	 *           This method populates Tealium data for PDP
 	 */
 	private void populateTealiumData(final ProductData productData, final Model model, final List<Breadcrumb> breadcrumbs)
 	{
 		final List<String> productCategoryList = new ArrayList<String>();
 		final List<String> productCategoryIdList = new ArrayList<String>();
-		String productCategory = "";
-		String productBrand = "";
-		String productSku = "";
-		String productPrice = "";
-		String productName = "";
-		String categoryId = "";
-		String productUnitPrice = "";
-		String productSubCategoryName = "";
-		if (productData != null && productData.getCategories() != null)
+		String productCategory = null;
+		String productBrand = null;
+		String productSku = null;
+		String productPrice = null;
+		String productName = null;
+		String categoryId = null;
+		String productUnitPrice = null;
+		String productSubCategoryName = null;
+		try
 		{
-			for (final CategoryData category : productData.getCategories())
+
+			if (productData != null && productData.getCategories() != null)
 			{
-				productCategoryList.add(category.getName());
-				productCategoryIdList.add(category.getCode());
-			}
-		}
-		final Object[] productCategoryStrings = productCategoryList.toArray();
-		//Object[] productCategoryIdStrings = productCategoryIdList.toArray();
-
-		if (productCategoryStrings.length > 0)
-		{
-			productCategory = (String) productCategoryStrings[0];
-			categoryId = productCategoryIdList.get(0);
-		}
-
-		if (productCategoryStrings.length >= 2)
-		{
-			productSubCategoryName = (String) productCategoryStrings[1];
-		}
-
-		if (productData != null)
-		{
-			if (productData.getCode() != null)
-			{
-				productSku = productData.getCode();
-
-				//	if (buyBoxFacade != null)
-				if (StringUtils.isNotEmpty(productSku))
+				for (final CategoryData category : productData.getCategories())
 				{
+					productCategoryList.add(category.getName());
+					productCategoryIdList.add(category.getCode());
+				}
+			}
+			final Object[] productCategoryStrings = productCategoryList.toArray();
+			//Object[] productCategoryIdStrings = productCategoryIdList.toArray();
+
+			if (productCategoryStrings.length > 0)
+			{
+				productCategory = (String) productCategoryStrings[0];
+				categoryId = productCategoryIdList.get(0);
+			}
+
+			if (productCategoryStrings.length >= 2)
+			{
+				productSubCategoryName = (String) productCategoryStrings[1];
+			}
+
+			if (productData != null)
+			{
+				if (productData.getCode() != null)
+				{
+					productSku = productData.getCode();
+
+					//if (buyBoxFacade != null)
+					//{
 					final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productSku);
-					if (buyboxdata != null && buyboxdata.getSellerArticleSKU() != null)
+					if (buyboxdata != null)
 					{
 						final PriceData specialPrice = buyboxdata.getSpecialPrice();
 						final PriceData mrp = buyboxdata.getMrp();
@@ -420,62 +422,67 @@ public class ProductPageController extends AbstractPageController
 						{
 							productPrice = specialPrice.getValue().toPlainString();
 						}
-						else if (null != mop)
+						else if (null != mop && null != mop.getValue())
 						{
 							productPrice = mop.getValue().toPlainString();
 						}
 						else
 						{
-							LOG.error("BuyBox data is not proper product:" + productData);
+							LOG.error("Error in fetching price for tealium for product code : " + productData.getCode());
 						}
 					}
+					//}
+
 				}
 
-			}
-
-			if (productData.getName() != null)
-			{
-				productName = productData.getName();
-			}
-
-
-			if (productData.getBrand() != null)
-			{
-				productBrand = productData.getBrand().getBrandname();
-			}
-
-
-		}
-		model.addAttribute("product_unit_price", productUnitPrice);
-		if (CollectionUtils.isNotEmpty(breadcrumbs))
-		{
-			model.addAttribute("site_section", breadcrumbs.get(0).getName());
-			String breadcrumbName = "";
-			int count = 1;
-			for (final Breadcrumb breadcrumb : breadcrumbs)
-			{
-				breadcrumbName += breadcrumb.getName();
-				if (count < breadcrumbs.size())
+				if (productData.getName() != null)
 				{
-					breadcrumbName += ":";
-
+					productName = productData.getName();
 				}
-				count++;
-			}
-			model.addAttribute("page_name", "Product Details:" + breadcrumbName);
-		}
-		model.addAttribute("product_list_price", productPrice);
-		model.addAttribute("product_name", productName);
-		model.addAttribute("product_sku", productSku);
-		model.addAttribute("page_category_name", "");
-		model.addAttribute("category_id", categoryId);
-		model.addAttribute("page_section_name", "");
-		model.addAttribute("product_id", productData.getCode());
-		model.addAttribute("page_subcategory_name", productSubCategoryName);
-		model.addAttribute("product_brand", productBrand);
-		model.addAttribute("site_section_detail", productData.getRootCategory());
-		model.addAttribute("product_category", productCategory);
 
+
+				if (productData.getBrand() != null)
+				{
+					productBrand = productData.getBrand().getBrandname();
+				}
+
+
+			}
+			model.addAttribute("product_unit_price", productUnitPrice);
+			if (CollectionUtils.isNotEmpty(breadcrumbs))
+			{
+				model.addAttribute("site_section", breadcrumbs.get(0).getName());
+				String breadcrumbName = "";
+				int count = 1;
+				for (final Breadcrumb breadcrumb : breadcrumbs)
+				{
+					breadcrumbName += breadcrumb.getName();
+					if (count < breadcrumbs.size())
+					{
+						breadcrumbName += ":";
+
+					}
+					count++;
+				}
+				model.addAttribute("page_name", "Product Details:" + breadcrumbName);
+			}
+			model.addAttribute("product_list_price", productPrice);
+			model.addAttribute("product_name", productName);
+			model.addAttribute("product_sku", productSku);
+			model.addAttribute("page_category_name", "");
+			model.addAttribute("category_id", categoryId);
+			model.addAttribute("page_section_name", "");
+			model.addAttribute("product_id", productData.getCode());
+			model.addAttribute("page_subcategory_name", productSubCategoryName);
+			model.addAttribute("product_brand", productBrand);
+			model.addAttribute("site_section_detail", productData.getRootCategory());
+			model.addAttribute("product_category", productCategory);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception while populating tealium Data for product" + productData.getCode() + ":::" + ex.getMessage());
+			throw ex;
+		}
 	}
 
 	/**
@@ -1025,24 +1032,22 @@ public class ProductPageController extends AbstractPageController
 					isCodEligible = seller.getIsCod();
 				}
 			}
-
+			
 			//Remove multiple DB calls
 			final RichAttributeData richAttribute = buyBoxFacade.getRichAttributeDetails(productModel,
 					buyboxdata.getSellerArticleSKU());
-
+			
 			model.addAttribute(ModelAttributetConstants.IS_COD_ELIGIBLE, isCodEligible);
 			//model.addAttribute(IS_ONLINE_EXCLUSIVE, Boolean.valueOf(buyBoxFacade.getRichAttributeDetails(productModel,
-			//buyboxdata.getSellerArticleSKU()).isOnlineExclusive()));
+				//	buyboxdata.getSellerArticleSKU()).isOnlineExclusive()));
 			model.addAttribute(IS_ONLINE_EXCLUSIVE, Boolean.valueOf(richAttribute.isOnlineExclusive()));
-
 			//model.addAttribute(IS_NEW, Boolean.valueOf(buyBoxFacade.getRichAttributeDetails(productModel,
-			//buyboxdata.getSellerArticleSKU()).getNewProduct()));
+				//	buyboxdata.getSellerArticleSKU()).getNewProduct()));
 			model.addAttribute(IS_NEW, richAttribute.getNewProduct());
-
 			//model.addAttribute(FULLFILMENT_TYPE, buyBoxFacade
-			//	.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU()).getFulfillment());
+				//	.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU()).getFulfillment());
 			model.addAttribute(FULLFILMENT_TYPE, richAttribute.getFulfillment());
-
+			
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
@@ -1774,11 +1779,11 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 *
+	 * 
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -1798,76 +1803,76 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 *
+	 * 
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 *
-	 *
+	 * 
+	 * 
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 *
+	 * 
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 *
+	 * 
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 *
+	 * 
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 *
+	 * 
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 *
+	 * 
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 *
-	 *
+	 * 
+	 * 
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 *
+	 * 
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 *
+	 * 
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 *
+	 * 
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 *
+	 * 
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 *
+	 * 
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 *
+	 * 
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 *
+	 * 
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 *
-	 *
+	 * 
+	 * 
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 *
+	 * 
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 

@@ -1155,6 +1155,14 @@ $( document ).ready(function() {
 	$("#addToCartButton").show();
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
+	//alert("----"+productCode);
+	
+	//changes done to restrict buybox AJAX call from every page.
+	if(typeof productCode === 'undefined')
+		{
+		return false;
+		}
+	
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/buybox";
 	var dataString = 'productCode=' + productCode;
@@ -1162,6 +1170,7 @@ $( document ).ready(function() {
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
 		data : dataString,
+		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
 			if (data['sellerArticleSKU'] != undefined) {

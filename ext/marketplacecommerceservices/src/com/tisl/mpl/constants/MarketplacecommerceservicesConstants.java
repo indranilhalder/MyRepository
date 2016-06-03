@@ -695,6 +695,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0019 = "E0019";
 	public static final String E0020 = "E0020";
 	public static final String E0021 = "E0021";
+	public static final String E0022 = "E0022";
 	//System/Non Business constants
 
 	//pdp error constants
@@ -843,7 +844,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9517 = "B9517";
 	public static final String B9518 = "B9518";
 	public static final String B9519 = "B9519";
-
+	public static final String B9520 = "B9520";
+	public static final String B9521 = "B9521";
 	public static final String B9103 = "B9103";
 
 	public static final String B9320 = "B9320";
@@ -1024,6 +1026,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CUSTOMERSURVEYS = "Consumer Surveys";
 	public static final String TYPE_CATEGORY = "category".intern();
 	public static final String TYPE_BRAND = "brand".intern();
+	public static final String FRIEND_EMAIL_MESSAGE_TEXT = "Hey,|I was blown away by the incredible shopping experience at Tata Mall. I highly recommend that you register as a member as well";
 	public static final String INVITE_FRIENDS_MESSAGE_KEY = "account.invite.friends.default.message.text";
 
 	public static final String PROMOALERTSENTGROUP = "promotionusergroup".intern();
@@ -1554,8 +1557,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISCR-421
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
+
 	public static final String EBS_SESSION_ID = "session_id";
 
+	//TISPRO-497
+	public static final String CARTAMOUNTINVALID = "cartAmountInvalid";
+	public static final String CART_TOTAL_INVALID_MESSAGE = "Cannot Apply Coupon - Order Amount is less than Coupon Amount!";
+	
+	public static final String NBBANKSQUERY = "select {b:pk} from {bankForNetbanking As b},{bank as m} where {b.isAvailable}='1' and {b.name}={m.pk} order by {m.bankname}"
+			.intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

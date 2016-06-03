@@ -1581,6 +1581,10 @@
 	</bean>
 	
 	<bean id="homepageComponentService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.HomepageComponentServiceImpl">
+		<property name="threadContextService" ref="threadContextService" />
+		<property name="commerceCategoryService" ref="commerceCategoryService" />
+		<property name="baseSiteService" ref="baseSiteService" />
+		<property name="pattern" value="/{category-path}/c-{category-code}" />
 	</bean>
 	
     <bean id="automationService"
