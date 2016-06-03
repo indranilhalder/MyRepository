@@ -1,6 +1,7 @@
 package com.tisl.mpl.solr.search;
 
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commerceservices.category.CommerceCategoryService;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData;
@@ -109,25 +110,37 @@ public class MplSearchResponseSubBrandPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXE
 	 * return allBrands; }
 	 */
 
-	private List<CategoryModel> buildSubBrands(final SearchResult solrSearchResult)
+	private List<CategoryData> buildSubBrands(final SearchResult solrSearchResult)
 	{
 		// YTODO Auto-generated method stub
 		final Facet brandFacet = solrSearchResult.getFacet(MarketplacecommerceservicesConstants.BRAND);
-		final List<CategoryModel> allBrands = new ArrayList<CategoryModel>();
+		final List<CategoryData> allBrands = new ArrayList<CategoryData>();
 		if ((brandFacet != null) && !(brandFacet.getFacetValues().isEmpty()))
 		{
 
 			for (final FacetValue facetValue : brandFacet.getFacetValues())
 			{
-				if (facetValue != null && facetValue.getName() != null)
+
+
+
+				final CategoryData categoryData = new CategoryData();
+				if (facetValue != null)
 				{
-					final CategoryModel categoryModel = getCommerceCategoryService().getCategoryForCode(facetValue.getName());
 
-					//adding category to brands
-					//allBrands = addCategoryToBrand(categoryModel);
-					addCategoryToBrand(categoryModel, allBrands);
 
+					if (facetValue.getName() != null)
+					{
+
+						categoryData.setCode(facetValue.getName());
+					}
+					if (facetValue.getDisplayName() != null)
+					{
+
+						categoryData.setName(facetValue.getDisplayName());
+					}
 				}
+				allBrands.add(categoryData);
+
 			}
 		}
 
@@ -154,17 +167,34 @@ public class MplSearchResponseSubBrandPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXE
 	 * @param searchResult
 	 * @return
 	 */
-	private List<CategoryModel> buildCategories(final SearchResult solrSearchResult)
+	private List<CategoryData> buildCategories(final SearchResult solrSearchResult)
 	{
 		// YTODO Auto-generated method stub
 		final Facet snsCategoryPathFacet = solrSearchResult.getFacet(MarketplacecommerceservicesConstants.SNS_CATEGORY);
-		final List<CategoryModel> allCategories = new ArrayList<CategoryModel>();
+		final List<CategoryData> allCategories = new ArrayList<CategoryData>();
 		if ((snsCategoryPathFacet != null) && !(snsCategoryPathFacet.getFacetValues().isEmpty()))
 		{
 
 			for (final FacetValue facetValue : snsCategoryPathFacet.getFacetValues())
 			{
-				allCategories.add(getCommerceCategoryService().getCategoryForCode(facetValue.getName()));
+				final CategoryData categoryData = new CategoryData();
+				if (facetValue != null)
+				{
+
+
+					if (facetValue.getName() != null)
+					{
+
+						categoryData.setCode(facetValue.getName());
+					}
+					if (facetValue.getDisplayName() != null)
+					{
+
+						categoryData.setName(facetValue.getDisplayName());
+					}
+				}
+				allCategories.add(categoryData);
+				//allCategories.add(getCommerceCategoryService().getCategoryForCode(facetValue.getName()));
 			}
 
 		}
