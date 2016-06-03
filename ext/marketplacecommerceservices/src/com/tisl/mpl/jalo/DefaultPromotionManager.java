@@ -1823,7 +1823,8 @@ public class DefaultPromotionManager extends PromotionsManager
 		List<SellerInformationModel> productSellerData = null;
 		try
 		{
-			if (null != entry && null != entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID))
+			if (null != entry && null != entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+					&& isExSellerRestrExists(restrictionList))
 			{
 				ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString();
 				final CatalogVersionModel oModel = catalogData();
@@ -1842,6 +1843,34 @@ public class DefaultPromotionManager extends PromotionsManager
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+		}
+		return flag;
+	}
+
+	/**
+	 * Check if Exclude Seller Restriction Exist
+	 *
+	 * @param restrictionList
+	 * @return flag
+	 */
+	private boolean isExSellerRestrExists(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		boolean flag = true;
+		if (CollectionUtils.isEmpty(restrictionList))
+		{
+			flag = false;
+		}
+		else
+		{
+			for (final AbstractPromotionRestriction restriction : restrictionList)
+			{
+				flag = false;
+				if (restriction instanceof EtailExcludeSellerSpecificRestriction)
+				{
+					flag = true;
+					break;
+				}
+			}
 		}
 		return flag;
 	}
@@ -1960,7 +1989,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		final List<AbstractOrderEntry> orderEntryList = cart.getEntriesByProduct(product) != null
 				? cart.getEntriesByProduct(product) : new ArrayList<AbstractOrderEntry>();
 
-		if (isSellerRestrExists(restrictionList))
+		if (isSellerRestrExists(restrictionList) || isExSellerRestrExists(restrictionList))
 		{
 			String selectedUSSID = null;
 			try
@@ -3170,5 +3199,67 @@ public class DefaultPromotionManager extends PromotionsManager
 			parameters.put(MarketplacecommerceservicesConstants.BOGO_DETAILS_MAP, customBogoPromoDataMap);
 		}
 		return createCustomBOGOPromoOrderEntryAdjustAction(ctx, parameters);
+	}
+
+	/**
+	 * Exclude Brand Data
+	 *
+	 * @param excludedManufactureList
+	 * @param product
+	 * @return
+	 */
+	public boolean excludeBrandDataCheck(final List<String> excludedManufactureList, final Product product)
+	{
+		//final long startTime = System.currentTimeMillis();
+
+		//Code Modified for  TISPT-148
+		boolean isExcludeBrand = false;
+		String brandName = MarketplacecommerceservicesConstants.EMPTY;
+		try
+		{ //final ProductModel productModel = productService.getProductForCode(product.getCode());
+			final List<Category> categoryList = (List<Category>) product.getAttribute("supercategories");
+			if (CollectionUtils.isNotEmpty(categoryList))
+			{
+				for (final Category category : categoryList)
+				{
+					if (category.getCode().startsWith("MBH"))
+					{
+						brandName = category.getName();
+						break;
+					}
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(excludedManufactureList) && StringUtils.isNotEmpty(brandName))
+			{
+				for (final String manufacturer : excludedManufactureList)
+				{
+					if (manufacturer.equalsIgnoreCase(brandName))
+					{
+						isExcludeBrand = true;
+						break;
+					}
+				}
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+		}
+
+		//		final long endTime = System.currentTimeMillis();
+		//		LOG.info("*******************New TIME DIFFERENCE*****************************************************************"
+		//				+ (endTime - startTime));
+
+		return isExcludeBrand;
+
 	}
 }
