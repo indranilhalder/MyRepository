@@ -156,7 +156,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; sellerId            	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSellerIdValueProvider             ;                						;                           ;
 ;$solrIndexedType; deliveryMode           ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplDeliveryModeValueProvider         ;    									;                           ;
 ;$solrIndexedType; collectionIds          ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplOccasionIDValueProvider           ;                						;                           ;
-;$solrIndexedType; vouchers		          ;string ;     ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplVoucherCodeValueProvider		    ;	;                         	;
+# ;$solrIndexedType; vouchers		          ;string ;     ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplVoucherCodeValueProvider		    ;	;                         	;
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;facet[default=true]
 ;$solrIndexedType; snsCategory            ;string ;     ;    ;     ;true ;true ;	 ;mplSnscategoryValueProvider;
@@ -190,16 +190,16 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 			 }
 		WHERE {c.code} LIKE 'MSH%' AND {p:varianttype} IS NULL 
 		AND (
-			 {p:modifiedtime} + 120/1440 >= ?lastIndexTime OR 
-			 {cr:modifiedtime} + 120/1440 >= ?lastIndexTime OR
-             {c2p:modifiedtime} + 120/1440 >= ?lastIndexTime
+			 {p:modifiedtime}  >= ?lastIndexTime OR 
+			 {cr:modifiedtime}  >= ?lastIndexTime OR
+             {c2p:modifiedtime}  >= ?lastIndexTime
 			 )
 	}}
 	UNION
 	{{
 		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:code} IN (
 			{{
-				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} + 120/1440 >= ?lastIndexTime
+				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} >= ?lastIndexTime
 																	 AND {bbox.delisted} != 1 
 																	 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
 																	 AND {bbox.available} > 0
@@ -211,7 +211,7 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:PK} IN (
 			{{
 				SELECT DISTINCT {ppromorel.source} from {ProductPromotion as ppromo},{ ProductPromotionRelation as ppromorel} 
-																	 WHERE {ppromo:modifiedtime} + 120/1440 >= ?lastIndexTime
+																	 WHERE {ppromo:modifiedtime}  >= ?lastIndexTime
 																	 AND {ppromo.PK} = {ppromorel.target}
 			}}
 		)
@@ -232,7 +232,7 @@ where tbl.code IN (
   SELECT distinct{p.PK} FROM {Product AS p} 
 						WHERE {p.code} IN ( 
 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
-													WHERE 	{bbox:modifiedtime} + 120/1440>= ?lastIndexTime 
+													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
 													AND ({bbox.product}={p.code} 
 													AND ({bbox.delisted} = 1 
 														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})
@@ -249,14 +249,14 @@ where tbl.code IN (
 						AND {p.varianttype} IS NULL	     
 ";anonymous
 ;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"
-  SELECT distinct{p.PK} FROM {Product AS p} 
+SELECT distinct{p.PK} FROM {Product AS p} 
 						WHERE {p.code} IN ( 
 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
 													AND ({bbox.product}={p.code} 
 													AND ({bbox.delisted} = 1 
 														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})
-														OR {bbox.available} <= 0)
+														OR {bbox.available} <= 0))
 													AND {bbox.product} NOT IN (
 													{{
 														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 
@@ -266,7 +266,7 @@ where tbl.code IN (
 													}})
 										}} 
 									) 
-						AND {p.varianttype} IS NULL	     
+						AND {p.varianttype} IS NULL
 ";anonymous
 
 # Define the available sorts
@@ -452,15 +452,20 @@ INSERT_UPDATE GlobalSolrSearchProfile;code;indexedType(identifier)[unique=true];
 
 
 # TISPRO-371 Start update and delete index solr cron job into single composite cronjob
-INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode)
- ;mplIndexingCompositeCronjob;compositeJobPerformable;en
+INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode);runningOnClusterNode
+ ;mplIndexingCompositeCronjob;compositeJobPerformable;en;1
  
 #Items to run from the Composite Cron Job
  INSERT_UPDATE CompositeEntry;code[unique=true];executablecronjob(code);compositecronjob(code);compositecronjobpos
  ;delete-mplIndex-cronJob;delete-mplIndex-cronJob;mplIndexingCompositeCronjob;1
  ;update-mplIndex-cronJob;update-mplIndex-cronJob;mplIndexingCompositeCronjob;2
  
+INSERT_UPDATE CronJob;code[unique=true];runningOnClusterNode
+# Run the update-mplIndex-cronJob every 15 minutes
+;full-mplIndex-cronJob;1
+;update-mplIndex-cronJob;1
+;delete-mplIndex-cronJob;1 
 					   
 INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;year;relative;active;maxAcceptableDelay
 # Run the mplIndexingCompositeCronjob every 15 minutes
-;mplIndexingCompositeCronjob;0;0;2;-1;-1;-1;true;true;-1
+;mplIndexingCompositeCronjob;0;15;0;-1;-1;-1;true;true;-1

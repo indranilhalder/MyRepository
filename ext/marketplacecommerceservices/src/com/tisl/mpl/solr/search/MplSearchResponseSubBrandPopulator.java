@@ -53,11 +53,17 @@ public class MplSearchResponseSubBrandPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXE
 			final ProductCategorySearchPageData<SolrSearchQueryData, ITEM, CategoryModel> target) throws ConversionException
 	{
 		// YTODO Auto-generated method stub
-		target.setAllBrand(buildSubBrands(source.getSearchResult()));
-		target.setAllSeller(buildSubSeller(source.getSearchResult()));
-		target.setSnsCategories(buildCategories(source.getSearchResult()));
+
+		if (source.getRequest().getSearchQueryData().isSns())
+		{
+			target.setAllBrand(buildSubBrands(source.getSearchResult()));
+			target.setAllSeller(buildSubSeller(source.getSearchResult()));
+			target.setSnsCategories(buildCategories(source.getSearchResult()));
+			target.setMicrositeSnsCategories(buildMicrositeSNSCategories(source.getSearchResult()));
+		}
+
 		target.setDeptType(builddeptType(source.getSearchResult()));
-		target.setMicrositeSnsCategories(buildMicrositeSNSCategories(source.getSearchResult()));
+
 
 	}
 

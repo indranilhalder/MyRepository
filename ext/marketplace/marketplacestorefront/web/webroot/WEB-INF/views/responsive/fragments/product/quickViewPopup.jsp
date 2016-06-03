@@ -104,6 +104,7 @@ tr.d0 td {
 	 
 	//AKAMAI Fix
 	 setSizeforAkamai();
+	 //setBuyBoxDetails();
 	 
 	 getRating_Qview('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 
@@ -277,6 +278,7 @@ display:none;
 }
 </style>
 
+
 <c:set var="image"><spring:theme code='quickview.image'/></c:set>
 <c:set var="video"><spring:theme code='quickview.video'/></c:set>
 <c:set var="cod_y"><spring:theme code='cod.eligible.yes'/></c:set>
@@ -350,8 +352,9 @@ display:none;
 		  <span ><spring:theme code="product.cod"/></span> 
 		  </div>
 	 </c:if> --%>
-		<c:if test="${isNew=='true'}">
-		 <div id ="newProduct" style="z-index: 1;display:none;" class="new new-product">
+	 
+	<c:if test="${isNew=='Y'}">
+		 <div id ="newProduct" style="z-index: 1;display:inline;" class="new new-product">
 					<img class="brush-strokes-sprite sprite-New"
 					src="/_ui/responsive/common/images/transparent.png"><span>New</span>
 					</div>
