@@ -39,6 +39,7 @@ public class InternalExternalCampaignAutomationJob extends AbstractJobPerformabl
 		final List<InternalCampaignReportData> bannerAutomationReport = automationService.automationGetAllBanner();
 		LOG.info("Automation Ran with Map:" + bannerAutomationReport);
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
+
 	}
 
 }
