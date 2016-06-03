@@ -5,7 +5,7 @@
 <script type="text/javascript"
 	src="${commonResourcePath}/js/minified/plugins.min.js<%-- ?clear=${minificationTimeStamp} --%>"></script>
 <script type="text/javascript"
-	src="${commonResourcePath}/js/minified/tmpmain.min.js?v=7648851"></script>
+	src="${commonResourcePath}/js/minified/tmpmain.min.js?v=76488512"></script>
 <c:if test="${isIAEnabled}">
 	<script type="text/javascript"
 		src="${commonResourcePath}/js/minified/ia.min.js<%-- ?clear=${minificationTimeStamp} --%>"></script>
