@@ -64,21 +64,24 @@
 		</div>
 	
 		<div class="left-block">
-		<cms:pageSlot position="ProductLeftRefinements" var="feature">
+		<%-- <cms:pageSlot position="ProductLeftRefinements" var="feature">
 			<cms:component component="${feature}" />
-		</cms:pageSlot>
-</div>
+		</cms:pageSlot> --%>
+		<product:productrefinementcomponent/>
+		</div>
 
-		<cms:pageSlot position="SearchResultsGridSlot" var="feature">
+		<%-- <cms:pageSlot position="SearchResultsGridSlot" var="feature">
 			<cms:component component="${feature}" />
-		</cms:pageSlot>
+		</cms:pageSlot> --%>
+		<product:searchresultsgridcomponent/>
 		
 	</div>
 
 	<div class="feedBack-block">
-		<cms:pageSlot position="FeedBackSlot" var="feature">
+		<%-- <cms:pageSlot position="FeedBackSlot" var="feature">
 			<cms:component component="${feature}" />
-		</cms:pageSlot>
+		</cms:pageSlot> --%>
+		<product:feedBack/>
 	</div>
 	<product:productCompare/> 
 	
