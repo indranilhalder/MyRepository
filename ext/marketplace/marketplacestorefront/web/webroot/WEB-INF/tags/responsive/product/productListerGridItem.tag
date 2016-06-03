@@ -352,12 +352,6 @@
 
 <script>
 	$(document).ready(function() {
-		window.onload = function closing() {
-			$("#zoomModal, #videoModal").modal('hide');
-			$("#zoomModal, #videoModal").removeClass("active");
-			var x = $("#player").attr('src');
-			var z = $("#player").attr('src', x+"&autoplay=0");
-		}
 		$.each($(".facet-name js-facet-name").find("h3"), function() {
 			if ($(this).text() == "Departments") {
 				$(this).remove();
