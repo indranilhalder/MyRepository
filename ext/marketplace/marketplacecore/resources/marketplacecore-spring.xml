@@ -263,6 +263,15 @@
 		<property name="mediaFormat" value="252Wx374H" />
 
 	</bean>
+	<bean id="newSearchImageHovervalueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.NewCustomSearchImageValueProvider">
+
+		<property name="mediaService" ref="mediaService" />
+		<property name="mediaContainerService" ref="mediaContainerService" />
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mediaFormat" value="252Wx374H" />
+
+	</bean>
 	<!-- Value Provider to display Serach Page Image - End -->
 
 
