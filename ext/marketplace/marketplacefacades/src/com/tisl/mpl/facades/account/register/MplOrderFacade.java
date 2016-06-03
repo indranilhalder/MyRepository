@@ -166,12 +166,4 @@ public interface MplOrderFacade
 	 */
 	OrderModel getOrder(String orderCode);
 
-	/**
-	 *
-	 * TISPT-175
-	 *
-	 * @param orderModel
-	 * @return OrderData
-	 */
-	OrderData getOrderDetailsForCode(OrderModel orderModel);
 }

@@ -1123,19 +1123,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 
 	/**
-	 * This method returns order data for order model for TISPT-175
-	 * 
-	 * @param orderModel
-	 * @return OrderData
-	 */
-	@Override
-	public OrderData getOrderDetailsForCode(final OrderModel orderModel)
-	{
-		return getOrderConverter().convert(orderModel);
-	}
-
-
-	/**
 	 * @return the customerAccountService
 	 */
 	public CustomerAccountService getCustomerAccountService()

@@ -1226,8 +1226,10 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 
 	/**
-	 * This method returns orderData based on orderModel
-	 * 
+	 * This method returns orderData based on orderModel for TISPT-175. This method is replication of
+	 * getOrderDetailsForCode(orderCode) but the only difference is it takes order model as parameter to minimize another
+	 * db hit
+	 *
 	 * @param orderModel
 	 * @return OrderData
 	 */
@@ -1238,7 +1240,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			OrderData orderData = null;
 
-			final PriceData deliveryCost = createPrice(orderModel, orderModel.getDeliveryCost());
+			final PriceData deliveryCost = createPrice(orderModel,
+					null == orderModel.getDeliveryCost() ? Double.valueOf(0.0) : orderModel.getDeliveryCost());
 			//TISBOX-1417 Displaying COD value in order confirmation page
 			PriceData convenienceCharge = null;
 			PriceData totalPriceWithConvenienceCharge = null;
@@ -1252,15 +1255,17 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				totalPriceWithConvenienceCharge = createPrice(orderModel, orderModel.getTotalPriceWithConv());
 			}
 
-
 			//skip the order if product is missing in the order entries
-			for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
+			if (CollectionUtils.isNotEmpty(orderModel.getEntries()))
 			{
-				if (null == orderEntry.getProduct()) // it means somehow product is deleted from the order entry.
+				for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 				{
-					LOG.info("************************Skipping order history for order :" + orderModel.getCode() + " and for user: "
-							+ orderModel.getUser().getName() + " **************************");
-					return null;
+					if (null == orderEntry.getProduct()) // it means somehow product is deleted from the order entry.
+					{
+						LOG.info("************************Skipping order history for order :" + orderModel.getCode() + " and for user: "
+								+ orderModel.getUser().getName() + " **************************");
+						return null;
+					}
 				}
 			}
 
@@ -1280,12 +1285,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			final List<OrderData> sellerOrderList = new ArrayList<OrderData>();
 			for (final OrderModel sellerOrder : orderModel.getChildOrders())
 			{
-				final PriceData childDeliveryCost = createPrice(sellerOrder, sellerOrder.getDeliveryCost());
+				final PriceData childDeliveryCost = createPrice(sellerOrder,
+						null != sellerOrder.getDeliveryCost() ? sellerOrder.getDeliveryCost() : Double.valueOf(0.0));
 				final OrderData sellerOrderData = getOrderConverter().convert(sellerOrder);
 				//orderData.setDeliveryCost(childDeliveryCost);
 				sellerOrderData.setDeliveryCost(childDeliveryCost);
-				sellerOrderData.setPickupName(orderModel.getPickupPersonName());
-				sellerOrderData.setPickupPhoneNumber(orderModel.getPickupPersonMobile());
+				sellerOrderData.setPickupName(
+						StringUtils.isNotEmpty(orderModel.getPickupPersonName()) ? orderModel.getPickupPersonName() : "");
+				sellerOrderData.setPickupPhoneNumber(
+						StringUtils.isNotEmpty(orderModel.getPickupPersonMobile()) ? orderModel.getPickupPersonMobile() : "");
 				sellerOrderList.add(sellerOrderData);
 			}
 			orderData.setSellerOrderList(sellerOrderList);
@@ -1293,11 +1301,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		}
 		catch (final IllegalArgumentException ex)
 		{
-
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 		catch (final NullPointerException ex)
-
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
