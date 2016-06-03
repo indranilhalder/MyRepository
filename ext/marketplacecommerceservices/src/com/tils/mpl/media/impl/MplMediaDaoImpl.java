@@ -61,10 +61,10 @@ public class MplMediaDaoImpl implements MplMediaDao
 			queryString.append(mediaFormatList);
 			queryString.append(")");
 
-			LOG.debug("QueryStringFetchingMediaforSearch" + queryString.toString());
+			LOG.debug("QueryStringFetchingMediaforSearch::" + queryString.toString());
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
 			query.addQueryParameter("catalogVersion", "Online");
-			query.addQueryParameter("containerPK", container.getPk());
+			query.addQueryParameter("containerPK", container);
 			return flexibleSearchService.<MediaModel> search(query).getResult();
 
 		}
