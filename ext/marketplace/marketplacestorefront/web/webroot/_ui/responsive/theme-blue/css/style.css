@@ -18355,7 +18355,8 @@ font-weight: 600;
 .product-facet .facet .facet-list {		
 	padding-left: 0;		
 	list-style: none;		
-	margin: 10px 5px;		
+	margin: 10px 5px;
+	word-break:break-word;		
 }	
 		
 .product-facet .facet .facet-list li {		
@@ -31775,7 +31776,16 @@ body .account .right-account .order-history .product-block li.item .product-name
 		height: 30px;
 	}
 	}
+	@media(max-width:650px){
+body .account .right-account ul.saved-cards>li a.make-default{
+top: 5px;
+}
 
+.checkout.wrapper .left-block .button {
+    width: 100%;
+    max-width: 250px;
+} 
+}
 /*--------------maincss-----------*/
 .row
 {

@@ -18,13 +18,13 @@ import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCheckoutController;
-import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.GuestRegisterForm;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.GuestRegisterValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.security.AutoLoginStrategy;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
+import de.hybris.platform.commercefacades.order.OrderFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.ProductFacade;
@@ -32,17 +32,15 @@ import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commerceservices.customer.CustomerAccountService;
-import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
-import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
 
 import java.util.ArrayList;
@@ -54,7 +52,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -63,7 +60,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,6 +74,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
+import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -157,6 +154,11 @@ public class CheckoutController extends AbstractCheckoutController
 
 	@Resource(name = "mplSellerInformationService")
 	private MplSellerInformationService mplSellerInformationService;
+
+	@Autowired
+	private OrderFacade orderFacade;//TISPT-175
+	@Autowired
+	private MplOrderFacade mplOrderFacade;//TISPT-175
 
 	/**
 	 * @return the modelService
@@ -276,9 +278,14 @@ public class CheckoutController extends AbstractCheckoutController
 	public String orderConfirmation(@PathVariable("orderCode") final String orderCode, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException
 	{
+		OrderModel orderModel = null;
+		OrderData orderDetails = null;
 		try
 		{
-			wishlistFacade.removeProductFromWL(orderCode);
+			orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
+			orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderModel); //TISPT-175 --- order details : reduce same call from two places
+			//wishlistFacade.removeProductFromWL(orderCode);
+			wishlistFacade.remProdFromWLForConf(orderDetails, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
 			// for MSD
 			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
@@ -286,6 +293,12 @@ public class CheckoutController extends AbstractCheckoutController
 			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
 			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 			//End MSD
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			LOG.error(MessageConstants.EXCEPTION_IS, e);
+			frontEndErrorHelper.callBusinessError(model, e.getMessage());
+			return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -302,18 +315,20 @@ public class CheckoutController extends AbstractCheckoutController
 			frontEndErrorHelper.callNonBusinessError(model, e.getErrorMessage());
 			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
-		return processOrderCode(orderCode, model, request);
+		//return processOrderCode(orderCode, model, request);	//TISPT-175 : Changing method parameters
+		return processOrderCode(orderCode, orderModel, orderDetails, model, request); //TISPT-175 : Changing method parameters
 	}
 
 
-	@RequestMapping(value = "/orderConfirmation/" + ORDER_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.POST)
-	public String orderConfirmation(final GuestRegisterForm form, final BindingResult bindingResult, final Model model,
-			final HttpServletRequest request, final HttpServletResponse response, final RedirectAttributes redirectModel)
-			throws CMSItemNotFoundException
-	{
-		getGuestRegisterValidator().validate(form, bindingResult);
-		return processRegisterGuestUserRequest(form, bindingResult, model, request, response, redirectModel);
-	}
+	//TISPT-175 ---- Not used
+	//	@RequestMapping(value = "/orderConfirmation/" + ORDER_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.POST)
+	//	public String orderConfirmation(final GuestRegisterForm form, final BindingResult bindingResult, final Model model,
+	//			final HttpServletRequest request, final HttpServletResponse response, final RedirectAttributes redirectModel)
+	//					throws CMSItemNotFoundException
+	//	{
+	//		getGuestRegisterValidator().validate(form, bindingResult);
+	//		return processRegisterGuestUserRequest(form, bindingResult, model, request, response, redirectModel);
+	//	}
 
 	/**
 	 * Method used to determine the checkout redirect URL that will handle the checkout process.
@@ -326,97 +341,107 @@ public class CheckoutController extends AbstractCheckoutController
 		return REDIRECT_PREFIX + "/checkout/multi";
 	}
 
-	protected String processRegisterGuestUserRequest(final GuestRegisterForm form, final BindingResult bindingResult,
-			final Model model, final HttpServletRequest request, final HttpServletResponse response,
-			final RedirectAttributes redirectModel) throws CMSItemNotFoundException
-	{
-		if (bindingResult.hasErrors())
-		{
-			GlobalMessages.addErrorMessage(model, "form.global.error");
-			return processOrderCode(form.getOrderCode(), model, request);
-		}
-		try
-		{
-			getCustomerFacade().changeGuestToCustomer(form.getPwd(), form.getOrderCode());
-			getAutoLoginStrategy().login(getCustomerFacade().getCurrentCustomer().getUid(), form.getPwd(), request, response);
-			getSessionService().removeAttribute(WebConstants.ANONYMOUS_CHECKOUT);
-		}
-		catch (final DuplicateUidException e)
-		{
-			// User already exists
-			LOG.error("guest registration failed: " + e);
-			model.addAttribute(new GuestRegisterForm());
-			GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
-					"guest.checkout.existingaccount.register.error", new Object[]
-					{ form.getUid() });
-			return REDIRECT_PREFIX + request.getHeader("Referer");
-		}
 
-		catch (final EtailBusinessExceptions e)
-		{
-			LOG.error(MessageConstants.EXCEPTION_IS, e);
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
-			return REDIRECT_PREFIX + request.getHeader("Referer");
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			LOG.error(MessageConstants.EXCEPTION_IS, e);
-			frontEndErrorHelper.callNonBusinessError(model, e.getErrorMessage());
-			return REDIRECT_PREFIX + request.getHeader("Referer");
-		}
 
-		return REDIRECT_PREFIX + "/my-account";
-	}
+	//TISPT-175 ---- Not used
+	//	protected String processRegisterGuestUserRequest(final GuestRegisterForm form, final BindingResult bindingResult,
+	//			final Model model, final HttpServletRequest request, final HttpServletResponse response,
+	//			final RedirectAttributes redirectModel) throws CMSItemNotFoundException
+	//	{
+	//		if (bindingResult.hasErrors())
+	//		{
+	//			GlobalMessages.addErrorMessage(model, "form.global.error");
+	//			return processOrderCode(form.getOrderCode(), model, request);
+	//		}
+	//		try
+	//		{
+	//			getCustomerFacade().changeGuestToCustomer(form.getPwd(), form.getOrderCode());
+	//			getAutoLoginStrategy().login(getCustomerFacade().getCurrentCustomer().getUid(), form.getPwd(), request, response);
+	//			getSessionService().removeAttribute(WebConstants.ANONYMOUS_CHECKOUT);
+	//		}
+	//		catch (final DuplicateUidException e)
+	//		{
+	//			// User already exists
+	//			LOG.error("guest registration failed: " + e);
+	//			model.addAttribute(new GuestRegisterForm());
+	//			GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
+	//					"guest.checkout.existingaccount.register.error", new Object[]
+	//			{ form.getUid() });
+	//			return REDIRECT_PREFIX + request.getHeader("Referer");
+	//		}
+	//
+	//		catch (final EtailBusinessExceptions e)
+	//		{
+	//			LOG.error(MessageConstants.EXCEPTION_IS, e);
+	//			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+	//			frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
+	//			return REDIRECT_PREFIX + request.getHeader("Referer");
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+	//			LOG.error(MessageConstants.EXCEPTION_IS, e);
+	//			frontEndErrorHelper.callNonBusinessError(model, e.getErrorMessage());
+	//			return REDIRECT_PREFIX + request.getHeader("Referer");
+	//		}
+	//
+	//		return REDIRECT_PREFIX + "/my-account";
+	//	}
 
 	/*
 	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-	 * 
+	 *
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
-	 * 
+	 *
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
 	@SuppressWarnings("boxing")
-	protected String processOrderCode(final String orderCode, final Model model, final HttpServletRequest request)
-			throws CMSItemNotFoundException
-	{
+	//	protected String processOrderCode(final String orderCode, final Model model, final HttpServletRequest request)
+	//			throws CMSItemNotFoundException TISPT-175
+	protected String processOrderCode(final String orderCode, final OrderModel orderModel, final OrderData orderDetails,
+			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
 
+	{
 		try
 		{
-			final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
-			final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
-			final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout() ? getCustomerAccountService()
-					.getOrderDetailsForGUID(orderCode, baseStoreModel) : getCustomerAccountService().getOrderForCode(
-					(CustomerModel) getUserService().getCurrentUser(), orderCode, baseStoreModel);
-
+			//final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			//			final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
+			//			final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout()
+			//					? getCustomerAccountService().getOrderDetailsForGUID(orderCode, baseStoreModel)
+			//					: getCustomerAccountService().getOrderForCode((CustomerModel) getUserService().getCurrentUser(), orderCode,
+			//							baseStoreModel);
+			//TISPT-175
 			long totalItemCount = 0L;
 
 			if (orderDetails != null)
 			{
-
-				final List<OrderEntryData> orderEntryList = orderDetails.getEntries();
-
-				if (orderDetails.isGuestCustomer()
-						&& !StringUtils.substringBefore(orderDetails.getUser().getUid(), "|").equals(
-								getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID)))
+				//final List<OrderEntryData> orderEntryList = orderDetails.getEntries();	//TISPT-175 : check it below return
+				if (orderDetails.isGuestCustomer() && !StringUtils.substringBefore(orderDetails.getUser().getUid(), "|")
+						.equals(getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID)))
 				{
 					return getCheckoutRedirectUrl();
 				}
 
-				if (orderDetails.getEntries() != null && !orderDetails.getEntries().isEmpty())
+				final List<OrderEntryData> orderEntryList = orderDetails.getEntries(); //TISPT-175
+
+				//if (orderDetails.getEntries() != null && !orderDetails.getEntries().isEmpty())	//TISPT-175
+				if (CollectionUtils.isNotEmpty(orderEntryList))
 				{
-					for (final OrderEntryData entry : orderDetails.getEntries())
+					//for (final OrderEntryData entry : orderDetails.getEntries())	//TISPT-175
+					for (final OrderEntryData entry : orderEntryList) //TISPT-175
 					{
-						final String productCode = entry.getProduct().getCode();
-						final ProductData product = productFacade.getProductForCodeAndOptions(productCode,
-								Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
-						entry.setProduct(product);
+						if (entry != null && entry.getProduct() != null) //TISPT-175
+						{
+							final String productCode = entry.getProduct().getCode();
+							final ProductData product = productFacade.getProductForCodeAndOptions(productCode,
+									Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
+							entry.setProduct(product);
+						}
 					}
 				}
 
@@ -440,7 +465,8 @@ public class CheckoutController extends AbstractCheckoutController
 					}
 					final String promotionMssg = RECEIVED_INR + totalDiscount + DISCOUNT_MSSG;
 					model.addAttribute("promotionMssg", promotionMssg);
-					final String date = mplCheckoutFacade.ordinalDate(orderCode);
+					//final String date = mplCheckoutFacade.ordinalDate(orderCode); //TISPT-175
+					final String date = mplCheckoutFacade.ordinalDate(orderDetails); //TISPT-175
 					model.addAttribute("date", date);
 				}
 
@@ -484,13 +510,13 @@ public class CheckoutController extends AbstractCheckoutController
 				{
 					if (orderModel.getStatus().equals(OrderStatus.RMS_VERIFICATION_PENDING))
 					{
-						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
-								.getString(ModelAttributetConstants.ORDER_CONF_HELD));
+						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG,
+								getConfigurationService().getConfiguration().getString(ModelAttributetConstants.ORDER_CONF_HELD));
 					}
 					else if (orderModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 					{
-						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG, getConfigurationService().getConfiguration()
-								.getString(ModelAttributetConstants.ORDER_CONF_SUCCESS));
+						model.addAttribute(ModelAttributetConstants.ORDER_STATUS_MSG,
+								getConfigurationService().getConfiguration().getString(ModelAttributetConstants.ORDER_CONF_SUCCESS));
 					}
 				}
 
@@ -573,8 +599,8 @@ public class CheckoutController extends AbstractCheckoutController
 			final String selectedDeliveryMode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 			final MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(selectedDeliveryMode,
 					MarketplacecommerceservicesConstants.INR, selectedUSSID);
-			String startValue = deliveryModel.getDeliveryMode().getStart() != null ? deliveryModel.getDeliveryMode().getStart()
-					.toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+			String startValue = deliveryModel.getDeliveryMode().getStart() != null
+					? deliveryModel.getDeliveryMode().getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 			String endValue = deliveryModel.getDeliveryMode().getEnd() != null ? deliveryModel.getDeliveryMode().getEnd().toString()
 					: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 			List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
@@ -585,8 +611,8 @@ public class CheckoutController extends AbstractCheckoutController
 				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 				if (CollectionUtils.isNotEmpty(richAttributeModel))
 				{
-					leadTime = richAttributeModel.get(0).getLeadTimeForHomeDelivery() != null ? richAttributeModel.get(0)
-							.getLeadTimeForHomeDelivery() : Integer.valueOf(0);
+					leadTime = richAttributeModel.get(0).getLeadTimeForHomeDelivery() != null
+							? richAttributeModel.get(0).getLeadTimeForHomeDelivery() : Integer.valueOf(0);
 				}
 				LOG.debug(" >> Lead time for Home delivery  " + leadTime);
 			}

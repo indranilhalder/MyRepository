@@ -36,7 +36,6 @@ import com.tisl.mpl.jalo.EtailExcludeSellerSpecificRestriction;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
 import com.tisl.mpl.jalo.ExcludeManufacturesRestriction;
 import com.tisl.mpl.jalo.ManufacturesRestriction;
-import com.tisl.mpl.jalo.SellerInformation;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
@@ -228,7 +227,7 @@ public class GenericUtilityMethods
 	 */
 	public static boolean isProductExcluded(final Product product, final List<Product> excludedProductList)
 	{
-		if (null != excludedProductList && excludedProductList.contains(product))
+		if (CollectionUtils.isNotEmpty(excludedProductList) && excludedProductList.contains(product))
 		{
 			LOG.debug("Product code:" + product.getCode() + " is in the excluded list.");
 			return true;
@@ -294,7 +293,7 @@ public class GenericUtilityMethods
 		boolean flag = false;
 		if (null != excludedManufactureList)
 		{
-			flag = getDefaultPromotionsManager().brandDataCheck(excludedManufactureList, product);
+			flag = getDefaultPromotionsManager().excludeBrandDataCheck(excludedManufactureList, product);
 		}
 
 		return flag;
@@ -566,7 +565,7 @@ public class GenericUtilityMethods
 	{
 		boolean excludeSellerFlag = false;
 		boolean checkFlag = false;
-		List<SellerInformation> sellerData = null;
+		List<SellerMaster> sellerData = null;
 		try
 		{
 			if (null == restrictionList || restrictionList.isEmpty())
@@ -575,24 +574,26 @@ public class GenericUtilityMethods
 			}
 			else
 			{
-				if (null != productSellerData)
+				if (CollectionUtils.isNotEmpty(productSellerData))
 				{
 					for (final AbstractPromotionRestriction restriction : restrictionList)
 					{
 						if (restriction instanceof EtailExcludeSellerSpecificRestriction)
 						{
-							final EtailExcludeSellerSpecificRestriction etailExcludeSellerSpecificRestriction = (EtailExcludeSellerSpecificRestriction) restriction;
-							sellerData = etailExcludeSellerSpecificRestriction.getSellerDetailsList();
-							for (final SellerInformation seller : sellerData)
+							final EtailExcludeSellerSpecificRestriction excludeSellerRestrict = (EtailExcludeSellerSpecificRestriction) restriction;
+							sellerData = excludeSellerRestrict.getSellerMasterList();
+
+							for (final SellerMaster seller : sellerData)
 							{
-								for (final SellerInformationModel specificSeller : productSellerData)
+								for (final SellerInformationModel speficSeller : productSellerData)
 								{
-									if (seller.getSellerID().equalsIgnoreCase(specificSeller.getSellerID()))
+									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
 									{
 										checkFlag = true;
 									}
 								}
 							}
+
 							if (checkFlag)
 							{
 								excludeSellerFlag = true;
@@ -603,9 +604,15 @@ public class GenericUtilityMethods
 								excludeSellerFlag = false;
 								break;
 							}
+
+						}
+						else
+						{
+							excludeSellerFlag = false;
 						}
 					}
 				}
+
 			}
 		}
 		catch (final Exception e)
