@@ -1158,7 +1158,7 @@ $( document ).ready(function() {
 	//alert("----"+productCode);
 	
 	//changes done to restrict buybox AJAX call from every page.
-	if(typeof productCode === 'undefined')
+	if(typeof productCode === 'undefined' || $('#pageType').val()=='cart')
 		{
 		return false;
 		}
