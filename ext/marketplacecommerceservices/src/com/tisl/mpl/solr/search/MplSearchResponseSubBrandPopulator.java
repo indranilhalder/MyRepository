@@ -45,7 +45,7 @@ public class MplSearchResponseSubBrandPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXE
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -101,12 +101,12 @@ public class MplSearchResponseSubBrandPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXE
 	 * final Facet brandPathFacet = solrSearchResult.getFacet(MarketplacecommerceservicesConstants.BRAND); final
 	 * List<String> allBrands = new ArrayList<String>(); if ((brandPathFacet != null) &&
 	 * !(brandPathFacet.getFacetValues().isEmpty())) {
-	 *
+	 * 
 	 * for (final FacetValue facetValue : brandPathFacet.getFacetValues()) { allBrands.add(facetValue.getName()); }
-	 *
+	 * 
 	 * }
-	 *
-	 *
+	 * 
+	 * 
 	 * return allBrands; }
 	 */
 
@@ -152,14 +152,14 @@ public class MplSearchResponseSubBrandPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXE
 	 * @param categoryModel
 	 * @return List<CategoryModel>
 	 */
-	private List<CategoryModel> addCategoryToBrand(final CategoryModel categoryModel, final List<CategoryModel> allBrands)
-	{
-		if (categoryModel != null)
-		{
-			allBrands.add(categoryModel);
-		}
-		return allBrands;
-	}
+	//	private List<CategoryModel> addCategoryToBrand(final CategoryModel categoryModel, final List<CategoryModel> allBrands)
+	//	{
+	//		if (categoryModel != null)
+	//		{
+	//			allBrands.add(categoryModel);
+	//		}
+	//		return allBrands;
+	//	}
 
 
 	/**
