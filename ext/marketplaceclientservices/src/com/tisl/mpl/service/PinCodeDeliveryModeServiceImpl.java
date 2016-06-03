@@ -1,6 +1,8 @@
 package com.tisl.mpl.service;
 
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringReader;
@@ -18,6 +20,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 //import com.hybris.oms.api.comm.dto.PincodeServiceabilityCheck;
@@ -88,6 +91,11 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	{
 		return configurationService;
 	}
+
+	@Autowired
+	private CartService cartService;
+
+	//public MplCartFacade MplCartFacade;
 
 	/**
 	 * @param configurationService
@@ -342,7 +350,6 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	}
 
 
-
 	/*
 	 * @desc used for validate connect timeout and read time out exceptions from oms rest call for pincode serviceabilty
 	 * and inventory reservation
@@ -458,6 +465,12 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						}
 						storeLocatorList.add(storelocreqObj);
 					}
+				}
+				final CartModel cartModel = cartService.getSessionCart();
+				if(null != cartModel && null != cartModel.getGuid()) 
+				{
+					storeLocatorRequest.setCartId(cartModel.getGuid());
+					LOG.debug("Cart ID is :"+cartModel.getGuid());
 				}
 				storeLocatorRequest.setItem(storeLocatorList);
 				LOG.debug("****************calls to oms to get valid stores having inventories*************");
