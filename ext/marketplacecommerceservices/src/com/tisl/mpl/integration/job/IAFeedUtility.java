@@ -227,7 +227,7 @@ public class IAFeedUtility
 					count = 0;
 				}
 			}
-			connection.commit();
+			
 
 
 		}
