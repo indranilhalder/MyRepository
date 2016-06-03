@@ -1158,7 +1158,7 @@ $( document ).ready(function() {
 	//alert("----"+productCode);
 	
 	//changes done to restrict buybox AJAX call from every page.
-	if(typeof productCode === 'undefined')
+	if(typeof productCode === 'undefined' || $('#pageType').val()=='cart')
 		{
 		return false;
 		}
@@ -1478,6 +1478,61 @@ function openPopForBankEMI() {
 		}
 	});
 }
+
+
+//TISPRO-533
+
+$( "#bankNameForEMI" ).change(function() {
+	var productVal = $("#prodPrice").val();
+		
+		var selectedBank = $('#bankNameForEMI :selected').text();
+		var contentData = '';
+		if (selectedBank != "select") {
+			var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
+			$.ajax({
+				url : ACC.config.encodedContextPath + "/p-getTerms",
+				data : dataString,
+				/*data : {
+					'selectedEMIBank' : selectedBank,
+					'productVal' : productVal
+				},*/
+				type : "GET",
+				cache : false,
+				success : function(data) {
+					if (data != null) {
+						$("#emiTableTHead").show();
+						$("#emiTableTbody").show();
+						for (var index = 0; index < data.length; index++) {
+							contentData += '<tr>';
+							contentData += "<td>" + data[index].term + "</td>";
+							contentData += "<td>" + data[index].interestRate
+									+ "</td>";
+							contentData += "<td>" + data[index].monthlyInstallment
+									+ "</td>";
+							contentData += "<td>" + data[index].interestPayable
+									+ "</td>";
+							contentData += '</tr>';
+						}
+
+						$("#emiTableTbody").html(contentData);
+					} else {
+						$('#emiNoData').show();
+					}
+				},
+				error : function(resp) {
+					$('#emiSelectBank').show();
+				}
+			});
+		} else {
+
+		}
+	});
+
+
+//TISPRO-533
+
+
+
 
 /**
  * This method picks up the selected bank for EMI, fetches the term period

@@ -24,7 +24,7 @@ Disallow: <c:url value="*selectedSize=*"/>
 Disallow: <c:url value="*selectedsize=*"/>
 Disallow: <c:url value="*/quickView"/>
 Disallow: <c:url value="*/quickview"/>
-Disallow: <c:url value="*/page-1"/>
+Disallow: <c:url value="*/page-1$"/>
 Disallow: <c:url value="/p-sizeGuide"/>
 Disallow: <c:url value="*msdclick=*"/>
 
