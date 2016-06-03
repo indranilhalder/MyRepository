@@ -41,4 +41,12 @@ public interface WishlistFacade
 	 * @return
 	 */
 	ProductData getBuyBoxPrice(String ussid, ProductData productData1);
+
+	/**
+	 * Desc It will fetch all wishlists for a customer/user TISPT-179
+	 *
+	 * @param userModel
+	 * @return List<Wishlist2Model>
+	 */
+	List<Wishlist2Model> getAllWishlistsForCustomer(UserModel userModel);
 }
