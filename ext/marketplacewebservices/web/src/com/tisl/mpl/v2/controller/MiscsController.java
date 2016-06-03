@@ -913,9 +913,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1213,6 +1213,12 @@ public class MiscsController extends BaseController
 			ExceptionUtil.etailNonBusinessExceptionHandler(eb);
 			resultData = setErrorStatus();
 		}
+		catch (final Exception eb)
+		{
+			LOG.debug("Error occured in getAutocompleteSuggestions :" + eb.getMessage());
+			ExceptionUtil.getCustomizedExceptionTrace(eb);
+			resultData = setErrorStatus();
+		}
 		return resultData;
 	}
 
@@ -1342,7 +1348,7 @@ public class MiscsController extends BaseController
 					 * Arrays.asList(ProductOption.BASIC, ProductOption.PRICE)); } else { throw new
 					 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); } PincodeServiceData data = null;
 					 * MarketplaceDeliveryModeData deliveryModeData = null; List<PinCodeResponseData> response = null;
-					 *
+					 * 
 					 * if (null != productData && null != productData.getSeller()) { for (final SellerInformationData seller
 					 * : productData.getSeller()) { final List<MarketplaceDeliveryModeData> deliveryModeList = new
 					 * ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if
@@ -1351,7 +1357,7 @@ public class MiscsController extends BaseController
 					 * seller.getUssid()) { deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(),
 					 * seller.getUssid()); } deliveryModeList.add(deliveryModeData); }
 					 * data.setDeliveryModes(deliveryModeList); }
-					 *
+					 * 
 					 * if (StringUtils.isNotEmpty(seller.getFullfillment())) {
 					 * data.setFullFillmentType(seller.getFullfillment()); } if
 					 * (StringUtils.isNotEmpty(seller.getShippingMode())) { data.setTransportMode(seller.getShippingMode());
@@ -1494,7 +1500,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1507,7 +1513,7 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 *
+	 * 
 	 * } return deliveryModeData; }
 	 */
 	/**

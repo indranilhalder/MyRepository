@@ -327,7 +327,7 @@ display:none;
 							<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
 						</c:if>
 						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
-							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}" />
+							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
 					    </c:if>
 					</span>
 				</li>
@@ -782,7 +782,29 @@ display:none;
 <span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span>
 
 </div>
-
+<!-- Change for Showing VIDEO ZOOM Box -->
+<div class="modal fade" id="videoModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="overlay" data-dismiss="modal" onclick="closing()"></div>
+      <div class="modal-content content"  style="width:53%; height:60%; overflow:hidden;">
+            <button type="button" class="close pull-right" 
+              onclick="closing()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">
+            </button>
+			<iframe name="videoFrame" id="player" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
+      </div>
+</div>
+<style>
+#videoModal .content > .close:before {
+    content: "\00d7";
+    color: #fff;
+    font-family: "Montserrat";
+    font-size: 17px;
+    font-weight: 600;
+    -webkit-transition: font-weight 0.15s;
+    -moz-transition: font-weight 0.15s;
+    transition: font-weight 0.15s;
+}
+</style>
  <div id="emailLoggedInIdquick" style="display: none"><spring:theme code="product.emailNonLoggedIn"/></div>
 <div id="emailSendQuick" class="emailSend">
 	

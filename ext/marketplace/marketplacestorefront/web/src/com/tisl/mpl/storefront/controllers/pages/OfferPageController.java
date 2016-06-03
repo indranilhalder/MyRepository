@@ -174,8 +174,14 @@ public class OfferPageController extends AbstractSearchPageController
 					searchQuery, page, showMode, sortCode, count);
 			populateModel(model, searchPageData, ShowMode.Page);
 			model.addAttribute("offers", Boolean.TRUE);
-			model.addAttribute("hideDepartments", Boolean.TRUE);
+			//model.addAttribute("hideDepartments", Boolean.TRUE);
 			model.addAttribute("otherProducts", true);
+			if (searchPageData != null)
+			{
+				model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+			}
+
+
 			//Code to hide the applied facet for isOfferExisting
 			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
 			{
