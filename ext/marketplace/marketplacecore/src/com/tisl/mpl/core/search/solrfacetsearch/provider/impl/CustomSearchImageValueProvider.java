@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
+import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.core.model.media.MediaContainerModel;
 import de.hybris.platform.core.model.media.MediaFormatModel;
 import de.hybris.platform.core.model.media.MediaModel;
@@ -10,6 +11,9 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.media.MediaContainerService;
 import de.hybris.platform.servicelayer.media.MediaService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.config.exceptions.FieldValueProviderException;
@@ -39,6 +43,7 @@ public class CustomSearchImageValueProvider extends AbstractPropertyFieldValuePr
 
 
 	private static final Logger LOG = Logger.getLogger(CustomSearchImageValueProvider.class);
+	private FlexibleSearchService flexibleSearchService;
 
 
 	private String mediaFormat;
@@ -126,29 +131,38 @@ public class CustomSearchImageValueProvider extends AbstractPropertyFieldValuePr
 				try
 				{
 
-					for (final MediaContainerModel container : galleryImages)
+					final String queryString = "select {media." + MediaModel.PK + "} from {" + MediaModel._TYPECODE
+							+ " as media JOIN " + MediaContainerModel._TYPECODE + " as container " + " ON {container."
+							+ MediaContainerModel.PK + "}={media." + MediaModel.MEDIACONTAINER + "} JOIN "
+							+ CatalogVersionModel._TYPECODE + " as cat ON {media." + MediaModel.CATALOGVERSION + "}={cat."
+							+ CatalogVersionModel.PK + "} JOIN " + MediaFormatModel._TYPECODE + " as mf ON {media."
+							+ MediaModel.MEDIAFORMAT + "}={mf." + MediaFormatModel.PK + "}} " + " where {media."
+							+ MediaModel.MEDIAPRIORITY + "}=?priority and {cat." + CatalogVersionModel.VERSION
+							+ "} = ?catalogVersion and {mf." + MediaFormatModel.QUALIFIER + "}= ?searchMediaFormat and {container."
+							+ MediaContainerModel.PK + "} in (" + galleryImages + ")";
+
+					final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+					query.addQueryParameter("priority", "1");
+					query.addQueryParameter("catalogVersion", "Online");
+					query.addQueryParameter("searchMediaFormat", "252Wx374H");
+
+					LOG.info("\n\nFinal media query is ===> " + query);
+
+					MediaModel media = null;
+					//					  for (final MediaContainerModel container : galleryImages) {  try { media =
+					//					  getMediaContainerService().getMediaForFormat(container, mediaFormat); } catch (final
+					//					  ModelNotFoundException e) { LOG.error("Error finding Media for the Product" + e); }
+
+					final SearchResult<MediaModel> result = flexibleSearchService.search(query);
+
+					media = result.getResult().get(0);
+
+
+					if (media != null)
 					{
-						MediaModel media = null;
-						try
-						{
-							media = getMediaContainerService().getMediaForFormat(container, mediaFormat);
-						}
-						catch (final ModelNotFoundException e)
-						{
-							LOG.error("Error finding Media for the Product" + e);
-						}
-
-						if (media != null)
-						{
-							if (media.getMediaPriority() != null && media.getMediaPriority() == 1)
-							{
-								return media;
-							}
-
-						}
+						return media;
 					}
-
-
 				}
 				catch (final ModelNotFoundException localModelNotFoundException)
 				{
