@@ -877,7 +877,8 @@ public class ProductPageController extends AbstractPageController
 			updatePageTitle(productData, model);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
-			model.addAttribute(WebConstants.BREADCRUMBS_KEY, productBreadcrumbBuilder.getBreadcrumbs(productModel));
+			final List<Breadcrumb> breadcrumbList = productBreadcrumbBuilder.getBreadcrumbs(productModel);
+			model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbList);
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
 			model.addAttribute(ModelAttributetConstants.SELLERS_SKU_ID_LIST, form.getSellersSkuListId());
 			model.addAttribute(SKU_ID_FOR_ED, form.getSkuIdForED());
@@ -930,7 +931,7 @@ public class ProductPageController extends AbstractPageController
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
-
+			populateTealiumData(productData, model, breadcrumbList);
 			//AKAMAI fix
 			if (productModel instanceof PcmProductVariantModel)
 			{
@@ -1013,7 +1014,7 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
 			model.addAttribute(SELECTED_SIZE, selectedSize);
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
-			buyBoxFacade.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU());
+			//buyBoxFacade.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU());
 			model.addAttribute(ModelAttributetConstants.BUYBOX_USSID, buyboxdata.getSellerArticleSKU());
 			model.addAttribute(ModelAttributetConstants.SP_PRICE, buyboxdata.getSpecialPrice());
 			model.addAttribute(ModelAttributetConstants.MRP_PRICE, buyboxdata.getMrp());
@@ -1032,13 +1033,22 @@ public class ProductPageController extends AbstractPageController
 					isCodEligible = seller.getIsCod();
 				}
 			}
+
+			//Remove multiple DB calls
+			final RichAttributeData richAttribute = buyBoxFacade.getRichAttributeDetails(productModel,
+					buyboxdata.getSellerArticleSKU());
+
 			model.addAttribute(ModelAttributetConstants.IS_COD_ELIGIBLE, isCodEligible);
-			model.addAttribute(IS_ONLINE_EXCLUSIVE, Boolean.valueOf(buyBoxFacade.getRichAttributeDetails(productModel,
-					buyboxdata.getSellerArticleSKU()).isOnlineExclusive()));
-			model.addAttribute(IS_NEW, Boolean.valueOf(buyBoxFacade.getRichAttributeDetails(productModel,
-					buyboxdata.getSellerArticleSKU()).getNewProduct()));
-			model.addAttribute(FULLFILMENT_TYPE, buyBoxFacade
-					.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU()).getFulfillment());
+			//model.addAttribute(IS_ONLINE_EXCLUSIVE, Boolean.valueOf(buyBoxFacade.getRichAttributeDetails(productModel,
+			//	buyboxdata.getSellerArticleSKU()).isOnlineExclusive()));
+			model.addAttribute(IS_ONLINE_EXCLUSIVE, Boolean.valueOf(richAttribute.isOnlineExclusive()));
+			//model.addAttribute(IS_NEW, Boolean.valueOf(buyBoxFacade.getRichAttributeDetails(productModel,
+			//	buyboxdata.getSellerArticleSKU()).getNewProduct()));
+			model.addAttribute(IS_NEW, richAttribute.getNewProduct());
+			//model.addAttribute(FULLFILMENT_TYPE, buyBoxFacade
+			//	.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU()).getFulfillment());
+			model.addAttribute(FULLFILMENT_TYPE, richAttribute.getFulfillment());
+
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
