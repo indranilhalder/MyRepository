@@ -1155,6 +1155,14 @@ $( document ).ready(function() {
 	$("#addToCartButton").show();
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
+	//alert("----"+productCode);
+	
+	//changes done to restrict buybox AJAX call from every page.
+	if(typeof productCode === 'undefined')
+		{
+		return false;
+		}
+	
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/buybox";
 	var dataString = 'productCode=' + productCode;
@@ -1162,6 +1170,7 @@ $( document ).ready(function() {
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
 		data : dataString,
+		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
 			if (data['sellerArticleSKU'] != undefined) {
@@ -1519,38 +1528,51 @@ function getSelectedEMIBankForPDP() {
 
 function CheckonReload()
 {
-	var contentData = '';
-	 $.ajax({
-				url : ACC.config.encodedContextPath + "/p-checkUser",
-				data : {
-				},
-				type : "GET",
-				cache : false,
-				success : function(data) {
-					if(!data)							
-						{
-							//Hiding the Comment Box if the User is not Logged In
-							//TISUATPII-470 fix
-							$('#commentsDiv .gig-comments-composebox').hide();
-							//$('#commentsDiv .gig-comments-composebox').show();
-						}
-						else
-						{
-							//Showing the Comment Box if the User is  Logged In
-							$('#commentsDiv .gig-comments-composebox').show();
-							}
-				},
-				error : function(resp) {
-					console.log( "Error Occured" );
-				}
-			});
+	//CODE change as part of PT defect TISPT-180
+	var user_id	     	= getCookie("mpl-user");
+	var user_type		= getCookie("mpl-userType");
+	//alert(user_id+"=="+user_type);
+	if(user_type =='session' && user_id=='anonymous'){
+		//Hiding the Comment Box if the User is not Logged In
+		//TISUATPII-470 fix
+		$('#commentsDiv .gig-comments-composebox').hide();
+	}
+	else{
+		//Showing the Comment Box if the User is  Logged In
+		$('#commentsDiv .gig-comments-composebox').show();
+	}
+	
+//	var contentData = '';
+//	 $.ajax({
+//				url : ACC.config.encodedContextPath + "/p-checkUser",
+//				data : {
+//				},
+//				type : "GET",
+//				cache : false,
+//				success : function(data) {
+//					if(!data)							
+//						{
+//							//Hiding the Comment Box if the User is not Logged In
+//							//TISUATPII-470 fix
+//							$('#commentsDiv .gig-comments-composebox').hide();
+//							//$('#commentsDiv .gig-comments-composebox').show();
+//						}
+//						else
+//						{
+//							//Showing the Comment Box if the User is  Logged In
+//							$('#commentsDiv .gig-comments-composebox').show();
+//							}
+//				},
+//				error : function(resp) {
+//					console.log( "Error Occured" );
+//				}
+//			});
 }
 
 
 
 function getRating(key,productCode,category)
 {
-	//alert('test');
 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
 	 
 	$.getJSON(url, function(data){
@@ -1641,34 +1663,43 @@ function getRating(key,productCode,category)
 
 
 function CheckUserLogedIn() {
-	var contentData = '';
- $.ajax({
-			url : ACC.config.encodedContextPath + "/p-checkUser",
-			data : {
-				
-			},
-			type : "GET",
-			cache : false,
-			success : function(data) {
-				if(!data)							
-					{
-						gotoLogin();
-						
-					}
-					else
-					{
-							
-						//$('.gig-comments-composebox').show();
-							
-						}
-					
-								
-			},
-			error : function(resp) {
-				//alert("Error Occured");
-				console.log( "Error Occured" );
-			}
-		});
+	
+	//CODE change as part of PT defect TISPT-180
+	var user_id	     	= getCookie("mpl-user");
+	var user_type		= getCookie("mpl-userType");
+	if(user_type =='session' && user_id=='anonymous'){
+		gotoLogin();
+	}
+	
+	
+//	var contentData = '';
+// $.ajax({
+//			url : ACC.config.encodedContextPath + "/p-checkUser",
+//			data : {
+//				
+//			},
+//			type : "GET",
+//			cache : false,
+//			success : function(data) {
+//				if(!data)							
+//					{
+//						gotoLogin();
+//						
+//					}
+//					else
+//					{
+//							
+//						//$('.gig-comments-composebox').show();
+//							
+//						}
+//					
+//								
+//			},
+//			error : function(resp) {
+//				//alert("Error Occured");
+//				console.log( "Error Occured" );
+//			}
+//		});
 	
 }
 function nextImage()

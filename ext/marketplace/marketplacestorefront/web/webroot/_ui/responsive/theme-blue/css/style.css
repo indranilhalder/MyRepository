@@ -1173,7 +1173,6 @@ h2 {
             header .content .right > ul > li.sign-in .sign-in-info form button[type="submit"] {
               font-size: 12px;
               text-align: center;
-              max-width: 300px;
               letter-spacing: 1px;
               font-weight: normal;
               display: inline-block;
@@ -9498,7 +9497,9 @@ footer .banner {
   padding: 0 30px; }
   .pagination li {
     font-size: 14px;
-    display: inline-block; }
+    display: inline-block;
+    margin: 0 2px;
+     }
     .pagination li.prev, .pagination li.next {
       font-weight: 500;
       cursor:pointer; }
@@ -18354,7 +18355,8 @@ font-weight: 600;
 .product-facet .facet .facet-list {		
 	padding-left: 0;		
 	list-style: none;		
-	margin: 10px 5px;		
+	margin: 10px 5px;
+	word-break:break-word;		
 }	
 		
 .product-facet .facet .facet-list li {		
@@ -19888,16 +19890,31 @@ div.other-sellers .navigation button.next:after {
 .wishlist-content .remove-btn:hover {
 color: #ff829a;
 }
-.wishlist-content #addToCartButton{
-	  margin-bottom: 30px !important;
-  line-height: 0px !important;
-  font-size: 12px !important;
-  height: 40px !important;
-  width: 100% !important;
-  background: #A9143C !important;
-  margin-top:0px !important;
-  color: #fff;
-  
+.wishlist-content button#addToCartButtonwl {
+	margin-bottom: 30px !important;
+    line-height: 0px !important;
+    font-size: 12px !important;
+    height: 40px !important;
+    width: 100% !important;
+    background: #A9143C !important;
+    margin-top: 0px !important;
+    color: #fff;
+    letter-spacing: 1px;
+    padding: 0px 10px;
+    font-weight: 500;
+    clear: both;
+    border: 1px solid #A9143C;
+    vertical-align: middle;
+    text-transform: uppercase;
+    text-align: center;
+    font-family: "Montserrat";
+    display: block;
+    -moz-transition: background 0.3s;
+    transition: background 0.3s;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
 }
 .modal .content.emptyWishlist {
         padding: 60px 30px 60px;
@@ -27569,7 +27586,7 @@ body .account .account-header select.menu-select optgroup option{
 @media (min-width:791px){
 	header .content nav > ul > li:first-child + li > ul:hover,
 	  header .content nav > ul > li:first-child  > ul:hover{
-	  background:transparent;}
+	  background:transparent !important;}
 }
 .brand-microsite .container .yCmsComponent .simple-banner-component img{
 	width:100%;}
@@ -31742,6 +31759,32 @@ body.touchDevice .select-view .select-list.touch_click ul {
 body .account .right-account .order-history .product-block li.item .product-name a 
 {
 	text-decoration:none;
+}
+
+	@media(max-width:1024px){
+	.modal.size-guide .sizes .tables li.header>ul{
+		display: table;
+		width: 100%;
+	}
+	.modal.size-guide .sizes .tables li.header>ul>li{
+		word-break: break-word;
+		font-size: 10px;
+		line-height: 16px;
+		display: table-cell;
+		float: none;
+		vertical-align: middle;
+		height: 30px;
+	}
+	}
+	@media(max-width:650px){
+body .account .right-account ul.saved-cards>li a.make-default{
+top: 5px;
+}
+
+.checkout.wrapper .left-block .button {
+    width: 100%;
+    max-width: 250px;
+} 
 }
 /*--------------maincss-----------*/
 .row

@@ -201,8 +201,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				if (null != buyBoxMod.getMrp())
 				{
 					buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
+					buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 				}
-				buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
+
 
 				//other sellers count
 				final int sellerSize = buyboxModelList.size() - 1;
@@ -360,8 +361,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 * @return SellerInformationDataList
 	 */
 	@Override
-	public List<SellerInformationData> getsellersDetails(final String productCode)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions
+	public List<SellerInformationData> getsellersDetails(final String productCode) throws EtailNonBusinessExceptions,
+			EtailBusinessExceptions
 	{
 		final List<SellerInformationData> SellerInformationDataList = new ArrayList<SellerInformationData>();
 
@@ -433,8 +434,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					sellerData.setFullfillment(rich.getDeliveryFulfillModes().getCode());
 				}
 				if (null != rich.getPaymentModes()
-						&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode())
-								|| (PaymentModesEnum.BOTH.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
+						&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
+								.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
 
 
 				{
@@ -475,10 +476,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		final String allowNew = configurationService.getConfiguration().getString("attribute.new.display");
 		for (final SellerInformationModel seller : productModel.getSellerInformationRelator())
 		{
-			if ((seller.getSellerAssociationStatus() == null
-					|| seller.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.YES))
-					&& (null != seller.getStartDate() && new Date().after(seller.getStartDate()) && null != seller.getEndDate()
-							&& new Date().before(seller.getEndDate())))
+			if ((seller.getSellerAssociationStatus() == null || seller.getSellerAssociationStatus().equals(
+					SellerAssociationStatusEnum.YES))
+					&& (null != seller.getStartDate() && new Date().after(seller.getStartDate()) && null != seller.getEndDate() && new Date()
+							.before(seller.getEndDate())))
 			{
 				if (null != seller.getOnlineExclusive()
 						&& (OnlineExclusiveEnum.YES).toString().equalsIgnoreCase(seller.getOnlineExclusive().getCode()))
@@ -492,8 +493,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					for (final RichAttributeModel rich : seller.getRichAttribute())
 					{
 						if (null != rich.getPaymentModes()
-								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode())
-										|| (PaymentModesEnum.BOTH.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
+								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
+										.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
 
 
 						{
@@ -635,7 +636,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 *
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 

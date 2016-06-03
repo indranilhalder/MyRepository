@@ -1063,6 +1063,69 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 
 	}
+	
+	/**
+	 * @description: To find the pickup button is updatable or not
+	 * @param: OrderData
+	 * @return: true or false
+	 */
+	@Override
+	public boolean isPickUpButtonEditable(final OrderData orderDetail)
+	{
+		for (final OrderData subOrder : orderDetail.getSellerOrderList())
+		{
+			for (final OrderEntryData entry : subOrder.getEntries())
+			{
+				if (null != entry.getMplDeliveryMode()
+						&& MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(entry.getMplDeliveryMode().getCode()))
+				{
+					final List<ConsignmentStatus> statuses = getPickUpButtonDisableOptions();
+					///if atleast one entry does not contain the listed disabling options,
+					//then enable the update pickup button.
+					if (null != entry.getConsignment() && null != entry.getConsignment().getStatus()
+							&& !statuses.contains(entry.getConsignment().getStatus().getCode()))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @description: it gives the possible pickup button disable options
+	 * @param:
+	 * @return: List<ConsignmentStatus>
+	 */
+	@Override
+	public List<ConsignmentStatus> getPickUpButtonDisableOptions()
+	{
+		final List<ConsignmentStatus> neededStatus = new ArrayList<ConsignmentStatus>();
+		neededStatus.add(ConsignmentStatus.RETURN_INITIATED);
+		neededStatus.add(ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND);
+		neededStatus.add(ConsignmentStatus.RETURN_TO_ORIGIN);
+		neededStatus.add(ConsignmentStatus.LOST_IN_TRANSIT);
+		neededStatus.add(ConsignmentStatus.REVERSE_AWB_ASSIGNED);
+		neededStatus.add(ConsignmentStatus.RETURN_RECEIVED);
+		neededStatus.add(ConsignmentStatus.RETURN_CLOSED);
+		neededStatus.add(ConsignmentStatus.RETURN_CANCELLED);
+		neededStatus.add(ConsignmentStatus.REDISPATCH_INITIATED);
+		neededStatus.add(ConsignmentStatus.CLOSED_ON_RETURN_TO_ORIGIN);
+		neededStatus.add(ConsignmentStatus.REFUND_INITIATED);
+		neededStatus.add(ConsignmentStatus.REFUND_IN_PROGRESS);
+		neededStatus.add(ConsignmentStatus.RETURN_REJECTED);
+		neededStatus.add(ConsignmentStatus.QC_FAILED);
+		neededStatus.add(ConsignmentStatus.CLOSED_ON_CANCELLATION);
+		neededStatus.add(ConsignmentStatus.CANCELLATION_INITIATED);
+		neededStatus.add(ConsignmentStatus.RETURN_COMPLETED);
+		neededStatus.add(ConsignmentStatus.ORDER_CANCELLED);
+		neededStatus.add(ConsignmentStatus.ORDER_COLLECTED);
+		neededStatus.add(ConsignmentStatus.ORDER_UNCOLLECTED);
+		neededStatus.add(ConsignmentStatus.RETURNINITIATED_BY_RTO);
+		return neededStatus;
+	}
+
 
 	/**
 	 * @return the mplSellerInformationService

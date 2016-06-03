@@ -135,6 +135,7 @@ import com.tisl.mpl.exceptions.UnsupportedRequestException;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
+import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
@@ -146,13 +147,10 @@ import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculation
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
-import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.order.data.CartDataList;
 import com.tisl.mpl.order.data.OrderEntryDataList;
 import com.tisl.mpl.product.data.PromotionResultDataList;
 import com.tisl.mpl.request.support.impl.PaymentProviderRequestSupportedStrategy;
-import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.stock.CommerceStockFacade;
 import com.tisl.mpl.user.data.AddressDataList;
@@ -256,7 +254,8 @@ public class CartsController extends BaseCommerceController
 	@Resource(name = "binService")
 	private BinService binService;
 
-
+	@Resource(name = "mplStoreLocatorFacade")
+	private MplStoreLocatorFacade mplStoreLocatorFacade;
 
 	/**
 	 * @return the binService
@@ -302,8 +301,6 @@ public class CartsController extends BaseCommerceController
 	@Resource(name = "mplSlaveMasterFacade")
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
 
-	@Autowired
-	private MplSellerInformationFacade mplSellerInformationFacade;
 
 
 	/**
@@ -1932,7 +1929,7 @@ public class CartsController extends BaseCommerceController
 			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl);
 			final long elapsedTime = System.nanoTime() - start;
 			final float seconds = elapsedTime / 1000000000;
-			LOG.debug(String.format("addProductToCart %s ns ---%s s", elapsedTime, seconds));
+			LOG.debug(String.format("addProductToCart---" + MarketplacewebservicesConstants.LOG_TIME, elapsedTime, seconds));
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1991,7 +1988,7 @@ public class CartsController extends BaseCommerceController
 				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode);
 				final long elapsedTime = System.nanoTime() - start;
 				final float seconds = elapsedTime / 1000000000;
-				LOG.debug(String.format("addProductToCart %s ns ---%s s", elapsedTime, seconds));
+				LOG.debug(String.format("cartDetails ---" + MarketplacewebservicesConstants.LOG_TIME, elapsedTime, seconds));
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -2497,7 +2494,7 @@ public class CartsController extends BaseCommerceController
 			}
 			final long elapsedTime = System.nanoTime() - start;
 			final float seconds = elapsedTime / 1000000000;
-			LOG.debug(String.format("addProductToCart %s ns ---%s s", elapsedTime, seconds));
+			LOG.debug(String.format("productCheckout ---" + MarketplacewebservicesConstants.LOG_TIME, elapsedTime, seconds));
 		}
 		catch (final InvalidCartException ce)
 		{
@@ -2684,7 +2681,7 @@ public class CartsController extends BaseCommerceController
 
 				final long elapsedTime = System.nanoTime() - start;
 				final float seconds = elapsedTime / 1000000000;
-				LOG.debug(String.format("addProductToCart %s ns ---%s s", elapsedTime, seconds));
+				LOG.debug(String.format("displayOrderSummary ---" + MarketplacewebservicesConstants.LOG_TIME, elapsedTime, seconds));
 			}
 			else
 			{
@@ -3892,105 +3889,33 @@ public class CartsController extends BaseCommerceController
 
 		if (LOG.isDebugEnabled())
 		{
-			LOG.debug("from setStoreToCCEntry method ");
+			LOG.debug("from addStoreToCCEntry method :" + cartId + "USSID :" + USSID + "slaveId :" + slaveId);
 		}
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
 		try
 		{
 			//call service to retrieve POSModel for given posName
 			final PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSByName(slaveId);
-
 			if (null != posModel)
 			{
-
-				final SellerInformationModel sellerInfoModel = mplSellerInformationFacade.getSellerDetail(USSID);
-
-				final CartModel cartModel = mplPaymentWebFacade.findCartValues(cartId);
-				if (cartModel != null && cartModel.getEntries() != null)
+				String response = mplStoreLocatorFacade.saveStoreForSelectedProduct(posModel, USSID);
+				LOG.debug("from addStoreToCCEntry response :" + response);
+				if ("yes".equalsIgnoreCase(response))
 				{
-					for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
-					{
-						if (cartEntryModel != null)
-						{
-							//save collection days at cart entry level
-							String collDays = "";
-							if (sellerInfoModel != null)
-							{
-								final SellerMasterModel sellerMaster = sellerInfoModel.getSellerMaster();
-								if (sellerMaster != null)
-								{
-									collDays = sellerMaster.getCollectionDays();
-								}
-							}
-							else
-							{
-								LOG.debug("************ no seller found for given *********" + USSID);
-								final EtailBusinessExceptions error = new EtailBusinessExceptions(
-										MarketplacecommerceservicesConstants.B9515);
-								ExceptionUtil.etailBusinessExceptionHandler(error, null);
-								cartDataDetails.setError(error.getErrorMessage());
-								cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-								return cartDataDetails;
-
-							}
-							if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(USSID))
-							{
-								if (StringUtils.isNotEmpty(collDays))
-								{
-									cartEntryModel.setCollectionDays(Integer.valueOf(collDays));
-								}
-								else
-								{
-									cartEntryModel.setCollectionDays(Integer.valueOf(0));
-								}
-								if (null != cartEntryModel.getAssociatedItems() && cartEntryModel.getAssociatedItems().size() > 0)
-								{
-									for (final String ussid : cartEntryModel.getAssociatedItems())
-									{
-										for (final AbstractOrderEntryModel cartHasFreebieEntryModel : cartModel.getEntries())
-										{
-											if (cartHasFreebieEntryModel.getSelectedUSSID().equalsIgnoreCase(ussid))
-											{
-												//check for freebie entry
-												if (cartHasFreebieEntryModel.getGiveAway() != null
-														&& cartHasFreebieEntryModel.getGiveAway().booleanValue())
-												{
-													LOG.info("Save Store for freebie product " + cartHasFreebieEntryModel.getSelectedUSSID());
-													cartHasFreebieEntryModel.setDeliveryPointOfService(posModel);
-													modelService.save(cartHasFreebieEntryModel);
-												}
-											}
-										}
-									}
-								}
-								cartEntryModel.setDeliveryPointOfService(posModel);
-								modelService.save(cartEntryModel);
-								break;
-							}
-						}
-					}
+					LOG.debug("************ in addStoreToCCEntry :get cart details mobile web service *********" + cartId);
+					final AddressListWsDTO addressListDTO = addressList(fields);
+					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null);
+					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					return cartDataDetails;
+				}else{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9520);
 				}
-
 			}
 			else
 			{
-
-				LOG.debug("************ no store found with pos id *********" + slaveId);
-				final EtailBusinessExceptions error = new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9514);
-				ExceptionUtil.etailBusinessExceptionHandler(error, null);
-				cartDataDetails.setError(error.getErrorMessage());
-				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-				return cartDataDetails;
+				LOG.debug("************ no store found with pos name *********" + slaveId);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9514);
 			}
-
-			if (null != cartId)
-			{
-				LOG.debug("************ in addStoreToCCEntry :get cart details mobile web service *********" + cartId);
-				final AddressListWsDTO addressListDTO = addressList(fields);
-				cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null);
-				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
-			}
-
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -4000,6 +3925,7 @@ public class CartsController extends BaseCommerceController
 				cartDataDetails.setError(e.getErrorMessage());
 			}
 			cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			cartDataDetails.setErrorCode(e.getErrorCode());
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -4016,6 +3942,7 @@ public class CartsController extends BaseCommerceController
 			{
 				cartDataDetails.setError(e.getErrorMessage());
 			}
+			cartDataDetails.setErrorCode(e.getErrorCode());
 		}
 		catch (final Exception e)
 		{
@@ -4030,7 +3957,7 @@ public class CartsController extends BaseCommerceController
 
 
 	/**
-	 * Adds the pickupdetails person details to cart
+	 * Adds the pickup person details to cart
 	 *
 	 * @PathVariable cartId
 	 * @PathVariable userId

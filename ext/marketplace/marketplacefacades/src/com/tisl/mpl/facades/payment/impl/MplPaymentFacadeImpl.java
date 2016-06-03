@@ -212,41 +212,46 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * This method searches all those banks for Netbanking which have Priority field set as true and returns them in a
 	 * map with key-value pair as bankName-bankCode
 	 *
+	 * @param bankList
+	 *           //TISPT-169
 	 * @return Map<String, String>
 	 *
 	 */
 	@Override
-	public List<MplNetbankingData> getBanksByPriority() throws EtailNonBusinessExceptions
+	public List<MplNetbankingData> getBanksByPriority(final List<BankforNetbankingModel> bankList)
+			throws EtailNonBusinessExceptions
 	{
-		List<BankforNetbankingModel> bankList = new ArrayList<BankforNetbankingModel>();
+		//final List<BankforNetbankingModel> bankList = new ArrayList<BankforNetbankingModel>(); //TISPT-169
 		final List<MplNetbankingData> nbBankDataList = new ArrayList<MplNetbankingData>();
 
 		try
 		{
 			//getting the priority banks
-			bankList = getMplPaymentService().getBanksByPriority();
+			//bankList = getMplPaymentService().getBanksByPriority();
 
 			if (CollectionUtils.isNotEmpty(bankList))
 			{
 				//looping through the bank to get banks
 				for (final BankforNetbankingModel bank : bankList)
 				{
-					final MplNetbankingData netbankingData = new MplNetbankingData();
-
-					//putting the bank data
-					if (null != bank.getNbCode())
+					if (bank.getPriority().booleanValue())
 					{
-						netbankingData.setBankCode(bank.getNbCode());
+						final MplNetbankingData netbankingData = new MplNetbankingData();
+						//putting the bank data
+						if (null != bank.getNbCode())
+						{
+							netbankingData.setBankCode(bank.getNbCode());
+						}
+						if (null != bank.getName().getBankLogo())
+						{
+							netbankingData.setBankLogoUrl(bank.getName().getBankLogo().getURL());
+						}
+						if (null != bank.getName().getBankName())
+						{
+							netbankingData.setBankName(bank.getName().getBankName());
+						}
+						nbBankDataList.add(netbankingData);
 					}
-					if (null != bank.getName().getBankLogo())
-					{
-						netbankingData.setBankLogoUrl(bank.getName().getBankLogo().getURL());
-					}
-					if (null != bank.getName().getBankName())
-					{
-						netbankingData.setBankName(bank.getName().getBankName());
-					}
-					nbBankDataList.add(netbankingData);
 				}
 			}
 			else
@@ -275,27 +280,32 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * This method searches all those banks for Netbanking which have Priority field set as false and returns them in a
 	 * map with key-value pair as bankName-bankCode
 	 *
+	 * @param bankList
+	 *           //TISPT-169
 	 * @return Map<String, String>
 	 *
 	 */
 	@Override
-	public Map<String, String> getOtherBanks() throws EtailNonBusinessExceptions
+	public Map<String, String> getOtherBanks(final List<BankforNetbankingModel> bankList) throws EtailNonBusinessExceptions
 	{
-		List<BankforNetbankingModel> bankList = new ArrayList<BankforNetbankingModel>();
+		//final List<BankforNetbankingModel> bankList = new ArrayList<BankforNetbankingModel>();
 		final Map<String, String> data = new TreeMap<String, String>();
 
 		try
 		{
 			//getting the non prioritized banks
-			bankList = getMplPaymentService().getOtherBanks();
+			//bankList = getMplPaymentService().getOtherBanks();  //TISPT-169
 
 			if (CollectionUtils.isNotEmpty(bankList))
 			{
 				//looping through the bank to get banks
 				for (final BankforNetbankingModel bank : bankList)
 				{
-					//putting the bank data
-					data.put(bank.getName().getBankName(), bank.getNbCode());
+					if (!bank.getPriority().booleanValue())
+					{
+						//putting the bank data
+						data.put(bank.getName().getBankName(), bank.getNbCode());
+					}
 				}
 			}
 			else
@@ -315,8 +325,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			LOG.error(MarketplaceFacadesConstants.NONPRIORITYBANKSERROR, e);
 		}
-
-		//returning data
 		return data;
 	}
 
@@ -1476,6 +1484,37 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		LOG.debug("Time taken within Controller setBankForSavedCard()=====" + (endTime - startTime));
 
 		return sessionStatus;
+	}
+
+	/*
+	 * @Description : Fetching bank name for net banking-- TISPT-169
+	 * 
+	 * @return List<BankforNetbankingModel>
+	 * 
+	 * @throws Exception
+	 */
+	@Override
+	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception
+	{
+		List<BankforNetbankingModel> bankList = null;
+		try
+		{
+			bankList = getMplPaymentService().getNetBankingBanks();
+			if (CollectionUtils.isEmpty(bankList))
+			{
+				LOG.error("getNetBankingBanks()  getNetBankingBanks() Netbanking list is empty or null");
+				bankList = new ArrayList<BankforNetbankingModel>();
+			}
+		}
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			LOG.error(MarketplaceFacadesConstants.PRIORITYBANKSERROR, ex);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplaceFacadesConstants.PRIORITYBANKSERROR, ex);
+		}
+		return bankList;
 	}
 
 	//Getters and setters
