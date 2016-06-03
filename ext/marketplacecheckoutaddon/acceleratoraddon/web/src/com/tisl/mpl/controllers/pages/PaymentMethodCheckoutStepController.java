@@ -1874,6 +1874,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				paymentInfo.put(paymentMode, Double.valueOf(cart.getTotalPriceWithConv().doubleValue() - walletAmount));
 				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, paymentInfo);
 
+				//TISPRO-540
+				if (paymentMode.equalsIgnoreCase("Credit Card"))
+				{
+					cart.setModeOfPayment("Credit Card");
+				}
+				else if (paymentMode.equalsIgnoreCase("Debit Card"))
+				{
+					cart.setModeOfPayment("Debit Card");
+				}
+
+				else if (paymentMode.equalsIgnoreCase("Netbanking"))
+				{
+					cart.setModeOfPayment("Netbanking");
+				}
+
+				else if (paymentMode.equalsIgnoreCase("EMI"))
+				{
+					cart.setModeOfPayment("EMI");
+				}
+
 				//TISST-7955
 				final CartData promotedCartData = getMplCustomAddressFacade().getCheckoutCart();
 				final Map<String, String> ussidPricemap = new HashMap<String, String>();
