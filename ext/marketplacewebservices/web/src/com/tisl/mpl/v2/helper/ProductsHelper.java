@@ -49,6 +49,8 @@ public class ProductsHelper extends AbstractHelper
 	private SearchQueryCodec<SolrSearchQueryData> searchQueryCodec;
 	@Resource(name = "solrSearchStateConverter")
 	private Converter<SolrSearchQueryData, SearchStateData> solrSearchStateConverter;
+	@Resource(name = "defaultMplProductSearchFacade")
+	private MplProductSearchFacade searchFacade;
 
 
 	@Cacheable(value = MarketplacewebservicesConstants.PRODSEARCHCACHE, key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(false,true,'DTO',#query,#currentPage,#pageSize,#sort,#fields)")
@@ -71,8 +73,8 @@ public class ProductsHelper extends AbstractHelper
 		final SolrSearchQueryData searchQueryData = searchQueryCodec.decodeQuery(query);
 		final PageableData pageable = createPageableData(currentPage, pageSize, sort);
 
-		final ProductSearchPageData<SearchStateData, ProductData> sourceResult = productSearchFacade
-				.textSearch(solrSearchStateConverter.convert(searchQueryData), pageable);
+		final ProductSearchPageData<SearchStateData, ProductData> sourceResult = productSearchFacade.textSearch(
+				solrSearchStateConverter.convert(searchQueryData), pageable);
 		return sourceResult;
 	}
 
@@ -119,7 +121,7 @@ public class ProductsHelper extends AbstractHelper
 		final SearchQueryData searchQueryData = new SearchQueryData();
 		searchQueryData.setValue(searchQuery);
 		searchState.setQuery(searchQueryData);
-		final ProductSearchPageData<SearchStateData, ProductData> sourceResultproduct = productSearchFacade.textSearch(searchState,
+		final ProductSearchPageData<SearchStateData, ProductData> sourceResultproduct = searchFacade.textSearch(searchState,
 				pageableData);
 		return sourceResultproduct;
 	}
@@ -178,8 +180,8 @@ public class ProductsHelper extends AbstractHelper
 	}
 
 	//@Cacheable(value = "productSearchCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(false,true,'Data',#query,#currentPage,#pageSize,#sort)")
-	public ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchProductsForSeller(final String sellerId,
-			final int currentPage, final int pageSize, final String sort)
+	public ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchProductsForSeller(
+			final String sellerId, final int currentPage, final int pageSize, final String sort)
 	{
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
