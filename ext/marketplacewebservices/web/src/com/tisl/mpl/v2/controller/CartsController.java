@@ -1926,12 +1926,7 @@ public class CartsController extends BaseCommerceController
 				+ USSID + ":::: quantity ::::" + quantity + ":::: productCode ::::" + productCode);
 		try
 		{
-			final long start = System.nanoTime();
-
 			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl);
-			final long elapsedTime = System.nanoTime() - start;
-			final float seconds = elapsedTime / 1000000000;
-			LOG.debug(String.format("addProductToCart---" + MarketplacewebservicesConstants.LOG_TIME, elapsedTime, seconds));
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1986,11 +1981,7 @@ public class CartsController extends BaseCommerceController
 			if (null != cartId)
 			{
 				LOG.debug("************ get cart details mobile web service *********" + cartId);
-				final long start = System.nanoTime();
 				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode);
-				final long elapsedTime = System.nanoTime() - start;
-				final float seconds = elapsedTime / 1000000000;
-				LOG.debug(String.format("cartDetails ---" + MarketplacewebservicesConstants.LOG_TIME, elapsedTime, seconds));
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -2076,10 +2067,10 @@ public class CartsController extends BaseCommerceController
 			}
 			/*
 			 * String cartIdentifier; Collection<CartModel> cartModelList = null;
-			 * 
+			 *
 			 * cartModelList = mplCartFacade.getCartDetails(customerFacade.getCurrentCustomer().getUid());
-			 * 
-			 * 
+			 *
+			 *
 			 * if (null != cartModelList && cartModelList.size() > 0) { for (final CartModel cartModel : cartModelList) {
 			 * if (userFacade.isAnonymousUser()) { cartIdentifier = cartModel.getGuid(); } else { cartIdentifier =
 			 * cartModel.getCode(); } if (cartIdentifier.equals(cartId)) {
@@ -2432,7 +2423,6 @@ public class CartsController extends BaseCommerceController
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		try
 		{
-			final long start = System.nanoTime();
 			if (userFacade.isAnonymousUser())
 			{
 				LOG.debug("CartDetails:  AnonymousUser ");
@@ -2512,9 +2502,7 @@ public class CartsController extends BaseCommerceController
 				cartDetailsData.setError(MarketplacewebservicesConstants.CARTMODELEMPTY);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
-			final long elapsedTime = System.nanoTime() - start;
-			final float seconds = elapsedTime / 1000000000;
-			LOG.debug(String.format("productCheckout ---" + MarketplacewebservicesConstants.LOG_TIME, elapsedTime, seconds));
+
 		}
 		catch (final ConversionException ce)
 		{
@@ -2574,8 +2562,6 @@ public class CartsController extends BaseCommerceController
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		try
 		{
-			final long start = System.nanoTime();
-
 			if (userFacade.isAnonymousUser())
 			{
 				LOG.debug("CartDetails:  AnonymousUser ");
@@ -2697,11 +2683,6 @@ public class CartsController extends BaseCommerceController
 					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
 					cartDetailsData.setDelistedMessage(delistMessage);
 				}
-
-
-				final long elapsedTime = System.nanoTime() - start;
-				final float seconds = elapsedTime / 1000000000;
-				LOG.debug(String.format("displayOrderSummary ---" + MarketplacewebservicesConstants.LOG_TIME, elapsedTime, seconds));
 			}
 			else
 			{

@@ -35,7 +35,6 @@ import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.CartException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.converters.Populator;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -808,7 +807,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
 		CartModel cart = null;
-		final CartModel newCartModel = null;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		try
 		{
@@ -829,8 +827,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
 				LOG.debug("Cart Delisted Status " + deListedStatus);
 				///newCartModel = mplCartFacade.removeDeliveryMode(cart); already used in productDetails
-
-				cartDataDetails = cartDetails(newCartModel, addressListWsDTO, pincode, cartId);
+				cartDataDetails = cartDetails(cart, addressListWsDTO, pincode, cartId);
 				if (deListedStatus)
 				{
 					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
@@ -1110,7 +1107,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						{
 							LOG.debug("*************** Mobile webservice product is of type PCMPRoductVariant ********************");
 
-							final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) productModel;
+							final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) abstractOrderEntry.getProduct();
 							final String selectedCapacity = selectedVariantModel.getCapacity();
 							final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
 							if (null != baseProduct.getVariants() && null != selectedCapacity)
