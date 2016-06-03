@@ -101,6 +101,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
 				excludedProductList, excludeManufactureList, restrictionList, this);
+		//Blocked for TISPT-154
 		//		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext, // Promotion added Restriction evaluation
 		//				paramPromotionEvaluationContext);
 
@@ -115,6 +116,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 			//changes end for omni cart fix
 
+			//Blocked for TISPT-154
 			//if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // if Restrictions return valid && Channel is valid
 			if (checkChannelFlag)
 			{
