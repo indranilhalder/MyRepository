@@ -47,5 +47,14 @@ public interface WishlistFacade
 	/**
 	 * @param orderDetails
 	 */
-	void remProdFromWLForConf(OrderData orderDetails); //TISPT-175 : changing to reduce populator call multiple times
+	void remProdFromWLForConf(OrderData orderDetails, UserModel userModel); //TISPT-175 : changing to reduce populator call multiple times
+
+
+	/**
+	 * Desc It will fetch all wishlists for a customer/user TISPT-179
+	 *
+	 * @param userModel
+	 * @return List<Wishlist2Model>
+	 */
+	List<Wishlist2Model> getAllWishlistsForCustomer(UserModel userModel);
 }

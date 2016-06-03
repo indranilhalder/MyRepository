@@ -45,6 +45,7 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -259,7 +260,8 @@ public class CartPageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
@@ -716,9 +718,14 @@ public class CartPageController extends AbstractPageController
 					final int minimum_gift_quantity = getSiteConfigService().getInt(MessageConstants.MINIMUM_GIFT_QUANTIY, 0);
 					LOG.debug("Class NameprepareDataForPag :" + className + " minimum_gift_quantity :" + minimum_gift_quantity);
 
-					final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
+					//final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists(); TISPT-179 Point 1
+					final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlistsForCustomer(cartModel.getUser());
+					//TISPT-179 Point 3
+					//entryModels = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity, allWishlists, defaultPinCodeId,cartModel); // Code moved to Facade and Impl
 
-					entryModels = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity, allWishlists, defaultPinCodeId); // Code moved to Facade and Impl
+					final Tuple2<?, ?> wishListPincodeObject = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity,
+							allWishlists, defaultPinCodeId, cartModel);
+					entryModels = (List<Wishlist2EntryModel>) wishListPincodeObject.getFirst();
 
 					for (final Wishlist2EntryModel entryModel : entryModels)
 					{
@@ -789,7 +796,8 @@ public class CartPageController extends AbstractPageController
 					}
 
 					/* TISEE-435 : New Code Added */
-					giftYourselfDeliveryModeDataMap = getMplCartFacade().checkPincodeGiftCartData(defaultPinCodeId, entryModels);
+					giftYourselfDeliveryModeDataMap = getMplCartFacade().checkPincodeGiftCartData(defaultPinCodeId, entryModels,
+							wishListPincodeObject);
 					if (MapUtils.isNotEmpty(giftYourselfDeliveryModeDataMap))
 					{
 						model.addAttribute("giftYourselfDeliveryModeDataMap", giftYourselfDeliveryModeDataMap);
@@ -866,8 +874,8 @@ public class CartPageController extends AbstractPageController
 					MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID);
 
 			//TISPRO-497
-			final String cartAmountInvalid = getSessionService().getAttribute(
-					MarketplacecommerceservicesConstants.CARTAMOUNTINVALID);
+			final String cartAmountInvalid = getSessionService()
+					.getAttribute(MarketplacecommerceservicesConstants.CARTAMOUNTINVALID);
 
 			final String payNowCouponCheck = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID);
 

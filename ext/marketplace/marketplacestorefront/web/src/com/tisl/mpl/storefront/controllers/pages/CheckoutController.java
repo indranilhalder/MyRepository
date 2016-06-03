@@ -285,7 +285,7 @@ public class CheckoutController extends AbstractCheckoutController
 			orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
 			orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderModel); //TISPT-175 --- order details : reduce same call from two places
 			//wishlistFacade.removeProductFromWL(orderCode);
-			wishlistFacade.remProdFromWLForConf(orderDetails); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
+			wishlistFacade.remProdFromWLForConf(orderDetails, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
 			// for MSD
 			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");

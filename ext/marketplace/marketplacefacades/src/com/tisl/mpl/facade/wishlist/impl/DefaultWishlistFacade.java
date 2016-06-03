@@ -362,14 +362,14 @@ public class DefaultWishlistFacade implements WishlistFacade
 	 */
 	//TISPT-175 : changing to reduce populator call multiple times -- also multiple for loop removed by this method
 	@Override
-	public void remProdFromWLForConf(final OrderData orderDetails)
+	public void remProdFromWLForConf(final OrderData orderDetails, final UserModel userModel)
 	{
 		try
 		{
 			final List<OrderEntryData> orderEntryDatas = orderDetails.getEntries();
-			final List<Wishlist2Model> allWishlists = getAllWishlists();
+			final List<Wishlist2Model> allWishlists = getAllWishlistsForCustomer(userModel);
 
-			if (CollectionUtils.isNotEmpty(orderEntryDatas))
+			if (CollectionUtils.isNotEmpty(orderEntryDatas) && CollectionUtils.isNotEmpty(allWishlists))
 			{
 				for (final OrderEntryData orderEntryData : orderEntryDatas)
 				{
@@ -391,6 +391,27 @@ public class DefaultWishlistFacade implements WishlistFacade
 					}
 				}
 			}
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+
+	/**
+	 * Desc It will fetch all wishlists for a customer/user TISPT-179 Point 1
+	 *
+	 * @param userModel
+	 * @return List<Wishlist2Model>
+	 */
+	@Override
+	public List<Wishlist2Model> getAllWishlistsForCustomer(final UserModel userModel)
+	{
+		try
+		{
+			return mplWishlistService.getWishlists(userModel);
 		}
 		catch (final Exception ex)
 		{
