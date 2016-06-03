@@ -10,6 +10,8 @@ import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.servicelayer.session.SessionService;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,17 +30,19 @@ import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplImageCategoryComponentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservice.url.ExtDefaultCategoryModelUrlResolver;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
  * @author TCS
  *
  */
-public class HomepageComponentServiceImpl implements HomepageComponentService
+public class HomepageComponentServiceImpl extends ExtDefaultCategoryModelUrlResolver implements HomepageComponentService
 {
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
@@ -261,7 +265,24 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	 */
 	private JSONObject getCategoryJSON(final CategoryModel category)
 	{
+		//	TISPRD-2315
 		final JSONObject categoryJSON = new JSONObject();
+		String categoryPath = buildPathString(getCategoryPath(category));
+		if (StringUtils.isNotEmpty(categoryPath))
+		{
+			try
+			{
+				categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
+			}
+			catch (final UnsupportedEncodingException e)
+			{
+				LOG.error(e.getMessage());
+			}
+			categoryPath = categoryPath.toLowerCase();
+			categoryPath = GenericUtilityMethods.changeUrl(categoryPath);
+			categoryJSON.put("categoryPath", categoryPath);
+		}
+
 		if (StringUtils.isNotEmpty(category.getName()))
 		{
 			categoryJSON.put("categoryName", category.getName());
@@ -273,8 +294,6 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			categoryJSON.put("categoryCode", category.getCode());
 
 		}
-
-
 
 		return categoryJSON;
 

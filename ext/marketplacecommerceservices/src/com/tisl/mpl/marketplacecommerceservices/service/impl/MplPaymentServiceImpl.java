@@ -1518,7 +1518,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param cartData
 	 * @param cartModel
 	 * @return MplPromoPriceData
-	 * 
+	 *
 	 * @throws JaloPriceFactoryException
 	 * @throws JaloSecurityException
 	 * @throws CalculationException
@@ -2306,7 +2306,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		AddressModel address = null;
 		if (StringUtils.isNotEmpty(orderStatusResponse.getUdf1()))
 		{
-			if (sameAsShipping.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE) && null !=cart.getDeliveryAddress())
+			if (sameAsShipping.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE) && null != cart.getDeliveryAddress())
 			{
 				address = cart.getDeliveryAddress();
 				address.setBillingAddress(Boolean.TRUE);
@@ -2520,11 +2520,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2532,6 +2532,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		return getMplPaymentDao().getBankDetailsForBank(bankName);
 
+	}
+
+	/*
+	 * @Description : Fetching bank name for net banking-- TISPT-169
+	 * 
+	 * @return List<BankforNetbankingModel>
+	 * 
+	 * @throws Exception
+	 */
+	@Override
+	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception
+	{
+		return getMplPaymentDao().getNetBankingBanks();
 	}
 
 	//Getters and Setters

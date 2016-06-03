@@ -4517,11 +4517,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 						//TISEE-6376
 						if (entryModel.getProduct() != null)
 						{
-							final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-									ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-									ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
-									ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+							/*
+							 * final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
+							 * Arrays.asList( ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY,
+							 * ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.PROMOTIONS,
+							 * ProductOption.STOCK, ProductOption.REVIEW, ProductOption.DELIVERY_MODE_AVAILABILITY,
+							 * ProductOption.SELLER));
+							 */
 
+							final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
+									ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+									ProductOption.STOCK, ProductOption.SELLER));
 
 							final BuyBoxModel buyboxmodel = buyBoxFacade.getpriceForUssid(entryModel.getUssid());
 							double price = 0.0;
@@ -4762,11 +4768,18 @@ public class AccountPageController extends AbstractMplSearchPageController
 					if (null != entryModel && null != entryModel.getProduct())
 					{
 						final WishlistProductData wishlistProductData = new WishlistProductData();
-						final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-								ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-								ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
+						/*
+						 * final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
+						 * Arrays.asList( ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY,
+						 * ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK,
+						 * ProductOption.REVIEW,
+						 * 
+						 * ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+						 */
 
-								ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+						final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
+								ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+								ProductOption.STOCK, ProductOption.SELLER));
 
 						datas.add(productData1);
 						wishlistProductData.setProductData(productData1);

@@ -18,10 +18,10 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-
 
 //import com.hybris.oms.api.comm.dto.PincodeServiceabilityCheck;
 import com.sun.jersey.api.client.Client;
@@ -199,12 +199,11 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				{
 					pincodeRequest.setPincode(pin);
 				}
-				if (null != reqData.get(0).getCartId())
+				if (null != reqData.get(0) && StringUtils.isNotEmpty(reqData.get(0).getCartId()))
 				{
 					pincodeRequest.setCartId(reqData.get(0).getCartId());
-
 				}
-				if (!(pincodeList.isEmpty()))
+				if (CollectionUtils.isNotEmpty(pincodeList))
 				{
 					pincodeRequest.setItem(pincodeList);
 				}
@@ -350,6 +349,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	}
 
 
+
 	/*
 	 * @desc used for validate connect timeout and read time out exceptions from oms rest call for pincode serviceabilty
 	 * and inventory reservation
@@ -410,6 +410,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 			}
 		}
 	}
+
 	/**
 	 * this method prepares request object and calls oms to get inventories for stores.
 	 *
@@ -534,7 +535,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				try
 				{
 					final Client client = Client.create();
-					
+
 					//Start : Code added for OMS fallback cases
 					final String connectionTimeout = configurationService.getConfiguration()
 							.getString(MarketplacecclientservicesConstants.OMS_PINCODESERVICEABILITY_CON_TIMEOUT, "5000").trim();
@@ -546,7 +547,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					client.setConnectTimeout(Integer.valueOf(connectionTimeout));
 					client.setReadTimeout(Integer.valueOf(readTimeout));
 					//End : Code added for OMS fallback cases
-					
+
 					final WebResource webResource = client.resource(UriBuilder.fromUri(
 							configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_URL))
 							.build());
@@ -558,9 +559,9 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					final String xmlString = sw.toString();
 
 					LOG.debug("*********************** StoreLocator Real Time Serviceability request xml :" + xmlString);
-					response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml")
-							.header("X-tenantId", "single").entity(xmlString).post(ClientResponse.class);
-					
+					response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("X-tenantId", "single")
+							.entity(xmlString).post(ClientResponse.class);
+
 					LOG.info("*****StoreATS response status code :" + response.getStatus());
 					if (httpErrorCode.contains(String.valueOf(response.getStatus())))
 					{
