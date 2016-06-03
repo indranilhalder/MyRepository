@@ -348,6 +348,9 @@
  */
 var ussidValue = "";
 $(document).on("click","#colorbox .productImageGallery .imageList img", function(e) {
+	if($(this).attr("data-type")=='image'){
+		 $("#player").hide();
+		 $(".productImagePrimary .picZoomer-pic-wp img").show();
 			$("#colorbox .main-image img.picZoomer-pic").attr("src",
 					$(this).attr("data-primaryimagesrc"));
 			$("#colorbox .productImageGallery .thumb").removeClass("active");
@@ -361,6 +364,15 @@ $(document).on("click","#colorbox .productImageGallery .imageList img", function
 			    zoomWindowFadeIn: 500,
 			    zoomWindowFadeOut: 750
 			       });
+	 }
+	 else {
+		 var url = $(this).attr("data-videosrc");
+	    	$("#player").show();
+			$("#player").attr("src",url);
+			$("#videoModal #player").attr("src",url);
+			$("#videoModal").modal();
+			$("#videoModal").addClass("active");
+	 } 
 });
 
 $(".product-image-container .productImageGallery.pdp-gallery .imageList img").click(
