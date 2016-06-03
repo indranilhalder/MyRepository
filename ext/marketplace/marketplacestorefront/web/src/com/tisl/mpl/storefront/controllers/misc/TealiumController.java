@@ -34,7 +34,7 @@ public class TealiumController extends AbstractController
 
 	private final String UTAG_SCRIPT_PROD = "</script><script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/prod/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
 	private final String UTAG_SCRIPT_DEV = "</script><script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
-
+	private final String IA_COMPANY = "IA_company";
 
 	@RequestMapping(value = "/getTealiumDataHome", method = RequestMethod.GET)
 	@ResponseBody
@@ -50,7 +50,7 @@ public class TealiumController extends AbstractController
 			final String utagData = utag.toJSONString();
 			tealiumData.append("<script type='text/javascript'> var utag_data =");
 			tealiumData.append(utagData);
-			tealiumData.append(getTealiumScript((String) utag.get("IA_company")));
+			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
 		}
 		catch (final Exception ex)
 		{
@@ -74,7 +74,7 @@ public class TealiumController extends AbstractController
 			tealiumData.append("<script type='text/javascript'> var utag_data =");
 			tealiumData.append(utagData);
 			tealiumData.append("<TealiumScript>");
-			tealiumData.append(getTealiumScript((String) utag.get("IA_company")));
+			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
 		}
 		catch (final Exception ex)
 		{
@@ -99,7 +99,7 @@ public class TealiumController extends AbstractController
 			final String utagData = utag.toJSONString();
 			tealiumData.append("<script type='text/javascript'> var utag_data =");
 			tealiumData.append(utagData);
-			tealiumData.append(getTealiumScript((String) utag.get("IA_company")));
+			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
 		}
 		catch (final Exception ex)
 		{
@@ -170,7 +170,7 @@ public class TealiumController extends AbstractController
 		utag.put("session_id", sessionId);
 		utag.put("visitor_ip", visitorIP);
 		utag.put("site_currency", "INR");
-		utag.put("IA_company", domainName);
+		utag.put(IA_COMPANY, domainName);
 
 		return utag;
 	}

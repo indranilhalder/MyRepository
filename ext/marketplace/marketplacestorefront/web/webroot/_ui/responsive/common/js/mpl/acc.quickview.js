@@ -90,15 +90,39 @@ function setSizeforAkamai()
 			} 
 }
 
-$(document).ready(function(){
-	 //AKAMAI Fix	 
- 	var url = window.location.href;	
-	if (url.indexOf("selectedSize=true")==-1 && typeof productSizeQuickVar !== "undefined")//>= 0  ==-1
-		{
-		 $('.select-size').find('span').remove();
-		 $(".select-size").append("<span class='selected quickViewSelect'>"+productSizeQuickVar+"</span>");
-		}
- });
+function setBuyBoxDetails()
+{
+	var productCode = $("#productCodePost").val();
+	//alert(productCode);
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
+	+ "/buybox";
+		var dataString = 'productCode=' + productCode;		
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			dataType : "json",
+			success : function(data) {
+				
+				//alert(data['sellerArticleSKU']);
+			}
+
+		});
+		
+		
+		
+}
+
+//$(document).ready(function(){
+//	 //AKAMAI Fix	 
+// 	var url = window.location.href;	
+// 	alert(url);
+//	if (url.indexOf("selectedSize=true")==-1 && typeof productSizeQuickVar !== "undefined")//>= 0  ==-1
+//		{
+//		 $('.select-size').find('span').remove();
+//		 $(".select-size").append("<span class='selected quickViewSelect'>"+productSizeQuickVar+"</span>");
+//		}
+// });
 
 
 function addToWishlist_quick() {
