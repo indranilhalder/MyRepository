@@ -15,9 +15,9 @@ $(function() {
      });
 });
 $(function() {
-
+//TISPRO-522 IE Issue Fix
     $.ajax({
-        url: ACC.config.encodedContextPath + "/setheader",
+        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
         type: 'GET',
         cache:false,
         success: function(data) {
@@ -213,12 +213,13 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
         }
     });
 });
+//TISPRO-522-IE Issue Fix
 $("li.ajaxloginhi").on("mouseover touchend", function(e) {
     e.stopPropagation();
     if ($("ul.ajaxflyout").html().trim().length <= 0) {
         $.ajax({
             url: ACC.config.encodedContextPath +
-                "/headerloginhi",
+                "/headerloginhi?timestamp="+Date.now(),
             type: 'GET',
             success: function(html) {
                 $("ul.ajaxflyout").html(html);
