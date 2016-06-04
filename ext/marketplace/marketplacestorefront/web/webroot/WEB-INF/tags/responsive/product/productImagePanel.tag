@@ -34,8 +34,9 @@
 
 	function closing() {
 		$("#zoomModal, #videoModal").modal('hide');
-		//$("#zoomModal, #videoModal").removeClass("active");
-		// $("#player").attr('src',"&autoplay=0");
+		$("#zoomModal, #videoModal").removeClass("active");
+		var x = $("#player").attr('src');
+		var z = $("#player").attr('src', x+"&autoplay=0");
 	}
 	$(document).ready(function(){
 		if ($(window).width() > 789) {

@@ -668,4 +668,4 @@ function automateMyrecomendationBrandModification(catids){
 	        		alert("Something is not right! Please try after sometime");
 				  }
 		});
-}
+	}

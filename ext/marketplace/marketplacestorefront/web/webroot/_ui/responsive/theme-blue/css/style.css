@@ -570,9 +570,9 @@ input:focus {
       border-left: 1px solid transparent;
       border-bottom: 1px solid transparent;
       cursor: pointer;
-      -webkit-transition: max-height 0.3s, border 0.15s 0.3s;
-      -moz-transition: max-height 0.3s, border 0.15s 0.3s;
-      transition: max-height 0.3s, border 0.15s 0.3s; }
+      -webkit-transition: max-height 0.3s, border 0.3s;
+      -moz-transition: max-height 0.3s, border 0.3s;
+      transition: max-height 0.3s, border 0.3s; }
     .select-view .select-list li {
       width: -webkit-calc(100% - -4px);
       width: calc(100% - -4px);
@@ -7929,6 +7929,7 @@ div.wishlist-content .pagination {
 .social a {
 	display: inline-block;
 	font-family: 'Montserrat';
+	margin: 0 2px;
 }
 
 .social a:after {
