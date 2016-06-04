@@ -24,7 +24,6 @@ import de.hybris.platform.acceleratorstorefrontcommons.security.AutoLoginStrateg
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
-import de.hybris.platform.commercefacades.order.OrderFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.ProductFacade;
@@ -155,8 +154,6 @@ public class CheckoutController extends AbstractCheckoutController
 	@Resource(name = "mplSellerInformationService")
 	private MplSellerInformationService mplSellerInformationService;
 
-	@Autowired
-	private OrderFacade orderFacade;//TISPT-175
 	@Autowired
 	private MplOrderFacade mplOrderFacade;//TISPT-175
 
