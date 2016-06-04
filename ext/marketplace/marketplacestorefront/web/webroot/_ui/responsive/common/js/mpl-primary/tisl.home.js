@@ -197,6 +197,7 @@ $("a#tracklink").on("mouseover touchend", function(e) {
         url: ACC.config.encodedContextPath +
             "/headerTrackOrder",
         type: 'GET',
+        cache:false,
         success: function(html) {
             $("ul.trackorder-dropdown").html(html);
         }
