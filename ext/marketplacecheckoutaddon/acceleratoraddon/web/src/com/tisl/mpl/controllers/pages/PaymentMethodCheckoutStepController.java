@@ -1878,20 +1878,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (paymentMode.equalsIgnoreCase("Credit Card"))
 				{
 					cart.setModeOfPayment("Credit Card");
+					getModelService().save(cart);
 				}
 				else if (paymentMode.equalsIgnoreCase("Debit Card"))
 				{
 					cart.setModeOfPayment("Debit Card");
+					getModelService().save(cart);
 				}
 
 				else if (paymentMode.equalsIgnoreCase("Netbanking"))
 				{
 					cart.setModeOfPayment("Netbanking");
+					getModelService().save(cart);
 				}
 
 				else if (paymentMode.equalsIgnoreCase("EMI"))
 				{
 					cart.setModeOfPayment("EMI");
+					getModelService().save(cart);
 				}
 
 				//TISST-7955
