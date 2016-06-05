@@ -37,7 +37,7 @@
 onchange="getSelectedEMIBankForPDP()">
 </select> -->
 
-<select name="bankNameForEMI" id="bankNameForEMI">
+<select name="bankNameForEMI" id="bankNameForEMI" onchange="populateEMIDetailsForPDP()">
 </select>
 
 
