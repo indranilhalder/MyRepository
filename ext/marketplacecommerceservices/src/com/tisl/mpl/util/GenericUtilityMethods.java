@@ -4,6 +4,7 @@
 package com.tisl.mpl.util;
 
 import de.hybris.platform.category.jalo.Category;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
@@ -16,6 +17,8 @@ import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.promotions.result.PromotionEvaluationContext;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -77,8 +80,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Sends the year from Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return year
 	 */
 	public static String redirectYear(final Date date)
@@ -103,8 +105,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Modifies Date with the required Year
-	 * @param :
-	 *           date,yeartoModify
+	 * @param : date,yeartoModify
 	 * @return modifedDate
 	 */
 	public static Date modifiedBDate(final Date date, final String yeartoModify)
@@ -197,8 +198,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Compares with System Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return flag
 	 */
 	public static boolean compareDateWithSysDate(final Date date)
@@ -237,8 +237,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks Excluded Manufacturer Restriction
-	 * @param :
-	 *           List<AbstractPromotionRestriction> restrictionLists
+	 * @param : List<AbstractPromotionRestriction> restrictionLists
 	 * @param restrictionList
 	 * @return manufactureList
 	 */
@@ -624,8 +623,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
-	 * @param :
-	 *           SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
 	 */
 	public static void populateExcludedProductManufacturerList(final SessionContext arg0, final PromotionEvaluationContext arg1,
 			final List<Product> excludedProductList, final List<String> excludeManufactureList,
@@ -636,8 +634,8 @@ public class GenericUtilityMethods
 			if (productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS) != null
 					&& excludedProductList != null)
 			{
-				excludedProductList.addAll(
-						(List<Product>) productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
+				excludedProductList.addAll((List<Product>) productPromotion.getProperty(arg0,
+						MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
 			}
 			if (excludeManufactureList != null)
 			{
@@ -672,8 +670,8 @@ public class GenericUtilityMethods
 			final SessionContext ctx, final PromotionEvaluationContext promoEvalCtx, final ProductPromotion productPromotion,
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
-		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion)
-				&& getDefaultPromotionsManager().checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
+		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion) && getDefaultPromotionsManager()
+				.checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
 
 	}
 
@@ -707,11 +705,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -917,5 +915,43 @@ public class GenericUtilityMethods
 		return url;
 	}
 
+	public static String buildPathString(final List<CategoryModel> path)
+	{
+		final StringBuilder result = new StringBuilder();
+
+		for (int i = 0; i < path.size(); ++i)
+		{
+			if (i != 0)
+			{
+				result.append('-');
+			}
+			result.append(urlSafe(path.get(i).getName()));
+		}
+
+		return result.toString();
+	}
+
+	public static String urlSafe(final String text)
+	{
+		if ((text == null) || (text.isEmpty()))
+		{
+			return "";
+		}
+		String encodedText;
+		try
+		{
+			encodedText = URLEncoder.encode(text, "utf-8");
+		}
+		catch (final UnsupportedEncodingException encodingException)
+		{
+			encodedText = text;
+			//	LOG.debug(encodingException.getMessage());
+		}
+
+		String cleanedText = encodedText;
+		cleanedText = cleanedText.replaceAll("%2F", "/");
+		cleanedText = cleanedText.replaceAll("[^%A-Za-z0-9\\-]+", "-");
+		return cleanedText;
+	}
 
 }
