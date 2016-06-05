@@ -15,9 +15,9 @@ $(function() {
      });
 });
 $(function() {
-
+//TISPRO-522 IE Issue Fix
     $.ajax({
-        url: ACC.config.encodedContextPath + "/setheader",
+        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
         type: 'GET',
         cache:false,
         success: function(data) {
@@ -197,6 +197,7 @@ $("a#tracklink").on("mouseover touchend", function(e) {
         url: ACC.config.encodedContextPath +
             "/headerTrackOrder",
         type: 'GET',
+        cache:false,
         success: function(html) {
             $("ul.trackorder-dropdown").html(html);
         }
@@ -213,12 +214,13 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
         }
     });
 });
+//TISPRO-522-IE Issue Fix
 $("li.ajaxloginhi").on("mouseover touchend", function(e) {
     e.stopPropagation();
     if ($("ul.ajaxflyout").html().trim().length <= 0) {
         $.ajax({
             url: ACC.config.encodedContextPath +
-                "/headerloginhi",
+                "/headerloginhi?timestamp="+Date.now(),
             type: 'GET',
             success: function(html) {
                 $("ul.ajaxflyout").html(html);
@@ -648,12 +650,9 @@ function getProductsYouCareAjaxCall() {
                 renderHtml +=
                     "<div class='home-product-you-care-carousel'>";
                 $.each(response.categories, function(k, v) {
-                    //console.log('Category name: '+v.categoryName);
-                    //console.log('Category code: '+v.categoryCode);
-                    //console.log('Category media url: '+v.mediaURL);
                     var URL = ACC.config.encodedContextPath +
-                        "/Categories/" + v.categoryName +
-                        "/c-" + v.categoryCode;
+                    /*"/Categories/" + v.categoryName*/ v.categoryPath +   //TISPRD_2315
+                    "/c-" + v.categoryCode.toLowerCase();
                     //for url
                     renderHtml += "<a href='" + appendIcid(
                             URL, v.icid) +

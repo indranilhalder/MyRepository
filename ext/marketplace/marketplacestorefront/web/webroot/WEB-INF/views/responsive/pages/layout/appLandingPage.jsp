@@ -213,10 +213,12 @@
 				<h5>Download it now on your favourite device and indulge in a
 					seamless shopping experience</h5>
 				<div class="container r2-marginTop r2-marginBottom r2-padding">
-					<span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <img
-						class="img-responsive" src="${commonResourcePath}/images/desktop_badge_mac.png">
-					</span> <span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <img
-						class="img-responsive" src="${commonResourcePath}/images/desktop_badge_play.png">
+					<span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <a
+						href="${pathToReferForMac}"> <img
+						class="img-responsive" src="${commonResourcePath}/images/desktop_badge_mac.png"></a>
+					</span> <span class="col-md-4 col-lg-4 col-sm-6 col-xs-6"> <a
+						href="${pathToReferForPlay}"> <img
+						class="img-responsive" src="${commonResourcePath}/images/desktop_badge_play.png"></a>
 					</span>
 				</div>
 

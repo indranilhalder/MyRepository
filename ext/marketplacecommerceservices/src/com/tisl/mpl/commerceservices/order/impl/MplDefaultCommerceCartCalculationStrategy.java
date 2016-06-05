@@ -14,8 +14,12 @@ import de.hybris.platform.promotions.jalo.PromotionsManager;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
@@ -26,8 +30,8 @@ import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculation
  *
  */
 
-public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCartCalculationStrategy implements
-		MplCommerceCartCalculationStrategy
+public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCartCalculationStrategy
+		implements MplCommerceCartCalculationStrategy
 {
 
 	/*
@@ -61,8 +65,8 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			}
 			catch (final CalculationException calculationException)
 			{
-				throw new IllegalStateException("Cart model " + cartModel.getCode() + " was not calculated due to: "
-						+ calculationException.getMessage());
+				throw new IllegalStateException(
+						"Cart model " + cartModel.getCode() + " was not calculated due to: " + calculationException.getMessage());
 			}
 			finally
 			{
@@ -86,9 +90,8 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			beforeCalculate(parameter);
 			resetCartModel(cartModel);
 			getCalculationService().recalculate(cartModel);
-			getPromotionsService().updatePromotions(getPromotionGroups(), cartModel, true,
-					PromotionsManager.AutoApplyMode.APPLY_ALL, PromotionsManager.AutoApplyMode.APPLY_ALL,
-					getTimeService().getCurrentTime());
+			getPromotionsService().updatePromotions(getPromotionGroups(), cartModel, true, PromotionsManager.AutoApplyMode.APPLY_ALL,
+					PromotionsManager.AutoApplyMode.APPLY_ALL, getTimeService().getCurrentTime());
 			resetNetAmtAftrAllDisc(cartModel);
 		}
 		catch (final CalculationException calculationException)
@@ -107,10 +110,8 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	@Override
 	protected void beforeCalculate(final CommerceCartParameter parameter)
 	{
-		if ((getCommerceCartCalculationMethodHooks() == null)
-				|| (!(parameter.isEnableHooks()))
-				|| (!(getConfigurationService().getConfiguration().getBoolean(
-						"commerceservices.commercecartcalculationmethodhook.enabled", true))))
+		if ((getCommerceCartCalculationMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
+				.getConfiguration().getBoolean("commerceservices.commercecartcalculationmethodhook.enabled", true))))
 		{
 			return;
 		}
@@ -123,10 +124,8 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	@Override
 	protected void afterCalculate(final CommerceCartParameter parameter)
 	{
-		if ((getCommerceCartCalculationMethodHooks() == null)
-				|| (!(parameter.isEnableHooks()))
-				|| (!(getConfigurationService().getConfiguration().getBoolean(
-						"commerceservices.commercecartcalculationmethodhook.enabled", true))))
+		if ((getCommerceCartCalculationMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
+				.getConfiguration().getBoolean("commerceservices.commercecartcalculationmethodhook.enabled", true))))
 		{
 			return;
 		}
@@ -138,8 +137,17 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 
 
 
+	/**
+	 * Resets Discount Attributes of Cart Model
+	 *
+	 * Method Modified for Performance Fix : TISPT-148
+	 *
+	 * @param cartModel
+	 * @return cartModel
+	 */
 	private CartModel resetCartModel(final CartModel cartModel)
 	{
+		final List<AbstractOrderEntryModel> cartEntryList = new ArrayList<AbstractOrderEntryModel>();
 		for (final AbstractOrderEntryModel cartEntry : cartModel.getEntries())
 		{
 			cartEntry.setQualifyingCount(Integer.valueOf(0));
@@ -158,7 +166,14 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			cartEntry.setTotalProductLevelDisc(Double.valueOf(0.00D));
 			//			cartEntry.setCouponCode("");
 			//			cartEntry.setCouponValue(Double.valueOf(0.00D));
-			modelService.save(cartEntry);
+
+			//modelService.save(cartEntry); //Blocked for TISPT-148
+			cartEntryList.add(cartEntry); // Code Added for TISPT-148
+		}
+
+		if (CollectionUtils.isNotEmpty(cartEntryList))
+		{
+			modelService.saveAll(cartEntryList);
 		}
 
 		modelService.refresh(cartModel);
@@ -166,21 +181,30 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 		return cartModel;
 	}
 
+	/**
+	 * Reset Net amount after Discount for Coupon
+	 *
+	 * Modified for TISPT-148
+	 *
+	 * @param cartModel
+	 */
+
 	private void resetNetAmtAftrAllDisc(final CartModel cartModel)
 	{
+		// Code Added for TISPT-148
+		final List<AbstractOrderEntryModel> cartEntryList = new ArrayList<AbstractOrderEntryModel>();
 		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 		{
-			if (null != entry.getCouponCode() && !entry.getCouponCode().isEmpty())
+			if (StringUtils.isNotEmpty(entry.getCouponCode()))
 			{
 				double currNetAmtAftrAllDisc = 0.00D;
 				final double entryTotalPrice = entry.getTotalPrice().doubleValue();
 				final double couponValue = entry.getCouponValue().doubleValue();
 
-				if ((null != entry.getProductPromoCode() && !entry.getProductPromoCode().isEmpty())
-						|| (null != entry.getCartPromoCode() && !entry.getCartPromoCode().isEmpty()))
+				if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode())))
 				{
-					final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
-							.doubleValue() : 0.00D;
+					final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null
+							? entry.getNetAmountAfterAllDisc().doubleValue() : 0.00D;
 					currNetAmtAftrAllDisc = netAmtAftrAllDisc - couponValue;
 				}
 				else
@@ -188,13 +212,18 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 					currNetAmtAftrAllDisc = entryTotalPrice - couponValue;
 				}
 				entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
-				getModelService().save(entry);
+				cartEntryList.add(entry);
+				//getModelService().save(entry); // Code Blocked for TISPT-148
 			}
-
 		}
+
+		// Code Added for TISPT-148
+		if (CollectionUtils.isNotEmpty(cartEntryList))
+		{
+			getModelService().saveAll(cartEntryList);
+		}
+
 	}
-
-
 
 
 	/**

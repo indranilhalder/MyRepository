@@ -26,8 +26,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -79,18 +81,20 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 			freeGiftQuantity = Long.parseLong((String) ctx.getAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY));
 		}
 
-
-		if (null != getFreeGiftQuantity(ctx))
-		{
-			freeGiftQuantity = getFreeGiftQuantity(ctx).longValue();
-		}
+		freeGiftQuantity = (null != getFreeGiftQuantity(ctx)) ? getFreeGiftQuantity(ctx).longValue() : 1L;
+		//		if (null != getFreeGiftQuantity(ctx))
+		//		{
+		//			freeGiftQuantity = getFreeGiftQuantity(ctx).longValue();
+		//		} //Blocked for TISPT-154
 
 		if (order != null)
 		{
+			final Map<String, Product> freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx)); //Added for TISPT-154
+			final Product product = getFreeProduct(ctx);
 			//For Single Freebie
-			if (null != getFreeProduct(ctx))
+			if (null != product)
 			{
-				final Product product = getFreeProduct(ctx);
+				//final Product product = getFreeProduct(ctx);
 				final Unit unit = product.getUnit(ctx);
 				//Adding free gift to order
 				final AbstractOrderEntry orderEntry = order.addNewEntry(product, freeGiftQuantity, unit, false);
@@ -134,15 +138,15 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 
 			//For Multiple  Freebie
 
-			else if (null != getAllFreeGiftInfoMap(ctx) && !getAllFreeGiftInfoMap(ctx).isEmpty())
+			else if (MapUtils.isNotEmpty(freeBieInfoMap)) //Added for TISPT-154
 			{
-				for (final Map.Entry<String, Product> entry : getAllFreeGiftInfoMap(ctx).entrySet())
+				for (final Map.Entry<String, Product> entry : freeBieInfoMap.entrySet()) //Added for TISPT-154
 				{
 
-					final Product product = entry.getValue();
-					final Unit unit = product.getUnit(ctx);
+					final Product freeProduct = entry.getValue();
+					final Unit unit = freeProduct.getUnit(ctx);
 					//Adding free gift to order
-					final AbstractOrderEntry orderEntry = order.addNewEntry(product, freeGiftQuantity, unit, false);
+					final AbstractOrderEntry orderEntry = order.addNewEntry(freeProduct, freeGiftQuantity, unit, false);
 
 					log.debug("Multiple Freebie USSID" + entry.getKey());
 					orderEntry.setGiveAway(ctx, true);
@@ -151,15 +155,15 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					orderEntry.setProperty(ctx, "totalPrice", new Double(freebieAmt));
 
 					final PromotionResult pr = getPromotionResult(ctx);
-					final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(
-							ctx, getGuid(ctx), orderEntry, freeGiftQuantity);
+					final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(ctx,
+							getGuid(ctx), orderEntry, freeGiftQuantity);
 					consumed.setAdjustedUnitPrice(ctx, 0.01D);
 					pr.addConsumedEntry(ctx, consumed);
 					setMarkedApplied(ctx, true);
 				}
 
 				log.debug("Populating List of USSIDs in List");
-				freeProductUSSIDList = populateFreeBieData(getAllFreeGiftInfoMap(ctx));
+				freeProductUSSIDList = populateFreeBieData(freeBieInfoMap);
 				if (CollectionUtils.isNotEmpty(freeProductUSSIDList))
 				{
 					tempfreeProductUSSIDList.addAll(freeProductUSSIDList);
@@ -177,16 +181,19 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 			Map<String, List<String>> productAssociatedItemsMap = null;
 			if (ctx.getAttributes() != null)
 			{
-				validProductList = ctx.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) != null ? (Map<String, AbstractOrderEntry>) ctx
-						.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) : null;
-				qualifyingCountMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) != null ? (Map<String, Integer>) ctx
-						.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) : null;
-				productPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) != null ? (String) ctx
-						.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) : null;
-				cartPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) != null ? (String) ctx
-						.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) : null;
-				productAssociatedItemsMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (Map<String, List<String>>) ctx
-						.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;//TODO null checking
+				validProductList = ctx.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) != null
+						? (Map<String, AbstractOrderEntry>) ctx.getAttributes()
+								.get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST)
+						: null;
+				qualifyingCountMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) != null
+						? (Map<String, Integer>) ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) : null;
+				productPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) != null
+						? (String) ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) : null;
+				cartPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) != null
+						? (String) ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) : null;
+				productAssociatedItemsMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null
+						? (Map<String, List<String>>) ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS)
+						: null;//TODO null checking
 			}
 			if (null == productPromoCode && null != cartPromoCode)
 			{//This is for Cart Level Freebie Promotion
@@ -197,8 +204,8 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					final double lineItemLevelPrice = cartEntry.getTotalPriceAsPrimitive();
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, entry.getProduct().getDescription());
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCODE, cartPromoCode);
-					cartEntry
-							.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
+					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE,
+							Double.valueOf(lineItemLevelPrice));
 
 					final double productLevelDisc = 0.00D;
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
@@ -221,7 +228,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 				{
 					freebieUSSID = freeUSSIDData;
 				}
-				catch (final JaloInvalidParameterException /* | JaloSecurityException */e)
+				catch (final JaloInvalidParameterException /* | JaloSecurityException */ e)
 				{
 					log.error(e.getMessage());
 				}
@@ -249,7 +256,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 
 						if (validProductList.containsKey(selectedUSSID)
 								|| (selectedUSSID.equalsIgnoreCase(freebieUSSID) || freeProductUSSIDList.contains(selectedUSSID))
-								&& null != entry.isGiveAway() && entry.isGiveAway().booleanValue())
+										&& null != entry.isGiveAway() && entry.isGiveAway().booleanValue())
 						{
 							int qualifyingCount = 0;
 
@@ -260,13 +267,13 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 								try
 								{
 									if (null != cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT)
-											&& Integer.parseInt(cartEntry.getAttribute(ctx,
-													MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString()) > 0)
+											&& Integer.parseInt(cartEntry
+													.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString()) > 0)
 									{
 										//Sonar fixes
 										//qualifyingCount = Integer.valueOf(cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString()).intValue();
-										qualifyingCount = Integer.parseInt(cartEntry.getAttribute(ctx,
-												MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString());
+										qualifyingCount = Integer.parseInt(
+												cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString());
 									}
 									else
 									{
@@ -304,8 +311,9 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 							}
 
 							final List<String> prevAssociatedItemList = cartEntry
-									.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (List<String>) cartEntry
-									.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
+									.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null
+											? (List<String>) cartEntry.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS)
+											: null;
 							if (prevAssociatedItemList != null && !prevAssociatedItemList.isEmpty() && null != entry.isGiveAway()
 									&& !entry.isGiveAway().booleanValue())
 							{
@@ -316,8 +324,8 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 								associatedItemsList.addAll(associatedItemsSet);
 							}
 
-							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, cartEntry.getProduct()
-									.getDescription());
+							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION,
+									cartEntry.getProduct().getDescription());
 							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT,
 									Integer.valueOf(qualifyingCount));
 
@@ -353,8 +361,8 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 									//For Promo Code
 									if (null != cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE))
 									{
-										final String promoData = cartEntry.getAttribute(ctx,
-												MarketplacecommerceservicesConstants.PRODUCTPROMOCODE).toString();
+										final String promoData = cartEntry
+												.getAttribute(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE).toString();
 										if (StringUtils.isEmpty(promoData))
 										{
 											log.debug("Setting New Promotion Code");
@@ -394,8 +402,8 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 							final double netAmtAfterDisc = netSellingPrice - cartLevelDisc;
 							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE,
 									Double.valueOf(netSellingPrice));
-							cartEntry
-									.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDisc));
+							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC,
+									Double.valueOf(cartLevelDisc));
 							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
 									Double.valueOf(netAmtAfterDisc));
 						}
@@ -441,6 +449,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 
 		for (final AbstractOrderEntry aoe : order.getEntries())
 		{
+			final Map<String, Product> freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx));
 			if (null != getFreeProduct(ctx))
 			{
 				if ((!(aoe.isGiveAway(ctx).booleanValue())) || (!(aoe.getProduct(ctx).equals(getFreeProduct(ctx))))
@@ -462,8 +471,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 				{
 					if (log.isDebugEnabled())
 					{
-						log.debug("("
-								+ getPK()
+						log.debug("(" + getPK()
 								+ ") undo: Line item has a greater quantity than the offer.  Removing the offer quantity and resetting giveaway flag.");
 					}
 					aoe.setQuantity(ctx, remainingQuantityAfterUndo);
@@ -504,13 +512,12 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 
 				break;
 			}
-
 			//For Multiple Freebie Implementation
-			else if (null != getAllFreeGiftInfoMap(ctx) && !getAllFreeGiftInfoMap(ctx).isEmpty())
+			else if (MapUtils.isNotEmpty(freeBieInfoMap))
 			{
-				final int checkCount = getAllFreeGiftInfoMap(ctx).size();
+				final int checkCount = freeBieInfoMap.size();
 				int validateCount = 0;
-				for (final Map.Entry<String, Product> entry : getAllFreeGiftInfoMap(ctx).entrySet())
+				for (final Map.Entry<String, Product> entry : freeBieInfoMap.entrySet())
 				{
 
 					if ((!(aoe.isGiveAway(ctx).booleanValue())) || (!(aoe.getProduct(ctx).equals(entry.getValue())))

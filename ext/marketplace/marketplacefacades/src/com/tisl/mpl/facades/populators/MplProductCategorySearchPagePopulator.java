@@ -164,14 +164,20 @@ public class MplProductCategorySearchPagePopulator<QUERY, STATE, RESULT, ITEM ex
 
 		target.setKeywordRedirectUrl(source.getKeywordRedirectUrl());
 
+		/*
+		 * if (source.getSnsCategories() != null) {
+		 * target.setSnsCategories(Converters.convertAll(source.getSnsCategories(), getCategoryConverter())); }
+		 */
+
+
 		if (source.getSnsCategories() != null)
 		{
-			target.setSnsCategories(Converters.convertAll(source.getSnsCategories(), getCategoryConverter()));
+			target.setSnsCategories(source.getSnsCategories());
 		}
 
 		if (source.getAllBrand() != null)
 		{
-			target.setAllBrand(Converters.convertAll(source.getAllBrand(), getCategoryConverter()));
+			target.setAllBrand(source.getAllBrand());
 		}
 
 		if (source.getDeptType() != null)

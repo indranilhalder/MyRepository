@@ -263,6 +263,15 @@
 		<property name="mediaFormat" value="252Wx374H" />
 
 	</bean>
+	<bean id="newSearchImageHovervalueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.NewCustomSearchImageValueProvider">
+
+		<property name="mediaService" ref="mediaService" />
+		<property name="mediaContainerService" ref="mediaContainerService" />
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mediaFormat" value="252Wx374H" />
+
+	</bean>
 	<!-- Value Provider to display Serach Page Image - End -->
 
 
@@ -1557,13 +1566,13 @@
 	
 	 
   <!-- ============== configure beans for CRM Ticket and Refund Initiation Events ============== -->
-  <bean id="sendUnColletedOrderToCRMEventListener"
-		class="com.tisl.mpl.marketplaceomsservices.event.SendUnColletedOrderToCRMEventListener"
+  <bean id="sendUnCollectedOrderToCRMEventListener"
+		class="com.tisl.mpl.marketplaceomsservices.event.SendUnCollectedOrderToCRMEventListener"
 		parent="abstractSiteEventListener">
 	</bean>
 	
-	<bean id="unColletedOrderToInitiateRefundEventListener"
-		class="com.tisl.mpl.marketplaceomsservices.event.UnColletedOrderToInitiateRefundEventListener"
+	<bean id="unCollectedOrderToInitiateRefundEventListener"
+		class="com.tisl.mpl.marketplaceomsservices.event.UnCollectedOrderToInitiateRefundEventListener"
 		parent="abstractSiteEventListener">
 	</bean>
 	

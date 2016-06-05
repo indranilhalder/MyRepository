@@ -137,15 +137,17 @@ public class MplCouponValueProvider extends AbstractPropertyFieldValueProvider i
 		final List fieldValues = new ArrayList();
 
 		List<VoucherModel> restrictedVouchers = new ArrayList<VoucherModel>();
-		final Collection<VoucherModel> productVouchers = getMplCouponListingDao().findVoucher();
+		//voucher api call commented
+		//final Collection<VoucherModel> productVouchers = getMplCouponListingDao().findVoucher();
 
-		if (productVouchers != null)
-		{
-			restrictedVouchers = validateVoucherRestrictions(productVouchers, product);
+		//if (productVouchers != null)
+		//{
+		//	restrictedVouchers = validateVoucherRestrictions(productVouchers, product);
+		//
+		//}
 
-		}
-
-
+		// New code to bypass coupon api call and get coupon info using query
+		restrictedVouchers = getMplCouponListingDao().findVoucherWithRestrictions(product);
 
 		final Iterator localIterator = restrictedVouchers.iterator();
 

@@ -378,7 +378,7 @@
 												<c:choose>
 													<c:when test="${not empty wpproduct.isOutOfStock && wpproduct.isOutOfStock eq 'Y'}">
 														<span id="outOfStockId">
-															<button id="addToCartButton" disabled="disabled"
+															<button id="addToCartButtonwl" disabled="disabled"
 																class="blue button js-add-to-cart_wl">
 																<spring:theme code="basket.add.to.basket" />
 															</button>
@@ -388,7 +388,7 @@
 													<c:otherwise>
 													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear')}">
 														<span>
-															<button id="addToCartButton" type="${buttonType}"
+															<button id="addToCartButtonwl" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
 																<spring:theme code="basket.add.to.basket" />
 															</button>
@@ -397,7 +397,7 @@
                                                     
 													<c:if test="${empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Electronics'}">
 														<span>
-															<button id="addToCartButton" type="${buttonType}"
+															<button id="addToCartButtonwl" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
 																<spring:theme code="basket.add.to.basket" />
 															</button>
@@ -405,7 +405,7 @@
 														</c:if>
 														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')}">
 														<span id="addToCartButtonId" style="display: none">
-															<button type="button" id="addToCartButton" 
+															<button type="button" id="addToCartButtonwl" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal"
 															data-target="#redirectsToPDP">
 																<spring:theme code="basket.add.to.basket" />
