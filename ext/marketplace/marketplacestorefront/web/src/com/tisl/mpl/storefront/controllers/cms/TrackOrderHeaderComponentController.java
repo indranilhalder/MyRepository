@@ -76,8 +76,10 @@ public class TrackOrderHeaderComponentController extends AbstractCMSComponentCon
 						}
 
 						model.addAttribute("notificationCount", notificationCount);
-						model.addAttribute("isSignedInUser", "yes");
 					}
+
+					model.addAttribute("isSignedInUser", "yes");
+					model.addAttribute("notificationUrl", "#");
 				}
 			}
 			if (userService.isAnonymousUser(currentCustomer))

@@ -774,7 +774,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public String getOrderStatusFromJuspay() throws EtailNonBusinessExceptions
+	public String getOrderStatusFromJuspay() throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
 		final PaymentService juspayService = new PaymentService();
 
@@ -809,8 +809,18 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			{
 				//Update Audit Table after getting payment response
 				updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse);
-				//Update PaymentTransaction and PaymentTransactionEntry Models
-				getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, cart);
+
+				//TISPRD-2558
+				if (cart.getTotalPrice().equals(orderStatusResponse.getAmount()))
+				{
+					//Update PaymentTransaction and PaymentTransactionEntry Models
+					getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, cart);
+				}
+				else
+				{
+					throw new EtailBusinessExceptions();
+				}
+
 			}
 
 			//Logic when transaction is successful i.e. CHARGED
@@ -829,6 +839,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//returning the statues of the order
 			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
 			return orderStatus;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error("Cart total and Juspay end total are not same!!!", e);
+			throw new EtailBusinessExceptions("Cart Total and Transaction total at Juspay Mismatch", e);
 		}
 		catch (final Exception e)
 		{

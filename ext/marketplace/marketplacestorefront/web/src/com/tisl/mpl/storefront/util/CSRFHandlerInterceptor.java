@@ -69,7 +69,9 @@ public class CSRFHandlerInterceptor extends HandlerInterceptorAdapter
 			}
 			else
 			{
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Bad or missing CSRF value");
+				//TISPRD-2266
+				//response.sendError(HttpServletResponse.SC_FORBIDDEN, "Bad or missing CSRF value");
+				response.sendRedirect(request.getServletPath());
 				return false;
 			}
 		}
