@@ -235,7 +235,7 @@ function dispQuickViewPrice(mrp, mop, spPrice) {
 		
 		if(spPrice.value > emiCuttOffAmount)
 			{
-			$("#productPrice").val(spPrice.value);
+			$("#prodPrice").val(spPrice.value);
 			$("#emiStickerId").show();
 			
 			}
@@ -254,7 +254,7 @@ function dispQuickViewPrice(mrp, mop, spPrice) {
 			if(mop.value > emiCuttOffAmount)
 			{
 			$("#emiStickerId").show();
-			$("#productPrice").val(mop.value);
+			$("#prodPrice").val(mop.value);
 			}
 			
 		} else {
@@ -262,7 +262,7 @@ function dispQuickViewPrice(mrp, mop, spPrice) {
 			if(mrp.value > emiCuttOffAmount)
 			{
 			$("#emiStickerId").show();
-			$("#productPrice").val(mrp.value);
+			$("#prodPrice").val(mrp.value);
 			}
 		}
 	}
@@ -484,7 +484,7 @@ function loadDefaultWishListName_quick() {
 
 
 function openPopForBankEMI_quick() {
-	var productVal = $("#productPrice").val();
+	var productVal = $("#prodPrice").val();
 	var optionData = "<option value='select' disabled selected>Select</option>";
 	$("#emiTableTHead").hide();
 	$("#emiTableTbody").hide();
@@ -511,7 +511,7 @@ function openPopForBankEMI_quick() {
 
 
 function getSelectedEMIBankForPDP() {
- var productVal = $("#productPrice").val();
+ var productVal = $("#prodPrice").val();
  
 	var selectedBank = $('#bankNameForEMI :selected').text();
 	var contentData = '';

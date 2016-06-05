@@ -460,7 +460,7 @@ display:none;
      </c:otherwise>
     </c:choose> --%>
     
-    <input type="hidden" id="productPrice" name="productPrice" />
+    <!-- <input type="hidden" id="productPrice" name="productPrice" /> -->
    <p class="old" id="mrpPriceId" style="display:none">
 	</p>
 	<p class="sale" id="mopPriceId" style="display:none">
