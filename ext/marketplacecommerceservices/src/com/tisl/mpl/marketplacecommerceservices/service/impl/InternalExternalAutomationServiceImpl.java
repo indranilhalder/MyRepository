@@ -123,17 +123,21 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 						// 1.For Mpl Sequntial Banners only
 						if (componentItr instanceof MplSequentialBannerComponentModel)
 						{
+							LOG.info("Inside MplSequentialBannerComponentModel starts");
 							campaignDataSeqBanner = new InternalCampaignReportData();
 							// Storing data for generating Internal Report
 							campaignDataSeqBanner.setAssetName(componentItr.getName());
-							if (contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
+							if (contentPageItr.getLabel() != null && contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
 							{
 								campaignDataSeqBanner.setSourcePage(contentPageItr.getLabel().substring(
 										contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
+								LOG.info("Inside MplSequentialBannerComponentModel.MICROSITE_SEPARATOR");
 							}
 							else
 							{
-								campaignDataSeqBanner.setSourcePage(contentPageItr.getLabel());
+								LOG.info("Inside MplSequentialBannerComponentModel.notMICROSITE_SEPARATOR");
+								//campaignDataSeqBanner.setSourcePage(contentPageItr.getLabel());
+								campaignDataBigPromoBanner.setSourcePage(MarketplacecommerceservicesConstants.EMPTY);
 							}
 							campaignDataSeqBanner.setIcid(componentItr.getPk().toString());
 
@@ -143,6 +147,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							{
 								if (banner instanceof MplBigPromoBannerComponentModel)
 								{
+									LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel starts");
 									String CategorySeqBanner = "";
 									final MplBigPromoBannerComponentModel bigPromoBanner = (MplBigPromoBannerComponentModel) banner;
 									if (contentPageItr.getCategoryAssociated() != null)
@@ -159,6 +164,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
 												&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
 										{
+											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTP");
 											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 											sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 											imageUrl = sb.toString();
@@ -168,7 +174,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												&& null != bigPromoBanner.getBannerImage().getURL()
 												&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
 										{
-
+											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTPS");
 											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 											imageUrl = sb.toString();
@@ -176,6 +182,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										}
 										if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
 										{
+											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.getMimeNotNull");
 											campaignDataSeqBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
 										}
 										else
@@ -185,6 +192,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 										if (null != imageSize)
 										{
+											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.imageSizeNotNull");
 											campaignDataSeqBanner.setSize(imageSize);
 										}
 										else
@@ -193,56 +201,65 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										}
 
 										CampaignDataList.add(campaignDataSeqBanner);
+										LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel ends");
 									}
 									catch (final Exception e)
 									{
-										LOG.error("Big promo banner Exception 11111 : " + e.getMessage());
+										LOG.error("MplBigPromoBannerComponentModel Exception: " + e.getMessage());
+
 									}
 								}
-								else if (banner instanceof MplBigFourPromoBannerComponentModel)
-								{
-									final MplBigFourPromoBannerComponentModel bigFourBanner = (MplBigFourPromoBannerComponentModel) banner;
-									LOG.info("MplBigFourPromoBannerComponentModel -->> " + bigFourBanner.getBannerImage());
-								}
-								else
-								{
-									LOG.info("MplBigFourPromoBannerComponentModel ......" + banner.getMedia());
-								}
+								//								else if (banner instanceof MplBigFourPromoBannerComponentModel)
+								//								{
+								//									final MplBigFourPromoBannerComponentModel bigFourBanner = (MplBigFourPromoBannerComponentModel) banner;
+								//									LOG.info("MplBigFourPromoBannerComponentModel -->> " + bigFourBanner.getBannerImage());
+								//								}
+								//								else
+								//								{
+								//									LOG.info("MplBigFourPromoBannerComponentModel ......" + banner.getMedia());
+								//								}
 							}
+							LOG.info("Stepping out from MplSequentialBannerComponentModel");
 						}
 						//2.Mpl Big Promo BannerComponent Model only
 						if (componentItr instanceof MplBigPromoBannerComponentModel)
 						{
+							LOG.info("Inside MplBigPromoBannerComponentModel starts");
 							campaignDataBigPromoBanner = new InternalCampaignReportData();
 							final MplBigPromoBannerComponentModel bigPromoBanner = (MplBigPromoBannerComponentModel) componentItr;
-							String CategoryBigPromoBanner = "";
+							String CategoryBigPromoBanner = MarketplacecommerceservicesConstants.EMPTY;
 							if (contentPageItr.getCategoryAssociated() != null)
 							{
 								CategoryBigPromoBanner = contentPageItr.getCategoryAssociated().getCode();
 							}
 							else
 							{
-								CategoryBigPromoBanner = "";
+								CategoryBigPromoBanner = MarketplacecommerceservicesConstants.EMPTY;
 							}
 							campaignDataBigPromoBanner.setIcid(componentItr.getPk().toString());
-							if (contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
+							LOG.info("Inside MplBigPromoBannerComponentModel.beforeMICROSITE_SEPARATOR");
+							if (contentPageItr.getLabel() != null && contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
 							{
 								campaignDataBigPromoBanner.setSourcePage(contentPageItr.getLabel().substring(
 										contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
+								LOG.info("Inside MplBigPromoBannerComponentModel.MICROSITE_SEPARATOR");
 							}
 							else
 							{
-								campaignDataBigPromoBanner.setSourcePage(contentPageItr.getLabel());
+								LOG.info("Inside MplBigPromoBannerComponentModel.notMICROSITE_SEPARATOR");
+								//campaignDataBigPromoBanner.setSourcePage(contentPageItr.getLabel());
+								campaignDataBigPromoBanner.setSourcePage(MarketplacecommerceservicesConstants.EMPTY);
 							}
 							campaignDataBigPromoBanner.setAssetName(componentItr.getName());
 							campaignDataBigPromoBanner.setCategory(CategoryBigPromoBanner);
-
+							LOG.info("Inside MplBigPromoBannerComponentModel.afterMICROSITE_SEPARATOR");
 							try
 							{
 
 								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
 										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
 								{
+									LOG.info("Inside MplBigPromoBannerComponentModel.HTTP");
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 									imageUrl = sb.toString();
@@ -251,6 +268,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
 										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
 								{
+									LOG.info("Inside MplBigPromoBannerComponentModel.HTTPS");
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
@@ -258,6 +276,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								}
 								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
 								{
+									LOG.info("Inside MplBigPromoBannerComponentModel.getMimeNotNull");
 									campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
 								}
 								else
@@ -266,6 +285,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								}
 								if (null != imageSize)
 								{
+									LOG.info("Inside MplBigPromoBannerComponentModel.imageSizeNotNull");
 									campaignDataBigPromoBanner.setSize(imageSize);
 								}
 
@@ -273,20 +293,23 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								{
 									campaignDataBigPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
 								}
-								CampaignDataList.add(campaignDataBigPromoBanner);
+								//CampaignDataList.add(campaignDataBigPromoBanner);
+								LOG.info("Inside MplBigPromoBannerComponentModel ends");
 							}
 							catch (final Exception e)
 							{
-								LOG.error("Big promo banner Exception 222 " + e.getMessage());
+								LOG.error("MplBigPromoBannerComponentModel Exception: " + e.getMessage());
 							}
 							CampaignDataList.add(campaignDataBigPromoBanner);
+							LOG.info("Stepping out from MplBigPromoBannerComponentModel");
 						}
 						//3. Mpl BigFour PromoBanner ComponentModel
 						if (componentItr instanceof MplBigFourPromoBannerComponentModel)
 						{
+							LOG.info("Inside MplBigFourPromoBannerComponentModel starts");
 							campaignDataBigFourPromoBanner = new InternalCampaignReportData();
 							final MplBigFourPromoBannerComponentModel bigPromoBanner = (MplBigFourPromoBannerComponentModel) componentItr;
-							String CategoryBigFourPromoBanner = "";
+							String CategoryBigFourPromoBanner = MarketplacecommerceservicesConstants.EMPTY;
 							if (contentPageItr.getCategoryAssociated() != null)
 							{
 								CategoryBigFourPromoBanner = contentPageItr.getCategoryAssociated().getCode();
@@ -294,18 +317,21 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 							else
 							{
-								CategoryBigFourPromoBanner = "";
+								CategoryBigFourPromoBanner = MarketplacecommerceservicesConstants.EMPTY;
 							}
 							campaignDataBigFourPromoBanner.setIcid(componentItr.getPk().toString());
 							campaignDataBigFourPromoBanner.setAssetName(componentItr.getName());
-							if (contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
+							if (contentPageItr.getLabel() != null && contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
 							{
 								campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel().substring(
 										contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
+								LOG.info("Inside MplBigFourPromoBannerComponentModel.MICROSITE_SEPARATOR");
 							}
 							else
 							{
-								campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel());
+								//campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel());
+								campaignDataBigFourPromoBanner.setSourcePage(MarketplacecommerceservicesConstants.EMPTY);
+								LOG.info("Inside MplBigFourPromoBannerComponentModel.notMICROSITE_SEPARATOR");
 							}
 							campaignDataBigFourPromoBanner.setCategory(CategoryBigFourPromoBanner);
 							try
@@ -314,6 +340,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
 										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
 								{
+									LOG.info("Inside MplBigFourPromoBannerComponentModel.HTTP");
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 									imageUrl = sb.toString();
@@ -322,7 +349,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
 										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
 								{
-
+									LOG.info("Inside MplBigFourPromoBannerComponentModel.HTTPS");
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
@@ -330,6 +357,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								}
 								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
 								{
+									LOG.info("Inside MplBigFourPromoBannerComponentModel.getMimeNotNull");
 									campaignDataBigFourPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
 								}
 								else
@@ -338,6 +366,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								}
 								if (null != imageSize)
 								{
+									LOG.info("Inside MplBigFourPromoBannerComponentModel.imageSizeNotNull");
 									campaignDataBigFourPromoBanner.setSize(imageSize);
 								}
 								else
@@ -345,17 +374,20 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
 								}
 
-
+								//CampaignDataList.add(campaignDataBigFourPromoBanner);
+								LOG.info("Inside MplBigFourPromoBannerComponentModel ends");
 							}
 							catch (final Exception e)
 							{
-								LOG.error("Error in Big Four PromoBanner111111" + e.getMessage());
+								LOG.error("MplBigFourPromoBannerComponentModel Exception: " + e.getMessage());
 							}
 							CampaignDataList.add(campaignDataBigFourPromoBanner);
+							LOG.info("Stepping out from MplBigFourPromoBannerComponentModel");
 						}
 						//4. Rotating Banner Component
 						if (componentItr instanceof RotatingImagesComponentModel)
 						{
+							LOG.info("Inside RotatingImagesComponentModel starts");
 							final RotatingImagesComponentModel banner = (RotatingImagesComponentModel) componentItr;
 							final List<BannerComponentModel> bannerComponentList = banner.getBanners();
 							for (final BannerComponentModel differentBanner : bannerComponentList)
@@ -363,7 +395,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								if (null != differentBanner)
 								{
 									campaignDataBigFourPromoBanner = new InternalCampaignReportData();
-									String rotaingImagesBannerCategory = "";
+									String rotaingImagesBannerCategory = MarketplacecommerceservicesConstants.EMPTY;
 
 									if (contentPageItr.getCategoryAssociated() != null)
 									{
@@ -375,14 +407,17 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									}
 									campaignDataBigFourPromoBanner.setIcid(differentBanner.getPk().toString());
 									campaignDataBigFourPromoBanner.setAssetName(differentBanner.getName());
-									if (contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
+									if (contentPageItr.getLabel() != null && contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
 									{
 										campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel().substring(
 												contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
+										LOG.info("Inside RotatingImagesComponentModel.MICROSITE_SEPARATOR");
 									}
 									else
 									{
-										campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel());
+										//campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel());
+										campaignDataBigFourPromoBanner.setSourcePage(MarketplacecommerceservicesConstants.EMPTY);
+										LOG.info("Inside RotatingImagesComponentModel.notMICROSITE_SEPARATOR");
 									}
 									campaignDataBigFourPromoBanner.setCategory(rotaingImagesBannerCategory);
 									try
@@ -390,6 +425,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getURL()
 												&& !differentBanner.getMedia().getURL().startsWith(HTTP))
 										{
+											LOG.info("Inside RotatingImagesComponentModel.HTTP");
 											sb = new StringBuffer(differentBanner.getMedia().getURL());
 											sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 											imageUrl = sb.toString();
@@ -399,6 +435,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										else if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getURL()
 												&& !differentBanner.getMedia().getURL().startsWith(HTTPS))
 										{
+											LOG.info("Inside RotatingImagesComponentModel.HTTPS");
 											sb = new StringBuffer(differentBanner.getMedia().getURL());
 											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 											imageUrl = sb.toString();
@@ -407,23 +444,31 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										}
 										if (differentBanner instanceof MplBigFourPromoBannerComponentModel)
 										{
+											LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel");
 											final MediaModel special = ((MplBigFourPromoBannerComponentModel) differentBanner)
 													.getBannerImage() != null ? ((MplBigFourPromoBannerComponentModel) differentBanner)
 													.getBannerImage() : null;
 
 											if (special != null)
 											{
-												campaignDataBigFourPromoBanner.setMediaType(special.getMime());
-												if (null != special.getURL())
+												if (null != special.getMime())
 												{
+													LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.getMimeNotNull");
+													campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+												}
+
+												if (null != special.getURL() && special.getURL().startsWith(HTTP))
+												{
+													LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.HTTP");
 													sb = new StringBuffer(((MplBigFourPromoBannerComponentModel) differentBanner)
 															.getBannerImage().getURL());
 													sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 													imageUrl = sb.toString();
 													imageSize = findIamgeSize(imageUrl);
 												}
-												else if (special.getURL().startsWith(HTTPS))
+												else if (null != special.getURL() && special.getURL().startsWith(HTTPS))
 												{
+													LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.HTTPS");
 													sb = new StringBuffer(((MplBigFourPromoBannerComponentModel) differentBanner)
 															.getBannerImage().getURL());
 													sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
@@ -436,19 +481,23 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										}
 										else if (differentBanner instanceof MplBigPromoBannerComponentModel)
 										{
+											LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel");
 											final MediaModel special = ((MplBigPromoBannerComponentModel) differentBanner).getBannerImage() != null ? ((MplBigPromoBannerComponentModel) differentBanner)
 													.getBannerImage() : null;
 
 											if (null != special)
 											{
+												LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.specialNotNull");
 												if (null != special.getMime())
 												{
+													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.getMimeNotNull");
 													campaignDataBigFourPromoBanner.setMediaType(special.getMime());
 												}
 
 
-												if (null != special.getURL())
+												if (null != special.getURL() && special.getURL().startsWith(HTTP))
 												{
+													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.HTTP");
 													sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
 															.getURL());
 													sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
@@ -457,8 +506,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 													imageSize = findIamgeSize(imageUrl);
 
 												}
-												else if (special.getURL().startsWith(HTTPS))
+												else if (null != special.getURL() && special.getURL().startsWith(HTTPS))
 												{
+													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.HTTPS");
 													sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
 															.getURL());
 													sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
@@ -467,6 +517,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												}
 												if (null != imageSize)
 												{
+													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.imageSizeNotNull");
 													campaignDataBigFourPromoBanner.setSize(imageSize);
 												}
 												else
@@ -476,6 +527,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 												if (null != special.getMime())
 												{
+													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.getMimeNotNull");
 													campaignDataBigFourPromoBanner.setMediaType(special.getMime());
 												}
 												else
@@ -500,21 +552,24 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											}
 
 										}
+										//CampaignDataList.add(campaignDataBigFourPromoBanner);
+										LOG.info("Inside RotatingImagesComponentModel ends");
 									}
 									catch (final Exception e)
 									{
-										LOG.error("Error in Big Four PromoBanner 222222" + e.getMessage());
+										LOG.error("RotatingImagesComponentModel Exception: " + e.getMessage());
 									}
 									CampaignDataList.add(campaignDataBigFourPromoBanner);
 								}
 							}
+							LOG.info("Stepping out from RotatingImagesComponentModel");
 						}
 						//5. Simple banner component
 						if (componentItr instanceof SimpleBannerComponentModel)
 						{
-							final SimpleBannerComponentModel simple = (SimpleBannerComponentModel) componentItr;
+							LOG.info("Inside SimpleBannerComponentModel");
 							campaignDataBigFourPromoBanner = new InternalCampaignReportData();
-							String imagesBannerCategory = "";
+							String imagesBannerCategory = MarketplacecommerceservicesConstants.EMPTY;
 
 							if (contentPageItr.getCategoryAssociated() != null)
 							{
@@ -526,22 +581,26 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							}
 							campaignDataBigFourPromoBanner.setIcid(componentItr.getPk().toString());
 							campaignDataBigFourPromoBanner.setAssetName(componentItr.getName());
-							if (contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
+							if (contentPageItr.getLabel() != null && contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
 							{
 								campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel().substring(
 										contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
+								LOG.info("Inside SimpleBannerComponentModel.MICROSITE_SEPARATOR");
 							}
 							else
 							{
-								campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel());
+								//campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel());
+								campaignDataBigFourPromoBanner.setSourcePage(MarketplacecommerceservicesConstants.EMPTY);
 							}
 							campaignDataBigFourPromoBanner.setCategory(imagesBannerCategory);
 							try
 							{
+								final SimpleBannerComponentModel simple = (SimpleBannerComponentModel) componentItr;
 
 								if (null != simple.getMedia() && null != simple.getMedia().getURL()
 										&& !simple.getMedia().getURL().startsWith(HTTP))
 								{
+									LOG.info("Inside SimpleBannerComponentModel.HTTP");
 									sb = new StringBuffer(simple.getMedia().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 									imageUrl = sb.toString();
@@ -553,6 +612,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								else if (null != simple.getMedia() && null != simple.getMedia().getURL()
 										&& !simple.getMedia().getURL().startsWith(HTTPS))
 								{
+									LOG.info("Inside SimpleBannerComponentModel.HTTPS");
 									sb = new StringBuffer(simple.getMedia().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
@@ -570,32 +630,38 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								}
 								if (null != simple.getMedia() && null != simple.getMedia().getMime())
 								{
+									LOG.info("Inside SimpleBannerComponentModel.getMimeNotNull");
 									campaignDataBigFourPromoBanner.setMediaType(simple.getMedia().getMime());
 								}
 								else
 								{
 									campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
 								}
-
+								//CampaignDataList.add(campaignDataBigFourPromoBanner);
+								LOG.info("Inside SimpleBannerComponentModel ends");
 							}
 
 							catch (final Exception e)
 							{
-								LOG.error("Cron Job Simple Banner Component Error ", e);
+								LOG.error("SimpleBannerComponentModel Exception: ", e);
 							}
 							CampaignDataList.add(campaignDataBigFourPromoBanner);
+							LOG.info("Stepping out from SimpleBannerComponentModel");
 						}
 					}
 				}
 			}
+			LOG.info("Before calling createCSVExcel()");
 			createCSVExcel(CampaignDataList);
+			LOG.info("After Completion of createCSVExcel()");
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception in creating Banner Image :" + e.getMessage());
+			LOG.error("Exception in creating Banner Image: " + e.getMessage());
 		}
 		return CampaignDataList;
 	}
+
 
 	/*
 	 * All banner components are fed to create excel or csv
@@ -615,7 +681,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 		catch (final Exception e)
 		{
-			LOG.info("Exception writing" + e.getMessage());
+			LOG.error("Exception writing" + e.getMessage());
 		}
 	}
 
@@ -630,7 +696,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	{
 		LOG.info("in createCSVExcel.populateCSV()::");
 		FileWriter fileWriter = null;
-		String CSVHeader = "";
+		String CSVHeader = MarketplacecommerceservicesConstants.EMPTY;
 		final List<InternalCampaignReportData> campaignDataConsolidatedList = new ArrayList<InternalCampaignReportData>();
 		for (final InternalCampaignReportData internalCampaignReportData : campaignDataConsolidatedTmpList)
 		{
@@ -766,9 +832,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	}
 
 
-	public String findIamgeSize(final String urlString)
+	public String findIamgeSize(final String urlString) throws Exception
 	{
-
+		LOG.info("Inside findIamgeSize starts");
 		final String username = configurationService.getConfiguration().getString("internal.campaign.report.username");
 
 		final String password = configurationService.getConfiguration().getString("internal.campaign.report.password");
@@ -819,16 +885,19 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		catch (final MalformedURLException e)
 		{
 			LOG.info("Malformed URL: " + e.getMessage());
+			throw e;
 		}
 		catch (final IOException e)
 		{
 			LOG.info("IO Exception: " + e.getMessage());
-			e.printStackTrace();
+			//e.printStackTrace();
+			throw e;
 		}
 		catch (final Exception e)
 		{
 			LOG.info("Exception is: " + e.getMessage());
-			e.printStackTrace();
+			//e.printStackTrace();
+			throw e;
 		}
 		return size;
 

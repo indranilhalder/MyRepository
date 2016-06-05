@@ -62,7 +62,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -229,20 +228,39 @@ public class DefaultPromotionManager extends PromotionsManager
 	 */
 	public boolean brandDataCheck(final List<String> promotionManufacturerList, final Product product)
 	{
+		//Code Modified for  TISPT-148
 		boolean applyPromotion = false;
+		String brandName = MarketplacecommerceservicesConstants.EMPTY;
 		try
-		{
-			final ProductModel productModel = productService.getProductForCode(product.getCode());
-			if (!productModel.getBrands().isEmpty())
+		{ //final ProductModel productModel = productService.getProductForCode(product.getCode());
+			final List<Category> categoryList = (List<Category>) product.getAttribute("supercategories");
+			if (CollectionUtils.isNotEmpty(categoryList))
 			{
-				final BrandModel brand = ((List<BrandModel>) productModel.getBrands()).get(0);
-
-				if (null != promotionManufacturerList && !promotionManufacturerList.isEmpty() && null != brand)
+				for (final Category category : categoryList)
 				{
-					applyPromotion = isEligibleManufacturer(promotionManufacturerList, brand);
+					if (category.getCode().startsWith("MBH"))
+					{
+						brandName = category.getName();
+						break;
+					}
 				}
 			}
 
+			if (CollectionUtils.isNotEmpty(promotionManufacturerList) && StringUtils.isNotEmpty(brandName))
+			{
+				applyPromotion = isEligibleManufacturer(promotionManufacturerList, brandName);
+			}
+
+			// Code Blocked for TISPT-148
+			//			if (!productModel.getBrands().isEmpty())
+			//			{
+			//				final BrandModel brand = ((List<BrandModel>) productModel.getBrands()).get(0);
+			//
+			//				if (null != promotionManufacturerList && !promotionManufacturerList.isEmpty() && null != brand)
+			//				{
+			//					applyPromotion = isEligibleManufacturer(promotionManufacturerList, brand);
+			//				}
+			//			}}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -263,18 +281,22 @@ public class DefaultPromotionManager extends PromotionsManager
 	/**
 	 * Checks for Valid Manufacturer : For Sonar Fix
 	 *
+	 * //Code Modified for TISPT-148
+	 *
 	 * @param promotionManufacturerList
 	 * @param brand
 	 * @return isValid
 	 */
-	private boolean isEligibleManufacturer(final List<String> promotionManufacturerList, final BrandModel brand)
+	private boolean isEligibleManufacturer(final List<String> promotionManufacturerList, final String brandName)
 	{
 		boolean isValid = false;
 
 		for (final String promoManufacturer : promotionManufacturerList)
 		{
 			//if (promoManufacturer.toLowerCase().equalsIgnoreCase(brand.getName().toLowerCase())) Sonar fix
-			if (promoManufacturer.equalsIgnoreCase(brand.getName()))
+
+			//Code Modified for TISPT-148
+			if (promoManufacturer.equalsIgnoreCase(brandName))
 			{
 				isValid = true;
 				break;
@@ -1103,15 +1125,16 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param totalCountFactor
 	 * @return Map<Product, Integer>
 	 */
-	public Map<String, Integer> getQualifyingCountForABPromotion(final List<String> eligibleProductList, final int totalCountFactor)
+	public Map<String, Integer> getQualifyingCountForABPromotion(final List<String> eligibleProductList,
+			final int totalCountFactor)
 	{
 		final Map<String, Integer> itemLevelQC = new HashMap<String, Integer>();
 		for (final String ussid : eligibleProductList)
 		{
-			itemLevelQC.put(ussid, Integer.valueOf(totalCountFactor)/*
-																					   * Integer.valueOf(Collections.frequency(
-																					   * eligibleProductList, ussid))
-																					   */);
+			itemLevelQC.put(ussid,
+					Integer.valueOf(totalCountFactor)/*
+																 * Integer.valueOf(Collections.frequency( eligibleProductList, ussid))
+																 */);
 		}
 		return itemLevelQC;
 	}
@@ -1169,8 +1192,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				else
 				{
 					//need to add the final remaining elements
-					associatedProductList.addAll(validProdUssidList.subList(validProdUssidList.indexOf(validProductUssid) + 1,
-							validProdUssidList.size()));
+					associatedProductList.addAll(
+							validProdUssidList.subList(validProdUssidList.indexOf(validProductUssid) + 1, validProdUssidList.size()));
 				}
 
 				if (sKUForFreebie != null)
@@ -1569,8 +1592,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param validProductList
 	 * @return Map<Product, Double>
 	 */
-	public Map<String, Map<String, Double>> updateDeliveryCharges(final boolean isDeliveryFreeFlag,
-			final boolean isPercentageFlag, final double adjustedDeliveryCharge, final Map<String, Integer> qCount,
+	public Map<String, Map<String, Double>> updateDeliveryCharges(final boolean isDeliveryFreeFlag, final boolean isPercentageFlag,
+			final double adjustedDeliveryCharge, final Map<String, Integer> qCount,
 			final Map<String, String> fetchProductRichAttribute)
 	{
 		final Map<String, Map<String, Double>> prodPrevCurrDelChargeMap = new HashMap<String, Map<String, Double>>();
@@ -1588,14 +1611,13 @@ public class DefaultPromotionManager extends PromotionsManager
 				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
 				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
 				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
-				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
-						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
+				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService
+						.getDeliveryCost(selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
 				prodDelChargeMap.put(entry, mplZoneDeliveryModeValueModel);
-				if (!isPercentageFlag
-						&& null != mplZoneDeliveryModeValueModel.getValue()
+				if (!isPercentageFlag && null != mplZoneDeliveryModeValueModel.getValue()
 						&& (fetchProductRichAttribute.containsKey(entry.getSelectedUSSID())
-								&& null != fetchProductRichAttribute.get(entry.getSelectedUSSID()) && !fetchProductRichAttribute.get(
-								entry.getSelectedUSSID()).equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP)))
+								&& null != fetchProductRichAttribute.get(entry.getSelectedUSSID()) && !fetchProductRichAttribute
+										.get(entry.getSelectedUSSID()).equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP)))
 				{
 					totalDeliveryCostForValidProds += mplZoneDeliveryModeValueModel.getValue().doubleValue()
 							* qCount.get(selectedUSSID).intValue();
@@ -1614,8 +1636,9 @@ public class DefaultPromotionManager extends PromotionsManager
 			final Map<String, Double> prevCurrDeliveryChargeMap = new HashMap<String, Double>();
 
 			if ((fetchProductRichAttribute.containsKey(entry.getSelectedUSSID())
-					&& null != fetchProductRichAttribute.get(entry.getSelectedUSSID()) && fetchProductRichAttribute.get(
-					entry.getSelectedUSSID()).equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
+					&& null != fetchProductRichAttribute.get(entry.getSelectedUSSID())
+					&& fetchProductRichAttribute.get(entry.getSelectedUSSID())
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
 					|| prodMplZoneDeliveryModeValueModel.getValue().doubleValue() == 0.00D)
 			{
 				prevCurrDeliveryChargeMap.put(MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0));
@@ -1800,7 +1823,8 @@ public class DefaultPromotionManager extends PromotionsManager
 		List<SellerInformationModel> productSellerData = null;
 		try
 		{
-			if (null != entry && null != entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID))
+			if (null != entry && null != entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+					&& isExSellerRestrExists(restrictionList))
 			{
 				ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString();
 				final CatalogVersionModel oModel = catalogData();
@@ -1819,6 +1843,34 @@ public class DefaultPromotionManager extends PromotionsManager
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+		}
+		return flag;
+	}
+
+	/**
+	 * Check if Exclude Seller Restriction Exist
+	 *
+	 * @param restrictionList
+	 * @return flag
+	 */
+	private boolean isExSellerRestrExists(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		boolean flag = true;
+		if (CollectionUtils.isEmpty(restrictionList))
+		{
+			flag = false;
+		}
+		else
+		{
+			for (final AbstractPromotionRestriction restriction : restrictionList)
+			{
+				flag = false;
+				if (restriction instanceof EtailExcludeSellerSpecificRestriction)
+				{
+					flag = true;
+					break;
+				}
+			}
 		}
 		return flag;
 	}
@@ -1868,8 +1920,8 @@ public class DefaultPromotionManager extends PromotionsManager
 									}
 									else if ((paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING)
 											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT)
-											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT) || paymentMode
-												.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
+											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT)
+											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
 											&& (StringUtils.isNotEmpty(selectedBank) && checkBankData(selectedBank, restrBanks)))
 									{
 										flag = true;
@@ -1934,10 +1986,10 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
 
-		final List<AbstractOrderEntry> orderEntryList = cart.getEntriesByProduct(product) != null ? cart
-				.getEntriesByProduct(product) : new ArrayList<AbstractOrderEntry>();
+		final List<AbstractOrderEntry> orderEntryList = cart.getEntriesByProduct(product) != null
+				? cart.getEntriesByProduct(product) : new ArrayList<AbstractOrderEntry>();
 
-		if (isSellerRestrExists(restrictionList))
+		if (isSellerRestrExists(restrictionList) || isExSellerRestrExists(restrictionList))
 		{
 			String selectedUSSID = null;
 			try
@@ -2175,9 +2227,8 @@ public class DefaultPromotionManager extends PromotionsManager
 		final int totalFactorCount = totalCount / (int) eligibleQty;
 		final int totalEligibleCount = totalFactorCount * (int) eligibleQty;
 
-		validProductUssidMap.keySet().retainAll(
-				populateSortedValidProdUssidMap(validProductUssidMap, totalEligibleCount, paramSessionContext, restrictionList,
-						validUssidList));
+		validProductUssidMap.keySet().retainAll(populateSortedValidProdUssidMap(validProductUssidMap, totalEligibleCount,
+				paramSessionContext, restrictionList, validUssidList));
 		return validUssidList;
 	}
 
@@ -2240,8 +2291,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				if (applyPromotion && brandFlag && sellerFlag)
 				{
 					sellerID = getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
-					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext,
-							entry));
+					validProductUssidMap
+							.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext, entry));
 					if (sellerIDData != null && eligibleProductMap != null)
 					{
 						sellerIDData.add(sellerID);
@@ -2256,7 +2307,8 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	/**
 	 * @Description : Checks For Manufacturer Based Restrictions
-	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param :
+	 *           SessionContext arg0,PromotionEvaluationContext arg1
 	 * @return : flag
 	 */
 	public boolean checkMinimumBrandAmount(final SessionContext arg0, final PromotionEvaluationContext arg1,
@@ -2328,8 +2380,10 @@ public class DefaultPromotionManager extends PromotionsManager
 		try
 		{
 			final double minimumCategoryValue = productPromotion.getProperty(ctx,
-					MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null ? ((Double) productPromotion.getProperty(ctx,
-					MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
+					MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null
+							? ((Double) productPromotion.getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT))
+									.doubleValue()
+							: 0.00D;
 			double totalEligibleEntryAmount = 0.0D;
 			if (minimumCategoryValue == 0.00D)
 			{
@@ -2377,8 +2431,9 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	/**
 	 * @Description :Converts amount to percentage
-	 * @param : SessionContext paramSessionContext ,Map<Product, Integer> validProductList , AbstractOrder cart,int
-	 *        totalCount,double discountPriceValue
+	 * @param :
+	 *           SessionContext paramSessionContext ,Map<Product, Integer> validProductList , AbstractOrder cart,int
+	 *           totalCount,double discountPriceValue
 	 * @return :double
 	 */
 
@@ -2616,7 +2671,8 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	/**
 	 * @Description : This calculates the total valid product price
-	 * @param : validProductUssidMap, validProductList
+	 * @param :
+	 *           validProductUssidMap, validProductList
 	 * @return :double
 	 */
 	public double getTotalValidProdPrice(final Map<String, AbstractOrderEntry> validProductUssidMap,
@@ -2793,8 +2849,8 @@ public class DefaultPromotionManager extends PromotionsManager
 		final long resultingQuantity = available - quantity;
 		if (resultingQuantity < 0L)
 		{
-			throw new PromotionException("Cannot remove " + quantity
-					+ " items.  There is not a sufficient quantity of this product remaining.");
+			throw new PromotionException(
+					"Cannot remove " + quantity + " items.  There is not a sufficient quantity of this product remaining.");
 		}
 
 		final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(ctx, "",
@@ -2837,8 +2893,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
 				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
 				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
-				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
-						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
+				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService
+						.getDeliveryCost(selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
 				prodDelChargeMap.put(entry, mplZoneDeliveryModeValueModel);
 				if (!isPercentageFlag && null != mplZoneDeliveryModeValueModel.getValue())
 				{
@@ -3008,8 +3064,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				if (applyPromotion && brandFlag && sellerFlag)
 				{
 					sellerID = getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
-					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext,
-							entry));
+					validProductUssidMap
+							.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext, entry));
 					if (sellerIDData != null && eligibleProductMap != null)
 					{
 						sellerIDData.add(sellerID);
@@ -3076,8 +3132,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				else
 				{
 					//need to add the final remaining elements
-					associatedProductList.addAll(validProdUssidList.subList(validProdUssidList.indexOf(validProductUssid) + 1,
-							validProdUssidList.size()));
+					associatedProductList.addAll(
+							validProdUssidList.subList(validProdUssidList.indexOf(validProductUssid) + 1, validProdUssidList.size()));
 				}
 
 				if (CollectionUtils.isNotEmpty(sKUForFreebieList))
@@ -3143,5 +3199,67 @@ public class DefaultPromotionManager extends PromotionsManager
 			parameters.put(MarketplacecommerceservicesConstants.BOGO_DETAILS_MAP, customBogoPromoDataMap);
 		}
 		return createCustomBOGOPromoOrderEntryAdjustAction(ctx, parameters);
+	}
+
+	/**
+	 * Exclude Brand Data
+	 *
+	 * @param excludedManufactureList
+	 * @param product
+	 * @return
+	 */
+	public boolean excludeBrandDataCheck(final List<String> excludedManufactureList, final Product product)
+	{
+		//final long startTime = System.currentTimeMillis();
+
+		//Code Modified for  TISPT-148
+		boolean isExcludeBrand = false;
+		String brandName = MarketplacecommerceservicesConstants.EMPTY;
+		try
+		{ //final ProductModel productModel = productService.getProductForCode(product.getCode());
+			final List<Category> categoryList = (List<Category>) product.getAttribute("supercategories");
+			if (CollectionUtils.isNotEmpty(categoryList))
+			{
+				for (final Category category : categoryList)
+				{
+					if (category.getCode().startsWith("MBH"))
+					{
+						brandName = category.getName();
+						break;
+					}
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(excludedManufactureList) && StringUtils.isNotEmpty(brandName))
+			{
+				for (final String manufacturer : excludedManufactureList)
+				{
+					if (manufacturer.equalsIgnoreCase(brandName))
+					{
+						isExcludeBrand = true;
+						break;
+					}
+				}
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+		}
+
+		//		final long endTime = System.currentTimeMillis();
+		//		LOG.info("*******************New TIME DIFFERENCE*****************************************************************"
+		//				+ (endTime - startTime));
+
+		return isExcludeBrand;
+
 	}
 }

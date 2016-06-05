@@ -16,6 +16,9 @@
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
 <%@ taglib prefix="action" tagdir="/WEB-INF/tags/responsive/action"%>
 <style>
+.store-finder-map{
+  height:500px;
+}
 .container_store_finder_map {
 		margin: 0px 0px;
 	}
@@ -27,7 +30,7 @@ z-index: 1;
 position :absolute;
 float:right;
 right:10px;
-top:20%;
+top:15%;
 padding-bottom:5px;
 }
 .googleMapLegends{
@@ -70,12 +73,19 @@ padding-bottom:5px;
                 <div><img alt="" src="${commonResourcePath}/images/Bestseller_Legend.png" class="googleMapLegends"></div>
                 <div><img alt="" src="${commonResourcePath}/images/CottonWorld_Legend.png" class="googleMapLegends"></div>
                 <div><img alt="" src="${commonResourcePath}/images/Croma_Legend.png" class="googleMapLegends"></div>
-                <div><img alt="" src="${commonResourcePath}/images/Dell_Legend.png" class="googleMapLegends"></div>
                 <div><img alt="" src="${commonResourcePath}/images/Inc5_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/Jack_Jones_Legend.png" class="googleMapLegends"></div>
+                
                 <div><img alt="" src="${commonResourcePath}/images/Killer_Legend.png" class="googleMapLegends"></div>
                 <div><img alt="" src="${commonResourcePath}/images/Lenovo_Legend.png" class="googleMapLegends"></div>
                 <div><img alt="" src="${commonResourcePath}/images/Metro_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/Mochi_Legend.png" class="googleMapLegends"></div>
+                
+                <div><img alt="" src="${commonResourcePath}/images/Only_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/TheMobileStore_Legend.png" class="googleMapLegends"></div>
                 <div><img alt="" src="${commonResourcePath}/images/Tresmode_Legend.png" class="googleMapLegends"></div>
+                <div><img alt="" src="${commonResourcePath}/images/VeroModa_Legend.png" class="googleMapLegends"></div>
+                
                 <div><img alt="" src="${commonResourcePath}/images/Westside_Legend.png" class="googleMapLegends"></div>
           </div> 
        </div>

@@ -182,7 +182,8 @@ public final class HybrisDataConverter
 		 */
 
 		final AbstractPageModel page = ((AbstractPageModel) request.getAttribute("cmsPage"));
-		if (page.getName() != null)
+		//TISPRD-2267
+		if (page!= null && page.getName() != null)
 		{
 			pageNameString = page.getName();
 		}

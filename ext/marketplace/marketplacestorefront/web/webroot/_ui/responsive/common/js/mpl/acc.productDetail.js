@@ -348,6 +348,9 @@
  */
 var ussidValue = "";
 $(document).on("click","#colorbox .productImageGallery .imageList img", function(e) {
+	if($(this).attr("data-type")=='image'){
+		 $("#player").hide();
+		 $(".productImagePrimary .picZoomer-pic-wp img").show();
 			$("#colorbox .main-image img.picZoomer-pic").attr("src",
 					$(this).attr("data-primaryimagesrc"));
 			$("#colorbox .productImageGallery .thumb").removeClass("active");
@@ -361,6 +364,15 @@ $(document).on("click","#colorbox .productImageGallery .imageList img", function
 			    zoomWindowFadeIn: 500,
 			    zoomWindowFadeOut: 750
 			       });
+	 }
+	 else {
+		 var url = $(this).attr("data-videosrc");
+	    	$("#player").show();
+			$("#player").attr("src",url);
+			$("#videoModal #player").attr("src",url);
+			$("#videoModal").modal();
+			$("#videoModal").addClass("active");
+	 } 
 });
 
 $(".product-image-container .productImageGallery.pdp-gallery .imageList img").click(
@@ -1155,6 +1167,14 @@ $( document ).ready(function() {
 	$("#addToCartButton").show();
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
+	//alert("----"+productCode);
+	
+	//changes done to restrict buybox AJAX call from every page.
+	if(typeof productCode === 'undefined' || $('#pageType').val()=='cart')
+		{
+		return false;
+		}
+	
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/buybox";
 	var dataString = 'productCode=' + productCode;
@@ -1162,6 +1182,7 @@ $( document ).ready(function() {
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
 		data : dataString,
+		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
 			if (data['sellerArticleSKU'] != undefined) {
@@ -1470,6 +1491,62 @@ function openPopForBankEMI() {
 	});
 }
 
+
+//TISPRO-533
+function populateEMIDetailsForPDP(){
+//$( "#bankNameForEMI" ).change(function() {
+	var productVal = $("#prodPrice").val();
+		
+		var selectedBank = $('#bankNameForEMI :selected').text();
+		var contentData = '';
+		if (selectedBank != "select") {
+			var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
+			$.ajax({
+				url : ACC.config.encodedContextPath + "/p-getTerms",
+				data : dataString,
+				/*data : {
+					'selectedEMIBank' : selectedBank,
+					'productVal' : productVal
+				},*/
+				type : "GET",
+				cache : false,
+				success : function(data) {
+					if (data != null) {
+						$("#emiTableTHead").show();
+						$("#emiTableTbody").show();
+						for (var index = 0; index < data.length; index++) {
+							contentData += '<tr>';
+							contentData += "<td>" + data[index].term + "</td>";
+							contentData += "<td>" + data[index].interestRate
+									+ "</td>";
+							contentData += "<td>" + data[index].monthlyInstallment
+									+ "</td>";
+							contentData += "<td>" + data[index].interestPayable
+									+ "</td>";
+							contentData += '</tr>';
+						}
+
+						$("#emiTableTbody").html(contentData);
+					} else {
+						$('#emiNoData').show();
+					}
+				},
+				error : function(resp) {
+					$('#emiSelectBank').show();
+				}
+			});
+		} else {
+
+		}
+	//});
+		}
+
+
+//TISPRO-533
+
+
+
+
 /**
  * This method picks up the selected bank for EMI, fetches the term period
  * against the bank and creates a dynamic EMI table
@@ -1519,38 +1596,51 @@ function getSelectedEMIBankForPDP() {
 
 function CheckonReload()
 {
-	var contentData = '';
-	 $.ajax({
-				url : ACC.config.encodedContextPath + "/p-checkUser",
-				data : {
-				},
-				type : "GET",
-				cache : false,
-				success : function(data) {
-					if(!data)							
-						{
-							//Hiding the Comment Box if the User is not Logged In
-							//TISUATPII-470 fix
-							$('#commentsDiv .gig-comments-composebox').hide();
-							//$('#commentsDiv .gig-comments-composebox').show();
-						}
-						else
-						{
-							//Showing the Comment Box if the User is  Logged In
-							$('#commentsDiv .gig-comments-composebox').show();
-							}
-				},
-				error : function(resp) {
-					console.log( "Error Occured" );
-				}
-			});
+	//CODE change as part of PT defect TISPT-180
+	var user_id	     	= getCookie("mpl-user");
+	var user_type		= getCookie("mpl-userType");
+	//alert(user_id+"=="+user_type);
+	if(user_type =='session' && user_id=='anonymous'){
+		//Hiding the Comment Box if the User is not Logged In
+		//TISUATPII-470 fix
+		$('#commentsDiv .gig-comments-composebox').hide();
+	}
+	else{
+		//Showing the Comment Box if the User is  Logged In
+		$('#commentsDiv .gig-comments-composebox').show();
+	}
+	
+//	var contentData = '';
+//	 $.ajax({
+//				url : ACC.config.encodedContextPath + "/p-checkUser",
+//				data : {
+//				},
+//				type : "GET",
+//				cache : false,
+//				success : function(data) {
+//					if(!data)							
+//						{
+//							//Hiding the Comment Box if the User is not Logged In
+//							//TISUATPII-470 fix
+//							$('#commentsDiv .gig-comments-composebox').hide();
+//							//$('#commentsDiv .gig-comments-composebox').show();
+//						}
+//						else
+//						{
+//							//Showing the Comment Box if the User is  Logged In
+//							$('#commentsDiv .gig-comments-composebox').show();
+//							}
+//				},
+//				error : function(resp) {
+//					console.log( "Error Occured" );
+//				}
+//			});
 }
 
 
 
 function getRating(key,productCode,category)
 {
-	//alert('test');
 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
 	 
 	$.getJSON(url, function(data){
@@ -1641,34 +1731,43 @@ function getRating(key,productCode,category)
 
 
 function CheckUserLogedIn() {
-	var contentData = '';
- $.ajax({
-			url : ACC.config.encodedContextPath + "/p-checkUser",
-			data : {
-				
-			},
-			type : "GET",
-			cache : false,
-			success : function(data) {
-				if(!data)							
-					{
-						gotoLogin();
-						
-					}
-					else
-					{
-							
-						//$('.gig-comments-composebox').show();
-							
-						}
-					
-								
-			},
-			error : function(resp) {
-				//alert("Error Occured");
-				console.log( "Error Occured" );
-			}
-		});
+	
+	//CODE change as part of PT defect TISPT-180
+	var user_id	     	= getCookie("mpl-user");
+	var user_type		= getCookie("mpl-userType");
+	if(user_type =='session' && user_id=='anonymous'){
+		gotoLogin();
+	}
+	
+	
+//	var contentData = '';
+// $.ajax({
+//			url : ACC.config.encodedContextPath + "/p-checkUser",
+//			data : {
+//				
+//			},
+//			type : "GET",
+//			cache : false,
+//			success : function(data) {
+//				if(!data)							
+//					{
+//						gotoLogin();
+//						
+//					}
+//					else
+//					{
+//							
+//						//$('.gig-comments-composebox').show();
+//							
+//						}
+//					
+//								
+//			},
+//			error : function(resp) {
+//				//alert("Error Occured");
+//				console.log( "Error Occured" );
+//			}
+//		});
 	
 }
 function nextImage()
@@ -2135,11 +2234,25 @@ function loadDefaultWishListName_SizeGuide() {
 	//AKAMAI Fix	
 	$(document).ready(function(){		
 		var url = window.location.href;		
+		
 		if (url.indexOf("selectedSize=true")>=0 && typeof productSizeVar !== "undefined")//>= 0  ==-1
 			{
-			$("#variant option:contains("+productSizeVar+")").attr('selected', true); 
-			$("#sizevariant option:contains("+productSizeVar+")").attr('selected', true); 
-			}
+			/*$("#variant option:contains("+productSizeVar+")").attr('selected', true); 
+			$("#sizevariant option:contains("+productSizeVar+")").attr('selected', true); */
+			$("#variant option").each(function() {
+				  if($(this).text().trim() == productSizeVar) {
+				    $(this).attr('selected', 'selected');            
+				  }                        
+				});
+			
+		
+		//Other Sellers
+		$("#sizevariant option").each(function() {
+			  if($(this).text().trim() == productSizeVar) {
+			    $(this).attr('selected', 'selected');            
+			  }                        
+			});
+		}
 		
 		
 		
