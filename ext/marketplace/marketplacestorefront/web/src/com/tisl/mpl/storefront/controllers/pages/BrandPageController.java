@@ -26,6 +26,7 @@ import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.enumeration.EnumerationService;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,6 +41,7 @@ import java.util.concurrent.ConcurrentMap;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -57,6 +59,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -241,6 +244,14 @@ public class BrandPageController extends AbstractSearchPageController
 
 					for (final CategoryModel subBrand : category.getAllSubcategories())
 					{
+						String categoryPath = GenericUtilityMethods.urlSafe(subBrand.getName());
+						if (StringUtils.isNotEmpty(categoryPath))
+						{
+							categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
+							categoryPath = categoryPath.toLowerCase();
+							categoryPath = GenericUtilityMethods.changeUrl(categoryPath);
+						}
+						subBrand.setName(subBrand.getName() + "||" + categoryPath);
 						for (final CategoryModel brand : allBrandList)
 						{
 							if (brand.getCode().equalsIgnoreCase(subBrand.getCode()))
@@ -304,8 +315,6 @@ public class BrandPageController extends AbstractSearchPageController
 
 
 					}
-
-
 				}
 			}
 
