@@ -132,6 +132,7 @@ function setBuyBoxDetails()
 				$("#ussid_quick").val(data['sellerArticleSKU']);				
 				$("#stock").val(data['availablestock']);					
 				var allStockZero = data['allOOStock'];
+				$("#sellerSelId").val(data['sellerId']); 
 				
 				
 				//alert("--"+ $(".quickViewSelect").html());
