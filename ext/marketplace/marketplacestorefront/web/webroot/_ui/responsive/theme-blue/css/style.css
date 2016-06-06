@@ -19926,8 +19926,8 @@ color: #ff829a;
 	}
 }
 @media (max-width:970px){
-	.product-tile .image .quickview {
-		display: none;
+	.product-tile .image .quickview,  .IAQuickView, .MSDQuickView {
+		display: none !important;
 	}
 	#colorbox, #cboxOverlay{
 	display:none !important;
@@ -25864,6 +25864,14 @@ body .account .right-account form .full.span input#currentPassword{
  @media (min-width:791px) {
 .zoomContainer {
 	z-index: 9999;
+}
+
+}
+@media (max-width:790px)
+{
+.zoomContainer,.zoomLens
+{
+	display:none !important;
 }
 }
 
