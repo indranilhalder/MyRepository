@@ -39,13 +39,13 @@ public class MplMediaDaoImpl implements MplMediaDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tils.mpl.media.MplMediaDao#findMediaSearch(java.lang.String)
-	 * 
+	 *
 	 * @Javadoc Method to Optimize Image load in PDP.Single Db Call to Populate Different Image Format
-	 * 
+	 *
 	 * @param MediaContainerModel container , String mediaFormatList
-	 * 
+	 *
 	 * @return List<MediaModel>
 	 */
 
@@ -64,7 +64,7 @@ public class MplMediaDaoImpl implements MplMediaDao
 							+ "where {media.MEDIACONTAINER}= ?containerPK " + "and {cat.VERSION } = ?catalogVersion "
 							+ "and {mf.QUALIFIER} in (");
 			queryString.append(mediaFormatList);
-			queryString.append(")");
+			queryString.append(')');
 
 			LOG.debug("QueryStringFetchingMediaforSearch::" + queryString.toString());
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
