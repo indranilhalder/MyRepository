@@ -8,6 +8,7 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.components.SimpleCMSComponentModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
 import com.tisl.mpl.marketplacecommerceservices.service.brand.BrandService;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -144,6 +146,17 @@ public class DefaultBrandService implements BrandService
 					subBrandList = brandComponent.getSubBrands();
 					sortMp = getBrandsInAplhabeticalOrder(subBrandList);
 
+				}
+				for (final CategoryModel categoryModel : subBrandList)
+				{
+					String categoryPath = GenericUtilityMethods.urlSafe(categoryModel.getName());
+					if (StringUtils.isNotEmpty(categoryPath))
+					{
+						categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
+						categoryPath = categoryPath.toLowerCase();
+						categoryPath = GenericUtilityMethods.changeUrl(categoryPath);
+					}
+					categoryModel.setName(categoryModel.getName() + "||" + categoryPath);
 				}
 			}
 		}

@@ -853,8 +853,22 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						orderStatus = orderStatusResponse.getStatus();
 					}
 				}
+				
+				//Logic when transaction is successful i.e. CHARGED
+				if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
+				{
+					//setting Payment Info
+					getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
+				}
+				getMplPaymentService().paymentModeApportion(cart);
+
+				if (updAuditErrStatus)
+				{
+					orderStatus = orderStatusResponse.getStatus();
+				}
 
 			}
+
 			//returning the statues of the order
 			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
 			return orderStatus;
