@@ -106,7 +106,28 @@
 	<%-- Favourite Icon --%>
 	<spring:theme code="img.favIcon" text="/" var="favIconPath"/>
     <link rel="shortcut icon" type="image/x-icon" media="all" href="${themeResourcePath}/${favIconPath}" />
+	<!-- DNS prefetching starts -->
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('ia.rootEP.https')" var="iaHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('msd.rest.url')" var="msdHost"/>
 
+	<link rel="dns-prefetch" href="//${mediaHost}">
+	<link rel="dns-prefetch" href="//${staticResourceHost}"> 
+	<link rel="dns-prefetch" href="//${iaHost}">
+	<link rel="dns-prefetch" href="//${msdHost}">
+	<link rel="dns-prefetch" href="//cdns.gigya.com">
+	<link rel="dns-prefetch" href="//tags.tiqcdn.com">
+	<link rel="dns-prefetch" href="//ajax.googleapis.com">
+	<link rel="dns-prefetch" href="//plus.google.com">
+	<link rel="dns-prefetch" href="//www.facebook.com">  
+	<link rel="dns-prefetch" href="//twitter.com">
+	<link rel="dns-prefetch" href="//www.instagram.com"> 
+	<link rel="dns-prefetch" href="//www.youtube.com">
+	<link rel="dns-prefetch" href="//docs.google.com">
+	<link rel="dns-prefetch" href="//apis.google.com">
+	<link rel="dns-prefetch" href="//tata.madstreetden.com">
+	<link rel="dns-prefetch" href="//tulprod.infiniteanalytics.com"> 
+	<!-- DNS prefetching ends --> 
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
 	<template:styleSheets/>
 	<script type="text/javascript"
