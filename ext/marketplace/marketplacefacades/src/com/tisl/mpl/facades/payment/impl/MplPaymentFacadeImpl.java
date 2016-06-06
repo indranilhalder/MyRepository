@@ -826,7 +826,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//Logic when transaction is successful i.e. CHARGED
 			if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 			{
-				//saving card details
+				//setting Payment Info
 				getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
 			}
 			getMplPaymentService().paymentModeApportion(cart);
@@ -1448,11 +1448,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1503,9 +1503,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override

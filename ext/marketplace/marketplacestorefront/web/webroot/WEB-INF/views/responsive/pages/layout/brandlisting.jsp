@@ -89,8 +89,9 @@ ${brandCollection.masterBrandName}
 								
 								<span class="letter">${entry.key}</span>
 								 <c:forEach items="${entry.value}" var="itemValue1">
-								 <c:url var="brandlistUrl" value="/Categories/c-${itemValue1.code}"></c:url>
-								 <a href ="${brandlistUrl}">${itemValue1.name}</a> 
+								 <c:set var="catName" value="${fn:split(itemValue1.name, '||')}" />
+								 <c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(itemValue1.code)}"></c:url>
+								 <a href ="${brandlistUrl}">${catName[0]}</a> 
 									
 									
 									</c:forEach>
@@ -140,10 +141,11 @@ ${brandCollection.masterBrandName}
 								 <span class="letter">${itemValue1.key}</span>
 								 
 								  <c:forEach items="${itemValue1.value}" var="item">
-								   <c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
+								  <c:set var="catName1" value="${fn:split(item.name, '||')}" />
+								   <c:url var="brandlistUrl" value="/${catName1[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
 								 
 								 <a
-									href ="${brandlistUrl}">${item.name}</a> 
+									href ="${brandlistUrl}">${catName1[0]}</a> 
 									
 									</c:forEach>
 									</li>
@@ -203,11 +205,11 @@ ${brandCollection.masterBrandName}
 								
 								<span class="letter">${item.key}</span>
 								 <c:forEach items="${item.value}" var="itemValue">
-								 
-								   <c:url var="brandlistUrl" value="/Categories/c-${itemValue.code}"></c:url>
+								 <c:set var="catName2" value="${fn:split(itemValue.name, '||')}" />
+								   <c:url var="brandlistUrl" value="/${catName2[1]}/c-${fn:toLowerCase(itemValue.code)}"></c:url>
 								 
 								 <a
-									class ="hello" href="${brandlistUrl}">${itemValue.name}</a> 
+									class ="hello" href="${brandlistUrl}">${catName2[0]}</a> 
 									</c:forEach>
 									
 									</li>
