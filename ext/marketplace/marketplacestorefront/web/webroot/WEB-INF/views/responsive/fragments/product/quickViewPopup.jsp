@@ -561,6 +561,7 @@ display:none;
 		<input type="hidden" name="ussid" id="ussid_quick"	/> <!-- value="${buyboxUssid}" -->
 		<input type="hidden" maxlength="3" size="1" id="stock" name="stock"
 		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
+		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
 		 
 		 <button id="addToCartButton" type="${buttonType}"
 												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
