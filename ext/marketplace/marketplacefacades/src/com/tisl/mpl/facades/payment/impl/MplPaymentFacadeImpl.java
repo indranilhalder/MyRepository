@@ -19,6 +19,7 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.BusinessProcessService;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -38,6 +39,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -516,7 +518,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public boolean isBlackListed(final String ipAddress, final CartModel cart) throws EtailNonBusinessExceptions
 	{
 		//getting current customer details
-		final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
+		//final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser(); TISPT-204 Point no 3
+		final CustomerModel customer = (CustomerModel) cart.getUser();
+
 		final String customerPk = customer.getPk().toString();
 		final String customerEmail = customer.getOriginalUid();
 		final String customerPhoneNo = fetchPhoneNumber(cart);
@@ -1448,11 +1452,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1503,9 +1507,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -1530,6 +1534,235 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			LOG.error(MarketplaceFacadesConstants.PRIORITYBANKSERROR, ex);
 		}
 		return bankList;
+	}
+
+	/**
+	 * This method is used to get the IP address of the client and check whether it is blacklisted TISPT-204 Point 2
+	 *
+	 * @return String
+	 *
+	 */
+	@Override
+	public String getBlacklistByIPStatus(final HttpServletRequest request)
+	{
+		String ip = request.getHeader("X-Forwarded-For");
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+		{
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+		{
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+		{
+			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+		{
+			ip = request.getHeader("HTTP_X_FORWARDED");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+		{
+			ip = request.getHeader("HTTP_X_CLUSTER_CLIENT_IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+		{
+			ip = request.getHeader("HTTP_CLIENT_IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+		{
+			ip = request.getHeader("HTTP_FORWARDED_FOR");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+		{
+			ip = request.getHeader("HTTP_FORWARDED");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+		{
+			ip = request.getHeader("HTTP_VIA");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+		{
+			ip = request.getHeader("REMOTE_ADDR");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+		{
+			ip = request.getRemoteAddr();
+		}
+
+		return ip;
+	}
+
+
+
+	/**
+	 * This method is used to get saved card details from juspay TISPT-204 Point no 4
+	 *
+	 * @param customer
+	 * @return ListCardsResponse
+	 *
+	 */
+	@Override
+	public ListCardsResponse getJuspayCardResponse(final CustomerModel customer)
+	{
+
+		final PaymentService juspayService = new PaymentService();
+
+		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService.withKey(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+				.withMerchantId(
+						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+
+		//creating ListCardsRequest of Juspay
+		final ListCardsRequest listCardsRequest = new ListCardsRequest().withCustomerId(customer.getUid());
+		ListCardsResponse listCardsResponse = new ListCardsResponse();
+		try
+		{
+			//getting ListCardsResponse by calling List Cards service of Juspay
+			listCardsResponse = juspayService.listCards(listCardsRequest);
+		}
+		catch (final NullPointerException e)
+		{
+			//logging error message
+			LOG.error(MarketplacecommerceservicesConstants.SAVEDCCERROR, e);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.SAVEDCCERROR, e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.SAVEDCCERROR, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.SAVEDCCERROR, e);
+		}
+
+		return listCardsResponse;
+	}
+
+	/**
+	 * This method fetches the stored credit card from juspay response and returns them back to the Controller TISPT-204
+	 * Point 4
+	 *
+	 * @param customer
+	 * @param listCardsResponse
+	 * @return Tuple2<?, ?>
+	 *
+	 */
+	@Override
+	public Tuple2<?, ?> listStoredCards(final CustomerModel customer, final ListCardsResponse listCardsResponse)
+	{
+		final Map<Date, SavedCardData> savedCreditCardDataMap = new TreeMap<Date, SavedCardData>(Collections.reverseOrder());
+		final Map<Date, SavedCardData> savedDebitCardDataMap = new TreeMap<Date, SavedCardData>(Collections.reverseOrder());
+
+		try
+		{
+			//getting ListCardsResponse by calling List Cards service of Juspay
+
+			final Collection<SavedCardModel> savedCardForCustomer = customer.getSavedCard();
+			final List<SavedCardModel> savedCardList = new ArrayList<SavedCardModel>();
+			savedCardList.addAll(savedCardForCustomer);
+			if (null != listCardsResponse && CollectionUtils.isNotEmpty(listCardsResponse.getCards()))
+			{
+				for (final StoredCard juspayCard : listCardsResponse.getCards())
+				{
+					final String bin = juspayCard.getCardIsin() != null ? juspayCard.getCardIsin()
+							: MarketplacecommerceservicesConstants.EMPTY;
+					BinModel binModel = getModelService().create(BinModel.class);
+					try
+					{
+						binModel = getBinService().checkBin(bin);
+					}
+					catch (final NullPointerException e)
+					{
+						LOG.error(MarketplacecommerceservicesConstants.BINNOERROR, e);
+						ExceptionUtil.getCustomizedExceptionTrace(e);
+					}
+					catch (final EtailBusinessExceptions e)
+					{
+						LOG.error(MarketplacecommerceservicesConstants.BINNOERROR, e);
+						ExceptionUtil.getCustomizedExceptionTrace(e);
+					}
+					//iterating through the saved cards list
+					for (final SavedCardModel savedCard : savedCardList)
+					{
+						//TISEE-396
+						if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
+								&& null != binModel
+								&& (StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.CARD_TYPE_CREDIT,
+										binModel.getCardType()) || StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.CC,
+										binModel.getCardType())) && null != savedCard.getBillingAddress())
+						{
+
+							final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+							savedCreditCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+						}
+						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
+								&& null != binModel
+								&& (StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.CARD_TYPE_DEBIT,
+										binModel.getCardType()) || StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.DC,
+										binModel.getCardType())))
+						{
+							final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+							savedDebitCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+						}
+						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null != binModel
+								&& StringUtils.isEmpty(binModel.getCardType()))
+						{
+							if (null != savedCard.getBillingAddress()) //Credit Card
+							{
+								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								savedCreditCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+							}
+							else
+							//Debit Card
+							{
+								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								savedDebitCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+							}
+						}
+						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null == binModel)
+						{
+							if (null != savedCard.getBillingAddress()) //Credit Card
+							{
+								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								savedCreditCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+							}
+							else
+							//Debit Card
+							{
+								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								savedDebitCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (final NullPointerException e)
+		{
+			//logging error message
+			LOG.error(MarketplacecommerceservicesConstants.SAVEDCARDERROR, e);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.SAVEDCARDERROR, e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.SAVEDCARDERROR, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.SAVEDCARDERROR, e);
+		}
+
+		return new Tuple2(savedCreditCardDataMap, savedDebitCardDataMap);
 	}
 
 	//Getters and setters

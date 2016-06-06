@@ -1567,9 +1567,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISPRO-497
 	public static final String CARTAMOUNTINVALID = "cartAmountInvalid";
 	public static final String CART_TOTAL_INVALID_MESSAGE = "Cannot Apply Coupon - Order Amount is less than Coupon Amount!";
-	
+
 	public static final String NBBANKSQUERY = "select {b:pk} from {bankForNetbanking As b},{bank as m} where {b.isAvailable}='1' and {b.name}={m.pk} order by {m.bankname}"
 			.intern();
+
+	//TISPT-204
+	public static final String SAVEDCARDERROR = "Exception while fetching saved credit/debit cards::::";
+	public static final String DC = "DC";
 
 	private MarketplacecommerceservicesConstants()
 	{

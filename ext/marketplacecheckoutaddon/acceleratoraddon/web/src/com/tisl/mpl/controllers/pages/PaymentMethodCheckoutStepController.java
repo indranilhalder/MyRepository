@@ -45,6 +45,7 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.promotions.PromotionsService;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -59,6 +60,7 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -99,6 +101,7 @@ import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.model.SavedCardModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.BinData;
 import com.tisl.mpl.data.CODData;
@@ -114,6 +117,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
+import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -1154,7 +1158,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final CartModel cart = getCartService().getSessionCart();
 
 		//to check customer is blacklisted or not against customer id, email, phone no. & ip address
-		final String ip = getBlacklistByIPStatus();
+		//final String ip = getBlacklistByIPStatus(); TISPT-204 Point No 2
+		final String ip = getMplPaymentFacade().getBlacklistByIPStatus(request);
 		LOG.debug("The ip of the system is::::::::::::::::::::::::" + ip);
 
 		//TISEE-5555
@@ -1171,6 +1176,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				//to check items are seller fulfilled or not
 				final List<String> fulfillmentDataList = new ArrayList<String>();
+				final List<String> paymentTypeList = new ArrayList<String>(); //TISPT-204
 				for (final OrderEntryData entry : cartData.getEntries())
 				{
 					if (entry != null && entry.getSelectedUssid() != null)
@@ -1185,6 +1191,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							{
 								final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
 								fulfillmentDataList.add(fulfillmentType.toUpperCase());
+							}
+
+							//Start TISPT-204 Point No 1
+							if (richAttributeModel != null && richAttributeModel.get(0) != null
+									&& richAttributeModel.get(0).getPaymentModes() != null)
+							{
+								final String paymentMode = richAttributeModel.get(0).getPaymentModes().toString();
+								if (StringUtils.isNotEmpty(paymentMode))
+								{
+									//setting the payment mode in a list
+									paymentTypeList.add(paymentMode);
+								}
+								//End TISPT-204 Point No 1
 							}
 						}
 					}
@@ -1210,33 +1229,33 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.TSHIP.toString());
 
 					//item eligible for COD or not
-					final List<String> paymentTypeList = new ArrayList<String>();
-
+					//final List<String> paymentTypeList = new ArrayList<String>(); TISPT-204
+					// Code commented as part of TISPT-204 Point No 1 , paymentTypeList is populated in earlier for loop
 					//iterating over all the cart entries
 					//TISBOX-883
-					for (final OrderEntryData entry : cartData.getEntries())
-					{
-						if (entry != null && entry.getSelectedUssid() != null)
-						{
-							final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
-									.getSelectedUssid());
-							List<RichAttributeModel> richAttributeModel = null;
-							if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
-							{
-								richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-								if (richAttributeModel != null && richAttributeModel.get(0).getPaymentModes() != null)
-								{
-									final String paymentMode = richAttributeModel.get(0).getPaymentModes().toString();
-									if (StringUtils.isNotEmpty(paymentMode))
-									{
-										//setting the payment mode in a list
-										paymentTypeList.add(paymentMode);
-									}
-								}
-							}
-						}
-
-					}
+					//					for (final OrderEntryData entry : cartData.getEntries())
+					//					{
+					//						if (entry != null && entry.getSelectedUssid() != null)
+					//						{
+					//							final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
+					//									.getSelectedUssid());
+					//							List<RichAttributeModel> richAttributeModel = null;
+					//							if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+					//							{
+					//								richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+					//								if (richAttributeModel != null && richAttributeModel.get(0).getPaymentModes() != null)
+					//								{
+					//									final String paymentMode = richAttributeModel.get(0).getPaymentModes().toString();
+					//									if (StringUtils.isNotEmpty(paymentMode))
+					//									{
+					//										//setting the payment mode in a list
+					//										paymentTypeList.add(paymentMode);
+					//									}
+					//								}
+					//							}
+					//						}
+					//
+					//					}
 
 					//declaring a flag
 					boolean codEligibilityFlag = false;
@@ -1349,10 +1368,37 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//getting the list of stored cards
 		Map<Date, SavedCardData> savedCreditCards = new TreeMap<Date, SavedCardData>();
 		Map<Date, SavedCardData> savedDebitCards = new TreeMap<Date, SavedCardData>();
+		final Collection<SavedCardModel> savedCardForCustomer = customer.getSavedCard(); //TISPT-204 Point no 5
 
+		// Code addition start TISPT-204 Point no 4
+		ListCardsResponse listCardsResponse = null;
 		try
 		{
-			savedCreditCards = getMplPaymentFacade().listStoredCreditCards(customer);
+			if (CollectionUtils.isNotEmpty(savedCardForCustomer)) // Code added for TISPT-204 Point no  5
+			{
+				listCardsResponse = getMplPaymentFacade().getJuspayCardResponse(customer);
+				final Tuple2<?, ?> storedSavedCards = getMplPaymentFacade().listStoredCards(customer, listCardsResponse);
+				savedCreditCards = (Map<Date, SavedCardData>) storedSavedCards.getFirst();
+				savedDebitCards = (Map<Date, SavedCardData>) storedSavedCards.getSecond();
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.B6005, e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.B6005, e);
+		}
+		// Code addition end TISPT-204 Point no 4
+		try
+		{
+			//savedCreditCards = getMplPaymentFacade().listStoredCreditCards(customer); Code commented for TISPT-204 Point no  4
 			if (MapUtils.isNotEmpty(savedCreditCards))
 			{
 				//adding cards to model
@@ -1361,7 +1407,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			else
 			{
 				LOG.info("No Saved credit cards found !!");
-
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1381,7 +1426,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		try
 		{
-			savedDebitCards = getMplPaymentFacade().listStoredDebitCards(customer);
+			//savedDebitCards = getMplPaymentFacade().listStoredDebitCards(customer); //Code commented for TISPT-204 Point no  4
 			if (!savedDebitCards.isEmpty())
 			{
 				//adding cards to model
@@ -1404,13 +1449,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			LOG.error(MarketplacecheckoutaddonConstants.B6006, e);
 
 		}
-
 		catch (final Exception e)
 		{
 			LOG.error(MarketplacecheckoutaddonConstants.B6006, e);
 		}
-
-
 		try
 		{
 			final List<String> countryList = getMplPaymentFacade().getCountries();
@@ -1509,56 +1551,57 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @return Boolean
 	 *
 	 */
-	private String getBlacklistByIPStatus()
-	{
-		String ip = request.getHeader("X-Forwarded-For");
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
-			ip = request.getHeader("Proxy-Client-IP");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
-			ip = request.getHeader("WL-Proxy-Client-IP");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
-			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
-			ip = request.getHeader("HTTP_X_FORWARDED");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
-			ip = request.getHeader("HTTP_X_CLUSTER_CLIENT_IP");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
-			ip = request.getHeader("HTTP_CLIENT_IP");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
-			ip = request.getHeader("HTTP_FORWARDED_FOR");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
-			ip = request.getHeader("HTTP_FORWARDED");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
-			ip = request.getHeader("HTTP_VIA");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
-			ip = request.getHeader("REMOTE_ADDR");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
-			ip = request.getRemoteAddr();
-		}
-
-		return ip;
-	}
+	//  Code moved to facade layer TISPT-204 Point 2
+	//	private String getBlacklistByIPStatus()
+	//	{
+	//		String ip = request.getHeader("X-Forwarded-For");
+	//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+	//		{
+	//			ip = request.getHeader("Proxy-Client-IP");
+	//		}
+	//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+	//		{
+	//			ip = request.getHeader("WL-Proxy-Client-IP");
+	//		}
+	//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+	//		{
+	//			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+	//		}
+	//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+	//		{
+	//			ip = request.getHeader("HTTP_X_FORWARDED");
+	//		}
+	//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+	//		{
+	//			ip = request.getHeader("HTTP_X_CLUSTER_CLIENT_IP");
+	//		}
+	//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+	//		{
+	//			ip = request.getHeader("HTTP_CLIENT_IP");
+	//		}
+	//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+	//		{
+	//			ip = request.getHeader("HTTP_FORWARDED_FOR");
+	//		}
+	//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+	//		{
+	//			ip = request.getHeader("HTTP_FORWARDED");
+	//		}
+	//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+	//		{
+	//			ip = request.getHeader("HTTP_VIA");
+	//		}
+	//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+	//		{
+	//			ip = request.getHeader("REMOTE_ADDR");
+	//		}
+	//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+	//		{
+	//			ip = request.getRemoteAddr();
+	//		}
+	//
+	//		return ip;
+	//	}
 
 
 	/**
