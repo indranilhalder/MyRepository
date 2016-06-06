@@ -27,6 +27,9 @@ $(function() {
             ).html(data.cartcount);
             if (!headerLoggedinStatus) {
                 $("a.headeruserdetails").html("Sign In");
+              //Akamai caching
+                $("a.headeruserdetails").attr('href','/login');
+                $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
             } else {
                 var firstName = data.userFirstName;
                 if (firstName == null || firstName.trim() ==
@@ -36,7 +39,11 @@ $(function() {
                     $("a.headeruserdetails").html("Hi, " +
                         firstName + "!");
                 }
+                //Akamai caching
+                $('#signIn').attr('class','dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout');
+                $("a.headeruserdetails").attr('href','/my-account');
             }
+         
         }
     });
 });
@@ -197,6 +204,7 @@ $("a#tracklink").on("mouseover touchend", function(e) {
         url: ACC.config.encodedContextPath +
             "/headerTrackOrder",
         type: 'GET',
+        cache:false,
         success: function(html) {
             $("ul.trackorder-dropdown").html(html);
         }
