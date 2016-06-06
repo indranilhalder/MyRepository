@@ -810,7 +810,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			{
 				LOG.error("Exception in picking up juspay order id from session...reverting to fallback mechanism with exception ",
 						e);
-				juspayOrderId = getMplPaymentService().getAuditId(cart.getGuid());
+				//				juspayOrderId = getMplPaymentService().getAuditId(cart.getGuid());
 			}
 			//			orderStatusRequest.withOrderId(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID)
 			//					.toString());
