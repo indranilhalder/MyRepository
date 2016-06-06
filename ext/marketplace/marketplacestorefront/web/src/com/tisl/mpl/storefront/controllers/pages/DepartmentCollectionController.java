@@ -5,14 +5,10 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commerceservices.category.CommerceCategoryService;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -29,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
@@ -49,7 +46,7 @@ public class DepartmentCollectionController
 	private CategoryService categoryService;
 
 	@Autowired
-	private CommerceCategoryService commerceCategoryService;
+	private HomepageComponentService homepageComponentService;
 
 
 	/**
@@ -80,7 +77,8 @@ public class DepartmentCollectionController
 				for (final CategoryModel thirdLevelCategories : thirdLevelCategory)
 				{
 
-					String categoryPathThird = buildPathString(getCategoryPath(thirdLevelCategories));
+					String categoryPathThird = GenericUtilityMethods.buildPathString(homepageComponentService
+							.getCategoryPath(thirdLevelCategories));
 					if (StringUtils.isNotEmpty(categoryPathThird))
 					{
 						categoryPathThird = URLDecoder.decode(categoryPathThird, "UTF-8");
@@ -93,7 +91,8 @@ public class DepartmentCollectionController
 
 				// Storing the third level categories in a map
 				thirdLevelCategoryMap.put(secondLevelCategory.getCode(), thirdLevelCategory);
-				String categoryPath = buildPathString(getCategoryPath(secondLevelCategory));
+				String categoryPath = GenericUtilityMethods.buildPathString(homepageComponentService
+						.getCategoryPath(secondLevelCategory));
 				if (StringUtils.isNotEmpty(categoryPath))
 				{
 					categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
@@ -131,59 +130,4 @@ public class DepartmentCollectionController
 		return ControllerConstants.Views.Fragments.Home.DepartmentCollection;
 	}
 
-	protected List<CategoryModel> getCategoryPath(final CategoryModel category)
-	{
-		final Collection<List<CategoryModel>> path = commerceCategoryService.getPathsForCategory(category);
-		if (null != path)
-		{
-			for (final List<CategoryModel> path1 : path)
-			{
-				if (path1.size() > 1)
-				{
-					path1.remove(0);
-				}
-			}
-		}
-
-		return (path.iterator().next());
-	}
-
-	protected String buildPathString(final List<CategoryModel> path)
-	{
-		final StringBuilder result = new StringBuilder();
-
-		for (int i = 0; i < path.size(); ++i)
-		{
-			if (i != 0)
-			{
-				result.append('-');
-			}
-			result.append(urlSafe(path.get(i).getName()));
-		}
-
-		return result.toString();
-	}
-
-	protected String urlSafe(final String text)
-	{
-		if ((text == null) || (text.isEmpty()))
-		{
-			return "";
-		}
-		String encodedText;
-		try
-		{
-			encodedText = URLEncoder.encode(text, "utf-8");
-		}
-		catch (final UnsupportedEncodingException encodingException)
-		{
-			encodedText = text;
-			//	LOG.debug(encodingException.getMessage());
-		}
-
-		String cleanedText = encodedText;
-		cleanedText = cleanedText.replaceAll("%2F", "/");
-		cleanedText = cleanedText.replaceAll("[^%A-Za-z0-9\\-]+", "-");
-		return cleanedText;
-	}
 }

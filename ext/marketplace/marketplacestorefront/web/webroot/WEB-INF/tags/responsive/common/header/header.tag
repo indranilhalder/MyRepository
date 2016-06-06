@@ -39,7 +39,7 @@
 	<input type="hidden" id="previewVersion" value="${cmsPageRequestContextData.preview}">
 	<input type="hidden" id="pageTemplateId" value="${cmsPage.masterTemplate.uid}">
 	<!-- For Infinite Analytics End -->
-	
+	<input type="hidden" id="pageName" value="${cmsPage.name}">
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">

@@ -12,25 +12,25 @@
 
 <!-- <ul class="header-trackOrder"> -->
 
-<c:set var="urlToAccess" value="#" />
+<!-- <c:set var="urlToAccess" value="#" />
 <c:if test="${isSignedInUser eq 'no'  }">
 <c:set var="urlToAccess" value="/login" />
   <c:url var="urlToAccess" value="${urlToAccess }"></c:url>
-</c:if>
+</c:if> -->
 <c:choose>
 <c:when test="${isSignedInUser eq 'yes' }">
 	<li class="track trackOrder">
-	<a id="tracklink" href="${urlToAccess }"><span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >${notificationCount}</span>)</a>
+	<a id="tracklink" href="${notificationUrl }"><span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >${notificationCount}</span>)</a>
 		 <span id="mobile-menu-toggle"></span>
 		<ul class="trackorder-dropdown"></ul> 
 		</li>
 		
 		</c:when>
 		<c:otherwise>
-		<c:if test="${ empty notificationCount }">
+		<c:if test="${ empty notificationCount and isSignedInUser eq 'no'}">
 		
 		<li class="track trackOrder">
-	<a id="tracklink" href="${urlToAccess}"><span class="bell-icon"></span>&nbsp;Notifications</a>
+	<a id="tracklink" href="/login"><span class="bell-icon"></span>&nbsp;Notifications</a>
 		 <span id="mobile-menu-toggle"></span>
 		<ul class="trackorder-dropdown"></ul> 
 		</li>

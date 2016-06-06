@@ -15,10 +15,15 @@ import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tils.mpl.media.MplMediaService;
 import com.tisl.mpl.core.enums.MediaTypeEnum;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 
@@ -31,6 +36,11 @@ public class CustomProductGalleryImagePopulator<SOURCE extends ProductModel, TAR
 		ProductGalleryImagesPopulator<SOURCE, TARGET>
 {
 	private static final Logger LOG = Logger.getLogger(CustomProductGalleryImagePopulator.class);
+
+	@Autowired
+	private MplMediaService mediaService;
+
+	//	DefaultCustomMediaService defaultCustomMediaService;
 
 	@Override
 	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException
@@ -76,10 +86,13 @@ public class CustomProductGalleryImagePopulator<SOURCE extends ProductModel, TAR
 
 	}
 
-	@Override
-	protected void addImagesInFormats(final MediaContainerModel mediaContainer, final ImageDataType imageType,
+	//this method will not get called now as it is doing lot of DB hit.
+	//@Override
+	protected void addImagesInFormatsOld(final MediaContainerModel mediaContainer, final ImageDataType imageType,
 			final int galleryIndex, final List<ImageData> list)
 	{
+
+		//final long startTime = System.currentTimeMillis();
 		for (final String imageFormat : getImageFormats())
 		{
 			try
@@ -125,6 +138,9 @@ public class CustomProductGalleryImagePopulator<SOURCE extends ProductModel, TAR
 						}
 					}
 				}
+
+				//final long endTime = System.currentTimeMillis();
+				//System.out.println("*******************OLD TIME DIFFERENCE********************" + (endTime - startTime));
 			}
 			catch (final ModelNotFoundException ignore)
 			{
@@ -134,4 +150,115 @@ public class CustomProductGalleryImagePopulator<SOURCE extends ProductModel, TAR
 			}
 		}
 	}
+
+	@Override
+	protected void addImagesInFormats(final MediaContainerModel mediaContainer, final ImageDataType imageType,
+			final int galleryIndex, final List<ImageData> list)
+	{
+
+		final long startTime = System.currentTimeMillis();
+		final Map<String, MediaModel> mediaMapwithFormat = getMediaList(mediaContainer);
+
+		try
+		{
+			for (final Map.Entry<String, MediaModel> entry : mediaMapwithFormat.entrySet())
+			{
+				final ImageData imageData = getImageConverter().convert(entry.getValue());
+				imageData.setFormat(entry.getKey());
+				imageData.setImageType(imageType);
+
+				if (null != entry.getValue() && null != entry.getValue().getMediaPriority())
+				{
+					if (null != entry.getValue().getMediaType() && MediaTypeEnum.VIDEO.equals(entry.getValue().getMediaType()))
+					{
+						final int newPriority = (entry.getValue().getMediaPriority() == null ? 0 : entry.getValue().getMediaPriority()
+								.intValue())
+								+ MarketplaceFacadesConstants.PRIORITY_INCREMENT;
+						imageData.setMediaPriority(Integer.valueOf(newPriority));
+					}
+					else
+					{
+						imageData.setMediaPriority(entry.getValue().getMediaPriority());
+					}
+				}
+				else
+				{
+					imageData.setMediaPriority(Integer.valueOf(0));
+				}
+				if (ImageDataType.GALLERY.equals(imageType))
+				{
+					imageData.setGalleryIndex(Integer.valueOf(galleryIndex));
+				}
+				list.add(imageData);
+
+			}
+
+			final long endTime = System.currentTimeMillis();
+			LOG.info("*******************New TIME DIFFERENCE********************" + (endTime - startTime));
+		}
+		catch (final ModelNotFoundException ignore)
+		{
+			LOG.error(ignore);
+		}
+
+
+	}
+
+	/*
+	 * @JavaDoc Method to List down the MediaFormat and Fire Collective Query to Dao
+	 *
+	 * @param MediaContainerModel container
+	 *
+	 * @return MediaModel
+	 */
+	private Map<String, MediaModel> getMediaList(final MediaContainerModel container)
+	{
+
+
+		//final List<String> mediaFormatQualifierList = new ArrayList<String>();
+		final StringBuilder mediaFormatQualifierData = new StringBuilder(50);
+		final Map<String, String> imageFormatMap = new HashMap<String, String>();
+
+		for (final String imageFormat : getImageFormats())
+		{
+			final String mediaFormatQualifier = getImageFormatMapping().getMediaFormatQualifierForImageFormat(imageFormat);
+			imageFormatMap.put(imageFormat, mediaFormatQualifier);
+			if (null != mediaFormatQualifier)
+			{
+				mediaFormatQualifierData.append('\'').append(mediaFormatQualifier).append('\'').append(',');
+			}
+		}
+
+
+		String mediaFormatQualifierApended = mediaFormatQualifierData.toString();
+		if (!StringUtils.isEmpty(mediaFormatQualifierApended))
+		{
+			mediaFormatQualifierApended = mediaFormatQualifierApended.substring(0, mediaFormatQualifierApended.length() - 1);
+		}
+
+		//Calling Optimized Method for Media
+		final List<MediaModel> allmedia = mediaService.findMediaForQualifier(container, mediaFormatQualifierApended);
+
+		final Map<String, MediaModel> mediaMapwithFormat = new HashMap<String, MediaModel>();
+		//Mapping Media with Image Format
+		for (final Map.Entry<String, String> entry : imageFormatMap.entrySet())
+		{
+			for (final MediaModel media : allmedia)
+			{
+				if (null != media.getMediaFormat() && null != media.getMediaFormat().getName()
+						&& media.getMediaFormat().getName().equals(entry.getValue()))// && null == mediaMapwithFormat.get(entry.getKey())
+				{
+					mediaMapwithFormat.put(entry.getKey(), media);
+				}
+			}
+
+		}
+
+		LOG.info("------------mediaMapwithFormat-----" + mediaMapwithFormat);
+
+		return mediaMapwithFormat;
+
+
+	}
+
 }
