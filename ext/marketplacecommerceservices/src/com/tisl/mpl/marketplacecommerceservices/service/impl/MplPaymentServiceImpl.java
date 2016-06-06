@@ -327,71 +327,46 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//TISPRO-540
 			//			for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
 			//			{
-			if (null != orderStatusResponse.getCardResponse() && null != cart.getModeOfPayment()
-					&& MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(cart.getModeOfPayment()))
+			try
 			{
-				try
+				if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
+						&& MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(cart.getModeOfPayment()))
 				{
 					//saving the cartmodel for Debit Card
 					getModelService().save(setValueInDebitCardPaymentInfo(cart, orderStatusResponse));
 					//						break;
 				}
-				catch (final ModelSavingException e)
-				{
-					LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-					throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-				}
-			}
-			else if (null != orderStatusResponse.getCardResponse() && null != cart.getModeOfPayment()
-					&& MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(cart.getModeOfPayment()))
-			{
-				try
+				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
+						&& MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(cart.getModeOfPayment()))
 				{
 					//saving the cartmodel for Credit Card
 					getModelService().save(setValueInCreditCardPaymentInfo(cart, orderStatusResponse));
 					//						break;
 				}
-				catch (final ModelSavingException e)
-				{
-					LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-					throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-				}
-			}
-			else if (null != orderStatusResponse.getCardResponse() && null != cart.getModeOfPayment()
-					&& MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
-			{
-				try
+				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
+						&& MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
 				{
 					//saving the cartmodel for EMI
 					getModelService().save(setValueInEMIPaymentInfo(cart, orderStatusResponse));
 					//						break;
 				}
-				catch (final ModelSavingException e)
-				{
-					LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-					throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-				}
-			}
-			else if (null != cart.getModeOfPayment()
-					&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(cart.getModeOfPayment()))
-			{
-				try
+				else if (StringUtils.isNotEmpty(cart.getModeOfPayment())
+						&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(cart.getModeOfPayment()))
 				{
 					//saving the cartmodel for Netbanking
 					getModelService().save(setValueInNetbankingPaymentInfo(cart, orderStatusResponse));
 					//						break;
 				}
-				catch (final ModelSavingException e)
-				{
-					LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-					throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-				}
+			}
+			catch (final ModelSavingException e)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
+				throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
 			}
 			//			}
 			//}
 		}
 	}
-
 
 	/**
 	 * This method is setting paymentTransactionModel and the paymentTransactionEntryModel against the cart for non-COD
@@ -2431,7 +2406,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private void saveCards(final GetOrderStatusResponse orderStatusResponse, final Map<String, Double> paymentMode,
 			final CartModel cart, final String sameAsShipping)
 	{
-		if (null != orderStatusResponse && null != orderStatusResponse.getCardResponse())
+		if (null != orderStatusResponse && null != orderStatusResponse.getCardResponse()
+				&& StringUtils.isNotEmpty(cart.getModeOfPayment()))
 		{
 			//Logic if the order status response is not null
 			//			for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
@@ -2521,11 +2497,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2537,9 +2513,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override

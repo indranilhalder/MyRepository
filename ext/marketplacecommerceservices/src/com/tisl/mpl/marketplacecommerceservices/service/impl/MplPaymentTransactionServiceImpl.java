@@ -99,8 +99,11 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 		//final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(entry.getKey());
 		//TISPRO-540 - Getting Payment mode from CartModel
-		final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(cart.getModeOfPayment());
-		paymentTransactionEntry.setPaymentMode(paymenttype);
+		if (StringUtils.isNotEmpty(cart.getModeOfPayment()))
+		{
+			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(cart.getModeOfPayment());
+			paymentTransactionEntry.setPaymentMode(paymenttype);
+		}
 
 		try
 		{
@@ -116,7 +119,6 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 		return paymentTransactionEntryList;
 
 	}
-
 
 	/**
 	 * This method sets the Payment Transaction entry status based on the Juspay Order Status Response
