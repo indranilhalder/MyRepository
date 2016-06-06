@@ -323,74 +323,50 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.info(MarketplacecommerceservicesConstants.JUSPAY_ORDER_STAT_RESP + orderStatusResponse);
 
 			//Logic if the order status response is not null
-			//if (null != orderStatusResponse.getCardResponse())
-			//{
-			for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+
+			//TISPRO-540
+			//			for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+			//			{
+			try
 			{
-				if (null != orderStatusResponse.getCardResponse()
-						&& MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(entry.getKey()))
+				if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
+						&& MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(cart.getModeOfPayment()))
 				{
-					try
-					{
-						//saving the cartmodel for Debit Card
-						getModelService().save(setValueInDebitCardPaymentInfo(cart, orderStatusResponse));
-						break;
-					}
-					catch (final ModelSavingException e)
-					{
-						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-					}
+					//saving the cartmodel for Debit Card
+					getModelService().save(setValueInDebitCardPaymentInfo(cart, orderStatusResponse));
+					//						break;
 				}
-				else if (null != orderStatusResponse.getCardResponse()
-						&& MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(entry.getKey()))
+				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
+						&& MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(cart.getModeOfPayment()))
 				{
-					try
-					{
-						//saving the cartmodel for Credit Card
-						getModelService().save(setValueInCreditCardPaymentInfo(cart, orderStatusResponse));
-						break;
-					}
-					catch (final ModelSavingException e)
-					{
-						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-					}
+					//saving the cartmodel for Credit Card
+					getModelService().save(setValueInCreditCardPaymentInfo(cart, orderStatusResponse));
+					//						break;
 				}
-				else if (null != orderStatusResponse.getCardResponse()
-						&& MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(entry.getKey()))
+				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
+						&& MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
 				{
-					try
-					{
-						//saving the cartmodel for EMI
-						getModelService().save(setValueInEMIPaymentInfo(cart, orderStatusResponse));
-						break;
-					}
-					catch (final ModelSavingException e)
-					{
-						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-					}
+					//saving the cartmodel for EMI
+					getModelService().save(setValueInEMIPaymentInfo(cart, orderStatusResponse));
+					//						break;
 				}
-				else if (MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey().trim()))
+				else if (StringUtils.isNotEmpty(cart.getModeOfPayment())
+						&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(cart.getModeOfPayment()))
 				{
-					try
-					{
-						//saving the cartmodel for Netbanking
-						getModelService().save(setValueInNetbankingPaymentInfo(cart, orderStatusResponse));
-						break;
-					}
-					catch (final ModelSavingException e)
-					{
-						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-					}
+					//saving the cartmodel for Netbanking
+					getModelService().save(setValueInNetbankingPaymentInfo(cart, orderStatusResponse));
+					//						break;
 				}
 			}
+			catch (final ModelSavingException e)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
+				throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
+			}
+			//			}
 			//}
 		}
 	}
-
 
 	/**
 	 * This method is setting paymentTransactionModel and the paymentTransactionEntryModel against the cart for non-COD
@@ -2430,41 +2406,42 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private void saveCards(final GetOrderStatusResponse orderStatusResponse, final Map<String, Double> paymentMode,
 			final CartModel cart, final String sameAsShipping)
 	{
-		if (null != orderStatusResponse && null != orderStatusResponse.getCardResponse())
+		if (null != orderStatusResponse && null != orderStatusResponse.getCardResponse()
+				&& StringUtils.isNotEmpty(cart.getModeOfPayment()))
 		{
 			//Logic if the order status response is not null
-			for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+			//			for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+			//			{
+			//				if (MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(entry.getKey()))
+			if (MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(cart.getModeOfPayment()))
 			{
-				if (MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(entry.getKey()))
+				try
 				{
-					try
-					{
-						saveDebitCard(orderStatusResponse, cart);
-						break;
-					}
-					catch (final ModelSavingException e)
-					{
-						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG, e);
-					}
+					saveDebitCard(orderStatusResponse, cart);
+					//					break;
 				}
-				else if (MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(entry.getKey())
-						|| MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(entry.getKey()))
+				catch (final ModelSavingException e)
 				{
-					try
-					{
-						saveCreditCard(orderStatusResponse, cart, sameAsShipping);
-						break;
-					}
-					catch (final ModelSavingException e)
-					{
-						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG, e);
-					}
+					LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG, e);
 				}
 			}
+			else if (MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(cart.getModeOfPayment())
+					|| MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
+			{
+				try
+				{
+					saveCreditCard(orderStatusResponse, cart, sameAsShipping);
+					//					break;
+				}
+				catch (final ModelSavingException e)
+				{
+					LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG, e);
+				}
+			}
+			//			}
 
 		}
 	}
-
 
 
 
