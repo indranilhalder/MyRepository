@@ -785,7 +785,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				List<String> associatedItemList = subOrderEntryModel.getAssociatedItems();
 				if (subOrderEntryModel.getGiveAway().booleanValue() && CollectionUtils.isNotEmpty(associatedItemList))
 				{
-					associatedItemList = updateAssociatedItem(associatedItemList, assignedParentList);
+					associatedItemList = updateAssociatedItem(associatedItemList, assignedParentList, freebieParentMap);
+
 					final String parentUssId = getParentUssid(associatedItemList, subOrderModel);
 					String parentTransactionId = null;
 					assignedParentList.add(parentUssId);
@@ -797,8 +798,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						{
 							subOrderEntryModel.setParentTransactionID(parentTransactionId);
 							getModelService().save(subOrderEntryModel);
-
-
 							for (final String freebieUssid : associatedItemMap.get(parentUssId))
 							{
 								if (!freebieUssid.equalsIgnoreCase(subOrderEntryModel.getSelectedUSSID()))
@@ -831,15 +830,20 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	/**
 	 * @param associatedItemList
 	 * @param assignedParentList
+	 * @param freebieParentMap
 	 * @return
 	 */
-	private List<String> updateAssociatedItem(final List<String> associatedItemList, final List<String> assignedParentList)
+	private List<String> updateAssociatedItem(final List<String> associatedItemList, final List<String> assignedParentList,
+			final Map<String, List<String>> freebieParentMap)
 	{
 		// YTODO Auto-generated method stub
 		final List<String> updatedAssociatedList = new ArrayList<String>(associatedItemList);
 		for (final String parentUssid : assignedParentList)
 		{
-			updatedAssociatedList.remove(parentUssid);
+			if (CollectionUtils.isEmpty(freebieParentMap.get(parentUssid)))
+			{
+				updatedAssociatedList.remove(parentUssid);
+			}
 		}
 		return updatedAssociatedList;
 	}
