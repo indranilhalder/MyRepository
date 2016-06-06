@@ -1,6 +1,6 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <div id="groups"
 	style="min-height: 28px; border-bottom: 4px solid; letter-spacing: 1px; font-size: 17px;">
@@ -23,8 +23,9 @@
 				<h3>${entry.key}</h3>
 				<c:set var="values" value="${entry.value}" />
 				<c:forEach items="${values}" var="item">
-					<c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
-					<li class="a-z-li"><a href="${brandlistUrl}">${item.name}</a></li>
+				<c:set var="catName" value="${fn:split(item.name, '||')}" />
+					<c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
+					<li class="a-z-li"><a href="${brandlistUrl}">${catName[0]}</a></li>
 
 				</c:forEach>
 			</ul>
@@ -40,8 +41,9 @@
 				<c:set var="values" value="${entry.value}" />
 				<c:forEach items="${values}" var="item">
 					<%-- <c:url var="subBrandUrl" value="${item.subBrandUrl}"></c:url> --%>
-					<c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
-					<li class="a-z-li"><a href="${brandlistUrl}">${item.name}</a></li>
+					<c:set var="catName1" value="${fn:split(item.name, '||')}" />
+					<c:url var="brandlistUrl" value="/${catName1[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
+					<li class="a-z-li"><a href="${brandlistUrl}">${catName1[0]}</a></li>
 
 				</c:forEach>
 			</ul>
@@ -58,8 +60,9 @@
 				<c:set var="values" value="${entry.value}" />
 				<c:forEach items="${values}" var="item" >
 					<%-- 	<c:url var="subBrandUrl" value="${item.subBrandUrl}"></c:url> --%>
-					<c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
-					<li class="a-z-li"><a href="${brandlistUrl}">${item.name}</a></li>
+					<c:set var="catName2" value="${fn:split(item.name, '||')}" />
+					<c:url var="brandlistUrl" value="/${catName2[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
+					<li class="a-z-li"><a href="${brandlistUrl}">${catName2[0]}</a></li>
 
 				</c:forEach>
 			</ul>
@@ -78,8 +81,9 @@
 
 
 					<%-- <c:url var="subBrandUrl" value="${item.subBrandUrl}"></c:url> --%>
-					<c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
-					<li class="a-z-li"><a href="${brandlistUrl}">${item.name}</a></li>
+					<c:set var="catName3" value="${fn:split(item.name, '||')}" />
+					<c:url var="brandlistUrl" value="/${catName3[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
+					<li class="a-z-li"><a href="${brandlistUrl}">${catName3[0]}</a></li>
 
 				</c:forEach>
 			</ul>
@@ -94,8 +98,9 @@
 				<h3>${entry.key}</h3>
 				<c:set var="values" value="${entry.value}" />
 				<c:forEach items="${values}" var="item">
-					<c:url var="brandlistUrl" value="/Categories/c-${item.code}"></c:url>
-					<li class="a-z-li"><a href="${brandlistUrl}">${item.name}</a></li>
+				<c:set var="catName4" value="${fn:split(item.name, '||')}" />
+					<c:url var="brandlistUrl" value="/${catName4[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
+					<li class="a-z-li"><a href="${brandlistUrl}">${catName4[0]}</a></li>
 
 				</c:forEach>
 			</ul>

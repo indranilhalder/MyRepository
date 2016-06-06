@@ -3,7 +3,10 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
+
+import java.util.List;
 
 import org.json.simple.JSONObject;
 
@@ -21,5 +24,7 @@ public interface HomepageComponentService
 	JSONObject getProductsYouCareJSON(ContentSlotModel contentSlot) throws EtailNonBusinessExceptions;
 
 	JSONObject getJsonBanner(ContentSlotModel contentSlot, String compType) throws EtailNonBusinessExceptions;
+
+	List<CategoryModel> getCategoryPath(CategoryModel categoryModel);
 
 }

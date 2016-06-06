@@ -4,7 +4,9 @@
 package com.tils.mpl.media.impl;
 
 import de.hybris.platform.core.model.media.MediaContainerModel;
+import de.hybris.platform.core.model.media.MediaFormatModel;
 import de.hybris.platform.core.model.media.MediaModel;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.List;
 
@@ -26,9 +28,9 @@ public class MplMediaServiceImpl implements MplMediaService
 
 	/*
 	 * @Javadoc Method to Optimize Image load in PDP.Single Db Call to Populate Different Image Format
-	 * 
+	 *
 	 * @param MediaContainerModel container , String mediaFormatList
-	 * 
+	 *
 	 * @return List<MediaModel>
 	 */
 
@@ -36,5 +38,12 @@ public class MplMediaServiceImpl implements MplMediaService
 	public List<MediaModel> findMediaForQualifier(final MediaContainerModel container, final String mediaFormatList)
 	{
 		return mediaDao.findMediaForQualifier(container, mediaFormatList);
+	}
+
+	@Override
+	public MediaModel getMediaForIndexing(final ProductModel product, final MediaFormatModel mediaFormat,
+			final List<MediaContainerModel> galleryImages)
+	{
+		return mediaDao.getMediaForIndexing(product, mediaFormat, galleryImages);
 	}
 }

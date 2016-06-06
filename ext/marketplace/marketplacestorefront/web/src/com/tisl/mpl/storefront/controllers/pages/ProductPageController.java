@@ -150,17 +150,7 @@ public class ProductPageController extends AbstractPageController
 	 */
 	private static final String PINCODE_CHECKED = "pincodeChecked";
 
-	/**
-	 *
-	 */
-	private static final String IS_NEW = "isNew";
 
-	private static final String FULLFILMENT_TYPE = "fullfilmentType";
-
-	/**
-	 *
-	 */
-	private static final String IS_ONLINE_EXCLUSIVE = "isOnline";
 
 	/**
 	 *
