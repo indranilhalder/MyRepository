@@ -1571,9 +1571,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NBBANKSQUERY = "select {b:pk} from {bankForNetbanking As b},{bank as m} where {b.isAvailable}='1' and {b.name}={m.pk} order by {m.bankname}"
 			.intern();
 
+
 	//TISPT-204
 	public static final String SAVEDCARDERROR = "Exception while fetching saved credit/debit cards::::";
 	public static final String DC = "DC";
+	//TISPT-200
+	public static final String GETAUDITID = "select {a.pk} from {mplpaymentaudit as a} where {a.cartGUID}=?cartGUID ORDER BY {a.requestDate} DESC"
+			.intern();
+
 
 	private MarketplacecommerceservicesConstants()
 	{
