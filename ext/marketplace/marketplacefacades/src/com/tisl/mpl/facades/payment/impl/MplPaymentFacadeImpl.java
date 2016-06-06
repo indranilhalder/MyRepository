@@ -830,7 +830,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//Logic when transaction is successful i.e. CHARGED
 			if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 			{
-				//saving card details
+				//setting Payment Info
 				getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
 			}
 			getMplPaymentService().paymentModeApportion(cart);

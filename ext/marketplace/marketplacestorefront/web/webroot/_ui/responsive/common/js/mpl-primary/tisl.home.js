@@ -70,7 +70,7 @@ $("div.departmenthover").on("mouseover touchend", function() {
             url: ACC.config.encodedContextPath +
                 "/departmentCollection",
             type: 'GET',
-            data: "&department=" + code,
+            data: "department=" + code,
             success: function(html) {
                 // console.log("Server");
                 $("ul." + id).html(html);

@@ -1806,8 +1806,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//TISPT-29
 		if (null != cart
 				&& StringUtils.isNotEmpty(paymentMode)
-				&& (paymentMode.equalsIgnoreCase("Credit Card") || paymentMode.equalsIgnoreCase("Debit Card")
-						|| paymentMode.equalsIgnoreCase("Netbanking") || paymentMode.equalsIgnoreCase("EMI")))
+				&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
+						|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
+						|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE) || paymentMode
+							.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)))
 		{
 			//setting in cartmodel
 			cart.setConvenienceCharges(Double.valueOf(0));
@@ -1916,6 +1918,32 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final Map<String, Double> paymentInfo = new HashMap<String, Double>();
 				paymentInfo.put(paymentMode, Double.valueOf(cart.getTotalPriceWithConv().doubleValue() - walletAmount));
 				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, paymentInfo);
+
+				//TISPRO-540 - Setting Payment mode in Cart
+				if (StringUtils.isNotEmpty(paymentMode)
+						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE))
+				{
+					cart.setModeOfPayment(MarketplacecheckoutaddonConstants.CREDITCARDMODE);
+					getModelService().save(cart);
+				}
+				else if (StringUtils.isNotEmpty(paymentMode)
+						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE))
+				{
+					cart.setModeOfPayment(MarketplacecheckoutaddonConstants.DEBITCARDMODE);
+					getModelService().save(cart);
+				}
+				else if (StringUtils.isNotEmpty(paymentMode)
+						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
+				{
+					cart.setModeOfPayment(MarketplacecheckoutaddonConstants.NETBANKINGMODE);
+					getModelService().save(cart);
+				}
+				else if (StringUtils.isNotEmpty(paymentMode)
+						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
+				{
+					cart.setModeOfPayment(MarketplacecheckoutaddonConstants.EMIMODE);
+					getModelService().save(cart);
+				}
 
 				//TISST-7955
 				final CartData promotedCartData = getMplCustomAddressFacade().getCheckoutCart();

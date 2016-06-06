@@ -262,6 +262,12 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	//TISPRO-497
 	public static final String CARTAMOUNTINVALID = "cartAmountInvalid";
 
+	//TISPRO-540
+	public static final String CREDITCARDMODE = "Credit Card";
+	public static final String DEBITCARDMODE = "Debit Card";
+	public static final String NETBANKINGMODE = "Netbanking";
+	public static final String EMIMODE = "EMI";
+
 
 	private MarketplacecheckoutaddonConstants()
 	{
