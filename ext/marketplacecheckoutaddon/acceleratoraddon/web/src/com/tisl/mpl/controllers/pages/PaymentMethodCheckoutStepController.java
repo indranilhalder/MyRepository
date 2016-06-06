@@ -1685,7 +1685,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			//ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("Exception in cardPayment", e);
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);

@@ -1377,44 +1377,58 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		try
 		{
 			//getting ListCardsResponse by calling List Cards service of Juspay
-			listCardsResponse = juspayService.listCards(listCardsRequest);
+			// Code commented as part of TISPT-204 Point No 7
+			//	listCardsResponse = juspayService.listCards(listCardsRequest);
+			//	final Collection<SavedCardModel> savedCardForCustomer = customer.getSavedCard();
+			//	final List<SavedCardModel> savedCardList = new ArrayList<SavedCardModel>();
+			//	savedCardList.addAll(savedCardForCustomer);
+
+
 			final Collection<SavedCardModel> savedCardForCustomer = customer.getSavedCard();
-			final List<SavedCardModel> savedCardList = new ArrayList<SavedCardModel>();
-			savedCardList.addAll(savedCardForCustomer);
-			for (final StoredCard juspayCard : listCardsResponse.getCards())
+
+			if (CollectionUtils.isNotEmpty(savedCardForCustomer)) // Code added as part of TISPT-204 Point No 7
 			{
-				final String bin = juspayCard.getCardIsin();
-				final BinModel binModel = getBinService().checkBin(bin);
-				if (null != binModel && StringUtils.isNotEmpty(binModel.getBankName())
-						&& binModel.getBankName().equalsIgnoreCase(bankName))
+				listCardsResponse = juspayService.listCards(listCardsRequest); // Code added as part of TISPT-204 Point No 7
+
+				final List<SavedCardModel> savedCardList = new ArrayList<SavedCardModel>();
+				savedCardList.addAll(savedCardForCustomer);
+
+				for (final StoredCard juspayCard : listCardsResponse.getCards())
 				{
-					for (final SavedCardModel savedCard : savedCardList)
+					final String bin = juspayCard.getCardIsin();
+					final BinModel binModel = getBinService().checkBin(bin);
+					if (null != binModel && StringUtils.isNotEmpty(binModel.getBankName())
+							&& binModel.getBankName().equalsIgnoreCase(bankName))
 					{
-						//TISEE-396
-						if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
-								&& null != binModel
-								&& (StringUtils.equalsIgnoreCase("CREDIT", binModel.getCardType()) || StringUtils.equalsIgnoreCase("CC",
-										binModel.getCardType())) && null != savedCard.getBillingAddress())
+						for (final SavedCardModel savedCard : savedCardList)
 						{
-							final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+							//TISEE-396
+							if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
+									&& null != binModel
+									&& (StringUtils.equalsIgnoreCase("CREDIT", binModel.getCardType()) || StringUtils.equalsIgnoreCase(
+											"CC", binModel.getCardType())) && null != savedCard.getBillingAddress())
+							{
+								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
-							savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
-						}
+								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+							}
 
-						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null != binModel
-								&& StringUtils.isEmpty(binModel.getCardType()) && null != savedCard.getBillingAddress())
-						{
-							final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
+									&& null != binModel && StringUtils.isEmpty(binModel.getCardType())
+									&& null != savedCard.getBillingAddress())
+							{
+								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
-							savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
-						}
+								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+							}
 
-						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null == binModel
-								&& null != savedCard.getBillingAddress())
-						{
-							final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
+									&& null == binModel && null != savedCard.getBillingAddress())
+							{
+								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
-							savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+							}
 						}
 					}
 				}
@@ -1452,11 +1466,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1507,9 +1521,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
