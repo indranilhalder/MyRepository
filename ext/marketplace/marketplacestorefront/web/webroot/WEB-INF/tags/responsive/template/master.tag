@@ -106,7 +106,20 @@
 	<%-- Favourite Icon --%>
 	<spring:theme code="img.favIcon" text="/" var="favIconPath"/>
     <link rel="shortcut icon" type="image/x-icon" media="all" href="${themeResourcePath}/${favIconPath}" />
+    
+	<!-- DNS prefetching starts -->
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
 
+	<link rel="dns-prefetch" href="//${mediaHost}">
+	<link rel="dns-prefetch" href="//${staticResourceHost}"> 
+	<c:choose>
+	    <c:when test="${not empty productMediaHost}">
+	       <link rel="dns-prefetch" href="//${productMediaHost}">
+	    </c:when>
+	</c:choose>	
+	<!-- DNS prefetching ends --> 
+	
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
 	<template:styleSheets/>
 	<script type="text/javascript"
