@@ -22,88 +22,6 @@
 </c:if>
 
 <header>	
-	<!-- For Gigya Social Login -->
-	<c:if test="${isGigyaEnabled=='Y'}">
-	<SCRIPT type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}">
-	
-	</SCRIPT>
-	
-	<script>
-function registerUser(eventObject)
-{
-	var encodedUID = encodeURIComponent(eventObject.UID);
-	var encodedTimestamp=encodeURIComponent(eventObject.timestamp);
-	var  encodedSignature=encodeURIComponent(eventObject.signature);
-//	console.log("SOCIAL LOGIN REFERER:-"+ window.location.href)
-		 $.ajax({
-				url : ACC.config.encodedContextPath + "/oauth2callback/socialLogin/",
-				data : {
-					'referer' : window.location.href,
-					'emailId' : eventObject.user.email,
-					'fName':  eventObject.user.firstName,
-					'lName' : 	eventObject.user.lastName,
-					'uid'		: encodedUID,
-					'timestamp'	 :encodedTimestamp,
-					'signature' :encodedSignature,
-					'provider' :eventObject.user.loginProvider
-					},
-				type : "GET",
-				cache : false,
-				success : function(data) {
-					//alert("success login page :- "+data);
-					if(!data)							
-						{
-						
-						}
-						else
-						{
-							if(data.indexOf(ACC.config.encodedContextPath) > -1)
-							{
-								window.open(data,"_self");
-							}
-							else
-							{
-							var hostName=window.location.host;
-							if(hostName.indexOf(':') >=0)
-							{
-								window.open(ACC.config.encodedContextPath +data,"_self");
-							}	
-							else
-								{
-							window.open("https://"+hostName+ACC.config.encodedContextPath +data,"_self");
-								}
-							}
-							
-						}	
-				},
-				error : function(resp) {
-					console.log("Error Occured Login Page" + resp);					
-				}
-			});
-	 
-}
-
-        // This method is activated when the page is loaded
-        function onLoad() {
-            // register for login event
-            gigya.socialize.addEventHandlers({
-                    context: { str: 'congrats on your' }
-                    , onLogin: onLoginHandler                   
-                    });
-        }
-        // onLogin Event handler
-        function onLoginHandler(eventObj) {
-           // console.log(eventObj.context.str + ' ' + eventObj.eventName + ' to ' + eventObj.provider
-          //      + '!\n' + eventObj.provider + ' user ID: ' +  eventObj.user.identities[eventObj.provider].providerUID);          
-            
-            registerUser(eventObj);      
-            
-        }        
-        
-        onLoad();
-    </script>
-</c:if>
-	<!-- End  Gigya Social Login -->
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" id="ia_site_id" value="${cmsSite.uid}"> 
 	<input type="hidden" id="ia_site_page_id" value="${cmsPage.uid}"> 
@@ -121,7 +39,7 @@ function registerUser(eventObject)
 	<input type="hidden" id="previewVersion" value="${cmsPageRequestContextData.preview}">
 	<input type="hidden" id="pageTemplateId" value="${cmsPage.masterTemplate.uid}">
 	<!-- For Infinite Analytics End -->
-	
+	<input type="hidden" id="pageName" value="${cmsPage.name}">
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">

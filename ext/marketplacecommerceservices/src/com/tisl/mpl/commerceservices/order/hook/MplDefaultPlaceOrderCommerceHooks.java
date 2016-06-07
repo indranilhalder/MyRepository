@@ -779,14 +779,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		// Populating parent transaction id for freebie items
 		for (final OrderModel subOrderModel : subOrderList)
 		{
+			final List<String> assignedParentList = new ArrayList<String>();
 			for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
 			{
-				if (subOrderEntryModel.getGiveAway().booleanValue()
-						&& CollectionUtils.isNotEmpty(subOrderEntryModel.getAssociatedItems()))
+				List<String> associatedItemList = subOrderEntryModel.getAssociatedItems();
+				if (subOrderEntryModel.getGiveAway().booleanValue() && CollectionUtils.isNotEmpty(associatedItemList))
 				{
-					final String parentUssId = getParentUssid(subOrderEntryModel.getAssociatedItems(), subOrderModel);
-					String parentTransactionId = null;
+					associatedItemList = updateAssociatedItem(associatedItemList, assignedParentList, freebieParentMap);
 
+					final String parentUssId = getParentUssid(associatedItemList, subOrderModel);
+					String parentTransactionId = null;
+					assignedParentList.add(parentUssId);
 					if (subOrderEntryModel.getParentTransactionID() == null && parentUssId != null
 							&& freebieParentMap.get(parentUssId) != null)
 					{
@@ -795,8 +798,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						{
 							subOrderEntryModel.setParentTransactionID(parentTransactionId);
 							getModelService().save(subOrderEntryModel);
-
-
 							for (final String freebieUssid : associatedItemMap.get(parentUssId))
 							{
 								if (!freebieUssid.equalsIgnoreCase(subOrderEntryModel.getSelectedUSSID()))
@@ -824,6 +825,27 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param associatedItemList
+	 * @param assignedParentList
+	 * @param freebieParentMap
+	 * @return
+	 */
+	private List<String> updateAssociatedItem(final List<String> associatedItemList, final List<String> assignedParentList,
+			final Map<String, List<String>> freebieParentMap)
+	{
+		// YTODO Auto-generated method stub
+		final List<String> updatedAssociatedList = new ArrayList<String>(associatedItemList);
+		for (final String parentUssid : assignedParentList)
+		{
+			if (CollectionUtils.isEmpty(freebieParentMap.get(parentUssid)))
+			{
+				updatedAssociatedList.remove(parentUssid);
+			}
+		}
+		return updatedAssociatedList;
 	}
 
 	/**

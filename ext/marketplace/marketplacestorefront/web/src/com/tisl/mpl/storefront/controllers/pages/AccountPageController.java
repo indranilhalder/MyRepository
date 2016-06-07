@@ -26,7 +26,6 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.EmailVal
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.PasswordValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ProfileValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.verification.AddressVerificationResultHandler;
-import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
@@ -215,7 +214,6 @@ import com.tisl.mpl.storefront.web.forms.validator.MplPasswordValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplUpdateEmailFormValidator;
 import com.tisl.mpl.storefront.web.forms.validator.ReturnItemFormValidator;
 import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
-import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
@@ -409,8 +407,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@Autowired
 	private DefaultMplReviewFacade mplReviewrFacade;
 
-	@Autowired
-	private DiscountUtility discountUtility;
+	/*
+	 * @Autowired private DiscountUtility discountUtility;
+	 */
 
 
 	@Autowired
@@ -1081,7 +1080,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			final List<CancellationReasonModel> cancellationReason = getMplOrderFacade().getCancellationReason();
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER, orderDetail);
-			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, isEditable());
+			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, getOrderDetailsFacade.getPickUpButtonDisableOptions());
 			model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE, getMplOrderFacade().filterDeliveryMode());
 			model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 			model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
@@ -1220,58 +1219,60 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			populateModelForCoupon(model, searchPageDataVoucher, showMode);
 
-			final int pageSizeVoucherHistory = Integer.valueOf(configurationService.getConfiguration()
-					.getString(MessageConstants.PAZE_SIZE_COUPONS, "20").trim());
+			LOG.info("Page for value is" + pageFor);
+			//Coupon history commented for Performance -- TISPT-153
+			//final int pageSizeVoucherHistory = Integer.valueOf(configurationService.getConfiguration()
+			//		.getString(MessageConstants.PAZE_SIZE_COUPONS, "20").trim());
 
 
 			/* Coupon history and saved sum count calculation */
-			final PageableData pageableDataVoucherHistory = createPageableData(pageHistory, pageSizeVoucherHistory, sortCode,
-					showMode);
-			final Map<String, Double> countSavedSumMap = mplCouponFacade.getInvalidatedCouponCountSaved(customer);
+			//final PageableData pageableDataVoucherHistory = createPageableData(pageHistory, pageSizeVoucherHistory, sortCode,
+			//		showMode);
+			//final Map<String, Double> countSavedSumMap = mplCouponFacade.getInvalidatedCouponCountSaved(customer);
 
-			final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = mplCouponFacade
-					.getVoucherHistoryTransactions(customer, pageableDataVoucherHistory);
+			//final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = mplCouponFacade
+			//		.getVoucherHistoryTransactions(customer, pageableDataVoucherHistory);
 
-			populateModelForCouponHistory(model, searchPageDataVoucherHistoryFinal, showMode);
+			//populateModelForCouponHistory(model, searchPageDataVoucherHistoryFinal, showMode);
 
-			final Collection<OrderModel> orders = customer.getOrders();
-			final List<OrderModel> orderList = new ArrayList<OrderModel>();
-			if (CollectionUtils.isNotEmpty(orders))
-			{
-				orderList.addAll(orders);
-
-			}
-			if (null != countSavedSumMap)
-			{
-
-				for (final Map.Entry<String, Double> iterator : countSavedSumMap.entrySet())
-				{
-
-					Double value = 0.0d;
-					if (null != iterator.getValue())
-					{
-						value = Double.valueOf(Math.round(iterator.getValue() * 100.0) / 100.0);
-					}
-					if (CollectionUtils.isNotEmpty(orderList))
-					{
-						model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM,
-								discountUtility.createPrice(orderList.get(0), value));
-					}
-					else
-					{
-						model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, value);
-					}
-					model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT, iterator.getKey());
-				}
-
-			}
+			//			final Collection<OrderModel> orders = customer.getOrders();
+			//			final List<OrderModel> orderList = new ArrayList<OrderModel>();
+			//			if (CollectionUtils.isNotEmpty(orders))
+			//			{
+			//				orderList.addAll(orders);
+			//
+			//			}
+			//			if (null != countSavedSumMap)
+			//			{
+			//
+			//				for (final Map.Entry<String, Double> iterator : countSavedSumMap.entrySet())
+			//				{
+			//
+			//					Double value = 0.0d;
+			//					if (null != iterator.getValue())
+			//					{
+			//						value = Double.valueOf(Math.round(iterator.getValue() * 100.0) / 100.0);
+			//					}
+			//					if (CollectionUtils.isNotEmpty(orderList))
+			//					{
+			//						model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM,
+			//								discountUtility.createPrice(orderList.get(0), value));
+			//					}
+			//					else
+			//					{
+			//						model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, value);
+			//					}
+			//					model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT, iterator.getKey());
+			//				}
+			//
+			//			}
 
 			storeCmsPageInModel(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
 			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
 			model.addAttribute(ModelAttributetConstants.PAGE_INDEX_HIST, pageHistory);
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
-			model.addAttribute(ModelAttributetConstants.PAGE_SIZE_HISTORY, pageSizeVoucherHistory);
+			//model.addAttribute(ModelAttributetConstants.PAGE_SIZE_HISTORY, pageSizeVoucherHistory);
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_COUPONDETAILS));
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
@@ -4516,11 +4517,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 						//TISEE-6376
 						if (entryModel.getProduct() != null)
 						{
-							final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-									ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-									ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
-									ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+							/*
+							 * final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
+							 * Arrays.asList( ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY,
+							 * ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.PROMOTIONS,
+							 * ProductOption.STOCK, ProductOption.REVIEW, ProductOption.DELIVERY_MODE_AVAILABILITY,
+							 * ProductOption.SELLER));
+							 */
 
+							final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
+									ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+									ProductOption.STOCK, ProductOption.SELLER));
 
 							final BuyBoxModel buyboxmodel = buyBoxFacade.getpriceForUssid(entryModel.getUssid());
 							double price = 0.0;
@@ -4761,11 +4768,18 @@ public class AccountPageController extends AbstractMplSearchPageController
 					if (null != entryModel && null != entryModel.getProduct())
 					{
 						final WishlistProductData wishlistProductData = new WishlistProductData();
-						final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-								ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-								ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
+						/*
+						 * final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
+						 * Arrays.asList( ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY,
+						 * ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK,
+						 * ProductOption.REVIEW,
+						 * 
+						 * ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+						 */
 
-								ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+						final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
+								ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+								ProductOption.STOCK, ProductOption.SELLER));
 
 						datas.add(productData1);
 						wishlistProductData.setProductData(productData1);
@@ -6951,30 +6965,4 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	public List<ConsignmentStatus> isEditable()
-	{
-		final List<ConsignmentStatus> neededStatus = new ArrayList<ConsignmentStatus>();
-		neededStatus.add(ConsignmentStatus.RETURN_INITIATED);
-		neededStatus.add(ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND);
-		neededStatus.add(ConsignmentStatus.RETURN_TO_ORIGIN);
-		neededStatus.add(ConsignmentStatus.LOST_IN_TRANSIT);
-		neededStatus.add(ConsignmentStatus.REVERSE_AWB_ASSIGNED);
-		neededStatus.add(ConsignmentStatus.RETURN_RECEIVED);
-		neededStatus.add(ConsignmentStatus.RETURN_CLOSED);
-		neededStatus.add(ConsignmentStatus.RETURN_CANCELLED);
-		neededStatus.add(ConsignmentStatus.REDISPATCH_INITIATED);
-		neededStatus.add(ConsignmentStatus.CLOSED_ON_RETURN_TO_ORIGIN);
-		neededStatus.add(ConsignmentStatus.REFUND_INITIATED);
-		neededStatus.add(ConsignmentStatus.REFUND_IN_PROGRESS);
-		neededStatus.add(ConsignmentStatus.RETURN_REJECTED);
-		neededStatus.add(ConsignmentStatus.QC_FAILED);
-		neededStatus.add(ConsignmentStatus.CLOSED_ON_CANCELLATION);
-		neededStatus.add(ConsignmentStatus.CANCELLATION_INITIATED);
-		neededStatus.add(ConsignmentStatus.RETURN_COMPLETED);
-		neededStatus.add(ConsignmentStatus.ORDER_CANCELLED);
-		neededStatus.add(ConsignmentStatus.ORDER_COLLECTED);
-		neededStatus.add(ConsignmentStatus.ORDER_UNCOLLECTED);
-		neededStatus.add(ConsignmentStatus.RETURNINITIATED_BY_RTO);
-		return neededStatus;
-	}
 }

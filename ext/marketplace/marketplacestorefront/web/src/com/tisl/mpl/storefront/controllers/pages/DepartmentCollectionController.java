@@ -6,6 +6,7 @@ package com.tisl.mpl.storefront.controllers.pages;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,10 +25,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -40,6 +45,8 @@ public class DepartmentCollectionController
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
 
+	@Autowired
+	private HomepageComponentService homepageComponentService;
 
 
 	/**
@@ -57,34 +64,50 @@ public class DepartmentCollectionController
 		final Map<String, Collection<CategoryModel>> secondLevelCategoryMap = new HashMap();
 		final Map<String, Collection<CategoryModel>> thirdLevelCategoryMap = new HashMap();
 
-
-		//if (!Collections.isEmpty(component.getDepartmentCollection()))
-		//{
-		//final List<CategoryModel> departmentList = (List<CategoryModel>) component.getDepartmentCollection();
 		try
 		{
-			//for (final CategoryModel category : departmentList)
-			//{
 			final CategoryModel department = categoryService.getCategoryForCode(departmentCode);
 
-			// Fetch all the second level categories for a particular
-			// category
 			final Collection<CategoryModel> secondLevelCategories = department.getCategories();
 
-			// Iterating through the second level categories
 			for (final CategoryModel secondLevelCategory : secondLevelCategories)
 			{
-				// Fetching the third level category against a second
-				// level category
 				final Collection<CategoryModel> thirdLevelCategory = secondLevelCategory.getCategories();
+
+				for (final CategoryModel thirdLevelCategories : thirdLevelCategory)
+				{
+
+					String categoryPathThird = GenericUtilityMethods.buildPathString(homepageComponentService
+							.getCategoryPath(thirdLevelCategories));
+					if (StringUtils.isNotEmpty(categoryPathThird))
+					{
+						categoryPathThird = URLDecoder.decode(categoryPathThird, "UTF-8");
+						categoryPathThird = categoryPathThird.toLowerCase();
+						categoryPathThird = GenericUtilityMethods.changeUrl(categoryPathThird);
+					}
+
+					thirdLevelCategories.setName(thirdLevelCategories.getName() + "||" + categoryPathThird);
+				}
+
 				// Storing the third level categories in a map
 				thirdLevelCategoryMap.put(secondLevelCategory.getCode(), thirdLevelCategory);
+				String categoryPath = GenericUtilityMethods.buildPathString(homepageComponentService
+						.getCategoryPath(secondLevelCategory));
+				if (StringUtils.isNotEmpty(categoryPath))
+				{
+					categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
+					categoryPath = categoryPath.toLowerCase();
+					categoryPath = GenericUtilityMethods.changeUrl(categoryPath);
+				}
+
+				secondLevelCategory.setName(secondLevelCategory.getName() + "||" + categoryPath);
+
+
 			}
 
 			// Storing the second level categories in a map
 			secondLevelCategoryMap.put(department.getCode(), secondLevelCategories);
 
-			//}
 			model.addAttribute(ModelAttributetConstants.FIRST_LEVEL_CATEGORY, department);
 		}
 		catch (final EtailBusinessExceptions businessException)

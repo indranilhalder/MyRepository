@@ -5763,6 +5763,12 @@
 							optional="true" />
 						<defaultvalue>false</defaultvalue>
 					</attribute>
+					<!-- TISPRO-540 - Payment Type -->
+					<attribute qualifier="modeOfPayment" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TISPRO-540 - Payment Type -->
 				</attributes>
 			</itemtype>
 		</typegroup>

@@ -110,7 +110,7 @@ function navigateToPage(queryString,textString)
 						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
-								<c:when test="${colorAry[0]='Multi' || colorAry[0]=='multi'}">
+								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
 								<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
@@ -415,24 +415,7 @@ function navigateToPage(queryString,textString)
 </c:if>
 <script>
 	
-$(document).ready(function(){
-	
-	$( "#brandNoFormSubmit" ).submit(function() {
-		  event.preventDefault();
-		});
-	 $(".facet-name.js-facet-name h4").each(function(){
-		if($(this).hasClass("true")){
-			$(this).addClass("active");
-			$(this).parent().siblings('.facet-values.js-facet-values.js-facet-form').addClass("active");
-	    	$(this).siblings('.brandSelectAllMain').addClass("active");
-	    	$(this).parent().siblings('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").addClass("active");
-	    	$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").addClass("active");
-			
-		}
-}); 
-	 
-	 
-});
+
 
 	
 </script>

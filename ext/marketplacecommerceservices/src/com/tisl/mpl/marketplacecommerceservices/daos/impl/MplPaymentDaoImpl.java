@@ -360,8 +360,8 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			final FlexibleSearchQuery paymentTransactionQuery = new FlexibleSearchQuery(queryString);
 			paymentTransactionQuery.addQueryParameter(MarketplacecommerceservicesConstants.CUSTOMERID, mplCustomerID);
 			paymentTransactionQuery.addQueryParameter(MarketplacecommerceservicesConstants.JUSPAYORDERID, juspayOrderId);
-			final List<PaymentTransactionModel> paymentTransactionList = flexibleSearchService.<PaymentTransactionModel> search(
-					paymentTransactionQuery).getResult();
+			final List<PaymentTransactionModel> paymentTransactionList = flexibleSearchService
+					.<PaymentTransactionModel> search(paymentTransactionQuery).getResult();
 			if (null != paymentTransactionList && !paymentTransactionList.isEmpty())
 			{
 				//fetching Payment Transaction from DB using flexible search query
@@ -602,6 +602,98 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			throw new EtailNonBusinessExceptions(ex);
 		}
 	}
+
+	/*
+	 * @Description : Fetching bank name for net banking-- TISPT-169
+	 *
+	 * @return List<BankforNetbankingModel>
+	 *
+	 * @throws Exception
+	 */
+	@Override
+	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.NBBANKSQUERY;
+
+			//forming the flexible search query
+			final FlexibleSearchQuery bankListQuery = new FlexibleSearchQuery(queryString);
+
+			//fetching bank list from DB using flexible search query
+			final List<BankforNetbankingModel> bankList = flexibleSearchService.<BankforNetbankingModel> search(bankListQuery)
+					.getResult();
+
+			return bankList;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+	}
+
+
+
+	/**
+	 * This method picks up the latest audit id against the cart guid which is in submitted status TISPT-200
+	 *
+	 * @param cartGuid
+	 * @return List<MplPaymentAuditModel>
+	 * @throws EtailNonBusinessExceptions
+	 * @throws Exception
+	 */
+	@Override
+	public List<MplPaymentAuditModel> getAuditId(final String cartGuid) throws EtailNonBusinessExceptions, Exception
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.GETAUDITID;
+
+			//forming the flexible search query
+			final FlexibleSearchQuery auditIdQuery = new FlexibleSearchQuery(queryString);
+			auditIdQuery.addQueryParameter(MarketplacecommerceservicesConstants.CARTGUID, cartGuid);
+
+			//fetching bank list from DB using flexible search query
+			final List<MplPaymentAuditModel> auditList = flexibleSearchService.<MplPaymentAuditModel> search(auditIdQuery)
+					.getResult();
+
+			return auditList;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+	}
+
+
+
+
 
 
 	//getters and setters

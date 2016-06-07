@@ -66,6 +66,8 @@ import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -182,7 +184,8 @@ public final class HybrisDataConverter
 		 */
 
 		final AbstractPageModel page = ((AbstractPageModel) request.getAttribute("cmsPage"));
-		if (page.getName() != null)
+		//TISPRD-2267
+		if (page!= null && page.getName() != null)
 		{
 			pageNameString = page.getName();
 		}
@@ -538,6 +541,7 @@ public final class HybrisDataConverter
 
 	public static String getCartScript() throws UDODefinitionException, UDOUpdateException
 	{
+
 		String scriptString = "";
 		try
 		{
@@ -561,60 +565,92 @@ public final class HybrisDataConverter
 			String page_subCategory_name = "";
 			if (cartData != null)
 			{
-				if (cartData.getTotalPrice() != null)
+				if (null != cartData.getTotalPrice() && null != cartData.getTotalPrice().getValue())
 				{
 					final String cartTotal = cartData.getTotalPrice().getValue().toPlainString();
 					udo.setValue("cart_total", cartTotal);
 				}
-				for (final OrderEntryData entry : cartData.getEntries())
+				if (CollectionUtils.isNotEmpty(cartData.getEntries()))
 				{
-					final String sku = entry.getProduct().getCode();
-					final String name = entry.getProduct().getName();
-					final String quantity = entry.getQuantity() + "";
-					final String basePrice = entry.getBasePrice().getValue().toPlainString();//base price for a cart entry
-					final String totalEntryPrice = entry.getTotalPrice().getValue().toPlainString();//total price for a cart entry 
-
-					final List<String> categoryList = new ArrayList<String>();
-					//START [05-Feb-2016] R2.1 - Adding only a Null Check to fix Card payment issue.
-					//Check that if (entry.getProduct().getCategories() != null) then only execute the loop. Else just log an 
-					//error message and continue.
-					Logger tealiumLog = Logger.getLogger(TealiumIQManager.class.getName());
-					if (entry.getProduct() != null && entry.getProduct().getCategories() != null){
-						tealiumLog.info(" entry.getProduct().getCategories() is NOT NULL. - sku,name = " + sku + " : " + name);
-						for (final CategoryData thisCategory : entry.getProduct().getCategories())
+					for (final OrderEntryData entry : cartData.getEntries())
+					{
+						String sku = null;
+						String name = null;
+						String quantity = null;
+						String basePrice = null;//base price for a cart entry
+						String totalEntryPrice = null;
+						if (null != entry)
 						{
-							categoryList.add(thisCategory.getName());
+							if (null != entry.getProduct() && null != entry.getProduct().getCode())
+							{
+								sku = entry.getProduct().getCode();
+
+							}
+							if (null != entry.getProduct() && null != entry.getProduct().getName())
+							{
+								name = entry.getProduct().getName();
+							}
+							if (null != entry.getQuantity())
+							{
+								quantity = entry.getQuantity() + "";
+							}
+
+							if (null != entry.getBasePrice() && null != entry.getBasePrice().getValue())
+							{
+								basePrice = entry.getBasePrice().getValue().toPlainString();//base price for a cart entry
+							}
+
+							if (null != entry.getTotalPrice() && null != entry.getTotalPrice().getValue())
+							{
+								totalEntryPrice = entry.getTotalPrice().getValue().toPlainString();//total price for a cart entry
+							}
 						}
-					} else {
-						tealiumLog.warn(" ***>>> entry.getProduct().getCategories() is NULL. - sku,name = " + sku + " : " + name);
-					}
-					//End [05-Feb-2016] R2.1 - Adding Null Check to fix Card payment issue. 
-					final Object[] categoryStrings = categoryList.toArray();
-					String category = "";
-					if (categoryStrings.length > 0)
-					{
-						category = (String) categoryStrings[0];
-					}
-					String brand = null;
-					if (entry != null && entry.getProduct() != null && entry.getProduct().getBrand() != null)
-					{
-						brand = entry.getProduct().getBrand().getBrandname();
-					}
-					if (categoryStrings.length >= 2)
-					{
-						page_subCategory_name = (String) categoryStrings[1];
-						pageSubCategories.add(page_subCategory_name);
-					}
+
+						final List<String> categoryList = new ArrayList<String>();
+						//START [05-Feb-2016] R2.1 - Adding only a Null Check to fix Card payment issue.
+						//Check that if (entry.getProduct().getCategories() != null) then only execute the loop. Else just log an
+						//error message and continue.
+						final Logger tealiumLog = Logger.getLogger(TealiumIQManager.class.getName());
+						if (entry.getProduct() != null && entry.getProduct().getCategories() != null)
+						{
+							tealiumLog.info(" entry.getProduct().getCategories() is NOT NULL. - sku,name = " + sku + " : " + name);
+							for (final CategoryData thisCategory : entry.getProduct().getCategories())
+							{
+								categoryList.add(thisCategory.getName());
+							}
+						}
+						else
+						{
+							tealiumLog.warn(" ***>>> entry.getProduct().getCategories() is NULL. - sku,name = " + sku + " : " + name);
+						}
+						//End [05-Feb-2016] R2.1 - Adding Null Check to fix Card payment issue.
+						final Object[] categoryStrings = categoryList.toArray();
+						String category = "";
+						if (categoryStrings.length > 0)
+						{
+							category = (String) categoryStrings[0];
+						}
+						String brand = null;
+						if (entry != null && entry.getProduct() != null && entry.getProduct().getBrand() != null)
+						{
+							brand = entry.getProduct().getBrand().getBrandname();
+						}
+						if (categoryStrings.length >= 2)
+						{
+							page_subCategory_name = (String) categoryStrings[1];
+							pageSubCategories.add(page_subCategory_name);
+						}
 
 
-					productBrandList.add(brand);
-					productCategoryList.add(category);
-					productIdList.add(sku);
-					productListPriceList.add(totalEntryPrice);
-					productNameList.add(name);
-					productQuantityList.add(quantity);
-					productSkuList.add(sku);
-					productUnitPriceList.add(basePrice);
+						productBrandList.add(brand);
+						productCategoryList.add(category);
+						productIdList.add(sku);
+						productListPriceList.add(totalEntryPrice);
+						productNameList.add(name);
+						productQuantityList.add(quantity);
+						productSkuList.add(sku);
+						productUnitPriceList.add(basePrice);
+					}
 				}
 				if (productSkuList != null)
 				{

@@ -15,9 +15,9 @@ $(function() {
      });
 });
 $(function() {
-
+//TISPRO-522 IE Issue Fix
     $.ajax({
-        url: ACC.config.encodedContextPath + "/setheader",
+        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
         type: 'GET',
         cache:false,
         success: function(data) {
@@ -26,7 +26,14 @@ $(function() {
                 "span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count"
             ).html(data.cartcount);
             if (!headerLoggedinStatus) {
+
                 $("a.headeruserdetails").html("Sign In");
+              //Akamai caching
+                $("a.headeruserdetails").attr('href','/login');
+                $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
+                
+                $("a.tracklinkcls").attr('href','/login');
+                $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
             } else {
                 var firstName = data.userFirstName;
                 if (firstName == null || firstName.trim() ==
@@ -36,7 +43,18 @@ $(function() {
                     $("a.headeruserdetails").html("Hi, " +
                         firstName + "!");
                 }
+                //Akamai caching
+                $('#signIn').attr('class','dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout');
+                $("a.headeruserdetails").attr('href','/my-account');
+                
+                $("a.tracklinkcls").attr('href','#');
+                if(data.notificationCount != null){
+	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >'+data.notificationCount+'</span>)');
+	               } else {
+	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
+	               } 
             }
+         
         }
     });
 });
@@ -63,7 +81,7 @@ $("div.departmenthover").on("mouseover touchend", function() {
             url: ACC.config.encodedContextPath +
                 "/departmentCollection",
             type: 'GET',
-            data: "&department=" + code,
+            data: "department=" + code,
             success: function(html) {
                 // console.log("Server");
                 $("ul." + id).html(html);
@@ -197,6 +215,7 @@ $("a#tracklink").on("mouseover touchend", function(e) {
         url: ACC.config.encodedContextPath +
             "/headerTrackOrder",
         type: 'GET',
+        cache:false,
         success: function(html) {
             $("ul.trackorder-dropdown").html(html);
         }
@@ -213,12 +232,13 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
         }
     });
 });
+//TISPRO-522-IE Issue Fix
 $("li.ajaxloginhi").on("mouseover touchend", function(e) {
     e.stopPropagation();
     if ($("ul.ajaxflyout").html().trim().length <= 0) {
         $.ajax({
             url: ACC.config.encodedContextPath +
-                "/headerloginhi",
+                "/headerloginhi?timestamp="+Date.now(),
             type: 'GET',
             success: function(html) {
                 $("ul.ajaxflyout").html(html);
@@ -648,12 +668,9 @@ function getProductsYouCareAjaxCall() {
                 renderHtml +=
                     "<div class='home-product-you-care-carousel'>";
                 $.each(response.categories, function(k, v) {
-                    //console.log('Category name: '+v.categoryName);
-                    //console.log('Category code: '+v.categoryCode);
-                    //console.log('Category media url: '+v.mediaURL);
                     var URL = ACC.config.encodedContextPath +
-                        "/Categories/" + v.categoryName +
-                        "/c-" + v.categoryCode;
+                    /*"/Categories/" + v.categoryName*/ v.categoryPath +   //TISPRD_2315
+                    "/c-" + v.categoryCode.toLowerCase();
                     //for url
                     renderHtml += "<a href='" + appendIcid(
                             URL, v.icid) +
@@ -712,10 +729,16 @@ function getNewAndExclusiveAjaxCall() {
                 "<div class='carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
             $.each(response.newAndExclusiveProducts, function(
                 key, value) {
+            	if(value.isNew == 'Y')
+            	{
+            	renderNewHtml = "<div style='z-index: 1;' class='new'><img class='brush-strokes-sprite sprite-New' src='/_ui/responsive/common/images/transparent.png'><span>New</span></div>";
+            	} else {
+            		renderNewHtml = '';
+            	}
                 renderHtml +=
                     "<div class='item slide'><div class='newExclusiveElement'><a href='" +
                     ACC.config.encodedContextPath +
-                    value.productUrl + "'><img class='lazyOwl' data-src='" +
+                    value.productUrl + "'>"+renderNewHtml+"<img class='lazyOwl' data-src='" +
                     value.productImageUrl +
                     "'></img><p class='New_Exclusive_title'>" +
                     value.productTitle +
@@ -1193,19 +1216,4 @@ function populateEnhancedSearch(enhancedSearchData)
 		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
 	}
 	
-	//Added for tealium
-	if($('#ia_site_page_id').val()=="homepage"){
-		//Added for tealium
-		   $.ajax({
-		        url: ACC.config.encodedContextPath + "/getTealiumDataHome",
-		        type: 'GET',
-		        cache:false,
-		        success: function(data) {
-		           //console.log(data);
-		           $('#tealiumHome').html(data);
-		        }
-		    });
-	}
-	//Tealium end
 }
-

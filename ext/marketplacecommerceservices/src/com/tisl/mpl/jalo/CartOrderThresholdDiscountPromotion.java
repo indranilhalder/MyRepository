@@ -43,9 +43,12 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param : ctx
-	 * @param : type
-	 * @param : allAttributes
+	 * @param :
+	 *           ctx
+	 * @param :
+	 *           type
+	 * @param :
+	 *           allAttributes
 	 * @return : item
 	 */
 	@Override
@@ -62,7 +65,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 	/**
 	 * @Description : Order Threshold Percentage or Amount Discount Cashback
-	 * @param : SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
+	 * @param :
+	 *           SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -144,10 +148,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 								setAdjustedDiscounts((percentageDiscount * orderSubtotalAfterDiscounts) / 100);
 								final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
 										arg1.getOrder(), 1.0F);
-								result.addAction(
-										arg0,
-										getDefaultPromotionsManager().createCustomPromotionOrderAdjustTotalAction(arg0,
-												-getAdjustedDiscounts()));
+								result.addAction(arg0, getDefaultPromotionsManager().createCustomPromotionOrderAdjustTotalAction(arg0,
+										-getAdjustedDiscounts()));
 								promotionResults.add(result);
 							}
 						}
@@ -155,12 +157,15 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						{
 							if (LOG.isDebugEnabled())
 							{
-								LOG.debug("(" + getPK() + ")"
-										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg1")
-										+ orderSubtotalAfterDiscounts
-										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg2")
-										+ threshold
-										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg3"));
+								LOG.debug(
+										"(" + getPK() + ")"
+												+ Localization
+														.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg1")
+												+ orderSubtotalAfterDiscounts
+												+ Localization.getLocalizedString(
+														"promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg2")
+												+ threshold + Localization
+														.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg3"));
 							}
 							final float certainty = (float) (orderSubtotalAfterDiscounts / threshold.doubleValue());
 							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
@@ -173,26 +178,33 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		}
 		catch (final EtailBusinessExceptions e)
 		{
+			LOG.error(e.getMessage());
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 		}
-		catch (final EtailNonBusinessExceptions e)
+		catch (final EtailNonBusinessExceptions e) //Added for TISPT-195
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error(e.getMessage());
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+			LOG.error(e.getMessage());
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
-
 		return promotionResults;
 	}
 
 	/**
 	 * This method is used for Localization Purpose
 	 *
-	 * @param : ctx
-	 * @param : result
-	 * @param : locale
+	 * @param :
+	 *           ctx
+	 * @param :
+	 *           result
+	 * @param :
+	 *           locale
 	 */
 	@Override
 	public String getResultDescription(final SessionContext ctx, final PromotionResult result, final Locale locale)
@@ -344,8 +356,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
 					}
 					else if ((null != entry.getAttribute(arg0, "isBOGOapplied")
-							&& BooleanUtils.toBoolean(entry.getAttribute(arg0, "isBOGOapplied").toString()) && null != entry
-								.getAttribute(arg0, "bogoFreeItmCount")))
+							&& BooleanUtils.toBoolean(entry.getAttribute(arg0, "isBOGOapplied").toString())
+							&& null != entry.getAttribute(arg0, "bogoFreeItmCount")))
 					{
 						final double freecount = Double.parseDouble(entry.getAttribute(arg0, "bogoFreeItmCount").toString());
 						totalPrice = totalPrice + (freecount * 0.01);

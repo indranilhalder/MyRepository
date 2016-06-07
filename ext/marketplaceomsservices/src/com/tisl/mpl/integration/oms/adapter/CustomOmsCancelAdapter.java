@@ -408,7 +408,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		
 		return result;
 	}
-	public CancelDecision isCancelPossible(OrderModel order,
+	private CancelDecision isCancelPossible(OrderModel order,
 			PrincipalModel requestor, boolean partialCancel,
 			boolean partialEntryCancel) {
 		OrderCancelConfigModel configuration = getConfiguration();
@@ -428,7 +428,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		return this.orderCancelDao.getOrderCancelConfiguration();
 	}
 	
-	public OrderCancelRecordEntryModel createRecordEntry(
+	private OrderCancelRecordEntryModel createRecordEntry(
 			MplOrderCancelRequest request, PrincipalModel requestor)
 			throws OrderCancelRecordsHandlerException {
 		

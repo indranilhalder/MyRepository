@@ -1360,7 +1360,8 @@
 		<!-- <property name="statusDisplayMsg"
 			type="java.util.Map&lt;String,String>" /> -->
 		<property name="pickupPersonName" type="String" />
-		<property name="pickupPersonMobile" type="String" />	
+		<property name="pickupPersonMobile" type="String" />
+		<property name="isPickupUpdatable" type="boolean"/>	
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">

@@ -7,10 +7,14 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
+import de.hybris.platform.commerceservices.category.CommerceCategoryService;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.servicelayer.session.SessionService;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -20,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplAdvancedCategoryCarouselComponentModel;
@@ -32,6 +37,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -42,6 +48,9 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 {
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
+
+	@Autowired
+	private CommerceCategoryService commerceCategoryService;
 
 	//store url change
 	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
@@ -261,7 +270,24 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	 */
 	private JSONObject getCategoryJSON(final CategoryModel category)
 	{
+		//	TISPRD-2315
 		final JSONObject categoryJSON = new JSONObject();
+		String categoryPath = GenericUtilityMethods.buildPathString(getCategoryPath(category));
+		if (StringUtils.isNotEmpty(categoryPath))
+		{
+			try
+			{
+				categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
+			}
+			catch (final UnsupportedEncodingException e)
+			{
+				LOG.error(e.getMessage());
+			}
+			categoryPath = categoryPath.toLowerCase();
+			categoryPath = GenericUtilityMethods.changeUrl(categoryPath);
+			categoryJSON.put("categoryPath", categoryPath);
+		}
+
 		if (StringUtils.isNotEmpty(category.getName()))
 		{
 			categoryJSON.put("categoryName", category.getName());
@@ -273,8 +299,6 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			categoryJSON.put("categoryCode", category.getCode());
 
 		}
-
-
 
 		return categoryJSON;
 
@@ -502,6 +526,24 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 		return newMediaUrl;
 
+	}
+
+	@Override
+	public List<CategoryModel> getCategoryPath(final CategoryModel category)
+	{
+		final Collection<List<CategoryModel>> path = commerceCategoryService.getPathsForCategory(category);
+		if (null != path)
+		{
+			for (final List<CategoryModel> path1 : path)
+			{
+				if (path1.size() > 1)
+				{
+					path1.remove(0);
+				}
+			}
+		}
+
+		return (path.iterator().next());
 	}
 
 }

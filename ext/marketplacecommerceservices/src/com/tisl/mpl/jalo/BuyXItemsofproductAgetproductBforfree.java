@@ -24,7 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -85,7 +88,9 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 		try
 		{
-			final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, promoContext); //Validating Restrictions
+			////***Blocked for TISPT-154**
+			//final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, promoContext); //Validating Restrictions
+
 			boolean checkChannelFlag = false;
 			boolean sellerFlag = false;
 			sellerFlag = getDefaultPromotionsManager().isSellerRestrExists(restrictionList);
@@ -101,7 +106,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 			//changes end for omni cart fix @atmaram
 
 
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag)
+			//if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag) //***Blocked for TISPT-154**
+			if (checkChannelFlag && sellerFlag)
 			{
 				final List<String> sellerIDData = new ArrayList<String>();
 				final Map<AbstractOrderEntry, String> eligibleProductMap = new HashMap<AbstractOrderEntry, String>();
@@ -114,10 +120,12 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 						restrictionList) && !getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
 				{
 					final int qualifyingCount = getQualifyingCount(ctx).intValue();
+					final List<Product> eligibleProductList = new ArrayList<Product>();
 					int realQuantity = 0;
 					for (final AbstractOrderEntry entry : validProductUssidMap.values())
 					{
 						realQuantity += entry.getQuantity().intValue(); // Fetches total count of Valid Products
+						eligibleProductList.add(entry.getProduct());
 					}
 					noOfProducts = realQuantity;
 
@@ -126,12 +134,13 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 					List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
 
+					//***Blocked for TISPT-154**
 					//getting eligible Product List
-					final List<Product> eligibleProductList = new ArrayList<Product>();
-					for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
-					{
-						eligibleProductList.add(orderEntry.getProduct());
-					}
+					//final List<Product> eligibleProductList = new ArrayList<Product>(); //Blocked for TISPT-154
+					//					for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
+					//					{
+					//						eligibleProductList.add(orderEntry.getProduct());
+					//					}
 
 					final PromotionOrderView view = promoContext.createView(ctx, this, eligibleProductList);
 					//final PromotionOrderEntry viewEntry = view.peek(ctx);
@@ -162,11 +171,11 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 						//final List consumed = promoContext.finishLoggingAndGetConsumed(this, true);
 						result.setConsumedEntries(ctx, consumed);
 
-						if (null != productList && !productList.isEmpty())
+						if (CollectionUtils.isNotEmpty(productList))
 						{
 							final Map<String, Product> giftProductDetails = getDefaultPromotionsManager()
 									.getGiftProductsUSSID(productList, sellerIDData); // Validating for Scenario: Eligible Products and Free Gift must be from the same DC
-							if (null != giftProductDetails && !giftProductDetails.isEmpty())
+							if (MapUtils.isNotEmpty(giftProductDetails))
 							{
 								getPromotionUtilityPOJO().setPromoProductList(eligibleProductList); // Adding Eligible Products for Scenario : One Product Promotion per eligible Product
 								skuFreebieList = populateFreebieSKUIDs(giftProductDetails);
@@ -228,15 +237,20 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 		}
 		catch (final EtailBusinessExceptions e)
 		{
+			LOG.error(e.getMessage());
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 		}
-		catch (final EtailNonBusinessExceptions e)
+		catch (final EtailNonBusinessExceptions e) //Added for TISPT-195
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error(e.getMessage());
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+			LOG.error(e.getMessage());
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return results;
 	}
@@ -250,7 +264,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 	 */
 	private Map<String, Product> populateFreebieDetails(final Map<String, Product> giftProductDetails)
 	{
-		final Map<String, Product> giftDetails = new HashMap<>();
+		final Map<String, Product> giftDetails = new ConcurrentHashMap<>();
 		for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
 		{
 			giftDetails.put(entry.getKey(), entry.getValue());
