@@ -93,6 +93,22 @@ $(document).ready(
 						});
 			}
 			// Tealium end
+			
+			if (pageType == "homepage") {
+				// Added for tealium
+				$
+						.ajax({
+							url : ACC.config.encodedContextPath
+									+ "/getTealiumDataSearch",
+							type : 'GET',
+							cache : false,
+							success : function(data) {
+								// console.log(data);
+								$('#tealiumHome').html(data);
+							}
+						});
+			}
+			// Tealium end
 
 		
 		});
