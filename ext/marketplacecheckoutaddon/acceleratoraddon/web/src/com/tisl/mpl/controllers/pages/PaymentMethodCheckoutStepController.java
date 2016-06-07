@@ -211,9 +211,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@PreValidateCheckoutStep(checkoutStep = MarketplacecheckoutaddonConstants.PAYMENT_METHOD)
 	public String enterStep(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
-		final CartModel serviceCart = getCartService().getSessionCart();
-		serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(true));
-		modelService.save(serviceCart);
+		//		final CartModel serviceCart = getCartService().getSessionCart();
+		//		serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(true));
+		//		modelService.save(serviceCart);
+
 		//redirecting to previous page for anonymous user
 		if (getUserFacade().isAnonymousUser())
 		{
@@ -227,22 +228,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 		final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 		final CartModel cartModel = getCartService().getSessionCart();
+
 		if (cartModel != null)
 		{
 
-			//MplDeliveryMode Checking
-
-			for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
-			{
-
-				if (abstractOrderEntryModel.getMplDeliveryMode() == null)
-				{
-					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-							"Falied To Place Order due to missing DeliveryMode");
-
-					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
-				}
-			}
+			cartModel.setIsExpressCheckoutSelected(Boolean.valueOf(true));
+			modelService.save(cartModel);
 
 			for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
 			{
@@ -339,7 +330,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			//TISST-13012
 			//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart()); TISPT-169
-			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart);
+			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cartModel);
 
 			if (cartItemDelistedStatus)
 			{
@@ -885,6 +876,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (!redirectFlag && cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
 			{
 				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+				redirectFlag = true;
+			}
+
+			if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
 				redirectFlag = true;
 			}
 
@@ -2170,6 +2167,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (!redirectFlag && cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
 			{
 				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+				redirectFlag = true;
+			}
+
+
+			if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
 				redirectFlag = true;
 			}
 
