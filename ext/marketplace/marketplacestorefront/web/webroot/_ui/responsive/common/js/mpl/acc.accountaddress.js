@@ -1044,6 +1044,15 @@ function editAddress(addressId) {
         	$("#errddressPost").css({"display":"block"});
         	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
         	flagPost = false;
+        } else if(addressForm.postcode.value == "000000"){
+        	$("#errddressPost").css({"display":"block"});
+        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
+        	flagPost = false;
+        }
+        else if(addressForm.postcode.value.startsWith("0")){
+        	$("#errddressPost").css({"display":"block"});
+        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
+        	flagPost = false;
         }
         if (addressForm.townCity.value == null || addressForm.townCity.value == "") {
         	$("#errddressCity").css({"display":"block"});
