@@ -25,8 +25,8 @@ $classificationAttributeAssignments=classificationAttributeAssignments(classific
 #
 
 # Create the solr server configuration
-INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false]
-;$serverConfigName;standalone;true;true
+INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false];maxTotalConnections;maxTotalConnectionsPerHostConfig
+;$serverConfigName;standalone;true;true;300;100
 
 # Create the solr indexer configuration
 INSERT_UPDATE SolrIndexConfig;name[unique=true];batchSize;numberOfThreads;indexMode(code);optimizeMode(code);ignoreErrors[default=false]
