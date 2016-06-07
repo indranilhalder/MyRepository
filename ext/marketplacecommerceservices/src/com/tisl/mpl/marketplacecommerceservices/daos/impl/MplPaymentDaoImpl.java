@@ -305,11 +305,11 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -360,8 +360,8 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			final FlexibleSearchQuery paymentTransactionQuery = new FlexibleSearchQuery(queryString);
 			paymentTransactionQuery.addQueryParameter(MarketplacecommerceservicesConstants.CUSTOMERID, mplCustomerID);
 			paymentTransactionQuery.addQueryParameter(MarketplacecommerceservicesConstants.JUSPAYORDERID, juspayOrderId);
-			final List<PaymentTransactionModel> paymentTransactionList = flexibleSearchService.<PaymentTransactionModel> search(
-					paymentTransactionQuery).getResult();
+			final List<PaymentTransactionModel> paymentTransactionList = flexibleSearchService
+					.<PaymentTransactionModel> search(paymentTransactionQuery).getResult();
 			if (null != paymentTransactionList && !paymentTransactionList.isEmpty())
 			{
 				//fetching Payment Transaction from DB using flexible search query
@@ -644,6 +644,57 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 		}
 
 	}
+
+
+
+	/**
+	 * This method picks up the latest audit id against the cart guid which is in submitted status TISPT-200
+	 *
+	 * @param cartGuid
+	 * @return List<MplPaymentAuditModel>
+	 * @throws EtailNonBusinessExceptions
+	 * @throws Exception
+	 */
+	@Override
+	public List<MplPaymentAuditModel> getAuditId(final String cartGuid) throws EtailNonBusinessExceptions, Exception
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.GETAUDITID;
+
+			//forming the flexible search query
+			final FlexibleSearchQuery auditIdQuery = new FlexibleSearchQuery(queryString);
+			auditIdQuery.addQueryParameter(MarketplacecommerceservicesConstants.CARTGUID, cartGuid);
+
+			//fetching bank list from DB using flexible search query
+			final List<MplPaymentAuditModel> auditList = flexibleSearchService.<MplPaymentAuditModel> search(auditIdQuery)
+					.getResult();
+
+			return auditList;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+	}
+
+
+
+
+
 
 	//getters and setters
 	/**

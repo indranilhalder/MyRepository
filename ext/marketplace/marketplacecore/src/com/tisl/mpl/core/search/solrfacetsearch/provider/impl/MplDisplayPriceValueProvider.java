@@ -63,7 +63,7 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -126,11 +126,21 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
 						&& pcmSizeVariantModel.getSize() != null)
 				{
-
-					final Double price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice();
+					double price = 0.0;
+					/* TISPRD-2611 */
+					if (null != buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice())
+					{
+						price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
+								.doubleValue();
+					}
+					else
+					{
+						price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice().doubleValue();
+					}
 					final JSONObject sizePriceJson = new JSONObject();
-					sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), price);
+					sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), Double.valueOf(price));
 					sizePriceJsonArray.add(sizePriceJson);
+
 				}
 
 			}
@@ -155,8 +165,6 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 
 
 	}
-
-
 
 
 	/**
