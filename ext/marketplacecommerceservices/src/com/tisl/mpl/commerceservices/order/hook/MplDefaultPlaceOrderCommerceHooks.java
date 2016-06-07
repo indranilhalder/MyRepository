@@ -861,16 +861,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			parentUssid = associatedItems.get(0);
 			int count = 0;
-			// ####  TISOMSII-230  START ############## 
-			// Getting Parent Transaction Id for freebie product Based On  Delivery Mode 
+			// ####  TISOMSII-230  START ##############
+			// Getting Parent Transaction Id for freebie product Based On  Delivery Mode
 			for (final AbstractOrderEntryModel entry : subOrderModel.getEntries())
 			{
-				if (mplOrderService.checkIfBuyABGetCApplied(entry))
+				if (entry.getGiveAway().booleanValue() && mplOrderService.checkIfBuyABGetCApplied(entry))
 				{
-					parentUssid = getParentUssidByDelModeForBuyABgetC(subOrderModel);
+					parentUssid = getParentUssidForBuyABgetC(associatedItems, subOrderModel);
 				}
 			}
-			// ####  TISOMSII-230  END  ############## 
+			// ####  TISOMSII-230  END  ##############
 
 			for (final String ussid : associatedItems)
 			{
@@ -891,7 +891,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				count = inCount;
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			LOG.error("Exception occured" + e.getMessage());
 		}
@@ -900,57 +900,86 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/**
 	 * This mthod is used to get the parent tranaction id For Freebie product By deliveryMode
+	 *
 	 * @param subOrderModel
-	 * @return
+	 * @return String
 	 */
-	private String getParentUssidByDelModeForBuyABgetC(OrderModel subOrderModel)
+	private String getParentUssidForBuyABgetC(final List<String> associatedItems, final OrderModel subOrderModel)
 	{
-		LOG.info("Inside getParentUssidByDelNodeForBuyABgetC Method");
+		LOG.info("Inside getParentUssidForBuyABgetC Method");
 		String parentUssid = StringUtils.EMPTY;
+		String ussIdA = StringUtils.EMPTY;
+		Long ussIdAQty = null;
+		Long ussIdBQty = null;
+		String ussIdB = StringUtils.EMPTY;
+		String ussIdADelMod = StringUtils.EMPTY;
+		String ussIdBDelMod = StringUtils.EMPTY;
 		try
 		{
-			for (final AbstractOrderEntryModel entry : subOrderModel.getEntries())
+			LOG.debug("Getting parent Order and entries delivery modes with quantity");
+			final OrderModel orderModel = subOrderModel.getParentReference();
+
+			for (final AbstractOrderEntryModel entry : orderModel.getEntries())
 			{
-				if (entry.getGiveAway().booleanValue() && mplOrderService.checkIfBuyABGetCApplied(entry))
+				if (entry.getSelectedUSSID().equalsIgnoreCase(associatedItems.get(0)))
 				{
-					final String ussIdA = subOrderModel.getEntries().get(0).getSelectedUSSID();
-					final String ussIdB = subOrderModel.getEntries().get(1).getSelectedUSSID();
-					final String ussIdADelMod = subOrderModel.getEntries().get(0).getMplDeliveryMode().getDeliveryMode().getCode();
-					final String ussIdBDelMod = subOrderModel.getEntries().get(1).getMplDeliveryMode().getDeliveryMode().getCode();
-
-					if (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
-					{
-						parentUssid = ussIdA;
-					}
-					else if (ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
-					{
-						parentUssid = ussIdB;
-					}
-					else if (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
-					{
-						parentUssid = ussIdA;
-					}
-					else if (ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
-					{
-						parentUssid = ussIdB;
-					}
-					else if (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
-					{
-						parentUssid = ussIdA;
-					}
-					else if (ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
-					{
-						parentUssid = ussIdB;
-
-					}
+					ussIdA = entry.getSelectedUSSID();
+					ussIdADelMod = entry.getMplDeliveryMode().getDeliveryMode().getCode();
+					ussIdAQty = entry.getQuantity();
 				}
-				LOG.debug("Parent USSID For Freebie is :"+parentUssid);
+				else if (entry.getSelectedUSSID().equalsIgnoreCase(associatedItems.get(1)))
+				{
+					ussIdB = associatedItems.get(1);
+					ussIdBDelMod = entry.getMplDeliveryMode().getDeliveryMode().getCode();
+					ussIdBQty = entry.getQuantity();
+				}
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
-			// YTODO Auto-generated catch block
-			LOG.error("Exception occurred "+e.getMessage());
+			LOG.error("Exception while getting parent order deliveryModes with quantity" + e.getMessage());
+		}
+
+		try
+		{
+			LOG.debug("Checking Delivery Modes with Quantity");
+			if (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+					&& ussIdAQty.longValue() <= ussIdBQty.longValue())
+			{
+				parentUssid = ussIdA;
+			}
+			else if (ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+					&& ussIdBQty.longValue() <= ussIdAQty.longValue())
+			{
+				parentUssid = ussIdB;
+			}
+			else if (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+					&& ussIdAQty.longValue() <= ussIdBQty.longValue())
+			{
+				parentUssid = ussIdA;
+			}
+			else if (ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+					&& ussIdBQty.longValue() <= ussIdAQty.longValue())
+			{
+				parentUssid = ussIdB;
+			}
+			else if (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
+					&& ussIdAQty.longValue() <= ussIdBQty.longValue())
+			{
+				parentUssid = ussIdA;
+			}
+			else if (ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
+					&& ussIdBQty.longValue() <= ussIdAQty.longValue())
+			{
+				parentUssid = ussIdB;
+
+			}
+			LOG.debug("Parent USSID For Freebie is :" + parentUssid);
+			return parentUssid;
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occurred " + e.getMessage());
 		}
 		return parentUssid;
 	}
