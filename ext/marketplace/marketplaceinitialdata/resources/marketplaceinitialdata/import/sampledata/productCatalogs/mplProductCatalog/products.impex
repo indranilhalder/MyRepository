@@ -64,7 +64,9 @@ INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];qu
 $inCurrency=INR
 
 INSERT_UPDATE Trigger;job(code)[unique=true];cronExpression;maxAcceptableDelay;
-;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
+#;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
+#Change for TISPT-215
+;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
 
 # MPL SHOP BY LOOK   
 INSERT_UPDATE MplShopByLook;collectionCategory(code,$catalogVersion);collectionId[unique=true];collectionName;collectionDescription;startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd];productCollections(code,$catalogVersion);gender;targetAgeGroup;occasion;topLeft;topRight;bottomLeft;bottomRight

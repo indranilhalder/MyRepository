@@ -140,7 +140,8 @@ ACC.product = {
 		});
 		
 		// Size Guide addToCartSizeGuide
-		$(document).on('click','#addToCartSizeGuide .js-add-to-cart',function(event){
+		//$(document).on('click','#addToCartSizeGuide .js-add-to-cart',function(event){
+		$(document).off('click', '#addToCartSizeGuide .js-add-to-cart').on('click','#addToCartSizeGuide .js-add-to-cart',function(event){
 			
 			var selectedSizeFlag = $("#sizeSelectedVal").val();
 			
