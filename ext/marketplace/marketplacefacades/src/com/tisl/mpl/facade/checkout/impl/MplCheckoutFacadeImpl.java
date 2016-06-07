@@ -900,8 +900,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					final SellerInformationModel sellerInfoModel = getMplSellerInformationService()
 							.getSellerDetail(marketplaceDeliveryModeData.getSellerArticleSKU());
-					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+					if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
+							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
+							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
+									.getCode())
 					{
 						final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
 								.getDeliveryFulfillModes().getCode();
