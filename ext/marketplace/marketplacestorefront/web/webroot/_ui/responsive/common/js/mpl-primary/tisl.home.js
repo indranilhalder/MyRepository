@@ -26,10 +26,14 @@ $(function() {
                 "span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count"
             ).html(data.cartcount);
             if (!headerLoggedinStatus) {
+
                 $("a.headeruserdetails").html("Sign In");
               //Akamai caching
                 $("a.headeruserdetails").attr('href','/login');
                 $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
+                
+                $("a.tracklinkcls").attr('href','/login');
+                $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
             } else {
                 var firstName = data.userFirstName;
                 if (firstName == null || firstName.trim() ==
@@ -42,6 +46,13 @@ $(function() {
                 //Akamai caching
                 $('#signIn').attr('class','dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout');
                 $("a.headeruserdetails").attr('href','/my-account');
+                
+                $("a.tracklinkcls").attr('href','#');
+                if(data.notificationCount != null){
+	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >'+data.notificationCount+'</span>)');
+	               } else {
+	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
+	               } 
             }
          
         }
