@@ -38,6 +38,7 @@
 				<entry key="/integration/" value-ref="integrationTenantFilterChain"/>
 				<entry key="/fetchToken" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for fetchToken -->
 				<entry key="/setheader" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for setHeader -->
+				<entry key="/getTealiumData" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for TealiumData -->
 			</map>
 		</property>
 	</bean>
@@ -227,7 +228,7 @@
 		<property name="btgSegmentStrategy" ref="btgSegmentStrategy"/>
 	</bean>  -->	
 	
-	<!-- TISPT-207 Custom filter chain for fetchToken and setHeader -->
+	<!-- TISPT-207 Custom filter chain for fetchToken, setHeader and tealiumData -->
 	<alias name="defaultAjaxUrlTenantFilterChainList" alias="ajaxUrlTenantFilterChainList" />
 	<util:list id="defaultAjaxUrlTenantFilterChainList">
 		<ref bean="log4jFilter"/>
