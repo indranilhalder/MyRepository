@@ -311,26 +311,40 @@ function editAddress(addressId) {
         var pathName = loc.pathname.substring(loc.pathname.lastIndexOf('/') + 1, loc.pathname.length);
     	var mainPreferenceUrl = ACC.config.encodedContextPath + "/my-account/marketplace-preference";
     	var mainProfileUrl = ACC.config.encodedContextPath + "/my-account/update-profile";
-//    	if(pathName == 'marketplace-preference'){
-//    		changeUrl(mainPreferenceUrl);
-//    	}
-//    	if(pathName == 'update-profile'){
-//    		changeUrl(mainProfileUrl);
-//    	}
-    	
     	$("#isUnsubcribed").val(false);
-    	
-//    	if($("#radioInterest1").is(":checked")) {
-//    		alert("asdasjdsaj");
-//			$("#radioInterest1").click();
-//		}
-    	
-    	
-    	
-    	
+		
+    	$("input[name='interest']").click(function() {
+    		var radioVal = $('input:radio:checked').attr('id');
+    		if(radioVal=="radioInterest0"){
+    			$("#isUnsubcribed").val(false);
+    		}
+    		else{
+    			$("#isUnsubcribed").val(true);
+    		}
+    	});
+		
+    	$("input[name='frequency']").click(function() {
+    		$("#isUnsubcribed").val(false);
+		});
+
+    	$("input[name='categoryData']").click(function() {
+    		$("#isUnsubcribed").val(false);
+		});
+		
+    	$("input[name='brandData']").click(function() {
+    		$("#isUnsubcribed").val(false);
+		});
+		
+    	$("input[name='feedbackArea']").click(function() {
+    		$("#isUnsubcribed").val(false);
+		});
+		
+ 	
     	if($("#radioInterest0").is(":checked")) {
     		$("#isUnsubcribed").val(false);
 		}
+    	
+    	
     	$("#saveMarketPrefButton").click(function(){
     		var isUnsubcribed = $("#isUnsubcribed").val();
     		var favoriteCategories = [];

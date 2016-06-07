@@ -64,10 +64,12 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
+import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
+import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.data.LatestOffersData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
@@ -128,6 +130,28 @@ public class HomePageController extends AbstractPageController
 	private DefaultCMSContentSlotService contentSlotService;
 	@Autowired
 	private ConfigurationService configurationService;
+
+	@Resource(name = "notificationFacade")
+	private NotificationFacade notificationFacade;
+
+	/**
+	 * @return the notificationFacade
+	 */
+	public NotificationFacade getNotificationFacade()
+	{
+		return notificationFacade;
+	}
+
+	/**
+	 * @param notificationFacade
+	 *           the notificationFacade to set
+	 */
+	public void setNotificationFacade(final NotificationFacade notificationFacade)
+	{
+		this.notificationFacade = notificationFacade;
+	}
+
+
 
 	private static final String VERSION = "version";
 	private static final String HOMEPAGE = "homepage";
@@ -744,6 +768,7 @@ public class HomePageController extends AbstractPageController
 					"Section5ASlot-Homepage",
 
 					version);
+
 			//return getJsonBanner(homepageSection5ASlot, "stayQued");
 			getStayQuedHomepageJson = homepageComponentService.getJsonBanner(homepageSection5ASlot, "stayQued");
 		}
@@ -925,13 +950,13 @@ public class HomePageController extends AbstractPageController
 		final Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
 	}
-	
+
 	@ResponseBody
- 	@RequestMapping(value = "/fetchToken", method = RequestMethod.GET)
- 	public Object fetchToken(final HttpSession session)
- 	{
- 		return CSRFTokenManager.getTokenForSession(session);
- 	}
+	@RequestMapping(value = "/fetchToken", method = RequestMethod.GET)
+	public Object fetchToken(final HttpSession session)
+	{
+		return CSRFTokenManager.getTokenForSession(session);
+	}
 
 	/**
 	 * @description Used to store emailid for newslettersubscription
@@ -954,9 +979,39 @@ public class HomePageController extends AbstractPageController
 		{
 			header.put("loggedInStatus", true);
 			final Object sessionDisplayName = session.getAttribute(userFirstName);
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
+
+			List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
+			final String customerUID = currentCustomer.getUid();
+			if (null != customerUID)
+			{
+				notificationMessagelist = getNotificationFacade().getNotificationDetail(customerUID, true);
+
+				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
+				{
+					int notificationCount = 0;
+					for (final NotificationData single : notificationMessagelist)
+					{
+						if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
+						{
+							notificationCount++;
+						}
+
+					}
+
+					header.put("notificationCount", notificationCount);
+				}
+				else
+				{
+					header.put("notificationCount", null);
+				}
+			}
+
+
 			if (sessionDisplayName == null)
 			{
-				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
 				String firstName = currentCustomer.getName();
 				if (StringUtils.isNotEmpty(firstName))
 				{
@@ -985,6 +1040,7 @@ public class HomePageController extends AbstractPageController
 		{
 			header.put("loggedInStatus", false);
 			header.put(userFirstName, null);
+			header.put("notificationCount", null);
 		}
 
 		return header;
