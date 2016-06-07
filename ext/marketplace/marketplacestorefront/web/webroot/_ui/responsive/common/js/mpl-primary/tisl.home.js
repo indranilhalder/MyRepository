@@ -1215,5 +1215,52 @@ function populateEnhancedSearch(enhancedSearchData)
 		$(".select-list .dropdown li#all").addClass("selected");
 		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
 	}
-	
 }
+	
+	//Added
+	
+	$("div.toggle.brandClass").on("mouseover touchend", function() {
+		var componentUid = $(this).find('a').attr('id');
+		 if (!$.cookie("dept-list") && window.localStorage) {
+		        for (var key in localStorage) {
+		            if (key.indexOf("brandhtml") >= 0) {
+		                window.localStorage.removeItem(key);
+		                // console.log("Deleting.." + key);
+
+		            }
+		        }
+		    }
+		 if (window.localStorage && (html = window.localStorage.getItem("brandhtml-" + componentUid)) && html != "") {
+		        // console.log("Local");
+		        $("ul.images").html(decodeURI(html));
+		    }else{
+		    	
+		    	 $.ajax({
+			            url: ACC.config.encodedContextPath +
+			            "/shopbybrand",
+			            type: 'GET',
+			            data:{"compId":componentUid},
+			            success: function(html) {
+			                $("ul.images").html(html);
+			                if (window.localStorage) {
+			                    $.cookie("dept-list", "true", {
+			                        expires: 1,
+			                        path: "/"
+
+			                    });
+			                    window.localStorage.setItem(
+			                        "brandhtml-" + componentUid,
+			                        encodeURI(html));
+
+			                }
+			                
+			            }
+			        });
+		    	
+		    }
+	       
+	    
+	});
+	//End
+	
+

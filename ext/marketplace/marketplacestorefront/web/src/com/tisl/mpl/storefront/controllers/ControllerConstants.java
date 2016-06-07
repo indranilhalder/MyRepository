@@ -260,6 +260,7 @@ public interface ControllerConstants
 				String LoginPanel = "fragments/home/loginPanel";
 				String MyAccountPanel = "fragments/home/myaccountPanel";
 				String LatestOffers = "fragments/home/latestOffersPanel";
+				String ShopByBrandImagesPanel = "fragments/home/shopByBrandImagesPanel";
 			}
 
 			interface Cart
