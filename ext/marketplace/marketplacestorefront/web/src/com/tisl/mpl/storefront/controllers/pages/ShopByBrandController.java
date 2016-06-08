@@ -9,7 +9,7 @@ import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +34,7 @@ public class ShopByBrandController
 	@Resource(name = "cmsComponentService")
 	private CMSComponentService cmsComponentService;
 
-	private static final Logger LOG = Logger.getLogger(ShopByBrandController.class);
+	//private static final Logger LOG = Logger.getLogger(ShopByBrandController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String getShopByBrandContent(@RequestParam("compId") final String componentUid, final Model model)
