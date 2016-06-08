@@ -51,6 +51,7 @@ public interface MarketplacecheckoutaddonControllerConstants
 				String TermsAndConditionsPopup = ADDON_PREFIX + "fragments/checkout/termsAndConditionsPopup";
 				String BillingAddressForm = ADDON_PREFIX + "fragments/checkout/billingAddressForm";
 				String NetbankingPanel = ADDON_PREFIX + "fragments/checkout/netbankingPanel"; //TISPT-235
+				String CODPanel = ADDON_PREFIX + "fragments/checkout/codPanel"; //TISPT-235
 			}
 
 		}

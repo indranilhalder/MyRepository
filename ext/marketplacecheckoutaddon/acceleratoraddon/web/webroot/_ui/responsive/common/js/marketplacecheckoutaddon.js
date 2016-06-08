@@ -166,98 +166,211 @@ function displayEMIForm(){
 }
 
 
+//Commented for TISPT-235
+//function displayCODForm()
+//{
+//	var codEligible=$("#codEligible").val();
+//	refresh();
+//	//TISPRD-2138
+//	applyPromotion(null);
+//	$("#paymentMode").val("COD");
+//	var paymentMode=$("#paymentMode").val();
+//	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
+//	/*$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","block");*/	//Modified back as erroneously pushed by performance team
+//	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
+//	//setCellNo();
+//	if(codEligible=="BLACKLISTED")
+//	{
+//		$("#customerBlackListMessage").css("display","block");
+//		$("#otpNUM").css("display","none");
+//		$("#otpSentMessage").css("display","none");
+//		$("#no-click").remove();
+//	}
+//	else if(codEligible=="NOT_TSHIP")
+//	{
+//		$("#fulfillmentMessage").css("display","block");
+//		$("#otpNUM").css("display","none");
+//		$("#otpSentMessage").css("display","none");
+//		$("#no-click").remove();
+//	}
+//	else if(codEligible=="ITEMS_NOT_ELIGIBLE")
+//	{
+//		$("#codItemEligibilityMessage").css("display","block");
+//		$("#otpNUM").css("display","none");
+//		$("#otpSentMessage").css("display","none");
+//		$("#no-click").remove();
+//	}
+//	else if(codEligible=="NOT_PINCODE_SERVICEABLE")
+//	{
+//		$("#codMessage").css("display","block");
+//		$("#otpNUM").css("display","none");
+//		$("#otpSentMessage").css("display","none");
+//		$("#no-click").remove();
+//	}
+//	else{
+//		if(isCodSet == false){
+//		   	$.ajax({
+//				url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/validateOTP",
+//				type: "GET",
+//				data: { 'paymentMode' : paymentMode },
+//				cache: false,
+//				success : function(response) {
+//					if(response==null){
+//						$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TISEE-510
+//					}
+//					else{
+//						$("#sendOTPNumber, #convCharge").css("display","block");
+//						var totalPrice=response.totalPrice.formattedValue;
+//						var convCharge=response.convCharge.formattedValue;
+//						$("#convChargeFieldId, #convChargeField").css("display","block");
+//						if(response.cellNo==""){
+//							$("#otpMobileNUMField").val("");
+//						}
+//						else{
+//							$("#otpMobileNUMField").val(response.cellNo);
+//						}
+//						if(response.convCharge.value!=0){
+//							document.getElementById("convChargeField").innerHTML=convCharge;
+//							//alert("Because you have selected COD, convenience charges have been added to your order amount")
+//							$("#convChargeMessage").css("display","inline-block");
+//						}
+//						else
+//						{
+//							document.getElementById("convChargeField").innerHTML="Free"; //TISPRD-146
+//							$("#convChargeMessage").css("display","none");
+//						}
+//						//document.getElementById("totalWithConvField").innerHTML=totalPrice; TISPT-29
+//						if(paymentMode!=null){
+//							applyPromotion(null);
+//						}
+//						isCodSet = true;
+//					}
+//				},
+//				error : function(resp) {
+//					alert("COD is not available at this time. Please select another payment mode and proceed");	
+//					$("#no-click").remove();
+//				}
+//			});
+//		}
+//		else{
+//			$("#convChargeFieldId, #convChargeField").css("display","block");
+//			$("#no-click").remove();
+//		}
+//	}
+//	//$("#no-click").remove();
+//}
 
 
+
+
+//TISPT-235 : COD Ajax Call
 function displayCODForm()
 {
-	var codEligible=$("#codEligible").val();
 	refresh();
 	//TISPRD-2138
 	applyPromotion(null);
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
-	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
-	/*$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","block");*/	//Modified back as erroneously pushed by performance team
-	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
-	//setCellNo();
-	if(codEligible=="BLACKLISTED")
-	{
-		$("#customerBlackListMessage").css("display","block");
-		$("#otpNUM").css("display","none");
-		$("#otpSentMessage").css("display","none");
-		$("#no-click").remove();
-	}
-	else if(codEligible=="NOT_TSHIP")
-	{
-		$("#fulfillmentMessage").css("display","block");
-		$("#otpNUM").css("display","none");
-		$("#otpSentMessage").css("display","none");
-		$("#no-click").remove();
-	}
-	else if(codEligible=="ITEMS_NOT_ELIGIBLE")
-	{
-		$("#codItemEligibilityMessage").css("display","block");
-		$("#otpNUM").css("display","none");
-		$("#otpSentMessage").css("display","none");
-		$("#no-click").remove();
-	}
-	else if(codEligible=="NOT_PINCODE_SERVICEABLE")
-	{
-		$("#codMessage").css("display","block");
-		$("#otpNUM").css("display","none");
-		$("#otpSentMessage").css("display","none");
-		$("#no-click").remove();
-	}
-	else{
-		if(isCodSet == false){
-		   	$.ajax({
-				url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/validateOTP",
-				type: "GET",
-				data: { 'paymentMode' : paymentMode },
-				cache: false,
-				success : function(response) {
-					if(response==null){
-						$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TISEE-510
-					}
-					else{
-						$("#sendOTPNumber, #convCharge").css("display","block");
-						var totalPrice=response.totalPrice.formattedValue;
-						var convCharge=response.convCharge.formattedValue;
-						$("#convChargeFieldId, #convChargeField").css("display","block");
-						if(response.cellNo==""){
-							$("#otpMobileNUMField").val("");
+	var cartValue=$("#cartValue").val();
+	var httpRequest=$("#httpRequest").val();
+	
+	$.ajax({
+		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplCODForm",
+		type: "GET",
+		data: { 'cartValue' : cartValue , 'request' : httpRequest},
+		cache: false,
+		success : function(response) {
+			$("#otpNUM").html(response);
+			var codEligible=$("#codEligible").val();
+			
+			$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
+			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
+			if(codEligible=="BLACKLISTED")
+			{
+				$("#customerBlackListMessage").css("display","block");
+				$("#otpNUM").css("display","none");
+				$("#otpSentMessage").css("display","none");
+				$("#no-click").remove();
+			}
+			else if(codEligible=="NOT_TSHIP")
+			{
+				$("#fulfillmentMessage").css("display","block");
+				$("#otpNUM").css("display","none");
+				$("#otpSentMessage").css("display","none");
+				$("#no-click").remove();
+			}
+			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
+			{
+				$("#codItemEligibilityMessage").css("display","block");
+				$("#otpNUM").css("display","none");
+				$("#otpSentMessage").css("display","none");
+				$("#no-click").remove();
+			}
+			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
+			{
+				$("#codMessage").css("display","block");
+				$("#otpNUM").css("display","none");
+				$("#otpSentMessage").css("display","none");
+				$("#no-click").remove();
+			}
+			else{
+				if(isCodSet == false){
+				   	$.ajax({
+						url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/validateOTP",
+						type: "GET",
+						data: { 'paymentMode' : paymentMode },
+						cache: false,
+						success : function(response) {
+							if(response==null){
+								$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TISEE-510
+							}
+							else{
+								$("#sendOTPNumber, #convCharge").css("display","block");
+								var totalPrice=response.totalPrice.formattedValue;
+								var convCharge=response.convCharge.formattedValue;
+								$("#convChargeFieldId, #convChargeField").css("display","block");
+								if(response.cellNo==""){
+									$("#otpMobileNUMField").val("");
+								}
+								else{
+									$("#otpMobileNUMField").val(response.cellNo);
+								}
+								if(response.convCharge.value!=0){
+									document.getElementById("convChargeField").innerHTML=convCharge;
+									//alert("Because you have selected COD, convenience charges have been added to your order amount")
+									$("#convChargeMessage").css("display","inline-block");
+								}
+								else
+								{
+									document.getElementById("convChargeField").innerHTML="Free"; //TISPRD-146
+									$("#convChargeMessage").css("display","none");
+								}
+								//document.getElementById("totalWithConvField").innerHTML=totalPrice; TISPT-29
+								if(paymentMode!=null){
+									applyPromotion(null);
+								}
+								isCodSet = true;
+							}
+						},
+						error : function(resp) {
+							alert("COD is not available at this time. Please select another payment mode and proceed");	
+							$("#no-click").remove();
 						}
-						else{
-							$("#otpMobileNUMField").val(response.cellNo);
-						}
-						if(response.convCharge.value!=0){
-							document.getElementById("convChargeField").innerHTML=convCharge;
-							//alert("Because you have selected COD, convenience charges have been added to your order amount")
-							$("#convChargeMessage").css("display","inline-block");
-						}
-						else
-						{
-							document.getElementById("convChargeField").innerHTML="Free"; //TISPRD-146
-							$("#convChargeMessage").css("display","none");
-						}
-						//document.getElementById("totalWithConvField").innerHTML=totalPrice; TISPT-29
-						if(paymentMode!=null){
-							applyPromotion(null);
-						}
-						isCodSet = true;
-					}
-				},
-				error : function(resp) {
-					alert("COD is not available at this time. Please select another payment mode and proceed");	
+					});
+				}
+				else{
+					$("#convChargeFieldId, #convChargeField").css("display","block");
 					$("#no-click").remove();
 				}
-			});
-		}
-		else{
-			$("#convChargeFieldId, #convChargeField").css("display","block");
+			}
+		},
+		error : function(resp) {
+			alert("COD is not available at this time. Please select another payment mode and proceed");	
 			$("#no-click").remove();
+			//$(".make_payment").removeAttr('disabled');
 		}
-	}
+	});
+	
 	//$("#no-click").remove();
 }
 

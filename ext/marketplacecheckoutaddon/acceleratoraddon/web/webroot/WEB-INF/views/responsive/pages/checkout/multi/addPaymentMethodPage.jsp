@@ -316,7 +316,10 @@
 								</li> --%>
 								<li class="cod-container">
 									<div id="otpNUM" >
-										<p style="color:#a9143c;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc"/></p>
+										<!-- TISPT-235 Code changed for COD using AJAX -->
+										<input type="hidden" id="cartValue" value="${cartValue}" />
+										<input type="hidden" id="httpRequest" value="${request}" />
+										<%-- <p style="color:#a9143c;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc"/></p>
 										<div class="amtPayable"><h4><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.amtPayable"/>
 										&nbsp;<span id="codAmount"></span></h4>&nbsp;<span id="convChargeMessage"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.convChargeMsg"/></span>
 										</div><br> 
@@ -343,7 +346,7 @@
 											<label name="Enter OTP"><spring:theme code="checkout.multi.paymentMethod.CODPayment.enterOTP" text="Enter OTP:&nbsp;"/>
 												<input type="text" id="otpNUMField" name="otpNUM" onfocus="hideErrorMsg()" autocomplete="off"/>
 											</label>
-										</div>
+										</div> --%>
 									</div>
 									
 									
