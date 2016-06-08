@@ -1040,7 +1040,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//getting totalprice of cart
 		final Double cartTotal = new Double(cartData.getTotalPrice().getValue().doubleValue());
 
-		setupMplNetbankingForm(model);
+		//setupMplNetbankingForm(model);		//TISPT-235 Commented to make ajax call for netbanking
 		setupMplCODForm(model, cartValue, cartData);
 		setupMplCardForm(model, cartTotal);
 
@@ -1081,13 +1081,84 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return sb.toString();
 	}
 
+
+
 	/**
-	 * This method is used to set up the details for Netbanking
+	 * This method is used to set up the details for Netbanking This method is commented to handle netbanking using AJAX
+	 * call
 	 *
 	 * @param model
 	 * @throws EtailBusinessExceptions
 	 */
-	private void setupMplNetbankingForm(final Model model) throws EtailBusinessExceptions, Exception
+	//	private void setupMplNetbankingForm(final Model model) throws EtailBusinessExceptions, Exception
+	//	{
+	//		List<MplNetbankingData> popularBankList = new ArrayList<MplNetbankingData>();
+	//		// TISPT-169
+	//		List<BankforNetbankingModel> netBankingList = new ArrayList<BankforNetbankingModel>(); //TISPT-169
+	//
+	//		try
+	//		{
+	//			netBankingList = getMplPaymentFacade().getNetBankingBanks(); // TISPT-169
+	//			//getting the popular banks
+	//			popularBankList = getMplPaymentFacade().getBanksByPriority(netBankingList); // TISPT-169
+	//			model.addAttribute(MarketplacecheckoutaddonConstants.POPULARBANKS, popularBankList);
+	//
+	//		}
+	//		catch (final EtailBusinessExceptions e)
+	//		{
+	//			LOG.error(MarketplacecommerceservicesConstants.B6002, e);
+	//			ExceptionUtil.getCustomizedExceptionTrace(e);
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			LOG.error(MarketplacecommerceservicesConstants.B6002, e);
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(MarketplacecommerceservicesConstants.B6002, e);
+	//		}
+	//
+	//		Map<String, String> otherBankCodeMap = new HashMap<String, String>();
+	//		try
+	//		{
+	//			//getting the other banks
+	//			otherBankCodeMap = getMplPaymentFacade().getOtherBanks(netBankingList); // TISPT-169
+	//			model.addAttribute(MarketplacecheckoutaddonConstants.OTHERBANKS, otherBankCodeMap);
+	//
+	//		}
+	//		catch (final EtailBusinessExceptions e)
+	//		{
+	//			LOG.error(MarketplacecommerceservicesConstants.B6003, e);
+	//
+	//			ExceptionUtil.getCustomizedExceptionTrace(e);
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			LOG.error(MarketplacecommerceservicesConstants.B6003, e);
+	//
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			//logging error message
+	//			LOG.error(MarketplacecommerceservicesConstants.B6003, e);
+	//		}
+	//	}
+
+
+
+
+
+	/**
+	 * This method is used to set up the details for Netbanking TISPT-235
+	 *
+	 * @param model
+	 * @throws EtailBusinessExceptions
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.SETUPMPLNETBANKINGFORM, method = RequestMethod.GET)
+	@RequireHardLogIn
+	public String setupMplNetbankingForm(final Model model) throws EtailBusinessExceptions, Exception
 	{
 		List<MplNetbankingData> popularBankList = new ArrayList<MplNetbankingData>();
 		// TISPT-169
@@ -1141,7 +1212,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//logging error message
 			LOG.error(MarketplacecommerceservicesConstants.B6003, e);
 		}
+
+		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.NetbankingPanel;
 	}
+
+
 
 	/**
 	 * This method is used to set up the details for COD
@@ -1804,12 +1879,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		MplPromoPriceData responseData = new MplPromoPriceData();
 
 		//TISPT-29
-		if (null != cart
-				&& StringUtils.isNotEmpty(paymentMode)
+		if (null != cart && StringUtils.isNotEmpty(paymentMode)
 				&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
 						|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
-						|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE) || paymentMode
-							.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)))
+						|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
+						|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)))
 		{
 			//setting in cartmodel
 			cart.setConvenienceCharges(Double.valueOf(0));
@@ -1939,8 +2013,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					cart.setModeOfPayment(MarketplacecheckoutaddonConstants.NETBANKINGMODE);
 					getModelService().save(cart);
 				}
-				else if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
+				else
+					if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
 				{
 					cart.setModeOfPayment(MarketplacecheckoutaddonConstants.EMIMODE);
 					getModelService().save(cart);

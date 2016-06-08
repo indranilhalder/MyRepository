@@ -268,6 +268,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String NETBANKINGMODE = "Netbanking";
 	public static final String EMIMODE = "EMI";
 
+	public static final String SETUPMPLNETBANKINGFORM = "/setupMplNetbankingForm"; //TISPT-235
+
 
 	private MarketplacecheckoutaddonConstants()
 	{

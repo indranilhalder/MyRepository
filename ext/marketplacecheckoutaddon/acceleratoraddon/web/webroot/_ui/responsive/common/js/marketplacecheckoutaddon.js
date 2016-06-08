@@ -100,18 +100,45 @@ function refresh(){
 }
 
 
+//TISPT-235 Commented to make netbanking ajax call
+
+//function displayNetbankingForm(){
+//	refresh();
+//	$("#paymentMode").val("Netbanking");
+//	//resetConvCharge();	TISPT-29
+//	$('input:password').val("");
+//	$(".name_on_card").val("");	
+//	applyPromotion(null);
+//	$("#paymentDetails, #netbanking, #make_nb_payment").css("display","block");
+//	$(".make_payment_top_nb").css("display","block");
+//	$("#submitButtons, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton").css("display","none");
+//}
 
 
+
+//TISPT-235 Ajax call for netbanking
 function displayNetbankingForm(){
 	refresh();
 	$("#paymentMode").val("Netbanking");
-	//resetConvCharge();	TISPT-29
-	$('input:password').val("");
-	$(".name_on_card").val("");	
-	applyPromotion(null);
-	$("#paymentDetails, #netbanking, #make_nb_payment").css("display","block");
-	$(".make_payment_top_nb").css("display","block");
-	$("#submitButtons, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton").css("display","none");
+	
+	$.ajax({
+		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplNetbankingForm",
+		type: "GET",
+		cache: false,
+		success : function(response) {
+			$(".netbankingPanel").html(response);
+			//resetConvCharge();	TISPT-29
+			$('input:password').val("");
+			$(".name_on_card").val("");	
+			applyPromotion(null);
+			$("#paymentDetails, #netbanking, #make_nb_payment").css("display","block");
+			$(".make_payment_top_nb").css("display","block");
+			$("#submitButtons, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton").css("display","none");
+		},
+		error : function(resp) {
+			
+		}
+	});
 }
 
 

@@ -404,7 +404,7 @@
 						
 				<!-- div for Netbanking -->	
 								<li id="netbanking">
-								<ul class="product-block net-bank">
+								<ul class="product-block net-bank" >
 								
 								<%-- <li class="header">
 										<ul>
@@ -413,8 +413,11 @@
 									</li>
 									<li class="mobile-header">
 										<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking"/></h2>
-									</li> --%>
-										<li class="item cardForm">									
+									</li>--%>
+									
+									<!-- TISPT-235 Commented to make netbanking ajax call -->
+									
+									<%--<li class="item cardForm">									
 										<input type="hidden" id="juspayOrderId" />
 										
 									<div id="netbankingIssueError" class="error-message">
@@ -438,7 +441,7 @@
 								
 									<c:if test="${not empty otherBankNames}">
 									<div class="bank-select">
-										<%-- <label><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otherNBBanks"/></label> --%>
+										<label><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otherNBBanks"/></label>
 										<select name="NBBankCode" id="bankCodeSelection" onchange="deselectRadio()">
 											<option value="select"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.selectBank"/></option>		
 											<c:forEach var="bankMap" items="${otherBankNames}">
@@ -455,7 +458,7 @@
 									</div>
 									
 									
-								</li>
+								</li>--%>
 									</ul>
 									<!-- Terms & Conditions Link -->
 									<div class="pay top-padding">
@@ -463,7 +466,7 @@
 										<p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p>
 										<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
 										
-									</div>
+									</div> 
 								</li>	
 				<!-- End of Netbanking -->	
 						
