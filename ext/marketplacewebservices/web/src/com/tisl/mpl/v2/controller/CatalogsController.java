@@ -194,7 +194,7 @@ public class CatalogsController extends BaseController
 	 */
 	@RequestMapping(value = "/allBrands", method = RequestMethod.GET)
 	@ResponseBody
-	public BrandListHierarchyWsDTO getAllBrands(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	public BrandListHierarchyData getAllBrands(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		BrandListHierarchyData shopbydeptdata = new BrandListHierarchyData();
 		BrandListHierarchyWsDTO brandListdto = new BrandListHierarchyWsDTO();
@@ -237,7 +237,7 @@ public class CatalogsController extends BaseController
 			brandListdto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 
-		return brandListdto;
+		return shopbydeptdata;
 	}
 
 	/**

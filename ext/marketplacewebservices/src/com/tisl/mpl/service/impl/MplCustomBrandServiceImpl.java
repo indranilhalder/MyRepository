@@ -57,7 +57,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 	/*
 	 * This method initially gets Shop by brand component for the component id and then fetches the corresponding fields
 	 * Sets latest modified time for mobile caching
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomBrandService#getShopByBrand()
 	 */
 	@Override
@@ -225,6 +225,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 						subbranddata.setSub_brand_type(SELLER);
 						subbranddata.setSub_brand_url(subrand.getSubBrandUrl().substring(3));
 
+
 						subBrandurl = subrand.getSubBrandUrl();
 						subBrandCode = subBrandurl.substring(subBrandurl.lastIndexOf('/') + 1);
 						if (null != subBrandCode)
@@ -257,13 +258,18 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 						micrositeId = true;
 					}
 					//subbranddata.setSub_brand_url(subrand.getSubBrandUrl()); }
+
+
 				}
 
 				if (null != subrand.getSubBrandName() && !StringUtils.isEmpty(subrand.getSubBrandName()))
 				{
 					subbranddata.setSub_brand_name(subrand.getSubBrandName());
 				}
-
+				if (null != subrand.getSubBrandLogo() && !StringUtils.isEmpty(subrand.getSubBrandLogo().getCode()))
+				{
+					subbranddata.setSub_brand_logo(subrand.getSubBrandLogo().getCode());
+				}
 
 				if (null != subrand.getSubBrandImage() && null != subrand.getSubBrandImage().getURL()
 						&& !subrand.getSubBrandImage().getURL().isEmpty())
@@ -293,8 +299,8 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 		if (null != configurationService && null != configurationService.getConfiguration()
 				&& null != MarketplacecommerceservicesConstants.SHOPBYBRANDCOMPONENT)
 		{
-			componentUid = configurationService.getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.SHOPBYBRANDCOMPONENT, "");
+			componentUid = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.SHOPBYBRANDCOMPONENT, "");
 		}
 		final BrandCollectionComponentModel shopByBrandComponent = (BrandCollectionComponentModel) cmsComponentService
 				.getSimpleCMSComponent(componentUid);
