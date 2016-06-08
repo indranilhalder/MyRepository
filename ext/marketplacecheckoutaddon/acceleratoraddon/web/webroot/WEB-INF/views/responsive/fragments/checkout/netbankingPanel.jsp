@@ -28,7 +28,8 @@
 					id="NBBankName${status.index}" value="${bank.bankName}" /></li>
 			</c:forEach>
 		</ul>
-	</c:if> <c:if test="${not empty otherBankNames}">
+	</c:if> 
+	<c:if test="${not empty otherBankNames}">
 		<div class="bank-select">
 			<%-- <label><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otherNBBanks"/></label> --%>
 			<select name="NBBankCode" id="bankCodeSelection"
@@ -44,4 +45,5 @@
 	</c:if> <br>
 	<div id="netbankingError">
 		<spring:theme code="checkout.multi.paymentMethod.netbanking.Error" />
-	</div></li>
+	</div>
+</li>

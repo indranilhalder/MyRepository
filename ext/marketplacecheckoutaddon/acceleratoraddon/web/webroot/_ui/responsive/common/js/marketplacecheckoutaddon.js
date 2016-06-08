@@ -64,7 +64,7 @@ function refresh(){
 	$("#is_emi").val("false");
 	$("#emi_bank").val("");
 	$("#emi_tenure").val("");
-	$("#COD, #emi, #netbanking, #card, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton, #mobileNoError, #OTPGenerationErrorMessage, #codMessage, #customerBlackListMessage, #otpValidationMessage, #wrongOtpValidationMessage, #expiredOtpValidationMessage, #fulfillmentMessage, #codItemEligibilityMessage, #emptyOTPMessage, #resendOTPMessage").css("display","none");
+	$("#COD, #emi, #netbanking, #card, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton, #mobileNoError, #OTPGenerationErrorMessage, #codMessage, #customerBlackListMessage, #otpValidationMessage, #wrongOtpValidationMessage, #expiredOtpValidationMessage, #fulfillmentMessage, #codItemEligibilityMessage, #emptyOTPMessage, #resendOTPMessage, .nbAjaxError").css("display","none");
 	$("#netbankingError, .savedCard, .newCard, #emiRangeError, #juspayconnErrorDiv").css("display","none");
 	$("#bankNameForEMI, #listOfEMiBank, #netbankingIssueError, #emiPromoError").css("display","none");
 	$("#convChargeFieldId, #convChargeField").css("display","none");
@@ -136,7 +136,10 @@ function displayNetbankingForm(){
 			$("#submitButtons, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton").css("display","none");
 		},
 		error : function(resp) {
-			
+			$(".nbButton").css("display","none");
+			$("#netbanking,.nbAjaxError").css("display","block");
+			$("#no-click").remove();
+			$(".make_payment").removeAttr('disabled');
 		}
 	});
 }

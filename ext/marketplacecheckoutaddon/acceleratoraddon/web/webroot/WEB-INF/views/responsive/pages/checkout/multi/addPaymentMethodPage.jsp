@@ -404,7 +404,7 @@
 						
 				<!-- div for Netbanking -->	
 								<li id="netbanking">
-								<ul class="product-block net-bank" >
+								<ul class="product-block net-bank netbankingPanel" >
 								
 								<%-- <li class="header">
 										<ul>
@@ -460,8 +460,12 @@
 									
 								</li>--%>
 									</ul>
+									<!-- TISPT-235 -->
+									<div class="nbAjaxError error-message">
+										<spring:theme code="checkout.multi.paymentMethod.netbanking.AjaxError"/>
+									</div>
 									<!-- Terms & Conditions Link -->
-									<div class="pay top-padding">
+									<div class="pay top-padding nbButton">
 										<button type="button" class="make_payment button btn-block payment-button" id="make_nb_payment" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 										<p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p>
 										<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
