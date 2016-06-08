@@ -326,4 +326,6 @@ public interface MplPaymentFacade
 	 */
 	Tuple2<?, ?> listStoredCards(final CustomerModel customer, ListCardsResponse listCardsResponse);
 
+	boolean isValidCart(CartModel cartModel);
+
 }
