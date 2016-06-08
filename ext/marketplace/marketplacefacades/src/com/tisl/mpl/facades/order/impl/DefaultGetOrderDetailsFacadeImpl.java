@@ -1072,6 +1072,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	@Override
 	public boolean isPickUpButtonEditable(final OrderData orderDetail)
 	{
+		LOG.debug("in check for pickup button updatable or not :"+orderDetail.getCode());
 		for (final OrderData subOrder : orderDetail.getSellerOrderList())
 		{
 			for (final OrderEntryData entry : subOrder.getEntries())
@@ -1080,16 +1081,22 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						&& MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(entry.getMplDeliveryMode().getCode()))
 				{
 					final List<ConsignmentStatus> statuses = getPickUpButtonDisableOptions();
+				
+					if(null != entry.getConsignment()){
+							LOG.info("status code:"+entry.getConsignment().getStatus() +" for txn id "+entry.getTransactionId());
+					}
 					///if atleast one entry does not contain the listed disabling options,
 					//then enable the update pickup button.
 					if (null != entry.getConsignment() && null != entry.getConsignment().getStatus()
-							&& !statuses.contains(entry.getConsignment().getStatus().getCode()))
+							&& !statuses.contains(entry.getConsignment().getStatus()))
 					{
-						return true;
+							LOG.debug("update pickup button is enabled");
+							return true;
 					}
 				}
 			}
 		}
+		LOG.debug("update pickup button is disabled");
 		return false;
 	}
 
