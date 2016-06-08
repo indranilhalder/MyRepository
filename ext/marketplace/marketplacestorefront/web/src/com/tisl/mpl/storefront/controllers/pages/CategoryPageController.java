@@ -218,6 +218,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 					return redirection;
 				}
 
+				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
+
 				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
 						categoryCode, searchQuery, page, showMode, sortCode, count, resetAll);
 
@@ -233,7 +235,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				final String categoryName = category.getName();
 
-				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
+
 				//model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 				//Collections.singletonList(new Breadcrumb("#", categoryName, LAST_LINK_CLASS)));
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
@@ -292,8 +294,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			catch (final Exception exp)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-						MarketplacecommerceservicesConstants.E0000));
+				ExceptionUtil.etailNonBusinessExceptionHandler(
+						new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 				try
 				{
 					return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
@@ -313,8 +315,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 		 */
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(
+					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -381,7 +383,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @throws UnsupportedEncodingException
 	 */
 	@ResponseBody
-	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
+	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN
+			+ "/results", method = RequestMethod.GET)
 	public SearchResultsData<ProductData> getResults(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = PAGE, defaultValue = "0") final int page,
@@ -505,8 +508,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> updatePageData(
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData,
-			final String whichSearch, final String searchQuery)
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData, final String whichSearch,
+			final String searchQuery)
 	{
 		// YTODO Auto-generated method stub
 		if (null != whichSearch)

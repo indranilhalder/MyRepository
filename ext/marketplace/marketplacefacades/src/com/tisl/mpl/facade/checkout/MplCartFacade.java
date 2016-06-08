@@ -16,6 +16,7 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -127,10 +128,11 @@ public interface MplCartFacade extends CartFacade
 	 * @Description : GiftYourself two latest product from wishlists
 	 * @return : List<Wishlist2EntryModel> finalgiftList
 	 */
-
-	List<Wishlist2EntryModel> getGiftYourselfDetails(int minGiftQuantity, List<Wishlist2Model> allWishlists, String pincode)
+	//TISPT-179 Point 2
+	//List<Wishlist2EntryModel> getGiftYourselfDetails(int minGiftQuantity, List<Wishlist2Model> allWishlists, String pincode, CartModel cartModel) throws CMSItemNotFoundException;
+	//TISPT-179 Point 3
+	Tuple2<?, ?> getGiftYourselfDetails(int minGiftQuantity, List<Wishlist2Model> allWishlists, String pincode, CartModel cartModel)
 			throws CMSItemNotFoundException;
-
 
 	/**
 	 * Method for fetching cart details
@@ -377,7 +379,11 @@ public interface MplCartFacade extends CartFacade
 	 * @param entryModels
 	 * @return Map<String, List<String>>
 	 */
-	Map<String, List<String>> checkPincodeGiftCartData(String defaultPinCodeId, List<Wishlist2EntryModel> entryModels);
+	//Map<String, List<String>> checkPincodeGiftCartData(String defaultPinCodeId, List<Wishlist2EntryModel> entryModels); TISPT-179 Point 3
+
+	Map<String, List<String>> checkPincodeGiftCartData(String defaultPinCodeId, List<Wishlist2EntryModel> entryModels,
+			Tuple2<?, ?> wishListPincodeObject);
+
 
 	/**
 	 * @Desc : To validate if any of the product is delisted or not TISEE-3676

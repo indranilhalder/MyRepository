@@ -19,6 +19,7 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -116,17 +117,16 @@ public interface MplCommerceCartService
 	 * @param minGiftQuantity
 	 * @param allWishlists
 	 * @param pincode
+	 * @param cartModel
 	 * @return : List<Wishlist2EntryModel>
+	 * @return : Tuple2<?, ?>
 	 * @throws CMSItemNotFoundException
 	 */
-	/**
-	 * @param minGiftQuantity
-	 * @param allWishlists
-	 * @param pincode
-	 * @return
-	 */
-	List<Wishlist2EntryModel> getGiftYourselfDetails(int minGiftQuantity, final List<Wishlist2Model> allWishlists, String pincode)
-			throws CMSItemNotFoundException;
+	//TISPT-179
+	//List<Wishlist2EntryModel> getGiftYourselfDetails(int minGiftQuantity, final List<Wishlist2Model> allWishlists, String pincode,CartModel cartModel) throws CMSItemNotFoundException;
+
+	Tuple2<?, ?> getGiftYourselfDetails(int minGiftQuantity, final List<Wishlist2Model> allWishlists, String pincode,
+			CartModel cartModel) throws CMSItemNotFoundException;
 
 	List<Wishlist2EntryModel> getGiftYourselfDetailsMobile(int minGiftQuantity, final List<Wishlist2Model> allWishlists,
 			String pincode, Collection<CartModel> cartModelList) throws CMSItemNotFoundException;
@@ -177,6 +177,7 @@ public interface MplCommerceCartService
 
 	boolean addItemToCart(final String cartId, final CartModel cartModel, final ProductModel productModel, final long quantity,
 			final String ussid) throws InvalidCartException, CommerceCartModificationException;
+
 
 	/**
 	 * @description: It is responsible to find possible delivery mode
@@ -397,7 +398,7 @@ public interface MplCommerceCartService
 	 * @return Map<String, List<String>>
 	 */
 	public abstract Map<String, List<String>> checkPincodeGiftCartData(String defaultPinCodeId,
-			List<Wishlist2EntryModel> entryModels);
+			List<Wishlist2EntryModel> entryModels, final Tuple2<?, ?> wishListPincodeObject); //TISPT-179 Point 3
 
 	/**
 	 * Returns Seller Data

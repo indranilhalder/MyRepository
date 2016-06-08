@@ -33,6 +33,7 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -198,8 +199,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * @param recentlyAddedFirst
 	 * 
-	 * @return CartData
-	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -229,15 +228,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * @Desc fetching cartdata using session cart
-	 *
-	 *
-	 *
-	 *
 	 * @return CartData
-	 *
-	 *
-	 *
-	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -568,40 +559,63 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return mplCommerceCartService.getCartDetails(ussid);
 	}
 
-	/*
+	/**
 	 * @Desc fetching gift yourself details
+<<<<<<< HEAD
 	 *
 	 *
 	 *
 	 *
+=======
+>>>>>>> refs/remotes/origin/TCS_PROD_SUPPORT
 	 * @param minGiftQuantity
+<<<<<<< HEAD
 	 *
 	 *
 	 *
 	 *
+=======
+>>>>>>> refs/remotes/origin/TCS_PROD_SUPPORT
 	 * @param allWishlists
+<<<<<<< HEAD
 	 *
 	 *
 	 *
 	 *
+=======
+>>>>>>> refs/remotes/origin/TCS_PROD_SUPPORT
 	 * @param pincode
+<<<<<<< HEAD
 	 *
 	 *
 	 *
 	 *
+=======
+	 * @param cartModel
+>>>>>>> refs/remotes/origin/TCS_PROD_SUPPORT
 	 * @return List<Wishlist2EntryModel>
 	 *
+<<<<<<< HEAD
 	 *
 	 *
 	 *
+=======
+>>>>>>> refs/remotes/origin/TCS_PROD_SUPPORT
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
-	public List<Wishlist2EntryModel> getGiftYourselfDetails(final int minGiftQuantity, final List<Wishlist2Model> allWishlists,
-			final String pincode) throws CMSItemNotFoundException
+	public Tuple2<?, ?> getGiftYourselfDetails(final int minGiftQuantity, final List<Wishlist2Model> allWishlists,
+			final String pincode, final CartModel cartModel) throws CMSItemNotFoundException
 	{
-		return mplCommerceCartService.getGiftYourselfDetails(minGiftQuantity, allWishlists, pincode);
+		return mplCommerceCartService.getGiftYourselfDetails(minGiftQuantity, allWishlists, pincode, cartModel); //TISPT-179 Point 2
 	}
+
+	//	@Override TISPT-179 Point 3
+	//	public List<Wishlist2EntryModel> getGiftYourselfDetails(final int minGiftQuantity, final List<Wishlist2Model> allWishlists,
+	//			final String pincode, final CartModel cartModel) throws CMSItemNotFoundException
+	//	{
+	//		return mplCommerceCartService.getGiftYourselfDetails(minGiftQuantity, allWishlists, pincode, cartModel); //TISPT-179 Point 2
+	//	}
 
 	/**
 	 * Method for creating empty cart if no cart is associated with user id for Mobile Service
@@ -1566,7 +1580,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			//			if (hasDeliveryMode)
 			//			{
 			commerceCartService.recalculateCart(cart); //TISPT-104
-			//modelService.save(cart);
+			modelService.save(cart);
 			//			}
 		}
 		catch (final Exception e)
@@ -2170,12 +2184,13 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	@Override
 	public Map<String, List<String>> checkPincodeGiftCartData(final String defaultPinCodeId,
-			final List<Wishlist2EntryModel> entryModels)
+			final List<Wishlist2EntryModel> entryModels, final Tuple2<?, ?> wishListPincodeObject) //TISPT-179 Point 3
 	{
 		Map<String, List<String>> giftYourselfDeliveryModeDataMap = new HashMap<String, List<String>>();
 		if (StringUtil.isNotEmpty(defaultPinCodeId))
 		{
-			giftYourselfDeliveryModeDataMap = getMplCommerceCartService().checkPincodeGiftCartData(defaultPinCodeId, entryModels);
+			giftYourselfDeliveryModeDataMap = getMplCommerceCartService().checkPincodeGiftCartData(defaultPinCodeId, entryModels,
+					wishListPincodeObject); //TISPT-179 Point 3
 			if (MapUtils.isNotEmpty(giftYourselfDeliveryModeDataMap))
 			{
 				LOG.debug("Servicable Data Obtained");

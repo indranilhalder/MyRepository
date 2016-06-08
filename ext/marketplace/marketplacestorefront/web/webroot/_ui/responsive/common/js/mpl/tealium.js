@@ -1,8 +1,11 @@
 $(document).ready(
 		function() {
 
+			
+			var pageType = $('#pageType').val();
+			var pageName=$('#pageName').val();
 			// Added for tealium
-			if ($('#ia_site_page_id').val() == "homepage") {
+			if (pageType == "homepage") {
 				// Added for tealium
 				$
 						.ajax({
@@ -18,8 +21,8 @@ $(document).ready(
 			}
 			// Tealium end
 
-			if ($('#ia_site_page_id').val() == "productDetails"
-					|| $('#ia_site_page_id').val() == "viewSellers") {
+			if (pageType == "product"
+					|| pageType == "/sellersdetailpage") {
 				// Added for tealium
 				$.ajax({
 					url : ACC.config.encodedContextPath
@@ -63,10 +66,9 @@ $(document).ready(
 			}
 
 			// Generic Page Script
-			var pageType = $('#pageType').val();
-			var pageName=$('#pageName').val();
-			if (pageType != 'homepage' && pageType != 'productDetails'
-					&& pageType != 'viewSellers' && pageType != 'productsearch'
+			
+			if (pageType != 'homepage' && pageType != 'product'
+					&& pageType != '/sellersdetailpage' && pageType != 'productsearch'
 					&& pageType != 'category' && pageType != 'cart'
 					&& pageType != 'multistepcheckoutsummary'
 					&& pageType != 'profile' && pageType != 'wishlist'

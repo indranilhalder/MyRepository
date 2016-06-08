@@ -411,6 +411,22 @@
 
 		return matchedSize;
 	}
+	
+	$( "#brandNoFormSubmit" ).submit(function() {
+		  event.preventDefault();
+	});
+	
+	 $(".facet-name.js-facet-name h4").each(function(){
+		if($(this).hasClass("true")){
+			$(this).addClass("active");
+			$(this).parent().siblings('.facet-values.js-facet-values.js-facet-form').addClass("active");
+	    	$(this).siblings('.brandSelectAllMain').addClass("active");
+	    	$(this).parent().siblings('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").addClass("active");
+	    	$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").addClass("active");
+			
+		}
+	 }); 
+	
 	$(function() {
 	    img = document.querySelectorAll('[data-searchimgsrc]');
 	    for (var i = 0; i < img.length; i++) {

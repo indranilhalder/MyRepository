@@ -109,7 +109,12 @@
 /*--- END of A-Z column function---*/
 	
 
-
+	function closing() {
+		$("#zoomModal, #videoModal").modal('hide');
+		$("#zoomModal, #videoModal").removeClass("active");
+		var x = $("#player").attr('src');
+		var z = $("#player").attr('src', x+"&autoplay=0");
+	}
 $(document).ready(function(){
 
 
@@ -129,6 +134,7 @@ $(document).ready(function(){
 			$('.modal').modal('hide');
 		}
 	}); 
+
 	/*------------Start of SNS auto complete----------*/
 			
 			var style = null ;
@@ -310,7 +316,7 @@ $(document).ready(function(){
 				}
 			});
 			
-			$(".toggle").on("click",function(e){
+			$(document).on("click",".toggle",function(e){
 				var p = $(e.currentTarget).parent();
 			    if(p.hasClass('active')) {
 			      p.removeClass('active');
@@ -1325,9 +1331,7 @@ $(document).ready(function(){
 		
 		if ('ontouchstart' in window) {
 			$('body').addClass("touchDevice");
-	 		$("header .content nav > ul > li > ul > li > .toggle a").click(function(){
-	 			$(this).attr("href","#");
-	 		});
+	 		$("header .content nav > ul > li > ul > li > .toggle a").attr("href","#");
 			}
 		
 		if($('.lookbook_wrapper .bottom-pagination').children().length==0){

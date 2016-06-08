@@ -185,7 +185,9 @@ INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];qu
 ;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true
 
 INSERT_UPDATE Trigger;job(code)[unique=true];cronExpression;maxAcceptableDelay;
-;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
+#;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
+#Change for TISPT-215
+;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
                                          
 
 INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]

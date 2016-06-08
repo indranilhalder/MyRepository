@@ -144,4 +144,6 @@ public final class RequestMappingUrlConstants
 	public static final String TRANSIENTCARTAJAX = "/cart/showTransientCart";
 	public static final String SITEMAP = "/site-map";
 
+	public static final String SHOP_BY_BRAND_AJAX = "/shopbybrand";
+
 }
