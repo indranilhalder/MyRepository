@@ -35,6 +35,7 @@ public class TealiumController extends AbstractController
 	private final String UTAG_SCRIPT_PROD = "</script><script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/prod/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
 	private final String UTAG_SCRIPT_DEV = "</script><script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
 	private final String IA_COMPANY = "IA_company";
+	private final String TEALIUM_ERROR = "Exception while populating tealium data ::::";
 
 	@RequestMapping(value = "/getTealiumDataHome", method = RequestMethod.GET)
 	@ResponseBody
@@ -54,7 +55,7 @@ public class TealiumController extends AbstractController
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("Exception while populating tealium data ::::" + ex.getMessage());
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
 
 		}
 		LOG.debug(tealiumData.toString());
@@ -78,7 +79,7 @@ public class TealiumController extends AbstractController
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("Exception while populating tealium data ::::" + ex.getMessage());
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
 
 		}
 		LOG.debug(tealiumData.toString());
@@ -103,7 +104,7 @@ public class TealiumController extends AbstractController
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("Exception while populating tealium data ::::" + ex.getMessage());
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
 
 		}
 		LOG.debug(tealiumData.toString());
@@ -129,7 +130,7 @@ public class TealiumController extends AbstractController
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("Exception while populating tealium data ::::" + ex.getMessage());
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
 
 		}
 		LOG.debug(tealiumData.toString());
@@ -154,7 +155,7 @@ public class TealiumController extends AbstractController
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("Exception while populating tealium data ::::" + ex.getMessage());
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
 
 		}
 		LOG.debug(tealiumData.toString());
