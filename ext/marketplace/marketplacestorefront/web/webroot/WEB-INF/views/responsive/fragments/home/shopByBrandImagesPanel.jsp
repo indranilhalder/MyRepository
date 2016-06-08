@@ -6,9 +6,9 @@
 
 	<c:if test="${layout eq 'FiveBrandImages'}">
 			<li class="short images">
-				<div class="toggle">
+				<%-- <div class="toggle">
 				<c:url var="subBrandUrl" value="${subBrandUrl}"></c:url>
-			</div> 
+			</div>  --%>
 			<div class="view_brands">
 			</div> <c:forEach items="${subBrandList}"
 					var="subBrand">
