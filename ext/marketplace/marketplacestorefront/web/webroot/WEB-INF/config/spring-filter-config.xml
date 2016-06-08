@@ -234,7 +234,7 @@
 		<ref bean="log4jFilter"/>
 		<ref bean="storefrontSessionFilter"/>
 		<ref bean="requestLoggerFilter"/>	
-		<ref bean="cmsSiteFilter"/>
+		<!-- <ref bean="cmsSiteFilter"/> -->
 		<ref bean="storefrontFilter"/>
 		<ref bean="urlEncoderFilter"/>
 		<ref bean="springSecurityFilterChain"/>
