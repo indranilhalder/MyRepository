@@ -1502,11 +1502,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1557,9 +1557,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -1813,6 +1813,22 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 
 		return new Tuple2(savedCreditCardDataMap, savedDebitCardDataMap);
+	}
+
+
+	@Override
+	public boolean isValidCart(final CartModel cartModel)
+	{
+		boolean isValid = true;
+		for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
+		{
+			if (abstractOrderEntryModel.getMplDeliveryMode() == null)
+			{
+				isValid = false;
+				break;
+			}
+		}
+		return isValid;
 	}
 
 	//Getters and setters

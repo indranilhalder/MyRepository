@@ -6,10 +6,14 @@
 
 	<c:if test="${layout eq 'FiveBrandImages'}">
 			<li class="short images">
-				<div class="toggle">
+				<%-- <div class="toggle">
 				<c:url var="subBrandUrl" value="${subBrandUrl}"></c:url>
-			</div> 
-			<div class="view_brands">
+			</div>  --%>
+			<div class="view_brands"><a href="${masterBrandUrl}"><h4>
+						<b> <spring:theme code="navigation.brand.viewAll" /> ${masterBrandName}
+
+						</b>
+					</h4></a>
 			</div> <c:forEach items="${subBrandList}"
 					var="subBrand">
 					<!-- TISPRD-1381 Brand Issue Fix -->
@@ -33,6 +37,11 @@
 	<c:if test="${layout eq 'OneCloumnOneBrandImage'}">	
 				<li class="short images">
 					<div class="view_brands">
+					<a href="${masterBrandUrl}"><h4>
+						<b> <spring:theme code="navigation.brand.viewAll" /> ${masterBrandName}
+
+						</b>
+					</h4></a>
 					</div>
 
 				<ul class="words" style="width: 50%; float: left">

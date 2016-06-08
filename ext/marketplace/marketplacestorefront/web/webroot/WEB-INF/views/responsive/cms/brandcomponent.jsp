@@ -22,11 +22,11 @@
 
 	<!-- Rendering the sub-brand images if the layout is FiveBrandImages  -->
 	<c:if test="${component.layout eq 'FiveBrandImages'}">
-    <ul class="images"></ul>
+    <ul class="images" id="${component.uid}"></ul>
     </c:if>
     
      <c:if test="${component.layout eq 'OneCloumnOneBrandImage'}">
-     <ul id="kids" class="images">
+     <ul id="${component.uid}" class="images">
      </ul>
      </c:if>
 	<!-- Rendering the brands alphabetically if the layout is AtoZ -->
