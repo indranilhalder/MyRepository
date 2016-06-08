@@ -14,6 +14,7 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
 import de.hybris.platform.category.CategoryService;
@@ -218,6 +219,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 					return redirection;
 				}
 
+				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
+
 				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
 						categoryCode, searchQuery, page, showMode, sortCode, count, resetAll);
 
@@ -233,7 +236,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				final String categoryName = category.getName();
 
-				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
+
 				//model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 				//Collections.singletonList(new Breadcrumb("#", categoryName, LAST_LINK_CLASS)));
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
@@ -288,6 +291,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 				model.addAttribute("heroProducts", commonNormalProducts);
 				populateModel(model, searchPageData, ShowMode.Page);
+				final List<Breadcrumb> breadcrumbs = getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, searchPageData);
+				populateTealiumData(breadcrumbs, model);
 				return performSearch;
 			}
 			catch (final Exception exp)
@@ -325,6 +330,36 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 		}
 		return getViewForPage(model);
+	}
+
+	/**
+	 * @param breadcrumbs
+	 * @param model
+	 */
+	private void populateTealiumData(final List<Breadcrumb> breadcrumbs, final Model model)
+	{
+		String breadcrumbName = "";
+		int count = 1;
+		if (CollectionUtils.isNotEmpty(breadcrumbs))
+		{
+			for (final Breadcrumb breadcrumb : breadcrumbs)
+			{
+				breadcrumbName += breadcrumb.getName();
+				if (count < breadcrumbs.size())
+				{
+					breadcrumbName += ":";
+
+				}
+				count++;
+			}
+
+			model.addAttribute("site_section", breadcrumbs.get(0).getName() != null ? breadcrumbs.get(0).getName() : "");
+
+		}
+
+		model.addAttribute("page_name", "Product Grid:" + breadcrumbName);
+
+
 	}
 
 	/**

@@ -31,13 +31,13 @@
 		<%=HybrisDataConverter.getHomeScript()%>
 	</c:when> --%>
 
-	<c:when test="${currentPageType == 'productsearch'}">
+	<%-- <c:when test="${currentPageType == 'productsearch'}">
 		<%=HybrisDataConverter.getSearchPageScript()%>
-	</c:when>
+	</c:when> --%>
 
-	<c:when test="${currentPageType == 'category'}">
+	<%-- <c:when test="${currentPageType == 'category'}">
 		<%=HybrisDataConverter.getCategoryScript()%>
-	</c:when>
+	</c:when> --%>
 
 	<%-- <c:when test="${currentPageType == 'product'}">
 		<%=HybrisDataConverter.getProductPageScript()%>
