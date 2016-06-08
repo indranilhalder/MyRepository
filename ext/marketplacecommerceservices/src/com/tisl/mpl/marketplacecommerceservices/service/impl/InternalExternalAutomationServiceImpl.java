@@ -75,7 +75,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	private MplCmsPageService mplCmsPageService;
 
 	private static final String NEW_LINE_SEPARATOR = "\n";
-	private static final String COMMA_DELIMITER = ",";
 	private static final String TAB_DELIMITER = "\t";
 	private static final String HTTP = "http://";
 	private static final String HTTPS = "https://";
