@@ -344,15 +344,17 @@ public class SearchPageController extends AbstractSearchPageController
 				{
 					final NeedHelpComponentModel need = cmsComponentService.getSimpleCMSComponent("NeedHelp");
 					model.addAttribute("contactNumber", need.getContactNumber());
-					model.addAttribute(WebConstants.BREADCRUMBS_KEY,
-							searchBreadcrumbBuilder.getEmptySearchResultBreadcrumbs(searchText));
+					final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getEmptySearchResultBreadcrumbs(searchText);
+					populateTealiumData(breadcrumbs, model);
+
+					model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
 				}
 				else
 				{
-					model.addAttribute(
-							WebConstants.BREADCRUMBS_KEY,
-							searchBreadcrumbBuilder.getBreadcrumbs(null, searchText,
-									CollectionUtils.isEmpty(searchPageData.getBreadcrumbs())));
+					final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchText,
+							CollectionUtils.isEmpty(searchPageData.getBreadcrumbs()));
+					model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
+					populateTealiumData(breadcrumbs, model);
 				}
 			}
 
@@ -541,7 +543,10 @@ public class SearchPageController extends AbstractSearchPageController
 			updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
 		}
-		model.addAttribute(WebConstants.BREADCRUMBS_KEY, searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData));
+		final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData);
+		model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
+		populateTealiumData(breadcrumbs, model);
+
 		model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
 
 
@@ -559,6 +564,36 @@ public class SearchPageController extends AbstractSearchPageController
 		setUpMetaData(model, metaKeywords, metaDescription);
 
 		return getViewForPage(model);
+	}
+
+	/**
+	 * @param breadcrumbs
+	 * @param model
+	 */
+	private void populateTealiumData(final List<Breadcrumb> breadcrumbs, final Model model)
+	{
+		String breadcrumbName = "";
+		int count = 1;
+		if (CollectionUtils.isNotEmpty(breadcrumbs))
+		{
+			for (final Breadcrumb breadcrumb : breadcrumbs)
+			{
+				breadcrumbName += breadcrumb.getName();
+				if (count < breadcrumbs.size())
+				{
+					breadcrumbName += ":";
+
+				}
+				count++;
+			}
+
+			//model.addAttribute("site_section", breadcrumbs.get(0).getName() != null ? breadcrumbs.get(0).getName() : "");
+
+		}
+
+		model.addAttribute("page_name", "Search Results Page:" + breadcrumbName);
+
+
 	}
 
 	//	@RequestMapping(method = RequestMethod.GET, params = "q")
@@ -1170,9 +1205,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 

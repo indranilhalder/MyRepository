@@ -268,6 +268,9 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String NETBANKINGMODE = "Netbanking";
 	public static final String EMIMODE = "EMI";
 
+	//TISPRO-578
+	public static final String CART_DELIVERYMODE_ADDRESS_INVALID = "cartDelModeAddrInvalid";
+	public static final String CART_DELIVERYMODE_ADDRESS_INVALID_MSG = "Either delivery mode or delivery address is not present";
 
 	private MarketplacecheckoutaddonConstants()
 	{
