@@ -135,7 +135,9 @@ public class MiniCartController extends AbstractController
 				if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 				{
 					richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-					if (richAttributeModel != null && richAttributeModel.get(0).getDeliveryFulfillModes() != null)
+					if (CollectionUtils.isNotEmpty(richAttributeModel) && null != richAttributeModel.get(0)
+							&& null != richAttributeModel.get(0).getDeliveryFulfillModes()
+							&& null != richAttributeModel.get(0).getDeliveryFulfillModes().getCode())
 					{
 						String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
 

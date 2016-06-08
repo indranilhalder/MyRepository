@@ -59,6 +59,8 @@
 				</c:otherwise>
 			</c:choose> --%>
 			<%-- <link rel="canonical" href="${regex:regExMatchAndRemove(canonical,'[/]$') }" /> --%>
+			<!-- TISPRD-2644 -->
+			<link rel="canonical" href="${canonical}" />
 		</c:otherwise>
 	</c:choose>
 	

@@ -25,8 +25,8 @@ $classificationAttributeAssignments=classificationAttributeAssignments(classific
 #
 
 # Create the solr server configuration
-INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false]
-;$serverConfigName;standalone;true;true
+INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false];maxTotalConnections;maxTotalConnectionsPerHostConfig
+;$serverConfigName;standalone;true;true;300;100
 
 # Create the solr indexer configuration
 INSERT_UPDATE SolrIndexConfig;name[unique=true];batchSize;numberOfThreads;indexMode(code);optimizeMode(code);ignoreErrors[default=false]
@@ -409,6 +409,8 @@ $solrIndexedType=solrIndexedType(identifier[default=$solrIndexedTypeIdentifier])
 INSERT_UPDATE GlobalSolrSearchProfile;code;indexedType(identifier)[unique=true];
 ;mpl-globalcatalog-srch-profile;$solrIndexedTypeIdentifier;
 
+INSERT_UPDATE Job;code[unique=true];nodeId
+;solrIndexerJob;1
 
 # TISPRO-371 Start update and delete index solr cron job into single composite cronjob
 INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode);runningOnClusterNode

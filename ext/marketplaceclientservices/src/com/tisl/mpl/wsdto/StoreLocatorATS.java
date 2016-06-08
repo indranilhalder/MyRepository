@@ -19,11 +19,30 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "StoreATS")
 @XmlType(propOrder =
-{ "item" })
+{ "cartId", "item" })
 public class StoreLocatorATS
 {
+	@XmlElement(name = "cartId")
+	private String cartId;
 	@XmlElement(name = "Item")
 	private List<StoreLocatorItem> item;
+	
+	/**
+	 * @return the cartId
+	 */
+	public String getCartId()
+	{
+		return cartId;
+	}
+
+	/**
+	 * @param cartId
+	 *           the cartId to set
+	 */
+	public void setCartId(final String cartId)
+	{
+		this.cartId = cartId;
+	}
 
 	/**
 	 * @return the item

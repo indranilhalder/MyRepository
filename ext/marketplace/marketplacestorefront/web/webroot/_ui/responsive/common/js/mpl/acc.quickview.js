@@ -180,7 +180,7 @@ function getRichAttributeQuickView(sellerName)
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
 		data : dataString,
-		cache : false,
+		cache : true,
 		dataType : "json",
 		success : function(data) {
 			if (data != null) {

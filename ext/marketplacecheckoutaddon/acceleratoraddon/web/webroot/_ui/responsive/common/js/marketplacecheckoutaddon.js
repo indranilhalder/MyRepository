@@ -4022,3 +4022,248 @@ function handleExceptionOnServerSide(errorDetails){
 			1000);
 		
 }
+// Start script moved from cartItems.tag
+
+function openPopFromCart(entry,productCode,ussid) {
+	
+	//var productCode = $("#product").val();
+	var requiredUrl = ACC.config.encodedContextPath + "/p"+"-viewWishlistsInPDP";
+	var dataString = 'productCode=' + productCode+ '&ussid=' + ussid;//modified for ussid
+	var entryNo = $("#entryNo").val(entry);
+		$.ajax({
+		contentType : "application/json; charset=utf-8",
+		url : requiredUrl,
+		data : dataString,
+		dataType : "json",
+		success : function(data) {
+			if(data==null)
+			{
+				$("#wishListNonLoggedInId").show();
+				$("#wishListDetailsId").hide();
+			}
+			else if (data == "" || data == []) {
+				loadDefaultWishLstForCart(productCode,ussid);
+			}
+			else
+			{
+				LoadWishListsFromCart(data, productCode,ussid);	
+			}	
+			
+		},
+		error : function(xhr, status, error) {
+			$("#wishListNonLoggedInId").show();
+			$("#wishListDetailsId").hide();
+		}
+	});
+}
+
+function loadDefaultWishLstForCart(productCode,ussid) {
+		
+	var wishListContent = "";
+	var wishName = $("#defaultWishId").text();
+	$("#wishListNonLoggedInId").hide();
+	$("#wishListDetailsId").show();
+
+	wishListContent = wishListContent
+			+ "<tr><td><input type='text' id='defaultWishName' value='"
+			+ wishName + "'/></td></td></tr>";
+	$("#wishlistTbodyId").html(wishListContent); 
+	$('#selectedProductCode').attr('value',productCode);
+	$('#proUssid').attr('value',ussid);
+}
+
+
+//Added
+function addToWishlistForCart(ussid,productCode)
+{
+	var wishName = "";
+	var sizeSelected=true;
+	
+	if (wishListList == "") {
+		wishName = $("#defaultWishName").val();
+	} else {
+		wishName = wishListList[$("#hidWishlist").val()];
+	}
+	
+	
+	if(wishName==""){
+		var msg=$('#wishlistnotblank').text();
+		$('#addedMessage').show();
+		$('#addedMessage').html(msg);
+		return false;
+	}
+    if(wishName==undefined||wishName==null){
+    	$("#wishlistErrorId").html("Please select a wishlist");
+    	$("#wishlistErrorId").css("display","block");
+    	return false;
+    }
+   	
+	$("#wishlistErrorId").css("display","none");
+    
+    
+	var requiredUrl = ACC.config.encodedContextPath + "/p"+ "-addToWishListInPDP";
+	var dataString = 'wish='+wishName 
+				    +'&product='+ productCode
+				    +'&ussid='+ ussid 
+				    +'&sizeSelected='+ sizeSelected;
+
+	var entryNo = $("#entryNo").val();
+	
+	$.ajax({
+		contentType : "application/json; charset=utf-8",
+		url : requiredUrl,
+		data : dataString,
+		dataType : "json",
+		success : function(data) {
+			if (data == true) {
+				
+				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
+				
+				
+				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
+				
+				
+/* 				var msg=$('#movedToWishlistFromCart').text();
+				$('#movedToWishlist_Cart').show();
+				$('#movedToWishlist_Cart').html(msg);
+				setTimeout(function() {
+					  $("#movedToWishlist_Cart").fadeOut().empty();
+					}, 1500); */
+				
+				
+		/* 		var msg=$('#wishlistSuccess').text() + wishName;
+				$('#addedMessage').show();
+				$('#addedMessage').html(msg);
+				setTimeout(function() {
+					  $("#addedMessage").fadeOut().empty();
+					}, 5000); */
+				removefromCart(entryNo,wishName);
+			}
+		},
+	})
+	
+	$('a.wishlist#wishlist').popover('hide');
+} 
+//End
+
+function removefromCart(entryNo,wishName)
+{
+	$.ajax({
+		contentType : "application/json; charset=utf-8",
+		url :  ACC.config.encodedContextPath+"/cart/removeFromMinicart?entryNumber="+entryNo,
+		dataType : "json",
+		success : function(data) {
+			
+			var productName = $("#moveEntry_"+entryNo).parents(".item").find(".desktop .product-name > a").text();
+			$("#moveEntry_"+entryNo).parents(".item").hide().empty();
+			/* $(".product-block > li.header").append('<span>'+productName+' Moved to '+wishName+'</span>'); */
+			
+			//$('.moveToWishlistMsg').html("Item successfully moved to "+wishName);
+			//$('.moveToWishlistMsg').show();
+			setTimeout(function() {
+				$(".product-block > li.header > span").fadeOut(6000).remove();
+				//  $(".moveToWishlistMsg").fadeOut().empty();
+				}, 6000);
+			location.reload();
+			
+			
+		},
+		error:function(data){
+			alert("error");
+		}
+		
+	});
+	
+}
+
+function gotoLogin() {
+	window.open(ACC.config.encodedContextPath + "/login", "_self");
+}
+
+var wishListList = [];
+
+function LoadWishListsFromCart(data, productCode,ussid) {
+    
+	// modified for ussid
+	
+	//var ussid = $("#ussid").val()
+	
+	var wishListContent = "";
+	var wishName = "";
+	$this = this;
+	$("#wishListNonLoggedInId").hide();
+	$("#wishListDetailsId").show();
+
+	for ( var i in data) {
+		var index = -1;
+		var checkExistingUssidInWishList = false;
+		var wishList = data[i];
+		wishName = wishList['particularWishlistName'];
+		wishListList[i] = wishName;
+		var entries = wishList['ussidEntries'];
+		for ( var j in entries) {
+			var entry = entries[j];
+			if (entry == ussid) {
+				
+				checkExistingUssidInWishList = true;
+				break;
+
+			}
+		}
+		if (checkExistingUssidInWishList) {
+			index++;
+            
+			wishListContent = wishListContent
+					+ "<tr class='d0'><td ><input type='radio' name='wishlistradio' id='radio_"
+					+ i
+					+ "' style='display: none' onclick='selectWishlist("
+					+ i + ")' disabled><label for='radio_"
+					+ i + "'>"+wishName+"</label></td></tr>";
+		} else {
+			index++;
+		  
+			wishListContent = wishListContent
+					+ "<tr><td><input type='radio' name='wishlistradio' id='radio_"
+					+ i
+					+ "' style='display: none' onclick='selectWishlist("
+					+ i + ")'><label for='radio_"
+					+ i + "'>"+wishName+"</label></td></tr>";
+		}
+
+	}
+
+	$("#wishlistTbodyId").html(wishListContent);
+	$('#selectedProductCode').attr('value',productCode);
+	$('#proUssid').attr('value',ussid);
+
+}
+
+function selectWishlist(i,productCode, ussid)
+{
+	$("#hidWishlist").val(i);	
+}
+
+// adding product to a wishlist
+function addToWishlistFromCart() {
+	var productCode = $("#product").val();
+	var ussid = $("#ussid").val();
+	alert("Into addToWishlistFromCart>>>"+ussid);
+	var wishName =wishListList[$("#hidWishlist").val()] ;
+	var requiredUrl = ACC.config.encodedContextPath + "/cart"+"/addToWishListFromCart";
+	var dataString = 'wish=' + wishName + '&product=' + productCode+ '&ussid=' + ussid;
+	$.ajax({
+		contentType : "application/json; charset=utf-8",
+		url : requiredUrl,
+		data : dataString,
+		dataType : "json",
+		success : function(data) {
+			
+			if (data == true) {				
+				alert("Product Added into wishlist "+wishName);
+				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
+				window.location.reload();
+			}
+		},
+	})
+}
+// End 
