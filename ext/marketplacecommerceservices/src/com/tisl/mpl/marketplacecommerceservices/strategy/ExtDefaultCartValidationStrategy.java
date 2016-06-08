@@ -172,6 +172,11 @@ public class ExtDefaultCartValidationStrategy extends DefaultCartValidationStrat
 	public Long getStockLevel(final CartEntryModel cartEntryModel)
 	{
 		final PointOfServiceModel pointOfService = cartEntryModel.getDeliveryPointOfService();
+		if (null != cartEntryModel.getDeliveryPointOfService())
+		{
+			modelService.remove(cartEntryModel.getDeliveryPointOfService());
+			modelService.save(cartEntryModel);
+		}
 
 		if (hasPointOfService(cartEntryModel))
 		{

@@ -80,9 +80,17 @@
 							</ul>
 						</c:if>
 					
-			<p class="item-info"><span>
+			        <p class="item-info">
+			          <span>
 						<spring:theme code="order.qty" /><ycommerce:testId code="orderDetails_productQuantity_label">&nbsp;${entry.quantity}</ycommerce:testId>
-					</span>
+					      <c:if test="${not empty entry.product.size}">
+								<ycommerce:testId code="cart_product_size">
+									<div class="size">
+										<spring:theme code="text.size" />${entry.product.size}
+									</div>
+								</ycommerce:testId>
+						 </c:if> 
+					  </span>
 					</p>
 					<ul class="item-details">
 					 <%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>

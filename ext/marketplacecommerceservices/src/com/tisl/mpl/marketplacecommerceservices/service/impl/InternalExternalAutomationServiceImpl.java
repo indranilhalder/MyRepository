@@ -75,7 +75,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	private MplCmsPageService mplCmsPageService;
 
 	private static final String NEW_LINE_SEPARATOR = "\n";
-	private static final String COMMA_DELIMITER = ",";
+	private static final String TAB_DELIMITER = "\t";
 	private static final String HTTP = "http://";
 	private static final String HTTPS = "https://";
 	private static final String MICROSITE_SEPARATOR = "/m/";
@@ -734,60 +734,59 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 			for (final InternalCampaignReportData internalCampaignData : campaignDataConsolidatedList)
 			{
-
-				if (internalCampaignData.getAssetName() == null)
+				if (internalCampaignData.getIcid() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append("").append(TAB_DELIMITER);
 				}
 				else
 				{
-					fileWriter.append(internalCampaignData.getAssetName()).append(COMMA_DELIMITER);
+					fileWriter.append(internalCampaignData.getIcid()).append(TAB_DELIMITER);
+				}
+
+				if (internalCampaignData.getAssetName() == null)
+				{
+					fileWriter.append("").append(TAB_DELIMITER);
+				}
+				else
+				{
+					fileWriter.append(internalCampaignData.getAssetName()).append(TAB_DELIMITER);
 				}
 
 
 				if (internalCampaignData.getCategory() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append("").append(TAB_DELIMITER);
 				}
 				else
 				{
-					fileWriter.append("\"").append(internalCampaignData.getCategory()).append("\"").append(COMMA_DELIMITER);
+					fileWriter.append("\"").append(internalCampaignData.getCategory()).append("\"").append(TAB_DELIMITER);
 				}
 
 				if (internalCampaignData.getMediaType() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append("").append(TAB_DELIMITER);
 				}
 				else
 				{
-					fileWriter.append(internalCampaignData.getMediaType()).append(COMMA_DELIMITER);
+					fileWriter.append(internalCampaignData.getMediaType()).append(TAB_DELIMITER);
 				}
 
 				if (internalCampaignData.getSize() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append("").append(TAB_DELIMITER);
 				}
 				else
 				{
-					fileWriter.append(internalCampaignData.getSize()).append(COMMA_DELIMITER);
+					fileWriter.append(internalCampaignData.getSize()).append(TAB_DELIMITER);
 				}
 
 				if (internalCampaignData.getSourcePage() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append("").append(TAB_DELIMITER);
 				}
 				else
 				{
-					fileWriter.append(internalCampaignData.getSourcePage()).append(COMMA_DELIMITER);
-				}
-
-				if (internalCampaignData.getIcid() == null)
-				{
-					fileWriter.append("").append(COMMA_DELIMITER);
-				}
-				else
-				{
-					fileWriter.append(internalCampaignData.getIcid()).append(COMMA_DELIMITER);
+					fileWriter.append(internalCampaignData.getSourcePage()).append(TAB_DELIMITER);
 				}
 
 				fileWriter.append(NEW_LINE_SEPARATOR);
@@ -834,28 +833,25 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 	public String findIamgeSize(final String urlString) throws Exception
 	{
-		LOG.info("Inside findIamgeSize starts");
-		final String username = configurationService.getConfiguration().getString("internal.campaign.report.username");
-
-		final String password = configurationService.getConfiguration().getString("internal.campaign.report.password");
-		//LOG.info("=============== Password read from Configuration File ================" + password);
-
+		LOG.info("Inside findIamgeSize starts, urlString is: " + urlString);
 		String size = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
-			//final String urlString = "https://upload.wikimedia.org/wikipedia/commons/7/7a/Pollock_to_Hussey.jpg";
 			final URL object = new URL(urlString);
-
 			//final HttpsURLConnection connection = (HttpsURLConnection) object.openConnection();
 			final URLConnection connection = object.openConnection();
+			LOG.info("Connection: " + connection);
 			// int timeOut = connection.getReadTimeout();
 			connection.setReadTimeout(60 * 1000);
 			connection.setConnectTimeout(60 * 1000);
 			final String isAuthenticationRequired = configurationService.getConfiguration().getString(
 					"internal.campaign.report.isAuthenticationRequired");
+			LOG.info("isAuthenticationRequired flag value is: " + isAuthenticationRequired);
 			if (StringUtils.isNotEmpty(isAuthenticationRequired)
 					&& isAuthenticationRequired.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
 			{
+				final String username = configurationService.getConfiguration().getString("internal.campaign.report.username");
+				final String password = configurationService.getConfiguration().getString("internal.campaign.report.password");
 				final sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
 				final String authorization = decrypt(username) + ":" + decrypt(password);
 				final String encodedAuth = "Basic " + encoder.encode(authorization.getBytes());
@@ -865,11 +861,15 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			//final int responseCode = connection.
 			//System.out.println("" + responseCode);
 			//final BufferedImage bimg = ImageIO.read(openURLForInput(url,username,password));
+			LOG.info("connection InputStream: " + connection.getInputStream() + ", BufferedImage: "
+					+ ImageIO.read(connection.getInputStream()));
 			final BufferedImage bimg = ImageIO.read(connection.getInputStream());
 			if (null != bimg)
 			{
+				LOG.info("If bimg is NOT NULL:");
 				final int width = bimg.getWidth();
 				final int height = bimg.getHeight();
+				LOG.info("If bimg is NOT NULL width, height: " + width + ", " + height);
 				size = width + " X " + height;
 			}
 			else

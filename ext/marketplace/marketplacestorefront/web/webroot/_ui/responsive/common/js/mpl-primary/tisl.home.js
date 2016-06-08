@@ -1070,6 +1070,9 @@ if ($('#brandsYouLove').children().length == 0 && $('#pageTemplateId').val() ==
 }
 setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
 
+//Fix for defect TISPT-202
+getFooterOnLoad();
+
 });
 //call lazy load after ajaz for page stops
 $(document).ajaxStop(function(){
@@ -1215,5 +1218,91 @@ function populateEnhancedSearch(enhancedSearchData)
 		$(".select-list .dropdown li#all").addClass("selected");
 		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
 	}
-	
 }
+	
+	//Added
+	
+	$("div.toggle.brandClass").on("mouseover touchend", function() {
+		var componentUid = $(this).find('a').attr('id');
+		 if (!$.cookie("dept-list") && window.localStorage) {
+		        for (var key in localStorage) {
+		            if (key.indexOf("brandhtml") >= 0) {
+		                window.localStorage.removeItem(key);
+		                // console.log("Deleting.." + key);
+
+		            }
+		        }
+		    }
+		 if (window.localStorage && (html = window.localStorage.getItem("brandhtml-" + componentUid)) && html != "") {
+		        // console.log("Local");
+		        $("ul#"+componentUid).html(decodeURI(html));
+		    }else{
+		    	
+		    	 $.ajax({
+			            url: ACC.config.encodedContextPath +
+			            "/shopbybrand",
+			            type: 'GET',
+			            data:{"compId":componentUid},
+			            success: function(html) {
+			                $("ul#"+componentUid).html(html);
+			                if (window.localStorage) {
+			                    $.cookie("dept-list", "true", {
+			                        expires: 1,
+			                        path: "/"
+
+			                    });
+			                    window.localStorage.setItem(
+			                        "brandhtml-" + componentUid,
+			                        encodeURI(html));
+
+			                }
+			                
+			            }
+			        });
+		    	
+		    }
+	       
+	    
+	});
+	//End
+	
+	// Fix for defect TISPT-202
+	function getFooterOnLoad()
+	{
+		var slotUid = "FooterSlot";
+		
+		if (!$.cookie("dept-list") && window.localStorage) {
+	        for (var key in localStorage) {
+	            if (key.indexOf("footerhtml") >= 0) {
+	                window.localStorage.removeItem(key);                
+	            }
+	        }
+	    }
+		
+		if (window.localStorage && (html = window.localStorage.getItem("footerhtml")) && html != "") {
+			$("#footerByAjaxId").html(decodeURI(html));
+	    } else {
+	        $.ajax({
+	            url: ACC.config.encodedContextPath +
+	                "/getFooterContent",
+	            type: 'GET',
+	            data : {
+					 "id" : slotUid
+					},
+	            success: function(footerhtml) {
+	            	$("#footerByAjaxId").html(footerhtml);
+	            	
+	                if (window.localStorage) {
+	                    $.cookie("dept-list", "true", {
+	                        expires: 1,
+	                        path: "/"
+
+	                    });
+	                    window.localStorage.setItem(
+	                        "footerhtml",
+	                        encodeURI(footerhtml));
+	                }
+	            }
+	        });
+	    }	
+	}
