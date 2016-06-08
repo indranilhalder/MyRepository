@@ -15,9 +15,9 @@ $(function() {
      });
 });
 $(function() {
-
+//TISPRO-522 IE Issue Fix
     $.ajax({
-        url: ACC.config.encodedContextPath + "/setheader",
+        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
         type: 'GET',
         cache:false,
         success: function(data) {
@@ -26,7 +26,14 @@ $(function() {
                 "span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count"
             ).html(data.cartcount);
             if (!headerLoggedinStatus) {
+
                 $("a.headeruserdetails").html("Sign In");
+              //Akamai caching
+                $("a.headeruserdetails").attr('href','/login');
+                $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
+                
+                $("a.tracklinkcls").attr('href','/login');
+                $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
             } else {
                 var firstName = data.userFirstName;
                 if (firstName == null || firstName.trim() ==
@@ -36,7 +43,18 @@ $(function() {
                     $("a.headeruserdetails").html("Hi, " +
                         firstName + "!");
                 }
+                //Akamai caching
+                $('#signIn').attr('class','dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout');
+                $("a.headeruserdetails").attr('href','/my-account');
+                
+                $("a.tracklinkcls").attr('href','#');
+                if(data.notificationCount != null){
+	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >'+data.notificationCount+'</span>)');
+	               } else {
+	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
+	               } 
             }
+         
         }
     });
 });
@@ -63,7 +81,7 @@ $("div.departmenthover").on("mouseover touchend", function() {
             url: ACC.config.encodedContextPath +
                 "/departmentCollection",
             type: 'GET',
-            data: "&department=" + code,
+            data: "department=" + code,
             success: function(html) {
                 // console.log("Server");
                 $("ul." + id).html(html);
@@ -197,6 +215,7 @@ $("a#tracklink").on("mouseover touchend", function(e) {
         url: ACC.config.encodedContextPath +
             "/headerTrackOrder",
         type: 'GET',
+        cache:false,
         success: function(html) {
             $("ul.trackorder-dropdown").html(html);
         }
@@ -213,12 +232,13 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
         }
     });
 });
+//TISPRO-522-IE Issue Fix
 $("li.ajaxloginhi").on("mouseover touchend", function(e) {
     e.stopPropagation();
     if ($("ul.ajaxflyout").html().trim().length <= 0) {
         $.ajax({
             url: ACC.config.encodedContextPath +
-                "/headerloginhi",
+                "/headerloginhi?timestamp="+Date.now(),
             type: 'GET',
             success: function(html) {
                 $("ul.ajaxflyout").html(html);
@@ -1050,6 +1070,9 @@ if ($('#brandsYouLove').children().length == 0 && $('#pageTemplateId').val() ==
 }
 setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
 
+//Fix for defect TISPT-202
+getFooterOnLoad();
+
 });
 //call lazy load after ajaz for page stops
 $(document).ajaxStop(function(){
@@ -1195,5 +1218,91 @@ function populateEnhancedSearch(enhancedSearchData)
 		$(".select-list .dropdown li#all").addClass("selected");
 		$("#searchBoxSpan").html($(".select-list .dropdown li#all").text());
 	}
-	
 }
+	
+	//Added
+	
+	$("div.toggle.brandClass").on("mouseover touchend", function() {
+		var componentUid = $(this).find('a').attr('id');
+		 if (!$.cookie("dept-list") && window.localStorage) {
+		        for (var key in localStorage) {
+		            if (key.indexOf("brandhtml") >= 0) {
+		                window.localStorage.removeItem(key);
+		                // console.log("Deleting.." + key);
+
+		            }
+		        }
+		    }
+		 if (window.localStorage && (html = window.localStorage.getItem("brandhtml-" + componentUid)) && html != "") {
+		        // console.log("Local");
+		        $("ul#"+componentUid).html(decodeURI(html));
+		    }else{
+		    	
+		    	 $.ajax({
+			            url: ACC.config.encodedContextPath +
+			            "/shopbybrand",
+			            type: 'GET',
+			            data:{"compId":componentUid},
+			            success: function(html) {
+			                $("ul#"+componentUid).html(html);
+			                if (window.localStorage) {
+			                    $.cookie("dept-list", "true", {
+			                        expires: 1,
+			                        path: "/"
+
+			                    });
+			                    window.localStorage.setItem(
+			                        "brandhtml-" + componentUid,
+			                        encodeURI(html));
+
+			                }
+			                
+			            }
+			        });
+		    	
+		    }
+	       
+	    
+	});
+	//End
+	
+	// Fix for defect TISPT-202
+	function getFooterOnLoad()
+	{
+		var slotUid = "FooterSlot";
+		
+		if (!$.cookie("dept-list") && window.localStorage) {
+	        for (var key in localStorage) {
+	            if (key.indexOf("footerhtml") >= 0) {
+	                window.localStorage.removeItem(key);                
+	            }
+	        }
+	    }
+		
+		if (window.localStorage && (html = window.localStorage.getItem("footerhtml")) && html != "") {
+			$("#footerByAjaxId").html(decodeURI(html));
+	    } else {
+	        $.ajax({
+	            url: ACC.config.encodedContextPath +
+	                "/getFooterContent",
+	            type: 'GET',
+	            data : {
+					 "id" : slotUid
+					},
+	            success: function(footerhtml) {
+	            	$("#footerByAjaxId").html(footerhtml);
+	            	
+	                if (window.localStorage) {
+	                    $.cookie("dept-list", "true", {
+	                        expires: 1,
+	                        path: "/"
+
+	                    });
+	                    window.localStorage.setItem(
+	                        "footerhtml",
+	                        encodeURI(footerhtml));
+	                }
+	            }
+	        });
+	    }	
+	}

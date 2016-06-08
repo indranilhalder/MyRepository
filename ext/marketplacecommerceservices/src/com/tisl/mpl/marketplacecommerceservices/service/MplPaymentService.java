@@ -169,9 +169,9 @@ public interface MplPaymentService
 	 * @throws ModelSavingException
 	 * @throws EtailNonBusinessExceptions
 	 */
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
-			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart)
+			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
+			CalculationException, JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -262,11 +262,21 @@ public interface MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
+
+	/**
+	 * TISPT-200
+	 *
+	 * @param cartGuid
+	 * @return String
+	 * @throws Exception
+	 * @throws EtailNonBusinessExceptions
+	 */
+	String getAuditId(String cartGuid) throws EtailNonBusinessExceptions, Exception;
 
 }
