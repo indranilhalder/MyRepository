@@ -45,4 +45,13 @@
 	</bean>
 	
 	<bean id="tmpmediaCacheRegionRegistrar" class="de.hybris.platform.regioncache.region.CacheRegionRegistrar" c:region-ref="tmpmediaCacheRegion" />
+
+	<!--Start  TIS-3167 -->
+	<bean id="tmpMediaCacheRegionMBean" class="de.hybris.platform.jmx.mbeans.impl.RegionCacheMBeanImpl">
+		<property name="beanInterface" value="de.hybris.platform.jmx.mbeans.RegionCacheMBean"/>
+		<property name="jmxPath" value="region=TMP Media Region Cache"/>
+		<property name="cacheRegion" ref="defaultTmpmediaCacheRegion"/>
+	</bean>
+	<!--End  TIS-3167 -->
+
 </beans>
