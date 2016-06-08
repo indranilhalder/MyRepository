@@ -132,6 +132,7 @@ function setBuyBoxDetails()
 				$("#ussid_quick").val(data['sellerArticleSKU']);				
 				$("#stock").val(data['availablestock']);					
 				var allStockZero = data['allOOStock'];
+				$("#sellerSelId").val(data['sellerId']); 
 				
 				
 				//alert("--"+ $(".quickViewSelect").html());
@@ -179,7 +180,7 @@ function getRichAttributeQuickView(sellerName)
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
 		data : dataString,
-		cache : false,
+		cache : true,
 		dataType : "json",
 		success : function(data) {
 			if (data != null) {

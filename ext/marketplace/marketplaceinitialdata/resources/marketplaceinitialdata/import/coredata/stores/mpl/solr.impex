@@ -25,8 +25,8 @@ $classificationAttributeAssignments=classificationAttributeAssignments(classific
 #
 
 # Create the solr server configuration
-INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false]
-;$serverConfigName;standalone;true;true
+INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false];maxTotalConnections;maxTotalConnectionsPerHostConfig
+;$serverConfigName;standalone;true;true;300;100
 
 # Create the solr indexer configuration
 INSERT_UPDATE SolrIndexConfig;name[unique=true];batchSize;numberOfThreads;indexMode(code);optimizeMode(code);ignoreErrors[default=false]
@@ -169,6 +169,7 @@ INSERT_UPDATE SolrIndexerQuery;solrIndexedType(identifier)[unique=true];identifi
 						LEFT JOIN CategoryProductRelation AS c2p ON {p.PK}={c2p.target} 
 						LEFT JOIN Category AS c ON {c2p.source}={c.PK} } 
 						WHERE {c.code} LIKE 'MSH%' 
+						AND (sysdate between {p.onlineDate} and {p.offlineDate})
 						AND EXISTS ( 
 										{{ SELECT * FROM {BuyBox AS bbox} 
 													WHERE {bbox.product}={p.code} 
@@ -225,7 +226,7 @@ where tbl.code IN (
 
  ORDER BY tbl.code
 ";anonymous
-;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"SELECT distinct{p.PK} FROM {Product AS p} 						WHERE {p.code} IN ( 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 													AND ({bbox.product}={p.code} 													AND ({bbox.delisted} = 1 														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})))													AND {bbox.product} NOT IN (													{{														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 															WHERE {bbox.delisted} != 1 															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})}})										}} 									) 						AND {p.varianttype} IS NULL";anonymous
+;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"SELECT distinct{p.PK} FROM {Product AS p} 						WHERE (sysdate not between {p.onlineDate} and {p.offlineDate}) OR {p.code} IN ( 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 													AND ({bbox.product}={p.code} 													AND ({bbox.delisted} = 1 														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})))													AND {bbox.product} NOT IN (													{{														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 															WHERE {bbox.delisted} != 1 															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})}})										}} 									) 						AND {p.varianttype} IS NULL";anonymous
 
 # Define the available sorts
 INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
@@ -408,6 +409,8 @@ $solrIndexedType=solrIndexedType(identifier[default=$solrIndexedTypeIdentifier])
 INSERT_UPDATE GlobalSolrSearchProfile;code;indexedType(identifier)[unique=true];
 ;mpl-globalcatalog-srch-profile;$solrIndexedTypeIdentifier;
 
+INSERT_UPDATE Job;code[unique=true];nodeId
+;solrIndexerJob;1
 
 # TISPRO-371 Start update and delete index solr cron job into single composite cronjob
 INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode);runningOnClusterNode
