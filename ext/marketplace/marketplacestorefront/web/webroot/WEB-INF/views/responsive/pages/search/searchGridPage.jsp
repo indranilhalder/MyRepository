@@ -15,6 +15,12 @@
 <c:if test="${currentPageEnd > searchPageData.pagination.totalNumberOfResults}">
     <c:set value="${searchPageData.pagination.totalNumberOfResults}" var="currentPageEnd"/>
 </c:if>
+<!-- Tealium hidden fields -->
+<input type="hidden" id="search_keyword" value="${searchPageData.freeTextSearch}">
+<input type="hidden" id="searchCategory" value="${searchCategory}">
+<input type="hidden" id="search_results" value="${currentPageEnd}">
+<input type="hidden" id="page_name" value="${page_name}">
+<!-- End -->
 <template:page pageTitle="${pageTitle}">
 	<div class="listing wrapper">
 		<div class="search-result">

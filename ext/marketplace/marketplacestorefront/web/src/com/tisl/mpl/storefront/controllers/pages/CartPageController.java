@@ -879,7 +879,7 @@ public class CartPageController extends AbstractPageController
 
 			final String payNowCouponCheck = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID);
 
-
+			//TISPRO-578
 			final String cartInvalidCheck = getSessionService().getAttribute(
 					MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID);
 
@@ -933,6 +933,7 @@ public class CartPageController extends AbstractPageController
 				getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID);
 				GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.COUPONINVALID);
 			}
+			//TISPRO-578
 			else if (StringUtils.isNotEmpty(cartInvalidCheck)
 					&& cartInvalidCheck.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
 			{

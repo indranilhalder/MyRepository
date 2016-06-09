@@ -271,7 +271,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String SETUPMPLNETBANKINGFORM = "/setupMplNetbankingForm"; //TISPT-235
 	public static final String SETUPMPLCODFORM = "/setupMplCODForm"; //TISPT-235
 
-
+	//TISPRO-578
 	public static final String CART_DELIVERYMODE_ADDRESS_INVALID = "cartDelModeAddrInvalid";
 	public static final String CART_DELIVERYMODE_ADDRESS_INVALID_MSG = "Either delivery mode or delivery address is not present";
 

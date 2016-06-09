@@ -878,7 +878,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
 				redirectFlag = true;
 			}
-
+			//TISPRO-578
 			if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
 			{
 				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
@@ -2444,7 +2444,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				redirectFlag = true;
 			}
 
-
+			//TISPRO-578
 			if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
 			{
 				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");

@@ -1774,6 +1774,8 @@
 		<property name="availableForPickup" type="Boolean" />
 		<property name="variantOptions" type="String"/>
 		<property name="spellingSuggestion" type="String"/>
+		
+		<property name="keywordRedirectUrl" type="String"/> 
 		<!-- <property name="facets"
 		          type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.search.facetdata.FacetWsDTO>"/> -->
 		<property name="facetdata"

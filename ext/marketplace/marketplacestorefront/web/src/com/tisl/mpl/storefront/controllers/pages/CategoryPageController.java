@@ -14,6 +14,7 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
 import de.hybris.platform.category.CategoryService;
@@ -290,12 +291,14 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 				model.addAttribute("heroProducts", commonNormalProducts);
 				populateModel(model, searchPageData, ShowMode.Page);
+				final List<Breadcrumb> breadcrumbs = getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, searchPageData);
+				populateTealiumData(breadcrumbs, model);
 				return performSearch;
 			}
 			catch (final Exception exp)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(
-						new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
 				try
 				{
 					return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
@@ -315,8 +318,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 		 */
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(
-					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+					MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -327,6 +330,36 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 		}
 		return getViewForPage(model);
+	}
+
+	/**
+	 * @param breadcrumbs
+	 * @param model
+	 */
+	private void populateTealiumData(final List<Breadcrumb> breadcrumbs, final Model model)
+	{
+		String breadcrumbName = "";
+		int count = 1;
+		if (CollectionUtils.isNotEmpty(breadcrumbs))
+		{
+			for (final Breadcrumb breadcrumb : breadcrumbs)
+			{
+				breadcrumbName += breadcrumb.getName();
+				if (count < breadcrumbs.size())
+				{
+					breadcrumbName += ":";
+
+				}
+				count++;
+			}
+
+			model.addAttribute("site_section", breadcrumbs.get(0).getName() != null ? breadcrumbs.get(0).getName() : "");
+
+		}
+
+		model.addAttribute("page_name", "Product Grid:" + breadcrumbName);
+
+
 	}
 
 	/**
@@ -383,8 +416,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @throws UnsupportedEncodingException
 	 */
 	@ResponseBody
-	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN
-			+ "/results", method = RequestMethod.GET)
+	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
 	public SearchResultsData<ProductData> getResults(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = PAGE, defaultValue = "0") final int page,
@@ -508,8 +540,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> updatePageData(
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData, final String whichSearch,
-			final String searchQuery)
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData,
+			final String whichSearch, final String searchQuery)
 	{
 		// YTODO Auto-generated method stub
 		if (null != whichSearch)

@@ -781,7 +781,15 @@ sendAddToBag : function(formId, isBuyNow) {
 		});
 	},
 	resetAllPLP:function(){
-		if((typeof(utag_data) !== "undefined")){
+		if($('#pageType').val()==="category"){
+			var resetURL = window.location.href;
+			resetURL = resetURL.split("?");
+			if(resetURL instanceof Array){
+				resetURL = resetURL[0];
+				$("a.reset").attr("href",resetURL);
+		}
+			
+		/*if((typeof(utag_data) !== "undefined")){
 		var pageType = utag_data.page_type;
 		if(pageType === "product"){
 			var resetURL = window.location.href;
@@ -789,9 +797,9 @@ sendAddToBag : function(formId, isBuyNow) {
 			if(resetURL instanceof Array){
 				resetURL = resetURL[0];
 			}
-			$("a.reset").attr("href",resetURL);
+			$("a.reset").attr("href",resetURL);*/
 		//	$("a.reset").attr("href",resetURL+"?resetAll=true");
-		}
+		
 		}
 		
 		
