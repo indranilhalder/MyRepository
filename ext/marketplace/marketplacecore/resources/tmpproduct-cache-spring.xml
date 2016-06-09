@@ -43,4 +43,12 @@
     </bean>
 
     <bean id="tmpProductCacheRegionRegistrar" class="de.hybris.platform.regioncache.region.CacheRegionRegistrar" c:region-ref="defaultTmpProductCacheRegion" />
+
+	<!--Start  TIS-3167 -->
+	<bean id="productCacheRegionMBean" class="de.hybris.platform.jmx.mbeans.impl.RegionCacheMBeanImpl">
+		<property name="beanInterface" value="de.hybris.platform.jmx.mbeans.RegionCacheMBean"/>
+		<property name="jmxPath" value="region=TMP Product Region Cache"/>
+		<property name="cacheRegion" ref="defaultTmpProductCacheRegion"/>
+	</bean>
+	<!--End  TIS-3167 -->
 </beans>
