@@ -53,6 +53,7 @@ import com.tisl.mpl.binDb.model.BinModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.SavedCardModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplNetbankingData;
@@ -1502,11 +1503,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1557,9 +1558,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -1813,6 +1814,43 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 
 		return new Tuple2(savedCreditCardDataMap, savedDebitCardDataMap);
+	}
+
+	////TISPRO-578
+	@Override
+	public boolean isValidCart(final CartModel cartModel)
+	{
+		boolean isValid = true;
+		boolean isOnlyClickNCollect = true;
+
+		for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
+		{
+			if (abstractOrderEntryModel.getMplDeliveryMode() == null)
+			{
+				isValid = false;
+				LOG.error(" >>> Delivery mode is missing for cart guid " + cartModel.getGuid());
+				break;
+			}
+			else
+			{
+				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = abstractOrderEntryModel.getMplDeliveryMode();
+				if (mplZoneDeliveryModeValueModel.getDeliveryMode() != null
+						&& mplZoneDeliveryModeValueModel.getDeliveryMode().getCode() != null
+						&& (mplZoneDeliveryModeValueModel.getDeliveryMode().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) || mplZoneDeliveryModeValueModel
+								.getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)))
+				{
+					isOnlyClickNCollect = false;
+				}
+			}
+		}
+		if (isValid)
+		{
+			isValid = (!isOnlyClickNCollect && cartModel.getDeliveryAddress() == null) ? false : true;
+		}
+
+
+		return isValid;
 	}
 
 	//Getters and setters
