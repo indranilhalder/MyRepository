@@ -34,8 +34,8 @@
 		<ul class="a-z">
 			<li class="short images" id="atozbrandsdiplay">
 			<div class="view_brands">
-				<a href="${brandlistUrl}"><h4>
-						<b> <spring:theme code="navigation.brand.viewAllBrands" />
+				<a href="${masterBrandUrl}"><h4>
+						<b> <spring:theme code="navigation.brand.viewAll" /> ${component.masterBrandName}
 
 						</b>
 					</h4></a>
