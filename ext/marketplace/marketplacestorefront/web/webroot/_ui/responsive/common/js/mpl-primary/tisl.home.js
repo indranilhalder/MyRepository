@@ -1120,7 +1120,7 @@ if ($('#brandsYouLove').children().length == 0 && $('#pageTemplateId').val() ==
 setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
 
 //Fix for defect TISPT-202
-getFooterOnLoad();
+//getFooterOnLoad();
 
 });
 //call lazy load after ajaz for page stops
