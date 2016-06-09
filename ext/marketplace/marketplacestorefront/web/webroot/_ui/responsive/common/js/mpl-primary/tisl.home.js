@@ -1291,7 +1291,8 @@ function populateEnhancedSearch(enhancedSearchData)
 		    }
 		 if (window.localStorage && (html = window.localStorage.getItem("brandhtml-" + componentUid)) && html != "") {
 		        // console.log("Local");
-		        $("ul#"+componentUid).html(decodeURI(html));
+		        //$("ul#"+componentUid).html(decodeURI(html));
+			    $("ul[id='"+componentUid+"']").html(decodeURI(html));
 		    }else{
 		    	
 		    	 $.ajax({
@@ -1300,7 +1301,8 @@ function populateEnhancedSearch(enhancedSearchData)
 			            type: 'GET',
 			            data:{"compId":componentUid},
 			            success: function(html) {
-			                $("ul#"+componentUid).html(html);
+			                //$("ul#"+componentUid).html(html);
+			            	$("ul[id='"+componentUid+"']").html(html); 
 			                if (window.localStorage) {
 			                    $.cookie("dept-list", "true", {
 			                        expires: 1,
