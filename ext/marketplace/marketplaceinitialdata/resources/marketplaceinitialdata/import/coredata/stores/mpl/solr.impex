@@ -102,7 +102,8 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; ratingCount    		  ;int    ;            ;	;    ;    ;    ;    ;mplRatingCountValueProvider;
 ;$solrIndexedType; productCategoryType    ;string ;            ;    ;    ;    ;    ;    ;mplProductCategoryTypeValueProvider;
 ;$solrIndexedType; mrpPriceValue          ;double ;            ;true;    ;    ;    ;    ;mplMrpPriceValueProvider;
-;$solrIndexedType; isOffersExisting       ;boolean;            ;    ;    ;    ;	   ;	;mplIsOffersExistingValueProvider;
+#TISPT-217 Changes
+#;$solrIndexedType; isOffersExisting       ;boolean;            ;    ;    ;    ;	   ;	;mplIsOffersExistingValueProvider;
 ;$solrIndexedType; searchCapacity   	  ;string ;            ;	;    ;true;    ;    ;mplCapacityValueProvider;
 ;$solrIndexedType; mobileBrandName        ;string ;            ;	;    ;    ;    ;    ;mplMobileBrandNameValueProvider;
 ;$solrIndexedType; isProductNew           ;boolean;            ;    ;    ;    ;	   ;	;mplIsProductNewValueProvider;
@@ -112,8 +113,17 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; onlineExclusive        ;boolean;            ;    ;    ;    ;	   ;	;mplOnlineExclusiveValueProvider;
 ;$solrIndexedType; leastSizeProduct       ;string ;            ;    ;    ;    ;    ;    ;mplLeastSizeProductValueProvider;
 ;$solrIndexedType; newTitle    		      ;string ;            ;	;    ;true;    ; true   ;mplNewTitleValueProvider;
-;$solrIndexedType; promotedProduct        ;boolean;            ;    ;    ;    ;	   ;	;mplPromotedProductValueProvider;
+#TISPT-217 Changes
+#;$solrIndexedType; promotedProduct        ;boolean;            ;    ;    ;    ;	   ;	;mplPromotedProductValueProvider;
 ;$solrIndexedType; promotedProductPriority        ;int;            ;    ;    ;    ;	   ;	;mplPromotedProductPriorityValueProvider;
+
+#TISPT-217 Changes Start
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;visible;facet[default=true]
+;$solrIndexedType; promotedProduct        ;boolean;            ;    ;    ;    ;	   ;	;mplPromotedProductValueProvider;false;true
+;$solrIndexedType; isOffersExisting       ;boolean;            ;    ;    ;    ;	   ;	;mplIsOffersExistingValueProvider;false;true 
+
+#TISPT-217 Changes End
 
 #Added for Cart
 
