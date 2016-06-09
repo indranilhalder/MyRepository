@@ -819,7 +819,7 @@ function displayEMICards(){
 				$(".accepted-cards .maestro").parent().css("display","none");
 				$(".accepted-cards .visa").parent().css("display","inline-block");
 				$(".accepted-cards .master").parent().css("display","inline-block");
-				$(".accepted-cards .amex").parent().css("display","none");
+				$(".accepted-cards .amex").parent().css("display","inline-block");
 				populateBillingAddress();					
 			}
 			else{
@@ -2133,17 +2133,20 @@ function validateCardNo() {
 				else
 				{
 					var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
+					//TISPOR-572
+					var selectedBankVal=selectedBank.split(" ", 1);
+					var responseBankVal=response.bankName;
 					if($("#paymentMode").val()=='EMI')
 					{
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 						{
-							if(selectedBank!="select" && selectedBank==response.bankName){
+							if(selectedBank!="select" && responseBankVal.includes(selectedBankVal)){
 								binStatus=true;
 								//applyPromotion();
 								errorHandle.innerHTML = "";
 								return true;			
 							}
-							else if(selectedBank!="select" && selectedBank!=response){
+							else if(selectedBank!="select" && !responseBankVal.includes(selectedBankVal)){
 								binStatus=false;
 								errorHandle.innerHTML = "Please enter a card same as the selected bank";
 								return false;	
