@@ -185,7 +185,7 @@ $(document).ready(function(){
 	/* -----------------END  of SNS auto complete---------*/
 		
 	/* -----------------Start of Out of stock styling---------*/
-		 $('a.stockLevelStatus').parents('div.image').find('a.thumb img').addClass('out-of-stock-product');
+		 $('a.stockLevelStatus').parents('div.image').find('a img').addClass('out-of-stock-product');
 		 
 	/* -----------------END  of Out of stock styling---------*/
 		 
@@ -357,7 +357,7 @@ $(document).ready(function(){
 					$("li.short.words,li.long.words").next().attr("style",style); 
 				} 
 			});
-			$("footer h3.toggle").click(function(e){
+			$(document).on("click","footer h3.toggle",function(e){
 				
 					if ($(window).width() > 790) {
 						$(e.currentTarget).parent().removeClass("active");
@@ -793,7 +793,7 @@ $(document).ready(function(){
 /* ---Start of Mobile view left nav --*/
 		
 		if($(window).width() < 790) {
-			$("header .content .top .toggle").click(function(){
+			$(document).on("click","header .content .top .toggle",function(){
 				if($(this).parent().hasClass("active")){
 					$(this).parent().siblings(".overlay").addClass("overlay-sideNav");
 					$("body").css("overflow","hidden");
@@ -1331,7 +1331,7 @@ $(document).ready(function(){
 		
 		if ('ontouchstart' in window) {
 			$('body').addClass("touchDevice");
-	 		$("header .content nav > ul > li > ul > li > .toggle a").attr("href","#");
+	 		$("header .content nav > ul > li > ul > li > .toggle a").attr("href","#nogo");
 			}
 		
 		if($('.lookbook_wrapper .bottom-pagination').children().length==0){
