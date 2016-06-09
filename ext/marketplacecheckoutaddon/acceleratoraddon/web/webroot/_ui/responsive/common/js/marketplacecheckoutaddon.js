@@ -2133,7 +2133,7 @@ function validateCardNo() {
 				else
 				{
 					var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
-					//TISPOR-572
+					//TISPRO-572 bank selection drop down
 					var selectedBankVal=selectedBank.split(" ", 1);
 					var responseBankVal=response.bankName;
 					if($("#paymentMode").val()=='EMI')
