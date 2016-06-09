@@ -92,6 +92,23 @@ public class MplMediaDaoImpl implements MplMediaDao
 	public MediaModel getMediaForIndexing(final ProductModel product, final MediaFormatModel mediaFormat,
 			final List<MediaContainerModel> galleryImages)
 	{
+
+		int count = 1;
+		final StringBuilder galImgPK = new StringBuilder();
+
+		for (final MediaContainerModel mcList : galleryImages)
+		{
+
+			if (galleryImages.size() != count)
+			{
+				galImgPK.append(mcList.getPk() + ",");
+			}
+			else
+			{
+				galImgPK.append(mcList.getPk());
+			}
+			count = count + 1;
+		}
 		try
 		{
 
@@ -100,18 +117,15 @@ public class MplMediaDaoImpl implements MplMediaDao
 					+ MediaModel.MEDIACONTAINER + "} JOIN " + CatalogVersionModel._TYPECODE + " as cat ON {media."
 					+ MediaModel.CATALOGVERSION + "}={cat." + CatalogVersionModel.PK + "} JOIN " + MediaFormatModel._TYPECODE
 					+ " as mf ON {media." + MediaModel.MEDIAFORMAT + "}={mf." + MediaFormatModel.PK + "}} " + " where {media."
-					+ MediaModel.MEDIAPRIORITY + "}=?priority and {cat." + CatalogVersionModel.VERSION
-					+ "} = ?catalogVersion and {mf." + MediaFormatModel.QUALIFIER + "}= ?searchMediaFormat and {container."
-					+ MediaContainerModel.PK + "} in (" + galleryImages + ")";
-
+					+ MediaModel.MEDIAPRIORITY + "}=?priority and {cat." + CatalogVersionModel.VERSION + "} =?catalogVersion and {mf."
+					+ MediaFormatModel.QUALIFIER + "}= ?searchMediaFormat and {container." + MediaContainerModel.PK + "} in ("
+					+ galImgPK + ")";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 			query.addQueryParameter("priority", "1");
 			query.addQueryParameter("catalogVersion", product.getCatalogVersion().getVersion());
-			query.addQueryParameter("searchMediaFormat", "252Wx374H");
-
-			LOG.debug("\n************ Indxing query for Media ===> \n" + query);
+			query.addQueryParameter("searchMediaFormat", mediaFormat.getQualifier());
 
 			final SearchResult<MediaModel> searchResult = flexibleSearchService.search(query);
 
