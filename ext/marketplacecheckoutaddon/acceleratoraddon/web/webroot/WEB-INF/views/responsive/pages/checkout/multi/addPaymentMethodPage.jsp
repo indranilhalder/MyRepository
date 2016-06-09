@@ -351,6 +351,9 @@
 									
 									
 									<!-- COD error messages -->
+									<div id="codErrorMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codErrorMessage"/>
+									</div>
+									
 									<div id="codMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codMessage"/>
 									</div>
 									

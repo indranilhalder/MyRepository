@@ -66,7 +66,7 @@ function refresh(){
 	$("#emi_tenure").val("");
 	$("#COD, #emi, #netbanking, #card, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton, #mobileNoError, #OTPGenerationErrorMessage, #codMessage, #customerBlackListMessage, #otpValidationMessage, #wrongOtpValidationMessage, #expiredOtpValidationMessage, #fulfillmentMessage, #codItemEligibilityMessage, #emptyOTPMessage, #resendOTPMessage, .nbAjaxError").css("display","none");
 	$("#netbankingError, .savedCard, .newCard, #emiRangeError, #juspayconnErrorDiv").css("display","none");
-	$("#bankNameForEMI, #listOfEMiBank, #netbankingIssueError, #emiPromoError").css("display","none");
+	$("#bankNameForEMI, #listOfEMiBank, #netbankingIssueError, #emiPromoError, #codErrorMessage").css("display","none");
 	$("#convChargeFieldId, #convChargeField").css("display","none");
 	$(".card_ebsErrorSavedCard, .card_cvvErrorSavedCard, #maestroMessage, #newMaestroMessage").css("display","none");
 	$(".make_payment_top_nb, .make_payment_top_savedCard, .make_payment_top_newCard, .cod_payment_button_top").css("display","none");
@@ -353,7 +353,10 @@ function displayCODForm()
 							}
 						},
 						error : function(resp) {
-							alert("COD is not available at this time. Please select another payment mode and proceed");	
+							//alert("COD is not available at this time. Please select another payment mode and proceed");
+							$("#COD, #paymentDetails").css("display","block");
+							$("#otpSentMessage").css("display","none");
+							$("#codErrorMessage").css("display","block");
 							$("#no-click").remove();
 						}
 					});
@@ -365,7 +368,10 @@ function displayCODForm()
 			}
 		},
 		error : function(resp) {
-			alert("COD is not available at this time. Please select another payment mode and proceed");	
+			//alert("COD is not available at this time. Please select another payment mode and proceed");	
+			$("#COD, #paymentDetails").css("display","block");
+			$("#otpSentMessage").css("display","none");
+			$("#codErrorMessage").css("display","block");
 			$("#no-click").remove();
 			//$(".make_payment").removeAttr('disabled');
 		}
