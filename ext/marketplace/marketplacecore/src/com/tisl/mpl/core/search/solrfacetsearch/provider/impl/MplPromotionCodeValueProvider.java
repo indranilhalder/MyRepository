@@ -216,41 +216,41 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 			{
 
 
-				if (CollectionUtils.isNotEmpty(buyBoxService.getBuyboxPricesForSearch(product.getCode()))
-						&& buyBoxService.getBuyboxPricesForSearch(product.getCode()).get(0).getAvailable().intValue() > 0)
+				//				if (CollectionUtils.isNotEmpty(buyBoxService.getBuyboxPricesForSearch(product.getCode()))
+				//						&& buyBoxService.getBuyboxPricesForSearch(product.getCode()).get(0).getAvailable().intValue() > 0)
+				//				{
+
+
+				Collections.sort(promotions, new Comparator<ProductPromotionModel>()
 				{
 
-
-					Collections.sort(promotions, new Comparator<ProductPromotionModel>()
+					@Override
+					public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
 					{
 
-						@Override
-						public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
+
+						if (o1.getPriority() == o2.getPriority())
+
 						{
-
-
-							if (o1.getPriority() == o2.getPriority())
-
-							{
-								return 0;
-							}
-							else if (o1.getPriority().intValue() < o2.getPriority().intValue())
-
-							{
-								return 1;
-							}
-							else
-							{
-								return -1;
-							}
+							return 0;
 						}
+						else if (o1.getPriority().intValue() < o2.getPriority().intValue())
 
-					});
-				}
-				else
-				{
-					promotions.clear();
-				}
+						{
+							return 1;
+						}
+						else
+						{
+							return -1;
+						}
+					}
+
+				});
+				//				}
+				//				else
+				//				{
+				//					promotions.clear();
+				//				}
 			}
 
 			if (promotions.size() > 0 && !promotions.isEmpty())

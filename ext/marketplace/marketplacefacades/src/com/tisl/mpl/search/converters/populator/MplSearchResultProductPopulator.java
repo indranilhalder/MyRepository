@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -146,12 +145,11 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 				target.setDisplayPromotion(displayPromotion);
 			}
 
-			if (getValue(source, "allPromotions") != null)
+			if (getValue(source, "isOffersExisting") != null)
 			{
 
-				final List<String> promotions = (List<String>) getValue(source, "allPromotions");
 
-				if (CollectionUtils.isEmpty(promotions))
+				if (this.<Boolean> getValue(source, "isOffersExisting").booleanValue() == false)
 				{
 
 					target.setIsOfferExisting(Boolean.FALSE);
@@ -160,6 +158,7 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 				{
 
 					target.setIsOfferExisting(Boolean.TRUE);
+
 					/*
 					 * TISPRD-216 :: This change has been made to change the url for actual product which has variant not the
 					 * lowest size variant which may not have promotion
@@ -204,8 +203,8 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 		final Double priceValue = this.<Double> getValue(source, "priceValue");
 		if (priceValue != null)
 		{
-			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY,
-					BigDecimal.valueOf(priceValue.doubleValue()), getCommonI18NService().getCurrentCurrency());
+			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(priceValue.doubleValue()),
+					getCommonI18NService().getCurrentCurrency());
 			target.setPrice(priceData);
 		}
 
@@ -251,20 +250,20 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 	/*
 	 * @Override protected void addImageData(final SearchResultValueData source, final String imageFormat, final String
 	 * mediaFormatQualifier, final ImageDataType type, final List<ImageData> images) {
-	 * 
+	 *
 	 * final Object imgObj = getValue(source, "img-" + mediaFormatQualifier); List<String> imgList = new ArrayList(); if
 	 * (imgObj instanceof ArrayList) { imgList = (List) imgObj; } else { final String imgStr = (String) imgObj;
 	 * imgList.add(imgStr); }
-	 * 
-	 * 
+	 *
+	 *
 	 * if (!imgList.isEmpty()) { for (int i = 0; i < imgList.size(); i++) { final ImageData imageSearchData =
 	 * createImageData(); imageSearchData.setImageType(type); imageSearchData.setFormat(imageFormat);
 	 * imageSearchData.setUrl(imgList.get(i)); images.add(imageSearchData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
-	 * 
-	 * 
+	 *
+	 *
 	 * } }
 	 */
 

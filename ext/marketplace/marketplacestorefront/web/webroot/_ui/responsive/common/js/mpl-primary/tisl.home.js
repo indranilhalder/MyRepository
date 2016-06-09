@@ -22,9 +22,16 @@ $(function() {
         cache:false,
         success: function(data) {
             headerLoggedinStatus = data.loggedInStatus;
-            $(
-                "span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count"
-            ).html(data.cartcount);
+            //TISPT-197
+            if(data.cartcount!='NaN')
+        	{
+            	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
+        	}
+            else
+            {
+            	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html('0');
+            }
+            
             if (!headerLoggedinStatus) {
 
                 $("a.headeruserdetails").html("Sign In");

@@ -786,7 +786,7 @@ public class SearchPageController extends AbstractSearchPageController
 				sortCode = "promotedpriority-asc";
 			}
 			storeContinueUrl(request);
-
+			model.addAttribute("newProduct", Boolean.TRUE);
 			populateModel(model, searchPageData, ShowMode.Page);
 			getRequestContextData(request).setSearch(searchPageData);
 			model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
@@ -839,7 +839,6 @@ public class SearchPageController extends AbstractSearchPageController
 
 		return getViewForPage(model);
 	}
-
 
 	/**
 	 * @param searchQuery
@@ -1205,9 +1204,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 * 
+	 *
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 * 
+	 *
 	 * return list; }
 	 */
 
