@@ -793,7 +793,12 @@ public class SearchPageController extends AbstractSearchPageController
 			model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 					Collections.singletonList(new Breadcrumb("#", NEW_EXCLUSIVE_BREADCRUMB, LAST_LINK_CLASS)));
 			model.addAttribute("pageType", PageType.PRODUCT.name());
-			model.addAttribute("hideDepartments", Boolean.TRUE);
+			if (searchPageData != null)
+			{
+				model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+			}
+
+			//model.addAttribute("hideDepartments", Boolean.TRUE);
 			//Code to hide the applied facet for promotedProduct
 			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
 			{
@@ -1204,9 +1209,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 
