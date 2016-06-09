@@ -786,14 +786,19 @@ public class SearchPageController extends AbstractSearchPageController
 				sortCode = "promotedpriority-asc";
 			}
 			storeContinueUrl(request);
-
+			model.addAttribute("newProduct", Boolean.TRUE);
 			populateModel(model, searchPageData, ShowMode.Page);
 			getRequestContextData(request).setSearch(searchPageData);
 			model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
 			model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 					Collections.singletonList(new Breadcrumb("#", NEW_EXCLUSIVE_BREADCRUMB, LAST_LINK_CLASS)));
 			model.addAttribute("pageType", PageType.PRODUCT.name());
-			model.addAttribute("hideDepartments", Boolean.TRUE);
+			if (searchPageData != null)
+			{
+				model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+			}
+
+			//model.addAttribute("hideDepartments", Boolean.TRUE);
 			//Code to hide the applied facet for promotedProduct
 			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
 			{
@@ -839,7 +844,6 @@ public class SearchPageController extends AbstractSearchPageController
 
 		return getViewForPage(model);
 	}
-
 
 	/**
 	 * @param searchQuery

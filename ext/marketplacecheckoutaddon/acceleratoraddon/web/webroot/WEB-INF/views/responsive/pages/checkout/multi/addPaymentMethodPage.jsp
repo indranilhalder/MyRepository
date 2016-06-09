@@ -316,7 +316,10 @@
 								</li> --%>
 								<li class="cod-container">
 									<div id="otpNUM" >
-										<p style="color:#a9143c;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc"/></p>
+										<!-- TISPT-235 Code changed for COD using AJAX -->
+										<input type="hidden" id="cartValue" value="${cartValue}" />
+										<input type="hidden" id="httpRequest" value="${request}" />
+										<%-- <p style="color:#a9143c;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc"/></p>
 										<div class="amtPayable"><h4><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.amtPayable"/>
 										&nbsp;<span id="codAmount"></span></h4>&nbsp;<span id="convChargeMessage"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.convChargeMsg"/></span>
 										</div><br> 
@@ -343,11 +346,14 @@
 											<label name="Enter OTP"><spring:theme code="checkout.multi.paymentMethod.CODPayment.enterOTP" text="Enter OTP:&nbsp;"/>
 												<input type="text" id="otpNUMField" name="otpNUM" onfocus="hideErrorMsg()" autocomplete="off"/>
 											</label>
-										</div>
+										</div> --%>
 									</div>
 									
 									
 									<!-- COD error messages -->
+									<div id="codErrorMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codErrorMessage"/>
+									</div>
+									
 									<div id="codMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codMessage"/>
 									</div>
 									
@@ -404,7 +410,7 @@
 						
 				<!-- div for Netbanking -->	
 								<li id="netbanking">
-								<ul class="product-block net-bank">
+								<ul class="product-block net-bank netbankingPanel" >
 								
 								<%-- <li class="header">
 										<ul>
@@ -413,8 +419,11 @@
 									</li>
 									<li class="mobile-header">
 										<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking"/></h2>
-									</li> --%>
-										<li class="item cardForm">									
+									</li>--%>
+									
+									<!-- TISPT-235 Commented to make netbanking ajax call -->
+									
+									<%--<li class="item cardForm">									
 										<input type="hidden" id="juspayOrderId" />
 										
 									<div id="netbankingIssueError" class="error-message">
@@ -438,7 +447,7 @@
 								
 									<c:if test="${not empty otherBankNames}">
 									<div class="bank-select">
-										<%-- <label><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otherNBBanks"/></label> --%>
+										<label><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otherNBBanks"/></label>
 										<select name="NBBankCode" id="bankCodeSelection" onchange="deselectRadio()">
 											<option value="select"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.selectBank"/></option>		
 											<c:forEach var="bankMap" items="${otherBankNames}">
@@ -455,15 +464,19 @@
 									</div>
 									
 									
-								</li>
+								</li>--%>
 									</ul>
+									<!-- TISPT-235 -->
+									<div class="nbAjaxError error-message">
+										<spring:theme code="checkout.multi.paymentMethod.netbanking.AjaxError"/>
+									</div>
 									<!-- Terms & Conditions Link -->
-									<div class="pay top-padding">
+									<div class="pay top-padding nbButton">
 										<button type="button" class="make_payment button btn-block payment-button" id="make_nb_payment" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 										<p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p>
 										<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
 										
-									</div>
+									</div> 
 								</li>	
 				<!-- End of Netbanking -->	
 						
