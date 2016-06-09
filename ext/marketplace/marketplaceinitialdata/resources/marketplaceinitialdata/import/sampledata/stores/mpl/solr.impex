@@ -399,6 +399,9 @@ INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isoco
  ;delete-mplIndex-cronJob;delete-mplIndex-cronJob;mplIndexingCompositeCronjob;1
  ;update-mplIndex-cronJob;update-mplIndex-cronJob;mplIndexingCompositeCronjob;2
 
+INSERT_UPDATE Job;code[unique=true];nodeId
+;solrIndexerJob;1
+
 INSERT_UPDATE CronJob;code[unique=true];runningOnClusterNode
 # Run the update-mplIndex-cronJob every 15 minutes
 ;full-mplIndex-cronJob;1

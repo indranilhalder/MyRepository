@@ -93,6 +93,59 @@ $(document).ready(
 						});
 			}
 			// Tealium end
+			
+			// Added for tealium
+			if (pageType == "category") {
+				// Added for tealium
+				$
+						.ajax({
+							url : ACC.config.encodedContextPath
+									+ "/getTealiumDataCategory",
+							type : 'GET',
+							cache : false,
+							success : function(data) {
+								// console.log(data);
+								var tealiumData = "";
+								tealiumData += ',"page_category_name":"'
+										+ $("#page_category_name").val() + '",';
+								tealiumData += '"site_section":"'
+										+ $("#site_section").val() + '",';
+								tealiumData += '"page_name":"'
+									+ $("#page_name").val() + '",';
+								tealiumData += '"categoryId":"'
+									+ $("#categoryId").val() + '"}';
+								data = data.replace("}<TealiumScript>", tealiumData);
+								$('#tealiumHome').html(data);
+							}
+						});
+			}
+			// Tealium end
+			
+			//Search
+			if(pageType == "productsearch"){
+				$
+				.ajax({
+					url : ACC.config.encodedContextPath
+							+ "/getTealiumDataSearch",
+					type : 'GET',
+					cache : false,
+					success : function(data) {
+						// console.log(data);
+						var tealiumData = "";
+						tealiumData += ',"search_keyword":"'
+								+ $("#search_keyword").val() + '",';
+						tealiumData += '"searchCategory":"'
+								+ $("#searchCategory").val() + '",';
+						tealiumData += '"page_name":"'
+							+ $("#page_name").val() + '",';
+						tealiumData += '"search_results":"'
+							+ $("#search_results").val() + '"}';
+						data = data.replace("}<TealiumScript>", tealiumData);
+						$('#tealiumHome').html(data);
+					}
+				});
+				
+			}
 
 		
 		});

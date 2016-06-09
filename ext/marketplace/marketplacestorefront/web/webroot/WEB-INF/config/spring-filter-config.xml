@@ -36,6 +36,9 @@
 		<property name="urlPathMapping">
 			<map>
 				<entry key="/integration/" value-ref="integrationTenantFilterChain"/>
+				<entry key="/fetchToken" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for fetchToken -->
+				<entry key="/setheader" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for setHeader -->
+				<entry key="/getTealiumData" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for TealiumData -->
 			</map>
 		</property>
 	</bean>
@@ -223,6 +226,26 @@
 
 	<bean id="btgSegmentFilter" class="com.tisl.mpl.storefront.filters.btg.BTGSegmentFilter" >
 		<property name="btgSegmentStrategy" ref="btgSegmentStrategy"/>
-	</bean>  -->
-
+	</bean>  -->	
+	
+	<!-- TISPT-207 Custom filter chain for fetchToken, setHeader and tealiumData -->
+	<alias name="defaultAjaxUrlTenantFilterChainList" alias="ajaxUrlTenantFilterChainList" />
+	<util:list id="defaultAjaxUrlTenantFilterChainList">
+		<ref bean="log4jFilter"/>
+		<ref bean="storefrontSessionFilter"/>
+		<ref bean="requestLoggerFilter"/>	
+		<ref bean="cmsSiteFilter"/>
+		<ref bean="storefrontFilter"/>
+		<ref bean="urlEncoderFilter"/>
+		<ref bean="springSecurityFilterChain"/>
+	</util:list>
+	
+	
+	<bean id="ajaxUrlFilterChain" class="de.hybris.platform.servicelayer.web.PlatformFilterChain">
+	   <constructor-arg>
+	   		<ref bean="ajaxUrlTenantFilterChainList"/>
+	   </constructor-arg>
+	</bean>
+	<!-- TISPT-207 Custom filter chain for fetchToken and setHeader ends -->
+	
 </beans>
