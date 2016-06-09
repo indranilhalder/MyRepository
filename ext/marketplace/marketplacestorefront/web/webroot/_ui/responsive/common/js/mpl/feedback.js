@@ -1483,5 +1483,81 @@ $(document).ready(function(){
 		
 		$(document).on('touchend','.select-view .select-list ul li',function(e){
 			$(this).click();
-		});		
+		});
+		
+		loadGigya();
 });
+
+/*start gigya social login*/
+
+function registerUserGigya(eventObject)
+{
+	var encodedUID = encodeURIComponent(eventObject.UID);
+	var encodedTimestamp=encodeURIComponent(eventObject.timestamp);
+	var  encodedSignature=encodeURIComponent(eventObject.signature);
+//	console.log("SOCIAL LOGIN REFERER:-"+ window.location.href)
+		 $.ajax({
+				url : ACC.config.encodedContextPath + "/oauth2callback/socialLogin/",
+				data : {
+					'referer' : window.location.href,
+					'emailId' : eventObject.user.email,
+					'fName':  eventObject.user.firstName,
+					'lName' : 	eventObject.user.lastName,
+					'uid'		: encodedUID,
+					'timestamp'	 :encodedTimestamp,
+					'signature' :encodedSignature,
+					'provider' :eventObject.user.loginProvider
+					},
+				type : "GET",
+				cache : false,
+				success : function(data) {
+					//alert("success login page :- "+data);
+					if(!data)							
+						{
+						
+						}
+						else
+						{
+							if(data.indexOf(ACC.config.encodedContextPath) > -1)
+							{
+								window.open(data,"_self");
+							}
+							else
+							{
+							var hostName=window.location.host;
+							if(hostName.indexOf(':') >=0)
+							{
+								window.open(ACC.config.encodedContextPath +data,"_self");
+							}	
+							else
+								{
+							window.open("https://"+hostName+ACC.config.encodedContextPath +data,"_self");
+								}
+							}
+							
+						}	
+				},
+				error : function(resp) {
+					console.log("Error Occured Login Page" + resp);					
+				}
+			});
+	 
+}
+
+        // This method is activated when the page is loaded
+        function loadGigya() {
+            // register for login event
+            gigya.socialize.addEventHandlers({
+                    context: { str: 'congrats on your' }
+                    , onLogin: onLoginHandlerGigya                   
+                    });
+        }
+        // onLogin Event handler
+        function onLoginHandlerGigya(eventObj) {
+           // console.log(eventObj.context.str + ' ' + eventObj.eventName + ' to ' + eventObj.provider
+          //      + '!\n' + eventObj.provider + ' user ID: ' +  eventObj.user.identities[eventObj.provider].providerUID);          
+            
+            registerUserGigya(eventObj);      
+            
+         }  
+       /*  End  Gigya Social Login */
