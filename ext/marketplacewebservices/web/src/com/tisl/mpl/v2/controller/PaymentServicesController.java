@@ -87,7 +87,7 @@ public class PaymentServicesController extends BaseController
 	private ModelService modelService;
 	@Autowired
 	private ExtendedUserService extUserService;
-	
+
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 
@@ -724,8 +724,8 @@ public class PaymentServicesController extends BaseController
 			}
 			else if (StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
 					&& (updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.AUTHORIZATION_FAILED)
-					|| updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.AUTHENTICATION_FAILED)
-					|| updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.PENDING_VBV)))
+							|| updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.AUTHENTICATION_FAILED) || updateTransactionDtls
+							.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.PENDING_VBV)))
 			{
 				updateTransactionDtls.setError(MarketplacewebservicesConstants.JUSPAY_FAILED_ERROR);
 			}
@@ -782,11 +782,12 @@ public class PaymentServicesController extends BaseController
 		PaymentServiceWsData paymentModesData = new PaymentServiceWsData();
 		try
 		{
-			CartModel cart=null;
-			cart=mplPaymentWebFacade.findCartValues(cartId);
-			final CartData cartData=getMplExtendedCartConverter().convert(cart);
-					
-			final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, true,cartData);
+			CartModel cart = null;
+			cart = mplPaymentWebFacade.findCartValues(cartId);
+			final CartData cartData = getMplExtendedCartConverter().convert(cart);
+
+			final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(MarketplacewebservicesConstants.MPLSTORE,
+					true, cartData);
 			paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(userId, cartId);
 			paymentModesData.setPaymentModes(paymentMode);
 		}
@@ -1053,9 +1054,10 @@ public class PaymentServicesController extends BaseController
 	}
 
 	/**
-	 * @param mplExtendedCartConverter the mplExtendedCartConverter to set
+	 * @param mplExtendedCartConverter
+	 *           the mplExtendedCartConverter to set
 	 */
-	public void setMplExtendedCartConverter(Converter<CartModel, CartData> mplExtendedCartConverter)
+	public void setMplExtendedCartConverter(final Converter<CartModel, CartData> mplExtendedCartConverter)
 	{
 		this.mplExtendedCartConverter = mplExtendedCartConverter;
 	}

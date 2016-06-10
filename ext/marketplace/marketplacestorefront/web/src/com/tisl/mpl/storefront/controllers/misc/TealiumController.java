@@ -35,6 +35,9 @@ public class TealiumController extends AbstractController
 	private final String UTAG_SCRIPT_PROD = "</script><script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/prod/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
 	private final String UTAG_SCRIPT_DEV = "</script><script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
 	private final String IA_COMPANY = "IA_company";
+	private final String TEALIUM_ERROR = "Exception while populating tealium data ::::";
+	private final String PAGETYPE = "page_type";
+	private final String UTAG_DATA = "<script type='text/javascript'> var utag_data =";
 
 	@RequestMapping(value = "/getTealiumDataHome", method = RequestMethod.GET)
 	@ResponseBody
@@ -44,17 +47,17 @@ public class TealiumController extends AbstractController
 		try
 		{
 			final JSONObject utag = populateCommonTealiumData();
-			utag.put("page_type", "home");
+			utag.put(PAGETYPE, "home");
 			utag.put("page_name", "Homepage");
 			utag.put("site_section", "home");
 			final String utagData = utag.toJSONString();
-			tealiumData.append("<script type='text/javascript'> var utag_data =");
+			tealiumData.append(UTAG_DATA);
 			tealiumData.append(utagData);
 			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("Exception while populating tealium data ::::" + ex.getMessage());
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
 
 		}
 		LOG.debug(tealiumData.toString());
@@ -69,16 +72,16 @@ public class TealiumController extends AbstractController
 		try
 		{
 			final JSONObject utag = populateCommonTealiumData();
-			utag.put("page_type", "product");
+			utag.put(PAGETYPE, "product");
 			final String utagData = utag.toJSONString();
-			tealiumData.append("<script type='text/javascript'> var utag_data =");
+			tealiumData.append(UTAG_DATA);
 			tealiumData.append(utagData);
 			tealiumData.append("<TealiumScript>");
 			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("Exception while populating tealium data ::::" + ex.getMessage());
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
 
 		}
 		LOG.debug(tealiumData.toString());
@@ -93,17 +96,68 @@ public class TealiumController extends AbstractController
 		try
 		{
 			final JSONObject utag = populateCommonTealiumData();
-			utag.put("page_type", "generic");
+			utag.put(PAGETYPE, "generic");
 			utag.put("page_name", pageName);
 			utag.put("site_section", pageName);
 			final String utagData = utag.toJSONString();
-			tealiumData.append("<script type='text/javascript'> var utag_data =");
+			tealiumData.append(UTAG_DATA);
 			tealiumData.append(utagData);
 			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("Exception while populating tealium data ::::" + ex.getMessage());
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
+
+		}
+		LOG.debug(tealiumData.toString());
+		return tealiumData.toString();
+	}
+
+	@RequestMapping(value = "/getTealiumDataCategory", method = RequestMethod.GET)
+	@ResponseBody
+	public String getTealiumDataCategory() throws Exception
+	{
+		final StringBuilder tealiumData = new StringBuilder(1000); // SONAR FIX
+		try
+		{
+			final JSONObject utag = populateCommonTealiumData();
+			utag.put(PAGETYPE, "product");
+			utag.put("page_section_name", "");
+			utag.put("page_subcategory_name", "");
+			final String utagData = utag.toJSONString();
+			tealiumData.append(UTAG_DATA);
+			tealiumData.append(utagData);
+			tealiumData.append("<TealiumScript>");
+			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
+
+		}
+		LOG.debug(tealiumData.toString());
+		return tealiumData.toString();
+	}
+
+	@RequestMapping(value = "/getTealiumDataSearch", method = RequestMethod.GET)
+	@ResponseBody
+	public String getTealiumDataSearch() throws Exception
+	{
+		final StringBuilder tealiumData = new StringBuilder(1000); // SONAR FIX
+		try
+		{
+			final JSONObject utag = populateCommonTealiumData();
+			utag.put(PAGETYPE, "search");
+			utag.put("site_section", "Search Results");
+			final String utagData = utag.toJSONString();
+			tealiumData.append(UTAG_DATA);
+			tealiumData.append(utagData);
+			tealiumData.append("<TealiumScript>");
+			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
 
 		}
 		LOG.debug(tealiumData.toString());

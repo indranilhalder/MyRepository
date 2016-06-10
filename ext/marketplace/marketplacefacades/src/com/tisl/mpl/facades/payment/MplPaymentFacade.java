@@ -326,6 +326,7 @@ public interface MplPaymentFacade
 	 */
 	Tuple2<?, ?> listStoredCards(final CustomerModel customer, ListCardsResponse listCardsResponse);
 
+	//TISPRO-578
 	boolean isValidCart(CartModel cartModel);
 
 }
