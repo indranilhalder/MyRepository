@@ -379,7 +379,7 @@ public class PasswordResetPageController extends AbstractPageController
 
 			final String securePasswordUrl = baseUrl + securePasswordPath;
 
-			forgetPasswordFacade.forgottenPasswordForEmail(email, securePasswordUrl);
+			forgetPasswordFacade.forgottenPasswordForEmail(email, securePasswordUrl, Boolean.FALSE);
 		}
 		catch (final UnknownIdentifierException e)
 		{
@@ -503,7 +503,7 @@ public class PasswordResetPageController extends AbstractPageController
 		{
 			try
 			{
-				forgetPasswordFacade.forgottenPasswordForEmail(form.getEmail(), securePasswordUrl);
+				forgetPasswordFacade.forgottenPasswordForEmail(form.getEmail(), securePasswordUrl, Boolean.FALSE);
 				GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.CONF_MESSAGES_HOLDER,
 						MessageConstants.ACCOUNT_CONFIRMATION_FORGOTTEN_PASSWORD_LINK_SENT);
 
