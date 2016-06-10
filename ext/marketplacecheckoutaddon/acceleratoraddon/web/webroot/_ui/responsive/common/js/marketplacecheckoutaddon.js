@@ -1706,7 +1706,7 @@ $("#otpMobileNUMField").focus(function(){
 		$(".accepted-cards .maestro").parent().css("display","none");
 		$(".accepted-cards .visa").parent().css("display","inline-block");
 		$(".accepted-cards .master").parent().css("display","inline-block");
-		$(".accepted-cards .amex").parent().css("display","none");
+		$(".accepted-cards .amex").parent().css("display","inline-block");
 		$("input[name=emiCards]:radio").first().removeClass("card_token_hide").addClass("card_token");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
 		$(".card_token_hide").parent().find('.card_bank').removeClass("card_bank").addClass("card_bank_hide"); 
