@@ -684,11 +684,18 @@ public class PaymentServicesController extends BaseController
 
 		try
 		{
-			updateTransactionDtls = getMplPaymentWebFacade()
-					.updateCardTransactionDetails(juspayOrderID, paymentMode, cartId, userId);
+			if (StringUtils.isNotEmpty(paymentMode))
+			{
+				updateTransactionDtls = getMplPaymentWebFacade().updateCardTransactionDetails(juspayOrderID, paymentMode, cartId,
+						userId);
 
-			LOG.debug(String.format("Update transaction details status %s ",
-					((null != updateTransactionDtls.getStatus()) ? updateTransactionDtls.getStatus() : "")));
+				LOG.debug(String.format("Update transaction details status %s ",
+						((null != updateTransactionDtls.getStatus()) ? updateTransactionDtls.getStatus() : "")));
+			}
+			else
+			{
+				LOG.debug("Payment mode is empty Mobile WS for ::: " + juspayOrderID + "userd id " + userId);
+			}
 		}
 		catch (final Exception e)
 		{
