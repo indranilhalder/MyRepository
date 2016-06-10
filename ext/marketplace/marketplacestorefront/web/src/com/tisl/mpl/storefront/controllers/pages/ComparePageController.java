@@ -23,10 +23,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.fest.util.Collections;
@@ -156,7 +158,7 @@ public class ComparePageController extends AbstractPageController
 	private Map<Integer, Map<String, String>> populateProductMap(final List<ProductData> productDatas)
 	{
 		int index = 0;
-		final Map<Integer, Map<String, String>> comparableProductMap = new HashMap();
+		final Map<Integer, Map<String, String>> comparableProductMap = new ConcurrentHashMap<Integer, Map<String, String>>();
 		for (final ProductData productData : productDatas)
 		{
 
@@ -166,32 +168,45 @@ public class ComparePageController extends AbstractPageController
 			productAttributeMap.put(ModelAttributetConstants.PRODUCT_BRAND, productData.getBrand().getBrandname());
 			productAttributeMap.put(ModelAttributetConstants.PRODUCT_URL, productData.getUrl());
 
-			final BuyBoxData buyBoxData = buyBoxFacade.buyboxPrice(productData.getCode());
-
-			if (buyBoxData != null)
+			//Code Added for TISPT-306
+			if (null != productData.getProductMRP())
 			{
-				if (buyBoxData.getMrpPriceValue() != null)
-				{
-					productAttributeMap.put(ModelAttributetConstants.PRODUCT_PRICE, buyBoxData.getMrpPriceValue().getFormattedValue());
-				}
-				if (buyBoxData.getSpecialPrice() != null)
-				{
-					LOG.info("**************Product Special Price**************** " + buyBoxData.getSpecialPrice());
-					productAttributeMap.put(ModelAttributetConstants.PRODUCT_PRICE_SPCL, buyBoxData.getSpecialPrice()
-							.getFormattedValue());
-				}
-				else if (buyBoxData.getPrice() != null)
-				{
-					LOG.info("************Product MOP Price**************" + buyBoxData.getPrice());
-					productAttributeMap.put(ModelAttributetConstants.PRODUCT_PRICE_SPCL, buyBoxData.getPrice().getFormattedValue());
-
-				}
+				productAttributeMap.put(ModelAttributetConstants.PRODUCT_PRICE, productData.getProductMRP().getFormattedValue());
 			}
+
+			if (null != productData.getProductMOP())
+			{
+				productAttributeMap.put(ModelAttributetConstants.PRODUCT_PRICE_SPCL, productData.getProductMOP().getFormattedValue());
+			}
+			//Code Added for TISPT-306 ends
+
+			//Code Blocked for TISPT-306
+			//final BuyBoxData buyBoxData = buyBoxFacade.buyboxPrice(productData.getCode());
+
+			//			if (buyBoxData != null)
+			//			{
+			//				if (buyBoxData.getMrpPriceValue() != null)
+			//				{
+			//					productAttributeMap.put(ModelAttributetConstants.PRODUCT_PRICE, buyBoxData.getMrpPriceValue().getFormattedValue());
+			//				}
+			//				if (buyBoxData.getSpecialPrice() != null)
+			//				{
+			//					LOG.info("**************Product Special Price**************** " + buyBoxData.getSpecialPrice());
+			//					productAttributeMap.put(ModelAttributetConstants.PRODUCT_PRICE_SPCL, buyBoxData.getSpecialPrice()
+			//							.getFormattedValue());
+			//				}
+			//				else if (buyBoxData.getPrice() != null)
+			//				{
+			//					LOG.info("************Product MOP Price**************" + buyBoxData.getPrice());
+			//					productAttributeMap.put(ModelAttributetConstants.PRODUCT_PRICE_SPCL, buyBoxData.getPrice().getFormattedValue());
+			//
+			//				}
+			//			}
 
 
 
 			final List<ImageData> images = (List<ImageData>) productData.getImages();
-			if (images != null)
+			if (CollectionUtils.isNotEmpty(images))
 			{
 				if (images.get(0).getUrl() != null)
 				{
@@ -302,9 +317,17 @@ public class ComparePageController extends AbstractPageController
 			}
 			model.addAttribute(ModelAttributetConstants.PRODUCT_DATAS, sessionCompareList);
 			final List<ClassificationData> uniqueClassficationClasses = new ArrayList<ClassificationData>();
-			if (getClassifyingCategories(sessionCompareList) != null)
+
+			//New Code Added for TISPT-306
+			final List<ClassificationData> classifyingCategories = getClassifyingCategories(sessionCompareList);
+
+			//Code Blocked for TISPT-306
+			//if (getClassifyingCategories(sessionCompareList) != null)
+			if (CollectionUtils.isNotEmpty(classifyingCategories))
 			{
-				for (final ClassificationData classification : getClassifyingCategories(sessionCompareList))
+				//Code Blocked for TISPT-306
+				//for (final ClassificationData classification : getClassifyingCategories(sessionCompareList))
+				for (final ClassificationData classification : classifyingCategories)
 				{
 					if (isUniqueClassification(classification.getName(), uniqueClassficationClasses))
 					{ //if unique then add
@@ -324,13 +347,16 @@ public class ComparePageController extends AbstractPageController
 						}
 						LOG.info("index::::" + classificationIndex);
 						// if it is not unique then get all features of this classification as well as the older one
-						List<FeatureData> appendedFeatureList = new ArrayList<FeatureData>();
+						final List<FeatureData> appendedFeatureList = new ArrayList<FeatureData>();
+						//New Code Added for TISPT-306
+						final List<FeatureData> featureList = getTotalFeatureList(uniqueClassficationClasses, classification);
 
-						if (!Collections.isEmpty(getTotalFeatureList(uniqueClassficationClasses, classification)))
+						if (!Collections.isEmpty(featureList))
 						{
-							appendedFeatureList = getTotalFeatureList(uniqueClassficationClasses, classification);
-
+							appendedFeatureList.addAll(featureList);
 						}
+
+
 						final ClassificationData classificationData = new ClassificationData();
 						if (!StringUtils.isEmpty(classification.getCode()))
 						{
@@ -377,8 +403,8 @@ public class ComparePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.B2001));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B2001));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.COMPARE_SYSTEM_ERROR);
 
 		}
@@ -395,15 +421,25 @@ public class ComparePageController extends AbstractPageController
 
 		final List<FeatureData> featureList = new ArrayList<FeatureData>();
 		//Add features from this new classification
-		featureList.addAll(newClassification.getFeatures());
-		//Also add features from existing classification
-		for (final ClassificationData classification : uniqueClassficationClasses)
+		//New Code added for TISPT-306
+		if (CollectionUtils.isNotEmpty(newClassification.getFeatures()))
 		{
-			if (classification.getName().equalsIgnoreCase(newClassification.getName()))
+			featureList.addAll(newClassification.getFeatures());
+		}
+
+		//New Code added for TISPT-306
+		if (CollectionUtils.isNotEmpty(uniqueClassficationClasses))
+		{
+			//Also add features from existing classification
+			for (final ClassificationData classification : uniqueClassficationClasses)
 			{
-				featureList.addAll(classification.getFeatures());
+				if (classification.getName().equalsIgnoreCase(newClassification.getName()))
+				{
+					featureList.addAll(classification.getFeatures());
+				}
 			}
 		}
+
 		LOG.debug("New feature list size :::" + featureList.size());
 		return featureList;
 
