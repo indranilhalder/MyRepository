@@ -15,8 +15,8 @@
 <%@ taglib prefix="tealium" tagdir="/WEB-INF/tags/addons/tealiumIQ/shared/analytics" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%-- <%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %> --%>
-<%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
-<compress:html removeIntertagSpaces="true">
+<%-- <%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
+<compress:html removeIntertagSpaces="true"> --%>
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
@@ -59,6 +59,8 @@
 				</c:otherwise>
 			</c:choose> --%>
 			<%-- <link rel="canonical" href="${regex:regExMatchAndRemove(canonical,'[/]$') }" /> --%>
+			<!-- TISPRD-2644 -->
+			<link rel="canonical" href="${canonical}" />
 		</c:otherwise>
 	</c:choose>
 	
@@ -106,7 +108,20 @@
 	<%-- Favourite Icon --%>
 	<spring:theme code="img.favIcon" text="/" var="favIconPath"/>
     <link rel="shortcut icon" type="image/x-icon" media="all" href="${themeResourcePath}/${favIconPath}" />
+    
+	<!-- DNS prefetching starts -->
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
 
+	<link rel="dns-prefetch" href="//${mediaHost}">
+	<link rel="dns-prefetch" href="//${staticResourceHost}"> 
+	<c:choose>
+	    <c:when test="${not empty productMediaHost}">
+	       <link rel="dns-prefetch" href="//${productMediaHost}">
+	    </c:when>
+	</c:choose>	
+	<!-- DNS prefetching ends --> 
+	
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
 	<template:styleSheets/>
 	<script type="text/javascript"
@@ -160,87 +175,10 @@ if($(window).width() < 650) {
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
 
-
-	<script>
-function registerUser(eventObject)
-{
-	var encodedUID = encodeURIComponent(eventObject.UID);
-	var encodedTimestamp=encodeURIComponent(eventObject.timestamp);
-	var  encodedSignature=encodeURIComponent(eventObject.signature);
-//	console.log("SOCIAL LOGIN REFERER:-"+ window.location.href)
-		 $.ajax({
-				url : ACC.config.encodedContextPath + "/oauth2callback/socialLogin/",
-				data : {
-					'referer' : window.location.href,
-					'emailId' : eventObject.user.email,
-					'fName':  eventObject.user.firstName,
-					'lName' : 	eventObject.user.lastName,
-					'uid'		: encodedUID,
-					'timestamp'	 :encodedTimestamp,
-					'signature' :encodedSignature,
-					'provider' :eventObject.user.loginProvider
-					},
-				type : "GET",
-				cache : false,
-				success : function(data) {
-					//alert("success login page :- "+data);
-					if(!data)							
-						{
-						
-						}
-						else
-						{
-							if(data.indexOf(ACC.config.encodedContextPath) > -1)
-							{
-								window.open(data,"_self");
-							}
-							else
-							{
-							var hostName=window.location.host;
-							if(hostName.indexOf(':') >=0)
-							{
-								window.open(ACC.config.encodedContextPath +data,"_self");
-							}	
-							else
-								{
-							window.open("https://"+hostName+ACC.config.encodedContextPath +data,"_self");
-								}
-							}
-							
-						}	
-				},
-				error : function(resp) {
-					console.log("Error Occured Login Page" + resp);					
-				}
-			});
-	 
-}
-
-        // This method is activated when the page is loaded
-        function onLoad() {
-            // register for login event
-            gigya.socialize.addEventHandlers({
-                    context: { str: 'congrats on your' }
-                    , onLogin: onLoginHandler                   
-                    });
-        }
-        // onLogin Event handler
-        function onLoginHandler(eventObj) {
-           // console.log(eventObj.context.str + ' ' + eventObj.eventName + ' to ' + eventObj.provider
-          //      + '!\n' + eventObj.provider + ' user ID: ' +  eventObj.user.identities[eventObj.provider].providerUID);          
-            
-            registerUser(eventObj);      
-            
-        }        
-        
-        onLoad();
-    </script>
-
-	<!-- End  Gigya Social Login -->
 	
 </body>
 
 <debug:debugFooter/>
 
 </html>
-</compress:html>
+<%-- </compress:html> --%>

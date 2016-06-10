@@ -146,22 +146,32 @@ public interface MplPaymentDao
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
+
+	/**
+	 * TISPT-200
+	 *
+	 * @param cartGuid
+	 * @return List<MplPaymentAuditModel>
+	 * @throws EtailNonBusinessExceptions
+	 * @throws Exception
+	 */
+	List<MplPaymentAuditModel> getAuditId(String cartGuid) throws EtailNonBusinessExceptions, Exception;
 
 }

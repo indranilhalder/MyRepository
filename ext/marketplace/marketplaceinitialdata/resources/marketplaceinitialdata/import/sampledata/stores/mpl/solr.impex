@@ -19,14 +19,12 @@ $priceRangeINR=$prefixPriceRangeINR
 $classAttributeAssignment=classAttributeAssignment(classificationAttribute(code),classificationClass(code))
 $classificationAttributeAssignments=classificationAttributeAssignments(classificationAttribute(code),classificationClass(code))
 
-
 #
 # Setup the Solr server, indexer, and search configs
 #
-
 # Create the solr server configuration
-INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false]
-;$serverConfigName;standalone;true;true
+INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false];maxTotalConnections;maxTotalConnectionsPerHostConfig
+;$serverConfigName;standalone;true;true;300;100
 
 # Create the solr indexer configuration
 INSERT_UPDATE SolrIndexConfig;name[unique=true];batchSize;numberOfThreads;indexMode(code);optimizeMode(code);ignoreErrors[default=false]
@@ -168,7 +166,6 @@ INSERT_UPDATE SolrIndexerQuery;solrIndexedType(identifier)[unique=true];identifi
 													WHERE {bbox.product}={p.code} 
 													AND {bbox.delisted} != 1 
 													AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
-													AND {bbox.available} > 0
 										}} 
 									) 
 						AND {p.varianttype} IS NULL   
@@ -196,7 +193,6 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} >= ?lastIndexTime
 																	 AND {bbox.delisted} != 1 
 																	 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
-																	 AND {bbox.available} > 0
 			}}
 		)
 	}}
@@ -216,32 +212,12 @@ where tbl.code IN (
 					{{ SELECT {bbox.product} FROM {BuyBox AS bbox} 
 								WHERE {bbox.delisted} != 1 
 								AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
-								AND {bbox.available} > 0
 					}} 
 				)
 
  ORDER BY tbl.code
 ";anonymous
-;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"
-  SELECT distinct{p.PK} FROM {Product AS p} 
-						WHERE {p.code} IN ( 
-										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
-													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
-													AND ({bbox.product}={p.code} 
-													AND ({bbox.delisted} = 1 
-														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})
-														OR {bbox.available} <= 0)
-													AND {bbox.product} NOT IN (
-													{{
-														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 
-															WHERE {bbox.delisted} != 1 
-															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
-															AND {bbox.available} > 0
-													}})
-										}} 
-									) 
-						AND {p.varianttype} IS NULL	     
-";anonymous
+;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"SELECT distinct{p.PK} FROM {Product AS p} 						WHERE {p.code} IN ( 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 													AND ({bbox.product}={p.code} 													AND ({bbox.delisted} = 1 														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})))													AND {bbox.product} NOT IN (													{{														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 															WHERE {bbox.delisted} != 1 															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})}})										}} 									) 						AND {p.varianttype} IS NULL";anonymous
 
 # Define the available sorts
 INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
@@ -422,6 +398,9 @@ INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isoco
  INSERT_UPDATE CompositeEntry;code[unique=true];executablecronjob(code);compositecronjob(code);compositecronjobpos
  ;delete-mplIndex-cronJob;delete-mplIndex-cronJob;mplIndexingCompositeCronjob;1
  ;update-mplIndex-cronJob;update-mplIndex-cronJob;mplIndexingCompositeCronjob;2
+
+INSERT_UPDATE Job;code[unique=true];nodeId
+;solrIndexerJob;1
 
 INSERT_UPDATE CronJob;code[unique=true];runningOnClusterNode
 # Run the update-mplIndex-cronJob every 15 minutes

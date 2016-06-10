@@ -7,21 +7,21 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
+import de.hybris.platform.commerceservices.category.CommerceCategoryService;
 import de.hybris.platform.core.model.media.MediaModel;
-import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
-import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplAdvancedCategoryCarouselComponentModel;
@@ -30,7 +30,6 @@ import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplImageCategoryComponentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.marketplacecommerceservice.url.ExtDefaultCategoryModelUrlResolver;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
@@ -42,18 +41,19 @@ import com.tisl.mpl.util.GenericUtilityMethods;
  * @author TCS
  *
  */
-public class HomepageComponentServiceImpl extends ExtDefaultCategoryModelUrlResolver implements HomepageComponentService
+public class HomepageComponentServiceImpl implements HomepageComponentService
 {
-	@Resource(name = "sessionService")
-	private SessionService sessionService;
+
+	@Autowired
+	private CommerceCategoryService commerceCategoryService;
 
 	//store url change
 	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 	//private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
 
-	private static final String SEQUENCE_NUMBER = "SequenceNumber";
-	private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
+	//private static final String SEQUENCE_NUMBER = "SequenceNumber";
+	//private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
 	private static final String TITLE = "title";
 	private static final String ICID = "icid";
 
@@ -267,7 +267,7 @@ public class HomepageComponentServiceImpl extends ExtDefaultCategoryModelUrlReso
 	{
 		//	TISPRD-2315
 		final JSONObject categoryJSON = new JSONObject();
-		String categoryPath = buildPathString(getCategoryPath(category));
+		String categoryPath = GenericUtilityMethods.buildPathString(getCategoryPath(category));
 		if (StringUtils.isNotEmpty(categoryPath))
 		{
 			try
@@ -334,16 +334,7 @@ public class HomepageComponentServiceImpl extends ExtDefaultCategoryModelUrlReso
 	public JSONObject getJsonBanner(final ContentSlotModel slot, final String compType)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
-		final JSONObject bannerJson = new JSONObject();
-		String seqNum = null;
-		if ("promo".equalsIgnoreCase(compType))
-		{
-			seqNum = SEQUENCE_NUMBER;
-		}
-		else
-		{
-			seqNum = SEQUENCE_NUMBER_STAYQUED;
-		}
+		final JSONObject allBannerJson = new JSONObject();
 		if (CollectionUtils.isNotEmpty(slot.getCmsComponents()))
 		{
 			components = slot.getCmsComponents();
@@ -355,93 +346,65 @@ public class HomepageComponentServiceImpl extends ExtDefaultCategoryModelUrlReso
 			if (component instanceof MplSequentialBannerComponentModel)
 			{
 				final MplSequentialBannerComponentModel promoBanner = (MplSequentialBannerComponentModel) component;
-				//final int firstSequenceNumber = 1;
-				//Show the default banner for a new session
-				int setNum = 0;
-				LOG.info("Session value :::" + sessionService.getAttribute(seqNum));
-				if (sessionService.getAttribute(seqNum) == null)
+
+				final JSONArray bannerJsonArray = new JSONArray();
+
+				for (final BannerComponentModel banner : promoBanner.getBannersList())
 				{
-					setNum = 1;
+					final JSONObject bannerJson = new JSONObject();
+					if (banner instanceof MplBigPromoBannerComponentModel)
+					{
+						final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) banner;
+						if (bannerImage.getBannerImage() != null)
+						{
+							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage().getURL());
+							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage()
+									.getAltText());
+						}
+						else
+						{
+							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
+									MarketplacecommerceservicesConstants.EMPTYSPACE);
+							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
+									MarketplacecommerceservicesConstants.EMPTYSPACE);
+						}
+						bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+						bannerJson.put("promoText1", bannerImage.getMajorPromoText());
+						bannerJson.put("promoText2", bannerImage.getMinorPromo1Text());
+						bannerJson.put("promoText3", bannerImage.getMinorPromo2Text());
+						bannerJson.put("sequenceNumber", bannerImage.getSequenceNumber());
+						bannerJsonArray.add(bannerJson);
+					}
+
+					if (banner instanceof MplBigFourPromoBannerComponentModel)
+					{
+						final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) banner;
+						if (bannerImage.getBannerImage() != null)
+						{
+							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage().getURL());
+							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage()
+									.getAltText());
+						}
+						else
+						{
+							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
+									MarketplacecommerceservicesConstants.EMPTYSPACE);
+							bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
+									MarketplacecommerceservicesConstants.EMPTYSPACE);
+						}
+						bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+						bannerJson.put("promoText1", bannerImage.getPromoText1());
+						bannerJson.put("promoText2", bannerImage.getPromoText2());
+						bannerJson.put("promoText3", bannerImage.getPromoText3());
+						bannerJson.put("promoText4", bannerImage.getPromoText4());
+						bannerJson.put("sequenceNumber", bannerImage.getSequenceNumber());
+						bannerJsonArray.add(bannerJson);
+					}
 				}
-				else
-				{
-					final int lastSequenceNumber = Integer.parseInt(sessionService.getAttribute(seqNum).toString());
-					final int nextSequenceNumber = lastSequenceNumber + 1;
-
-					if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner) != null)
-					{
-						setNum = nextSequenceNumber;
-					}
-					else
-					{
-						setNum = 1;
-					}
-
-
-				}
-
-
-				if (getBannerforSequenceNumber(setNum, promoBanner) instanceof MplBigPromoBannerComponentModel)
-				{
-					final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
-							setNum, promoBanner);
-					if (bannerImage.getBannerImage() != null)
-					{
-						/*
-						 * bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
-						 * bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
-						 */
-						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage().getURL());
-						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage().getAltText());
-					}
-					else
-					{
-						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
-								MarketplacecommerceservicesConstants.EMPTYSPACE);
-						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
-								MarketplacecommerceservicesConstants.EMPTYSPACE);
-					}
-
-					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-					bannerJson.put("promoText1", bannerImage.getMajorPromoText());
-					bannerJson.put("promoText2", bannerImage.getMinorPromo1Text());
-					bannerJson.put("promoText3", bannerImage.getMinorPromo2Text());
-
-				}
-
-				if (getBannerforSequenceNumber(setNum, promoBanner) instanceof MplBigFourPromoBannerComponentModel)
-				{
-					final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
-							setNum, promoBanner);
-
-					if (bannerImage.getBannerImage() != null)
-					{
-						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage().getURL());
-						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage().getAltText());
-					}
-					else
-					{
-						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
-								MarketplacecommerceservicesConstants.EMPTYSPACE);
-						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
-								MarketplacecommerceservicesConstants.EMPTYSPACE);
-					}
-					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-					bannerJson.put("promoText1", bannerImage.getPromoText1());
-					bannerJson.put("promoText2", bannerImage.getPromoText2());
-					bannerJson.put("promoText3", bannerImage.getPromoText3());
-					bannerJson.put("promoText4", bannerImage.getPromoText4());
-				}
-
-				sessionService.setAttribute(seqNum, Integer.valueOf(setNum));
-
-
-
+				allBannerJson.put("allBannerJsonObject", bannerJsonArray);
 			}
 		}
-
-
-		return bannerJson;
+		return allBannerJson;
 	}
 
 	/**
@@ -451,6 +414,7 @@ public class HomepageComponentServiceImpl extends ExtDefaultCategoryModelUrlReso
 	 * @param component
 	 * @return displayBanner
 	 */
+	@SuppressWarnings("unused")
 	private BannerComponentModel getBannerforSequenceNumber(final int sequenceNumber,
 			final MplSequentialBannerComponentModel component)
 	{
@@ -521,6 +485,24 @@ public class HomepageComponentServiceImpl extends ExtDefaultCategoryModelUrlReso
 
 		return newMediaUrl;
 
+	}
+
+	@Override
+	public List<CategoryModel> getCategoryPath(final CategoryModel category)
+	{
+		final Collection<List<CategoryModel>> path = commerceCategoryService.getPathsForCategory(category);
+		if (null != path)
+		{
+			for (final List<CategoryModel> path1 : path)
+			{
+				if (path1.size() > 1)
+				{
+					path1.remove(0);
+				}
+			}
+		}
+
+		return (path.iterator().next());
 	}
 
 }

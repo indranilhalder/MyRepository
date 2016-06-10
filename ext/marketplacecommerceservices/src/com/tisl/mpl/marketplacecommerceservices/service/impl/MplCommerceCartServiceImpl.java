@@ -409,8 +409,12 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				{
 					final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
 							.getSelectedUssid());
-					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+					if (sellerInfoModel != null
+							&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
+							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
+							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
+									.getCode())
 					{
 						final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
 								.getDeliveryFulfillModes().getCode();
@@ -4689,7 +4693,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
 					{
 						if (deliveryDetailsData != null && abstractOrderEntryModel != null
-								&& abstractOrderEntryModel.getSelectedUSSID().equalsIgnoreCase(pinCodeResponseData.getUssid()))
+								&& abstractOrderEntryModel.getSelectedUSSID().equalsIgnoreCase(pinCodeResponseData.getUssid())
+								&& !abstractOrderEntryModel.getGiveAway().booleanValue()) //TISPRDT-219
 						{
 							inventory = (deliveryDetailsData.getInventory() != null) ? Long
 									.parseLong(deliveryDetailsData.getInventory()) : inventory;

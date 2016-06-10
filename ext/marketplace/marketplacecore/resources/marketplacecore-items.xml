@@ -4192,6 +4192,15 @@
 				<description>It represents an offer Image Carousel component with extending  attributes from
  				ImageCarouselComponent .</description>
 			</itemtype>
+			
+			<itemtype code="CMSSite" autocreate="false" generate="false">
+				<description>Attribute Build Number for maintaing the build version</description>
+				<attributes>
+					<attribute qualifier="buildNumber" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					</attributes>
+			</itemtype>
 
 		</typegroup>
 
@@ -5763,6 +5772,12 @@
 							optional="true" />
 						<defaultvalue>false</defaultvalue>
 					</attribute>
+					<!-- TISPRO-540 - Payment Type -->
+					<attribute qualifier="modeOfPayment" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TISPRO-540 - Payment Type -->
 				</attributes>
 			</itemtype>
 		</typegroup>

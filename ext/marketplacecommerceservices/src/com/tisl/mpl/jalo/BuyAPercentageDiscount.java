@@ -184,15 +184,20 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		}
 		catch (final EtailBusinessExceptions e)
 		{
+			LOG.error(e.getMessage());
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 		}
-		catch (final EtailNonBusinessExceptions e)
+		catch (final EtailNonBusinessExceptions e) //Added for TISPT-195
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error(e.getMessage());
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+			LOG.error(e.getMessage());
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 
 		return promotionResults;

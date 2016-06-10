@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorcms.model.components.FooterComponentModel;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
@@ -64,16 +65,19 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
+import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
+import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.data.LatestOffersData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
+import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -128,6 +132,28 @@ public class HomePageController extends AbstractPageController
 	private DefaultCMSContentSlotService contentSlotService;
 	@Autowired
 	private ConfigurationService configurationService;
+
+	@Resource(name = "notificationFacade")
+	private NotificationFacade notificationFacade;
+
+	/**
+	 * @return the notificationFacade
+	 */
+	public NotificationFacade getNotificationFacade()
+	{
+		return notificationFacade;
+	}
+
+	/**
+	 * @param notificationFacade
+	 *           the notificationFacade to set
+	 */
+	public void setNotificationFacade(final NotificationFacade notificationFacade)
+	{
+		this.notificationFacade = notificationFacade;
+	}
+
+
 
 	private static final String VERSION = "version";
 	private static final String HOMEPAGE = "homepage";
@@ -744,6 +770,7 @@ public class HomePageController extends AbstractPageController
 					"Section5ASlot-Homepage",
 
 					version);
+
 			//return getJsonBanner(homepageSection5ASlot, "stayQued");
 			getStayQuedHomepageJson = homepageComponentService.getJsonBanner(homepageSection5ASlot, "stayQued");
 		}
@@ -925,13 +952,13 @@ public class HomePageController extends AbstractPageController
 		final Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
 	}
-	
+
 	@ResponseBody
- 	@RequestMapping(value = "/fetchToken", method = RequestMethod.GET)
- 	public Object fetchToken(final HttpSession session)
- 	{
- 		return CSRFTokenManager.getTokenForSession(session);
- 	}
+	@RequestMapping(value = "/fetchToken", method = RequestMethod.GET)
+	public Object fetchToken(final HttpSession session)
+	{
+		return CSRFTokenManager.getTokenForSession(session);
+	}
 
 	/**
 	 * @description Used to store emailid for newslettersubscription
@@ -954,9 +981,39 @@ public class HomePageController extends AbstractPageController
 		{
 			header.put("loggedInStatus", true);
 			final Object sessionDisplayName = session.getAttribute(userFirstName);
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
+
+			List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
+			final String customerUID = currentCustomer.getUid();
+			if (null != customerUID)
+			{
+				notificationMessagelist = getNotificationFacade().getNotificationDetail(customerUID, true);
+
+				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
+				{
+					int notificationCount = 0;
+					for (final NotificationData single : notificationMessagelist)
+					{
+						if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
+						{
+							notificationCount++;
+						}
+
+					}
+
+					header.put("notificationCount", notificationCount);
+				}
+				else
+				{
+					header.put("notificationCount", null);
+				}
+			}
+
+
 			if (sessionDisplayName == null)
 			{
-				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
 				String firstName = currentCustomer.getName();
 				if (StringUtils.isNotEmpty(firstName))
 				{
@@ -985,6 +1042,7 @@ public class HomePageController extends AbstractPageController
 		{
 			header.put("loggedInStatus", false);
 			header.put(userFirstName, null);
+			header.put("notificationCount", null);
 		}
 
 		return header;
@@ -1021,5 +1079,63 @@ public class HomePageController extends AbstractPageController
 		//return getBestPicksJson;
 
 		return ControllerConstants.Views.Fragments.Home.LatestOffers;
+	}
+
+	//Fix for defect TISPT-202
+	@RequestMapping(value = "/getFooterContent", method = RequestMethod.GET)
+	public String getFooterContent(@RequestParam(value = "id") final String slotId, final Model model)
+	{
+		try
+		{
+
+			FooterComponentModel footer = null;
+			NeedHelpComponentModel needHelpFooter = null;
+			final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
+
+			if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
+			{
+				for (final AbstractCMSComponentModel cmsComponentModel : footerSlot.getCmsComponents())
+				{
+					if (cmsComponentModel instanceof FooterComponentModel)
+					{
+						footer = (FooterComponentModel) cmsComponentModel;
+					}
+					if (cmsComponentModel instanceof NeedHelpComponentModel)
+					{
+						needHelpFooter = (NeedHelpComponentModel) cmsComponentModel;
+					}
+				}
+			}
+
+
+			//final FooterComponentModel footer = cmsComponentService.getSimpleCMSComponent(componentId);
+			model.addAttribute("footerSocialIconList", footer.getFooterImageList());
+			model.addAttribute("footerText", footer.getFooterText());
+			model.addAttribute("notice", footer.getNotice());
+			model.addAttribute("footerAppImageList", footer.getFooterAppImageList());
+			model.addAttribute("navigationNodes", footer.getNavigationNodes());
+			model.addAttribute("wrapAfter", footer.getWrapAfter());
+
+			//Need help section
+			model.addAttribute("contactNumber", (needHelpFooter == null) ? "" : needHelpFooter.getContactNumber());
+
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		return ControllerConstants.Views.Fragments.Home.FooterPanel;
 	}
 }

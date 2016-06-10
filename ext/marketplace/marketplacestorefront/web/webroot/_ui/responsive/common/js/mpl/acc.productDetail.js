@@ -1493,8 +1493,8 @@ function openPopForBankEMI() {
 
 
 //TISPRO-533
-
-$( "#bankNameForEMI" ).change(function() {
+function populateEMIDetailsForPDP(){
+//$( "#bankNameForEMI" ).change(function() {
 	var productVal = $("#prodPrice").val();
 		
 		var selectedBank = $('#bankNameForEMI :selected').text();
@@ -1538,7 +1538,8 @@ $( "#bankNameForEMI" ).change(function() {
 		} else {
 
 		}
-	});
+	//});
+		}
 
 
 //TISPRO-533

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -146,12 +145,12 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 				target.setDisplayPromotion(displayPromotion);
 			}
 
-			if (getValue(source, "allPromotions") != null)
+			if (getValue(source, "isOffersExisting") != null)
 			{
 
-				final List<String> promotions = (List<String>) getValue(source, "allPromotions");
 
-				if (CollectionUtils.isEmpty(promotions))
+				//if (this.<Boolean> getValue(source, "isOffersExisting").booleanValue() == false) Sonar critical fixes
+				if (!this.<Boolean> getValue(source, "isOffersExisting").booleanValue())
 				{
 
 					target.setIsOfferExisting(Boolean.FALSE);
@@ -160,6 +159,7 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 				{
 
 					target.setIsOfferExisting(Boolean.TRUE);
+
 					/*
 					 * TISPRD-216 :: This change has been made to change the url for actual product which has variant not the
 					 * lowest size variant which may not have promotion

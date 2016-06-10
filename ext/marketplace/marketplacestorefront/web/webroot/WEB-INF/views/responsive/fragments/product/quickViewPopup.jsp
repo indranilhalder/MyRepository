@@ -46,16 +46,7 @@ tr.d0 td {
 
  
  var imagePageLimit = ${imgCount};
-/*  $(document).ready(function(){
- 	 $("#previousImage").css("opacity","0.5");
- 	$("#nextImage").css("opacity","1");
- 	var listHeight = $(".imageList li").height();
- 	if($("#previousImage").length){
- 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
- 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
- 	}
- 	$(".imageListCarousel").show(); 
- }); */
+
  function nextImage()
  {
  	var item_height = $(".product-info .imageListCarousel li").height();
@@ -98,13 +89,17 @@ tr.d0 td {
  
 //AKAMAI Fix
  var productSizeQuickVar = '${productSizeQuick}';
- 
+ var emiCuttOffAmount = '${emiCuttOffAmount}';
+ var productCodeQuickView = '${product.code}';
+
  
  $( document ).ready(function() {
 	 
 	//AKAMAI Fix
 	 setSizeforAkamai();
-	 //setBuyBoxDetails();
+	//AJAX BuyBox call
+	 setBuyBoxDetails();
+	 
 	 
 	 getRating_Qview('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 
@@ -327,6 +322,7 @@ display:none;
 							<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
 						</c:if>
 						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+							<%-- <img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}" /> --%>
 							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
 					    </c:if>
 					</span>
@@ -353,21 +349,29 @@ display:none;
 		  </div>
 	 </c:if> --%>
 	 
-	<c:if test="${isNew=='Y'}">
-		 <div id ="newProduct" style="z-index: 1;display:inline;" class="new new-product">
+	<%-- <c:if test="${isNew=='Y'}"> --%>
+		 <div id ="newProduct" style="z-index: 1;display:none;" class="new new-product">
 					<img class="brush-strokes-sprite sprite-New"
 					src="/_ui/responsive/common/images/transparent.png"><span>New</span>
 					</div>
-	 	   </c:if> 
-	   <c:if test="${isOnline=='true'}">
-		 	<div style="z-index: 1;" class="online-exclusive">
+	 	  <%--  </c:if>  --%>
+	  <%--  <c:if test="${isOnline=='true'}"> --%>
+		 	<div style="z-index: 1;;display:none;" class="online-exclusive">
 					<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
 						src="/_ui/responsive/common/images/transparent.png"> <span><spring:theme code="quickview.onlineexclusive"/></span>
 				</div>
-		</c:if>
+		<%-- </c:if> --%>
 		</div>
+		
+		<div id="emiStickerId" class="emi" style="display:none;">
+							<spring:theme code="marketplace.emiavailable" />&nbsp;
+							<a type="button" name="yes" id="prodEMI"
+		data-target="#modalProd" onclick="openPopForBankEMI_quick()"
+		data-toggle="modal"><spring:theme code="marketplace.emiinfo"></spring:theme></a> <input id="prodPrice" type="hidden" />
+						</div>
+				<product:emiDetail product="${product}" />
 	
-		<c:choose>
+<%-- 		<c:choose>
 		<c:when test="${spPrice ne null}">
 			<c:if test="${spPrice.value>emiCuttOffAmount}">
 			<div id="emiStickerId" class="emi">
@@ -382,8 +386,8 @@ display:none;
 		<c:otherwise>
 			<c:choose>
 				<c:when test="${mopPrice ne null}">
-					<%-- <input type="hidden" id="mopId" value="${mopPrice}"/> --%>
-					<%-- <div>${mopPrice.formattedValue}</div> --%>
+					<input type="hidden" id="mopId" value="${mopPrice}"/>
+					<div>${mopPrice.formattedValue}</div>
 					<c:if test="${mopPrice.value>emiCuttOffAmount}">
 						<div id="emiStickerId" class="emi">
 							<spring:theme code="marketplace.emiavailable" />&nbsp;
@@ -395,8 +399,8 @@ display:none;
 					</c:if>
 				</c:when>
 				<c:otherwise>
-					<%-- <input type="hidden" id="mrpId" value="${mrp}"/> --%>
-					<%-- <div>${mrpPrice.formattedValue}</div> --%>
+					<input type="hidden" id="mrpId" value="${mrp}"/>
+					<div>${mrpPrice.formattedValue}</div>
 					<c:if test="${mrpPrice.value>emiCuttOffAmount}">
 						<div id="emiStickerId" class="emi">
 							<spring:theme code="marketplace.emiavailable" />&nbsp;
@@ -410,15 +414,19 @@ display:none;
 				</c:otherwise>
 			</c:choose>
 		</c:otherwise>
-	</c:choose>
+	</c:choose> --%>
 		
 	</div>	
     <div class="product-detail">
+    
     <h2 class="company">
-              <span class="logo"></span>${product.brand.brandname}&nbsp;<spring:theme code="product.by"/>&nbsp;${sellerName}</h2>
+              <span class="logo"></span>${product.brand.brandname}&nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName}</h2><!-- Convert into AJAX call -->
+              
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     <div class="price">
-    <c:choose>
+    
+    
+<%--     <c:choose>
     <c:when test="${not empty spPrice.value && spPrice.value ne 0}">
      <c:choose>
      	<c:when test="${mopPrice.value eq mrpPrice.value}">
@@ -451,7 +459,16 @@ display:none;
      	</c:otherwise>
      	</c:choose>
      </c:otherwise>
-    </c:choose>
+    </c:choose> --%>
+    
+    <!-- <input type="hidden" id="productPrice" name="productPrice" /> -->
+   <p class="old" id="quickMrpPriceId" style="display:none">
+	</p>
+	<p class="sale" id="quickMopPriceId" style="display:none">
+	</p>
+	<p class="sale" id="quickSpPriceId" style="display:none">
+	</p>
+    
   </div>   
 <a href="#" class="gig--readReviewsLink"></a>
 	<span id="gig-rating-readReviewsLink_quick" ></span>	
@@ -493,14 +510,16 @@ display:none;
  
  	<div class="fullfilled-by">
 		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
-		<c:choose>
+		<%-- <c:choose>
 		<c:when test="${fn:toLowerCase(fullfilmentType) == fn:toLowerCase('sship')}">
 			<span id="fullFilledById">${sellerName}</span>
 		</c:when>
 		<c:otherwise>
 			<span id="fullFilledById"><spring:theme code="product.default.fulfillmentType"/></span>
 		</c:otherwise>
-		</c:choose>
+		</c:choose> --%>
+		<span id="fulFilledByTshipQuick" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+			<span id="fulFilledBySshipQuick"  style="display:none;"></span>
 	</div>
    <div class="product-content" style="margin-top:15px;">
 	   <div class="swatch">
@@ -539,21 +558,26 @@ display:none;
 		</c:if>
 		<input type="hidden" name="productCodePost" id="productCodePost" value="${product.code}" />
 		<input type="hidden" name="wishlistNamePost" id="wishlistNamePost" value="N" />
-		<input type="hidden" name="ussid" id="ussid_quick"	value="${buyboxUssid}"/>
+		<input type="hidden" name="ussid" id="ussid_quick"	/> <!-- value="${buyboxUssid}" -->
 		<input type="hidden" maxlength="3" size="1" id="stock" name="stock"
-		value="${availablestock}" />
-		<c:choose>
-			<c:when test="${allOOStock==stock_y}">
-			<%-- <span id="outOfStockId" style="display: block"  class="out_of_stock">
-				<font color="red"><spring:theme code="product.product.outOfStock" /></font>
-				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick('${buyboxUssid}');scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
-			</span>
-				<button type="${buttonType}"
-					class="btn-block js-add-to-cart outOfStock"
-					disabled="disabled">
-					<spring:theme code="product.variants.out.of.stock" />
-				</button> --%>
-				
+		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
+		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
+		 
+		 <button id="addToCartButtonQuick" type="${buttonType}"
+												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
+												<spring:theme code="basket.add.to.basket" />
+											</button>
+		<span id="dListedErrorMsg" style="display: none"  class="dlist_message">
+		<spring:theme code="pdp.delisted.message" />
+	</span>
+		<button id="addToCartButtonQuick-wrong" type="button" class="btn-block" disable="true" style="display: none;"> <spring:theme code="basket.add.to.basket" /></button>
+											
+		<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
+			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
+			</p></span>
+		 
+		<%-- <c:choose>
+			<c:when test="${allOOStock==stock_y}">				
 			<button id="addToCartButton" type="${buttonType}"
 												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
 												<spring:theme code="basket.add.to.basket" />
@@ -582,55 +606,23 @@ display:none;
 									</c:choose>
 
 								</c:otherwise>
-							</c:choose>
+							</c:choose> --%>
 		
-	<%-- 	<c:choose>
-		<c:when test="${selectedSize!=null || product.rootCategory=='Electronics'}">
-		<c:choose>
-			<c:when test="${allOOStock==stock_y}">
-			<span id="outOfStockId" style="display: block"  class="out_of_stock">
-				<font color="red"><spring:theme code="product.product.outOfStock" /></font>
-				<input type="button" id="add_to_wishlist" onClick="openPop('${buyboxUssid}');scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
-			</span>
-				<button type="${buttonType}"
-					class="btn-block js-add-to-cart outOfStock"
-					disabled="disabled">
-					<spring:theme code="product.variants.out.of.stock" />
-				</button>
-			</c:when>
-			<c:otherwise>			
-					<button id="addToCartButton" type="${buttonType}"
-						class="btn-block js-add-to-cart">
-						<spring:theme code="basket.add.to.basket" />
-					</button>
-				
-			</c:otherwise>
-		</c:choose>
-		</c:when>
-		<c:otherwise>
-		<button id="addToCartButton" type="${buttonType}"
-						class="btn-block js-add-to-cart">
-						<spring:theme code="basket.add.to.basket" />
-					</button>
-		</c:otherwise>
-	</c:choose> --%>
+	
 	</form:form>
-	<c:if test="${allOOStock==stock_y}">
-			<span id="outOfStockId" style="display: block"  class="out_of_stock">
+	<%-- <c:if test="${allOOStock==stock_y}"> --%>
+			<span id="outOfStockIdQuick" style="display: none"  class="out_of_stock">
 				<font color="red"><spring:theme code="product.product.outOfStock" /></font>
-				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick('${buyboxUssid}');scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
-			</span>
-				<%-- <button type="${buttonType}"
-					class="btn-block js-add-to-cart outOfStock"
-					disabled="disabled">
-					<spring:theme code="product.variants.out.of.stock" />
-				</button> --%>
-	</c:if>
+				<%-- <input type="button" id="add_to_wishlist_quick" onClick="openPop_quick('${buyboxUssid}');scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/> --%>
+				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick();scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
+			</span>				
+	<%-- </c:if> --%>
 	</ycommerce:testId>    
 <!-- adding to wishlist -->
 				<ul class="wish-share">
 					<li><!-- <span id="addedMessage" style="display:none"></span> -->
-						<a onClick="openPop_quick('${buyboxUssid}');scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li>
+						<%-- <a onClick="openPop_quick('${buyboxUssid}');scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'>....<spring:theme code="text.add.to.wishlist"/></a></li> --%>
+						<a onClick="openPop_quick();scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li>
 				<%-- <a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li> --%>
 					<li>
 						<div class="share">
@@ -782,13 +774,14 @@ display:none;
 <span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span>
 
 </div>
+
 <!-- Change for Showing VIDEO ZOOM Box -->
 <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" 
    aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="overlay" data-dismiss="modal" onclick="closing()"></div>
       <div class="modal-content content"  style="width:53%; height:60%; overflow:hidden;">
             <button type="button" class="close pull-right" 
-              onclick="closing()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">
+              onclick="closingVideo()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">     <!-- TISPRO-508 -->
             </button>
 			<iframe name="videoFrame" id="player" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
       </div>
@@ -805,6 +798,7 @@ display:none;
     transition: font-weight 0.15s;
 }
 </style>
+
  <div id="emailLoggedInIdquick" style="display: none"><spring:theme code="product.emailNonLoggedIn"/></div>
 <div id="emailSendQuick" class="emailSend">
 	
