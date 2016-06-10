@@ -71,8 +71,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import net.sourceforge.pmd.util.StringUtil;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -105,6 +103,8 @@ import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 
 /**
  * @author TCS
@@ -134,7 +134,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService mplDeliveryCostService;
-	
+
 	/**
 	 * @return the wishlistFacade
 	 */
@@ -584,8 +584,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			parameter.setEnableHooks(true);
 
-			final CartModel cartForGuidAndSiteAndUser = mplCommerceCartService.getMplCommerceCartDao().getCartForGuidAndSiteAndUser(
-					toMergeCartGuid, currentBaseSite, currentUser);
+			final CartModel cartForGuidAndSiteAndUser = mplCommerceCartService.getMplCommerceCartDao()
+					.getCartForGuidAndSiteAndUser(toMergeCartGuid, currentBaseSite, currentUser);
 
 			if (null != cartForGuidAndSiteAndUser.getCode())
 			{
@@ -721,10 +721,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			boolean delisted = false;
 			for (final SellerInformationModel seller : productModel.getSellerInformationRelator())
 			{
-				if (seller.getSellerArticleSKU().equalsIgnoreCase(USSID)
-						&& (seller.getSellerAssociationStatus() != null && (seller.getSellerAssociationStatus().getCode()
-								.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO) || (seller.getEndDate() != null && new Date()
-								.after(seller.getEndDate())))))
+				if (seller.getSellerArticleSKU().equalsIgnoreCase(USSID) && (seller.getSellerAssociationStatus() != null
+						&& (seller.getSellerAssociationStatus().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)
+								|| (seller.getEndDate() != null && new Date().after(seller.getEndDate())))))
 				{
 					delisted = true;
 					break;
@@ -733,8 +732,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			if (!delisted)
 			{
 				addedToCart = mplCommerceCartService.addItemToCart(cartId, productCode, quant, USSID);
-				LOG.debug("*********** Products added status in cart *************  ::::USSID::::" + USSID + ":::added???"
-						+ addedToCart);
+				LOG.debug(
+						"*********** Products added status in cart *************  ::::USSID::::" + USSID + ":::added???" + addedToCart);
 
 				final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
 				for (final Wishlist2Model wishlist2Model : allWishlists)
@@ -1097,10 +1096,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					if (null != abstractOrderEntry && null != abstractOrderEntry.getProduct())
 					{
-						productData1 = productFacade.getProductForOptions(abstractOrderEntry.getProduct(), Arrays.asList(
-								ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-								ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK,
-								ProductOption.DELIVERY_MODE_AVAILABILITY));
+						productData1 = productFacade.getProductForOptions(abstractOrderEntry.getProduct(),
+								Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+										ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK,
+										ProductOption.DELIVERY_MODE_AVAILABILITY));
 						final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 
 						if (null != abstractOrderEntry.getDeliveryPointOfService())
@@ -1161,7 +1160,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							{
 								if (null != img && null != img.getUrl() && StringUtils.isNotEmpty(img.getFormat())
 								//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
-										&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+								//&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL)) TISSAM-9
+										&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
 								{
 									gwlp.setImageURL(img.getUrl());
 								}
@@ -1211,8 +1211,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									if (!selectedCapacity.isEmpty() && null != pm.getCapacity()
 											&& selectedCapacity.equals(pm.getCapacity()))
 									{
-										LOG.debug("*************** Mobile webservice product capacity********************"
-												+ pm.getCapacity());
+										LOG.debug(
+												"*************** Mobile webservice product capacity********************" + pm.getCapacity());
 										gwlp.setCapacity(pm.getCapacity());
 									}
 									else
@@ -1286,8 +1286,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 										if (null != abstractOrderEntry.getSelectedUSSID()
 												&& !abstractOrderEntry.getSelectedUSSID().isEmpty()
-												&& null != deliveryMode.getSellerArticleSKU()
-												&& !deliveryMode.getSellerArticleSKU().isEmpty()
+												&& null != deliveryMode.getSellerArticleSKU() && !deliveryMode.getSellerArticleSKU().isEmpty()
 												&& abstractOrderEntry.getSelectedUSSID().equalsIgnoreCase(deliveryMode.getSellerArticleSKU()))
 										{
 											delivery = new MobdeliveryModeWsDTO();
@@ -1314,8 +1313,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 												if (null != deliveryMode.getDeliveryCost()
 														&& null != deliveryMode.getDeliveryCost().getValue())
 												{
-													delivery.setDeliveryCost(String.valueOf(deliveryMode.getDeliveryCost().getValue()
-															.setScale(2, BigDecimal.ROUND_HALF_UP)));
+													delivery.setDeliveryCost(String.valueOf(
+															deliveryMode.getDeliveryCost().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 												}
 											}
 											if (StringUtils.isNotEmpty(deliveryMode.getDescription()))
@@ -1337,7 +1336,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							Collection<MplZoneDeliveryModeValueModel> deliverymodeList = null;
 							try
 							{
-								if (null != abstractOrderEntry.getMplZoneDeliveryModeValue() && !abstractOrderEntry.getMplZoneDeliveryModeValue().isEmpty())
+								if (null != abstractOrderEntry.getMplZoneDeliveryModeValue()
+										&& !abstractOrderEntry.getMplZoneDeliveryModeValue().isEmpty())
 								{
 									deliverymodeList = abstractOrderEntry.getMplZoneDeliveryModeValue();
 									for (final MplZoneDeliveryModeValueModel deliveryMode : deliverymodeList)
@@ -1353,12 +1353,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 											String endValue = null;
 											if (null != deliveryMode.getDeliveryMode())
 											{
-												startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode
-														.getDeliveryMode().getStart().toString()
+												startValue = deliveryMode.getDeliveryMode().getStart() != null
+														? deliveryMode.getDeliveryMode().getStart().toString()
 														: MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
-												endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
-														.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+												endValue = deliveryMode.getDeliveryMode().getEnd() != null
+														? deliveryMode.getDeliveryMode().getEnd().toString()
+														: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 											}
 											if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode())
@@ -1398,8 +1399,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 										deliveryList.add(delivery);
 
 									}
-								}else{
-									String ussid=	abstractOrderEntry.getSelectedUSSID();									
+								}
+								else
+								{
+									final String ussid = abstractOrderEntry.getSelectedUSSID();
 									if (ussid != null && !ussid.isEmpty())
 									{
 										abstractOrderEntry.setSelectedUSSID(ussid);
@@ -1408,7 +1411,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 										abstractOrderEntry.setMplZoneDeliveryModeValue(MplZoneDeliveryModeValueModel);
 										modelService.save(abstractOrderEntry);
 									}
-									
+
 									deliverymodeList = abstractOrderEntry.getMplZoneDeliveryModeValue();
 									for (final MplZoneDeliveryModeValueModel deliveryMode : deliverymodeList)
 									{
@@ -1423,12 +1426,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 											String endValue = null;
 											if (null != deliveryMode.getDeliveryMode())
 											{
-												startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode
-														.getDeliveryMode().getStart().toString()
+												startValue = deliveryMode.getDeliveryMode().getStart() != null
+														? deliveryMode.getDeliveryMode().getStart().toString()
 														: MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
-												endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
-														.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+												endValue = deliveryMode.getDeliveryMode().getEnd() != null
+														? deliveryMode.getDeliveryMode().getEnd().toString()
+														: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 											}
 											if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode())
@@ -1466,7 +1470,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 											}
 										}
 										deliveryList.add(delivery);
-									
+
 									}
 								}
 							}
@@ -1502,12 +1506,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								if (null != abstractOrderEntry.getMplDeliveryMode()
 										&& null != abstractOrderEntry.getMplDeliveryMode().getDeliveryMode())
 								{
-									startValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getStart() != null ? abstractOrderEntry
-											.getMplDeliveryMode().getDeliveryMode().getStart().toString()
+									startValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getStart() != null
+											? abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getStart().toString()
 											: MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
-									endValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getEnd() != null ? abstractOrderEntry
-											.getMplDeliveryMode().getDeliveryMode().getEnd().toString()
+									endValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getEnd() != null
+											? abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getEnd().toString()
 											: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 									if (StringUtils.isNotEmpty(abstractOrderEntry.getMplDeliveryMode().getSellerArticleSKU())
@@ -1521,7 +1525,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 								}
 								if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
-										&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP) && delivery != null)
+										&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP)
+										&& delivery != null)
 								{
 									LOG.debug("************ Mobile webservice Tship product ************* Delivery cost 0"
 											+ gwlp.getFullfillmentType());
@@ -1647,21 +1652,24 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 														if (null != appliedResponseData.getDiscountPrice())
 														{
 															gwlp.setDiscountPrice(appliedResponseData.getDiscountPrice());
-															LOG.debug("************ Mobile webservice product level discount price ************* "
-																	+ appliedResponseData.getDiscountPrice());
+															LOG.debug(
+																	"************ Mobile webservice product level discount price ************* "
+																			+ appliedResponseData.getDiscountPrice());
 														}
 														if (null != appliedResponseData.getIsPercentage())
 														{
 															gwlp.setIsPercentage(appliedResponseData.getIsPercentage());
-															LOG.debug("************ Mobile webservice product level percentage there? ************* "
-																	+ appliedResponseData.getIsPercentage());
+															LOG.debug(
+																	"************ Mobile webservice product level percentage there? ************* "
+																			+ appliedResponseData.getIsPercentage());
 
 														}
 														if (null != appliedResponseData.getPercentagePromotion())
 														{
 															gwlp.setPercentagePromotion(appliedResponseData.getPercentagePromotion());
-															LOG.debug("************ Mobile webservice product level percentage promotion ************* "
-																	+ appliedResponseData.getPercentagePromotion());
+															LOG.debug(
+																	"************ Mobile webservice product level percentage promotion ************* "
+																			+ appliedResponseData.getPercentagePromotion());
 														}
 													}
 													///////////////////////////////
@@ -1697,8 +1705,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 												}
 												if (null != appliedResponseData.getPercentagePromotion())
 												{
-													LOG.debug("************ Mobile webservice product level percentage promotion ************* "
-															+ appliedResponseData.getPercentagePromotion());
+													LOG.debug(
+															"************ Mobile webservice product level percentage promotion ************* "
+																	+ appliedResponseData.getPercentagePromotion());
 													gwlp.setCartPercentagePromotion(appliedResponseData.getPercentagePromotion());
 												}
 											}
@@ -1757,10 +1766,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				if (null != abstractOrderEntry)
 				{
-					productData1 = productFacade.getProductForOptions(abstractOrderEntry.getProduct(), Arrays.asList(
-							ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-							ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK,
-							ProductOption.DELIVERY_MODE_AVAILABILITY));
+					productData1 = productFacade.getProductForOptions(abstractOrderEntry.getProduct(),
+							Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+									ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK,
+									ProductOption.DELIVERY_MODE_AVAILABILITY));
 					/*** Free Items ***/
 					if (abstractOrderEntry.getGiveAway().booleanValue())
 					{
@@ -1791,10 +1800,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						}
 						if (null != productData1.getImages())
 						{
-							final String imgUrl = productData1.getImages() == null ? "" : productData1.getImages().stream()
-									.filter(im -> im != null)
-									.filter(im -> im.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL))
-									.map(s -> s.getUrl()).findFirst().get();
+							final String imgUrl = productData1
+									.getImages() == null
+											? ""
+											: productData1.getImages().stream().filter(im -> im != null)
+													.filter(im -> im.getFormat().toLowerCase()
+															.equals(MarketplacecommerceservicesConstants.THUMBNAIL))
+													.map(s -> s.getUrl()).findFirst().get();
 							gwlpFreeItem.setImageURL(imgUrl);
 						}
 						gwlpFreeItemList.add(gwlpFreeItem);
@@ -1945,11 +1957,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									categoryList = responseData.getPotentialPromotion().getPromoPotCategories();
 								}
 							}
-							cartOffer.setPotentialProducts(productList.stream().filter(p -> p != null).map(p -> p.getCode())
-									.collect(Collectors.toList()));
+							cartOffer.setPotentialProducts(
+									productList.stream().filter(p -> p != null).map(p -> p.getCode()).collect(Collectors.toList()));
 
-							cartOffer.setPotentialCategories(categoryList.stream().filter(c -> c != null).map(c -> c.getCode())
-									.collect(Collectors.toList()));
+							cartOffer.setPotentialCategories(
+									categoryList.stream().filter(c -> c != null).map(c -> c.getCode()).collect(Collectors.toList()));
 
 						}
 					}
@@ -2013,8 +2025,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			if (null != cartModel.getTotalPrice() && StringUtils.isNotEmpty(cartModel.getTotalPrice().toString())
 					&& null != cartModel.getDeliveryCost() && StringUtils.isNotEmpty(cartModel.getDeliveryCost().toString()))
 			{
-				final Double totalPriceWithoutDeliveryCharge = new Double(cartModel.getTotalPrice().doubleValue()
-						- cartModel.getDeliveryCost().doubleValue());
+				final Double totalPriceWithoutDeliveryCharge = new Double(
+						cartModel.getTotalPrice().doubleValue() - cartModel.getDeliveryCost().doubleValue());
 
 				final PriceData totalPrice = discountUtility.createPrice(cartModel,
 						Double.valueOf(totalPriceWithoutDeliveryCharge.toString()));
@@ -2029,13 +2041,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			 * !cartModel.getEntries().isEmpty()) { for (final AbstractOrderEntryModel entry : cartModel.getEntries()) { if
 			 * (null != entry.getBasePrice() && null != entry.getQuantity()) { totalPrice = totalPrice +
 			 * (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue()); } }
-			 * 
+			 *
 			 * if (null != cartModel.getDeliveryCost() && null != cartModel.getConvenienceCharges() && null !=
 			 * cartModel.getTotalPriceWithConv()) { LOG.debug("*************  Discount **************** totalPrice" +
 			 * totalPrice + "Delivery cost" + cartModel.getDeliveryCost() + "Conv charges" +
 			 * cartModel.getConvenienceCharges().doubleValue() + "Total price with conv" +
 			 * cartModel.getTotalPriceWithConv().doubleValue() + "discount" + discount);
-			 * 
+			 *
 			 * discount = (totalPrice + cartModel.getDeliveryCost().doubleValue() +
 			 * cartModel.getConvenienceCharges().doubleValue()) - cartModel.getTotalPriceWithConv().doubleValue(); } } if
 			 * (discount >= 0) { final PriceData priceDiscount = discountUtility.createPrice(cartModel,
@@ -2134,8 +2146,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			if (null != cartModel.getTotalPrice() && StringUtils.isNotEmpty(cartModel.getTotalPrice().toString())
 					&& null != cartModel.getDeliveryCost() && StringUtils.isNotEmpty(cartModel.getDeliveryCost().toString()))
 			{
-				final Double totalPriceWithoutDeliveryCharge = new Double(cartModel.getTotalPrice().doubleValue()
-						- cartModel.getDeliveryCost().doubleValue());
+				final Double totalPriceWithoutDeliveryCharge = new Double(
+						cartModel.getTotalPrice().doubleValue() - cartModel.getDeliveryCost().doubleValue());
 
 				final PriceData totalPrice = discountUtility.createPrice(cartModel,
 						Double.valueOf(totalPriceWithoutDeliveryCharge.toString()));
@@ -2150,13 +2162,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			 * !cartModel.getEntries().isEmpty()) { for (final AbstractOrderEntryModel entry : cartModel.getEntries()) { if
 			 * (null != entry.getBasePrice() && null != entry.getQuantity()) { totalPrice = totalPrice +
 			 * (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue()); } }
-			 * 
+			 *
 			 * if (null != cartModel.getDeliveryCost() && null != cartModel.getConvenienceCharges() && null !=
 			 * cartModel.getTotalPriceWithConv()) { LOG.debug("*************  Discount **************** totalPrice" +
 			 * totalPrice + "Delivery cost" + cartModel.getDeliveryCost() + "Conv charges" +
 			 * cartModel.getConvenienceCharges().doubleValue() + "Total price with conv" +
 			 * cartModel.getTotalPriceWithConv().doubleValue() + "discount" + discount);
-			 * 
+			 *
 			 * discount = (totalPrice + cartModel.getDeliveryCost().doubleValue() +
 			 * cartModel.getConvenienceCharges().doubleValue()) - cartModel.getTotalPriceWithConv().doubleValue(); } } if
 			 * (discount >= 0) { final PriceData priceDiscount = discountUtility.createPrice(cartModel,
@@ -2337,7 +2349,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//		}
 	//		throw new CartEntryException("Entry not found", CartEntryException.NOT_FOUND, String.valueOf(number));
 	//	}
-	
+
 	/**
 	 * @return the mplDeliveryCostService
 	 */
