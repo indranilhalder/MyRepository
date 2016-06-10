@@ -317,9 +317,17 @@ public class ComparePageController extends AbstractPageController
 			}
 			model.addAttribute(ModelAttributetConstants.PRODUCT_DATAS, sessionCompareList);
 			final List<ClassificationData> uniqueClassficationClasses = new ArrayList<ClassificationData>();
-			if (getClassifyingCategories(sessionCompareList) != null)
+
+			//New Code Added for TISPT-306
+			final List<ClassificationData> classifyingCategories = getClassifyingCategories(sessionCompareList);
+
+			//Code Blocked for TISPT-306
+			//if (getClassifyingCategories(sessionCompareList) != null)
+			if (CollectionUtils.isNotEmpty(classifyingCategories))
 			{
-				for (final ClassificationData classification : getClassifyingCategories(sessionCompareList))
+				//Code Blocked for TISPT-306
+				//for (final ClassificationData classification : getClassifyingCategories(sessionCompareList))
+				for (final ClassificationData classification : classifyingCategories)
 				{
 					if (isUniqueClassification(classification.getName(), uniqueClassficationClasses))
 					{ //if unique then add
@@ -339,13 +347,16 @@ public class ComparePageController extends AbstractPageController
 						}
 						LOG.info("index::::" + classificationIndex);
 						// if it is not unique then get all features of this classification as well as the older one
-						List<FeatureData> appendedFeatureList = new ArrayList<FeatureData>();
+						final List<FeatureData> appendedFeatureList = new ArrayList<FeatureData>();
+						//New Code Added for TISPT-306
+						final List<FeatureData> featureList = getTotalFeatureList(uniqueClassficationClasses, classification);
 
-						if (!Collections.isEmpty(getTotalFeatureList(uniqueClassficationClasses, classification)))
+						if (!Collections.isEmpty(featureList))
 						{
-							appendedFeatureList = getTotalFeatureList(uniqueClassficationClasses, classification);
-
+							appendedFeatureList.addAll(featureList);
 						}
+
+
 						final ClassificationData classificationData = new ClassificationData();
 						if (!StringUtils.isEmpty(classification.getCode()))
 						{
@@ -410,15 +421,25 @@ public class ComparePageController extends AbstractPageController
 
 		final List<FeatureData> featureList = new ArrayList<FeatureData>();
 		//Add features from this new classification
-		featureList.addAll(newClassification.getFeatures());
-		//Also add features from existing classification
-		for (final ClassificationData classification : uniqueClassficationClasses)
+		//New Code added for TISPT-306
+		if (CollectionUtils.isNotEmpty(newClassification.getFeatures()))
 		{
-			if (classification.getName().equalsIgnoreCase(newClassification.getName()))
+			featureList.addAll(newClassification.getFeatures());
+		}
+
+		//New Code added for TISPT-306
+		if (CollectionUtils.isNotEmpty(uniqueClassficationClasses))
+		{
+			//Also add features from existing classification
+			for (final ClassificationData classification : uniqueClassficationClasses)
 			{
-				featureList.addAll(classification.getFeatures());
+				if (classification.getName().equalsIgnoreCase(newClassification.getName()))
+				{
+					featureList.addAll(classification.getFeatures());
+				}
 			}
 		}
+
 		LOG.debug("New feature list size :::" + featureList.size());
 		return featureList;
 
