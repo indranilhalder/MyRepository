@@ -31,7 +31,6 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.search.ProductSearchFacade;
 import de.hybris.platform.commercefacades.search.data.SearchQueryData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
-import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductDefinitionService;
 import de.hybris.platform.commerceservices.search.facetdata.BreadcrumbData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetRefinement;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
@@ -53,7 +52,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -94,8 +92,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
 
-	@Autowired
-	private HeroProductDefinitionService heroService;
+	//Below Lines Commented as Sonar Fix
+	//Start
+	//	@Autowired
+	//	private HeroProductDefinitionService heroService;
+	//End
 	//	@Resource(name = "accProductFacade")
 	//	private ProductFacade productFacade;
 	//	@Resource
@@ -275,7 +276,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				/*
 				 * final List<ProductData> commonNormalProducts = new ArrayList<ProductData>(); final List<ProductData>
 				 * normalProductDatas = searchPageData.getResults();
-				 *
+				 * 
 				 * if (null != normalProductDatas) { for (final ProductData normalProduct : normalProductDatas) { for (final
 				 * ProductModel heroProduct : heroProducts) { if
 				 * (normalProduct.getCode().equalsIgnoreCase(heroProduct.getCode())) {
@@ -291,8 +292,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			catch (final Exception exp)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(
-						new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
 				try
 				{
 					return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
@@ -312,8 +313,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 		 */
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(
-					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+					MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -410,8 +411,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @throws UnsupportedEncodingException
 	 */
 	@ResponseBody
-	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN
-			+ "/results", method = RequestMethod.GET)
+	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
 	public SearchResultsData<ProductData> getResults(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = PAGE, defaultValue = "0") final int page,
@@ -535,8 +535,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> updatePageData(
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData, final String whichSearch,
-			final String searchQuery)
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData,
+			final String whichSearch, final String searchQuery)
 	{
 		// YTODO Auto-generated method stub
 		if (null != whichSearch)
