@@ -427,11 +427,11 @@
 		}
 	 }); 
 	
-	$(function() {
+	/*$(function() {
 	    img = document.querySelectorAll('[data-searchimgsrc]');
 	    for (var i = 0; i < img.length; i++) {
 	        var self = img[i];
 	          self.src = self.getAttribute('data-searchimgsrc');
 	      }
 
-	});
+	});*/
