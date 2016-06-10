@@ -269,7 +269,7 @@
 				}		
 
 			}		
-			else {		s
+			else {		
 				 $("#on-sale_"+ product).show();//showing on_sale tag		
 				break;		
 		}		
@@ -427,11 +427,11 @@
 		}
 	 }); 
 	
-	$(function() {
+	/*$(function() {
 	    img = document.querySelectorAll('[data-searchimgsrc]');
 	    for (var i = 0; i < img.length; i++) {
 	        var self = img[i];
 	          self.src = self.getAttribute('data-searchimgsrc');
 	      }
 
-	});
+	});*/
