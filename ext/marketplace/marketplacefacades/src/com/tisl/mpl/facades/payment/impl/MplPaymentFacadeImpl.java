@@ -859,18 +859,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					}
 				}
 
+				//Codemerge issue --- Commented for Payment Fallback
 				//Logic when transaction is successful i.e. CHARGED
-				if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
-				{
-					//setting Payment Info
-					getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
-				}
-				getMplPaymentService().paymentModeApportion(cart);
-
-				if (updAuditErrStatus)
-				{
-					orderStatus = orderStatusResponse.getStatus();
-				}
+				//				if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
+				//				{
+				//					//setting Payment Info
+				//					getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
+				//				}
+				//				getMplPaymentService().paymentModeApportion(cart);
+				//
+				//				if (updAuditErrStatus)
+				//				{
+				//					orderStatus = orderStatusResponse.getStatus();
+				//				}
 
 			}
 
@@ -1847,8 +1848,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				if (mplZoneDeliveryModeValueModel.getDeliveryMode() != null
 						&& mplZoneDeliveryModeValueModel.getDeliveryMode().getCode() != null
 						&& (mplZoneDeliveryModeValueModel.getDeliveryMode().getCode()
-								.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) || mplZoneDeliveryModeValueModel
-								.getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)))
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+								|| mplZoneDeliveryModeValueModel.getDeliveryMode().getCode()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)))
 				{
 					isOnlyClickNCollect = false;
 				}
