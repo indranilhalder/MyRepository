@@ -155,7 +155,8 @@
 
 <!-- Added for Need help section -->
 
-	<div id="up" obclick="openNeedHelpSec()">
+
+	<div id="up" onclick="openNeedHelpSec()">
 		<spring:theme code="needhelp.needhelptext" />
 
 		<div id="h">
