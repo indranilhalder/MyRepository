@@ -417,7 +417,7 @@ public class SearchSuggestUtilityMethods
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
 						&& !facate.getCode().equalsIgnoreCase("allPromotions"))
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
@@ -878,8 +878,8 @@ public class SearchSuggestUtilityMethods
 										{
 											if (oldL3DepartFilter.getCategoryCode().equals(foundDeparts[3].split(":")[0]))
 											{
-												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(
-														foundDeparts[4].split(":"));
+												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(foundDeparts[4]
+														.split(":"));
 												if (oldL3DepartFilter.getChildFilters() != null
 														&& !oldL3DepartFilter.getChildFilters().isEmpty())
 												{
@@ -1220,7 +1220,7 @@ public class SearchSuggestUtilityMethods
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
+						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
