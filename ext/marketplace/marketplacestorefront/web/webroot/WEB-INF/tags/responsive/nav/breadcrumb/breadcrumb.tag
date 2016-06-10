@@ -12,8 +12,27 @@
 	</li>
 	
 	<c:forEach items="${breadcrumbs}" var="breadcrumb" varStatus="status">
-		<c:url value="${breadcrumb.url}" var="breadcrumbUrl" />		
+		<c:url value="${breadcrumb.url}" var="breadcrumbUrl" />	
 		<c:choose>
+		<c:when test="${fn:containsIgnoreCase(breadcrumbUrl, 'mbh')}">
+		 <c:choose>
+		<c:when test="${status.last}">
+			<c:if test="${breadcrumb.linkClass eq '#'}">
+				<li class="active"><spring:theme code="text.no.results"/> '${breadcrumb.name}'</li>
+			</c:if>
+			<c:if test="${breadcrumb.linkClass ne '#'}">
+				<li class="active">${breadcrumb.name}</li>
+			</c:if>
+			</c:when>
+			<c:when test="${breadcrumb.url eq '#'}">
+				<li>
+					<a href="#">${breadcrumb.name}</a>
+				</li>
+			</c:when>
+			</c:choose>
+    </c:when>
+    <c:otherwise>
+    <c:choose>
 			<c:when test="${status.last}">
 			<c:if test="${breadcrumb.linkClass eq '#'}">
 				<li class="active"><spring:theme code="text.no.results"/> '${breadcrumb.name}'</li>
@@ -33,4 +52,7 @@
 				</li>
 			</c:otherwise>
 		</c:choose>
+    </c:otherwise>
+    </c:choose>
+    
 	</c:forEach>

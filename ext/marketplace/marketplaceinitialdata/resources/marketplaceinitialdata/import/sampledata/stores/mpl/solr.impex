@@ -19,14 +19,12 @@ $priceRangeINR=$prefixPriceRangeINR
 $classAttributeAssignment=classAttributeAssignment(classificationAttribute(code),classificationClass(code))
 $classificationAttributeAssignments=classificationAttributeAssignments(classificationAttribute(code),classificationClass(code))
 
-
 #
 # Setup the Solr server, indexer, and search configs
 #
-
 # Create the solr server configuration
-INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false]
-;$serverConfigName;standalone;true;true
+INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false];maxTotalConnections;maxTotalConnectionsPerHostConfig
+;$serverConfigName;standalone;true;true;300;100
 
 # Create the solr indexer configuration
 INSERT_UPDATE SolrIndexConfig;name[unique=true];batchSize;numberOfThreads;indexMode(code);optimizeMode(code);ignoreErrors[default=false]
@@ -400,6 +398,9 @@ INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isoco
  INSERT_UPDATE CompositeEntry;code[unique=true];executablecronjob(code);compositecronjob(code);compositecronjobpos
  ;delete-mplIndex-cronJob;delete-mplIndex-cronJob;mplIndexingCompositeCronjob;1
  ;update-mplIndex-cronJob;update-mplIndex-cronJob;mplIndexingCompositeCronjob;2
+
+INSERT_UPDATE Job;code[unique=true];nodeId
+;solrIndexerJob;1
 
 INSERT_UPDATE CronJob;code[unique=true];runningOnClusterNode
 # Run the update-mplIndex-cronJob every 15 minutes

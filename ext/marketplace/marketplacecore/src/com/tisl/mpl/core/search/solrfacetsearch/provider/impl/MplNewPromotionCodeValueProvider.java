@@ -1,6 +1,4 @@
-/**
- *
- */
+/*** Eclipse Class Decompiler plugin, copyright (c) 2012 Chao Chen (cnfree2000@hotmail.com) ***/
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
@@ -14,6 +12,7 @@ import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.servicelayer.time.TimeService;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
+import de.hybris.platform.solrfacetsearch.config.IndexedType;
 import de.hybris.platform.solrfacetsearch.config.exceptions.FieldValueProviderException;
 import de.hybris.platform.solrfacetsearch.provider.FieldNameProvider;
 import de.hybris.platform.solrfacetsearch.provider.FieldValue;
@@ -25,30 +24,57 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
 import com.tisl.mpl.model.ManufacturersRestrictionModel;
+import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.model.SellerMasterModel;
 
 
-/**
- * @author 361234
- *
- */
-public class MplOffersExistingValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
+public class MplNewPromotionCodeValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 	private PromotionsService promotionService;
 	private TimeService timeService;
+	private IndexedProperty mobilePromotionIndexedProperty = null;
+
+
+	private BuyBoxService buyBoxService;
+
+	/**
+	 * @return the buyBoxService
+	 */
+	public BuyBoxService getBuyBoxService()
+	{
+		return buyBoxService;
+	}
+
+	/**
+	 * @param buyBoxService
+	 *           the buyBoxService to set
+	 */
+	@Resource
+	public void setBuyBoxService(final BuyBoxService buyBoxService)
+	{
+		this.buyBoxService = buyBoxService;
+	}
 
 	protected FieldNameProvider getFieldNameProvider()
 	{
@@ -75,6 +101,17 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
+		final Collection<IndexedType> indexedTypes = indexConfig.getIndexedTypes().values();
+		final IndexedType indexedType = indexedTypes.iterator().next();
+
+		final Collection<IndexedProperty> indexedProperties = indexedType.getIndexedProperties().values();
+		for (final IndexedProperty indexedProperty1 : indexedProperties)
+		{
+			if (indexedProperty1.getName().equalsIgnoreCase("allMobilePromotions"))
+			{
+				mobilePromotionIndexedProperty = indexedProperty1;
+			}
+		}
 
 		if (model instanceof PcmProductVariantModel)
 		{
@@ -82,89 +119,255 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 
 			final Collection fieldValues = new ArrayList();
 
-			fieldValues.addAll(createFieldValue(product, indexConfig, indexedProperty));
-
+			if (indexedProperty.isMultiValue())
+			{
+				fieldValues.addAll(createFieldValues(product, indexConfig, indexedProperty));
+			}
+			else
+			{
+				fieldValues.addAll(createFieldValue(product, indexConfig, indexedProperty));
+			}
 			return fieldValues;
 		}
-		else
+		else if (model instanceof ProductModel)
 		{
-			return Collections.emptyList();
+			final ProductModel product = (ProductModel) model;
 
+			final Collection fieldValues = new ArrayList();
+
+			if (indexedProperty.isMultiValue())
+			{
+				fieldValues.addAll(createFieldValues(product, indexConfig, indexedProperty));
+			}
+			else
+			{
+				fieldValues.addAll(createFieldValue(product, indexConfig, indexedProperty));
+			}
+			return fieldValues;
 		}
-
+		throw new FieldValueProviderException("Cannot get promotion codes of non-product item");
 	}
 
 	protected List<FieldValue> createFieldValue(final ProductModel product, final IndexConfig indexConfig,
 			final IndexedProperty indexedProperty)
 	{
-
 		final List fieldValues = new ArrayList();
-
-		addFieldValues(fieldValues, indexedProperty, null, checkIfOfferExist(indexConfig, product));
-
-		return fieldValues;
-	}
-
-
-	/**
-	 * @param indexConfig
-	 * @param product
-	 */
-	private boolean checkIfOfferExist(final IndexConfig indexConfig, final ProductModel product)
-	{
-
-		final boolean offerExists = false;
 		final BaseSiteModel baseSiteModel = indexConfig.getBaseSite();
 		if ((baseSiteModel != null) && (baseSiteModel.getDefaultPromotionGroup() != null))
 		{
 			final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+
 			final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
 					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
 
 			final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
 
+			final Iterator localIterator = restrictedPromotions.iterator();
+
+
+			if (localIterator.hasNext())
+			{
+				final ProductPromotionModel promotion = (ProductPromotionModel) localIterator.next();
+
+				addFieldValues(fieldValues, indexedProperty, null, promotion.getCode());
+			}
+		}
+
+		return fieldValues;
+	}
+
+
+	protected List<FieldValue> createFieldValue(final PcmProductVariantModel product, final IndexConfig indexConfig,
+			final IndexedProperty indexedProperty)
+	{
+		final List fieldValues = new ArrayList();
+		final BaseSiteModel baseSiteModel = indexConfig.getBaseSite();
+		if ((baseSiteModel != null) && (baseSiteModel.getDefaultPromotionGroup() != null))
+		{
+			final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+
+			final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
+					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
+
+			final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
+
+			final Iterator localIterator = restrictedPromotions.iterator();
+
+			if (localIterator.hasNext())
+			{
+				final ProductPromotionModel promotion = (ProductPromotionModel) localIterator.next();
+
+				addFieldValues(fieldValues, indexedProperty, null, promotion.getCode());
+			}
+		}
+
+		return fieldValues;
+	}
+
+	protected List<FieldValue> createFieldValues(final PcmProductVariantModel product, final IndexConfig indexConfig,
+			final IndexedProperty indexedProperty)
+	{
+		final List fieldValues = new ArrayList();
+		final BaseSiteModel baseSiteModel = indexConfig.getBaseSite();
+		if ((baseSiteModel != null) && (baseSiteModel.getDefaultPromotionGroup() != null))
+		{
+			final List<ProductPromotionModel> promotions = new ArrayList<ProductPromotionModel>();
+			final List<ProductPromotionModel> mobilePromotions = new ArrayList<ProductPromotionModel>();
+
+			final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+
+			final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
+					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
+			final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
 
 			for (final ProductPromotionModel promotion : restrictedPromotions)
 			{
 				if (promotion.getChannel().contains(SalesApplication.WEB) || promotion.getChannel().isEmpty())
 				{
-					return true;
+					promotions.add(promotion);
+				}
+				if (promotion.getChannel().contains(SalesApplication.MOBILE) || promotion.getChannel().isEmpty())
+				{
+					mobilePromotions.add(promotion);
 				}
 			}
 
+			if (!promotions.isEmpty())
+			{
+				Collections.sort(promotions, new Comparator<ProductPromotionModel>()
+				{
+
+					@Override
+					public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
+					{
+
+
+						if (o1.getPriority() == o2.getPriority())
+
+						{
+							return 0;
+						}
+						else if (o1.getPriority().intValue() < o2.getPriority().intValue())
+
+						{
+							return 1;
+						}
+						else
+						{
+							return -1;
+						}
+					}
+
+				});
+
+				addFieldValues(fieldValues, indexedProperty, null, promotions.get(0).getCode());
+			}
+
+			if (!mobilePromotions.isEmpty() && mobilePromotionIndexedProperty != null)
+			{
+				Collections.sort(mobilePromotions, new Comparator<ProductPromotionModel>()
+				{
+
+					@Override
+					public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
+					{
+
+
+						if (o1.getPriority() == o2.getPriority())
+
+						{
+							return 0;
+						}
+						else if (o1.getPriority().intValue() < o2.getPriority().intValue())
+
+						{
+							return 1;
+						}
+						else
+						{
+							return -1;
+						}
+					}
+
+				});
+
+				addFieldValues(fieldValues, mobilePromotionIndexedProperty, null, mobilePromotions.get(0).getCode());
+			}
 		}
-
-		return offerExists;
-
+		return fieldValues;
 	}
 
-	/*
-	 * @Deprecated protected List<FieldValue> createFieldValue(final PcmProductVariantModel product, final IndexConfig
-	 * indexConfig, final IndexedProperty indexedProperty) { boolean offerExists = false; final List fieldValues = new
-	 * ArrayList(); final BaseSiteModel baseSiteModel = indexConfig.getBaseSite(); if ((baseSiteModel != null) &&
-	 * (baseSiteModel.getDefaultPromotionGroup() != null)) { final Date currentTimeRoundedToMinute =
-	 * DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
-	 *
-	 * final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
-	 * Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
-	 *
-	 * final List<ProductPromotionModel> promotions = new ArrayList<ProductPromotionModel>(); final
-	 * List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
-	 *
-	 * for (final ProductPromotionModel promotion : restrictedPromotions) { if
-	 * (promotion.getChannel().contains(SalesApplication.WEB) || promotion.getChannel().isEmpty()) {
-	 * promotions.add(promotion); } }
-	 *
-	 *
-	 * if (promotions.size() > 0 && !promotions.isEmpty())
-	 *
-	 * { offerExists = true; System.out.println("Promotion exists for product ::::" + product.getCode() + "::::");
-	 * addFieldValues(fieldValues, indexedProperty, null, offerExists); }
-	 *
-	 * }
-	 *
-	 * return fieldValues; }
-	 */
+	protected List<FieldValue> createFieldValues(final ProductModel product, final IndexConfig indexConfig,
+			final IndexedProperty indexedProperty)
+	{
+		final List fieldValues = new ArrayList();
+		final BaseSiteModel baseSiteModel = indexConfig.getBaseSite();
+		if ((baseSiteModel != null) && (baseSiteModel.getDefaultPromotionGroup() != null))
+		{
+			final List<ProductPromotionModel> promotions = new ArrayList<ProductPromotionModel>();
+
+			final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+
+			final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
+					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
+
+			final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
+
+			for (final ProductPromotionModel promotion : restrictedPromotions)
+			{
+
+				promotions.add(promotion);
+			}
+
+			if (!promotions.isEmpty())
+			{
+
+				if (CollectionUtils.isNotEmpty(buyBoxService.getBuyboxPricesForSearch(product.getCode()))
+						&& buyBoxService.getBuyboxPricesForSearch(product.getCode()).get(0).getAvailable().intValue() > 0)
+				{
+
+
+					Collections.sort(promotions, new Comparator<ProductPromotionModel>()
+					{
+
+						@Override
+						public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
+						{
+
+							if (o1.getPriority() == o2.getPriority())
+
+							{
+								return 0;
+							}
+							else if (o1.getPriority().intValue() < o2.getPriority().intValue())
+
+							{
+								return 1;
+							}
+							else
+							{
+								return -1;
+							}
+						}
+
+					});
+				}
+			}
+			else
+			{
+				promotions.clear();
+			}
+
+			if (promotions.size() > 0 && !promotions.isEmpty())
+
+			{
+				addFieldValues(fieldValues, indexedProperty, null, promotions.get(0).getCode());
+
+			}
+
+		}
+		return fieldValues;
+	}
 
 	protected void addFieldValues(final List<FieldValue> fieldValues, final IndexedProperty indexedProperty,
 			final LanguageModel language, final Object value)
@@ -237,8 +440,6 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 					}
 
 					///brand restriction check
-
-
 					for (final AbstractPromotionRestrictionModel restriction : productPromotion.getRestrictions())
 					{
 
@@ -246,6 +447,15 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 
 						//checking if BOGO promotion present or not and removing the promotion if seller restriction not present
 						if (!(restriction instanceof EtailSellerSpecificRestrictionModel) && isFreeBee)
+						{
+							toRemovePromotionList.add(productPromotion);
+							excludePromotion = true;
+							break;
+						}
+
+						//Seller restriction check for non free bee promotion
+						if (restriction instanceof EtailSellerSpecificRestrictionModel
+								&& !isPromoEligibleForproduct(restriction, productModel))
 						{
 							toRemovePromotionList.add(productPromotion);
 							excludePromotion = true;
@@ -318,6 +528,49 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 
 	}
 
+	//Seller restriction check for non free bee promotion
+	private boolean isPromoEligibleForproduct(final AbstractPromotionRestrictionModel restriction, final ProductModel product)
+	{
+		List<String> allowedSellerList = null;
+		boolean eligibleForPromo = false;
+		if (restriction instanceof EtailSellerSpecificRestrictionModel)
+		{
+			allowedSellerList = new ArrayList<String>();
+			final EtailSellerSpecificRestrictionModel sellerRestriction = (EtailSellerSpecificRestrictionModel) restriction;
+			if (null != sellerRestriction.getSellerMasterList() && !sellerRestriction.getSellerMasterList().isEmpty())
+			{
+				final List<SellerMasterModel> sellerList = sellerRestriction.getSellerMasterList();
+				for (final SellerMasterModel seller : sellerList)
+				{
+					allowedSellerList.add(seller.getId());
+				}
+
+			}
+
+		}
+
+
+
+		if (null != allowedSellerList && !allowedSellerList.isEmpty())
+		{
+			for (final SellerInformationModel seller : product.getSellerInformationRelator())
+			{
+				if (allowedSellerList.contains(seller.getSellerID()))
+				{
+					eligibleForPromo = true;
+					break;
+				}
+			}
+		}
+
+		LOG.debug("!!!!!!!!!@@@@@@@@@@@@@@@@@@Product :" + product.getCode() + " allowed seller list:" + allowedSellerList
+				+ " eligibleForPromo:" + eligibleForPromo);
+
+
+		return eligibleForPromo;
+
+	}
+
 	private boolean isFreeBeePromotionExists(final ProductPromotionModel productPromotion)
 	{
 		boolean isFreeBree = false;
@@ -377,6 +630,7 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 
 
 	}
+
 
 
 

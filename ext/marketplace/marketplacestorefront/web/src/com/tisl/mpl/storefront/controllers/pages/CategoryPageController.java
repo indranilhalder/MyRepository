@@ -14,25 +14,28 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 
+import de.hybris.platform.acceleratorservices.controllers.page.PageType;
+import de.hybris.platform.acceleratorservices.data.RequestContextData;
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
+import de.hybris.platform.acceleratorstorefrontcommons.util.MetaSanitizerUtil;
+import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.pages.CategoryPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.search.ProductSearchFacade;
 import de.hybris.platform.commercefacades.search.data.SearchQueryData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
-import de.hybris.platform.commercesearch.model.SolrHeroProductDefinitionModel;
-import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductDefinitionService;
 import de.hybris.platform.commerceservices.search.facetdata.BreadcrumbData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetRefinement;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.session.Session;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -49,7 +52,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -90,8 +92,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
 
-	@Autowired
-	private HeroProductDefinitionService heroService;
+	//Below Lines Commented as Sonar Fix
+	//Start
+	//	@Autowired
+	//	private HeroProductDefinitionService heroService;
+	//End
 	//	@Resource(name = "accProductFacade")
 	//	private ProductFacade productFacade;
 	//	@Resource
@@ -154,7 +159,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		//Storing the user preferred search results count
 		updateUserPreferences(pageSize);
 
-		List<ProductModel> heroProducts = new ArrayList<ProductModel>();
+		//final List<ProductModel> heroProducts = new ArrayList<ProductModel>();
 		if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
 				&& categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 		{
@@ -191,11 +196,13 @@ public class CategoryPageController extends AbstractCategoryPageController
 			/*
 			 * Getting all Hero products as configured in back office
 			 */
-			final SolrHeroProductDefinitionModel solrModel = heroService.getSolrHeroProductDefinitionForCategory(category);
-			if (null != solrModel)
-			{
-				heroProducts = solrModel.getProducts();
-			}
+
+			//Commented out for TISPT-225
+			/*
+			 * final SolrHeroProductDefinitionModel solrModel =
+			 * heroService.getSolrHeroProductDefinitionForCategory(category); if (null != solrModel) { heroProducts =
+			 * solrModel.getProducts(); }
+			 */
 			final String categoryName = (category == null) ? "" : category.getName();
 			model.addAttribute("dropDownText", categoryName);
 		}
@@ -258,44 +265,35 @@ public class CategoryPageController extends AbstractCategoryPageController
 					count = preferencesData.getPageSize().intValue();
 				}
 
-				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-						categoryCode, searchQuery, page, showMode, sortCode, count, resetAll);
+				/*
+				 * final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData =
+				 * (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch( categoryCode,
+				 * searchQuery, page, showMode, sortCode, count, resetAll);
+				 */
 				final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, page, showMode, sortCode,
 						model, request, response);
-
-				final List<ProductData> commonNormalProducts = new ArrayList<ProductData>();
-				final List<ProductData> normalProductDatas = searchPageData.getResults();
-
-				if (null != normalProductDatas)
-				{
-					for (final ProductData normalProduct : normalProductDatas)
-					{
-						for (final ProductModel heroProduct : heroProducts)
-						{
-							if (normalProduct.getCode().equalsIgnoreCase(heroProduct.getCode()))
-							{
-								commonNormalProducts.add(normalProduct);
-							}
-						}
-					}
-				}
-				if (!commonNormalProducts.isEmpty())
-				{
-					normalProductDatas.removeAll(commonNormalProducts);
-					model.addAttribute("normalProducts", normalProductDatas);
-				}
-				else
-				{
-					model.addAttribute("normalProducts", normalProductDatas);
-				}
-				model.addAttribute("heroProducts", commonNormalProducts);
-				populateModel(model, searchPageData, ShowMode.Page);
+				//Commented out for TISPT-225
+				/*
+				 * final List<ProductData> commonNormalProducts = new ArrayList<ProductData>(); final List<ProductData>
+				 * normalProductDatas = searchPageData.getResults();
+				 * 
+				 * if (null != normalProductDatas) { for (final ProductData normalProduct : normalProductDatas) { for (final
+				 * ProductModel heroProduct : heroProducts) { if
+				 * (normalProduct.getCode().equalsIgnoreCase(heroProduct.getCode())) {
+				 * commonNormalProducts.add(normalProduct); } } } } if (!commonNormalProducts.isEmpty()) {
+				 * normalProductDatas.removeAll(commonNormalProducts); model.addAttribute("normalProducts",
+				 * normalProductDatas); } else { model.addAttribute("normalProducts", normalProductDatas); }
+				 * model.addAttribute("heroProducts", commonNormalProducts); populateModel(model, searchPageData,
+				 * ShowMode.Page); final List<Breadcrumb> breadcrumbs =
+				 * getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, searchPageData);
+				 * populateTealiumData(breadcrumbs, model);
+				 */
 				return performSearch;
 			}
 			catch (final Exception exp)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(
-						new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
 				try
 				{
 					return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
@@ -315,8 +313,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 		 */
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(
-					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+					MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -327,6 +325,36 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 		}
 		return getViewForPage(model);
+	}
+
+	/**
+	 * @param breadcrumbs
+	 * @param model
+	 */
+	private void populateTealiumData(final List<Breadcrumb> breadcrumbs, final Model model)
+	{
+		String breadcrumbName = "";
+		int count = 1;
+		if (CollectionUtils.isNotEmpty(breadcrumbs))
+		{
+			for (final Breadcrumb breadcrumb : breadcrumbs)
+			{
+				breadcrumbName += breadcrumb.getName();
+				if (count < breadcrumbs.size())
+				{
+					breadcrumbName += ":";
+
+				}
+				count++;
+			}
+
+			model.addAttribute("site_section", breadcrumbs.get(0).getName() != null ? breadcrumbs.get(0).getName() : "");
+
+		}
+
+		model.addAttribute("page_name", "Product Grid:" + breadcrumbName);
+
+
 	}
 
 	/**
@@ -383,8 +411,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @throws UnsupportedEncodingException
 	 */
 	@ResponseBody
-	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN
-			+ "/results", method = RequestMethod.GET)
+	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
 	public SearchResultsData<ProductData> getResults(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = PAGE, defaultValue = "0") final int page,
@@ -508,8 +535,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> updatePageData(
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData, final String whichSearch,
-			final String searchQuery)
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData,
+			final String whichSearch, final String searchQuery)
 	{
 		// YTODO Auto-generated method stub
 		if (null != whichSearch)
@@ -557,5 +584,62 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 		}
 		return page;
+	}
+
+
+
+
+	@Override
+	protected String performSearchAndGetResultsPage(final String categoryCode, final String searchQuery, final int page,
+			final ShowMode showMode, final String sortCode, final Model model, final HttpServletRequest request,
+			final HttpServletResponse response) throws UnsupportedEncodingException
+	{
+		final CategoryModel category = getCommerceCategoryService().getCategoryForCode(categoryCode);
+
+		final String redirection = checkRequestUrl(request, response, getCategoryModelUrlResolver().resolve(category));
+		if (StringUtils.isNotEmpty(redirection))
+		{
+			return redirection;
+		}
+
+		final CategoryPageModel categoryPage = getCategoryPage(category);
+
+		final CategorySearchEvaluator categorySearch = new CategorySearchEvaluator(categoryCode, XSSFilterUtil.filter(searchQuery),
+				page, showMode, sortCode, categoryPage);
+		categorySearch.doSearch();
+
+		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = categorySearch
+				.getSearchPageData();
+		final boolean showCategoriesOnly = categorySearch.isShowCategoriesOnly();
+
+		storeCmsPageInModel(model, categorySearch.getCategoryPage());
+		storeContinueUrl(request);
+
+		populateModel(model, searchPageData, ShowMode.Page);
+		model.addAttribute(WebConstants.BREADCRUMBS_KEY, getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, searchPageData));
+		model.addAttribute("showCategoriesOnly", Boolean.valueOf(showCategoriesOnly));
+		model.addAttribute("categoryName", category.getName());
+		//model.addAttribute("pageType", PageType.Category);
+		model.addAttribute("pageType", PageType.CATEGORY.name());
+		model.addAttribute("userLocation", getCustomerLocationService().getUserLocation());
+		model.addAttribute("otherProducts", true);
+		updatePageTitle(category, searchPageData.getBreadcrumbs(), model);
+
+		final RequestContextData requestContextData = getRequestContextData(request);
+		requestContextData.setCategory(category);
+		requestContextData.setSearch(searchPageData);
+
+		if (searchQuery != null)
+		{
+			model.addAttribute("metaRobots", "noindex,follow");
+		}
+
+		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(category.getKeywords());
+		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(category.getDescription());
+		setUpMetaData(model, metaKeywords, metaDescription);
+		final List<Breadcrumb> breadcrumbs = getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, searchPageData);
+		populateTealiumData(breadcrumbs, model);
+		return getViewPage(categorySearch.getCategoryPage());
+
 	}
 }

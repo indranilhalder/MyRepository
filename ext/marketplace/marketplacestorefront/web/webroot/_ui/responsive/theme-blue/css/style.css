@@ -3,7 +3,7 @@
    License: none (public domain)
 */
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
-
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, img, ins, kbd, q, s, samp, small, strike, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
   padding: 0;
@@ -116,7 +116,7 @@ td, th {
 		url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular')
 		format('svg');
 }
-@font-face {
+/* @font-face {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
@@ -126,7 +126,7 @@ local('MaterialIcons-Regular'),
 url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2'),
 url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff) format('woff'),
 url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.ttf) format('truetype');
-}
+} */
 
 .glyphicon {
 	position: relative;
@@ -17836,7 +17836,7 @@ header .content .bottom .search .select-list select
 	color:#fff;
 }
 
-#addToCartButton {
+#addToCartButton,#addToCartButtonQuick {
   font-size: 12px;
   letter-spacing: 1px;
   height: 55px;
@@ -18703,7 +18703,7 @@ display: block !important;
   float: left;
 }
 
-.quick-view-popup .qty, #addToCartButton {
+.quick-view-popup .qty, #addToCartButton, #addToCartButtonQuick {
   margin-top: 15px;
 }
 .quick-view-popup .select-size {
@@ -24461,10 +24461,10 @@ div#cartItems.products p{
     margin-left: 20px;
     margin-top: 20px;
 }
-#outOfStockId #addToCartButton{
+#outOfStockId #addToCartButton,#outOfStockId #addToCartButtonQuick{
 	opacity:0.4;
 }
-#outOfStockId #addToCartButton:hover{
+#outOfStockId #addToCartButton:hover,#outOfStockId #addToCartButtonQuick:hover{
 	opacity:0.4;
 	background: #A9143C !important
 }
@@ -24989,7 +24989,7 @@ input.brandSearchTxt {
 	border: 1px solid #DFD1D5;
     height: 30px;
 }
-#addToCartButton-wrong{
+#addToCartButton-wrong,#addToCartButtonQuick-wrong{
     background-color: #ccc;
     border: 1px solid #a9143c;
     cursor: default;
@@ -25004,6 +25004,9 @@ input.brandSearchTxt {
     clear: both;
     color: #a9143c;
     opacity: 0.5;
+}
+#addToCartButtonQuick-wrong{
+	margin-top: 15px;
 }
 button#buyNowButton[disabled="disabled"] {
     opacity: 0.5;
@@ -25257,7 +25260,7 @@ padding:0;
     display:block;
 }
 
-#addToCartButton {
+#addToCartButton,#addToCartButtonQuick {
     font-size: 12px;
     letter-spacing: 1px;
     height: 42px;
@@ -25280,7 +25283,7 @@ padding:0;
     -ms-appearance: none;
     -o-appearance: none;
 }
-#addToCartFormQuick #addToCartButton,#addToCartSizeGuide #addToCartButton{
+#addToCartFormQuick #addToCartButton,#addToCartSizeGuide #addToCartButton,#addToCartFormQuick #addToCartButtonQuick,#addToCartSizeGuide #addToCartButtonQuick{
 	color: #fff;
      background-color: #A9143C;
 }
@@ -26020,7 +26023,7 @@ line-height:19px;
 	.cod-container #enterOTP label input {
     width: 75%;
 	}
-	#addToCartButton {
+	#addToCartButton,#addToCartButtonQuick {
 	height:42px;
 	}
 	.cart.wrapper .left-block .payments.tab-view .nav li.active span,.cart.wrapper .left-block .payments.tab-view .nav > li{
@@ -28827,7 +28830,7 @@ header .content .bottom.active nav > ul > li:first-child + li > ul {
     width: 22%;
     position:relative;
 }
-.modal.size-guide .sizes .details .attributes #addToCartButton,#add_to_wishlist-sizeguide{
+.modal.size-guide .sizes .details .attributes #addToCartButton,#add_to_wishlist-sizeguide,.modal.size-guide .sizes .details .attributes #addToCartButtonQuick{
 height:30px;
 min-width: 150px;
 }
@@ -30006,7 +30009,7 @@ li.store-locator-header a:before{
 	color:#a9143c !important;
 }
 
-.material-icons {
+/* .material-icons {
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
@@ -30022,7 +30025,7 @@ li.store-locator-header a:before{
     -webkit-font-smoothing: antialiased;
     font-feature-settings: 'liga';
     font-smoothing: antialiased;
-}
+} */
 span.material-icons {
     font-style: normal;
     display: inline-block;
@@ -30211,6 +30214,7 @@ header:not(.compact) .content .marketplace.compact{
 		padding-top: 20px;
 	}
 	.modal.size-guide .sizes .details .attributes #addToCartButton,
+	.modal.size-guide .sizes .details .attributes #addToCartButtonQuick,
 		#add_to_wishlist-sizeguide {
 		max-width: 250px;
 		margin: 20px auto 0px;
@@ -37358,7 +37362,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
 	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
 	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError,
-	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError {
+	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, .nbAjaxError {
 	display: none;
 }
 

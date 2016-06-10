@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorcms.model.components.FooterComponentModel;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
@@ -76,6 +77,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
+import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -1077,5 +1079,63 @@ public class HomePageController extends AbstractPageController
 		//return getBestPicksJson;
 
 		return ControllerConstants.Views.Fragments.Home.LatestOffers;
+	}
+
+	//Fix for defect TISPT-202
+	@RequestMapping(value = "/getFooterContent", method = RequestMethod.GET)
+	public String getFooterContent(@RequestParam(value = "id") final String slotId, final Model model)
+	{
+		try
+		{
+
+			FooterComponentModel footer = null;
+			NeedHelpComponentModel needHelpFooter = null;
+			final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
+
+			if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
+			{
+				for (final AbstractCMSComponentModel cmsComponentModel : footerSlot.getCmsComponents())
+				{
+					if (cmsComponentModel instanceof FooterComponentModel)
+					{
+						footer = (FooterComponentModel) cmsComponentModel;
+					}
+					if (cmsComponentModel instanceof NeedHelpComponentModel)
+					{
+						needHelpFooter = (NeedHelpComponentModel) cmsComponentModel;
+					}
+				}
+			}
+
+
+			//final FooterComponentModel footer = cmsComponentService.getSimpleCMSComponent(componentId);
+			model.addAttribute("footerSocialIconList", footer.getFooterImageList());
+			model.addAttribute("footerText", footer.getFooterText());
+			model.addAttribute("notice", footer.getNotice());
+			model.addAttribute("footerAppImageList", footer.getFooterAppImageList());
+			model.addAttribute("navigationNodes", footer.getNavigationNodes());
+			model.addAttribute("wrapAfter", footer.getWrapAfter());
+
+			//Need help section
+			model.addAttribute("contactNumber", (needHelpFooter == null) ? "" : needHelpFooter.getContactNumber());
+
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		return ControllerConstants.Views.Fragments.Home.FooterPanel;
 	}
 }

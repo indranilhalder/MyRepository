@@ -107,14 +107,21 @@
 }		
 	
 /*--- END of A-Z column function---*/
-	
 
+//TISPRO-508	
+	
 	function closing() {
-		$("#zoomModal, #videoModal").modal('hide');
-		$("#zoomModal, #videoModal").removeClass("active");
+		$("#zoomModal").modal('hide');
+		$("#zoomModal").removeClass("active");
+	}
+	function closingVideo(){
+		$("#videoModal").modal('hide');
+		$("#videoModal").removeClass("active");
 		var x = $("#player").attr('src');
 		var z = $("#player").attr('src', x+"&autoplay=0");
-	}
+	}	
+	
+	
 $(document).ready(function(){
 
 
@@ -185,7 +192,7 @@ $(document).ready(function(){
 	/* -----------------END  of SNS auto complete---------*/
 		
 	/* -----------------Start of Out of stock styling---------*/
-		 $('a.stockLevelStatus').parents('div.image').find('a.thumb img').addClass('out-of-stock-product');
+		 $('a.stockLevelStatus').parents('div.image').find('a img').addClass('out-of-stock-product');
 		 
 	/* -----------------END  of Out of stock styling---------*/
 		 
@@ -316,7 +323,7 @@ $(document).ready(function(){
 				}
 			});
 			
-			$(".toggle").on("click",function(e){
+			$(document).on("click",".toggle",function(e){
 				var p = $(e.currentTarget).parent();
 			    if(p.hasClass('active')) {
 			      p.removeClass('active');
@@ -357,7 +364,7 @@ $(document).ready(function(){
 					$("li.short.words,li.long.words").next().attr("style",style); 
 				} 
 			});
-			$("footer h3.toggle").click(function(e){
+			$(document).on("click","footer h3.toggle",function(e){
 				
 					if ($(window).width() > 790) {
 						$(e.currentTarget).parent().removeClass("active");
@@ -793,7 +800,7 @@ $(document).ready(function(){
 /* ---Start of Mobile view left nav --*/
 		
 		if($(window).width() < 790) {
-			$("header .content .top .toggle").click(function(){
+			$(document).on("click","header .content .top .toggle",function(){
 				if($(this).parent().hasClass("active")){
 					$(this).parent().siblings(".overlay").addClass("overlay-sideNav");
 					$("body").css("overflow","hidden");
@@ -1331,9 +1338,7 @@ $(document).ready(function(){
 		
 		if ('ontouchstart' in window) {
 			$('body').addClass("touchDevice");
-	 		$("header .content nav > ul > li > ul > li > .toggle a").click(function(){
-	 			$(this).attr("href","#");
-	 		});
+	 		$("header .content nav > ul > li > ul > li > .toggle a").attr("href","#nogo");
 			}
 		
 		if($('.lookbook_wrapper .bottom-pagination').children().length==0){
@@ -1485,5 +1490,81 @@ $(document).ready(function(){
 		
 		$(document).on('touchend','.select-view .select-list ul li',function(e){
 			$(this).click();
-		});		
+		});
+		
+		loadGigya();
 });
+
+/*start gigya social login*/
+
+function registerUserGigya(eventObject)
+{
+	var encodedUID = encodeURIComponent(eventObject.UID);
+	var encodedTimestamp=encodeURIComponent(eventObject.timestamp);
+	var  encodedSignature=encodeURIComponent(eventObject.signature);
+//	console.log("SOCIAL LOGIN REFERER:-"+ window.location.href)
+		 $.ajax({
+				url : ACC.config.encodedContextPath + "/oauth2callback/socialLogin/",
+				data : {
+					'referer' : window.location.href,
+					'emailId' : eventObject.user.email,
+					'fName':  eventObject.user.firstName,
+					'lName' : 	eventObject.user.lastName,
+					'uid'		: encodedUID,
+					'timestamp'	 :encodedTimestamp,
+					'signature' :encodedSignature,
+					'provider' :eventObject.user.loginProvider
+					},
+				type : "GET",
+				cache : false,
+				success : function(data) {
+					//alert("success login page :- "+data);
+					if(!data)							
+						{
+						
+						}
+						else
+						{
+							if(data.indexOf(ACC.config.encodedContextPath) > -1)
+							{
+								window.open(data,"_self");
+							}
+							else
+							{
+							var hostName=window.location.host;
+							if(hostName.indexOf(':') >=0)
+							{
+								window.open(ACC.config.encodedContextPath +data,"_self");
+							}	
+							else
+								{
+							window.open("https://"+hostName+ACC.config.encodedContextPath +data,"_self");
+								}
+							}
+							
+						}	
+				},
+				error : function(resp) {
+					console.log("Error Occured Login Page" + resp);					
+				}
+			});
+	 
+}
+
+        // This method is activated when the page is loaded
+        function loadGigya() {
+            // register for login event
+            gigya.socialize.addEventHandlers({
+                    context: { str: 'congrats on your' }
+                    , onLogin: onLoginHandlerGigya                   
+                    });
+        }
+        // onLogin Event handler
+        function onLoginHandlerGigya(eventObj) {
+           // console.log(eventObj.context.str + ' ' + eventObj.eventName + ' to ' + eventObj.provider
+          //      + '!\n' + eventObj.provider + ' user ID: ' +  eventObj.user.identities[eventObj.provider].providerUID);          
+            
+            registerUserGigya(eventObj);      
+            
+         }  
+       /*  End  Gigya Social Login */

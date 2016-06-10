@@ -420,7 +420,7 @@ display:none;
     <div class="product-detail">
     
     <h2 class="company">
-              <span class="logo"></span>${product.brand.brandname}&nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameId"></span><%-- ${sellerName} --%></h2><!-- Convert into AJAX call -->
+              <span class="logo"></span>${product.brand.brandname}&nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName}</h2><!-- Convert into AJAX call -->
               
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     <div class="price">
@@ -462,11 +462,11 @@ display:none;
     </c:choose> --%>
     
     <!-- <input type="hidden" id="productPrice" name="productPrice" /> -->
-   <p class="old" id="mrpPriceId" style="display:none">
+   <p class="old" id="quickMrpPriceId" style="display:none">
 	</p>
-	<p class="sale" id="mopPriceId" style="display:none">
+	<p class="sale" id="quickMopPriceId" style="display:none">
 	</p>
-	<p class="sale" id="spPriceId" style="display:none">
+	<p class="sale" id="quickSpPriceId" style="display:none">
 	</p>
     
   </div>   
@@ -518,8 +518,8 @@ display:none;
 			<span id="fullFilledById"><spring:theme code="product.default.fulfillmentType"/></span>
 		</c:otherwise>
 		</c:choose> --%>
-		<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
-			<span id="fulFilledBySship"  style="display:none;"></span>
+		<span id="fulFilledByTshipQuick" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+			<span id="fulFilledBySshipQuick"  style="display:none;"></span>
 	</div>
    <div class="product-content" style="margin-top:15px;">
 	   <div class="swatch">
@@ -563,14 +563,14 @@ display:none;
 		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
 		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
 		 
-		 <button id="addToCartButton" type="${buttonType}"
+		 <button id="addToCartButtonQuick" type="${buttonType}"
 												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
 												<spring:theme code="basket.add.to.basket" />
 											</button>
 		<span id="dListedErrorMsg" style="display: none"  class="dlist_message">
 		<spring:theme code="pdp.delisted.message" />
 	</span>
-		<button id="addToCartButton-wrong" type="button" class="btn-block" disable="true" style="display: none;"> <spring:theme code="basket.add.to.basket" /></button>
+		<button id="addToCartButtonQuick-wrong" type="button" class="btn-block" disable="true" style="display: none;"> <spring:theme code="basket.add.to.basket" /></button>
 											
 		<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
@@ -611,7 +611,7 @@ display:none;
 	
 	</form:form>
 	<%-- <c:if test="${allOOStock==stock_y}"> --%>
-			<span id="outOfStockId" style="display: none"  class="out_of_stock">
+			<span id="outOfStockIdQuick" style="display: none"  class="out_of_stock">
 				<font color="red"><spring:theme code="product.product.outOfStock" /></font>
 				<%-- <input type="button" id="add_to_wishlist_quick" onClick="openPop_quick('${buyboxUssid}');scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/> --%>
 				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick();scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
@@ -781,7 +781,7 @@ display:none;
    <div class="overlay" data-dismiss="modal" onclick="closing()"></div>
       <div class="modal-content content"  style="width:53%; height:60%; overflow:hidden;">
             <button type="button" class="close pull-right" 
-              onclick="closing()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">
+              onclick="closingVideo()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">     <!-- TISPRO-508 -->
             </button>
 			<iframe name="videoFrame" id="player" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
       </div>

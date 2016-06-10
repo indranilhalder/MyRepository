@@ -727,4 +727,6 @@ public final class ModelAttributetConstants
 	//TISSIT-2010
 	public static final String USER_FIRST_NAME = "userFirstName";
 
+	public static final String BUILD_NUMBER = "buildNumber";
+
 }
