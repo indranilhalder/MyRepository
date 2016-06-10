@@ -59,10 +59,10 @@
 			$('.glyphicon-remove').click(function() {
 				helpMe();
 			});
-			$('#up').click(function() {
+			/* $('#up').click(function() {
 					$(this).removeClass("minimize");
 					$("#h").toggle();
-			});
+			}); */
 			$(document).on("blur",".input-box input",function(){	
 				if( $(this).val() != ""){
 					$(this).addClass("used");
