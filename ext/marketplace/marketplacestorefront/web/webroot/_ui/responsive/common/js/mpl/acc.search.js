@@ -269,7 +269,7 @@
 				}		
 
 			}		
-			else {		s
+			else {		
 				 $("#on-sale_"+ product).show();//showing on_sale tag		
 				break;		
 		}		
