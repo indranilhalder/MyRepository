@@ -611,7 +611,7 @@ display:none;
 	
 	</form:form>
 	<%-- <c:if test="${allOOStock==stock_y}"> --%>
-			<span id="outOfStockId" style="display: none"  class="out_of_stock">
+			<span id="outOfStockIdQuick" style="display: none"  class="out_of_stock">
 				<font color="red"><spring:theme code="product.product.outOfStock" /></font>
 				<%-- <input type="button" id="add_to_wishlist_quick" onClick="openPop_quick('${buyboxUssid}');scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/> --%>
 				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick();scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>

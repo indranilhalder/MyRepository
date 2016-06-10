@@ -141,19 +141,19 @@ function setBuyBoxDetails()
 				if (allStockZero == 'Y') {
 					if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
 					$("#addToCartButtonQuick").hide();
-					$("#outOfStockId").show();
+					$("#outOfStockIdQuick").show();
 					}					
 				}
 				/*else if (allStockZero == 'Y' && data['othersSellersCount']==0){
 					if($(".quickViewSelect").html()!="Select"){	//TISPRD-1173
 						$("#addToCartButton").hide();
-						$("#outOfStockId").show();
+						$("#outOfStockIdQuick").show();
 					}					
 				}*/
 				else
 					{
 					$("#addToCartButtonQuick").show();
-					$("#outOfStockId").hide();
+					$("#outOfStockIdQuick").hide();
 					}				
 				
 				dispQuickViewPrice(mrpPrice, mop, spPrice);
