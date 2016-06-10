@@ -494,7 +494,9 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 							//final Map<String, Double> paymentInfo = new HashMap<String, Double>();
 							//paymentInfo.put(paymentMode, Double.valueOf(totalPriceAfterConvCharge.getValue().doubleValue()));
 							getSessionService().setAttribute(MarketplacewebservicesConstants.PAYMENTMODE, paymentModeMap);
-
+							//TISPRD-2733
+							cartModel.setModeOfPayment(paymentMode);
+							getModelService().save(cartModel);
 
 							if (!paymentModeMap.isEmpty())
 							{
