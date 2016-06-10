@@ -86,17 +86,12 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 
 			return fieldValues;
 		}
-		else if (model instanceof ProductModel)
+		else
 		{
-			final ProductModel product = (ProductModel) model;
+			return Collections.emptyList();
 
-			final Collection fieldValues = new ArrayList();
-
-			fieldValues.addAll(createFieldValue(product, indexConfig, indexedProperty));
-
-			return fieldValues;
 		}
-		throw new FieldValueProviderException("Cannot get promotion codes of non-product item");
+
 	}
 
 	protected List<FieldValue> createFieldValue(final ProductModel product, final IndexConfig indexConfig,
@@ -118,12 +113,11 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 	private boolean checkIfOfferExist(final IndexConfig indexConfig, final ProductModel product)
 	{
 
-		boolean offerExists = false;
+		final boolean offerExists = false;
 		final BaseSiteModel baseSiteModel = indexConfig.getBaseSite();
 		if ((baseSiteModel != null) && (baseSiteModel.getDefaultPromotionGroup() != null))
 		{
 			final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
-			final List<ProductPromotionModel> promotions = new ArrayList<ProductPromotionModel>();
 			final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
 					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
 
@@ -134,16 +128,10 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 			{
 				if (promotion.getChannel().contains(SalesApplication.WEB) || promotion.getChannel().isEmpty())
 				{
-					promotions.add(promotion);
+					return true;
 				}
 			}
 
-			if (promotions.size() > 0 && !promotions.isEmpty())
-
-			{
-				offerExists = true;
-				LOG.debug("Promotion exists for product:::" + product.getCode());
-			}
 		}
 
 		return offerExists;

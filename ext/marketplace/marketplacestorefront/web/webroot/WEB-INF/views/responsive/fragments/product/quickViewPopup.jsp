@@ -781,7 +781,7 @@ display:none;
    <div class="overlay" data-dismiss="modal" onclick="closing()"></div>
       <div class="modal-content content"  style="width:53%; height:60%; overflow:hidden;">
             <button type="button" class="close pull-right" 
-              onclick="closing()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">
+              onclick="closingVideo()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">     <!-- TISPRO-508 -->
             </button>
 			<iframe name="videoFrame" id="player" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
       </div>
