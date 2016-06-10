@@ -192,6 +192,11 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_SOCIAL_LOGIN_URL, gigyaSocialLoginURL);
 		modelAndView.addObject(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
 		modelAndView.addObject(ModelAttributetConstants.FEED_BACK_SURVEY_URL, feedbackSurveyUrl);
+
+		if (StringUtils.isNotEmpty(currentSite.getBuildNumber()))
+		{
+			modelAndView.addObject(ModelAttributetConstants.BUILD_NUMBER, currentSite.getBuildNumber());
+		}
 	}
 
 	protected List getAddOnCommonCSSPaths(final String contextPath, final String uiExperience, final List<String> addOnNames)

@@ -277,7 +277,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 * 
+	 *
 	 * }
 	 */
 
@@ -469,7 +469,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 * 
+	 *
 	 * @param model ,redirectModel
 	 */
 
@@ -879,6 +879,10 @@ public class CartPageController extends AbstractPageController
 
 			final String payNowCouponCheck = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID);
 
+			//TISPRO-578
+			final String cartInvalidCheck = getSessionService().getAttribute(
+					MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID);
+
 			//TISEE-3676
 			if (StringUtils.isNotEmpty(cartItemDelisted)
 					&& cartItemDelisted.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
@@ -928,6 +932,13 @@ public class CartPageController extends AbstractPageController
 			{
 				getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID);
 				GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.COUPONINVALID);
+			}
+			//TISPRO-578
+			else if (StringUtils.isNotEmpty(cartInvalidCheck)
+					&& cartInvalidCheck.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
+			{
+				getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID);
+				GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID_MSG);
 			}
 
 		}
@@ -1238,7 +1249,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1295,7 +1306,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

@@ -200,6 +200,8 @@
 		<property name="sub_brand_code" type="String" />
 		<property name="sub_brand_type" type="String" />
 		<property name="subBrandImageUrl" type="String"/>
+		<property name="sub_brand_logo" type="String" />
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.BrandListHierarchyWsDTO">
@@ -224,6 +226,7 @@
 		<property name="sub_brand_code" type="String" />
 		<property name="sub_brand_type" type="String" />
 		<property name="subBrandImageUrl" type="String" />
+		<property name="sub_brand_logo" type="String" />
 	</bean>
 	<!-- Shop by brand Mobile -->
 	<!-- Shop by dept Mobile -->
@@ -1774,6 +1777,8 @@
 		<property name="availableForPickup" type="Boolean" />
 		<property name="variantOptions" type="String"/>
 		<property name="spellingSuggestion" type="String"/>
+		
+		<property name="keywordRedirectUrl" type="String"/> 
 		<!-- <property name="facets"
 		          type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.search.facetdata.FacetWsDTO>"/> -->
 		<property name="facetdata"

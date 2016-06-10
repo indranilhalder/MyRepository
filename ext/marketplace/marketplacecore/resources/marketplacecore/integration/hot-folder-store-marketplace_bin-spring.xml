@@ -36,7 +36,7 @@
     <!-- 1) Scan for files -->
     
     <file:inbound-channel-adapter id="batchFilesMarketplaceBin" directory="#{baseDirectoryMarketplaceBin}"
-        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" >
+        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
         <int:poller fixed-rate="1000" />
     </file:inbound-channel-adapter>
  
