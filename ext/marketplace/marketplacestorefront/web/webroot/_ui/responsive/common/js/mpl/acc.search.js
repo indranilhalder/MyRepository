@@ -1,5 +1,6 @@
 	function constructDepartmentHierarchy(inputArray) {
 		var output = [];
+		if(inputArray!=""){
 		for (var i = 0; i < inputArray.length; i++) {
 			var categoryArray = inputArray[i].split("|");
 			var currentNode = output;
@@ -31,7 +32,7 @@
 				}
 			}
 		}
-
+		}
 	var expandTree = false;
 	
 	//TISCF-4 Start
