@@ -788,21 +788,34 @@ sendAddToBag : function(formId, isBuyNow) {
 				resetURL = resetURL[0];
 				$("a.reset").attr("href",resetURL);
 		}
-			
-		/*if((typeof(utag_data) !== "undefined")){
-		var pageType = utag_data.page_type;
-		if(pageType === "product"){
+		}
+	   if($('#pageType').val()==="offerlisting"){
 			var resetURL = window.location.href;
 			resetURL = resetURL.split("?");
 			if(resetURL instanceof Array){
 				resetURL = resetURL[0];
+				//$("a.reset").attr("href",resetURL);
 			}
-			$("a.reset").attr("href",resetURL);*/
-		//	$("a.reset").attr("href",resetURL+"?resetAll=true");
-		
+			$("a.reset").attr("href",resetURL);
+			var resetOfferURL = window.location.href;
+			if(resetOfferURL.indexOf("/o") > -1)
+			{
+				resetOfferURL = resetOfferURL.split("&");
+				if(resetOfferURL instanceof Array){
+					resetOfferURL = resetOfferURL[0];
+				}
+				$("a.reset").attr("href",resetOfferURL);
+			}
 		}
-		
-		
+	   if($('#pageType').val()==="sellerlisting"){
+		   var resetURL = window.location.href;
+			resetURL = resetURL.split("?");
+			if(resetURL instanceof Array){
+				resetURL = resetURL[0];
+			}
+			$("a.reset").attr("href",resetURL);
+	   }
+	   
 		if((typeof(utag_data) !== "undefined")){
 			var pageType = utag_data.page_type;
 			if(pageType === "generic"){

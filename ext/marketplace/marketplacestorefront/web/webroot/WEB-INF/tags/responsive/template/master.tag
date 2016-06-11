@@ -15,8 +15,8 @@
 <%@ taglib prefix="tealium" tagdir="/WEB-INF/tags/addons/tealiumIQ/shared/analytics" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%-- <%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %> --%>
-<%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
-<compress:html removeIntertagSpaces="true">
+<%-- <%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
+<compress:html removeIntertagSpaces="true"> --%>
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
@@ -181,4 +181,4 @@ if($(window).width() < 650) {
 <debug:debugFooter/>
 
 </html>
-</compress:html>
+<%-- </compress:html> --%>
