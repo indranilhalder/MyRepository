@@ -2068,7 +2068,7 @@ function validateCardNo() {
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
-	else if(cardType=='AMEX' && value.length==15 && ($("#paymentMode").val()=='EMI' || $("#paymentMode").val()=='Debit Card')){
+	else if(cardType=='AMEX' && value.length==15 && (/*$("#paymentMode").val()=='EMI'*/ || $("#paymentMode").val()=='Debit Card')){
 		binStatus=false;
 		errorHandle.innerHTML = "Please enter a valid debit card";
 		return false;
