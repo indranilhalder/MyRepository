@@ -5,8 +5,10 @@
 
 <script>
 $(function() {
+	if(departmentHierarchyData!=""||departmentHierarchyData!=[]){
 	var inputArray = ${departmentHierarchyData.hierarchyList};
 	constructDepartmentHierarchy(inputArray);
+	}
 	});
 	
 	
