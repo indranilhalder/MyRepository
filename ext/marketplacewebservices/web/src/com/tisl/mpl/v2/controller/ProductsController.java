@@ -871,6 +871,7 @@ public class ProductsController extends BaseController
 					}
 					if (url != null)
 					{
+						//fetching the Parameters from the redirect URL in Map with Key and values
 						params = URLParamUtil.getQueryParams(url);
 						//setting parameter again as per keyword redirect
 						if (params.containsKey("searchText"))
