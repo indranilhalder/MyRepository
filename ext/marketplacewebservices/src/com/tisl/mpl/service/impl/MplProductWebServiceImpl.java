@@ -131,7 +131,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -1747,8 +1747,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		SolrFacetSearchKeywordRedirectModel keywordRedirect = null;
 		try
 		{
-			final String isoLang = i18nService.getCurrentLocale().getISO3Language();
-
+			final String isoLang = i18nService.getCurrentLocale().getLanguage();
 			keywords = solrFacetSearchKeywordDao.findKeywords(searchText, KeywordRedirectMatchType.EXACT, configurationService
 					.getConfiguration().getString(MarketplacewebservicesConstants.SEARCH_FACET_CONFIG), isoLang);
 			//suggestion to check CollectionUtils
