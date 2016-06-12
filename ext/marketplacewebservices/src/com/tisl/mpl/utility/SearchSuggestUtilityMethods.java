@@ -17,9 +17,7 @@ import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType;
 import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
-import de.hybris.platform.solrfacetsearch.search.impl.DefaultSolrFacetSearchKeywordDao;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
+import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.util.MplCompetingProductsUtility;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
@@ -81,9 +80,8 @@ public class SearchSuggestUtilityMethods
 	private DefaultMplProductSearchFacade searchFacade;
 	@Resource(name = "productSearchFacade")
 	private ProductSearchFacade<ProductData> productSearchFacade;
-
-	@Resource
-	DefaultSolrFacetSearchKeywordDao defaultSolrFacetSearchKeywordDao;
+	@Resource(name = "mplProductWebService")
+	private MplProductWebService mplProductWebService;
 
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
@@ -521,23 +519,10 @@ public class SearchSuggestUtilityMethods
 
 	}
 
+	// Check if Keyword exists
 	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(final String searchText)
 	{
-		List<SolrFacetSearchKeywordRedirectModel> keywords = new ArrayList<SolrFacetSearchKeywordRedirectModel>();
-		SolrFacetSearchKeywordRedirectModel keywordRedirect = null;
-		try
-		{
-			keywords = defaultSolrFacetSearchKeywordDao.findKeywords(searchText, KeywordRedirectMatchType.EXACT, "mplIndex", "en");
-			if (keywords.size() > 0)
-			{
-				keywordRedirect = keywords.get(0);
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.debug("keywordRedirectSearch------" + e.getMessage());
-		}
-		return keywordRedirect;
+		return mplProductWebService.getKeywordSearch(searchText);
 	}
 
 	private final List<GalleryImageData> getGalleryImagesList(final List<Map<String, String>> galleryImages)

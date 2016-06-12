@@ -865,6 +865,7 @@ public class ProductsController extends BaseController
 				solrfacets = searchSuggestUtilityMethods.getKeywordSearch(searchText);
 				if (solrfacets != null)
 				{
+					//FOR Direct URL redirection only
 					if (solrfacets.getRedirectMobile() instanceof SolrURIRedirectModel)
 					{
 						url = ((SolrURIRedirectModel) solrfacets.getRedirectMobile()).getUrl();
@@ -883,11 +884,13 @@ public class ProductsController extends BaseController
 						}
 						if (params.containsKey("page"))
 						{
-							page = Integer.valueOf(params.get("page").get(0)).intValue();
+							//suggestion to parseInt
+							page = Integer.parseInt(params.get("page").get(0));
 						}
 						if (params.containsKey("pageSize"))
 						{
-							pageSize = Integer.valueOf(params.get("pageSize").get(0)).intValue();
+							//suggestion to parseInt
+							pageSize = Integer.parseInt(params.get("pageSize").get(0));
 						}
 						if (params.containsKey("sortCode"))
 						{
@@ -895,7 +898,8 @@ public class ProductsController extends BaseController
 						}
 						if (params.containsKey("isFilter"))
 						{
-							isFilter = Boolean.valueOf(params.get("isFilter").get(0)).booleanValue();
+							//suggestion to parseBoolean
+							isFilter = Boolean.parseBoolean(params.get("isFilter").get(0));
 						}
 					}
 					LOG.debug("params" + params);
