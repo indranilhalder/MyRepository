@@ -992,9 +992,9 @@ public class ProductsController extends BaseController
 				productSearchPage.setCategoryCode(typeID);
 			}
 			//For Keyword
-			if (StringUtils.isNotEmpty(searchPageData.getKeywordRedirectUrl()))
+			if (StringUtils.isNotEmpty(url))
 			{
-				productSearchPage.setKeywordRedirectUrl(searchPageData.getKeywordRedirectUrl());
+				productSearchPage.setKeywordRedirectUrl(url);
 			}
 			/*
 			 * final ProductSearchPageWsDto sortingvalues = searchProductsfacatedtonew(searchText, typeID, page, pageSize,
