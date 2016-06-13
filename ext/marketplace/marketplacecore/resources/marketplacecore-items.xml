@@ -4192,6 +4192,15 @@
 				<description>It represents an offer Image Carousel component with extending  attributes from
  				ImageCarouselComponent .</description>
 			</itemtype>
+			
+			<itemtype code="CMSSite" autocreate="false" generate="false">
+				<description>Attribute Build Number for maintaing the build version</description>
+				<attributes>
+					<attribute qualifier="buildNumber" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					</attributes>
+			</itemtype>
 
 		</typegroup>
 
@@ -8195,5 +8204,21 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
+				
+		
+		<typegroup name="SolrFacetKeywordRedirect">
+			<itemtype code="SolrFacetSearchKeywordRedirect" autocreate="false"
+				generate="false">
+				<description>Extending the SolrFacetSearchKeywordRedirect type from core with additional attributes.</description>
+			<attributes>
+				<attribute type="SolrAbstractKeywordRedirect" qualifier="redirectMobile">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+	
+		
 	</itemtypes>
 </items>

@@ -149,7 +149,8 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 			{
 
 
-				if (this.<Boolean> getValue(source, "isOffersExisting").booleanValue() == false)
+				//if (this.<Boolean> getValue(source, "isOffersExisting").booleanValue() == false) Sonar critical fixes
+				if (!this.<Boolean> getValue(source, "isOffersExisting").booleanValue())
 				{
 
 					target.setIsOfferExisting(Boolean.FALSE);
@@ -203,8 +204,8 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 		final Double priceValue = this.<Double> getValue(source, "priceValue");
 		if (priceValue != null)
 		{
-			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(priceValue.doubleValue()),
-					getCommonI18NService().getCurrentCurrency());
+			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY,
+					BigDecimal.valueOf(priceValue.doubleValue()), getCommonI18NService().getCurrentCurrency());
 			target.setPrice(priceData);
 		}
 
@@ -250,20 +251,20 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 	/*
 	 * @Override protected void addImageData(final SearchResultValueData source, final String imageFormat, final String
 	 * mediaFormatQualifier, final ImageDataType type, final List<ImageData> images) {
-	 *
+	 * 
 	 * final Object imgObj = getValue(source, "img-" + mediaFormatQualifier); List<String> imgList = new ArrayList(); if
 	 * (imgObj instanceof ArrayList) { imgList = (List) imgObj; } else { final String imgStr = (String) imgObj;
 	 * imgList.add(imgStr); }
-	 *
-	 *
+	 * 
+	 * 
 	 * if (!imgList.isEmpty()) { for (int i = 0; i < imgList.size(); i++) { final ImageData imageSearchData =
 	 * createImageData(); imageSearchData.setImageType(type); imageSearchData.setFormat(imageFormat);
 	 * imageSearchData.setUrl(imgList.get(i)); images.add(imageSearchData);
-	 *
-	 *
+	 * 
+	 * 
 	 * }
-	 *
-	 *
+	 * 
+	 * 
 	 * } }
 	 */
 
