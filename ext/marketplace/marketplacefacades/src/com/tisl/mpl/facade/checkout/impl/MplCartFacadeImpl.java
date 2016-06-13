@@ -1238,6 +1238,13 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 			if (cartData != null && cartData.getEntries() != null && !cartData.getEntries().isEmpty())
 			{
+				//TISPRO-590
+				if (qty > stock)
+				{
+					addToCartFlag = MarketplacecommerceservicesConstants.OUT_OF_INVENTORY;
+					LOG.debug("You are about to exceede the max inventory");
+				}
+
 				for (final OrderEntryData entry : cartData.getEntries())
 				{
 					final ProductData productData = entry.getProduct();

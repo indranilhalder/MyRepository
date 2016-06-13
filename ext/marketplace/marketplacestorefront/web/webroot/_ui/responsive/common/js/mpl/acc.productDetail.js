@@ -214,10 +214,10 @@
 						});
 
 				   // load the url and show modal on success
-				   $("#popUpModal .modal-content").load(target, function() { 
+				  // $("#popUpModal .modal-content").load(target, function() { 
 					   	   $("#popUpModal").modal("show");
 						   buyboxDetailsForSizeGuide(productcode);
-				    }); 
+				   // }); 
 				   
 		 }); 
 		//End
