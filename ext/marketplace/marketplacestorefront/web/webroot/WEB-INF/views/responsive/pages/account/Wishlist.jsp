@@ -377,7 +377,7 @@
 													value="${particularWishlistName}" />
 												<c:choose>
 													<c:when test="${not empty wpproduct.isOutOfStock && wpproduct.isOutOfStock eq 'Y'}">
-														<span id="outOfStockId">
+	<!-- TISPRO-588 -->													<span id="outOfStockIdwl">                                                      
 															<button id="addToCartButtonwl" disabled="disabled"
 																class="blue button js-add-to-cart_wl">
 																<spring:theme code="basket.add.to.basket" />
