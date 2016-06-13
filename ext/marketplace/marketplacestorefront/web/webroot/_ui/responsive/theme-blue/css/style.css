@@ -9932,7 +9932,7 @@ body .account .right-account .order-history .pagination li{
       font-size: 9px !important;
     letter-spacing: 1px;
     font-weight: 600;
-        padding: 3px 1px;
+        padding: 3px;
         text-transform: uppercase;
         line-height:normal;
       }
@@ -31804,6 +31804,7 @@ top: 5px;
 }
 .product-tile .image .online-exclusive span{
 	letter-spacing: 0px;
+	padding:3px 1px;
 }
 }
 .product-tile .image .on-sale{
