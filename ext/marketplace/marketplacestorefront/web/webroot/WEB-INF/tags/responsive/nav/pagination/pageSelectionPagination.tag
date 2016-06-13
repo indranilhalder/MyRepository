@@ -27,15 +27,7 @@
 							<spring:param name="page"
 								value="${searchPageData.pagination.currentPage - 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_previousPage_link">
-							<!-- TISPRD-2315 -->
-							<c:choose>
-							<c:when test="${not empty searchCategory}">
 							<a href="${newPaginationUrlPrev}&searchCategory=${searchCategory}" rel="prev"><span><spring:theme code="text.previous.page"/></span></a>
-						    </c:when>
-						    <c:otherwise>
-						    <a href="${newPaginationUrlPrev}" rel="prev"><span><spring:theme code="text.previous.page"/></span></a>
-						    </c:otherwise>
-						    </c:choose>
 						</ycommerce:testId>
 					</li>
 				</c:if>
@@ -92,17 +84,7 @@
 								<spring:param name="page" value="0" />
 						</spring:url>
 						<ycommerce:testId code="pageNumber_link">
-						
-							<li>
-							<!-- TISPRD-2315 -->
-							<c:choose>
-							<c:when test="${not empty searchCategory}">
-							<a href="${newPaginationUrlDotPrev}&searchCategory=${searchCategory}">1</a>
-							</c:when>
-							<c:otherwise>
-							<a href="${newPaginationUrlDotPrev}">1</a>
-							</c:otherwise>
-							</c:choose>
+							<li><a href="${newPaginationUrlDotPrev}&searchCategory=${searchCategory}">1</a>
 								<c:if test="${beginPage ne 2}">
 									...
 								</c:if>
@@ -122,15 +104,7 @@
 							</spring:url>
 							
 							<ycommerce:testId code="pageNumber_link">
-							<!-- TISPRD-2315 -->
-							<c:choose>
-							<c:when test="${not empty searchCategory}">
-							<li><a href="${newPaginationUrl}&searchCategory=${searchCategory}">${pageNumber}</a></li>
-							</c:when>
-							<c:otherwise>
-							<li><a href="${newPaginationUrl}">${pageNumber}</a></li>
-							</c:otherwise>
-							</c:choose>
+								<li><a href="${newPaginationUrl}&searchCategory=${searchCategory}">${pageNumber}</a></li>
 							</ycommerce:testId>
 						</c:when>
 						<c:otherwise>
@@ -150,21 +124,10 @@
 						</spring:url>
 						<ycommerce:testId code="pageNumber_link">
 						<li>
-						<!-- TISPRD-2315 -->
 						<c:if test="${searchPageData.pagination.currentPage ne (searchPageData.pagination.numberOfPages-4)}">
 							...
 						</c:if>
-						   <c:choose>
-							<c:when test="${not empty searchCategory}">
-							<li><a href="${newPaginationUrl}&searchCategory=${searchCategory}">${pageNumber}</a></li>
-							<a href="${newPaginationUrlDotsNext}&searchCategory=${searchCategory}">${searchPageData.pagination.numberOfPages}</a>
-							</c:when>
-							<c:otherwise>
-							<li><a href="${newPaginationUrl}">${pageNumber}</a></li>
-							<a href="${newPaginationUrlDotsNext}">${searchPageData.pagination.numberOfPages}</a>
-							</c:otherwise>
-							</c:choose>
-							</li>
+							<a href="${newPaginationUrlDotsNext}&searchCategory=${searchCategory}">${searchPageData.pagination.numberOfPages}</a></li>
 						</ycommerce:testId>
 					</c:when>
 				</c:choose>
@@ -178,16 +141,7 @@
 							<spring:param name="page"
 								value="${searchPageData.pagination.currentPage + 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_nextPage_link">
-							<!-- TISPRD-2315 -->
-							<c:choose>
-							<c:when test="${not empty searchCategory}">
 							<a href="${newPaginationUrlNext}&searchCategory=${searchCategory}" rel="next"><span><spring:theme code="text.next.page"/></span></a>
-						    </c:when>
-						    <c:otherwise>
-						    <a href="${newPaginationUrlNext}" rel="next"><span><spring:theme code="text.next.page"/></span></a>
-						    </c:otherwise>
-						    </c:choose>
-						
 						</ycommerce:testId></li>
 				</c:if>
 
