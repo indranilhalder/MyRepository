@@ -16,6 +16,7 @@ import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
+import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.util.MplCompetingProductsUtility;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
@@ -71,6 +73,8 @@ public class SearchSuggestUtilityMethods
 
 	@Resource(name = "mplCompetingProductsUtility")
 	private MplCompetingProductsUtility mplCompetingProductsUtility;
+	@Resource(name = "mplProductWebService")
+	private MplProductWebService mplProductWebService;
 
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
@@ -155,7 +159,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -522,6 +526,12 @@ public class SearchSuggestUtilityMethods
 		return galleryImageList;
 	}
 
+	// Check if Keyword exists
+	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(final String searchText)
+	{
+		return mplProductWebService.getKeywordSearch(searchText);
+	}
+
 	private List<SellingItemDetailWsDto> getProductResults(
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
@@ -878,8 +888,8 @@ public class SearchSuggestUtilityMethods
 										{
 											if (oldL3DepartFilter.getCategoryCode().equals(foundDeparts[3].split(":")[0]))
 											{
-												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(
-														foundDeparts[4].split(":"));
+												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(foundDeparts[4]
+														.split(":"));
 												if (oldL3DepartFilter.getChildFilters() != null
 														&& !oldL3DepartFilter.getChildFilters().isEmpty())
 												{
