@@ -191,10 +191,10 @@
 			</div>
 		</div>
 	</div>
-	<div class="feedback-links">
+	<%-- <div class="feedback-links">
 		<a id="feedback" href="#nogo"><spring:theme code="text.feedback.survey"/></a>
 		<input type="hidden" id="feedbackUrlPath" value="${feebBackSurveyUrl}" />
-		</div>
+		</div> --%>
 	<script>
 		$(document).ready(function() {
 			$('.glyphicon-remove').click(function() {
