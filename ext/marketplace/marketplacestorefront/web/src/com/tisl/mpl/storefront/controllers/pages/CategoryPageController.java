@@ -624,6 +624,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 		model.addAttribute("userLocation", getCustomerLocationService().getUserLocation());
 		model.addAttribute("otherProducts", true);
 		updatePageTitle(category, searchPageData.getBreadcrumbs(), model);
+		if (CollectionUtils.isNotEmpty(searchPageData.getResults()))
+		{
+			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+		}
 
 		final RequestContextData requestContextData = getRequestContextData(request);
 		requestContextData.setCategory(category);
