@@ -319,18 +319,39 @@
 
 													<div class="actions">
 
+														<c:set var="bogoCheck" value='false' />
+
 														<c:if test="${entry.itemCancellationStatus eq 'true'}">
-															<c:if test="${entry.giveAway eq 'false' and entry.isBOGOapplied eq 'false'}">
-																<c:set var="bogoCheck" value="${entry.associatedItems ne null ? 'true': 'false'}"></c:set> 
+															<c:if
+																test="${entry.giveAway eq 'false' and entry.isBOGOapplied eq 'false'}">
+																<c:forEach items="${entry.associatedItems}"
+																	var="entryAssociated">
+																	<c:forEach items="${subOrder.entries}"
+																		var="entrySubOrder">
+																		<c:if
+																			test="${entrySubOrder.selectedUssid eq entryAssociated}">
+																			<c:if
+																				test="${entrySubOrder.giveAway eq 'true' || entrySubOrder.isBOGOapplied eq 'true'}">
+																				<c:set var="bogoCheck" value='true' />
+
+																			</c:if>
+																		</c:if>
+
+																	</c:forEach>
+																</c:forEach>
+
+																<%-- 	<c:set var="bogoCheck" value="${entry.associatedItems ne null ? 'true': 'false'}"></c:set> --%>
+
 																<a href="" data-toggle="modal"
 																	data-target="#cancelOrder${subOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}"
 																	data-mylist="<spring:theme code="text.help" />"
-																	data-dismiss="modal" onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
+																	data-dismiss="modal"
+																	onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
 																		text="Cancel Order" /></a>
 															</c:if>
 
 														</c:if>
-														
+
 														<!--Chairman Demo Changes: New Static Content Sheet: Checkout> Order Cancellation -->
 														<!-- TISCR-410 -->
 															<c:if test="${entry.isCancellationMissed eq 'true'}">
