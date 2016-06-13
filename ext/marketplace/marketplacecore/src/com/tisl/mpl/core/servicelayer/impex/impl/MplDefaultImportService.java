@@ -9,52 +9,63 @@ import de.hybris.platform.servicelayer.impex.ImportConfig;
 import de.hybris.platform.servicelayer.impex.ImportResult;
 import de.hybris.platform.servicelayer.impex.impl.DefaultImportService;
 import de.hybris.platform.servicelayer.impex.impl.ImportCronJobResult;
+
 import org.apache.log4j.Logger;
+
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
+
 
 /**
  * Created by 585070 on 6/11/2016.
  */
-public class MplDefaultImportService extends DefaultImportService {
+public class MplDefaultImportService extends DefaultImportService
+{
 
-    private static final Logger LOG = Logger.getLogger(MplDefaultImportService.class);
+	private static final Logger LOG = Logger.getLogger(MplDefaultImportService.class);
+	private ConfigurationService configurationService;
 
-    private ConfigurationService configurationService;
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
 
-    public ConfigurationService getConfigurationService() {
-        return configurationService;
-    }
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
 
-    public void setConfigurationService(ConfigurationService configurationService) {
-        this.configurationService = configurationService;
-    }
+	@SuppressWarnings("boxing")
+	@Override
+	public ImportResult importData(final ImportConfig config)
+	{
+		final ImpExImportCronJobModel cronJob = (ImpExImportCronJobModel) this.getModelService().create("ImpExImportCronJob");
 
-    @Override
-    public ImportResult importData(ImportConfig config) {
-        ImpExImportCronJobModel cronJob = (ImpExImportCronJobModel)this.getModelService().create("ImpExImportCronJob");
+		try
+		{
+			this.getModelService().initDefaults(cronJob);
+		}
+		catch (final ModelInitializationException var4)
+		{
+			throw new SystemException(var4);
+		}
+		cronJob.setNodeID(getConfigurationService().getConfiguration().getInt("mpl.impex.import.node.id", 0));
 
-        try {
-            this.getModelService().initDefaults(cronJob);
-        } catch (ModelInitializationException var4) {
-            throw new SystemException(var4);
-        }
-        cronJob.setNodeID(getConfigurationService().getConfiguration().getInt("mpl.impex.import.node.id",0));
+		this.configureCronJob(cronJob, config);
+		this.getModelService().saveAll(new Object[]
+		{ cronJob.getJob(), cronJob });
+		this.importData(cronJob, config.isSynchronous(), config.isRemoveOnSuccess());
 
-        this.configureCronJob(cronJob, config);
-        this.getModelService().saveAll(new Object[]{cronJob.getJob(), cronJob});
-        this.importData(cronJob, config.isSynchronous(), config.isRemoveOnSuccess());
+		if (getConfigurationService().getConfiguration().getBoolean("mpl.log.cronjob.enabled", false))
+		{
+			LOG.error(MarketplaceCoreConstants.SeperaterHashHead + "\nCode : " + cronJob.getCode() + "\nNodeID : "
+					+ cronJob.getNodeID() + "\nStartTime : " + cronJob.getStartTime() + "\nEndTime : " + cronJob.getEndTime()
+					+ "\nNumber of lines processed successfully : " + cronJob.getValueCount() + "\nLast successfully processed line : "
+					+ cronJob.getLastSuccessfulLine() + "\nStatus : " + cronJob.getStatus().name() + "\nResult : "
+					+ cronJob.getResult().name() + MarketplaceCoreConstants.EMPTY + MarketplaceCoreConstants.SeperaterHash);
+		}
 
-        if(getConfigurationService().getConfiguration().getBoolean("mpl.log.cronjob.enabled", false)) {
-            LOG.error("\n################################# Cronjob Stats ################################" +
-                    "\nCode : " + cronJob.getCode() + "\nNodeID : " + cronJob.getNodeID() +
-                    "\nStartTime : " + cronJob.getStartTime() + "\nEndTime : " + cronJob.getEndTime() +
-                    "\nNumber of lines processed successfully : " + cronJob.getValueCount() +
-                    "\nLast successfully processed line : " + cronJob.getLastSuccessfulLine() +
-                    "\nStatus : " + cronJob.getStatus().name() +
-                    "\nResult : " + cronJob.getResult().name() + "" +
-                    "\n#############################################################################");
-        }
-
-        return ((Item)this.getModelService().getSource(cronJob)).isAlive()?new ImportCronJobResult(cronJob):new ImportCronJobResult((ImpExImportCronJobModel)null);
-    }
+		return ((Item) this.getModelService().getSource(cronJob)).isAlive() ? new ImportCronJobResult(cronJob)
+				: new ImportCronJobResult((ImpExImportCronJobModel) null);
+	}
 
 }
