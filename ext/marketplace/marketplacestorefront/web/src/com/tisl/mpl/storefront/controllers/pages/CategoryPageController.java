@@ -50,9 +50,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -222,7 +225,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 				final String redirection = checkRequestUrl(request, response, getCategoryModelUrlResolver().resolve(category));
 				if (StringUtils.isNotEmpty(redirection))
 				{
-					return redirection;
+					//return redirection;
+					response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+					response.setHeader("Location", redirection);
+					return null;
 				}
 
 				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
@@ -517,6 +523,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	protected String checkRequestUrl(final HttpServletRequest request, final HttpServletResponse response, String resolvedUrlPath)
 			throws UnsupportedEncodingException
 	{
+		String newUrl = null;
 		final String uri = request.getRequestURI();
 		if (uri.contains("page"))
 		{
@@ -530,7 +537,38 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 			}
 		}
-		return super.checkRequestUrl(request, response, resolvedUrlPath);
+		//return super.checkRequestUrl(request, response, resolvedUrlPath);
+		try
+		{
+			final String resolvedUrl = response.encodeURL(request.getContextPath() + resolvedUrlPath);
+			final String requestURI = URIUtil.decode(request.getRequestURI(), "utf-8");
+			final String decoded = URIUtil.decode(resolvedUrl, "utf-8");
+			if (StringUtils.isNotEmpty(requestURI) && requestURI.endsWith(decoded))
+			{
+				return null;
+			}
+			else
+			{
+				//  org.springframework.web.servlet.View.RESPONSE_STATUS_ATTRIBUTE = "org.springframework.web.servlet.View.responseStatus"
+				request.setAttribute("org.springframework.web.servlet.View.responseStatus", HttpStatus.MOVED_PERMANENTLY);
+				final String queryString = request.getQueryString();
+				if (queryString != null && !queryString.isEmpty())
+				{
+					newUrl = resolvedUrlPath + "?" + queryString;
+					//return "redirect:" + resolvedUrlPath + "?" + queryString;
+				}
+				else
+				{
+					//return "redirect:" + resolvedUrlPath;
+					newUrl = resolvedUrlPath;
+				}
+				return newUrl;
+			}
+		}
+		catch (final URIException e)
+		{
+			throw new UnsupportedEncodingException();
+		}
 	}
 
 
