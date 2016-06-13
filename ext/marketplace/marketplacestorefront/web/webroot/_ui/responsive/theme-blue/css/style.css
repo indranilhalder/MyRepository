@@ -9932,7 +9932,7 @@ body .account .right-account .order-history .pagination li{
       font-size: 9px !important;
     letter-spacing: 1px;
     font-weight: 600;
-        padding: 0 8px;
+        padding: 3px 1px;
         text-transform: uppercase;
         line-height:normal;
       }
@@ -31798,7 +31798,21 @@ top: 5px;
     width: 100%;
     max-width: 250px;
 } 
+.product-tile .image .online-exclusive, .product-tile .image .on-sale,
+.product-tile .image .new,.newExclusiveElement .new{
+	right:0px;
 }
+.product-tile .image .online-exclusive span{
+	letter-spacing: 0px;
+}
+}
+.product-tile .image .on-sale{
+	width:35%;
+}
+.product-tile .image .online-exclusive{
+	width:42%;
+}
+
 /*--------------maincss-----------*/
 .row
 {
