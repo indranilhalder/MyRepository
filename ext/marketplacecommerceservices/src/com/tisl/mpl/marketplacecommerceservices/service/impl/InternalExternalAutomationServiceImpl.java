@@ -20,8 +20,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Authenticator;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -47,6 +50,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.data.InternalCampaignReportData;
+import com.tisl.mpl.juspay.constants.MarketplaceJuspayServicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.InternalExternalAutomationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
@@ -136,8 +140,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							else
 							{
 								LOG.info("Inside MplSequentialBannerComponentModel.notMICROSITE_SEPARATOR");
-								//campaignDataSeqBanner.setSourcePage(contentPageItr.getLabel());
-								campaignDataBigPromoBanner.setSourcePage(MarketplacecommerceservicesConstants.EMPTY);
+								campaignDataSeqBanner.setSourcePage(MarketplacecommerceservicesConstants.EMPTY);
+								//campaignDataBigPromoBanner.setSourcePage(MarketplacecommerceservicesConstants.EMPTY);
 							}
 							campaignDataSeqBanner.setIcid(componentItr.getPk().toString());
 
@@ -180,6 +184,28 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											imageUrl = sb.toString();
 											imageSize = findIamgeSize(imageUrl);
 										}
+
+										//										if (null != bigPromoBanner.getBannerImage()
+										//												&& StringUtils.isNotEmpty(bigPromoBanner.getBannerImage().getURL()))
+										//										{
+										//											final String imageURL = bigPromoBanner.getBannerImage().getURL();
+										//											if (imageURL.startsWith(HTTP))
+										//											{
+										//												LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTP");
+										//												sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+										//												sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+										//												imageUrl = sb.toString();
+										//												imageSize = findIamgeSize(imageUrl);
+										//											}
+										//											else if (imageURL.startsWith(HTTPS))
+										//											{
+										//												LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTPS");
+										//												sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+										//												sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+										//												imageUrl = sb.toString();
+										//												imageSize = findIamgeSize(imageUrl);
+										//											}
+										//										}
 										if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
 										{
 											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.getMimeNotNull");
@@ -838,12 +864,29 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		try
 		{
 			final URL object = new URL(urlString);
-			//final HttpsURLConnection connection = (HttpsURLConnection) object.openConnection();
-			final URLConnection connection = object.openConnection();
-			LOG.info("Connection: " + connection);
+			final String proxyEnableStatus = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.PROXYENABLED);
+			URLConnection connection = null;
+
+			if (proxyEnableStatus.equalsIgnoreCase("true"))
+			{
+				LOG.info("Inside proxy enabled true");
+				final String proxyName = configurationService.getConfiguration().getString(
+						MarketplacecommerceservicesConstants.GENPROXY);
+				final int proxyPort = Integer.parseInt(configurationService.getConfiguration().getString(
+						MarketplacecommerceservicesConstants.GENPROXYPORT));
+				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
+				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+				connection = object.openConnection(proxy);
+			}
+			else
+			{
+				connection = object.openConnection();
+			}
 			// int timeOut = connection.getReadTimeout();
 			connection.setReadTimeout(60 * 1000);
 			connection.setConnectTimeout(60 * 1000);
+			LOG.info("Connection: " + connection);
 			final String isAuthenticationRequired = configurationService.getConfiguration().getString(
 					"internal.campaign.report.isAuthenticationRequired");
 			LOG.info("isAuthenticationRequired flag value is: " + isAuthenticationRequired);
@@ -884,18 +927,18 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		}
 		catch (final MalformedURLException e)
 		{
-			LOG.info("Malformed URL: " + e.getMessage());
+			LOG.info("Malformed URL: ", e);
 			throw e;
 		}
 		catch (final IOException e)
 		{
-			LOG.info("IO Exception: " + e.getMessage());
+			LOG.info("IO Exception: ", e);
 			//e.printStackTrace();
 			throw e;
 		}
 		catch (final Exception e)
 		{
-			LOG.info("Exception is: " + e.getMessage());
+			LOG.info("Exception is: ", e);
 			//e.printStackTrace();
 			throw e;
 		}
