@@ -1056,9 +1056,10 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			//final int responseCode = connection.
 			//System.out.println("" + responseCode);
 			//final BufferedImage bimg = ImageIO.read(openURLForInput(url,username,password));
-			LOG.info("connection InputStream: " + connection.getInputStream() + ", BufferedImage: "
-					+ ImageIO.read(connection.getInputStream()));
+			//LOG.info("connection InputStream: " + connection.getInputStream() + ", BufferedImage: "
+			//		+ ImageIO.read(connection.getInputStream()));
 			final BufferedImage bimg = ImageIO.read(connection.getInputStream());
+			LOG.info("connection InputStream: " + connection.getInputStream() + ", BufferedImage: " + bimg);
 			if (null != bimg)
 			{
 				LOG.info("If bimg is NOT NULL:");
