@@ -147,9 +147,13 @@ if($(window).width() < 650) {
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
 <!-- For Gigya Social Login -->
 	<c:if test="${isGigyaEnabled=='Y'}">
-	<SCRIPT type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}">
-	
-	</SCRIPT>
+		<c:choose><!-- TISPT-261 -->
+			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/') or 
+					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/payment-method/')}"></c:when>
+		<c:otherwise>
+			<script type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}"></script>
+		</c:otherwise>
+		</c:choose>
 	</c:if>
 	<tealium:sync/> 
 <!-- <script type="text/javascript">
