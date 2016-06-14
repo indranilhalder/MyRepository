@@ -19917,6 +19917,9 @@ color: #ff829a;
     -ms-appearance: none;
     -o-appearance: none;
 }
+.wishlist-content button#addToCartButtonwl[disabled="disabled"] {
+    opacity: 0.5;
+}
 .modal .content.emptyWishlist {
         padding: 60px 30px 60px;
     } 
