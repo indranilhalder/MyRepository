@@ -50,7 +50,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.data.InternalCampaignReportData;
-import com.tisl.mpl.juspay.constants.MarketplaceJuspayServicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.InternalExternalAutomationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
@@ -166,7 +165,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									try
 									{
 										if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-												&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
+												&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
 										{
 											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTP");
 											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
@@ -176,7 +175,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										}
 										else if (null != bigPromoBanner.getBannerImage()
 												&& null != bigPromoBanner.getBannerImage().getURL()
-												&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
+												&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
 										{
 											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTPS");
 											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
@@ -283,7 +282,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							{
 
 								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
+										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
 								{
 									LOG.info("Inside MplBigPromoBannerComponentModel.HTTP");
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
@@ -292,7 +291,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									imageSize = findIamgeSize(imageUrl);
 								}
 								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
+										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
 								{
 									LOG.info("Inside MplBigPromoBannerComponentModel.HTTPS");
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
@@ -364,7 +363,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							{
 
 								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
+										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
 								{
 									LOG.info("Inside MplBigFourPromoBannerComponentModel.HTTP");
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
@@ -373,7 +372,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									imageSize = findIamgeSize(imageUrl);
 								}
 								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
+										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
 								{
 									LOG.info("Inside MplBigFourPromoBannerComponentModel.HTTPS");
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
@@ -449,7 +448,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									try
 									{
 										if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getURL()
-												&& !differentBanner.getMedia().getURL().startsWith(HTTP))
+												&& differentBanner.getMedia().getURL().startsWith(HTTP))
 										{
 											LOG.info("Inside RotatingImagesComponentModel.HTTP");
 											sb = new StringBuffer(differentBanner.getMedia().getURL());
@@ -459,7 +458,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											campaignDataBigFourPromoBanner.setSize(imageSize);
 										}
 										else if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getURL()
-												&& !differentBanner.getMedia().getURL().startsWith(HTTPS))
+												&& differentBanner.getMedia().getURL().startsWith(HTTPS))
 										{
 											LOG.info("Inside RotatingImagesComponentModel.HTTPS");
 											sb = new StringBuffer(differentBanner.getMedia().getURL());
@@ -624,7 +623,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								final SimpleBannerComponentModel simple = (SimpleBannerComponentModel) componentItr;
 
 								if (null != simple.getMedia() && null != simple.getMedia().getURL()
-										&& !simple.getMedia().getURL().startsWith(HTTP))
+										&& simple.getMedia().getURL().startsWith(HTTP))
 								{
 									LOG.info("Inside SimpleBannerComponentModel.HTTP");
 									sb = new StringBuffer(simple.getMedia().getURL());
@@ -636,7 +635,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									campaignDataBigFourPromoBanner.setSize(imageSize);
 								}
 								else if (null != simple.getMedia() && null != simple.getMedia().getURL()
-										&& !simple.getMedia().getURL().startsWith(HTTPS))
+										&& simple.getMedia().getURL().startsWith(HTTPS))
 								{
 									LOG.info("Inside SimpleBannerComponentModel.HTTPS");
 									sb = new StringBuffer(simple.getMedia().getURL());
