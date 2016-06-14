@@ -71,5 +71,9 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 		//empty
 	}
 
+	public static final String SeperaterHashHead = "\n################################### Cronjob Stats ##################################";
+	public static final String SeperaterHash = "\n###################################################################################";
+	public static final String EMPTY = "";
+
 	// implement here constants used by this extension
 }
