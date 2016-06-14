@@ -819,7 +819,7 @@ function displayEMICards(){
 				$(".accepted-cards .maestro").parent().css("display","none");
 				$(".accepted-cards .visa").parent().css("display","inline-block");
 				$(".accepted-cards .master").parent().css("display","inline-block");
-				$(".accepted-cards .amex").parent().css("display","none");
+				$(".accepted-cards .amex").parent().css("display","inline-block");
 				populateBillingAddress();					
 			}
 			else{
@@ -1706,7 +1706,7 @@ $("#otpMobileNUMField").focus(function(){
 		$(".accepted-cards .maestro").parent().css("display","none");
 		$(".accepted-cards .visa").parent().css("display","inline-block");
 		$(".accepted-cards .master").parent().css("display","inline-block");
-		$(".accepted-cards .amex").parent().css("display","none");
+		$(".accepted-cards .amex").parent().css("display","inline-block");
 		$("input[name=emiCards]:radio").first().removeClass("card_token_hide").addClass("card_token");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
 		$(".card_token_hide").parent().find('.card_bank').removeClass("card_bank").addClass("card_bank_hide"); 
@@ -2068,7 +2068,8 @@ function validateCardNo() {
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
-	else if(cardType=='AMEX' && value.length==15 && ($("#paymentMode").val()=='EMI' || $("#paymentMode").val()=='Debit Card')){
+	//TISPRO-572 - Commenting check for EMI in case of AMEX
+	else if(cardType=='AMEX' && value.length==15 && (/*$("#paymentMode").val()=='EMI' ||*/ $("#paymentMode").val()=='Debit Card')){
 		binStatus=false;
 		errorHandle.innerHTML = "Please enter a valid debit card";
 		return false;
@@ -2133,17 +2134,20 @@ function validateCardNo() {
 				else
 				{
 					var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
+					//TISPRO-572 bank selection drop down
+					var selectedBankVal=selectedBank.split(" ", 1);
+					var responseBankVal=response.bankName;
 					if($("#paymentMode").val()=='EMI')
 					{
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 						{
-							if(selectedBank!="select" && selectedBank==response.bankName){
+							if(selectedBank!="select" && responseBankVal.includes(selectedBankVal)){
 								binStatus=true;
 								//applyPromotion();
 								errorHandle.innerHTML = "";
 								return true;			
 							}
-							else if(selectedBank!="select" && selectedBank!=response){
+							else if(selectedBank!="select" && !responseBankVal.includes(selectedBankVal)){
 								binStatus=false;
 								errorHandle.innerHTML = "Please enter a card same as the selected bank";
 								return false;	

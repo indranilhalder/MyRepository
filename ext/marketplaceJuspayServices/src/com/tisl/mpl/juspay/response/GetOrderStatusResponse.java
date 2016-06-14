@@ -53,6 +53,10 @@ public class GetOrderStatusResponse
 	private String paymentMethodType;
 	private String paymentMethod;
 
+	//extra filed for EMI
+	private String bankEmi;
+	private String bankTenure;
+
 
 	public String getMerchantId()
 	{
@@ -378,4 +382,41 @@ public class GetOrderStatusResponse
 	{
 		this.paymentMethod = paymentMethod;
 	}
+
+	/**
+	 * @return the bankEmi
+	 */
+	public String getBankEmi()
+	{
+		return bankEmi;
+	}
+
+	/**
+	 * @param bankEmi
+	 *           the bankEmi to set
+	 */
+	public void setBankEmi(final String bankEmi)
+	{
+		this.bankEmi = bankEmi;
+	}
+
+	/**
+	 * @return the bankTenure
+	 */
+	public String getBankTenure()
+	{
+		return bankTenure;
+	}
+
+	/**
+	 * @param bankTenure
+	 *           the bankTenure to set
+	 */
+	public void setBankTenure(final String bankTenure)
+	{
+		this.bankTenure = bankTenure;
+	}
+
+
+
 }
