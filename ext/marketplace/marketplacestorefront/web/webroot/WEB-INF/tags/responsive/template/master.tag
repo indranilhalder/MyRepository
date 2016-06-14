@@ -116,8 +116,8 @@
 	<link rel="dns-prefetch" href="//${mediaHost}">
 	<link rel="dns-prefetch" href="//${staticResourceHost}"> 
 	<c:choose>
-	    <c:when test="${not empty productMediaHost}">
-	       <link rel="dns-prefetch" href="//${productMediaHost}">
+	    <c:when test="${not empty productMediadnsHost}">
+	       <link rel="dns-prefetch" href="//${productMediadnsHost}">
 	    </c:when>
 	</c:choose>	
 	<!-- DNS prefetching ends --> 
