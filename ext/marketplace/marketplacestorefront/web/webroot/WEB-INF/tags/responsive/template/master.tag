@@ -145,9 +145,9 @@ if($(window).width() < 650) {
 </head>
 
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
-<!-- For Gigya Social Login -->
+<!-- For Gigya Social Login --><!-- TISPT-261 -->
 	<c:if test="${isGigyaEnabled=='Y'}">
-		<c:choose><!-- TISPT-261 -->
+		<c:choose>
 			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/') or 
 					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/payment-method/')}"></c:when>
 		<c:otherwise>
