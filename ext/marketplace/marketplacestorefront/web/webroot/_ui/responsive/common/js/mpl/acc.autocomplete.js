@@ -102,7 +102,8 @@ ACC.autocomplete = {
 			{
 				var self=this;
 				var term = request.term.toLowerCase();
-				var selectedCat = $("#searchCategory option:selected").val();
+				//var selectedCat = $("#searchCategory option:selected").val();
+				var selectedCat = $(".select-list .dropdown li.selected").attr('id');
 				var termCombi = term+":"+selectedCat;
 				//if (term in self.options.cache)
 				if (termCombi in self.options.cache)
