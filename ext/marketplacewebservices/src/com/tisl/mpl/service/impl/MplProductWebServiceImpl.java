@@ -1100,11 +1100,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return List<Map<String, ImageData>>
 	 */
-	private List<GalleryImageData> getGalleryImages(final ProductData productData)
+	@Override
+	public List<GalleryImageData> getGalleryImages(final ProductData productData)
 	{
 		List<GalleryImageData> galleryImageList = new ArrayList<GalleryImageData>();
-		if (null != productDetailsHelper.getGalleryImagesMobile(productData)
-				&& !productDetailsHelper.getGalleryImagesMobile(productData).isEmpty())
+		if (null != productData.getCode())
 		{
 			galleryImageList = productDetailsHelper.getGalleryImagesMobile(productData);
 		}
