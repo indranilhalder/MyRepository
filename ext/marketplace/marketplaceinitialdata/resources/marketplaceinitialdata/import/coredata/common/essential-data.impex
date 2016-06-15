@@ -184,11 +184,30 @@ INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mod
 INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];query;restrictedType(code);principal(UID);active;generate
 ;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true
 
+#Changes for TISPT-345 Start
+INSERT_UPDATE CatalogVersionSyncCronJob;code[unique=true];job(code);singleExecutable;sessionLanguage(isocode);nodeid;
+;mplProductCatalogSync;sync mplProductCatalog\:Staged->Online;false;en;0;
+;mplContentCatalogSync;sync mplContentCatalog\:Staged->Online;false;en;0;
+
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression;
+#Product Catalog Sync Scheduled Every 5 hours
+;mplProductCatalogSync;0 0 0/5 * * ?;
+#Content Catalog Sync Runs on Demand Basis
+;mplContentCatalogSync;;
+
+#Changes for TISPT-345 End
+
 INSERT_UPDATE Trigger;job(code)[unique=true];cronExpression;maxAcceptableDelay;
 #;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
 #Change for TISPT-215
-;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
-                                         
+#;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
+#Commented as per Changes for TISPT-345                                         
+
+
+
+
+
 
 INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
 ;wide;MplNowTrendingProductCarouselComponent

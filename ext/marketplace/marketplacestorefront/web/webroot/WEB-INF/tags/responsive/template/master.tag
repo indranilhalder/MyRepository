@@ -116,8 +116,8 @@
 	<link rel="dns-prefetch" href="//${mediaHost}">
 	<link rel="dns-prefetch" href="//${staticResourceHost}"> 
 	<c:choose>
-	    <c:when test="${not empty productMediaHost}">
-	       <link rel="dns-prefetch" href="//${productMediaHost}">
+	    <c:when test="${not empty productMediadnsHost}">
+	       <link rel="dns-prefetch" href="//${productMediadnsHost}">
 	    </c:when>
 	</c:choose>	
 	<!-- DNS prefetching ends --> 
@@ -145,11 +145,15 @@ if($(window).width() < 650) {
 </head>
 
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
-<!-- For Gigya Social Login -->
+<!-- For Gigya Social Login --><!-- TISPT-261 -->
 	<c:if test="${isGigyaEnabled=='Y'}">
-	<SCRIPT type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}">
-	
-	</SCRIPT>
+		<c:choose>
+			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/') or 
+					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/payment-method/')}"></c:when>
+		<c:otherwise>
+			<script type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}"></script>
+		</c:otherwise>
+		</c:choose>
 	</c:if>
 	<tealium:sync/> 
 <!-- <script type="text/javascript">

@@ -405,7 +405,7 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 						}
 
 					}
-
+					boolean checkSellerRestrictionForFreeBee = false;
 					///brand restriction check
 					for (final AbstractPromotionRestrictionModel restriction : productPromotion.getRestrictions())
 					{
@@ -413,12 +413,12 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 						boolean excluseBrandRestrictionPresent = false;
 
 						//checking if BOGO promotion present or not and removing the promotion if seller restriction not present
-						if (!(restriction instanceof EtailSellerSpecificRestrictionModel) && isFreeBee)
-						{
-							toRemovePromotionList.add(productPromotion);
-							excludePromotion = true;
-							break;
-						}
+						//						if (!(restriction instanceof EtailSellerSpecificRestrictionModel) && isFreeBee)
+						//						{
+						//							toRemovePromotionList.add(productPromotion);
+						//							excludePromotion = true;
+						//							break;
+						//						}
 
 						//Seller restriction check for non free bee promotion
 						if (restriction instanceof EtailSellerSpecificRestrictionModel
@@ -427,6 +427,13 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 							toRemovePromotionList.add(productPromotion);
 							excludePromotion = true;
 							break;
+						}
+
+						//checking if valid seller restriction exists against free bee promotion
+						if (restriction instanceof EtailSellerSpecificRestrictionModel
+								&& isPromoEligibleForproduct(restriction, productModel))
+						{
+							checkSellerRestrictionForFreeBee = true;
 						}
 
 						//checking Exclude brandRestriction
@@ -481,10 +488,16 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 
 
 					}
-
+					if (!checkSellerRestrictionForFreeBee && isFreeBee)
+					{
+						toRemovePromotionList.add(productPromotion);
+						excludePromotion = true;
+					}
 
 				}
 			} //end promotion for loop
+
+
 		}
 		if (!toRemovePromotionList.isEmpty())
 		{
