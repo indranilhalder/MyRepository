@@ -76,8 +76,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 	private static final String NEW_LINE_SEPARATOR = "\n";
 	private static final String TAB_DELIMITER = "\t";
-	private static final String HTTP = "http://";
-	private static final String HTTPS = "https://";
+	//private static final String HTTP = "http://";		//SONAR Fix
+	//private static final String HTTPS = "https://";		//SONAR Fix
 	private static final String MICROSITE_SEPARATOR = "/m/";
 
 	/*
@@ -185,7 +185,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												&& StringUtils.isNotEmpty(bigPromoBanner.getBannerImage().getURL()))
 										{
 											final String imageURL = bigPromoBanner.getBannerImage().getURL();
-											LOG.info("Image url is:::" + imageURL);
+											LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
 											//											if (imageURL.startsWith(HTTP))
 											//											{
 											//												LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTP");
@@ -303,7 +303,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										&& StringUtils.isNotEmpty(bigPromoBanner.getBannerImage().getURL()))
 								{
 									final String imageURL = bigPromoBanner.getBannerImage().getURL();
-									LOG.info("Image url is:::" + imageURL);
+									LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
 									//									if (imageURL.startsWith(HTTP))
 									//									{
 									//										LOG.info("Inside MplBigPromoBannerComponentModel.HTTP");
@@ -407,7 +407,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										&& StringUtils.isNotEmpty(bigPromoBanner.getBannerImage().getURL()))
 								{
 									final String imageURL = bigPromoBanner.getBannerImage().getURL();
-									LOG.info("Image url is:::" + imageURL);
+									LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
 									//									if (imageURL.startsWith(HTTP))
 									//									{
 									//										LOG.info("Inside MplBigFourPromoBannerComponentModel.HTTP");
@@ -519,7 +519,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												&& StringUtils.isNotEmpty(differentBanner.getMedia().getURL()))
 										{
 											final String imageURL = differentBanner.getMedia().getURL();
-											LOG.info("Image url is:::" + imageURL);
+											LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
 											//											if (imageURL.startsWith(HTTP))
 											//											{
 											//												LOG.info("Inside RotatingImagesComponentModel.HTTP");
@@ -556,7 +556,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												if (null != special.getURL())
 												{
 													final String imageURL = special.getURL();
-													LOG.info("Image url is:::" + imageURL);
+													LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
 													//													if (imageURL.startsWith(HTTP))
 													//													{
 													//														LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.HTTP");
@@ -632,7 +632,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												if (null != special.getURL())
 												{
 													final String imageURL = special.getURL();
-													LOG.info("Image url is:::" + imageURL);
+													LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
 													//													if (imageURL.startsWith(HTTP))
 													//													{
 													//														LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.HTTP");
@@ -773,7 +773,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								if (null != simple.getMedia() && null != simple.getMedia().getURL())
 								{
 									final String imageURL = simple.getMedia().getURL();
-									LOG.info("Image url is:::" + imageURL);
+									LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
 									//									if (imageURL.startsWith(HTTP))
 									//									{
 									//										LOG.info("Inside SimpleBannerComponentModel.HTTP");

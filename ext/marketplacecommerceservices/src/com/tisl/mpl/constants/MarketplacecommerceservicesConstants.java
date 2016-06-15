@@ -1583,6 +1583,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String GENPROXY = "proxy.address";
 	public final static String GENPROXYPORT = "proxy.port";
 
+	public final static String IMAGEURLMSG = "Image url is:::";
+
 
 	private MarketplacecommerceservicesConstants()
 	{
