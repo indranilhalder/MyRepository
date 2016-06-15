@@ -1004,8 +1004,10 @@ $(document).ready(function(){
 									listSelect = "";
 								//	console.log(data);
 									$.each(data, function(k, v) {
-										listSelect += '<option value="'+v+'">'
-												+ v + '</option>';
+										if(v != null){
+											listSelect += '<option value="'+v+'">'
+													+ v + '</option>';
+											}
 									});
 								//	console.log(listSelect);
 									$("#feedCategory").html(listSelect);
