@@ -10,6 +10,9 @@
 <span id="wishlistnotblank_sizeGuide" style="display:none"><spring:theme code="wishlist.notblank"/></span>
 
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<script>
+var productCodeSG = '${product.code}'; 
+ </script>
 <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true"></button>
 
 <input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
@@ -552,6 +555,8 @@
 </div>
 <script>
 $(document).ready(function(){
+	
+	openSizeGuidePopuponLoad();
 	var qtyData = $("#pdpQty").val();
 	localStorage.setItem("sizeguideselectvaluePdp", qtyData);
 	
