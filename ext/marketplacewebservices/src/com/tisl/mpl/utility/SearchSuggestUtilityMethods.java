@@ -529,6 +529,8 @@ public class SearchSuggestUtilityMethods
 	// Check if Keyword exists
 	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(final String searchText)
 	{
+		//TODO parse the URL and remove any extra sort query within it
+		//searchText = URLParamUtil.getQueryParamParsed(searchText);
 		return mplProductWebService.getKeywordSearch(searchText);
 	}
 
@@ -768,15 +770,11 @@ public class SearchSuggestUtilityMethods
 					}
 
 				}
-				else
-				{
-					sellerItemDetailWsDto = new SellerItemDetailWsDto();
-					sellerItemDetailWsDto.setSellerId("767865");
-					sellerItemDetailWsDto.setSellerName("TATA");
-					sellerItemDetailWsDto.setEMItag("Y");
-					sellerItemDetailWsDto.setOfferprice("767");
-					sellerItemDetailWsDtoList.add(sellerItemDetailWsDto);
-				}
+				/*
+				 * else { sellerItemDetailWsDto = new SellerItemDetailWsDto(); sellerItemDetailWsDto.setSellerId("767865");
+				 * sellerItemDetailWsDto.setSellerName("TATA"); sellerItemDetailWsDto.setEMItag("Y");
+				 * sellerItemDetailWsDto.setOfferprice("767"); sellerItemDetailWsDtoList.add(sellerItemDetailWsDto); }
+				 */
 				sellingItemDetail.setSeller(sellerItemDetailWsDtoList);
 				sellingItemDetail.setVariantOptions(variantOptionsWsDtoWsDtoList);
 				searchProductDTOList.add(sellingItemDetail);

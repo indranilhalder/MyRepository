@@ -847,7 +847,7 @@ public class ProductsController extends BaseController
 	public ProductSearchPageWsDto searchProductDto(@RequestParam(required = false) String searchText,
 			@RequestParam(required = false) String typeID, @RequestParam(required = false) int page,
 			@RequestParam(required = false) int pageSize, @RequestParam(required = false) String sortCode,
-			//@RequestParam(required = false, defaultValue = "category") final String type,
+			@RequestParam(required = false, defaultValue = "false") final boolean isTextSearch,
 			@RequestParam(required = false) boolean isFilter, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 
@@ -861,54 +861,57 @@ public class ProductsController extends BaseController
 			if (StringUtils.isNotBlank(searchText))
 			{
 				//For Keyword Redirection
-				solrfacets = searchSuggestUtilityMethods.getKeywordSearch(searchText);
-				if (solrfacets != null)
+				if (isTextSearch)
 				{
-					//FOR Direct URL redirection only
-					if (solrfacets.getRedirectMobile() instanceof SolrURIRedirectModel)
+					solrfacets = searchSuggestUtilityMethods.getKeywordSearch(URLParamUtil.filter(searchText));
+					if (solrfacets != null)
 					{
-						url = ((SolrURIRedirectModel) solrfacets.getRedirectMobile()).getUrl();
+						//FOR Direct URL redirection only
+						if (solrfacets.getRedirectMobile() instanceof SolrURIRedirectModel)
+						{
+							url = ((SolrURIRedirectModel) solrfacets.getRedirectMobile()).getUrl();
+						}
+						if (StringUtils.isNotEmpty(url))
+						{
+							//fetching the Parameters from the redirect URL in Map with Key and values
+							params = URLParamUtil.getQueryParams(url);
+							//setting parameter again as per keyword redirect
+							if (params.containsKey("searchText"))
+							{
+								searchText = params.get("searchText").get(0);
+							}
+							if (params.containsKey("typeID"))
+							{
+								typeID = params.get("typeID").get(0);
+							}
+							if (params.containsKey("page"))
+							{
+								//suggestion to parseInt
+								page = Integer.parseInt(params.get("page").get(0));
+							}
+							if (params.containsKey("pageSize"))
+							{
+								//suggestion to parseInt
+								pageSize = Integer.parseInt(params.get("pageSize").get(0));
+							}
+							if (params.containsKey("sortCode"))
+							{
+								sortCode = params.get("sortCode").get(0);
+							}
+							if (params.containsKey("isFilter"))
+							{
+								//suggestion to parseBoolean
+								isFilter = Boolean.parseBoolean(params.get("isFilter").get(0));
+							}
+						}
+						LOG.debug("params" + params);
 					}
-					if (url != null)
-					{
-						//fetching the Parameters from the redirect URL in Map with Key and values
-						params = URLParamUtil.getQueryParams(url);
-						//setting parameter again as per keyword redirect
-						if (params.containsKey("searchText"))
-						{
-							searchText = params.get("searchText").get(0);
-						}
-						if (params.containsKey("typeID"))
-						{
-							typeID = params.get("typeID").get(0);
-						}
-						if (params.containsKey("page"))
-						{
-							//suggestion to parseInt
-							page = Integer.parseInt(params.get("page").get(0));
-						}
-						if (params.containsKey("pageSize"))
-						{
-							//suggestion to parseInt
-							pageSize = Integer.parseInt(params.get("pageSize").get(0));
-						}
-						if (params.containsKey("sortCode"))
-						{
-							sortCode = params.get("sortCode").get(0);
-						}
-						if (params.containsKey("isFilter"))
-						{
-							//suggestion to parseBoolean
-							isFilter = Boolean.parseBoolean(params.get("isFilter").get(0));
-						}
-					}
-					LOG.debug("params" + params);
-				}
-				LOG.debug("url" + url);
-				//End For Keyword Redirection
-				final PageableData pageableData = createPageableData(page, pageSize, sortCode, ShowMode.Page);
-				//final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
+					LOG.debug("url" + url);
 
+				}
+				//End For Keyword Redirection
+
+				final PageableData pageableData = createPageableData(page, pageSize, sortCode, ShowMode.Page);
 				final SearchStateData searchState = new SearchStateData();
 				final SearchQueryData searchQueryData = new SearchQueryData();
 				searchQueryData.setValue(searchText);
