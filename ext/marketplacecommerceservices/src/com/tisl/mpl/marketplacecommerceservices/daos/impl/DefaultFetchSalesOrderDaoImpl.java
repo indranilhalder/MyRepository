@@ -86,7 +86,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	public MplConfigurationModel getCronDetails(final String code)
 	{
 		final String queryString = //
-		SELECT_CLASS + MplConfigurationModel.PK + "} "//
+		SELECT_CLASS + MplConfigurationModel.PK
+				+ "} "//
 				+ FROM_CLASS + MplConfigurationModel._TYPECODE + " AS p } where" + P_CLASS + MplConfigurationModel.MPLCONFIGCODE
 				+ "} = ?code";
 
@@ -156,7 +157,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	{
 		LOG.debug("db call fetch  specified details");
 		final String queryString = //
-		SELECT_CLASS + OrderModel.PK + "} "//
+		SELECT_CLASS + OrderModel.PK
+				+ "} "//
 				+ FROM_CLASS + OrderModel._TYPECODE + " AS p} where " + P_CLASS + OrderModel.CREATIONTIME
 				+ "} BETWEEN ?earlierDate and ?presentDate and " + P_CLASS + OrderModel.TYPE + TYPE_CLASS;
 		LOG.debug("db call fetch  specified details success");
@@ -176,13 +178,12 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	@Override
 	public List<OrderModel> fetchSpecifiedCancelData(final Date earlierDate, final Date presentDate)
 	{
-		//TISPRO-129
+		//TISPRO-129 && TISPRD 2511 query modified
 		final List<OrderModel> orderlist = new ArrayList<OrderModel>();
 		LOG.debug("********inside dao for selecting specified cancel order data**********");
 		final String query = "SELECT DISTINCT {cur:" + OrderModel.PK + "} " + " FROM {" + OrderModel._TYPECODE + " AS cur "
 				+ "LEFT JOIN " + OrderHistoryEntryModel._TYPECODE + "  AS adr  ON {cur:" + OrderModel.PK + "}={adr:"
-				+ OrderHistoryEntryModel.ORDER + "} " + "} WHERE ({cur:" + OrderModel.MODIFIEDTIME
-				+ "}  BETWEEN ?earlierDate and ?presentDate" + " OR {adr:" + OrderHistoryEntryModel.MODIFIEDTIME
+				+ OrderHistoryEntryModel.ORDER + "} " + "} WHERE ({adr:" + OrderHistoryEntryModel.MODIFIEDTIME
 				+ "} BETWEEN ?earlierDate and ?presentDate)" + "and " + "{cur." + OrderModel.TYPE + TYPE_CLASS;
 
 		final Map<String, Object> params = new HashMap<String, Object>(2);
