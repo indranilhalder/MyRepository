@@ -4776,7 +4776,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final Wishlist2Model wishlist2Model = wishlistFacade.removeProductFromWl(productCodeWl, wishlistName, ussidWl);
 
 			sessionService.setAttribute(ModelAttributetConstants.MY_WISHLIST_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
-
+			model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
 			final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
 			model.addAttribute(ModelAttributetConstants.ALL_WISHLISTS, allWishlists);
 			model.addAttribute(ModelAttributetConstants.SHOW_WISHLIST, ModelAttributetConstants.Y_SMALL_VAL);
