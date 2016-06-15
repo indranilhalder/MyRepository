@@ -31,6 +31,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import reactor.util.CollectionUtils;
+
 
 /**
  */
@@ -83,7 +85,16 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 
 		if (source.getCategoryCode() != null)
 		{
-			populateCategorySearchUrl(source, target);
+			//TISPRD-2315
+
+			if (CollectionUtils.isEmpty(source.getFilterTerms()) && source.getSort().equals("relevance"))
+			{
+				target.setUrl(getCategoryUrl(source) + "/page-{pageNo}");
+			}
+			else
+			{
+				populateCategorySearchUrl(source, target);
+			}
 		}
 		else if (source.getSellerID() != null)
 		{
@@ -112,7 +123,6 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 
 
 	}
-
 
 	private boolean checkIfNewProductsPage(final List<SolrSearchQueryTermData> filterTerms)
 	{
