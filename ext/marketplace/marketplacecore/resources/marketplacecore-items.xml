@@ -5275,6 +5275,9 @@
 					<index name="BuyBox_IDX">
 						<key attribute="product" />
 					</index>
+					<index name="BuyBox_USSID_IDX">
+						<key attribute="sellerArticleSKU" />
+					</index> 
 				</indexes>
 			</itemtype>
 

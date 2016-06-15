@@ -5725,7 +5725,7 @@ text-transform: uppercase;
       float: left;
       padding-right: 5px; }
       .cart.wrapper .left-block .payments.tab-view .nav li, .confirmation .left-block .payments.tab-view .nav li {
-        padding: 16px 10px;
+        padding: 0px;
     margin: 1px 0;
     font-weight: 500;
     color: #4A4A4A;
@@ -8161,7 +8161,7 @@ div.wishlist-content .pagination {
 
   @media(min-width:791px) {
 	   .body-Content {
- 	 	padding-bottom:472px; 
+ 	 	padding-bottom:590px; 
 	 }
 	  body.page-productDetails .body-Content {
 	 	padding-bottom:0px !important;
@@ -9535,7 +9535,8 @@ body .account .right-account .order-history .pagination li{
   height: 50px;
   line-height: 35px;}
       .bottom-pagination .pagination .next a, .bottom-pagination .pagination .prev a {
-        padding: 0 15px; }
+          padding: 5px 15px 5px 25px;
+    display: block;}
       .bottom-pagination .pagination .next:hover, .bottom-pagination .pagination .prev:hover {
         background: #A9143C;
         -webkit-transition: background 0.3s;
@@ -19917,6 +19918,9 @@ color: #ff829a;
     -ms-appearance: none;
     -o-appearance: none;
 }
+.wishlist-content button#addToCartButtonwl[disabled="disabled"] {
+    opacity: 0.5;
+}
 .modal .content.emptyWishlist {
         padding: 60px 30px 60px;
     } 
@@ -20195,12 +20199,12 @@ display: inline-block;
 }
 
 .bottom-pagination .pagination .next {
-  padding: 5px 0 5px 10px;
+  padding: 0px;
   width: 150px;
 }
 .bottom-pagination .pagination .prev {
   width: 150px;
-  padding: 5px 10px 5px 0;
+  padding: 0px;
 }
 .product-tile .short-info .color-swatch {
   float: right;
@@ -26906,16 +26910,22 @@ top: 14px;
 	display:none !important;
 }
 .listing-leftmenu .Size .facet-list .filter-Size .facet-text {
-	display: inline-block;
-    float: left;
-    width: 38px;
-    margin:4px;
-    height:38px;
-    line-height:38px;
-    text-align:center;
+	display: table-cell;
+    float: none;
+    vertical-align: middle;
+    width: 60px;
+    margin: 2px;
+    height: 38px;
+    text-align: center;
     border: 1px solid #b9b9b9;
-    color:#b9b9b9 ;
-    font-size:14px;
+    color: #b9b9b9;
+    font-size: 12px;
+}
+.product-facet .facet.size .facet-list li.filter-size {
+    padding: 0 2px;
+} 
+.listing-leftmenu .Size .facet-list .filter-Size label {
+    display: table;
 }
 .listing-leftmenu .Size .facet-list .filter-Size .facet-text:hover { 
 	 border-color: #000;
@@ -31813,7 +31823,10 @@ top: 5px;
 .product-tile .image .online-exclusive{
 	width:42%;
 }
-
+@media (min-width:651px){
+	 .cart.wrapper .left-block .payments.tab-view .nav li span{
+	 padding:16px 10px;}
+}
 /*--------------maincss-----------*/
 .row
 {
@@ -38205,7 +38218,7 @@ font-family: 'FontAwesome';
 	content: url(../images/COD-Black.png);
 }
 .cart.wrapper .left-block .payments.tab-view .nav li span {
-    padding-left: 35px;
+   padding: 16px 10px 16px 45px;
 }
 
 
@@ -38233,7 +38246,7 @@ font-size: 14px;
   .cart.wrapper .left-block .payments.tab-view .nav li span:before{
     margin-left: -35px;
     font-size: 14px;
-    margin-top: 0px;
+    margin-top: 6px;
     position: absolute;
    }
 .cart.wrapper .left-block .payments.tab-view .nav li.active span#viewPaymentCredit:before,

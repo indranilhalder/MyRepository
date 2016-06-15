@@ -1579,6 +1579,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String GETAUDITID = "select {a.pk} from {mplpaymentaudit as a} where {a.cartGUID}=?cartGUID ORDER BY {a.requestDate} DESC"
 			.intern();
 
+	public final static String PROXYENABLED = "proxy.enabled";
+	public final static String GENPROXY = "proxy.address";
+	public final static String GENPROXYPORT = "proxy.port";
+
 
 	private MarketplacecommerceservicesConstants()
 	{
