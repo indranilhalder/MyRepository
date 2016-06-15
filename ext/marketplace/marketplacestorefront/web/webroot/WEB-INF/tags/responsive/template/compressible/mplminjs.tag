@@ -40,7 +40,7 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 		src="${commonResourcePath}/js/acc.accountpagination.js?v=${buildNumber}"></script>
 </c:if>
 
-<!-- Fix for defect TISPT-202 -->
+<%-- <!-- Fix for defect TISPT-202 -->
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/store-finder') || (requestScope['javax.servlet.forward.request_uri']=='/') || fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/check')}">
 	<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script>
-</c:if> 
+</c:if>  --%>

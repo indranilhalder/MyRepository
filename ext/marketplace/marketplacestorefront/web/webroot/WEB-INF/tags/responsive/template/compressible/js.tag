@@ -33,6 +33,8 @@ if(loginStatus){
 	}  
 }
 </script>
+<script type="text/javascript"
+	src="${commonResourcePath}/js/jquery-ui-1.11.2.custom.min.js"></script>	
 <%-- bootstrap --%>
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -93,7 +95,7 @@ function globalErrorPopup(msg) {
 } 
 $(document).on('hide.bs.modal', function () {
     $("#globalErrorPopupMsg").remove();
-}); 
+});
 </script>
 
 <style type="text/css">
