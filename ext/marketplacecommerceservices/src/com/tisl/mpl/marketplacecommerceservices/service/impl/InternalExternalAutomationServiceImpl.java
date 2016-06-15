@@ -20,11 +20,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Authenticator;
-import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
-import java.net.Proxy;
-import java.net.SocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -203,7 +200,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											sb = new StringBuffer(imageURL);
 											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 											imageUrl = sb.toString();
-											imageSize = findIamgeSize(imageUrl);
+											imageSize = findImageSize(imageUrl);
 											//}
 										}
 										if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
@@ -232,7 +229,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									}
 									catch (final Exception e)
 									{
-										LOG.error("MplBigPromoBannerComponentModel Exception: " + e.getMessage());
+										LOG.error("MplBigPromoBannerComponentModel Exception: ", e);
 
 									}
 								}
@@ -321,7 +318,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									sb = new StringBuffer(imageURL);
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
-									imageSize = findIamgeSize(imageUrl);
+									imageSize = findImageSize(imageUrl);
 									//}
 								}
 								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
@@ -348,7 +345,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							}
 							catch (final Exception e)
 							{
-								LOG.error("MplBigPromoBannerComponentModel Exception: " + e.getMessage());
+								LOG.error("MplBigPromoBannerComponentModel Exception: ", e);
 							}
 							CampaignDataList.add(campaignDataBigPromoBanner);
 							LOG.info("Stepping out from MplBigPromoBannerComponentModel");
@@ -425,7 +422,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									sb = new StringBuffer(imageURL);
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
-									imageSize = findIamgeSize(imageUrl);
+									imageSize = findImageSize(imageUrl);
 									//									}
 								}
 
@@ -453,7 +450,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							}
 							catch (final Exception e)
 							{
-								LOG.error("MplBigFourPromoBannerComponentModel Exception: " + e.getMessage());
+								LOG.error("MplBigFourPromoBannerComponentModel Exception: ", e);
 							}
 							CampaignDataList.add(campaignDataBigFourPromoBanner);
 							LOG.info("Stepping out from MplBigFourPromoBannerComponentModel");
@@ -537,7 +534,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											sb = new StringBuffer(imageURL);
 											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 											imageUrl = sb.toString();
-											imageSize = findIamgeSize(imageUrl);
+											imageSize = findImageSize(imageUrl);
 											//											}
 										}
 
@@ -576,7 +573,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 															.getBannerImage().getURL());
 													sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 													imageUrl = sb.toString();
-													imageSize = findIamgeSize(imageUrl);
+													imageSize = findImageSize(imageUrl);
 													//													}
 												}
 
@@ -652,7 +649,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 															.getURL());
 													sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 													imageUrl = sb.toString();
-													imageSize = findIamgeSize(imageUrl);
+													imageSize = findImageSize(imageUrl);
 													//													}
 												}
 
@@ -699,7 +696,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									}
 									catch (final Exception e)
 									{
-										LOG.error("RotatingImagesComponentModel Exception: " + e.getMessage());
+										LOG.error("RotatingImagesComponentModel Exception: ", e);
 									}
 									CampaignDataList.add(campaignDataBigFourPromoBanner);
 								}
@@ -792,7 +789,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									sb = new StringBuffer(imageURL);
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
-									imageSize = findIamgeSize(imageUrl);
+									imageSize = findImageSize(imageUrl);
 									//									}
 								}
 								if (null != simple.getMedia() && null != simple.getMedia().getMime())
@@ -836,7 +833,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception in creating Banner Image: " + e.getMessage());
+			LOG.error("Exception in creating Banner Image: ", e);
 		}
 		return CampaignDataList;
 	}
@@ -859,7 +856,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 		catch (final Exception e)
 		{
-			LOG.error("Exception writing" + e.getMessage());
+			LOG.error("Exception writing", e);
 		}
 	}
 
@@ -1009,33 +1006,14 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	}
 
 
-	public String findIamgeSize(final String urlString) throws Exception
+	public String findImageSize(final String urlString) throws Exception
 	{
 		LOG.info("Inside findIamgeSize starts, urlString is: " + urlString);
 		String size = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
 			final URL object = new URL(urlString);
-			final String proxyEnableStatus = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.PROXYENABLED);
-			URLConnection connection = null;
-
-			if (proxyEnableStatus.equalsIgnoreCase("true"))
-			{
-				LOG.info("Inside proxy enabled true");
-				final String proxyName = configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.GENPROXY);
-				final int proxyPort = Integer.parseInt(configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.GENPROXYPORT));
-				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				connection = object.openConnection(proxy);
-			}
-			else
-			{
-				connection = object.openConnection();
-			}
-			// int timeOut = connection.getReadTimeout();
+			final URLConnection connection = object.openConnection();
 			connection.setReadTimeout(60 * 1000);
 			connection.setConnectTimeout(60 * 1000);
 			LOG.info("Connection: " + connection);
@@ -1056,8 +1034,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			//final int responseCode = connection.
 			//System.out.println("" + responseCode);
 			//final BufferedImage bimg = ImageIO.read(openURLForInput(url,username,password));
-			//LOG.info("connection InputStream: " + connection.getInputStream() + ", BufferedImage: "
-			//		+ ImageIO.read(connection.getInputStream()));
 			final BufferedImage bimg = ImageIO.read(connection.getInputStream());
 			LOG.info("connection InputStream: " + connection.getInputStream() + ", BufferedImage: " + bimg);
 			if (null != bimg)
@@ -1073,7 +1049,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				size = MarketplacecommerceservicesConstants.EMPTY;
 			}
 
-			//size = String.valueOf(width) + " X " + String.valueOf(height);
 			LOG.info("Size is :::::::" + size);
 
 
