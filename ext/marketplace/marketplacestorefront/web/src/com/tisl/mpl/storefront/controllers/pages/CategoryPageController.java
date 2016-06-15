@@ -139,7 +139,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	@RequestMapping(value =
 	{ NEW_CATEGORY_URL_PATTERN, NEW_CATEGORY_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
 	public String category(@PathVariable("categoryCode") String categoryCode,
-			@RequestParam(value = "q", required = false) final String searchQuery,
+			@RequestParam(value = "q", required = false) String searchQuery,
 			@RequestParam(value = PAGE, defaultValue = "0") int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
@@ -159,6 +159,12 @@ public class CategoryPageController extends AbstractCategoryPageController
 			model.addAttribute("sizeCount", Integer.valueOf(getfilterListCountForSize(searchQuery)));
 			model.addAttribute("searchQueryValue", searchQuery);
 		}
+		//TISPRD-2315(checking whether the link has been clicked for pagination)
+		if (checkIfPagination(request) && searchQuery == null)
+		{
+			searchQuery = ":relevance";
+		}
+
 		//Storing the user preferred search results count
 		updateUserPreferences(pageSize);
 
@@ -242,9 +248,15 @@ public class CategoryPageController extends AbstractCategoryPageController
 				if (CollectionUtils.isNotEmpty(normalProductDatas))
 				{
 					model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+					model.addAttribute("departments", searchPageData.getDepartments());
 				}
-
-
+				//set url for 1st page
+				//				if (checkIfPagination(request) && searchQuery.quals && page == 0 && null != searchPageData.getCurrentQuery())
+				//				{
+				//					searchPageData.getCurrentQuery().setUrl(
+				//							searchPageData.getCurrentQuery().getUrl()
+				//									.substring(0, searchPageData.getCurrentQuery().getUrl().indexOf("/page")));
+				//				}
 
 				final String categoryName = category.getName();
 
@@ -648,6 +660,20 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = categorySearch
 				.getSearchPageData();
+		//set url for 1st page
+		if (checkIfPagination(request) && searchQuery.equals(":relevance") && sortCode == null
+				&& null != searchPageData.getCurrentQuery())
+		{
+			searchPageData.getCurrentQuery()
+					.setUrl(
+							searchPageData.getCurrentQuery().getUrl()
+									.substring(0, searchPageData.getCurrentQuery().getUrl().indexOf("/page")));
+		}
+		if (searchPageData != null)
+		{
+			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+			model.addAttribute("departments", searchPageData.getDepartments());
+		}
 		final boolean showCategoriesOnly = categorySearch.isShowCategoriesOnly();
 
 		storeCmsPageInModel(model, categorySearch.getCategoryPage());
@@ -684,4 +710,23 @@ public class CategoryPageController extends AbstractCategoryPageController
 		return getViewPage(categorySearch.getCategoryPage());
 
 	}
+
+	/**
+	 * check if the request contains paging information
+	 *
+	 * @param request
+	 * @return pagination
+	 */
+	private boolean checkIfPagination(final HttpServletRequest request)
+	{
+		final String uri = request.getRequestURI();
+		boolean pagination = false;
+		if (uri.contains("page"))
+		{
+			pagination = true;
+
+		}
+		return pagination;
+	}
+
 }
