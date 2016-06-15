@@ -4263,6 +4263,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
 	}
 
 	/**
@@ -4407,6 +4412,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				if (wishlist2Model.getName().equals(wishlistName))
 				{
 					modelService.remove(wishlist2Model);
+					break;
 				}
 			}
 
@@ -4441,6 +4447,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
@@ -4693,6 +4704,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
 	}
 
 	/**
@@ -4729,7 +4745,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
-
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
 	}
 
 
@@ -4752,77 +4772,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 	{
 		try
 		{
-			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d,yyyy");
+
 			final Wishlist2Model wishlist2Model = wishlistFacade.removeProductFromWl(productCodeWl, wishlistName, ussidWl);
-			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
-					MessageConstants.SYSTEM_ERROR_WISHLIST_PRODUCT_REMOVE_SUCCESS, null);
 
-			model.addAttribute(ModelAttributetConstants.PRODUCT_DATA, wishlist2Model);
-			final List<ProductData> datas = new ArrayList<ProductData>();
-			final List<WishlistProductData> wpDataList = new ArrayList<WishlistProductData>();
-			final List<Wishlist2EntryModel> entryModels = wishlist2Model.getEntries();
-			if (entryModels.size() >= 1)
-			{
-				for (final Wishlist2EntryModel entryModel : entryModels)
-				{
-					if (null != entryModel && null != entryModel.getProduct())
-					{
-						final WishlistProductData wishlistProductData = new WishlistProductData();
-						/*
-						 * final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
-						 * Arrays.asList( ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY,
-						 * ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK,
-						 * ProductOption.REVIEW,
-						 * 
-						 * ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
-						 */
-
-						final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-								ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-								ProductOption.STOCK, ProductOption.SELLER));
-
-						datas.add(productData1);
-						wishlistProductData.setProductData(productData1);
-
-						if (null != productData1 && null != productData1.getSeller() && productData1.getSeller().size() > 0)
-						{
-							final List<SellerInformationData> sellerDatas = productData1.getSeller();
-							for (final SellerInformationData sellerData : sellerDatas)
-							{
-								if (sellerData.getUssid().equals(entryModel.getUssid()))
-								{
-									wishlistProductData.setSellerInfoData(sellerData);
-									break;
-								}
-							}
-							wishlistProductData.setWishlistAddedDate(simpleDateFormat.format(entryModel.getAddedDate()));
-						}
-						wpDataList.add(wishlistProductData);
-					}
-				}
-			}
 			sessionService.setAttribute(ModelAttributetConstants.MY_WISHLIST_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
 
-			model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
-			model.addAttribute(ModelAttributetConstants.PRODUCT_DATAS, datas);
-			model.addAttribute(ModelAttributetConstants.WISHLIST_PRODUCT_DATA_LIST, wpDataList);
-			model.addAttribute(new WishlistData());
-			model.addAttribute(new ReviewForm());
-			model.addAttribute(ModelAttributetConstants.EDIT_WISHLIST_NAME_DATA, new EditWishlistNameData());
 			final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
 			model.addAttribute(ModelAttributetConstants.ALL_WISHLISTS, allWishlists);
-			final NewWishlistData newWishlistData1 = new NewWishlistData();
-			model.addAttribute(ModelAttributetConstants.NEW_WISHLIST_DATA, newWishlistData1);
-			final ExistingWishlistData existingWishlistData = new ExistingWishlistData();
-			model.addAttribute(ModelAttributetConstants.EXISTING_WISHLIST_DATA, existingWishlistData);
-			final ParticularWishlistData1 particularWishlistData1 = new ParticularWishlistData1();
-			model.addAttribute(ModelAttributetConstants.PARTICULAR_WISHLIST_DATA, particularWishlistData1);
-			model.addAttribute(ModelAttributetConstants.RENDERING_METHOD,
-					ModelAttributetConstants.RENDERING_METHOD_VIEW_PARTICULAR_WISHLIST);
 			model.addAttribute(ModelAttributetConstants.SHOW_WISHLIST, ModelAttributetConstants.Y_SMALL_VAL);
 			model.addAttribute(ModelAttributetConstants.PARTICULAR_WISHLIST_NAME, wishlist2Model.getName());
-			final RemoveWishlistData removeWishlistData = new RemoveWishlistData();
-			model.addAttribute(ModelAttributetConstants.REMOVE_WISHLIST_DATA, removeWishlistData);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(WISHLIST_CMS_PAGE));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(WISHLIST_CMS_PAGE));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -4844,6 +4802,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
@@ -4927,6 +4890,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			wishlistJson.put(ERROR_OCCURED, ERROR_MSG);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			wishlistJson.put(ERROR_OCCURED, ERROR_MSG);
+		}
 		return jsonArray;
 	}
 
@@ -4960,6 +4929,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		return null;
