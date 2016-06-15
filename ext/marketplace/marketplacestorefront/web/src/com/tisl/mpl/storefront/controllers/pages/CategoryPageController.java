@@ -294,7 +294,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				/*
 				 * final List<ProductData> commonNormalProducts = new ArrayList<ProductData>(); final List<ProductData>
 				 * normalProductDatas = searchPageData.getResults();
-				 * 
+				 *
 				 * if (null != normalProductDatas) { for (final ProductData normalProduct : normalProductDatas) { for (final
 				 * ProductModel heroProduct : heroProducts) { if
 				 * (normalProduct.getCode().equalsIgnoreCase(heroProduct.getCode())) {
@@ -422,7 +422,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 *              in @RequestMapping
 	 * @param categoryCode
 	 * @param searchQuery
-	 * 
+	 *
 	 * @param showMode
 	 * @param sortCode
 	 * @return SearchResultsData<ProductData>
@@ -537,7 +537,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	{
 		String newUrl = null;
 		final String uri = request.getRequestURI();
-		if (uri.contains("page"))
+		if (uri.contains(PAGE))
 		{
 			final Pattern p = Pattern.compile("page-[0-9]+");
 			final Matcher m = p.matcher(uri);
@@ -619,7 +619,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	{
 		int pages = 0;
 		final String uri = request.getRequestURI();
-		if (uri.contains("page"))
+		if (uri.contains(PAGE))
 		{
 			final Pattern p = Pattern.compile("page-[0-9]+");
 			final Matcher m = p.matcher(uri);
@@ -721,7 +721,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	{
 		final String uri = request.getRequestURI();
 		boolean pagination = false;
-		if (uri.contains("page"))
+		if (uri.contains(PAGE))
 		{
 			pagination = true;
 
