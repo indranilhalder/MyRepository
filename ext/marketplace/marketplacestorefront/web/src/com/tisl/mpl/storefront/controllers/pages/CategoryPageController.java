@@ -140,7 +140,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	{ NEW_CATEGORY_URL_PATTERN, NEW_CATEGORY_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
 	public String category(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) String searchQuery,
-			@RequestParam(value = PAGE, defaultValue = "0") int page,
+			@RequestParam(value = PAGE, defaultValue = "0") int pageNo,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
@@ -151,7 +151,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		categoryCode = categoryCode.toUpperCase();
 		String searchCode = new String(categoryCode);
 		//SEO: New pagination detection TISCR 340
-		page = getPaginatedPageNo(request);
+		pageNo = getPaginatedPageNo(request);
 		//applying search filters
 		if (searchQuery != null)
 		{
@@ -240,7 +240,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
 
 				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-						categoryCode, searchQuery, page, showMode, sortCode, count, resetAll);
+						categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll);
 
 				final List<ProductData> normalProductDatas = searchPageData.getResults();
 				//Set department hierarchy
@@ -288,7 +288,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				 * (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch( categoryCode,
 				 * searchQuery, page, showMode, sortCode, count, resetAll);
 				 */
-				final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, page, showMode, sortCode,
+				final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, pageNo, showMode, sortCode,
 						model, request, response);
 				//Commented out for TISPT-225
 				/*
@@ -409,12 +409,12 @@ public class CategoryPageController extends AbstractCategoryPageController
 	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/facets", method = RequestMethod.GET)
 	public FacetRefinement<SearchStateData> getFacets(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = PAGE, defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") final int pageNum,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode) throws UnsupportedEncodingException
 	{
 		categoryCode = categoryCode.toUpperCase();
-		return performSearchAndGetFacets(categoryCode, searchQuery, page, showMode, sortCode);
+		return performSearchAndGetFacets(categoryCode, searchQuery, pageNum, showMode, sortCode);
 	}
 
 	/**
@@ -422,7 +422,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 *              in @RequestMapping
 	 * @param categoryCode
 	 * @param searchQuery
-	 * @param page
+	 * 
 	 * @param showMode
 	 * @param sortCode
 	 * @return SearchResultsData<ProductData>
@@ -432,12 +432,12 @@ public class CategoryPageController extends AbstractCategoryPageController
 	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
 	public SearchResultsData<ProductData> getResults(@PathVariable("categoryCode") String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = PAGE, defaultValue = "0") final int page,
+			@RequestParam(value = PAGE, defaultValue = "0") final int pgNum,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode) throws UnsupportedEncodingException
 	{
 		categoryCode = categoryCode.toUpperCase();
-		return performSearchAndGetResultsData(categoryCode, searchQuery, page, showMode, sortCode);
+		return performSearchAndGetResultsData(categoryCode, searchQuery, pgNum, showMode, sortCode);
 	}
 
 	/**
@@ -507,10 +507,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @return ProductSearchPageData
 	 */
 	protected ProductSearchPageData<SearchStateData, ProductData> performSearch(final String categoryCode,
-			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int pageSize,
+			final String searchQuery, final int pgNo, final ShowMode showMode, final String sortCode, final int pageSize,
 			final boolean resetAll)
 	{
-		final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
+		final PageableData pageableData = createPageableData(pgNo, pageSize, sortCode, showMode);
 
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
@@ -617,7 +617,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 */
 	private int getPaginatedPageNo(final HttpServletRequest request)
 	{
-		int page = 0;
+		int pages = 0;
 		final String uri = request.getRequestURI();
 		if (uri.contains("page"))
 		{
@@ -625,22 +625,22 @@ public class CategoryPageController extends AbstractCategoryPageController
 			final Matcher m = p.matcher(uri);
 			if (m.find())
 			{
-				final String pageNo = m.group().split("-")[1];
-				if (null != pageNo)
+				final String pageNoVal = m.group().split("-")[1];
+				if (null != pageNoVal)
 				{
-					page = Integer.parseInt(pageNo);
-					page = page - 1;
+					pages = Integer.parseInt(pageNoVal);
+					pages = pages - 1;
 				}
 			}
 		}
-		return page;
+		return pages;
 	}
 
 
 
 
 	@Override
-	protected String performSearchAndGetResultsPage(final String categoryCode, final String searchQuery, final int page,
+	protected String performSearchAndGetResultsPage(final String categoryCode, final String searchQuery, final int pgNumbers,
 			final ShowMode showMode, final String sortCode, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws UnsupportedEncodingException
 	{
@@ -655,7 +655,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		final CategoryPageModel categoryPage = getCategoryPage(category);
 
 		final CategorySearchEvaluator categorySearch = new CategorySearchEvaluator(categoryCode, XSSFilterUtil.filter(searchQuery),
-				page, showMode, sortCode, categoryPage);
+				pgNumbers, showMode, sortCode, categoryPage);
 		categorySearch.doSearch();
 
 		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = categorySearch
