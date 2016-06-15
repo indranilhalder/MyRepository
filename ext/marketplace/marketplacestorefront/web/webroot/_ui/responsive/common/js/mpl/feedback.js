@@ -1492,9 +1492,9 @@ $(document).ready(function(){
 			$(this).click();
 		});
 		
-		$(document).on('click','header .content .right > ul > li.bag',function(){
+	/*	$(document).on('click','header .content .right > ul > li.bag',function(){
 			$(this).toggleClass('clicked');
-		});
+		});*/
 		
 		
 		loadGigya();
