@@ -4,8 +4,10 @@
 package com.tisl.mpl.service;
 
 import de.hybris.platform.commercefacades.product.data.ProductData;
-import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
 
+import java.util.List;
+
+import com.tisl.mpl.wsdto.GalleryImageData;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 
 
@@ -19,5 +21,5 @@ public interface MplProductWebService
 
 	public String getCategoryCodeOfProduct(final ProductData productData);
 
-	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(final String searchText);
+	public List<GalleryImageData> getGalleryImages(final ProductData productData);
 }
