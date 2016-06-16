@@ -863,7 +863,7 @@ public class ProductsController extends BaseController
 				//For Keyword Redirection
 				if (isTextSearch)
 				{
-					solrfacets = searchSuggestUtilityMethods.getKeywordSearch(URLParamUtil.filter(searchText));
+					solrfacets = searchSuggestUtilityMethods.getKeywordSearch(searchText);
 					if (solrfacets != null)
 					{
 						//FOR Direct URL redirection only

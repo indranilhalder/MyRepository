@@ -527,10 +527,11 @@ public class SearchSuggestUtilityMethods
 	}
 
 	// Check if Keyword exists
-	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(final String searchText)
+	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(String searchText)
 	{
 		//TODO parse the URL and remove any extra sort query within it
 		//searchText = URLParamUtil.getQueryParamParsed(searchText);
+		searchText = URLParamUtil.filter(searchText);
 		return mplProductWebService.getKeywordSearch(searchText);
 	}
 
