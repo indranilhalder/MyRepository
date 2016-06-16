@@ -1125,16 +1125,15 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param totalCountFactor
 	 * @return Map<Product, Integer>
 	 */
-	public Map<String, Integer> getQualifyingCountForABPromotion(final List<String> eligibleProductList,
-			final int totalCountFactor)
+	public Map<String, Integer> getQualifyingCountForABPromotion(final List<String> eligibleProductList, final int totalCountFactor)
 	{
 		final Map<String, Integer> itemLevelQC = new HashMap<String, Integer>();
 		for (final String ussid : eligibleProductList)
 		{
-			itemLevelQC.put(ussid,
-					Integer.valueOf(totalCountFactor)/*
-																 * Integer.valueOf(Collections.frequency( eligibleProductList, ussid))
-																 */);
+			itemLevelQC.put(ussid, Integer.valueOf(totalCountFactor)/*
+																					   * Integer.valueOf(Collections.frequency(
+																					   * eligibleProductList, ussid))
+																					   */);
 		}
 		return itemLevelQC;
 	}
@@ -1192,8 +1191,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				else
 				{
 					//need to add the final remaining elements
-					associatedProductList.addAll(
-							validProdUssidList.subList(validProdUssidList.indexOf(validProductUssid) + 1, validProdUssidList.size()));
+					associatedProductList.addAll(validProdUssidList.subList(validProdUssidList.indexOf(validProductUssid) + 1,
+							validProdUssidList.size()));
 				}
 
 				if (sKUForFreebie != null)
@@ -1592,8 +1591,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param validProductList
 	 * @return Map<Product, Double>
 	 */
-	public Map<String, Map<String, Double>> updateDeliveryCharges(final boolean isDeliveryFreeFlag, final boolean isPercentageFlag,
-			final double adjustedDeliveryCharge, final Map<String, Integer> qCount,
+	public Map<String, Map<String, Double>> updateDeliveryCharges(final boolean isDeliveryFreeFlag,
+			final boolean isPercentageFlag, final double adjustedDeliveryCharge, final Map<String, Integer> qCount,
 			final Map<String, String> fetchProductRichAttribute)
 	{
 		final Map<String, Map<String, Double>> prodPrevCurrDelChargeMap = new HashMap<String, Map<String, Double>>();
@@ -1611,13 +1610,14 @@ public class DefaultPromotionManager extends PromotionsManager
 				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
 				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
 				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
-				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService
-						.getDeliveryCost(selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
+				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
+						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
 				prodDelChargeMap.put(entry, mplZoneDeliveryModeValueModel);
-				if (!isPercentageFlag && null != mplZoneDeliveryModeValueModel.getValue()
+				if (!isPercentageFlag
+						&& null != mplZoneDeliveryModeValueModel.getValue()
 						&& (fetchProductRichAttribute.containsKey(entry.getSelectedUSSID())
-								&& null != fetchProductRichAttribute.get(entry.getSelectedUSSID()) && !fetchProductRichAttribute
-										.get(entry.getSelectedUSSID()).equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP)))
+								&& null != fetchProductRichAttribute.get(entry.getSelectedUSSID()) && !fetchProductRichAttribute.get(
+								entry.getSelectedUSSID()).equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP)))
 				{
 					totalDeliveryCostForValidProds += mplZoneDeliveryModeValueModel.getValue().doubleValue()
 							* qCount.get(selectedUSSID).intValue();
@@ -1636,9 +1636,8 @@ public class DefaultPromotionManager extends PromotionsManager
 			final Map<String, Double> prevCurrDeliveryChargeMap = new HashMap<String, Double>();
 
 			if ((fetchProductRichAttribute.containsKey(entry.getSelectedUSSID())
-					&& null != fetchProductRichAttribute.get(entry.getSelectedUSSID())
-					&& fetchProductRichAttribute.get(entry.getSelectedUSSID())
-							.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
+					&& null != fetchProductRichAttribute.get(entry.getSelectedUSSID()) && fetchProductRichAttribute.get(
+					entry.getSelectedUSSID()).equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
 					|| prodMplZoneDeliveryModeValueModel.getValue().doubleValue() == 0.00D)
 			{
 				prevCurrDeliveryChargeMap.put(MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0));
@@ -1920,8 +1919,8 @@ public class DefaultPromotionManager extends PromotionsManager
 									}
 									else if ((paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING)
 											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT)
-											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT)
-											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
+											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT) || paymentMode
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
 											&& (StringUtils.isNotEmpty(selectedBank) && checkBankData(selectedBank, restrBanks)))
 									{
 										flag = true;
@@ -1986,8 +1985,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
 
-		final List<AbstractOrderEntry> orderEntryList = cart.getEntriesByProduct(product) != null
-				? cart.getEntriesByProduct(product) : new ArrayList<AbstractOrderEntry>();
+		final List<AbstractOrderEntry> orderEntryList = cart.getEntriesByProduct(product) != null ? cart
+				.getEntriesByProduct(product) : new ArrayList<AbstractOrderEntry>();
 
 		if (isSellerRestrExists(restrictionList) || isExSellerRestrExists(restrictionList))
 		{
@@ -2227,8 +2226,9 @@ public class DefaultPromotionManager extends PromotionsManager
 		final int totalFactorCount = totalCount / (int) eligibleQty;
 		final int totalEligibleCount = totalFactorCount * (int) eligibleQty;
 
-		validProductUssidMap.keySet().retainAll(populateSortedValidProdUssidMap(validProductUssidMap, totalEligibleCount,
-				paramSessionContext, restrictionList, validUssidList));
+		validProductUssidMap.keySet().retainAll(
+				populateSortedValidProdUssidMap(validProductUssidMap, totalEligibleCount, paramSessionContext, restrictionList,
+						validUssidList));
 		return validUssidList;
 	}
 
@@ -2291,8 +2291,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				if (applyPromotion && brandFlag && sellerFlag)
 				{
 					sellerID = getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
-					validProductUssidMap
-							.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext, entry));
+					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext,
+							entry));
 					if (sellerIDData != null && eligibleProductMap != null)
 					{
 						sellerIDData.add(sellerID);
@@ -2307,8 +2307,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	/**
 	 * @Description : Checks For Manufacturer Based Restrictions
-	 * @param :
-	 *           SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
 	 * @return : flag
 	 */
 	public boolean checkMinimumBrandAmount(final SessionContext arg0, final PromotionEvaluationContext arg1,
@@ -2380,10 +2379,8 @@ public class DefaultPromotionManager extends PromotionsManager
 		try
 		{
 			final double minimumCategoryValue = productPromotion.getProperty(ctx,
-					MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null
-							? ((Double) productPromotion.getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT))
-									.doubleValue()
-							: 0.00D;
+					MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null ? ((Double) productPromotion.getProperty(ctx,
+					MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
 			double totalEligibleEntryAmount = 0.0D;
 			if (minimumCategoryValue == 0.00D)
 			{
@@ -2431,9 +2428,8 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	/**
 	 * @Description :Converts amount to percentage
-	 * @param :
-	 *           SessionContext paramSessionContext ,Map<Product, Integer> validProductList , AbstractOrder cart,int
-	 *           totalCount,double discountPriceValue
+	 * @param : SessionContext paramSessionContext ,Map<Product, Integer> validProductList , AbstractOrder cart,int
+	 *        totalCount,double discountPriceValue
 	 * @return :double
 	 */
 
@@ -2457,6 +2453,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	public int getFreeGiftCount(final String key, final Map<AbstractOrderEntry, String> eligibleProductMap, final int count)
 	{
 		int giftCount = 0;
+		int quantity = 0;
 		List<SellerInformationModel> productSellerData = null;
 		try
 		{
@@ -2473,12 +2470,18 @@ public class DefaultPromotionManager extends PromotionsManager
 						{
 							if (sellerData.getSellerID().equalsIgnoreCase(entry.getValue()))
 							{
-								giftCount = giftCount + (entry.getKey().getQuantity().intValue() / count);
+								quantity = quantity + (entry.getKey().getQuantity().intValue());
+								//giftCount = giftCount + (entry.getKey().getQuantity().intValue() / count);
 							}
 						}
 					}
 				}
 
+				//Newly Added Code
+				if (quantity > 0)
+				{
+					giftCount = quantity / count;
+				}
 			}
 
 		}
@@ -2671,8 +2674,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	/**
 	 * @Description : This calculates the total valid product price
-	 * @param :
-	 *           validProductUssidMap, validProductList
+	 * @param : validProductUssidMap, validProductList
 	 * @return :double
 	 */
 	public double getTotalValidProdPrice(final Map<String, AbstractOrderEntry> validProductUssidMap,
@@ -2849,8 +2851,8 @@ public class DefaultPromotionManager extends PromotionsManager
 		final long resultingQuantity = available - quantity;
 		if (resultingQuantity < 0L)
 		{
-			throw new PromotionException(
-					"Cannot remove " + quantity + " items.  There is not a sufficient quantity of this product remaining.");
+			throw new PromotionException("Cannot remove " + quantity
+					+ " items.  There is not a sufficient quantity of this product remaining.");
 		}
 
 		final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(ctx, "",
@@ -2893,8 +2895,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
 				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
 				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
-				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService
-						.getDeliveryCost(selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
+				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
+						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
 				prodDelChargeMap.put(entry, mplZoneDeliveryModeValueModel);
 				if (!isPercentageFlag && null != mplZoneDeliveryModeValueModel.getValue())
 				{
@@ -3064,8 +3066,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				if (applyPromotion && brandFlag && sellerFlag)
 				{
 					sellerID = getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
-					validProductUssidMap
-							.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext, entry));
+					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext,
+							entry));
 					if (sellerIDData != null && eligibleProductMap != null)
 					{
 						sellerIDData.add(sellerID);
@@ -3132,8 +3134,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				else
 				{
 					//need to add the final remaining elements
-					associatedProductList.addAll(
-							validProdUssidList.subList(validProdUssidList.indexOf(validProductUssid) + 1, validProdUssidList.size()));
+					associatedProductList.addAll(validProdUssidList.subList(validProdUssidList.indexOf(validProductUssid) + 1,
+							validProdUssidList.size()));
 				}
 
 				if (CollectionUtils.isNotEmpty(sKUForFreebieList))

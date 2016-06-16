@@ -104,6 +104,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 						&& entryModel.getUssid().equals(ussid))
 				{
 					wishlist2EntryModel = entryModel;
+					break;
 				}
 			}
 
@@ -304,8 +305,8 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	protected PriceData createPrice(final AbstractOrderEntryModel orderEntry, final Double val)
 	{
-		return priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(val.doubleValue()),
-				orderEntry.getOrder().getCurrency());
+		return priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(val.doubleValue()), orderEntry.getOrder()
+				.getCurrency());
 	}
 
 	/*
