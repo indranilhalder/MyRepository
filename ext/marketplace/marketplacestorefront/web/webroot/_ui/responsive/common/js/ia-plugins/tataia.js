@@ -1,35 +1,16 @@
 /*Facebook Variables to be Provided by TCS*/
-
 var fbID = '';
-
 var fbAccessToken = '';
-
-
-
 /*Which widget we are working with*/
-
 var widgetMode = '';
-
-
-
 /*Initialize company specific variables*/
-
 //ecompany = 'dev.tul.com';
-
 rootEP = $('#rootEPForHttp').val();
-
 if(location.protocol === "https:") {
-
   rootEP = $('#rootEPForHttps').val();
-
 }
-
 recEndPoint = rootEP + '/SocialGenomix/recommendations/products/jsonp';
-
-
-
 //******************************************************************************* Populating Dynamic Parameter Values For IA
-
 var allsizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
 
 var hotDropdownselected = 'All Department';
@@ -61,17 +42,11 @@ searchCategory_idFromMicrosite		= $('#selectedSearchCategoryIdMicrosite').val();
 var daysDif = '';
 
 var is_new_product = false;
-
-
-
 if (searchCategory_id){
 
 	if(searchCategory_id.indexOf("MSH") > -1){
-
 	category_id = searchCategory_id;
-
 	}
-
 	else if(searchCategory_id.indexOf("MBH") > -1){
 
 		brand_id = searchCategory_id;
@@ -81,15 +56,9 @@ if (searchCategory_id){
 			seller_id = searchCategory_id;	
 
 		}else{
-
 						category_id = '';
-
 					}
-
 			}
-
-
-
 			if (searchCategory_idFromMicrosite){ // only for microsite search
 
 				if(searchCategory_idFromMicrosite.indexOf("MBH") > -1){
@@ -97,15 +66,10 @@ if (searchCategory_id){
 					brand_id = searchCategory_idFromMicrosite;
 
 					}
-
 					else{
-
 							category_id = '';
-
 						}
-
 			}
-
 			// Array[productCode] for wishlist and cart pages
 
 			$.each($('input[name=productArrayForIA]'),function(prodArrayIndex,val){  
@@ -113,28 +77,16 @@ if (searchCategory_id){
 				if(prodArrayIndex < 5){
 
 				site_product_array.push(val.value);
-
 				}
 
 			});
 
-
-
 			//For homepage,search,searchEmpty,wishlist,cartPage,orderConfirmation
 
 			site_page_type = $('#ia_site_page_id').val();
-
-
-
 			if(site_page_type == 'productDetails'){
-
 				site_page_type = 'productpage';  
-
 			}
-
-
-
-
 
 			if(site_page_type == 'myStyleProfile'){
 
@@ -145,11 +97,8 @@ if (searchCategory_id){
 					if(catArrayIndex < 5){
 
 					category_array.push(val.value);
-
 					}
-
 				});
-
 				$.each($('input[name=brandArrayForIA]'),function(brandArrayIndex,val){  
 
 					if(brandArrayIndex < 5){
@@ -160,10 +109,7 @@ if (searchCategory_id){
 
 				});
 
-
-
 			}
-
 				//changes start for url structure changes	
 
 			if(currentPageURL.indexOf("/c-msh") > -1 || currentPageURL.indexOf("/c-ssh") > -1)
@@ -174,12 +120,9 @@ if (searchCategory_id){
 
 			  category_id = currentPageURL.split('-').pop().toUpperCase();
 
-			 			  
-
 			  if(category_id.indexOf('?') > 0) {
 
 				 category_id = category_id.substr(0, category_id.indexOf('?'));
-
 			  }
 
 			}
@@ -307,9 +250,6 @@ if (searchCategory_id){
 						};
 
 						 //TISPRD-2183 FIX end
-
-
-
 				    /*New login, use current credentials*/
 
 				    if(getCookie("IAUSERTYPE") !== 'REGISTERED' || getCookie("IAUSERTYPE") !== 'site_user') {
@@ -1737,9 +1677,9 @@ if (searchCategory_id){
 			    }
 
 			    /*It exists, lets name the payload because we may be modifying it*/
-
+			    if(response.data !== null){
 			    var respData = response.data.recommendations;
-
+			    }
 
 
 			    /*Use Carousel by default*/
