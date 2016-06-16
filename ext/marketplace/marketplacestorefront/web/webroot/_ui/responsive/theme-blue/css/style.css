@@ -598,7 +598,7 @@ input:focus {
       transition: border 0.15s; }
       /* .select-view .select-list:hover > .selected {
         border-bottom: 2px solid #DFD1D5; } */
-      body:not(.touchDevice) .select-view .select-list:hover ul {
+     .select-view .select-list:hover ul {
         max-height: 500px;
         border-color: #DFD1D5;
         -webkit-transition: max-height 0.15s, border 0s;
@@ -606,7 +606,7 @@ input:focus {
         transition: max-height 0.15s, border 0s; }
       .select-view .select-list.touch_click ul {
       	display: block !important;
-        max-height: 500px;
+        /* max-height: 500px; */
         border-color: #DFD1D5;
         -webkit-transition: max-height 0.15s, border 0s;
         -moz-transition: max-height 0.15s, border 0s;
@@ -1726,7 +1726,7 @@ h2 {
             color: #fff;
             }
           
-          body:not(.touchDevice) header .content nav > ul > li:hover > ul {
+     header .content nav > ul > li:hover > ul {
             background-color: #fff;
            /*  -webkit-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             -moz-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
@@ -1849,7 +1849,7 @@ h2 {
         transition: border 0.15s; }
         /* header .content .search .select-list:hover > .selected {
           border-bottom: 1px solid #DFD1D5; } */
-        body:not(.touchDevice) header .content .search .select-list:hover ul {
+  header .content .search .select-list:hover ul {
           max-height: 500px;
           border-color: #DFD1D5;
           -webkit-transition: max-height 0.15s, border 0s;
@@ -9199,6 +9199,8 @@ footer .banner {
       width: 30%;
       padding-top: 5px; 
       margin-top:2px;
+      position:relative;
+      z-index:1;
      }
       .listing.wrapper .left-block .listing-leftmenu:first-child {
         display: block; } }
@@ -31782,14 +31784,14 @@ li.a-z-li a {
 body.safariBrowser .product-info .product-image-container .image-list li span.thumb:hover, body.safariBrowser .product-info .product-image-container .image-list li .active {
 	padding-bottom: 1px;	
 }
-body.touchDevice .select-view .select-list ul {
+/* body.touchDevice .select-view .select-list ul {
 	 border: none; 
 }
 body.touchDevice .select-view .select-list.touch_click ul {
 	border-right: 1px solid #e3e3e3;
     border-left: 1px solid #e3e3e3;
     border-bottom: 1px solid #e3e3e3;
-} 
+}  */
 body .account .right-account .order-history .product-block li.item .product-name a 
 {
 	text-decoration:none;
