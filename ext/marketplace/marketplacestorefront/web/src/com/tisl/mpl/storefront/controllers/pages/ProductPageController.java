@@ -501,8 +501,9 @@ public class ProductPageController extends AbstractPageController
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-					ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
+					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.SELLER,
+					//					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
+					ProductOption.VARIANT_FULL));
 
 
 			final List<Breadcrumb> breadcrumbList = productBreadcrumbBuilder.getBreadcrumbs(productModel);
@@ -858,7 +859,8 @@ public class ProductPageController extends AbstractPageController
 
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+					//					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
+					ProductOption.VARIANT_FULL));
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			populateProductData(productData, model);
 			final List<String> deliveryInfoList = new ArrayList<String>();
