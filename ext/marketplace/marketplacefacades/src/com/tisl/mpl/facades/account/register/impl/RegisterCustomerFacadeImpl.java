@@ -403,12 +403,28 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					LOG.debug("Method  registerSocial SITE UID " + registerData.getUid());
 					LOG.debug("Method  registerSocial FIRST_NAME " + registerData.getFirstName());
 					LOG.debug("Method  registerSocial LAST_NAME " + registerData.getLastName());
-					final String gigyaMethod = configurationService.getConfiguration()
-							.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
+					final String gigyaMethod = configurationService.getConfiguration().getString(
+							MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 					LOG.debug("GIGYA METHOD" + gigyaMethod);
+					//gigya code change for removing duplicate UID Start
+					final int errorcode = gigyaservice.checkGigyaUID(newCustomer.getUid());
+					if (errorcode == 403005)
+					{
+						gigyaservice.notifyGigya(newCustomer.getUid(), registerData.getUid(), registerData.getFirstName(),
+								registerData.getLastName(), registerData.getLogin(), gigyaMethod);
+					}
+					else
+					{
+						LOG.debug("UID already existing in Gigya for this  New Customer :error code " + errorcode);
+						LOG.debug("UID already existing in Gigya for this  New Customer :new customer uid " + newCustomer.getUid());
+						LOG.debug("UID already existing in Gigya for this  New Customer :new customer email "
+								+ newCustomer.getOriginalUid());
+						LOG.debug("UID already existing in Gigya for this  New Customer :existing uid in Gigya" + registerData.getUid());
 
-					gigyaservice.notifyGigya(newCustomer.getUid(), registerData.getUid(), registerData.getFirstName(),
-							registerData.getLastName(), registerData.getLogin(), gigyaMethod);
+						LOG.debug("UID already existing in Gigya for this  New Customer :existing uid in Gigya"
+								+ registerData.getLogin());
+					}
+					//gigya code change for removing duplicate UID end
 
 				}
 				catch (final Exception e)
@@ -440,12 +456,43 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				registerData.setPassword(password);
 				registerData.setSocialLogin(true);
 				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
-				final String gigyaMethod = configurationService.getConfiguration()
-						.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
+				final String gigyaMethod = configurationService.getConfiguration().getString(
+						MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
 				LOG.debug("GIGYA METHOD" + gigyaMethod);
 
-				gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
-						registerData.getLastName(), registerData.getLogin(), gigyaMethod);
+
+				//changes start for gigya duplicate uid  check start
+				if ((customerModel.getUid().toString()) == (registerData.getUid().toString()))
+				{
+
+					final int errorcode = gigyaservice.checkGigyaUID(customerModel.getUid().toString());
+					if (errorcode == 0)
+					{
+						gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
+								registerData.getLastName(), registerData.getLogin(), gigyaMethod);
+						LOG.debug("Customer model UID is same as of Gigya UID:Error code is " + errorcode);
+					}
+				}
+				else
+				{/* gigya uid didnot match with hybris */
+
+					final int errorcode2 = gigyaservice.checkGigyaUID(registerData.getUid());
+					LOG.debug("Customer model UID is different from Gigya UID :Error code is " + errorcode2);
+					LOG.debug("Customer model UID is different from Gigya UID :Email id is  " + registerData.getLogin());
+					LOG.debug("Customer model UID is different from Gigya UID :UID is   " + registerData.getUid());
+					//added to check : if we deleted the mismatched data,then to set the site uid
+					final int errorcode3 = gigyaservice.checkGigyaUID(customerModel.getUid());
+					if (errorcode3 == 403005)
+					{
+						final String gigyaMethodNotify = configurationService.getConfiguration().getString(
+								MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
+						LOG.debug("GIGYA METHOD" + gigyaMethodNotify);
+						gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
+								registerData.getLastName(), registerData.getLogin(), gigyaMethodNotify);
+					}
+
+				}
+				//changes start for gigya duplicate uid  check end
 				return registerData;
 			}
 		}
@@ -478,8 +525,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	}
 
 	@Override
-	public void changeUid(final String newUid, final String currentPassword)
-			throws DuplicateUidException, PasswordMismatchException
+	public void changeUid(final String newUid, final String currentPassword) throws DuplicateUidException,
+			PasswordMismatchException
 	{
 		try
 		{
@@ -543,11 +590,11 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			//Added
 			if (!StringUtils.isEmpty(sendInvoiceData.getInvoiceUrl()) && !StringUtils.isEmpty(sendInvoiceData.getTransactionId()))
 			{
-				if (!StringUtils
-						.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId())))
+				if (!StringUtils.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
+						sendInvoiceData.getTransactionId())))
 				{
-					sendInvoiceProcessModel.setInvoiceUrl(
-							createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId()));
+					sendInvoiceProcessModel.setInvoiceUrl(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
+							sendInvoiceData.getTransactionId()));
 				}
 			}
 			//End
