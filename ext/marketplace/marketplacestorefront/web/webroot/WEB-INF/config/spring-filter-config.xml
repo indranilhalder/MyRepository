@@ -41,7 +41,7 @@
 				<entry key="/getTealiumData" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for TealiumData -->
 				<entry key="/search" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for search -->
 				<entry key="/p" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for PDP page -->
-				<entry key="/c" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for Category page -->
+				<entry key="/c-" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for Category page -->
 				<entry key="/m" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for MicroSite page -->
 			</map>
 		</property>
