@@ -25,7 +25,6 @@
 	<context:annotation-config/> 
 		
 
-
 	<!-- tenant scoped filter -->
 
 	<bean id="storefrontTenantFilterChain" class="com.tisl.mpl.storefront.filters.UrlPathFilter" >
