@@ -170,7 +170,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -432,7 +432,7 @@ public class SearchSuggestUtilityMethods
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
 						&& !facate.getCode().equalsIgnoreCase("allPromotions"))
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
@@ -1259,7 +1259,7 @@ public class SearchSuggestUtilityMethods
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
+						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
