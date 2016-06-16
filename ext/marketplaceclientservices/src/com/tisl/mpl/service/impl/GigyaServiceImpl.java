@@ -207,10 +207,10 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * This method helps in Logging the User in the Gigya Side and Registers New User
-	 * 
+	 *
 	 * @param CustomerModel customerModel
-	 * 
-	 * 
+	 *
+	 *
 	 * @return List<String> cookieData
 	 */
 	@Override
@@ -343,7 +343,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.GigyaService#RatingLogoutHelper(de.hybris.platform.core.model.user.CustomerModel)
 	 */
 	@Override
@@ -420,7 +420,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.GigyaService#validateSignature(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -589,7 +589,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.GigyaService#gigyaLoginHelperforMobile(de.hybris.platform.core.model.user.CustomerModel,
 	 * boolean)
 	 */
@@ -710,5 +710,58 @@ public class GigyaServiceImpl implements GigyaService
 			LOG.error(EXCEPTION_LOG, ex);
 		}
 		return gigyaWsDTO;
+	}
+
+	/*
+	 * This method helps in checking whether duser already exists in gigya or not
+	 *
+	 * @param string siteUid
+	 *
+	 *
+	 * @return int errorCode for gigya
+	 */
+	@Override
+	public int checkGigyaUID(final String siteUid)
+	{
+		//START cross checking if uid exists in Gigya
+		final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+				MarketplacecclientservicesConstants.PROXYENABLED);
+
+		final String checkUIDMethod = "ids.getAccountInfo";
+		int errorCode = 0;
+		final GSRequest requestCheck = new GSRequest(getApikey(), getSecretkey(), checkUIDMethod);
+		requestCheck.setParam("UID", siteUid);
+		if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
+		{
+			setProxy();
+			requestCheck.setProxy(proxy);
+		}
+		requestCheck.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
+		requestCheck.setAPIDomain(getDomain());
+		final GSResponse responseUIDCheck = requestCheck.send();
+		if (responseUIDCheck != null)
+		{
+			if (responseUIDCheck.getErrorCode() == 0)
+			{
+				errorCode = 0;
+				//uid exists :uid already exists in Gigya system
+				LOG.debug(responseUIDCheck.getResponseText());
+			}
+			else
+			{
+				//uid is new:no user with UID exists
+				errorCode = responseUIDCheck.getErrorCode();
+				LOG.debug("GIGYA RESPONSE ERROR CODE->" + responseUIDCheck.getErrorCode() + " MESSAGE ->"
+						+ (responseUIDCheck.getErrorMessage()));
+			}
+
+		}
+
+		else
+		{
+			//response null case need to be handled
+			LOG.debug(MarketplacecclientservicesConstants.NULL_RESPONSE + responseUIDCheck);
+		}
+		return errorCode;
 	}
 }
