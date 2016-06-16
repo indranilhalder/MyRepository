@@ -107,14 +107,21 @@
 }		
 	
 /*--- END of A-Z column function---*/
-	
 
+//TISPRO-508	
+	
 	function closing() {
-		$("#zoomModal, #videoModal").modal('hide');
-		$("#zoomModal, #videoModal").removeClass("active");
+		$("#zoomModal").modal('hide');
+		$("#zoomModal").removeClass("active");
+	}
+	function closingVideo(){
+		$("#videoModal").modal('hide');
+		$("#videoModal").removeClass("active");
 		var x = $("#player").attr('src');
 		var z = $("#player").attr('src', x+"&autoplay=0");
-	}
+	}	
+	
+	
 $(document).ready(function(){
 
 
@@ -185,7 +192,7 @@ $(document).ready(function(){
 	/* -----------------END  of SNS auto complete---------*/
 		
 	/* -----------------Start of Out of stock styling---------*/
-		 $('a.stockLevelStatus').parents('div.image').find('a.thumb img').addClass('out-of-stock-product');
+		 $('a.stockLevelStatus').parents('div.image').find('a img').addClass('out-of-stock-product');
 		 
 	/* -----------------END  of Out of stock styling---------*/
 		 
@@ -357,7 +364,7 @@ $(document).ready(function(){
 					$("li.short.words,li.long.words").next().attr("style",style); 
 				} 
 			});
-			$("footer h3.toggle").click(function(e){
+			$(document).on("click","footer h3.toggle",function(e){
 				
 					if ($(window).width() > 790) {
 						$(e.currentTarget).parent().removeClass("active");
@@ -793,7 +800,7 @@ $(document).ready(function(){
 /* ---Start of Mobile view left nav --*/
 		
 		if($(window).width() < 790) {
-			$("header .content .top .toggle").click(function(){
+			$(document).on("click","header .content .top .toggle",function(){
 				if($(this).parent().hasClass("active")){
 					$(this).parent().siblings(".overlay").addClass("overlay-sideNav");
 					$("body").css("overflow","hidden");
@@ -997,8 +1004,10 @@ $(document).ready(function(){
 									listSelect = "";
 								//	console.log(data);
 									$.each(data, function(k, v) {
-										listSelect += '<option value="'+v+'">'
-												+ v + '</option>';
+										if(v != null){
+											listSelect += '<option value="'+v+'">'
+													+ v + '</option>';
+											}
 									});
 								//	console.log(listSelect);
 									$("#feedCategory").html(listSelect);
@@ -1331,7 +1340,7 @@ $(document).ready(function(){
 		
 		if ('ontouchstart' in window) {
 			$('body').addClass("touchDevice");
-	 		$("header .content nav > ul > li > ul > li > .toggle a").attr("href","#");
+	 		$("header .content nav > ul > li > ul > li > .toggle a").attr("href","#nogo");
 			}
 		
 		if($('.lookbook_wrapper .bottom-pagination').children().length==0){
@@ -1459,6 +1468,7 @@ $(document).ready(function(){
 				
 			if(!$(e.target).parents().hasClass('select-list') && $('body').hasClass('touchDevice')) {
 				$('.select-view .select-list').removeClass('touch_click');
+				$('.select-view .select-list ul').css({'max-height':'0','border-color':'transparent'});
 			}
 		});
 
@@ -1467,17 +1477,20 @@ $(document).ready(function(){
 				$('.select-view .select-list').removeClass('touch_click');
 				if($(this).children('ul').height() > 2) {
 					$(this).removeClass('touch_click');
+					$(this).find('ul').css({'max-height':'0','border-color':'transparent'});
 				} else {
 					$(this).addClass('touch_click');
+					$(this).find('ul').css({'max-height':'500px','border-color':'#dfd1d5'});	
 				}
 			}
-				
+
 		});
 
 		$(document).on('touchend','.select-view .select-list ul',function(e){
 			$('.select-view .select-list').removeClass('touch_click');
+			$('.select-view .select-list ul').css({'max-height':'0','border-color':'transparent'});
 			e.stopPropagation();
-		});
+		}); 
 		//TISPRO-480
 		$('.sign-in-dropdown').mouseleave(function(){$('.sign-in-dropdown input').blur();});
 		

@@ -850,8 +850,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//Logic when transaction is successful i.e. CHARGED
 					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 					{
+						//TIS-3168
+						LOG.error("Payment successful with transaction ID::::" + juspayOrderId);
 						//saving card details
 						getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
+					}
+					//TIS-3168
+					else
+					{
+						LOG.error("Payment failure with transaction ID::::" + juspayOrderId);
 					}
 					getMplPaymentService().paymentModeApportion(cart);
 
@@ -861,18 +868,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					}
 				}
 
+				//Codemerge issue --- Commented for Payment Fallback
 				//Logic when transaction is successful i.e. CHARGED
-				if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
-				{
-					//setting Payment Info
-					getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
-				}
-				getMplPaymentService().paymentModeApportion(cart);
-
-				if (updAuditErrStatus)
-				{
-					orderStatus = orderStatusResponse.getStatus();
-				}
+				//				if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
+				//				{
+				//					//setting Payment Info
+				//					getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
+				//				}
+				//				getMplPaymentService().paymentModeApportion(cart);
+				//
+				//				if (updAuditErrStatus)
+				//				{
+				//					orderStatus = orderStatusResponse.getStatus();
+				//				}
 
 			}
 
@@ -1285,13 +1293,20 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	@Override
 	public String fetchPhoneNumber(final CartModel cart)
 	{
-		if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getPhone1())
+		if (null != cart)
 		{
-			return cart.getDeliveryAddress().getPhone1();
-		}
-		else if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getCellphone())
-		{
-			return cart.getDeliveryAddress().getCellphone();
+			if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getPhone1())
+			{
+				return cart.getDeliveryAddress().getPhone1();
+			}
+			else if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getCellphone())
+			{
+				return cart.getDeliveryAddress().getCellphone();
+			}
+			else
+			{
+				return MarketplacecommerceservicesConstants.EMPTYSTRING;
+			}
 		}
 		else
 		{
@@ -1503,11 +1518,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1558,9 +1573,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override

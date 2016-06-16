@@ -178,7 +178,7 @@
 			   // load the url and show modal on success
 			   $("#popUpModal .modal-content").load(target, function() { 
 				   	   $("#popUpModal").modal("show");
-					   buyboxDetailsForSizeGuide(productcode);
+					  // buyboxDetailsForSizeGuide(productcode);
 			    });
 			  
 		});
@@ -197,12 +197,12 @@
 		    // load the url and show modal on success
 		    $("#popUpModal .modal-content").load(value, function() { 
 		         $("#popUpModal").modal("show");
-		     	buyboxDetailsForSizeGuide(productcode);
+		     	//buyboxDetailsForSizeGuide(productcode);
 		    });
 		});
 		
 		//TISPRO-333
-		$(document).on("click", 'a[data-target=#popUpModal] ',
+		/*$(document).on("click", 'a[data-target=#popUpModal] ',
 				function() {
 				   var target = $(this).attr("href");
 			//	   console.log(target);
@@ -214,12 +214,12 @@
 						});
 
 				   // load the url and show modal on success
-				   $("#popUpModal .modal-content").load(target, function() { 
+				  // $("#popUpModal .modal-content").load(target, function() { 
 					   	   $("#popUpModal").modal("show");
 						   buyboxDetailsForSizeGuide(productcode);
-				    }); 
+				   // }); 
 				   
-		 }); 
+		 }); */
 		//End
 		
 		
@@ -2259,4 +2259,17 @@ function loadDefaultWishListName_SizeGuide() {
 		
 		
 		});
+	//fix for TISPT-332
+	function openSizeGuidePopuponLoad()
+	{
+		 
+				   var productcode= productCodeSG;
+				  // alert('/////'+productcode)
+				  
+				   $('body').on('hidden.bs.modal', '#popUpModal', function () {
+						  $(this).removeData('bs.modal');
+						});
+				   $("#popUpModal").modal("show");
+				   buyboxDetailsForSizeGuide(productcode);	
+	} 
 	

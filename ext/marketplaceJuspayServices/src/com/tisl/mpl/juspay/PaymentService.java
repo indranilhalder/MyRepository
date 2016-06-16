@@ -369,7 +369,11 @@ public class PaymentService
 
 		final String response = makeServiceCall(url, serializedParams);
 
-		LOG.debug("Response from juspay::::::::::::::::::::::::::::" + response);
+		//TIS-3168
+		if (null != response)
+		{
+			LOG.error("Response from Juspay:::" + response);
+		}
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
 
 		return assembleOrderStatusResponse(jsonResponse, new GetOrderStatusResponse());
@@ -419,6 +423,11 @@ public class PaymentService
 
 		orderStatusResponse.setAmountRefunded(getDoubleValue(jsonResponse.get("amount_refunded")));
 		orderStatusResponse.setRefunded((Boolean) jsonResponse.get("refunded"));
+
+		//TIPRO-572
+		orderStatusResponse.setBankEmi((String) jsonResponse.get("emi_bank") == null ? "" : (String) jsonResponse.get("emi_bank"));
+		orderStatusResponse.setBankTenure((String) jsonResponse.get("emi_tenure") == null ? "" : (String) jsonResponse
+				.get("emi_tenure"));
 
 		final JSONObject gatewayResponse = (JSONObject) jsonResponse.get("payment_gateway_response");
 		final JSONObject card = (JSONObject) jsonResponse.get("card");
@@ -685,6 +694,11 @@ public class PaymentService
 		final String url = baseUrl + "/order/refund";
 		LOG.debug("JUSPAY REFUND REQUEST--------------url-----" + url + "-------request----" + serializedParams);
 		final String response = makeServiceCall(url, serializedParams);
+		//TIS-3168
+		if (null != response)
+		{
+			LOG.error("Refund Response:::" + response);
+		}
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
 		if (jsonResponse != null)
 		{
@@ -811,6 +825,12 @@ public class PaymentService
 		final String url = baseUrl + "/txns";
 
 		final String response = makeServiceCall(url, serializedParams);
+
+		//TIS-3168
+		if (null != response)
+		{
+			LOG.error("Netbanking response:::" + response);
+		}
 
 		return response;
 	}
