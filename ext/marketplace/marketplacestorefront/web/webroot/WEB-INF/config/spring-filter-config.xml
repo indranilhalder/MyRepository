@@ -270,7 +270,6 @@
 	</bean>
 	
 	<!-- TISPT-348 Custom filter chain for search,PDP,category and MicroSite ends -->
-	
 
 	
 </beans>
