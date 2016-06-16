@@ -5,7 +5,7 @@
 <c:set var="buildNumber" value= "100000"/>
 </c:if>
 <script type="text/javascript"
-	src="${commonResourcePath}/js/minified/plugins.min.js<%-- ?clear=${minificationTimeStamp} --%>"></script>
+	src="${commonResourcePath}/js/minified/plugins.min.js?v=${buildNumber}<%-- ?clear=${minificationTimeStamp} --%>"></script>
 <script type="text/javascript"
 	src="${commonResourcePath}/js/minified/tmpmain.min.js?v=${buildNumber}"></script>
 <c:if test="${isIAEnabled}">

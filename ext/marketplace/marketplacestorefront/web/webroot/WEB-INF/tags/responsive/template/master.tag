@@ -158,7 +158,6 @@ if($(window).width() < 650) {
 		<script type="text/javascript">
 		$(window).on('load',function(){
 			$.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
-				console.log("Called");
 				$.getScript('${commonResourcePath}/js/minified/acc.gigya.min.js?v=${buildNumber}').done(function(){
 					loadGigya();
 				});
@@ -170,7 +169,6 @@ if($(window).width() < 650) {
 		<script type="text/javascript">
 		$(window).on('load',function(){
 			$.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
-				console.log("Called");
 				$.getScript('${commonResourcePath}/js/gigya/acc.gigya.js').done(function(){
 					loadGigya();
 				});

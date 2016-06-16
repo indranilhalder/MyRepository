@@ -229,4 +229,61 @@ function registerUserGigya(eventObject)
     			gotoLogin();
     		}
     	}
+    	/*$(function(){*/
+    		if(typeof($('#loginDiv').html())!= undefined){
+    			gigya.socialize.showLoginUI({
+    	            height: 100
+    	            ,width: 330
+    	            ,showTermsLink:false // remove 'Terms' link
+    	            ,hideGigyaLink:true // remove 'Gigya' link
+    	            ,buttonsStyle: 'signInWith' // Change the default buttons design to "Full Logos" design
+    	            //,showWhatsThis: true // Pop-up a hint describing the Login Plugin, when the user rolls over the Gigya link.
+    	            ,containerID: 'loginDiv' // The component will embed itself inside the loginDiv Div
+    	            ,cid:''
+    	            ,enabledProviders : 'facebook,google'
+    	            });	
+    		}
+    		
+    		if(typeof($('#loginDivReg').html())!= undefined){
+    			gigya.socialize.showLoginUI({
+    	            height: 100
+    	            ,width: 330
+    	            ,showTermsLink:false // remove 'Terms' link
+    	            ,hideGigyaLink:true // remove 'Gigya' link
+    	            ,buttonsStyle: 'signInWith' // Change the default buttons design to "Full Logos" design
+    	            //,showWhatsThis: true // Pop-up a hint describing the Login Plugin, when the user rolls over the Gigya link.
+    	            ,containerID: 'loginDivReg' // The component will embed itself inside the loginDiv Div
+    	            ,cid:''
+    	            ,enabledProviders : 'facebook,google'
+    	            });
+    		}
+    		
+    		if(typeof($('#loginDivCheckout').html())!= undefined){
+    			gigya.socialize.showLoginUI({
+    	            height: 100
+    	            ,width: 330
+    	            ,showTermsLink:false // remove 'Terms' link
+    	            ,hideGigyaLink:true // remove 'Gigya' link
+    	            ,buttonsStyle: 'signInWith' // Change the default buttons design to "Full Logos" design
+    	            //,showWhatsThis: true // Pop-up a hint describing the Login Plugin, when the user rolls over the Gigya link.
+    	            ,containerID: 'loginDivCheckout' // The component will embed itself inside the loginDiv Div
+    	            ,cid:''
+    	            ,enabledProviders : 'facebook,google'
+    	            });	
+    		}
+    		
+    		if(typeof($('#loginDivsiginflyout').html())!= undefined){
+    			 gigya.socialize.showLoginUI({
+    		            height: 100
+    		            ,width: 330
+    		            ,showTermsLink:false // remove 'Terms' link
+    		            ,hideGigyaLink:true // remove 'Gigya' link
+    		            ,buttonsStyle: 'signInWith' // Change the default buttons design to "Full Logos" design
+    		            //,showWhatsThis: true // Pop-up a hint describing the Login Plugin, when the user rolls over the Gigya link.
+    		            ,containerID: 'loginDivsiginflyout' // The component will embed itself inside the loginDiv Div
+    		            ,cid:''
+    		            ,enabledProviders : 'facebook,google'
+    		            });
+    		}
+    /*	});*/
     		
