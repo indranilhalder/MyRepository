@@ -269,7 +269,7 @@
 	   </constructor-arg>
 	</bean>
 	
-	<!-- TISPT-348 Custom filter chain for search,PDP,category and Microsite ends -->
+	<!-- TISPT-348 Custom filter chain for search,PDP,category and MicroSite ends -->
 	
 
 	
