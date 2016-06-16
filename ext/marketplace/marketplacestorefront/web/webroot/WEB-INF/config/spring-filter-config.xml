@@ -36,7 +36,7 @@
 			<map>
 				<entry key="/integration/" value-ref="integrationTenantFilterChain"/>
 				<entry key="/fetchToken" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for fetchToken -->
-			<!-- 	<entry key="/setheader" value-ref="ajaxUrlFilterChain"/> -->	<!-- TISPT-207 Custom filter chain for setHeader -->
+				<entry key="/setheader" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for setHeader -->
 				<entry key="/getTealiumData" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for TealiumData -->
 				<entry key="/search" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for search -->
 				<entry key="/p" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for PDP page -->
