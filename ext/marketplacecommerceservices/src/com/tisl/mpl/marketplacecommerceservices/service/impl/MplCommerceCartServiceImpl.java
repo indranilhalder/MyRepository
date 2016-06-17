@@ -3664,6 +3664,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							{
 								final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
 								cartSoftReservationData.setFulfillmentType(fulfillmentType.toUpperCase());
+								if(entryModel.getGiveAway().booleanValue())
+								{
+									setFullFillmentTypeForFreebie(cartSoftReservationData,abstractOrderModel);
+								}	
+								
 							}
 							else
 							{
@@ -3685,6 +3690,70 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return cartSoftReservationDataList;
 	}
 
+
+	/**
+	 * This method is used to set  fullFillMent type for a product 
+	 * @author TECHOUTS
+	 * @param cartSoftReservationData
+	 * @param abstractOrderModel
+	 * @return void 
+	 */
+	private void setFullFillmentTypeForFreebie(CartSoftReservationData cartSoftReservationData, AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions
+	{
+		try
+		{
+			String parentUSSID = cartSoftReservationData.getParentUSSID();
+			String parentFullfillmenttype = StringUtils.EMPTY;
+			String freebieFullfillmenttype = cartSoftReservationData.getFulfillmentType();
+			for (AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
+			{
+				if ( entry.getSelectedUSSID().equalsIgnoreCase(parentUSSID))
+				{
+					parentFullfillmenttype = getFullfillmentTypeByUSSID(entry.getSelectedUSSID());
+				}
+				if (parentFullfillmenttype.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIPCODE)
+						&& freebieFullfillmenttype.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE))
+				{
+					cartSoftReservationData.setFulfillmentType(parentFullfillmenttype);
+				}
+
+			}
+		}
+		catch (Exception e)
+		{
+			LOG.error("Exception while setting fullFillment type for freebie" + e.getCause());
+		}
+	}
+
+
+	/**
+	 * this Method is used to get the fullFillMent type for a product using USSID
+	 * @author TECHOUTS
+	 * @param selectedUSSID
+	 * @return String
+	 *
+	 */
+	private String getFullfillmentTypeByUSSID(String selectedUSSID)
+	{
+		String fulfillmentType = StringUtils.EMPTY;
+		final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(selectedUSSID);
+		List<RichAttributeModel> richAttributeModel = null;
+		if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+		{
+			richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+			if (richAttributeModel != null && richAttributeModel.get(0) != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
+			{
+				fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+				return fulfillmentType.toUpperCase();
+			}
+		}
+		return fulfillmentType.toUpperCase();
+	}
+
+
+	
 
 	/**
 	 * @param cartSoftReservationData
