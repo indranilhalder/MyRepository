@@ -29,10 +29,12 @@ import com.hybris.oms.domain.order.OrderlineFulfillmentType;
 import com.hybris.oms.domain.order.Promotion;
 import com.hybris.oms.domain.types.Amount;
 import com.hybris.oms.domain.types.Quantity;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -42,6 +44,7 @@ import com.tisl.mpl.model.SellerInformationModel;
  * @author TCS
  *
  */
+
 
 public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, OrderLine>
 {
@@ -197,6 +200,33 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 
 				target.setFulfillmentMode(MplCodeMasterUtility.getglobalCode(fulfilmentType));
+				// Setting parentFullfillment type to freebie in the case of SSHIP  
+				if(source.getGiveAway().booleanValue()) 
+				{
+					try
+					{
+						String parentFullfillmentType = getMplSellerInformationService().getFullfillmentTypeOfParent(source);
+						if (null != parentFullfillmentType &&  null != source.getFulfillmentType() )
+						{
+							LOG.debug("Parent entry fullFillment type :"+parentFullfillmentType);
+							if(source.getFulfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE)
+									&& parentFullfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIPCODE))
+							{
+								source.setFulfillmentType(parentFullfillmentType.toUpperCase());
+								LOG.info(" Parent is SSHIP  and FreeBie is TSHIP : Setting FreeBie Fulfillemt Type as SSHIP");
+							}
+						}
+								
+					}
+					catch(EtailBusinessExceptions e) 
+					{
+						LOG.error("Exception occured while setting fullFillMent Type for freebie "+e.getErrorCode());
+					}
+					catch (Exception e)
+					{
+						LOG.error("Exception occured while setting fullFillMent Type for freebie " + e.getMessage());
+					}
+				}
 			}
 			else
 			{
