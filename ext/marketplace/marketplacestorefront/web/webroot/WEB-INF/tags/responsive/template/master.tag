@@ -42,8 +42,13 @@
 	<c:set var="pageURL" value="${emailURL}"/>
 	<c:set var="protocolString" value="${fn:split(pageURL, '://')}"/>
 	<c:set var="baseURL" value="${protocolString[0]}://${host}"/>
-	
 	<c:set var="reqURI" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+	
+	<!--Start:<TISPRD-2939-hrefLang tag added> -->
+	<c:set var="hrefLang" value="${baseURL}${reqURI}"></c:set>
+    <link rel="alternate" href="${hrefLang}" hreflang="en-in" />
+    <!--End:<TISPRD-2939-hrefLang tag added> -->
+    
 	<c:choose>
 		<c:when test="${fn:contains(reqURI,'search')}">
 		</c:when>

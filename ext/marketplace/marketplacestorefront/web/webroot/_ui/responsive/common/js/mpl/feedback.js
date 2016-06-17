@@ -1004,8 +1004,10 @@ $(document).ready(function(){
 									listSelect = "";
 								//	console.log(data);
 									$.each(data, function(k, v) {
-										listSelect += '<option value="'+v+'">'
-												+ v + '</option>';
+										if(v != null){
+											listSelect += '<option value="'+v+'">'
+													+ v + '</option>';
+											}
 									});
 								//	console.log(listSelect);
 									$("#feedCategory").html(listSelect);
@@ -1466,6 +1468,7 @@ $(document).ready(function(){
 				
 			if(!$(e.target).parents().hasClass('select-list') && $('body').hasClass('touchDevice')) {
 				$('.select-view .select-list').removeClass('touch_click');
+				$('.select-view .select-list ul').css({'max-height':'0','border-color':'transparent'});
 			}
 		});
 
@@ -1474,17 +1477,20 @@ $(document).ready(function(){
 				$('.select-view .select-list').removeClass('touch_click');
 				if($(this).children('ul').height() > 2) {
 					$(this).removeClass('touch_click');
+					$(this).find('ul').css({'max-height':'0','border-color':'transparent'});
 				} else {
 					$(this).addClass('touch_click');
+					$(this).find('ul').css({'max-height':'500px','border-color':'#dfd1d5'});	
 				}
 			}
-				
+
 		});
 
 		$(document).on('touchend','.select-view .select-list ul',function(e){
 			$('.select-view .select-list').removeClass('touch_click');
+			$('.select-view .select-list ul').css({'max-height':'0','border-color':'transparent'});
 			e.stopPropagation();
-		});
+		}); 
 		//TISPRO-480
 		$('.sign-in-dropdown').mouseleave(function(){$('.sign-in-dropdown input').blur();});
 		
@@ -1568,3 +1574,4 @@ function registerUserGigya(eventObject)
             
          }  
        /*  End  Gigya Social Login */
+
