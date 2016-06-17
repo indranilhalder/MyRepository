@@ -687,8 +687,12 @@ public class CategoryPageController extends AbstractCategoryPageController
 		final RequestContextData requestContextData = getRequestContextData(request);
 		requestContextData.setCategory(category);
 		requestContextData.setSearch(searchPageData);
-
-		if (searchQuery != null)
+		/* TISPRD-2987 */
+		if (searchQuery != null && checkIfPagination(request) && sortCode == null)
+		{
+			model.addAttribute("metaRobots", "index,follow");
+		}
+		else if (searchQuery != null)
 		{
 			model.addAttribute("metaRobots", "noindex,follow");
 		}

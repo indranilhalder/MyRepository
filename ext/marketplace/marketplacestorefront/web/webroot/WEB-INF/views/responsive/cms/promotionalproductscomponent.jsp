@@ -14,7 +14,7 @@
 
 		<div class="shop-sale wrapper">
 			<h1>
-				<span>${component.title}</span> <span>${component.promotion.description}</span>
+				<span>${component.title}</span> <span><span class="span-border"></span><span class="shop-sale-text">${component.promotion.description}</span></span>
 			</h1>
 			<div class="carousel-component">
 				<div
@@ -30,9 +30,10 @@
 									<div class="image">
 
 										<c:if test="${product.isProductNew eq true}">
-											<img class="new brush-strokes-sprite sprite-New"
-												style="z-index: 1; display: block;"
-												src="/_ui/responsive/common/images/transparent.png">
+										<div style="z-index: 1;display: block;" class="new">
+										<img class="brush-strokes-sprite sprite-New"
+									src="/_ui/responsive/common/images/transparent.png"><span>New</span>
+										</div>
 										</c:if>
 										<a class="thumb" href="${productUrl}" title="${product.name}">
 											 <product:productPrimaryImage
