@@ -1574,3 +1574,4 @@ function registerUserGigya(eventObject)
             
          }  
        /*  End  Gigya Social Login */
+
