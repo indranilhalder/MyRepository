@@ -359,7 +359,7 @@ public class SearchPageController extends AbstractSearchPageController
 			}
 
 			model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
-			model.addAttribute("metaRobots", "noindex,follow");
+			model.addAttribute("metaRobots", "index,follow");
 
 
 
@@ -1114,7 +1114,7 @@ public class SearchPageController extends AbstractSearchPageController
 			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
 		}
 		model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
-		model.addAttribute("metaRobots", "noindex,follow");
+		model.addAttribute("metaRobots", "index,follow");
 
 
 		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
