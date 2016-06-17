@@ -660,7 +660,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = categorySearch
 				.getSearchPageData();
-
 		if (searchPageData != null)
 		{
 			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
