@@ -52,8 +52,6 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.servicelayer.i18n.I18NService;
-import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
-import de.hybris.platform.solrfacetsearch.model.redirect.SolrURIRedirectModel;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -71,6 +69,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +109,6 @@ import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.stock.CommerceStockFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
-import com.tisl.mpl.utility.URLParamUtil;
 import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.DepartmentHierarchy;
@@ -855,7 +853,7 @@ public class ProductsController extends BaseController
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
 		Map<String, List<String>> params = null;
 		String url = null;
-		SolrFacetSearchKeywordRedirectModel solrfacets = null;
+
 		try
 		{
 			if (StringUtils.isNotBlank(searchText))
@@ -863,51 +861,44 @@ public class ProductsController extends BaseController
 				//For Keyword Redirection
 				if (isTextSearch)
 				{
-					solrfacets = searchSuggestUtilityMethods.getKeywordSearch(searchText);
-					if (solrfacets != null)
+					params = searchSuggestUtilityMethods.getKeywordSearch(searchText);
+					if (MapUtils.isNotEmpty(params))
 					{
-						//FOR Direct URL redirection only
-						if (solrfacets.getRedirectMobile() instanceof SolrURIRedirectModel)
+						//setting parameter again as per keyword redirect
+						if (params.containsKey("searchText"))
 						{
-							url = ((SolrURIRedirectModel) solrfacets.getRedirectMobile()).getUrl();
+							searchText = params.get("searchText").get(0);
 						}
-						if (StringUtils.isNotEmpty(url))
+						if (params.containsKey("typeID"))
 						{
-							//fetching the Parameters from the redirect URL in Map with Key and values
-							params = URLParamUtil.getQueryParams(url);
-							//setting parameter again as per keyword redirect
-							if (params.containsKey("searchText"))
-							{
-								searchText = params.get("searchText").get(0);
-							}
-							if (params.containsKey("typeID"))
-							{
-								typeID = params.get("typeID").get(0);
-							}
-							if (params.containsKey("page"))
-							{
-								//suggestion to parseInt
-								page = Integer.parseInt(params.get("page").get(0));
-							}
-							if (params.containsKey("pageSize"))
-							{
-								//suggestion to parseInt
-								pageSize = Integer.parseInt(params.get("pageSize").get(0));
-							}
-							if (params.containsKey("sortCode"))
-							{
-								sortCode = params.get("sortCode").get(0);
-							}
-							if (params.containsKey("isFilter"))
-							{
-								//suggestion to parseBoolean
-								isFilter = Boolean.parseBoolean(params.get("isFilter").get(0));
-							}
+							typeID = params.get("typeID").get(0);
 						}
-						LOG.debug("params" + params);
+						if (params.containsKey("page"))
+						{
+							//suggestion to parseInt
+							page = Integer.parseInt(params.get("page").get(0));
+						}
+						if (params.containsKey("pageSize"))
+						{
+							//suggestion to parseInt
+							pageSize = Integer.parseInt(params.get("pageSize").get(0));
+						}
+						if (params.containsKey("sortCode"))
+						{
+							sortCode = params.get("sortCode").get(0);
+						}
+						if (params.containsKey("isFilter"))
+						{
+							//suggestion to parseBoolean
+							isFilter = Boolean.parseBoolean(params.get("isFilter").get(0));
+						}
+						//fetching keyword url
+						if (params.containsKey("keywordUrl"))
+						{
+							url = params.get("keywordUrl").get(0);
+						}
 					}
-					LOG.debug("url" + url);
-
+					LOG.debug("params" + params);
 				}
 				//End For Keyword Redirection
 

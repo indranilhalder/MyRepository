@@ -25,6 +25,7 @@ import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType;
 import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
+import de.hybris.platform.solrfacetsearch.model.redirect.SolrURIRedirectModel;
 import de.hybris.platform.solrfacetsearch.search.SolrFacetSearchKeywordDao;
 import de.hybris.platform.solrfacetsearch.search.SolrKeywordRedirectService;
 import de.hybris.platform.util.localization.Localization;
@@ -96,7 +97,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private SolrFacetSearchKeywordDao solrFacetSearchKeywordDao;
 	@Resource
 	private SolrKeywordRedirectService solrKeywordRedirectService;
-
 	@Resource(name = "i18nService")
 	private I18NService i18nService;
 	/*
@@ -134,7 +134,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -1754,11 +1754,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @return keywordRedirect
 	 */
 	@Override
-	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(String searchText)
+	public String getKeywordSearch(String searchText)
 	{
 		//suggestion to remove new Arraylist
 		List<SolrFacetSearchKeywordRedirectModel> keywords = null;
 		SolrFacetSearchKeywordRedirectModel keyword = null;
+		String url = null;
 		try
 		{
 			//getting current basestore language
@@ -1773,6 +1774,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			if (CollectionUtils.isNotEmpty(keywords) && keywords.size() > 0)
 			{
 				keyword = keywords.get(0);
+				//FOR Direct URL redirection only
+				if (keyword.getRedirectMobile() instanceof SolrURIRedirectModel)
+				{
+					url = ((SolrURIRedirectModel) keyword.getRedirectMobile()).getUrl();
+				}
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -1785,7 +1791,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 
-		return keyword;
+		return url;
 	}
 
 	/**
