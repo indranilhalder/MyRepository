@@ -2,21 +2,8 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-/* @import url(https://fonts.googleapis.com/css?family=Montserrat);
-@import url(https://fonts.googleapis.com/icon?family=Material+Icons); */
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Montserrat-Regular'), url(https://fonts.gstatic.com/s/montserrat/v7/zhcz-_WihjSQC0oHJ9TCYPk_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-@font-face {
-  font-family: 'Material Icons';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v17/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
-}
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, img, ins, kbd, q, s, samp, small, strike, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
   padding: 0;
@@ -18307,19 +18294,11 @@ font-size: 24px;
 }
 .electronics-brand .feature-categories.custom-feature div.left-img + .content {
   width: 35%;
-  height: 79.5%;
-  position: absolute;
   float:left;
+  padding-top:30px;
   }
   .electronics-brand .feature-categories.custom-feature div.left-img + .content>div{
-top: 35%;
   width: 100%;
-  position: absolute;
-  -webkit-transform: translateY(-35%);
-  -moz-transform: translateY(-35%);
-  -ms-transform: translateY(-35%);
-  -o-transform: translateY(-35%);
-  transform: translateY(-35%);
 }
 }
 .electronics-brand .feature-categories.custom-feature div.left-img + .content {
@@ -26956,10 +26935,31 @@ top: 14px;
     color: #b9b9b9;
     font-size: 12px;
 }
+.listing-leftmenu .Size .facet-list .filter-Size form input[type="submit"] {
+    display: table-cell;
+    vertical-align: middle;
+    width: 60px;
+    height: 38px;
+    text-align: center;
+    border: 1px solid #b9b9b9;
+    color: #b9b9b9;
+    font-size: 12px;
+    line-height: 16px;
+    text-transform: capitalize;
+    padding: 0;
+    white-space: normal;
+}
+.listing-leftmenu .Size .facet-list .filter-Size form input[type="submit"]:hover{
+	border-color: #000;
+    -webkit-transition: border-color .5s;
+    -moz-transition: border-color .5s;
+    transition: border-color .5s;
+    color: #000 !important;
+}
 .product-facet .facet.size .facet-list li.filter-size {
     padding: 0 2px;
 } 
-.listing-leftmenu .Size .facet-list .filter-Size label {
+.listing-leftmenu .Size .facet-list .filter-Size form {
     display: table;
 }
 .listing-leftmenu .Size .facet-list .filter-Size .facet-text:hover { 
