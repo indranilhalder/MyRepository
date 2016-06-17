@@ -1075,17 +1075,28 @@ h2 {
                     -webkit-transition: color 0.15s, background 0.15s;
                     -moz-transition: color 0.15s, background 0.15s;
                     transition: color 0.15s, background 0.15s; }
-          header .content .right > ul > li.bag:hover {
+          header .content .right > ul > li.bag:hover{
             border-left: 2px solid #f0f4f5;
             z-index: 4;
             -webkit-transition: z-index 0s, border 0.3s;
             -moz-transition: z-index 0s, border 0.3s;
             transition: z-index 0s, border 0.3s; }
+         /*  header .content .right > ul > li.bag.clicked {
+            border-left: 2px solid #f0f4f5;
+            z-index: 4;
+            -webkit-transition: z-index 0s, border 0.3s;
+            -moz-transition: z-index 0s, border 0.3s;
+            transition: z-index 0s, border 0.3s; } */
             header .content .right > ul > li.bag:hover .mini-bag {
               max-height: 2000px;
               -webkit-transition: max-height 0.15s;
               -moz-transition: max-height 0.15s;
               transition: max-height 0.15s; }
+         /*    header .content .right > ul > li.bag.clicked .mini-bag {
+              max-height: 2000px;
+              -webkit-transition: max-height 0.15s;
+              -moz-transition: max-height 0.15s;
+              transition: max-height 0.15s; } */
         header .content .right > ul > li.wishlist > a:before {
           font-family: 'icomoon';
           -webkit-font-smoothing: antialiased;

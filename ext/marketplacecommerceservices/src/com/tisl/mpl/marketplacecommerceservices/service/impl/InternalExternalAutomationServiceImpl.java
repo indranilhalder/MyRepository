@@ -515,28 +515,28 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										//										}
 
 
-										if (null != differentBanner.getMedia()
-												&& StringUtils.isNotEmpty(differentBanner.getMedia().getURL()))
-										{
-											final String imageURL = differentBanner.getMedia().getURL();
-											LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
-											//											if (imageURL.startsWith(HTTP))
-											//											{
-											//												LOG.info("Inside RotatingImagesComponentModel.HTTP");
-											//												sb = new StringBuffer(differentBanner.getMedia().getURL());
-											//												sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
-											//												imageUrl = sb.toString();
-											//												imageSize = findIamgeSize(imageUrl);
-											//											}
-											//											else if (imageURL.startsWith(HTTPS))
-											//											{
-											LOG.info("Inside RotatingImagesComponentModel.HTTPS");
-											sb = new StringBuffer(imageURL);
-											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
-											imageUrl = sb.toString();
-											imageSize = findImageSize(imageUrl);
-											//											}
-										}
+										//										if (null != differentBanner.getMedia()
+										//												&& StringUtils.isNotEmpty(differentBanner.getMedia().getURL()))
+										//										{
+										//											final String imageURL = differentBanner.getMedia().getURL();
+										//											LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
+										//											//											if (imageURL.startsWith(HTTP))
+										//											//											{
+										//											//												LOG.info("Inside RotatingImagesComponentModel.HTTP");
+										//											//												sb = new StringBuffer(differentBanner.getMedia().getURL());
+										//											//												sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+										//											//												imageUrl = sb.toString();
+										//											//												imageSize = findIamgeSize(imageUrl);
+										//											//											}
+										//											//											else if (imageURL.startsWith(HTTPS))
+										//											//											{
+										//											LOG.info("Inside RotatingImagesComponentModel.HTTPS");
+										//											sb = new StringBuffer(imageURL);
+										//											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+										//											imageUrl = sb.toString();
+										//											imageSize = findImageSize(imageUrl);
+										//											//											}
+										//										}
 
 										if (differentBanner instanceof MplBigFourPromoBannerComponentModel)
 										{

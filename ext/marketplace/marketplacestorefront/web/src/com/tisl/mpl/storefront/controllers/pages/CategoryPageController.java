@@ -660,15 +660,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = categorySearch
 				.getSearchPageData();
-		//set url for 1st page
-		if (checkIfPagination(request) && searchQuery.equals(":relevance") && sortCode == null
-				&& null != searchPageData.getCurrentQuery())
-		{
-			searchPageData.getCurrentQuery()
-					.setUrl(
-							searchPageData.getCurrentQuery().getUrl()
-									.substring(0, searchPageData.getCurrentQuery().getUrl().indexOf("/page")));
-		}
+
 		if (searchPageData != null)
 		{
 			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
@@ -696,8 +688,12 @@ public class CategoryPageController extends AbstractCategoryPageController
 		final RequestContextData requestContextData = getRequestContextData(request);
 		requestContextData.setCategory(category);
 		requestContextData.setSearch(searchPageData);
-
-		if (searchQuery != null)
+		/* TISPRD-2987 */
+		if (searchQuery != null && checkIfPagination(request) && sortCode == null)
+		{
+			model.addAttribute("metaRobots", "index,follow");
+		}
+		else if (searchQuery != null)
 		{
 			model.addAttribute("metaRobots", "noindex,follow");
 		}
