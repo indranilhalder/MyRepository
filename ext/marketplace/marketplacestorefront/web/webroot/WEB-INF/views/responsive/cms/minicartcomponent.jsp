@@ -20,8 +20,8 @@
     ><spring:theme code="minicart.mybag"/>(<span class="js-mini-cart-count">${totalItems}</span>)</a> --%>
 <li class="transient-mini-bag"></li>
 				<li class="bag">
-				<!-- ${cartUrl} -->
-				<a href="#nogo" 
+				
+				<a href="${cartUrl}" 
 					class="mini-cart-link myBag-sticky"
 					data-mini-cart-url="${rolloverPopupUrl}"
 					data-mini-cart-refresh-url="${refreshMiniCartUrl}"
