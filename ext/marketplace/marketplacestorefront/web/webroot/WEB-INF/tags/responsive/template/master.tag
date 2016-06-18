@@ -42,8 +42,13 @@
 	<c:set var="pageURL" value="${emailURL}"/>
 	<c:set var="protocolString" value="${fn:split(pageURL, '://')}"/>
 	<c:set var="baseURL" value="${protocolString[0]}://${host}"/>
-	
 	<c:set var="reqURI" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+	
+	<!--Start:<TISPRD-2939-hrefLang tag added> -->
+	<c:set var="hrefLang" value="${baseURL}${reqURI}"></c:set>
+    <link rel="alternate" href="${hrefLang}" hreflang="en-in" />
+    <!--End:<TISPRD-2939-hrefLang tag added> -->
+    
 	<c:choose>
 		<c:when test="${fn:contains(reqURI,'search')}">
 		</c:when>
@@ -143,7 +148,9 @@ if($(window).width() < 650) {
 }
 </script>
 </head>
-
+<c:if test="${empty buildNumber}">
+<c:set var="buildNumber" value= "100000"/>
+</c:if>
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
 <!-- For Gigya Social Login --><!-- TISPT-261 -->
 	<c:if test="${isGigyaEnabled=='Y'}">
@@ -151,10 +158,34 @@ if($(window).width() < 650) {
 			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/') or 
 					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/payment-method/')}"></c:when>
 		<c:otherwise>
-			<script type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}"></script>
+		<c:choose>
+		<c:when test="${isMinificationEnabled}">
+		<script type="text/javascript">
+		$(window).on('load',function(){
+			$.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
+				$.getScript('${commonResourcePath}/js/minified/acc.gigya.min.js?v=${buildNumber}').done(function(){
+					loadGigya();
+				});
+			});
+		});
+		</script>
+		</c:when>
+		<c:otherwise>
+		<script type="text/javascript">
+		$(window).on('load',function(){
+			$.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
+				$.getScript('${commonResourcePath}/js/gigya/acc.gigya.js').done(function(){
+					loadGigya();
+				});
+			});
+		});
+		</script>
+		</c:otherwise>
+		</c:choose>
 		</c:otherwise>
 		</c:choose>
 	</c:if>
+
 	<tealium:sync/> 
 <!-- <script type="text/javascript">
     (function(a,b,c,d){

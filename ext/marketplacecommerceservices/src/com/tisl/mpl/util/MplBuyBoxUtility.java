@@ -419,7 +419,7 @@ public class MplBuyBoxUtility
 			for (final BuyBoxModel buyBox : buyBoxModelList)
 
 			{
-				if (buyBox.getAvailable() > 0)
+				if (buyBox.getAvailable().intValue() > 0)
 				{
 					if (null != buyBox.getSpecialPrice() && buyBox.getSpecialPrice().doubleValue() > 0.0)
 					{
@@ -494,7 +494,7 @@ public class MplBuyBoxUtility
 		{
 			for (final BuyBoxModel buyBox : buyBoxModelList)
 			{
-				if (buyBox.getAvailable() > 0)
+				if (buyBox.getAvailable().intValue() > 0)
 				{
 					isOutOfStock = false;
 					break;
@@ -506,5 +506,12 @@ public class MplBuyBoxUtility
 
 		return isOutOfStock;
 
+	}
+
+	public BuyBoxModel getLeastPriceBuyBoxModel(final ProductModel productModel)
+	{
+		// YTODO Auto-generated method stub
+		final BuyBoxModel buyBoxWinnerModel = getBuyBoxPrice(productModel);
+		return buyBoxWinnerModel;
 	}
 }

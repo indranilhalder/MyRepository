@@ -24,7 +24,6 @@
 		
 	<context:annotation-config/> 
 		
-
 	<!-- tenant scoped filter -->
 
 	<bean id="storefrontTenantFilterChain" class="com.tisl.mpl.storefront.filters.UrlPathFilter" >
@@ -36,7 +35,7 @@
 			<map>
 				<entry key="/integration/" value-ref="integrationTenantFilterChain"/>
 				<entry key="/fetchToken" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for fetchToken -->
-			<!-- 	<entry key="/setheader" value-ref="ajaxUrlFilterChain"/> -->	<!-- TISPT-207 Custom filter chain for setHeader -->
+				<entry key="/setheader" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for setHeader -->
 				<entry key="/getTealiumData" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for TealiumData -->
 				<entry key="/search" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for search -->
 				<entry key="/p" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for PDP page -->
@@ -72,7 +71,7 @@
 		<ref bean="anonymousCheckoutFilter"/>
 
 		<!-- filter to restore items in cart -->
-		<ref bean="cartRestorationFilter"/>
+		<!-- <ref bean="cartRestorationFilter"/> -->
 
 		<!-- filter to restore customer preferred location -->
 		<ref bean="customerLocationRestorationFilter"/>
