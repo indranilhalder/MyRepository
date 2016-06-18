@@ -491,11 +491,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			if (null != otpResponse && null != otpResponse.getInvalidErrorMessage())
 			{
+				//TIS-3168
+				LOG.error("OTP Validation message is " + otpResponse.getInvalidErrorMessage());
 				//returning true or false based on whether OTP is valid or not
 				return otpResponse.getInvalidErrorMessage();
 			}
 			else
 			{
+				//TIS-3168
+				LOG.error("OTP Validation message is null");
 				return null;
 			}
 		}
@@ -833,7 +837,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				if (null != orderStatusResponse)
 				{
 					//Update Audit Table after getting payment response
-					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse);
+					//updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse);
+					//TIS-3168
+					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest);
+
 
 					//TISPRD-2558
 					if (cart.getTotalPrice().equals(orderStatusResponse.getAmount()))
@@ -866,6 +873,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					{
 						orderStatus = orderStatusResponse.getStatus();
 					}
+				}
+				//TIS-3168
+				else
+				{
+					LOG.error("Null orderStatusResponse for juspayOrderId::" + juspayOrderId);
 				}
 
 				//Codemerge issue --- Commented for Payment Fallback

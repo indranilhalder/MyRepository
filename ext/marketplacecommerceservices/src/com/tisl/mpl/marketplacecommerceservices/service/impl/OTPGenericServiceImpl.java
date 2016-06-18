@@ -449,7 +449,9 @@ public class OTPGenericServiceImpl implements OTPGenericService
 				}
 				else
 				{
-					LOG.debug("Otp matched!!!!");
+					//TIS-3168
+					LOG.error("Otp validation matched for OTP:::" + enteredOTPNumber);
+					//LOG.debug("Otp matched!!!!");
 					latestOTP.setIsValidated(Boolean.TRUE);
 					getModelservice().save(latestOTP);
 					otpResponse.setOTPValid(Boolean.TRUE);
@@ -540,7 +542,7 @@ public class OTPGenericServiceImpl implements OTPGenericService
 	/*
 	 * (non-Javadoc)
 	 * 
-
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService#getLatestOTPModel(java.lang.String,
 	 * com.tisl.mpl.enums.OTPTypeEnum)
 	 */
@@ -677,4 +679,3 @@ public class OTPGenericServiceImpl implements OTPGenericService
 
 
 }
-
