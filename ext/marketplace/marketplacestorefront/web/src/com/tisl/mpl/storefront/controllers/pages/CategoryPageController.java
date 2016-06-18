@@ -688,14 +688,14 @@ public class CategoryPageController extends AbstractCategoryPageController
 		requestContextData.setCategory(category);
 		requestContextData.setSearch(searchPageData);
 		/* TISPRD-2987 */
-		if (searchQuery != null && checkIfPagination(request) && sortCode == null)
-		{
-			model.addAttribute("metaRobots", "index,follow");
-		}
-		else if (searchQuery != null)
-		{
-			model.addAttribute("metaRobots", "noindex,follow");
-		}
+		// if (searchQuery != null && checkIfPagination(request) && sortCode == null)
+		// {
+		// 	model.addAttribute("metaRobots", "index,follow");
+		// }
+	         	if (searchQuery != null)
+		 {
+	        	 model.addAttribute("metaRobots", "index,follow");
+		 }
 
 		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(category.getKeywords());
 		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(category.getDescription());
