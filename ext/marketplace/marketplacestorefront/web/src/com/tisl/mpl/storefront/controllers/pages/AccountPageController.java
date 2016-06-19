@@ -5735,12 +5735,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 							final CategoryData categoryData = new CategoryData();
 							categoryData.setCode(oModel.getConfiguredCategory().getCode());
 							categoryData.setName(oModel.getConfiguredCategory().getName());
-							//TISPRD-2335
-							if (null != oModel.getConfiguredCategory().getThumbnail())
+							//TISPRD-2335 and TISPRD-2756
+							if (null != oModel.getConfiguredCategory().getMedias())
 							{
-								categoryData.setImage(oModel.getConfiguredCategory().getThumbnail().getURL());
+								for (int i = 0; i < oModel.getConfiguredCategory().getMedias().size(); i++)
+								{
+									if (null != oModel.getConfiguredCategory().getMedias().get(i).getMediaFormat()
+											&& null != oModel.getConfiguredCategory().getMedias().get(i).getMediaFormat().getQualifier()
+											&& oModel.getConfiguredCategory().getMedias().get(i).getMediaFormat().getQualifier()
+													.equalsIgnoreCase("324Wx324H"))
+									{
+										categoryData.setImage(oModel.getConfiguredCategory().getMedias().get(i).getURL());
+									}
+								}
 							}
-
 							categoryDataMap.put(oModel.getConfiguredCategory().getCode(), categoryData);
 						}
 					}
@@ -5815,12 +5823,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 									final CategoryData oData = new CategoryData();
 									oData.setCode(catModel.getCode());
 									oData.setName(catModel.getName());
-									//TISPRD-2335
-									if (null != catModel.getThumbnail())
+									//TISPRD-2335 and TISPRD-2756
+									if (null != catModel.getMedias())
 									{
-										oData.setImage(catModel.getThumbnail().getURL());
+										for (int i = 0; i < catModel.getMedias().size(); i++)
+										{
+											if (null != catModel.getMedias().get(i).getMediaFormat()
+													&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
+													&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
+															.equalsIgnoreCase("324Wx324H"))
+											{
+												oData.setImage(catModel.getMedias().get(i).getURL());
+											}
+										}
 									}
-
 									categoryDataMap.put(catModel.getCode(), oData);
 								}
 							}
@@ -5921,12 +5937,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 											final CategoryData oData = new CategoryData();
 											oData.setCode(catModel.getCode());
 											oData.setName(catModel.getName());
-											//TISPRD-2335
-											if (null != catModel.getThumbnail())
+											//TISPRD-2335 and TISPRD-2756
+											if (null != catModel.getMedias())
 											{
-												oData.setImage(catModel.getThumbnail().getURL());
+												for (int i = 0; i < catModel.getMedias().size(); i++)
+												{
+													if (null != catModel.getMedias().get(i).getMediaFormat()
+															&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
+															&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
+																	.equalsIgnoreCase("324Wx324H"))
+													{
+														oData.setImage(catModel.getMedias().get(i).getURL());
+													}
+												}
 											}
-
 											categoryDataMapApparel.put(catModel.getCode(), oData);
 										}
 									}
@@ -5965,12 +5989,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 											final CategoryData oData = new CategoryData();
 											oData.setCode(catModel.getCode());
 											oData.setName(catModel.getName());
-											//TISPRD-2335
-											if (null != catModel.getThumbnail())
+											//TISPRD-2335and TISPRD-2756
+											if (null != catModel.getMedias())
 											{
-												oData.setImage(catModel.getThumbnail().getURL());
+												for (int i = 0; i < catModel.getMedias().size(); i++)
+												{
+													if (null != catModel.getMedias().get(i).getMediaFormat()
+															&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
+															&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
+																	.equalsIgnoreCase("324Wx324H"))
+													{
+														oData.setImage(catModel.getMedias().get(i).getURL());
+													}
+												}
 											}
-
 											categoryDataMapElectronics.put(catModel.getCode(), oData);
 										}
 									}
@@ -6000,10 +6032,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 									final CategoryData oData = new CategoryData();
 									oData.setCode(catModel.getCode());
 									oData.setName(catModel.getName());
-									//TISPRD-2335
-									if (null != catModel.getThumbnail())
+									//TISPRD-2335 and TISPRD-2756
+									if (null != catModel.getMedias())
 									{
-										oData.setImage(catModel.getThumbnail().getURL());
+										for (int i = 0; i < catModel.getMedias().size(); i++)
+										{
+											if (null != catModel.getMedias().get(i).getMediaFormat()
+													&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
+													&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
+															.equalsIgnoreCase("324Wx324H"))
+											{
+												oData.setImage(catModel.getMedias().get(i).getURL());
+											}
+										}
 									}
 
 									categoryDataMap.put(catModel.getCode(), oData);
@@ -6078,12 +6119,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 					selCategoryData.setCode(categoryLineItem.getCode());
 					jsoncatArray.add(categoryLineItem.getCode());
 					selCategoryData.setName(categoryLineItem.getName());
-					//TISPRD-2335
-					if (null != categoryLineItem.getThumbnail())
+					//TISPRD-2335 and TISPRD-2756
+					if (null != categoryLineItem.getMedias())
 					{
-						selCategoryData.setImage(categoryLineItem.getThumbnail().getURL());
+						for (int i = 0; i < categoryLineItem.getMedias().size(); i++)
+						{
+							if (null != categoryLineItem.getMedias().get(i).getMediaFormat()
+									&& null != categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
+									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H"))
+							{
+								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL());
+							}
+						}
 					}
-
 					// Media needs to be set for Pic Display
 					categoryDataMap.put(categoryLineItem.getCode(), selCategoryData);
 				}
@@ -6111,12 +6159,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 					preferredCategoryList.add(categoryLineItem.getName());
 					selCategoryData.setCode(categoryLineItem.getCode());
 					selCategoryData.setName(categoryLineItem.getName());
-					//TISPRD-2335
-					if (null != categoryLineItem.getThumbnail())
+					//TISPRD-2335 and TISPRD-2756
+					if (null != categoryLineItem.getMedias())
 					{
-						selCategoryData.setImage(categoryLineItem.getThumbnail().getURL());
+						for (int i = 0; i < categoryLineItem.getMedias().size(); i++)
+						{
+							if (null != categoryLineItem.getMedias().get(i).getMediaFormat()
+									&& null != categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
+									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H"))
+							{
+								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL());
+							}
+						}
 					}
-
 					//Media needs to be set for Pic Display
 					brandDataMap.put(categoryLineItem.getCode(), selCategoryData);
 				}
@@ -6940,4 +6995,3 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 }
-
