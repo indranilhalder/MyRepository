@@ -35,5 +35,10 @@ public interface GigyaService
 
 	public GigyaWsDTO gigyaLoginHelperforMobile(CustomerModel customerModel, boolean isNewUser);
 
-
+	/*
+	 * @param siteUID
+	 * 
+	 * @Desc used to check duplicate id's in gigya
+	 */
+	public int checkGigyaUID(final String siteUid);
 }

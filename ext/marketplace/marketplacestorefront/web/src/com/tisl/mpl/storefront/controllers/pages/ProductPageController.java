@@ -71,10 +71,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -281,7 +284,9 @@ public class ProductPageController extends AbstractPageController
 
 			if (StringUtils.isNotEmpty(redirection))
 			{
-				returnStatement = redirection;
+				//returnStatement = redirection;
+				response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+				response.setHeader("Location", redirection);
 			}
 
 			else
@@ -496,8 +501,9 @@ public class ProductPageController extends AbstractPageController
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-					ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
+					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.SELLER,
+					//					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
+					ProductOption.VARIANT_FULL));
 
 
 			final List<Breadcrumb> breadcrumbList = productBreadcrumbBuilder.getBreadcrumbs(productModel);
@@ -853,7 +859,8 @@ public class ProductPageController extends AbstractPageController
 
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+					//					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
+					ProductOption.VARIANT_FULL));
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			populateProductData(productData, model);
 			final List<String> deliveryInfoList = new ArrayList<String>();
@@ -1764,11 +1771,11 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 *
+	 * 
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -1788,76 +1795,76 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 *
+	 * 
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 *
-	 *
+	 * 
+	 * 
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 *
+	 * 
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 *
+	 * 
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 *
+	 * 
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 *
+	 * 
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 *
+	 * 
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 *
-	 *
+	 * 
+	 * 
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 *
+	 * 
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 *
+	 * 
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 *
+	 * 
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 *
+	 * 
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 *
+	 * 
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 *
+	 * 
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 *
+	 * 
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 *
-	 *
+	 * 
+	 * 
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 *
+	 * 
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -1939,5 +1946,44 @@ public class ProductPageController extends AbstractPageController
 		}
 
 		return successful;
+	}
+
+	@Override
+	protected String checkRequestUrl(final HttpServletRequest request, final HttpServletResponse response,
+			final String resolvedUrlPath) throws UnsupportedEncodingException
+	{
+		try
+		{
+			final String resolvedUrl = response.encodeURL(request.getContextPath() + resolvedUrlPath);
+			final String requestURI = URIUtil.decode(request.getRequestURI(), "utf-8");
+			final String decoded = URIUtil.decode(resolvedUrl, "utf-8");
+			String newUrl = null;
+			if (StringUtils.isNotEmpty(requestURI) && requestURI.endsWith(decoded))
+			{
+				return null;
+			}
+			else
+			{
+				//  org.springframework.web.servlet.View.RESPONSE_STATUS_ATTRIBUTE = "org.springframework.web.servlet.View.responseStatus"
+				request.setAttribute("org.springframework.web.servlet.View.responseStatus", HttpStatus.MOVED_PERMANENTLY);
+				final String queryString = request.getQueryString();
+				if (queryString != null && !queryString.isEmpty())
+				{
+					newUrl = resolvedUrlPath + "?" + queryString;
+
+				}
+				else
+				{
+					newUrl = resolvedUrlPath;
+				}
+				return newUrl;
+
+
+			}
+		}
+		catch (final URIException e)
+		{
+			throw new UnsupportedEncodingException();
+		}
 	}
 }

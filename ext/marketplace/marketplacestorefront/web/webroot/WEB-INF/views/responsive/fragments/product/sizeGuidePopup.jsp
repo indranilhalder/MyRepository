@@ -10,6 +10,9 @@
 <span id="wishlistnotblank_sizeGuide" style="display:none"><spring:theme code="wishlist.notblank"/></span>
 
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<script>
+var productCodeSG = '${product.code}'; 
+ </script>
 <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true"></button>
 
 <input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
@@ -358,7 +361,7 @@
  <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
 		<select id="variant" class="variant-select size-g variant-select-sizeGuidePopUp">            <!--changes for TISPRO-338 (variant-select-sizeGuidePopUp class added) -->
 			<c:choose>
-				<c:when test="${empty sizeSelectedSizeGuide}">
+				<c:when test="${empty sizeSelectedSizeGuide || sizeSelectedSizeGuide ne 'true'}">
 					<option value="#" data-target="#popUpModal" selected="selected"><spring:theme code="text.select.size" /></option>
 				</c:when>
 				<c:otherwise>
@@ -379,7 +382,7 @@
 										<c:when test="${(variantOption.code eq product.code)}">
 										
 											<c:choose>
-											    <c:when test="${empty sizeSelectedSizeGuide}">
+											   <c:when test="${empty sizeSelectedSizeGuide || sizeSelectedSizeGuide ne 'true'}">
 													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
 												</c:when>
 												<c:otherwise>
@@ -436,19 +439,13 @@
 		</select>
 	</c:if>
 			</div>
+			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantCount"/>
 			<div class="qty" id="">
 				<label>Qty:</label>
 				<select id="sizeGuideQty">
-					<option>1</option>
-					<option>2</option>
-					<option>3</option>
-					<option>4</option>
-					<option>5</option>
-					<option>6</option>
-					<option>7</option>
-					<option>8</option>
-					<option>9</option>
-					<option>10</option>
+				<c:forEach var="qtyCount" begin="1" end="${maxQuantCount}">
+		   		<option value="${qtyCount}">${qtyCount}</option>
+				</c:forEach>
 				</select>
 			</div>
 
@@ -558,6 +555,8 @@
 </div>
 <script>
 $(document).ready(function(){
+	
+	openSizeGuidePopuponLoad();
 	var qtyData = $("#pdpQty").val();
 	localStorage.setItem("sizeguideselectvaluePdp", qtyData);
 	

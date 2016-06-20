@@ -491,11 +491,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			if (null != otpResponse && null != otpResponse.getInvalidErrorMessage())
 			{
+				//TIS-3168
+				LOG.error("OTP Validation message is " + otpResponse.getInvalidErrorMessage());
 				//returning true or false based on whether OTP is valid or not
 				return otpResponse.getInvalidErrorMessage();
 			}
 			else
 			{
+				//TIS-3168
+				LOG.error("OTP Validation message is null");
 				return null;
 			}
 		}
@@ -833,7 +837,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				if (null != orderStatusResponse)
 				{
 					//Update Audit Table after getting payment response
-					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse);
+					//updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse);
+					//TIS-3168
+					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest);
+
 
 					//TISPRD-2558
 					if (cart.getTotalPrice().equals(orderStatusResponse.getAmount()))
@@ -850,8 +857,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//Logic when transaction is successful i.e. CHARGED
 					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 					{
+						//TIS-3168
+						LOG.error("Payment successful with transaction ID::::" + juspayOrderId);
 						//saving card details
 						getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
+					}
+					//TIS-3168
+					else
+					{
+						LOG.error("Payment failure with transaction ID::::" + juspayOrderId);
 					}
 					getMplPaymentService().paymentModeApportion(cart);
 
@@ -860,19 +874,25 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						orderStatus = orderStatusResponse.getStatus();
 					}
 				}
+				//TIS-3168
+				else
+				{
+					LOG.error("Null orderStatusResponse for juspayOrderId::" + juspayOrderId);
+				}
 
+				//Codemerge issue --- Commented for Payment Fallback
 				//Logic when transaction is successful i.e. CHARGED
-				if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
-				{
-					//setting Payment Info
-					getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
-				}
-				getMplPaymentService().paymentModeApportion(cart);
-
-				if (updAuditErrStatus)
-				{
-					orderStatus = orderStatusResponse.getStatus();
-				}
+				//				if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
+				//				{
+				//					//setting Payment Info
+				//					getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
+				//				}
+				//				getMplPaymentService().paymentModeApportion(cart);
+				//
+				//				if (updAuditErrStatus)
+				//				{
+				//					orderStatus = orderStatusResponse.getStatus();
+				//				}
 
 			}
 
@@ -1285,13 +1305,20 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	@Override
 	public String fetchPhoneNumber(final CartModel cart)
 	{
-		if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getPhone1())
+		if (null != cart)
 		{
-			return cart.getDeliveryAddress().getPhone1();
-		}
-		else if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getCellphone())
-		{
-			return cart.getDeliveryAddress().getCellphone();
+			if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getPhone1())
+			{
+				return cart.getDeliveryAddress().getPhone1();
+			}
+			else if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getCellphone())
+			{
+				return cart.getDeliveryAddress().getCellphone();
+			}
+			else
+			{
+				return MarketplacecommerceservicesConstants.EMPTYSTRING;
+			}
 		}
 		else
 		{
@@ -1503,11 +1530,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1558,9 +1585,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override

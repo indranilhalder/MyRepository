@@ -9,15 +9,12 @@ import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.commerceservices.category.CommerceCategoryService;
 import de.hybris.platform.core.model.media.MediaModel;
-import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -46,8 +43,6 @@ import com.tisl.mpl.util.GenericUtilityMethods;
  */
 public class HomepageComponentServiceImpl implements HomepageComponentService
 {
-	@Resource(name = "sessionService")
-	private SessionService sessionService;
 
 	@Autowired
 	private CommerceCategoryService commerceCategoryService;
@@ -57,8 +52,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 	//private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
 
-	private static final String SEQUENCE_NUMBER = "SequenceNumber";
-	private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
+	//private static final String SEQUENCE_NUMBER = "SequenceNumber";
+	//private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
 	private static final String TITLE = "title";
 	private static final String ICID = "icid";
 

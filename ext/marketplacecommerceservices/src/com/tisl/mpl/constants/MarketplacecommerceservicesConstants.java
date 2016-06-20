@@ -694,8 +694,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0018 = "E0018";
 	public static final String E0019 = "E0019";
 	public static final String E0020 = "E0020";
+	//TISPRO-607
 	public static final String E0021 = "E0021";
 	public static final String E0022 = "E0022";
+
+
 	//System/Non Business constants
 
 	//pdp error constants
@@ -1578,6 +1581,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISPT-200
 	public static final String GETAUDITID = "select {a.pk} from {mplpaymentaudit as a} where {a.cartGUID}=?cartGUID ORDER BY {a.requestDate} DESC"
 			.intern();
+
+	public final static String PROXYENABLED = "proxy.enabled";
+	public final static String GENPROXY = "proxy.address";
+	public final static String GENPROXYPORT = "proxy.port";
+
+	public final static String IMAGEURLMSG = "Image url is:::";
+	public final static String IMAGEDIMENSION = "324Wx324H";
+
+	public final static String DEFAULT_RISK = "-1.0";
 
 
 	private MarketplacecommerceservicesConstants()

@@ -22,9 +22,16 @@ $(function() {
         cache:false,
         success: function(data) {
             headerLoggedinStatus = data.loggedInStatus;
-            $(
-                "span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count"
-            ).html(data.cartcount);
+            //TISPT-197
+            if(data.cartcount!='NaN')
+        	{
+            	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
+        	}
+            else
+            {
+            	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html('0');
+            }
+            
             if (!headerLoggedinStatus) {
 
                 $("a.headeruserdetails").html("Sign In");
@@ -75,7 +82,7 @@ $("div.departmenthover").on("mouseover touchend", function() {
     if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
         // console.log("Local");
         $("ul." + id).html(decodeURI(html));
-        LazyLoad();
+        //LazyLoad();
     } else {
         $.ajax({
             url: ACC.config.encodedContextPath +
@@ -341,7 +348,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
             //$('#brandsYouLove').append(defaultHtml);
             $('.home-brands-you-love-desc').remove();
             $('#brandsYouLove').append(decodeURI(html));
-            LazyLoad();
+            //LazyLoad();
         } else {
             $.ajax({
                 type: "GET",
@@ -901,25 +908,14 @@ function showStayQued(response){
         '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">' +
         promoText1 + '<a href="' + bannerUrlLink +
         '" class="button maroon">' + linkText +
-        '</a></div><div class="qued-image"><img class="lazy" data-original="' +
+        '</a></div><div class="qued-image"><img class="lazy" src="' +
         bannerImage + '" class="img-responsive"></div>';
     $('#stayQued').html(renderHtml);
 }
 
 
 /* StayQued Section Ends */
-if ($('#showcase').children().length == 0 && $('#pageTemplateId').val() ==
-    'LandingPage2Template') {
-    if (window.localStorage) {
-        for (var key in localStorage) {
-            if (key.indexOf("showcaseContent") >= 0) {
-                window.localStorage.removeItem(key);
-                //console.log("Deleting.." + key);
-            }
-        }
-    }
-    getShowCaseAjaxCall();
-}
+
 // AJAX call for Showcase
 function getShowCaseAjaxCall() {
         var env = $("#previewVersion").val();
@@ -972,7 +968,7 @@ function getShowcaseContentAjaxCall(id) {
             // console.log("Local");
             $('.about-one showcase-section').remove();
             $('#showcase').append(decodeURI(html));
-            LazyLoad();
+            //LazyLoad();
         } else {
             $.ajax({
                 type: "GET",
@@ -1000,7 +996,7 @@ function getShowcaseContentAjaxCall(id) {
                             "undefined") {
                             defaultHtml += "<a href='" + appendIcid(response.bannerUrl, response.icid) + "'>";
                         }
-                        defaultHtml += "<img class='lazy' data-original='" + response.bannerImageUrl +
+                        defaultHtml += "<img class='lazy' src='" + response.bannerImageUrl +
                             "'></img>";
                         if (typeof response.bannerUrl !==
                             "undefined") {
@@ -1018,7 +1014,7 @@ function getShowcaseContentAjaxCall(id) {
                             " <div class='desc-section'><a href='" +
                             ACC.config.encodedContextPath +
                             response.firstProductUrl +
-                            "'><img class='lazy' data-original='" + response.firstProductImageUrl +
+                            "'><img class='lazy' src='" + response.firstProductImageUrl +
                             "'></img>";
                         defaultHtml +=
                             "<div class='showcase-center'>";
@@ -1080,43 +1076,8 @@ function appendIcid(url, icid) {
     }
 }
 $(document).ready(function(){
-
-	if ($('#stayQued').children().length == 0 && $('#pageTemplateId').val() ==
-    'LandingPage2Template') {
-    getStayQuedHomepage();
-}
-
-if ($('#promobannerhomepage').children().length == 0 && $('#pageTemplateId').val() ==
-    'LandingPage2Template') {
-    getPromoBannerHomepage();
-}
-
-if ($('#newAndExclusive').children().length == 0 && $('#pageTemplateId').val() ==
-    'LandingPage2Template') {
-    getNewAndExclusiveAjaxCall();
-}
-
-if ($('#productYouCare').children().length == 0 && $('#pageTemplateId').val() ==
-    'LandingPage2Template') {
-    getProductsYouCareAjaxCall();
-}
-if ($('#bestPicks').children().length == 0 && $('#pageTemplateId').val() ==
-    'LandingPage2Template') {
-    getBestPicksAjaxCall();
-}
-
-if ($('#brandsYouLove').children().length == 0 && $('#pageTemplateId').val() ==
-    'LandingPage2Template') {
-    if (window.localStorage) {
-        for (var key in localStorage) {
-            if (key.indexOf("brandContent") >= 0) {
-                window.localStorage.removeItem(key);
-                //console.log("Deleting.." + key);
-            }
-        }
-    }
-    getBrandsYouLoveAjaxCall();
-}
+	//TISPT-290
+	lazyLoadDivs();
 setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
 
 //Fix for defect TISPT-202
@@ -1124,7 +1085,7 @@ getFooterOnLoad();
 
 });
 //call lazy load after ajaz for page stops
-$(document).ajaxStop(function(){
+/*$(document).ajaxStop(function(){
 	LazyLoad();
 });
 
@@ -1132,7 +1093,7 @@ function LazyLoad(){
 	$("img.lazy").lazyload({
     	effect : "fadeIn"
     });
-}
+}*/
 
 $(document).ready(function() {
 var resize_stop;
@@ -1284,7 +1245,8 @@ function populateEnhancedSearch(enhancedSearchData)
 		    }
 		 if (window.localStorage && (html = window.localStorage.getItem("brandhtml-" + componentUid)) && html != "") {
 		        // console.log("Local");
-		        $("ul#"+componentUid).html(decodeURI(html));
+		        //$("ul#"+componentUid).html(decodeURI(html));
+			    $("ul[id='"+componentUid+"']").html(decodeURI(html));
 		    }else{
 		    	
 		    	 $.ajax({
@@ -1293,7 +1255,8 @@ function populateEnhancedSearch(enhancedSearchData)
 			            type: 'GET',
 			            data:{"compId":componentUid},
 			            success: function(html) {
-			                $("ul#"+componentUid).html(html);
+			                //$("ul#"+componentUid).html(html);
+			            	$("ul[id='"+componentUid+"']").html(html); 
 			                if (window.localStorage) {
 			                    $.cookie("dept-list", "true", {
 			                        expires: 1,
@@ -1316,6 +1279,12 @@ function populateEnhancedSearch(enhancedSearchData)
 	//End
 	
 	// Fix for defect TISPT-202
+	
+	function openNeedHelpSec()
+	{
+		$(this).removeClass("minimize");
+		$("#h").toggle();
+	}
 	function getFooterOnLoad()
 	{
 		var slotUid = "FooterSlot";
@@ -1355,3 +1324,142 @@ function populateEnhancedSearch(enhancedSearchData)
 	        });
 	    }	
 	}
+	
+	//TISPT-290
+	function lazyLoadDivs(){
+		//Changes
+		
+		$(window).on('scroll load',function() {
+			lazyLoadfunction();
+		});
+		//End
+		var ctrlKey = false;
+		$(document).keydown(function(e) {
+	        if (e.keyCode == 17) ctrlKey = true;
+	    }).keyup(function(e) {
+	        if (e.keyCode == 17) ctrlKey = false;
+	    });
+
+	    $(document).keydown(function(e) {
+	        if (ctrlKey && (e.which == 109 || e.which == 107 || e.which == 189 || e.which == 187)) {
+	        	lazyLoadfunction();
+	        }
+	    });
+		
+		
+	}
+	
+	function lazyLoadfunction() {
+		
+		if ($(window).scrollTop() + $(window).height() >= $('#brandsYouLove').offset().top) {
+	        if(!$('#brandsYouLove').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#brandsYouLove').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#brandsYouLove').children().length == 0 && $('#pageTemplateId').val() ==
+	            'LandingPage2Template') {
+	            	 if (window.localStorage) {
+	     		        for (var key in localStorage) {
+	     		            if (key.indexOf("brandContent") >= 0) {
+	     		                window.localStorage.removeItem(key);
+	     		                //console.log("Deleting.." + key);
+	     		            }
+	     		        }
+	     		    }
+	     		    getBrandsYouLoveAjaxCall();
+	        }
+	        }
+	}
+		if ($(window).scrollTop() + $(window).height() >= $('#promobannerhomepage').offset().top) {
+	        if(!$('#promobannerhomepage').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#promobannerhomepage').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#promobannerhomepage').children().length == 0 && $('#pageTemplateId').val() ==
+	            'LandingPage2Template') {
+	            	getPromoBannerHomepage();
+	        }
+	        }
+	}
+		if ($(window).scrollTop() + $(window).height() >= $('#bestPicks').offset().top) {
+	        if(!$('#bestPicks').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#bestPicks').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#bestPicks').children().length == 0 && $('#pageTemplateId').val() ==
+	            'LandingPage2Template') {
+	            	getBestPicksAjaxCall();
+	        }
+	        }
+	}
+		
+		if ($(window).scrollTop() + $(window).height() >= $('#productYouCare').offset().top) {
+	        if(!$('#productYouCare').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#productYouCare').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#productYouCare').children().length == 0 && $('#pageTemplateId').val() ==
+	            'LandingPage2Template') {
+	            	getProductsYouCareAjaxCall();
+	        }
+	        }
+	}
+		if ($(window).scrollTop() + $(window).height() >= $('#newAndExclusive').offset().top) {
+	        if(!$('#newAndExclusive').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#newAndExclusive').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#newAndExclusive').children().length == 0 && $('#pageTemplateId').val() ==
+	            'LandingPage2Template') {
+	            	getNewAndExclusiveAjaxCall();
+	        }
+	        }
+	}
+		
+		if ($(window).scrollTop() + $(window).height() >= $('#stayQued').offset().top) {
+	        if(!$('#stayQued').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#stayQued').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#stayQued').children().length == 0 && $('#pageTemplateId').val() ==
+	            'LandingPage2Template') {
+	            	getStayQuedHomepage();
+	        }
+	        }
+	}
+		
+		
+		if ($(window).scrollTop() + $(window).height() >= $('#showcase').offset().top) {
+	        if(!$('#showcase').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#showcase').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#showcase').children().length == 0 && $('#pageTemplateId').val() ==
+			    'LandingPage2Template') {
+			    if (window.localStorage) {
+			        for (var key in localStorage) {
+			            if (key.indexOf("showcaseContent") >= 0) {
+			                window.localStorage.removeItem(key);
+			                //console.log("Deleting.." + key);
+			            }
+			        }
+			    }
+			    getShowCaseAjaxCall();
+			}
+	        }
+	}
+}
