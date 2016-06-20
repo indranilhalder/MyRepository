@@ -524,21 +524,15 @@ display:none;
    <div class="product-content" style="margin-top:15px;">
 	   <div class="swatch">
 	<product:viewQuickViewVariant/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantityCount"/>
 	<div class="qty">
 		<p> <spring:theme code="product.configureproductscount.qty"/></p>
-		<select id="quantity">
-			<option>1</option>
-			<option>2</option>
-			<option>3</option>
-			<option>4</option>
-			<option>5</option>
-			<option>6</option>
-			<option>7</option>
-			<option>8</option>
-			<option>9</option>
-			<option>10</option>
+		<select id="quantity">		
+		<c:forEach var="qtyCnt" begin="1" end="${maxQuantityCount}">
+   		<option value="${qtyCnt}">${qtyCnt}</option>
+		</c:forEach>
 		</select>
-	</div>
+	</div> 
 
 </div>
 <%--  <div id="ajax-loader" style="margin: 0 auto; height:20px; width: 20px;"><img src="${commonResourcePath}/images/ajax-loader.gif"></div> --%>     

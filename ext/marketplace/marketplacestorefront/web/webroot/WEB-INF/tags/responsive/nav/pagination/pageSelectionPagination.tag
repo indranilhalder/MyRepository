@@ -156,15 +156,14 @@
 						</c:if>
 						   <c:choose>
 							<c:when test="${not empty searchCategory}">
-							<li><a href="${newPaginationUrl}&searchCategory=${searchCategory}">${pageNumber}</a></li>
+							
 							<a href="${newPaginationUrlDotsNext}&searchCategory=${searchCategory}">${searchPageData.pagination.numberOfPages}</a>
 							</c:when>
 							<c:otherwise>
-							<li><a href="${newPaginationUrl}">${pageNumber}</a></li>
 							<a href="${newPaginationUrlDotsNext}">${searchPageData.pagination.numberOfPages}</a>
 							</c:otherwise>
 							</c:choose>
-							</li>
+						</li>
 						</ycommerce:testId>
 					</c:when>
 				</c:choose>

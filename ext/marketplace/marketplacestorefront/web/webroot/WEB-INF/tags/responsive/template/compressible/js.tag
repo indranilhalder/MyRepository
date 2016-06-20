@@ -34,8 +34,8 @@ if(loginStatus){
 }
 </script>
 
-<script type="text/javascript"
-	src="${commonResourcePath}/js/jquery-ui-1.11.2.custom.min.js"></script>
+<%-- <script type="text/javascript"
+	src="${commonResourcePath}/js/plugins/jquery-ui-1.11.2.custom.min.js"></script> --%>
 <%-- bootstrap --%>
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
