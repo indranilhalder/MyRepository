@@ -77,14 +77,8 @@ public class SearchSuggestUtilityMethods
 	private MplCompetingProductsUtility mplCompetingProductsUtility;
 	@Resource(name = "mplProductWebService")
 	private MplProductWebService mplProductWebService;
-
-
-	@Autowired
-	private MplProductWebService mplProductWebService;
-
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
-	//
 	//	@Resource(name = "cwsProductFacade")
 	//	private ProductFacade productFacade;
 	@Resource(name = "productService")
@@ -434,9 +428,8 @@ public class SearchSuggestUtilityMethods
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
-						&& !facate.getCode().equalsIgnoreCase("category")
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("deptType")
+						&& !facate.getCode().equalsIgnoreCase("sellerId") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
 						&& !facate.getCode().equalsIgnoreCase("allPromotions"))
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
@@ -1268,9 +1261,8 @@ public class SearchSuggestUtilityMethods
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
-						&& !facate.getCode().equalsIgnoreCase("category")
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
+						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("deptType")
+						&& !facate.getCode().equalsIgnoreCase("sellerId") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
