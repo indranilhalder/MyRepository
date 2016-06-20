@@ -152,3 +152,74 @@
 	<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+
+<!-- Added for Need help section -->
+
+
+	<div id="up" onclick="openNeedHelpSec()">
+		<spring:theme code="needhelp.needhelptext" />
+
+		<div id="h">
+			<span class="cclose-ico"></span>
+			<div class="chat">
+				<h5>
+					<span class="cicon icon-comment"></span>
+					<a href="${request.contextPath}/clickto/chat" id="chatMe"
+					data-title="">
+					<spring:theme code="needhelp.chatwithus" />
+					<!-- &nbsp;<span class="bubble">1</span> -->
+					</a>
+				</h5>
+					<!-- Commented as part of the chairman demo feedback -->
+			<%-- 	<a href="${request.contextPath}/clickto/chat" id="chatMe"
+					data-title="">
+					<spring:theme code="needhelp.availablenow" />
+				</a> --%>
+
+			</div>
+			<div class="call">
+				<h5>
+					<span class="cicon icon-earphone"></span>
+					<a href="${request.contextPath}/clickto/call" id="callMe"
+					data-title="">${contactNumber}
+					<%-- <spring:theme code="needhelp.callus" /> --%>
+					</a>
+				</h5>
+				
+				<!--  Post chairman demo Changes -->
+				<%-- <a href="${request.contextPath}/clickto/call" id="callMe">${contactNumber}</a> --%>
+			</div>
+		</div>
+	</div>
+	<div class="feedback-links">
+		<a id="feedback" href="#nogo"><spring:theme code="text.feedback.survey"/></a>
+		<input type="hidden" id="feedbackUrlPath" value="${feebBackSurveyUrl}" />
+		</div>
+	<script>
+		$(document).ready(function() {
+			$('.glyphicon-remove').click(function() {
+				helpMe();
+			});
+			/* $('#up').click(function() {
+					$(this).removeClass("minimize");
+					$("#h").toggle();
+			}); */
+			$(document).on("blur",".input-box input",function(){	
+				if( $(this).val() != ""){
+					$(this).addClass("used");
+				}
+				else {
+					$(this).removeClass("used");
+				}
+			});
+			$(document).on("blur",".input-box select",function(){	
+				if( $(this).val() != ""){
+					$(this).addClass("used");
+				}
+				else {
+					$(this).removeClass("used");
+				}
+			});
+
+		});
+	</script>

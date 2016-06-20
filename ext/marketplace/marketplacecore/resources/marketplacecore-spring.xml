@@ -1337,6 +1337,14 @@
 		<property name="timeService" ref="timeService" />
 	</bean>
 	
+	<bean id="mplNewPromotionCodeValueProvider"
+	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplNewPromotionCodeValueProvider"
+	      parent="abstractPropertyFieldValueProvider" >
+		<property name="promotionsService" ref="promotionsService"/>
+		<property name="fieldNameProvider" ref="solrFieldNameProvider"/>
+		<property name="timeService" ref="timeService" />
+	</bean>
+	
 
 	<bean id="mplMobilePromotionCodeValueProvider"
 	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplMobilePromotionCodeValueProvider"

@@ -5,6 +5,9 @@ package com.tisl.mpl.service;
 
 import de.hybris.platform.commercefacades.product.data.ProductData;
 
+import java.util.List;
+
+import com.tisl.mpl.wsdto.GalleryImageData;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 
 
@@ -17,4 +20,6 @@ public interface MplProductWebService
 	public ProductDetailMobileWsData getProductdetailsForProductCode(final String productCode, String baseUrl);
 
 	public String getCategoryCodeOfProduct(final ProductData productData);
+
+	public List<GalleryImageData> getGalleryImages(final ProductData productData);
 }
