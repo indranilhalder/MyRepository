@@ -38,6 +38,14 @@ import reactor.util.CollectionUtils;
  */
 public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryData, SearchStateData>
 {
+	/**
+	 * 
+	 */
+	private static final String UTF_8 = "UTF-8";
+	/**
+	 *
+	 */
+	private static final String PAGE_PAGE_NO_Q = "/page-{pageNo}?q=";
 	private String searchPath;
 	private UrlResolver<CategoryData> categoryDataUrlResolver;
 	private Converter<SolrSearchQueryData, SearchQueryData> searchQueryConverter;
@@ -86,6 +94,7 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		if (source.getCategoryCode() != null)
 		{
 			//TISPRD-2315
+
 			if (CollectionUtils.isEmpty(source.getFilterTerms()) && source.getSort().equals("relevance"))
 			{
 				target.setUrl(getCategoryUrl(source) + "/page-{pageNo}");
@@ -106,9 +115,11 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		{
 			populateOfferListingUrl(source, target);
 		}
-		else if (checkIfNewProductsPage(source.getFilterTerms()) && source.getOfferID() == null || (source.getOfferID() != null))
+		else if (checkIfNewProductsPage(source.getFilterTerms()))
 		{
-			target.setUrl("/search/viewOnlineProducts" + buildUrlQueryString(source, target).replace("?", "&"));
+			target.setUrl("/search/viewOnlineProducts" + PAGE_PAGE_NO_Q
+					+ buildUrlQueryStringForNew(source, target).replace("?", "&"));
+			//target.setUrl("/search/viewOnlineProducts" + buildUrlQueryString(source, target).replace("?", "&"));
 		}
 		//		else if (source.getOfferID() != null)
 		//		{
@@ -192,11 +203,11 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		{
 			try
 			{
-				return "/page-{pageNo}?q=" + URLEncoder.encode(searchQueryParam, "UTF-8");
+				return PAGE_PAGE_NO_Q + URLEncoder.encode(searchQueryParam, UTF_8);
 			}
 			catch (final UnsupportedEncodingException e)
 			{
-				return "/page-{pageNo}?q=" + StringEscapeUtils.escapeHtml(searchQueryParam);
+				return PAGE_PAGE_NO_Q + StringEscapeUtils.escapeHtml(searchQueryParam);
 			}
 		}
 		return "";
@@ -221,7 +232,7 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 
 			try
 			{
-				encodedOfferId = URLEncoder.encode(source.getOfferID(), "UTF-8");
+				encodedOfferId = URLEncoder.encode(source.getOfferID(), UTF_8);
 				target.setUrl("/o/" + offerCategoryID + "?offer=" + encodedOfferId
 						+ buildUrlQueryString(source, target).replace("?", "&"));
 			}
@@ -236,10 +247,45 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 			//target.setUrl("/o/viewAllOffers" + buildUrlQueryString(source, target).replace("?", "&"));
 
 			//TISPRD-1867
-			target.setUrl("/view-all-offers" + buildUrlQueryString(source, target).replace("?", "&"));
+			target.setUrl("/view-all-offers" + PAGE_PAGE_NO_Q + buildUrlQueryStringForOffer(source, target).replace("?", "&"));
+			//target.setUrl("/view-all-offers" + buildUrlQueryString(source, target).replace("?", "&"));
 			//			target.setUrl("/o/viewAllOffers?offer=" + encodedOfferId + "?searchCategory=" + offerCategoryID
 			//					+ buildUrlQueryString(source, target).replace("?", "&"));
 		}
 
+	}
+
+	protected String buildUrlQueryStringForNew(final SolrSearchQueryData source, final SearchStateData target)
+	{
+		final String searchQueryParam = target.getQuery().getValue();
+		if (StringUtils.isNotBlank(searchQueryParam))
+		{
+			try
+			{
+				return URLEncoder.encode(searchQueryParam, UTF_8);
+			}
+			catch (final UnsupportedEncodingException e)
+			{
+				return StringEscapeUtils.escapeHtml(searchQueryParam);
+			}
+		}
+		return "";
+	}
+
+	protected String buildUrlQueryStringForOffer(final SolrSearchQueryData source, final SearchStateData target)
+	{
+		final String searchQueryParam = target.getQuery().getValue();
+		if (StringUtils.isNotBlank(searchQueryParam))
+		{
+			try
+			{
+				return URLEncoder.encode(searchQueryParam, UTF_8);
+			}
+			catch (final UnsupportedEncodingException e)
+			{
+				return StringEscapeUtils.escapeHtml(searchQueryParam);
+			}
+		}
+		return "";
 	}
 }

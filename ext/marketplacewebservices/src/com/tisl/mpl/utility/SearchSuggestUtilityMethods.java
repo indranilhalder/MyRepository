@@ -20,6 +20,7 @@ import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearc
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,6 +75,8 @@ public class SearchSuggestUtilityMethods
 
 	@Resource(name = "mplCompetingProductsUtility")
 	private MplCompetingProductsUtility mplCompetingProductsUtility;
+	@Resource(name = "mplProductWebService")
+	private MplProductWebService mplProductWebService;
 
 
 	@Autowired
@@ -170,7 +173,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -431,6 +434,7 @@ public class SearchSuggestUtilityMethods
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
+						&& !facate.getCode().equalsIgnoreCase("category")
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
 						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
 						&& !facate.getCode().equalsIgnoreCase("allPromotions"))
@@ -541,6 +545,12 @@ public class SearchSuggestUtilityMethods
 	//	}
 
 
+
+	// Check if Keyword exists
+	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(final String searchText)
+	{
+		return mplProductWebService.getKeywordSearch(searchText);
+	}
 
 	private List<SellingItemDetailWsDto> getProductResults(
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
@@ -1258,6 +1268,7 @@ public class SearchSuggestUtilityMethods
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
+						&& !facate.getCode().equalsIgnoreCase("category")
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
 						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
 				{

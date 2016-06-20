@@ -5275,6 +5275,9 @@
 					<index name="BuyBox_IDX">
 						<key attribute="product" />
 					</index>
+					<index name="BuyBox_USSID_IDX">
+						<key attribute="sellerArticleSKU" />
+					</index> 
 				</indexes>
 			</itemtype>
 
@@ -8204,7 +8207,7 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-		
+				
 		
 		<typegroup name="SolrFacetKeywordRedirect">
 			<itemtype code="SolrFacetSearchKeywordRedirect" autocreate="false"
@@ -8218,7 +8221,7 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-	
+
 	</itemtypes>
 	
 </items>

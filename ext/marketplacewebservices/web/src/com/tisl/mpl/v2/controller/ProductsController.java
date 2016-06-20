@@ -52,6 +52,8 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.servicelayer.i18n.I18NService;
+import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
+import de.hybris.platform.solrfacetsearch.model.redirect.SolrURIRedirectModel;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -61,6 +63,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -108,6 +111,7 @@ import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.stock.CommerceStockFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
+import com.tisl.mpl.utility.URLParamUtil;
 import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.DepartmentHierarchy;
@@ -843,21 +847,68 @@ public class ProductsController extends BaseController
 
 	@RequestMapping(value = "/serpsearch", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ProductSearchPageWsDto searchProductDto(@RequestParam(required = false) final String searchText,
-			@RequestParam(required = false) final String typeID, @RequestParam(required = false) final int page,
-			@RequestParam(required = false) final int pageSize, @RequestParam(required = false) final String sortCode,
+	public ProductSearchPageWsDto searchProductDto(@RequestParam(required = false) String searchText,
+			@RequestParam(required = false) String typeID, @RequestParam(required = false) int page,
+			@RequestParam(required = false) int pageSize, @RequestParam(required = false) String sortCode,
 			//@RequestParam(required = false, defaultValue = "category") final String type,
-			@RequestParam(required = false) final boolean isFilter,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false) boolean isFilter, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 
 		final ProductSearchPageWsDto productSearchPage = new ProductSearchPageWsDto();
-
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+		Map<String, List<String>> params = null;
+		String url = null;
+		SolrFacetSearchKeywordRedirectModel solrfacets = null;
 		try
 		{
 			if (StringUtils.isNotBlank(searchText))
 			{
+				//For Keyword Redirection
+				solrfacets = searchSuggestUtilityMethods.getKeywordSearch(searchText);
+				if (solrfacets != null)
+				{
+					//FOR Direct URL redirection only
+					if (solrfacets.getRedirectMobile() instanceof SolrURIRedirectModel)
+					{
+						url = ((SolrURIRedirectModel) solrfacets.getRedirectMobile()).getUrl();
+					}
+					if (url != null)
+					{
+						//fetching the Parameters from the redirect URL in Map with Key and values
+						params = URLParamUtil.getQueryParams(url);
+						//setting parameter again as per keyword redirect
+						if (params.containsKey("searchText"))
+						{
+							searchText = params.get("searchText").get(0);
+						}
+						if (params.containsKey("typeID"))
+						{
+							typeID = params.get("typeID").get(0);
+						}
+						if (params.containsKey("page"))
+						{
+							//suggestion to parseInt
+							page = Integer.parseInt(params.get("page").get(0));
+						}
+						if (params.containsKey("pageSize"))
+						{
+							//suggestion to parseInt
+							pageSize = Integer.parseInt(params.get("pageSize").get(0));
+						}
+						if (params.containsKey("sortCode"))
+						{
+							sortCode = params.get("sortCode").get(0);
+						}
+						if (params.containsKey("isFilter"))
+						{
+							//suggestion to parseBoolean
+							isFilter = Boolean.parseBoolean(params.get("isFilter").get(0));
+						}
+					}
+					LOG.debug("params" + params);
+				}
+				LOG.debug("url" + url);
+				//End For Keyword Redirection
 				final PageableData pageableData = createPageableData(page, pageSize, sortCode, ShowMode.Page);
 				//final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
 
@@ -941,6 +992,11 @@ public class ProductsController extends BaseController
 			if (null != typeID)
 			{
 				productSearchPage.setCategoryCode(typeID);
+			}
+			//For Keyword
+			if (StringUtils.isNotEmpty(url))
+			{
+				productSearchPage.setKeywordRedirectUrl(url);
 			}
 			/*
 			 * final ProductSearchPageWsDto sortingvalues = searchProductsfacatedtonew(searchText, typeID, page, pageSize,
