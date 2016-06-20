@@ -237,10 +237,28 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 			//target.setUrl("/o/viewAllOffers" + buildUrlQueryString(source, target).replace("?", "&"));
 
 			//TISPRD-1867
-			target.setUrl("/view-all-offers" + buildUrlQueryString(source, target).replace("?", "&"));
+			target.setUrl("/view-all-offers" + "/page-{pageNo}?q=" + buildUrlQueryStringForOffer(source, target).replace("?", "&"));
+			//target.setUrl("/view-all-offers" + buildUrlQueryString(source, target).replace("?", "&"));
 			//			target.setUrl("/o/viewAllOffers?offer=" + encodedOfferId + "?searchCategory=" + offerCategoryID
 			//					+ buildUrlQueryString(source, target).replace("?", "&"));
 		}
 
+	}
+
+	protected String buildUrlQueryStringForOffer(final SolrSearchQueryData source, final SearchStateData target)
+	{
+		final String searchQueryParam = target.getQuery().getValue();
+		if (StringUtils.isNotBlank(searchQueryParam))
+		{
+			try
+			{
+				return URLEncoder.encode(searchQueryParam, "UTF-8");
+			}
+			catch (final UnsupportedEncodingException e)
+			{
+				return StringEscapeUtils.escapeHtml(searchQueryParam);
+			}
+		}
+		return "";
 	}
 }
