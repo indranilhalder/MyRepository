@@ -195,7 +195,8 @@ function buildParams(moreParams) {
     'user_id': uid,
     'user_type': user_type,
     'ecompany': ecompany,
-    'site_page_type': site_page_type
+    'site_page_type': site_page_type,
+    'client_type':'web_site'
   };
 
   if(search_string !== "") {
