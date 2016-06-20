@@ -1588,6 +1588,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String IMAGEURLMSG = "Image url is:::";
 
+	public final static String DEFAULT_RISK = "-1.0";
+
 
 	private MarketplacecommerceservicesConstants()
 	{
