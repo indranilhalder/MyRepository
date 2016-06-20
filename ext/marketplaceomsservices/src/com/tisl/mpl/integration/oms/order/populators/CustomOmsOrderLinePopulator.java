@@ -212,7 +212,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 							if(source.getFulfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE)
 									&& parentFullfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIPCODE))
 							{
-								source.setFulfillmentType(parentFullfillmentType.toUpperCase());
+								target.setFulfillmentMode(parentFullfillmentType.toUpperCase());
 								LOG.info(" Parent is SSHIP  and FreeBie is TSHIP : Setting FreeBie Fulfillemt Type as SSHIP");
 							}
 						}
