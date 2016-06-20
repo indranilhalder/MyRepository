@@ -71,7 +71,7 @@
 		<ref bean="anonymousCheckoutFilter"/>
 
 		<!-- filter to restore items in cart -->
-		<ref bean="cartRestorationFilter"/>
+		<!-- <ref bean="cartRestorationFilter"/> -->
 
 		<!-- filter to restore customer preferred location -->
 		<ref bean="customerLocationRestorationFilter"/>

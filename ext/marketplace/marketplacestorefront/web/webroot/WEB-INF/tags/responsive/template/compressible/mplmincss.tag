@@ -4,6 +4,7 @@
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
 </c:if>
+
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/tmpmain.min.css?v=${buildNumber}<%-- ?clear=${minificationTimeStamp} --%>" />
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/main-ie8-min.css"/>

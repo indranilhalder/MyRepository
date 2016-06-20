@@ -59,7 +59,7 @@
 								
    <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
   <div id="loginDivsiginflyout"></div>
-    <script type="text/javascript">
+  <script type="text/javascript">
         gigya.socialize.showLoginUI({
             height: 100
             ,width: 330
@@ -71,8 +71,7 @@
             ,cid:''
             ,enabledProviders : 'facebook,google'
             });
-    </script> 
-								
+    </script>
 								</c:when>
 								<c:otherwise>
 								<ul class="signin-flyout social-connect" id="gSignInWrapper">
