@@ -63,6 +63,11 @@ for(var i = 0; i < arr.length; i++)
                                 'search', 'view-all-offers')}" />
                             <c:url value="${removeQueryUrl}&searchCategory=${searchCategory}" var="removeQueryUrl"/>
 						   </c:when>
+						   <c:when test="${breadcrumb.removeQuery.url!='' && not empty newProduct}">
+						   <c:set var="removeQueryUrl" value="${fn:replace(breadcrumb.removeQuery.url, 
+                                'search', 'search/viewOnlineProducts')}" />
+                            <c:url value="${removeQueryUrl}&searchCategory=${searchCategory}" var="removeQueryUrl"/>
+						   </c:when>
 						   <c:otherwise>
 						   <c:url value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}" var="removeQueryUrl"/>
 						   </c:otherwise>
