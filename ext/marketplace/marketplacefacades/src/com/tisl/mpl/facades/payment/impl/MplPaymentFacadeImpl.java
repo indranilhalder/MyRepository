@@ -1880,6 +1880,70 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		return isValid;
 	}
 
+	//TISPRO-540
+	/**
+	 * This method is used to check whether payment info, delivery mode and address are present against cart or not
+	 *
+	 * @param cart
+	 * @return boolean
+	 */
+	@Override
+	public boolean checkCart(final CartModel cart)
+	{
+		boolean status = true;
+
+		if (cart.getEntries().isEmpty())
+		{
+			status = false;
+		}
+		else if (cart.getPaymentInfo() == null)
+		{
+			status = false;
+		}
+		else if (cart.getTotalPrice().doubleValue() <= 0.0 || cart.getTotalPriceWithConv().doubleValue() <= 0.0)
+		{
+			status = false;
+		}
+		else
+		{
+			status = checkDeliveryOptions(cart);
+		}
+
+		return status;
+	}
+
+	private boolean checkDeliveryOptions(final CartModel cart)
+	{
+		boolean deliveryOptionCheck = true;
+
+		if (null != cart.getEntries() && !cart.getEntries().isEmpty())
+		{
+			for (final AbstractOrderEntryModel entry : cart.getEntries())
+			{
+				if (null == entry.getMplDeliveryMode())
+				{
+					deliveryOptionCheck = false;
+				}
+			}
+		}
+
+		if (cart.getDeliveryAddress() == null)
+		{
+			for (final AbstractOrderEntryModel entry : cart.getEntries())
+			{
+				if (entry.getDeliveryPointOfService() == null && entry.getDeliveryAddress() == null)
+				{
+					// Order and Entry have no delivery address and some entries are not for pickup
+					deliveryOptionCheck = false;
+					//return false;
+				}
+			}
+		}
+
+		//return true;
+		return deliveryOptionCheck;
+	}
+
 	//Getters and setters
 	/**
 	 * @return the mplPaymentService
