@@ -119,6 +119,24 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//Added For TISPRD-1243
 	private static final String DROPDOWN_BRAND = "MBH";
 	private static final String DROPDOWN_CATEGORY = "MSH";
+	private int pageSiseCount;
+
+	/**
+	 * @return the pageSiseCount
+	 */
+	public int getPageSiseCount()
+	{
+		return pageSiseCount;
+	}
+
+	/**
+	 * @param pageSiseCount
+	 *           the pageSiseCount to set
+	 */
+	public void setPageSiseCount(final int pageSiseCount)
+	{
+		this.pageSiseCount = pageSiseCount;
+	}
 
 	/**
 	 * @desc Main method for category landing pages SEO : Changed to accept new pattern and new pagination changes TISCR
@@ -281,6 +299,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				if (preferencesData != null && preferencesData.getPageSize() != null)
 				{
 					count = preferencesData.getPageSize().intValue();
+					setPageSiseCount(count);
 				}
 
 				/*
@@ -660,7 +679,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = categorySearch
 				.getSearchPageData();
-
 		if (searchPageData != null)
 		{
 			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
@@ -688,10 +706,14 @@ public class CategoryPageController extends AbstractCategoryPageController
 		final RequestContextData requestContextData = getRequestContextData(request);
 		requestContextData.setCategory(category);
 		requestContextData.setSearch(searchPageData);
-
+		/* TISPRD-2987 */
+		// if (searchQuery != null && checkIfPagination(request) && sortCode == null)
+		// {
+		// 	model.addAttribute("metaRobots", "index,follow");
+		// }
 		if (searchQuery != null)
 		{
-			model.addAttribute("metaRobots", "noindex,follow");
+			model.addAttribute("metaRobots", "index,follow");
 		}
 
 		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(category.getKeywords());
@@ -720,5 +742,19 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 		return pagination;
 	}
+
+	//TISPRO-623
+	@Override
+	protected int getSearchPageSize()
+	{
+		int count = getSiteConfigService().getInt("storefront.search.pageSize", 0);
+		if (getPageSiseCount() > 0)
+		{
+			count = getPageSiseCount();
+		}
+
+		return count;
+	}
+
 
 }
