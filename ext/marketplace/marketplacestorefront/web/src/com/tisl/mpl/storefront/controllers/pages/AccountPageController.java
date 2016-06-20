@@ -57,7 +57,7 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
-import de.hybris.platform.core.enums.Gender;
+import de.hybris.platform.constants.GeneratedCoreConstants.Enumerations.Gender;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -127,11 +127,12 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.SellerAssociationStatusEnum;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.FeedbackArea;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.Frequency;
 import com.tisl.mpl.core.enums.AddressType;
-import com.tisl.mpl.core.enums.FeedbackArea;
-import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
@@ -153,7 +154,6 @@ import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.data.WishlistData;
-import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -264,6 +264,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final Logger LOG = Logger.getLogger(AccountPageController.class);
 	private String dateDOB = MarketplacecommerceservicesConstants.EMPTY;
 	private String dateDOAnn = MarketplacecommerceservicesConstants.EMPTY;
+	private final String imageDimension = MarketplacecommerceservicesConstants.IMAGEDIMENSION;
 	private static final String RETURN_REQUEST = "returnRequest";
 	private static final String RETURN_SUBMIT = "returnSubmit";
 	private static final String RETURN_SUCCESS = "returnSuccess";
@@ -5775,7 +5776,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									if (null != oModel.getConfiguredCategory().getMedias().get(i).getMediaFormat()
 											&& null != oModel.getConfiguredCategory().getMedias().get(i).getMediaFormat().getQualifier()
 											&& oModel.getConfiguredCategory().getMedias().get(i).getMediaFormat().getQualifier()
-													.equalsIgnoreCase("324Wx324H"))
+													.equalsIgnoreCase(imageDimension))
 									{
 										categoryData.setImage(oModel.getConfiguredCategory().getMedias().get(i).getURL2());
 									}
@@ -5863,7 +5864,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 											if (null != catModel.getMedias().get(i).getMediaFormat()
 													&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
 													&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
-															.equalsIgnoreCase("324Wx324H"))
+															.equalsIgnoreCase(imageDimension))
 											{
 												oData.setImage(catModel.getMedias().get(i).getURL2());
 											}
@@ -5977,7 +5978,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 													if (null != catModel.getMedias().get(i).getMediaFormat()
 															&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
 															&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
-																	.equalsIgnoreCase("324Wx324H"))
+																	.equalsIgnoreCase(imageDimension))
 													{
 														oData.setImage(catModel.getMedias().get(i).getURL2());
 													}
@@ -6029,7 +6030,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 													if (null != catModel.getMedias().get(i).getMediaFormat()
 															&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
 															&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
-																	.equalsIgnoreCase("324Wx324H"))
+																	.equalsIgnoreCase(imageDimension))
 													{
 														oData.setImage(catModel.getMedias().get(i).getURL2());
 													}
@@ -6072,7 +6073,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 											if (null != catModel.getMedias().get(i).getMediaFormat()
 													&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
 													&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
-															.equalsIgnoreCase("324Wx324H"))
+															.equalsIgnoreCase(imageDimension))
 											{
 												oData.setImage(catModel.getMedias().get(i).getURL2());
 											}
@@ -6158,7 +6159,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 						{
 							if (null != categoryLineItem.getMedias().get(i).getMediaFormat()
 									&& null != categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
-									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H"))
+									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
+											.equalsIgnoreCase(imageDimension))
 							{
 								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL2());
 							}
@@ -6198,7 +6200,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 						{
 							if (null != categoryLineItem.getMedias().get(i).getMediaFormat()
 									&& null != categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
-									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H"))
+									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
+											.equalsIgnoreCase(imageDimension))
 							{
 								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL2());
 							}
