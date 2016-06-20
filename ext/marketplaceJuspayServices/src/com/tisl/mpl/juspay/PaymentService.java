@@ -374,6 +374,10 @@ public class PaymentService
 		{
 			LOG.error("Response from Juspay:::" + response);
 		}
+		else
+		{
+			LOG.error("Null response from Juspay");
+		}
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
 
 		return assembleOrderStatusResponse(jsonResponse, new GetOrderStatusResponse());
