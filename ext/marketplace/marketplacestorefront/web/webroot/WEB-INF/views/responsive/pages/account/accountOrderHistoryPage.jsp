@@ -248,7 +248,14 @@
 															</c:choose>
 															</p>
 														</div>
-														<c:forEach items="${productSerrialNumber}"
+														<c:if
+															test="${not empty entry.imeiDetails.serialNum &&  fn:length(entry.imeiDetails.serialNum) > 0}">
+															<p>
+																<spring:theme code="text.orderHistory.serial.number" />
+																&nbsp; ${entry.imeiDetails.serialNum}
+															</p>
+														</c:if>
+														<%-- <c:forEach items="${productSerrialNumber}"
 															var="productSerrialNumber">
 															<c:choose>
 																<c:when
@@ -271,7 +278,7 @@
 																	</c:forEach>
 																</c:when>
 															</c:choose>
-														</c:forEach>
+														</c:forEach> --%>
 
 														<p>
 															<spring:theme

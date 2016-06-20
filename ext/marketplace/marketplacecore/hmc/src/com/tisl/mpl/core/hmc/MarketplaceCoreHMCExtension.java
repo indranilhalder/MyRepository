@@ -47,7 +47,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -344,8 +346,13 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 			LOG.debug("***Fired Message Has been modified****");
 			if (item instanceof BuyXItemsofproductAgetproductBforfree || item instanceof BuyABFreePrecentageDiscount)
 			{
-				LOG.debug("***Modifying Promotion Fired Mesage ****");
-				getSellerBasedPromotionService().modifyFiredMessage(initialValues.get(MarketplaceCoreConstants.PROMOCODE).toString());
+				if (MapUtils.isNotEmpty(initialValues) && null != initialValues.get(MarketplaceCoreConstants.PROMOCODE)
+						&& StringUtils.isNotEmpty(initialValues.get(MarketplaceCoreConstants.PROMOCODE).toString())) //Code Change for TISSIT-2033
+				{
+					LOG.debug("***Modifying Promotion Fired Mesage ****");
+					getSellerBasedPromotionService().modifyFiredMessage(
+							initialValues.get(MarketplaceCoreConstants.PROMOCODE).toString());
+				}
 			}
 		}
 
@@ -624,19 +631,21 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 		if (item instanceof ProductPromotion)
 		{
 			final ProductPromotion productBOGOFPromotion = (ProductPromotion) item;
-			final List<AbstractPromotionRestriction> promoRestrictionList = new ArrayList<AbstractPromotionRestriction>(
-					productBOGOFPromotion.getRestrictions());
-
-			for (final AbstractPromotionRestriction restriction : promoRestrictionList)
+			if (CollectionUtils.isNotEmpty(productBOGOFPromotion.getRestrictions())) //code change for TISSIT-2033
 			{
-				if (restriction instanceof EtailSellerSpecificRestriction)
+				final List<AbstractPromotionRestriction> promoRestrictionList = new ArrayList<AbstractPromotionRestriction>(
+						productBOGOFPromotion.getRestrictions());
+				for (final AbstractPromotionRestriction restriction : promoRestrictionList)
 				{
-					final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
-					if (etailSellerSpecificRestriction.getSellerMasterList().size() > 1)
+					if (restriction instanceof EtailSellerSpecificRestriction)
 					{
-						isSellerExists = true;
+						final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
+						if (etailSellerSpecificRestriction.getSellerMasterList().size() > 1)
+						{
+							isSellerExists = true;
+						}
+						break;
 					}
-					break;
 				}
 			}
 		}
