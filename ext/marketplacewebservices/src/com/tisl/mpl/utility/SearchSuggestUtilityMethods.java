@@ -20,7 +20,6 @@ import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearc
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +30,8 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -167,7 +168,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -540,9 +541,32 @@ public class SearchSuggestUtilityMethods
 
 
 	// Check if Keyword exists
-	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(final String searchText)
+	public Map<String, List<String>> getKeywordSearch(String searchText)
 	{
-		return mplProductWebService.getKeywordSearch(searchText);
+		//TODO parse the URL and remove any extra sort query within it
+		String url = null;
+		Map<String, List<String>> params = null;
+		final List<String> urlList = new ArrayList<String>();
+		try
+		{
+			//searchText = URLParamUtil.getQueryParamParsed(searchText);
+			searchText = URLParamUtil.filter(searchText);
+			url = mplProductWebService.getKeywordSearch(searchText);
+			if (StringUtils.isNotBlank(url))
+			{
+				//fetching the Parameters from the redirect URL in Map with Key and values
+				params = URLParamUtil.getQueryParams(url);
+				urlList.add(url);
+				params.put("keywordUrl", urlList);
+				LOG.debug("---search keyword url" + url);
+
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.debug(String.format("searchText-----%s -----url %s", searchText, url));
+		}
+		return params;
 	}
 
 	private List<SellingItemDetailWsDto> getProductResults(
@@ -801,15 +825,11 @@ public class SearchSuggestUtilityMethods
 					}
 
 				}
-				else
-				{
-					sellerItemDetailWsDto = new SellerItemDetailWsDto();
-					sellerItemDetailWsDto.setSellerId("767865");
-					sellerItemDetailWsDto.setSellerName("TATA");
-					sellerItemDetailWsDto.setEMItag("Y");
-					sellerItemDetailWsDto.setOfferprice("767");
-					sellerItemDetailWsDtoList.add(sellerItemDetailWsDto);
-				}
+				/*
+				 * else { sellerItemDetailWsDto = new SellerItemDetailWsDto(); sellerItemDetailWsDto.setSellerId("767865");
+				 * sellerItemDetailWsDto.setSellerName("TATA"); sellerItemDetailWsDto.setEMItag("Y");
+				 * sellerItemDetailWsDto.setOfferprice("767"); sellerItemDetailWsDtoList.add(sellerItemDetailWsDto); }
+				 */
 				sellingItemDetail.setSeller(sellerItemDetailWsDtoList);
 				sellingItemDetail.setVariantOptions(variantOptionsWsDtoWsDtoList);
 				searchProductDTOList.add(sellingItemDetail);

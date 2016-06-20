@@ -52,8 +52,6 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.servicelayer.i18n.I18NService;
-import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
-import de.hybris.platform.solrfacetsearch.model.redirect.SolrURIRedirectModel;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -71,6 +69,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +110,6 @@ import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.stock.CommerceStockFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
-import com.tisl.mpl.utility.URLParamUtil;
 import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.DepartmentHierarchy;
@@ -850,7 +848,7 @@ public class ProductsController extends BaseController
 	public ProductSearchPageWsDto searchProductDto(@RequestParam(required = false) String searchText,
 			@RequestParam(required = false) String typeID, @RequestParam(required = false) int page,
 			@RequestParam(required = false) int pageSize, @RequestParam(required = false) String sortCode,
-			//@RequestParam(required = false, defaultValue = "category") final String type,
+			@RequestParam(required = false, defaultValue = "false") final boolean isTextSearch,
 			@RequestParam(required = false) boolean isFilter, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 
@@ -858,24 +856,17 @@ public class ProductsController extends BaseController
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
 		Map<String, List<String>> params = null;
 		String url = null;
-		SolrFacetSearchKeywordRedirectModel solrfacets = null;
+
 		try
 		{
 			if (StringUtils.isNotBlank(searchText))
 			{
 				//For Keyword Redirection
-				solrfacets = searchSuggestUtilityMethods.getKeywordSearch(searchText);
-				if (solrfacets != null)
+				if (isTextSearch)
 				{
-					//FOR Direct URL redirection only
-					if (solrfacets.getRedirectMobile() instanceof SolrURIRedirectModel)
+					params = searchSuggestUtilityMethods.getKeywordSearch(searchText);
+					if (MapUtils.isNotEmpty(params))
 					{
-						url = ((SolrURIRedirectModel) solrfacets.getRedirectMobile()).getUrl();
-					}
-					if (url != null)
-					{
-						//fetching the Parameters from the redirect URL in Map with Key and values
-						params = URLParamUtil.getQueryParams(url);
 						//setting parameter again as per keyword redirect
 						if (params.containsKey("searchText"))
 						{
@@ -904,14 +895,17 @@ public class ProductsController extends BaseController
 							//suggestion to parseBoolean
 							isFilter = Boolean.parseBoolean(params.get("isFilter").get(0));
 						}
+						//fetching keyword url
+						if (params.containsKey("keywordUrl"))
+						{
+							url = params.get("keywordUrl").get(0);
+						}
 					}
 					LOG.debug("params" + params);
 				}
-				LOG.debug("url" + url);
 				//End For Keyword Redirection
-				final PageableData pageableData = createPageableData(page, pageSize, sortCode, ShowMode.Page);
-				//final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
 
+				final PageableData pageableData = createPageableData(page, pageSize, sortCode, ShowMode.Page);
 				final SearchStateData searchState = new SearchStateData();
 				final SearchQueryData searchQueryData = new SearchQueryData();
 				searchQueryData.setValue(searchText);
