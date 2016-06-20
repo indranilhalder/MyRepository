@@ -5745,7 +5745,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 											&& oModel.getConfiguredCategory().getMedias().get(i).getMediaFormat().getQualifier()
 													.equalsIgnoreCase("324Wx324H"))
 									{
-										categoryData.setImage(oModel.getConfiguredCategory().getMedias().get(i).getURL());
+										categoryData.setImage(oModel.getConfiguredCategory().getMedias().get(i).getURL2());
 									}
 								}
 							}
@@ -5833,7 +5833,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 													&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
 															.equalsIgnoreCase("324Wx324H"))
 											{
-												oData.setImage(catModel.getMedias().get(i).getURL());
+												oData.setImage(catModel.getMedias().get(i).getURL2());
 											}
 										}
 									}
@@ -5947,7 +5947,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 															&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
 																	.equalsIgnoreCase("324Wx324H"))
 													{
-														oData.setImage(catModel.getMedias().get(i).getURL());
+														oData.setImage(catModel.getMedias().get(i).getURL2());
 													}
 												}
 											}
@@ -5999,7 +5999,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 															&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
 																	.equalsIgnoreCase("324Wx324H"))
 													{
-														oData.setImage(catModel.getMedias().get(i).getURL());
+														oData.setImage(catModel.getMedias().get(i).getURL2());
 													}
 												}
 											}
@@ -6042,7 +6042,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 													&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
 															.equalsIgnoreCase("324Wx324H"))
 											{
-												oData.setImage(catModel.getMedias().get(i).getURL());
+												oData.setImage(catModel.getMedias().get(i).getURL2());
 											}
 										}
 									}
@@ -6128,7 +6128,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									&& null != categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
 									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H"))
 							{
-								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL());
+								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL2());
 							}
 						}
 					}
@@ -6168,7 +6168,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									&& null != categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
 									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H"))
 							{
-								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL());
+								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL2());
 							}
 						}
 					}
