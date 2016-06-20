@@ -2311,11 +2311,11 @@ public class CartsController extends BaseCommerceController
 										{
 											throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
 										}
-										if ((abstractOrderEntry.getQuantity().longValue()
-												+ pr.getQuantity().longValue()) > maximum_configured_quantiy)
-										{
-											throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9066);
-										}
+										/*
+										 * if ((abstractOrderEntry.getQuantity().longValue() + pr.getQuantity().longValue()) >
+										 * maximum_configured_quantiy) { throw new
+										 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9066); }
+										 */
 										break;
 
 									}
