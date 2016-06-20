@@ -1990,6 +1990,8 @@ public class CartsController extends BaseCommerceController
 				LOG.debug("************ get cart details mobile web service *********" + cartId);
 				final long start = System.nanoTime();
 				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode);
+				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
 				final long elapsedTime = System.nanoTime() - start;
 				final float seconds = elapsedTime / 1000000000;
 				LOG.debug(String.format("cartDetails ---" + MarketplacewebservicesConstants.LOG_TIME, elapsedTime, seconds));
