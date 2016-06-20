@@ -32,7 +32,15 @@ for(var i = 0; i < arr.length; i++)
 <c:if test="${not empty pageData.breadcrumbs}">
 	<div class="facet js-facet">
 	<%-- <c:url value="/search?searchCategory=${searchCategory}&text=${searchPageData.freeTextSearch}&resetAll=${true}" var="resetQueryUrl"/> --%>
-    <c:url value="/search?searchCategory=${searchCategory}&text=${searchPageData.freeTextSearch}" var="resetQueryUrl"/>
+    <c:choose>
+    <c:when test="${not empty  newProduct}">
+     <c:url value="/search/viewOnlineProducts" var="resetQueryUrl"/>
+    </c:when>
+    <c:otherwise>
+     <c:url value="/search?searchCategory=${searchCategory}&text=${searchPageData.freeTextSearch}" var="resetQueryUrl"/>
+    </c:otherwise>
+    </c:choose>
+   
 	<c:set var="breadCrumbList" value="${pageData.breadcrumbs}" />
 	
 	<c:set var="breadCrumbSize" value="${fn:length(breadCrumbList)}" />

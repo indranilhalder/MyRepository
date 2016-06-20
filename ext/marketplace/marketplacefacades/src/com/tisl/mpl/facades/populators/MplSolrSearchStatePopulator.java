@@ -107,9 +107,11 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		{
 			populateOfferListingUrl(source, target);
 		}
-		else if (checkIfNewProductsPage(source.getFilterTerms()) && source.getOfferID() == null || (source.getOfferID() != null))
+		else if (checkIfNewProductsPage(source.getFilterTerms()))
 		{
-			target.setUrl("/search/viewOnlineProducts" + buildUrlQueryString(source, target).replace("?", "&"));
+			target.setUrl("/search/viewOnlineProducts" + "/page-{pageNo}?q="
+					+ buildUrlQueryStringForNew(source, target).replace("?", "&"));
+			//target.setUrl("/search/viewOnlineProducts" + buildUrlQueryString(source, target).replace("?", "&"));
 		}
 		//		else if (source.getOfferID() != null)
 		//		{
@@ -243,6 +245,23 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 			//					+ buildUrlQueryString(source, target).replace("?", "&"));
 		}
 
+	}
+
+	protected String buildUrlQueryStringForNew(final SolrSearchQueryData source, final SearchStateData target)
+	{
+		final String searchQueryParam = target.getQuery().getValue();
+		if (StringUtils.isNotBlank(searchQueryParam))
+		{
+			try
+			{
+				return URLEncoder.encode(searchQueryParam, "UTF-8");
+			}
+			catch (final UnsupportedEncodingException e)
+			{
+				return StringEscapeUtils.escapeHtml(searchQueryParam);
+			}
+		}
+		return "";
 	}
 
 	protected String buildUrlQueryStringForOffer(final SolrSearchQueryData source, final SearchStateData target)
