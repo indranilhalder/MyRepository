@@ -72,7 +72,6 @@ import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
-import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -105,7 +104,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	private ModelService modelService;
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	private Converter<CartModel, CartData> mplExtendedPromoCartConverter;
-	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 	@Autowired
 	private CommerceCartService commerceCartService;
 
@@ -1954,22 +1952,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		parameter.setCart(cartModel);
 		parameter.setEntryNumber(entryNumber);
 		parameter.setQuantity(quantity);
-		/////////// TISSAM-14
-		for (final AbstractOrderEntryModel pr : cartModel.getEntries())
-		{
-			final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
-			if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
-			}
-			if ((quantity + pr.getQuantity().longValue()) > maximum_configured_quantiy)
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9066);
-			}
-			break;
-
-		}
-		////////
 		final CommerceCartModification modification = getMplCommerceCartService().updateQuantityForCartEntry(parameter);
 
 		return getCartModificationConverter().convert(modification);
