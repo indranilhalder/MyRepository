@@ -187,8 +187,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
+	 *
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -386,7 +386,7 @@ public class ProductDetailsHelper
 		boolean add = false;
 		try
 		{
-			Wishlist2Model existingWishlist = wishlistFacade.getWishlistForName(wishName);
+			final Wishlist2Model existingWishlist = wishlistFacade.getWishlistForName(wishName);
 			//  boolean add=
 			//checking whether the wishlist with given name exists or not
 			LOG.debug("addToWishListInPopup: *****productCode: " + productCode + " **** ussid: " + ussid + " *** wishName: "
@@ -405,7 +405,7 @@ public class ProductDetailsHelper
 				add = wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, sizeSelected.booleanValue());
 				final WishlistData wishData = new WishlistData();
 				wishData.setParticularWishlistName(createdWishlist.getName());
-				existingWishlist = wishlistFacade.getWishlistForName(wishName);
+				//existingWishlist = wishlistFacade.getWishlistForName(wishName);
 				wishData.setProductCode(productCode);
 			}
 			if (!add) //add == false
@@ -852,15 +852,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,

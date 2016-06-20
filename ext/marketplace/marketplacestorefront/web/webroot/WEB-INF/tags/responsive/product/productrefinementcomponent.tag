@@ -6,7 +6,9 @@
 <script>
 $(function() {
 	var inputArray = ${departmentHierarchyData.hierarchyList};
+	if(inputArray!=""||inputArray!=[]){
 	constructDepartmentHierarchy(inputArray);
+	}
 	});
 	
 	

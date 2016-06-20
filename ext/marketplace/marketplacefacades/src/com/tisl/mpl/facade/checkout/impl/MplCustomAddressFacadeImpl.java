@@ -209,6 +209,10 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 				cartData.setTotalPriceWithConvCharge(createPrice(cartModel, cartModel.getTotalPriceWithConv()));
 			}
 		}
+		else
+		{
+			LOG.error(">>>> getCheckoutCart() CartModel is null ");
+		}
 		return cartData;
 	}
 

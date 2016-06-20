@@ -5,12 +5,16 @@
 	use it only in accordance with the terms of the license agreement you entered 
 	into with hybris. -->
 
+          
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context.xsd">
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 	<context:annotation-config />
 
@@ -1337,6 +1341,14 @@
 		<property name="timeService" ref="timeService" />
 	</bean>
 	
+	<bean id="mplNewPromotionCodeValueProvider"
+	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplNewPromotionCodeValueProvider"
+	      parent="abstractPropertyFieldValueProvider" >
+		<property name="promotionsService" ref="promotionsService"/>
+		<property name="fieldNameProvider" ref="solrFieldNameProvider"/>
+		<property name="timeService" ref="timeService" />
+	</bean>
+	
 
 	<bean id="mplMobilePromotionCodeValueProvider"
 	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplMobilePromotionCodeValueProvider"
@@ -1580,6 +1592,25 @@
 	<bean id="fallBackReportJob" class="com.tisl.mpl.core.pincode.jobs.FallBackReportJob"
 		autowire="byName">
 		<property name="mplPincodeService" ref="mplPincodeService" />
+	</bean>
+	
+	<aop:aspectj-autoproxy/>
+
+	<alias name="mplDefaultImportService" alias="importService" />
+	<bean id="mplDefaultImportService" class="com.tisl.mpl.core.servicelayer.impex.impl.MplDefaultImportService" parent="defaultImportService" >
+		<property name="configurationService" ref="configurationService" />
+	</bean>
+
+	<alias name="mplBatchRunnerTask" alias="batchRunnerTask" />
+	<bean id="mplBatchRunnerTask" class="com.tisl.mpl.core.servicelayer.impex.impl.MplImpexRunnerTask" >
+		<property name="sessionService" ref="sessionService" />
+		<property name="importService" ref="importService" />
+		<property name="configurationService" ref="configurationService" />
+		<lookup-method name="getImportConfig" bean="importConfig" />
+	</bean>
+
+	<bean id="cronjobStatusLogger" class="com.tisl.mpl.core.aspect.cronjob.DefaultCronjobStatusLogger" >
+		<property name="configurationService" ref="configurationService" />
 	</bean>
 	
 </beans>

@@ -3,11 +3,16 @@
  */
 package com.tils.mpl.media.impl;
 
+import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.core.model.media.MediaContainerModel;
+import de.hybris.platform.core.model.media.MediaFormatModel;
 import de.hybris.platform.core.model.media.MediaModel;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 import java.util.List;
@@ -80,5 +85,76 @@ public class MplMediaDaoImpl implements MplMediaDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+
+
+	@Override
+	public MediaModel getMediaForIndexing(final ProductModel product, final MediaFormatModel mediaFormat,
+			final List<MediaContainerModel> galleryImages)
+	{
+
+		int count = 1;
+		final StringBuilder galImgPK = new StringBuilder();
+
+		for (final MediaContainerModel mcList : galleryImages)
+		{
+
+			if (galleryImages.size() != count)
+			{
+				//galImgPK.append(mcList.getPk() + ","); Sonar fixes
+
+				galImgPK.append(mcList.getPk());
+				galImgPK.append(',');
+			}
+			else
+			{
+				galImgPK.append(mcList.getPk());
+			}
+			count = count + 1;
+		}
+		try
+		{
+
+			final String queryString = "select {media." + MediaModel.PK + "} from {" + MediaModel._TYPECODE + " as media JOIN "
+					+ MediaContainerModel._TYPECODE + " as container " + " ON {container." + MediaContainerModel.PK + "}={media."
+					+ MediaModel.MEDIACONTAINER + "} JOIN " + CatalogVersionModel._TYPECODE + " as cat ON {media."
+					+ MediaModel.CATALOGVERSION + "}={cat." + CatalogVersionModel.PK + "} JOIN " + MediaFormatModel._TYPECODE
+					+ " as mf ON {media." + MediaModel.MEDIAFORMAT + "}={mf." + MediaFormatModel.PK + "}} " + " where {media."
+					+ MediaModel.MEDIAPRIORITY + "}=?priority and {cat." + CatalogVersionModel.VERSION + "} =?catalogVersion and {mf."
+					+ MediaFormatModel.QUALIFIER + "}= ?searchMediaFormat and {container." + MediaContainerModel.PK + "} in ("
+					+ galImgPK + ")";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+			query.addQueryParameter("priority", "1");
+			query.addQueryParameter("catalogVersion", product.getCatalogVersion().getVersion());
+			query.addQueryParameter("searchMediaFormat", mediaFormat.getQualifier());
+
+			final SearchResult<MediaModel> searchResult = flexibleSearchService.search(query);
+
+			MediaModel media = null;
+
+			media = searchResult.getResult().get(0);
+
+
+			if (media != null)
+			{
+				return media;
+			}
+		}
+
+		catch (final ModelNotFoundException localModelNotFoundException)
+		{
+
+			LOG.debug("Error finding Media for the Product" + localModelNotFoundException);
+			return null;
+		}
+		catch (final Exception e)
+		{
+
+			LOG.debug("Exception in finding Media" + e);
+			return null;
+		}
+		return null;
 	}
 }

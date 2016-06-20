@@ -5,7 +5,10 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav" %>
-
+<!-- Tealium hidden fields -->
+<input type="hidden" id="search_keyword" value="${searchPageData.freeTextSearch}">
+<input type="hidden" id="searchCategory" value="${searchCategory}">
+<input type="hidden" id="search_results" value="${searchPageData.pagination.totalNumberOfResults}">
 <template:page pageTitle="${pageTitle}">
 <script language='javascript'>
 $(document).ready(function() {

@@ -21,7 +21,11 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType;
+import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
+import de.hybris.platform.solrfacetsearch.search.SolrFacetSearchKeywordDao;
 import de.hybris.platform.util.localization.Localization;
 
 import java.math.BigDecimal;
@@ -87,6 +91,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private DefaultPromotionManager defaultPromotionManager;
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
+	@Resource
+	private SolrFacetSearchKeywordDao solrFacetSearchKeywordDao;
+
+	@Resource(name = "i18nService")
+	private I18NService i18nService;
 	/*
 	 * @Autowired private MplDeliveryInformationService mplDeliveryInformationService;
 	 */
@@ -1722,6 +1731,42 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * check if Keyword is configured
+	 *
+	 * @param searchText
+	 * @return keywordRedirect
+	 */
+	@Override
+	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(final String searchText)
+	{
+		//suggestion to remove new Arraylist
+		List<SolrFacetSearchKeywordRedirectModel> keywords = null;
+		SolrFacetSearchKeywordRedirectModel keywordRedirect = null;
+		try
+		{
+			final String isoLang = i18nService.getCurrentLocale().getLanguage();
+			keywords = solrFacetSearchKeywordDao.findKeywords(searchText, KeywordRedirectMatchType.EXACT, configurationService
+					.getConfiguration().getString(MarketplacewebservicesConstants.SEARCH_FACET_CONFIG), isoLang);
+			//suggestion to check CollectionUtils
+			if (CollectionUtils.isNotEmpty(keywords) && keywords.size() > 0)
+			{
+				keywordRedirect = keywords.get(0);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+		catch (final Exception e)
+		{
+			LOG.debug("keywordRedirectSearch------" + e.getMessage());
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+
+		return keywordRedirect;
 	}
 
 	/**
