@@ -39,6 +39,10 @@ import reactor.util.CollectionUtils;
 public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryData, SearchStateData>
 {
 	/**
+	 * 
+	 */
+	private static final String UTF_8 = "UTF-8";
+	/**
 	 *
 	 */
 	private static final String PAGE_PAGE_NO_Q = "/page-{pageNo}?q=";
@@ -199,7 +203,7 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		{
 			try
 			{
-				return PAGE_PAGE_NO_Q + URLEncoder.encode(searchQueryParam, "UTF-8");
+				return PAGE_PAGE_NO_Q + URLEncoder.encode(searchQueryParam, UTF_8);
 			}
 			catch (final UnsupportedEncodingException e)
 			{
@@ -228,7 +232,7 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 
 			try
 			{
-				encodedOfferId = URLEncoder.encode(source.getOfferID(), "UTF-8");
+				encodedOfferId = URLEncoder.encode(source.getOfferID(), UTF_8);
 				target.setUrl("/o/" + offerCategoryID + "?offer=" + encodedOfferId
 						+ buildUrlQueryString(source, target).replace("?", "&"));
 			}
@@ -258,7 +262,7 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		{
 			try
 			{
-				return URLEncoder.encode(searchQueryParam, "UTF-8");
+				return URLEncoder.encode(searchQueryParam, UTF_8);
 			}
 			catch (final UnsupportedEncodingException e)
 			{
@@ -275,7 +279,7 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		{
 			try
 			{
-				return URLEncoder.encode(searchQueryParam, "UTF-8");
+				return URLEncoder.encode(searchQueryParam, UTF_8);
 			}
 			catch (final UnsupportedEncodingException e)
 			{
