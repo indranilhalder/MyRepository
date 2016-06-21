@@ -1413,7 +1413,7 @@ $(document).ready(function(){
 			}
 		});
 		
-		$(window).on("load resize", function() {
+		$(window).on("resize", function() {
 			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 				var footer_height=$('footer').height() + 20 + 'px';
 				$(".body-Content").css('padding-bottom',footer_height);
