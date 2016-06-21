@@ -420,10 +420,6 @@ public class SellerPageController extends AbstractSearchPageController
 		return searchPageData;
 	}
 
-	@Override
-	protected int getSearchPageSize()
-	{
-		return getSiteConfigService().getInt("storefront.search.pageSize", 0);
-	}
+
 
 }
