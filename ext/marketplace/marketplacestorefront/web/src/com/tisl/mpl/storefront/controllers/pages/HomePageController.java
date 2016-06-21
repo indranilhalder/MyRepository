@@ -77,6 +77,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
+import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -1088,6 +1089,7 @@ public class HomePageController extends AbstractPageController
 		{
 
 			FooterComponentModel footer = null;
+			NeedHelpComponentModel needHelpFooter = null;
 			final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
 
 			if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
@@ -1097,7 +1099,10 @@ public class HomePageController extends AbstractPageController
 					if (cmsComponentModel instanceof FooterComponentModel)
 					{
 						footer = (FooterComponentModel) cmsComponentModel;
-						break;
+					}
+					if (cmsComponentModel instanceof NeedHelpComponentModel)
+					{
+						needHelpFooter = (NeedHelpComponentModel) cmsComponentModel;
 					}
 				}
 			}
@@ -1110,6 +1115,10 @@ public class HomePageController extends AbstractPageController
 			model.addAttribute("footerAppImageList", footer.getFooterAppImageList());
 			model.addAttribute("navigationNodes", footer.getNavigationNodes());
 			model.addAttribute("wrapAfter", footer.getWrapAfter());
+
+			//Need help section
+			model.addAttribute("contactNumber", (needHelpFooter == null) ? "" : needHelpFooter.getContactNumber());
+
 		}
 
 		catch (final EtailBusinessExceptions e)

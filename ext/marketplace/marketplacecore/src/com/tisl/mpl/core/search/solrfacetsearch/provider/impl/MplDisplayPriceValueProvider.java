@@ -63,7 +63,7 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -128,12 +128,15 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 				{
 					double price = 0.0;
 					/* TISPRD-2611 */
-					if (null != buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice())
+					if (null != buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
+							&& buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
+									.doubleValue() > 0.0)
 					{
 						price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
 								.doubleValue();
 					}
-					else
+					else if (null != buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice()
+							&& buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice().doubleValue() > 0.0)
 					{
 						price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice().doubleValue();
 					}

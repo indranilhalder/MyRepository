@@ -15,7 +15,7 @@
 
 </head>
 <body>
-	<div id="up">
+	<div id="up" onclick="openNeedHelpSec()">
 		<spring:theme code="needhelp.needhelptext" />
 
 		<div id="h">
@@ -50,19 +50,22 @@
 			</div>
 		</div>
 	</div>
-	<div class="feedback-links">
+	
+	<!-- TISPRD-2359 -->
+	<%-- <div class="feedback-links">
 		<a id="feedback" href="#nogo"><spring:theme code="text.feedback.survey"/></a>
 		<input type="hidden" id="feedbackUrlPath" value="${feebBackSurveyUrl}" />
-		</div>
+		</div> --%>
+		
 	<script>
 		$(document).ready(function() {
 			$('.glyphicon-remove').click(function() {
 				helpMe();
 			});
-			$('#up').click(function() {
+			/* $('#up').click(function() {
 					$(this).removeClass("minimize");
 					$("#h").toggle();
-			});
+			}); */
 			$(document).on("blur",".input-box input",function(){	
 				if( $(this).val() != ""){
 					$(this).addClass("used");

@@ -41,6 +41,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -137,7 +138,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -219,7 +220,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -233,7 +234,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -306,9 +307,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 * 
+	 *
 	 * @param subOrderList
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	private void setParentTransBuyABGetC(final List<OrderModel> subOrderList) throws InvalidCartException
@@ -365,9 +366,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 * 
+	 *
 	 * @param subOrderList
-	 * 
+	 *
 	 * @throws Exception
 	 */
 
@@ -732,9 +733,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
+	 *
 	 * @param orderList
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions
@@ -1008,7 +1009,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 			for (final Map.Entry<String, List<AbstractOrderEntryModel>> sellerEntry : sellerEntryMap.entrySet())
 			{
-				subOrders.add(createSubOrders(orderModel, sellerEntry.getValue(), cachedSellerInfoMap));
+				subOrders.add(createSubOrders(orderModel, sellerEntry.getValue(), cachedSellerInfoMap, sellerEntry.getKey()));
 			}
 		}
 		catch (final Exception ex) //TISPRD-958
@@ -1071,7 +1072,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 */
 	private OrderModel createSubOrders(final OrderModel orderModel,
 			final List<AbstractOrderEntryModel> abstractOrderEntryModelList,
-			final Map<String, SellerInformationModel> cachedSellerInfoMap) throws Exception //TISPRD-958
+			final Map<String, SellerInformationModel> cachedSellerInfoMap, final String sellerId) throws Exception //TISPRD-958
 	{
 		Double deliveryCharge = Double.valueOf(0.0);
 		Double prevDelCharge = Double.valueOf(0.0);
@@ -1087,8 +1088,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		clonedSubOrder.setType("SubOrder");
 		clonedSubOrder.setParentReference(orderModel);
 		getModelService().save(clonedSubOrder);
-		final Set setSubPromo = new HashSet<PromotionResultModel>(clonedSubOrder.getAllPromotionResults());
-		setSubPromo.clear();
+
+		//Blocked for TISPRO-288
+		//final Set setSubPromo = new HashSet<PromotionResultModel>(clonedSubOrder.getAllPromotionResults());
+		//setSubPromo.clear();
+
+		final Set setSubPromo = new HashSet<PromotionResultModel>();
+
 		for (final AbstractOrderEntryModel abstractOrderEntryModel : abstractOrderEntryModelList)
 		{
 			int quantity = abstractOrderEntryModel.getQuantity().intValue();
@@ -1176,40 +1182,43 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 
 				}
-				for (final PromotionResultModel promotion : clonedSubOrder.getAllPromotionResults())
-				{
-					if (promotion.getCertainty().floatValue() == 1f
-							&& ((promotion.getPromotion() instanceof ProductPromotionModel
-									&& abstractOrderEntryModel.getProductPromoCode() != null && abstractOrderEntryModel
-									.getProductPromoCode().equalsIgnoreCase(promotion.getPromotion().getCode())) || promotion
-										.getPromotion() instanceof OrderPromotionModel))
-					{
-						for (final PromotionOrderEntryConsumedModel promotionOrder : promotion.getConsumedEntries())
-						{
-							for (final AbstractOrderEntryModel matchline : clonedSubOrder.getEntries())
-							{
-								//TISEE-6353
-								if (matchline != null && matchline.getProductPromoCode() != null
-										&& matchline.getProductPromoCode().equalsIgnoreCase(promotion.getPromotion().getCode()))
-								{
-									promotionOrder.setOrderEntry(matchline);
-									promotionOrder.setPromotionResult(promotion);
-									getModelService().save(promotionOrder);
-								}
-							}
 
-						}
-						setSubPromo.add(promotion);
-					}
-				}
+				//********Note : Blocked for TISPRO-288****
+				//				for (final PromotionResultModel promotion : clonedSubOrder.getAllPromotionResults())
+				//				{
+				//					if (promotion.getCertainty().floatValue() == 1f
+				//							&& ((promotion.getPromotion() instanceof ProductPromotionModel
+				//									&& abstractOrderEntryModel.getProductPromoCode() != null && abstractOrderEntryModel
+				//									.getProductPromoCode().equalsIgnoreCase(promotion.getPromotion().getCode())) || promotion
+				//										.getPromotion() instanceof OrderPromotionModel))
+				//					{
+				//						for (final PromotionOrderEntryConsumedModel promotionOrder : promotion.getConsumedEntries())
+				//						{
+				//							for (final AbstractOrderEntryModel matchline : clonedSubOrder.getEntries())
+				//							{
+				//								//TISEE-6353
+				//								if (matchline != null && matchline.getProductPromoCode() != null
+				//										&& matchline.getProductPromoCode().equalsIgnoreCase(promotion.getPromotion().getCode()))
+				//								{
+				//									promotionOrder.setOrderEntry(matchline);
+				//									promotionOrder.setPromotionResult(promotion);
+				//									getModelService().save(promotionOrder);
+				//								}
+				//							}
+				//
+				//						}
+				//						setSubPromo.add(promotion);
+				//					}
+				//				}
+				//
+				//				for (final PromotionResultModel promotion : clonedSubOrder.getAllPromotionResults())
+				//				{
+				//					if ((promotion.getPromotion() instanceof OrderPromotionModel))
+				//					{
+				//						setSubPromo.add(promotion);
+				//					}
+				//				}
 
-				for (final PromotionResultModel promotion : clonedSubOrder.getAllPromotionResults())
-				{
-					if ((promotion.getPromotion() instanceof OrderPromotionModel))
-					{
-						setSubPromo.add(promotion);
-					}
-				}
 
 				createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, cartApportionValue, 0, price, false, 0,
 						deliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
@@ -1225,6 +1234,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 
 		}
+
+		//----added for child order consumed entry setup----------------//
+		//Method added for TISPRO-288
+		setPromotionsHmcTabChildOrder(orderModel, clonedSubOrder, sellerId, setSubPromo);
+
+
 		clonedSubOrder.setAllPromotionResults(setSubPromo);
 		getModelService().save(clonedSubOrder);
 
@@ -1455,6 +1470,169 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		}
 		return subOrderID;
 	}
+
+
+
+
+
+	/**
+	 * Method added for TISPRO-288
+	 *
+	 * @param orderModel
+	 * @param clonedSubOrder
+	 * @param sellerId
+	 * @param setSubPromo
+	 */
+	private void setPromotionsHmcTabChildOrder(final OrderModel orderModel, final OrderModel clonedSubOrder,
+			final String sellerId, final Set setSubPromo)
+	{
+		final List<PromotionResultModel> SellerSpecificPromoResultList = new ArrayList<PromotionResultModel>(
+				orderModel.getAllPromotionResults());
+		setPromotionResults(SellerSpecificPromoResultList, sellerId);
+
+		setChildOrderConsumedEntries(clonedSubOrder.getAllPromotionResults());
+		final List<Integer> processedEntryNumList = new ArrayList<Integer>();
+
+		for (final PromotionResultModel promotionResultParent : SellerSpecificPromoResultList)
+		{
+			if (promotionResultParent.getPromotion() instanceof ProductPromotionModel)
+			{
+				parentConsumed: for (final PromotionOrderEntryConsumedModel promotionConsumedParent : promotionResultParent
+						.getConsumedEntries())
+				{
+					final AbstractOrderEntryModel parentEntry = promotionConsumedParent.getOrderEntry();
+
+
+					for (final PromotionResultModel promotionResultChild : clonedSubOrder.getAllPromotionResults())
+					{
+						if ((promotionResultParent.getCertainty().floatValue() == promotionResultChild.getCertainty().floatValue())
+								&& (promotionResultParent.getPromotion().getCode().equalsIgnoreCase(promotionResultChild.getPromotion()
+										.getCode())))
+						{
+							long qty = promotionConsumedParent.getQuantity().longValue();
+							childConsumed: for (final PromotionOrderEntryConsumedModel promotionConsumedChild : promotionResultChild
+									.getConsumedEntries())
+							{
+								if (promotionConsumedChild.getOrderEntry() == null)
+								{
+									for (final AbstractOrderEntryModel matchline : clonedSubOrder.getEntries())
+									{
+										final Integer currEntryNumber = matchline.getEntryNumber();
+										if (parentEntry.getSelectedUSSID().equalsIgnoreCase(matchline.getSelectedUSSID())
+												&& promotionConsumedParent.getAdjustedUnitPrice().equals(matchline.getTotalPrice())
+												&& (CollectionUtils.isEmpty(processedEntryNumList) || !processedEntryNumList
+														.contains(currEntryNumber)))
+										{
+											processedEntryNumList.add(currEntryNumber);
+											promotionConsumedChild.setOrderEntry(matchline);
+											promotionConsumedChild.setQuantity(matchline.getQuantity());
+											promotionConsumedChild.setAdjustedUnitPrice(promotionConsumedParent.getAdjustedUnitPrice());
+											promotionConsumedChild.setPromotionResult(promotionResultChild);
+											getModelService().save(promotionConsumedChild);
+											setSubPromo.add(promotionResultChild);
+											if (qty > matchline.getQuantity().longValue())
+											{
+												qty--;
+												continue childConsumed;
+											}
+											else
+											{
+												continue parentConsumed;
+											}
+
+										}
+									}
+								}
+							}
+
+							continue parentConsumed;
+
+						}
+
+					}
+				}
+			}
+		}
+
+		for (final PromotionResultModel promotion : clonedSubOrder.getAllPromotionResults())
+		{
+			if ((promotion.getPromotion() instanceof OrderPromotionModel))
+			{
+				setSubPromo.add(promotion);
+			}
+		}
+	}
+
+	/**
+	 * Method added for TISPRO-288
+	 *
+	 * @param PromoResultList
+	 * @param sellerId
+	 */
+	private void setPromotionResults(final List<PromotionResultModel> PromoResultList, final String sellerId)
+	{
+		final Iterator<PromotionResultModel> iter = PromoResultList.iterator();
+
+		outer: while (iter.hasNext())
+		{
+			final PromotionResultModel promoResult = iter.next();
+			final List<PromotionOrderEntryConsumedModel> consumedEntries = new ArrayList<PromotionOrderEntryConsumedModel>(
+					promoResult.getConsumedEntries());
+
+			for (final PromotionOrderEntryConsumedModel entry : consumedEntries)
+			{
+				final String ussid = entry.getOrderEntry().getSelectedUSSID();
+				if (!ussid.substring(0, 6).equalsIgnoreCase(sellerId))
+				{
+					iter.remove();
+					continue outer;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Method added for TISPRO-288
+	 *
+	 * @param childPromotionResults
+	 */
+	private void setChildOrderConsumedEntries(final Set<PromotionResultModel> childPromotionResults)
+	{
+		for (final PromotionResultModel promotionResultChild : childPromotionResults)
+		{
+			final List<PromotionOrderEntryConsumedModel> cosumedList = new ArrayList<PromotionOrderEntryConsumedModel>(
+					promotionResultChild.getConsumedEntries());
+			for (final PromotionOrderEntryConsumedModel promotionConsumedChild : promotionResultChild.getConsumedEntries())
+			{
+				final long qty = promotionConsumedChild.getQuantity().longValue();
+				if (qty > 1)
+				{
+					for (int i = 1; i <= qty - 1; i++)
+					{
+						final PromotionOrderEntryConsumedModel consumed = modelService.create(PromotionOrderEntryConsumedModel.class);
+						consumed.setAdjustedUnitPrice(promotionConsumedChild.getAdjustedUnitPrice());
+						consumed.setPromotionResult(promotionResultChild);
+						//modelService.save(consumed);
+
+						cosumedList.add(consumed);
+					}
+					//modelService.saveAll(cosumedList);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(cosumedList))
+			{
+				modelService.saveAll(cosumedList);
+				promotionResultChild.setConsumedEntries(cosumedList);
+				modelService.save(promotionResultChild);
+			}
+
+		}
+	}
+
+
+
+
 
 	@Required
 	public void setCloneAbstractOrderStrategy(final CloneAbstractOrderStrategy cloneAbstractOrderStrategy)

@@ -46,11 +46,12 @@
 
 				<ul class="words" style="width: 50%; float: left">
 					<c:forEach items="${subBrands}" var="subBrand">
+					<c:set var="catName" value="${fn:split(subBrand.name, '||')}" />
 						<c:url var="subBrandUrl"
-							value="/Categories/${subBrand.name}/c-${subBrand.code}"></c:url>
+							value="/${catName[1]}/c-${fn:toLowerCase(subBrand.code)}"></c:url>
 						<li class="long words"><div class="toggle"
 								style="font-weight: normal; text-transform: capitalize">
-								<a href="${subBrandUrl}">${subBrand.name}</a>
+								<a href="${subBrandUrl}">${catName[0]}</a>
 							</div></li>
 					</c:forEach>
 				</ul> <c:set var="count" value="0" /> <c:forEach

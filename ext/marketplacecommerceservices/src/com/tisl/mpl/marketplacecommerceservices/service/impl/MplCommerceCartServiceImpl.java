@@ -44,6 +44,8 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.ordersplitting.model.StockLevelModel;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -76,6 +78,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -123,6 +126,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionSer
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.ExtDefaultCommerceUpdateCartEntryStrategy;
+import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.StateModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
@@ -3493,174 +3497,190 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				for (final AbstractOrderEntryModel entryModel : abstractOrderModel.getEntries())
 				{
-					String deliveryModeGlobalCode = null;
-					String deliveryMode = null;
-					cartSoftReservationData = new CartSoftReservationData();
-					if (entryModel.getSelectedUSSID() != null)
+					//Start Code added for TISPRD-2758
+					final Tuple2<?, ?> tupleData = getFreebieInventoryList(abstractOrderModel, entryModel);
+					if (tupleData != null && tupleData.getFirst() != null && tupleData.getFirst().equals(Boolean.TRUE))
 					{
-						cartSoftReservationData.setUSSID(entryModel.getSelectedUSSID());
-					}
-					else
-					{
-						LOG.debug("populateDataForSoftReservation : entry.getMplDeliveryMode() is null or empty");
-					}
-					if (entryModel.getQuantity() != null && entryModel.getQuantity().intValue() > 0)
-					{
-						cartSoftReservationData.setQuantity(Integer.valueOf(entryModel.getQuantity().toString()));
-					}
-					else
-					{
-						LOG.debug("populateDataForSoftReservation :  entryModel.getQuantity() is null or empty");
-					}
-
-					if (entryModel.getDeliveryPointOfService() != null)
-					{
-						cartSoftReservationData.setStoreId(entryModel.getDeliveryPointOfService().getSlaveId());
-					}
-					if (entryModel.getAssociatedItems() != null && entryModel.getAssociatedItems().size() > 0
-							&& entryModel.getGiveAway().booleanValue())
-					{
-						if (entryModel.getAssociatedItems().size() >= 2)
+						final List<CartSoftReservationData> dataList = (List<CartSoftReservationData>) tupleData.getSecond();
+						if (CollectionUtils.isNotEmpty(dataList))
 						{
-							deliveryMode = setParentforABgetC(cartSoftReservationData, entryModel, abstractOrderModel);
-							cartSoftReservationData.setIsAFreebie(MarketplacecommerceservicesConstants.Y);
-							if (null != deliveryMode)
+							cartSoftReservationDataList.addAll(dataList);
+						}
+						else
+						{
+							LOG.error("TISPRD-2758 Freebie Data Population  is empty  ");
+						}
+					}//End Code added for TISPRD-2758
+					else
+					{
+						String deliveryModeGlobalCode = null;
+						String deliveryMode = null;
+						cartSoftReservationData = new CartSoftReservationData();
+						if (entryModel.getSelectedUSSID() != null)
+						{
+							cartSoftReservationData.setUSSID(entryModel.getSelectedUSSID());
+						}
+						else
+						{
+							LOG.debug("populateDataForSoftReservation : entry.getMplDeliveryMode() is null or empty");
+						}
+						if (entryModel.getQuantity() != null && entryModel.getQuantity().intValue() > 0)
+						{
+							cartSoftReservationData.setQuantity(Integer.valueOf(entryModel.getQuantity().toString()));
+						}
+						else
+						{
+							LOG.debug("populateDataForSoftReservation :  entryModel.getQuantity() is null or empty");
+						}
+
+						if (entryModel.getDeliveryPointOfService() != null)
+						{
+							cartSoftReservationData.setStoreId(entryModel.getDeliveryPointOfService().getSlaveId());
+						}
+						if (entryModel.getAssociatedItems() != null && entryModel.getAssociatedItems().size() > 0
+								&& entryModel.getGiveAway().booleanValue())
+						{
+							if (entryModel.getAssociatedItems().size() >= 2)
 							{
-								if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+								deliveryMode = setParentforABgetC(cartSoftReservationData, entryModel, abstractOrderModel);
+								cartSoftReservationData.setIsAFreebie(MarketplacecommerceservicesConstants.Y);
+								if (null != deliveryMode)
 								{
-									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.HD;
-								}
-								else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
-								{
-									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.ED;
-								}
-								else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
-								{
-									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CnC;
-								}
-								if (StringUtil.isNotEmpty(deliveryModeGlobalCode))
-								{
-									cartSoftReservationData.setDeliveryMode(deliveryModeGlobalCode);
-								}
-								//set DeliveryPointOfService as parent for freebie
-								final String parentUssid = cartSoftReservationData.getParentUSSID();
-								if (null != parentUssid
-										&& deliveryModeGlobalCode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
-								{
-									for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
+									if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
 									{
-										if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssid))
+										deliveryModeGlobalCode = MarketplacecommerceservicesConstants.HD;
+									}
+									else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+									{
+										deliveryModeGlobalCode = MarketplacecommerceservicesConstants.ED;
+									}
+									else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+									{
+										deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CnC;
+									}
+									if (StringUtil.isNotEmpty(deliveryModeGlobalCode))
+									{
+										cartSoftReservationData.setDeliveryMode(deliveryModeGlobalCode);
+									}
+									//set DeliveryPointOfService as parent for freebie
+									final String parentUssid = cartSoftReservationData.getParentUSSID();
+									if (null != parentUssid
+											&& deliveryModeGlobalCode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+									{
+										for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
 										{
-											final PointOfServiceModel parentPosModel = cEntry.getDeliveryPointOfService();
-											if (null != parentPosModel)
+											if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssid))
 											{
-												cartSoftReservationData.setStoreId(parentPosModel.getSlaveId());
+												final PointOfServiceModel parentPosModel = cEntry.getDeliveryPointOfService();
+												if (null != parentPosModel)
+												{
+													cartSoftReservationData.setStoreId(parentPosModel.getSlaveId());
+												}
 											}
 										}
 									}
 								}
+							}
+							else
+							{
+								final String ussId = entryModel.getAssociatedItems().get(0);
+								cartSoftReservationData.setParentUSSID(ussId);
+								final String deliveryModeForFreebie = getDeliverModeForABgetC(ussId, abstractOrderModel);
+								if (null != deliveryModeForFreebie)
+								{
+									if (deliveryModeForFreebie.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+									{
+										deliveryModeGlobalCode = MarketplacecommerceservicesConstants.HD;
+									}
+									else if (deliveryModeForFreebie
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+									{
+										deliveryModeGlobalCode = MarketplacecommerceservicesConstants.ED;
+									}
+									else if (deliveryModeForFreebie.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+									{
+										deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CnC;
+									}
+									if (StringUtil.isNotEmpty(deliveryModeGlobalCode))
+									{
+										cartSoftReservationData.setDeliveryMode(deliveryModeGlobalCode);
+									}
+									//set DeliveryPointOfService as parent for freebie
+									if (null != ussId && deliveryModeGlobalCode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+									{
+										for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
+										{
+											if (cEntry.getSelectedUSSID().equalsIgnoreCase(ussId))
+											{
+												final PointOfServiceModel parentPosModel = cEntry.getDeliveryPointOfService();
+												if (null != parentPosModel)
+												{
+													cartSoftReservationData.setStoreId(parentPosModel.getSlaveId());
+												}
+											}
+										}
+									}
+								}
+								cartSoftReservationData.setIsAFreebie(MarketplacecommerceservicesConstants.Y);
+							}
+						}
+
+						if (entryModel.getMplDeliveryMode() != null && entryModel.getMplDeliveryMode().getDeliveryMode() != null
+								&& entryModel.getMplDeliveryMode().getDeliveryMode().getCode() != null
+								&& StringUtil.isNotEmpty(entryModel.getMplDeliveryMode().getDeliveryMode().getCode()))
+						{
+							if (deliveryMode == null)
+							{
+								deliveryMode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
+							}
+
+							if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+							{
+								deliveryModeGlobalCode = MarketplacecommerceservicesConstants.HD;
+							}
+							else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+							{
+								deliveryModeGlobalCode = MarketplacecommerceservicesConstants.ED;
+							}
+							else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+							{
+								deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CnC;
+							}
+
+							if (StringUtil.isNotEmpty(deliveryModeGlobalCode))
+							{
+								cartSoftReservationData.setDeliveryMode(deliveryModeGlobalCode);
 							}
 						}
 						else
 						{
-							final String ussId = entryModel.getAssociatedItems().get(0);
-							cartSoftReservationData.setParentUSSID(ussId);
-							final String deliveryModeForFreebie = getDeliverModeForABgetC(ussId, abstractOrderModel);
-							if (null != deliveryModeForFreebie)
+							LOG.debug("populateDataForSoftReservation :  entryModel.getMplDeliveryMode().getCode() is null or empty");
+						}
+
+						if (entryModel.getSelectedUSSID() != null)
+						{
+							final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+									entryModel.getSelectedUSSID());
+							List<RichAttributeModel> richAttributeModel = null;
+							if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 							{
-								if (deliveryModeForFreebie.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+								richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+								if (richAttributeModel != null && richAttributeModel.get(0) != null
+										&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
+										&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
 								{
-									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.HD;
+									final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+									cartSoftReservationData.setFulfillmentType(fulfillmentType.toUpperCase());
 								}
-								else if (deliveryModeForFreebie.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+								else
 								{
-									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.ED;
-								}
-								else if (deliveryModeForFreebie.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
-								{
-									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CnC;
-								}
-								if (StringUtil.isNotEmpty(deliveryModeGlobalCode))
-								{
-									cartSoftReservationData.setDeliveryMode(deliveryModeGlobalCode);
-								}
-								//set DeliveryPointOfService as parent for freebie
-								if (null != ussId && deliveryModeGlobalCode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
-								{
-									for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
-									{
-										if (cEntry.getSelectedUSSID().equalsIgnoreCase(ussId))
-										{
-											final PointOfServiceModel parentPosModel = cEntry.getDeliveryPointOfService();
-											if (null != parentPosModel)
-											{
-												cartSoftReservationData.setStoreId(parentPosModel.getSlaveId());
-											}
-										}
-									}
+									LOG.debug("populateDataForSoftReservation :  Fulfillment type not received for the "
+											+ entryModel.getSelectedUSSID());
 								}
 							}
-							cartSoftReservationData.setIsAFreebie(MarketplacecommerceservicesConstants.Y);
 						}
+						cartSoftReservationDataList.add(cartSoftReservationData);
 					}
-
-					if (entryModel.getMplDeliveryMode() != null && entryModel.getMplDeliveryMode().getDeliveryMode() != null
-							&& entryModel.getMplDeliveryMode().getDeliveryMode().getCode() != null
-							&& StringUtil.isNotEmpty(entryModel.getMplDeliveryMode().getDeliveryMode().getCode()))
-					{
-						if (deliveryMode == null)
-						{
-							deliveryMode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
-						}
-
-						if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
-						{
-							deliveryModeGlobalCode = MarketplacecommerceservicesConstants.HD;
-						}
-						else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
-						{
-							deliveryModeGlobalCode = MarketplacecommerceservicesConstants.ED;
-						}
-						else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
-						{
-							deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CnC;
-						}
-
-						if (StringUtil.isNotEmpty(deliveryModeGlobalCode))
-						{
-							cartSoftReservationData.setDeliveryMode(deliveryModeGlobalCode);
-						}
-					}
-					else
-					{
-						LOG.debug("populateDataForSoftReservation :  entryModel.getMplDeliveryMode().getCode() is null or empty");
-					}
-
-					if (entryModel.getSelectedUSSID() != null)
-					{
-						final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-								entryModel.getSelectedUSSID());
-						List<RichAttributeModel> richAttributeModel = null;
-						if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
-						{
-							richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-							if (richAttributeModel != null && richAttributeModel.get(0) != null
-									&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
-									&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-							{
-								final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
-								cartSoftReservationData.setFulfillmentType(fulfillmentType.toUpperCase());
-							}
-							else
-							{
-								LOG.debug("populateDataForSoftReservation :  Fulfillment type not received for the "
-										+ entryModel.getSelectedUSSID());
-							}
-						}
-					}
-
-					cartSoftReservationDataList.add(cartSoftReservationData);
-
 				}
 			}
 		}
@@ -3670,6 +3690,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		}
 		return cartSoftReservationDataList;
 	}
+
 
 
 	/**
@@ -3806,6 +3827,156 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return qty;
 	}
 
+	/*
+	 * @DESC : Inventory list to be generated for TISPRD-2758
+	 *
+	 * @param abstractOrderModel
+	 *
+	 * @param entryModel
+	 *
+	 * @return Tuple2<?, ?>
+	 */
+	private Tuple2<?, ?> getFreebieInventoryList(final AbstractOrderModel abstractOrderModel,
+			final AbstractOrderEntryModel entryModel)
+	{
+		List<CartSoftReservationData> reservationList = new ArrayList<CartSoftReservationData>();
+		boolean isFreebiePromotionApplied = false;
+		try
+		{
+			if (entryModel.getGiveAway().booleanValue() && CollectionUtils.isNotEmpty(entryModel.getAssociatedItems())
+					&& entryModel.getAssociatedItems().size() > 1
+					&& CollectionUtils.isNotEmpty(abstractOrderModel.getAllPromotionResults()))
+			{
+				final Set<PromotionResultModel> eligiblePromoList = abstractOrderModel.getAllPromotionResults();
+				String productPromoCode = MarketplacecommerceservicesConstants.EMPTY;
+				for (final PromotionResultModel promotionResultModel : eligiblePromoList)
+				{
+					final AbstractPromotionModel promotion = promotionResultModel.getPromotion();
+					if (promotionResultModel.getCertainty().floatValue() == 1.0F
+							&& promotion instanceof BuyXItemsofproductAgetproductBforfreeModel
+							&& StringUtils.equalsIgnoreCase(promotion.getCode(), entryModel.getProductPromoCode()))
+					{
+						isFreebiePromotionApplied = true;
+						productPromoCode = promotion.getCode();
+						break;
+					}
+				}
+				if (isFreebiePromotionApplied)
+				{
+					reservationList = populateFreebieInventoryData(abstractOrderModel, entryModel, productPromoCode);
+				}
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception occured in getFreebieInventoryList", ex);
+		}
+		return new Tuple2(Boolean.valueOf(isFreebiePromotionApplied), reservationList);
+	}
+
+	/*
+	 * @DESC : Inventory list to be generated for TISPRD-2758
+	 *
+	 * @param abstractOrderModel
+	 *
+	 * @param entryModel
+	 *
+	 * @param productPromoCode
+	 *
+	 * @return List<CartSoftReservationData>
+	 */
+	private List<CartSoftReservationData> populateFreebieInventoryData(final AbstractOrderModel abstractOrderModel,
+			final AbstractOrderEntryModel entryModel, final String productPromoCode)
+	{
+		final List<CartSoftReservationData> reservationList = new ArrayList<CartSoftReservationData>();
+		try
+		{
+			CartSoftReservationData cartSoftReservationData = null;
+			for (final AbstractOrderEntryModel cartEntryModel : abstractOrderModel.getEntries())
+			{
+				if (CollectionUtils.isNotEmpty(cartEntryModel.getAssociatedItems())
+						&& cartEntryModel.getAssociatedItems().contains(entryModel.getSelectedUSSID())
+						&& StringUtils.equalsIgnoreCase(productPromoCode, cartEntryModel.getProductPromoCode())
+						&& !cartEntryModel.getGiveAway().booleanValue())
+				{
+					cartSoftReservationData = new CartSoftReservationData();
+					if (entryModel.getSelectedUSSID() != null)
+					{
+						cartSoftReservationData.setUSSID(entryModel.getSelectedUSSID()); // Setting freebie ussid
+					}
+
+					if (cartEntryModel.getQualifyingCount() != null && cartEntryModel.getQualifyingCount().intValue() > 0)
+					{
+						cartSoftReservationData.setQuantity(Integer.valueOf(cartEntryModel.getQualifyingCount().toString())); // Setting Qualifying count as selected quantity
+					}
+
+					if (cartEntryModel.getDeliveryPointOfService() != null
+							&& cartEntryModel.getDeliveryPointOfService().getSlaveId() != null)
+					{
+						cartSoftReservationData.setStoreId(cartEntryModel.getDeliveryPointOfService().getSlaveId());
+					}
+					cartSoftReservationData.setParentUSSID(cartEntryModel.getSelectedUSSID());
+					cartSoftReservationData.setIsAFreebie(MarketplacecommerceservicesConstants.Y);
+
+					String deliveryMode = MarketplacecommerceservicesConstants.EMPTY;
+
+					if (cartEntryModel.getMplDeliveryMode() != null && cartEntryModel.getMplDeliveryMode().getDeliveryMode() != null
+							&& cartEntryModel.getMplDeliveryMode().getDeliveryMode().getCode() != null)
+					{
+						deliveryMode = cartEntryModel.getMplDeliveryMode().getDeliveryMode().getCode();
+					}
+
+					if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+					{
+						deliveryMode = MarketplacecommerceservicesConstants.HD;
+					}
+					else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+					{
+						deliveryMode = MarketplacecommerceservicesConstants.ED;
+					}
+					else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+					{
+						deliveryMode = MarketplacecommerceservicesConstants.CnC;
+					}
+
+					if (StringUtils.isNotEmpty(deliveryMode))
+					{
+						cartSoftReservationData.setDeliveryMode(deliveryMode);
+					}
+					if (StringUtils.equalsIgnoreCase(deliveryMode, MarketplacecommerceservicesConstants.CnC))
+					{
+						final PointOfServiceModel parentPosModel = cartEntryModel.getDeliveryPointOfService();
+						if (null != parentPosModel && parentPosModel.getSlaveId() != null)
+						{
+							cartSoftReservationData.setStoreId(parentPosModel.getSlaveId());
+						}
+					}
+
+					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+							entryModel.getSelectedUSSID());
+					List<RichAttributeModel> richAttributeModel = null;
+					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+					{
+						richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+						if (richAttributeModel != null && richAttributeModel.get(0) != null
+								&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
+								&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
+						{
+							final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+							cartSoftReservationData.setFulfillmentType(fulfillmentType.toUpperCase());
+						}
+					}
+
+					reservationList.add(cartSoftReservationData);
+				}
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception occured in populateFreebieInventoryData", ex);
+		}
+		return reservationList;
+	}
 
 	/**
 	 * @return the commerceUpdateCartEntryStrategy
