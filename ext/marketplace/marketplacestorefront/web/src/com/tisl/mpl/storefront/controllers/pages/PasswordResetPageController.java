@@ -379,7 +379,7 @@ public class PasswordResetPageController extends AbstractPageController
 
 			final String securePasswordUrl = baseUrl + securePasswordPath;
 
-			forgetPasswordFacade.forgottenPasswordForEmail(email, securePasswordUrl);
+			forgetPasswordFacade.forgottenPasswordForEmail(email, securePasswordUrl, Boolean.FALSE);
 		}
 		catch (final UnknownIdentifierException e)
 		{
@@ -503,7 +503,7 @@ public class PasswordResetPageController extends AbstractPageController
 		{
 			try
 			{
-				forgetPasswordFacade.forgottenPasswordForEmail(form.getEmail(), securePasswordUrl);
+				forgetPasswordFacade.forgottenPasswordForEmail(form.getEmail(), securePasswordUrl, Boolean.FALSE);
 				GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.CONF_MESSAGES_HOLDER,
 						MessageConstants.ACCOUNT_CONFIRMATION_FORGOTTEN_PASSWORD_LINK_SENT);
 
@@ -715,6 +715,7 @@ public class PasswordResetPageController extends AbstractPageController
 	public String changePassword(@Valid final MplUpdatePwdForm form, final BindingResult bindingResult, final Model model,
 			final RedirectAttributes redirectModel, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
+		boolean enableApp = false;
 		try
 		{
 			//
@@ -722,6 +723,10 @@ public class PasswordResetPageController extends AbstractPageController
 			final String confirmNewPassword = java.net.URLDecoder.decode(form.getCheckPwd(), UTF);
 			form.setPwd(newPassword);
 			form.setCheckPwd(confirmNewPassword);
+			if (request.getParameterMap().containsKey("source"))
+			{
+				enableApp = true;
+			}
 		}
 		catch (final EtailNonBusinessExceptions | UnsupportedEncodingException e)
 		{
@@ -770,16 +775,36 @@ public class PasswordResetPageController extends AbstractPageController
 									MessageConstants.ACCOUNT_CONFIRMATION_PASSWORD_ENTERUNIQUEPASSWORD);
 							try
 							{
-								return REDIRECT_PREFIX + MessageConstants.LOGIN_PW_CHANGE + MessageConstants.TOKEN
-										+ getURLEncodedToken(form.getToken()) + ModelAttributetConstants.AMPARSAND
-										+ ModelAttributetConstants.PARAM + ModelAttributetConstants.EQUALS
-										+ ModelAttributetConstants.FAILURE;
+								//TISSAM-2
+								if (enableApp)
+								{
+									return REDIRECT_PREFIX + MessageConstants.LOGIN_PW_CHANGE + MessageConstants.TOKEN
+											+ getURLEncodedToken(form.getToken()) + ModelAttributetConstants.AMPARSAND
+											+ ModelAttributetConstants.PARAM + ModelAttributetConstants.EQUALS
+											+ ModelAttributetConstants.FAILURE + MarketplacecommerceservicesConstants.MOBILE_SOURCE;
+								}
+								else
+								{
+									return REDIRECT_PREFIX + MessageConstants.LOGIN_PW_CHANGE + MessageConstants.TOKEN
+											+ getURLEncodedToken(form.getToken()) + ModelAttributetConstants.AMPARSAND
+											+ ModelAttributetConstants.PARAM + ModelAttributetConstants.EQUALS
+											+ ModelAttributetConstants.FAILURE;
+								}
 							}
 							catch (final UnsupportedEncodingException e)
 							{
 								ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 										MarketplacecommerceservicesConstants.E0013));
-								return REDIRECT_LOGIN;
+								//TISSAM-2
+								if (enableApp)
+								{
+									return REDIRECT_LOGIN + ModelAttributetConstants.QS
+											+ MarketplacecommerceservicesConstants.MOBILE_SOURCE;
+								}
+								else
+								{
+									return REDIRECT_LOGIN;
+								}
 							}
 						}
 
@@ -815,6 +840,7 @@ public class PasswordResetPageController extends AbstractPageController
 								MessageConstants.ACCOUNT_CONFIRMATION_PASSWORD_ENTERUNIQUEPASSWORD);
 						try
 						{
+
 							return REDIRECT_PREFIX + MessageConstants.LOGIN_PW_CHANGE + MessageConstants.TOKEN
 									+ getURLEncodedToken(form.getToken()) + ModelAttributetConstants.AMPARSAND
 									+ ModelAttributetConstants.PARAM + ModelAttributetConstants.EQUALS + ModelAttributetConstants.FAILURE;
@@ -851,7 +877,15 @@ public class PasswordResetPageController extends AbstractPageController
 				return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			}
 		}
-		return REDIRECT_LOGIN;
+		//TISSAM-2
+		if (enableApp)
+		{
+			return REDIRECT_LOGIN + ModelAttributetConstants.QS + MarketplacecommerceservicesConstants.MOBILE_SOURCE;
+		}
+		else
+		{
+			return REDIRECT_LOGIN;
+		}
 	}
 
 	/**

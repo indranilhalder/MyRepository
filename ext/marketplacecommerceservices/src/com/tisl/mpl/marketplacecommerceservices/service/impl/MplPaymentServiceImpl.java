@@ -2068,7 +2068,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					}
 					else
 					{
-						juspayEBSResponseModel.setEbsRiskPercentage("-1.0");
+						juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
 					}
 					if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
 							&& !orderStatusResponse.getRiskResponse().getEbsPaymentStatus()
@@ -2077,7 +2077,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						setEBSRiskStatus(orderStatusResponse.getRiskResponse().getEbsPaymentStatus(), juspayEBSResponseModel);
 					}
 					else if (StringUtils.isEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
-							&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase("-1.0"))
+							&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase(
+									MarketplacecommerceservicesConstants.DEFAULT_RISK))
 					{
 						if (MplPaymentAuditStatusEnum.PENDING.equals(auditEntry.getStatus()))
 						{
@@ -2133,7 +2134,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 										+ orderStatusResponse.getOrderId());
 
 								auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
-								juspayEBSResponseModel.setEbsRiskPercentage("-1.0");
+								juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
 							}
 						}
 					}
@@ -2526,11 +2527,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2542,9 +2543,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -2712,7 +2713,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					}
 					else
 					{
-						juspayEBSResponseModel.setEbsRiskPercentage("-1.0");
+						juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
 					}
 					if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
 							&& !orderStatusResponse.getRiskResponse().getEbsPaymentStatus()
@@ -2721,7 +2722,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						setEBSRiskStatus(orderStatusResponse.getRiskResponse().getEbsPaymentStatus(), juspayEBSResponseModel);
 					}
 					else if (StringUtils.isEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
-							&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase("-1.0"))
+							&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase(
+									MarketplacecommerceservicesConstants.DEFAULT_RISK))
 					{
 						if (MplPaymentAuditStatusEnum.PENDING.equals(auditEntry.getStatus()))
 						{
@@ -2777,7 +2779,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 										+ orderStatusResponse.getOrderId());
 
 								auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
-								juspayEBSResponseModel.setEbsRiskPercentage("-1.0");
+								juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
 							}
 						}
 					}

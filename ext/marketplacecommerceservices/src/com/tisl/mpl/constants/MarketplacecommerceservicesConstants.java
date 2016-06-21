@@ -1582,11 +1582,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String GETAUDITID = "select {a.pk} from {mplpaymentaudit as a} where {a.cartGUID}=?cartGUID ORDER BY {a.requestDate} DESC"
 			.intern();
 
+	public static final String MOBILE_SOURCE = "&source=App".intern();
+
 	public final static String PROXYENABLED = "proxy.enabled";
 	public final static String GENPROXY = "proxy.address";
 	public final static String GENPROXYPORT = "proxy.port";
 
 	public final static String IMAGEURLMSG = "Image url is:::";
+	public final static String IMAGEDIMENSION = "324Wx324H";
+
+	public final static String DEFAULT_RISK = "-1.0";
 
 
 	private MarketplacecommerceservicesConstants()
