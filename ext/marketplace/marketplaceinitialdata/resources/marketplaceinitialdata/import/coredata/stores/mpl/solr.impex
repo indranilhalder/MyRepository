@@ -108,7 +108,11 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; mobileBrandName        ;string ;            ;	;    ;    ;    ;    ;mplMobileBrandNameValueProvider;
 ;$solrIndexedType; isProductNew           ;boolean;            ;    ;    ;    ;	   ;	;mplIsProductNewValueProvider;
 ;$solrIndexedType; ussID  		 		  ;string ;            ;	;    ;	  ;    ;    ;mplUssIDValueProvider;
-;$solrIndexedType; img-252Wx374H          ;string ;            ;    ;    ;    ;    ;    ;searchImageHovervalueProvider;
+
+#TISPT-142 Changes Start - New Value provider designed to load media based on flexible search query
+;$solrIndexedType; img-252Wx374H          ;string ;            ;    ;    ;    ;    ;    ;newSearchImageHovervalueProvider;
+#TISPT-142 Changes End
+
 ;$solrIndexedType; immediateCategory      ;string ;            ;    ;    ;    ;    ;    ;mplCompareProductValueProvider;
 ;$solrIndexedType; onlineExclusive        ;boolean;            ;    ;    ;    ;	   ;	;mplOnlineExclusiveValueProvider;
 ;$solrIndexedType; leastSizeProduct       ;string ;            ;    ;    ;    ;    ;    ;mplLeastSizeProductValueProvider;
