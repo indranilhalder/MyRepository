@@ -88,11 +88,11 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 					}
 					subBrandDataList = new ArrayList<BrandSubHierarchyData>();
 					brandData = new BrandHierarchyData();
-					if (null != brand.getMasterBrandName() && !StringUtils.isEmpty(brand.getMasterBrandName()))
+					if (null != brand.getMasterBrandName() && StringUtils.isNotEmpty(brand.getMasterBrandName()))
 					{
 						brandData.setMenu_brand_name(brand.getMasterBrandName());
 					}
-					if (null != brand.getMasterBrandURL() && !StringUtils.isEmpty(brand.getMasterBrandURL()))
+					if (null != brand.getMasterBrandURL() && StringUtils.isNotEmpty(brand.getMasterBrandURL()))
 					{
 						brandData.setMenu_brand_logo(brand.getMasterBrandURL());
 					}
@@ -144,19 +144,19 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 							}
 
 							final BrandSubHierarchyData subbranddata = new BrandSubHierarchyData();
-							if (null != oModel.getCode() && !StringUtils.isEmpty(oModel.getCode()))
+							if (null != oModel.getCode() && StringUtils.isNotEmpty(oModel.getCode()))
 							{
 								subbranddata.setSub_brand_code(oModel.getCode());
 							}
 
-							if (null != oModel.getName() && !StringUtils.isEmpty(oModel.getName()))
+							if (null != oModel.getName() && StringUtils.isNotEmpty(oModel.getName()))
 							{
 								subbranddata.setSub_brand_name(oModel.getName());
 							}
 							//							final String subBrandUrl = "/Categories/" + oModel.getName() + "c/" + oModel.getCode();
 
 							final String subBrandUrl = "/Categories/" + oModel.getName() + "/c-" + oModel.getCode();
-							if (!StringUtils.isEmpty(subBrandUrl))
+							if (StringUtils.isNotEmpty(subBrandUrl))
 							{
 
 								subbranddata.setSub_brand_url(subBrandUrl);
@@ -215,7 +215,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 				final BrandSubHierarchyData subbranddata = new BrandSubHierarchyData();
 
 
-				if (null != subrand.getSubBrandUrl() && !StringUtils.isEmpty(subrand.getSubBrandUrl()))
+				if (null != subrand.getSubBrandUrl() && StringUtils.isNotEmpty(subrand.getSubBrandUrl()))
 				{
 					String subBrandCode = null;
 					String subBrandurl = null;
@@ -224,6 +224,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 					{
 						subbranddata.setSub_brand_type(SELLER);
 						subbranddata.setSub_brand_url(subrand.getSubBrandUrl().substring(3));
+
 
 						subBrandurl = subrand.getSubBrandUrl();
 						subBrandCode = subBrandurl.substring(subBrandurl.lastIndexOf('/') + 1);
@@ -257,13 +258,18 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 						micrositeId = true;
 					}
 					//subbranddata.setSub_brand_url(subrand.getSubBrandUrl()); }
+
+
 				}
 
-				if (null != subrand.getSubBrandName() && !StringUtils.isEmpty(subrand.getSubBrandName()))
+				if (null != subrand.getSubBrandName() && StringUtils.isNotEmpty(subrand.getSubBrandName()))
 				{
 					subbranddata.setSub_brand_name(subrand.getSubBrandName());
 				}
-
+				if (null != subrand.getSubBrandLogo() && StringUtils.isNotEmpty(subrand.getSubBrandLogo().getURL()))
+				{
+					subbranddata.setSub_brand_logo(subrand.getSubBrandLogo().getURL());
+				}
 
 				if (null != subrand.getSubBrandImage() && null != subrand.getSubBrandImage().getURL()
 						&& !subrand.getSubBrandImage().getURL().isEmpty())
@@ -293,8 +299,8 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 		if (null != configurationService && null != configurationService.getConfiguration()
 				&& null != MarketplacecommerceservicesConstants.SHOPBYBRANDCOMPONENT)
 		{
-			componentUid = configurationService.getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.SHOPBYBRANDCOMPONENT, "");
+			componentUid = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.SHOPBYBRANDCOMPONENT, "");
 		}
 		final BrandCollectionComponentModel shopByBrandComponent = (BrandCollectionComponentModel) cmsComponentService
 				.getSimpleCMSComponent(componentUid);
