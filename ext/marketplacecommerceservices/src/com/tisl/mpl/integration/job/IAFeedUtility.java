@@ -110,7 +110,7 @@ public class IAFeedUtility
 					listOfMaps.add(dataMap);
 				}
 
-
+				LOG.debug("data export query : " + dataExportQuery);
 				writeExportDataIntoFile(dataExportQuery, listOfMaps);
 				if (null != dataExportQuery && dataExportQuery.equals(MarketplacecommerceservicesConstants.PRICEINVENTORY_FEED))
 				{
@@ -227,7 +227,7 @@ public class IAFeedUtility
 					count = 0;
 				}
 			}
-			
+
 
 
 		}
@@ -335,6 +335,25 @@ public class IAFeedUtility
 
 					+ configurationService.getConfiguration()
 							.getString(MarketplacecommerceservicesConstants.IA_FILENAME_PRICEINVENTORY)
+					+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
+					+ MarketplacecommerceservicesConstants.IA_FILE_EXTENSION;
+		}
+		else if (MarketplacecommerceservicesConstants.IA_PRICEINVENTORY_CONTROL.equalsIgnoreCase(dataExportQuery))
+		{
+			LOG.debug("/////inside file writer//////");
+			final String exportFilePath = configurationService.getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.IA_PRICEINVENTORYCONTROL_FOLDER);
+
+			final File exportDir = new File(exportFilePath);
+			// Creating export directory if not exists.
+			if (!exportDir.isDirectory())
+			{
+				exportDir.mkdir();
+			}
+			exportFileName = exportFilePath
+
+					+ configurationService.getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.IA_FILENAME_PRICEINVENTORYCONTROL)
 					+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
 					+ MarketplacecommerceservicesConstants.IA_FILE_EXTENSION;
 		}
