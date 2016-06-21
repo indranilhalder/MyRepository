@@ -122,7 +122,6 @@ public class SellerPageController extends AbstractSearchPageController
 		//	updateUserPreferences(pageSize);
 		try
 		{
-
 			if (mplSellerMasterService.getSellerMaster(sellerID) != null)
 			{
 				final String uri = request.getRequestURI();
@@ -168,9 +167,6 @@ public class SellerPageController extends AbstractSearchPageController
 				searchQueryData.setValue(sellerName);
 
 				searchState.setQuery(searchQueryData);
-
-
-				//searchState.setResetAll(resetAll);
 				searchPageData = searchFacade.dropDownSearch(searchState, sellerID, MarketplaceCoreConstants.SELLER_ID, pageableData);
 				searchPageData = updatePageData(searchPageData, sellerID, searchQuery);
 				final StringBuilder urlBuilder = new StringBuilder(200);
