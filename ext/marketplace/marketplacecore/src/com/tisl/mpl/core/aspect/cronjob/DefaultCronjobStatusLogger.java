@@ -11,11 +11,9 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 
-import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
-
 
 /**
- * Created by 585070 on 6/11/2016.
+ * Created by TCS on 6/11/2016.
  */
 
 @Aspect
@@ -23,6 +21,7 @@ public class DefaultCronjobStatusLogger
 {
 
 	private static final Logger LOG = Logger.getLogger(DefaultCronjobStatusLogger.class);
+
 	private ConfigurationService configurationService;
 
 	public ConfigurationService getConfigurationService()
@@ -43,19 +42,18 @@ public class DefaultCronjobStatusLogger
 		{
 			try
 			{
-				LOG.error(MarketplaceCoreConstants.SeperaterHashHead + "\nCode : " + cronjob.getCode() + "\nJob : "
-						+ cronjob.getJob().getCode() + "\nNode ID : " + cronjob.getNodeID() + "\nStart time : " + cronjob.getStartTime()
-						+ "\nEnd time : " + cronjob.getEndTime() + "\nResult : " + cronjob.getResult().name() + "\nStatus : "
-						+ cronjob.getStatus().name() + "\nServer IP : " + InetAddress.getLocalHost().toString()
-						+ MarketplaceCoreConstants.SeperaterHash);
+				LOG.error("-cronjob-stats- Processed cronjob with Code : " + cronjob.getCode() + ", Job : "
+						+ cronjob.getJob().getCode() + ", Node ID : " + cronjob.getNodeID() + ", Start time : " + cronjob.getStartTime()
+						+ ", End time : " + cronjob.getEndTime() + ", Result : " + cronjob.getResult().name() + ", Status : "
+						+ cronjob.getStatus().name() + ", Server IP : " + InetAddress.getLocalHost().toString());
 			}
 			catch (final UnknownHostException e)
 			{
-				//Never mind
-				LOG.error(MarketplaceCoreConstants.SeperaterHashHead + "\nCode : " + cronjob.getCode() + "\nJob : "
-						+ cronjob.getJob().getCode() + "\nNode ID : " + cronjob.getNodeID() + "\nStart time : " + cronjob.getStartTime()
-						+ "\nEnd time : " + cronjob.getEndTime() + "\nResult : " + cronjob.getResult().name() + "\nStatus : "
-						+ cronjob.getStatus().name() + MarketplaceCoreConstants.SeperaterHash);
+				//Never mind just don'e log the IP
+				LOG.error("-cronjob-stats- Processed cronjob with Code : " + cronjob.getCode() + ", Job : "
+						+ cronjob.getJob().getCode() + ", Node ID : " + cronjob.getNodeID() + ", Start time : " + cronjob.getStartTime()
+						+ ", End time : " + cronjob.getEndTime() + ", Result : " + cronjob.getResult().name() + ", Status : "
+						+ cronjob.getStatus().name());
 			}
 		}
 
@@ -67,9 +65,8 @@ public class DefaultCronjobStatusLogger
 
 		if (getConfigurationService().getConfiguration().getBoolean("mpl.log.cronjob.enabled", false))
 		{
-			LOG.error(MarketplaceCoreConstants.SeperaterHash + "\nStarting cronjob with code " + cronjob.getCode()
-					+ " running the job " + cronjob.getJob().getCode() + " at cluster node " + cronjob.getNodeID()
-					+ MarketplaceCoreConstants.SeperaterHash);
+			LOG.error("-cronjob-stats- Starting cronjob with code " + cronjob.getCode() + " running the job "
+					+ cronjob.getJob().getCode() + " at cluster node " + cronjob.getNodeID());
 		}
 
 	}
