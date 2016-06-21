@@ -597,7 +597,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				LOG.error("Exception while completing COD Payment");
+				LOG.error("Exception while completing COD Payment in /view");
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 						MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 				return getCheckoutStep().previousStep();

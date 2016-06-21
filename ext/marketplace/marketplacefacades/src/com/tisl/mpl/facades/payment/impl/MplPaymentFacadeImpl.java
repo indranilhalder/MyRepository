@@ -1530,11 +1530,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1585,9 +1585,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -1916,18 +1916,24 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		boolean deliveryOptionCheck = true;
 
-		if (null != cart.getEntries() && !cart.getEntries().isEmpty())
+		if (CollectionUtils.isNotEmpty(cart.getEntries()))
 		{
 			for (final AbstractOrderEntryModel entry : cart.getEntries())
 			{
 				if (null == entry.getMplDeliveryMode())
 				{
 					deliveryOptionCheck = false;
+					break;
 				}
 			}
 		}
 
-		if (cart.getDeliveryAddress() == null)
+		if (!deliveryOptionCheck)
+		{
+			LOG.error("Delivery mode not present for cart guid "
+					+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
+		}
+		if (deliveryOptionCheck && cart.getDeliveryAddress() == null)
 		{
 			for (final AbstractOrderEntryModel entry : cart.getEntries())
 			{
@@ -1935,12 +1941,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				{
 					// Order and Entry have no delivery address and some entries are not for pickup
 					deliveryOptionCheck = false;
-					//return false;
+					break;
 				}
 			}
 		}
-
-		//return true;
 		return deliveryOptionCheck;
 	}
 

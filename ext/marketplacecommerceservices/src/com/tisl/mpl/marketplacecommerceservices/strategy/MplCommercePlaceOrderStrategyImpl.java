@@ -211,14 +211,12 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 		{
 			getExternalTaxesService().clearSessionTaxDocument();
 		}
-
-
 	}
 
 	private boolean checkOrder(final OrderModel order)
 	{
 		boolean status = true;
-		if (order.getEntries().isEmpty())
+		if (order != null && CollectionUtils.isNotEmpty(order.getEntries()))
 		{
 			status = false;
 		}
@@ -242,23 +240,29 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 	{
 		boolean deliveryOptionCheck = true;
 
-		if (null != order.getChildOrders() && !order.getChildOrders().isEmpty())
+		if (order != null && CollectionUtils.isNotEmpty(order.getEntries()))
 		{
-			for (final OrderModel subOrder : order.getChildOrders())
+			for (final AbstractOrderEntryModel entry : order.getEntries())
 			{
-				if (null != subOrder.getEntries() && !subOrder.getEntries().isEmpty())
+				if (null == entry.getMplDeliveryMode())
 				{
-					for (final AbstractOrderEntryModel entry : subOrder.getEntries())
-					{
-						if (null == entry.getMplDeliveryMode())
-						{
-							deliveryOptionCheck = false;
-						}
-					}
+					deliveryOptionCheck = false;
+					break;
 				}
 			}
 		}
+		else
+		{
+			deliveryOptionCheck = false;
+			LOG.error("MplCommercePlaceOrderStrategyImpl placeorder Order model null or entries not present for  order  guid "
+					+ (StringUtils.isNotEmpty(order.getGuid()) ? order.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
+		}
 
+		if (!deliveryOptionCheck)
+		{
+			LOG.error("MplCommercePlaceOrderStrategyImpl placeorder Delivery mode not present for order  guid "
+					+ (StringUtils.isNotEmpty(order.getGuid()) ? order.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
+		}
 		if (order.getDeliveryAddress() == null)
 		{
 			for (final AbstractOrderEntryModel entry : order.getEntries())
@@ -267,6 +271,7 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 				{
 					// Order and Entry have no delivery address and some entries are not for pickup
 					deliveryOptionCheck = false;
+					break;
 				}
 			}
 		}
