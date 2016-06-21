@@ -12,16 +12,18 @@ import de.hybris.platform.servicelayer.impex.impl.ImportCronJobResult;
 
 import org.apache.log4j.Logger;
 
-import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
-
 
 /**
- * Created by 585070 on 6/11/2016.
+ * Created by TCS on 6/11/2016.
  */
 public class MplDefaultImportService extends DefaultImportService
 {
 
 	private static final Logger LOG = Logger.getLogger(MplDefaultImportService.class);
+	private static final String NODEID_STRING = "nodeid";
+	private static final String NODEGROUP_STRING = "nodegroup";
+	private static final String ADMINNODES_STRING = "adminnodes";
+
 	private ConfigurationService configurationService;
 
 	public ConfigurationService getConfigurationService()
@@ -34,7 +36,6 @@ public class MplDefaultImportService extends DefaultImportService
 		this.configurationService = configurationService;
 	}
 
-	@SuppressWarnings("boxing")
 	@Override
 	public ImportResult importData(final ImportConfig config)
 	{
@@ -48,7 +49,18 @@ public class MplDefaultImportService extends DefaultImportService
 		{
 			throw new SystemException(var4);
 		}
-		cronJob.setNodeID(getConfigurationService().getConfiguration().getInt("mpl.impex.import.node.id", 0));
+
+		if (NODEID_STRING.equalsIgnoreCase(
+				getConfigurationService().getConfiguration().getString("mpl.impex.import.node.executiontype", NODEID_STRING)))
+		{
+			cronJob.setNodeID(getConfigurationService().getConfiguration().getInt("mpl.impex.import.node.id", 0));
+		}
+		if (NODEGROUP_STRING.equalsIgnoreCase(
+				getConfigurationService().getConfiguration().getString("mpl.impex.import.node.executiontype", NODEID_STRING)))
+		{
+			cronJob.setNodeGroup(
+					getConfigurationService().getConfiguration().getString("mpl.impex.import.node.group", ADMINNODES_STRING));
+		}
 
 		this.configureCronJob(cronJob, config);
 		this.getModelService().saveAll(new Object[]
@@ -57,11 +69,10 @@ public class MplDefaultImportService extends DefaultImportService
 
 		if (getConfigurationService().getConfiguration().getBoolean("mpl.log.cronjob.enabled", false))
 		{
-			LOG.error(MarketplaceCoreConstants.SeperaterHashHead + "\nCode : " + cronJob.getCode() + "\nNodeID : "
-					+ cronJob.getNodeID() + "\nStartTime : " + cronJob.getStartTime() + "\nEndTime : " + cronJob.getEndTime()
-					+ "\nNumber of lines processed successfully : " + cronJob.getValueCount() + "\nLast successfully processed line : "
-					+ cronJob.getLastSuccessfulLine() + "\nStatus : " + cronJob.getStatus().name() + "\nResult : "
-					+ cronJob.getResult().name() + MarketplaceCoreConstants.EMPTY + MarketplaceCoreConstants.SeperaterHash);
+			LOG.error("-cronjob-stats- Code : " + cronJob.getCode() + ", NodeID : " + cronJob.getNodeID() + ", StartTime : "
+					+ cronJob.getStartTime() + ", EndTime : " + cronJob.getEndTime() + ", Number of lines processed successfully : "
+					+ cronJob.getValueCount() + ", Last successfully processed line : " + cronJob.getLastSuccessfulLine()
+					+ ", Status : " + cronJob.getStatus().name() + ", Result : " + cronJob.getResult().name());
 		}
 
 		return ((Item) this.getModelService().getSource(cronJob)).isAlive() ? new ImportCronJobResult(cronJob)
