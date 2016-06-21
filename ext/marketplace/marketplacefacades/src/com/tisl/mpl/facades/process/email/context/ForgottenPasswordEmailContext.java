@@ -73,10 +73,10 @@ public class ForgottenPasswordEmailContext extends CustomerEmailContext
 		if (storeFrontCustomerProcessModel instanceof ForgottenPasswordProcessModel)
 		{
 			setToken(((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel).getToken());
-			final String uniqueID = storeFrontCustomerProcessModel.getCustomer().getUid();
-			final String token = ((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel).getToken();
+			//final String uniqueID = storeFrontCustomerProcessModel.getCustomer().getUid();
+			//final String token = ((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel).getToken();
 			final String secureResetPasswordUrl = ((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel)
-					.getForgetPasswordUrl() + "?token=" + token + "&customerUniqueID=" + uniqueID;
+					.getForgetPasswordUrl();
 			put(SECURE_RESET_PASSWORD_URL, secureResetPasswordUrl);
 
 		}
