@@ -109,8 +109,7 @@ public class SellerPageController extends AbstractSearchPageController
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
-			@RequestParam(value = "sort", required = false) final String sortCode,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
+			@RequestParam(value = "sort", required = false) final String sortCode, final Model model,
 			final HttpServletRequest request) throws UnsupportedEncodingException
 	{
 		//Set the drop down text if the attribute is not empty or null
@@ -119,11 +118,10 @@ public class SellerPageController extends AbstractSearchPageController
 		model.addAttribute("searchCode", sellerID);
 		//Check if there is a landing page for the seller
 		final SellerMasterModel sellerMaster = mplSellerMasterService.getSellerMaster(sellerID);
-		pageSize = pageSize != null ? pageSize : 0;
-		updateUserPreferences(pageSize);
+		//	pageSize = pageSize != null ? pageSize : 0;
+		//	updateUserPreferences(pageSize);
 		try
 		{
-
 			if (mplSellerMasterService.getSellerMaster(sellerID) != null)
 			{
 				final String uri = request.getRequestURI();
@@ -141,6 +139,13 @@ public class SellerPageController extends AbstractSearchPageController
 						}
 					}
 				}
+				pageSize = pageSize != null ? pageSize : getSearchPageSize();
+				final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+				if (preferencesData != null && preferencesData.getPageSize() != null)
+				{
+					pageSize = preferencesData.getPageSize().intValue();
+				}
+
 
 				final String sellerName = sellerMaster.getLegalName();
 
@@ -156,16 +161,12 @@ public class SellerPageController extends AbstractSearchPageController
 				/**
 				 * offer facets
 				 */
-
-				final PageableData pageableData = createPageableData(0, pageSize, null, ShowMode.Page);
+				final PageableData pageableData = createPageableData(page, pageSize, null, ShowMode.Page);
 				final SearchStateData searchState = new SearchStateData();
 				final SearchQueryData searchQueryData = new SearchQueryData();
 				searchQueryData.setValue(sellerName);
 
 				searchState.setQuery(searchQueryData);
-
-
-				//searchState.setResetAll(resetAll);
 				searchPageData = searchFacade.dropDownSearch(searchState, sellerID, MarketplaceCoreConstants.SELLER_ID, pageableData);
 				searchPageData = updatePageData(searchPageData, sellerID, searchQuery);
 				final StringBuilder urlBuilder = new StringBuilder(200);
@@ -219,16 +220,15 @@ public class SellerPageController extends AbstractSearchPageController
 
 				searchQueryData.setValue(sellerLegalName);
 				SellerSearchEvaluator sellerSearch = null;
-				if (!resetAll)
-				{
-					sellerSearch = new SellerSearchEvaluator(sellerID, XSSFilterUtil.filter(searchQuery), page, showMode, sortCode);
-				}
-				else
-				{
-					sellerSearch = new SellerSearchEvaluator(sellerID, XSSFilterUtil.filter(searchQuery), page, showMode, sortCode);
-				}
-				sellerSearch.doSearch(resetAll, searchQuery, pageSize);
-
+				//				if (!resetAll)
+				//				{
+				//					sellerSearch = new SellerSearchEvaluator(sellerID, XSSFilterUtil.filter(searchQuery), page, showMode, sortCode);
+				//				}
+				//				else
+				//{
+				sellerSearch = new SellerSearchEvaluator(sellerID, XSSFilterUtil.filter(searchQuery), page, showMode, sortCode);
+				//}
+				sellerSearch.doSearch(searchQuery, pageSize);
 				populateModel(model, sellerSearch.getSearchPageData(), showMode);
 				model.addAttribute("dropDownText", sellerLegalName);
 				model.addAttribute("hideDepartments", Boolean.TRUE);
@@ -318,7 +318,7 @@ public class SellerPageController extends AbstractSearchPageController
 
 
 
-		public void doSearch(final boolean resetAll, final String searchQuery, final int pageSize)
+		public void doSearch(final String searchQuery, final int pageSize)
 		{
 			//showCategoriesOnly = false;
 
@@ -419,4 +419,11 @@ public class SellerPageController extends AbstractSearchPageController
 
 		return searchPageData;
 	}
+
+	@Override
+	protected int getSearchPageSize()
+	{
+		return getSiteConfigService().getInt("storefront.search.pageSize", 0);
+	}
+
 }
