@@ -216,7 +216,7 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 	private boolean checkOrder(final OrderModel order)
 	{
 		boolean status = true;
-		if (order != null && CollectionUtils.isNotEmpty(order.getEntries()))
+		if (order != null && CollectionUtils.isEmpty(order.getEntries()))
 		{
 			status = false;
 		}
@@ -281,9 +281,9 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
