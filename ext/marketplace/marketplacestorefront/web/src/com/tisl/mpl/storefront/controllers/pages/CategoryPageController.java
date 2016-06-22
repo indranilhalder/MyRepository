@@ -183,6 +183,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 			searchQuery = ":relevance";
 		}
 
+		// Get page facets to include in facet field exclude tag
+		final String pageFacets = request.getParameter("pageFacetData");
+
 		//Storing the user preferred search results count
 		updateUserPreferences(pageSize);
 
@@ -258,7 +261,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
 
 				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-						categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll);
+						categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
 
 				final List<ProductData> normalProductDatas = searchPageData.getResults();
 				//Set department hierarchy
@@ -308,7 +311,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				 * searchQuery, page, showMode, sortCode, count, resetAll);
 				 */
 				final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, pageNo, showMode, sortCode,
-						model, request, response);
+						model, request, response, pageFacets);
 				//Commented out for TISPT-225
 				/*
 				 * final List<ProductData> commonNormalProducts = new ArrayList<ProductData>(); final List<ProductData>
@@ -527,10 +530,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 */
 	protected ProductSearchPageData<SearchStateData, ProductData> performSearch(final String categoryCode,
 			final String searchQuery, final int pgNo, final ShowMode showMode, final String sortCode, final int pageSize,
-			final boolean resetAll)
+			final boolean resetAll, final String pageFacets)
 	{
 		final PageableData pageableData = createPageableData(pgNo, pageSize, sortCode, showMode);
-
+		pageableData.setPageFacets(pageFacets);
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
 		searchQueryData.setValue(searchQuery);
@@ -658,10 +661,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 
-	@Override
 	protected String performSearchAndGetResultsPage(final String categoryCode, final String searchQuery, final int pgNumbers,
 			final ShowMode showMode, final String sortCode, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws UnsupportedEncodingException
+			final HttpServletResponse response, final String pageFacets) throws UnsupportedEncodingException
 	{
 		final CategoryModel category = getCommerceCategoryService().getCategoryForCode(categoryCode);
 
@@ -674,7 +676,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		final CategoryPageModel categoryPage = getCategoryPage(category);
 
 		final CategorySearchEvaluator categorySearch = new CategorySearchEvaluator(categoryCode, XSSFilterUtil.filter(searchQuery),
-				pgNumbers, showMode, sortCode, categoryPage);
+				pgNumbers, showMode, sortCode, categoryPage, pageFacets);
 		categorySearch.doSearch();
 
 		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = categorySearch
@@ -754,6 +756,82 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 
 		return count;
+	}
+
+	protected class CategorySearchEvaluator
+	{
+		private final String categoryCode;
+		private final SearchQueryData searchQueryData = new SearchQueryData();
+		private final int page;
+		private final ShowMode showMode;
+		private final String sortCode;
+		private CategoryPageModel categoryPage;
+		private boolean showCategoriesOnly;
+		private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData;
+		private final String pageFacets;
+
+		public CategorySearchEvaluator(final String categoryCode, final String searchQuery, final int page,
+				final ShowMode showMode, final String sortCode, final CategoryPageModel categoryPage, final String pageFacets)
+		{
+			this.categoryCode = categoryCode;
+			this.searchQueryData.setValue(searchQuery);
+			this.page = page;
+			this.showMode = showMode;
+			this.sortCode = sortCode;
+			this.categoryPage = categoryPage;
+			this.pageFacets = pageFacets;
+		}
+
+		public void doSearch()
+		{
+			showCategoriesOnly = false;
+			if (searchQueryData.getValue() == null)
+			{
+				// Direct category link without filtering
+				searchPageData = getProductSearchFacade().categorySearch(categoryCode);
+				if (categoryPage != null)
+				{
+					showCategoriesOnly = !categoryHasDefaultPage(categoryPage)
+							&& CollectionUtils.isNotEmpty(searchPageData.getSubCategories());
+				}
+			}
+			else
+			{
+				// We have some search filtering
+				if (categoryPage == null || !categoryHasDefaultPage(categoryPage))
+				{
+					// Load the default category page
+					categoryPage = getDefaultCategoryPage();
+				}
+
+				final SearchStateData searchState = new SearchStateData();
+				searchState.setQuery(searchQueryData);
+
+				final PageableData pageableData = createPageableData(page, getSearchPageSize(), sortCode, showMode);
+				pageableData.setPageFacets(pageFacets);
+				searchPageData = getProductSearchFacade().categorySearch(categoryCode, searchState, pageableData);
+			}
+		}
+
+		public int getPage()
+		{
+			return page;
+		}
+
+		public CategoryPageModel getCategoryPage()
+		{
+			return categoryPage;
+		}
+
+		public boolean isShowCategoriesOnly()
+		{
+			return showCategoriesOnly;
+		}
+
+		public ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> getSearchPageData()
+		{
+			return searchPageData;
+		}
 	}
 
 
