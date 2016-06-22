@@ -35,6 +35,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.data.MplDepartmentHierarchyData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -1256,6 +1257,7 @@ public class SearchSuggestUtilityMethods
 		 * configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		 */
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
+		final List<FacetDataWsDTO> searchfacetCategoryDTOList = new ArrayList<>();
 		if (null != searchPageData.getFacets())
 		{
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
@@ -1340,6 +1342,21 @@ public class SearchSuggestUtilityMethods
 				}
 			}
 			productSearchPage.setFacetdata(searchfacetDTOList);
+			productSearchPage.setFacetdatacategory(searchfacetCategoryDTOList);
+
+		}
+		else if (searchPageData.getDepartmentHierarchyData() != null)
+		{
+			final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
+			//	facetWsDTO.setCategory(facate.getCode());
+			final MplDepartmentHierarchyData depHierarchyData = searchPageData.getDepartmentHierarchyData();
+			facetWsDTO.setMultiSelect(Boolean.TRUE);
+			facetWsDTO.setValues(null);
+			//Fix to send only facets with visible true
+			if (facetWsDTO.getVisible().booleanValue())
+			{
+				searchfacetCategoryDTOList.add(facetWsDTO);
+			}
 		}
 		else
 		{
@@ -1351,6 +1368,4 @@ public class SearchSuggestUtilityMethods
 
 
 	}
-
-
 }

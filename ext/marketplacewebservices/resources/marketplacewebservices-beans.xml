@@ -1788,7 +1788,9 @@
 		          type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.search.pagedata.SortWsDTO>"/> 
 	<property name="pagination"
 		          type="de.hybris.platform.commercewebservicescommons.dto.search.pagedata.PaginationWsDTO"/>
-		          <property name="currentQuery" type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO"/>
+		<property name="currentQuery" type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO"/>
+		<property name="facetdatacategory"
+		          type="java.util.List&lt;com.tisl.mpl.wsdto.FacetDataWsDTO>"/>
 		  
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FacetDataWsDTO">
@@ -1811,6 +1813,8 @@
 		<property name="query" type="String"/>
 		<property name="selected" type="Boolean"/>
 		<property name="value" type="String"/>
+		<property name="subcategories" type="java.util.List&lt;com.tisl.mpl.wsdto.FacetValueDataWsDTO>"/>
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.SellingItemDetailWsDto">
