@@ -1727,18 +1727,6 @@
 		<property name="password" value="${jdbc.iastg.pass}" />
 	</bean>
 	
-	<alias name="defaultmplCommerceSearchResponseKeywordRedirectPopulator" alias="commerceSearchResponseKeywordRedirectPopulator" />
-	<bean id="defaultmplCommerceSearchResponseKeywordRedirectPopulator" class="com.tisl.mpl.converter.populator.MPLSearchResponseKeywordRedirectPopulator">
-		<property name="typeService" ref="typeService" />
-		<property name="keywordRedirectUrlResolvers">
-			<map>
-				<entry key="SolrProductRedirect" value-ref="productKeywordRedirectUrlResolver" />
-				<entry key="SolrCategoryRedirect" value-ref="categoryKeywordRedirectUrlResolver" />
-				<entry key="SolrURIRedirect" value-ref="uriKeywordRedirectUrlResolver" />
-			</map>
-		</property>
-	</bean>
-	<alias name="defaultUriKeywordRedirectUrlResolver" alias="uriKeywordRedirectUrlResolver" />
-	<bean id="defaultUriKeywordRedirectUrlResolver" class="de.hybris.platform.commerceservices.search.solrfacetsearch.keywordredirect.impl.UriKeywordRedirectUrlResolver" />
+	
 </beans>
 

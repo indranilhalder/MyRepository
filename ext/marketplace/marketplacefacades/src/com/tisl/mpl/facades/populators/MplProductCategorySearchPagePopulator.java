@@ -163,6 +163,10 @@ public class MplProductCategorySearchPagePopulator<QUERY, STATE, RESULT, ITEM ex
 		}
 
 		target.setKeywordRedirectUrl(source.getKeywordRedirectUrl());
+		if (source.getKeywordRedirectMobileUrl() != null)
+		{
+			target.setKeywordRedirectMobileUrl(source.getKeywordRedirectMobileUrl());
+		}
 
 		/*
 		 * if (source.getSnsCategories() != null) {

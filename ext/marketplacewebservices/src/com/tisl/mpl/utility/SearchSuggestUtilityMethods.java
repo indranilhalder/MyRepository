@@ -13,6 +13,7 @@ import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.commercefacades.search.ProductSearchFacade;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
@@ -90,6 +91,8 @@ public class SearchSuggestUtilityMethods
 
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
+	@Resource(name = "productSearchFacade")
+	private ProductSearchFacade<ProductData> productSearchFacade;
 
 	/**
 	 * @Description : Sets Category Data to a DTO
@@ -168,7 +171,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -547,11 +550,15 @@ public class SearchSuggestUtilityMethods
 		String url = null;
 		Map<String, List<String>> params = null;
 		final List<String> urlList = new ArrayList<String>();
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
 		try
 		{
 			//searchText = URLParamUtil.getQueryParamParsed(searchText);
 			searchText = URLParamUtil.filter(searchText);
-			url = mplProductWebService.getKeywordSearch(searchText);
+			searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+					.textSearch(searchText);
+			url = searchPageData.getKeywordRedirectMobileUrl();
+			//url = mplProductWebService.getKeywordSearch(searchText);
 			if (StringUtils.isNotBlank(url))
 			{
 				//fetching the Parameters from the redirect URL in Map with Key and values
