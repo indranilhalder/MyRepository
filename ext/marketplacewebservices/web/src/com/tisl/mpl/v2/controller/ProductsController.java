@@ -187,6 +187,8 @@ public class ProductsController extends BaseController
 
 	//	@Autowired
 	//	private ConfigurationService configurationService;
+	//@Autowired
+	//private MplProductWebServiceImpl MplProductWebService;
 
 	@Autowired
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
@@ -921,7 +923,6 @@ public class ProductsController extends BaseController
 
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
 								.textSearch(searchState, pageableData);
-
 					}
 					else if (typeID.startsWith(DROPDOWN_CATEGORY) || typeID.startsWith(DROPDOWN_BRAND))
 					{

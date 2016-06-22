@@ -60,6 +60,8 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -75,6 +77,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -89,8 +92,6 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
-
-import net.sourceforge.pmd.util.StringUtil;
 
 
 /**
@@ -155,6 +156,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	private ModelService modelService;
 
 	private static final Logger LOG = Logger.getLogger(MplCheckoutFacadeImpl.class);
+
+	@Resource(name = "mplCustomAddressFacade")
+	private MplCustomAddressFacade mplCustomAddressFacade;
 
 
 	/**
@@ -275,15 +279,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -319,13 +323,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description modified from DefaultAcceleratorCheckoutFacade performExpressCheckout : TIS 391
-	 *
+	 * 
 	 * @ Selected Address set for express checkout
-	 *
+	 * 
 	 * @param addressId
-	 *
+	 * 
 	 * @return ExpressCheckoutResult
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	@Override
@@ -355,7 +359,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc if express checkout is enabled for the store
-	 *
+	 * 
 	 * @return boolean
 	 */
 
@@ -373,11 +377,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description setting address for express checkout : TIS 391
-	 *
+	 * 
 	 * @param addressId
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	private boolean setDefaultDeliveryAddressForCheckout(final String addressId) throws EtailNonBusinessExceptions
@@ -392,8 +396,12 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			{
 				if (null != addressData.getId() && addressData.getId().equals(addressId))
 				{
+					//TISSIT-2038
+					isDefaultAddressSet = getMplCustomAddressFacade().setDeliveryAddress(addressData);
 					//return (getAcceleratorCheckoutFacade().setDeliveryAddress(addressData)) ? true : false;
-					isDefaultAddressSet = (getAcceleratorCheckoutFacade().setDeliveryAddress(addressData)) ? true : false;
+
+					//TISSIT-2038
+					//isDefaultAddressSet = (getAcceleratorCheckoutFacade().setDeliveryAddress(addressData)) ? true : false;
 					break;
 				}
 			}
@@ -404,11 +412,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Re calculating cart delivery cost: TIS 400
-	 *
+	 * 
 	 * @param addressId
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -531,13 +539,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Storing delivery cost while navigating from Delivery mode to address selection : TIS 400 TISEE-581
-	 *
+	 * 
 	 * @param finalDeliveryCost
-	 *
+	 * 
 	 * @param deliveryCostPromotionMap
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -556,8 +564,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			discountValue = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
 		}
-		totalPriceAfterDeliveryCost = Double
-				.valueOf(subTotal.doubleValue() + finalDeliveryCost.doubleValue() - discountValue.doubleValue());
+		totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + finalDeliveryCost.doubleValue()
+				- discountValue.doubleValue());
 
 		cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
 		cartModel.setDeliveryCost(finalDeliveryCost);
@@ -632,10 +640,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			if (code != null)
 			{
 				final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
-				final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout()
-						? getCustomerAccountService().getOrderDetailsForGUID(code, baseStoreModel)
-						: getCustomerAccountService().getOrderForCode((CustomerModel) getUserService().getCurrentUser(), code,
-								baseStoreModel);
+				final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout() ? getCustomerAccountService()
+						.getOrderDetailsForGUID(code, baseStoreModel) : getCustomerAccountService().getOrderForCode(
+						(CustomerModel) getUserService().getCurrentUser(), code, baseStoreModel);
 
 
 				LOG.info("Step--1 ----- Order Codes For User " + orderModel.getCode());
@@ -666,8 +673,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					if (null == orderEntry.getProduct()) // it means somehow product is deleted from the order entry.
 					{
-						LOG.info("************************Skipping order history for order :" + orderModel.getCode() + " and for user: "
-								+ orderModel.getUser().getName() + " **************************");
+						LOG.info("************************Skipping order history for order :" + orderModel.getCode()
+								+ " and for user: " + orderModel.getUser().getName() + " **************************");
 						return null;
 					}
 				}
@@ -749,11 +756,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc to check pincode inventory for Pay now TIS 414
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -822,11 +829,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @ Desc to check promotion expired or not for Pay now : TIS 414
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -881,13 +888,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Override
 	public Map<String, List<MarketplaceDeliveryModeData>> repopulateTshipDeliveryCost(
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final CartData cartData)
-					throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions
 	{
 
 		if (!deliveryModeDataMap.isEmpty() && cartData != null)
 		{
-			String tshipThresholdValue = getConfigurationServiceDetails().getConfiguration()
-					.getString(MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
+			String tshipThresholdValue = getConfigurationServiceDetails().getConfiguration().getString(
+					MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
 			tshipThresholdValue = (StringUtils.isNotEmpty(tshipThresholdValue)) ? tshipThresholdValue : Integer.toString(0);
 
 			final Iterator deliveryModeMapIterator = deliveryModeDataMap.entrySet().iterator();
@@ -898,9 +905,10 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 				for (final MarketplaceDeliveryModeData marketplaceDeliveryModeData : list)
 				{
-					final SellerInformationModel sellerInfoModel = getMplSellerInformationService()
-							.getSellerDetail(marketplaceDeliveryModeData.getSellerArticleSKU());
-					if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
+					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+							marketplaceDeliveryModeData.getSellerArticleSKU());
+					if (sellerInfoModel != null
+							&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
@@ -920,8 +928,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 								&& cartData.getTotalPrice().getValue().doubleValue() > Double.parseDouble(tshipThresholdValue))
 
 						{
-							marketplaceDeliveryModeData
-									.setDeliveryCost(createPrice(getCartService().getSessionCart(), Double.valueOf(0.0)));
+							marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
+									Double.valueOf(0.0)));
 						}
 					}
 				}
@@ -933,7 +941,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#placeOrder(java.lang.String)
 	 */
 	@Override
@@ -1101,8 +1109,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 					pushData = new PushNotificationData();
 					if (null != orderReferenceNumber)
 					{
-						pushData.setMessage(MarketplacecommerceservicesConstants.PUSH_MESSAGE_ORDER_PLACED
-								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, orderReferenceNumber));
+						pushData.setMessage(MarketplacecommerceservicesConstants.PUSH_MESSAGE_ORDER_PLACED.replace(
+								MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, orderReferenceNumber));
 						pushData.setOrderId(orderReferenceNumber);
 					}
 					if (null != customer.getOriginalUid() && !customer.getOriginalUid().isEmpty() && null != customer.getIsActive()
@@ -1124,7 +1132,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCheckoutFacade#triggerEmailAndSmsOnOrderConfirmation(de.hybris.platform.core.model
 	 * .order.OrderModel)
@@ -1136,8 +1144,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		final String mobileNumber = orderDetails.getDeliveryAddress().getPhone();
 		final String firstName = orderDetails.getDeliveryAddress().getFirstName();
 		final String orderReferenceNumber = orderDetails.getCode();
-		final String trackingUrl = getConfigurationServiceDetails().getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderReferenceNumber;
+		final String trackingUrl = getConfigurationServiceDetails().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				+ orderReferenceNumber;
 
 		if (order.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 		{
@@ -1157,12 +1166,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 			try
 			{
-				getSendSMSFacade().sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+				getSendSMSFacade().sendSms(
+						MarketplacecommerceservicesConstants.SMS_SENDER_ID,
 
-				MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, trackingUrl), mobileNumber);
+						MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
+								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
+								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
+								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, trackingUrl), mobileNumber);
 
 			}
 			catch (final EtailNonBusinessExceptions ex)
@@ -1175,32 +1185,32 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @param freebieModelMap
-	 *
+	 * 
 	 * @param freebieParentQtyMap
-	 *
+	 * 
 	 * @return void
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
 	public void saveDeliveryMethForFreebie(final CartModel cartModel,
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
-					throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions
 	{
 		getMplCommerceCartService().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
 	}
 
 	/*
 	 * @Description to check coupon expired or not for Pay now
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1212,8 +1222,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		if (CollectionUtils.isNotEmpty(voucherList))
 		{
 			final PromotionVoucherModel voucher = (PromotionVoucherModel) voucherList.get(0);//Only one coupon would be applied in one order
-			if (getVoucherModelService().isApplicable(voucher, cart) && ((PromotionVoucher) getModelService().getSource(voucher))
-					.isReservable(voucher.getVoucherCode(), (User) getModelService().getSource(cart.getUser())))
+			if (getVoucherModelService().isApplicable(voucher, cart)
+					&& ((PromotionVoucher) getModelService().getSource(voucher)).isReservable(voucher.getVoucherCode(),
+							(User) getModelService().getSource(cart.getUser())))
 			{
 				result = true;
 			}
@@ -1243,8 +1254,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			OrderData orderData = null;
 
-			final PriceData deliveryCost = createPrice(orderModel,
-					null == orderModel.getDeliveryCost() ? Double.valueOf(0.0) : orderModel.getDeliveryCost());
+			final PriceData deliveryCost = createPrice(orderModel, null == orderModel.getDeliveryCost() ? Double.valueOf(0.0)
+					: orderModel.getDeliveryCost());
 			//TISBOX-1417 Displaying COD value in order confirmation page
 			PriceData convenienceCharge = null;
 			PriceData totalPriceWithConvenienceCharge = null;
@@ -1265,8 +1276,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					if (null == orderEntry.getProduct()) // it means somehow product is deleted from the order entry.
 					{
-						LOG.info("************************Skipping order history for order :" + orderModel.getCode() + " and for user: "
-								+ orderModel.getUser().getName() + " **************************");
+						LOG.info("************************Skipping order history for order :" + orderModel.getCode()
+								+ " and for user: " + orderModel.getUser().getName() + " **************************");
 						return null;
 					}
 				}
@@ -1293,10 +1304,10 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				final OrderData sellerOrderData = getOrderConverter().convert(sellerOrder);
 				//orderData.setDeliveryCost(childDeliveryCost);
 				sellerOrderData.setDeliveryCost(childDeliveryCost);
-				sellerOrderData.setPickupName(
-						StringUtils.isNotEmpty(orderModel.getPickupPersonName()) ? orderModel.getPickupPersonName() : "");
-				sellerOrderData.setPickupPhoneNumber(
-						StringUtils.isNotEmpty(orderModel.getPickupPersonMobile()) ? orderModel.getPickupPersonMobile() : "");
+				sellerOrderData.setPickupName(StringUtils.isNotEmpty(orderModel.getPickupPersonName()) ? orderModel
+						.getPickupPersonName() : "");
+				sellerOrderData.setPickupPhoneNumber(StringUtils.isNotEmpty(orderModel.getPickupPersonMobile()) ? orderModel
+						.getPickupPersonMobile() : "");
 				sellerOrderList.add(sellerOrderData);
 			}
 			orderData.setSellerOrderList(sellerOrderList);
@@ -1611,6 +1622,27 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	public void setModelService(final ModelService modelService)
 	{
 		this.modelService = modelService;
+	}
+
+
+
+	/**
+	 * @return the mplCustomAddressFacade
+	 */
+	public MplCustomAddressFacade getMplCustomAddressFacade()
+	{
+		return mplCustomAddressFacade;
+	}
+
+
+
+	/**
+	 * @param mplCustomAddressFacade
+	 *           the mplCustomAddressFacade to set
+	 */
+	public void setMplCustomAddressFacade(final MplCustomAddressFacade mplCustomAddressFacade)
+	{
+		this.mplCustomAddressFacade = mplCustomAddressFacade;
 	}
 
 
