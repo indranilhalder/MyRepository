@@ -1562,12 +1562,21 @@ $("#otpMobileNUMField").focus(function(){
 	 document.getElementById("cvvError").innerHTML="";
 	 
  })
+  $("#make_cc_payment, #make_cc_payment_up").click(function(){	
+		var bin_current_status = getCardBinstatus();
+		dopayment(bin_current_status);
+  })
+  
+  function getCardBinstatus(){
+	 var status = validateCardNo();
+	 return status;
+  }
  
  
 
- $("#make_cc_payment, #make_cc_payment_up").click(function(){
+ function dopayment(bin_current_status){
 	 var name = validateName();
-	 if(binStatus==true){
+	 if(bin_current_status==true){
 		 var cardNo=true;
 	 }
 	 else{
@@ -1628,7 +1637,7 @@ $("#otpMobileNUMField").focus(function(){
 			 }
 		 }
 	 }
- })
+ }
  
  
 
@@ -3583,10 +3592,19 @@ $(".card_exp_year").focus(function(){
 $(".security_code").focus(function(){
 	document.getElementById("cvvError").innerHTML="";
 });
+$("#make_cc_payment").on("mousedown", function(e){
+    $("#make_cc_payment").data("mouseDown", true);
+  });
+
+
 $("#cardNo").blur(function(){
 	if($("#cardNo").val()!="")
 	{
-		validateCardNo();
+		if($("#make_cc_payment").data("mouseDown") != true){
+		  validateCardNo();
+		}
+	} else {
+		 document.getElementById("cardNoError").innerHTML="Please enter a valid card number ";
 	}
 });
 $(".name_on_card").blur(function(){
