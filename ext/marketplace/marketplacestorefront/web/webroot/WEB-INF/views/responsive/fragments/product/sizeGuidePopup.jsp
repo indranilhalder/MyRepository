@@ -361,7 +361,7 @@ var productCodeSG = '${product.code}';
  <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
 		<select id="variant" class="variant-select size-g variant-select-sizeGuidePopUp">            <!--changes for TISPRO-338 (variant-select-sizeGuidePopUp class added) -->
 			<c:choose>
-				<c:when test="${empty sizeSelectedSizeGuide}">
+				<c:when test="${empty sizeSelectedSizeGuide || sizeSelectedSizeGuide ne 'true'}">
 					<option value="#" data-target="#popUpModal" selected="selected"><spring:theme code="text.select.size" /></option>
 				</c:when>
 				<c:otherwise>
@@ -382,7 +382,7 @@ var productCodeSG = '${product.code}';
 										<c:when test="${(variantOption.code eq product.code)}">
 										
 											<c:choose>
-											    <c:when test="${empty sizeSelectedSizeGuide}">
+											   <c:when test="${empty sizeSelectedSizeGuide || sizeSelectedSizeGuide ne 'true'}">
 													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
 												</c:when>
 												<c:otherwise>

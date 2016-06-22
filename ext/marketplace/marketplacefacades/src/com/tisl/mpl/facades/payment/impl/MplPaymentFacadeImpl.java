@@ -491,11 +491,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			if (null != otpResponse && null != otpResponse.getInvalidErrorMessage())
 			{
+				//TIS-3168
+				LOG.error("OTP Validation message is " + otpResponse.getInvalidErrorMessage());
 				//returning true or false based on whether OTP is valid or not
 				return otpResponse.getInvalidErrorMessage();
 			}
 			else
 			{
+				//TIS-3168
+				LOG.error("OTP Validation message is null");
 				return null;
 			}
 		}
@@ -833,7 +837,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				if (null != orderStatusResponse)
 				{
 					//Update Audit Table after getting payment response
-					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse);
+					//updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse);
+					//TIS-3168
+					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest);
+
 
 					//TISPRD-2558
 					if (cart.getTotalPrice().equals(orderStatusResponse.getAmount()))
@@ -866,6 +873,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					{
 						orderStatus = orderStatusResponse.getStatus();
 					}
+				}
+				//TIS-3168
+				else
+				{
+					LOG.error("Null orderStatusResponse for juspayOrderId::" + juspayOrderId);
 				}
 
 				//Codemerge issue --- Commented for Payment Fallback
@@ -1518,11 +1530,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1573,9 +1585,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -1866,6 +1878,74 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 		return isValid;
+	}
+
+	//TISPRO-540
+	/**
+	 * This method is used to check whether payment info, delivery mode and address are present against cart or not
+	 *
+	 * @param cart
+	 * @return boolean
+	 */
+	@Override
+	public boolean checkCart(final CartModel cart)
+	{
+		boolean status = true;
+
+		if (cart.getEntries().isEmpty())
+		{
+			status = false;
+		}
+		else if (cart.getPaymentInfo() == null)
+		{
+			status = false;
+		}
+		else if (cart.getTotalPrice().doubleValue() <= 0.0 || cart.getTotalPriceWithConv().doubleValue() <= 0.0)
+		{
+			status = false;
+		}
+		else
+		{
+			status = checkDeliveryOptions(cart);
+		}
+
+		return status;
+	}
+
+	private boolean checkDeliveryOptions(final CartModel cart)
+	{
+		boolean deliveryOptionCheck = true;
+
+		if (CollectionUtils.isNotEmpty(cart.getEntries()))
+		{
+			for (final AbstractOrderEntryModel entry : cart.getEntries())
+			{
+				if (null == entry.getMplDeliveryMode())
+				{
+					deliveryOptionCheck = false;
+					break;
+				}
+			}
+		}
+
+		if (!deliveryOptionCheck)
+		{
+			LOG.error("Delivery mode not present for cart guid "
+					+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
+		}
+		if (deliveryOptionCheck && cart.getDeliveryAddress() == null)
+		{
+			for (final AbstractOrderEntryModel entry : cart.getEntries())
+			{
+				if (entry.getDeliveryPointOfService() == null && entry.getDeliveryAddress() == null)
+				{
+					// Order and Entry have no delivery address and some entries are not for pickup
+					deliveryOptionCheck = false;
+					break;
+				}
+			}
+		}
+		return deliveryOptionCheck;
 	}
 
 	//Getters and setters

@@ -59,8 +59,9 @@
 								
    <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
   <div id="loginDivsiginflyout"></div>
-    <script type="text/javascript">
-        gigya.socialize.showLoginUI({
+  <script type="text/javascript">
+        if(typeof(gigya) != 'undefined'){
+    	gigya.socialize.showLoginUI({
             height: 100
             ,width: 330
             ,showTermsLink:false // remove 'Terms' link
@@ -71,8 +72,8 @@
             ,cid:''
             ,enabledProviders : 'facebook,google'
             });
-    </script> 
-								
+    }
+    </script>
 								</c:when>
 								<c:otherwise>
 								<ul class="signin-flyout social-connect" id="gSignInWrapper">

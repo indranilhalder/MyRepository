@@ -144,7 +144,7 @@ UPDATE SolrSort;indexedType(identifier)[unique=true];code[unique=true];name[lang
 ;$solrIndexedType;name-desc;Brands Z-A
 ;$solrIndexedType;price-asc;Price Low to High
 ;$solrIndexedType;price-desc;Price High to Low
-;$solrIndexedType;isOffersExisting;Discounts
+;$solrIndexedType;isDiscountedPrice;Discounts
 ;$solrIndexedType;isProductNew;Brand New
 
 # for footwear
