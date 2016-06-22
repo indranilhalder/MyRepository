@@ -91,8 +91,7 @@ public class ForgottenPasswordsController extends BaseController
 	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
 	@RequestMapping(value = "/forgotPasswordforEmail", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public UserResultWsDto forgotPassword(@RequestParam final String emailid, final String fields,
-			final HttpServletRequest request)
+	public UserResultWsDto forgotPassword(@RequestParam final String emailid, final String fields, final HttpServletRequest request)
 	{
 		final UserResultWsDto userResultWsDto = new UserResultWsDto();
 		String message = "";
@@ -110,7 +109,7 @@ public class ForgottenPasswordsController extends BaseController
 				//final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + ""; Do not add empty strings
 				final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString;
 				final String securePasswordUrl = baseUrl + MarketplacecommerceservicesConstants.LINK_PASSWORD_CHANGE;
-				forgetPasswordFacade.forgottenPasswordForEmail(emailid, securePasswordUrl);
+				forgetPasswordFacade.forgottenPasswordForEmail(emailid, securePasswordUrl, Boolean.TRUE);
 				userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 		}

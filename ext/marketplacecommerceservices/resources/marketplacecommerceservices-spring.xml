@@ -1707,6 +1707,11 @@
 			autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
+	<bean id="priceInventoryControlJob" class="com.tisl.mpl.integration.job.PriceInventoryControlJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+	</bean>
 	<bean id="iaFeedUtil" class="com.tisl.mpl.integration.job.IAFeedUtility">
 	</bean>
 <!-- IA STAGED DATA SOURCE -->

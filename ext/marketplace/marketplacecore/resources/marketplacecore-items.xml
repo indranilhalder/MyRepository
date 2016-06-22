@@ -8215,13 +8215,13 @@
 				<description>Extending the SolrFacetSearchKeywordRedirect type from core with additional attributes.</description>
 			<attributes>
 				<attribute type="SolrAbstractKeywordRedirect" qualifier="redirectMobile">
-						<modifiers read="true" write="true" optional="false" search="true" />
+						<modifiers read="true" write="true" optional="true" search="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
-	
-		
+
 	</itemtypes>
+	
 </items>
