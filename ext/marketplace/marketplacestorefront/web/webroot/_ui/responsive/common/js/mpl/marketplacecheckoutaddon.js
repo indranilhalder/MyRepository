@@ -3592,15 +3592,19 @@ $(".card_exp_year").focus(function(){
 $(".security_code").focus(function(){
 	document.getElementById("cvvError").innerHTML="";
 });
-$("#make_cc_payment").on("mousedown", function(e){
-    $("#make_cc_payment").data("mouseDown", true);
+$("#make_cc_payment").on("mousedown", function(event){
+    $("#make_cc_payment").data("mouseDown", "clicked");
+
   });
+$( "#cardNo" ).keydown(function() {
+	$("#make_cc_payment").data("mouseDown", "notclicked");
+})
 
 
 $("#cardNo").blur(function(){
 	if($("#cardNo").val()!="")
 	{
-		if($("#make_cc_payment").data("mouseDown") != true){
+		if($("#make_cc_payment").data("mouseDown") != "clicked"){
 		  validateCardNo();
 		}
 	} else {
