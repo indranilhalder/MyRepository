@@ -25,7 +25,7 @@ public class URLParamUtil
 	/**
 	 * @Description : For Filtering Product Promotions
 	 * @param url
-	 * @return responseData
+	 * @return params
 	 */
 	public static Map<String, List<String>> getQueryParams(final String url)
 	{

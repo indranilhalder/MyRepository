@@ -359,7 +359,7 @@ public class SearchPageController extends AbstractSearchPageController
 			}
 
 			model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
-			model.addAttribute("metaRobots", "noindex,follow");
+			model.addAttribute("metaRobots", "index,follow");
 
 
 
@@ -748,11 +748,12 @@ public class SearchPageController extends AbstractSearchPageController
 
 	@RequestMapping(value =
 	{ NEW_PRODUCTS_URL_PATTERN_PAGINATION, NEW_PRODUCTS_NEW_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
-	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) String searchQuery,
+	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = "page", defaultValue = "0", required = false) int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
-			@RequestParam(value = "sort", required = false) String sortCode, final HttpServletRequest request, final Model model)
-			throws CMSItemNotFoundException
+			@RequestParam(value = "sort", required = false) String sortCode,
+			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
+			final Model model) throws CMSItemNotFoundException
 	{
 
 		try
@@ -773,13 +774,19 @@ public class SearchPageController extends AbstractSearchPageController
 					}
 				}
 			}
-			if (request.getServletPath().indexOf(':') != -1 && searchQuery == null)
+			//			if (request.getServletPath().indexOf(':') != -1 && searchQuery == null)
+			//			{
+			//				searchQuery = request.getServletPath().substring(request.getServletPath().indexOf('=') + 1,
+			//						request.getServletPath().lastIndexOf('&'));
+			//			}
+			int count = getSearchPageSize();
+			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+			if (preferencesData != null && preferencesData.getPageSize() != null)
 			{
-				searchQuery = request.getServletPath().substring(request.getServletPath().indexOf('=') + 1,
-						request.getServletPath().lastIndexOf('&'));
+				count = preferencesData.getPageSize().intValue();
 			}
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForOnlineProducts(
-					searchQuery, page, showMode, sortCode, getSearchPageSize());
+					searchQuery, page, showMode, sortCode, count);
 			if (StringUtils.isEmpty(sortCode))
 
 			{
@@ -1114,7 +1121,7 @@ public class SearchPageController extends AbstractSearchPageController
 			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
 		}
 		model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
-		model.addAttribute("metaRobots", "noindex,follow");
+		model.addAttribute("metaRobots", "index,follow");
 
 
 		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
@@ -1161,7 +1168,7 @@ public class SearchPageController extends AbstractSearchPageController
 				updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			}
 			model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
-			model.addAttribute("metaRobots", "noindex,follow");
+			model.addAttribute("metaRobots", "index,follow");
 			if (CollectionUtils.isNotEmpty(searchPageData.getResults()))
 			{
 				model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());

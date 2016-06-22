@@ -35,12 +35,33 @@
 			<map>
 				<entry key="/integration/" value-ref="integrationTenantFilterChain"/>
 				<entry key="/fetchToken" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for fetchToken -->
-				<entry key="/setheader" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for setHeader -->
+				<!-- <entry key="/setheader" value-ref="ajaxUrlFilterChain"/> -->	<!-- TISPT-207 Custom filter chain for setHeader -->
 				<entry key="/getTealiumData" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for TealiumData -->
-				<entry key="/search" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for search -->
-				<entry key="/p" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for PDP page -->
-				<entry key="/c-" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for Category page -->
-				<entry key="/m" value-ref="withoutCartRestorationFilterChain"/>	<!-- TISPT-348 Custom filter chain for MicroSite page -->
+				
+			
+			<!-- TISPT-348 Custom filter chain for the following methods Start-->
+		     	<entry key="/search" value-ref="withoutCartRestorationFilterChain"/>	
+				<entry key="/m" value-ref="withoutCartRestorationFilterChain"/>	
+			
+				<entry key="/headerTrackOrder" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/departmentCollection" value-ref="withoutCartRestorationFilterChain"/>	
+				
+				<entry key="/getCollectionShowcase" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getStayQuedHomepage" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getPromoBannerHomepage" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getNewAndExclusive" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getProductsYouCare" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getBestPicks" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getBrandsYouLove" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getShowcaseContent" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getBrandsYouLoveContent" value-ref="withoutCartRestorationFilterChain"/>
+				
+				<entry key="/headerloginhi" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/sociallogin" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/headerWishlist" value-ref="withoutCartRestorationFilterChain"/>
+				
+		 <!-- TISPT-348 Custom filter chain for the following methods End-->		
+								
 			</map>
 		</property>
 	</bean>
@@ -71,7 +92,7 @@
 		<ref bean="anonymousCheckoutFilter"/>
 
 		<!-- filter to restore items in cart -->
-		<!-- <ref bean="cartRestorationFilter"/> -->
+		<ref bean="cartRestorationFilter"/>
 
 		<!-- filter to restore customer preferred location -->
 		<ref bean="customerLocationRestorationFilter"/>

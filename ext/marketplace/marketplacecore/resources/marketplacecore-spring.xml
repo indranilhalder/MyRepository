@@ -1612,5 +1612,12 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<bean id="cronjobStatusLogger" class="com.tisl.mpl.core.aspect.cronjob.DefaultCronjobStatusLogger" >
 		<property name="configurationService" ref="configurationService" />
 	</bean>
+		<!-- TISPRD-2788 changes-->
+	<bean id="mplDiscountedPriceValueProvider" class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDiscountedPriceValueProvider"
+	parent="abstractPropertyFieldValueProvider">	
+     	<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+	</bean>
+	
 	
 </beans>

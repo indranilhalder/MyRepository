@@ -20,9 +20,13 @@
 	tagdir="/WEB-INF/tags/responsive/storepickup"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
+<c:set var="selectedSizeForSizeGuide" value="${selectedSize}"/>
+<c:if test="${empty selectedSize}">
+<c:set var="selectedSizeForSizeGuide" value="false"/>
+</c:if>
 
 <c:url var="sizeGuideUrl"
-	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
+	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSizeForSizeGuide}" scope="request"></c:url>
 <style>
 #variant, .productCount select {
 	border-radius: 0;
