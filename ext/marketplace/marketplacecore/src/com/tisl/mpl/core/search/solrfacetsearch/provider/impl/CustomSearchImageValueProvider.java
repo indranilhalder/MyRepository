@@ -7,6 +7,7 @@ import de.hybris.platform.core.model.media.MediaContainerModel;
 import de.hybris.platform.core.model.media.MediaFormatModel;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.media.MediaContainerService;
 import de.hybris.platform.servicelayer.media.MediaService;
@@ -19,10 +20,13 @@ import de.hybris.platform.solrfacetsearch.provider.FieldValueProvider;
 import de.hybris.platform.solrfacetsearch.provider.impl.AbstractPropertyFieldValueProvider;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
@@ -61,6 +65,9 @@ public class CustomSearchImageValueProvider extends AbstractPropertyFieldValuePr
 	{
 		return this.mediaService;
 	}
+
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 
 	@Required
 	public void setMediaService(final MediaService mediaService)
@@ -114,6 +121,8 @@ public class CustomSearchImageValueProvider extends AbstractPropertyFieldValuePr
 		return Collections.emptyList();
 	}
 
+	@SuppressWarnings(
+	{ "boxing", "deprecation" })
 	protected MediaModel findMedia(final ProductModel product, final MediaFormatModel mediaFormat)
 	{
 		if ((product != null) && (mediaFormat != null))
@@ -132,6 +141,51 @@ public class CustomSearchImageValueProvider extends AbstractPropertyFieldValuePr
 						try
 						{
 							media = getMediaContainerService().getMediaForFormat(container, mediaFormat);
+							if (media.getUrl() != null && media.getUrl().length() > 0)
+							{
+								LOG.debug("Domain sharding started for product code--> " + product.getCode().toString());
+								final String prodCode = product.getCode().toString();
+								final char lastChar = prodCode.charAt(prodCode.length() - 1);
+								final int lastProductNum = Integer.parseInt(String.valueOf(lastChar));
+								int numberOfHosts;
+								if (configurationService.getConfiguration().getString("search.media.numberofhosts") != null)
+								{
+									numberOfHosts = Integer.parseInt(
+											String.valueOf(configurationService.getConfiguration().getString("search.media.numberofhosts")));
+								}
+								else
+								{
+									numberOfHosts = 1;
+								}
+								if (((lastProductNum % numberOfHosts) != 0) && (numberOfHosts != 1))
+								{
+									URL netUrl = null;
+									if (!media.getUrl().contains("https://") && !media.getUrl().contains("http://"))
+									{
+										netUrl = new URL("http:" + media.getUrl());
+									}
+									else
+									{
+										netUrl = new URL(media.getUrl());
+									}
+									String host = null;
+									host = netUrl.getHost();
+									final String path = netUrl.getPath();
+									if (!host.contains("localhost"))
+									{
+										final String splitHostName[] = host.split("\\.");
+										if (splitHostName != null)
+										{
+											String newHost = "";
+											newHost = splitHostName[0] + (lastProductNum % numberOfHosts) + "." + splitHostName[1] + "."
+													+ splitHostName[2];
+											final String newMediaUrl = "//" + newHost + path;
+											LOG.debug("New newMediaUrl for media during indexing --> " + newMediaUrl);
+											media.setUrl(newMediaUrl);
+										}
+									}
+								}
+							}
 						}
 						catch (final ModelNotFoundException e)
 						{
