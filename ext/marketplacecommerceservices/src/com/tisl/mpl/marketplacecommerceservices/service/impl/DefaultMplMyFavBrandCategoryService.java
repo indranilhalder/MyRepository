@@ -344,7 +344,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				{
 					LOG.info("Without userLogin when device id is not null");
 					//for update if device id consists of categories
-					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatOfDevice(deviceId);
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
 						LOG.info("Inside if, device id consists of categories");
@@ -500,7 +500,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 		boolean result = false;
 		try
 		{
-			MplStyleProfileModel styleProfileModelToSave = new MplStyleProfileModel();
+			MplStyleProfileModel styleProfileModelToSave = null;
 			final CustomerModel customer = getCurrentCustomerByEmail(emailId);
 			final MplStyleProfileModel styleProfileModel = customer.getMyStyleProfile();
 			List<CategoryModel> selectedBrands = new ArrayList<CategoryModel>();
@@ -513,7 +513,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				{
 					LOG.info("Without userLogin when device id is not null");
 					//for update if device id consists of brands
-					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchBrandOfDevice(deviceId);
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
 						LOG.info("Inside if, device id consists of brands");
@@ -628,7 +628,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			if (StringUtils.equalsIgnoreCase(ANONYMOUS_USER, emailId))
 			{
 				LOG.info("Without userLogin when device id is not null");
-				final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatOfDevice(deviceId);
+				final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 				if (CollectionUtils.isNotEmpty(myStyleProfileList))
 				{
 					styleProfileModelToSave = myStyleProfileList.get(0);
@@ -812,7 +812,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				{
 					LOG.info("Without userLogin when device id is not null");
 					//for update if device id consists of categories
-					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatOfDevice(deviceId);
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
 						LOG.info("Inside if, device id consists of categories");
@@ -859,7 +859,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				{
 					LOG.info("Without userLogin when device id is not null");
 					//for update if device id consists of brands
-					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatOfDevice(deviceId);
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
 						LOG.info("Inside if, device id consists of categories");

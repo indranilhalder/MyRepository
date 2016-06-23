@@ -63,7 +63,7 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MyStyleProfileDao#fetchBrands(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -91,7 +91,7 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MyStyleProfileDao#fetchSubCatdOfBrands(java.lang.String)
 	 */
 	@Override
@@ -117,15 +117,15 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 
 	/*
 	 * @Description : Fetching preferred categories against device ID
-	 *
+	 * 
 	 * @param: device ID
-	 *
+	 * 
 	 * @return: List of MplStyleProfileModel
 	 */
 	@Override
-	public List<MplStyleProfileModel> fetchCatOfDevice(final String deviceId)
+	public List<MplStyleProfileModel> fetchCatBrandOfDevice(final String deviceId)
 	{
-		LOG.debug("Fetching fetchCatOfDevice Data");
+		LOG.debug("Fetching fetchCatandBrandsOfDevice Data");
 		try
 		{
 			final String queryString = "SELECT {p:" + MplStyleProfileModel.PK + "} " + "FROM {" + MplStyleProfileModel._TYPECODE
@@ -143,7 +143,7 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MyStyleProfileDao#fetchBrandOfDevice(java.lang.String)
 	 */
 	@Override

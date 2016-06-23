@@ -23,7 +23,7 @@ public interface MyStyleProfileDao
 
 	List<MyRecommendationsBrandsModel> fetchSubCatdOfBrands(String catCode);
 
-	List<MplStyleProfileModel> fetchCatOfDevice(String deviceId);
+	List<MplStyleProfileModel> fetchCatBrandOfDevice(String deviceId);
 
 	/**
 	 * @param deviceId
