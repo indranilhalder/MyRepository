@@ -5815,12 +5815,14 @@ public class UsersController extends BaseCommerceController
 	 * @throws WebserviceValidationException
 	 * @throws MalformedURLException
 	 */
-	@Secured(
-	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	/*
+	 * @Secured( { CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	 */
 	@RequestMapping(value = "{emailId}/getFavCategoriesBrands", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplAllFavouritePreferenceWsDTO getFavCategoriesBrands(@PathVariable final String emailId, final String fields)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	public MplAllFavouritePreferenceWsDTO getFavCategoriesBrands(@PathVariable final String emailId, final String fields,
+			@RequestParam(required = false) final String deviceId) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException
 	{
 		final MplAllFavouritePreferenceWsDTO mplAllFavouritePreferenceWsDTO = new MplAllFavouritePreferenceWsDTO();
 		final List<MplFavBrandCategoryWsDTO> favBrandCategoryDtoForCategory = new ArrayList<MplFavBrandCategoryWsDTO>();
@@ -5829,7 +5831,7 @@ public class UsersController extends BaseCommerceController
 		{
 			brandCategoryDataForCategory = mplMyFavBrandCategoryFacade.fetchAllCategories();
 
-			final List<CategoryModel> selectedCategoryList = mplMyFavBrandCategoryFacade.fetchFavCategories(emailId);
+			final List<CategoryModel> selectedCategoryList = mplMyFavBrandCategoryFacade.fetchFavCategories(emailId, deviceId);
 			boolean flag = false;
 			if (null != brandCategoryDataForCategory)
 			{
@@ -5870,7 +5872,8 @@ public class UsersController extends BaseCommerceController
 			Map<String, MplFavBrandCategoryData> brandCategoryDataForBrand = new HashMap<String, MplFavBrandCategoryData>();
 			brandCategoryDataForBrand = mplMyFavBrandCategoryFacade.fetchAllBrands();
 
-			final List<CategoryModel> selectedBrandList = mplMyFavBrandCategoryFacade.fetchFavBrands(emailId);
+			//final List<CategoryModel> selectedBrandList = mplMyFavBrandCategoryFacade.fetchFavBrands(emailId);
+			final List<CategoryModel> selectedBrandList = mplMyFavBrandCategoryFacade.fetchFavBrands(emailId, deviceId);
 			boolean result = false;
 			if (null != brandCategoryDataForBrand)
 			{
@@ -5985,12 +5988,14 @@ public class UsersController extends BaseCommerceController
 		return mplFavBrandCategoryWsDTO;
 	}
 
-	@Secured(
-	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	/*
+	 * @Secured( { CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	 */
 	@RequestMapping(value = "{emailId}/addFavCategoriesBrands", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto addFavCategoriesBrand(@PathVariable final String emailId, @RequestParam final List codeList,
-			@RequestParam final String type) throws RequestParameterException, WebserviceValidationException, MalformedURLException
+			@RequestParam final String type, @RequestParam(required = false) final String deviceId)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		final UserResultWsDto resultDto = new UserResultWsDto();
 		boolean result = false;
@@ -5998,11 +6003,11 @@ public class UsersController extends BaseCommerceController
 		{
 			if (!StringUtils.isEmpty(type) && type.equalsIgnoreCase(MarketplacecommerceservicesConstants.TYPE_CATEGORY))
 			{
-				result = mplMyFavBrandCategoryFacade.addFavCategories(emailId, codeList);
+				result = mplMyFavBrandCategoryFacade.addFavCategories(emailId, deviceId, codeList);
 			}
 			else if (!StringUtils.isEmpty(type) && type.equalsIgnoreCase(MarketplacecommerceservicesConstants.TYPE_BRAND))
 			{
-				result = mplMyFavBrandCategoryFacade.addFavBrands(emailId, codeList);
+				result = mplMyFavBrandCategoryFacade.addFavBrands(emailId, deviceId, codeList);
 			}
 			if (result)
 			{

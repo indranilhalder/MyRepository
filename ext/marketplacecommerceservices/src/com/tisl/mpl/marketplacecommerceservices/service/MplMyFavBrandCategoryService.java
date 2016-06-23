@@ -67,4 +67,34 @@ public interface MplMyFavBrandCategoryService
 	 */
 	boolean deleteFavBrands(String emailId, String code);
 
+	/**
+	 * @param emailId
+	 * @param deviceId
+	 * @param codeList
+	 * @return
+	 */
+	boolean addFavCategories(String emailId, String deviceId, List<String> codeList);
+
+	/**
+	 * @param emailId
+	 * @param deviceId
+	 * @param codeList
+	 * @return
+	 */
+	boolean addFavBrands(String emailId, String deviceId, List<String> codeList);
+
+	/**
+	 * @param emailId
+	 * @param deviceId
+	 * @return
+	 */
+	List<CategoryModel> fetchFavCategories(String emailId, String deviceId);
+
+	/**
+	 * @param emailId
+	 * @param deviceId
+	 * @return
+	 */
+	List<CategoryModel> fetchFavBrands(String emailId, String deviceId);
+
 }

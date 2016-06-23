@@ -14,19 +14,25 @@ import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplStyleProfileModel;
 import com.tisl.mpl.core.model.MyRecommendationsConfigurationModel;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryData;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplMyFavBrandCategoryDao;
+import com.tisl.mpl.marketplacecommerceservices.daos.MyStyleProfileDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplMyFavBrandCategoryService;
 
@@ -37,6 +43,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplMyFavBrandCategorySer
  */
 public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategoryService
 {
+	private static final Logger LOG = Logger.getLogger(DefaultMplMyFavBrandCategoryService.class);
 	@Autowired
 	private ExtendedUserService extendedUserService;
 	@Autowired
@@ -45,6 +52,8 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 	private ModelService modelService;
 	@Autowired
 	private CategoryService categoryService;
+	@Autowired
+	private MyStyleProfileDao myStyleProfileDao;
 
 	//	private static final Logger LOG = Logger.getLogger(DefaultMplMyFavBrandCategoryService.class);
 
@@ -315,6 +324,108 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 		return result;
 	}
 
+	@Override
+	public boolean addFavCategories(final String emailId, final String deviceId, final List<String> codeList)
+	{
+		boolean result = false;
+		try
+		{
+			final CustomerModel customer = getCurrentCustomerByEmail(emailId);
+			final MplStyleProfileModel styleProfileModel = customer.getMyStyleProfile();
+			List<CategoryModel> selectedCategory = new ArrayList<CategoryModel>();
+			List<CategoryModel> newListCategory = new ArrayList<CategoryModel>();
+			MplStyleProfileModel styleProfileModelUpdate = null;
+			//MplStyleProfileModel styleProfileModelToSave = modelService.create(MplStyleProfileModel.class);
+
+			if (emailId.equalsIgnoreCase("anonymous"))
+			{
+				if (deviceId != null)
+				{
+					LOG.info("Without userLogin when device id is not null");
+					//for update if device id consists of categories
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatOfDevice(deviceId);
+					if (CollectionUtils.isNotEmpty(myStyleProfileList))
+					{
+						LOG.info("Inside if, device id consists of categories");
+						styleProfileModelUpdate = myStyleProfileList.get(0);
+
+						selectedCategory = new ArrayList(styleProfileModelUpdate.getPreferredCategory());
+						final List<CategoryModel> newEntries = fetchCategoryData(codeList);
+						for (final CategoryModel entry : newEntries)
+						{
+							selectedCategory.add(entry);
+						}
+						//Removing Duplicates;
+						final Set<CategoryModel> s = new HashSet<CategoryModel>();
+						s.addAll(selectedCategory);
+						newListCategory = new ArrayList<CategoryModel>();
+						newListCategory.addAll(s);
+						//Now the List has only the identical Elements
+						styleProfileModelUpdate.setPreferredCategory(newListCategory);
+						modelService.save(styleProfileModelUpdate);
+						result = true;
+					}
+					else
+					{
+						//for insert if device id does not consist of categories
+						LOG.info("Inside else, device id does not consist of categories");
+						final MplStyleProfileModel styleProfileModelToSave = modelService.create(MplStyleProfileModel.class);
+						final List<CategoryModel> newEntries = fetchCategoryData(codeList);
+						for (final CategoryModel entry : newEntries)
+						{
+							selectedCategory.add(entry);
+						}
+						styleProfileModelToSave.setPreferredCategory(selectedCategory);
+
+						styleProfileModelToSave.setDeviceId(deviceId);
+						modelService.save(styleProfileModelToSave);
+						result = true;
+					}
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9219);
+				}
+
+			}
+			else
+			{
+				LOG.debug("With using userLogin, when device id is neglected");
+				MplStyleProfileModel styleProfileModelToSave = modelService.create(MplStyleProfileModel.class);
+				styleProfileModelToSave = styleProfileModel;
+				selectedCategory = (List<CategoryModel>) styleProfileModelToSave.getPreferredCategory();
+				final List<CategoryModel> newEntries = fetchCategoryData(codeList);
+
+				if (CollectionUtils.isNotEmpty(selectedCategory))
+				{
+					for (final CategoryModel oldEntry : selectedCategory)
+					{
+						newListCategory.add(oldEntry);
+					}
+				}
+
+				if (CollectionUtils.isNotEmpty(newEntries))
+				{
+					for (final CategoryModel entry : newEntries)
+					{
+						newListCategory.add(entry);
+					}
+				}
+
+				styleProfileModelToSave.setPreferredCategory(newListCategory);
+				modelService.save(styleProfileModelToSave);
+				customer.setMyStyleProfile(styleProfileModelToSave);
+				modelService.save(customer);
+				result = true;
+			}
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		return result;
+	}
+
 
 	@Override
 	public boolean addFavBrands(final String emailId, final List<String> codeList)
@@ -363,7 +474,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				{
 					selectedBrands.add(entry);
 				}
-				styleProfileModelToSave.setPreferredCategory(selectedBrands);
+				styleProfileModelToSave.setPreferredBrand(selectedBrands);
 				modelService.save(styleProfileModelToSave);
 				customer.setMyStyleProfile(styleProfileModelToSave);
 				modelService.save(customer);
@@ -380,6 +491,125 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 		}
 		return result;
 	}
+
+
+	@Override
+	public boolean addFavBrands(final String emailId, final String deviceId, final List<String> codeList)
+	{
+		boolean result = false;
+		try
+		{
+			MplStyleProfileModel styleProfileModelToSave = new MplStyleProfileModel();
+			final CustomerModel customer = getCurrentCustomerByEmail(emailId);
+			final MplStyleProfileModel styleProfileModel = customer.getMyStyleProfile();
+			List<CategoryModel> selectedBrands = new ArrayList<CategoryModel>();
+			List<CategoryModel> newListBrand = new ArrayList<CategoryModel>();
+			MplStyleProfileModel styleProfileModelUpdate = null;
+
+			if (emailId.equalsIgnoreCase("anonymous"))
+			{
+				if (deviceId != null)
+				{
+					LOG.info("Without userLogin when device id is not null");
+					//for update if device id consists of brands
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchBrandOfDevice(deviceId);
+					if (CollectionUtils.isNotEmpty(myStyleProfileList))
+					{
+						LOG.info("Inside if, device id consists of brands");
+						styleProfileModelUpdate = myStyleProfileList.get(0);
+						selectedBrands = new ArrayList(styleProfileModelUpdate.getPreferredBrand());
+						final List<CategoryModel> newEntries = fetchCategoryData(codeList);
+						for (final CategoryModel entry : newEntries)
+						{
+							selectedBrands.add(entry);
+						}
+						//Removing Duplicates;
+						final Set<CategoryModel> s = new HashSet<CategoryModel>();
+						s.addAll(selectedBrands);
+						newListBrand = new ArrayList<CategoryModel>();
+						newListBrand.addAll(s);
+						//Now the List has only the identical Elements
+						styleProfileModelUpdate.setPreferredBrand(newListBrand);
+						modelService.save(styleProfileModelUpdate);
+						result = true;
+					}
+					else
+					{
+						//for insert if device id does not consist of brands
+						LOG.info("Inside else, device id does not consist of brands");
+						styleProfileModelToSave = modelService.create(MplStyleProfileModel.class);
+						final List<CategoryModel> newEntries = fetchCategoryData(codeList);
+						for (final CategoryModel entry : newEntries)
+						{
+							selectedBrands.add(entry);
+						}
+						styleProfileModelToSave.setPreferredBrand(selectedBrands);
+						styleProfileModelToSave.setDeviceId(deviceId);
+						modelService.save(styleProfileModelToSave);
+						result = true;
+					}
+
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9219);
+				}
+			}
+			else
+			{
+				LOG.debug("With using userLogin, when device id is neglected");
+				if (null != styleProfileModel)
+				{
+					styleProfileModelToSave = styleProfileModel;
+					selectedBrands = (List<CategoryModel>) styleProfileModelToSave.getPreferredBrand();
+					final List<CategoryModel> newEntries = fetchCategoryData(codeList);
+					if (CollectionUtils.isNotEmpty(selectedBrands))
+					{
+						for (final CategoryModel oldEntry : selectedBrands)
+						{
+							newListBrand.add(oldEntry);
+						}
+					}
+					if (CollectionUtils.isNotEmpty(newEntries))
+					{
+						for (final CategoryModel entry : newEntries)
+						{
+							newListBrand.add(entry);
+						}
+					}
+					styleProfileModelToSave.setPreferredBrand(newListBrand);
+					modelService.save(styleProfileModelToSave);
+					customer.setMyStyleProfile(styleProfileModelToSave);
+					modelService.save(customer);
+					result = true;
+				}
+				else
+				{
+					styleProfileModelToSave = modelService.create(MplStyleProfileModel.class);
+					final List<CategoryModel> newEntries = fetchCategoryData(codeList);
+					for (final CategoryModel entry : newEntries)
+					{
+						selectedBrands.add(entry);
+					}
+					styleProfileModelToSave.setPreferredBrand(selectedBrands);
+					modelService.save(styleProfileModelToSave);
+					customer.setMyStyleProfile(styleProfileModelToSave);
+					modelService.save(customer);
+					result = true;
+				}
+			}
+		}
+		catch (final ModelSavingException ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		return result;
+	}
+
 
 
 	@Override
@@ -511,4 +741,101 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 	{
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
+
+
+	@Override
+	public List<CategoryModel> fetchFavCategories(final String emailId, final String deviceId)
+	{
+		List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		try
+		{
+			if (emailId.equalsIgnoreCase("anonymous"))
+			{
+				if (StringUtils.isNotEmpty(deviceId))
+				{
+					LOG.info("Without userLogin when device id is not null");
+					//for update if device id consists of categories
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatOfDevice(deviceId);
+					if (CollectionUtils.isNotEmpty(myStyleProfileList))
+					{
+						LOG.info("Inside if, device id consists of categories");
+						final MplStyleProfileModel styleProfileModelUpdate = myStyleProfileList.get(0);
+
+						categoryList = new ArrayList(styleProfileModelUpdate.getPreferredCategory());
+
+					}
+				}
+				else
+				{
+					LOG.info("Email id is anonymous and device id is null");
+				}
+			}
+			else
+			{
+				final CustomerModel customer = getCurrentCustomerByEmail(emailId);
+
+				if (null != customer && null != customer.getMyStyleProfile()
+						&& null != customer.getMyStyleProfile().getPreferredCategory()
+						&& !customer.getMyStyleProfile().getPreferredCategory().isEmpty())
+				{
+					categoryList = new ArrayList<CategoryModel>(customer.getMyStyleProfile().getPreferredCategory());
+				}
+			}
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		return categoryList;
+	}
+
+
+	@Override
+	public List<CategoryModel> fetchFavBrands(final String emailId, final String deviceId)
+	{
+		List<CategoryModel> brandList = new ArrayList<CategoryModel>();
+		try
+		{
+			if (emailId.equalsIgnoreCase("anonymous"))
+			{
+				if (StringUtils.isNotEmpty(deviceId))
+				{
+					LOG.info("Without userLogin when device id is not null");
+					//for update if device id consists of brands
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatOfDevice(deviceId);
+					if (CollectionUtils.isNotEmpty(myStyleProfileList))
+					{
+						LOG.info("Inside if, device id consists of categories");
+						final MplStyleProfileModel styleProfileModelUpdate = myStyleProfileList.get(0);
+
+						brandList = new ArrayList(styleProfileModelUpdate.getPreferredBrand());
+					}
+				}
+				else
+				{
+					LOG.info("Email id is anonymous and device id is null");
+				}
+			}
+			else
+			{
+				final CustomerModel customer = getCurrentCustomerByEmail(emailId);
+				if (null != customer && null != customer.getMyStyleProfile()
+						&& null != customer.getMyStyleProfile().getPreferredBrand()
+						&& !customer.getMyStyleProfile().getPreferredBrand().isEmpty())
+				{
+					brandList = new ArrayList<CategoryModel>(customer.getMyStyleProfile().getPreferredBrand());
+				}
+			}
+
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		return brandList;
+	}
+
+
+
+
 }
