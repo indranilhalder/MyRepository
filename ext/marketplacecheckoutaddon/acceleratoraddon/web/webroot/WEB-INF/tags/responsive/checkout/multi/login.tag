@@ -125,6 +125,19 @@
     <br />
    <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
     <div id="loginDivCheckout"></div>
+    <script type="text/javascript">
+        gigya.socialize.showLoginUI({
+            height: 100
+            ,width: 330
+            ,showTermsLink:false // remove 'Terms' link
+            ,hideGigyaLink:true // remove 'Gigya' link
+            ,buttonsStyle: 'signInWith' // Change the default buttons design to "Full Logos" design
+            //,showWhatsThis: true // Pop-up a hint describing the Login Plugin, when the user rolls over the Gigya link.
+            ,containerID: 'loginDivCheckout' // The component will embed itself inside the loginDiv Div
+            ,cid:''
+            ,enabledProviders : 'facebook,google'
+            });
+    </script>    
     </li>
 </ul>
 </c:when>
