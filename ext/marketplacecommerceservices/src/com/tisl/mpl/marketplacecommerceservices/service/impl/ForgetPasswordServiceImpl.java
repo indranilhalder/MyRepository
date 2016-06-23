@@ -147,7 +147,7 @@ public class ForgetPasswordServiceImpl extends DefaultSecureTokenService impleme
 	 * @description method is called to change the Password of the customer through Email
 	 */
 	@Override
-	public void forgottenPasswordEmail(final CustomerModel customerModel, final String securePasswordUrl)
+	public void forgottenPasswordEmail(final CustomerModel customerModel, String securePasswordUrl, final Boolean isMobile)
 	{
 		try
 		{
@@ -174,8 +174,14 @@ public class ForgetPasswordServiceImpl extends DefaultSecureTokenService impleme
 			forgottenPasswordProcessModel.setLanguage(getCommonI18NService().getCurrentLanguage());
 			forgottenPasswordProcessModel.setCurrency(getCommonI18NService().getCurrentCurrency());
 			forgottenPasswordProcessModel.setStore(getBaseStoreService().getCurrentBaseStore());
-			forgottenPasswordProcessModel.setForgetPasswordUrl(securePasswordUrl);
 
+			securePasswordUrl = securePasswordUrl + "?token=" + token + "&customerUniqueID=" + customerModel.getUid();
+
+			if (isMobile.booleanValue())
+			{
+				securePasswordUrl = securePasswordUrl + MarketplacecommerceservicesConstants.MOBILE_SOURCE;
+			}
+			forgottenPasswordProcessModel.setForgetPasswordUrl(securePasswordUrl);
 			//if (baseStoreService.getCurrentBaseStore() != null)	SONAR Fix
 			if (getBaseStoreService().getCurrentBaseStore() != null)
 			{
@@ -408,7 +414,8 @@ public class ForgetPasswordServiceImpl extends DefaultSecureTokenService impleme
 	protected byte[] generateSignature(final byte[] data, final int offset, final int length, final byte[] signatureKeyBytes)
 			throws NoSuchAlgorithmException
 	{
-		final MessageDigest md5Digest = MessageDigest.getInstance(configurationService.getConfiguration().getString(TOKENENCODING,"md5"));
+		final MessageDigest md5Digest = MessageDigest.getInstance(configurationService.getConfiguration().getString(TOKENENCODING,
+				"md5"));
 
 		md5Digest.update(signatureKeyBytes);
 

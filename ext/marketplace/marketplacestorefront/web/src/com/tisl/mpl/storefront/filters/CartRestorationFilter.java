@@ -52,6 +52,16 @@ public class CartRestorationFilter extends OncePerRequestFilter
 	public void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
 			final FilterChain filterChain) throws IOException, ServletException
 	{
+		
+		String servletPath = (String) request.getAttribute("javax.servlet.include.servlet_path");
+		if (servletPath == null)
+		{
+			servletPath = request.getServletPath();
+		}
+		
+		if (!(servletPath.equalsIgnoreCase("/") || servletPath.contains("/p-") || servletPath.contains("/c-")))
+		{//checking if current page is not among home page,pdp page or category landing page
+
 		if (getUserService().isAnonymousUser(getUserService().getCurrentUser()))
 		{
 			if (getCartService().hasSessionCart()
@@ -118,7 +128,7 @@ public class CartRestorationFilter extends OncePerRequestFilter
 				}
 			}
 		}
-
+		}
 		filterChain.doFilter(request, response);
 	}
 

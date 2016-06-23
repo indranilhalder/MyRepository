@@ -1541,17 +1541,20 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String IA_CATEGORY_PRODUCT = "categoryproduct";
 	public static final String IA_BRAND_PRODUCT = "brandproduct";
 	public static final String IA_PRICE_INVENTORY = "priceinventory";
+	public static final String IA_PRICEINVENTORY_CONTROL = "priceinventorycontrol";
 	public static final String DOT = ".";
 	public static final String IA_FILE_EXTENSION = "csv";
 	public static final String IA_FILENAME_PRODUCTCATEGORY = "ia.filename.productcategory";
 	public static final String IA_FILENAME_BRANDPRODUCT = "ia.filename.brandproduct";
 	public static final String IA_FILENAME_PRICEINVENTORY = "ia.filename.priceinventory";
 	public static final String IA_FILENAME_SELLERPRICEDETAILS = "ia.filename.sellerpricedetails";
+	public static final String IA_FILENAME_PRICEINVENTORYCONTROL = "ia.filename.priceinventorycontrol";
 	public static final String IA_EXPORT_FOLDER = "ia.path.export";
 	public static final String IA_CATEGORYEXPORT_FOLDER = "ia.path.catexport";
 	public static final String IA_BRANDEXPORT_FOLDER = "ia.path.brandexport";
 	public static final String IA_PRICE_INVENTORYEXPORT_FOLDER = "ia.path.priceinventoryexport";
 	public static final String IA_SELLERPRICEDETAILSEXPORT_FOLDER = "ia.path.sellerpricedetails";
+	public static final String IA_PRICEINVENTORYCONTROL_FOLDER = "ia.path.priceinventorycontrol";
 	public static final String ENCODING = "UTF-8";
 	public static final String IA_BATCHVALUE = "mpl.ia.batchvalue";
 	public static final String IA_SPDETAILSHEADER = "mpl.ia.spdetailsheader";
@@ -1581,6 +1584,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISPT-200
 	public static final String GETAUDITID = "select {a.pk} from {mplpaymentaudit as a} where {a.cartGUID}=?cartGUID ORDER BY {a.requestDate} DESC"
 			.intern();
+
+	public static final String MOBILE_SOURCE = "&source=App".intern();
 
 	public final static String PROXYENABLED = "proxy.enabled";
 	public final static String GENPROXY = "proxy.address";
