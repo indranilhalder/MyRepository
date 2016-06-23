@@ -145,6 +145,15 @@
 	<bean id="mplPriceRowDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPriceRowDaoImpl">
 	</bean>
+	
+	<alias name="mplSearchSolrQueryTypeFacetsPopulator" alias="mplSearchSolrQueryTypeFacetsPopulator" />
+		<bean id="mplSearchSolrQueryTypeFacetsPopulator" class="com.tisl.mpl.solr.search.MplSearchSolrQueryTypeFacetsPopulator">
+	</bean>
+	
+	<bean parent="modifyPopulatorList">
+		<property name="list" ref="commerceSearchQueryPageableConverter"/>
+		<property name="add" ref="mplSearchSolrQueryTypeFacetsPopulator"/>
+	</bean>
 
 
 
