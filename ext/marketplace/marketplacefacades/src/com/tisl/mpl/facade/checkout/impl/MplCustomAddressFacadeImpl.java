@@ -530,8 +530,27 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	@Override
 	public boolean hasNoDeliveryAddress()
 	{
-		final CartData cartData = getCheckoutCart();
-		return hasShippingItems() && (cartData == null || cartData.getDeliveryAddress() == null);
+		final CartModel cartModel = cartService.getSessionCart();
+		boolean flag = false;
+		if (null != cartModel && cartModel.getDeliveryAddress() == null)
+		{
+			if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+			{
+				for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+				{
+					if (entry.getDeliveryPointOfService() == null) // Entry having CNC Delivery Mode will always have POS
+					{
+						flag = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return flag;
+
+		//Blocked for
+		//return hasShippingItems() && (cartData == null || cartData.getDeliveryAddress() == null);
 	}
 
 	/**
