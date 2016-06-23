@@ -172,7 +172,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		if (null != hook.getOrderStatus())
 		{
 
-			if (CollectionUtils.isNotEmpty(hook.getOrderStatus().getRefunds()))
+			if (CollectionUtils.isEmpty(hook.getOrderStatus().getRefunds()))
 			{
 				//For Positive Flow
 				getResponseBasedOnStatus(hook, hook.getOrderStatus().getOrderId(), hook.getOrderStatus().getStatus());
