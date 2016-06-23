@@ -4250,6 +4250,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_CREATE_NEW_WISHLIST_WP, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public String createNewWishlistWP(@RequestParam("newWishlistData") final String newWishlistData, final Model model,
 			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
@@ -4498,8 +4499,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 */
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_VIEW_PARTICULAR_WISHLIST, method = RequestMethod.GET)
-	public String viewParticularWishlist(@RequestParam("particularWishlist") final String viewParticularWishlist,
-			final Model model) throws CMSItemNotFoundException
+	@RequireHardLogIn
+	public String viewParticularWishlist(@RequestParam("particularWishlist") final String viewParticularWishlist, final Model model)
+			throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -4697,6 +4699,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_PARTICULAR_WISHLIST_NAME, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public String editWishlistName(@RequestParam(ModelAttributetConstants.NEW_WISHLIST_NAME) final String newWishlistName,
 			@RequestParam(ModelAttributetConstants.WISHLIST_OLD_NAME) final String oldName, final Model model,
@@ -4797,6 +4800,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_WISHLIST_REMOVE, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public String removeItemFromWL(@RequestParam(ModelAttributetConstants.WISHLIST_NAME) final String wishlistName,
 			@RequestParam(ModelAttributetConstants.PRODUCTCODE_WL) final String productCodeWl,
@@ -5741,6 +5745,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws NullPointerException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_GENDER, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public Map<String, CategoryData> myInterestForCategory(
 			@RequestParam(value = ModelAttributetConstants.GENDERDATA) final String genderData,
@@ -5813,6 +5818,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws JSONException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_BRANDS, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public Map<String, CategoryData> myInterestForBrand(
 			@RequestParam(value = ModelAttributetConstants.CATEGORYDATA) final String categoryData,
@@ -5906,6 +5912,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws JSONException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_SUBCATEGORIES, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public List<Map<String, CategoryData>> getBrandSubCategory(
 			@SuppressWarnings(UNUSED) @RequestParam(value = ModelAttributetConstants.CATEGORYDATA, required = false) final String categoryData,
@@ -6327,6 +6334,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws JSONException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_SEL_SUBCATEGORIES, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public Map<String, CategoryData> saveSubCategoryData(
 			@RequestParam(value = ModelAttributetConstants.CATEGORYDATA) final String categoryData, final Model model)
@@ -6382,6 +6390,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_REMOVE_BRAND, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public void removeSingleBrand(@RequestParam(value = ModelAttributetConstants.CATEGORYDATA) final String categoryData,
 			final Model model) throws CMSItemNotFoundException, NullPointerException, JSONException

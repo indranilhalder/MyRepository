@@ -288,13 +288,6 @@
 						<arg line="--compilation_level SIMPLE" />
 						<arg line="--language_in ECMASCRIPT5" />
 						<arg line="--warning_level QUIET" />
-						<arg line="--js ${mpstorefront.js.dir}/gigya/acc.gigya.js" />
-						<arg line="--js_output_file ${mpstorefront.minjs.dir}/acc.gigya.min.js" />
-					</java>
-					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
-						<arg line="--compilation_level SIMPLE" />
-						<arg line="--language_in ECMASCRIPT5" />
-						<arg line="--warning_level QUIET" />
 						<arg line="--js ${mpstorefront.js.dir}/ia-plugins/ia_plugin_general.js" />
 						<arg line="--js ${mpstorefront.js.dir}/ia-plugins/tataia.js" />
 						<arg line="--js_output_file ${mpstorefront.minjs.dir}/ia.min.js" />
