@@ -338,7 +338,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			MplStyleProfileModel styleProfileModelUpdate = null;
 			//MplStyleProfileModel styleProfileModelToSave = modelService.create(MplStyleProfileModel.class);
 
-			if (emailId.equalsIgnoreCase("anonymous"))
+			if (emailId.equalsIgnoreCase("ANONYMOUS_USER"))
 			{
 				if (deviceId != null)
 				{
@@ -507,7 +507,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			List<CategoryModel> newListBrand = new ArrayList<CategoryModel>();
 			MplStyleProfileModel styleProfileModelUpdate = null;
 
-			if (emailId.equalsIgnoreCase("anonymous"))
+			if (emailId.equalsIgnoreCase("ANONYMOUS_USER"))
 			{
 				if (deviceId != null)
 				{
