@@ -54,6 +54,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 	private CategoryService categoryService;
 	@Autowired
 	private MyStyleProfileDao myStyleProfileDao;
+	private static final String ANONYMOUS_USER = "anonymous";
 
 	//	private static final Logger LOG = Logger.getLogger(DefaultMplMyFavBrandCategoryService.class);
 
@@ -613,7 +614,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 
 
 	@Override
-	public boolean deleteFavCategories(final String emailId, final String code)
+	public boolean deleteFavCategories(final String emailId, final String deviceId, final String code)
 	{
 		boolean result = false;
 		try
@@ -623,14 +624,15 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			final MplStyleProfileModel styleProfileModel = customer.getMyStyleProfile();
 			List<CategoryModel> selectedCategory = new ArrayList<CategoryModel>();
 			final List<CategoryModel> newCategory = new ArrayList<CategoryModel>();
-
-			if (null != styleProfileModel)
+			// anonymous user TISSAM-7
+			if (StringUtils.equalsIgnoreCase(ANONYMOUS_USER, emailId))
 			{
-				styleProfileModelToSave = styleProfileModel;
-				selectedCategory = (List<CategoryModel>) styleProfileModelToSave.getPreferredCategory();
-				//if (null != selectedCategory && selectedCategory.size() > 0)
-				if (CollectionUtils.isNotEmpty(selectedCategory))
+				LOG.info("Without userLogin when device id is not null");
+				final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatOfDevice(deviceId);
+				if (CollectionUtils.isNotEmpty(myStyleProfileList))
 				{
+					styleProfileModelToSave = myStyleProfileList.get(0);
+					selectedCategory = new ArrayList(styleProfileModelToSave.getPreferredCategory());
 					for (final CategoryModel entry : selectedCategory)
 					{
 						if (!entry.getCode().equalsIgnoreCase(code))
@@ -638,12 +640,38 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 							newCategory.add(entry);
 						}
 					}
+					styleProfileModelToSave.setPreferredCategory(newCategory);
+					modelService.save(styleProfileModelToSave);
+					customer.setMyStyleProfile(styleProfileModelToSave);
+					modelService.save(customer);
+					result = true;
 				}
-				styleProfileModelToSave.setPreferredCategory(newCategory);
-				modelService.save(styleProfileModelToSave);
-				customer.setMyStyleProfile(styleProfileModelToSave);
-				modelService.save(customer);
-				result = true;
+			}
+
+			//  Logged in user
+			else
+			{
+				if (null != styleProfileModel)
+				{
+					styleProfileModelToSave = styleProfileModel;
+					selectedCategory = (List<CategoryModel>) styleProfileModelToSave.getPreferredCategory();
+					//if (null != selectedCategory && selectedCategory.size() > 0)
+					if (CollectionUtils.isNotEmpty(selectedCategory))
+					{
+						for (final CategoryModel entry : selectedCategory)
+						{
+							if (!entry.getCode().equalsIgnoreCase(code))
+							{
+								newCategory.add(entry);
+							}
+						}
+					}
+					styleProfileModelToSave.setPreferredCategory(newCategory);
+					modelService.save(styleProfileModelToSave);
+					customer.setMyStyleProfile(styleProfileModelToSave);
+					modelService.save(customer);
+					result = true;
+				}
 			}
 		}
 		catch (final ModelSavingException ex)
@@ -659,7 +687,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 
 
 	@Override
-	public boolean deleteFavBrands(final String emailId, final String code)
+	public boolean deleteFavBrands(final String emailId, final String deviceId, final String code)
 	{
 		boolean result = false;
 		try
@@ -669,28 +697,57 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			final MplStyleProfileModel styleProfileModel = customer.getMyStyleProfile();
 			List<CategoryModel> selectedBrands = new ArrayList<CategoryModel>();
 			final List<CategoryModel> newBrands = new ArrayList<CategoryModel>();
-
-			if (null != styleProfileModel)
+			// anonymous user TISSAM-7
+			if (StringUtils.equalsIgnoreCase(ANONYMOUS_USER, emailId))
 			{
-				styleProfileModelToSave = styleProfileModel;
-				selectedBrands = (List<CategoryModel>) styleProfileModelToSave.getPreferredBrand();
-				//if (null != selectedBrands && selectedBrands.size() > 0)
-				if (CollectionUtils.isNotEmpty(selectedBrands))
+				final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchBrandOfDevice(deviceId);
+				if (CollectionUtils.isNotEmpty(myStyleProfileList))
 				{
-					for (final CategoryModel entry : selectedBrands)
+					styleProfileModelToSave = myStyleProfileList.get(0);
+					selectedBrands = new ArrayList(styleProfileModelToSave.getPreferredBrand());
+					if (CollectionUtils.isNotEmpty(selectedBrands))
 					{
-						if (!entry.getCode().equalsIgnoreCase(code))
+						for (final CategoryModel entry : selectedBrands)
 						{
-							newBrands.add(entry);
+							if (!entry.getCode().equalsIgnoreCase(code))
+							{
+								newBrands.add(entry);
+							}
 						}
 					}
+					styleProfileModelToSave.setPreferredBrand(newBrands);
+					modelService.save(styleProfileModelToSave);
+					customer.setMyStyleProfile(styleProfileModelToSave);
+					modelService.save(customer);
+					result = true;
 				}
-				styleProfileModelToSave.setPreferredBrand(newBrands);
-				modelService.save(styleProfileModelToSave);
-				customer.setMyStyleProfile(styleProfileModelToSave);
-				modelService.save(customer);
-				result = true;
 			}
+			//  Logged in user
+			else
+			{
+				if (null != styleProfileModel)
+				{
+					styleProfileModelToSave = styleProfileModel;
+					selectedBrands = (List<CategoryModel>) styleProfileModelToSave.getPreferredBrand();
+					//if (null != selectedBrands && selectedBrands.size() > 0)
+					if (CollectionUtils.isNotEmpty(selectedBrands))
+					{
+						for (final CategoryModel entry : selectedBrands)
+						{
+							if (!entry.getCode().equalsIgnoreCase(code))
+							{
+								newBrands.add(entry);
+							}
+						}
+					}
+					styleProfileModelToSave.setPreferredBrand(newBrands);
+					modelService.save(styleProfileModelToSave);
+					customer.setMyStyleProfile(styleProfileModelToSave);
+					modelService.save(customer);
+					result = true;
+				}
+			}
+
 		}
 		catch (final ModelSavingException ex)
 		{
