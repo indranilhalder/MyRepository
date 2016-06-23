@@ -375,8 +375,11 @@ addToBagFromWl: function(ussid, addedToCart) {
 		data : {"ussid": ussid, "addedToCart":addedToCart},
 		dataType : "json",
 		success : function(response) {
-			alert("success_yipee");
+			//alert("success_yipee");
 		},
+		complete:function(){
+			forceUpdateHeader();
+		}
 	})
 },
 
