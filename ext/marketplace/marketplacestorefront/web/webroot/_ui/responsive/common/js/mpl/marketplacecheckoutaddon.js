@@ -4393,6 +4393,9 @@ function removefromCart(entryNo,wishName)
 			
 			
 		},
+		complete:function(){
+			forceUpdateHeader();
+		},
 		error:function(data){
 			alert("error");
 		}
