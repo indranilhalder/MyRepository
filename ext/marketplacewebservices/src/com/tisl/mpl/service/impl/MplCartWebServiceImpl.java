@@ -1383,10 +1383,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						&& Double.compare(entryPrice, abstractOrderEntry.getTotalPrice().doubleValue()) != 0)
 				{
 					gwlp.setOfferPrice(abstractOrderEntry.getTotalPrice().toString());
-					if (LOG.isDebugEnabled())
-					{
-						LOG.debug("************ Mobile webservice OfferPrice ************* " + abstractOrderEntry.getTotalPrice());
-					}
 
 				}
 
@@ -1448,32 +1444,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 												if (null != appliedResponseData.getDiscountPrice())
 												{
 													gwlp.setDiscountPrice(appliedResponseData.getDiscountPrice());
-													if (LOG.isDebugEnabled())
-													{
-														LOG.debug("************ Mobile webservice product level discount price ************* "
-																+ appliedResponseData.getDiscountPrice());
-													}
+
 												}
 												if (null != appliedResponseData.getIsPercentage())
 												{
 													gwlp.setIsPercentage(appliedResponseData.getIsPercentage());
-													if (LOG.isDebugEnabled())
-													{
-														LOG.debug(
-																"************ Mobile webservice product level percentage there? ************* "
-																		+ appliedResponseData.getIsPercentage());
-													}
+
 
 												}
 												if (null != appliedResponseData.getPercentagePromotion())
 												{
 													gwlp.setPercentagePromotion(appliedResponseData.getPercentagePromotion());
-													if (LOG.isDebugEnabled())
-													{
-														LOG.debug(
-																"************ Mobile webservice product level percentage promotion ************* "
-																		+ appliedResponseData.getPercentagePromotion());
-													}
+
 												}
 											}
 											///////////////////////////////
@@ -1496,30 +1478,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 										appliedResponseData = mplDiscountUtil.populateCartPromoData(orderPromotionModel, finalCart);
 										if (null != appliedResponseData.getDiscountPrice())
 										{
-											if (LOG.isDebugEnabled())
-											{
-												LOG.debug("************ Mobile webservice cart level discount price ************* "
-														+ appliedResponseData.getDiscountPrice());
-											}
+
 											gwlp.setCartDiscountPrice(appliedResponseData.getDiscountPrice());
 										}
 										if (null != appliedResponseData.getIsPercentage())
 										{
-											if (LOG.isDebugEnabled())
-											{
-												LOG.debug("************ Mobile webservice cart level percentage there? ************* "
-														+ appliedResponseData.getIsPercentage());
-											}
+
 											gwlp.setCartIsPercentage(appliedResponseData.getIsPercentage());
 
 										}
 										if (null != appliedResponseData.getPercentagePromotion())
 										{
-											if (LOG.isDebugEnabled())
-											{
-												LOG.debug("************ Mobile webservice product level percentage promotion ************* "
-														+ appliedResponseData.getPercentagePromotion());
-											}
+
 											gwlp.setCartPercentagePromotion(appliedResponseData.getPercentagePromotion());
 										}
 									}
