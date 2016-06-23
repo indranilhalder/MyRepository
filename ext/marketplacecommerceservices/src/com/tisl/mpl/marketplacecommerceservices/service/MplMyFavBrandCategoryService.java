@@ -58,14 +58,14 @@ public interface MplMyFavBrandCategoryService
 	 * @param code
 	 * @return boolean
 	 */
-	boolean deleteFavCategories(String emailId, String code);
+	boolean deleteFavCategories(String emailId, String deviceId, String code);
 
 	/**
 	 * @param emailId
 	 * @param code
 	 * @return boolean
 	 */
-	boolean deleteFavBrands(String emailId, String code);
+	boolean deleteFavBrands(String emailId, String deviceId, String code);
 
 	/**
 	 * @param emailId

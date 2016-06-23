@@ -278,11 +278,11 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 
 
 	@Override
-	public boolean deleteFavCategories(final String emailId, final String code)
+	public boolean deleteFavCategories(final String emailId, final String deviceId, final String code)
 	{
 		try
 		{
-			final boolean result = mplMyFavBrandCategoryService.deleteFavCategories(emailId, code);
+			final boolean result = mplMyFavBrandCategoryService.deleteFavCategories(emailId, deviceId, code);
 			return result;
 		}
 		catch (final IllegalArgumentException ex)
@@ -309,11 +309,11 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 
 
 	@Override
-	public boolean deleteFavBrands(final String emailId, final String code)
+	public boolean deleteFavBrands(final String emailId, final String deviceId, final String code)
 	{
 		try
 		{
-			final boolean result = mplMyFavBrandCategoryService.deleteFavBrands(emailId, code);
+			final boolean result = mplMyFavBrandCategoryService.deleteFavBrands(emailId, deviceId, code);
 			return result;
 		}
 		catch (final IllegalArgumentException ex)
@@ -340,7 +340,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade#fetchFavCategories(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -376,7 +376,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade#fetchFavBrands(java.lang.String,
 	 * java.lang.String)
 	 */
