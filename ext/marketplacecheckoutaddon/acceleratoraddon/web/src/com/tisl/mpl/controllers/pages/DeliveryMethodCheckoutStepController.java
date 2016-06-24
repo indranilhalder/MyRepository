@@ -1820,16 +1820,16 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		return (defaultAddress != null && defaultAddress.getId() != null && defaultAddress.getId().equals(addressId));
 	}
 
-	@RequestMapping(value = "/back", method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequestMapping(value = "/back", method = RequestMethod.GET)
+	//@RequireHardLogIn
 	@Override
 	public String back(final RedirectAttributes redirectAttributes)
 	{
 		return getCheckoutStep().previousStep();
 	}
 
-	@RequestMapping(value = "/next", method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequestMapping(value = "/next", method = RequestMethod.GET)
+	//@RequireHardLogIn
 	@Override
 	public String next(final RedirectAttributes redirectAttributes)
 	{
