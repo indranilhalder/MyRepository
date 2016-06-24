@@ -147,6 +147,7 @@ UPDATE SolrSort;indexedType(identifier)[unique=true];code[unique=true];name[lang
 ;$solrIndexedType;isDiscountedPrice;Discounts
 ;$solrIndexedType;isProductNew;Brand New
 
+
 # for footwear
 UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];displayName[lang=$lang]
  ;$solrIndexedType		   ;stylecodefootwear						   ;"Style Code"
