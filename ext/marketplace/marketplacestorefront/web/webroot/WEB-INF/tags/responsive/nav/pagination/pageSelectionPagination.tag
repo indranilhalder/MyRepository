@@ -12,10 +12,21 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<!-- construct list of facet code -->
+<c:forEach items="${searchPageData.facets}" var="facet">
+	<c:set value="${pageFacets}${facet.code ? '' : '&'}${facet.code}" scope="request" var="tempFacets" />
+	<c:set var="pageFacets" value="${tempFacets}" />
+</c:forEach>
 <c:set var="hasPreviousPage"
 	value="${searchPageData.pagination.currentPage > 0}" />
 <c:set var="hasNextPage"
 	value="${(searchPageData.pagination.currentPage + 1) < searchPageData.pagination.numberOfPages}" />
+
+<form action="#" method="get" class="paginationForm" id="paginationForm"> 
+	<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+	<input type="hidden" name="q" value="${searchPageData.currentQuery.query.value}"/>
+	<input type="hidden" name="pageFacetData" value="${pageFacets}"/>
+	<input type="hidden" name="pageSize" value="${searchPageData.pagination.pageSize}"/>
 
 		<c:if test="${(searchPageData.pagination.numberOfPages > 1)}">
 			<ul class="pagination mobile">
@@ -28,14 +39,7 @@
 								value="${searchPageData.pagination.currentPage - 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_previousPage_link">
 							<!-- TISPRD-2315 -->
-							<c:choose>
-							<c:when test="${not empty searchCategory}">
-							<a href="${newPaginationUrlPrev}&searchCategory=${searchCategory}&pageSize=${searchPageData.pagination.pageSize}" rel="prev"><span><spring:theme code="text.previous.page"/></span></a>
-						    </c:when>
-						    <c:otherwise>
-						    <a href="${newPaginationUrlPrev}&pageSize=${searchPageData.pagination.pageSize}" rel="prev"><span><spring:theme code="text.previous.page"/></span></a>
-						    </c:otherwise>
-						    </c:choose>
+							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev"><span><spring:theme code="text.previous.page"/></span></a>
 						</ycommerce:testId>
 					</li>
 				</c:if>
@@ -95,14 +99,7 @@
 						
 							<li>
 							<!-- TISPRD-2315 -->
-							<c:choose>
-							<c:when test="${not empty searchCategory}">
-							<a href="${newPaginationUrlDotPrev}&searchCategory=${searchCategory}&pageSize=${searchPageData.pagination.pageSize}">1</a>
-							</c:when>
-							<c:otherwise>
-							<a href="${newPaginationUrlDotPrev}&pageSize=${searchPageData.pagination.pageSize}">1</a>
-							</c:otherwise>
-							</c:choose>
+							<a href="${newPaginationUrlDotPrev}" class="pagination_a_link">1</a>
 								<c:if test="${beginPage ne 2}">
 									...
 								</c:if>
@@ -123,14 +120,7 @@
 							
 							<ycommerce:testId code="pageNumber_link">
 							<!-- TISPRD-2315 -->
-							<c:choose>
-							<c:when test="${not empty searchCategory}">
-							<li><a href="${newPaginationUrl}&searchCategory=${searchCategory}&pageSize=${searchPageData.pagination.pageSize}">${pageNumber}</a></li>
-							</c:when>
-							<c:otherwise>
-							<li><a href="${newPaginationUrl}&pageSize=${searchPageData.pagination.pageSize}">${pageNumber}</a></li>
-							</c:otherwise>
-							</c:choose>
+							<li><a href="${newPaginationUrl}" class="pagination_a_link">${pageNumber}</a></li>
 							</ycommerce:testId>
 						</c:when>
 						<c:otherwise>
@@ -154,15 +144,7 @@
 						<c:if test="${searchPageData.pagination.currentPage ne (searchPageData.pagination.numberOfPages-4)}">
 							...
 						</c:if>
-						   <c:choose>
-							<c:when test="${not empty searchCategory}">
-							
-							<a href="${newPaginationUrlDotsNext}&searchCategory=${searchCategory}&pageSize=${searchPageData.pagination.pageSize}">${searchPageData.pagination.numberOfPages}</a>
-							</c:when>
-							<c:otherwise>
-							<a href="${newPaginationUrlDotsNext}&pageSize=${searchPageData.pagination.pageSize}">${searchPageData.pagination.numberOfPages}</a>
-							</c:otherwise>
-							</c:choose>
+						   <a href="${newPaginationUrlDotsNext}" class="pagination_a_link">${searchPageData.pagination.numberOfPages}</a>
 						</li>
 						</ycommerce:testId>
 					</c:when>
@@ -178,14 +160,7 @@
 								value="${searchPageData.pagination.currentPage + 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_nextPage_link">
 							<!-- TISPRD-2315 -->
-							<c:choose>
-							<c:when test="${not empty searchCategory}">
-							<a href="${newPaginationUrlNext}&searchCategory=${searchCategory}&pageSize=${searchPageData.pagination.pageSize}" rel="next"><span><spring:theme code="text.next.page"/></span></a>
-						    </c:when>
-						    <c:otherwise>
-						    <a href="${newPaginationUrlNext}&pageSize=${searchPageData.pagination.pageSize}" rel="next"><span><spring:theme code="text.next.page"/></span></a>
-						    </c:otherwise>
-						    </c:choose>
+							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next"><span><spring:theme code="text.next.page"/></span></a>
 						
 						</ycommerce:testId></li>
 				</c:if>
@@ -197,7 +172,7 @@
 
 			</ul>
 		</c:if>
-
+</form>
 <%-- 
 <div class="hidden-md hidden-lg">
 	<ul class="pager">
