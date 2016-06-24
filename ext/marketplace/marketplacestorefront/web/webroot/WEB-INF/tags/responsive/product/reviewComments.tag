@@ -176,10 +176,90 @@
 		</div>
 </div>
 
-<input type="hidden" name="gigya_product_root_category" value="${product.rootCategory}"/>
-<input type="hidden" name="gigya_product_code" value="${product.code}"/>
-<input type="hidden" name="gigya_api_key" value="${gigyaAPIKey}"/>
 <c:if test="${isGigyaEnabled=='Y'}">
+<script type="text/javascript">
+	$(document).ready(function() {
+				
+		getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
+	});
+		
+		var ratingsParams = {
+			categoryID : '${product.rootCategory}',
+			streamID : '${product.code}',
+			containerID : 'ratingDiv',
+			linkedCommentsUI : 'commentsDiv',
+			showCommentButton : 'true',
+			onAddReviewClicked:reviewClick,
+		}
+		
+		gigya.comments.showRatingUI(ratingsParams);
+
+		var params = {
+			categoryID : '${product.rootCategory}',
+			streamID : '${product.code}',
+			scope : 'both',
+			privacy : 'public',
+			version : 2,
+			containerID : 'commentsDiv',
+			onCommentSubmitted:reviewCount, 
+			cid : '',
+			enabledShareProviders : 'facebook,twitter',
+			enabledProviders : 'facebook,google,twitter', // login providers that should be displayed when click post
+			onLoad :commentBox,
+			onError: onErrorHandler
+			//userAction: shareUserAction
+		}
+		gigya.comments.showCommentsUI(params);	
+		
+		
+		
+		 /* var shareparams = {
+			    url: "http://www.gigya.com/",
+			    shortURLs: 'never',
+			    provider:'tumblr',
+			    facebookDialogType: 'share',
+			    title: "Gigya"
+			}
+			 
+			gigya.socialize.postBookmark(shareparams); */
+		 
+		 
+
+	//};
+	
+	function commentBox(response)
+	{		
+		<c:if test="${isGigyaEnabled=='Y'}">
+		$('#commentsDiv .gig-comments-subscribe').hide();
+		$('#commentsDiv .gig-composebox-logout').hide();
+		
+		CheckonReload();
+		</c:if>
+		
+	}
+	
+	function onErrorHandler(responseObj){
+		$(".gig-composebox-error").text(responseObj.errorDetails);
+		$(".gig-composebox-error").show();
+		}
+
+
+	function reviewCount(response) {
+
+		<c:if test="${isGigyaEnabled=='Y'}">
+		getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
+		</c:if>
+	}; 
+	
+	function reviewClick(response) {
+		
+		<c:if test="${isGigyaEnabled=='Y'}">
+		CheckUserLogedIn();
+		</c:if>
+	};	
+</script>
+
+
 <style>
 
 /* .reviews .gig-button-container {

@@ -1077,8 +1077,13 @@ function appendIcid(url, icid) {
 }
 $(document).ready(function(){
 	//TISPT-290
+	if($('#pageTemplateId').val() ==
+	            'LandingPage2Template'){
 	lazyLoadDivs();
-setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
+	setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
+	
+}
+	
 
 //Fix for defect TISPT-202
 getFooterOnLoad();
@@ -1320,6 +1325,14 @@ function populateEnhancedSearch(enhancedSearchData)
 	                        "footerhtml",
 	                        encodeURI(footerhtml));
 	                }
+	         
+					if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+						var footer_height=$('footer').height() + 20 + 'px';
+						$(".body-Content").css('padding-bottom',footer_height);
+					}
+					else{
+						$(".body-Content").css('padding-bottom','0px');
+					}
 	            }
 	        });
 	    }	
