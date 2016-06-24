@@ -2613,6 +2613,9 @@ function setBankForSavedCard(bankName){
 
 function applyPromotion(bankName)
 {
+	$("body").append("<div id='no-click1' style='opacity:0.15; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner1" style="position: fixed; left: 40%;top:45%; height: 30px;">'); 
+	
 	$(".make_payment").attr('disabled','true');
 	var paymentMode=$("#paymentMode").val();
 	$("#promotionApplied,#promotionMessage").css("display","none");
@@ -2811,12 +2814,16 @@ function applyPromotion(bankName)
 				$("#no-click").remove();
 				$(".make_payment").removeAttr('disabled');
 			}
+			$("#no-click1,.spinner1").remove();
 		},
 		error : function(resp) {
 			$("#no-click").remove();
 			$(".make_payment").removeAttr('disabled');
+			$("#no-click1,.spinner1").remove();
 		}
 	});
+	
+	
 }
 
 
