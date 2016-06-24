@@ -103,12 +103,23 @@ $("div.departmenthover").on("mouseover touchend", function() {
                         encodeURI(html));
 
                 }
+            },
+            complete: function() {
+            	if($(window).width() > 767) { 
+            		bgcolor(id);
+            	   }
             }
         });
 
 
     }
+    
+    
+   if($(window).width() > 767) { 
+	   bgcolor(id);
+   }
 });
+
 
 $(".A-ZBrands").on("mouseover touchend", function(e) {
 	var componentUid = $("#componentUid").val();
@@ -1469,5 +1480,143 @@ function populateEnhancedSearch(enhancedSearchData)
 			    getShowCaseAjaxCall();
 			}
 	        }
+	}
+}
+$(document).ready(function(){
+	//start//
+	$('header .content nav > ul > li > div.toggle').on('mouseover touchend',function(){
+		$(this).parent().addClass('hovered');
+		
+		//department/////////////////////
+		var id = $('header .content nav > ul > li > ul > li:first-child .departmenthover').attr('id');
+	    var code = id.substring(4);
+
+	    if (!$.cookie("dept-list") && window.localStorage) {
+	        for (var key in localStorage) {
+	            if (key.indexOf("deptmenuhtml") >= 0) {
+	                window.localStorage.removeItem(key);
+	                // console.log("Deleting.." + key);
+
+	            }
+	        }
+	    }
+	    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
+	        // console.log("Local");
+	        $("ul." + id).html(decodeURI(html));
+	        //LazyLoad();
+	        
+	    } else {
+	        $.ajax({
+	            url: ACC.config.encodedContextPath +
+	                "/departmentCollection",
+	            type: 'GET',
+	            data: "department=" + code,
+	            success: function(html) {
+	                // console.log("Server");
+	                $("ul." + id).html(html);
+	                if (window.localStorage) {
+	                    $.cookie("dept-list", "true", {
+	                        expires: 1,
+	                        path: "/"
+
+	                    });
+	                    window.localStorage.setItem(
+	                        "deptmenuhtml-" + code,
+	                        encodeURI(html));
+
+	                }
+	            },
+	            complete: function() {
+	            	if($(window).width() > 767) { 
+	            		   bgcolor(id);
+	            	   }
+	            }
+	        });
+
+
+	    }
+	    
+	    if($(window).width() > 767) { 
+	  		   bgcolor(id);
+	  	   }
+	    //brand/////////////////////
+		var componentUid = $("#componentUid").val();
+	    if ($("li#atozbrandsdiplay").length) {
+	        // console.log("Dipslaying A-Z Brands..");
+
+	        if (!$.cookie("dept-list") && window.localStorage) {
+	            for (var key in localStorage) {
+	                if (key.indexOf("atozbrandmenuhtml") >= 0) {
+	                    window.localStorage.removeItem(key);
+	                    // console.log("Deleting.." + key);
+
+	                }
+	            }
+	        }
+	        if (window.localStorage && (html = window.localStorage.getItem("atozbrandmenuhtml")) && html != "") {
+	            // console.log("Local");
+	            if ($("div#appendedAtoZBrands") == null || $(
+	                "div#appendedAtoZBrands").length == 0) {
+	                $("li#atozbrandsdiplay").append(decodeURI(html));
+	            }
+	        } else {
+	            // console.log("Server");
+
+	            $.ajax({
+	                url: ACC.config.encodedContextPath +
+	                    "/atozbrands",
+	                type: 'GET',
+	                data : {
+						 "componentUid" : componentUid
+						},
+	                success: function(html) {
+	                    //console.log(html)
+	                    if ($("div#appendedAtoZBrands") == null ||
+	                        $("div#appendedAtoZBrands").length ==
+	                        0) {
+	                        $("li#atozbrandsdiplay").append(
+	                            html);
+	                    }
+	                    if (window.localStorage) {
+	                        $.cookie("dept-list", "true", {
+	                            expires: 1,
+	                            path: "/"
+
+	                        });
+	                        window.localStorage.setItem(
+	                            "atozbrandmenuhtml",
+	                            encodeURI(html));
+	                    }
+	                }
+	            });
+	        }
+	    }
+	   
+	});
+	$(document).on('mouseleave','header .content nav > ul > li.hovered > ul > li:first-child',function(){
+		$('header .content nav > ul > li').removeClass('hovered');
+	});
+	
+	//end//
+});
+function bgcolor(id) {
+	console.log(id);
+	var col = 0, bgWidth = 0, len = $('ul.words.'+id+' li.words').length, ulwords = $('ul.words.'+id+' li.words'), ulwordsParent = $('ul.words.'+id), lastLiWidth =  ulwords.last().outerWidth(),bgleft = 0;
+	$('ul.words.'+id+' span.bg').remove();
+	for(var i=0;i<len-1;i++) {
+		bgleft = (ulwords.eq(i).offset().left - ulwordsParent.offset().left -20);
+		if(ulwords.eq(i).offset().left != ulwords.eq(i+1).offset().left){
+			col++;
+			bgWidth = ulwords.eq(i+1).offset().left - ulwords.eq(i).offset().left + 15;
+			if(col%2 != 0 && col != 1) {
+				ulwordsParent.append('<span class="bg" style="left:'+bgleft+'px;width:'+(bgWidth-5)+'px;"></span>');
+			} else if(col == 1) {
+				ulwordsParent.append('<span class="bg" style="left: 0px;width:'+bgWidth+'px;"></span>');
+			}	
+		}
+	}
+	
+	if(col%2 == 0) {
+		ulwordsParent.append('<span class="bg" style="left:'+(bgleft+5)+'px;width:'+(lastLiWidth + 25)+'px"></span>')
 	}
 }
