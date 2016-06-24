@@ -214,7 +214,6 @@
 		<property name="micrositeSnsCategories" type="java.util.List&lt;CATEGORY>"/>
 		<property name="departmentHierarchyData" type="com.tisl.mpl.data.MplDepartmentHierarchyData"/>
 		<property name="deptType" type="String"/>
-		<property name="keywordRedirectMobileUrl" type="String"/>
 		<property name="departments" type="java.util.List&lt;String>"/>
 	</bean>
 	
