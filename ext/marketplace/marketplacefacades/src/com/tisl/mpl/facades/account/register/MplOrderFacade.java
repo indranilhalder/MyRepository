@@ -101,8 +101,7 @@ public interface MplOrderFacade
 	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
-	OrderEntryData fetchOrderEntryDetails(OrderEntryData orderEntryData, Map<String, Boolean> sortInvoice, OrderData subOrder)
-			throws EtailNonBusinessExceptions;
+	OrderEntryData fetchOrderEntryDetails(OrderEntryData orderEntryData, OrderData subOrder) throws EtailNonBusinessExceptions;
 
 	boolean checkCancelStatus(final String currentStatus, final String status);
 
@@ -153,7 +152,17 @@ public interface MplOrderFacade
 
 	/**
 	 * Sorted DeliveryMode
+	 *
 	 * @return DeliverYMode List Type
 	 */
 	public List<String> filterDeliveryMode();
+
+	/**
+	 * TISPT-175
+	 *
+	 * @param orderCode
+	 * @return OrderModel
+	 */
+	OrderModel getOrder(String orderCode);
+
 }

@@ -34,8 +34,9 @@
 
 	function closing() {
 		$("#zoomModal, #videoModal").modal('hide');
-		//$("#zoomModal, #videoModal").removeClass("active");
-		// $("#player").attr('src',"&autoplay=0");
+		$("#zoomModal, #videoModal").removeClass("active");
+		var x = $("#player").attr('src');
+		var z = $("#player").attr('src', x+"&autoplay=0");
 	}
 	$(document).ready(function(){
 		if ($(window).width() > 789) {
@@ -99,7 +100,7 @@
    <div class="overlay" data-dismiss="modal" onclick="closing()"></div>
       <div class="modal-content content"  style="width:53%; height:60%; overflow:hidden;">
             <button type="button" class="close pull-right" 
-              onclick="closing()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">
+              onclick="closingVideo()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">     <!-- TISPRO-508 -->
             </button>
 			<iframe name="videoFrame" id="player" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
       </div>

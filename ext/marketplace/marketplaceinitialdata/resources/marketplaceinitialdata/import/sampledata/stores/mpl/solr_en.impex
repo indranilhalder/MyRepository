@@ -99,7 +99,7 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;connectivityAudioHts			   ;"Conncetivity Audio HTS"
  ;$solrIndexedType		   ;control							   ;"Control"
  ;$solrIndexedType		   ;cookingType						   ;"Cooking Type"
- ;$solrIndexedType		   ;cordless						   ;"Cordless"
+ ;$solrIndexedType		   ;cordless						   ;"Cordlength"
  ;$solrIndexedType		   ;dialColour						   ;"Dial Colour"
  ;$solrIndexedType		   ;display							   ;"Display"
  ;$solrIndexedType		   ;energyRating					   ;"Energy Rating"

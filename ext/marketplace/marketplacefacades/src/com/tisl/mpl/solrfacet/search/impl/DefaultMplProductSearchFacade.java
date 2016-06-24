@@ -948,7 +948,13 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 		}
-
+		if (checkIfDepartmentFilterSelected(searchQueryData.getFilterTerms()))
+		{
+			final SolrSearchQueryTermData solrSearchQueryTerm = new SolrSearchQueryTermData();
+			solrSearchQueryTerm.setKey(PROMOTED_PRODUCT);
+			solrSearchQueryTerm.setValue(Boolean.TRUE.toString());
+			searchQueryData.getFilterTerms().add(solrSearchQueryTerm);
+		}
 		return searchQueryData;
 	}
 
@@ -985,7 +991,44 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 
 		}
+		if (checkIfDepartmentFilterSelected(searchQueryData.getFilterTerms()))
+		{
+			final SolrSearchQueryTermData solrSearchQueryTerm = new SolrSearchQueryTermData();
+			solrSearchQueryTerm.setKey(IS_OFFER_EXISTING);
+			solrSearchQueryTerm.setValue(Boolean.TRUE.toString());
+			searchQueryData.getFilterTerms().add(solrSearchQueryTerm);
+		}
 		return searchQueryData;
+	}
+
+	/**
+	 * chcek whether a department hierarchy is selected or not
+	 *
+	 * @param filterTerms
+	 * @return isOnlyDeptFacet
+	 */
+	private boolean checkIfDepartmentFilterSelected(final List<SolrSearchQueryTermData> filterTerms)
+	{
+		// YTODO Auto-generated method stub
+		boolean isOnlyDeptFacet = false;
+
+		for (final SolrSearchQueryTermData termData : filterTerms)
+		{
+			if (termData.getKey().equals("category"))
+			{
+				isOnlyDeptFacet = true;
+				break;
+			}
+		}
+		if (isOnlyDeptFacet && filterTerms.size() == 1)
+		{
+			isOnlyDeptFacet = true;
+		}
+		else
+		{
+			isOnlyDeptFacet = false;
+		}
+		return isOnlyDeptFacet;
 	}
 
 	/**

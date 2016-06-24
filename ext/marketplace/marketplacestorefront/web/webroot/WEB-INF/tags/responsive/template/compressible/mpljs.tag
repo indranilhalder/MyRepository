@@ -280,3 +280,11 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <!--[if lt IE 10]>
 <script type="text/javascript" src="${commonResourcePath}/js/jquery.html5-placeholder-shim.js"></script>
 <![endif]-->
+
+<!-- Fix for defect TISPT-202 -->
+<!-- TISPT-202  -->
+<c:if test="fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/check')}">
+	<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script>
+</c:if> 
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/marketplacecheckoutaddon.js"></script>	

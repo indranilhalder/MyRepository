@@ -9,6 +9,7 @@ import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
 import java.security.InvalidKeyException;
@@ -17,12 +18,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplNetbankingData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.juspay.response.ListCardsResponse;
 
 
 /**
@@ -292,5 +296,46 @@ public interface MplPaymentFacade
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
+
+	/**
+	 * This method is used to get the IP address of the client and check whether it is blacklisted TISPT-204 Point 2
+	 *
+	 * @param httpServletRequest
+	 * @return String
+	 *
+	 */
+	String getBlacklistByIPStatus(HttpServletRequest httpServletRequest);
+
+	/**
+	 * This method is used to get saved card details from juspay TISPT-204 Point no 4
+	 *
+	 * @param customer
+	 * @return ListCardsResponse
+	 *
+	 */
+	ListCardsResponse getJuspayCardResponse(CustomerModel customer);
+
+	/**
+	 * This method fetches the stored credit card from juspay response and returns them back to the Controller TISPT-204
+	 * Point no 4
+	 *
+	 * @param customer
+	 * @param listCardsResponse
+	 * @return Tuple2<?, ?>
+	 *
+	 */
+	Tuple2<?, ?> listStoredCards(final CustomerModel customer, ListCardsResponse listCardsResponse);
+
+	//TISPRO-578
+	boolean isValidCart(CartModel cartModel);
+
+	//TISPRO-540
+	/**
+	 * This method is used to check whether payment info, delivery mode and address are present against cart or not
+	 *
+	 * @param cart
+	 * @return boolean
+	 */
+	boolean checkCart(final CartModel cart);
 
 }

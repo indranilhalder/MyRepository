@@ -64,15 +64,15 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 						.setSubscriptionID(getOrderStatusResponse.getPaymentGatewayResponse().getRootReferenceNumber());
 			}
 
-			paymentTransactionEntry
-					.setTransactionStatusDetails(getOrderStatusResponse.getPaymentGatewayResponse().getResponseMessage());
+			paymentTransactionEntry.setTransactionStatusDetails(getOrderStatusResponse.getPaymentGatewayResponse()
+					.getResponseMessage());
 			paymentTransactionEntry.setRequestToken(getOrderStatusResponse.getPaymentGatewayResponse().getTxnId());
 			paymentTransactionEntry.setRequestId(getOrderStatusResponse.getPaymentGatewayResponse().getExternalGatewayTxnId());
 
 			if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentGatewayResponse().getAuthIdCode()))
 			{
-				paymentTransactionEntry
-						.setCode(getOrderStatusResponse.getPaymentGatewayResponse().getAuthIdCode() + "-" + System.currentTimeMillis());
+				paymentTransactionEntry.setCode(getOrderStatusResponse.getPaymentGatewayResponse().getAuthIdCode() + "-"
+						+ System.currentTimeMillis());
 			}
 			else
 			{
@@ -91,12 +91,19 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			setEntryStatus(orderStatus, paymentTransactionEntry);
 		}
 
-		paymentTransactionEntry.setAmount(BigDecimal.valueOf(entry.getValue().doubleValue()));
+		//paymentTransactionEntry.setAmount(BigDecimal.valueOf(entry.getValue().doubleValue()));
+		//TISPRO-540 - Getting amount from CartModel
+		paymentTransactionEntry.setAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
 		paymentTransactionEntry.setTime(new Date());
 		paymentTransactionEntry.setCurrency(cart.getCurrency());
 
-		final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(entry.getKey());
-		paymentTransactionEntry.setPaymentMode(paymenttype);
+		//final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(entry.getKey());
+		//TISPRO-540 - Getting Payment mode from CartModel
+		if (StringUtils.isNotEmpty(cart.getModeOfPayment()))
+		{
+			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(cart.getModeOfPayment());
+			paymentTransactionEntry.setPaymentMode(paymenttype);
+		}
 
 		try
 		{
@@ -112,8 +119,6 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 		return paymentTransactionEntryList;
 
 	}
-
-
 
 	/**
 	 * This method sets the Payment Transaction entry status based on the Juspay Order Status Response
@@ -189,7 +194,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			paymentTransactionModel.setPaymentProvider(orderStatusResponse.getGatewayId().toString());
 		}
 
-		paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
+		paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
 
 		if (StringUtils.isNotEmpty(orderStatusResponse.getTxnId()))
 		{
@@ -273,4 +278,3 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 	}
 
 }
-

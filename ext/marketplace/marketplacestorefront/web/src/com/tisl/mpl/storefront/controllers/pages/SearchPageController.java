@@ -344,20 +344,22 @@ public class SearchPageController extends AbstractSearchPageController
 				{
 					final NeedHelpComponentModel need = cmsComponentService.getSimpleCMSComponent("NeedHelp");
 					model.addAttribute("contactNumber", need.getContactNumber());
-					model.addAttribute(WebConstants.BREADCRUMBS_KEY,
-							searchBreadcrumbBuilder.getEmptySearchResultBreadcrumbs(searchText));
+					final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getEmptySearchResultBreadcrumbs(searchText);
+					populateTealiumData(breadcrumbs, model);
+
+					model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
 				}
 				else
 				{
-					model.addAttribute(
-							WebConstants.BREADCRUMBS_KEY,
-							searchBreadcrumbBuilder.getBreadcrumbs(null, searchText,
-									CollectionUtils.isEmpty(searchPageData.getBreadcrumbs())));
+					final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchText,
+							CollectionUtils.isEmpty(searchPageData.getBreadcrumbs()));
+					model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
+					populateTealiumData(breadcrumbs, model);
 				}
 			}
 
 			model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
-			model.addAttribute("metaRobots", "noindex,follow");
+			model.addAttribute("metaRobots", "index,follow");
 
 
 
@@ -491,9 +493,10 @@ public class SearchPageController extends AbstractSearchPageController
 		{
 			count = preferencesData.getPageSize().intValue();
 		}
-
+		// Get page facets to include in facet field exclude tag
+		final String pageFacets = request.getParameter("pageFacetData");
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-				searchQuery, page, showMode, sortCode, count);
+				searchQuery, page, showMode, sortCode, count, pageFacets);
 		searchPageData = updatePageData(searchPageData, null, searchQuery);
 		/* Storing the user preferred search results count - END */
 		final String searchCategory = request.getParameter(ModelAttributetConstants.SEARCH_CATEGORY);
@@ -541,7 +544,10 @@ public class SearchPageController extends AbstractSearchPageController
 			updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
 		}
-		model.addAttribute(WebConstants.BREADCRUMBS_KEY, searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData));
+		final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData);
+		model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
+		populateTealiumData(breadcrumbs, model);
+
 		model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
 
 
@@ -559,6 +565,36 @@ public class SearchPageController extends AbstractSearchPageController
 		setUpMetaData(model, metaKeywords, metaDescription);
 
 		return getViewForPage(model);
+	}
+
+	/**
+	 * @param breadcrumbs
+	 * @param model
+	 */
+	private void populateTealiumData(final List<Breadcrumb> breadcrumbs, final Model model)
+	{
+		String breadcrumbName = "";
+		int count = 1;
+		if (CollectionUtils.isNotEmpty(breadcrumbs))
+		{
+			for (final Breadcrumb breadcrumb : breadcrumbs)
+			{
+				breadcrumbName += breadcrumb.getName();
+				if (count < breadcrumbs.size())
+				{
+					breadcrumbName += ":";
+
+				}
+				count++;
+			}
+
+			//model.addAttribute("site_section", breadcrumbs.get(0).getName() != null ? breadcrumbs.get(0).getName() : "");
+
+		}
+
+		model.addAttribute("page_name", "Search Results Page:" + breadcrumbName);
+
+
 	}
 
 	//	@RequestMapping(method = RequestMethod.GET, params = "q")
@@ -657,9 +693,10 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @return ProductSearchPageData
 	 */
 	protected ProductSearchPageData<SearchStateData, ProductData> performSearch(final String searchQuery, final int page,
-			final ShowMode showMode, final String sortCode, final int pageSize)
+			final ShowMode showMode, final String sortCode, final int pageSize, final String pageFacets)
 	{
 		final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
+		pageableData.setPageFacets(pageFacets);
 
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
@@ -692,7 +729,7 @@ public class SearchPageController extends AbstractSearchPageController
 			@RequestParam(value = "sort", required = false) final String sortCode) throws CMSItemNotFoundException
 	{
 		final ProductSearchPageData<SearchStateData, ProductData> searchPageData = performSearch(searchQuery, page, showMode,
-				sortCode, getSearchPageSize());
+				sortCode, getSearchPageSize(), null);
 		final SearchResultsData<ProductData> searchResultsData = new SearchResultsData<>();
 		searchResultsData.setResults(searchPageData.getResults());
 		searchResultsData.setPagination(searchPageData.getPagination());
@@ -713,11 +750,12 @@ public class SearchPageController extends AbstractSearchPageController
 
 	@RequestMapping(value =
 	{ NEW_PRODUCTS_URL_PATTERN_PAGINATION, NEW_PRODUCTS_NEW_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
-	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) String searchQuery,
+	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = "page", defaultValue = "0", required = false) int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
-			@RequestParam(value = "sort", required = false) String sortCode, final HttpServletRequest request, final Model model)
-			throws CMSItemNotFoundException
+			@RequestParam(value = "sort", required = false) String sortCode,
+			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
+			final Model model) throws CMSItemNotFoundException
 	{
 
 		try
@@ -738,27 +776,38 @@ public class SearchPageController extends AbstractSearchPageController
 					}
 				}
 			}
-			if (request.getServletPath().indexOf(':') != -1 && searchQuery == null)
+			//			if (request.getServletPath().indexOf(':') != -1 && searchQuery == null)
+			//			{
+			//				searchQuery = request.getServletPath().substring(request.getServletPath().indexOf('=') + 1,
+			//						request.getServletPath().lastIndexOf('&'));
+			//			}
+			int count = getSearchPageSize();
+			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+			if (preferencesData != null && preferencesData.getPageSize() != null)
 			{
-				searchQuery = request.getServletPath().substring(request.getServletPath().indexOf('=') + 1,
-						request.getServletPath().lastIndexOf('&'));
+				count = preferencesData.getPageSize().intValue();
 			}
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForOnlineProducts(
-					searchQuery, page, showMode, sortCode, getSearchPageSize());
+					searchQuery, page, showMode, sortCode, count);
 			if (StringUtils.isEmpty(sortCode))
 
 			{
 				sortCode = "promotedpriority-asc";
 			}
 			storeContinueUrl(request);
-
+			model.addAttribute("newProduct", Boolean.TRUE);
 			populateModel(model, searchPageData, ShowMode.Page);
 			getRequestContextData(request).setSearch(searchPageData);
 			model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
 			model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 					Collections.singletonList(new Breadcrumb("#", NEW_EXCLUSIVE_BREADCRUMB, LAST_LINK_CLASS)));
 			model.addAttribute("pageType", PageType.PRODUCT.name());
-			model.addAttribute("hideDepartments", Boolean.TRUE);
+			if (searchPageData != null)
+			{
+				model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+			}
+
+			//model.addAttribute("hideDepartments", Boolean.TRUE);
 			//Code to hide the applied facet for promotedProduct
 			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
 			{
@@ -804,7 +853,6 @@ public class SearchPageController extends AbstractSearchPageController
 
 		return getViewForPage(model);
 	}
-
 
 	/**
 	 * @param searchQuery
@@ -1075,7 +1123,7 @@ public class SearchPageController extends AbstractSearchPageController
 			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
 		}
 		model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
-		model.addAttribute("metaRobots", "noindex,follow");
+		model.addAttribute("metaRobots", "index,follow");
 
 
 		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
@@ -1106,7 +1154,7 @@ public class SearchPageController extends AbstractSearchPageController
 		if (searchQuery != null)
 		{
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-					searchQuery, page, showMode, sortCode, getSearchPageSize());
+					searchQuery, page, showMode, sortCode, getSearchPageSize(), null);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
 			if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
 			{
@@ -1122,7 +1170,7 @@ public class SearchPageController extends AbstractSearchPageController
 				updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			}
 			model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
-			model.addAttribute("metaRobots", "noindex,follow");
+			model.addAttribute("metaRobots", "index,follow");
 			if (CollectionUtils.isNotEmpty(searchPageData.getResults()))
 			{
 				model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());

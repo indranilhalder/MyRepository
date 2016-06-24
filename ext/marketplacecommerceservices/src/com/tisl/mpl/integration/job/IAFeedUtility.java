@@ -54,6 +54,7 @@ public class IAFeedUtility
 	Statement vjdbcStmt = null;
 	PreparedStatement pst = null;
 
+	public static final String COMMA = ",";
 
 	public void executeExport(final String dataExportQuery)
 	{
@@ -108,14 +109,57 @@ public class IAFeedUtility
 					}
 					listOfMaps.add(dataMap);
 				}
-				for (final String s : rowIdList)
-				{
-					LOG.debug(s);
-				}
 
+				LOG.debug("data export query : " + dataExportQuery);
 				writeExportDataIntoFile(dataExportQuery, listOfMaps);
 				if (null != dataExportQuery && dataExportQuery.equals(MarketplacecommerceservicesConstants.PRICEINVENTORY_FEED))
 				{
+					final String spDetailsHeader = configurationService.getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.IA_SPDETAILSHEADER);
+					final String[] spDetailsHeaderList = spDetailsHeader.split(COMMA);
+					final ArrayList<String> rsHeaderList = new ArrayList<String>();
+					if (columnCount > 0)
+					{
+						for (int i = 1; i < columnCount; i++)
+						{
+							LOG.debug("Column name to be matched" + analyticsResult.getMetaData().getColumnName(i));
+							rsHeaderList.add(analyticsResult.getMetaData().getColumnName(i).toUpperCase());
+
+						}
+					}
+					final String spDetailsQueryHeader = configurationService.getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.IA_SPDETAILSQUERYHEADER).toUpperCase();
+					final String[] spDetailsQueryHeaderList = spDetailsQueryHeader.split(COMMA);
+					final int spdColumnCount = spDetailsQueryHeaderList.length;
+					final int[] headerMapper = new int[spdColumnCount];
+					for (int i = 0; i < spdColumnCount; i++)
+					{
+						headerMapper[i] = rsHeaderList.indexOf(spDetailsQueryHeaderList[i]);
+					}
+
+					final List<Map<Integer, String>> spdListOfMaps = new ArrayList<Map<Integer, String>>();
+					final Map<Integer, String> spdDataColumnMap = new HashMap<Integer, String>();
+					for (int i = 0; i < spdColumnCount; i++)
+					{
+						spdDataColumnMap.put(Integer.valueOf(i), spDetailsHeaderList[i]);
+					}
+					spdListOfMaps.add(spdDataColumnMap);
+					Map<Integer, String> spdDataMap = null;
+					for (final Map<Integer, String> map : listOfMaps)
+					{
+						if (listOfMaps.indexOf(map) == 0)
+						{
+							continue;
+						}
+						spdDataMap = new HashMap<Integer, String>();
+						for (int i = 0; i < spdColumnCount; i++)
+						{
+							spdDataMap.put(Integer.valueOf(i), map.get(Integer.valueOf(headerMapper[i])));
+						}
+						spdListOfMaps.add(spdDataMap);
+					}
+
+					writeExportforSellerPriceDetails(spdListOfMaps);
 					updateProcessed(rowIdList, dataExportQuery);
 				}
 			}
@@ -151,6 +195,8 @@ public class IAFeedUtility
 
 	}
 
+
+
 	/**
 	 * @param rowIdList
 	 * @param dataExportQuery
@@ -181,7 +227,7 @@ public class IAFeedUtility
 					count = 0;
 				}
 			}
-			connection.commit();
+
 
 
 		}
@@ -216,8 +262,8 @@ public class IAFeedUtility
 	public String getDataExportQuery(final String queryName)
 	{
 		//		final InputStream propFileValue = null;
-		final String query = configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.IAFEED_QUERY + queryName);
+		final String query = configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.IAFEED_QUERY + queryName);
 		LOG.info("query" + query);
 		return query;
 	}
@@ -225,8 +271,8 @@ public class IAFeedUtility
 	public String getDataUpdateQuery(final String queryName)
 	{
 		//		final InputStream propFileValue = null;
-		final String query = configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.IAFEED_UPDATEQUERY + queryName);
+		final String query = configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.IAFEED_UPDATEQUERY + queryName);
 		LOG.info("query" + query);
 		return query;
 	}
@@ -243,8 +289,8 @@ public class IAFeedUtility
 		if (MarketplacecommerceservicesConstants.IA_CATEGORY_PRODUCT.equalsIgnoreCase(dataExportQuery))
 		{
 
-			final String exportFilePath = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.IA_CATEGORYEXPORT_FOLDER);
+			final String exportFilePath = configurationService.getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.IA_CATEGORYEXPORT_FOLDER);
 			final File exportDir = new File(exportFilePath);
 			// Creating export directory if not exists.
 			if (!exportDir.isDirectory())
@@ -253,14 +299,15 @@ public class IAFeedUtility
 			}
 			exportFileName = exportFilePath
 
-			+ configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.IA_FILENAME_PRODUCTCATEGORY)
+					+ configurationService.getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.IA_FILENAME_PRODUCTCATEGORY)
 					+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
 					+ MarketplacecommerceservicesConstants.IA_FILE_EXTENSION;
 		}
 		else if (MarketplacecommerceservicesConstants.IA_BRAND_PRODUCT.equalsIgnoreCase(dataExportQuery))
 		{
-			final String exportFilePath = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.IA_BRANDEXPORT_FOLDER);
+			final String exportFilePath = configurationService.getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.IA_BRANDEXPORT_FOLDER);
 			final File exportDir = new File(exportFilePath);
 			// Creating export directory if not exists.
 			if (!exportDir.isDirectory())
@@ -275,8 +322,8 @@ public class IAFeedUtility
 		else if (MarketplacecommerceservicesConstants.IA_PRICE_INVENTORY.equalsIgnoreCase(dataExportQuery))
 		{
 
-			final String exportFilePath = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.IA_PRICE_INVENTORYEXPORT_FOLDER);
+			final String exportFilePath = configurationService.getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.IA_PRICE_INVENTORYEXPORT_FOLDER);
 
 			final File exportDir = new File(exportFilePath);
 			// Creating export directory if not exists.
@@ -286,7 +333,27 @@ public class IAFeedUtility
 			}
 			exportFileName = exportFilePath
 
-			+ configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.IA_FILENAME_PRICEINVENTORY)
+					+ configurationService.getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.IA_FILENAME_PRICEINVENTORY)
+					+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
+					+ MarketplacecommerceservicesConstants.IA_FILE_EXTENSION;
+		}
+		else if (MarketplacecommerceservicesConstants.IA_PRICEINVENTORY_CONTROL.equalsIgnoreCase(dataExportQuery))
+		{
+			LOG.debug("/////inside file writer//////");
+			final String exportFilePath = configurationService.getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.IA_PRICEINVENTORYCONTROL_FOLDER);
+
+			final File exportDir = new File(exportFilePath);
+			// Creating export directory if not exists.
+			if (!exportDir.isDirectory())
+			{
+				exportDir.mkdir();
+			}
+			exportFileName = exportFilePath
+
+					+ configurationService.getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.IA_FILENAME_PRICEINVENTORYCONTROL)
 					+ ft.format(date) + MarketplacecommerceservicesConstants.DOT
 					+ MarketplacecommerceservicesConstants.IA_FILE_EXTENSION;
 		}
@@ -333,6 +400,74 @@ public class IAFeedUtility
 			}
 
 		}
+	}
+
+	/**
+	 * @param listOfMaps
+	 */
+	private void writeExportforSellerPriceDetails(final List<Map<Integer, String>> listOfMaps)
+	{
+		String exportFileName = null;
+		final Date date = new Date();
+
+		final SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd-HHmmss-SSS");
+		final String exportFilePath = configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.IA_SELLERPRICEDETAILSEXPORT_FOLDER);
+		final File exportDir = new File(exportFilePath);
+		// Creating export directory if not exists.
+		if (!exportDir.isDirectory())
+		{
+			exportDir.mkdir();
+		}
+		exportFileName = exportFilePath
+
+				+ configurationService.getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.IA_FILENAME_SELLERPRICEDETAILS)
+				+ ft.format(date) + MarketplacecommerceservicesConstants.DOT + MarketplacecommerceservicesConstants.IA_FILE_EXTENSION;
+
+
+		final File exportFile = new File(exportFileName);
+		if (!exportFile.exists())
+		{
+			try
+			{
+				exportFile.createNewFile();
+			}
+			catch (final IOException e)
+			{
+				LOG.error("error occurred while creating the export file" + e.getMessage());
+			}
+
+		}
+		CSVWriter DataImpexScriptWriter;
+		try
+		{
+			DataImpexScriptWriter = new CSVWriter(exportFile, MarketplacecommerceservicesConstants.ENCODING, true);
+			DataImpexScriptWriter.setFieldseparator(',');
+			//	DataImpexScriptWriter.setCommentchar('#');
+			DataImpexScriptWriter.setLinebreak("\r\n");
+			if (listOfMaps != null && listOfMaps.size() > 0)
+			{
+				for (final Map<Integer, String> dataMap : listOfMaps)
+				{
+					DataImpexScriptWriter.write(dataMap);
+				}
+				DataImpexScriptWriter.close();
+
+			}
+		}
+
+		catch (UnsupportedEncodingException | FileNotFoundException e)
+		{
+			LOG.error("Error occurred while creating the export file" + e.getMessage());
+		}
+		catch (final IOException e)
+		{
+			LOG.error("Error occurred while writing into the export file" + e.getMessage());
+		}
+
+
+
 	}
 
 }

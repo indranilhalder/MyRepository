@@ -25,8 +25,11 @@ import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.math.BigDecimal;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -101,6 +104,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 						&& entryModel.getUssid().equals(ussid))
 				{
 					wishlist2EntryModel = entryModel;
+					break;
 				}
 			}
 
@@ -341,6 +345,74 @@ public class DefaultWishlistFacade implements WishlistFacade
 					}
 				}
 			}
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+
+	/**
+	 * This method removes products from wishlist when the customer is redirected to order confirmation page after
+	 * placing order
+	 *
+	 * @param orderDetails
+	 *
+	 */
+	//TISPT-175 : changing to reduce populator call multiple times -- also multiple for loop removed by this method
+	@Override
+	public void remProdFromWLForConf(final OrderData orderDetails, final UserModel userModel)
+	{
+		try
+		{
+			final List<OrderEntryData> orderEntryDatas = orderDetails.getEntries();
+			final List<Wishlist2Model> allWishlists = getAllWishlistsForCustomer(userModel);
+
+			if (CollectionUtils.isNotEmpty(orderEntryDatas) && CollectionUtils.isNotEmpty(allWishlists))
+			{
+				for (final OrderEntryData orderEntryData : orderEntryDatas)
+				{
+					if (null != orderEntryData.getProduct() && StringUtils.isNotEmpty(orderEntryData.getSelectedUssid()))
+					{
+						for (final Wishlist2Model wishlist2Model : allWishlists)
+						{
+							final Iterator iter = wishlist2Model.getEntries().iterator();
+							while (iter.hasNext())
+							{
+								final Wishlist2EntryModel wishlist2EntryModel = (Wishlist2EntryModel) iter.next();
+								if (null != wishlist2EntryModel.getAddToCartFromWl()
+										&& wishlist2EntryModel.getAddToCartFromWl().equals(Boolean.TRUE))
+								{
+									wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+
+	/**
+	 * Desc It will fetch all wishlists for a customer/user TISPT-179 Point 1
+	 *
+	 * @param userModel
+	 * @return List<Wishlist2Model>
+	 */
+	@Override
+	public List<Wishlist2Model> getAllWishlistsForCustomer(final UserModel userModel)
+	{
+		try
+		{
+			return mplWishlistService.getWishlists(userModel);
 		}
 		catch (final Exception ex)
 		{

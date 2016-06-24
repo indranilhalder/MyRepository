@@ -92,8 +92,7 @@ function setSizeforAkamai()
 
 function setBuyBoxDetails()
 {
-	var productCode = $("#productCodePost").val();
-	//alert(productCode);
+	var productCode = productCodeQuickView;//$("#productCodePost").val();
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 	+ "/buybox";
 		var dataString = 'productCode=' + productCode;		
@@ -101,28 +100,182 @@ function setBuyBoxDetails()
 			contentType : "application/json; charset=utf-8",
 			url : requiredUrl,
 			data : dataString,
+			cache : false,
 			dataType : "json",
 			success : function(data) {
 				
-				//alert(data['sellerArticleSKU']);
+				//alert("...>>"+data['sellerArticleSKU']+"<<"+productCode+"..."+productCodeQuickView);
+				
+				if(typeof data['sellerArticleSKU'] === 'undefined')
+					{
+					$("#addToCartButtonQuick-wrong").show();
+					$("#addToCartButtonQuick").hide();					
+					//$("#dListedErrorMsg").show();				
+					return false;
+					}					
+				
+				if(data['sellerArticleSKU']==null)
+					{
+					$("#addToCartButtonQuick-wrong").show();
+					$("#addToCartButtonQuick").hide();
+					//$("#dListedErrorMsg").show();					
+					return false;
+					}
+				
+				$("#addToCartButtonQuick-wrong").hide();
+				$("#dListedErrorMsg").hide();	
+				
+				//alert(data['sellerArticleSKU']+".."+data['sellerName']);
+				var spPrice = data['specialPrice'];
+				var mrpPrice = data['mrp'];
+				var mop = data['price'];
+				$("#ussid_quick").val(data['sellerArticleSKU']);				
+				$("#stock").val(data['availablestock']);					
+				var allStockZero = data['allOOStock'];
+				$("#sellerSelId").val(data['sellerId']); 
+				
+				
+				//alert("--"+ $(".quickViewSelect").html());
+				
+				//if (allStockZero == 'Y' && data['othersSellersCount']>0) {
+				if (allStockZero == 'Y') {
+					if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
+					$("#addToCartButtonQuick").hide();
+					$("#outOfStockIdQuick").show();
+					}					
+				}
+				/*else if (allStockZero == 'Y' && data['othersSellersCount']==0){
+					if($(".quickViewSelect").html()!="Select"){	//TISPRD-1173
+						$("#addToCartButton").hide();
+						$("#outOfStockIdQuick").show();
+					}					
+				}*/
+				else
+					{
+					$("#addToCartButtonQuick").show();
+					$("#outOfStockIdQuick").hide();
+					}				
+				
+				dispQuickViewPrice(mrpPrice, mop, spPrice);
+				
+				
+				var sellerName = data['sellerName'];
+				//alert("seller name"+sellerName);
+				$("#sellerNameIdQuick").html(sellerName);
+				getRichAttributeQuickView(sellerName);
+				
 			}
 
-		});
-		
-		
+		});	
 		
 }
 
-//$(document).ready(function(){
-//	 //AKAMAI Fix	 
-// 	var url = window.location.href;	
-// 	alert(url);
-//	if (url.indexOf("selectedSize=true")==-1 && typeof productSizeQuickVar !== "undefined")//>= 0  ==-1
-//		{
-//		 $('.select-size').find('span').remove();
-//		 $(".select-size").append("<span class='selected quickViewSelect'>"+productSizeQuickVar+"</span>");
-//		}
-// });
+function getRichAttributeQuickView(sellerName)
+{
+	//alert("----inside getRichAttributeQuickView"+sellerName);
+	var buyboxSeller = $("#ussid_quick").val();
+	var productCode = productCodeQuickView;//$("#productCode").val();
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
+			+ "/getRichAttributes";
+	var dataString = 'buyboxid=' + buyboxSeller;
+	$.ajax({
+		contentType : "application/json; charset=utf-8",
+		url : requiredUrl,
+		data : dataString,
+		cache : true,
+		dataType : "json",
+		success : function(data) {
+			if (data != null) {
+				var fulFillment = data['fulfillment'];
+				//alert("----value of fulFillment is"+fulFillment);
+				if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
+					$('#fulFilledByTshipQuick').show();
+				} else {
+					$('#fulFilledBySshipQuick').show();
+					$('#fulFilledBySshipQuick').html(sellerName);
+				}
+				
+				if (null != data['newProduct']
+				&& data['newProduct'].toLowerCase() == 'y') {
+						$('#newProduct').show();
+						//$(".picZoomer-pic-wp #codId").css("top", "85" + "px");
+				}
+				if (data['onlineExclusive']) {
+					$('.online-exclusive').show();
+				}
+		
+		
+			}
+				
+			}
+		});
+}
+
+function dispQuickViewPrice(mrp, mop, spPrice) {
+	
+	if(null!= mrp){
+		$("#quickMrpPriceId").append(mrp.formattedValue);
+	}
+	if(null!= mop){
+		$("#quickMopPriceId").append(mop.formattedValue);
+	}
+	if(null!= spPrice){
+		$("#quickSpPriceId").append(spPrice.formattedValue);
+	} 
+
+	if (null!=spPrice && spPrice != 0) {		
+
+		if (mop.value == mrp.value) {
+
+			$('#quickMrpPriceId').css('text-decoration', 'line-through');
+			$("#quickMrpPriceId").show();
+			$("#quickSpPriceId").show();
+		} else {
+
+			$('#quickMrpPriceId').css('text-decoration', 'line-through');
+			$("#quickMrpPriceId").show();
+			$("#quickSpPriceId").show();
+		}
+		
+		if(spPrice.value > emiCuttOffAmount)
+			{
+			$("#prodPrice").val(spPrice.value);
+			$("#emiStickerId").show();
+			
+			}
+
+	} else {
+		if (null!=mop && mop.value != 0) {
+			if (mop.value == mrp.value) {
+				$("#quickMrpPriceId").removeClass("old").addClass("sale");
+				$("#quickMrpPriceId").show();
+			} else {
+				$('#quickMrpPriceId').css('text-decoration', 'line-through');
+				$("#quickMrpPriceId").show();
+				$("#quickMopPriceId").show();
+			}
+			
+			if(mop.value > emiCuttOffAmount)
+			{
+			$("#emiStickerId").show();
+			$("#prodPrice").val(mop.value);
+			}
+			
+		} else {
+			$("#quickMrpPriceId").show();
+			if(mrp.value > emiCuttOffAmount)
+			{
+			$("#emiStickerId").show();
+			$("#prodPrice").val(mrp.value);
+			}
+		}
+	}
+	if (mrp.value == "") {
+		$("#quickMrpPriceId").hide();
+	} else {
+		$("#quickMrpPriceId").show();
+	}
+}
 
 
 function addToWishlist_quick() {
@@ -335,7 +488,7 @@ function loadDefaultWishListName_quick() {
 
 
 function openPopForBankEMI_quick() {
-	var productVal = $("#productPrice").val();
+	var productVal = $("#prodPrice").val();
 	var optionData = "<option value='select' disabled selected>Select</option>";
 	$("#emiTableTHead").hide();
 	$("#emiTableTbody").hide();
@@ -362,7 +515,8 @@ function openPopForBankEMI_quick() {
 
 
 function getSelectedEMIBankForPDP() {
- var productVal = $("#productPrice").val();
+ var productVal = $("#prodPrice").val();
+ 
 	var selectedBank = $('#bankNameForEMI :selected').text();
 	var contentData = '';
 	if (selectedBank != "select") {

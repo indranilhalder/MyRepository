@@ -21,6 +21,22 @@
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.sellerDetails.js"></script> --%>
 	<product:sellerForm></product:sellerForm>
+	<!-- Tealium -->
+<input type="hidden" id="product_unit_price" value="${product_unit_price}" />
+<input type="hidden" id="site_section" value="${site_section}" />
+<input type="hidden" id="product_list_price" value="${product_list_price}" />
+<input type="hidden" id="product_name" value="${product_name}" />
+<input type="hidden" id="product_sku" value="${product_sku}" />
+<input type="hidden" id="page_category_name" value="${page_category_name}" />
+<input type="hidden" id="category_id" value="${category_id}" />
+<input type="hidden" id="page_section_name" value="${page_section_name}" />
+<input type="hidden" id="page_name" value="${page_name}" />
+<input type="hidden" id="product_id" value="${product_id}" />
+<input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}" />
+<input type="hidden" id="product_brand" value="${product_brand}" />
+<input type="hidden" id="site_section_detail" value="${site_section_detail}" />
+<input type="hidden" id="product_category" value="${product_category}" />	
+<!-- End Tealium -->
 	<input type="hidden" maxlength="10" size="1" id="pinCodeCheckedFlag" name="pinCodeCheckedFlag" value="${pincodeChecked}" />	
 		<input type="hidden" value="${productCategoryType}" id="categoryType"/>
     <span id="deliveryPretext" style="display:none;"><spring:theme code="mpl.pdp.delivery.pretext"/></span>
@@ -168,7 +184,7 @@ var hdIndx=-1;
 var edIndx=-1;
 $(document).ready(function() {
 	
-   	getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
+   	//getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 var stockMap="${skuIdsWithNoStock}"; 
 	
 	 //fetchPrice();

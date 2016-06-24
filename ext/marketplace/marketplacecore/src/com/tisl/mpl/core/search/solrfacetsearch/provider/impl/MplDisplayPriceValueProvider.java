@@ -126,11 +126,24 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
 						&& pcmSizeVariantModel.getSize() != null)
 				{
-
-					final Double price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice();
+					double price = 0.0;
+					/* TISPRD-2611 */
+					if (null != buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
+							&& buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
+									.doubleValue() > 0.0)
+					{
+						price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
+								.doubleValue();
+					}
+					else if (null != buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice()
+							&& buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice().doubleValue() > 0.0)
+					{
+						price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice().doubleValue();
+					}
 					final JSONObject sizePriceJson = new JSONObject();
-					sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), price);
+					sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), Double.valueOf(price));
 					sizePriceJsonArray.add(sizePriceJson);
+
 				}
 
 			}
@@ -155,8 +168,6 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 
 
 	}
-
-
 
 
 	/**

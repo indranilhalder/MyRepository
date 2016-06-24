@@ -262,6 +262,18 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	//TISPRO-497
 	public static final String CARTAMOUNTINVALID = "cartAmountInvalid";
 
+	//TISPRO-540
+	public static final String CREDITCARDMODE = "Credit Card";
+	public static final String DEBITCARDMODE = "Debit Card";
+	public static final String NETBANKINGMODE = "Netbanking";
+	public static final String EMIMODE = "EMI";
+
+	public static final String SETUPMPLNETBANKINGFORM = "/setupMplNetbankingForm"; //TISPT-235
+	public static final String SETUPMPLCODFORM = "/setupMplCODForm"; //TISPT-235
+
+	//TISPRO-578
+	public static final String CART_DELIVERYMODE_ADDRESS_INVALID = "cartDelModeAddrInvalid";
+	public static final String CART_DELIVERYMODE_ADDRESS_INVALID_MSG = "Either delivery mode or delivery address is not present";
 
 	private MarketplacecheckoutaddonConstants()
 	{
@@ -272,4 +284,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	/* Gigya Social Login */
 	public final static String SOCIALLOGIN = "/socialLogin";
+
+	public static final String CHECKSESSIONACTIVE = "/checkSessionActive";
+	
 }

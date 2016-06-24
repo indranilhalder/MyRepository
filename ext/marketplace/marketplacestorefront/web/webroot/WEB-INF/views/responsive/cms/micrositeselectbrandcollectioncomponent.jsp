@@ -15,7 +15,7 @@ $(document).ready(function () {
 	var pageLabel = '${cmsPage.label}';
 		var siteName = '${cmsSite.uid}';
 	var lastSegment = pageLabel.split('/').pop();
-	    var url='**/m/fetchSellerSalesHierarchyCategories/'+lastSegment;
+	    var url='/m/fetchSellerSalesHierarchyCategories/'+lastSegment;
 	        
 	        $.ajax({
 	        	type: 'GET',

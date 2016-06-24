@@ -34,8 +34,8 @@ if(loginStatus){
 }
 </script>
 
-<script type="text/javascript"
-	src="${commonResourcePath}/js/jquery-ui-1.11.2.custom.min.js"></script>
+<%-- <script type="text/javascript"
+	src="${commonResourcePath}/js/plugins/jquery-ui-1.11.2.custom.min.js"></script> --%>
 <%-- bootstrap --%>
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -65,26 +65,26 @@ if(loginStatus){
 <c:if test="${isMSDEnabled}">
 	<c:choose>
 	<c:when test="${product.rootCategory=='Clothing'}">
-		<script type="text/javascript"	src="${msdjsURL}"></script>
-		<script type="text/javascript"	src="${commonResourcePath}/js/moreMADness.js"></script>
-		
-		 <c:set var="MSDRESTURL" scope="request" value="${msdRESTURL}"/>
-		  
-		<c:forEach items="${product.categories}" var="categoryForMSD">
+	<c:set var="MSDRESTURL" scope="request" value="${msdRESTURL}"/>
+	<c:forEach items="${product.categories}" var="categoryForMSD">
 			<c:if test="${fn:startsWith(categoryForMSD.code, 'MSH')}">
 			<input type="hidden" value="${categoryForMSD.code}" name="salesHierarchyCategoryMSD" />   
 		</c:if>
-		</c:forEach>
-		<input type="hidden" name="productCodeMSD" class="cartMSD"	value="${product.code}" />	   
-		<script type="text/javascript" defer="defer">
-				  var productCodeMSD =  $("input[name=productCodeMSD]").val();
+	</c:forEach>
+	<input type="hidden" name="productCodeMSD" class="cartMSD"	value="${product.code}" />
+	<script type="text/javascript">
+	$(window).on('load',function(){
+		$.getScript('${msdjsURL}').done(function(){
+			$.getScript('${commonResourcePath}/js/minified/acc.moreMADness.min.js?v=${buildNumber}').done(function(){
+				var productCodeMSD =  $("input[name=productCodeMSD]").val();
 				  var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();				  
 				  var msdRESTURL = '<c:out value="${MSDRESTURL}"/>';				  
-		          callMSD(productCodeMSD,salesHierarchyCategoryMSD,msdRESTURL);        
-		          $(window).on('load', function(){
-		        	  jQuery($("#view-similar-items")[0]).resize();}
-		          );  
-		</script>  
+		          callMSD(productCodeMSD,salesHierarchyCategoryMSD,msdRESTURL); 
+		          jQuery($("#view-similar-items")[0]).resize();
+			});
+		});
+	});
+	</script>
 	</c:when>
 	</c:choose>
 </c:if>

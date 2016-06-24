@@ -96,13 +96,13 @@ public class ForgetPasswordFacadeImpl implements ForgetPasswordFacade
 	 * @description method is called to change the Password of the customer through Email
 	 */
 	@Override
-	public void forgottenPasswordForEmail(final String uid, final String securePasswordUrl)
+	public void forgottenPasswordForEmail(final String uid, final String securePasswordUrl, final Boolean isMobile)
 	{
 		try
 		{
 			Assert.hasText(uid, MarketplacecommerceservicesConstants.UID_CANNOT_BE_EMPTY);
 			final CustomerModel customerModel = userService.getUserForUID(uid.toLowerCase(), CustomerModel.class);
-			forgetPasswordService.forgottenPasswordEmail(customerModel, securePasswordUrl);
+			forgetPasswordService.forgottenPasswordEmail(customerModel, securePasswordUrl, isMobile);
 		}
 		catch (final Exception ex)
 		{

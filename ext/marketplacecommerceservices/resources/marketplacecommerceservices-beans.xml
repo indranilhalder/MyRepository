@@ -208,9 +208,9 @@
 	
 	<bean class="de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData&lt;STATE, RESULT, CATEGORY>" extends="de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData&lt;STATE, RESULT>">
 		<description>POJO containing the result page for product or category search.</description>
-		<property name="allBrand" type="java.util.List&lt;CATEGORY>"/>
+		<property name="allBrand" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.CategoryData>"/>
 		<property name="allSeller" type="java.util.List&lt;String>"/>
-		<property name="snsCategories" type="java.util.List&lt;CATEGORY>"/>
+		<property name="snsCategories" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.CategoryData>"/>
 		<property name="micrositeSnsCategories" type="java.util.List&lt;CATEGORY>"/>
 		<property name="departmentHierarchyData" type="com.tisl.mpl.data.MplDepartmentHierarchyData"/>
 		<property name="deptType" type="String"/>
@@ -650,6 +650,15 @@
 	<property name ="size" type="String"/>
 	<property name ="sourcePage" type = "String" />
 	<property name ="icid" type = "String" />
+	</bean>
+	
+	<!-- Page Search Data -->
+
+	<bean class="de.hybris.platform.commerceservices.search.pagedata.PageableData">
+		<description>POJO representation of search query pagination.</description>
+		<property name="pageFacets" type="String">
+			<description>The page related facets included in this attribute.</description>
+		</property>
 	</bean>
 	
 </beans>

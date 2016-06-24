@@ -447,9 +447,21 @@ public class UsersController extends BaseCommerceController
 	{
 		LOG.debug("****************** User Registration mobile web service ***********" + emailId);
 		MplUserResultWsDto userResult = new MplUserResultWsDto();
+		GigyaWsDTO gigyaWsDto = new GigyaWsDTO();
+		final boolean isNewusers = true;
 		try
 		{
 			userResult = mobileUserService.registerNewMplUser(emailId, password);
+			final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailId);
+			gigyaWsDto = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
+			if (StringUtils.isNotEmpty(gigyaWsDto.getSessionSecret()))
+			{
+				userResult.setSessionSecret(gigyaWsDto.getSessionSecret());
+			}
+			if (StringUtils.isNotEmpty(gigyaWsDto.getSessionToken()))
+			{
+				userResult.setSessionToken(gigyaWsDto.getSessionToken());
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{

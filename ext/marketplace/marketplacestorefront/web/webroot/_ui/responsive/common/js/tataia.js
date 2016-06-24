@@ -674,7 +674,7 @@ function makeProductHtml(widgetElement, obj, rid) {
 			  html += '</div>';
 			  
 		  }else{
-			  html += '<div class="image" style="position: relative; left: 0;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg" alt="'+obj.name+'"/>';
+			  html += '<div class="image" style="position: relative; left: 0;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="/_ui/desktop/theme-blue/images/missing-product-300x300.jpg" alt="'+obj.name+'"/>';
 			  if(is_new_product == true){
 				  html += '<div style="z-index: 1;" class="new"><span>New</span></div>';
 				 }
@@ -868,8 +868,9 @@ function updatePage(response, widgetMode) {
       return;
     }
     /*It exists, lets name the payload because we may be modifying it*/
+    if(response.data !== null){
     var respData = response.data.recommendations;
-
+    }
     /*Use Carousel by default*/
     var slider = true;
     /*But for cases where we have an array of recommendations the size of 100, we will be using grid view*/

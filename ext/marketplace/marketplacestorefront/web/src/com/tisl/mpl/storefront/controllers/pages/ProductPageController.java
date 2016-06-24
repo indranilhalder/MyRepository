@@ -71,10 +71,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -150,17 +153,7 @@ public class ProductPageController extends AbstractPageController
 	 */
 	private static final String PINCODE_CHECKED = "pincodeChecked";
 
-	/**
-	 *
-	 */
-	private static final String IS_NEW = "isNew";
 
-	private static final String FULLFILMENT_TYPE = "fullfilmentType";
-
-	/**
-	 *
-	 */
-	private static final String IS_ONLINE_EXCLUSIVE = "isOnline";
 
 	/**
 	 *
@@ -291,7 +284,9 @@ public class ProductPageController extends AbstractPageController
 
 			if (StringUtils.isNotEmpty(redirection))
 			{
-				returnStatement = redirection;
+				//returnStatement = redirection;
+				response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+				response.setHeader("Location", redirection);
 			}
 
 			else
@@ -506,8 +501,9 @@ public class ProductPageController extends AbstractPageController
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-					ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
+					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.SELLER,
+					//					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
+					ProductOption.VARIANT_FULL));
 
 
 			final List<Breadcrumb> breadcrumbList = productBreadcrumbBuilder.getBreadcrumbs(productModel);
@@ -863,7 +859,8 @@ public class ProductPageController extends AbstractPageController
 
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+					//					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
+					ProductOption.VARIANT_FULL));
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			populateProductData(productData, model);
 			final List<String> deliveryInfoList = new ArrayList<String>();
@@ -877,7 +874,8 @@ public class ProductPageController extends AbstractPageController
 			updatePageTitle(productData, model);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
-			model.addAttribute(WebConstants.BREADCRUMBS_KEY, productBreadcrumbBuilder.getBreadcrumbs(productModel));
+			final List<Breadcrumb> breadcrumbList = productBreadcrumbBuilder.getBreadcrumbs(productModel);
+			model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbList);
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
 			model.addAttribute(ModelAttributetConstants.SELLERS_SKU_ID_LIST, form.getSellersSkuListId());
 			model.addAttribute(SKU_ID_FOR_ED, form.getSkuIdForED());
@@ -930,7 +928,7 @@ public class ProductPageController extends AbstractPageController
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
-
+			populateTealiumData(productData, model, breadcrumbList);
 			//AKAMAI fix
 			if (productModel instanceof PcmProductVariantModel)
 			{
@@ -1012,42 +1010,36 @@ public class ProductPageController extends AbstractPageController
 			getRequestContextData(request).setProduct(productModel);
 			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
 			model.addAttribute(SELECTED_SIZE, selectedSize);
-			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
-			//buyBoxFacade.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU());
-			model.addAttribute(ModelAttributetConstants.BUYBOX_USSID, buyboxdata.getSellerArticleSKU());
-			model.addAttribute(ModelAttributetConstants.SP_PRICE, buyboxdata.getSpecialPrice());
-			model.addAttribute(ModelAttributetConstants.MRP_PRICE, buyboxdata.getMrp());
-			model.addAttribute(ModelAttributetConstants.MOP_PRICE, buyboxdata.getPrice());
-			model.addAttribute(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
-			model.addAttribute(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
+			//			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
+			//			//buyBoxFacade.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU());
+			//			model.addAttribute(ModelAttributetConstants.BUYBOX_USSID, buyboxdata.getSellerArticleSKU());
+			//			model.addAttribute(ModelAttributetConstants.SP_PRICE, buyboxdata.getSpecialPrice());
+			//			model.addAttribute(ModelAttributetConstants.MRP_PRICE, buyboxdata.getMrp());
+			//			model.addAttribute(ModelAttributetConstants.MOP_PRICE, buyboxdata.getPrice());
+			//			model.addAttribute(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
+			//			model.addAttribute(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
+			//
+			//			final String sellerName = buyboxdata.getSellerName();
+			//			model.addAttribute(ModelAttributetConstants.SELLER_NAME, sellerName);
+			//			model.addAttribute(ModelAttributetConstants.SELLER_ID, buyboxdata.getSellerId());
+			//			String isCodEligible = ModelAttributetConstants.EMPTY;
+			//			for (final SellerInformationData seller : productData.getSeller())
+			//			{
+			//				if (seller.getUssid().equals(buyboxdata.getSellerArticleSKU()))
+			//				{
+			//					isCodEligible = seller.getIsCod();
+			//				}
+			//			}
 
-			final String sellerName = buyboxdata.getSellerName();
-			model.addAttribute(ModelAttributetConstants.SELLER_NAME, sellerName);
-			model.addAttribute(ModelAttributetConstants.SELLER_ID, buyboxdata.getSellerId());
-			String isCodEligible = ModelAttributetConstants.EMPTY;
-			for (final SellerInformationData seller : productData.getSeller())
-			{
-				if (seller.getUssid().equals(buyboxdata.getSellerArticleSKU()))
-				{
-					isCodEligible = seller.getIsCod();
-				}
-			}
-			
 			//Remove multiple DB calls
-			final RichAttributeData richAttribute = buyBoxFacade.getRichAttributeDetails(productModel,
-					buyboxdata.getSellerArticleSKU());
-			
-			model.addAttribute(ModelAttributetConstants.IS_COD_ELIGIBLE, isCodEligible);
-			//model.addAttribute(IS_ONLINE_EXCLUSIVE, Boolean.valueOf(buyBoxFacade.getRichAttributeDetails(productModel,
-				//	buyboxdata.getSellerArticleSKU()).isOnlineExclusive()));
-			model.addAttribute(IS_ONLINE_EXCLUSIVE, Boolean.valueOf(richAttribute.isOnlineExclusive()));
-			//model.addAttribute(IS_NEW, Boolean.valueOf(buyBoxFacade.getRichAttributeDetails(productModel,
-				//	buyboxdata.getSellerArticleSKU()).getNewProduct()));
-			model.addAttribute(IS_NEW, richAttribute.getNewProduct());
-			//model.addAttribute(FULLFILMENT_TYPE, buyBoxFacade
-				//	.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU()).getFulfillment());
-			model.addAttribute(FULLFILMENT_TYPE, richAttribute.getFulfillment());
-			
+			//			final RichAttributeData richAttribute = buyBoxFacade.getRichAttributeDetails(productModel,
+			//					buyboxdata.getSellerArticleSKU());
+			//
+			//			model.addAttribute(ModelAttributetConstants.IS_COD_ELIGIBLE, isCodEligible);
+			//			model.addAttribute(IS_ONLINE_EXCLUSIVE, Boolean.valueOf(richAttribute.isOnlineExclusive()));
+			//			model.addAttribute(IS_NEW, richAttribute.getNewProduct());
+			//			model.addAttribute(FULLFILMENT_TYPE, richAttribute.getFulfillment());
+
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
@@ -1954,5 +1946,44 @@ public class ProductPageController extends AbstractPageController
 		}
 
 		return successful;
+	}
+
+	@Override
+	protected String checkRequestUrl(final HttpServletRequest request, final HttpServletResponse response,
+			final String resolvedUrlPath) throws UnsupportedEncodingException
+	{
+		try
+		{
+			final String resolvedUrl = response.encodeURL(request.getContextPath() + resolvedUrlPath);
+			final String requestURI = URIUtil.decode(request.getRequestURI(), "utf-8");
+			final String decoded = URIUtil.decode(resolvedUrl, "utf-8");
+			String newUrl = null;
+			if (StringUtils.isNotEmpty(requestURI) && requestURI.endsWith(decoded))
+			{
+				return null;
+			}
+			else
+			{
+				//  org.springframework.web.servlet.View.RESPONSE_STATUS_ATTRIBUTE = "org.springframework.web.servlet.View.responseStatus"
+				request.setAttribute("org.springframework.web.servlet.View.responseStatus", HttpStatus.MOVED_PERMANENTLY);
+				final String queryString = request.getQueryString();
+				if (queryString != null && !queryString.isEmpty())
+				{
+					newUrl = resolvedUrlPath + "?" + queryString;
+
+				}
+				else
+				{
+					newUrl = resolvedUrlPath;
+				}
+				return newUrl;
+
+
+			}
+		}
+		catch (final URIException e)
+		{
+			throw new UnsupportedEncodingException();
+		}
 	}
 }

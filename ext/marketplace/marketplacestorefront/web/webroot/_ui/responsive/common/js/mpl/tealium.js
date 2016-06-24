@@ -1,8 +1,11 @@
 $(document).ready(
 		function() {
 
+			
+			var pageType = $('#pageType').val();
+			var pageName=$('#pageName').val();
 			// Added for tealium
-			if ($('#ia_site_page_id').val() == "homepage") {
+			if (pageType == "homepage") {
 				// Added for tealium
 				$
 						.ajax({
@@ -18,8 +21,8 @@ $(document).ready(
 			}
 			// Tealium end
 
-			if ($('#ia_site_page_id').val() == "productDetails"
-					|| $('#ia_site_page_id').val() == "viewSellers") {
+			if (pageType == "product"
+					|| pageType == "/sellersdetailpage") {
 				// Added for tealium
 				$.ajax({
 					url : ACC.config.encodedContextPath
@@ -63,10 +66,9 @@ $(document).ready(
 			}
 
 			// Generic Page Script
-			var pageType = $('#pageType').val();
-			var pageName=$('#pageName').val();
-			if (pageType != 'homepage' && pageType != 'productDetails'
-					&& pageType != 'viewSellers' && pageType != 'productsearch'
+			
+			if (pageType != 'homepage' && pageType != 'product'
+					&& pageType != '/sellersdetailpage' && pageType != 'productsearch'
 					&& pageType != 'category' && pageType != 'cart'
 					&& pageType != 'multistepcheckoutsummary'
 					&& pageType != 'profile' && pageType != 'wishlist'
@@ -91,6 +93,59 @@ $(document).ready(
 						});
 			}
 			// Tealium end
+			
+			// Added for tealium
+			if (pageType == "category") {
+				// Added for tealium
+				$
+						.ajax({
+							url : ACC.config.encodedContextPath
+									+ "/getTealiumDataCategory",
+							type : 'GET',
+							cache : false,
+							success : function(data) {
+								// console.log(data);
+								var tealiumData = "";
+								tealiumData += ',"page_category_name":"'
+										+ $("#page_category_name").val() + '",';
+								tealiumData += '"site_section":"'
+										+ $("#site_section").val() + '",';
+								tealiumData += '"page_name":"'
+									+ $("#page_name").val() + '",';
+								tealiumData += '"categoryId":"'
+									+ $("#categoryId").val() + '"}';
+								data = data.replace("}<TealiumScript>", tealiumData);
+								$('#tealiumHome').html(data);
+							}
+						});
+			}
+			// Tealium end
+			
+			//Search
+			if(pageType == "productsearch"){
+				$
+				.ajax({
+					url : ACC.config.encodedContextPath
+							+ "/getTealiumDataSearch",
+					type : 'GET',
+					cache : false,
+					success : function(data) {
+						// console.log(data);
+						var tealiumData = "";
+						tealiumData += ',"search_keyword":"'
+								+ $("#search_keyword").val() + '",';
+						tealiumData += '"searchCategory":"'
+								+ $("#searchCategory").val() + '",';
+						tealiumData += '"page_name":"'
+							+ $("#page_name").val() + '",';
+						tealiumData += '"search_results":"'
+							+ $("#search_results").val() + '"}';
+						data = data.replace("}<TealiumScript>", tealiumData);
+						$('#tealiumHome').html(data);
+					}
+				});
+				
+			}
 
 		
 		});

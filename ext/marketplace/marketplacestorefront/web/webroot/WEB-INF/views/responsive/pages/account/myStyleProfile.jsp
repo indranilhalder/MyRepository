@@ -38,6 +38,7 @@
 						<!-- TISPRD-2335 -->
 						<c:choose>
 							<c:when test="${category.value.image ne null}">
+							
 								<img class="" src="${category.value.image}">
 							</c:when>
 							<c:otherwise>

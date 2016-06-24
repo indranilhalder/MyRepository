@@ -145,6 +145,15 @@
 	<bean id="mplPriceRowDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPriceRowDaoImpl">
 	</bean>
+	
+	<alias name="mplSearchSolrQueryTypeFacetsPopulator" alias="mplSearchSolrQueryTypeFacetsPopulator" />
+		<bean id="mplSearchSolrQueryTypeFacetsPopulator" class="com.tisl.mpl.solr.search.MplSearchSolrQueryTypeFacetsPopulator">
+	</bean>
+	
+	<bean parent="modifyPopulatorList">
+		<property name="list" ref="commerceSearchQueryPageableConverter"/>
+		<property name="add" ref="mplSearchSolrQueryTypeFacetsPopulator"/>
+	</bean>
 
 
 
@@ -1581,10 +1590,10 @@
 	</bean>
 	
 	<bean id="homepageComponentService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.HomepageComponentServiceImpl">
-		<property name="threadContextService" ref="threadContextService" />
+		<!-- <property name="threadContextService" ref="threadContextService" />
 		<property name="commerceCategoryService" ref="commerceCategoryService" />
 		<property name="baseSiteService" ref="baseSiteService" />
-		<property name="pattern" value="/{category-path}/c-{category-code}" />
+		<property name="pattern" value="/{category-path}/c-{category-code}" /> -->
 	</bean>
 	
     <bean id="automationService"
@@ -1703,6 +1712,11 @@
 		<property name="modelService" ref="modelService" />
 	</bean>
 	<bean id="priceInventoryExportJob" class="com.tisl.mpl.integration.job.PriceInventoryExtractJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<bean id="priceInventoryControlJob" class="com.tisl.mpl.integration.job.PriceInventoryControlJob"
 		parent="abstractJobPerformable"
 			autowire="byName">
 		<property name="modelService" ref="modelService" />

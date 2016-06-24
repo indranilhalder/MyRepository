@@ -24,49 +24,61 @@ $("document").ready(function(){
     				        	url: requiredUrl,
     				            data: genderData, 	
     				        	success: function(data){
-    				        		var htmlData = "";
-    				        		var index = 0;
-    				        		$(".gender").addClass("gender");
-    				        		$(".myInterestGender").css("display","none");
-    				        		$("fieldset.products").addClass("products active");
-    				        		 $.each(data , function( key, value ) {
-    				        			 index++;
-    				        			 //TISPRD-2335
-    				        			 var catImage="";
-    				        			 if (null!=value.image){
-    				        				 catImage="<img src='"+value.image+"'>";
-    				        			 }else{
-    				        				 catImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
-    				        			 }
-    				        			 
-    				        			if($.inArray(key,prevSelectedCats)!= -1){
-    				        				htmlData=htmlData+"<input class='category-selection' data-l1='"+value.name+"' checked='checked' type='checkbox' name='categoryCode'"+"id='question-1-"
-       				                     +index
-       				                     +"' value="+key+">"
-       				                     +"<label for='question-1-"
-       				                     +index
-       				                     +"'>"
-       				                     +catImage
-       				                     +"<span>"+value.name+"</span>"
-       				                     +"</label>";
-    				        				
-    				        			}else{
-    				        				htmlData=htmlData+"<input class='category-selection' data-l1='"+value.name+"' type='checkbox' name='categoryCode'"+"id='question-1-"
-       				                     +index
-       				                     +"' value="+key+">"
-       				                     +"<label for='question-1-"
-       				                     +index
-       				                     +"'>"
-       				                     +catImage
-       				                     +"<span>"+value.name+"</span>"
-       				                     +"</label>";
-    				        			} 
-    				                 });
-    				        		 $(".products-questionnaire").html(htmlData);
+    				        		if(typeof data=="object")
+    				        		{
+    				        			var htmlData = "";
+        				        		var index = 0;
+        				        		$(".gender").addClass("gender");
+        				        		$(".myInterestGender").css("display","none");
+        				        		$("fieldset.products").addClass("products active");
+        				        		 $.each(data , function( key, value ) {
+        				        			 index++;
+        				        			 //TISPRD-2335
+        				        			 var catImage="";
+        				        			 if (null!=value.image){
+        				        				 catImage="<img src='"+value.image+"'>";
+        				        			 }else{
+        				        				 catImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+        				        			 }
+        				        			 
+        				        			if($.inArray(key,prevSelectedCats)!= -1){
+        				        				htmlData=htmlData+"<input class='category-selection' data-l1='"+value.name+"' checked='checked' type='checkbox' name='categoryCode'"+"id='question-1-"
+           				                     +index
+           				                     +"' value="+key+">"
+           				                     +"<label for='question-1-"
+           				                     +index
+           				                     +"'>"
+           				                     +catImage
+           				                     +"<span>"+value.name+"</span>"
+           				                     +"</label>";
+        				        				
+        				        			}else{
+        				        				htmlData=htmlData+"<input class='category-selection' data-l1='"+value.name+"' type='checkbox' name='categoryCode'"+"id='question-1-"
+           				                     +index
+           				                     +"' value="+key+">"
+           				                     +"<label for='question-1-"
+           				                     +index
+           				                     +"'>"
+           				                     +catImage
+           				                     +"<span>"+value.name+"</span>"
+           				                     +"</label>";
+        				        			} 
+        				                 });
+        				        		 
+        				        		 $(".products-questionnaire").html(htmlData);
+    				        		}
+    				        		else
+    				        		{
+    				        			$(location).attr('href',ACC.config.encodedContextPath+"/login");
+    				        		}
+    				        		
+    				        		
+    				        		
     				        	},
     				        	error: function(){
     				        		alert("Something is not right! Please try after sometime");
     							}
+    				        
     					});
     					 
     				});
@@ -124,41 +136,50 @@ $("document").ready(function(){
     			url: requiredUrl,
     			data: categoryData, 	
     			success: function(data){
-    				var htmlData = "";
-    				var index = 0;
-    				$(".myInterestGender").css("display","none");
-    				$(".myInterestCategory").css("display","none");
-    				$("fieldset.brands").addClass("brands active");
-    				$.each(data , function( key, value ) {
-    					index++;
-    					//TISPRD-2335
-    					var brandImage="";
-    					var brandImageHover="";
-	        			 if (null!=value.image){
-	        				 brandImage="<img src='"+value.image+"'>";
-	        				 brandImageHover="<img class='hover-image' src='"+value.image+"'>";
-	        			 }else{
-	        				 brandImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
-	        				 brandImageHover = "<img class='hover-image' src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
-	        			 }
-	        			 
-    					if($.inArray(key,prevSelectedBrands)!= -1){
-    						htmlData = htmlData+'<input type="checkbox" class="allBrands" checked="checked" name="brand" '+'id="question-2-'
-    						+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
-    						+ brandImage +
-    						brandImageHover +"<span>"+value.name+"</span>"+'</label>';
-    					}else{
-    						htmlData = htmlData+'<input type="checkbox" class="allBrands" name="brand" '+'id="question-2-'
-    						+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
-    						+brandImage +
-    						brandImageHover +"<span>"+value.name+"</span>"+'</label>';
-    					}
-    				});
-    				$("#brandContainer").html(htmlData);
+    				if(typeof data=="object")
+	        		{
+    					var htmlData = "";
+        				var index = 0;
+        				$(".myInterestGender").css("display","none");
+        				$(".myInterestCategory").css("display","none");
+        				$("fieldset.brands").addClass("brands active");
+        				$.each(data , function( key, value ) {
+        					index++;
+        					//TISPRD-2335
+        					var brandImage="";
+        					var brandImageHover="";
+    	        			 if (null!=value.image){
+    	        				 brandImage="<img src='"+value.image+"'>";
+    	        				 brandImageHover="<img class='hover-image' src='"+value.image+"'>";
+    	        			 }else{
+    	        				 brandImage= "<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+    	        				 brandImageHover = "<img class='hover-image' src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+    	        			 }
+    	        			 
+        					if($.inArray(key,prevSelectedBrands)!= -1){
+        						htmlData = htmlData+'<input type="checkbox" class="allBrands" checked="checked" name="brand" '+'id="question-2-'
+        						+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
+        						+ brandImage +
+        						brandImageHover +"<span>"+value.name+"</span>"+'</label>';
+        					}else{
+        						htmlData = htmlData+'<input type="checkbox" class="allBrands" name="brand" '+'id="question-2-'
+        						+index+'" value='+key+'>'+'<label for="question-2-'+index+'">'
+        						+brandImage +
+        						brandImageHover +"<span>"+value.name+"</span>"+'</label>';
+        					}
+        				});
+        				$("#brandContainer").html(htmlData);
+	        		}
+	        		else
+	        		{
+	        			$(location).attr('href',ACC.config.encodedContextPath+"/login");
+	        		}
+	        		
     			},
     			error: function(){
-    				alert("Something is not right! Please try after sometime");
+    				//alert("Something is not right! Please try after sometime");
     			}
+    			
     		});
     	});
 
@@ -207,88 +228,96 @@ $("document").ready(function(){
         			url: requiredUrl,
         			data: {"categoryData":selectedCats[0],"selectedCategory":categorySelected,"subCategoryData":JSON.stringify(selectedBrandCat)}, 	
         			success: function(data){
-        				$(".myInterestGender").css("display","none");
-        				$(".myInterestCategory").css("display","none");
-        				$(".brandsCategory").css("display","none");
-        				
-        				var htmlData = "";
-        				var index = 0;
-        				var subCategoryImage="<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
-        				if(categorySelected == "both"){
-        					
-        					$("fieldset.objects-apparel").addClass("active");
-        					dataApparel = data[0];
-            				dataElectronics = data[1];
-            				//added 
-            			//	console.log("Directly navigated to electronic");
-            				if($.isEmptyObject(dataApparel)){
-            			//		console.log("in empty apparel block");
-            					var htmlData = "";
-            					var index = 0;
-            		    		$.each(dataElectronics , function( key, value ) {
-            						index++;
-            						//TISPRD-2335
-            	        			 if (null!=value.image){
-            	        				 subCategoryImage="<img src='"+value.image+"'>";
-            	        			 }
-            	        			 
-            						htmlData = htmlData+'<input type="checkbox" name="subCatBrand"'+'id="question-4-'
-            						+index+'" value='+key+'>'
-            						+'<label for="question-4-'
-            						+index+'">'+subCategoryImage+"<span>"+value.name+"</span>"+'</label>';
-            					});
-            		    		$("#objHeadingElectronics").text("What types of electronics are you interested in?");
-            		    		$("fieldset.objects-apparel").removeClass("active");
-            					$("#electronicObjects").html(htmlData);
-            					$("fieldset.objects-electronics").addClass("active");
-            					//added
-            			//		console.log("Directly navigated to apparel");
-            				}else if($.isEmptyObject(dataElectronics)){
+        				if(typeof data=="object")
+		        		{
+        					$(".myInterestGender").css("display","none");
+            				$(".myInterestCategory").css("display","none");
+            				$(".brandsCategory").css("display","none");
+            				
+            				var htmlData = "";
+            				var index = 0;
+            				var subCategoryImage="<img src='"+ACC.config.commonResourcePath+"/images/missing-product-515x515.jpg'>";
+            				if(categorySelected == "both"){
             					
-            			//		console.log("Empty electronics");
-            					$.each(dataApparel , function( key, value ) {
-                					index++;
+            					$("fieldset.objects-apparel").addClass("active");
+            					dataApparel = data[0];
+                				dataElectronics = data[1];
+                				//added 
+                			//	console.log("Directly navigated to electronic");
+                				if($.isEmptyObject(dataApparel)){
+                			//		console.log("in empty apparel block");
+                					var htmlData = "";
+                					var index = 0;
+                		    		$.each(dataElectronics , function( key, value ) {
+                						index++;
+                						//TISPRD-2335
+                	        			 if (null!=value.image){
+                	        				 subCategoryImage="<img src='"+value.image+"'>";
+                	        			 }
+                	        			 
+                						htmlData = htmlData+'<input type="checkbox" name="subCatBrand"'+'id="question-4-'
+                						+index+'" value='+key+'>'
+                						+'<label for="question-4-'
+                						+index+'">'+subCategoryImage+"<span>"+value.name+"</span>"+'</label>';
+                					});
+                		    		$("#objHeadingElectronics").text("What types of electronics are you interested in?");
+                		    		$("fieldset.objects-apparel").removeClass("active");
+                					$("#electronicObjects").html(htmlData);
+                					$("fieldset.objects-electronics").addClass("active");
+                					//added
+                			//		console.log("Directly navigated to apparel");
+                				}else if($.isEmptyObject(dataElectronics)){
                 					
-            	        			 if (null!=value.image){
-            	        				 subCategoryImage="<img src='"+value.image+"'>";
-            	        			 }
-            	        			 
-                					htmlData = htmlData+'<input type="checkbox" name="subBrand"'+'id="question-3-'
-                					+index+'" value='+key+'>'
-                					+'<label for="question-3-'
-                					+index+'">'+subCategoryImage+"<span>"+value.name+"</span>"+'</label>';
-                				});
-                				$("#apparelObjects").html(htmlData);
-                				$("#apparelFinal").text("Create Style Profile");
-                				
-                	    		
+                			//		console.log("Empty electronics");
+                					$.each(dataApparel , function( key, value ) {
+                    					index++;
+                    					
+                	        			 if (null!=value.image){
+                	        				 subCategoryImage="<img src='"+value.image+"'>";
+                	        			 }
+                	        			 
+                    					htmlData = htmlData+'<input type="checkbox" name="subBrand"'+'id="question-3-'
+                    					+index+'" value='+key+'>'
+                    					+'<label for="question-3-'
+                    					+index+'">'+subCategoryImage+"<span>"+value.name+"</span>"+'</label>';
+                    				});
+                    				$("#apparelObjects").html(htmlData);
+                    				$("#apparelFinal").text("Create Style Profile");
+                    				
+                    	    		
+                				}else{
+                					$.each(dataApparel , function( key, value ) {
+                    					index++;
+                    					if (null!=value.image){
+               	        				 subCategoryImage="<img src='"+value.image+"'>";
+               	        			 	}
+                    					htmlData = htmlData+'<input type="checkbox" name="subBrand"'+'id="question-3-'
+                    					+index+'" value='+key+'>'
+                    					+'<label for="question-3-'
+                    					+index+'">'+subCategoryImage+"<span>"+value.name+"</span>"+'</label>';
+                    				});
+                    				$("#apparelObjects").html(htmlData);
+                				}
             				}else{
-            					$.each(dataApparel , function( key, value ) {
+            					$("fieldset.objects").addClass("active");
+            					$.each(data[0] , function( key, value ) {
                 					index++;
                 					if (null!=value.image){
            	        				 subCategoryImage="<img src='"+value.image+"'>";
            	        			 	}
-                					htmlData = htmlData+'<input type="checkbox" name="subBrand"'+'id="question-3-'
+                					htmlData = htmlData+'<input type="checkbox" name="subBrandFinal"'+'id="question-3-'
                 					+index+'" value='+key+'>'
                 					+'<label for="question-3-'
                 					+index+'">'+subCategoryImage+"<span>"+value.name+"</span>"+'</label>';
                 				});
-                				$("#apparelObjects").html(htmlData);
+                				$("#objects").html(htmlData);
             				}
-        				}else{
-        					$("fieldset.objects").addClass("active");
-        					$.each(data[0] , function( key, value ) {
-            					index++;
-            					if (null!=value.image){
-       	        				 subCategoryImage="<img src='"+value.image+"'>";
-       	        			 	}
-            					htmlData = htmlData+'<input type="checkbox" name="subBrandFinal"'+'id="question-3-'
-            					+index+'" value='+key+'>'
-            					+'<label for="question-3-'
-            					+index+'">'+subCategoryImage+"<span>"+value.name+"</span>"+'</label>';
-            				});
-            				$("#objects").html(htmlData);
-        				}
+						}
+		        		else
+		        		{
+		        			$(location).attr('href',ACC.config.encodedContextPath+"/login");
+		        		}
+        				
         			},
         			error: function(){
         				alert("Something is not right! Please try after sometime");
@@ -510,11 +539,13 @@ $("document").ready(function(){
     						error: function(){
     							alert("Something is not right! Please try after sometime");
     						}
+    						
     					});
     				},
     				error: function(){
     					alert("Something is not right! Please try after sometime");
     				}
+    				
     			});
     		}
 
@@ -606,6 +637,7 @@ function automateMyrecomendationBrandModification(catids){
 		error: function(){
 			alert("Something is not right! Please try after sometime");
 		}
+		
 	});
 }
 
@@ -667,5 +699,6 @@ function automateMyrecomendationBrandModification(catids){
 	        	error: function(){
 	        		alert("Something is not right! Please try after sometime");
 				  }
+	        	
 		});
-}
+	}

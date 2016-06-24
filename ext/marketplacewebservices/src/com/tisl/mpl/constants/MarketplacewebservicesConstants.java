@@ -513,7 +513,6 @@ public class MarketplacewebservicesConstants
 	public static final String DROPDOWN_BRAND = "MBH".intern();
 	public static final String DROPDOWN_CATEGORY = "MSH".intern();
 	public static final String LOG_TIME = "%s ns ---%s s".intern();
-
-
+	public static final String SEARCH_FACET_CONFIG = "search.facet.config";
 
 }

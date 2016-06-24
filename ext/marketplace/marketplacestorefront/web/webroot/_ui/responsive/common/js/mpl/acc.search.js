@@ -1,5 +1,6 @@
 	function constructDepartmentHierarchy(inputArray) {
 		var output = [];
+		if(inputArray!=""){
 		for (var i = 0; i < inputArray.length; i++) {
 			var categoryArray = inputArray[i].split("|");
 			var currentNode = output;
@@ -31,7 +32,7 @@
 				}
 			}
 		}
-
+		}
 	var expandTree = false;
 	
 	//TISCF-4 Start
@@ -269,7 +270,7 @@
 				}		
 
 			}		
-			else {		s
+			else {		
 				 $("#on-sale_"+ product).show();//showing on_sale tag		
 				break;		
 		}		
@@ -411,11 +412,27 @@
 
 		return matchedSize;
 	}
-	$(function() {
+	
+	$( "#brandNoFormSubmit" ).submit(function() {
+		  event.preventDefault();
+	});
+	
+	 $(".facet-name.js-facet-name h4").each(function(){
+		if($(this).hasClass("true")){
+			$(this).addClass("active");
+			$(this).parent().siblings('.facet-values.js-facet-values.js-facet-form').addClass("active");
+	    	$(this).siblings('.brandSelectAllMain').addClass("active");
+	    	$(this).parent().siblings('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").addClass("active");
+	    	$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").addClass("active");
+			
+		}
+	 }); 
+	
+	/*$(function() {
 	    img = document.querySelectorAll('[data-searchimgsrc]');
 	    for (var i = 0; i < img.length; i++) {
 	        var self = img[i];
 	          self.src = self.getAttribute('data-searchimgsrc');
 	      }
 
-	});
+	});*/
