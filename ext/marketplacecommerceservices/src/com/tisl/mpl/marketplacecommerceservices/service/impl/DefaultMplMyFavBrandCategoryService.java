@@ -842,10 +842,12 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				{
 					LOG.info("Email id is anonymous and device id is null");
 				}
+				return categoryList;
 			}
 			else
 			{
 				final CustomerModel customer = getCurrentCustomerByEmail(emailId);
+				List<CategoryModel> newListCategory = null;
 
 				if (null != customer && null != customer.getMyStyleProfile()
 						&& null != customer.getMyStyleProfile().getPreferredCategory()
@@ -853,13 +855,42 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				{
 					categoryList = new ArrayList<CategoryModel>(customer.getMyStyleProfile().getPreferredCategory());
 				}
+
+				if (StringUtils.isNotEmpty(customer.getDeviceKey()))
+				{
+					LOG.info("Without userLogin when device id is not null");
+					newListCategory = new ArrayList<CategoryModel>();
+					//for update if device id consists of categories
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(customer
+							.getDeviceKey());
+					if (CollectionUtils.isNotEmpty(myStyleProfileList))
+					{
+						LOG.info("Inside if, device id consists of categories");
+						final MplStyleProfileModel styleProfileModelUpdate = myStyleProfileList.get(0);
+
+						newListCategory = new ArrayList(styleProfileModelUpdate.getPreferredCategory());
+					}
+					for (final CategoryModel entry : newListCategory)
+					{
+						categoryList.add(entry);
+					}
+
+				}
+
+				//Removing Duplicates;
+
+				final Set<CategoryModel> s = new HashSet<CategoryModel>();
+				s.addAll(categoryList);
+				newListCategory = new ArrayList<CategoryModel>();
+				newListCategory.addAll(s);
+				return newListCategory;
 			}
 		}
 		catch (final Exception ex)
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
-		return categoryList;
+
 	}
 
 
@@ -888,9 +919,11 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				{
 					LOG.info("Email id is anonymous and device id is null");
 				}
+				return brandList;
 			}
 			else
 			{
+				List<CategoryModel> newListBrand = null;
 				final CustomerModel customer = getCurrentCustomerByEmail(emailId);
 				if (null != customer && null != customer.getMyStyleProfile()
 						&& null != customer.getMyStyleProfile().getPreferredBrand()
@@ -898,6 +931,35 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				{
 					brandList = new ArrayList<CategoryModel>(customer.getMyStyleProfile().getPreferredBrand());
 				}
+
+				if (StringUtils.isNotEmpty(customer.getDeviceKey()))
+				{
+					LOG.info("Without userLogin when device id is not null");
+					newListBrand = new ArrayList<CategoryModel>();
+					//for update if device id consists of categories
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(customer
+							.getDeviceKey());
+					if (CollectionUtils.isNotEmpty(myStyleProfileList))
+					{
+						LOG.info("Inside if, device id consists of categories");
+						final MplStyleProfileModel styleProfileModelUpdate = myStyleProfileList.get(0);
+
+						newListBrand = new ArrayList(styleProfileModelUpdate.getPreferredBrand());
+					}
+					for (final CategoryModel entry : newListBrand)
+					{
+						brandList.add(entry);
+					}
+
+				}
+
+				//Removing Duplicates;
+
+				final Set<CategoryModel> s = new HashSet<CategoryModel>();
+				s.addAll(brandList);
+				newListBrand = new ArrayList<CategoryModel>();
+				newListBrand.addAll(s);
+				return newListBrand;
 			}
 
 		}
@@ -905,7 +967,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
-		return brandList;
+
 	}
 
 
