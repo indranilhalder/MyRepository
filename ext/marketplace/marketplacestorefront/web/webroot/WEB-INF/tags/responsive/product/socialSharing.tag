@@ -5,7 +5,6 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
-<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>

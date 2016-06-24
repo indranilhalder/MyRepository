@@ -479,6 +479,7 @@ if (searchCategory_id){
 				},
 			  	complete: function(){
 			        //$('#ajax-loader').hide();
+			  		forceUpdateHeader();	
 			    },
 				error : function(resp) {
 				//	alert("Add to Bag unsuccessful");

@@ -162,11 +162,12 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 			//				}
 			//			}
 			//Deeply nested if..then statements are hard to read
-			if (request.isSecure() && null != findAnnotation(handler, RequireHardLogIn.class))
+			LOG.error("******************The request is secured**********" + request.isSecure());
+			if (null != findAnnotation(handler, RequireHardLogIn.class))
 			{
 				final String guid = (String) request.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
-				if (!(((!getUserService().isAnonymousUser(getUserService().getCurrentUser()) || checkForAnonymousCheckout())
-						&& checkForGUIDCookie(request, response, guid))))
+				if (!(((!getUserService().isAnonymousUser(getUserService().getCurrentUser()) || checkForAnonymousCheckout()) && checkForGUIDCookie(
+						request, response, guid))))
 				{
 					LOG.warn((guid == null ? "missing secure token in session" : "no matching guid cookie") + ", redirecting");
 					getRedirectStrategy().sendRedirect(request, response, getRedirectUrl(request));
