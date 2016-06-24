@@ -17,7 +17,6 @@ import de.hybris.platform.solrfacetsearch.search.SearchQuery;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 
@@ -44,36 +43,26 @@ public class MplSearchSolrQueryTypeFacetsPopulator<INDEXED_PROPERTY_TYPE, INDEXE
 
 			final String pageFacets = pageableData.getPageFacets();
 
-			if (null != pageFacets)
+			if (null != pageFacets && !pageFacets.isEmpty())
 			{
-				final Set<String> typeFacets = new HashSet<String>(Arrays.asList(pageFacets.split("&")));
-				target.setIndexedType(getIndexedType(target.getFacetSearchConfig(), typeFacets));
+				final Set<String> pageTypeFacets = new HashSet<String>(Arrays.asList(pageFacets.split("&")));
+
+				target.setIndexedType(getIndexedType(target.getFacetSearchConfig(), pageTypeFacets));
 			}
 
 		}
 
 	}
 
-	protected IndexedType getIndexedType(final FacetSearchConfig config, final Set<String> typeFacets)
+	protected IndexedType getIndexedType(final FacetSearchConfig config, final Set<String> pageTypeFacets)
 	{
 
 		final IndexConfig indexConfig = config.getIndexConfig();
-		final Set<String> newTypeFacets = new HashSet<String>();
 		final Collection indexedTypes = indexConfig.getIndexedTypes().values();
 		if ((indexedTypes != null) && (!(indexedTypes.isEmpty())))
 		{
 			final IndexedType indexedType = ((IndexedType) indexedTypes.iterator().next());
-			final Set<String> typeFacetSet = indexedType.getTypeFacets();
-			final Iterator typeFacetItr = typeFacetSet.iterator();
-			while (typeFacetItr.hasNext())
-			{
-				final String key = (String) typeFacetItr.next();
-				if (typeFacets.contains(key))
-				{
-					newTypeFacets.add(key);
-				}
-			}
-			indexedType.setTypeFacets(newTypeFacets);
+			indexedType.setPageTypeFacets(pageTypeFacets);
 			return indexedType;
 		}
 
