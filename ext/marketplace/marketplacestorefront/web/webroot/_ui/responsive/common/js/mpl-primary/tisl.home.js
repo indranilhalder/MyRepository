@@ -1,4 +1,5 @@
 var headerLoggedinStatus = false;
+var csrfDataChanged = false;
 $(function() {
       $.ajax({
          url: ACC.config.encodedContextPath + "/fetchToken",
