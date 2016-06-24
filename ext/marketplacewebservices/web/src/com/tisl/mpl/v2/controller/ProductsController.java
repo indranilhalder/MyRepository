@@ -72,7 +72,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -183,9 +182,7 @@ public class ProductsController extends BaseController
 	@Resource(name = "defaultMplProductSearchFacade")
 	private DefaultMplProductSearchFacade searchFacade;
 
-	//	@Autowired
-	//	private ConfigurationService configurationService;
-	@Autowired
+	@Resource(name = "searchSuggestUtilityMethods")
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
 
 	static
@@ -1264,42 +1261,6 @@ public class ProductsController extends BaseController
 		return productSearchPage;
 	}
 
-
-
-	/**
-	 * @return the messageSource
-	 */
-	public MessageSource getMessageSource()
-	{
-		return messageSource;
-	}
-
-	/**
-	 * @param messageSource
-	 *           the messageSource to set
-	 */
-	public void setMessageSource(final MessageSource messageSource)
-	{
-		this.messageSource = messageSource;
-	}
-
-	/**
-	 * @return the i18nService
-	 */
-	public I18NService getI18nService()
-	{
-		return i18nService;
-	}
-
-	/**
-	 * @param i18nService
-	 *           the i18nService to set
-	 */
-	public void setI18nService(final I18NService i18nService)
-	{
-		this.i18nService = i18nService;
-	}
-
 	@RequestMapping(value = "/getDepartmentFilter", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public DepartmentHierarchy departmentFilter(@RequestParam(required = false) final String searchText,
@@ -1356,6 +1317,178 @@ public class ProductsController extends BaseController
 			//return searchSuggestUtilityMethods.getDepartmentHierarchy(filter);
 		}
 		return null;
+	}
+
+
+
+	/**
+	 * @return the messageSource
+	 */
+	public MessageSource getMessageSource()
+	{
+		return messageSource;
+	}
+
+	/**
+	 * @param messageSource
+	 *           the messageSource to set
+	 */
+	public void setMessageSource(final MessageSource messageSource)
+	{
+		this.messageSource = messageSource;
+	}
+
+	/**
+	 * @return the i18nService
+	 */
+	public I18NService getI18nService()
+	{
+		return i18nService;
+	}
+
+	/**
+	 * @param i18nService
+	 *           the i18nService to set
+	 */
+	public void setI18nService(final I18NService i18nService)
+	{
+		this.i18nService = i18nService;
+	}
+
+	/**
+	 * @return the productFacade
+	 */
+	public ProductFacade getProductFacade()
+	{
+		return productFacade;
+	}
+
+	/**
+	 * @param productFacade
+	 *           the productFacade to set
+	 */
+	public void setProductFacade(final ProductFacade productFacade)
+	{
+		this.productFacade = productFacade;
+	}
+
+	/**
+	 * @return the productSearchFacade
+	 */
+	public ProductSearchFacade<ProductData> getProductSearchFacade()
+	{
+		return productSearchFacade;
+	}
+
+	/**
+	 * @param productSearchFacade
+	 *           the productSearchFacade to set
+	 */
+	public void setProductSearchFacade(final ProductSearchFacade<ProductData> productSearchFacade)
+	{
+		this.productSearchFacade = productSearchFacade;
+	}
+
+	/**
+	 * @return the commerceStockFacade
+	 */
+	public CommerceStockFacade getCommerceStockFacade()
+	{
+		return commerceStockFacade;
+	}
+
+	/**
+	 * @param commerceStockFacade
+	 *           the commerceStockFacade to set
+	 */
+	public void setCommerceStockFacade(final CommerceStockFacade commerceStockFacade)
+	{
+		this.commerceStockFacade = commerceStockFacade;
+	}
+
+	/**
+	 * @return the catalogFacade
+	 */
+	public CatalogFacade getCatalogFacade()
+	{
+		return catalogFacade;
+	}
+
+	/**
+	 * @param catalogFacade
+	 *           the catalogFacade to set
+	 */
+	public void setCatalogFacade(final CatalogFacade catalogFacade)
+	{
+		this.catalogFacade = catalogFacade;
+	}
+
+	/**
+	 * @return the productsHelper
+	 */
+	public ProductsHelper getProductsHelper()
+	{
+		return productsHelper;
+	}
+
+	/**
+	 * @param productsHelper
+	 *           the productsHelper to set
+	 */
+	public void setProductsHelper(final ProductsHelper productsHelper)
+	{
+		this.productsHelper = productsHelper;
+	}
+
+	/**
+	 * @return the sizeGuideFacade
+	 */
+	public SizeGuideFacade getSizeGuideFacade()
+	{
+		return sizeGuideFacade;
+	}
+
+	/**
+	 * @param sizeGuideFacade
+	 *           the sizeGuideFacade to set
+	 */
+	public void setSizeGuideFacade(final SizeGuideFacade sizeGuideFacade)
+	{
+		this.sizeGuideFacade = sizeGuideFacade;
+	}
+
+	/**
+	 * @return the searchFacade
+	 */
+	public DefaultMplProductSearchFacade getSearchFacade()
+	{
+		return searchFacade;
+	}
+
+	/**
+	 * @param searchFacade
+	 *           the searchFacade to set
+	 */
+	public void setSearchFacade(final DefaultMplProductSearchFacade searchFacade)
+	{
+		this.searchFacade = searchFacade;
+	}
+
+	/**
+	 * @return the searchSuggestUtilityMethods
+	 */
+	public SearchSuggestUtilityMethods getSearchSuggestUtilityMethods()
+	{
+		return searchSuggestUtilityMethods;
+	}
+
+	/**
+	 * @param searchSuggestUtilityMethods
+	 *           the searchSuggestUtilityMethods to set
+	 */
+	public void setSearchSuggestUtilityMethods(final SearchSuggestUtilityMethods searchSuggestUtilityMethods)
+	{
+		this.searchSuggestUtilityMethods = searchSuggestUtilityMethods;
 	}
 
 }
