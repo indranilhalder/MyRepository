@@ -14,7 +14,6 @@
 package com.tisl.mpl.controllers.pages;
 
 import de.hybris.platform.acceleratorfacades.flow.CheckoutFlowFacade;
-import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
@@ -75,6 +74,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 
 	protected static final String SPRING_SECURITY_LAST_USERNAME = "SPRING_SECURITY_LAST_USERNAME";
+	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
 
 
 	@Resource(name = "registerPageValidator")
@@ -121,7 +121,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	@Override
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequireHardLogIn
 	//@PreValidateCheckoutStep(checkoutStep = "checkout-login")
 	public String enterStep(
 			@RequestParam(value = ModelAttributetConstants.ERROR, defaultValue = ModelAttributetConstants.FALSE) final boolean loginError,
@@ -132,7 +132,9 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 		try
 		{
 
-			if (!getUserFacade().isAnonymousUser())
+			final String guid = (String) request.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
+
+			if (!getUserFacade().isAnonymousUser() && null != guid)
 			{
 				return getCheckoutStep().nextStep();
 			}

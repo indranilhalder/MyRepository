@@ -21,6 +21,7 @@ import de.hybris.platform.solrfacetsearch.provider.FieldValueProvider;
 import de.hybris.platform.solrfacetsearch.provider.impl.AbstractPropertyFieldValueProvider;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,8 +42,8 @@ import com.tils.mpl.media.MplMediaService;
  */
 @SuppressWarnings(
 { "PMD" })
-public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
-		Serializable
+public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValueProvider
+		implements FieldValueProvider, Serializable
 {
 
 	@Autowired
@@ -134,6 +135,7 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 		return Collections.emptyList();
 	}
 
+	@SuppressWarnings("deprecation")
 	protected MediaModel findMedia(final ProductModel product, final MediaFormatModel mediaFormat)
 	{
 		if ((product != null) && (mediaFormat != null))
@@ -148,6 +150,51 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 				{
 					MediaModel media = null;
 					media = mplMediService.getMediaForIndexing(product, mediaFormat, galleryImages);
+					if (media.getUrl() != null && media.getUrl().length() > 0)
+					{
+						LOG.debug("Domain sharding started for product code--> " + product.getCode().toString());
+						final String prodCode = product.getCode().toString();
+						final char lastChar = prodCode.charAt(prodCode.length() - 1);
+						final int lastProductNum = Integer.parseInt(String.valueOf(lastChar));
+						int numberOfHosts;
+						if (configurationService.getConfiguration().getString("search.media.numberofhosts") != null)
+						{
+							numberOfHosts = Integer.parseInt(
+									String.valueOf(configurationService.getConfiguration().getString("search.media.numberofhosts")));
+						}
+						else
+						{
+							numberOfHosts = 1;
+						}
+						if (((lastProductNum % numberOfHosts) != 0) && (numberOfHosts != 1))
+						{
+							URL netUrl = null;
+							if (!media.getUrl().contains("https://") && !media.getUrl().contains("http://"))
+							{
+								netUrl = new URL("http:" + media.getUrl());
+							}
+							else
+							{
+								netUrl = new URL(media.getUrl());
+							}
+							String host = null;
+							host = netUrl.getHost();
+							final String path = netUrl.getPath();
+							if (!host.contains("localhost"))
+							{
+								final String splitHostName[] = host.split("\\.");
+								if (splitHostName != null)
+								{
+									String newHost = "";
+									newHost = splitHostName[0] + (lastProductNum % numberOfHosts) + "." + splitHostName[1] + "."
+											+ splitHostName[2];
+									final String newMediaUrl = "//" + newHost + path;
+									LOG.debug("New newMediaUrl for media during indexing --> " + newMediaUrl);
+									media.setUrl(newMediaUrl);
+								}
+							}
+						}
+					}
 					return media;
 				}
 

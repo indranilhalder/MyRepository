@@ -1,5 +1,6 @@
 <%@ tag body-content="empty" trimDirectiveWhitespaces="true" %>
 <%@ attribute name="facetData" required="true" type="de.hybris.platform.commerceservices.search.facetdata.FacetData" %>
+<%@ attribute name="pageFacetData" required="true" type="String" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -118,7 +119,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-								
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								
 								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg');border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
@@ -136,8 +137,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-								
-								
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>							
 								<input type="hidden" name="isFacet" value="true"/>
 								
 								<input type="submit" title="${facetValue.name}" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />
@@ -157,7 +157,7 @@ function navigateToPage(queryString,textString)
 									<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 									<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 									<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-									
+									<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 									<input type="hidden" name="isFacet" value="true"/>
 									<label>
 										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" />
@@ -181,7 +181,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-								
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="submit" value="${facetValue.name}"  />
 								</form>
@@ -221,7 +221,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-					
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
 								</form>
@@ -240,7 +240,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 								<input type="hidden" name="isFacet" value="true"/>
-								
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="submit" title="${facetValue.name}" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />
 									<%-- <c:if test="${facetData.code == 'inStockFlag'}">
 									<c:if test="${facetValue.code == 'true' && facetStockSize=='2'}">
@@ -284,7 +284,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-								
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="submit" value="${facetValue.name}"  />
 								</form>
@@ -307,7 +307,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 								<input type="hidden" name="isFacet" value="true"/>								
 								<input type="submit" title="${facetValue.name}" value="" style="background-color:${facetValue.name}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;" />														
-					
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 							</form>							
 							</c:if>
 							<!-- Added for TISPRO-490 End here -->		
@@ -316,7 +316,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-								
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<c:if test="${facetData.code ne 'dialColour'}"> <!-- Added for TISPRO-490  -->		
 								<label>
@@ -360,7 +360,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-								
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="submit" value="${facetValue.name}"  />
 								</form>	
@@ -394,7 +394,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-								
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="submit" value="<spring:theme code="search.nav.facetShowLess_${facetData.code}" />" class="js-less-facet-values-link"  />
 								</form>

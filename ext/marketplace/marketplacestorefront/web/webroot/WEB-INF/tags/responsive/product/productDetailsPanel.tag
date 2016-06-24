@@ -5,8 +5,6 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
-<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -18,12 +16,12 @@ tr.d0 td {
 </style>
 
  <script type="text/javascript">
-      (function() {
-       var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-       po.src = 'https://apis.google.com/js/client:plusone.js';
-       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-     })();
-    
+ $(window).on("load",function(){
+	 var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+     po.src = 'https://apis.google.com/js/client:plusone.js';
+     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+ });
+ 
       $("#sellersSkuListId").val("");
       $("#skuIdForED").val("");
       $("#skuIdForHD").val("");

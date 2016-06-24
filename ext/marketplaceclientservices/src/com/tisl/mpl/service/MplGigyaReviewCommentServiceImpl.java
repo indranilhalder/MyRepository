@@ -304,10 +304,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						final ProductModel productModel = productService.getProductForCode(gsCommentObject
 								.getString(MarketplacecclientservicesConstants.STREAM_ID));
-
-						productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-								ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-								ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+						//TISPT-221 Changes
+						productData = productFacade.getProductForOptions(productModel,
+								Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
 					}
 
 					reviewDTO.setProductData(productData);
