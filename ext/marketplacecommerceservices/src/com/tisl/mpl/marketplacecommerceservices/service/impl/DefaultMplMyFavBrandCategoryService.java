@@ -619,7 +619,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 		boolean result = false;
 		try
 		{
-			MplStyleProfileModel styleProfileModelToSave = new MplStyleProfileModel();
+			MplStyleProfileModel styleProfileModelToSave = null;
 			final CustomerModel customer = getCurrentCustomerByEmail(emailId);
 			final MplStyleProfileModel styleProfileModel = customer.getMyStyleProfile();
 			List<CategoryModel> selectedCategory = new ArrayList<CategoryModel>();
@@ -627,24 +627,31 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			// anonymous user TISSAM-7
 			if (StringUtils.equalsIgnoreCase(ANONYMOUS_USER, emailId))
 			{
-				LOG.info("Without userLogin when device id is not null");
-				final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
-				if (CollectionUtils.isNotEmpty(myStyleProfileList))
+				if (deviceId != null)
 				{
-					styleProfileModelToSave = myStyleProfileList.get(0);
-					selectedCategory = new ArrayList(styleProfileModelToSave.getPreferredCategory());
-					for (final CategoryModel entry : selectedCategory)
+					LOG.info("Without userLogin when device id is not null");
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
+					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
-						if (!entry.getCode().equalsIgnoreCase(code))
+						styleProfileModelToSave = myStyleProfileList.get(0);
+						selectedCategory = new ArrayList(styleProfileModelToSave.getPreferredCategory());
+						for (final CategoryModel entry : selectedCategory)
 						{
-							newCategory.add(entry);
+							if (!entry.getCode().equalsIgnoreCase(code))
+							{
+								newCategory.add(entry);
+							}
 						}
+						styleProfileModelToSave.setPreferredCategory(newCategory);
+						modelService.save(styleProfileModelToSave);
+						customer.setMyStyleProfile(styleProfileModelToSave);
+						modelService.save(customer);
+						result = true;
 					}
-					styleProfileModelToSave.setPreferredCategory(newCategory);
-					modelService.save(styleProfileModelToSave);
-					customer.setMyStyleProfile(styleProfileModelToSave);
-					modelService.save(customer);
-					result = true;
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9219);
 				}
 			}
 
@@ -692,7 +699,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 		boolean result = false;
 		try
 		{
-			MplStyleProfileModel styleProfileModelToSave = new MplStyleProfileModel();
+			MplStyleProfileModel styleProfileModelToSave = null;
 			final CustomerModel customer = getCurrentCustomerByEmail(emailId);
 			final MplStyleProfileModel styleProfileModel = customer.getMyStyleProfile();
 			List<CategoryModel> selectedBrands = new ArrayList<CategoryModel>();
@@ -700,27 +707,36 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			// anonymous user TISSAM-7
 			if (StringUtils.equalsIgnoreCase(ANONYMOUS_USER, emailId))
 			{
-				final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchBrandOfDevice(deviceId);
-				if (CollectionUtils.isNotEmpty(myStyleProfileList))
+				if (deviceId != null)
 				{
-					styleProfileModelToSave = myStyleProfileList.get(0);
-					selectedBrands = new ArrayList(styleProfileModelToSave.getPreferredBrand());
-					if (CollectionUtils.isNotEmpty(selectedBrands))
+
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchBrandOfDevice(deviceId);
+					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
-						for (final CategoryModel entry : selectedBrands)
+						styleProfileModelToSave = myStyleProfileList.get(0);
+						selectedBrands = new ArrayList(styleProfileModelToSave.getPreferredBrand());
+						if (CollectionUtils.isNotEmpty(selectedBrands))
 						{
-							if (!entry.getCode().equalsIgnoreCase(code))
+							for (final CategoryModel entry : selectedBrands)
 							{
-								newBrands.add(entry);
+								if (!entry.getCode().equalsIgnoreCase(code))
+								{
+									newBrands.add(entry);
+								}
 							}
 						}
+						styleProfileModelToSave.setPreferredBrand(newBrands);
+						modelService.save(styleProfileModelToSave);
+						customer.setMyStyleProfile(styleProfileModelToSave);
+						modelService.save(customer);
+						result = true;
 					}
-					styleProfileModelToSave.setPreferredBrand(newBrands);
-					modelService.save(styleProfileModelToSave);
-					customer.setMyStyleProfile(styleProfileModelToSave);
-					modelService.save(customer);
-					result = true;
 				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9219);
+				}
+
 			}
 			//  Logged in user
 			else
