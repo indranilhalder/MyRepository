@@ -159,6 +159,7 @@ ACC.comparenow = {
 												var divId = '#compare-id'
 														+ checkboxId;
 												$(divId).remove();
+												var compareProdLen = $('#compareSection .compare-item').length;
 												$(
 														"input:checkbox[id="
 																+ checkboxId
@@ -166,19 +167,19 @@ ACC.comparenow = {
 														'checked', false);
 												$('#compare' + checkboxId)
 														.html('Add to Compare');
-												var count = 0;
-												$(
-														'.compare input[type=checkbox]')
-														.each(
-																function() {
-																	if ($(this)
-																			.is(
-																					":checked")) {
-																		count++;
-
-																	}
-																});
-												if (count <= 1) {
+//												var count = 0;
+//												$(
+//														'.compare input[type=checkbox]')
+//														.each(
+//																function() {
+//																	if ($(this)
+//																			.is(
+//																					":checked")) {
+//																		count++;
+//
+//																	}
+//																});
+												if (compareProdLen <= 1) {
 													$('#compareBtn').attr(
 															"disabled",
 															"disabled");
@@ -409,18 +410,19 @@ ACC.comparenow = {
 													.prop('checked', false);
 											$('#compare' + productCode).html(
 													'Add to Compare');
-											var count = 0;
-											$('.compare input[type=checkbox]')
-													.each(
-															function() {
-																if ($(this)
-																		.is(
-																				":checked")) {
-																	count++;
-
-																}
-															});
-											if (count <= 1) {
+											var compareProdLen1 = $('#compareSection .compare-item').length;
+//											var count = 0;
+//											$('.compare input[type=checkbox]')
+//													.each(
+//															function() {
+//																if ($(this)
+//																		.is(
+//																				":checked")) {
+//																	count++;
+//
+//																}
+//															});
+											if (compareProdLen1 <= 1) {
 												$('#compareBtn').attr(
 														"disabled", "disabled");
 												$('#compareBtn').removeClass(
