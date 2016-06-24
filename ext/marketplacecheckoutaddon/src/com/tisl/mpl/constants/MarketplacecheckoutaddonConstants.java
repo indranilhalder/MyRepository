@@ -72,7 +72,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String DELIVERYMODE = "deliveryMode";
 	public static final String PAYMENTINFO = "paymentInfo";
 	public static final String REQUESTSECURITYCODE = "requestSecurityCode";
-	public static final String PROCESSCONVCHARGESURL = "/validateOTP";
+	public static final String PROCESSCONVCHARGESURL = "/setConvCharge";
 	public static final String GENERATEOTPURL = "/generateOTP";
 	public static final String VALIDATEOTPURL = "/validateOTP/{otpNUMField:.*}";
 	public static final String OTPNUMFIELD = "otpNUMField";
@@ -286,5 +286,5 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String SOCIALLOGIN = "/socialLogin";
 
 	public static final String CHECKSESSIONACTIVE = "/checkSessionActive";
-	
+
 }
