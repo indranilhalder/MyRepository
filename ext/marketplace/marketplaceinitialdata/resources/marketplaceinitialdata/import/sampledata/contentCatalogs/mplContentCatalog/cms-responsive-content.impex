@@ -775,6 +775,39 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 ##FOOTWEAR BRAND LANDING PAGE: END#####################
 
+ ##############Added By SAP :::: START################
+##########ContentSlot for Watch landing page #########################
+ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+ ;;Section1-Watches;true;Category Banner Slot;TMPApparelHomepageBannerComponent
+ ;;Section2A-Watches;true;Category Carousel Slot;accessories
+ ;;Section2B-Watches;true;Beinspired Row 1 Slot;BeInspiredParagraphComponent,LatestLookBanner1
+ ;;Section2C-Watches;true;Background Image Slot;BackgroundImages1,BackgroundImages2
+ ;;Section3-Watches;true;Beinspired Row 2 Slot;LatestLookBanner2,LatestLookBanner3
+ # ContentSlotForPage 
+ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='Watches'];contentSlot(uid,$contentCV)[unique=true];;;
+ ;;Section1-Watches;Section1;;Section1-Watches;;;
+ ;;Section2A-Watches;Section2A;;Section2A-Watches;;;
+ ;;Section2B-Watches;Section2B;;Section2B-Watches;;;
+ ;;Section2C-Watches;Section2C;;Section2C-Watches;;;
+ ;;Section3-Watches;Section3;;Section3-Watches;;;
+ 
+ ##########ContentSlot for Fashion Accessories Landing Page
+ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+ ;;Section1-FashionAccessories;true;Category Banner Slot;TMPApparelHomepageBannerComponent
+ ;;Section2A-FashionAccessories;true;Category Carousel Slot;accessories
+ ;;Section2B-FashionAccessories;true;Beinspired Row 1 Slot;BeInspiredParagraphComponent,LatestLookBanner1
+ ;;Section2C-FashionAccessories;true;Background Image Slot;BackgroundImages1,BackgroundImages2
+ ;;Section3-FashionAccessories;true;Beinspired Row 2 Slot;LatestLookBanner2,LatestLookBanner3
+ # ContentSlotForPage 
+ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='Fashion Accessories'];contentSlot(uid,$contentCV)[unique=true];;;
+ ;;Section1-FashionAccessories;Section1;;Section1-FashionAccessories;;;
+ ;;Section2A-FashionAccessories;Section2A;;Section2A-FashionAccessories;;;
+ ;;Section2B-FashionAccessories;Section2B;;Section2B-FashionAccessories;;;
+ ;;Section2C-FashionAccessories;Section2C;;Section2C-FashionAccessories;;;
+ ;;Section3-FashionAccessories;Section3;;Section3-FashionAccessories;;;
+ ##############Added By SAP :::: END################
+  
+
 ####BRAND LANDING PAGE-ELECTRONICS##############
 
 INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;SequenceNumber;&componentRef

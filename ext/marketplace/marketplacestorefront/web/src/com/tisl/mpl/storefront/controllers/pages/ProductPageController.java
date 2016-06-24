@@ -26,6 +26,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ReviewVa
 import de.hybris.platform.acceleratorstorefrontcommons.util.MetaSanitizerUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.variants.VariantSortStrategy;
+import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
@@ -102,6 +103,7 @@ import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
+import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
@@ -236,6 +238,9 @@ public class ProductPageController extends AbstractPageController
 
 	@Autowired
 	private UserService userService;
+	
+	@Resource(name = "mplProductFacade")
+	private MplProductFacade mplProductFacade;
 
 	@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
@@ -248,6 +253,24 @@ public class ProductPageController extends AbstractPageController
 	public void setBuyBoxFacade(final BuyBoxFacade buyBoxFacade)
 	{
 		this.buyBoxFacade = buyBoxFacade;
+	}
+	
+	/**
+	 * @return the mplProductFacade
+	 */
+	public MplProductFacade getMplProductFacade()
+	{
+		return mplProductFacade;
+	}
+
+
+	/**
+	 * @param mplProductFacade
+	 *           the mplProductFacade to set
+	 */
+	public void setMplProductFacade(final MplProductFacade mplProductFacade)
+	{
+		this.mplProductFacade = mplProductFacade;
 	}
 
 	/**
@@ -1356,6 +1379,7 @@ public class ProductPageController extends AbstractPageController
 	private void displayConfigurableAttribute(final ProductData productData, final Model model)
 	{
 		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
+		final Map<String, Map<String, String>> mapConfigurableAttributes = new HashMap<String, Map<String, String>>();
 		final List<String> warrentyList = new ArrayList<String>();
 		try
 		{
@@ -1370,8 +1394,10 @@ public class ProductPageController extends AbstractPageController
 
 					for (final FeatureData featureData : featureDataList)
 					{
-
+						final Map<String, String> productFeatureMap = new HashMap<String, String>();
 						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
+						final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+								productData, featureData.getCode());
 						if (null != productData.getRootCategory())
 						{
 							final String properitsValue = configurationService.getConfiguration().getString(
@@ -1379,15 +1405,24 @@ public class ProductPageController extends AbstractPageController
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
-									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())))
+									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
+									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())
+									|| ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()))
 							{
 
-								if (null != properitsValue && featureValueData.getValue() != null
-										&& properitsValue.toLowerCase().contains(featureData.getName().toLowerCase()))
+								//								mapConfigurableAttribute.put(featureValueData.getValue(),
+								//											productFeature != null && productFeature.getUnit() != null
+								//													&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
+								//													: "");
+								if (productFeatureMap.size() > 0)
 								{
-									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+									productFeatureMap.clear();
 								}
-
+								productFeatureMap.put(featureValueData.getValue(),
+										productFeature != null && productFeature.getUnit() != null
+												&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
+												: "");
+								mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 							} //end apparel
 							  //electronics
 							else
@@ -1411,9 +1446,11 @@ public class ProductPageController extends AbstractPageController
 			}
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
+					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
+					|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())
+					|| ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()))
 			{
-				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 			}
 			else
 			{

@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos.product.impl;
 
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.daos.impl.DefaultProductDao;
 import de.hybris.platform.search.restriction.SearchRestrictionService;
@@ -115,6 +116,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		return catalogVersionModel;
 	}
 
+
 	//TISPRD-1631 Changes Start
 	//Get Session Catalog Version
 	private CatalogVersionModel getCatalogVersionSession()
@@ -150,5 +152,38 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	}
 
 	//TISPRD-1631 Changes End
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductFeaturesByCodeAndQualifier(java
+	 * .lang.String, java.lang.String)
+	 */
+
+	/*
+	 * Added by SAP for get prodcutFeture by given product & qualifier start
+	 */
+	@Override
+	public List<ProductFeatureModel> findProductFeaturesByCodeAndQualifier(final String code, final String qualifier)
+	{
+		final StringBuilder stringBuilder = new StringBuilder(70);
+
+		//Product
+		stringBuilder.append("SELECT  distinct {p:").append(ProductFeatureModel.PK).append("} ");
+		stringBuilder.append("FROM {").append(ProductFeatureModel._TYPECODE).append(" AS p }");
+		final String conditionPart = ProductFeatureModel.PRODUCT + "} = (?code) AND {p:" + ProductFeatureModel.QUALIFIER
+				+ "} = (?qualifier)";
+		stringBuilder.append("WHERE {p:").append(conditionPart);
+		LOG.debug(stringBuilder);
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
+		query.addQueryParameter("code", code);
+		query.addQueryParameter("qualifier", qualifier);
+		query.setResultClassList(Collections.singletonList(ProductFeatureModel.class));
+		final SearchResult<ProductFeatureModel> searchResult = getFlexibleSearchService().search(query);
+		return searchResult.getResult();
+	}
+
 
 }
