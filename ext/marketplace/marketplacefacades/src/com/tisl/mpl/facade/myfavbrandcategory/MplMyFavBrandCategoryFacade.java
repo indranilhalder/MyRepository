@@ -62,6 +62,7 @@ public interface MplMyFavBrandCategoryFacade
 
 	/**
 	 * @param emailId
+	 * @param deviceId
 	 * @param code
 	 * @return boolean
 	 */
@@ -70,8 +71,8 @@ public interface MplMyFavBrandCategoryFacade
 	/**
 	 * @param emailId
 	 * @param deviceId
-	 * @param codeList
-	 * @return
+	 * @param code
+	 * @return boolean
 	 */
 	boolean addFavCategories(String emailId, String deviceId, List codeList);
 
