@@ -13,11 +13,11 @@ import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
-import de.hybris.platform.commercefacades.search.ProductSearchFacade;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
+import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -41,6 +41,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.service.MplProductWebService;
+import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.util.MplCompetingProductsUtility;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
@@ -91,8 +92,8 @@ public class SearchSuggestUtilityMethods
 
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
-	@Resource(name = "productSearchFacade")
-	private ProductSearchFacade<ProductData> productSearchFacade;
+	@Resource(name = "defaultMplProductSearchFacade")
+	private DefaultMplProductSearchFacade searchFacade;
 
 	/**
 	 * @Description : Sets Category Data to a DTO
@@ -171,7 +172,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -550,15 +551,13 @@ public class SearchSuggestUtilityMethods
 		String url = null;
 		Map<String, List<String>> params = null;
 		final List<String> urlList = new ArrayList<String>();
-		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+		ProductSearchPageData<SearchStateData, ProductData> searchPageData = null;
 		try
 		{
 			//searchText = URLParamUtil.getQueryParamParsed(searchText);
 			searchText = URLParamUtil.filter(searchText);
-			searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
-					.textSearch(searchText);
-			url = searchPageData.getKeywordRedirectMobileUrl();
-			//url = mplProductWebService.getKeywordSearch(searchText);
+			searchPageData = searchFacade.textSearch(searchText);
+			url = mplProductWebService.getKeywordSearch(searchPageData, searchText);
 			if (StringUtils.isNotBlank(url))
 			{
 				//fetching the Parameters from the redirect URL in Map with Key and values

@@ -16,18 +16,21 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
+import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
-import de.hybris.platform.servicelayer.i18n.I18NService;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType;
+import de.hybris.platform.solrfacetsearch.handler.KeywordRedirectHandler;
 import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
 import de.hybris.platform.solrfacetsearch.model.redirect.SolrURIRedirectModel;
+import de.hybris.platform.solrfacetsearch.search.KeywordRedirectSorter;
 import de.hybris.platform.solrfacetsearch.search.SolrFacetSearchKeywordDao;
-import de.hybris.platform.solrfacetsearch.search.SolrKeywordRedirectService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.math.BigDecimal;
@@ -47,7 +50,6 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -63,6 +65,7 @@ import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplProductWebService;
+import com.tisl.mpl.solr.search.KeywordRedirectValue;
 import com.tisl.mpl.wsdto.CapacityLinkData;
 import com.tisl.mpl.wsdto.ClassificationMobileWsData;
 import com.tisl.mpl.wsdto.ColorLinkData;
@@ -96,33 +99,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	@Resource
 	private SolrFacetSearchKeywordDao solrFacetSearchKeywordDao;
 	@Resource
-	private SolrKeywordRedirectService solrKeywordRedirectService;
-	@Resource(name = "i18nService")
-	private I18NService i18nService;
-	/*
-	 * @Autowired private MplDeliveryInformationService mplDeliveryInformationService;
-	 */
-	@Autowired
+	private CommonI18NService commonI18NService;
+	@Resource
+	private KeywordRedirectSorter keywordRedirectSorter;
+	@Resource
 	private ModelService modelService;
-	@Autowired
+	@Resource
 	private ProductDetailsHelper productDetailsHelper;
-
-	/**
-	 * @return the modelService
-	 */
-	public ModelService getModelService()
-	{
-		return modelService;
-	}
-
-	/**
-	 * @param modelService
-	 *           the modelService to set
-	 */
-	public void setModelService(final ModelService modelService)
-	{
-		this.modelService = modelService;
-	}
+	private Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers;
 
 	private static final String Y = "Y";
 	private static final String N = "N";
@@ -134,7 +118,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -1754,31 +1738,23 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @return keywordRedirect
 	 */
 	@Override
-	public String getKeywordSearch(String searchText)
+	public String getKeywordSearch(final ProductSearchPageData<SearchStateData, ProductData> searchPageData,
+			final String searchText)
 	{
 		//suggestion to remove new Arraylist
-		List<SolrFacetSearchKeywordRedirectModel> keywords = null;
-		SolrFacetSearchKeywordRedirectModel keyword = null;
+		KeywordRedirectValue result = null;
 		String url = null;
 		try
 		{
-			//getting current basestore language
-			final String isoLang = i18nService.getCurrentLocale().getLanguage();
-			//expecting that keyword in lowercase
-			searchText = searchText.toLowerCase();
 			//searching the keyword in solr search config
-			keywords = solrFacetSearchKeywordDao.findKeywords(searchText, KeywordRedirectMatchType.EXACT, configurationService
-					.getConfiguration().getString(MarketplacewebservicesConstants.SEARCH_FACET_CONFIG), isoLang);
-			//final List<KeywordRedirectValue> keywordValues = solrKeywordRedirectService.getSingleKeywordRedirect(searchState);
-			//suggestion to check CollectionUtils
-			if (CollectionUtils.isNotEmpty(keywords) && keywords.size() > 0)
+			if (StringUtils.isNotBlank(searchText))
 			{
-				keyword = keywords.get(0);
-				//FOR Direct URL redirection only
-				if (keyword.getRedirectMobile() instanceof SolrURIRedirectModel)
-				{
-					url = ((SolrURIRedirectModel) keyword.getRedirectMobile()).getUrl();
-				}
+				result = getSingleKeywordRedirect(searchText);
+			}
+			//FOR Direct URL redirection only
+			if (null != result && null != result.getRedirectMobile())
+			{
+				url = ((SolrURIRedirectModel) result.getRedirectMobile()).getUrl();
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -1787,11 +1763,58 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("keywordRedirectSearch------" + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
-
 		return url;
+	}
+
+	private List<SolrFacetSearchKeywordRedirectModel> findKeywordRedirects(final String searchQuery)
+	{
+		final String langIso = commonI18NService.getCurrentLanguage().getIsocode();
+		final List result = solrFacetSearchKeywordDao.findKeywords(
+				configurationService.getConfiguration().getString(MarketplacewebservicesConstants.SEARCH_FACET_CONFIG), langIso);
+		return keywordRedirectSorter.sort(result);
+	}
+
+	private void handleKeywordMatch(final List<KeywordRedirectValue> result, final String theQuery,
+			final SolrFacetSearchKeywordRedirectModel redirect)
+	{
+		final KeywordRedirectHandler handler = redirectHandlers.get(redirect.getMatchType());
+		if ((handler == null)
+				|| (!(handler.keywordMatches(theQuery, redirect.getKeyword(), redirect.getIgnoreCase().booleanValue()))))
+		{
+			return;
+		}
+		result.add(new KeywordRedirectValue(redirect.getKeyword(), redirect.getMatchType(), redirect.getRedirect(), redirect
+				.getRedirectMobile()));
+	}
+
+	public List<KeywordRedirectValue> getKeywordRedirect(final String query)
+	{
+		final List result = new ArrayList();
+
+		if (StringUtils.isNotBlank(query))
+		{
+			final Collection<SolrFacetSearchKeywordRedirectModel> redirects = findKeywordRedirects(query);
+
+			for (final SolrFacetSearchKeywordRedirectModel redirect : redirects)
+			{
+				handleKeywordMatch(result, query, redirect);
+			}
+		}
+
+		return result;
+	}
+
+	private KeywordRedirectValue getSingleKeywordRedirect(final String query)
+	{
+		final List<KeywordRedirectValue> keywordRedirects = getKeywordRedirect(query);
+		KeywordRedirectValue keywordRedirectValue = null;
+		if (!(keywordRedirects.isEmpty()))
+		{
+			keywordRedirectValue = keywordRedirects.get(0);
+		}
+		return keywordRedirectValue;
 	}
 
 	/**
@@ -1809,5 +1832,175 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public void setBuyBoxFacade(final BuyBoxFacade buyBoxFacade)
 	{
 		this.buyBoxFacade = buyBoxFacade;
+	}
+
+	/**
+	 * @return the productService
+	 */
+	public ProductService getProductService()
+	{
+		return productService;
+	}
+
+	/**
+	 * @param productService
+	 *           the productService to set
+	 */
+	public void setProductService(final ProductService productService)
+	{
+		this.productService = productService;
+	}
+
+	/**
+	 * @return the productFacade
+	 */
+	public ProductFacade getProductFacade()
+	{
+		return productFacade;
+	}
+
+	/**
+	 * @param productFacade
+	 *           the productFacade to set
+	 */
+	public void setProductFacade(final ProductFacade productFacade)
+	{
+		this.productFacade = productFacade;
+	}
+
+	/**
+	 * @return the defaultPromotionManager
+	 */
+	public DefaultPromotionManager getDefaultPromotionManager()
+	{
+		return defaultPromotionManager;
+	}
+
+	/**
+	 * @param defaultPromotionManager
+	 *           the defaultPromotionManager to set
+	 */
+	public void setDefaultPromotionManager(final DefaultPromotionManager defaultPromotionManager)
+	{
+		this.defaultPromotionManager = defaultPromotionManager;
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+	/**
+	 * @return the solrFacetSearchKeywordDao
+	 */
+	public SolrFacetSearchKeywordDao getSolrFacetSearchKeywordDao()
+	{
+		return solrFacetSearchKeywordDao;
+	}
+
+	/**
+	 * @param solrFacetSearchKeywordDao
+	 *           the solrFacetSearchKeywordDao to set
+	 */
+	public void setSolrFacetSearchKeywordDao(final SolrFacetSearchKeywordDao solrFacetSearchKeywordDao)
+	{
+		this.solrFacetSearchKeywordDao = solrFacetSearchKeywordDao;
+	}
+
+	/**
+	 * @return the commonI18NService
+	 */
+	public CommonI18NService getCommonI18NService()
+	{
+		return commonI18NService;
+	}
+
+	/**
+	 * @param commonI18NService
+	 *           the commonI18NService to set
+	 */
+	public void setCommonI18NService(final CommonI18NService commonI18NService)
+	{
+		this.commonI18NService = commonI18NService;
+	}
+
+	/**
+	 * @return the keywordRedirectSorter
+	 */
+	public KeywordRedirectSorter getKeywordRedirectSorter()
+	{
+		return keywordRedirectSorter;
+	}
+
+	/**
+	 * @param keywordRedirectSorter
+	 *           the keywordRedirectSorter to set
+	 */
+	public void setKeywordRedirectSorter(final KeywordRedirectSorter keywordRedirectSorter)
+	{
+		this.keywordRedirectSorter = keywordRedirectSorter;
+	}
+
+	/**
+	 * @return the productDetailsHelper
+	 */
+	public ProductDetailsHelper getProductDetailsHelper()
+	{
+		return productDetailsHelper;
+	}
+
+	/**
+	 * @param productDetailsHelper
+	 *           the productDetailsHelper to set
+	 */
+	public void setProductDetailsHelper(final ProductDetailsHelper productDetailsHelper)
+	{
+		this.productDetailsHelper = productDetailsHelper;
+	}
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
+
+	/**
+	 * @return the redirectHandlers
+	 */
+	public Map<KeywordRedirectMatchType, KeywordRedirectHandler> getRedirectHandlers()
+	{
+		return redirectHandlers;
+	}
+
+	/**
+	 * @param redirectHandlers
+	 *           the redirectHandlers to set
+	 */
+	public void setRedirectHandlers(final Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers)
+	{
+		this.redirectHandlers = redirectHandlers;
 	}
 }
