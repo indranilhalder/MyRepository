@@ -63,6 +63,8 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerMasterService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
 import com.tisl.mpl.model.SellerMasterModel;
+import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
+import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MobileAppCollectionHeroComponentModel;
 import com.tisl.mpl.model.cms.components.MobileAppComponentModel;
 import com.tisl.mpl.model.cms.components.MobileAppHeroComponentModel;
@@ -72,7 +74,7 @@ import com.tisl.mpl.model.cms.components.MobileCollectionLinkComponentModel;
 import com.tisl.mpl.model.cms.components.PromotionalProductsComponentModel;
 import com.tisl.mpl.model.cms.components.SmallBrandMobileAppComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
-
+import com.tisl.mpl.facades.cms.data.ImageListComponentData;
 
 /**
  * @author 584443
@@ -417,9 +419,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 
 	@Override
-	public List<MplPageData> getPageInformationForPageId(final String homePageUid)
+	public List<MplPageData> getPageInformationForPageId(final String pageUid)
 	{
-		final ContentPageModel contentPage = getMplCMSPageService().getHomePageForMobile(homePageUid);
+		final ContentPageModel contentPage = getMplCMSPageService().getPageForAppById(pageUid);
 
 		final List<MplPageData> componentDatas = new ArrayList<MplPageData>();
 		final List<Date> lastModifiedTimes = new ArrayList<Date>();
@@ -433,6 +435,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				final List<TextComponentData> texts = new ArrayList<TextComponentData>();
 				final List<BannerComponentData> banners = new ArrayList<BannerComponentData>();
 				final List<ProductListComponentData> productForShowCase = new ArrayList<ProductListComponentData>();
+				final List<ImageListComponentData> imageCarousels = new ArrayList<ImageListComponentData>();
 
 				for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlotForPage.getContentSlot()
 						.getCmsComponents())
@@ -459,6 +462,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						if (paragraphComponent.getDeeplinkTypeVal() != null)
 						{
 							textComponent.setTypeVal(paragraphComponent.getDeeplinkTypeVal());
+						}
+						if (paragraphComponent.getComponentType() != null)
+						{
+							textComponent.setComponentType(paragraphComponent.getComponentType().getCode());
 						}
 						texts.add(textComponent);
 					}
@@ -488,14 +495,63 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 							{
 								banner.setTypeVal(bannerComponent.getDeeplinkTypeVal());
 							}
+							if (bannerComponent.getComponentType() != null)
+							{
+								banner.setComponentType(bannerComponent.getComponentType().getCode());
+							}
 							banners.add(banner);
 						}
 						//homePageData.setBannerComponents(bannerComponents);
 					}
+					else if (abstractCMSComponentModel instanceof ImageCarouselComponentModel)
+					{
+
+						final ImageCarouselComponentModel carouselComponent = (ImageCarouselComponentModel) abstractCMSComponentModel;
+						final ImageListComponentData imageListData = new ImageListComponentData();
+						final List<BannerComponentData> carouselBanners = new ArrayList<BannerComponentData>();
+						final List<CMSMediaParagraphComponentModel> mediaParaList = carouselComponent.getCollectionItems();
+						if (carouselComponent.getComponentType() != null)
+						{
+							imageListData.setComponentType(carouselComponent.getComponentType().getCode());
+						}
+						for (final CMSMediaParagraphComponentModel cmsMediaPara : mediaParaList)
+						{
+							if (null != cmsMediaPara.getMedia())
+							{
+								final BannerComponentData banner = new BannerComponentData();
+								if (cmsMediaPara.getMedia().getDescription() != null)
+								{
+									banner.setImageDiscription(cmsMediaPara.getMedia().getDescription());
+								}
+								if (cmsMediaPara.getMedia().getUrl2() != null)
+								{
+									banner.setUrl(cmsMediaPara.getMedia().getUrl2());
+								}
+								if (cmsMediaPara.getDeeplinkType() != null)
+								{
+									banner.setType(cmsMediaPara.getDeeplinkType());
+								}
+								if (cmsMediaPara.getDeeplinkTypeId() != null)
+								{
+									banner.setTypeId(cmsMediaPara.getDeeplinkTypeId());
+								}
+								if (cmsMediaPara.getDeeplinkType() != null)
+								{
+									banner.setTypeVal(cmsMediaPara.getDeeplinkTypeVal());
+								}
+								carouselBanners.add(banner);
+							}
+						}
+						imageListData.setBannerslist(carouselBanners);
+						imageCarousels.add(imageListData);
+					}
+
+
 					else if (abstractCMSComponentModel instanceof ProductCarouselComponentModel)
 					{
 						final ProductCarouselComponentModel productCarousel = (ProductCarouselComponentModel) abstractCMSComponentModel;
 						final List<String> products = productCarousel.getProductCodes();
+
 						for (final String productCode : products)
 						{
 							final ProductListComponentData productComp = new ProductListComponentData();
@@ -524,7 +580,6 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 							{
 								productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue());
 							}
-							productForShowCase.add(productComp);
 
 							if (productModel != null)
 							{
@@ -540,7 +595,13 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								{
 									productComp.setTypeVal(productModel.getDeeplinkTypeVal());
 								}
+								if (productModel.getCode() != null)
+								{
+									productComp.setProductID(productModel.getCode());
+								}
 							}
+							productForShowCase.add(productComp);
+
 						}
 
 						//homePageData.setBannerComponents(bannerComponents);
@@ -561,6 +622,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				homePageData.setTextComponents(texts);
 				homePageData.setProductComponents(productForShowCase);
 				homePageData.setBannerComponents(banners);
+				homePageData.setBannerslistComponents(imageCarousels);
 				componentDatas.add(homePageData);
 			}
 		}
