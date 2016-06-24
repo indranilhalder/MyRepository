@@ -24,6 +24,16 @@
 		${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
 	</title>
 	<%-- Meta Content --%>
+	<meta name="apple-itunes-app" content="app-id=502838820">
+<meta name="google-play-app" content="app-id=ru.hh.android">
+
+<!-- <meta name="msApplication-ID" content="microsoft.build.App"/>
+<meta name="msApplication-PackageFamilyName" content="microsoft.build_8wekyb3d8bbwe"/> -->
+
+<link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
+<link rel="android-touch-icon" href="${themeResourcePath}/images/Appicon.png" />
+<!-- <link rel="windows-touch-icon" href="icon.png" /> -->
+	
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta charset="utf-8">
@@ -147,11 +157,25 @@ if($(window).width() < 650) {
 	$('head').append('<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />');
 }
 </script>
+
+
+
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
 </c:if>
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
+
+<!-- 
+<div>
+		<a href="#" onclick="run('android')">android</a>
+		<a href="#" onclick="run('ios')">ios</a>
+		<a href="#" onclick="run('windows')">windows</a>
+	</div> -->
+
+
+
+
 <!-- For Gigya Social Login --><!-- TISPT-261 -->
 	<c:if test="${isGigyaEnabled=='Y'}">
 		<c:choose>
@@ -214,6 +238,32 @@ if($(window).width() < 650) {
 </body>
 
 <debug:debugFooter/>
+<script>
+/* 	banner = undefined;
+		var n = document.querySelector('.smartbanner');
+		if (n) {
+			n.parentNode.removeChild(n);
+		} */
+		new SmartBanner({
+				daysHidden: 0, // days to hide banner after close button is clicked (defaults to 15)
+				daysReminder: 0, // days to hide banner after "VIEW" button is clicked (defaults to 90)
+				appStoreLanguage: 'us', // language code for the App Store (defaults to user's browser language)
+				title: 'TataCLiQ',
+				author: 'TataCLiQ',
+				speedIn: 300, // Show animation speed of the banner
+			    speedOut: 400, // Close animation speed of the banner
+				button: 'OPEN',
+				force: null,
+				store: {
+		              ios: 'On the App Store',
+		              android: 'In Google Play'
+		          },
+		          price: {
+		              ios: 'FREE',
+		              android: 'FREE'
+		          }
+		});
 
+</script>
 </html>
 <%-- </compress:html> --%>
