@@ -262,11 +262,15 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				{
 					try
 					{
-						pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+						if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
+								&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+						{
+							pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+						}
 					}
 					catch (final Exception e)
 					{
-						LOG.debug("Exception occured while checking inventory ");
+						LOG.error("Exception occured while checking inventory " + e.getCause());
 					}
 				}
 				//  TISPRD-1951  END //
