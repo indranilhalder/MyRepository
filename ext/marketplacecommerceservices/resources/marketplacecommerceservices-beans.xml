@@ -661,4 +661,8 @@
 		</property>
 	</bean>
 	
+	<bean class="de.hybris.platform.solrfacetsearch.config.IndexedType">
+		<property name="pageTypeFacets" type="java.util.Set&lt;String>" />
+	</bean>
+	
 </beans>
