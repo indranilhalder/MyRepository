@@ -1156,20 +1156,7 @@ public class CartPageController extends AbstractPageController
 							{
 								for (PinCodeResponseData pinCodeResponseData : responseData)
 								{
-									//  TISPRD-1951  START //
 
-									// Checking whether inventory is availbale or not
-									// if inventory is not available for particular delivery Mode
-									// then removing that deliveryMode in Choose DeliveryMode Page
-									try
-									{
-										pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
-									}
-									catch (final Exception e)
-									{
-										LOG.error("Exception occured while checking inventory ");
-									}
-									//  TISPRD-1951  END //
 									if (pinCodeResponseData != null
 											&& pinCodeResponseData.getIsServicable() != null
 											&& pinCodeResponseData.getIsServicable()
@@ -1177,6 +1164,26 @@ public class CartPageController extends AbstractPageController
 									{
 										isServicable = MarketplacecommerceservicesConstants.N;
 										break;
+									}
+									else if (pinCodeResponseData != null
+											&& pinCodeResponseData.getIsServicable() != null
+											&& pinCodeResponseData.getIsServicable()
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+									{
+										//  TISPRD-1951  START //
+
+										// Checking whether inventory is availbale or not
+										// if inventory is not available for particular delivery Mode
+										// then removing that deliveryMode in Choose DeliveryMode Page
+										try
+										{
+											pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+										}
+										catch (final Exception e)
+										{
+											LOG.error("Exception occured while checking inventory " + e.getCause());
+										}
+										//  TISPRD-1951  END //
 									}
 								}
 							}
@@ -1470,25 +1477,30 @@ public class CartPageController extends AbstractPageController
 
 				for (PinCodeResponseData pinCodeResponseData : responseData)
 				{
-					//  TISPRD-1951  START //
 
-					// Checking whether inventory is availbale or not
-					// if inventory is not available for particular delivery Mode
-					// then removing that deliveryMode in Choose DeliveryMode Page
-					try
-					{
-						pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
-					}
-					catch (final Exception e)
-					{
-						LOG.error("Exception occured while checking inventory ");
-					}
-					//  TISPRD-1951  END //
 					if (pinCodeResponseData != null
 							&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
 					{
 						isServicable = MarketplacecommerceservicesConstants.N;
 						break;
+					}
+					else if (pinCodeResponseData != null
+							&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+					{
+						//  TISPRD-1951  START //
+
+						// Checking whether inventory is availbale or not
+						// if inventory is not available for particular delivery Mode
+						// then removing that deliveryMode in Choose DeliveryMode Page
+						try
+						{
+							pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+						}
+						catch (final Exception e)
+						{
+							LOG.error("Exception occured while checking inventory " + e.getCause());
+						}
+						//  TISPRD-1951  END //
 					}
 				}
 				//if ((selectedPincode == null || selectedPincode.isEmpty()) 	|| (!selectedPincode.isEmpty() && responseData.size() == 0))
