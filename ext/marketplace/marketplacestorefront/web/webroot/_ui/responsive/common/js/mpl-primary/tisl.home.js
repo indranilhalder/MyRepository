@@ -1,6 +1,5 @@
 var headerLoggedinStatus = false;
 $(function() {
-  
       $.ajax({
          url: ACC.config.encodedContextPath + "/fetchToken",
          type: 'GET',
@@ -11,60 +10,34 @@ $(function() {
                  this.value = data;
              });
              ACC.config.CSRFToken = data;
+             var crsfSession = window.sessionStorage.getItem("csrf-token");
+             if(window.sessionStorage && (null == crsfSession || crsfSession != data)){
+            	 csrfDataChanged = true;
+            	 window.sessionStorage.setItem("csrf-token",data);
+             }
          }
      });
 });
 $(function() {
-//TISPRO-522 IE Issue Fix
-    $.ajax({
-        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
-        type: 'GET',
-        cache:false,
-        success: function(data) {
-            headerLoggedinStatus = data.loggedInStatus;
-            //TISPT-197
-            if(data.cartcount!='NaN')
-        	{
-            	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
-        	}
-            else
-            {
-            	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html('0');
-            }
-            
-            if (!headerLoggedinStatus) {
-
-                $("a.headeruserdetails").html("Sign In");
-              //Akamai caching
-                $("a.headeruserdetails").attr('href','/login');
-                $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
-                
-                $("a.tracklinkcls").attr('href','/login');
-                $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
-            } else {
-                var firstName = data.userFirstName;
-                if (firstName == null || firstName.trim() ==
-                    '') {
-                    $("a.headeruserdetails").html("Hi!");
-                } else {
-                    $("a.headeruserdetails").html("Hi, " +
-                        firstName + "!");
-                }
-                //Akamai caching
-                $('#signIn').attr('class','dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout');
-                $("a.headeruserdetails").attr('href','/my-account');
-                
-                $("a.tracklinkcls").attr('href','#');
-                if(data.notificationCount != null){
-	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >'+data.notificationCount+'</span>)');
-	               } else {
-	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
-	               } 
-            }
-         
-        }
-    });
-});
+	//TISPRO-522 IE Issue Fix
+	
+	var header = window.sessionStorage.getItem("header");
+	var userCookChanged = userCookieChanged();
+	if(forceSetHeader() || null == header || userCookChanged == true || csrfDataChanged){
+		$.ajax({
+	        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
+	        type: 'GET',
+	        cache:false,
+	        success: function(data) {
+	        	window.sessionStorage.setItem("header" , JSON.stringify(data));
+	        	setHeader(data);
+	        }
+	    });
+	}else{
+		 header = JSON.parse(header);
+		 setHeader(header);
+	 	}
+	});
  
 $("div.departmenthover").on("mouseover touchend", function() {
     var id = this.id;
@@ -1077,8 +1050,13 @@ function appendIcid(url, icid) {
 }
 $(document).ready(function(){
 	//TISPT-290
+	if($('#pageTemplateId').val() ==
+	            'LandingPage2Template'){
 	lazyLoadDivs();
-setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
+	setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
+	
+}
+	
 
 //Fix for defect TISPT-202
 getFooterOnLoad();
@@ -1471,3 +1449,75 @@ function populateEnhancedSearch(enhancedSearchData)
 	        }
 	}
 }
+
+	function forceUpdateHeader(){
+		$.ajax({
+	        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
+	        type: 'GET',
+	        cache:false,
+	        success: function(data) {
+	        	window.sessionStorage.setItem("header" , JSON.stringify(data));
+	        	setHeader(data);
+	        }
+	    });
+	}
+	
+	function setHeader(data){
+		   headerLoggedinStatus = data.loggedInStatus;
+           //TISPT-197
+           if(data.cartcount!='NaN')
+       	{
+           	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
+       	}
+           else
+           {
+           	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html('0');
+           }
+           
+           if (!headerLoggedinStatus) {
+
+               $("a.headeruserdetails").html("Sign In");
+             //Akamai caching
+               $("a.headeruserdetails").attr('href','/login');
+               $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
+               
+               $("a.tracklinkcls").attr('href','/login');
+               $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
+           } else {
+               var firstName = data.userFirstName;
+               if (firstName == null || firstName.trim() ==
+                   '') {
+                   $("a.headeruserdetails").html("Hi!");
+               } else {
+                   $("a.headeruserdetails").html("Hi, " +
+                       firstName + "!");
+               }
+               //Akamai caching
+               $('#signIn').attr('class','dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout');
+               $("a.headeruserdetails").attr('href','/my-account');
+               
+               $("a.tracklinkcls").attr('href','#');
+               if(data.notificationCount != null){
+	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >'+data.notificationCount+'</span>)');
+	               } else {
+	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
+	               } 
+           }
+	}
+	
+	function userCookieChanged(){
+		var mplUserSession = window.sessionStorage.getItem("mpl-user");
+        if(window.sessionStorage && (null == mplUserSession || mplUserSession != $.cookie("mpl-user"))){
+       	 window.sessionStorage.setItem("mpl-user",$.cookie("mpl-user"));
+       	 return true;
+        }else{
+        	return false;
+        }
+	}
+	
+	function forceSetHeader(){
+	 var pageType = $("#pageType").val();
+	 if(pageType == 'cart' || pageType == 'orderconfirmation' || pageType == 'update-profile'){
+		 return true;
+	 }
+	}

@@ -45,5 +45,6 @@
 	</script>
 	<template:javaScriptAddOnsVariables/>
 	
+	<!-- TISPT- 287 -->
 	<%-- generated variables from commonVariables.properties --%>
-	<script type="text/javascript" src="${sharedResourcePath}/js/generatedVariables.js"></script>
+	<%-- <script type="text/javascript" src="${sharedResourcePath}/js/generatedVariables.js"></script> --%>

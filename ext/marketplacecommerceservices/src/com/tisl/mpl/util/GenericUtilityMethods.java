@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -51,6 +53,7 @@ import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 public class GenericUtilityMethods
 {
 	private static final Logger LOG = Logger.getLogger(GenericUtilityMethods.class);
+	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
 
 
 	/**
@@ -952,6 +955,23 @@ public class GenericUtilityMethods
 		cleanedText = cleanedText.replaceAll("%2F", "/");
 		cleanedText = cleanedText.replaceAll("[^%A-Za-z0-9\\-]+", "-");
 		return cleanedText;
+	}
+
+	/**
+	 * @param request
+	 * @return boolean This method checks if the current session is active
+	 */
+	public static boolean checkSessionActive(final HttpServletRequest request)
+	{
+		boolean isSessionActive = true;
+		final String guid = (String) request.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
+		if (null == guid)
+		{
+			LOG.debug("::::::::Session is not active:::::::");
+			isSessionActive = false;
+		}
+		return isSessionActive;
+
 	}
 
 }

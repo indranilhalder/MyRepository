@@ -104,6 +104,9 @@ ACC.minicart = {
 														}
 													});
 										},
+										complete:function(){
+											forceUpdateHeader();
+										},
 										error : function(resp) {
 											console.log(resp);
 										}
