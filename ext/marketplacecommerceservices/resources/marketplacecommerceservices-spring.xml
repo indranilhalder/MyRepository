@@ -1727,6 +1727,4 @@
 		<property name="password" value="${jdbc.iastg.pass}" />
 	</bean>
 	
-	
 </beans>
-
