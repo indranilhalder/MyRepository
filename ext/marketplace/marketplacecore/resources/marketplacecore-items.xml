@@ -5383,12 +5383,7 @@
 						<description>for seller end date</description>
 						<persistence type="property" />
 					</attribute>
-					
-					<attribute qualifier="IsBuyBoxUpdated" type="java.lang.String">
-						<description>for seller end date</description>
-						<persistence type="property" />
-					</attribute>
-					
+											
 				</attributes>
 				<indexes>
 					<index name="BuyBoxCommerce_IDX">
