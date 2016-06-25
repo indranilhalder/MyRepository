@@ -17,18 +17,8 @@
        
        
        
-      <!--Batch Upload for Payment Bin and Bank Data     -->
-     <bean id="fileOrderComparator"
-	class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
-			<property name="prefixPriority">
-					<map>
-					<entry key="buybox" value="0"/>
-					</map>
-			</property>
-	</bean>  
-	
-	<bean id="baseDirectoryMarketplaceBuyBox" class="java.lang.String">
-        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-buybox" />
+    <bean id="baseDirectoryMarketplaceBuyBox" class="java.lang.String">
+        <constructor-arg value="#{configurationService.configuration.getProperty('buybox.hotFolderLocation')}" />
     </bean>
 	
     <!-- 1) Scan for files -->
@@ -58,9 +48,8 @@
 	
 	
 	
-	<bean id="batchbankConverterMapping"
+	<bean id="batchBuyBoxConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-
     p:mapping="buybox"
     p:converter-ref="batchBuyboxConverter"/>
 
@@ -70,7 +59,6 @@
 	 <bean id="batchBuyboxConverter"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
-
 			<value>
 				# InsertUpdate BuyBox Data
 				INSERT_UPDATE BuyBox;product[unique=true];price;mrp;sellerArticleSKU;specialPrice;available;weightage;sellerId;sellerName;sellerType;delisted;sellerStartDate[dateformat=yyyyMMddHHmmss];sellerEndDate[dateformat=yyyyMMddHHmmss]
