@@ -9,7 +9,8 @@ INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLangu
 ;merchantMasterPopulateCronJob;merchantmaster;false;de
 ###For COD Blacklist Report Job####
 #;blacklistReportCreationJob;blacklistReportJob;false;de
-
+#New BuyBox Implementation
+;BuyBoxDataImportJob;buyBoxDataImportJob;false;en
 
 
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression

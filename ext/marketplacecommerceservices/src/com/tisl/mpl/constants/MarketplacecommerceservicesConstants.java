@@ -1597,8 +1597,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String DEFAULT_RISK = "-1.0";
 
+	//New BuyBox Implementation
 
-
+	public final static String BUYBOX = "buybox.";
+	public final static String QUERY = "DataExtract";
+	public final static String HOTFOLDERLOCATION = "hotFolderLocation";
+	public static final String BUYBOX_FILE_NAME = "filename";
+	public static final String BUYBOX_FILE_EXTENSION = "csv";
 
 	private MarketplacecommerceservicesConstants()
 	{

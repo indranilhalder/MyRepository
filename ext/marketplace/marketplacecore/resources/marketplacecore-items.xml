@@ -5312,7 +5312,91 @@
 
 				</attributes>
 			</itemtype>
+			<!-- New BuyBoxCommerce Table For Procedure -->
+			<itemtype code="BuyBoxProcTable" extends="GenericItem" generate="true"
+				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.BuyBoxProcTable">
+				<deployment table="MplBuyBoxProcTable" typecode="16000" />
+				
+				<attributes>
+					<attribute qualifier="product" type="java.lang.String">
+						<description>Product</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="price" type="java.lang.Double">
+						<description>Price</description>
+						<persistence type="property" />
+					</attribute>
 
+					<!-- mrp at ussid level -->
+					<attribute qualifier="mrp" type="java.lang.Double">
+						<description>Price</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="sellerArticleSKU" type="java.lang.String">
+						<description>SellerArticleSKU</description>
+						<persistence type="property" />
+						<modifiers unique="true" />
+					</attribute>
+
+					<attribute qualifier="specialPrice" type="java.lang.Double">
+						<description>SpecialPrice</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="available" type="java.lang.Integer">
+						<description>Available</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="weightage" type="java.lang.Double">
+						<description>Weightage</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="sellerId" type="java.lang.String">
+						<description>sellerId</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="sellerName" type="java.lang.String">
+						<description>SellerName</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="sellerType" type="java.lang.String">
+						<description>SellerType</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="delisted" type="java.lang.Boolean">
+						<description>flag to check whether a seller is delisted or not</description>
+						<persistence type="property" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+					</attribute>
+
+					<attribute qualifier="sellerStartDate" type="java.util.Date">
+						<description>for seller start date</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="sellerEndDate" type="java.util.Date">
+						<description>for seller end date</description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="IsBuyBoxUpdated" type="java.lang.String">
+						<description>for seller end date</description>
+						<persistence type="property" />
+					</attribute>
+					
+				</attributes>
+				<indexes>
+					<index name="BuyBoxCommerce_IDX">
+						<key attribute="product" />
+					</index>
+				</indexes>
+			</itemtype>
+		
 			<itemtype code="ContactUsTabComponent" generate="true"
 				autocreate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.ContactUsTabComponent">
