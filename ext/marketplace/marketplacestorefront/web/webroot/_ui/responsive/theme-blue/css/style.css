@@ -9260,9 +9260,15 @@ footer .banner {
     width: 100%;
     text-align:center;
       margin-left: 10px;
-      color:#A9143C;
+      /*color:#A9143C;*/
+      color:#000;
        
      }
+      /*ADD*/
+     .listing.wrapper .search-result h2 span{
+     color:#a9143c;
+     }
+      /*ADD*/
     .listing.wrapper .search-result h2 span.searchString  {
           font-style:italic;
     }

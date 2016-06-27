@@ -58,12 +58,20 @@
 							
 							</i></span>
 					</c:when>
-					<c:otherwise>
+					<!--<c:otherwise>
 						<spring:theme code="search.page.searchResultsCount"
 							arguments="${currentPageStart},${currentPageEnd},${searchPageData.pagination.totalNumberOfResults}" />
 						<spring:theme code="search.page.searchText"/>
 						"<span class="searchString"><spring:theme code="search.page.searchTextValue"
 							arguments="${searchPageData.freeTextSearch}" /></span>"
+					</c:otherwise> -->
+					<!-- Changes for Search result text changes -->
+					<c:otherwise>
+					 <spring:theme code="search.page.searchText"/>	
+					 <span>"<spring:theme code="search.page.searchResultsCount" arguments="${searchPageData.pagination.totalNumberOfResults}"/>"</span> 
+					  <spring:theme code="search.page.searchTextItem"/>
+					  <span class="searchString">					
+					 "<spring:theme code="search.page.searchTextValue" arguments="${searchPageData.freeTextSearch}"/>"</span>
 					</c:otherwise>
 				</c:choose>
 			</h2>
