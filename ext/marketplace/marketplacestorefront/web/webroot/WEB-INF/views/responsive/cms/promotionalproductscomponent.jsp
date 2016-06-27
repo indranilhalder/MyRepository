@@ -7,6 +7,8 @@
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
+
 <c:choose>
 
 	<c:when test="${not empty productData}">
@@ -32,7 +34,7 @@
 										<c:if test="${product.isProductNew eq true}">
 										<div style="z-index: 1;display: block;" class="new">
 										<img class="brush-strokes-sprite sprite-New"
-									src="/_ui/responsive/common/images/transparent.png"><span>New</span>
+									src="${pageContext.request.scheme}://${staticHost}/_ui/responsive/common/images/transparent.png"><span>New</span>
 										</div>
 										</c:if>
 										<a class="thumb" href="${productUrl}" title="${product.name}">
@@ -44,7 +46,7 @@
 										<c:if test="${product.isOnlineExclusive}">
 											<div style="z-index: 1;" class="online-exclusive">
 												<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-													src="/_ui/responsive/common/images/transparent.png">
+													src="${pageContext.request.scheme}://${staticHost}/_ui/responsive/common/images/transparent.png">
 												<span>online exclusive</span>
 											</div>
 										</c:if>
