@@ -15,6 +15,11 @@
 	<c:set var="pageFacets" value="${tempFacets}" />
 </c:forEach>
 
+<c:if test="${pageFacets ne '' }">
+	<c:set var="pageFacets" value="${pageFacets}&departmentHierarchy" />
+</c:if> 
+
+
 <c:forEach items="${pageData.facets}" var="facet">
 	<c:choose>
 		<c:when test="${facet.code eq 'availableInStores'}">
