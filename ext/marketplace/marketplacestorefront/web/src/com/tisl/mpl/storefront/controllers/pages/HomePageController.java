@@ -45,6 +45,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -84,6 +85,7 @@ import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -164,7 +166,7 @@ public class HomePageController extends AbstractPageController
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
 	//store url changes
-	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+	//private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 	private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
 
@@ -319,7 +321,8 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLoveContent", method = RequestMethod.GET)
-	public JSONObject getBrandsYouLoveContent(@RequestParam(value = "id") final String componentId)
+	public JSONObject getBrandsYouLoveContent(@RequestParam(value = "id") final String componentId,
+			final HttpServletRequest request)
 	{
 		MplShowcaseItemComponentModel showcaseItem = null;
 		JSONObject showCaseItemJson = new JSONObject();
@@ -330,7 +333,7 @@ public class HomePageController extends AbstractPageController
 			showcaseItem = (MplShowcaseItemComponentModel) cmsComponentService.getSimpleCMSComponent(componentId);
 			LOG.info("Found component with id::::" + componentId);
 
-			showCaseItemJson = getJSONForShowCaseItem(showcaseItem, ShowCaseLayout.BRANDSHOWCASE);
+			showCaseItemJson = getJSONForShowCaseItem(showcaseItem, ShowCaseLayout.BRANDSHOWCASE, request);
 
 		}
 		catch (final CMSItemNotFoundException e)
@@ -363,7 +366,8 @@ public class HomePageController extends AbstractPageController
 	 * @param brandshowcase
 	 * @return
 	 */
-	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final ShowCaseLayout showcaseLayout)
+	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem,
+			final ShowCaseLayout showcaseLayout, final HttpServletRequest request)
 	{
 		final JSONObject showCaseItemJson = new JSONObject();
 		ProductData firstProduct = null;
@@ -374,7 +378,7 @@ public class HomePageController extends AbstractPageController
 			{
 
 				firstProduct = productFacade.getProductForOptions(showcaseItem.getProduct1(), PRODUCT_OPTIONS);
-				showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct));
+				showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct, request));
 				showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
 				showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
 				String price = null;
@@ -405,7 +409,7 @@ public class HomePageController extends AbstractPageController
 				if (showcaseItem.getProduct2() != null)
 				{
 					secondProduct = productFacade.getProductForOptions(showcaseItem.getProduct2(), PRODUCT_OPTIONS);
-					showCaseItemJson.put("secondproductImageUrl", getProductPrimaryImageUrl(secondProduct));
+					showCaseItemJson.put("secondproductImageUrl", getProductPrimaryImageUrl(secondProduct, request));
 					showCaseItemJson.put("secondProductTitle", secondProduct.getProductTitle());
 					showCaseItemJson.put("secondProductUrl", secondProduct.getUrl());
 					String price = null;
@@ -469,7 +473,7 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
-	public JSONObject getBestPicks(@RequestParam(VERSION) final String version)
+	public JSONObject getBestPicks(@RequestParam(VERSION) final String version, final HttpServletRequest request)
 	{
 		JSONObject getBestPicksJson = new JSONObject();
 		try
@@ -477,7 +481,7 @@ public class HomePageController extends AbstractPageController
 			final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
 					"Section4CSlot-Homepage", version);
 			//return homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
-			getBestPicksJson = homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
+			getBestPicksJson = homepageComponentService.getBestPicksJSON(homepageSection4CSlot, request);
 		}
 
 		catch (final EtailBusinessExceptions e)
@@ -500,14 +504,14 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getProductsYouCare", method = RequestMethod.GET)
-	public JSONObject getProductsYouCare(@RequestParam(VERSION) final String version)
+	public JSONObject getProductsYouCare(@RequestParam(VERSION) final String version, final HttpServletRequest request)
 	{
 		JSONObject getProductsYouCareJson = new JSONObject();
 		try
 		{
 			final ContentSlotModel homepageSection4DSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
 					"Section4DSlot-Homepage", version);
-			getProductsYouCareJson = homepageComponentService.getProductsYouCareJSON(homepageSection4DSlot);
+			getProductsYouCareJson = homepageComponentService.getProductsYouCareJSON(homepageSection4DSlot, request);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -531,7 +535,7 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getNewAndExclusive", method = RequestMethod.GET)
-	public JSONObject getNewAndExclusive(@RequestParam(VERSION) final String version)
+	public JSONObject getNewAndExclusive(@RequestParam(VERSION) final String version, final HttpServletRequest request)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject newAndExclusiveJson = new JSONObject();
@@ -598,7 +602,7 @@ public class HomePageController extends AbstractPageController
 
 							ProductData product = null;
 							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
-							newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
+							newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product, request));
 							newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
 							newAndExclusiveProductJson.put("productUrl", product.getUrl());
 							String price = null;
@@ -847,7 +851,7 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getShowcaseContent", method = RequestMethod.GET)
-	public JSONObject getShowcaseContent(@RequestParam(value = "id") final String componentId)
+	public JSONObject getShowcaseContent(@RequestParam(value = "id") final String componentId, final HttpServletRequest request)
 	{
 		MplShowcaseItemComponentModel showcaseItem = null;
 		JSONObject showCaseItemJson = new JSONObject();
@@ -858,7 +862,7 @@ public class HomePageController extends AbstractPageController
 			showcaseItem = (MplShowcaseItemComponentModel) cmsComponentService.getSimpleCMSComponent(componentId);
 			LOG.info("Found component with id::::" + componentId);
 
-			showCaseItemJson = getJSONForShowCaseItem(showcaseItem, ShowCaseLayout.COLLECTIONSHOWCASE);
+			showCaseItemJson = getJSONForShowCaseItem(showcaseItem, ShowCaseLayout.COLLECTIONSHOWCASE, request);
 
 		}
 		catch (final CMSItemNotFoundException e)
@@ -890,10 +894,11 @@ public class HomePageController extends AbstractPageController
 	 * @param productData
 	 * @return imageUrl
 	 */
-	private String getProductPrimaryImageUrl(final ProductData productData)
+	private String getProductPrimaryImageUrl(final ProductData productData, final HttpServletRequest request)
 	{
 		final List<ImageData> images = (List<ImageData>) productData.getImages();
-		String imageUrl = MISSING_IMAGE_URL;
+		//String imageUrl = MISSING_IMAGE_URL;
+		String imageUrl = GenericUtilityMethods.getMissingImageUrl(request);
 
 		if (CollectionUtils.isNotEmpty(images))
 		{
