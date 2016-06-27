@@ -298,12 +298,12 @@ function displayCODForm()
 {
 	refresh();
 	//TISPRD-2138
-	applyPromotion(null);
+	//applyPromotion(null);
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
 	var cartValue=$("#cartValue").val();
 	var httpRequest=$("#httpRequest").val();
-	
+
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplCODForm",
 		type: "GET",
@@ -312,7 +312,7 @@ function displayCODForm()
 		success : function(response) {
 			$("#otpNUM").html(response);
 			var codEligible=$("#codEligible").val();
-			
+
 			$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
 			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 			if(codEligible=="BLACKLISTED")
@@ -320,33 +320,37 @@ function displayCODForm()
 				$("#customerBlackListMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				$("#no-click").remove();
+				//$("#no-click").remove();
+				applyPromotion(null);
 			}
 			else if(codEligible=="NOT_TSHIP")
 			{
 				$("#fulfillmentMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				$("#no-click").remove();
+				//$("#no-click").remove();
+				applyPromotion(null);
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
 			{
 				$("#codItemEligibilityMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				$("#no-click").remove();
+				//$("#no-click").remove();
+				applyPromotion(null);
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
 			{
 				$("#codMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				$("#no-click").remove();
+				//$("#no-click").remove();
+				applyPromotion(null);
 			}
 			else{
 				if(isCodSet == false){
 				   	$.ajax({
-						url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/validateOTP",
+						url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setConvCharge",
 						type: "GET",
 						data: { 'paymentMode' : paymentMode },
 						cache: false,
@@ -406,7 +410,7 @@ function displayCODForm()
 			//$(".make_payment").removeAttr('disabled');
 		}
 	});
-	
+
 	//$("#no-click").remove();
 }
 
@@ -2822,8 +2826,6 @@ function applyPromotion(bankName)
 			$("#no-click1,.spinner1").remove();
 		}
 	});
-	
-	
 }
 
 
