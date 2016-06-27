@@ -2826,8 +2826,6 @@ function applyPromotion(bankName)
 			$("#no-click1,.spinner1").remove();
 		}
 	});
-	
-	
 }
 
 

@@ -59,15 +59,15 @@ function deleteWishlist(wishlistName){
 		},
 		//error : function(data) {
 			//alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");
+			//console.log(data.responseText) 
 		//}
 		error: function (xhr, status, error) {
 			if(status == "parsererror"){
 				window.location.href = ACC.config.encodedContextPath + "/login";
 			} else {
-				 alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
-			}
-           
-        }
+				alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
+			}          
+		}
 	});
 }
 
@@ -113,10 +113,9 @@ function renameWishlist(newWishlistName) {
 			if(status == "parsererror"){
 				window.location.href = ACC.config.encodedContextPath + "/login";
 			} else {
-				 alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
-			}
-           
-        }
+			 alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
+			}           
+		 }
 	});
 }
 
@@ -158,16 +157,9 @@ $(document).on("click",".create_wishlist",function(){
 			if(status == "parsererror"){
 				window.location.href = ACC.config.encodedContextPath + "/login";
 			} else {
-				 alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
-			}
-           
-        }
-		/*error : function(data) {
-			alert(data.responseText);
-			
-			alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");
-			//console.log(data.responseText) 
-		}*/
+			 alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
+			}           
+		 }
 	});
 });
 
@@ -293,10 +285,6 @@ function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isAppa
 //			window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
 			window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName;
 		},
-		//error : function(data) {
-			//alert("Some issues are there with Delete Wishlist at this time. Please try later or contact out helpdesk");
-			//console.log(data.responseText) 
-		//}
 		error: function (xhr, status, error) {
 			if(status == "parsererror"){
 				window.location.href = ACC.config.encodedContextPath + "/login";

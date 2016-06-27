@@ -76,7 +76,6 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 	protected static final String SPRING_SECURITY_LAST_USERNAME = "SPRING_SECURITY_LAST_USERNAME";
 	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
 
-
 	@Resource(name = "registerPageValidator")
 	private RegisterPageValidator registerPageValidator;
 	@Autowired
@@ -131,9 +130,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 		try
 		{
-
 			final String guid = (String) request.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
-
 			if (!getUserFacade().isAnonymousUser() && null != guid)
 			{
 				return getCheckoutStep().nextStep();
