@@ -1,4 +1,5 @@
 var headerLoggedinStatus = false;
+var csrfDataChanged = false;
 $(function() {
       $.ajax({
          url: ACC.config.encodedContextPath + "/fetchToken",
@@ -1050,14 +1051,10 @@ function appendIcid(url, icid) {
 }
 $(document).ready(function(){
 	//TISPT-290
-	if($('#pageTemplateId').val() ==
-	            'LandingPage2Template'){
+	if($('#pageTemplateId').val() =='LandingPage2Template'){
 	lazyLoadDivs();
 	setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
-	
 }
-	
-
 //Fix for defect TISPT-202
 getFooterOnLoad();
 
@@ -1147,7 +1144,7 @@ function populateEnhancedSearch(enhancedSearchData)
 	var notPresentBrand=true;
 	var notPresentSeller=true;
 	if(enhancedSearchData.categoryData.length > 0){
-		$(".select-view #searchCategory").append('<optgroup label="Departments"></optgroup>');
+		$(".select-view #enhancedSearchCategory").append('<optgroup label="Departments"></optgroup>');
 		for (var i=0; i<enhancedSearchData.categoryData.length; i++){
 			var code=enhancedSearchData.categoryData[i].code;
 			var name=enhancedSearchData.categoryData[i].name;
@@ -1158,14 +1155,14 @@ function populateEnhancedSearch(enhancedSearchData)
 				notPresentCategory=false;
 			}
 			$(".enhanced-search ul[label=Departments]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$(".select-view #searchCategory optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".select-view #enhancedSearchCategory optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
 		$("#searchBoxSpan").html(selectedText);
 	}
 	
 	if(enhancedSearchData.brandData.length > 0){
-		$(".select-view #searchCategory").append('<optgroup label="Brands"></optgroup>');
+		$(".select-view #enhancedSearchCategory").append('<optgroup label="Brands"></optgroup>');
 		for (var i=0; i<enhancedSearchData.brandData.length; i++){
 			var code=enhancedSearchData.brandData[i].code;
 			var name=enhancedSearchData.brandData[i].name;
@@ -1176,7 +1173,7 @@ function populateEnhancedSearch(enhancedSearchData)
 				notPresentBrand=false;
 			}
 			$(".enhanced-search ul[label=Brands]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$(".select-view #searchCategory optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".select-view #enhancedSearchCategory optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 			
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
@@ -1184,7 +1181,7 @@ function populateEnhancedSearch(enhancedSearchData)
 	}
 	
 	if(enhancedSearchData.sellerData.length > 0){
-		$(".select-view #searchCategory").append('<optgroup label="Sellers"></optgroup>');
+		$(".select-view #enhancedSearchCategory").append('<optgroup label="Sellers"></optgroup>');
 		for (var i=0; i<enhancedSearchData.sellerData.length; i++){
 			var code=enhancedSearchData.sellerData[i].id;
 			var name=enhancedSearchData.sellerData[i].name;
@@ -1195,7 +1192,7 @@ function populateEnhancedSearch(enhancedSearchData)
 				notPresentSeller=false;
 			}
 			$(".enhanced-search ul[label=Sellers]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$(".select-view #searchCategory optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".select-view #enhancedSearchCategory optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
 		$("#searchBoxSpan").html(selectedText);
