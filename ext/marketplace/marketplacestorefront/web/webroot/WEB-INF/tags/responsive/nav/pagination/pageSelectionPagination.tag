@@ -17,6 +17,9 @@
 	<c:set value="${pageFacets}${facet.code ? '' : '&'}${facet.code}" scope="request" var="tempFacets" />
 	<c:set var="pageFacets" value="${tempFacets}" />
 </c:forEach>
+<c:if test="${pageFacets ne '' }">
+	<c:set var="pageFacets" value="${pageFacets}&departmentHierarchy" />
+</c:if> 
 <c:set var="hasPreviousPage"
 	value="${searchPageData.pagination.currentPage > 0}" />
 <c:set var="hasNextPage"
