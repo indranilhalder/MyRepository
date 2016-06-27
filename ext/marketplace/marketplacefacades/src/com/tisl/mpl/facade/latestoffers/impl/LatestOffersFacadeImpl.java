@@ -9,6 +9,8 @@ import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -18,6 +20,7 @@ import com.tisl.mpl.facades.data.LatestOffersData;
 import com.tisl.mpl.facades.data.LatestOffersEntriesData;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -27,6 +30,7 @@ import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 public class LatestOffersFacadeImpl implements LatestOffersFacade
 {
 	private static final Logger LOG = Logger.getLogger(LatestOffersFacadeImpl.class);
+
 	private static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 
@@ -38,7 +42,7 @@ public class LatestOffersFacadeImpl implements LatestOffersFacade
 	 * @return LatestOffersData
 	 */
 	@Override
-	public LatestOffersData getLatestOffers(final ContentSlotModel contentSlot)
+	public LatestOffersData getLatestOffers(final ContentSlotModel contentSlot, final HttpServletRequest request)
 	{
 		final LatestOffersData offerData = new LatestOffersData();
 		final List<LatestOffersEntriesData> entriesdataList = new ArrayList<LatestOffersEntriesData>();
@@ -74,7 +78,7 @@ public class LatestOffersFacadeImpl implements LatestOffersFacade
 				for (final CMSMediaParagraphComponentModel latestOffersItem : latestOffersItemList)
 				{
 					final LatestOffersEntriesData entriesdata = new LatestOffersEntriesData();
-					String imageURL = MISSING_IMAGE_URL;
+					String imageURL = GenericUtilityMethods.getMissingImageUrl(request);
 					String text = "";
 					String linkUrl = "#";
 					if (null != latestOffersItem)

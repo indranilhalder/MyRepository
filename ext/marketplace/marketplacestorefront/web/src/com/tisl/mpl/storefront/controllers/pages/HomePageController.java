@@ -1056,13 +1056,13 @@ public class HomePageController extends AbstractPageController
 
 
 	@RequestMapping(value = "/listOffers", method = RequestMethod.GET)
-	public String get(final Model model)
+	public String get(final Model model, final HttpServletRequest request)
 	{
 		LatestOffersData latestOffersData = new LatestOffersData();
 		try
 		{
 			final ContentSlotModel homepageHeaderConcierge = contentSlotService.getContentSlotForId("HeaderLinksSlot");
-			latestOffersData = latestOffersFacade.getLatestOffers(homepageHeaderConcierge);
+			latestOffersData = latestOffersFacade.getLatestOffers(homepageHeaderConcierge, request);
 			model.addAttribute("latestOffersData", latestOffersData);
 		}
 

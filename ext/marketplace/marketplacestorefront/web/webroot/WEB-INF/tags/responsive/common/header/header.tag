@@ -20,7 +20,7 @@
 	<c:set var="hideSecureTransaction" value="true"></c:set>
 	<c:set var="hideLogo" value="true"></c:set>
 </c:if>
-
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <header>	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" id="ia_site_id" value="${cmsSite.uid}"> 
@@ -40,6 +40,9 @@
 	<input type="hidden" id="pageTemplateId" value="${cmsPage.masterTemplate.uid}">
 	<!-- For Infinite Analytics End -->
 	<input type="hidden" id="pageName" value="${cmsPage.name}">
+	<!-- Static resource host -->
+	<input type="hidden" id="staticHost" value="${pageContext.request.scheme}://${staticHost}">
+	<!-- End -->
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">

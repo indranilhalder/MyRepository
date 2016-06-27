@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -50,6 +51,7 @@ import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -70,7 +72,7 @@ public class ComparePageController extends AbstractPageController
 	private static final String HASH = "#";
 	private static final String LAST_LINK_CLASS = "active";
 	//store url changes
-	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-96x96.jpg";
+	//private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-96x96.jpg";
 	private static final String COMPARE_LIST = "compareList";
 
 	private List<CategoryModel> referenceCategories = new ArrayList<CategoryModel>();
@@ -101,7 +103,7 @@ public class ComparePageController extends AbstractPageController
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<Integer, Map<String, String>> getComparableProducts(@RequestParam("productCode") final String productCode,
-			final HttpSession session, @RequestParam("maximumSize") final int maximumSize)
+			final HttpSession session, @RequestParam("maximumSize") final int maximumSize, final HttpServletRequest request)
 
 	{
 		List<ProductData> sessionCompareList = new ArrayList();//3
@@ -145,7 +147,7 @@ public class ComparePageController extends AbstractPageController
 
 		session.setAttribute(COMPARE_LIST, sessionCompareList);
 
-		return populateProductMap(sessionCompareList);
+		return populateProductMap(sessionCompareList, request);
 	}
 
 	/**
@@ -155,7 +157,8 @@ public class ComparePageController extends AbstractPageController
 	 *
 	 */
 	@SuppressWarnings("boxing")
-	private Map<Integer, Map<String, String>> populateProductMap(final List<ProductData> productDatas)
+	private Map<Integer, Map<String, String>> populateProductMap(final List<ProductData> productDatas,
+			final HttpServletRequest request)
 	{
 		int index = 0;
 		final Map<Integer, Map<String, String>> comparableProductMap = new ConcurrentHashMap<Integer, Map<String, String>>();
@@ -214,12 +217,14 @@ public class ComparePageController extends AbstractPageController
 				}
 				else
 				{
-					productAttributeMap.put(ModelAttributetConstants.PRODUCT_IMAGE_URL, MISSING_IMAGE_URL);
+					productAttributeMap.put(ModelAttributetConstants.PRODUCT_IMAGE_URL,
+							GenericUtilityMethods.getMissingImageUrl(request));
 				}
 			}
 			else
 			{
-				productAttributeMap.put(ModelAttributetConstants.PRODUCT_IMAGE_URL, MISSING_IMAGE_URL);
+				productAttributeMap
+						.put(ModelAttributetConstants.PRODUCT_IMAGE_URL, GenericUtilityMethods.getMissingImageUrl(request));
 			}
 
 			comparableProductMap.put(index, productAttributeMap);
@@ -403,8 +408,8 @@ public class ComparePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B2001));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.B2001));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.COMPARE_SYSTEM_ERROR);
 
 		}
