@@ -161,7 +161,9 @@ if($(window).width() < 650) {
 
 
 </head>
-
+<c:if test="${empty buildNumber}">
+<c:set var="buildNumber" value= "100000"/>
+</c:if>
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
 
 <!-- 
@@ -180,7 +182,30 @@ if($(window).width() < 650) {
 			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/') or 
 					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/payment-method/')}"></c:when>
 		<c:otherwise>
-			<script type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}"></script>
+		<c:choose>
+ 		<c:when test="${isMinificationEnabled}">
+ 		<script type="text/javascript">
+ 		$(window).on('load',function(){
+ 			$.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
+ 				$.getScript('${commonResourcePath}/js/minified/acc.gigya.min.js?v=${buildNumber}').done(function(){
+ 					loadGigya();
+ 				});
+ 			});
+ 		});
+ 		</script>
+ 	</c:when>
+ 		<c:otherwise>
+ 		<script type="text/javascript">
+ 		$(window).on('load',function(){
+ 			$.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
+ 				$.getScript('${commonResourcePath}/js/gigya/acc.gigya.js').done(function(){
+ 					loadGigya();
+ 				});
+ 			});
+ 		});
+ 		</script>
+ 		</c:otherwise>
+ 		</c:choose>
 		</c:otherwise>
 		</c:choose>
 	</c:if>
