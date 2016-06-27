@@ -7,7 +7,7 @@
 		<property qualifier="AbstractCMSComponent.visible"/>
 	</group>
 
-	<group qualifier="editorial" visible="true" initially-opened="false">
+	<group qualifier="editorial" visible="true" initially-opened="true">
 		<label key="config.general.editorial" />
 		<property qualifier="ImageCarouselComponent.collectionItems">
 			<parameter>
@@ -15,13 +15,11 @@
 				<value>cmsItemPredefinedValuesStrategy</value>
 			</parameter>		
 		</property>
-		<property qualifier="ImageCarouselComponent.headerText"/>
-		<property qualifier="ImageCarouselComponent.buttonText"/>
-		<property qualifier="ImageCarouselComponent.buttonLink"/>			
+		<property qualifier="SimpleCMSComponent.componentType" />				
 		<property qualifier="SimpleCMSComponent.deeplinkType" />
         <property qualifier="SimpleCMSComponent.deeplinkTypeId" />
         <property qualifier="SimpleCMSComponent.deeplinkTypeVal" />
-        <property qualifier="SimpleCMSComponent.componentType" />		
+            		
 	</group>
 
 	<group qualifier="visibility" visible="true" initially-opened="false">
