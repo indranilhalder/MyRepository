@@ -616,6 +616,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOBANKLIST = "bank list is not available";
 
 	public static final String SSHIPCODE = "SSHIP";
+	public static final String TSHIPCODE = "TSHIP";
 	public static final String SET_EMPTY_ORDER_NOTIFICATIONS = "Notifications are not available";
 	public static final String EMAIL_ID_IS_EMPTY = "Email ID for the current user is empty";
 

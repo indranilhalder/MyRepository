@@ -1,4 +1,5 @@
 var headerLoggedinStatus = false;
+var csrfDataChanged = false;
 $(function() {
       $.ajax({
          url: ACC.config.encodedContextPath + "/fetchToken",
@@ -1050,14 +1051,10 @@ function appendIcid(url, icid) {
 }
 $(document).ready(function(){
 	//TISPT-290
-	if($('#pageTemplateId').val() ==
-	            'LandingPage2Template'){
+	if($('#pageTemplateId').val() =='LandingPage2Template'){
 	lazyLoadDivs();
 	setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
-	
 }
-	
-
 //Fix for defect TISPT-202
 getFooterOnLoad();
 
