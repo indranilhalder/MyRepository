@@ -1119,7 +1119,7 @@ public class CartPageController extends AbstractPageController
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKPINCODESERVICEABILITY, method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequireHardLogIn
 	public @ResponseBody String checkPincodeServiceability(
 			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode)
 	{
@@ -1430,7 +1430,7 @@ public class CartPageController extends AbstractPageController
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKEXPRESSCHECKOUTPINOCDESERVICEABILITY, method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequireHardLogIn
 	public @ResponseBody String checkExpressCheckoutPincodeServiceability(
 			@PathVariable(MarketplacecheckoutaddonConstants.SELECTEDADDRESSID) final String selectedAddressId)
 			throws EtailNonBusinessExceptions

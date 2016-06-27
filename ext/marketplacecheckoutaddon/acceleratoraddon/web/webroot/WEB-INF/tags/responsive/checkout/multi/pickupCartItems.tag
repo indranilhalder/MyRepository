@@ -121,6 +121,9 @@
 	            <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
 	            <h3 class="product-name"><a href="${productUrl}">${entry.product.name}</a></h3>
 	            <p class="qty"><spring:theme code="basket.page.qty"/>&nbsp;${entry.quantity}</p>
+	              <c:if test="${not empty entry.product.size}">
+						<p class="size"><spring:theme code="text.size"/>&nbsp;${entry.product.size}</p>
+				  </c:if>
 				<div class="price"><format:price priceData="${entry.basePrice}" displayFreeForZero="true"/></div>
 				<div class="details">
 					<%-- <div class="name"><a href="${productUrl}">${entry.product.name}</a></div>
