@@ -41,7 +41,7 @@
 	<!-- For Infinite Analytics End -->
 	<input type="hidden" id="pageName" value="${cmsPage.name}">
 	<!-- Static resource host -->
-	<input type="hidden" id="staticHost" value="${pageContext.request.scheme}://${staticHost}">
+	<input type="hidden" id="staticHost" value="//${staticHost}">
 	<!-- End -->
 	<div class="row header-row"></div>
 	<c:choose>

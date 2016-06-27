@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -63,8 +61,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 
 	@Override
-	public JSONObject getBestPicksJSON(final ContentSlotModel contentSlot, final HttpServletRequest request)
-			throws EtailNonBusinessExceptions
+	public JSONObject getBestPicksJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject bestPicks = new JSONObject();
@@ -121,7 +118,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							{
 								LOG.info("No Media for this item");
 								//imageURL = MISSING_IMAGE_URL;
-								imageURL = GenericUtilityMethods.getMissingImageUrl(request);
+								imageURL = GenericUtilityMethods.getMissingImageUrl();
 							}
 
 							bestPickItemJson.put("imageUrl", imageURL);
@@ -168,8 +165,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 
 	@Override
-	public JSONObject getProductsYouCareJSON(final ContentSlotModel contentSlot, final HttpServletRequest request)
-			throws EtailNonBusinessExceptions
+	public JSONObject getProductsYouCareJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject productYouCare = new JSONObject();
@@ -202,7 +198,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 					for (final CategoryModel category : productYouCareCarouselComponent.getCategories())
 					{
 						final JSONObject categoryJSON = getCategoryJSON(category);
-						categoryJSON.put("mediaURL", getCategoryMediaUrl(category, request));
+						categoryJSON.put("mediaURL", getCategoryMediaUrl(category));
 						categoryJSON.put(ICID, productYouCareCarouselComponent.getPk().getLongValueAsString());
 						subComponentJsonArray.add(categoryJSON);
 					}
@@ -231,7 +227,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							final JSONObject categoryJSON = getCategoryJSON(imageCategoryComponent.getCategory());
 							if (imageCategoryComponent.getIsImageFromPCM().booleanValue())
 							{
-								mediaUrl = getCategoryMediaUrl(imageCategoryComponent.getCategory(), request);
+								mediaUrl = getCategoryMediaUrl(imageCategoryComponent.getCategory());
 
 							}
 							else
@@ -308,11 +304,11 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	/**
 	 * @param category
 	 */
-	private String getCategoryMediaUrl(final CategoryModel category, final HttpServletRequest request)
+	private String getCategoryMediaUrl(final CategoryModel category)
 	{
 
 		//String mediaUrl = MISSING_IMAGE_URL;
-		String mediaUrl = GenericUtilityMethods.getMissingImageUrl(request);
+		String mediaUrl = GenericUtilityMethods.getMissingImageUrl();
 		if (null != category.getMedias())
 		{
 			for (final MediaModel categoryMedia : category.getMedias())

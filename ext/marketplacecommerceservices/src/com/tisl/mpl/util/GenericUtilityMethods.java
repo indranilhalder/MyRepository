@@ -709,11 +709,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -982,13 +982,12 @@ public class GenericUtilityMethods
 	/**
 	 * @return String This method returns the missing image url
 	 */
-	public static String getMissingImageUrl(final HttpServletRequest request)
+	public static String getMissingImageUrl()
 
 	{
 		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext().getBean(
 				"configurationService");
 		String missingImageUrl = MISSING_IMAGE_URL;
-		final String protocol = request.getScheme() + "://";
 		String staticHost = null;
 		if (null != configService)
 		{
@@ -996,7 +995,7 @@ public class GenericUtilityMethods
 		}
 		if (StringUtils.isNotEmpty(staticHost))
 		{
-			missingImageUrl = protocol + staticHost + MISSING_IMAGE_URL;
+			missingImageUrl = "//" + staticHost + MISSING_IMAGE_URL;
 		}
 		return missingImageUrl;
 

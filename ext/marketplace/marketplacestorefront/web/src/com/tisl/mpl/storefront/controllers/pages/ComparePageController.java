@@ -147,7 +147,7 @@ public class ComparePageController extends AbstractPageController
 
 		session.setAttribute(COMPARE_LIST, sessionCompareList);
 
-		return populateProductMap(sessionCompareList, request);
+		return populateProductMap(sessionCompareList);
 	}
 
 	/**
@@ -157,8 +157,7 @@ public class ComparePageController extends AbstractPageController
 	 *
 	 */
 	@SuppressWarnings("boxing")
-	private Map<Integer, Map<String, String>> populateProductMap(final List<ProductData> productDatas,
-			final HttpServletRequest request)
+	private Map<Integer, Map<String, String>> populateProductMap(final List<ProductData> productDatas)
 	{
 		int index = 0;
 		final Map<Integer, Map<String, String>> comparableProductMap = new ConcurrentHashMap<Integer, Map<String, String>>();
@@ -217,14 +216,12 @@ public class ComparePageController extends AbstractPageController
 				}
 				else
 				{
-					productAttributeMap.put(ModelAttributetConstants.PRODUCT_IMAGE_URL,
-							GenericUtilityMethods.getMissingImageUrl(request));
+					productAttributeMap.put(ModelAttributetConstants.PRODUCT_IMAGE_URL, GenericUtilityMethods.getMissingImageUrl());
 				}
 			}
 			else
 			{
-				productAttributeMap
-						.put(ModelAttributetConstants.PRODUCT_IMAGE_URL, GenericUtilityMethods.getMissingImageUrl(request));
+				productAttributeMap.put(ModelAttributetConstants.PRODUCT_IMAGE_URL, GenericUtilityMethods.getMissingImageUrl());
 			}
 
 			comparableProductMap.put(index, productAttributeMap);

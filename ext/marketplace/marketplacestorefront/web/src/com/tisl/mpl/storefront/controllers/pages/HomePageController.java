@@ -378,7 +378,7 @@ public class HomePageController extends AbstractPageController
 			{
 
 				firstProduct = productFacade.getProductForOptions(showcaseItem.getProduct1(), PRODUCT_OPTIONS);
-				showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct, request));
+				showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct));
 				showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
 				showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
 				String price = null;
@@ -409,7 +409,7 @@ public class HomePageController extends AbstractPageController
 				if (showcaseItem.getProduct2() != null)
 				{
 					secondProduct = productFacade.getProductForOptions(showcaseItem.getProduct2(), PRODUCT_OPTIONS);
-					showCaseItemJson.put("secondproductImageUrl", getProductPrimaryImageUrl(secondProduct, request));
+					showCaseItemJson.put("secondproductImageUrl", getProductPrimaryImageUrl(secondProduct));
 					showCaseItemJson.put("secondProductTitle", secondProduct.getProductTitle());
 					showCaseItemJson.put("secondProductUrl", secondProduct.getUrl());
 					String price = null;
@@ -473,7 +473,7 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
-	public JSONObject getBestPicks(@RequestParam(VERSION) final String version, final HttpServletRequest request)
+	public JSONObject getBestPicks(@RequestParam(VERSION) final String version)
 	{
 		JSONObject getBestPicksJson = new JSONObject();
 		try
@@ -481,7 +481,7 @@ public class HomePageController extends AbstractPageController
 			final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
 					"Section4CSlot-Homepage", version);
 			//return homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
-			getBestPicksJson = homepageComponentService.getBestPicksJSON(homepageSection4CSlot, request);
+			getBestPicksJson = homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
 		}
 
 		catch (final EtailBusinessExceptions e)
@@ -504,14 +504,14 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getProductsYouCare", method = RequestMethod.GET)
-	public JSONObject getProductsYouCare(@RequestParam(VERSION) final String version, final HttpServletRequest request)
+	public JSONObject getProductsYouCare(@RequestParam(VERSION) final String version)
 	{
 		JSONObject getProductsYouCareJson = new JSONObject();
 		try
 		{
 			final ContentSlotModel homepageSection4DSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
 					"Section4DSlot-Homepage", version);
-			getProductsYouCareJson = homepageComponentService.getProductsYouCareJSON(homepageSection4DSlot, request);
+			getProductsYouCareJson = homepageComponentService.getProductsYouCareJSON(homepageSection4DSlot);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -535,7 +535,7 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getNewAndExclusive", method = RequestMethod.GET)
-	public JSONObject getNewAndExclusive(@RequestParam(VERSION) final String version, final HttpServletRequest request)
+	public JSONObject getNewAndExclusive(@RequestParam(VERSION) final String version)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject newAndExclusiveJson = new JSONObject();
@@ -602,7 +602,7 @@ public class HomePageController extends AbstractPageController
 
 							ProductData product = null;
 							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
-							newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product, request));
+							newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
 							newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
 							newAndExclusiveProductJson.put("productUrl", product.getUrl());
 							String price = null;
@@ -894,11 +894,11 @@ public class HomePageController extends AbstractPageController
 	 * @param productData
 	 * @return imageUrl
 	 */
-	private String getProductPrimaryImageUrl(final ProductData productData, final HttpServletRequest request)
+	private String getProductPrimaryImageUrl(final ProductData productData)
 	{
 		final List<ImageData> images = (List<ImageData>) productData.getImages();
 		//String imageUrl = MISSING_IMAGE_URL;
-		String imageUrl = GenericUtilityMethods.getMissingImageUrl(request);
+		String imageUrl = GenericUtilityMethods.getMissingImageUrl();
 
 		if (CollectionUtils.isNotEmpty(images))
 		{
@@ -1062,7 +1062,7 @@ public class HomePageController extends AbstractPageController
 		try
 		{
 			final ContentSlotModel homepageHeaderConcierge = contentSlotService.getContentSlotForId("HeaderLinksSlot");
-			latestOffersData = latestOffersFacade.getLatestOffers(homepageHeaderConcierge, request);
+			latestOffersData = latestOffersFacade.getLatestOffers(homepageHeaderConcierge);
 			model.addAttribute("latestOffersData", latestOffersData);
 		}
 

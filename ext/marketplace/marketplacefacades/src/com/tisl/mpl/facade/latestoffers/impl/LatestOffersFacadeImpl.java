@@ -9,8 +9,6 @@ import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -42,7 +40,7 @@ public class LatestOffersFacadeImpl implements LatestOffersFacade
 	 * @return LatestOffersData
 	 */
 	@Override
-	public LatestOffersData getLatestOffers(final ContentSlotModel contentSlot, final HttpServletRequest request)
+	public LatestOffersData getLatestOffers(final ContentSlotModel contentSlot)
 	{
 		final LatestOffersData offerData = new LatestOffersData();
 		final List<LatestOffersEntriesData> entriesdataList = new ArrayList<LatestOffersEntriesData>();
@@ -78,7 +76,7 @@ public class LatestOffersFacadeImpl implements LatestOffersFacade
 				for (final CMSMediaParagraphComponentModel latestOffersItem : latestOffersItemList)
 				{
 					final LatestOffersEntriesData entriesdata = new LatestOffersEntriesData();
-					String imageURL = GenericUtilityMethods.getMissingImageUrl(request);
+					String imageURL = GenericUtilityMethods.getMissingImageUrl();
 					String text = "";
 					String linkUrl = "#";
 					if (null != latestOffersItem)

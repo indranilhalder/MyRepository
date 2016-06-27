@@ -12,7 +12,7 @@
 		<c:url value="${imagePath}" var="imageUrl" context="${originalContextPath}"/>
 	</c:when>
 	<c:otherwise>
-		<c:url value="${pageContext.request.scheme}://${staticHost}${imagePath}" var="imageUrl" />
+		<c:url value="//${staticHost}${imagePath}" var="imageUrl" />
 	</c:otherwise>
 </c:choose>
 
