@@ -24,8 +24,8 @@
 		${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
 	</title>
 	<%-- Meta Content --%>
-	<meta name="apple-itunes-app" content="app-id=502838820">
-<meta name="google-play-app" content="app-id=ru.hh.android">
+	<meta name="apple-itunes-app" content="app-id=1101619385">
+<meta name="google-play-app" content="app-id=com.tul.tatacliq">
 
 <!-- <meta name="msApplication-ID" content="microsoft.build.App"/>
 <meta name="msApplication-PackageFamilyName" content="microsoft.build_8wekyb3d8bbwe"/> -->
