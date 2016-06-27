@@ -3,8 +3,11 @@
  */
 package com.tisl.mpl.BuyBoxDataImport;
 
+import de.hybris.platform.core.Registry;
+import de.hybris.platform.jdbcwrapper.HybrisDataSource;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.util.CSVWriter;
+import de.hybris.platform.virtualjdbc.db.VjdbcDataSourceImplFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,7 +58,7 @@ public class BuyBoxImportUtility
 
 	public void executeExtraction()
 	{
-
+		HybrisDataSource currentDataSource = null;
 		final String productExportQuery = getDataExportQuery();
 		LOG.debug("Buybox Export query :" + productExportQuery);
 		Connection vjdbcConnection = null;
@@ -64,7 +67,10 @@ public class BuyBoxImportUtility
 		try
 		{
 			// getting database connection from vjdbc
-			vjdbcConnection = buyBoxDataSource.getConnection();
+			currentDataSource = Registry.getCurrentTenantNoFallback().getDataSource(VjdbcDataSourceImplFactory.class.getName());
+			vjdbcConnection = currentDataSource.getConnection();
+			//Please Comment the above two lines in case of local and uncomment the below line
+			//vjdbcConnection=buyBoxDataSource.getConnection();
 			vjdbcStmt = vjdbcConnection.createStatement();
 			//Fetching Result
 			analyticsResult = vjdbcStmt.executeQuery(productExportQuery);
