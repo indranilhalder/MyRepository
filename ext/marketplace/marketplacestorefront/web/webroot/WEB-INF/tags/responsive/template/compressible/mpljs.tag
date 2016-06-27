@@ -269,6 +269,8 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/feedback.js"></script>
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/smart-app-banner.js"></script>
 	
 <!--[if lt IE 9]>
 <script type="text/javascript" src="${commonResourcePath}/js/html5shiv.js"></script>
