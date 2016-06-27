@@ -103,21 +103,12 @@ $("div.departmenthover").on("mouseover touchend", function() {
                         encodeURI(html));
 
                 }
-            },
-            complete: function() {
-            	if($(window).width() > 767) { 
-            		bgcolor(id);
-            	   }
             }
         });
 
 
     }
     
-    
-   if($(window).width() > 767) { 
-	   bgcolor(id);
-   }
 });
 
 
@@ -1525,20 +1516,13 @@ $(document).ready(function(){
 	                        encodeURI(html));
 
 	                }
-	            },
-	            complete: function() {
-	            	if($(window).width() > 767) { 
-	            		   bgcolor(id);
-	            	   }
 	            }
 	        });
 
 
 	    }
 	    
-	    if($(window).width() > 767) { 
-	  		   bgcolor(id);
-	  	   }
+	    
 	    //brand/////////////////////
 		var componentUid = $("#componentUid").val();
 	    if ($("li#atozbrandsdiplay").length) {
@@ -1599,8 +1583,7 @@ $(document).ready(function(){
 	
 	//end//
 });
-function bgcolor(id) {
-	console.log(id);
+/*function bgcolor(id) {
 	var col = 0, bgWidth = 0, len = $('ul.words.'+id+' li.words').length, ulwords = $('ul.words.'+id+' li.words'), ulwordsParent = $('ul.words.'+id), lastLiWidth =  ulwords.last().outerWidth(),bgleft = 0;
 	$('ul.words.'+id+' span.bg').remove();
 	for(var i=0;i<len-1;i++) {
@@ -1619,4 +1602,4 @@ function bgcolor(id) {
 	if(col%2 == 0) {
 		ulwordsParent.append('<span class="bg" style="left:'+(bgleft+5)+'px;width:'+(lastLiWidth + 25)+'px"></span>')
 	}
-}
+}*/
