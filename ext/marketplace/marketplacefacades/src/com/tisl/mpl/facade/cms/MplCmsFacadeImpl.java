@@ -562,7 +562,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 							try
 							{
 								productModel = productService.getProductForCode(productCode);
-								productComp.setImage(productModel.getPicture().getUrl2());
+								if (null !=productModel && null != productModel.getPicture())
+								{
+									productComp.setImage(productModel.getPicture().getUrl2());
+								}
 							}
 							catch (final Exception e)
 							{
