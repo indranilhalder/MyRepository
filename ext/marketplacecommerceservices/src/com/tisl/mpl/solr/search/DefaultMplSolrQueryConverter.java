@@ -32,11 +32,13 @@ import org.apache.solr.client.solrj.SolrQuery;
 public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 {
 	private static final Logger LOG = Logger.getLogger(DefaultMplSolrQueryConverter.class);
+	private SearchQuery searchQuery;
 
 
 	@Override
 	public SolrQuery convertSolrQuery(final SearchQuery searchQuery) throws FacetSearchException
 	{
+		this.searchQuery = searchQuery;
 		if (searchQuery instanceof MplSearchQuery && ((MplSearchQuery) searchQuery).isSnS())
 		{
 			LOG.debug("Entering MplSearchQuery..");
@@ -142,6 +144,68 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 		}
 	}
 
+	@Override
+	protected void addFacetFields(final SolrQuery solrQuery, Map<String, IndexedFacetInfo> facetInfoMap)
+			throws FacetSearchException
+	{
+		//get page related facets and update facetInfoMap
+		if (searchQuery.getIndexedType().getPageTypeFacets() != null)
+		{
+			facetInfoMap = getPageFacetInfo(this.searchQuery, getSolrFieldNameProvider());
+		}
+
+		for (final IndexedFacetInfo facetInfo : facetInfoMap.values())
+		{
+			if (facetInfo.isMultiSelect())
+			{
+				solrQuery.addFacetField(new String[]
+				{ "{!ex=" + facetInfo.getKey() + "}" + facetInfo.getTranslatedFieldName() });
+			}
+			else
+			{
+				solrQuery.addFacetField(new String[]
+				{ facetInfo.getTranslatedFieldName() });
+			}
+		}
+	}
+
+	protected Map<String, IndexedFacetInfo> getPageFacetInfo(final SearchQuery searchQuery,
+			final FieldNameProvider solrFieldNameProvider) throws FacetSearchException
+	{
+		final Map results = new HashMap();
+
+		int index = 0;
+
+		final IndexedType indexedType = searchQuery.getIndexedType();
+		final Set<String> facets = indexedType.getPageTypeFacets();
+		for (final String facetName : facets)
+		{
+			final IndexedProperty indexedProperty = indexedType.getIndexedProperties().get(facetName);
+			if (indexedProperty != null)
+			{
+				final IndexedFacetInfo facetInfo = new IndexedFacetInfo();
+				final FacetType facetType = indexedProperty.getFacetType();
+				if (FacetType.MULTISELECTAND.equals(facetType))
+				{
+					facetInfo.setMultiSelect(true);
+					facetInfo.setMultiSelectAnd(true);
+				}
+				else if (FacetType.MULTISELECTOR.equals(facetType))
+				{
+					facetInfo.setMultiSelect(true);
+					facetInfo.setMultiSelectOr(true);
+				}
+
+				facetInfo.setTranslatedFieldName(translateFieldName(facetName, FieldNameProvider.FieldType.INDEX, searchQuery));
+				facetInfo.setKey("fk" + index);
+				results.put(facetInfo.getTranslatedFieldName(), facetInfo);
+			}
+
+			++index;
+		}
+
+		return results;
+	}
 
 
 	private String[] convertCoupledQueryFields(final List<CoupledQueryField> coupledQueryFields)

@@ -1514,3 +1514,4 @@ $(document).ready(function(){
         var screenXsMax="639px";
         var screenSmMax="1023px";
         var screenMdMax="1399px";
+

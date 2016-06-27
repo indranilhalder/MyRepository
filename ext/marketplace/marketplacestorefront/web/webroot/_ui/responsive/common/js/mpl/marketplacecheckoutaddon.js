@@ -9,27 +9,57 @@ var bankNameSelected;
 //Display forms based on mode button click
 $("#viewPaymentCredit").click(function(){
 	$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	displayCreditCardForm();
+	//Display Credit Card form only if the session is active
+	if(isSessionActive()){
+		displayCreditCardForm();
+	}
+	else{
+		redirectToCheckoutLogin();	
+	}
 });
 
 $("#viewPaymentDebit").click(function(){
 	$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	displayDebitCardForm();
+	//Display Debit Card form only if the session is active
+	if(isSessionActive()){
+		displayDebitCardForm();
+	}
+	else{
+		redirectToCheckoutLogin();	
+	}
 });
 
 $("#viewPaymentNetbanking").click(function(){
 	$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	displayNetbankingForm();
+	//Display NET BANKING form only if the session is active
+	if(isSessionActive()){
+		displayNetbankingForm();
+	}
+	else{
+		redirectToCheckoutLogin();	
+	}
 });
 
 $("#viewPaymentCOD").click(function(){
 	$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	displayCODForm();
+	//Display COD form only if the session is active
+	if(isSessionActive()==true){
+		displayCODForm();
+	}
+	else{
+		redirectToCheckoutLogin();
+	}
 });
 
 $("#viewPaymentEMI").click(function(){
 	$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	displayEMIForm();
+	//Display EMI form only if the session is active
+	if(isSessionActive()){
+		displayEMIForm();
+	}
+	else{
+		redirectToCheckoutLogin();
+	}
 }); 
 //Mode button click function ends
 
@@ -268,12 +298,12 @@ function displayCODForm()
 {
 	refresh();
 	//TISPRD-2138
-	applyPromotion(null);
+	//applyPromotion(null);
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
 	var cartValue=$("#cartValue").val();
 	var httpRequest=$("#httpRequest").val();
-	
+
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplCODForm",
 		type: "GET",
@@ -282,7 +312,7 @@ function displayCODForm()
 		success : function(response) {
 			$("#otpNUM").html(response);
 			var codEligible=$("#codEligible").val();
-			
+
 			$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
 			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 			if(codEligible=="BLACKLISTED")
@@ -290,33 +320,37 @@ function displayCODForm()
 				$("#customerBlackListMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				$("#no-click").remove();
+				//$("#no-click").remove();
+				applyPromotion(null);
 			}
 			else if(codEligible=="NOT_TSHIP")
 			{
 				$("#fulfillmentMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				$("#no-click").remove();
+				//$("#no-click").remove();
+				applyPromotion(null);
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
 			{
 				$("#codItemEligibilityMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				$("#no-click").remove();
+				//$("#no-click").remove();
+				applyPromotion(null);
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
 			{
 				$("#codMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
-				$("#no-click").remove();
+				//$("#no-click").remove();
+				applyPromotion(null);
 			}
 			else{
 				if(isCodSet == false){
 				   	$.ajax({
-						url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/validateOTP",
+						url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setConvCharge",
 						type: "GET",
 						data: { 'paymentMode' : paymentMode },
 						cache: false,
@@ -376,7 +410,7 @@ function displayCODForm()
 			//$(".make_payment").removeAttr('disabled');
 		}
 	});
-	
+
 	//$("#no-click").remove();
 }
 
@@ -1033,6 +1067,8 @@ function displayFormForCC(){
   
 
 function mobileBlacklist(){
+	//Check if the session is active before generating OTP
+	if(isSessionActive()){
 	//store url change
 	$("#sendOTPButton").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
 	if($("#sendOTPButton #resendOTPMessage").css("display") == 'block') {
@@ -1061,7 +1097,10 @@ function mobileBlacklist(){
 			$("#sendOTPButton .spinner").remove();
 		}
 	});
-	
+	}
+	else{
+		redirectToCheckoutLogin();
+	}
 }
 
 
@@ -1562,9 +1601,14 @@ $("#otpMobileNUMField").focus(function(){
 	 document.getElementById("cvvError").innerHTML="";
 	 
  })
-  $("#make_cc_payment, #make_cc_payment_up").click(function(){	
+  $("#make_cc_payment, #make_cc_payment_up").click(function(){
+	  if(isSessionActive()==false){
+			 redirectToCheckoutLogin();
+			}
+			else{
 		var bin_current_status = getCardBinstatus();
 		dopayment(bin_current_status);
+			}
   })
   
   function getCardBinstatus(){
@@ -2573,6 +2617,9 @@ function setBankForSavedCard(bankName){
 
 function applyPromotion(bankName)
 {
+	$("body").append("<div id='no-click1' style='opacity:0.15; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner1" style="position: fixed; left: 40%;top:45%; height: 30px;">'); 
+	
 	$(".make_payment").attr('disabled','true');
 	var paymentMode=$("#paymentMode").val();
 	$("#promotionApplied,#promotionMessage").css("display","none");
@@ -2771,10 +2818,12 @@ function applyPromotion(bankName)
 				$("#no-click").remove();
 				$(".make_payment").removeAttr('disabled');
 			}
+			$("#no-click1,.spinner1").remove();
 		},
 		error : function(resp) {
 			$("#no-click").remove();
 			$(".make_payment").removeAttr('disabled');
+			$("#no-click1,.spinner1").remove();
 		}
 	});
 }
@@ -3605,7 +3654,13 @@ $("#cardNo").blur(function(){
 	if($("#cardNo").val()!="")
 	{
 		if($("#make_cc_payment").data("mouseDown") != "clicked"){
-		  validateCardNo();
+			//Check if session is timed out before validating card
+			if(isSessionActive()){
+				validateCardNo();
+			}
+			else{
+				redirectToCheckoutLogin();
+			}
 		}
 	} else {
 		 document.getElementById("cardNoError").innerHTML="Please enter a valid card number ";
@@ -3950,6 +4005,9 @@ function clearDisable()
 
 //Coupon
 $("#couponSubmitButton").click(function(){
+	if(!isSessionActive()){
+		redirectToCheckoutLogin();
+	}else{
 	$(this).prop('disabled', true);
 	$(this).css("opacity","0.5");
 	$("#priceCouponError, #emptyCouponError, #appliedCouponError, " +
@@ -4045,6 +4103,7 @@ $("#couponSubmitButton").click(function(){
 	 			$("#couponSubmitButton").css("opacity","1");
 	 		}
 	 	});	 
+	}
 	}
 });
 
@@ -4343,6 +4402,9 @@ function removefromCart(entryNo,wishName)
 			
 			
 		},
+		complete:function(){
+			forceUpdateHeader();
+		},
 		error:function(data){
 			alert("error");
 		}
@@ -4442,3 +4504,29 @@ function addToWishlistFromCart() {
 	})
 }
 // End 
+//Check Session Active
+function isSessionActive(){
+	var active=false;
+	$.ajax({
+		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/checkSessionActive",
+		type: "GET",
+		cache: false,
+		async:false,
+		success : function(response) {
+			if(response){
+				active=true;
+			}
+			
+			
+		},
+		error:function(response){
+			console.log("Error occured");
+			}
+		});
+	return active;
+	
+}
+//redirect to checkout login page
+function redirectToCheckoutLogin(){
+	window.location=ACC.config.encodedContextPath + "/checkout/multi/checkoutlogin/login";
+}

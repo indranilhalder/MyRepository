@@ -1,6 +1,6 @@
 var headerLoggedinStatus = false;
+var csrfDataChanged = false;
 $(function() {
-  
       $.ajax({
          url: ACC.config.encodedContextPath + "/fetchToken",
          type: 'GET',
@@ -11,60 +11,34 @@ $(function() {
                  this.value = data;
              });
              ACC.config.CSRFToken = data;
+             var crsfSession = window.sessionStorage.getItem("csrf-token");
+             if(window.sessionStorage && (null == crsfSession || crsfSession != data)){
+            	 csrfDataChanged = true;
+            	 window.sessionStorage.setItem("csrf-token",data);
+             }
          }
      });
 });
 $(function() {
-//TISPRO-522 IE Issue Fix
-    $.ajax({
-        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
-        type: 'GET',
-        cache:false,
-        success: function(data) {
-            headerLoggedinStatus = data.loggedInStatus;
-            //TISPT-197
-            if(data.cartcount!='NaN')
-        	{
-            	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
-        	}
-            else
-            {
-            	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html('0');
-            }
-            
-            if (!headerLoggedinStatus) {
-
-                $("a.headeruserdetails").html("Sign In");
-              //Akamai caching
-                $("a.headeruserdetails").attr('href','/login');
-                $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
-                
-                $("a.tracklinkcls").attr('href','/login');
-                $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
-            } else {
-                var firstName = data.userFirstName;
-                if (firstName == null || firstName.trim() ==
-                    '') {
-                    $("a.headeruserdetails").html("Hi!");
-                } else {
-                    $("a.headeruserdetails").html("Hi, " +
-                        firstName + "!");
-                }
-                //Akamai caching
-                $('#signIn').attr('class','dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout');
-                $("a.headeruserdetails").attr('href','/my-account');
-                
-                $("a.tracklinkcls").attr('href','#');
-                if(data.notificationCount != null){
-	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >'+data.notificationCount+'</span>)');
-	               } else {
-	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
-	               } 
-            }
-         
-        }
-    });
-});
+	//TISPRO-522 IE Issue Fix
+	
+	var header = window.sessionStorage.getItem("header");
+	var userCookChanged = userCookieChanged();
+	if(forceSetHeader() || null == header || userCookChanged == true || csrfDataChanged){
+		$.ajax({
+	        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
+	        type: 'GET',
+	        cache:false,
+	        success: function(data) {
+	        	window.sessionStorage.setItem("header" , JSON.stringify(data));
+	        	setHeader(data);
+	        }
+	    });
+	}else{
+		 header = JSON.parse(header);
+		 setHeader(header);
+	 	}
+	});
  
 $("div.departmenthover").on("mouseover touchend", function() {
     var id = this.id;
@@ -1077,9 +1051,10 @@ function appendIcid(url, icid) {
 }
 $(document).ready(function(){
 	//TISPT-290
+	if($('#pageTemplateId').val() =='LandingPage2Template'){
 	lazyLoadDivs();
-setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
-
+	setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
+}
 //Fix for defect TISPT-202
 getFooterOnLoad();
 
@@ -1169,7 +1144,7 @@ function populateEnhancedSearch(enhancedSearchData)
 	var notPresentBrand=true;
 	var notPresentSeller=true;
 	if(enhancedSearchData.categoryData.length > 0){
-		$(".select-view #searchCategory").append('<optgroup label="Departments"></optgroup>');
+		$(".select-view #enhancedSearchCategory").append('<optgroup label="Departments"></optgroup>');
 		for (var i=0; i<enhancedSearchData.categoryData.length; i++){
 			var code=enhancedSearchData.categoryData[i].code;
 			var name=enhancedSearchData.categoryData[i].name;
@@ -1180,14 +1155,14 @@ function populateEnhancedSearch(enhancedSearchData)
 				notPresentCategory=false;
 			}
 			$(".enhanced-search ul[label=Departments]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$(".select-view #searchCategory optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".select-view #enhancedSearchCategory optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
 		$("#searchBoxSpan").html(selectedText);
 	}
 	
 	if(enhancedSearchData.brandData.length > 0){
-		$(".select-view #searchCategory").append('<optgroup label="Brands"></optgroup>');
+		$(".select-view #enhancedSearchCategory").append('<optgroup label="Brands"></optgroup>');
 		for (var i=0; i<enhancedSearchData.brandData.length; i++){
 			var code=enhancedSearchData.brandData[i].code;
 			var name=enhancedSearchData.brandData[i].name;
@@ -1198,7 +1173,7 @@ function populateEnhancedSearch(enhancedSearchData)
 				notPresentBrand=false;
 			}
 			$(".enhanced-search ul[label=Brands]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$(".select-view #searchCategory optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".select-view #enhancedSearchCategory optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 			
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
@@ -1206,7 +1181,7 @@ function populateEnhancedSearch(enhancedSearchData)
 	}
 	
 	if(enhancedSearchData.sellerData.length > 0){
-		$(".select-view #searchCategory").append('<optgroup label="Sellers"></optgroup>');
+		$(".select-view #enhancedSearchCategory").append('<optgroup label="Sellers"></optgroup>');
 		for (var i=0; i<enhancedSearchData.sellerData.length; i++){
 			var code=enhancedSearchData.sellerData[i].id;
 			var name=enhancedSearchData.sellerData[i].name;
@@ -1217,7 +1192,7 @@ function populateEnhancedSearch(enhancedSearchData)
 				notPresentSeller=false;
 			}
 			$(".enhanced-search ul[label=Sellers]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$(".select-view #searchCategory optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".select-view #enhancedSearchCategory optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
 		$("#searchBoxSpan").html(selectedText);
@@ -1471,3 +1446,75 @@ function populateEnhancedSearch(enhancedSearchData)
 	        }
 	}
 }
+
+	function forceUpdateHeader(){
+		$.ajax({
+	        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
+	        type: 'GET',
+	        cache:false,
+	        success: function(data) {
+	        	window.sessionStorage.setItem("header" , JSON.stringify(data));
+	        	setHeader(data);
+	        }
+	    });
+	}
+	
+	function setHeader(data){
+		   headerLoggedinStatus = data.loggedInStatus;
+           //TISPT-197
+           if(data.cartcount!='NaN')
+       	{
+           	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
+       	}
+           else
+           {
+           	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html('0');
+           }
+           
+           if (!headerLoggedinStatus) {
+
+               $("a.headeruserdetails").html("Sign In");
+             //Akamai caching
+               $("a.headeruserdetails").attr('href','/login');
+               $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
+               
+               $("a.tracklinkcls").attr('href','/login');
+               $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
+           } else {
+               var firstName = data.userFirstName;
+               if (firstName == null || firstName.trim() ==
+                   '') {
+                   $("a.headeruserdetails").html("Hi!");
+               } else {
+                   $("a.headeruserdetails").html("Hi, " +
+                       firstName + "!");
+               }
+               //Akamai caching
+               $('#signIn').attr('class','dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout');
+               $("a.headeruserdetails").attr('href','/my-account');
+               
+               $("a.tracklinkcls").attr('href','#');
+               if(data.notificationCount != null){
+	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >'+data.notificationCount+'</span>)');
+	               } else {
+	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
+	               } 
+           }
+	}
+	
+	function userCookieChanged(){
+		var mplUserSession = window.sessionStorage.getItem("mpl-user");
+        if(window.sessionStorage && (null == mplUserSession || mplUserSession != $.cookie("mpl-user"))){
+       	 window.sessionStorage.setItem("mpl-user",$.cookie("mpl-user"));
+       	 return true;
+        }else{
+        	return false;
+        }
+	}
+	
+	function forceSetHeader(){
+	 var pageType = $("#pageType").val();
+	 if(pageType == 'cart' || pageType == 'orderconfirmation' || pageType == 'update-profile'){
+		 return true;
+	 }
+	}
