@@ -328,10 +328,11 @@ function getBrandsYouLoveContentAjaxCall(id) {
                 type: "GET",
                 dataType: "json",
                 beforeSend: function() {
+                	var staticHost=$('#staticHost').val();
                     $(".home-brands-you-love-carousel").css(
                         "margin-bottom", "120px");
                     $("#brandsYouLove").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -416,7 +417,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         id, encodeURI(defaultHtml));
                 },
                 complete: function() {
-                    $('#brandsYouLove .loaderDiv').remove();
+                   $('#brandsYouLove .loaderDiv').remove();
                 },
                 error: function() {
                     $('#brandsYouLove .loaderDiv').remove();
@@ -937,7 +938,7 @@ function getShowCaseAjaxCall() {
     // Get Showcase Content AJAX
 
 function getShowcaseContentAjaxCall(id) {
-        if (window.localStorage && (html = window.localStorage.getItem(
+	if (window.localStorage && (html = window.localStorage.getItem(
             "showcaseContent-" + id)) && html != "") {
             // console.log("Local");
             $('.about-one showcase-section').remove();
@@ -948,10 +949,11 @@ function getShowcaseContentAjaxCall(id) {
                 type: "GET",
                 dataType: "json",
                 beforeSend: function() {
+                	var staticHost=$('#staticHost').val();
                     $(".showcase-switch").css("margin-bottom",
                         "80px");
                     $("#showcase").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -960,6 +962,7 @@ function getShowcaseContentAjaxCall(id) {
                     "id": id
                 },
                 success: function(response) {
+                	
                     $('.about-one.showcase-section').remove();
                     defaultHtml =
                         "<div class='about-one showcase-section'>";
