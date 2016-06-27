@@ -1790,7 +1790,7 @@
 		          type="de.hybris.platform.commercewebservicescommons.dto.search.pagedata.PaginationWsDTO"/>
 		<property name="currentQuery" type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO"/>
 		<property name="facetdatacategory"
-		          type="com.tisl.mpl.wsdto.DepartmentHierarchy"/>
+		          type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>"/>
 		  
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FacetDataWsDTO">

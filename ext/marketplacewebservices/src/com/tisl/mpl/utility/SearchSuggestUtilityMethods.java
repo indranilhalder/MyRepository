@@ -170,7 +170,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -394,7 +394,7 @@ public class SearchSuggestUtilityMethods
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
-		DepartmentHierarchy categoryHierarchy = null;
+		List<DepartmentFilterWsDto> categoryHierarchy = new ArrayList<>();
 		if (null != searchPageData.getResults())
 		{
 
@@ -1291,7 +1291,7 @@ public class SearchSuggestUtilityMethods
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
-		DepartmentHierarchy categoryHierarchy = null;
+		List<DepartmentFilterWsDto> categoryHierarchy = new ArrayList<>();
 		if (null != searchPageData.getFacets())
 		{
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
@@ -1397,11 +1397,11 @@ public class SearchSuggestUtilityMethods
 		return productSearchPage;
 	}
 
-	public DepartmentHierarchy getDepartmentHierarchy(final List<String> departmentFilters,
+	public List<DepartmentFilterWsDto> getDepartmentHierarchy(final List<String> departmentFilters,
 			final List<FacetValueData<SearchStateData>> facetValues)
 	{
 		final Set<String> traversedDepartments = new HashSet<String>();
-		final DepartmentHierarchy departmentHierarchy = new DepartmentHierarchy();
+		List<DepartmentFilterWsDto> departmentHierarchy = new ArrayList<DepartmentFilterWsDto>();
 
 		if (departmentFilters != null && !departmentFilters.isEmpty())
 		{
@@ -1413,7 +1413,7 @@ public class SearchSuggestUtilityMethods
 					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
 					if (foundDeparts.length > 4)
 					{
-						for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
+						for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy)
 						{
 							if (oldL1Filter.getCategoryCode().equals(
 									foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
@@ -1456,7 +1456,7 @@ public class SearchSuggestUtilityMethods
 				else if (traverseString.equals(MarketplacecommerceservicesConstants.DEPT_L1))
 				{
 					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
-					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
+					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy)
 					{
 						if (null != oldL1Filter.getCategoryCode()
 								&& oldL1Filter.getCategoryCode().equals(
@@ -1541,7 +1541,7 @@ public class SearchSuggestUtilityMethods
 				else if (traverseString.equals(MarketplacecommerceservicesConstants.DEPT_L2))
 				{
 					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
-					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
+					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy)
 					{
 						if (oldL1Filter.getCategoryCode().equals(foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
 						{
@@ -1686,14 +1686,14 @@ public class SearchSuggestUtilityMethods
 					l2DepartFilter.setChildFilters(l3List);
 					l2List.add(l2DepartFilter);
 					l1DepartFilter.setChildFilters(l2List);
-					if (departmentHierarchy.getFilters() != null && !departmentHierarchy.getFilters().isEmpty())
+					if (CollectionUtils.isNotEmpty(departmentHierarchy))
 					{
-						departmentHierarchy.getFilters().add(l1DepartFilter);
+						departmentHierarchy.add(l1DepartFilter);
 					}
 					else
 					{
 						l1List.add(l1DepartFilter);
-						departmentHierarchy.setFilters(l1List);
+						departmentHierarchy = l1List;
 					}
 					traversedDepartments.addAll(concateDepartmentString(departmentFil));
 				}
@@ -1701,7 +1701,7 @@ public class SearchSuggestUtilityMethods
 			}
 		}
 
-		for (final DepartmentFilterWsDto oldL0 : departmentHierarchy.getFilters())
+		for (final DepartmentFilterWsDto oldL0 : departmentHierarchy)
 		{
 			//FOr select if facet is selected
 			for (final FacetValueData<SearchStateData> value : facetValues)
@@ -1712,40 +1712,47 @@ public class SearchSuggestUtilityMethods
 					break;
 				}
 			}
-
-			for (final DepartmentFilterWsDto oldL1 : oldL0.getChildFilters())
+			if (CollectionUtils.isNotEmpty(oldL0.getChildFilters()))
 			{
-				//FOr select if facet is selected
-				for (final FacetValueData<SearchStateData> value : facetValues)
+				for (final DepartmentFilterWsDto oldL1 : oldL0.getChildFilters())
 				{
-					if (value != null && value.getCode().equalsIgnoreCase(oldL1.getCategoryCode()))
-					{
-						oldL1.setSelected(Boolean.valueOf(value.isSelected()));
-						break;
-					}
-				}
 
-				for (final DepartmentFilterWsDto oldL2 : oldL1.getChildFilters())
-				{
 					//FOr select if facet is selected
 					for (final FacetValueData<SearchStateData> value : facetValues)
 					{
-						if (value != null && value.getCode().equalsIgnoreCase(oldL2.getCategoryCode()))
+						if (value != null && value.getCode().equalsIgnoreCase(oldL1.getCategoryCode()))
 						{
-							oldL2.setSelected(Boolean.valueOf(value.isSelected()));
+							oldL1.setSelected(Boolean.valueOf(value.isSelected()));
 							break;
 						}
 					}
-
-					for (final DepartmentFilterWsDto oldL3 : oldL2.getChildFilters())
+					if (CollectionUtils.isNotEmpty(oldL1.getChildFilters()))
 					{
-						//FOr select if facet is selected
-						for (final FacetValueData<SearchStateData> value : facetValues)
+						for (final DepartmentFilterWsDto oldL2 : oldL1.getChildFilters())
 						{
-							if (value != null && value.getCode().equalsIgnoreCase(oldL3.getCategoryCode()))
+							//FOr select if facet is selected
+							for (final FacetValueData<SearchStateData> value : facetValues)
 							{
-								oldL3.setSelected(Boolean.valueOf(value.isSelected()));
-								break;
+								if (value != null && value.getCode().equalsIgnoreCase(oldL2.getCategoryCode()))
+								{
+									oldL2.setSelected(Boolean.valueOf(value.isSelected()));
+									break;
+								}
+							}
+							if (CollectionUtils.isNotEmpty(oldL2.getChildFilters()))
+							{
+								for (final DepartmentFilterWsDto oldL3 : oldL2.getChildFilters())
+								{
+									//FOr select if facet is selected
+									for (final FacetValueData<SearchStateData> value : facetValues)
+									{
+										if (value != null && value.getCode().equalsIgnoreCase(oldL3.getCategoryCode()))
+										{
+											oldL3.setSelected(Boolean.valueOf(value.isSelected()));
+											break;
+										}
+									}
+								}
 							}
 						}
 					}
