@@ -1594,7 +1594,7 @@ h2 {
               padding-left: 30px;
               padding-right: 10px;
               overflow: auto;
-              background-color: #fff;
+              background-color: #f5f5f5;
               opacity: 0;
               width: -webkit-calc(100% - 150px);
               width: calc(100% - 150px); } }
@@ -1611,6 +1611,7 @@ h2 {
                 -webkit-column-width: 80px;
                 -moz-column-width: 80px;
                 column-width: 80px;
+                background: #f5f5f5;
                }
               header .content nav > ul > li > ul > li > ul > li {
                 line-height: 26px; }
@@ -1701,41 +1702,125 @@ h2 {
 			        }
 			    }
 			     @media (min-width: 791px) {
-        header .content nav > ul > li:hover {
-          background-color: #fff;
-          -webkit-transition: background-color 0.15s 0.3s;
-          -moz-transition: background-color 0.15s 0.3s;
-          transition: background-color 0.15s 0.3s; }
-          header .content nav > ul > li:hover > .toggle {
-            color: #000;
-            -webkit-transition: color 0.15s;
-            -moz-transition: color 0.15s;
-            transition: color 0.15s; }
-          header .content nav > ul > li#shopMicrositeSeller:hover > .toggle {
-            color: #fff;
-            }
-          
-     header .content nav > ul > li:hover > ul {
-            background-color: #fff;
-           /*  -webkit-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
+			     /*start*/
+			     header .content nav > ul > li.hovered > ul{
+	          width: calc(100% - 208px);
+	          }
+	          header .content   .bottom.active nav > ul > li.hovered  > ul{
+	          	width: -webkit-calc(100% - 185px);
+    			width: calc(100% - 185px);
+	          }
+	          header.brand-header .content .bottom.active nav > ul > li.hovered > ul{
+	          	width: -webkit-calc(100% - 285px) !important;
+   				 width: calc(100% - 285px) !important;
+	          }
+	          header.brand-header .content nav > ul > li.hovered > ul{
+	          	width: -webkit-calc(100% - 285px) !important;
+   				 width: calc(100% - 285px) !important;
+	          }
+	          header .content nav > ul > li.hovered > ul > li:first-child > .toggle{
+	          background-color: #a9143c;
+	          }
+	          header .content nav > ul > li.hovered > ul > li:first-child > .toggle > a{
+	          color: #fff;
+	          }
+	          header .content nav > ul > li.hovered > ul > li:first-child > .toggle:after {
+			    height: 0;
+			    width: 0;
+			    border-bottom: 25px solid transparent;
+			    border-left: 15px solid #a9143c;
+			    border-top: 25px solid transparent;
+			}
+	
+	
+	          header .content nav>ul>li:first-child+li.hovered > ul{
+	          width: calc(100% - 378px);
+	          }
+	header .content nav>ul>li:first-child+li.hovered>ul {
+		width: -webkit-calc(100% - 378px);
+		width: calc(100% - 378px);
+	}
+	header .content nav>ul>li:first-child+li.hovered > ul > li:first-child > .toggle > a{
+	          color: #fff;
+	          }
+	          header .content nav>ul>li:first-child+li.hovered > ul > li:first-child > .toggle:after {
+			    height: 0;
+			    width: 0;
+			    border-bottom: 25px solid transparent;
+			    border-left: 15px solid #a9143c;
+			    border-top: 25px solid transparent;
+			}
+			header .content nav > ul > li.hovered > ul > li:first-child >ul {
+				z-index: 1;
+				opacity: 1;
+			}
+	/*end  */
+	header .content nav>ul>li:hover {
+		background-color: #fff;
+		-webkit-transition: background-color 0.15s 0.3s;
+		-moz-transition: background-color 0.15s 0.3s;
+		transition: background-color 0.15s 0.3s;
+	}
+	header .content nav>ul>li:hover>.toggle {
+		color: #000;
+		-webkit-transition: color 0.15s;
+		-moz-transition: color 0.15s;
+		transition: color 0.15s;
+	}
+	header .content nav>ul>li#shopMicrositeSeller:hover>.toggle {
+		color: #fff;
+	}
+	header .content nav>ul>li:hover>ul {
+		background-color: #fff;
+		/*  -webkit-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             -moz-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px; */
-          	height: 450px;
-            z-index: 10001;
-            -webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
-            -moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
-            transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s; }
-  header .content .search {
-    float: right;
-    max-width: 640px;
- min-width: 349px; 
-    width: -webkit-calc(100% - 685px);
-    width: calc(100% - 685px); }
-    header .content .search::after {
-      clear: both;
-      content: "";
-      display: table; } }
-    @media  (min-width: 791px) and (max-width: 920px) {
+		height: 450px;
+		z-index: 10001;
+		-webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
+		-moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
+		transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
+	}
+	header .content .search {
+		float: right;
+		max-width: 640px;
+		min-width: 349px;
+		width: -webkit-calc(100% - 685px);
+		width: calc(100% - 685px);
+	}
+	header .content .search::after {
+		clear: both;
+		content: "";
+		display: table;
+	}
+}
+
+@media ( max-width : 855px) and (min-width: 791px) {
+	header .content nav > ul > li.hovered > ul {
+		width: -webkit-calc(100% - 190px);
+		width: calc(100% - 190px);
+	}
+	
+	header .content nav>ul>li:first-child+li.hovered > ul {
+		width: -webkit-calc(100% - 330px);
+		width: calc(100% - 330px);
+	}
+}
+
+@media ( max-width : 1050px) and (min-width: 856px) {
+	header .content nav>ul>li:first-child+li.hovered > ul {
+		width: -webkit-calc(100% - 355px);
+		width: calc(100% - 355px);
+	}
+}
+
+@media (max-width: 1050px) and (min-width: 791px){
+header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
+    width: -webkit-calc(100% - 335px);
+    width: calc(100% - 335px);
+}
+}
+@media  (min-width: 791px) and (max-width: 920px) {
       header .content .search {
         min-width: 260px;
         width: -webkit-calc(100% - 556px);
@@ -19085,7 +19170,7 @@ header.brand-header .content .bottom nav>ul>li>ul>li a {
 }
 
 header.brand-header .content .bottom nav>ul>li>ul>li>ul {
-	background-color: #b9b9b9
+	background-color: #222222;
 }
 
 header.brand-header .content .bottom nav>ul>li>ul>li>ul a:hover {
@@ -31824,6 +31909,11 @@ top: 5px;
 	 .cart.wrapper .left-block .payments.tab-view .nav li span{
 	 padding:16px 10px;}
 }
+
+div#searchPageDeptHierTree > .jqtree-tree > .jqtree-folder {
+    border-top: 2px solid #f0f4f5;
+    padding-top: 5px;
+}
 /*--------------maincss-----------*/
 .row
 {
@@ -40337,4 +40427,3 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 .smartbanner-windows .smartbanner-button-text:active,
 .smartbanner-windows .smartbanner-button-text:hover {
 }
-
