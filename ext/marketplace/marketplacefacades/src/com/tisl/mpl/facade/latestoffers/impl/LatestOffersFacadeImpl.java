@@ -31,7 +31,7 @@ public class LatestOffersFacadeImpl implements LatestOffersFacade
 {
 	private static final Logger LOG = Logger.getLogger(LatestOffersFacadeImpl.class);
 
-	private static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+	//private static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 
 
