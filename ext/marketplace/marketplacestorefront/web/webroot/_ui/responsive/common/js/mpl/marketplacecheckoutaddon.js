@@ -3540,7 +3540,7 @@ function checkSignUpValidation(path){
 		validationResult=false;
 	}else if(password.length < 8){
 		$("#signupPasswordDiv").show();
-		$("#signupPasswordDiv").html("Minimum length is 8 characters");
+		$("#signupPasswordDiv").html("Your password should be minimum 8 characters");
 		validationResult=false;
 	}else{
 		$("#signupPasswordDiv").hide();
@@ -3552,7 +3552,7 @@ function checkSignUpValidation(path){
 		validationResult=false;
 	}else if(rePassword.length < 8){
 		$("#signupConfirmPasswordDiv").show();
-		$("#signupConfirmPasswordDiv").html("Minimum length is 8 characters");
+		$("#signupConfirmPasswordDiv").html("Your password should be minimum 8 characters");
 		validationResult=false;
 	}else{
 		$("#signupConfirmPasswordDiv").hide();
