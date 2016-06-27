@@ -706,6 +706,7 @@ function getNewAndExclusiveAjaxCall() {
         data: dataString,
         success: function(response) {
             //console.log(response.newAndExclusiveProducts);
+        	var staticHost=$('#staticHost').val();
             var defaultHtml = "";
             renderHtml = "<h1>" + response.title + "</h1>" +
                 "<div class='carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
@@ -713,7 +714,7 @@ function getNewAndExclusiveAjaxCall() {
                 key, value) {
             	if(value.isNew == 'Y')
             	{
-            	renderNewHtml = "<div style='z-index: 1;' class='new'><img class='brush-strokes-sprite sprite-New' src='/_ui/responsive/common/images/transparent.png'><span>New</span></div>";
+            	renderNewHtml = "<div style='z-index: 1;' class='new'><img class='brush-strokes-sprite sprite-New' src='"+staticHost+"/_ui/responsive/common/images/transparent.png'><span>New</span></div>";
             	} else {
             		renderNewHtml = '';
             	}
