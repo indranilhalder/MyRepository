@@ -5142,7 +5142,7 @@ text-transform: uppercase;
       content: "";
       display: block;
       position: absolute;
-      background-image: url('/images/BFB7CE48A38FD61F.png');
+    /*   background-image: url('/images/BFB7CE48A38FD61F.png'); */
       background-size: 100% 100%;
       height: 30%;
       width: 140%;
@@ -9260,9 +9260,15 @@ footer .banner {
     width: 100%;
     text-align:center;
       margin-left: 10px;
-      color:#A9143C;
+      /*color:#A9143C;*/
+      color:#000;
        
      }
+      /*ADD*/
+     .listing.wrapper .search-result h2 span{
+     color:#a9143c;
+     }
+      /*ADD*/
     .listing.wrapper .search-result h2 span.searchString  {
           font-style:italic;
     }
@@ -10844,10 +10850,10 @@ button.otherSellersFont {
     .product-info .product-content .swatch .qty select {
         width: 60%
     }
-    .product-info .product-content .swatch .size select.black-arrow,
+    /* .product-info .product-content .swatch .size select.black-arrow,
     .product-info .product-content .swatch .qty select.black-arrow {
         background-image: url('/images/arrow.png')
-    }
+    } */
 }
 .product-info .product-content .swatch .size a,
 .product-info .product-content .swatch .qty a {
@@ -19871,7 +19877,7 @@ div.other-sellers .navigation button.next:after {
     }
     div.other-sellers .sort-by select {
         background-color: transparent;
-        background-image: url('/images/arrow_copy_5.png');
+        /* background-image: url('/images/arrow_copy_5.png'); */
         padding-right: 15px;
         opacity: 0;
         z-index: 2;
@@ -22587,7 +22593,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
     background-position: -287px -173px
 }
 .blob-sprite {
-    background-image: url(sprites/blob.png);
+    /* background-image: url(sprites/blob.png); */
     background-repeat: no-repeat;
     display: block
 }
@@ -31155,7 +31161,7 @@ img.r2-app-mob-up {
 }
 }
 .r2-app-slider {
-	background-image: url('../images/r2/app-off-mob.png');
+	/* background-image: url('../images/r2/app-off-mob.png'); */
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -40027,14 +40033,6 @@ ul.jqtree-tree li.jqtree-ghost span.jqtree-circle {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-}
-
-/* IE 6, 7, 8 */
-@media \0screen\,screen\9  {
-    ul.jqtree-tree li.jqtree-ghost span.jqtree-circle {
-        background: url(jqtree-circle.png) no-repeat;
-        border: 0 none;
-    }
 }
 
 ul.jqtree-tree li.jqtree-ghost span.jqtree-line {
