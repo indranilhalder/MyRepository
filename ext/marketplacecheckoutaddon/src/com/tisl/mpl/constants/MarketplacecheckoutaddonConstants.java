@@ -274,6 +274,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	//TISPRO-578
 	public static final String CART_DELIVERYMODE_ADDRESS_INVALID = "cartDelModeAddrInvalid";
 	public static final String CART_DELIVERYMODE_ADDRESS_INVALID_MSG = "Either delivery mode or delivery address is not present";
+	public static final String CART_EXPRESS_CHECKOUT_SELECTED = "isExpressCheckoutSelected";
 
 	private MarketplacecheckoutaddonConstants()
 	{
