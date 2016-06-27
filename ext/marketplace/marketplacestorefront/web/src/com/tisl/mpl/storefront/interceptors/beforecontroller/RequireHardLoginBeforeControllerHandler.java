@@ -162,7 +162,6 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 			//				}
 			//			}
 			//Deeply nested if..then statements are hard to read
-			//LOG.error("******************The request is secured**********" + request.isSecure());
 			if (null != findAnnotation(handler, RequireHardLogIn.class))
 			{
 				final String guid = (String) request.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
