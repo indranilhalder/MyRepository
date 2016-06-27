@@ -1,1 +1,1 @@
-Refund credited against one or more item(s)  In Tata Mall Order ref no ${ctx.orderCode}
+Refund credited against one or more item(s)  In Tata CLiQ Order ref no ${ctx.orderCode}

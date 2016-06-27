@@ -29499,6 +29499,11 @@ width: 100%;
 	padding:0 10px;
     box-sizing: border-box;
 }
+.home-brands-you-love-side-image > a {
+    max-width: 250px;
+    display: block;
+    margin: 0px auto;
+}
 .home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
 vertical-align:top;
 padding: 0 2.8%;

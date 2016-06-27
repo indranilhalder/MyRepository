@@ -616,6 +616,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOBANKLIST = "bank list is not available";
 
 	public static final String SSHIPCODE = "SSHIP";
+	public static final String TSHIPCODE = "TSHIP";
 	public static final String SET_EMPTY_ORDER_NOTIFICATIONS = "Notifications are not available";
 	public static final String EMAIL_ID_IS_EMPTY = "Email ID for the current user is empty";
 
@@ -1592,9 +1593,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String GENPROXYPORT = "proxy.port";
 
 	public final static String IMAGEURLMSG = "Image url is:::";
-	public final static String IMAGEDIMENSION = "324Wx324H";
+	public final static String IMAGEDIMENSION = "257Wx257H";
 
 	public final static String DEFAULT_RISK = "-1.0";
+
+
 
 
 	private MarketplacecommerceservicesConstants()
