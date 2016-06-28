@@ -29817,8 +29817,8 @@ li.store-locator-header a:before{
 	display: inline-block;
     height: 45px;
     width: 50px;
-    background-image: url("../images/stay-qued.png");
-    background-size: 100%;
+    background-image: url("../images/icons_sprite.png");
+    background-position: -17px -23px;
     background-repeat: no-repeat;
     margin-right: 15px;
 }
@@ -40128,3 +40128,80 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 .smartbanner-windows .smartbanner-button-text:active,
 .smartbanner-windows .smartbanner-button-text:hover {
 }
+
+/************** Sprite images start *****************/
+.shop-promos .promos li a span.spriteImg {
+	display: inline-block;
+    height: 45px;
+    width: 45px;
+    background-image: url("../images/icons_sprite.png");
+    background-position: -262px -23px;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -o-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.shop-promos .promos li:nth-child(2) a span.spriteImg {
+	background-position: -413px -23px;
+}
+.shop-promos .promos li:nth-child(3) a span.spriteImg {
+	background-position: -183px -23px;
+}
+.shop-promos .promos li:nth-child(4) a span.spriteImg {
+	background-position: -101px -23px;
+}
+.shop-promos .promos li:nth-child(5) a span.spriteImg {
+	background-position: -338px -23px;
+}
+
+.shop-promos .promos li a span.spriteImg:after {
+	content: "";
+	display: none;
+}
+
+.social.share .links a span.spriteImg {
+	display: inline-block;
+    height: 32px;
+    width: 32px;
+    background-image: url("../images/icons_sprite.png");
+    background-position: -269px -92px;
+    background-repeat: no-repeat;
+}
+.social.share .links a:after {
+	content:"";
+	display: none;
+}
+.social.share .links a.fb span.spriteImg {
+	background-position: -269px -92px;
+}
+.social.share .links a.gplus span.spriteImg {
+	background-position: -345px -92px;
+}
+.social.share .links a.twitter span.spriteImg {
+	background-position: -190px -92px;
+}
+.social.share .links a.insta span.spriteImg {
+	background-position: -108px -92px;
+}
+.social.share .links a.youtube span.spriteImg {
+	background-position: -26px -92px;
+}
+
+.social.app-download .links a span.spriteImg {
+	display: inline-block;
+    height: 32px;
+    width: 28px;
+    background-image: url("../images/icons_sprite.png");
+    background-position: -28px -155px;
+    background-repeat: no-repeat;
+}
+.social.app-download .links a:last-child span.spriteImg {
+    background-position: -111px -155px;
+}
+/************** Sprite images end *****************/
