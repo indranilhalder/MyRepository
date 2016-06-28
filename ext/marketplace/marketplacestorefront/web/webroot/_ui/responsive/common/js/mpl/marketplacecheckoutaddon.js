@@ -3066,12 +3066,18 @@ $('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li 
 
 function changeCTAButtonName(deliveryCode) {
 	//console.log(deliveryCode);
+	//TISPRO-625
+	//var buttonText=$('#deliveryMethodSubmit').text();
+	
 	if(deliveryCode == "click-and-collect") {
 		$("#deliveryMethodSubmit").text("Choose Store");
 		$("#deliveryMethodSubmitUp").text("Choose Store");
 	} else if(deliveryCode== "DefaultName") {
+		//TISPRO-625
 		$("#deliveryMethodSubmit").text("Choose Address");
 		$("#deliveryMethodSubmitUp").text("Choose Address");
+		//$("#deliveryMethodSubmit").text(buttonText);
+		//$("#deliveryMethodSubmitUp").text(buttonText);
 	}
 }
 
@@ -3540,7 +3546,7 @@ function checkSignUpValidation(path){
 		validationResult=false;
 	}else if(password.length < 8){
 		$("#signupPasswordDiv").show();
-		$("#signupPasswordDiv").html("Minimum length is 8 characters");
+		$("#signupPasswordDiv").html("Your password should be minimum 8 characters");
 		validationResult=false;
 	}else{
 		$("#signupPasswordDiv").hide();
@@ -3552,7 +3558,7 @@ function checkSignUpValidation(path){
 		validationResult=false;
 	}else if(rePassword.length < 8){
 		$("#signupConfirmPasswordDiv").show();
-		$("#signupConfirmPasswordDiv").html("Minimum length is 8 characters");
+		$("#signupConfirmPasswordDiv").html("Your password should be minimum 8 characters");
 		validationResult=false;
 	}else{
 		$("#signupConfirmPasswordDiv").hide();

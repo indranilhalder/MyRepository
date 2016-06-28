@@ -21,7 +21,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.storefront.businessvalidator.CommonAsciiValidator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 
 
@@ -69,18 +68,19 @@ public class RegisterPageValidator implements Validator
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.PWD, "register.pwd.invalid");
 		}
-		else if (!CommonAsciiValidator.validatePassword(pwd))
-		{
-			errors.rejectValue(MarketplacecommerceservicesConstants.PWD, "register.pwd.invalid.pp");
-		}
+		//TISPRM-11
+		/*
+		 * else if (!CommonAsciiValidator.validatePassword(pwd)) {
+		 * errors.rejectValue(MarketplacecommerceservicesConstants.PWD, "register.pwd.invalid.pp"); }
+		 */
 		else if (StringUtils.length(pwd) < 8)
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.PWD, "register.pwd.invalid");
 		}
-		/*else if (StringUtils.length(pwd) > 16)
-		{
-			errors.rejectValue(MarketplacecommerceservicesConstants.PWD, "register.pwd.invalid.long");
-		}*/
+		/*
+		 * else if (StringUtils.length(pwd) > 16) { errors.rejectValue(MarketplacecommerceservicesConstants.PWD,
+		 * "register.pwd.invalid.long"); }
+		 */
 		else if (checkWhiteSpace(pwd))
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.PWD, "register.pwd.invalid.space");
