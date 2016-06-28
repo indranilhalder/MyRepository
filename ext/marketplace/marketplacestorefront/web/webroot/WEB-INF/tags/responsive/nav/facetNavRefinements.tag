@@ -15,6 +15,11 @@
 	<c:set var="pageFacets" value="${tempFacets}" />
 </c:forEach>
 
+<c:if test="${pageFacets ne '' }">
+	<c:set var="pageFacets" value="${pageFacets}&departmentHierarchy" />
+</c:if> 
+
+
 <c:forEach items="${pageData.facets}" var="facet">
 	<c:choose>
 		<c:when test="${facet.code eq 'availableInStores'}">
@@ -23,8 +28,10 @@
 		
 		<c:otherwise>
 			<c:choose>
-				<c:when test="${fn:contains(pageData.currentQuery.query.value, 'category') ||
-				categoryCodeStr ne 'msh10' && categoryCodeStr ne 'msh11' && categoryCodeStr ne 'msh12' && categoryCodeStr ne 'msh13'}">
+				<c:when test="${((searchCategory ne 'MSH10' && searchCategory ne 'MSH11' && 
+				                  searchCategory ne 'MSH12' && searchCategory ne 'MSH13') ||
+								 (categoryCodeStr ne 'msh10' && categoryCodeStr ne 'msh11' && 
+								  categoryCodeStr ne 'msh12' && categoryCodeStr ne 'msh13'))}">
 					<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="${pageFacets}"/>
 			   	</c:when>
 			   	<%-- <c:when test="${(not empty departments &&  fn:length(departments) lt 2)}">
