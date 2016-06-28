@@ -184,6 +184,36 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 		}
 	}
 
+	@Override
+	public boolean addFavCategories(final String emailId, final String deviceId, final List codeList)
+	{
+		try
+		{
+			//final boolean result = mplMyFavBrandCategoryService.addFavCategories(emailId, codeList);
+			final boolean result = mplMyFavBrandCategoryService.addFavCategories(emailId, deviceId, codeList);
+			return result;
+		}
+		catch (final IllegalArgumentException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final NullPointerException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final UnknownIdentifierException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+	}
 
 	@Override
 	public boolean addFavBrands(final String emailId, final List<String> codeList)
@@ -217,11 +247,11 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 
 
 	@Override
-	public boolean deleteFavCategories(final String emailId, final String code)
+	public boolean addFavBrands(final String emailId, final String deviceId, final List codeList)
 	{
 		try
 		{
-			final boolean result = mplMyFavBrandCategoryService.deleteFavCategories(emailId, code);
+			final boolean result = mplMyFavBrandCategoryService.addFavBrands(emailId, deviceId, codeList);
 			return result;
 		}
 		catch (final IllegalArgumentException ex)
@@ -248,11 +278,11 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 
 
 	@Override
-	public boolean deleteFavBrands(final String emailId, final String code)
+	public boolean deleteFavCategories(final String emailId, final String deviceId, final String code)
 	{
 		try
 		{
-			final boolean result = mplMyFavBrandCategoryService.deleteFavBrands(emailId, code);
+			final boolean result = mplMyFavBrandCategoryService.deleteFavCategories(emailId, deviceId, code);
 			return result;
 		}
 		catch (final IllegalArgumentException ex)
@@ -276,4 +306,108 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 			throw new EtailNonBusinessExceptions(ex);
 		}
 	}
+
+
+	@Override
+	public boolean deleteFavBrands(final String emailId, final String deviceId, final String code)
+	{
+		try
+		{
+			final boolean result = mplMyFavBrandCategoryService.deleteFavBrands(emailId, deviceId, code);
+			return result;
+		}
+		catch (final IllegalArgumentException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final NullPointerException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final UnknownIdentifierException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade#fetchFavCategories(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public List<CategoryModel> fetchFavCategories(final String emailId, final String deviceId)
+	{
+		try
+		{
+			final List<CategoryModel> categories = mplMyFavBrandCategoryService.fetchFavCategories(emailId, deviceId);
+			return categories;
+		}
+		catch (final IllegalArgumentException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final NullPointerException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final UnknownIdentifierException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade#fetchFavBrands(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public List<CategoryModel> fetchFavBrands(final String emailId, final String deviceId)
+	{
+		try
+		{
+			final List<CategoryModel> brands = mplMyFavBrandCategoryService.fetchFavBrands(emailId, deviceId);
+			return brands;
+		}
+		catch (final IllegalArgumentException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final NullPointerException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final UnknownIdentifierException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+	}
+
 }
