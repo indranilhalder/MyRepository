@@ -1,7 +1,3 @@
-<%@ page trimDirectiveWhitespaces="true" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-
-
 <!DOCTYPE html>
 <head>
 	<title>
