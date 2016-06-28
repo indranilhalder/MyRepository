@@ -65,11 +65,11 @@ function navigateToPage(queryString,textString)
 				<h4 class="${facetData.genericFilter}">${facetData.name}</h4>
 			</c:if>		 
 			</c:when> 
-			<c:when test="${facetData.code == 'price'}">
+			<%-- <c:when test="${facetData.code == 'price'}">
 				<h4 class="true">${facetData.name}</h4>
-			</c:when>
+			</c:when> --%>
 			<c:otherwise>
-				<h4 class="${facetData.genericFilter}">${facetData.name}</h4>
+				<h4 class="true">${facetData.name}</h4>
 			</c:otherwise>
 	   </c:choose>
 		

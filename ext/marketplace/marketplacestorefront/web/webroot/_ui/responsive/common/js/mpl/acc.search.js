@@ -46,6 +46,8 @@
 		// Assign tree object to category page
 		$("#categoryPageDeptHierTree").tree({
 			data: output,
+			 openedIcon:'',
+			 openedIcon: '',
 			//TISCF-4 Start
 			//autoOpen: true
 			//The Department Hierarchy Tree should always remain Closed for Both PLP and SERP
@@ -57,6 +59,8 @@
 		// Assign tree object to search page
 		$("#searchPageDeptHierTree").tree({
 			data: output,
+			 closedIcon:'',
+			 openedIcon:'',
 			autoOpen: true
 	
 		});
