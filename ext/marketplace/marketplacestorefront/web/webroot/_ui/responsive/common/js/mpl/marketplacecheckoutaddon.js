@@ -4122,7 +4122,6 @@ $("#couponSubmitButton").click(function(){
 	 		}
 	 	});	 
 	}
-	}
 	}//End of session checking
 });
 
