@@ -479,6 +479,7 @@ if (searchCategory_id){
 				},
 			  	complete: function(){
 			        //$('#ajax-loader').hide();
+			  		/*PT Issues fix*/
 			  		forceUpdateHeader();	
 			    },
 				error : function(resp) {
@@ -675,6 +676,7 @@ if (searchCategory_id){
 						  html += '</div>';
 						  
 					  }else{
+						  /* TISPRD-3135 changes for default image -removal of /store */
 						  html += '<div class="image" style="position: relative; left: 0;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="/_ui/desktop/theme-blue/images/missing-product-300x300.jpg" alt="'+obj.name+'"/>';
 						  if(is_new_product == true){
 							  html += '<div style="z-index: 1;" class="new"><span>New</span></div>';
