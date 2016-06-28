@@ -43,7 +43,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplMyFavBrandCategorySer
  */
 public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategoryService
 {
-	private static final Logger LOG = Logger.getLogger(DefaultMplMyFavBrandCategoryService.class);
+	//private static final Logger LOG = Logger.getLogger(DefaultMplMyFavBrandCategoryService.class);
 	@Autowired
 	private ExtendedUserService extendedUserService;
 	@Autowired
@@ -838,10 +838,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 
 					}
 				}
-				else
+				/*else
 				{
 					//LOG.info("Email id is anonymous and device id is null");
-				}
+				}*/
 				return categoryList;
 			}
 			else
@@ -915,10 +915,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 						brandList = new ArrayList(styleProfileModelUpdate.getPreferredBrand());
 					}
 				}
-				else
+				/*else
 				{
 					//LOG.info("Email id is anonymous and device id is null");
-				}
+				}*/
 				return brandList;
 			}
 			else
