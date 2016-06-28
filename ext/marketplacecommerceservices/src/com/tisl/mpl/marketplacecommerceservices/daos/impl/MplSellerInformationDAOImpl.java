@@ -4,6 +4,10 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
+import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.SearchResult;
 
@@ -11,10 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO;
 import com.tisl.mpl.model.RestrictionsetupModel;
@@ -32,6 +38,8 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 {
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
+	@Autowired 
+	private ModelService modelService;
 
 	private static final Logger LOG = Logger.getLogger(MplSellerInformationDAOImpl.class);
 	private static final String SELECT_CLASS = "SELECT {c:";
@@ -365,6 +373,62 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 			LOG.debug(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
 			throw new EtailNonBusinessExceptions(ex);
 		}
+	}
+
+	/**
+	 * 
+	 *  This method is used to get the parent OrderEntryModel 
+	 * @author TECHOUTS
+	 * @param transactionId
+	 * @Return String
+	 */
+
+	@Override
+	public String getparentFulfillmenttype(String  transactionId) throws EtailBusinessExceptions
+	{
+		LOG.info("Inside getparentFulfillmenttype Method");
+		String parentFulfillmenttype = StringUtils.EMPTY;
+		try
+		{
+			final Map<String, Object> params = new HashMap<String, Object>();
+			params.put("transactionId", transactionId);
+			String query = "SELECT {" + OrderEntryModel.PK + "} FROM {OrderEntry} where {transactionId} =?transactionId";
+			final SearchResult<OrderEntryModel> searchRes = flexibleSearchService.search(query, params);
+			if (searchRes != null && searchRes.getCount() > 0)
+			{
+				OrderEntryModel entry = searchRes.getResult().get(0);
+				parentFulfillmenttype = entry.getFulfillmentType();
+			}
+			if (searchRes.getCount() <= 0)
+			{
+				throw new EtailBusinessExceptions("Order Entry Not Found with transaction Id :" + transactionId);
+			}
+			else if (searchRes.getCount() > 0 && StringUtils.isBlank(parentFulfillmenttype))
+			{
+				throw new EtailBusinessExceptions("Fullfillment type is Blanck for Transaction Id :" + transactionId);
+			}
+		}
+		catch (FlexibleSearchException exception)
+		{
+			LOG.error("Flecible search exception :Failed to Fetech OrderEntryModel from  DB :" + exception);
+			throw new EtailBusinessExceptions(exception.getMessage(), exception);
+		}
+		catch (ModelNotFoundException exception)
+		{
+			LOG.error("Order Entry Not Found with transaction Id : " + transactionId);
+			throw new EtailBusinessExceptions(exception.getMessage(), exception);
+		}
+		catch (EtailBusinessExceptions e)
+		{
+			LOG.error(" EtailBusinessExceptions " + e.getErrorCode());
+			throw new EtailBusinessExceptions(e.getErrorCode(), e);
+		}
+		catch (Exception exception)
+		{
+			LOG.error("Exception occurred " + exception.getCause());
+			throw new EtailBusinessExceptions(exception.getMessage(), exception);
+		}
+		return parentFulfillmenttype;
 	}
 
 }

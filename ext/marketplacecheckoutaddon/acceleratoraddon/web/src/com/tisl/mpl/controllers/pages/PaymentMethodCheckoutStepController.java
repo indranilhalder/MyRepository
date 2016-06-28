@@ -2796,12 +2796,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return getCheckoutStep(MarketplacecheckoutaddonConstants.PAYMENT_METHOD);
 	}
 
+	/**
+	 * @param request
+	 * @return boolean This method checks whether the session is active
+	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKSESSIONACTIVE, method = RequestMethod.GET)
 	@ResponseBody
 	private boolean checkSessionActive(final HttpServletRequest request)
 	{
 		return GenericUtilityMethods.checkSessionActive(request);
 	}
+
 
 	//Getters and Setters
 	/**

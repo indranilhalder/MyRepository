@@ -49,7 +49,7 @@
 			//TISCF-4 Start
 			//autoOpen: true
 			//The Department Hierarchy Tree should always remain Closed for Both PLP and SERP
-			autoOpen: false
+			autoOpen: true
 			//TISCF-4 End
 	
 		});
@@ -57,7 +57,7 @@
 		// Assign tree object to search page
 		$("#searchPageDeptHierTree").tree({
 			data: output,
-			autoOpen: expandTree
+			autoOpen: true
 	
 		});
 		
