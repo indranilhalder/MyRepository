@@ -831,7 +831,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
-						LOG.info("Inside if, device id consists of categories");
+						//LOG.info("Inside if, device id consists of categories");
 						final MplStyleProfileModel styleProfileModelUpdate = myStyleProfileList.get(0);
 
 						categoryList = new ArrayList(styleProfileModelUpdate.getPreferredCategory());
@@ -840,7 +840,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				}
 				else
 				{
-					LOG.info("Email id is anonymous and device id is null");
+					//LOG.info("Email id is anonymous and device id is null");
 				}
 				return categoryList;
 			}
@@ -865,7 +865,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 							.getDeviceKey());
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
-						LOG.info("Inside if, device id consists of categories");
+						//LOG.info("Inside if, device id consists of categories");
 						final MplStyleProfileModel styleProfileModelUpdate = myStyleProfileList.get(0);
 
 						newListCategory = new ArrayList(styleProfileModelUpdate.getPreferredCategory());
@@ -909,7 +909,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
-						LOG.info("Inside if, device id consists of categories");
+						//LOG.info("Inside if, device id consists of categories");
 						final MplStyleProfileModel styleProfileModelUpdate = myStyleProfileList.get(0);
 
 						brandList = new ArrayList(styleProfileModelUpdate.getPreferredBrand());
@@ -917,7 +917,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				}
 				else
 				{
-					LOG.info("Email id is anonymous and device id is null");
+					//LOG.info("Email id is anonymous and device id is null");
 				}
 				return brandList;
 			}
@@ -941,7 +941,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 							.getDeviceKey());
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
-						LOG.info("Inside if, device id consists of categories");
+						//LOG.info("Inside if, device id consists of categories");
 						final MplStyleProfileModel styleProfileModelUpdate = myStyleProfileList.get(0);
 
 						newListBrand = new ArrayList(styleProfileModelUpdate.getPreferredBrand());
