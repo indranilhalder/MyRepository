@@ -60,7 +60,7 @@ public class BuyBoxImportUtility
 
 	public void executeExtraction()
 	{
-		final HybrisDataSource currentDataSource = null;
+		HybrisDataSource currentDataSource = null;
 		final String productExportQuery = getDataExportQuery();
 		LOG.debug("Buybox Export query :" + productExportQuery);
 		Connection vjdbcConnection = null;
