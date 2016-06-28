@@ -9269,9 +9269,6 @@ footer .banner {
      color:#a9143c;
      }
       /*ADD*/
-    .listing.wrapper .search-result h2 span.searchString  {
-          font-style:italic;
-    }
   .listing.wrapper .search-result .did-you-mean a {
     color: #A9143C;
     text-transform: uppercase;
