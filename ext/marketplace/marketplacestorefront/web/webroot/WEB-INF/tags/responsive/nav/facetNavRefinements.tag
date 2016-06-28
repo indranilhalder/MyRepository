@@ -28,7 +28,7 @@
 		
 		<c:otherwise>
 			<c:choose>
-				<c:when test="${((searchCategory ne 'MSH10' && searchCategory ne 'MSH11' && 
+				<c:when test="${(((searchCategory ne 'ALL' && searchCategory ne 'All' && searchCategory ne 'all') && searchCategory ne 'MSH10' && searchCategory ne 'MSH11' && 
 				                  searchCategory ne 'MSH12' && searchCategory ne 'MSH13') ||
 								 (categoryCodeStr ne 'msh10' && categoryCodeStr ne 'msh11' && 
 								  categoryCodeStr ne 'msh12' && categoryCodeStr ne 'msh13'))}">
