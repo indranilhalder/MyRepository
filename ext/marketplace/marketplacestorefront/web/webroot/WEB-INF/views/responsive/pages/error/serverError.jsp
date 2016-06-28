@@ -23,7 +23,7 @@
 				</div>
 				<ul class="major-promos">
 						<li data-bannerid="8797960930364"><span class="major-promo-header-italic">Some issue occurred !!</span>
-                  <span class="major-promo-description"><p>Not to worry!!</p><p>Pleae visit our home page <a href="https://www.tatacliq.com">https://www.tatacliq.com</a></p></span>
+                  <span class="major-promo-description"><p>Not to worry!!</p><p>Please visit our home page https://www.tatacliq.com</p></span>
 				        </li>
 					</ul>
 				</div>
