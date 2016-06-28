@@ -20,11 +20,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Authenticator;
-import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
-import java.net.Proxy;
-import java.net.SocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -79,8 +76,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 	private static final String NEW_LINE_SEPARATOR = "\n";
 	private static final String TAB_DELIMITER = "\t";
-	private static final String HTTP = "http://";
-	private static final String HTTPS = "https://";
+	//private static final String HTTP = "http://";		//SONAR Fix
+	//private static final String HTTPS = "https://";		//SONAR Fix
 	private static final String MICROSITE_SEPARATOR = "/m/";
 
 	/*
@@ -164,47 +161,48 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									campaignDataSeqBanner.setCategory(CategorySeqBanner);
 									try
 									{
-										if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-												&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
+										//										if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+										//												&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
+										//										{
+										//											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTP");
+										//											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+										//											sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+										//											imageUrl = sb.toString();
+										//											imageSize = findIamgeSize(imageUrl);
+										//										}
+										//										else if (null != bigPromoBanner.getBannerImage()
+										//												&& null != bigPromoBanner.getBannerImage().getURL()
+										//												&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
+										//										{
+										//											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTPS");
+										//											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+										//											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+										//											imageUrl = sb.toString();
+										//											imageSize = findIamgeSize(imageUrl);
+										//										}
+
+										if (null != bigPromoBanner.getBannerImage()
+												&& StringUtils.isNotEmpty(bigPromoBanner.getBannerImage().getURL()))
 										{
-											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTP");
-											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
-											sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
-											imageUrl = sb.toString();
-											imageSize = findIamgeSize(imageUrl);
-										}
-										else if (null != bigPromoBanner.getBannerImage()
-												&& null != bigPromoBanner.getBannerImage().getURL()
-												&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
-										{
+											final String imageURL = bigPromoBanner.getBannerImage().getURL();
+											LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
+											//											if (imageURL.startsWith(HTTP))
+											//											{
+											//												LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTP");
+											//												sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+											//												sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+											//												imageUrl = sb.toString();
+											//												imageSize = findIamgeSize(imageUrl);
+											//											}
+											//else if (imageURL.startsWith(HTTPS))
+											//{
 											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTPS");
-											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+											sb = new StringBuffer(imageURL);
 											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 											imageUrl = sb.toString();
-											imageSize = findIamgeSize(imageUrl);
+											imageSize = findImageSize(imageUrl);
+											//}
 										}
-
-										//										if (null != bigPromoBanner.getBannerImage()
-										//												&& StringUtils.isNotEmpty(bigPromoBanner.getBannerImage().getURL()))
-										//										{
-										//											final String imageURL = bigPromoBanner.getBannerImage().getURL();
-										//											if (imageURL.startsWith(HTTP))
-										//											{
-										//												LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTP");
-										//												sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
-										//												sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
-										//												imageUrl = sb.toString();
-										//												imageSize = findIamgeSize(imageUrl);
-										//											}
-										//											else if (imageURL.startsWith(HTTPS))
-										//											{
-										//												LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.HTTPS");
-										//												sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
-										//												sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
-										//												imageUrl = sb.toString();
-										//												imageSize = findIamgeSize(imageUrl);
-										//											}
-										//										}
 										if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
 										{
 											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.getMimeNotNull");
@@ -217,7 +215,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 										if (null != imageSize)
 										{
-											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.imageSizeNotNull");
+											LOG.info("Inside MplSequentialBannerComponentModel.MplBigPromoBannerComponentModel.imageSizeNotNull:::"
+													+ imageSize);
 											campaignDataSeqBanner.setSize(imageSize);
 										}
 										else
@@ -230,7 +229,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									}
 									catch (final Exception e)
 									{
-										LOG.error("MplBigPromoBannerComponentModel Exception: " + e.getMessage());
+										LOG.error("MplBigPromoBannerComponentModel Exception: ", e);
 
 									}
 								}
@@ -281,23 +280,46 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							try
 							{
 
-								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
+								//								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+								//										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
+								//								{
+								//									LOG.info("Inside MplBigPromoBannerComponentModel.HTTP");
+								//									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+								//									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+								//									imageUrl = sb.toString();
+								//									imageSize = findIamgeSize(imageUrl);
+								//								}
+								//								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+								//										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
+								//								{
+								//									LOG.info("Inside MplBigPromoBannerComponentModel.HTTPS");
+								//									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+								//									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+								//									imageUrl = sb.toString();
+								//									imageSize = findIamgeSize(imageUrl);
+								//								}
+
+								if (null != bigPromoBanner.getBannerImage()
+										&& StringUtils.isNotEmpty(bigPromoBanner.getBannerImage().getURL()))
 								{
-									LOG.info("Inside MplBigPromoBannerComponentModel.HTTP");
-									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
-									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
-									imageUrl = sb.toString();
-									imageSize = findIamgeSize(imageUrl);
-								}
-								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
-								{
+									final String imageURL = bigPromoBanner.getBannerImage().getURL();
+									LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
+									//									if (imageURL.startsWith(HTTP))
+									//									{
+									//										LOG.info("Inside MplBigPromoBannerComponentModel.HTTP");
+									//										sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									//										sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+									//										imageUrl = sb.toString();
+									//										imageSize = findIamgeSize(imageUrl);
+									//									}
+									//else if (imageURL.startsWith(HTTPS))
+									//{
 									LOG.info("Inside MplBigPromoBannerComponentModel.HTTPS");
-									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									sb = new StringBuffer(imageURL);
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
-									imageSize = findIamgeSize(imageUrl);
+									imageSize = findImageSize(imageUrl);
+									//}
 								}
 								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
 								{
@@ -310,7 +332,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								}
 								if (null != imageSize)
 								{
-									LOG.info("Inside MplBigPromoBannerComponentModel.imageSizeNotNull");
+									LOG.info("Inside MplBigPromoBannerComponentModel.imageSizeNotNull:::" + imageSize);
 									campaignDataBigPromoBanner.setSize(imageSize);
 								}
 
@@ -323,7 +345,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							}
 							catch (final Exception e)
 							{
-								LOG.error("MplBigPromoBannerComponentModel Exception: " + e.getMessage());
+								LOG.error("MplBigPromoBannerComponentModel Exception: ", e);
 							}
 							CampaignDataList.add(campaignDataBigPromoBanner);
 							LOG.info("Stepping out from MplBigPromoBannerComponentModel");
@@ -362,24 +384,48 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							try
 							{
 
-								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
+								//								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+								//										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
+								//								{
+								//									LOG.info("Inside MplBigFourPromoBannerComponentModel.HTTP");
+								//									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+								//									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+								//									imageUrl = sb.toString();
+								//									imageSize = findIamgeSize(imageUrl);
+								//								}
+								//								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+								//										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
+								//								{
+								//									LOG.info("Inside MplBigFourPromoBannerComponentModel.HTTPS");
+								//									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+								//									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+								//									imageUrl = sb.toString();
+								//									imageSize = findIamgeSize(imageUrl);
+								//								}
+
+								if (null != bigPromoBanner.getBannerImage()
+										&& StringUtils.isNotEmpty(bigPromoBanner.getBannerImage().getURL()))
 								{
-									LOG.info("Inside MplBigFourPromoBannerComponentModel.HTTP");
-									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
-									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
-									imageUrl = sb.toString();
-									imageSize = findIamgeSize(imageUrl);
-								}
-								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
-								{
+									final String imageURL = bigPromoBanner.getBannerImage().getURL();
+									LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
+									//									if (imageURL.startsWith(HTTP))
+									//									{
+									//										LOG.info("Inside MplBigFourPromoBannerComponentModel.HTTP");
+									//										sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									//										sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+									//										imageUrl = sb.toString();
+									//										imageSize = findIamgeSize(imageUrl);
+									//									}
+									//									else if (imageURL.startsWith(HTTPS))
+									//									{
 									LOG.info("Inside MplBigFourPromoBannerComponentModel.HTTPS");
-									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									sb = new StringBuffer(imageURL);
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
-									imageSize = findIamgeSize(imageUrl);
+									imageSize = findImageSize(imageUrl);
+									//									}
 								}
+
 								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getMime())
 								{
 									LOG.info("Inside MplBigFourPromoBannerComponentModel.getMimeNotNull");
@@ -391,7 +437,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								}
 								if (null != imageSize)
 								{
-									LOG.info("Inside MplBigFourPromoBannerComponentModel.imageSizeNotNull");
+									LOG.info("Inside MplBigFourPromoBannerComponentModel.imageSizeNotNull:::" + imageSize);
 									campaignDataBigFourPromoBanner.setSize(imageSize);
 								}
 								else
@@ -404,7 +450,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							}
 							catch (final Exception e)
 							{
-								LOG.error("MplBigFourPromoBannerComponentModel Exception: " + e.getMessage());
+								LOG.error("MplBigFourPromoBannerComponentModel Exception: ", e);
 							}
 							CampaignDataList.add(campaignDataBigFourPromoBanner);
 							LOG.info("Stepping out from MplBigFourPromoBannerComponentModel");
@@ -426,10 +472,10 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									{
 										rotaingImagesBannerCategory = contentPageItr.getCategoryAssociated().getCode();
 									}
-									else
-									{
-										rotaingImagesBannerCategory = "";
-									}
+									//									else
+									//									{
+									//										rotaingImagesBannerCategory = "";
+									//									}
 									campaignDataBigFourPromoBanner.setIcid(differentBanner.getPk().toString());
 									campaignDataBigFourPromoBanner.setAssetName(differentBanner.getName());
 									if (contentPageItr.getLabel() != null && contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
@@ -447,26 +493,52 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									campaignDataBigFourPromoBanner.setCategory(rotaingImagesBannerCategory);
 									try
 									{
-										if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getURL()
-												&& differentBanner.getMedia().getURL().startsWith(HTTP))
-										{
-											LOG.info("Inside RotatingImagesComponentModel.HTTP");
-											sb = new StringBuffer(differentBanner.getMedia().getURL());
-											sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
-											imageUrl = sb.toString();
-											imageSize = findIamgeSize(imageUrl);
-											campaignDataBigFourPromoBanner.setSize(imageSize);
-										}
-										else if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getURL()
-												&& differentBanner.getMedia().getURL().startsWith(HTTPS))
-										{
-											LOG.info("Inside RotatingImagesComponentModel.HTTPS");
-											sb = new StringBuffer(differentBanner.getMedia().getURL());
-											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
-											imageUrl = sb.toString();
-											imageSize = findIamgeSize(imageUrl);
-											campaignDataBigFourPromoBanner.setSize(imageSize);
-										}
+										//										if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getURL()
+										//												&& differentBanner.getMedia().getURL().startsWith(HTTP))
+										//										{
+										//											LOG.info("Inside RotatingImagesComponentModel.HTTP");
+										//											sb = new StringBuffer(differentBanner.getMedia().getURL());
+										//											sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+										//											imageUrl = sb.toString();
+										//											imageSize = findIamgeSize(imageUrl);
+										//											campaignDataBigFourPromoBanner.setSize(imageSize);
+										//										}
+										//										else if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getURL()
+										//												&& differentBanner.getMedia().getURL().startsWith(HTTPS))
+										//										{
+										//											LOG.info("Inside RotatingImagesComponentModel.HTTPS");
+										//											sb = new StringBuffer(differentBanner.getMedia().getURL());
+										//											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+										//											imageUrl = sb.toString();
+										//											imageSize = findIamgeSize(imageUrl);
+										//											campaignDataBigFourPromoBanner.setSize(imageSize);
+										//										}
+
+
+										//										if (null != differentBanner.getMedia()
+										//												&& StringUtils.isNotEmpty(differentBanner.getMedia().getURL()))
+										//										{
+										//											final String imageURL = differentBanner.getMedia().getURL();
+										//											LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
+										//											//											if (imageURL.startsWith(HTTP))
+										//											//											{
+										//											//												LOG.info("Inside RotatingImagesComponentModel.HTTP");
+										//											//												sb = new StringBuffer(differentBanner.getMedia().getURL());
+										//											//												sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+										//											//												imageUrl = sb.toString();
+										//											//												imageSize = findIamgeSize(imageUrl);
+										//											//											}
+										//											//											else if (imageURL.startsWith(HTTPS))
+										//											//											{
+										//											LOG.info("Inside RotatingImagesComponentModel.HTTPS");
+										//											sb = new StringBuffer(imageURL);
+										//											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+										//											imageUrl = sb.toString();
+										//											imageSize = findImageSize(imageUrl);
+										//											//											}
+										//										}
+
+										String mediaType = "";
 										if (differentBanner instanceof MplBigFourPromoBannerComponentModel)
 										{
 											LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel");
@@ -479,29 +551,47 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												if (null != special.getMime())
 												{
 													LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.getMimeNotNull");
-													campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+													//campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+													mediaType = special.getMime();
 												}
 
-												if (null != special.getURL() && special.getURL().startsWith(HTTP))
+												if (null != special.getURL())
 												{
-													LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.HTTP");
-													sb = new StringBuffer(((MplBigFourPromoBannerComponentModel) differentBanner)
-															.getBannerImage().getURL());
-													sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
-													imageUrl = sb.toString();
-													imageSize = findIamgeSize(imageUrl);
-												}
-												else if (null != special.getURL() && special.getURL().startsWith(HTTPS))
-												{
+													final String imageURL = special.getURL();
+													LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
+													//													if (imageURL.startsWith(HTTP))
+													//													{
+													//														LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.HTTP");
+													//														sb = new StringBuffer(((MplBigFourPromoBannerComponentModel) differentBanner)
+													//																.getBannerImage().getURL());
+													//														sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+													//														imageUrl = sb.toString();
+													//														imageSize = findIamgeSize(imageUrl);
+													//													}
+													//													else if (imageURL.startsWith(HTTPS))
+													//													{
 													LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.HTTPS");
 													sb = new StringBuffer(((MplBigFourPromoBannerComponentModel) differentBanner)
 															.getBannerImage().getURL());
 													sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 													imageUrl = sb.toString();
-													imageSize = findIamgeSize(imageUrl);
+													imageSize = findImageSize(imageUrl);
+													//													}
 												}
-												campaignDataBigFourPromoBanner.setSize(imageSize);
-												campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+
+												//campaignDataBigFourPromoBanner.setSize(imageSize);
+												//												if (null != imageSize)
+												//												{
+												//													LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.imageSizeNotNull:::"
+												//															+ imageSize);
+												//													campaignDataBigFourPromoBanner.setSize(imageSize);
+												//												}
+												//												else
+												//												{
+												//													campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+												//												}
+
+												//campaignDataBigFourPromoBanner.setMediaType(special.getMime());
 											}
 										}
 										else if (differentBanner instanceof MplBigPromoBannerComponentModel)
@@ -516,73 +606,138 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												if (null != special.getMime())
 												{
 													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.getMimeNotNull");
-													campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+													//campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+													mediaType = special.getMime();
 												}
 
 
-												if (null != special.getURL() && special.getURL().startsWith(HTTP))
-												{
-													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.HTTP");
-													sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
-															.getURL());
-													sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
-													imageUrl = sb.toString();
+												//												if (null != special.getURL() && special.getURL().startsWith(HTTP))
+												//												{
+												//													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.HTTP");
+												//													sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
+												//															.getURL());
+												//													sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+												//													imageUrl = sb.toString();
+												//
+												//													imageSize = findIamgeSize(imageUrl);
+												//
+												//												}
+												//												else if (null != special.getURL() && special.getURL().startsWith(HTTPS))
+												//												{
+												//													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.HTTPS");
+												//													sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
+												//															.getURL());
+												//													sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+												//													imageUrl = sb.toString();
+												//													imageSize = findIamgeSize(imageUrl);
+												//												}
 
-													imageSize = findIamgeSize(imageUrl);
-
-												}
-												else if (null != special.getURL() && special.getURL().startsWith(HTTPS))
+												if (null != special.getURL())
 												{
-													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.HTTPS");
+													final String imageURL = special.getURL();
+													LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
+													//													if (imageURL.startsWith(HTTP))
+													//													{
+													//														LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.HTTP");
+													//														sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner)
+													//																.getBannerImage().getURL());
+													//														sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+													//														imageUrl = sb.toString();
+													//														imageSize = findIamgeSize(imageUrl);
+													//													}
+													//													else if (imageURL.startsWith(HTTPS))
+													//													{
+													LOG.info("Inside RotatingImagesComponentModel.MplBigFourPromoBannerComponentModel.HTTPS");
 													sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
 															.getURL());
 													sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 													imageUrl = sb.toString();
-													imageSize = findIamgeSize(imageUrl);
-												}
-												if (null != imageSize)
-												{
-													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.imageSizeNotNull");
-													campaignDataBigFourPromoBanner.setSize(imageSize);
-												}
-												else
-												{
-													campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+													imageSize = findImageSize(imageUrl);
+													//													}
 												}
 
-												if (null != special.getMime())
-												{
-													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.getMimeNotNull");
-													campaignDataBigFourPromoBanner.setMediaType(special.getMime());
-												}
-												else
-												{
-
-													campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
-												}
-
-											}
-											else
-											{
-												if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getMime())
-												{
-													campaignDataBigFourPromoBanner.setMediaType(differentBanner.getMedia().getMime());
-												}
-												else
-												{
-
-													campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
-												}
+												//												if (null != imageSize)
+												//												{
+												//													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.imageSizeNotNull:::"
+												//															+ imageSize);
+												//													campaignDataBigFourPromoBanner.setSize(imageSize);
+												//												}
+												//												else
+												//												{
+												//													campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+												//												}
+												//
+												//												if (null != special.getMime())
+												//												{
+												//													LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.getMimeNotNull");
+												//													campaignDataBigFourPromoBanner.setMediaType(special.getMime());
+												//												}
+												//												else
+												//												{
+												//
+												//													campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
+												//												}
 
 											}
+											//											else
+											//											{
+											//												if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getMime())
+											//												{
+											//													campaignDataBigFourPromoBanner.setMediaType(differentBanner.getMedia().getMime());
+											//												}
+											//												else
+											//												{
+											//
+											//													campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
+											//												}
+											//
+											//											}
 
 										}
+										else
+										{
+											if (null != differentBanner.getMedia()
+													&& StringUtils.isNotEmpty(differentBanner.getMedia().getURL()))
+											{
+												final String imageURL = differentBanner.getMedia().getURL();
+												LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
+												LOG.info("Inside RotatingImagesComponentModel.HTTPS");
+												sb = new StringBuffer(imageURL);
+												sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+												imageUrl = sb.toString();
+												imageSize = findImageSize(imageUrl);
+											}
+											if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getMime())
+											{
+												mediaType = differentBanner.getMedia().getMime();
+											}
+										}
 										//CampaignDataList.add(campaignDataBigFourPromoBanner);
+										if (StringUtils.isNotEmpty(imageSize))
+										{
+											LOG.info("Inside RotatingImagesComponentModel.imageSizeNotNull:::" + imageSize);
+											campaignDataBigFourPromoBanner.setSize(imageSize);
+										}
+										else
+										{
+											campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+										}
+
+										if (StringUtils.isNotEmpty(mediaType))
+										{
+											LOG.info("Inside RotatingImagesComponentModel.getMimeNotNull");
+											campaignDataBigFourPromoBanner.setMediaType(mediaType);
+										}
+										else
+										{
+
+											campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
+										}
 										LOG.info("Inside RotatingImagesComponentModel ends");
 									}
 									catch (final Exception e)
 									{
-										LOG.error("RotatingImagesComponentModel Exception: " + e.getMessage());
+										LOG.error("RotatingImagesComponentModel Exception: ", e);
 									}
 									CampaignDataList.add(campaignDataBigFourPromoBanner);
 								}
@@ -622,36 +777,61 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							{
 								final SimpleBannerComponentModel simple = (SimpleBannerComponentModel) componentItr;
 
-								if (null != simple.getMedia() && null != simple.getMedia().getURL()
-										&& simple.getMedia().getURL().startsWith(HTTP))
-								{
-									LOG.info("Inside SimpleBannerComponentModel.HTTP");
-									sb = new StringBuffer(simple.getMedia().getURL());
-									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
-									imageUrl = sb.toString();
+								//								if (null != simple.getMedia() && null != simple.getMedia().getURL()
+								//										&& simple.getMedia().getURL().startsWith(HTTP))
+								//								{
+								//									LOG.info("Inside SimpleBannerComponentModel.HTTP");
+								//									sb = new StringBuffer(simple.getMedia().getURL());
+								//									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+								//									imageUrl = sb.toString();
+								//
+								//									imageSize = findIamgeSize(imageUrl);
+								//
+								//									campaignDataBigFourPromoBanner.setSize(imageSize);
+								//								}
+								//								else if (null != simple.getMedia() && null != simple.getMedia().getURL()
+								//										&& simple.getMedia().getURL().startsWith(HTTPS))
+								//								{
+								//									LOG.info("Inside SimpleBannerComponentModel.HTTPS");
+								//									sb = new StringBuffer(simple.getMedia().getURL());
+								//									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+								//									imageUrl = sb.toString();
+								//									imageSize = findIamgeSize(imageUrl);
+								//
+								//
+								//									if (null != imageSize)
+								//									{
+								//										campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+								//									}
+								//									else
+								//									{
+								//										campaignDataBigFourPromoBanner.setSize(imageSize);
+								//									}
+								//								}
 
-									imageSize = findIamgeSize(imageUrl);
 
-									campaignDataBigFourPromoBanner.setSize(imageSize);
-								}
-								else if (null != simple.getMedia() && null != simple.getMedia().getURL()
-										&& simple.getMedia().getURL().startsWith(HTTPS))
+
+								if (null != simple.getMedia() && null != simple.getMedia().getURL())
 								{
+									final String imageURL = simple.getMedia().getURL();
+									LOG.info(MarketplacecommerceservicesConstants.IMAGEURLMSG + imageURL);
+									//									if (imageURL.startsWith(HTTP))
+									//									{
+									//										LOG.info("Inside SimpleBannerComponentModel.HTTP");
+									//										sb = new StringBuffer(simple.getMedia().getURL());
+									//										sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+									//										imageUrl = sb.toString();
+									//
+									//										imageSize = findIamgeSize(imageUrl);
+									//									}
+									//									else if (imageURL.startsWith(HTTPS))
+									//									{
 									LOG.info("Inside SimpleBannerComponentModel.HTTPS");
-									sb = new StringBuffer(simple.getMedia().getURL());
+									sb = new StringBuffer(imageURL);
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
-									imageSize = findIamgeSize(imageUrl);
-
-
-									if (null != imageSize)
-									{
-										campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
-									}
-									else
-									{
-										campaignDataBigFourPromoBanner.setSize(imageSize);
-									}
+									imageSize = findImageSize(imageUrl);
+									//									}
 								}
 								if (null != simple.getMedia() && null != simple.getMedia().getMime())
 								{
@@ -662,6 +842,18 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								{
 									campaignDataBigFourPromoBanner.setMediaType(MarketplacecommerceservicesConstants.EMPTY);
 								}
+
+								if (null != imageSize)
+								{
+									LOG.info("Inside RotatingImagesComponentModel.MplBigPromoBannerComponentModel.imageSizeNotNull:::"
+											+ imageSize);
+									campaignDataBigFourPromoBanner.setSize(imageSize);
+								}
+								else
+								{
+									campaignDataBigFourPromoBanner.setSize(MarketplacecommerceservicesConstants.EMPTY);
+								}
+
 								//CampaignDataList.add(campaignDataBigFourPromoBanner);
 								LOG.info("Inside SimpleBannerComponentModel ends");
 							}
@@ -682,11 +874,10 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception in creating Banner Image: " + e.getMessage());
+			LOG.error("Exception in creating Banner Image: ", e);
 		}
 		return CampaignDataList;
 	}
-
 
 	/*
 	 * All banner components are fed to create excel or csv
@@ -706,7 +897,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 		catch (final Exception e)
 		{
-			LOG.error("Exception writing" + e.getMessage());
+			LOG.error("Exception writing", e);
 		}
 	}
 
@@ -856,33 +1047,14 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	}
 
 
-	public String findIamgeSize(final String urlString) throws Exception
+	public String findImageSize(final String urlString) throws Exception
 	{
 		LOG.info("Inside findIamgeSize starts, urlString is: " + urlString);
 		String size = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
 			final URL object = new URL(urlString);
-			final String proxyEnableStatus = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.PROXYENABLED);
-			URLConnection connection = null;
-
-			if (proxyEnableStatus.equalsIgnoreCase("true"))
-			{
-				LOG.info("Inside proxy enabled true");
-				final String proxyName = configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.GENPROXY);
-				final int proxyPort = Integer.parseInt(configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.GENPROXYPORT));
-				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				connection = object.openConnection(proxy);
-			}
-			else
-			{
-				connection = object.openConnection();
-			}
-			// int timeOut = connection.getReadTimeout();
+			final URLConnection connection = object.openConnection();
 			connection.setReadTimeout(60 * 1000);
 			connection.setConnectTimeout(60 * 1000);
 			LOG.info("Connection: " + connection);
@@ -903,9 +1075,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			//final int responseCode = connection.
 			//System.out.println("" + responseCode);
 			//final BufferedImage bimg = ImageIO.read(openURLForInput(url,username,password));
-			LOG.info("connection InputStream: " + connection.getInputStream() + ", BufferedImage: "
-					+ ImageIO.read(connection.getInputStream()));
 			final BufferedImage bimg = ImageIO.read(connection.getInputStream());
+			LOG.info("connection InputStream: " + connection.getInputStream() + ", BufferedImage: " + bimg);
 			if (null != bimg)
 			{
 				LOG.info("If bimg is NOT NULL:");
@@ -919,7 +1090,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				size = MarketplacecommerceservicesConstants.EMPTY;
 			}
 
-			//size = String.valueOf(width) + " X " + String.valueOf(height);
 			LOG.info("Size is :::::::" + size);
 
 

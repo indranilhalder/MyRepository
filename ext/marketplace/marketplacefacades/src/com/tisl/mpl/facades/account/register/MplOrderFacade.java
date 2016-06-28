@@ -101,8 +101,7 @@ public interface MplOrderFacade
 	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
-	OrderEntryData fetchOrderEntryDetails(OrderEntryData orderEntryData, Map<String, Boolean> sortInvoice, OrderData subOrder)
-			throws EtailNonBusinessExceptions;
+	OrderEntryData fetchOrderEntryDetails(OrderEntryData orderEntryData, OrderData subOrder) throws EtailNonBusinessExceptions;
 
 	boolean checkCancelStatus(final String currentStatus, final String status);
 

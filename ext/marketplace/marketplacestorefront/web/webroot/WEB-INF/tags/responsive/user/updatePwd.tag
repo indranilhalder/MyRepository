@@ -39,6 +39,9 @@
 						<button class="form blue" onclick="encodePwd()"><spring:theme code="updatePwd.submit"/></button>
 					</ycommerce:testId>
 				</div>
+				<c:if test="${param.source ne null and param.source eq 'App' }">
+				<input type="hidden" name="source" value="App"/>
+				</c:if>
 			</form:form>
 		</div>
 	</div>

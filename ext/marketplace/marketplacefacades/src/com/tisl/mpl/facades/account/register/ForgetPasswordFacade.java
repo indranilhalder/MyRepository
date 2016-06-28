@@ -18,7 +18,7 @@ import com.tisl.mpl.enums.OTPTypeEnum;
 public interface ForgetPasswordFacade
 {
 
-	void forgottenPasswordForEmail(final String uid, final String securePasswordUrl);
+	void forgottenPasswordForEmail(final String uid, final String securePasswordUrl, Boolean isMobile);
 
 	void updatePassword(String token, String newPassword) throws TokenInvalidatedException;
 

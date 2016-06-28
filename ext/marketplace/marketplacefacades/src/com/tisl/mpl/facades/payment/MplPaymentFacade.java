@@ -278,11 +278,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -290,9 +290,9 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return Map<String, List<MplNetbankingData>>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
@@ -328,5 +328,14 @@ public interface MplPaymentFacade
 
 	//TISPRO-578
 	boolean isValidCart(CartModel cartModel);
+
+	//TISPRO-540
+	/**
+	 * This method is used to check whether payment info, delivery mode and address are present against cart or not
+	 *
+	 * @param cart
+	 * @return boolean
+	 */
+	boolean checkCart(final CartModel cart);
 
 }

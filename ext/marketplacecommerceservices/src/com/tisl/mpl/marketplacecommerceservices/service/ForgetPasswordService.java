@@ -8,7 +8,7 @@ import java.util.List;
 
 
 /**
- * @author 682160
+ * @author TCS
  *
  */
 public interface ForgetPasswordService
@@ -18,7 +18,7 @@ public interface ForgetPasswordService
 
 	String getOriginalToken(String tokenFromURL, CustomerModel customerModel);
 
-	public void forgottenPasswordEmail(CustomerModel paramCustomerModel, String securePasswordUrl);
+	public void forgottenPasswordEmail(CustomerModel paramCustomerModel, String securePasswordUrl, Boolean isMobile);
 
 	void updatePassword(String token, String newPassword) throws TokenInvalidatedException;
 

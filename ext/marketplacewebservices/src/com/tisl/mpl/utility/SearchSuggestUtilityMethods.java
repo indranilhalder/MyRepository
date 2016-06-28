@@ -6,6 +6,8 @@ package com.tisl.mpl.utility;
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.commercefacades.product.ProductFacade;
+import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
@@ -15,14 +17,14 @@ import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
+import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -30,13 +32,16 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
+import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.service.MplProductWebService;
+import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.util.MplCompetingProductsUtility;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
@@ -75,12 +80,20 @@ public class SearchSuggestUtilityMethods
 	private MplCompetingProductsUtility mplCompetingProductsUtility;
 	@Resource(name = "mplProductWebService")
 	private MplProductWebService mplProductWebService;
-
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
-	//
 	//	@Resource(name = "cwsProductFacade")
 	//	private ProductFacade productFacade;
+	@Resource(name = "productService")
+	private ProductService productService;
+
+	@Resource(name = "defaultPromotionManager")
+	private DefaultPromotionManager defaultPromotionManager;
+
+	@Resource(name = "accProductFacade")
+	private ProductFacade productFacade;
+	@Resource(name = "defaultMplProductSearchFacade")
+	private DefaultMplProductSearchFacade searchFacade;
 
 	/**
 	 * @Description : Sets Category Data to a DTO
@@ -420,8 +433,8 @@ public class SearchSuggestUtilityMethods
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("deptType")
+						&& !facate.getCode().equalsIgnoreCase("sellerId") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
 						&& !facate.getCode().equalsIgnoreCase("allPromotions"))
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
@@ -512,24 +525,54 @@ public class SearchSuggestUtilityMethods
 
 	}
 
-	private final List<GalleryImageData> getGalleryImagesList(final List<Map<String, String>> galleryImages)
-	{
-		final List<GalleryImageData> galleryImageList = new ArrayList<GalleryImageData>();
-		GalleryImageData galleryImage = null;
-		for (final Map<String, String> map : galleryImages)
-		{
-			galleryImage = new GalleryImageData();
-			galleryImage.setGalleryImages(map);
-			galleryImageList.add(galleryImage);
-		}
 
-		return galleryImageList;
-	}
+
+
+	//	private final List<GalleryImageData> getGalleryImagesList(final List<Map<String, String>> galleryImages)
+	//	{
+	//		final List<GalleryImageData> galleryImageList = new ArrayList<GalleryImageData>();
+	//		GalleryImageData galleryImage = null;
+	//		for (final Map<String, String> map : galleryImages)
+	//		{
+	//			galleryImage = new GalleryImageData();
+	//			galleryImage.setGalleryImages(map);
+	//			galleryImageList.add(galleryImage);
+	//		}
+	//
+	//		return galleryImageList;
+	//	}
+
+
 
 	// Check if Keyword exists
-	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(final String searchText)
+	public Map<String, List<String>> getKeywordSearch(String searchText)
 	{
-		return mplProductWebService.getKeywordSearch(searchText);
+		//TODO parse the URL and remove any extra sort query within it
+		String url = null;
+		Map<String, List<String>> params = null;
+		final List<String> urlList = new ArrayList<String>();
+		ProductSearchPageData<SearchStateData, ProductData> searchPageData = null;
+		try
+		{
+			//searchText = URLParamUtil.getQueryParamParsed(searchText);
+			searchText = URLParamUtil.filter(searchText);
+			searchPageData = searchFacade.textSearch(searchText);
+			url = mplProductWebService.getKeywordSearch(searchPageData, searchText);
+			if (StringUtils.isNotBlank(url))
+			{
+				//fetching the Parameters from the redirect URL in Map with Key and values
+				params = URLParamUtil.getQueryParams(url);
+				urlList.add(url);
+				params.put("keywordUrl", urlList);
+				LOG.debug("---search keyword url" + url);
+
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.debug(String.format("searchText-----%s -----url %s", searchText, url));
+		}
+		return params;
 	}
 
 	private List<SellingItemDetailWsDto> getProductResults(
@@ -541,22 +584,42 @@ public class SearchSuggestUtilityMethods
 
 		for (final ProductData productData : searchPageData.getResults())
 		{
+
 			final SellingItemDetailWsDto sellingItemDetail = new SellingItemDetailWsDto();
 			final List<VariantOptionsWsDto> variantOptionsWsDtoWsDtoList = new ArrayList<>();
 
-			if (null != productData)
+			if (null != productData && null != productData.getCode())
 			{
-				final List<Map<String, String>> gallaryImages = getGalleryImages(productData);
-				if (null != gallaryImages)
+
+				final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
+						productData.getCode());
+
+				ProductData productData1 = null;
+				if (null != productModel)
 				{
-
-					final List<GalleryImageData> gallaryImagesList = getGalleryImagesList(gallaryImages);
-
-					if (!gallaryImagesList.isEmpty())
-					{
-						sellingItemDetail.setGalleryImagesList(gallaryImagesList);
-					}
+					productData1 = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY));
 				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037);
+				}
+
+
+				if (null != productData1)
+				{
+					final List<GalleryImageData> gallaryImages = mplProductWebService.getGalleryImages(productData1);
+
+					if (!gallaryImages.isEmpty())
+					{
+						sellingItemDetail.setGalleryImagesList(gallaryImages);
+					}
+
+				}
+
+				//					if (null != mplProductWebService.getGalleryImages(productData1))
+				//					{
+				//						sellingItemDetail.setGalleryImagesList(mplProductWebService.getGalleryImages(productData1));
+				//					}
 				if (null != productData.getName())
 				{
 					sellingItemDetail.setProductname(productData.getName());
@@ -768,15 +831,11 @@ public class SearchSuggestUtilityMethods
 					}
 
 				}
-				else
-				{
-					sellerItemDetailWsDto = new SellerItemDetailWsDto();
-					sellerItemDetailWsDto.setSellerId("767865");
-					sellerItemDetailWsDto.setSellerName("TATA");
-					sellerItemDetailWsDto.setEMItag("Y");
-					sellerItemDetailWsDto.setOfferprice("767");
-					sellerItemDetailWsDtoList.add(sellerItemDetailWsDto);
-				}
+				/*
+				 * else { sellerItemDetailWsDto = new SellerItemDetailWsDto(); sellerItemDetailWsDto.setSellerId("767865");
+				 * sellerItemDetailWsDto.setSellerName("TATA"); sellerItemDetailWsDto.setEMItag("Y");
+				 * sellerItemDetailWsDto.setOfferprice("767"); sellerItemDetailWsDtoList.add(sellerItemDetailWsDto); }
+				 */
 				sellingItemDetail.setSeller(sellerItemDetailWsDtoList);
 				sellingItemDetail.setVariantOptions(variantOptionsWsDtoWsDtoList);
 				searchProductDTOList.add(sellingItemDetail);
@@ -790,7 +849,6 @@ public class SearchSuggestUtilityMethods
 		}
 		return searchProductDTOList;
 	}
-
 
 	private ImageData getPrimaryImageForProductAndFormat(final ProductData product, final String format)
 	{
@@ -811,54 +869,54 @@ public class SearchSuggestUtilityMethods
 		return null;
 	}
 
-	private List<Map<String, String>> getGalleryImages(final ProductData productData)
-	{
-
-		final List<Map<String, String>> galleryImages = new ArrayList<>();
-		if (CollectionUtils.isNotEmpty(productData.getImages()))
-		{
-			final List<ImageData> images = new ArrayList<>();
-			for (final ImageData image : productData.getImages())
-			{
-				if (ImageDataType.GALLERY.equals(image.getImageType()))
-				{
-					images.add(image);
-				}
-			}
-			Collections.sort(images, new Comparator<ImageData>()
-			{
-				@Override
-				public int compare(final ImageData image1, final ImageData image2)
-				{
-					return image1.getGalleryIndex().compareTo(image2.getGalleryIndex());
-				}
-			});
-
-			if (CollectionUtils.isNotEmpty(images))
-			{
-				int currentIndex = images.get(0).getGalleryIndex().intValue();
-				Map<String, String> formats = new HashMap<String, String>();
-				for (final ImageData image : images)
-				{
-					if (currentIndex != image.getGalleryIndex().intValue())
-					{
-						galleryImages.add(formats);
-						formats = new HashMap<>();
-						currentIndex = image.getGalleryIndex().intValue();
-					}
-					if (null != image.getFormat() && null != image.getUrl())
-					{
-						formats.put(image.getFormat(), image.getUrl());
-					}
-				}
-				if (!formats.isEmpty() && formats.equals(MarketplacecommerceservicesConstants.THUMBNAIL))
-				{
-					galleryImages.add(formats);
-				}
-			}
-		}
-		return galleryImages;
-	}
+	//	private List<Map<String, String>> getGalleryImages(final ProductData productData)
+	//	{
+	//
+	//		final List<Map<String, String>> galleryImages = new ArrayList<>();
+	//		if (CollectionUtils.isNotEmpty(productData.getImages()))
+	//		{
+	//			final List<ImageData> images = new ArrayList<>();
+	//			for (final ImageData image : productData.getImages())
+	//			{
+	//				if (ImageDataType.GALLERY.equals(image.getImageType()))
+	//				{
+	//					images.add(image);
+	//				}
+	//			}
+	//			Collections.sort(images, new Comparator<ImageData>()
+	//			{
+	//				@Override
+	//				public int compare(final ImageData image1, final ImageData image2)
+	//				{
+	//					return image1.getGalleryIndex().compareTo(image2.getGalleryIndex());
+	//				}
+	//			});
+	//
+	//			if (CollectionUtils.isNotEmpty(images))
+	//			{
+	//				int currentIndex = images.get(0).getGalleryIndex().intValue();
+	//				Map<String, String> formats = new HashMap<String, String>();
+	//				for (final ImageData image : images)
+	//				{
+	//					if (currentIndex != image.getGalleryIndex().intValue())
+	//					{
+	//						galleryImages.add(formats);
+	//						formats = new HashMap<>();
+	//						currentIndex = image.getGalleryIndex().intValue();
+	//					}
+	//					if (null != image.getFormat() && null != image.getUrl())
+	//					{
+	//						formats.put(image.getFormat(), image.getUrl());
+	//					}
+	//				}
+	//				if (!formats.isEmpty() && formats.equals(MarketplacecommerceservicesConstants.THUMBNAIL))
+	//				{
+	//					galleryImages.add(formats);
+	//				}
+	//			}
+	//		}
+	//		return galleryImages;
+	//	}
 
 	public DepartmentHierarchy getDepartmentHierarchy(final List<String> departmentFilters)
 	{
@@ -1229,8 +1287,8 @@ public class SearchSuggestUtilityMethods
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
+						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("deptType")
+						&& !facate.getCode().equalsIgnoreCase("sellerId") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 

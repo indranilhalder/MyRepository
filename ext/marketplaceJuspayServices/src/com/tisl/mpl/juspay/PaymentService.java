@@ -369,7 +369,15 @@ public class PaymentService
 
 		final String response = makeServiceCall(url, serializedParams);
 
-		LOG.debug("Response from juspay::::::::::::::::::::::::::::" + response);
+		//TIS-3168
+		if (null != response)
+		{
+			LOG.error("Response from Juspay:::" + response);
+		}
+		else
+		{
+			LOG.error("Null response from Juspay");
+		}
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
 
 		return assembleOrderStatusResponse(jsonResponse, new GetOrderStatusResponse());
@@ -690,6 +698,11 @@ public class PaymentService
 		final String url = baseUrl + "/order/refund";
 		LOG.debug("JUSPAY REFUND REQUEST--------------url-----" + url + "-------request----" + serializedParams);
 		final String response = makeServiceCall(url, serializedParams);
+		//TIS-3168
+		if (null != response)
+		{
+			LOG.error("Refund Response:::" + response);
+		}
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
 		if (jsonResponse != null)
 		{
@@ -816,6 +829,12 @@ public class PaymentService
 		final String url = baseUrl + "/txns";
 
 		final String response = makeServiceCall(url, serializedParams);
+
+		//TIS-3168
+		if (null != response)
+		{
+			LOG.error("Netbanking response:::" + response);
+		}
 
 		return response;
 	}

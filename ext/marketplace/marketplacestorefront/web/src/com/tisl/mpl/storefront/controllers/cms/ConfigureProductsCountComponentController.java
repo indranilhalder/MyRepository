@@ -3,8 +3,11 @@
  */
 package com.tisl.mpl.storefront.controllers.cms;
 
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +30,9 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 public class ConfigureProductsCountComponentController extends
 		AbstractCMSComponentController<ConfigureProductsCountComponentModel>
 {
+	@Autowired
+	private ConfigurationService configurationService;
+
 	/**
 	 * attribute added for configuring number of products to be added to the bag in pdp
 	 */
@@ -43,7 +49,10 @@ public class ConfigureProductsCountComponentController extends
 	protected void fillModel(final HttpServletRequest request, final Model model,
 			final ConfigureProductsCountComponentModel component)
 	{
-		model.addAttribute(ControllerConstants.Actions.Cms.PRODUCT_COUNT, Integer.valueOf(component.getCount()));
+		//TISPRO-606
+		//model.addAttribute(ControllerConstants.Actions.Cms.PRODUCT_COUNT, Integer.valueOf(component.getCount()));
+		model.addAttribute(ControllerConstants.Actions.Cms.PRODUCT_COUNT,
+				Integer.valueOf(configurationService.getConfiguration().getString("mpl.cart.maximumConfiguredQuantity.lineItem"), 10));
 	}
 
 }

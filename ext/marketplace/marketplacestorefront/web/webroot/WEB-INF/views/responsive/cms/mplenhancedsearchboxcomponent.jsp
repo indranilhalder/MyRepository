@@ -7,14 +7,15 @@
 
 <script language='javascript'>
 	$(document).ready(function() {
-		 var selectedItemText = $("#searchCategory").find('option:selected').text();
+		 var selectedItemText = $("#enhancedSearchCategory").find('option:selected').text();
 		 $("#searchBoxSpan").html(selectedItemText);
 		 
 		 $('.select-view .select-list').hover(function(){
 			 $(this).find('ul').slideDown();
 		 });
 		$(document).on('click',".select-list .dropdown li",function(e) {
-			$("#searchCategory").val(this.id);
+			 $("#enhancedSearchCategory").val(this.id);
+			 $("#searchCodeForDropdown").val(this.id);
 			//sessionStorage.setItem("selectedItemValue",$("#searchCategory").val());
 			//sessionStorage.setItem("selectedItemText",$(this).html());
 			$(".select-list .dropdown li").removeClass("selected");
@@ -28,8 +29,8 @@
 		$("#search_form").submit(function(event) {
 			if($("#js-site-search-input").val().trim()=="") {
 				var actionText = ACC.config.contextPath;
-				var dropdownValue = $("#searchCategory").val();
-				var dropdownName = $("#searchCategory").find('option:selected').text();
+				var dropdownValue = $("#enhancedSearchCategory").val();
+				//var dropdownName = $("#searchCategory").find('option:selected').text();
 
 				if (!String.prototype.startsWith) {
 					  String.prototype.startsWith = function(searchString, position) {
@@ -91,7 +92,7 @@
 		</span>
 		<!-- search category List -->
 		<div class="select-view">
-			<select id="searchCategory" name="searchCategory">
+			<select id="enhancedSearchCategory" name="searchCategory">
 				<optgroup label="All">
 					<option selected="selected" value="all"><spring:theme code="text.all" /></option>
 				</optgroup>

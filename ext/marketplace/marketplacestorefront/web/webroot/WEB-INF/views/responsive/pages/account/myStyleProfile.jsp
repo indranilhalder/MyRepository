@@ -38,7 +38,8 @@
 						<!-- TISPRD-2335 -->
 						<c:choose>
 							<c:when test="${category.value.image ne null}">
-								<img class="" src="${commonResourcePath}${category.value.image}">
+							
+								<img class="" src="${category.value.image}">
 							</c:when>
 							<c:otherwise>
 								<img class="" src="${commonResourcePath}/images/missing-product-515x515.jpg">
@@ -74,7 +75,7 @@
 							<!-- TISPRD-2335 -->
 								<c:choose>
 									<c:when test="${brand.value.image ne null}">
-										<img class="" src="${commonResourcePath}${brand.value.image}">
+										<img class="" src="${brand.value.image}">
 									</c:when>
 									<c:otherwise>
 										<img class="" src="${commonResourcePath}/images/missing-product-515x515.jpg">
