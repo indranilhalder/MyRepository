@@ -871,7 +871,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Password should contain more than 8 characters</font>";
+			document.getElementById("errNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Your password should be minimum 8 characters</font>";
 			flag = false;
 		}
 		// TISPRM-11
