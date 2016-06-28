@@ -3067,17 +3067,17 @@ $('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li 
 function changeCTAButtonName(deliveryCode) {
 	//console.log(deliveryCode);
 	//TISPRO-625
-	var buttonText=$('#deliveryMethodSubmit').text();
+	//var buttonText=$('#deliveryMethodSubmit').text();
 	
 	if(deliveryCode == "click-and-collect") {
 		$("#deliveryMethodSubmit").text("Choose Store");
 		$("#deliveryMethodSubmitUp").text("Choose Store");
 	} else if(deliveryCode== "DefaultName") {
 		//TISPRO-625
-		//$("#deliveryMethodSubmit").text("Choose Address");
-		//$("#deliveryMethodSubmitUp").text("Choose Address");
-		$("#deliveryMethodSubmit").text(buttonText);
-		$("#deliveryMethodSubmitUp").text(buttonText);
+		$("#deliveryMethodSubmit").text("Choose Address");
+		$("#deliveryMethodSubmitUp").text("Choose Address");
+		//$("#deliveryMethodSubmit").text(buttonText);
+		//$("#deliveryMethodSubmitUp").text(buttonText);
 	}
 }
 
