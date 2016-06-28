@@ -1617,11 +1617,6 @@ $("#otpMobileNUMField").focus(function(){
 	 return status;
   }
  
-  $("#make_cc_payment, #make_cc_payment_up").click(function(){
-	 if(isSessionActive()==false){
-		 redirectToCheckoutLogin();
-		}
-		else{
 
 
 
@@ -3085,10 +3080,10 @@ function changeCTAButtonName(deliveryCode) {
 		$("#deliveryMethodSubmitUp").text("Choose Store");
 	} else if(deliveryCode== "DefaultName") {
 		//TISPRO-625
-		//$("#deliveryMethodSubmit").text("Choose Address");
-		//$("#deliveryMethodSubmitUp").text("Choose Address");
-		$("#deliveryMethodSubmit").text(buttonText);
-		$("#deliveryMethodSubmitUp").text(buttonText);
+		$("#deliveryMethodSubmit").text("Choose Address");
+		$("#deliveryMethodSubmitUp").text("Choose Address");
+		//$("#deliveryMethodSubmit").text(buttonText);
+		//$("#deliveryMethodSubmitUp").text(buttonText);
 	}
 }
 
