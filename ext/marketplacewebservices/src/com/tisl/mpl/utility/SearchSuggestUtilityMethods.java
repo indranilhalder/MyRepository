@@ -47,7 +47,7 @@ import com.tisl.mpl.util.MplCompetingProductsUtility;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
 import com.tisl.mpl.wsdto.DepartmentFilterWsDto;
-import com.tisl.mpl.wsdto.DepartmentHierarchy;
+import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
 import com.tisl.mpl.wsdto.FacetDataWsDTO;
 import com.tisl.mpl.wsdto.FacetValueDataWsDTO;
 import com.tisl.mpl.wsdto.GalleryImageData;
@@ -170,7 +170,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -394,7 +394,7 @@ public class SearchSuggestUtilityMethods
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
-		List<DepartmentFilterWsDto> categoryHierarchy = new ArrayList<>();
+		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
 		if (null != searchPageData.getResults())
 		{
 
@@ -517,6 +517,32 @@ public class SearchSuggestUtilityMethods
 					{
 						categoryHierarchy = getDepartmentHierarchy(searchPageData.getDepartmentHierarchyData().getHierarchyList(),
 								facate.getValues());
+					}
+					categoryHierarchy.setMultiSelect(Boolean.valueOf((facate.isCategory())));
+					if (null != facate.getName())
+					{
+						categoryHierarchy.setName(facate.getName());
+					}
+					categoryHierarchy.setCategory(Boolean.valueOf((facate.isCategory())));
+					categoryHierarchy.setPriority(Integer.valueOf((facate.getPriority())));
+					categoryHierarchy.setKey(facate.getCode());
+
+					//Generic filter condition
+					if (searchPageData.getDeptType().equalsIgnoreCase("Generic"))
+					{
+
+						if (facate.isGenericFilter())
+						{
+							categoryHierarchy.setVisible(Boolean.TRUE);
+						}
+						else
+						{
+							categoryHierarchy.setVisible(Boolean.FALSE);
+						}
+					}
+					else
+					{
+						categoryHierarchy.setVisible(Boolean.valueOf((facate.isVisible())));
 					}
 					productSearchPage.setFacetdatacategory(categoryHierarchy);
 				}
@@ -925,10 +951,10 @@ public class SearchSuggestUtilityMethods
 	//		return galleryImages;
 	//	}
 
-	public DepartmentHierarchy getDepartmentHierarchy(final List<String> departmentFilters)
+	public DepartmentHierarchyWs getDepartmentHierarchy(final List<String> departmentFilters)
 	{
 		final Set<String> traversedDepartments = new HashSet<String>();
-		final DepartmentHierarchy departmentHierarchy = new DepartmentHierarchy();
+		final DepartmentHierarchyWs departmentHierarchy = new DepartmentHierarchyWs();
 		//	final List<L1DepartmentFilterWsDto> l1DepartmentFilterWsDtos = new ArrayList<L1DepartmentFilterWsDto>();
 
 		if (departmentFilters != null && !departmentFilters.isEmpty())
@@ -1291,7 +1317,7 @@ public class SearchSuggestUtilityMethods
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
-		List<DepartmentFilterWsDto> categoryHierarchy = new ArrayList<>();
+		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
 		if (null != searchPageData.getFacets())
 		{
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
@@ -1382,6 +1408,32 @@ public class SearchSuggestUtilityMethods
 						categoryHierarchy = getDepartmentHierarchy(searchPageData.getDepartmentHierarchyData().getHierarchyList(),
 								facate.getValues());
 					}
+					categoryHierarchy.setMultiSelect(Boolean.valueOf((facate.isCategory())));
+					if (null != facate.getName())
+					{
+						categoryHierarchy.setName(facate.getName());
+					}
+					categoryHierarchy.setCategory(Boolean.valueOf((facate.isCategory())));
+					categoryHierarchy.setPriority(Integer.valueOf((facate.getPriority())));
+					categoryHierarchy.setKey(facate.getCode());
+
+					//Generic filter condition
+					if (searchPageData.getDeptType().equalsIgnoreCase("Generic"))
+					{
+
+						if (facate.isGenericFilter())
+						{
+							categoryHierarchy.setVisible(Boolean.TRUE);
+						}
+						else
+						{
+							categoryHierarchy.setVisible(Boolean.FALSE);
+						}
+					}
+					else
+					{
+						categoryHierarchy.setVisible(Boolean.valueOf((facate.isVisible())));
+					}
 					productSearchPage.setFacetdatacategory(categoryHierarchy);
 				}
 			}
@@ -1397,11 +1449,12 @@ public class SearchSuggestUtilityMethods
 		return productSearchPage;
 	}
 
-	public List<DepartmentFilterWsDto> getDepartmentHierarchy(final List<String> departmentFilters,
+	public DepartmentHierarchyWs getDepartmentHierarchy(final List<String> departmentFilters,
 			final List<FacetValueData<SearchStateData>> facetValues)
 	{
 		final Set<String> traversedDepartments = new HashSet<String>();
-		List<DepartmentFilterWsDto> departmentHierarchy = new ArrayList<DepartmentFilterWsDto>();
+		final DepartmentHierarchyWs departmentHierarchy = new DepartmentHierarchyWs();
+		//	final List<L1DepartmentFilterWsDto> l1DepartmentFilterWsDtos = new ArrayList<L1DepartmentFilterWsDto>();
 
 		if (departmentFilters != null && !departmentFilters.isEmpty())
 		{
@@ -1413,7 +1466,7 @@ public class SearchSuggestUtilityMethods
 					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
 					if (foundDeparts.length > 4)
 					{
-						for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy)
+						for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
 						{
 							if (oldL1Filter.getCategoryCode().equals(
 									foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
@@ -1429,9 +1482,7 @@ public class SearchSuggestUtilityMethods
 													foundDeparts[3].split(MarketplacecommerceservicesConstants.COLON)[0]))
 											{
 												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(foundDeparts[4]
-														.split(MarketplacecommerceservicesConstants.COLON));
-
-
+														.split(":"));
 												if (oldL3DepartFilter.getChildFilters() != null
 														&& !oldL3DepartFilter.getChildFilters().isEmpty())
 												{
@@ -1450,13 +1501,12 @@ public class SearchSuggestUtilityMethods
 
 							}
 						}
-
 					}
 				}
 				else if (traverseString.equals(MarketplacecommerceservicesConstants.DEPT_L1))
 				{
 					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
-					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy)
+					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
 					{
 						if (null != oldL1Filter.getCategoryCode()
 								&& oldL1Filter.getCategoryCode().equals(
@@ -1521,8 +1571,6 @@ public class SearchSuggestUtilityMethods
 							}
 							l2DepartFilter.setChildFilters(l3List);
 
-
-
 							if (oldL1Filter.getChildFilters() != null && !oldL1Filter.getChildFilters().isEmpty())
 							{
 								oldL1Filter.getChildFilters().add(l2DepartFilter);
@@ -1541,7 +1589,7 @@ public class SearchSuggestUtilityMethods
 				else if (traverseString.equals(MarketplacecommerceservicesConstants.DEPT_L2))
 				{
 					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
-					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy)
+					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
 					{
 						if (oldL1Filter.getCategoryCode().equals(foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
 						{
@@ -1686,22 +1734,23 @@ public class SearchSuggestUtilityMethods
 					l2DepartFilter.setChildFilters(l3List);
 					l2List.add(l2DepartFilter);
 					l1DepartFilter.setChildFilters(l2List);
-					if (CollectionUtils.isNotEmpty(departmentHierarchy))
+					if (departmentHierarchy.getFilters() != null && !departmentHierarchy.getFilters().isEmpty())
 					{
-						departmentHierarchy.add(l1DepartFilter);
+						departmentHierarchy.getFilters().add(l1DepartFilter);
 					}
 					else
 					{
 						l1List.add(l1DepartFilter);
-						departmentHierarchy = l1List;
+						departmentHierarchy.setFilters(l1List);
 					}
 					traversedDepartments.addAll(concateDepartmentString(departmentFil));
+
 				}
 
 			}
 		}
-
-		for (final DepartmentFilterWsDto oldL0 : departmentHierarchy)
+		boolean flag = false;
+		for (final DepartmentFilterWsDto oldL0 : departmentHierarchy.getFilters())
 		{
 			//FOr select if facet is selected
 			for (final FacetValueData<SearchStateData> value : facetValues)
@@ -1709,6 +1758,7 @@ public class SearchSuggestUtilityMethods
 				if (value != null && value.getCode().equalsIgnoreCase(oldL0.getCategoryCode()))
 				{
 					oldL0.setSelected(Boolean.valueOf(value.isSelected()));
+					flag = true;
 					break;
 				}
 			}
@@ -1723,6 +1773,7 @@ public class SearchSuggestUtilityMethods
 						if (value != null && value.getCode().equalsIgnoreCase(oldL1.getCategoryCode()))
 						{
 							oldL1.setSelected(Boolean.valueOf(value.isSelected()));
+							flag = true;
 							break;
 						}
 					}
@@ -1736,6 +1787,7 @@ public class SearchSuggestUtilityMethods
 								if (value != null && value.getCode().equalsIgnoreCase(oldL2.getCategoryCode()))
 								{
 									oldL2.setSelected(Boolean.valueOf(value.isSelected()));
+									flag = true;
 									break;
 								}
 							}
@@ -1749,7 +1801,9 @@ public class SearchSuggestUtilityMethods
 										if (value != null && value.getCode().equalsIgnoreCase(oldL3.getCategoryCode()))
 										{
 											oldL3.setSelected(Boolean.valueOf(value.isSelected()));
+											flag = true;
 											break;
+
 										}
 									}
 								}
@@ -1759,7 +1813,14 @@ public class SearchSuggestUtilityMethods
 				}
 			}
 		}
-
+		if (flag)
+		{
+			departmentHierarchy.setSelected(Boolean.TRUE);
+		}
+		else
+		{
+			departmentHierarchy.setSelected(Boolean.FALSE);
+		}
 		return departmentHierarchy;
 	}
 }
