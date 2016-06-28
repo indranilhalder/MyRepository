@@ -57,9 +57,16 @@ function deleteWishlist(wishlistName){
 		success : function(data) {
 			window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
 		},
-		error : function(data) {
-			alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");
+		//error : function(data) {
+			//alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");
 			//console.log(data.responseText) 
+		//}
+		error: function (xhr, status, error) {
+			if(status == "parsererror"){
+				window.location.href = ACC.config.encodedContextPath + "/login";
+			} else {
+				alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
+			}          
 		}
 	});
 }
@@ -98,10 +105,17 @@ function renameWishlist(newWishlistName) {
 				$(".rename-input").html("Your wishlist needs a name!");
 			}
 		},
-		error : function(data) {
-			alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");
+		//error : function(data) {
+			//alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");
 			//console.log(data.responseText) 
-		}
+		//}
+		error: function (xhr, status, error) {
+			if(status == "parsererror"){
+				window.location.href = ACC.config.encodedContextPath + "/login";
+			} else {
+			 alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
+			}           
+		 }
 	});
 }
 
@@ -139,10 +153,13 @@ $(document).on("click",".create_wishlist",function(){
 				
 			}
 		},
-		error : function(data) {
-			alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");
-			//console.log(data.responseText) 
-		}
+		error: function (xhr, status, error) {
+			if(status == "parsererror"){
+				window.location.href = ACC.config.encodedContextPath + "/login";
+			} else {
+			 alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
+			}           
+		 }
 	});
 });
 
@@ -267,10 +284,13 @@ function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isAppa
 //			window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
 			window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName;
 		},
-		error : function(data) {
-			alert("Some issues are there with Delete Wishlist at this time. Please try later or contact out helpdesk");
-			//console.log(data.responseText) 
-		}
+		error: function (xhr, status, error) {
+			if(status == "parsererror"){
+				window.location.href = ACC.config.encodedContextPath + "/login";
+			} else {
+			 alert("Some issues are there with Delete Wishlist at this time. Please try later or contact out helpdesk");	
+			}           
+		 }
 	});
 }
 

@@ -44,7 +44,7 @@ public class MplSearchSolrQueryTypeFacetsPopulator<INDEXED_PROPERTY_TYPE, INDEXE
 
 			final String pageFacets = pageableData.getPageFacets();
 
-			if (null != pageFacets)
+			if (null != pageFacets && !pageFacets.isEmpty())
 			{
 				final Set<String> typeFacets = new HashSet<String>(Arrays.asList(pageFacets.split("&")));
 				target.setIndexedType(getIndexedType(target.getFacetSearchConfig(), typeFacets));

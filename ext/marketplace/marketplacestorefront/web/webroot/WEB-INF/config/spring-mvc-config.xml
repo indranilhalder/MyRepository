@@ -78,7 +78,7 @@
 			<property name="userService" ref="userService" />
 			<property name="redirectStrategy" ref="redirectStrategy" />
 			<property name="loginUrl" value="/login" />
-			<property name="loginAndCheckoutUrl" value="/login/checkout" />
+			<property name="loginAndCheckoutUrl" value="/checkout/multi/checkoutlogin/login" />
 			<property name="cookieGenerator" ref="guidCookieGenerator" />
 			<property name="sessionService" ref="sessionService" />
 			<property name="cartService" ref="cartService" />
