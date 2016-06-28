@@ -1922,6 +1922,7 @@ public class CartsController extends BaseCommerceController
 			@RequestParam(required = false, defaultValue = "1") final String quantity,
 			@RequestParam(required = true) final boolean addedToCartWl) throws InvalidCartException,
 			CommerceCartModificationException
+
 	{
 		WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		LOG.debug("**************** Adding ptoduct to cart mobile web service *********************" + cartId + "::: USSID ::::"
@@ -1995,6 +1996,10 @@ public class CartsController extends BaseCommerceController
 			{
 				cartDataDetails.setError(e.getErrorMessage());
 			}
+			if (null != e.getErrorCode())
+			{
+				cartDataDetails.setErrorCode(e.getErrorCode());
+			}
 			cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -2007,6 +2012,10 @@ public class CartsController extends BaseCommerceController
 			else
 			{
 				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			if (null != e.getErrorCode())
+			{
+				cartDataDetails.setErrorCode(e.getErrorCode());
 			}
 			if (null != e.getErrorMessage())
 			{
@@ -2071,10 +2080,10 @@ public class CartsController extends BaseCommerceController
 			}
 			/*
 			 * String cartIdentifier; Collection<CartModel> cartModelList = null;
-			 * 
+			 *
 			 * cartModelList = mplCartFacade.getCartDetails(customerFacade.getCurrentCustomer().getUid());
-			 * 
-			 * 
+			 *
+			 *
 			 * if (null != cartModelList && cartModelList.size() > 0) { for (final CartModel cartModel : cartModelList) {
 			 * if (userFacade.isAnonymousUser()) { cartIdentifier = cartModel.getGuid(); } else { cartIdentifier =
 			 * cartModel.getCode(); } if (cartIdentifier.equals(cartId)) {

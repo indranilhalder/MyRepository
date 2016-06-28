@@ -15,10 +15,15 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xmlns:int="http://www.springframework.org/schema/integration"
 		  xmlns:aop="http://www.springframework.org/schema/aop"
+		 xmlns:util="http://www.springframework.org/schema/util"
 		 xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
-           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+           http://www.springframework.org/schema/integration 
+           http://www.springframework.org/schema/integration/spring-integration.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd">
+
 
 	<bean id="cwsProductFacade" parent="defaultProductFacade">
 		<property name="productConfiguredPopulator" ref="cwsProductConfiguredPopulator"/>
@@ -321,8 +326,23 @@
 </bean>	
 <!-- Registration Mobile web service  -->	
 <!-- ProductDetailsForProductCode mobile web service begins -->
-<bean id="mplProductWebService"
-		class="com.tisl.mpl.service.impl.MplProductWebServiceImpl"/>
+<!-- <bean id="mplProductWebService"
+		class="com.tisl.mpl.service.impl.MplProductWebServiceImpl"/> -->
+		
+<bean id="mplProductWebService" class="com.tisl.mpl.service.impl.MplProductWebServiceImpl">
+	<property name="solrFacetSearchKeywordDao" ref="solrFacetSearchKeywordDao" />
+	<property name="keywordRedirectSorter" ref="keywordRedirectSorter" />
+	<property name="commonI18NService" ref="commonI18NService" />
+	<property name="redirectHandlers">
+		<util:map key-type="de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType" map-class="java.util.HashMap">
+			<entry key="CONTAINS" value-ref="containsKeywordRedirectHandler" />
+			<entry key="STARTS_WITH" value-ref="startsWithKeywordRedirectHandler" />
+			<entry key="ENDS_WITH" value-ref="endsWithKeywordRedirectHandler" />
+			<entry key="REGEX" value-ref="regexKeywordRedirectHandler" />
+			<entry key="EXACT" value-ref="exactKeywordRedirectHandler" />
+		</util:map>
+	</property>
+</bean>		
 <!-- ProductDetailsForProductCode mobile web service ends -->	
 <!-- Push Notifications save device info starts-->
 <bean id="mplMobileAppRegisterFacade"

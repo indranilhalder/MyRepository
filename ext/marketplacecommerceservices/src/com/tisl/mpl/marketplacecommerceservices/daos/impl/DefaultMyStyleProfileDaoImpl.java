@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.MplStyleProfileModel;
 import com.tisl.mpl.core.model.MyRecommendationsBrandsModel;
 import com.tisl.mpl.core.model.MyRecommendationsConfigurationModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -28,6 +29,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MyStyleProfileDao;
 @Component(value = "myStyleProfileDao")
 public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 {
+
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(DefaultMyStyleProfileDaoImpl.class);
 	@Autowired
@@ -109,6 +111,56 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 		}
 		catch (final Exception ex)
 		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/*
+	 * @Description : Fetching preferred categories against device ID
+	 * 
+	 * @param: device ID
+	 * 
+	 * @return: List of MplStyleProfileModel
+	 */
+	@Override
+	public List<MplStyleProfileModel> fetchCatBrandOfDevice(final String deviceId)
+	{
+		LOG.debug("Fetching fetchCatandBrandsOfDevice Data");
+		try
+		{
+			final String queryString = "SELECT {p:" + MplStyleProfileModel.PK + "} " + "FROM {" + MplStyleProfileModel._TYPECODE
+					+ " AS p }" + " WHERE {p:" + MplStyleProfileModel.DEVICEID + "}=?deviceId";
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("deviceId", deviceId);
+			return flexibleSearchService.<MplStyleProfileModel> search(query).getResult();
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex.getMessage());
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MyStyleProfileDao#fetchBrandOfDevice(java.lang.String)
+	 */
+	@Override
+	public List<MplStyleProfileModel> fetchBrandOfDevice(final String deviceId)
+	{
+		LOG.debug("Fetching fetchBrandOfDevice Data");
+		try
+		{
+			final String queryString = "SELECT {p:" + MplStyleProfileModel.PK + "} " + "FROM {" + MplStyleProfileModel._TYPECODE
+					+ " AS p }" + " WHERE {p:" + MplStyleProfileModel.DEVICEID + "}=?deviceId";
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("deviceId", deviceId);
+			return flexibleSearchService.<MplStyleProfileModel> search(query).getResult();
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex.getMessage());
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
