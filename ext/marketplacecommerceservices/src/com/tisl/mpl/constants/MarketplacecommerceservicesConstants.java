@@ -1601,6 +1601,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String BUYBOX = "buybox.";
 	public final static String QUERY = "DataExtract";
+	public final static String LASTRUNTIME = "lastruntime";
 	public final static String HOTFOLDERLOCATION = "hotFolderLocation";
 	public static final String BUYBOX_FILE_NAME = "filename";
 	public static final String BUYBOX_FILE_EXTENSION = "csv";

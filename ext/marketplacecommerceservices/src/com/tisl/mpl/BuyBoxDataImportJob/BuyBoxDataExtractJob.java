@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.BuyBoxDataImportJob;
 
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
 import de.hybris.platform.cronjob.model.CronJobModel;
@@ -19,6 +20,8 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.BuyBoxDataImport.BuyBoxImportUtility;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService;
+import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -60,14 +63,24 @@ public class BuyBoxDataExtractJob extends AbstractJobPerformable<CronJobModel>
 	public PerformResult perform(final CronJobModel cronJob)
 	{
 		LOG.info("Entering BuyBox extract Job Starting.....");
+		final MplConfigurationModel configModel = getFetchSalesOrderService().getCronDetails(cronJob.getCode());
+
+
 		try
 		{
 			{
-
+				configModel.setMplConfigCode(cronJob.getCode());
 				buyBoxImportUtil.executeExtraction();
 			}
 			cronJob.setEndTime(new Date());
+
+			//saving Cronjob
 			getModelService().save(cronJob);
+			//saving the last start time
+			configModel.setMplConfigDate(cronJob.getStartTime());
+			//saving MplConfiguration
+			getModelService().save(configModel);
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -86,5 +99,10 @@ public class BuyBoxDataExtractJob extends AbstractJobPerformable<CronJobModel>
 		}
 
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
+	}
+
+	protected FetchSalesOrderService getFetchSalesOrderService()
+	{
+		return Registry.getApplicationContext().getBean("fetchSalesOrderServiceImpl", FetchSalesOrderService.class);
 	}
 }

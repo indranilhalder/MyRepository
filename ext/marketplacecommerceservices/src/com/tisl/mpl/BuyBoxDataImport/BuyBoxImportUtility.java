@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,8 +48,9 @@ public class BuyBoxImportUtility
 	private ConfigurationService configurationService;
 
 
-	@Resource
-	private DataSource buyBoxDataSource;
+	//@Resource
+	//private DataSource buyBoxDataSource;
+	
 	Connection vjdbcConnection = null;
 	Connection connection = null;
 	Statement vjdbcStmt = null;
@@ -58,11 +60,11 @@ public class BuyBoxImportUtility
 
 	public void executeExtraction()
 	{
-		HybrisDataSource currentDataSource = null;
+		final HybrisDataSource currentDataSource = null;
 		final String productExportQuery = getDataExportQuery();
 		LOG.debug("Buybox Export query :" + productExportQuery);
 		Connection vjdbcConnection = null;
-		Statement vjdbcStmt = null;
+		//final Statement vjdbcStmt = null;
 		ResultSet analyticsResult = null;
 		try
 		{
@@ -70,19 +72,20 @@ public class BuyBoxImportUtility
 			currentDataSource = Registry.getCurrentTenantNoFallback().getDataSource(VjdbcDataSourceImplFactory.class.getName());
 			vjdbcConnection = currentDataSource.getConnection();
 			//Please Comment the above two lines in case of local and uncomment the below line
-			//vjdbcConnection=buyBoxDataSource.getConnection();
-			vjdbcStmt = vjdbcConnection.createStatement();
+			//vjdbcConnection = buyBoxDataSource.getConnection();
+			pst = vjdbcConnection.prepareStatement(productExportQuery);
+			
+			//set last Run time from MplConfig Table
+			pst.setTimestamp(1, getLastRunTime());
+
 			//Fetching Result
-			analyticsResult = vjdbcStmt.executeQuery(productExportQuery);
+			analyticsResult = pst.executeQuery();
 
 			// Getting the result set and assigned the values in MAP array.
 
 			final List<Map<Integer, String>> listOfMaps = new ArrayList<Map<Integer, String>>();
 			final int columnCount = analyticsResult.getMetaData() != null ? analyticsResult.getMetaData().getColumnCount() : 0;
-			//	final Map<Integer, String> dataColumnMap = new HashMap<Integer, String>();
 			final List<String> rowIdList = new ArrayList<String>();
-
-
 			Map<Integer, String> dataMap = null;
 
 			while (analyticsResult.next())
@@ -98,6 +101,68 @@ public class BuyBoxImportUtility
 
 
 			writeExportDataIntoFile(listOfMaps);
+
+		}
+
+		catch (final Exception e)
+		{
+			LOG.warn("Error occurred while getting data from database in Data Analytics export job" + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				if (analyticsResult != null)
+				{
+					analyticsResult.close();
+				}
+				if (pst != null)
+				{
+					pst.close();
+				}
+				if (vjdbcConnection != null)
+				{
+					vjdbcConnection.close();
+				}
+
+			}
+			catch (final Exception e)
+			{
+				LOG.warn("Error ocured while Data Extraction" + e.getMessage());
+			}
+		}
+
+	}
+
+
+	public Timestamp getLastRunTime()
+	{
+
+		HybrisDataSource currentDataSource = null;
+		final String productExportQuery = getLastRunTimeQuery();
+		LOG.debug("Buybox Export query :" + productExportQuery);
+		Connection vjdbcConnection = null;
+		Statement vjdbcStmt = null;
+		ResultSet analyticsResult = null;
+		try
+		{
+			// getting database connection from vjdbc
+			currentDataSource = Registry.getCurrentTenantNoFallback().getDataSource(VjdbcDataSourceImplFactory.class.getName());
+			vjdbcConnection = currentDataSource.getConnection();
+			
+			vjdbcStmt = vjdbcConnection.createStatement();
+			//Fetching Result
+
+			analyticsResult = vjdbcStmt.executeQuery(productExportQuery);
+
+
+			while (analyticsResult.next())
+			{
+				return analyticsResult.getTimestamp(1);
+			}
+
+
 
 		}
 
@@ -130,13 +195,23 @@ public class BuyBoxImportUtility
 			}
 		}
 
-	}
 
+
+		return null;
+	}
 
 	public String getDataExportQuery()
 	{
 		final String query = configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.BUYBOX + MarketplacecommerceservicesConstants.QUERY);
+		LOG.debug("query" + query);
+		return query;
+	}
+
+	public String getLastRunTimeQuery()
+	{
+		final String query = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.BUYBOX + MarketplacecommerceservicesConstants.LASTRUNTIME);
 		LOG.debug("query" + query);
 		return query;
 	}
