@@ -1790,7 +1790,7 @@
 		          type="de.hybris.platform.commercewebservicescommons.dto.search.pagedata.PaginationWsDTO"/>
 		<property name="currentQuery" type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO"/>
 		<property name="facetdatacategory"
-		          type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>"/>
+		          type="com.tisl.mpl.wsdto.DepartmentHierarchyWs"/>
 		  
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FacetDataWsDTO">
@@ -2140,6 +2140,18 @@
      <bean class="com.tisl.mpl.wsdto.DepartmentHierarchy">
     <property name="filters" type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>" />
     </bean>
+    
+     <bean class="com.tisl.mpl.wsdto.DepartmentHierarchyWs">
+   	 	<property name="filters" type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>" />
+  		<property name="name" type="String"/>
+		<property name="key" type="String"/>
+		<property name="priority" type="Integer"/>
+		<property name="category" type="Boolean"/>
+		<property name="multiSelect" type="Boolean"/>
+		<property name="visible" type="Boolean"/>
+		<property name="selected" type="Boolean" />
+    </bean>
+    
     
       <!-- Saved Card Credit/Debit Data -->
      <bean class="com.tisl.mpl.wsdto.MplPreferenceWsDTO">
