@@ -110,7 +110,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
 import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
-import com.tisl.mpl.wsdto.DepartmentHierarchy;
+import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
 import com.tisl.mpl.wsdto.ProductCompareWsDTO;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
@@ -1299,7 +1299,7 @@ public class ProductsController extends BaseController
 
 	@RequestMapping(value = "/getDepartmentFilter", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public DepartmentHierarchy departmentFilter(@RequestParam(required = false) final String searchText,
+	public DepartmentHierarchyWs departmentFilter(@RequestParam(required = false) final String searchText,
 			@RequestParam(required = false) final String typeID,
 			@RequestParam(required = false, defaultValue = "category") final String type)
 	{
