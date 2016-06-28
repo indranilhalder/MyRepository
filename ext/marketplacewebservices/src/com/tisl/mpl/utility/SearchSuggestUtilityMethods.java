@@ -1758,7 +1758,8 @@ public class SearchSuggestUtilityMethods
 				if (value != null && value.getCode().equalsIgnoreCase(oldL0.getCategoryCode()))
 				{
 					oldL0.setSelected(Boolean.valueOf(value.isSelected()));
-					flag = true;
+					if(value.isSelected())
+						flag = true;
 					break;
 				}
 			}
@@ -1773,7 +1774,8 @@ public class SearchSuggestUtilityMethods
 						if (value != null && value.getCode().equalsIgnoreCase(oldL1.getCategoryCode()))
 						{
 							oldL1.setSelected(Boolean.valueOf(value.isSelected()));
-							flag = true;
+							if(value.isSelected())
+								flag = true;
 							break;
 						}
 					}
@@ -1787,7 +1789,8 @@ public class SearchSuggestUtilityMethods
 								if (value != null && value.getCode().equalsIgnoreCase(oldL2.getCategoryCode()))
 								{
 									oldL2.setSelected(Boolean.valueOf(value.isSelected()));
-									flag = true;
+										if(value.isSelected())
+											flag = true;
 									break;
 								}
 							}
@@ -1801,6 +1804,7 @@ public class SearchSuggestUtilityMethods
 										if (value != null && value.getCode().equalsIgnoreCase(oldL3.getCategoryCode()))
 										{
 											oldL3.setSelected(Boolean.valueOf(value.isSelected()));
+												if(value.isSelected())
 											flag = true;
 											break;
 
