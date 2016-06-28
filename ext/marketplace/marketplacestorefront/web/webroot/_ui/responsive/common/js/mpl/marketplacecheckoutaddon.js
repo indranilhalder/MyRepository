@@ -2686,18 +2686,20 @@ function applyPromotion(bankName)
 				{
 					for (var x = 0; x < response.mplPromo.length; x++)
 					{
-						var promoIdentifier=response.mplPromo[x].promoTypeIdentifier;
-						if(promoIdentifier=="PotentialPromotion")
+						if(!(response.mplPromo[x]==null || response.mplPromo[x]=='null' || response.mplPromo[x]=='undefined')) //TISSIT-2046 TISBM-4449
 						{
-							var spanTag = document.createElement("p");
-							spanTag.id = "p"+x;	
-							$("#promotionApplied").css("display","none");
-							$("#promotionMessage").css("display","block");
-							spanTag.innerHTML=response.mplPromo[x].potentialPromotion.promoMessage;
-							$("#promotionMessage").append(spanTag);
-							$("spanTag.id").append('</br>');
+							var promoIdentifier=response.mplPromo[x].promoTypeIdentifier;
+							if(promoIdentifier=="PotentialPromotion")
+							{
+								var spanTag = document.createElement("p");
+								spanTag.id = "p"+x;	
+								$("#promotionApplied").css("display","none");
+								$("#promotionMessage").css("display","block");
+								spanTag.innerHTML=response.mplPromo[x].potentialPromotion.promoMessage;
+								$("#promotionMessage").append(spanTag);
+								$("spanTag.id").append('</br>');
+							}
 						}
-						
 					}
 					
 					//TISEE-352
