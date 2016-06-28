@@ -629,7 +629,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			{
 				if (deviceId != null)
 				{
-					LOG.info("Without userLogin when device id is not null");
+					//Without userLogin when device id is not null
 					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
@@ -826,7 +826,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			{
 				if (StringUtils.isNotEmpty(deviceId))
 				{
-					LOG.info("Without userLogin when device id is not null");
+					//Without userLogin when device id is not null
 					//for update if device id consists of categories
 					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
@@ -858,7 +858,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 
 				if (StringUtils.isNotEmpty(customer.getDeviceKey()))
 				{
-					LOG.info("Without userLogin when device id is not null");
+					//Without userLogin when device id is not null
 					newListCategory = new ArrayList<CategoryModel>();
 					//for update if device id consists of categories
 					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(customer
@@ -904,7 +904,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			{
 				if (StringUtils.isNotEmpty(deviceId))
 				{
-					LOG.info("Without userLogin when device id is not null");
+					//Without userLogin when device id is not null
 					//for update if device id consists of brands
 					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
@@ -934,7 +934,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 
 				if (StringUtils.isNotEmpty(customer.getDeviceKey()))
 				{
-					LOG.info("Without userLogin when device id is not null");
+					//Without userLogin when device id is not null
 					newListBrand = new ArrayList<CategoryModel>();
 					//for update if device id consists of categories
 					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(customer
