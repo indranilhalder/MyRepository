@@ -67,11 +67,12 @@ $("document").ready(function(){
     				        		} else{
     				        			$(location).attr('href',ACC.config.encodedContextPath+"/login");
     				        		}
-    				        		
+
     				        	},
     				        	error: function(){
     				        		alert("Something is not right! Please try after sometime");
     							}
+    				        
     					});
     					 
     				});
@@ -165,11 +166,12 @@ $("document").ready(function(){
     				{
     					$(location).attr('href',ACC.config.encodedContextPath+"/login");
     				}
-    				
+
     			},
     			error: function(){
-    				alert("Something is not right! Please try after sometime");
+    				//alert("Something is not right! Please try after sometime");
     			}
+    			
     		});
     	});
 
@@ -526,11 +528,13 @@ $("document").ready(function(){
     						error: function(){
     							alert("Something is not right! Please try after sometime");
     						}
+    						
     					});
     				},
     				error: function(){
     					alert("Something is not right! Please try after sometime");
     				}
+    				
     			});
     		}
 
@@ -622,6 +626,7 @@ function automateMyrecomendationBrandModification(catids){
 		error: function(){
 			alert("Something is not right! Please try after sometime");
 		}
+		
 	});
 }
 
@@ -683,5 +688,6 @@ function automateMyrecomendationBrandModification(catids){
 	        	error: function(){
 	        		alert("Something is not right! Please try after sometime");
 				  }
+	        	
 		});
 	}

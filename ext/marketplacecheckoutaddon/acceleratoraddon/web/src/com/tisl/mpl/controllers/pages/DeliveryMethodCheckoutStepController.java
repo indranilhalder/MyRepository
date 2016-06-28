@@ -286,6 +286,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.FALSE);
 				model.addAttribute("defaultPincode", defaultPinCodeId);
 
+				//TISPRO-625
+
+				final Boolean isExpressCheckoutSelected = (serviceCart != null && serviceCart.getDeliveryAddress() != null) ? Boolean.TRUE
+						: Boolean.FALSE;
+				model.addAttribute(MarketplacecheckoutaddonConstants.CART_EXPRESS_CHECKOUT_SELECTED, isExpressCheckoutSelected);
+
 				this.prepareDataForPage(model);
 				storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 				setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
@@ -295,6 +301,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 								MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
 				model.addAttribute("metaRobots", "noindex,nofollow");
 				setCheckoutStepLinksForModel(model, getCheckoutStep());
+			}
+			else
+			{
+				return MarketplacecommerceservicesConstants.REDIRECT + "/cart";
 			}
 			else
 			{
@@ -1820,16 +1830,16 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		return (defaultAddress != null && defaultAddress.getId() != null && defaultAddress.getId().equals(addressId));
 	}
 
-	@RequestMapping(value = "/back", method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequestMapping(value = "/back", method = RequestMethod.GET)
+	//@RequireHardLogIn
 	@Override
 	public String back(final RedirectAttributes redirectAttributes)
 	{
 		return getCheckoutStep().previousStep();
 	}
 
-	@RequestMapping(value = "/next", method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequestMapping(value = "/next", method = RequestMethod.GET)
+	//@RequireHardLogIn
 	@Override
 	public String next(final RedirectAttributes redirectAttributes)
 	{

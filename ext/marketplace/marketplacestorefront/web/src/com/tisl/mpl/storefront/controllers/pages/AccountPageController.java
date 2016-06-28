@@ -6744,8 +6744,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			pagedData.setPageSize(orderCarousalsize);
 			final SearchPageData<OrderModel> sortedLatestorders = gigyaCommentService.getPagedFilteredSubOrderHistory(customerModel,
 					currentBaseStore, pagedData);
+			//TISPT-221 Changes
 			final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
-					ProductOption.VARIANT_FULL, ProductOption.CATEGORIES);
+					ProductOption.CATEGORIES);
 
 			if (!CollectionUtils.isEmpty(sortedLatestorders.getResults()))
 			{

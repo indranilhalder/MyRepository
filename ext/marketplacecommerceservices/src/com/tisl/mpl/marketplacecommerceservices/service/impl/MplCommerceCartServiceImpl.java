@@ -99,6 +99,9 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.enums.ClickAndCollectEnum;
+import com.tisl.mpl.core.enums.ExpressDeliveryEnum;
+import com.tisl.mpl.core.enums.HomeDeliveryEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
@@ -1311,6 +1314,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					{
 						LOG.info("preparingFinalList sellerInfoModel is null ");
 					}
+					//TISPRD-3072
 
 					final List<MplZoneDeliveryModeValueModel> deliveryModes = getMplDeliveryCostService().getDeliveryModesAndCost(
 							MarketplacecommerceservicesConstants.INR, wishlist2EntryModel.getUssid());
@@ -1318,16 +1322,35 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					{
 						for (final MplZoneDeliveryModeValueModel deliveryEntry : deliveryModes)
 						{
-							final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-							final PriceData priceData = formPriceData(deliveryEntry.getValue());
-							deliveryModeData.setCode(deliveryEntry.getDeliveryMode().getCode());
-							deliveryModeData.setDescription(deliveryEntry.getDeliveryMode().getDescription());
-							deliveryModeData.setName(deliveryEntry.getDeliveryMode().getName());
-							deliveryModeData.setSellerArticleSKU(wishlist2EntryModel.getUssid());
-							deliveryModeData.setDeliveryCost(priceData);
-							deliveryModeDataList.add(deliveryModeData);
+
+							if ((null != richAttributeModel.get(0).getHomeDelivery()
+									&& richAttributeModel.get(0).getHomeDelivery().equals(HomeDeliveryEnum.YES) && StringUtils
+										.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
+												MarketplacecommerceservicesConstants.HOME_DELIVERY))
+									|| (null != richAttributeModel.get(0).getExpressDelivery()
+											&& richAttributeModel.get(0).getExpressDelivery().equals(ExpressDeliveryEnum.YES) && StringUtils
+												.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
+														MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+
+									|| (null != richAttributeModel.get(0).getClickAndCollect()
+											&& richAttributeModel.get(0).getClickAndCollect().equals(ClickAndCollectEnum.YES) && StringUtils
+												.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
+														MarketplacecommerceservicesConstants.CLICK_COLLECT)))
+							{
+								final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
+								final PriceData priceData = formPriceData(deliveryEntry.getValue());
+								deliveryModeData.setCode(deliveryEntry.getDeliveryMode().getCode());
+								deliveryModeData.setDescription(deliveryEntry.getDeliveryMode().getDescription());
+								deliveryModeData.setName(deliveryEntry.getDeliveryMode().getName());
+								deliveryModeData.setSellerArticleSKU(wishlist2EntryModel.getUssid());
+								deliveryModeData.setDeliveryCost(priceData);
+								deliveryModeDataList.add(deliveryModeData);
+							}
+
 						}
 					}
+					//TISPRD-3072 ends
+
 					pincodeServiceData.setFullFillmentType(fullfillmentType.toUpperCase());
 					if (richAttributeModel.get(0).getShippingModes() != null
 							&& richAttributeModel.get(0).getShippingModes().getCode() != null)
@@ -1363,6 +1386,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						LOG.debug("wishlist2EntryModel product is null ");
 					}
 					pincodeServiceData.setDeliveryModes(deliveryModeDataList);
+
 					pincodeServiceData.setIsDeliveryDateRequired(MarketplacecommerceservicesConstants.N);
 					pincodeRequestDataList.add(pincodeServiceData);
 				}

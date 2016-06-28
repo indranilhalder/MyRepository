@@ -972,7 +972,6 @@ public class GenericUtilityMethods
 				isSessionActive = false;
 			}
 		}
-
 		return isSessionActive;
 
 	}
