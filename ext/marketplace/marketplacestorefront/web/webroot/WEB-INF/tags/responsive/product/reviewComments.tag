@@ -175,11 +175,11 @@
 			<ul id="commentsDiv" class="review-list"></ul>
 		</div>
 </div>
-
 <input type="hidden" name="gigya_product_root_category" value="${product.rootCategory}"/>
-<input type="hidden" name="gigya_product_code" value="${product.code}"/>
-<input type="hidden" name="gigya_api_key" value="${gigyaAPIKey}"/>
+ <input type="hidden" name="gigya_product_code" value="${product.code}"/>
+ <input type="hidden" name="gigya_api_key" value="${gigyaAPIKey}"/>
 <c:if test="${isGigyaEnabled=='Y'}">
+
 <style>
 
 /* .reviews .gig-button-container {

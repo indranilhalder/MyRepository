@@ -2272,3 +2272,4 @@ function loadDefaultWishListName_SizeGuide() {
 				   $("#popUpModal").modal("show");
 				   buyboxDetailsForSizeGuide(productcode);	
 	} 
+

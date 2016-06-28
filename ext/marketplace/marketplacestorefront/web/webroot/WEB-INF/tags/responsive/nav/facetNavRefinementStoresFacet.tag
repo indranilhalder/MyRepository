@@ -1,7 +1,7 @@
 <%@ tag body-content="empty" trimDirectiveWhitespaces="true" %>
 <%@ attribute name="facetData" required="true" type="de.hybris.platform.commerceservices.search.facetdata.FacetData" %>
 <%@ attribute name="userLocation" required="true" type="de.hybris.platform.acceleratorservices.store.data.UserLocationData" %>
-
+<%@ attribute name="pageFacetData" required="true" type="String" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
@@ -63,9 +63,10 @@
 									<li class="${(status.index < 5 or facetValue.selected) ? '' : 'hidden'}">
 										<c:if test="${facetData.multiSelect}">
 											<form action="#" method="get">
-																			<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+												<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 												<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 												<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+												<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 												<label>
 													<input class="facet-checkbox js-facet-checkbox sr-only" type="checkbox"  ${facetValue.selected ? 'checked="checked"' : ''} >
 													<span class="facet-label">

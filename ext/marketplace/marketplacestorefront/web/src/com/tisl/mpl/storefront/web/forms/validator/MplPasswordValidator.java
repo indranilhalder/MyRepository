@@ -16,7 +16,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.storefront.businessvalidator.CommonAsciiValidator;
 
 
 /**
@@ -62,18 +61,20 @@ public class MplPasswordValidator implements Validator
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.NEW_PASSWORD, "updatePwd.pwd.invalid");
 		}
-		else if (!CommonAsciiValidator.validatePassword(newPasswd))
-		{
-			errors.rejectValue(MarketplacecommerceservicesConstants.NEW_PASSWORD, "register.pwd.invalid.pp");
-		}
+		//TISPRM-11
+		/*
+		 * else if (!CommonAsciiValidator.validatePassword(newPasswd)) {
+		 * errors.rejectValue(MarketplacecommerceservicesConstants.NEW_PASSWORD, "register.pwd.invalid.pp"); }
+		 */
 		else if (StringUtils.length(newPasswd) < 8)
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.NEW_PASSWORD, "register.pwd.invalid");
 		}
-		/*else if (StringUtils.length(newPasswd) > 16)
-		{
-			errors.rejectValue(MarketplacecommerceservicesConstants.NEW_PASSWORD, "register.pwd.invalid.long");
-		}*/
+		//TISPRM-11
+		/*
+		 * else if (StringUtils.length(newPasswd) > 16) {
+		 * errors.rejectValue(MarketplacecommerceservicesConstants.NEW_PASSWORD, "register.pwd.invalid.long"); }
+		 */
 		else if (checkWhiteSpace(newPasswd))
 		{
 			errors.rejectValue(MarketplacecommerceservicesConstants.NEW_PASSWORD, "register.pwd.invalid.space");

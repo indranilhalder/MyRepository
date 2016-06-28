@@ -53,15 +53,23 @@ public class ResponsivePaymentCheckoutStepValidator extends AbstractCheckoutStep
 			return ValidationResults.REDIRECT_TO_CART;
 		}
 
+		//Added for TISPRO-639 : Method checks for CNC Orders
+		if (getMplCustomAddressFacade().hasNoDeliveryAddress())
+		{
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+					"checkout.multi.deliveryAddress.notprovided");
+			return ValidationResults.REDIRECT_TO_CART;
+		}
+
 		// Commented to refer marketplacefacade
 		/*
 		 * if (!getCheckoutFlowFacade().hasValidCart()) { LOG.info("Missing, empty or unsupported cart"); return
 		 * ValidationResults.REDIRECT_TO_CART; }
-		 *
+		 * 
 		 * if (getCheckoutFlowFacade().hasNoDeliveryAddress()) { GlobalMessages.addFlashMessage(redirectAttributes,
 		 * GlobalMessages.INFO_MESSAGES_HOLDER, "checkout.multi.deliveryAddress.notprovided"); return
 		 * ValidationResults.REDIRECT_TO_DELIVERY_ADDRESS; }
-		 *
+		 * 
 		 * if (getCheckoutFlowFacade().hasNoDeliveryMode()) { GlobalMessages.addFlashMessage(redirectAttributes,
 		 * GlobalMessages.INFO_MESSAGES_HOLDER, "checkout.multi.deliveryMethod.notprovided"); return
 		 * ValidationResults.REDIRECT_TO_DELIVERY_METHOD; }
@@ -69,6 +77,8 @@ public class ResponsivePaymentCheckoutStepValidator extends AbstractCheckoutStep
 
 		return ValidationResults.SUCCESS;
 	}
+
+
 
 	/**
 	 * @return the mplCustomAddressFacade

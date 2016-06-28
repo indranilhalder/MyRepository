@@ -14,6 +14,7 @@
 package com.tisl.mpl.v2.controller;
 
 
+import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.basecommerce.enums.StockLevelStatus;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
@@ -248,7 +249,8 @@ public class CartsController extends BaseCommerceController
 	private MplPaymentFacade mplPaymentFacade;
 	@Autowired
 	private WishlistFacade wishlistFacade;
-
+	@Autowired
+	private SiteConfigService siteConfigService;
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
 
@@ -332,7 +334,7 @@ public class CartsController extends BaseCommerceController
 	private static final String ENTRY_NUMBER = "entryNumber";
 	private static final String ADDRESS_DELIVERY = "/{cartId}/addresses/delivery";
 	private static final String PRODUCT = "Product [";
-
+	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
 	//	@Autowired
@@ -1982,6 +1984,8 @@ public class CartsController extends BaseCommerceController
 			{
 				LOG.debug("************ get cart details mobile web service *********" + cartId);
 				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode);
+				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -2067,10 +2071,10 @@ public class CartsController extends BaseCommerceController
 			}
 			/*
 			 * String cartIdentifier; Collection<CartModel> cartModelList = null;
-			 *
+			 * 
 			 * cartModelList = mplCartFacade.getCartDetails(customerFacade.getCurrentCustomer().getUid());
-			 *
-			 *
+			 * 
+			 * 
 			 * if (null != cartModelList && cartModelList.size() > 0) { for (final CartModel cartModel : cartModelList) {
 			 * if (userFacade.isAnonymousUser()) { cartIdentifier = cartModel.getGuid(); } else { cartIdentifier =
 			 * cartModel.getCode(); } if (cartIdentifier.equals(cartId)) {
@@ -2291,6 +2295,23 @@ public class CartsController extends BaseCommerceController
 
 								if (StringUtils.isNotEmpty((abstractOrderEntry.getQuantity().toString())))
 								{
+									/////////// TISSAM-14
+									for (final AbstractOrderEntryModel pr : cartModel.getEntries())
+									{
+										final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+										if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
+										{
+											throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
+										}
+										/*
+										 * if ((abstractOrderEntry.getQuantity().longValue() + pr.getQuantity().longValue()) >
+										 * maximum_configured_quantiy) { throw new
+										 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9066); }
+										 */
+										break;
+
+									}
+									////////
 									gwlp.setQtySelectedByUser(abstractOrderEntry.getQuantity().toString());
 								}
 								gwlpList.add(gwlp);
@@ -2425,6 +2446,7 @@ public class CartsController extends BaseCommerceController
 		{
 			if (userFacade.isAnonymousUser())
 			{
+
 				LOG.debug("CartDetails:  AnonymousUser ");
 				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
 				LOG.debug("************ Anonymous cart mobile **************" + cartId);
@@ -2635,7 +2657,6 @@ public class CartsController extends BaseCommerceController
 
 						cartDetailsData
 								.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
-
 					}
 				}
 				else

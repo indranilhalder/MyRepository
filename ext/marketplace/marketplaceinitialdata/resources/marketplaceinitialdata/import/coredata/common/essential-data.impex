@@ -234,6 +234,7 @@ INSERT_UPDATE BuyboxUpdateLog;last_run_time[dateformat=yyyy-MM-dd HH:mm];proc_na
 ;2015-06-01 10:00:01;ia_category
 ;2015-06-01 10:00:01;ia_catprdrel
 ;2015-06-01 10:00:01;ia_price_inventory
+;2015-06-01 10:00:01;ia_price_inventory_control
 
 #buybox insert the weightage values
 INSERT_UPDATE BBWeightage;weigtagetype[unique=true];weightagevalue

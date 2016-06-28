@@ -143,6 +143,7 @@
     <br />
    <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
     <div id="loginDiv"></div>
+    
     </li>
 </ul>
   </c:when>

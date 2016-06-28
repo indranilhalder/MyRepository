@@ -798,7 +798,8 @@
 		<property name="offerDetails"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.CartOfferDetailsWsDTO>" />
 		<!-- new count variable added  -->
-		<property name="count" type="int" />	
+		<property name="count" type="int" />
+		<property name="maxAllowed" type="int" />	
 		<property name="delistedMessage" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
