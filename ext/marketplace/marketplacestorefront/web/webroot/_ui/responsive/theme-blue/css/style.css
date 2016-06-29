@@ -20034,8 +20034,6 @@ body.page-shoe .feature-collections ul.collections li.chef.sub h3 span a{
 }
 .listing.wrapper .right-block .listing-menu > div .wrapped-form.sort {
   display: inline-block;
-  padding: 0 0 0 15px;
-  border: 2px solid #f0f4f5;
 }
 
 }
@@ -31623,6 +31621,46 @@ div#searchPageDeptHierTree > .jqtree-tree > .jqtree-folder {
     border-top: 2px solid #f0f4f5;
     padding-top: 5px;
 }
+.sort-by-sec {
+    font-size: 13px;
+    border-bottom: 2px solid #f0f4f5;
+    padding: 0;
+    text-align: center;
+    margin: 10px 0;
+}
+.sort-by-sec strong {
+    color: #857D7B;
+    font-weight: 400;
+}
+.sort-by-sec a {
+    display: inline-block;
+    padding: 10px 15px;
+    position: relative;
+    font-weight: 400;
+}
+.sort-by-sec a.active, .sort-by-sec a:hover {
+    color: #a9143c;
+    border-bottom: 2px solid #A91E3E;
+    margin-bottom: -1px;
+}
+.sort-by-sec a.active:before {
+    top: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(136, 183, 213, 0);
+    border-bottom-color: #a9143c;
+    border-width: 4px;
+    margin: -8px 0 0 -4px;
+}
+.sort-by-inline{
+	display:inline;
+}
+
 /*--------------maincss-----------*/
 .row
 {
