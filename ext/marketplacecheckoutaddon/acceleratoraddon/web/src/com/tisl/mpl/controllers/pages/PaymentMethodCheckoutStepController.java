@@ -126,6 +126,7 @@ import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -460,13 +461,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//		return placeOrder(model, redirectAttributes);
 	//	}
 
+
 	/**
 	 * This is an OOTB method to go back to the previous checkout step
 	 *
 	 * @param redirectAttributes
 	 */
-	@RequestMapping(value = MarketplacecheckoutaddonConstants.BACKVALUE, method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequestMapping(value = MarketplacecheckoutaddonConstants.BACKVALUE, method = RequestMethod.GET)
+	//@RequireHardLogIn
 	@Override
 	public String back(final RedirectAttributes redirectAttributes)
 	{
@@ -478,8 +480,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 *
 	 * @param redirectAttributes
 	 */
-	@RequestMapping(value = MarketplacecheckoutaddonConstants.NEXTVALUE, method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequestMapping(value = MarketplacecheckoutaddonConstants.NEXTVALUE, method = RequestMethod.GET)
+	//@RequireHardLogIn
 	@Override
 	public String next(final RedirectAttributes redirectAttributes)
 	{
@@ -2792,6 +2794,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	private CheckoutStep getCheckoutStep()
 	{
 		return getCheckoutStep(MarketplacecheckoutaddonConstants.PAYMENT_METHOD);
+	}
+
+	/**
+	 * @param request
+	 * @return boolean This method checks whether the session is active
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKSESSIONACTIVE, method = RequestMethod.GET)
+	@ResponseBody
+	private boolean checkSessionActive(final HttpServletRequest request)
+	{
+		return GenericUtilityMethods.checkSessionActive(request);
 	}
 
 

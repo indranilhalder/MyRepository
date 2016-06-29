@@ -616,6 +616,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOBANKLIST = "bank list is not available";
 
 	public static final String SSHIPCODE = "SSHIP";
+	public static final String TSHIPCODE = "TSHIP";
 	public static final String SET_EMPTY_ORDER_NOTIFICATIONS = "Notifications are not available";
 	public static final String EMAIL_ID_IS_EMPTY = "Email ID for the current user is empty";
 
@@ -852,6 +853,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9103 = "B9103";
 
 	public static final String B9320 = "B9320";
+	public static final String B9321 = "B9321";
+	public static final String B9322 = "B9322";
+	public static final String B9323 = "B9323";
+	public static final String B9324 = "B9324";
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -911,6 +916,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9216 = "B9216";
 	public static final String B9217 = "B9217";
 	public static final String B9218 = "B9218";
+	public static final String B9219 = "B9219";
 
 
 	//Search error codes ends
@@ -1592,10 +1598,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String GENPROXYPORT = "proxy.port";
 
 	public final static String IMAGEURLMSG = "Image url is:::";
-	public final static String IMAGEDIMENSION = "324Wx324H";
+	public final static String IMAGEDIMENSION = "257Wx257H";
 
 	public final static String DEFAULT_RISK = "-1.0";
-
 
 	private MarketplacecommerceservicesConstants()
 	{
