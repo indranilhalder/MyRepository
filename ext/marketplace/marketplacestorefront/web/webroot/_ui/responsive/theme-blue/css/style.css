@@ -31672,6 +31672,13 @@ display:none;
     font-size: 10px;
     text-align: center;
 }
+.product-facet .facet.colour .facet-list li span span {
+    position: static;
+    width: auto;
+    background: #fff;
+    display: inline-block !important;
+    padding: 0 5px;
+}
 @media (max-width:790px) and (min-width:651px){
 	  .listing.wrapper .search-result h2 {
       padding-left:30%;
