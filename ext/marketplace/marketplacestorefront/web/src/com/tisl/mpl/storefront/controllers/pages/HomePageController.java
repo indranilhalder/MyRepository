@@ -967,7 +967,14 @@ public class HomePageController extends AbstractPageController
 	{
 		final HttpServletRequest request = getRequest();
 		final String visitorIP = getVisitorIpAddress(request);
-		final String sessionId = session.getId();
+		String sessionId = session.getId();
+
+		if (sessionId.contains("."))
+		{
+			final String[] parts = sessionId.split("\\.");
+			sessionId = parts[0];
+
+		}
 		final JSONObject sessionDetails = new JSONObject();
 		sessionDetails.put("token", CSRFTokenManager.getTokenForSession(session));
 		sessionDetails.put("sessionId", sessionId);
