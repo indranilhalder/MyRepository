@@ -9865,7 +9865,7 @@ body .account .right-account .order-history .pagination li{
   	.listing-leftmenu > li, .listing-leftmenu > div > li {
   padding: 5px 5px;
   width: 100%;
-  border-top:none; }
+  /* border-top:none; */ }
   .listing-leftmenu h4:after, .listing-leftmenu h4.active:after {
   	border: none;
   }
@@ -25418,7 +25418,8 @@ padding-left: 0px;}
     padding-left:5px;}
    .listing-leftmenu .facet-name.js-facet-name .tree-dept{
        padding-left: 10px;
-    margin: 10px 0;}
+    margin: 10px 0;
+    border-bottom: 1px solid #ccc;}
     .sort-refine-bar.wrapped-form.sort.mobile{
     position: absolute;
     top:0px;
