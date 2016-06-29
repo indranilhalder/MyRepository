@@ -123,6 +123,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="isFacet" value="true"/>
 								
 								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg');border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
+								<span>All Color</span>
 								</form>
 								<%-- <a   onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" >
 							<!-- 	<a href="onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')"> -->
@@ -141,6 +142,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="isFacet" value="true"/>
 								
 								<input type="submit" title="${facetValue.name}" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />
+								<span>${facetValue.name}</span>
 								</form>
 									<%-- 
 									<a  title="${facetValue.name}" onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a>
@@ -224,6 +226,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
+								
 								</form>
 								<%-- <a href="#">
 								<a href="/search/helpmeshop&amp;text=${searchPageData.freeTextSearch}&amp;q=${facetValue.query.query.value}">
@@ -386,7 +389,7 @@ function navigateToPage(queryString,textString)
 		    
 			<div class="more-lessFacetLinks active">
 				<div class="more js-more-facet-values checkbox-menu">
-					<a href="#" class="js-more-facet-values-link more" > ${remainingFacetValuesSize} &nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
+					<a href="#" class="js-more-facet-values-link more" >${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
 				</div>
 				<div class="less js-less-facet-values checkbox-menu">
 				    	<form action="${url}" method="get"> 
