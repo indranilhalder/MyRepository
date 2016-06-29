@@ -881,7 +881,7 @@ function showStayQued(response){
         linkText = promoText2;
     }
     renderHtml =
-        '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">' +
+        '<h1><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">' +
         promoText1 + '<a href="' + bannerUrlLink +
         '" class="button maroon">' + linkText +
         '</a></div><div class="qued-image"><img class="lazy" src="' +

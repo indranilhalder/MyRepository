@@ -22,9 +22,14 @@
 	 <div class="social share">
 		<h3><spring:theme code="text.stay.connected"/></h3>
 		<div class="links">
-			<c:forEach items="${footerSocialIconList}" var="banner">
-					<a href="${banner.urlLink}"><img src="${banner.media.URL}" ></a>
-			</c:forEach> 
+			<%-- <c:forEach items="${component.footerImageList}" var="banner">
+					<a href="${banner.urlLink}" ><span class="spriteImg"></span></a>
+			</c:forEach> --%>
+			<a href="https://plus.google.com/107413929814020009505" class="gplus"><span class="spriteImg"></span></a>
+			<a href="https://www.facebook.com/TataCLiQ/" class="facebook"><span class="spriteImg"></span></a>
+			<a href="https://twitter.com/tatacliq" class="twitter"><span class="spriteImg"></span></a>
+			<a href="https://www.instagram.com/tatacliq/" class="insta"><span class="spriteImg"></span></a>
+			<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" class="youtube"><span class="spriteImg"></span></a>
 		</div>
 	</div>
 	
@@ -35,9 +40,11 @@
 	 <div class="social app-download">
 		<h3><spring:theme code="text.download.app"/></h3>
 		<div class="links">
-			<c:forEach items="${footerAppImageList}" var="banner">
-					<a href="${banner.urlLink}" class="appios"><img src="${banner.media.URL}" ></a>
-			</c:forEach>
+			<%-- <c:forEach items="${footerAppImageList}" var="banner">
+					<a href="${banner.urlLink}" class="appios"><span class="spriteImg"></span></a>
+			</c:forEach> --%>
+			<a href="/apps" class="youtube"><span class="spriteImg"></span></a>
+			<a href="/apps" class="youtube"><span class="spriteImg"></span></a>
 		</div>
 	</div>
 </div>
