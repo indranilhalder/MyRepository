@@ -26105,8 +26105,6 @@ li#savedCVVError{
 @media(min-width:651px){
 	.facet-name.js-facet-name h4.tree-dept{
 		    padding-bottom: 10px;
-	      font-size:18px;
-	      font-weight:500;
 	}
 	#savedCreditCard .credit-card-group,#savedDebitCard .debit-card-group,#savedEMICard .credit-card-group{
 		min-height: 90px;
@@ -31676,10 +31674,14 @@ display:none;
 @media (max-width:790px) and (min-width:651px){
 	  .listing.wrapper .search-result h2 {
       padding-left:30%;
-       
      }
 }
-
+#searchPageDeptHierTree ul.jqtree_common.jqtree-tree > li.jqtree_common:first-child > div.jqtree-element.jqtree_common > span.jqtree-title.jqtree_common{
+	color:#000;
+}
+.jqtree-title.jqtree_common:not(.jqtree-title-folder){
+	color:#857D7B;
+}
 /*--------------maincss-----------*/
 .row
 {
