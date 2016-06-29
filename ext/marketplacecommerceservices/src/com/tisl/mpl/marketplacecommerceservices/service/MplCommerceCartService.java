@@ -16,6 +16,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.promotions.util.Tuple2;
@@ -174,8 +175,9 @@ public interface MplCommerceCartService
 	 *            less than or equals to 0
 	 */
 
-	boolean addItemToCart(String cartId, String productCode, long quantity, String ussid) throws InvalidCartException,
-			CommerceCartModificationException;
+	boolean addItemToCart(final String cartId, final CartModel cartModel, final ProductModel productModel, final long quantity,
+			final String ussid) throws InvalidCartException, CommerceCartModificationException;
+
 
 	/**
 	 * @description: It is responsible to find possible delivery mode

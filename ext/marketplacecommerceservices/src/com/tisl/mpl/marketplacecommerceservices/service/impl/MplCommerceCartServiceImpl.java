@@ -1569,38 +1569,21 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 
 	@Override
-	public boolean addItemToCart(final String cartId, final String productCode, final long quantity, final String ussid)
-			throws InvalidCartException, CommerceCartModificationException
+	public boolean addItemToCart(final String cartId, final CartModel cartModel, final ProductModel productModel,
+			final long quantity, final String ussid) throws InvalidCartException, CommerceCartModificationException
 	{
 		boolean success = false;
 		CartData cartData = null;
-		CartModel cartModel = null;
-		ProductModel productModel = null;
 		final CommerceCartParameter parameter = new CommerceCartParameter();
 		CartModificationData cartModificationData = null;
 		String sellerUssId = null;
 
-		if (cartId != null && !cartId.isEmpty() && productCode != null && !productCode.isEmpty())
+		if (cartModel != null)
 		{
-			if (getUserFacade().isAnonymousUser())
-			{
-				cartModel = getCartService().getSessionCart();
-			}
-			else
-			{
-				// Check if cart id is valid or not
-				cartModel = getMplCommerceCartDao().getCart(cartId);
-				if (cartModel == null)
-				{
-					throw new CommerceCartModificationException("Invalid cart id " + cartId);
-				}
-			}
-
 			// Check if product code is valid or not
-			productModel = getProductService().getProductForCode(productCode);
 			if (productModel == null)
 			{
-				throw new CommerceCartModificationException("Invalid product code " + productCode);
+				throw new CommerceCartModificationException("Invalid ussid " + ussid);
 			}
 
 			//check if quantity is valid or not
@@ -1610,7 +1593,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			}
 
 			cartData = getCartConverter().convert(cartModel);
-
 			// Check if ussid is null then fetch ussid
 			if (ussid == null || ussid.isEmpty())
 			{
@@ -1621,7 +1603,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				sellerUssId = ussid;
 			}
 			//			if (isMaxQuantityAlreadyAdded(cartData, productCode))
-			if (isMaxQuantityAlreadyAdded(cartData, sellerUssId, quantity, productCode))
+			if (isMaxQuantityAlreadyAdded(cartData, sellerUssId, quantity, productModel.getCode()))
 			{
 				parameter.setEnableHooks(true);
 				parameter.setCart(cartModel);

@@ -16,9 +16,11 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.order.InvalidCartException;
 
 import java.util.List;
+import java.util.Map;
 
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
@@ -79,8 +81,9 @@ public interface MplCartWebService
 	 * @throws EtailBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	List<GetWishListProductWsDTO> productDetails(List<AbstractOrderEntryModel> aoem, boolean isPinCodeCheckRequired,
-			String pincode, boolean resetReqd, String cartId) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+	List<GetWishListProductWsDTO> productDetails(String cartId, CartModel cartModel, CartData cartData,
+			Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMapfinal, boolean isPinCodeCheckRequired,
+			boolean resetReqd) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 
 	/**
 	 * pincode response from OMS at cart level
@@ -107,7 +110,7 @@ public interface MplCartWebService
 
 	/**
 	 * Service to get cart details with POS
-	 * 
+	 *
 	 * @param cartId
 	 * @param addressListDTO
 	 * @param pincode

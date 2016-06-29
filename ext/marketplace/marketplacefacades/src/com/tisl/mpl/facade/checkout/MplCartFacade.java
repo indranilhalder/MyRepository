@@ -13,6 +13,7 @@ import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.promotions.util.Tuple2;
@@ -177,8 +178,8 @@ public interface MplCartFacade extends CartFacade
 	 */
 
 
-	boolean addItemToCart(String cartId, String productCode, long quantity, String ussid) throws InvalidCartException,
-			CommerceCartModificationException;
+	boolean addItemToCart(String cartId, CartModel cartModel, ProductModel productModel, long quantity, String ussid)
+			throws InvalidCartException, CommerceCartModificationException;
 
 	/**
 	 * @param cartData
@@ -414,5 +415,17 @@ public interface MplCartFacade extends CartFacade
 	 */
 	public PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData)
 			throws EtailNonBusinessExceptions;
+
+	/**
+	 * This Method is used to get Ordered Cart entry in Mobile
+	 *
+	 * @param data
+	 * @param recentlyAddedFirst
+	 * @return CartData
+	 * @throws EtailNonBusinessExceptions
+	 */
+	public CartData getSessionCartWithEntryOrderingMobile(final CartData data, final boolean recentlyAddedFirst)
+			throws EtailNonBusinessExceptions;
+
 
 }
