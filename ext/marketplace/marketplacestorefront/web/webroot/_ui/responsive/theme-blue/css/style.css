@@ -1033,9 +1033,9 @@ h2 {
             transition: z-index 0s, border 0.3s; } */
             header .content .right > ul > li.bag:hover .mini-bag {
               max-height: 2000px;
-              -webkit-transition: max-height 0.15s;
-              -moz-transition: max-height 0.15s;
-              transition: max-height 0.15s; }
+              -webkit-transition: max-height 0.15s 0.35s;
+              -moz-transition: max-height 0.15s 0.35s;
+              transition: max-height 0.15s 0.35s; }
          /*    header .content .right > ul > li.bag.clicked .mini-bag {
               max-height: 2000px;
               -webkit-transition: max-height 0.15s;
@@ -1099,9 +1099,9 @@ h2 {
           header .content .right > ul > li.wishlist:hover .wishlist-info {
             z-index: 10;
             max-height: 1000px;
-            -webkit-transition: max-height 0.15s, z-index 0s;
-            -moz-transition: max-height 0.15s, z-index 0s;
-            transition: max-height 0.15s, z-index 0s; }
+            -webkit-transition: max-height 0.15s 0.35s;
+            -moz-transition: max-height 0.15s 0.35s;
+            transition: max-height 0.15s 0.35s; }
         header .content .right > ul > li.sign-in .sign-in-info {
           display: block;
           position: absolute;
@@ -1216,9 +1216,9 @@ h2 {
           header .content .right > ul > li.sign-in:hover .sign-in-info {
             max-height: 1000px;
             z-index: 10;
-            -webkit-transition: max-height 0.15s, z-index 0s;
-            -moz-transition: max-height 0.15s, z-index 0s;
-            transition: max-height 0.15s, z-index 0s; }
+            -webkit-transition: max-height 0.15s 0.35s, z-index 0s;
+            -moz-transition: max-height 0.15s 0.35s, z-index 0s;
+            transition: max-height 0.15s 0.35s, z-index 0s; }
         header .content .right > ul > li.signed-in .signed-in-info {
           position: absolute;
           left: 0;
@@ -24531,11 +24531,15 @@ div#cartItems.products p{
 	position: absolute;
 	width: 250px;
 	left: 0;
-	display: none;
-	max-height: 400px;
+	max-height: 0px;
 	overflow: auto;
+	-webkit-transition: max-height 0.15s 0.35s;
+    -moz-transition: max-height 0.15s 0.35s;
+    transition: max-height 0.15s 0.35s; 
 }
-
+.track.trackOrder #tracklink,li.wishlist #myWishlistHeader {
+	display: block;
+}
 .trackorder-dropdown li {
 	min-height: 35px;
 	line-height: 18px;
@@ -24565,7 +24569,7 @@ ul.trackorder-dropdown li > div > h4 {
     font-weight: 600; 
 }
 .track.trackOrder:hover .trackorder-dropdown{
-display:block;
+max-height: 500px;
 z-index:10;
 }
 
