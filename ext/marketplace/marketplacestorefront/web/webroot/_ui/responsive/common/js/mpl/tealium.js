@@ -1,21 +1,6 @@
 $(document).ready(
 		function() {
 
-			var UTAG_SCRIPT_PROD = "<script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/prod/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
-			
-			var UTAG_SCRIPT_DEV = "<script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
-			var session_id = ACC.config.SessionId;
-			
-			
-			var visitor_ip = ACC.config.VisitorIp;
-			
-			var user_type = $.cookie("mpl-userType");
-			var user_id = $.cookie("mpl-user");
-			var site_region = 'en';
-			var site_currency ='INR';
-			var site_section = 'home';
-			var domain_name = document.domain;
-			
 			
 			var pageType = $('#pageType').val();
 			var pageName=$('#pageName').val();
@@ -35,6 +20,21 @@ $(document).ready(
 								$('#tealiumHome').html(data);
 							}
 						});*/
+				// Added for TISPT-324
+				var UTAG_SCRIPT_PROD = "<script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/prod/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
+				
+				var UTAG_SCRIPT_DEV = "<script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
+				var session_id = ACC.config.SessionId;
+				
+				
+				var visitor_ip = ACC.config.VisitorIp;
+				
+				var user_type = $.cookie("mpl-userType");
+				var user_id = $.cookie("mpl-user");
+				var site_region = 'en';
+				var site_currency ='INR';
+				var site_section = 'home';
+				var domain_name = document.domain;
 				
 				var homePageTealium = '';
 				
