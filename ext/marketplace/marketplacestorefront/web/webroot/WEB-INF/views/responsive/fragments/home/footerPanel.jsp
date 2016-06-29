@@ -43,8 +43,8 @@
 			<%-- <c:forEach items="${footerAppImageList}" var="banner">
 					<a href="${banner.urlLink}" class="appios"><span class="spriteImg"></span></a>
 			</c:forEach> --%>
-			<a href="/apps" class="youtube"><span class="spriteImg"></span></a>
-			<a href="/apps" class="youtube"><span class="spriteImg"></span></a>
+			<a href="/apps" class="appios"><span class="spriteImg"></span></a>
+			<a href="/apps" class="appios"><span class="spriteImg"></span></a>
 		</div>
 	</div>
 </div>
