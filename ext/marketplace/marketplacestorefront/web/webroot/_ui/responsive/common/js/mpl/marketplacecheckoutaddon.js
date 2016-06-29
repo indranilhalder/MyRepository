@@ -2686,18 +2686,20 @@ function applyPromotion(bankName)
 				{
 					for (var x = 0; x < response.mplPromo.length; x++)
 					{
-						var promoIdentifier=response.mplPromo[x].promoTypeIdentifier;
-						if(promoIdentifier=="PotentialPromotion")
+						if(!(response.mplPromo[x]==null || response.mplPromo[x]=='null' || response.mplPromo[x]=='undefined')) //TISSIT-2046 TISBM-4449
 						{
-							var spanTag = document.createElement("p");
-							spanTag.id = "p"+x;	
-							$("#promotionApplied").css("display","none");
-							$("#promotionMessage").css("display","block");
-							spanTag.innerHTML=response.mplPromo[x].potentialPromotion.promoMessage;
-							$("#promotionMessage").append(spanTag);
-							$("spanTag.id").append('</br>');
+							var promoIdentifier=response.mplPromo[x].promoTypeIdentifier;
+							if(promoIdentifier=="PotentialPromotion")
+							{
+								var spanTag = document.createElement("p");
+								spanTag.id = "p"+x;	
+								$("#promotionApplied").css("display","none");
+								$("#promotionMessage").css("display","block");
+								spanTag.innerHTML=response.mplPromo[x].potentialPromotion.promoMessage;
+								$("#promotionMessage").append(spanTag);
+								$("spanTag.id").append('</br>');
+							}
 						}
-						
 					}
 					
 					//TISEE-352
@@ -3039,7 +3041,7 @@ function selectDefaultDeliveryMethod() {
 			  //console.log($(this).find("li:first").children("input:radio").attr("id"));
 			  var radioSplit = $(this).find("li:first").children("input:radio").attr("id").split("_");
 			  var radioId = radioSplit[0]+"_"+radioSplit[1];
-			  //calculateDeliveryCost(radioId,radioSplit[2]); TISPT-104
+			  calculateDeliveryCost(radioId,radioSplit[2]); //TISPT-104 REMOVED
 			  $("#"+$(this).find("li:first").children("input:radio").attr("id")).prop('checked', true);
 			  if($(this).find("input[type='radio']:checked").attr("id").split("_")[2] == "click-and-collect") {
 			  		changeCTAButtonName($(this).find("input[type='radio']:checked").attr("id").split("_")[2]);
