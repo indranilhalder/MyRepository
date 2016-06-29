@@ -9261,7 +9261,8 @@ footer .banner {
       z-index:1;
      }
       .listing.wrapper .left-block .listing-leftmenu:first-child {
-        display: block; } }
+        display: block; }
+       }
         @media (max-width: 650px) {		
     .listing.wrapper .left-block {		
         display: inline-block;		
@@ -9830,7 +9831,7 @@ body .account .right-account .order-history .pagination li{
       transform: translateX(-50%) translateY(-50%); }
   .listing-leftmenu .search input {
     width: 80%;
-    padding:0 5px; }
+    padding:0 5px 0px 10px; }
   .listing-leftmenu .search input.brandSearchTxt {
    border-width: 0 0 1px !important;
     width: 100%;
@@ -31671,6 +31672,12 @@ display:none;
     left: -37px;
     font-size: 10px;
     text-align: center;
+}
+@media (max-width:790px) and (min-width:651px){
+	  .listing.wrapper .search-result h2 {
+      padding-left:30%;
+       
+     }
 }
 
 /*--------------maincss-----------*/
