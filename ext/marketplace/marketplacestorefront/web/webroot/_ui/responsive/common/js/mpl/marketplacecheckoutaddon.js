@@ -1,5 +1,6 @@
 var isCodSet = false;	//this is a variable to check whether convenience charge is set or not
 var binStatus= false;
+var isNewCard = false; //this is variable to fix paynow blackout issue
 
 var couponApplied=false;
 var bankNameSelected;
@@ -1488,6 +1489,9 @@ $("#otpMobileNUMField").focus(function(){
   
   
   function createJuspayOrderForNewCard(){
+	  
+	   isNewCard = true;////this is variable to fix paynow blackout issue
+	  
 		$(".pay button, #make_cc_payment_up").prop("disabled",true);
 		$(".pay button, #make_cc_payment_up").css("opacity","0.5");
 		//store url change
@@ -1558,6 +1562,7 @@ $("#otpMobileNUMField").focus(function(){
 					 }, 1000);
 			
 				}
+				$("#no-click").remove();
 			},
 			error : function(resp) {
 				if($(".redirect").val()=="false"){
@@ -2825,6 +2830,11 @@ function applyPromotion(bankName)
 				$(".make_payment").removeAttr('disabled');
 			}
 			$("#no-click1,.spinner1").remove();
+			
+			if(isNewCard){//if this variable is true resetting the opacity
+			$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			isNewCard = false;
+		}
 		},
 		error : function(resp) {
 			$("#no-click").remove();
