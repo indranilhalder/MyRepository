@@ -40,11 +40,9 @@
 	 <div class="social app-download">
 		<h3><spring:theme code="text.download.app"/></h3>
 		<div class="links">
-			<%-- <c:forEach items="${footerAppImageList}" var="banner">
+			<c:forEach items="${footerAppImageList}" var="banner">
 					<a href="${banner.urlLink}" class="appios"><span class="spriteImg"></span></a>
-			</c:forEach> --%>
-			<a href="/apps" class="appios"><span class="spriteImg"></span></a>
-			<a href="/apps" class="appios"><span class="spriteImg"></span></a>
+			</c:forEach>
 		</div>
 	</div>
 </div>
