@@ -9251,6 +9251,7 @@ footer .banner {
 .listing.wrapper .left-block {
   width: 100%;
    padding: 0px 5px;
+   margin-top:31px;
   }
   @media (min-width: 651px) {
     .listing.wrapper .left-block {
