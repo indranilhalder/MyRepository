@@ -37,6 +37,11 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 	@Autowired
 	private CategoryService categoryService;
 
+	private final String SELECT_P = "SELECT {p:";
+	private final String FROM_ = "FROM {";
+	private final String AS_P = " AS p }";
+	private final String WHERE_P = " WHERE {p:";
+
 	/**
 	 * @Description : Fetch Data corresponding to gender
 	 * @param: genderData
@@ -49,8 +54,8 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 		{
 			LOG.debug("Fetching My Recommendation Data");
 			final String queryString = //
-			"SELECT {p:" + MyRecommendationsConfigurationModel.PK + "} "//
-					+ "FROM {" + MyRecommendationsConfigurationModel._TYPECODE + " AS p }";
+			SELECT_P + MyRecommendationsConfigurationModel.PK + "} "//
+					+ FROM_ + MyRecommendationsConfigurationModel._TYPECODE + AS_P;
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			return flexibleSearchService.<MyRecommendationsConfigurationModel> search(query).getResult();
@@ -63,7 +68,7 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MyStyleProfileDao#fetchBrands(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -74,8 +79,8 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 		{
 			LOG.debug("Fetching My fetchBrands Data");
 			final String queryString = //
-			"SELECT {p:" + MyRecommendationsConfigurationModel.PK + "} " + "FROM {" + MyRecommendationsConfigurationModel._TYPECODE
-					+ " AS p }" + " WHERE {p:" + MyRecommendationsConfigurationModel.GENDERDATA + "}=?genderData AND " + "{p:"
+			SELECT_P + MyRecommendationsConfigurationModel.PK + "} " + FROM_ + MyRecommendationsConfigurationModel._TYPECODE + AS_P
+					+ WHERE_P + MyRecommendationsConfigurationModel.GENDERDATA + "}=?genderData AND " + "{p:"
 					+ MyRecommendationsConfigurationModel.CONFIGUREDCATEGORY + "}=?catCode";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
@@ -91,7 +96,7 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MyStyleProfileDao#fetchSubCatdOfBrands(java.lang.String)
 	 */
 	@Override
@@ -102,8 +107,8 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 			final CategoryModel catModel = categoryService.getCategoryForCode(catCode);
 
 			final String queryString = //
-			"SELECT {p:" + MyRecommendationsBrandsModel.PK + "} " + "FROM {" + MyRecommendationsBrandsModel._TYPECODE + " AS p }"
-					+ " WHERE {p:" + MyRecommendationsBrandsModel.CONFIGUREDBRANDS + "}=?configBrand";
+			SELECT_P + MyRecommendationsBrandsModel.PK + "} " + FROM_ + MyRecommendationsBrandsModel._TYPECODE + AS_P + WHERE_P
+					+ MyRecommendationsBrandsModel.CONFIGUREDBRANDS + "}=?configBrand";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("configBrand", catModel.getPk().toString());
@@ -117,9 +122,9 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 
 	/*
 	 * @Description : Fetching preferred categories against device ID
-	 * 
+	 *
 	 * @param: device ID
-	 * 
+	 *
 	 * @return: List of MplStyleProfileModel
 	 */
 	@Override
@@ -128,8 +133,8 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 		LOG.debug("Fetching fetchCatandBrandsOfDevice Data");
 		try
 		{
-			final String queryString = "SELECT {p:" + MplStyleProfileModel.PK + "} " + "FROM {" + MplStyleProfileModel._TYPECODE
-					+ " AS p }" + " WHERE {p:" + MplStyleProfileModel.DEVICEID + "}=?deviceId";
+			final String queryString = SELECT_P + MplStyleProfileModel.PK + "} " + FROM_ + MplStyleProfileModel._TYPECODE + AS_P
+					+ WHERE_P + MplStyleProfileModel.DEVICEID + "}=?deviceId";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("deviceId", deviceId);
 			return flexibleSearchService.<MplStyleProfileModel> search(query).getResult();
@@ -143,7 +148,7 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MyStyleProfileDao#fetchBrandOfDevice(java.lang.String)
 	 */
 	@Override
@@ -152,8 +157,8 @@ public class DefaultMyStyleProfileDaoImpl implements MyStyleProfileDao
 		LOG.debug("Fetching fetchBrandOfDevice Data");
 		try
 		{
-			final String queryString = "SELECT {p:" + MplStyleProfileModel.PK + "} " + "FROM {" + MplStyleProfileModel._TYPECODE
-					+ " AS p }" + " WHERE {p:" + MplStyleProfileModel.DEVICEID + "}=?deviceId";
+			final String queryString = SELECT_P + MplStyleProfileModel.PK + "} " + FROM_ + MplStyleProfileModel._TYPECODE + AS_P
+					+ WHERE_P + MplStyleProfileModel.DEVICEID + "}=?deviceId";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("deviceId", deviceId);
 			return flexibleSearchService.<MplStyleProfileModel> search(query).getResult();
