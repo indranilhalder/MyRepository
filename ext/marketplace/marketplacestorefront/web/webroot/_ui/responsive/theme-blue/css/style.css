@@ -18326,37 +18326,6 @@ font-weight: 600;
 .listing-leftmenu li ul li:hover .facet-mark,.listing-leftmenu li ul li:hover .facet-text,.listing-leftmenu ul li:hover .facet-text a{		
 	color:#A9143C !important;		
 }				
-.remove_filter{				
-	position:relative;
-	display: inline-block;
-  width: 25px;
-  height: 25px;
-  margin: 0;
-  line-height: 1;
-  min-width: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  box-shadow: none;
-  z-index: 2;
-	
-}
-.remove_filter:after{				
-   content: "\00d7";
-  color: #000;
-  font-family: "Montserrat";
-  font-size: 20px;
-  font-weight: 500;
-  top: 2px;
-  position: relative;
-  -webkit-transition: font-weight 0.15s;
-  -moz-transition: font-weight 0.15s;
-  transition: font-weight 0.15s;
-  
-}	
-	
-
-
 .appliedFacets{
 	padding-bottom:10px;
 }	
@@ -31652,6 +31621,40 @@ div#searchPageDeptHierTree > .jqtree-tree > .jqtree-folder {
     padding-top: 5px;
 }
 
+/*selected filter UI changes starts*/
+.facet-list.filter-opt{
+	padding: 10px 0;
+    text-align: center;
+}
+.facet-list.filter-opt li{
+	display: inline-block;
+    position: relative;
+    background-color: #eaeaec;
+    text-transform: capitalize;
+    padding: 6px 15px 7px;
+    margin: 0 7px 5px 5px;
+    cursor: pointer;
+    transition: all .2s ease-out;
+    background: #4a4a4a;
+    color: #fff;
+    font-size: 14px;
+    line-height: normal;
+    vertical-align: top;
+}
+.remove_filter{				
+	color: #fff;
+    font-size: 12px;
+	
+}
+@media(max-width:650px){
+.facet-list.filter-opt{
+display:none;
+}
+}	
+.bottom-pagination .filter-opt {
+    display: none;
+}
+/*selected filter UI changes ends*/
 
 /*--------------maincss-----------*/
 .row

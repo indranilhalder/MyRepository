@@ -33,16 +33,16 @@
 <c:set var="breadCrumbList" value="${searchPageData.breadcrumbs}" />
 <c:set var="breadCrumbSize" value="${fn:length(breadCrumbList)}" />
 <div class="facet-values js-facet-values">
-			<ul class="facet-list">
+			<ul class="facet-list filter-opt">
 				<c:forEach items="${searchPageData.breadcrumbs}" var="breadcrumb">
 					<c:if test="${breadcrumb.facetName == 'inStockFlag'}">
-						<!-- <li> -->
+						<li>
 							<c:url value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}" var="removeQueryUrl"/>
-							Exclude OutofStock&nbsp;<a href="${removeQueryUrl}" ><span class="remove_filter"></span></a>
-						<!-- </li> -->
+							Exclude OutofStock&nbsp;<a href="${removeQueryUrl}" ><span class="remove_filter">x</span></a>
+						</li>
 					</c:if>
 					<c:if test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' &&  breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'}">
-						<!-- <li> -->
+						<li>
 						   <c:choose>
 						   <c:when test="${breadcrumb.removeQuery.url!='' && not empty offers}">
 						   <c:set var="removeQueryUrl" value="${fn:replace(breadcrumb.removeQuery.url, 
@@ -59,8 +59,8 @@
 						   </c:otherwise>
 						   </c:choose>
 							<input type="hidden" class="applied-color" value="${breadcrumb.facetValueName}">
-							${breadcrumb.facetValueName}&nbsp;<a href="${removeQueryUrl}" ><span class="remove_filter"></span></a>
-						<!-- </li> -->
+							${breadcrumb.facetValueName}&nbsp;<a href="${removeQueryUrl}" ><span class="remove_filter">x</span></a>
+						</li>
 					</c:if>
 				</c:forEach>
 			</ul>
