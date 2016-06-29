@@ -9234,8 +9234,8 @@ footer .banner {
     width: 100%;
     text-align:center;
       margin-left: 10px;
-      /*color:#A9143C;*/
       color:#000;
+      padding-left:20%;
        
      }
       /*ADD*/
@@ -9261,7 +9261,8 @@ footer .banner {
       z-index:1;
      }
       .listing.wrapper .left-block .listing-leftmenu:first-child {
-        display: block; } }
+        display: block; }
+       }
         @media (max-width: 650px) {		
     .listing.wrapper .left-block {		
         display: inline-block;		
@@ -9770,6 +9771,7 @@ body .account .right-account .order-history .pagination li{
 }
 .facet.js-facet.colour .facet-values.js-facet-values.js-facet-form {
 	padding-bottom: 10px;
+	margin-left:-7px;
 }
 
 .facet-values.js-facet-values.js-facet-form, .brandSelectAllMain {
@@ -9782,7 +9784,7 @@ body .account .right-account .order-history .pagination li{
 }
 
 .facet-values.js-facet-values.js-facet-form {
-  max-height: 250px;
+  max-height: 185px;
   overflow-y: auto;
 }
 
@@ -9829,28 +9831,29 @@ body .account .right-account .order-history .pagination li{
       transform: translateX(-50%) translateY(-50%); }
   .listing-leftmenu .search input {
     width: 80%;
-    padding:0 5px; }
+    padding:0 5px 0px 10px; }
   .listing-leftmenu .search input.brandSearchTxt {
    border-width: 0 0 1px !important;
     width: 100%;
-    font-style: italic;}
+    font-style: italic;
+    font-size:12px;}
   .listing-leftmenu .search input.brandSearchTxt:focus {
        border-color: #AB8791 !important;}
     .listing-leftmenu .search input::-webkit-input-placeholder {
-      color: #000;
-      font-size: 14px;
+      color: #ccc;
+      font-size: 12px;
       line-height: 18px; }
     .listing-leftmenu .search input::-moz-placeholder {
-      color: #000;
-      font-size: 14px;
+      color: #ccc;
+      font-size: 12px;
       line-height: 18px; }
     .listing-leftmenu .search input:-moz-placeholder {
-      color: #000;
-      font-size: 14px;
+      color: #ccc;
+      font-size: 12px;
       line-height: 18px; }
     .listing-leftmenu .search input:-ms-input-placeholder {
-      color: #000;
-      font-size: 14px;
+      color: #ccc;
+      font-size: 12px;
       line-height: 18px; }
 .listing-leftmenu > li, .listing-leftmenu > div > li {
   padding: 5px 10px;
@@ -18209,7 +18212,7 @@ font-weight: 600;
 	opacity:0.9;
 	font-size:13px;					
 	text-transform:capitalize !important;
-		margin-bottom:10px;			
+		margin-bottom:6px;			
 }		
 .product-facet .facet .facet-list .facet-text a{		
 	color:#000;		
@@ -18248,6 +18251,8 @@ font-weight: 600;
     width: 25px;
     height: 25px;
     margin: 2px;
+    position:relative;
+    padding-top:5px;
     border: 1px solid rgb(204,211,217);
     -webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;
@@ -18389,9 +18394,9 @@ font-weight: 600;
 .list_title h2{
 	text-align:center;
 }
-.js-more-facet-values-link.more{
+/* .js-more-facet-values-link.more{
 	text-transform:capitalize;
-}
+} */
 .product-facet .filter-colour{
 	border: 1px solid rgb(204, 211, 217);
 }
@@ -18409,6 +18414,7 @@ input[type="checkbox"]#brandSelectAll + label{
 	position:relative;
 	width: calc(100% - -20px);
     left: -10px;
+    margin:0px;
 }
 .product-facet .facet .facet-name .brandSelectAllMain label{
 	color: #A9143C;
@@ -31655,6 +31661,24 @@ display:none;
     display: none;
 }
 /*selected filter UI changes ends*/
+.product-facet .facet.colour .facet-list li:hover span{
+	display:block;
+}
+.product-facet .facet.colour .facet-list li span{
+	display: none;
+    position: absolute;
+    top: -10px;
+    width: 100px;
+    left: -37px;
+    font-size: 10px;
+    text-align: center;
+}
+@media (max-width:790px) and (min-width:651px){
+	  .listing.wrapper .search-result h2 {
+      padding-left:30%;
+       
+     }
+}
 
 /*--------------maincss-----------*/
 .row
@@ -32534,7 +32558,6 @@ input[type="file"]:focus, input[type="radio"]:focus, input[type="checkbox"]:focu
 .form-control::-webkit-input-placeholder {
 	color: #777777;
 }
-
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control
 	{
 	cursor: not-allowed;
@@ -37616,12 +37639,11 @@ div.productInfo ul li span.product-size.carousel-size{
 display:block;
 }
   .listing-leftmenu .checkbox-menu > a, .listing-leftmenu .checkbox-menu input[type='submit'] {
-    color: #A9143C;
-    text-decoration: underline;
-    font-size: 14px;
+    color: #4A4A4A;
+    font-size: 11px;
     margin: 5px 0px;
-    font-weight: 600;
-    letter-spacing: 1px;
+    font-weight: 400;
+    letter-spacing: -1px;
     display: block;
     border:none;
         -webkit-appearance: none;
@@ -39678,7 +39700,7 @@ ul.jqtree-tree ul.jqtree_common {
     list-style: none outside;
     margin-bottom: 0;
     padding: 0;
-    font-size:14px;
+    font-size:13px;
 }
 
 ul.jqtree-tree ul.jqtree_common {
