@@ -385,7 +385,7 @@ function navigateToPage(queryString,textString)
 			
 			<c:set var="remainingFacetValues" value="${facetData.values}" />
 	
-		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-6}" />
+		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-8}" />
 		    
 			<div class="more-lessFacetLinks active">
 				<div class="more js-more-facet-values checkbox-menu">
