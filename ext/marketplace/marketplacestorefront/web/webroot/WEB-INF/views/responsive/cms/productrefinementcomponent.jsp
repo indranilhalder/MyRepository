@@ -31,7 +31,7 @@ $(document).ready(function(){
 
 		<div class="facet-name js-facet-name">
 				<c:if test="${empty hideDepartments}">
-				<h4 class="true active tree-dept"><spring:theme code="search.nav.facetTitle" arguments="department"/></h4>
+				<h4 class="true active tree-dept"><spring:theme code="search.nav.facetTitle" arguments="Department"/></h4>
 				</c:if>
 		</div>
 		<c:choose>

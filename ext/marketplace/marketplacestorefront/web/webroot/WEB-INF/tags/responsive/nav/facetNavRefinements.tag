@@ -19,17 +19,17 @@
 <c:forEach items="${pageData.facets}" var="facet">
 	<c:choose>
 		<c:when test="${facet.code eq 'availableInStores'}">
-			<nav:facetNavRefinementStoresFacet facetData="${facet}" userLocation="${userLocation}" pageFacetData="${pageFacets}"/>
+			<nav:facetNavRefinementStoresFacet facetData="${facet}" userLocation="${userLocation}" pageFacetData=""/>
 		</c:when>
 		
 		<c:otherwise>
 			<c:choose>
 				<c:when test="${(fn:length(searchCategory) > 5 || fn:length(categoryCode) > 5)}">
-					<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="${pageFacets}"/>
+					<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData=""/>
 			   	</c:when>
 		   		<c:otherwise>
 		   			<c:if test="${facet.genericFilter}">
-				 		<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="${pageFacets}"/>
+				 		<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData=""/>
 					</c:if> 
 		   		</c:otherwise>
 			 </c:choose>  

@@ -8,13 +8,15 @@ $(function() {
          cache:false,
          success: function(data) {
              $("input[name='CSRFToken']").each(function() {
-                 this.value = data;
+                 this.value = data.token;
              });
-             ACC.config.CSRFToken = data;
+             ACC.config.CSRFToken = data.token;
+             ACC.config.SessionId = data.sessionId;
+             ACC.config.VisitorIp = data.vistiorIp;
              var crsfSession = window.sessionStorage.getItem("csrf-token");
-             if(window.sessionStorage && (null == crsfSession || crsfSession != data)){
+             if(window.sessionStorage && (null == crsfSession || crsfSession != data.token)){
             	 csrfDataChanged = true;
-            	 window.sessionStorage.setItem("csrf-token",data);
+            	 window.sessionStorage.setItem("csrf-token",data.token);
              }
          }
      });
@@ -1620,6 +1622,9 @@ $(document).ready(function(){
 
 			}
 		}
+	});
+	$(document).on('mouseover touchend','header .content nav > ul > li#shopMicrositeSeller > div.toggle',function(){
+		$(this).parent().addClass('hovered');
 	});
 	$(document).on('mouseleave','header .content nav > ul > li.hovered > ul > li:first-child,header .content nav > ul > li > div.toggle',function(){
 		$('header .content nav > ul > li').removeClass('hovered');
