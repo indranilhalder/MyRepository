@@ -592,7 +592,7 @@ public class MarketplaceCustomerEditDetailsWidgetRenderer extends
 		if (customer != null)
 		{
 			final String securePwdUrl = configurationService.getConfiguration().getString("cockpit.forgot.url");
-			final String securePwdUrlFinal = securePwdUrl + "/login/pw/change";
+			final String securePwdUrlFinal = securePwdUrl + "/store/mpl/en/login/pw/change";
 			forgetPasswordFacade.forgottenPasswordForEmail(customer.getOriginalUid(), securePwdUrlFinal, Boolean.FALSE);
 			Messagebox.show(LabelUtils.getLabel(widget, SENDING_EMAIL_TO), LabelUtils.getLabel(widget, SENDING_EMAIL_TO_TITLE),
 					Messagebox.OK, Messagebox.INFORMATION + customer.getOriginalUid());
