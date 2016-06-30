@@ -45,6 +45,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -320,8 +321,7 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLoveContent", method = RequestMethod.GET)
-	public JSONObject getBrandsYouLoveContent(@RequestParam(value = "id") final String componentId,
-			final HttpServletRequest request)
+	public JSONObject getBrandsYouLoveContent(@RequestParam(value = "id") final String componentId)
 	{
 		MplShowcaseItemComponentModel showcaseItem = null;
 		JSONObject showCaseItemJson = new JSONObject();
@@ -332,7 +332,7 @@ public class HomePageController extends AbstractPageController
 			showcaseItem = (MplShowcaseItemComponentModel) cmsComponentService.getSimpleCMSComponent(componentId);
 			LOG.info("Found component with id::::" + componentId);
 
-			showCaseItemJson = getJSONForShowCaseItem(showcaseItem, ShowCaseLayout.BRANDSHOWCASE, request);
+			showCaseItemJson = getJSONForShowCaseItem(showcaseItem, ShowCaseLayout.BRANDSHOWCASE);
 
 		}
 		catch (final CMSItemNotFoundException e)
@@ -365,8 +365,7 @@ public class HomePageController extends AbstractPageController
 	 * @param brandshowcase
 	 * @return
 	 */
-	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem,
-			final ShowCaseLayout showcaseLayout, final HttpServletRequest request)
+	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final ShowCaseLayout showcaseLayout)
 	{
 		final JSONObject showCaseItemJson = new JSONObject();
 		ProductData firstProduct = null;
@@ -861,7 +860,7 @@ public class HomePageController extends AbstractPageController
 			showcaseItem = (MplShowcaseItemComponentModel) cmsComponentService.getSimpleCMSComponent(componentId);
 			LOG.info("Found component with id::::" + componentId);
 
-			showCaseItemJson = getJSONForShowCaseItem(showcaseItem, ShowCaseLayout.COLLECTIONSHOWCASE, request);
+			showCaseItemJson = getJSONForShowCaseItem(showcaseItem, ShowCaseLayout.COLLECTIONSHOWCASE);
 
 		}
 		catch (final CMSItemNotFoundException e)
