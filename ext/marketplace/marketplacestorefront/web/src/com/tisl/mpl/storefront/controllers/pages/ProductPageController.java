@@ -172,6 +172,13 @@ public class ProductPageController extends AbstractPageController
 	 */
 	private static final String ELECTRONICS = "electronics";
 
+	/**
+	 * Added by I313024 for TATAUNISTORE-15 START ::::
+	 */
+	private static final String WATCHES = "Watches";
+	/**
+	 * Added by I313024 for TATAUNISTORE-15 END ::::
+	 */
 	private static final String IMG_COUNT = "imgCount";
 
 	private static final String SKU_ID_FOR_COD = "skuIdForCod";
@@ -238,7 +245,7 @@ public class ProductPageController extends AbstractPageController
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Resource(name = "mplProductFacade")
 	private MplProductFacade mplProductFacade;
 
@@ -254,7 +261,7 @@ public class ProductPageController extends AbstractPageController
 	{
 		this.buyBoxFacade = buyBoxFacade;
 	}
-	
+
 	/**
 	 * @return the mplProductFacade
 	 */
@@ -1299,7 +1306,8 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
 			displayConfigurableAttribute(productData, model);
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
-			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType()))
+			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
+					|| WATCHES.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
 				productDetailsHelper.groupGlassificationData(productData);
 			}
@@ -1359,7 +1367,6 @@ public class ProductPageController extends AbstractPageController
 
 
 
-
 	//TODO
 	protected void setUpMetaData(final Model model, final String metaDescription, final String metaTitle, final String productCode)
 	{
@@ -1406,7 +1413,6 @@ public class ProductPageController extends AbstractPageController
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
 									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
-									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())
 									|| ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()))
 							{
 
@@ -1447,7 +1453,6 @@ public class ProductPageController extends AbstractPageController
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
 					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())
 					|| ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
