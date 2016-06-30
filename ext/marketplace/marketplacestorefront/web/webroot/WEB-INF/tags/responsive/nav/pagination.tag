@@ -202,7 +202,7 @@
 				</c:if>
 				<div>
 
-<pagination:pageSelectionPagination searchUrl="${searchUrl}" searchPageData="${searchPageData}" numberPagesShown="${numberPagesShown}" themeMsgKey="${themeMsgKey}"/>
+<pagination:pageSelectionPagination top="${top}" searchUrl="${searchUrl}" searchPageData="${searchPageData}" numberPagesShown="${numberPagesShown}" themeMsgKey="${themeMsgKey}"/>
 </div>
 			</c:if>
 
