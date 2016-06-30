@@ -479,6 +479,7 @@ if (searchCategory_id){
 				},
 			  	complete: function(){
 			        //$('#ajax-loader').hide();
+			  		/*PT Issues fix*/
 			  		forceUpdateHeader();	
 			    },
 				error : function(resp) {
@@ -675,6 +676,7 @@ if (searchCategory_id){
 						  html += '</div>';
 						  
 					  }else{
+						  /* TISPRD-3135 changes for default image -removal of /store */
 						  html += '<div class="image" style="position: relative; left: 0;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="/_ui/desktop/theme-blue/images/missing-product-300x300.jpg" alt="'+obj.name+'"/>';
 						  if(is_new_product == true){
 							  html += '<div style="z-index: 1;" class="new"><span>New</span></div>';
@@ -790,6 +792,23 @@ if (searchCategory_id){
 			    /*Initialize params object we'll be passing around*/
 			    var params = {};
 			    if (site_page_type === "product" || site_page_type === "productpage") {
+			    	 jQuery.ajax({
+
+					      	type: "GET",
+
+					      	url: rootEP + '/SocialGenomix/recommendations/products/increment',
+
+					      	jsonp: 'callback',
+
+					      	dataType: 'jsonp',
+
+					      	data: { 'site_product_id' : spid, 'ecompany': ecompany, 'session_id':ssid },
+
+					      	contentType: 'application/javascript',
+
+					      	success: function(response) {}
+
+					      });
 			      document.cookie='prev_start_time=' + start_time.getTime() + '; path=/';      
 			      /*Check previous pages, add extra parameters if applicable*/
 			      refCheck();
@@ -854,7 +873,9 @@ if (searchCategory_id){
 			    /*Either analytics is down or we passed a bad parameter*/
 			    return;
 			  }
-
+			  if(response.data === null) {
+				  	return;
+				  }
 			  /*Product Widgets*/
 			  if(jQuery.inArray(widgetMode, productWidget) > -1) {
 			    /*So we can replace the same widget if we're narrowing down*/

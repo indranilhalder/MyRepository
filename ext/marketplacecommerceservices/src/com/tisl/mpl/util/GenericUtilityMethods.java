@@ -57,6 +57,7 @@ public class GenericUtilityMethods
 	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
 	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
+
 	/**
 	 * @Description: Checks whether the requested Date lies within range provided
 	 * @param start
@@ -709,11 +710,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -973,9 +974,9 @@ public class GenericUtilityMethods
 				LOG.debug("::::::::Session is not active:::::::");
 				isSessionActive = false;
 			}
+
 		}
 		return isSessionActive;
-
 	}
 
 

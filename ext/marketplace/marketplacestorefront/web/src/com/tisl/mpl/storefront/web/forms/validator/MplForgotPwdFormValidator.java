@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.tisl.mpl.storefront.businessvalidator.CommonAsciiValidator;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.web.forms.MplUpdatePwdForm;
 
@@ -47,18 +46,20 @@ public class MplForgotPwdFormValidator implements Validator
 		{
 			errors.rejectValue(ModelAttributetConstants.PWD, "register.pwd.invalid");
 		}
-		else if (!CommonAsciiValidator.validatePassword(pwd))
-		{
-			errors.rejectValue(ModelAttributetConstants.PWD, "register.pwd.invalid.pp");
-		}
+		// TISPRM-11
+		/*
+		 * else if (!CommonAsciiValidator.validatePassword(pwd)) { errors.rejectValue(ModelAttributetConstants.PWD,
+		 * "register.pwd.invalid.pp"); }
+		 */
 		else if (StringUtils.length(pwd) < 8)
 		{
 			errors.rejectValue(ModelAttributetConstants.PWD, "register.pwd.invalid");
 		}
-		else if (StringUtils.length(pwd) > 16)
-		{
-			errors.rejectValue(ModelAttributetConstants.PWD, "register.pwd.invalid.long");
-		}
+		// TISPRM-11
+		/*
+		 * else if (StringUtils.length(pwd) > 16) { errors.rejectValue(ModelAttributetConstants.PWD,
+		 * "register.pwd.invalid.long"); }
+		 */
 		else if (checkWhiteSpace(pwd))
 		{
 			errors.rejectValue(ModelAttributetConstants.PWD, "register.pwd.invalid.space");

@@ -838,7 +838,7 @@ function editAddress(addressId) {
 //  Update Password *********************************************
 	function validatePassword() {
 		var flag=true;
-		var regexPasswordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#^$%*&!^~]).{8,16}$/;
+		//var regexPasswordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#^$%*&!^~]).{8,16}$/; //TISPRM-11
 		if (document.getElementById("currentPassword").value == null
 				|| document.getElementById("currentPassword").value == "") {
 			$("#errCurpwd").css({
@@ -866,18 +866,17 @@ function editAddress(addressId) {
 			document.getElementById("errCnfNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Please Confirm New Password</font>";
 			flag = false;
 		}
-
-		else if (document.getElementById("newPassword").value.length < 8
-				|| document.getElementById("newPassword").value.length > 16) {
+		// TISPRM-11
+		else if (document.getElementById("newPassword").value.length < 8) {
 			$("#errNewpwd").css({
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Password should contain more than 8 and less than 16 characters</font>";
+			document.getElementById("errNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Your password should be minimum 8 characters</font>";
 			flag = false;
 		}
-
-		else if (!regexPasswordPattern.test(document
+		// TISPRM-11
+		/*else if (!regexPasswordPattern.test(document
 				.getElementById("newPassword").value)) {
 			$("#errNewpwd").css({
 				"display" : "block",
@@ -885,7 +884,7 @@ function editAddress(addressId) {
 			});
 			document.getElementById("errNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Passwords must be at least 8 characters long and contain a combination of upper/lower case letters, numbers and symbols</font>";
 			flag = false;
-		}
+		}*/
 		else if (document.getElementById("newPassword").value != document
 				.getElementById("checkNewPassword").value) {
 			$("#errCnfNewpwd").css({
