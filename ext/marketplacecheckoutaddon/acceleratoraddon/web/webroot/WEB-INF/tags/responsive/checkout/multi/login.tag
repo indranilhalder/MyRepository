@@ -125,6 +125,7 @@
     <br />
    <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
     <div id="loginDivCheckout"></div>
+  
     </li>
 </ul>
 </c:when>

@@ -461,13 +461,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//		return placeOrder(model, redirectAttributes);
 	//	}
 
+
 	/**
 	 * This is an OOTB method to go back to the previous checkout step
 	 *
 	 * @param redirectAttributes
 	 */
-	@RequestMapping(value = MarketplacecheckoutaddonConstants.BACKVALUE, method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequestMapping(value = MarketplacecheckoutaddonConstants.BACKVALUE, method = RequestMethod.GET)
+	//@RequireHardLogIn
 	@Override
 	public String back(final RedirectAttributes redirectAttributes)
 	{
@@ -479,8 +480,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 *
 	 * @param redirectAttributes
 	 */
-	@RequestMapping(value = MarketplacecheckoutaddonConstants.NEXTVALUE, method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequestMapping(value = MarketplacecheckoutaddonConstants.NEXTVALUE, method = RequestMethod.GET)
+	//@RequireHardLogIn
 	@Override
 	public String next(final RedirectAttributes redirectAttributes)
 	{

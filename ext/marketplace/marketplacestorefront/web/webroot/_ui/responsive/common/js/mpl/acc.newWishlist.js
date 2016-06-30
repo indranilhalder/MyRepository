@@ -259,6 +259,7 @@ $(document).on("click",".removeProductConfirmation",function(e){
 function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isApparelExist,rootCategoryMSD,catID,price,currency){	
 	var requiredUrl = ACC.config.encodedContextPath+"/my-account/wishList/remove";
 	var dataString = "wishlistName=" +wishlistName+ "&productCodeWl=" +productCode+ "&ussidWl=" +ussid;
+	
 	$.ajax({
 		url: requiredUrl,
 		type: "GET",
@@ -288,9 +289,11 @@ function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isAppa
 			if(status == "parsererror"){
 				window.location.href = ACC.config.encodedContextPath + "/login";
 			} else {
-			 alert("Some issues are there with Delete Wishlist at this time. Please try later or contact out helpdesk");	
-			}           
-		 }
+
+				 alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
+			}
+           
+        }
 	});
 }
 
