@@ -41,7 +41,9 @@ for(var i = 0; i < arr.length; i++)
     </c:otherwise>
     </c:choose>
    
-	<c:set var="breadCrumbList" value="${pageData.breadcrumbs}" />
+   <!-- Commented out for 30th June CR implementation ends -->
+   
+	<%-- <c:set var="breadCrumbList" value="${pageData.breadcrumbs}" />
 	
 	<c:set var="breadCrumbSize" value="${fn:length(breadCrumbList)}" />
 			<h3><span class="facet-name js-facet-name appliedFacets">FILTER BY</span>
@@ -78,7 +80,9 @@ for(var i = 0; i < arr.length; i++)
 					</c:if>
 				</c:forEach>
 			</ul>
-		</div>
+		</div> --%>		
+		<!-- Commented out for 30th June CR implementation ends -->
+		
 	</div>
 
 </c:if>

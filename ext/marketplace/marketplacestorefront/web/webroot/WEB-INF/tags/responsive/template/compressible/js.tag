@@ -19,7 +19,12 @@ $(document).on("click", ".header-myAccountSignOut", function() {
 	$("#paginationForm").attr("action", hrefurl);
 	$(this).closest('form').submit();
  });  
-
+ $(document).on("click","form .pagination_a_link",function(e){
+		event.preventDefault();
+		var hrefurl = $(this).attr('href');
+		$("#paginationFormBottom").attr("action", hrefurl);
+		$(this).closest('form').submit();
+	 }); 
 //TISPRO-183 -- Firing Tealium event only after successful user login
 if(loginStatus){
 	if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {

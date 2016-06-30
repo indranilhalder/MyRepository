@@ -855,13 +855,12 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					categoryList = new ArrayList<CategoryModel>(customer.getMyStyleProfile().getPreferredCategory());
 				}
 
-				if (StringUtils.isNotEmpty(customer.getDeviceKey()))
+				if (StringUtils.isNotEmpty(deviceId))
 				{
 					//Without userLogin when device id is not null
 					newListCategory = new ArrayList<CategoryModel>();
 					//for update if device id consists of categories
-					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(customer
-							.getDeviceKey());
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
 						//LOG.info("Inside if, device id consists of categories");
@@ -931,13 +930,12 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					brandList = new ArrayList<CategoryModel>(customer.getMyStyleProfile().getPreferredBrand());
 				}
 
-				if (StringUtils.isNotEmpty(customer.getDeviceKey()))
+				if (StringUtils.isNotEmpty(deviceId))
 				{
 					//Without userLogin when device id is not null
 					newListBrand = new ArrayList<CategoryModel>();
 					//for update if device id consists of categories
-					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(customer
-							.getDeviceKey());
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
 						//LOG.info("Inside if, device id consists of categories");
