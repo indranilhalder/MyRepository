@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -170,7 +171,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -432,8 +433,9 @@ public class SearchSuggestUtilityMethods
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
-						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("deptType")
-						&& !facate.getCode().equalsIgnoreCase("sellerId") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
+						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
+						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
 						&& !facate.getCode().equalsIgnoreCase("allPromotions"))
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
@@ -449,7 +451,7 @@ public class SearchSuggestUtilityMethods
 					facetWsDTO.setKey(facate.getCode());
 
 					//Generic filter condition
-					if (searchPageData.getDeptType().equalsIgnoreCase("Generic"))
+					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
 					{
 
 						if (facate.isGenericFilter())
@@ -510,7 +512,7 @@ public class SearchSuggestUtilityMethods
 					}
 					//searchfacetDTOList.add(facetWsDTO);
 				}
-				else if (facate.isVisible() && facate.getCode().equalsIgnoreCase("category"))
+				else if (facate.isVisible() && facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY))
 				{
 					if (null != searchPageData.getDepartmentHierarchyData()
 							&& CollectionUtils.isNotEmpty(searchPageData.getDepartmentHierarchyData().getHierarchyList()))
@@ -528,7 +530,7 @@ public class SearchSuggestUtilityMethods
 					categoryHierarchy.setKey(facate.getCode());
 
 					//Generic filter condition
-					if (searchPageData.getDeptType().equalsIgnoreCase("Generic"))
+					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
 					{
 
 						if (facate.isGenericFilter())
@@ -1323,8 +1325,9 @@ public class SearchSuggestUtilityMethods
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
-						&& !facate.getCode().equalsIgnoreCase("category") && !facate.getCode().equalsIgnoreCase("deptType")
-						&& !facate.getCode().equalsIgnoreCase("sellerId") && !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
+						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
+						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
+						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
@@ -1339,7 +1342,7 @@ public class SearchSuggestUtilityMethods
 					facetWsDTO.setKey(facate.getCode());
 
 					//Generic filter condition
-					if (searchPageData.getDeptType().equalsIgnoreCase("Generic"))
+					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
 					{
 
 						if (facate.isGenericFilter())
@@ -1400,7 +1403,7 @@ public class SearchSuggestUtilityMethods
 					}
 					//searchfacetDTOList.add(facetWsDTO);
 				}
-				else if (facate.isVisible() && facate.getCode().equalsIgnoreCase("category"))
+				else if (facate.isVisible() && facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY))
 				{
 					if (null != searchPageData.getDepartmentHierarchyData()
 							&& CollectionUtils.isNotEmpty(searchPageData.getDepartmentHierarchyData().getHierarchyList()))
@@ -1418,7 +1421,7 @@ public class SearchSuggestUtilityMethods
 					categoryHierarchy.setKey(facate.getCode());
 
 					//Generic filter condition
-					if (searchPageData.getDeptType().equalsIgnoreCase("Generic"))
+					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
 					{
 
 						if (facate.isGenericFilter())
@@ -1758,8 +1761,10 @@ public class SearchSuggestUtilityMethods
 				if (value != null && value.getCode().equalsIgnoreCase(oldL0.getCategoryCode()))
 				{
 					oldL0.setSelected(Boolean.valueOf(value.isSelected()));
-					if(value.isSelected())
+					if (value.isSelected())
+					{
 						flag = true;
+					}
 					break;
 				}
 			}
@@ -1774,8 +1779,10 @@ public class SearchSuggestUtilityMethods
 						if (value != null && value.getCode().equalsIgnoreCase(oldL1.getCategoryCode()))
 						{
 							oldL1.setSelected(Boolean.valueOf(value.isSelected()));
-							if(value.isSelected())
+							if (value.isSelected())
+							{
 								flag = true;
+							}
 							break;
 						}
 					}
@@ -1789,8 +1796,10 @@ public class SearchSuggestUtilityMethods
 								if (value != null && value.getCode().equalsIgnoreCase(oldL2.getCategoryCode()))
 								{
 									oldL2.setSelected(Boolean.valueOf(value.isSelected()));
-										if(value.isSelected())
-											flag = true;
+									if (value.isSelected())
+									{
+										flag = true;
+									}
 									break;
 								}
 							}
@@ -1804,8 +1813,10 @@ public class SearchSuggestUtilityMethods
 										if (value != null && value.getCode().equalsIgnoreCase(oldL3.getCategoryCode()))
 										{
 											oldL3.setSelected(Boolean.valueOf(value.isSelected()));
-												if(value.isSelected())
-											flag = true;
+											if (value.isSelected())
+											{
+												flag = true;
+											}
 											break;
 
 										}
