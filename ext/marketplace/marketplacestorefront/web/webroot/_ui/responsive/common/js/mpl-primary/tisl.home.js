@@ -1,25 +1,23 @@
 var headerLoggedinStatus = false;
 var csrfDataChanged = false;
 $(function() {
-      $.ajax({
-         url: ACC.config.encodedContextPath + "/fetchToken",
-         type: 'GET',
-         async:false,
-         cache:false,
-         success: function(data) {
-             $("input[name='CSRFToken']").each(function() {
-                 this.value = data.token;
-             });
-             ACC.config.CSRFToken = data.token;
-             ACC.config.SessionId = data.sessionId;
-             ACC.config.VisitorIp = data.vistiorIp;
-             var crsfSession = window.sessionStorage.getItem("csrf-token");
-             if(window.sessionStorage && (null == crsfSession || crsfSession != data.token)){
-            	 csrfDataChanged = true;
-            	 window.sessionStorage.setItem("csrf-token",data.token);
-             }
-         }
-     });
+    $.ajax({
+       url: ACC.config.encodedContextPath + "/fetchToken",
+       type: 'GET',
+       async:false,
+       cache:false,
+       success: function(data) {
+           $("input[name='CSRFToken']").each(function() {
+               this.value = data;
+           });
+           ACC.config.CSRFToken = data;
+           var crsfSession = window.sessionStorage.getItem("csrf-token");
+           if(window.sessionStorage && (null == crsfSession || crsfSession != data)){
+          	 csrfDataChanged = true;
+          	 window.sessionStorage.setItem("csrf-token",data);
+           }
+       }
+   });
 });
 $(function() {
 	//TISPRO-522 IE Issue Fix
