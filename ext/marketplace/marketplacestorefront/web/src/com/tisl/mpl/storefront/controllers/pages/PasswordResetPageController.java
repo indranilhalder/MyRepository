@@ -57,6 +57,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MplConstants.USER;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -666,15 +667,15 @@ public class PasswordResetPageController extends AbstractPageController
 				return REDIRECT_HOME;
 			}
 			final UserModel user = userService.getCurrentUser();
-			final String guid = (String) httpServletRequest.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
-			//			if (null != user.getName() && (!user.getName().equalsIgnoreCase(USER.ANONYMOUS_CUSTOMER)))
-			//			{
-			//				return REDIRECT_HOME;
-			//			}
-			if (null != user.getName() && null != guid)
+			//			final String guid = (String) httpServletRequest.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
+			if (null != user.getName() && (!user.getName().equalsIgnoreCase(USER.ANONYMOUS_CUSTOMER)))
 			{
 				return REDIRECT_HOME;
 			}
+			//			if (null != user.getName() && null != guid)
+			//			{
+			//				return REDIRECT_HOME;
+			//			}
 			final MplUpdatePwdForm form = new MplUpdatePwdForm();
 			form.setToken(token);
 			model.addAttribute(form);
