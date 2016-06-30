@@ -21,7 +21,6 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.ForgottenPwdForm;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.LoginForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commerceservices.customer.TokenInvalidatedException;
-import de.hybris.platform.core.Constants.USER;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
@@ -58,6 +57,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MplConstants.USER;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -96,6 +96,7 @@ public class PasswordResetPageController extends AbstractPageController
 	private static final String BZ_ERROR_CMS_PAGE = "businessErrorFound";
 	private static final String NBZ_ERROR_CMS_PAGE = "nonBusinessErrorFound";
 	private static final String UTF = "UTF-8";
+	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
 
 	@Resource(name = ModelAttributetConstants.SIMPLE_BREADCRUMB_BUILDER)
 	private ResourceBreadcrumbBuilder resourceBreadcrumbBuilder;
@@ -126,7 +127,8 @@ public class PasswordResetPageController extends AbstractPageController
 	UserService userService;
 	private boolean validate = false;
 	protected static final String SPRING_SECURITY_LAST_USERNAME = "SPRING_SECURITY_LAST_USERNAME";
-
+	@Autowired
+	HttpServletRequest httpServletRequest;
 
 	/**
 	 * @description method is called to get PasswordRequest
@@ -665,11 +667,15 @@ public class PasswordResetPageController extends AbstractPageController
 				return REDIRECT_HOME;
 			}
 			final UserModel user = userService.getCurrentUser();
-
+			//			final String guid = (String) httpServletRequest.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
 			if (null != user.getName() && (!user.getName().equalsIgnoreCase(USER.ANONYMOUS_CUSTOMER)))
 			{
 				return REDIRECT_HOME;
 			}
+			//			if (null != user.getName() && null != guid)
+			//			{
+			//				return REDIRECT_HOME;
+			//			}
 			final MplUpdatePwdForm form = new MplUpdatePwdForm();
 			form.setToken(token);
 			model.addAttribute(form);

@@ -1602,6 +1602,9 @@ $(document).ready(function(){
 			}
 		}
 	});
+	$(document).on('mouseover touchend','header .content nav > ul > li#shopMicrositeSeller > div.toggle',function(){
+		$(this).parent().addClass('hovered');
+	});
 	$(document).on('mouseleave','header .content nav > ul > li.hovered > ul > li:first-child,header .content nav > ul > li > div.toggle',function(){
 		$('header .content nav > ul > li').removeClass('hovered');
 	});

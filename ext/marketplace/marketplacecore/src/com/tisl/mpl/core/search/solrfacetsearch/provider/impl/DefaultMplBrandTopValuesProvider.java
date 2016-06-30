@@ -13,12 +13,12 @@ import java.util.List;
 
 
 /**
- * @author 361234
+ * @author TCS
  *
  */
 public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 {
-	private int topFacetCount = 6;
+	private int topFacetCount = 8;
 
 	protected int getTopFacetCount()
 	{
