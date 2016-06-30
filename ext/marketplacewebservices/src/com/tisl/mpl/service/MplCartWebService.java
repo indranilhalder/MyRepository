@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.service;
 
-import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
@@ -91,10 +90,10 @@ public interface MplCartWebService
 	 * @param cartData
 	 * @param pincode
 	 * @return List<PinCodeResponseData>
-	 * @throws CMSItemNotFoundException
+	 * @throws EtailNonBusinessExceptions
 	 */
 	public List<PinCodeResponseData> checkPinCodeAtCart(final CartData cartData, final String pincode)
-			throws CMSItemNotFoundException;
+			throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 
 
 	/**
