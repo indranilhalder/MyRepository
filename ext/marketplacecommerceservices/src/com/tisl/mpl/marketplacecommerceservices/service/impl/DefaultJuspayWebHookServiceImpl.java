@@ -52,6 +52,7 @@ import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
+
 /**
  * @author TCS
  *
@@ -95,7 +96,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	{
 		List<JuspayWebhookModel> webHookDetailList = new ArrayList<JuspayWebhookModel>();
 		webHookDetailList = juspayWebHookDao.fetchWebHookData();
-		if (null != webHookDetailList && !webHookDetailList.isEmpty())
+
+		if (CollectionUtils.isNotEmpty(webHookDetailList))
 		{
 			validateWebHookData(webHookDetailList);
 		}
@@ -127,14 +129,15 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					for (final JuspayWebhookModel unique : uniqueList)
 					{
 						//if there is duplicate order id which is not expired(N) then setting it to Y
-						if (unique.getOrderStatus().getOrderId().equalsIgnoreCase(hook.getOrderStatus().getOrderId())
-								&& hook.getEventName().equalsIgnoreCase("ORDER_SUCCEEDED"))
+						if (unique != null && unique.getOrderStatus() != null && hook.getOrderStatus() != null
+								&& StringUtils.equalsIgnoreCase(unique.getOrderStatus().getOrderId(), hook.getOrderStatus().getOrderId())
+								&& StringUtils.equalsIgnoreCase(hook.getEventName(), "ORDER_SUCCEEDED"))
+
 						{
 							duplicateFound = true;
 							break;
 						}
 					}
-
 					if (duplicateFound)
 					{
 						hook.setIsExpired(Boolean.TRUE);
@@ -143,7 +146,6 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					else
 					{
 						processWebhook(hook, webHookDetailList);
-
 						//TISSIT-1811:the processed hook in the uniqueList
 						uniqueList.add(hook);
 					}
@@ -151,14 +153,12 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				else
 				{
 					processWebhook(hook, webHookDetailList);
-
 					//TISSIT-1811:the processed hook in the uniqueList
 					uniqueList.add(hook);
 				}
 			}
 		}
 	}
-
 
 	/**
 	 * WebHook Data Processing
@@ -168,18 +168,23 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 */
 	private void processWebhook(final JuspayWebhookModel hook, final List<JuspayWebhookModel> webHookDetailList)
 	{
-		if (hook.getOrderStatus().getRefunds().isEmpty())
+		//TISPRO-607
+		if (null != hook.getOrderStatus())
 		{
-			//For Positive Flow
-			getResponseBasedOnStatus(hook, hook.getOrderStatus().getOrderId(), hook.getOrderStatus().getStatus());
-		}
-		//For Refund Flow
-		else
-		{
-			//Action for refund scenarios
-			performActionForRefund(webHookDetailList);
-			//Processed in Webhook
-			updateWebHookExpired(hook);
+
+			if (CollectionUtils.isEmpty(hook.getOrderStatus().getRefunds()))
+			{
+				//For Positive Flow
+				getResponseBasedOnStatus(hook, hook.getOrderStatus().getOrderId(), hook.getOrderStatus().getStatus());
+			}
+			//For Refund Flow
+			else
+			{
+				//Action for refund scenarios
+				performActionForRefund(webHookDetailList);
+				//Processed in Webhook
+				updateWebHookExpired(hook);
+			}
 		}
 	}
 
@@ -190,245 +195,280 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 */
 	private void performActionForRefund(final List<JuspayWebhookModel> webHookList)
 	{
+		//TISPRO-607
+		boolean isError = false;
+		final List<String> errorList = new ArrayList<String>();
 		for (final JuspayWebhookModel hook : webHookList)
 		{
-			for (final JuspayRefundResponseModel refund : hook.getOrderStatus().getRefunds())
+			if (null != hook.getOrderStatus() && CollectionUtils.isNotEmpty(hook.getOrderStatus().getRefunds()))
 			{
-				try
+				for (final JuspayRefundResponseModel refund : hook.getOrderStatus().getRefunds())
 				{
-					//fetching the refund transaction mapping records
-					final List<RefundTransactionMappingModel> results = juspayWebHookDao.fetchRefundTransactionMapping(refund
-							.getUniqueRequestId());
-
-					if (!results.isEmpty())
+					try
 					{
-						for (final RefundTransactionMappingModel rtmModel : results)
+						//TISPRO-607
+						if (StringUtils.isEmpty(refund.getUniqueRequestId()))
 						{
-							if (!rtmModel.getIsProcessed().booleanValue())
-							{
-								//fetching audit records
-								final MplPaymentAuditModel auditModel = juspayWebHookDao.fetchAuditData(hook.getOrderStatus()
-										.getOrderId());
-								final OrderModel parentOrder = juspayWebHookDao.fetchParentOrder(auditModel.getCartGUID());
+							isError = true;
+							errorList.add(refund.getId());
 
-								//TISSIT-1802
-								OrderModel subOrder = modelService.create(OrderModel.class);
-								if (null != rtmModel.getRefundedOrderEntry() && null != rtmModel.getRefundedOrderEntry().getOrder())
-								{
-									subOrder = (OrderModel) rtmModel.getRefundedOrderEntry().getOrder();
-								}
-
-								if (null != subOrder && null != rtmModel.getRefundType()
-										&& rtmModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.CANCELLED.toString()))
-								{
-									//Change status of Consignment against order line when it is SUCCESS at Juspay & CANCELLED in RTM
-									changeConsignmentStatusForCancelled(rtmModel, refund, subOrder, hook.getOrderStatus().getOrderId());
-								}
-								else if (null != subOrder && null != rtmModel.getRefundType()
-										&& rtmModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.RETURN.toString()))
-								{
-									//Change status of Consignment against order line when it is SUCCESS at Juspay & RETURN in RTM
-									changeConsignmentStatusForReturn(rtmModel, refund, subOrder, hook.getOrderStatus().getOrderId());
-								}
-								else if (null != subOrder && null != rtmModel.getRefundType()
-										&& rtmModel.getRefundType().equals(JuspayRefundType.CANCELLED_FOR_RISK))
-								{
-									//Change status of Consignment against parent order when it is SUCCESS at Juspay & CANCELLED_FOR_RISK in RTM
-									changeConsignmentStatusForCancelledForRisk(rtmModel, refund, parentOrder, hook.getOrderStatus()
-											.getOrderId());
-								}
-							}
+							throw new Exception(MarketplacecommerceservicesConstants.E0021);
 						}
-					}
-					else
-					{
-						//						final MplPaymentAuditModel audit = getModelService().create(MplPaymentAuditModel.class);
-						//						audit.setAuditId(hook.getOrderStatus().getOrderId());
-						//						final MplPaymentAuditModel mplPaymentAuditModel = getFlexibleSearchService().getModelByExample(audit);
-
-						//Fetch data from Audit table against unique request id for Refund
-						final MplPaymentAuditModel audit = juspayWebHookDao.fetchAuditData(hook.getOrderStatus().getOrderId());
-						Collection<MplPaymentAuditEntryModel> collection = audit.getAuditEntries();
-						final List<MplPaymentAuditEntryModel> entryList = new ArrayList<MplPaymentAuditEntryModel>();
-						if (null == collection || collection.isEmpty())
+						else
 						{
-							collection = new ArrayList<MplPaymentAuditEntryModel>();
-						}
-
-						entryList.addAll(collection);
-
-						//final List<MplPaymentAuditEntryModel> entryList = mplPaymentAuditModel.getAuditEntries();
-						final MplPaymentAuditEntryModel entry = entryList.get(entryList.size() - 1);
+							//fetching the refund transaction mapping records
+							final List<RefundTransactionMappingModel> results = juspayWebHookDao.fetchRefundTransactionMapping(refund
+									.getUniqueRequestId());
 
 
-
-						if (refund.getUniqueRequestId().equalsIgnoreCase(entry.getRefundReqId()))
-						{
-							if (entry.getStatus().equals(MplPaymentAuditStatusEnum.REFUND_INITIATED)
-									&& refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+							if (CollectionUtils.isNotEmpty(results))
 							{
-								final MplPaymentAuditEntryModel mplPaymentAuditEntryModel = modelService
-										.create(MplPaymentAuditEntryModel.class);
-
-								final PaymentTransactionModel paymentTransactionModel = modelService
-										.create(PaymentTransactionModel.class);
-								final PaymentTransactionEntryModel paymentTransactionEntryModel = modelService
-										.create(PaymentTransactionEntryModel.class);
-								final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
-								BigDecimal bigAmount = null;
-
-								mplPaymentAuditEntryModel.setAuditId(audit.getAuditId());
-								mplPaymentAuditEntryModel.setResponseDate(new Date());
-								paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-								paymentTransactionModel.setCode(entry.getRefundReqId() + MarketplacecommerceservicesConstants.UNDER_SCORE
-										+ new Date().getSeconds());
-
-								paymentTransactionEntryModel.setCode(entry.getRefundReqId()
-										+ MarketplacecommerceservicesConstants.UNDER_SCORE + new Date().getSeconds());
-								bigAmount = new BigDecimal(refund.getAmount().doubleValue(), MathContext.DECIMAL64);
-								paymentTransactionEntryModel.setAmount(bigAmount);
-								paymentTransactionEntryModel.setTime(new Date());
-								//paymentTransactionEntryModel.setCurrency(orderModel.getPaymentTransactions().get(0).getEntries().get(0).getCurrency());
-								paymentTransactionEntryModel.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
-								paymentTransactionEntryModel.setTransactionStatusDetails(MarketplacecommerceservicesConstants.SUCCESS);
-								paymentTransactionEntryModel.setType(PaymentTransactionType.REFUND_STANDALONE);
-
-								//TISPRO-130
-								PaymentTypeModel paymentTypeModel = getModelService().create(PaymentTypeModel.class);
-								if (null != hook.getOrderStatus().getPaymentMethodType()
-										&& hook.getOrderStatus().getPaymentMethodType()
-												.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+								for (final RefundTransactionMappingModel rtmModel : results)
 								{
-									paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getPaymentMethodType());
-									setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+									if (!rtmModel.getIsProcessed().booleanValue() && null != hook.getOrderStatus().getOrderId())
+									{
+										//fetching audit records
+										final MplPaymentAuditModel auditModel = juspayWebHookDao.fetchAuditData(hook.getOrderStatus()
+												.getOrderId());
+										final OrderModel parentOrder = juspayWebHookDao.fetchParentOrder(auditModel.getCartGUID());
+
+										//TISSIT-1802
+										OrderModel subOrder = modelService.create(OrderModel.class);
+										if (null != rtmModel.getRefundedOrderEntry() && null != rtmModel.getRefundedOrderEntry().getOrder())
+										{
+											subOrder = (OrderModel) rtmModel.getRefundedOrderEntry().getOrder();
+										}
+
+										if (null != subOrder
+												&& null != rtmModel.getRefundType()
+												&& rtmModel.getRefundType().toString()
+														.equalsIgnoreCase(JuspayRefundType.CANCELLED.toString()))
+										{
+											//Change status of Consignment against order line when it is SUCCESS at Juspay & CANCELLED in RTM
+											changeConsignmentStatusForCancelled(rtmModel, refund, subOrder, hook.getOrderStatus()
+													.getOrderId());
+										}
+										else if (null != subOrder && null != rtmModel.getRefundType()
+												&& rtmModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.RETURN.toString()))
+										{
+											//Change status of Consignment against order line when it is SUCCESS at Juspay & RETURN in RTM
+											changeConsignmentStatusForReturn(rtmModel, refund, subOrder, hook.getOrderStatus().getOrderId());
+										}
+										else if (null != subOrder && null != rtmModel.getRefundType()
+												&& rtmModel.getRefundType().equals(JuspayRefundType.CANCELLED_FOR_RISK))
+										{
+											//Change status of Consignment against parent order when it is SUCCESS at Juspay & CANCELLED_FOR_RISK in RTM
+											changeConsignmentStatusForCancelledForRisk(rtmModel, refund, parentOrder, hook.getOrderStatus()
+													.getOrderId());
+										}
+									}
 								}
-								else
-								{
-									paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getCardResponse().getCardType());
-
-									setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
-								}
-
-								modelService.save(paymentTransactionEntryModel);
-
-								entries.add(paymentTransactionEntryModel);
-								paymentTransactionModel.setEntries(entries);
-								modelService.save(paymentTransactionModel);
-
-								mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_SUCCESSFUL);
-
-								//setting Payment transaction against auditentry in case where we dont have the order
-								mplPaymentAuditEntryModel.setPaymentTransaction(paymentTransactionModel);
-
-								//setting the unique request id of the refund request sent to Juspay in Audit entry
-								mplPaymentAuditEntryModel.setRefundReqId(refund.getUniqueRequestId());
-
-								entryList.add(mplPaymentAuditEntryModel);
-								audit.setAuditEntries(entryList);
-								modelService.save(audit);
-
-							}
-							else if (entry.getStatus().equals(MplPaymentAuditStatusEnum.REFUND_INITIATED)
-									&& refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.FAILURE))
-							{
-								final MplPaymentAuditEntryModel mplPaymentAuditEntryModel = modelService
-										.create(MplPaymentAuditEntryModel.class);
-
-								final PaymentTransactionModel paymentTransactionModel = modelService
-										.create(PaymentTransactionModel.class);
-								final PaymentTransactionEntryModel paymentTransactionEntryModel = modelService
-										.create(PaymentTransactionEntryModel.class);
-								final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
-								BigDecimal bigAmount = null;
-
-								mplPaymentAuditEntryModel.setAuditId(audit.getAuditId());
-								mplPaymentAuditEntryModel.setResponseDate(new Date());
-								paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
-								paymentTransactionModel.setCode(entry.getRefundReqId() + MarketplacecommerceservicesConstants.UNDER_SCORE
-										+ new Date().getSeconds());
-
-								paymentTransactionEntryModel.setCode(entry.getRefundReqId()
-										+ MarketplacecommerceservicesConstants.UNDER_SCORE + new Date().getSeconds());
-								bigAmount = new BigDecimal(refund.getAmount().doubleValue(), MathContext.DECIMAL64);
-								paymentTransactionEntryModel.setAmount(bigAmount);
-								paymentTransactionEntryModel.setTime(new Date());
-								//paymentTransactionEntryModel.setCurrency(orderModel.getPaymentTransactions().get(0).getEntries().get(0).getCurrency());
-								paymentTransactionEntryModel.setTransactionStatus(MarketplacecommerceservicesConstants.FAILURE);
-								paymentTransactionEntryModel.setTransactionStatusDetails(MarketplacecommerceservicesConstants.FAILURE);
-								paymentTransactionEntryModel.setType(PaymentTransactionType.REFUND_STANDALONE);
-
-								//								final PaymentTypeModel paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getCardResponse()
-								//										.getCardType());
-								//								setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
-								//
-
-								//TISPRO-130
-								PaymentTypeModel paymentTypeModel = getModelService().create(PaymentTypeModel.class);
-								if (null != hook.getOrderStatus().getPaymentMethodType()
-										&& hook.getOrderStatus().getPaymentMethodType()
-												.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
-								{
-									paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getPaymentMethodType());
-									setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
-								}
-								else
-								{
-									paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getCardResponse().getCardType());
-									setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
-								}
-								modelService.save(paymentTransactionEntryModel);
-
-								entries.add(paymentTransactionEntryModel);
-								paymentTransactionModel.setEntries(entries);
-								modelService.save(paymentTransactionModel);
-
-								mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL);
-
-								//setting Payment transaction against auditentry in case where we dont have the order
-								mplPaymentAuditEntryModel.setPaymentTransaction(paymentTransactionModel);
-
-								//setting the unique request id of the refund request sent to Juspay in Audit entry
-								mplPaymentAuditEntryModel.setRefundReqId(refund.getUniqueRequestId());
-
-								entryList.add(mplPaymentAuditEntryModel);
-								audit.setAuditEntries(entryList);
-								modelService.save(audit);
-
-							}
-							else if (entry.getStatus().equals(MplPaymentAuditStatusEnum.REFUND_INITIATED)
-									&& refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
-							{
-								break;
 							}
 							else
 							{
-								if (entry.getStatus().equals(MplPaymentAuditStatusEnum.REFUND_SUCCESSFUL))
+								if (null != hook.getOrderStatus().getOrderId())
 								{
-									//Set is Expired Y in webhook table
-									updateWebHookExpired(hook);
-								}
-								else if (entry.getStatus().equals(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL))
-								{
-									//Set is Expired Y in webhook table
-									updateWebHookExpired(hook);
-								}
+									//Fetch data from Audit table against unique request id for Refund
+									final MplPaymentAuditModel audit = juspayWebHookDao.fetchAuditData(hook.getOrderStatus().getOrderId());
+									Collection<MplPaymentAuditEntryModel> collection = audit.getAuditEntries();
+									final List<MplPaymentAuditEntryModel> entryList = new ArrayList<MplPaymentAuditEntryModel>();
+									if (null == collection || collection.isEmpty())
+									{
+										collection = new ArrayList<MplPaymentAuditEntryModel>();
+									}
 
+									entryList.addAll(collection);
+
+									//final List<MplPaymentAuditEntryModel> entryList = mplPaymentAuditModel.getAuditEntries();
+									final MplPaymentAuditEntryModel entry = entryList.get(entryList.size() - 1);
+
+
+
+									if (null != refund.getUniqueRequestId()
+											&& refund.getUniqueRequestId().equalsIgnoreCase(entry.getRefundReqId()))
+									{
+										if (entry.getStatus().equals(MplPaymentAuditStatusEnum.REFUND_INITIATED)
+												&& refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+										{
+											final MplPaymentAuditEntryModel mplPaymentAuditEntryModel = modelService
+													.create(MplPaymentAuditEntryModel.class);
+
+											final PaymentTransactionModel paymentTransactionModel = modelService
+													.create(PaymentTransactionModel.class);
+											final PaymentTransactionEntryModel paymentTransactionEntryModel = modelService
+													.create(PaymentTransactionEntryModel.class);
+											final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
+											BigDecimal bigAmount = null;
+
+											mplPaymentAuditEntryModel.setAuditId(audit.getAuditId());
+											mplPaymentAuditEntryModel.setResponseDate(new Date());
+											paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+											paymentTransactionModel.setCode(entry.getRefundReqId()
+													+ MarketplacecommerceservicesConstants.UNDER_SCORE + new Date().getSeconds());
+
+											paymentTransactionEntryModel.setCode(entry.getRefundReqId()
+													+ MarketplacecommerceservicesConstants.UNDER_SCORE + new Date().getSeconds());
+											bigAmount = new BigDecimal(refund.getAmount().doubleValue(), MathContext.DECIMAL64);
+											paymentTransactionEntryModel.setAmount(bigAmount);
+											paymentTransactionEntryModel.setTime(new Date());
+											//paymentTransactionEntryModel.setCurrency(orderModel.getPaymentTransactions().get(0).getEntries().get(0).getCurrency());
+											paymentTransactionEntryModel.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
+											paymentTransactionEntryModel
+													.setTransactionStatusDetails(MarketplacecommerceservicesConstants.SUCCESS);
+											paymentTransactionEntryModel.setType(PaymentTransactionType.REFUND_STANDALONE);
+
+											//TISPRO-130
+											PaymentTypeModel paymentTypeModel = getModelService().create(PaymentTypeModel.class);
+											if (null != hook.getOrderStatus().getPaymentMethodType()
+													&& hook.getOrderStatus().getPaymentMethodType()
+															.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+											{
+												paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getPaymentMethodType());
+												setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+											}
+											else
+											{
+												paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getCardResponse()
+														.getCardType());
+
+												setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+											}
+
+											modelService.save(paymentTransactionEntryModel);
+
+											entries.add(paymentTransactionEntryModel);
+											paymentTransactionModel.setEntries(entries);
+											modelService.save(paymentTransactionModel);
+
+											mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_SUCCESSFUL);
+
+											//setting Payment transaction against auditentry in case where we dont have the order
+											mplPaymentAuditEntryModel.setPaymentTransaction(paymentTransactionModel);
+
+											//setting the unique request id of the refund request sent to Juspay in Audit entry
+											mplPaymentAuditEntryModel.setRefundReqId(refund.getUniqueRequestId());
+
+											entryList.add(mplPaymentAuditEntryModel);
+											audit.setAuditEntries(entryList);
+											modelService.save(audit);
+										}
+									}
+									else if (entry.getStatus().equals(MplPaymentAuditStatusEnum.REFUND_INITIATED)
+											&& refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.FAILURE))
+									{
+										final MplPaymentAuditEntryModel mplPaymentAuditEntryModel = modelService
+												.create(MplPaymentAuditEntryModel.class);
+
+										final PaymentTransactionModel paymentTransactionModel = modelService
+												.create(PaymentTransactionModel.class);
+										final PaymentTransactionEntryModel paymentTransactionEntryModel = modelService
+												.create(PaymentTransactionEntryModel.class);
+										final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
+										BigDecimal bigAmount = null;
+
+										mplPaymentAuditEntryModel.setAuditId(audit.getAuditId());
+										mplPaymentAuditEntryModel.setResponseDate(new Date());
+										paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+										paymentTransactionModel.setCode(entry.getRefundReqId()
+												+ MarketplacecommerceservicesConstants.UNDER_SCORE + new Date().getSeconds());
+
+										paymentTransactionEntryModel.setCode(entry.getRefundReqId()
+												+ MarketplacecommerceservicesConstants.UNDER_SCORE + new Date().getSeconds());
+										bigAmount = new BigDecimal(refund.getAmount().doubleValue(), MathContext.DECIMAL64);
+										paymentTransactionEntryModel.setAmount(bigAmount);
+										paymentTransactionEntryModel.setTime(new Date());
+										//paymentTransactionEntryModel.setCurrency(orderModel.getPaymentTransactions().get(0).getEntries().get(0).getCurrency());
+										paymentTransactionEntryModel.setTransactionStatus(MarketplacecommerceservicesConstants.FAILURE);
+										paymentTransactionEntryModel
+												.setTransactionStatusDetails(MarketplacecommerceservicesConstants.FAILURE);
+										paymentTransactionEntryModel.setType(PaymentTransactionType.REFUND_STANDALONE);
+
+										//								final PaymentTypeModel paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getCardResponse()
+										//										.getCardType());
+										//								setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+										//
+
+										//TISPRO-130
+										PaymentTypeModel paymentTypeModel = getModelService().create(PaymentTypeModel.class);
+										if (null != hook.getOrderStatus().getPaymentMethodType()
+												&& hook.getOrderStatus().getPaymentMethodType()
+														.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+										{
+											paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getPaymentMethodType());
+											setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+										}
+										else
+										{
+											paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getCardResponse().getCardType());
+											setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+										}
+										modelService.save(paymentTransactionEntryModel);
+
+										entries.add(paymentTransactionEntryModel);
+										paymentTransactionModel.setEntries(entries);
+										modelService.save(paymentTransactionModel);
+
+										mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL);
+
+										//setting Payment transaction against auditentry in case where we dont have the order
+										mplPaymentAuditEntryModel.setPaymentTransaction(paymentTransactionModel);
+
+										//setting the unique request id of the refund request sent to Juspay in Audit entry
+										mplPaymentAuditEntryModel.setRefundReqId(refund.getUniqueRequestId());
+
+										entryList.add(mplPaymentAuditEntryModel);
+										audit.setAuditEntries(entryList);
+										modelService.save(audit);
+
+									}
+									else if (entry.getStatus().equals(MplPaymentAuditStatusEnum.REFUND_INITIATED)
+											&& refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
+									{
+										break;
+									}
+									else
+									{
+										if (entry.getStatus().equals(MplPaymentAuditStatusEnum.REFUND_SUCCESSFUL))
+										{
+											//Set is Expired Y in webhook table
+											updateWebHookExpired(hook);
+										}
+										else if (entry.getStatus().equals(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL))
+										{
+											//Set is Expired Y in webhook table
+											updateWebHookExpired(hook);
+										}
+
+									}
+								}
 							}
 						}
 					}
 
+					catch (final ModelSavingException e)
+					{
+						LOG.error(e.getMessage(), e);
+					}
+					catch (final Exception e)
+					{
+						//TISPRO-607
+						if (isError)
+						{
+							for (final String data : errorList)
+							{
+								LOG.error("Unique request ID missing for the following JuspayRefundResponseModel ID " + data, e);
+							}
+						}
+						else
+						{
+							LOG.error(e.getMessage(), e);
+						}
+					}
 
-				}
-				catch (final ModelSavingException e)
-				{
-					LOG.error(e.getMessage(), e);
-				}
-				catch (final EtailNonBusinessExceptions e)
-				{
-					LOG.error(e.getMessage(), e);
 				}
 			}
 		}
+
 	}
 
 	/**
@@ -774,13 +814,11 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 									getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
 											oModel.getOrderStatus().getCardResponse().getCardType());
 								}
-
 							}
 							catch (final Exception e)
 							{
 								LOG.error(e.getMessage(), e);
 							}
-
 							LOG.debug(MarketplacecommerceservicesConstants.WEBHOOKUPDATEMSG);
 							updateWebHookExpired(oModel);
 						}
@@ -797,6 +835,10 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		{
 			LOG.error(exception.getMessage());
 		}
+		catch (final Exception exception)
+		{
+			LOG.error(exception.getMessage());
+		}
 	}
 
 	/**
@@ -805,10 +847,9 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @param orderGuid
 	 * @return boolean
 	 */
-	private boolean checkParentOrderExists(final String orderGuid)
+	private boolean checkParentOrderExists(final String orderGuid) throws Exception
 	{
 		final List<OrderModel> orders = getJuspayWebHookDao().fetchOrder(orderGuid);
-
 		if (!CollectionUtils.isEmpty(orders))
 		{
 			int subOrderCount = 0;
@@ -828,9 +869,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 						continue;
 					}
 				}
-
 			}
-
 			return subOrderCount > 0;
 		}
 		else

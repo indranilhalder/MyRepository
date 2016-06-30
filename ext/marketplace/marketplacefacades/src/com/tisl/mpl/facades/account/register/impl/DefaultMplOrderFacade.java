@@ -522,20 +522,26 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public OrderEntryData fetchOrderEntryDetails(final OrderEntryData orderEntryData, final Map<String, Boolean> sortInvoice,
-			final OrderData subOrder) throws EtailNonBusinessExceptions
+	public OrderEntryData fetchOrderEntryDetails(final OrderEntryData orderEntryData, final OrderData subOrder)
+			throws EtailNonBusinessExceptions
 	{
 		ConsignmentModel consignmentModel = null;
-		final String tranSactionId = orderEntryData.getTransactionId();
-		//TISEE-1067
-		if (null != orderEntryData.getConsignment() && orderEntryData.getConsignment().getStatus() != null
-				&& (orderEntryData.getConsignment().getStatus().getCode()
-						.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
-						|| orderEntryData.getConsignment().getStatus().getCode()
-								.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
-				&& sortInvoice.containsKey(tranSactionId))
+		if (null != orderEntryData.getConsignment() && orderEntryData.getConsignment().getStatus() != null)
 		{
-			orderEntryData.setShowInvoiceStatus(sortInvoice.get(tranSactionId).booleanValue());
+			consignmentModel = mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
+			//TISPT-194
+			//		final String tranSactionId = orderEntryData.getTransactionId();
+			//TISEE-1067
+			if (null != consignmentModel && null != consignmentModel.getInvoice()
+					&& null != consignmentModel.getInvoice().getInvoiceUrl() && null != orderEntryData.getConsignment()
+					&& orderEntryData.getConsignment().getStatus() != null
+					&& (orderEntryData.getConsignment().getStatus().getCode()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
+							|| orderEntryData.getConsignment().getStatus().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
+			{
+				orderEntryData.setShowInvoiceStatus(true);
+			}
 		}
 
 		//getting the product code

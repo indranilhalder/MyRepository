@@ -375,8 +375,11 @@ addToBagFromWl: function(ussid, addedToCart) {
 		data : {"ussid": ussid, "addedToCart":addedToCart},
 		dataType : "json",
 		success : function(response) {
-			alert("success_yipee");
+			//alert("success_yipee");
 		},
+		complete:function(){
+			forceUpdateHeader();
+		}
 	})
 },
 
@@ -527,6 +530,7 @@ sendAddToBag : function(formId, isBuyNow) {
 					},
 					complete : function() {
 						$('#ajax-loader').hide();
+						forceUpdateHeader();
 					},
 					error : function(resp) {
 						// alert("Add to Bag unsuccessful");

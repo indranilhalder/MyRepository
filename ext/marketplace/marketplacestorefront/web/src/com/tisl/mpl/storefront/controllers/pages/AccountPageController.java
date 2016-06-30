@@ -57,7 +57,7 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
-import de.hybris.platform.core.enums.Gender;
+import de.hybris.platform.constants.GeneratedCoreConstants.Enumerations.Gender;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -127,11 +127,12 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.SellerAssociationStatusEnum;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.FeedbackArea;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.Frequency;
 import com.tisl.mpl.core.enums.AddressType;
-import com.tisl.mpl.core.enums.FeedbackArea;
-import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
@@ -153,7 +154,6 @@ import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.data.WishlistData;
-import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -264,6 +264,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final Logger LOG = Logger.getLogger(AccountPageController.class);
 	private String dateDOB = MarketplacecommerceservicesConstants.EMPTY;
 	private String dateDOAnn = MarketplacecommerceservicesConstants.EMPTY;
+	private final String imageDimension = MarketplacecommerceservicesConstants.IMAGEDIMENSION;
 	private static final String RETURN_REQUEST = "returnRequest";
 	private static final String RETURN_SUBMIT = "returnSubmit";
 	private static final String RETURN_SUCCESS = "returnSuccess";
@@ -649,78 +650,84 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			populateModel(model, searchPageDataParentOrder, showMode);
 
-			final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
-			final List<OrderModel> orderModels = (List<OrderModel>) customerModel.getOrders();
+			// TISPT-194   - Commenting to avoid the fetching of all order model object
 
-			if (CollectionUtils.isNotEmpty(orderModels))
+			//			final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
+			//			final List<OrderModel> orderModels = (List<OrderModel>) customerModel.getOrders();
+			//			if (CollectionUtils.isNotEmpty(orderModels))
+			//			{
+
+			// TISPT-194   - Commenting to avoid the iteration all order line for serial no
+
+			//				LOG.debug("Step1-************************Order History :fetching product serial no ");
+			//				final Map<String, Map<String, String>> productSerrialNumber = getMplOrderFacade()
+			//						.fetchOrderSerialNoDetails(orderModels);
+			//				model.addAttribute("productSerrialNumber", productSerrialNumber);
+
+			// TISPT-194   - Commenting to avoid the iteration all order line for invoice url
+			//		LOG.debug("Step2-************************Order History :fetching invoice details ");
+			//		final Map<String, Boolean> sortInvoice = getMplOrderFacade().fetchOrderInvoiceDetails(orderModels);
+
+			orderHistoryList = searchPageDataParentOrder.getResults();
+			for (final OrderHistoryData orderHistoryData : orderHistoryList)
 			{
-				LOG.debug("Step1-************************Order History :fetching product serial no ");
-				final Map<String, Map<String, String>> productSerrialNumber = getMplOrderFacade().fetchOrderSerialNoDetails(
-						orderModels);
-				model.addAttribute("productSerrialNumber", productSerrialNumber);
+				LOG.debug("Step3-************************Order History :code" + orderHistoryData.getCode());
 
-				LOG.debug("Step2-************************Order History :fetching invoice details ");
-				final Map<String, Boolean> sortInvoice = getMplOrderFacade().fetchOrderInvoiceDetails(orderModels);
-
-				orderHistoryList = searchPageDataParentOrder.getResults();
-				for (final OrderHistoryData orderHistoryData : orderHistoryList)
+				final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderHistoryData.getCode());
+				//this scenario will occour only when product is missing in order entries.
+				if (null == orderDetails)
 				{
-					LOG.debug("Step3-************************Order History :code" + orderHistoryData.getCode());
-
-					final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderHistoryData.getCode());
-					//this scenario will occour only when product is missing in order entries.
-					if (null == orderDetails)
-					{
-						continue;
-					}
-					LOG.debug("Step4-************************Order History: After order:" + orderHistoryData.getCode());
-					final List<OrderData> subOrderList = orderDetails.getSellerOrderList();
-					for (final OrderData subOrder : subOrderList)
-					{
-						for (OrderEntryData orderEntryData : subOrder.getEntries())
-						{
-							orderEntryData = getMplOrderFacade().fetchOrderEntryDetails(orderEntryData, sortInvoice, subOrder);
-
-							if (null == orderEntryData)
-							{
-								continue;
-							}
-
-							boolean cancellationMsgFlag = false;
-							if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
-							{
-								//TISCR-410 : To check whether to show missed cancellation deadline message to customer
-								final String orderEntryStatus = orderEntryData.getConsignment().getStatus().getCode();
-								final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
-
-								if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
-								{
-									cancellationMsgFlag = true;
-								}
-							}
-							orderEntryData.setIsCancellationMissed(cancellationMsgFlag);
-
-							LOG.debug("Step7-************************Order History: post fetching and populating order entry details "
-									+ orderHistoryData.getCode());
-							//setting cancel product for BOGO
-
-							cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
-									orderEntryData.getOrderLineId());
-							currentProductMap.put(subOrder.getCode() + orderEntryData.getOrderLineId(), cancelProduct);
-						}
-						subOrderDetailsList.add(subOrder);
-					}
-					formattedOrderDate = getFormattedDate(orderDetails.getCreated());
-					orderFormattedDateMap.put(orderDetails.getCode(), formattedOrderDate);
-					orderDataList.add(orderDetails);
+					continue;
 				}
-				LOG.debug("Step16-************************Order History: Finished:");
+				LOG.debug("Step4-************************Order History: After order:" + orderHistoryData.getCode());
+				final List<OrderData> subOrderList = orderDetails.getSellerOrderList();
+				for (final OrderData subOrder : subOrderList)
+				{
+					for (OrderEntryData orderEntryData : subOrder.getEntries())
+					{
+						orderEntryData = getMplOrderFacade().fetchOrderEntryDetails(orderEntryData, subOrder);
 
+						if (null == orderEntryData)
+						{
+							continue;
+						}
+
+						boolean cancellationMsgFlag = false;
+						if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
+						{
+							//TISCR-410 : To check whether to show missed cancellation deadline message to customer
+							final String orderEntryStatus = orderEntryData.getConsignment().getStatus().getCode();
+							final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
+
+							if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+							{
+								cancellationMsgFlag = true;
+							}
+						}
+						orderEntryData.setIsCancellationMissed(cancellationMsgFlag);
+
+						LOG.debug("Step7-************************Order History: post fetching and populating order entry details "
+								+ orderHistoryData.getCode());
+						//setting cancel product for BOGO
+
+						cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
+								orderEntryData.getOrderLineId());
+						currentProductMap.put(subOrder.getCode() + orderEntryData.getOrderLineId(), cancelProduct);
+					}
+					subOrderDetailsList.add(subOrder);
+				}
+				formattedOrderDate = getFormattedDate(orderDetails.getCreated());
+				orderFormattedDateMap.put(orderDetails.getCode(), formattedOrderDate);
+				orderDataList.add(orderDetails);
 			}
-			else
-			{
-				LOG.debug(" Orders History >> Order model is null or empty for customer " + customerModel.getOriginalUid());
-			}
+			LOG.debug("Step16-************************Order History: Finished:");
+
+			// TISPT-194   - Commenting to avoid the fetching of all order model object
+			//			}
+			//			else
+			//			{
+			//				LOG.debug(" Orders History >> Order model is null or empty for customer " + customerModel.getOriginalUid());
+			//			}
 
 
 			final String showOrdersFrom = configurationService.getConfiguration().getString(MessageConstants.SHOW_ORDERS_FROM);
@@ -739,17 +746,26 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
 
 		}
-		catch (final EtailBusinessExceptions e)
+		catch (
+
+		final EtailBusinessExceptions e)
+
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
 		}
-		catch (final EtailNonBusinessExceptions e)
+		catch (
+
+		final EtailNonBusinessExceptions e)
+
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
-		catch (final Exception e)
+		catch (
+
+		final Exception e)
+
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
@@ -896,7 +912,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 						consignmentModel = mplOrderService.fetchConsignment(orderEntry.getConsignment().getCode());
 						//TISEE-1067
 						consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
-						if (null != consignmentModel.getInvoice()
+						if (null != consignmentModel
+								&& null != consignmentModel.getInvoice()
 								&& null != consignmentModel.getInvoice().getInvoiceUrl()
 								&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
 										.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
@@ -4218,6 +4235,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_CREATE_NEW_WISHLIST_WP, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public String createNewWishlistWP(@RequestParam("newWishlistData") final String newWishlistData, final Model model,
 			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
@@ -4261,6 +4279,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
@@ -4407,6 +4430,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				if (wishlist2Model.getName().equals(wishlistName))
 				{
 					modelService.remove(wishlist2Model);
+					break;
 				}
 			}
 
@@ -4443,6 +4467,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
 	}
 
 	/**
@@ -4454,6 +4483,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 */
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_VIEW_PARTICULAR_WISHLIST, method = RequestMethod.GET)
+	@RequireHardLogIn
 	public String viewParticularWishlist(@RequestParam("particularWishlist") final String viewParticularWishlist, final Model model)
 			throws CMSItemNotFoundException
 	{
@@ -4653,6 +4683,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_PARTICULAR_WISHLIST_NAME, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public String editWishlistName(@RequestParam(ModelAttributetConstants.NEW_WISHLIST_NAME) final String newWishlistName,
 			@RequestParam(ModelAttributetConstants.WISHLIST_OLD_NAME) final String oldName, final Model model,
@@ -4693,6 +4724,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
 	}
 
 	/**
@@ -4729,7 +4765,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
-
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
 	}
 
 
@@ -4744,6 +4784,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_WISHLIST_REMOVE, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public String removeItemFromWL(@RequestParam(ModelAttributetConstants.WISHLIST_NAME) final String wishlistName,
 			@RequestParam(ModelAttributetConstants.PRODUCTCODE_WL) final String productCodeWl,
@@ -4752,77 +4793,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 	{
 		try
 		{
-			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d,yyyy");
+
 			final Wishlist2Model wishlist2Model = wishlistFacade.removeProductFromWl(productCodeWl, wishlistName, ussidWl);
-			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
-					MessageConstants.SYSTEM_ERROR_WISHLIST_PRODUCT_REMOVE_SUCCESS, null);
 
-			model.addAttribute(ModelAttributetConstants.PRODUCT_DATA, wishlist2Model);
-			final List<ProductData> datas = new ArrayList<ProductData>();
-			final List<WishlistProductData> wpDataList = new ArrayList<WishlistProductData>();
-			final List<Wishlist2EntryModel> entryModels = wishlist2Model.getEntries();
-			if (entryModels.size() >= 1)
-			{
-				for (final Wishlist2EntryModel entryModel : entryModels)
-				{
-					if (null != entryModel && null != entryModel.getProduct())
-					{
-						final WishlistProductData wishlistProductData = new WishlistProductData();
-						/*
-						 * final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
-						 * Arrays.asList( ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY,
-						 * ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK,
-						 * ProductOption.REVIEW,
-						 * 
-						 * ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
-						 */
-
-						final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-								ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-								ProductOption.STOCK, ProductOption.SELLER));
-
-						datas.add(productData1);
-						wishlistProductData.setProductData(productData1);
-
-						if (null != productData1 && null != productData1.getSeller() && productData1.getSeller().size() > 0)
-						{
-							final List<SellerInformationData> sellerDatas = productData1.getSeller();
-							for (final SellerInformationData sellerData : sellerDatas)
-							{
-								if (sellerData.getUssid().equals(entryModel.getUssid()))
-								{
-									wishlistProductData.setSellerInfoData(sellerData);
-									break;
-								}
-							}
-							wishlistProductData.setWishlistAddedDate(simpleDateFormat.format(entryModel.getAddedDate()));
-						}
-						wpDataList.add(wishlistProductData);
-					}
-				}
-			}
 			sessionService.setAttribute(ModelAttributetConstants.MY_WISHLIST_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
-
 			model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
-			model.addAttribute(ModelAttributetConstants.PRODUCT_DATAS, datas);
-			model.addAttribute(ModelAttributetConstants.WISHLIST_PRODUCT_DATA_LIST, wpDataList);
-			model.addAttribute(new WishlistData());
-			model.addAttribute(new ReviewForm());
-			model.addAttribute(ModelAttributetConstants.EDIT_WISHLIST_NAME_DATA, new EditWishlistNameData());
 			final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
 			model.addAttribute(ModelAttributetConstants.ALL_WISHLISTS, allWishlists);
-			final NewWishlistData newWishlistData1 = new NewWishlistData();
-			model.addAttribute(ModelAttributetConstants.NEW_WISHLIST_DATA, newWishlistData1);
-			final ExistingWishlistData existingWishlistData = new ExistingWishlistData();
-			model.addAttribute(ModelAttributetConstants.EXISTING_WISHLIST_DATA, existingWishlistData);
-			final ParticularWishlistData1 particularWishlistData1 = new ParticularWishlistData1();
-			model.addAttribute(ModelAttributetConstants.PARTICULAR_WISHLIST_DATA, particularWishlistData1);
-			model.addAttribute(ModelAttributetConstants.RENDERING_METHOD,
-					ModelAttributetConstants.RENDERING_METHOD_VIEW_PARTICULAR_WISHLIST);
 			model.addAttribute(ModelAttributetConstants.SHOW_WISHLIST, ModelAttributetConstants.Y_SMALL_VAL);
 			model.addAttribute(ModelAttributetConstants.PARTICULAR_WISHLIST_NAME, wishlist2Model.getName());
-			final RemoveWishlistData removeWishlistData = new RemoveWishlistData();
-			model.addAttribute(ModelAttributetConstants.REMOVE_WISHLIST_DATA, removeWishlistData);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(WISHLIST_CMS_PAGE));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(WISHLIST_CMS_PAGE));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -4844,6 +4823,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
@@ -4927,6 +4911,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			wishlistJson.put(ERROR_OCCURED, ERROR_MSG);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			wishlistJson.put(ERROR_OCCURED, ERROR_MSG);
+		}
 		return jsonArray;
 	}
 
@@ -4960,6 +4950,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		return null;
@@ -5734,6 +5729,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws NullPointerException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_GENDER, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public Map<String, CategoryData> myInterestForCategory(
 			@RequestParam(value = ModelAttributetConstants.GENDERDATA) final String genderData,
@@ -5761,12 +5757,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 							final CategoryData categoryData = new CategoryData();
 							categoryData.setCode(oModel.getConfiguredCategory().getCode());
 							categoryData.setName(oModel.getConfiguredCategory().getName());
-							//TISPRD-2335
-							if (null != oModel.getConfiguredCategory().getThumbnail())
+							//TISPRD-2335 and TISPRD-2756
+							if (null != oModel.getConfiguredCategory().getMedias())
 							{
-								categoryData.setImage(oModel.getConfiguredCategory().getThumbnail().getURL());
+								for (int i = 0; i < oModel.getConfiguredCategory().getMedias().size(); i++)
+								{
+									if (null != oModel.getConfiguredCategory().getMedias().get(i).getMediaFormat()
+											&& null != oModel.getConfiguredCategory().getMedias().get(i).getMediaFormat().getQualifier()
+											&& oModel.getConfiguredCategory().getMedias().get(i).getMediaFormat().getQualifier()
+													.equalsIgnoreCase(imageDimension))
+									{
+										categoryData.setImage(oModel.getConfiguredCategory().getMedias().get(i).getURL2());
+									}
+								}
 							}
-
 							categoryDataMap.put(oModel.getConfiguredCategory().getCode(), categoryData);
 						}
 					}
@@ -5798,6 +5802,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws JSONException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_BRANDS, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public Map<String, CategoryData> myInterestForBrand(
 			@RequestParam(value = ModelAttributetConstants.CATEGORYDATA) final String categoryData,
@@ -5841,12 +5846,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 									final CategoryData oData = new CategoryData();
 									oData.setCode(catModel.getCode());
 									oData.setName(catModel.getName());
-									//TISPRD-2335
-									if (null != catModel.getThumbnail())
+									//TISPRD-2335 and TISPRD-2756
+									if (null != catModel.getMedias())
 									{
-										oData.setImage(catModel.getThumbnail().getURL());
+										for (int i = 0; i < catModel.getMedias().size(); i++)
+										{
+											if (null != catModel.getMedias().get(i).getMediaFormat()
+													&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
+													&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
+															.equalsIgnoreCase(imageDimension))
+											{
+												oData.setImage(catModel.getMedias().get(i).getURL2());
+											}
+										}
 									}
-
 									categoryDataMap.put(catModel.getCode(), oData);
 								}
 							}
@@ -5883,6 +5896,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws JSONException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_SUBCATEGORIES, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public List<Map<String, CategoryData>> getBrandSubCategory(
 			@SuppressWarnings(UNUSED) @RequestParam(value = ModelAttributetConstants.CATEGORYDATA, required = false) final String categoryData,
@@ -5947,12 +5961,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 											final CategoryData oData = new CategoryData();
 											oData.setCode(catModel.getCode());
 											oData.setName(catModel.getName());
-											//TISPRD-2335
-											if (null != catModel.getThumbnail())
+											//TISPRD-2335 and TISPRD-2756
+											if (null != catModel.getMedias())
 											{
-												oData.setImage(catModel.getThumbnail().getURL());
+												for (int i = 0; i < catModel.getMedias().size(); i++)
+												{
+													if (null != catModel.getMedias().get(i).getMediaFormat()
+															&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
+															&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
+																	.equalsIgnoreCase(imageDimension))
+													{
+														oData.setImage(catModel.getMedias().get(i).getURL2());
+													}
+												}
 											}
-
 											categoryDataMapApparel.put(catModel.getCode(), oData);
 										}
 									}
@@ -5991,12 +6013,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 											final CategoryData oData = new CategoryData();
 											oData.setCode(catModel.getCode());
 											oData.setName(catModel.getName());
-											//TISPRD-2335
-											if (null != catModel.getThumbnail())
+											//TISPRD-2335and TISPRD-2756
+											if (null != catModel.getMedias())
 											{
-												oData.setImage(catModel.getThumbnail().getURL());
+												for (int i = 0; i < catModel.getMedias().size(); i++)
+												{
+													if (null != catModel.getMedias().get(i).getMediaFormat()
+															&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
+															&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
+																	.equalsIgnoreCase(imageDimension))
+													{
+														oData.setImage(catModel.getMedias().get(i).getURL2());
+													}
+												}
 											}
-
 											categoryDataMapElectronics.put(catModel.getCode(), oData);
 										}
 									}
@@ -6026,10 +6056,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 									final CategoryData oData = new CategoryData();
 									oData.setCode(catModel.getCode());
 									oData.setName(catModel.getName());
-									//TISPRD-2335
-									if (null != catModel.getThumbnail())
+									//TISPRD-2335 and TISPRD-2756
+									if (null != catModel.getMedias())
 									{
-										oData.setImage(catModel.getThumbnail().getURL());
+										for (int i = 0; i < catModel.getMedias().size(); i++)
+										{
+											if (null != catModel.getMedias().get(i).getMediaFormat()
+													&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
+													&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
+															.equalsIgnoreCase(imageDimension))
+											{
+												oData.setImage(catModel.getMedias().get(i).getURL2());
+											}
+										}
 									}
 
 									categoryDataMap.put(catModel.getCode(), oData);
@@ -6104,12 +6143,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 					selCategoryData.setCode(categoryLineItem.getCode());
 					jsoncatArray.add(categoryLineItem.getCode());
 					selCategoryData.setName(categoryLineItem.getName());
-					//TISPRD-2335
-					if (null != categoryLineItem.getThumbnail())
+					//TISPRD-2335 and TISPRD-2756
+					if (null != categoryLineItem.getMedias())
 					{
-						selCategoryData.setImage(categoryLineItem.getThumbnail().getURL());
+						for (int i = 0; i < categoryLineItem.getMedias().size(); i++)
+						{
+							if (null != categoryLineItem.getMedias().get(i).getMediaFormat()
+									&& null != categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
+									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
+											.equalsIgnoreCase(imageDimension))
+							{
+								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL2());
+							}
+						}
 					}
-
 					// Media needs to be set for Pic Display
 					categoryDataMap.put(categoryLineItem.getCode(), selCategoryData);
 				}
@@ -6137,12 +6184,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 					preferredCategoryList.add(categoryLineItem.getName());
 					selCategoryData.setCode(categoryLineItem.getCode());
 					selCategoryData.setName(categoryLineItem.getName());
-					//TISPRD-2335
-					if (null != categoryLineItem.getThumbnail())
+					//TISPRD-2335 and TISPRD-2756
+					if (null != categoryLineItem.getMedias())
 					{
-						selCategoryData.setImage(categoryLineItem.getThumbnail().getURL());
+						for (int i = 0; i < categoryLineItem.getMedias().size(); i++)
+						{
+							if (null != categoryLineItem.getMedias().get(i).getMediaFormat()
+									&& null != categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
+									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
+											.equalsIgnoreCase(imageDimension))
+							{
+								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL2());
+							}
+						}
 					}
-
 					//Media needs to be set for Pic Display
 					brandDataMap.put(categoryLineItem.getCode(), selCategoryData);
 				}
@@ -6263,6 +6318,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws JSONException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_SEL_SUBCATEGORIES, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public Map<String, CategoryData> saveSubCategoryData(
 			@RequestParam(value = ModelAttributetConstants.CATEGORYDATA) final String categoryData, final Model model)
@@ -6318,6 +6374,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_REMOVE_BRAND, method = RequestMethod.GET)
+	@RequireHardLogIn
 	@ResponseBody
 	public void removeSingleBrand(@RequestParam(value = ModelAttributetConstants.CATEGORYDATA) final String categoryData,
 			final Model model) throws CMSItemNotFoundException, NullPointerException, JSONException
@@ -6687,8 +6744,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			pagedData.setPageSize(orderCarousalsize);
 			final SearchPageData<OrderModel> sortedLatestorders = gigyaCommentService.getPagedFilteredSubOrderHistory(customerModel,
 					currentBaseStore, pagedData);
+			//TISPT-221 Changes
 			final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
-					ProductOption.VARIANT_FULL, ProductOption.CATEGORIES);
+					ProductOption.CATEGORIES);
 
 			if (!CollectionUtils.isEmpty(sortedLatestorders.getResults()))
 			{

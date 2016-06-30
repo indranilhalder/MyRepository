@@ -1004,8 +1004,10 @@ $(document).ready(function(){
 									listSelect = "";
 								//	console.log(data);
 									$.each(data, function(k, v) {
-										listSelect += '<option value="'+v+'">'
-												+ v + '</option>';
+										if(v != null){
+											listSelect += '<option value="'+v+'">'
+													+ v + '</option>';
+											}
 									});
 								//	console.log(listSelect);
 									$("#feedCategory").html(listSelect);
@@ -1411,7 +1413,7 @@ $(document).ready(function(){
 			}
 		});
 		
-		$(window).on("load resize", function() {
+		$(window).on("resize", function() {
 			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 				var footer_height=$('footer').height() + 20 + 'px';
 				$(".body-Content").css('padding-bottom',footer_height);
@@ -1466,6 +1468,7 @@ $(document).ready(function(){
 				
 			if(!$(e.target).parents().hasClass('select-list') && $('body').hasClass('touchDevice')) {
 				$('.select-view .select-list').removeClass('touch_click');
+				$('.select-view .select-list ul').css({'max-height':'0','border-color':'transparent'});
 			}
 		});
 
@@ -1474,17 +1477,20 @@ $(document).ready(function(){
 				$('.select-view .select-list').removeClass('touch_click');
 				if($(this).children('ul').height() > 2) {
 					$(this).removeClass('touch_click');
+					$(this).find('ul').css({'max-height':'0','border-color':'transparent'});
 				} else {
 					$(this).addClass('touch_click');
+					$(this).find('ul').css({'max-height':'500px','border-color':'#dfd1d5'});	
 				}
 			}
-				
+
 		});
 
 		$(document).on('touchend','.select-view .select-list ul',function(e){
 			$('.select-view .select-list').removeClass('touch_click');
+			$('.select-view .select-list ul').css({'max-height':'0','border-color':'transparent'});
 			e.stopPropagation();
-		});
+		}); 
 		//TISPRO-480
 		$('.sign-in-dropdown').mouseleave(function(){$('.sign-in-dropdown input').blur();});
 		
@@ -1492,79 +1498,20 @@ $(document).ready(function(){
 			$(this).click();
 		});
 		
-		loadGigya();
+		//loadGigya();
 });
 
-/*start gigya social login*/
+        var screenXs="480px";
+        var screenSm="640px";
+        var screenMd="1024px";
+        var screenLg="1400px";
+          
+        var screenXsMin="480px";
+        var screenSmMin="640px";
+        var screenMdMin="1024px";
+        var screenLgMin="1400px";
 
-function registerUserGigya(eventObject)
-{
-	var encodedUID = encodeURIComponent(eventObject.UID);
-	var encodedTimestamp=encodeURIComponent(eventObject.timestamp);
-	var  encodedSignature=encodeURIComponent(eventObject.signature);
-//	console.log("SOCIAL LOGIN REFERER:-"+ window.location.href)
-		 $.ajax({
-				url : ACC.config.encodedContextPath + "/oauth2callback/socialLogin/",
-				data : {
-					'referer' : window.location.href,
-					'emailId' : eventObject.user.email,
-					'fName':  eventObject.user.firstName,
-					'lName' : 	eventObject.user.lastName,
-					'uid'		: encodedUID,
-					'timestamp'	 :encodedTimestamp,
-					'signature' :encodedSignature,
-					'provider' :eventObject.user.loginProvider
-					},
-				type : "GET",
-				cache : false,
-				success : function(data) {
-					//alert("success login page :- "+data);
-					if(!data)							
-						{
-						
-						}
-						else
-						{
-							if(data.indexOf(ACC.config.encodedContextPath) > -1)
-							{
-								window.open(data,"_self");
-							}
-							else
-							{
-							var hostName=window.location.host;
-							if(hostName.indexOf(':') >=0)
-							{
-								window.open(ACC.config.encodedContextPath +data,"_self");
-							}	
-							else
-								{
-							window.open("https://"+hostName+ACC.config.encodedContextPath +data,"_self");
-								}
-							}
-							
-						}	
-				},
-				error : function(resp) {
-					console.log("Error Occured Login Page" + resp);					
-				}
-			});
-	 
-}
+        var screenXsMax="639px";
+        var screenSmMax="1023px";
+        var screenMdMax="1399px";
 
-        // This method is activated when the page is loaded
-        function loadGigya() {
-            // register for login event
-            gigya.socialize.addEventHandlers({
-                    context: { str: 'congrats on your' }
-                    , onLogin: onLoginHandlerGigya                   
-                    });
-        }
-        // onLogin Event handler
-        function onLoginHandlerGigya(eventObj) {
-           // console.log(eventObj.context.str + ' ' + eventObj.eventName + ' to ' + eventObj.provider
-          //      + '!\n' + eventObj.provider + ' user ID: ' +  eventObj.user.identities[eventObj.provider].providerUID);          
-            
-            registerUserGigya(eventObj);      
-            
-         }  
-       /*  End  Gigya Social Login */

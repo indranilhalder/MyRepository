@@ -652,4 +652,17 @@
 	<property name ="icid" type = "String" />
 	</bean>
 	
+	<!-- Page Search Data -->
+
+	<bean class="de.hybris.platform.commerceservices.search.pagedata.PageableData">
+		<description>POJO representation of search query pagination.</description>
+		<property name="pageFacets" type="String">
+			<description>The page related facets included in this attribute.</description>
+		</property>
+	</bean>
+	
+	<bean class="de.hybris.platform.solrfacetsearch.config.IndexedType">
+		<property name="pageTypeFacets" type="java.util.Set&lt;String>" />
+	</bean>
+	
 </beans>

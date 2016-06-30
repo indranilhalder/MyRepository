@@ -269,6 +269,8 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/feedback.js"></script>
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/smart-app-banner.js"></script>
 	
 <!--[if lt IE 9]>
 <script type="text/javascript" src="${commonResourcePath}/js/html5shiv.js"></script>
@@ -282,6 +284,9 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <![endif]-->
 
 <!-- Fix for defect TISPT-202 -->
-<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/store-finder') || (requestScope['javax.servlet.forward.request_uri']=='/') || fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/check')}">
+<!-- TISPT-202  -->
+<c:if test="fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/check')}">
 	<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script>
 </c:if> 
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/marketplacecheckoutaddon.js"></script>	

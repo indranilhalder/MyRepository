@@ -12,10 +12,24 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<!-- construct list of facet code -->
+<c:forEach items="${searchPageData.facets}" var="facet">
+	<c:set value="${pageFacets}${facet.code ? '' : '&'}${facet.code}" scope="request" var="tempFacets" />
+	<c:set var="pageFacets" value="${tempFacets}" />
+</c:forEach>
+<c:if test="${pageFacets ne '' }">
+	<c:set var="pageFacets" value="${pageFacets}&departmentHierarchy" />
+</c:if> 
 <c:set var="hasPreviousPage"
 	value="${searchPageData.pagination.currentPage > 0}" />
 <c:set var="hasNextPage"
 	value="${(searchPageData.pagination.currentPage + 1) < searchPageData.pagination.numberOfPages}" />
+
+<form action="#" method="get" class="paginationForm" id="paginationForm"> 
+	<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+	<input type="hidden" name="q" value="${searchPageData.currentQuery.query.value}"/>
+	<input type="hidden" name="pageFacetData" value="${pageFacets}"/>
+	<input type="hidden" name="pageSize" value="${searchPageData.pagination.pageSize}"/>
 
 		<c:if test="${(searchPageData.pagination.numberOfPages > 1)}">
 			<ul class="pagination mobile">
@@ -27,7 +41,8 @@
 							<spring:param name="page"
 								value="${searchPageData.pagination.currentPage - 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_previousPage_link">
-							<a href="${newPaginationUrlPrev}&searchCategory=${searchCategory}" rel="prev"><span><spring:theme code="text.previous.page"/></span></a>
+							<!-- TISPRD-2315 -->
+							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev"><span><spring:theme code="text.previous.page"/></span></a>
 						</ycommerce:testId>
 					</li>
 				</c:if>
@@ -84,7 +99,10 @@
 								<spring:param name="page" value="0" />
 						</spring:url>
 						<ycommerce:testId code="pageNumber_link">
-							<li><a href="${newPaginationUrlDotPrev}&searchCategory=${searchCategory}">1</a>
+						
+							<li>
+							<!-- TISPRD-2315 -->
+							<a href="${newPaginationUrlDotPrev}" class="pagination_a_link">1</a>
 								<c:if test="${beginPage ne 2}">
 									...
 								</c:if>
@@ -104,7 +122,8 @@
 							</spring:url>
 							
 							<ycommerce:testId code="pageNumber_link">
-								<li><a href="${newPaginationUrl}&searchCategory=${searchCategory}">${pageNumber}</a></li>
+							<!-- TISPRD-2315 -->
+							<li><a href="${newPaginationUrl}" class="pagination_a_link">${pageNumber}</a></li>
 							</ycommerce:testId>
 						</c:when>
 						<c:otherwise>
@@ -124,10 +143,12 @@
 						</spring:url>
 						<ycommerce:testId code="pageNumber_link">
 						<li>
+						<!-- TISPRD-2315 -->
 						<c:if test="${searchPageData.pagination.currentPage ne (searchPageData.pagination.numberOfPages-4)}">
 							...
 						</c:if>
-							<a href="${newPaginationUrlDotsNext}&searchCategory=${searchCategory}">${searchPageData.pagination.numberOfPages}</a></li>
+						   <a href="${newPaginationUrlDotsNext}" class="pagination_a_link">${searchPageData.pagination.numberOfPages}</a>
+						</li>
 						</ycommerce:testId>
 					</c:when>
 				</c:choose>
@@ -141,7 +162,9 @@
 							<spring:param name="page"
 								value="${searchPageData.pagination.currentPage + 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_nextPage_link">
-							<a href="${newPaginationUrlNext}&searchCategory=${searchCategory}" rel="next"><span><spring:theme code="text.next.page"/></span></a>
+							<!-- TISPRD-2315 -->
+							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next"><span><spring:theme code="text.next.page"/></span></a>
+						
 						</ycommerce:testId></li>
 				</c:if>
 
@@ -152,7 +175,7 @@
 
 			</ul>
 		</c:if>
-
+</form>
 <%-- 
 <div class="hidden-md hidden-lg">
 	<ul class="pager">

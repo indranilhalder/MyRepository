@@ -145,6 +145,15 @@
 	<bean id="mplPriceRowDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPriceRowDaoImpl">
 	</bean>
+	
+	<alias name="mplSearchSolrQueryTypeFacetsPopulator" alias="mplSearchSolrQueryTypeFacetsPopulator" />
+		<bean id="mplSearchSolrQueryTypeFacetsPopulator" class="com.tisl.mpl.solr.search.MplSearchSolrQueryTypeFacetsPopulator">
+	</bean>
+	
+	<bean parent="modifyPopulatorList">
+		<property name="list" ref="commerceSearchQueryPageableConverter"/>
+		<property name="add" ref="mplSearchSolrQueryTypeFacetsPopulator"/>
+	</bean>
 
 
 
@@ -1707,6 +1716,11 @@
 			autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
+	<bean id="priceInventoryControlJob" class="com.tisl.mpl.integration.job.PriceInventoryControlJob"
+		parent="abstractJobPerformable"
+			autowire="byName">
+		<property name="modelService" ref="modelService" />
+	</bean>
 	<bean id="iaFeedUtil" class="com.tisl.mpl.integration.job.IAFeedUtility">
 	</bean>
 <!-- IA STAGED DATA SOURCE -->
@@ -1727,6 +1741,4 @@
 		<property name="password" value="${jdbc.iastg.pass}" />
 	</bean>
 	
-
 </beans>
-
