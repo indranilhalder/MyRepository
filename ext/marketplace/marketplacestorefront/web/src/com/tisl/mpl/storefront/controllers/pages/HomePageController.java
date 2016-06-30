@@ -45,7 +45,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -60,8 +59,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -956,31 +953,16 @@ public class HomePageController extends AbstractPageController
 		return matcher.matches();
 	}
 
-	private static HttpServletRequest getRequest()
-	{
-		return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-	}
+	/*
+	 * private static HttpServletRequest getRequest() { return ((ServletRequestAttributes)
+	 * RequestContextHolder.currentRequestAttributes()).getRequest(); }
+	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/fetchToken", method = RequestMethod.GET)
-	public JSONObject fetchToken(final HttpSession session)
+	public Object fetchToken(final HttpSession session)
 	{
-		final HttpServletRequest request = getRequest();
-		final String visitorIP = getVisitorIpAddress(request);
-		String sessionId = session.getId();
-
-		if (sessionId.contains("."))
-		{
-			final String[] parts = sessionId.split("\\.");
-			sessionId = parts[0];
-
-		}
-		final JSONObject sessionDetails = new JSONObject();
-		sessionDetails.put("token", CSRFTokenManager.getTokenForSession(session));
-		sessionDetails.put("sessionId", sessionId);
-		sessionDetails.put("vistiorIp", visitorIP);
-		return sessionDetails;
-
+		return CSRFTokenManager.getTokenForSession(session);
 	}
 
 	/**
@@ -1162,19 +1144,5 @@ public class HomePageController extends AbstractPageController
 		return ControllerConstants.Views.Fragments.Home.FooterPanel;
 	}
 
-	private static String getVisitorIpAddress(final HttpServletRequest request)
-	{
-		final String[] HEADERS_TO_TRY =
-		{ "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED",
-				"HTTP_X_CLUSTER_CLIENT_IP", "HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR", "HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR" };
-		for (final String header : HEADERS_TO_TRY)
-		{
-			final String ip = request.getHeader(header);
-			if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip))
-			{
-				return ip;
-			}
-		}
-		return request.getRemoteAddr();
-	}
+
 }
