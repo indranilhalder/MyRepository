@@ -17,6 +17,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -171,32 +172,37 @@ public class SalesOrderReverseXMLUtility
 				final String retRef = MarketplacecommerceservicesConstants.RETURN_COMPLETED;
 				final String orderCancel = MarketplacecommerceservicesConstants.ORDER_CANCELLED;
 				LOG.debug("Inside order history entry model");
+				LOG.warn("Inside order history entry model" + orderHistoryEntryModel.getOrder());
 				//	if (checkOrderHistoryEntryDate(orderHistoryEntryModel.getCreationtime().toString()))
-
-				if ((orderHistoryEntryModel.getDescription().equals(orderCancel)))
-
+				final Calendar calendar = Calendar.getInstance();
+				calendar.add(Calendar.HOUR_OF_DAY, -24);
+				if (orderHistoryEntryModel.getModifiedtime().after(calendar.getTime()))
 				{
-					lineID = orderHistoryEntryModel.getLineId(); // line ID is trnsction id
-					orderCancelReturn = CAN;
-					cancelReturnDate = sdformat.format(orderHistoryEntryModel.getModifiedtime());
 
-					final Map<String, String> orderTagDateMap = new HashMap<String, String>();
-					orderTagDateMap.put(orderCancelReturn, cancelReturnDate);
-					LOG.debug("cancel map size>>>>>" + orderTagDateMap.size());
-					returnCancelMap.put(lineID, orderTagDateMap);
+					if ((orderHistoryEntryModel.getDescription().equals(orderCancel)))
 
+					{
+						lineID = orderHistoryEntryModel.getLineId(); // line ID is trnsction id
+						orderCancelReturn = CAN;
+						cancelReturnDate = sdformat.format(orderHistoryEntryModel.getModifiedtime());
+
+						final Map<String, String> orderTagDateMap = new HashMap<String, String>();
+						orderTagDateMap.put(orderCancelReturn, cancelReturnDate);
+						LOG.debug("cancel map size>>>>>" + orderTagDateMap.size());
+						returnCancelMap.put(lineID, orderTagDateMap);
+
+					}
+					if ((orderHistoryEntryModel.getDescription().equals(retRef)))
+					{
+						lineID = orderHistoryEntryModel.getLineId();
+						orderCancelReturn = RET;
+						cancelReturnDate = sdformat.format(orderHistoryEntryModel.getModifiedtime());
+						final Map<String, String> orderTagDateMap = new HashMap<String, String>();
+						orderTagDateMap.put(orderCancelReturn, cancelReturnDate);
+						LOG.debug("return map size>>>>>" + orderTagDateMap.size());
+						returnCancelMap.put(lineID, orderTagDateMap);
+					}
 				}
-				if ((orderHistoryEntryModel.getDescription().equals(retRef)))
-				{
-					lineID = orderHistoryEntryModel.getLineId();
-					orderCancelReturn = RET;
-					cancelReturnDate = sdformat.format(orderHistoryEntryModel.getModifiedtime());
-					final Map<String, String> orderTagDateMap = new HashMap<String, String>();
-					orderTagDateMap.put(orderCancelReturn, cancelReturnDate);
-					LOG.debug("return map size>>>>>" + orderTagDateMap.size());
-					returnCancelMap.put(lineID, orderTagDateMap);
-				}
-
 			}
 		}
 		return returnCancelMap;
