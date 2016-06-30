@@ -59,7 +59,7 @@
 				                      <c:if test="${sort.code ne 'promotedpriority-asc' }">				                      				                       
 				                       <c:choose>			                     
 				                         <c:when test="${not empty sort.name}">			                       			                       
-											 <a href="#" class="filter-sort-by" data-filter="${sort.code}">${sort.name}</a>
+											 <a href="#" class="filter-sort-by" data-filter="${sort.code}" >${sort.name}</a>
 									     </c:when> 
 									     <c:otherwise>
 									         <a href="#" class="filter-sort-by" data-filter="${sort.code}"><spring:theme code="${themeMsgKey}.sort.${sort.code}"/></a>										 
@@ -69,7 +69,7 @@
 									</c:forEach>	
 									</ul>								
 				                </div>
-									<%-- <label class="sortBy">Sort by:</label>
+									 <%-- <label class="sortBy">Sort by:</label>
 									<select class="black-arrow" id="sortOptions${top ? '1' : '2'}" name="sort">
 										<option disabled><spring:theme code="${themeMsgKey}.sortTitle"/></option>
 										<c:forEach items="${searchPageData.sorts}" var="sort">
@@ -86,7 +86,7 @@
 											</option>
 											</c:if>
 										</c:forEach>
-									</select> --%>
+									</select> --%> 
 									
 									<c:catch var="errorException">
 										<spring:eval expression="searchPageData.currentQuery.query" var="dummyVar"/><%-- This will throw an exception is it is not supported --%>

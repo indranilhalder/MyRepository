@@ -380,13 +380,21 @@ function navigateToPage(queryString,textString)
 
 			<c:if test="${not empty facetData.topValues}">
 			
-			<c:set var="remainingFacetValues" value="${facetData.values}" />
-	
-		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-6}" />
+			<c:set var="remainingFacetValues" value="${facetData.values}" />			
 		    
 			<div class="more-lessFacetLinks active">
 				<div class="more js-more-facet-values checkbox-menu">
-					<a href="#" class="js-more-facet-values-link more" > ${remainingFacetValuesSize} &nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
+				  <c:choose>
+		              <c:when test="${facetData.code eq 'category' }">  <!-- && not empty facetValue.name -->
+		              <a href="#" class="js-more-facet-values-link more" > <spring:theme code="SHOW ALL" text="SHOW ALL" /> </a>
+		              </c:when>
+		              <c:otherwise>
+		              <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('search.Facet.topValue')" var="facetTopValue"/>				
+				       <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)} - ${facetTopValue}" /> 
+				       <a href="#" class="js-more-facet-values-link more" > ${remainingFacetValuesSize} &nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
+		              </c:otherwise>
+                  </c:choose>
+					
 				</div>
 				<div class="less js-less-facet-values checkbox-menu">
 				    	<form action="${url}" method="get"> 
