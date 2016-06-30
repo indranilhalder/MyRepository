@@ -82,15 +82,13 @@ public class MplUserHelper
 		{
 			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9008);
 		}
-		else if (!validatePasswordPolicy(password))
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9010);
-		}
-
-		else if (StringUtils.length(password) > MAX_PASSWORD_LENGTH)
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9009);
-		}
+		/*
+		 * TISPRM-11 else if (!validatePasswordPolicy(password)) { throw new
+		 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9010); }
+		 *
+		 * else if (StringUtils.length(password) > MAX_PASSWORD_LENGTH) { throw new
+		 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9009); }
+		 */
 		else if (checkWhiteSpace(password))
 		{
 			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9014);
