@@ -5933,6 +5933,11 @@
 						<persistence type="property" />
 						<modifiers read="true" write="true" optional="false" />
 					</attribute>
+					<attribute qualifier="deviceId" type="java.lang.String">
+						<description>Stores the Device ID</description>
+						<modifiers optional="true" read="true" write="true" unique="true"/>
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
