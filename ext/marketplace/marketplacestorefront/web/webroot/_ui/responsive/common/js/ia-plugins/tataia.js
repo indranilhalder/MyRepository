@@ -792,6 +792,23 @@ if (searchCategory_id){
 			    /*Initialize params object we'll be passing around*/
 			    var params = {};
 			    if (site_page_type === "product" || site_page_type === "productpage") {
+			    	 jQuery.ajax({
+
+					      	type: "GET",
+
+					      	url: rootEP + '/SocialGenomix/recommendations/products/increment',
+
+					      	jsonp: 'callback',
+
+					      	dataType: 'jsonp',
+
+					      	data: { 'site_product_id' : spid, 'ecompany': ecompany, 'session_id':ssid },
+
+					      	contentType: 'application/javascript',
+
+					      	success: function(response) {}
+
+					      });
 			      document.cookie='prev_start_time=' + start_time.getTime() + '; path=/';      
 			      /*Check previous pages, add extra parameters if applicable*/
 			      refCheck();
@@ -856,7 +873,9 @@ if (searchCategory_id){
 			    /*Either analytics is down or we passed a bad parameter*/
 			    return;
 			  }
-
+			  if(response.data === null) {
+				  	return;
+				  }
 			  /*Product Widgets*/
 			  if(jQuery.inArray(widgetMode, productWidget) > -1) {
 			    /*So we can replace the same widget if we're narrowing down*/
