@@ -390,7 +390,7 @@ function navigateToPage(queryString,textString)
 		              </c:when>
 		              <c:otherwise>
 		              <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('search.Facet.topValue')" var="facetTopValue"/>				
-				       <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)} - ${facetTopValue}" /> 
+				       <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-facetTopValue}" /> 
 				       <a href="#" class="js-more-facet-values-link more" > ${remainingFacetValuesSize} &nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
 		              </c:otherwise>
                   </c:choose>
