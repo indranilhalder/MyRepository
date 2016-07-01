@@ -119,7 +119,7 @@ var _genesys = {
 				'regExit': 'CANCEL',
 				'regSubmit': 'CONNECT'
 			},
-			templates:'http://219.65.91.73:8700/static/chatTemplates2.html',
+			templates:'https://219.65.91.73:443/static/chatTemplates2.html',
 			onReady: function(cobrowseAPI, isTopContext){
 
 				cobrowseAPI.onBeforeChatOptionsApplied(function(options) {
