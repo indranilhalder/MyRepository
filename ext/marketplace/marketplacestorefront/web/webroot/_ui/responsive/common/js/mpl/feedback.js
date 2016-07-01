@@ -1497,6 +1497,7 @@ $(document).ready(function(){
 		$(document).on('touchend','.select-view .select-list ul li',function(e){
 			$(this).click();
 		});
+		
 		$(".sort-by-inline a").click(function(){
 			$(".sort-by-inline a").removeClass("active");
 			$(this).addClass("active");

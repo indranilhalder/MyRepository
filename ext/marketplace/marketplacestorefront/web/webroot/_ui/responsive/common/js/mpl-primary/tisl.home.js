@@ -1,23 +1,23 @@
 var headerLoggedinStatus = false;
 var csrfDataChanged = false;
 $(function() {
-      $.ajax({
-         url: ACC.config.encodedContextPath + "/fetchToken",
-         type: 'GET',
-         async:false,
-         cache:false,
-         success: function(data) {
-             $("input[name='CSRFToken']").each(function() {
-                 this.value = data;
-             });
-             ACC.config.CSRFToken = data;
-             var crsfSession = window.sessionStorage.getItem("csrf-token");
-             if(window.sessionStorage && (null == crsfSession || crsfSession != data)){
-            	 csrfDataChanged = true;
-            	 window.sessionStorage.setItem("csrf-token",data);
-             }
-         }
-     });
+    $.ajax({
+       url: ACC.config.encodedContextPath + "/fetchToken",
+       type: 'GET',
+       async:false,
+       cache:false,
+       success: function(data) {
+           $("input[name='CSRFToken']").each(function() {
+               this.value = data;
+           });
+           ACC.config.CSRFToken = data;
+           var crsfSession = window.sessionStorage.getItem("csrf-token");
+           if(window.sessionStorage && (null == crsfSession || crsfSession != data)){
+          	 csrfDataChanged = true;
+          	 window.sessionStorage.setItem("csrf-token",data);
+           }
+       }
+   });
 });
 $(function() {
 	//TISPRO-522 IE Issue Fix
@@ -1599,6 +1599,9 @@ $(document).ready(function(){
 
 			}
 		}
+	});
+	$(document).on('mouseover touchend','header .content nav > ul > li#shopMicrositeSeller > div.toggle',function(){
+		$(this).parent().addClass('hovered');
 	});
 	$(document).on('mouseleave','header .content nav > ul > li.hovered > ul > li:first-child,header .content nav > ul > li > div.toggle',function(){
 		$('header .content nav > ul > li').removeClass('hovered');

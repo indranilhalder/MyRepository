@@ -1681,6 +1681,7 @@
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
     	<property name="imageDiscription" type="String" />
+	<property name="componentType" type="String" />
     </bean>
     
      <bean class="com.tisl.mpl.wsdto.TextComponentWsDTO">
@@ -1699,14 +1700,25 @@
     	<property name="type" type="String" />
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
+		<property name="productID" type="String" />
+    	<property name="componentType" type="String" />
     </bean>
     
+    <bean class="com.tisl.mpl.wsdto.ImageListComponentWsDTO">
+    	<property name="type" type="String" />
+    	<property name="typeId" type="String" />
+    	<property name="typeVal" type="String" />
+    	<property name="imageDiscription" type="String" />
+    	<property name="bannerslist" type="java.util.List&lt;com.tisl.mpl.wsdto.BannerComponentWsDTO>"/>
+    	<property name="componentType" type="String" />
+    </bean> 
    
     <bean class="com.tisl.mpl.wsdto.MplPageWsDTO">
     	<property name="sectionId" type="String" />
     	<property name="textComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.TextComponentWsDTO>"/>
     	<property name="bannerComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.BannerComponentWsDTO>"/>
     	<property name="productComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductListComponentWsDTO>"/>
+		<property name="bannerslistComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.ImageListComponentWsDTO>"/>
     	<property name="sectionName" type="String" />
     </bean>
 
@@ -1788,7 +1800,9 @@
 		          type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.search.pagedata.SortWsDTO>"/> 
 	<property name="pagination"
 		          type="de.hybris.platform.commercewebservicescommons.dto.search.pagedata.PaginationWsDTO"/>
-		          <property name="currentQuery" type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO"/>
+		<property name="currentQuery" type="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO"/>
+		<property name="facetdatacategory"
+		          type="com.tisl.mpl.wsdto.DepartmentHierarchyWs"/>
 		  
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FacetDataWsDTO">
@@ -1811,6 +1825,8 @@
 		<property name="query" type="String"/>
 		<property name="selected" type="Boolean"/>
 		<property name="value" type="String"/>
+		<property name="subcategories" type="java.util.List&lt;com.tisl.mpl.wsdto.FacetValueDataWsDTO>"/>
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.SellingItemDetailWsDto">
@@ -2101,16 +2117,18 @@
  		<property name="level" type="String" />
  		<property name="categoryType" type="String" />
  		<property name="ranking" type="String" />
+ 		<property name="selected" type="Boolean" />
+ 		<property name="childFilters" type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>" />
     </bean>
     
-     <bean class="com.tisl.mpl.wsdto.L3DepartmentFilterWsDto">
-     <!-- <property name="level3DepartmentFilter" type="com.tisl.mpl.wsDTO.DepartmentFilterWsDto" /> -->
-     <property name="categoryCode" type="String" />
+    <bean class="com.tisl.mpl.wsdto.L3DepartmentFilterWsDto">
+     	<!-- <property name="level3DepartmentFilter" type="com.tisl.mpl.wsDTO.DepartmentFilterWsDto" /> -->
+     	<property name="categoryCode" type="String" />
  		<property name="categoryName" type="String" />
  		<property name="level" type="String" />
  		<property name="categoryType" type="String" />
  		<property name="ranking" type="String" />
-    <property name="childFilters" type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>" />
+    	<property name="childFilters" type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>" />
     </bean>
     
      <bean class="com.tisl.mpl.wsdto.L2DepartmentFilterWsDto">
@@ -2132,10 +2150,22 @@
     </bean>
     
      <bean class="com.tisl.mpl.wsdto.DepartmentHierarchy">
-    <property name="filters" type="java.util.List&lt;com.tisl.mpl.wsdto.L1DepartmentFilterWsDto>" />
+    <property name="filters" type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>" />
     </bean>
-   
-     <!-- Saved Card Credit/Debit Data -->
+    
+     <bean class="com.tisl.mpl.wsdto.DepartmentHierarchyWs">
+   	 	<property name="filters" type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>" />
+  		<property name="name" type="String"/>
+		<property name="key" type="String"/>
+		<property name="priority" type="Integer"/>
+		<property name="category" type="Boolean"/>
+		<property name="multiSelect" type="Boolean"/>
+		<property name="visible" type="Boolean"/>
+		<property name="selected" type="Boolean" />
+    </bean>
+    
+    
+      <!-- Saved Card Credit/Debit Data -->
      <bean class="com.tisl.mpl.wsdto.MplPreferenceWsDTO">
 		<property name="myInterest" type="String" />
 		<property name="selectedCategory" type="java.util.List" />
@@ -2146,7 +2176,6 @@
 	</bean>
     
     <bean class="com.tisl.mpl.wsdto.SellerMasterResponseWsDTO">
-
 		<property name="status" type="String" />
 		<property name="sellerMaster" type="com.tisl.mpl.model.SellerMasterModel" />
 	</bean>
