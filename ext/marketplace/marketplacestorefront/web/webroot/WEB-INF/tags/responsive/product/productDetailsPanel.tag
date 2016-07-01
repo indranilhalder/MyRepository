@@ -95,7 +95,7 @@ tr.d0 td {
 		<div class="product-detail">
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
-				<h2 class="company">${product.brand.brandname} Sold by <span id="sellerNameId"></span></h2>
+				<h2 class="company">Brand ${product.brand.brandname} Sold by <span id="sellerNameId"></span></h2>
 				<h3 class="product-name">${product.productTitle}</h3>
 			</ycommerce:testId>
 
