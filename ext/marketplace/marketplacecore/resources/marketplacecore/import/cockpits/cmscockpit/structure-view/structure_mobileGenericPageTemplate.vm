@@ -1,0 +1,94 @@
+<div>
+	<table width="100%" cellspacing="0" style="margin:0;padding:0;table-layout:auto;border:1px solid #1E4EBF;">
+		<tbody>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section1"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section2"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section3"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section4"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section5"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section6"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section7"/>
+				</td>
+			</tr>
+						<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section8"/>
+				</td>
+			</tr>
+						<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section8"/>
+				</td>
+			</tr>			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section9"/>
+				</td>
+			</tr>			
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section10"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section11"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section12"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section13"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section14"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section15"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="Section16"/>
+				</td>
+			</tr>
+			
+		</tbody>
+	</table>
+	<div style="width:100%; border-top: 2px solid #bbb" class="cmsContentEditor">
+		<cockpit code="editor" />
+	</div>
+</div>

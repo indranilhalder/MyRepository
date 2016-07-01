@@ -15,7 +15,23 @@
 	<collectiontypes>
 		<collectiontype elementtype="BaseSite" code="BaseSiteCollection" autocreate="true"/>
 	</collectiontypes>
-
+	
+	<enumtypes>
+		<enumtype code="ComponentTypeEnum" autocreate="true" generate="true" dynamic="true">
+		<description>Component Type For Components</description>
+			<value code="BannerCarousel"/>
+			<value code="Banners3CarouselType"/>
+			<value code="StayQuedCarousel"/>
+			<value code="Text"/>
+			<value code="SliderType"/>
+			<value code="GridCarousel2x2"/>
+			<value code="Col2BannerLarge"/>			
+			<value code="SingleBanner"/>
+			<value code="Banners3TypeReverse"/>	
+			<value code="Banner3Type"/>
+		</enumtype>
+	</enumtypes>
+	
 	<itemtypes>
 		<itemtype code="ProductExpressUpdateCleanerCronJob" autocreate="true" generate="true" extends="CronJob"
 					 jaloclass="com.tisl.mpl.jalo.expressupdate.cron.ProductExpressUpdateCleanerCronJob">
@@ -321,5 +337,16 @@
 					</attribute>				
 			</attributes>
 	</itemtype>
+	
+	 <itemtype code="SimpleCMSComponent" generate="false" autocreate="false">
+			<attributes>
+				<!--..... other declarations...-->
+				<attribute qualifier="componentType" type="ComponentTypeEnum">
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="true" />
+				</attribute>
+			</attributes>
+	</itemtype>
+	
 	</itemtypes>
 </items>

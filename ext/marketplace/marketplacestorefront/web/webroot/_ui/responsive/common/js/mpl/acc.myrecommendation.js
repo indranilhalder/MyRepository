@@ -24,8 +24,7 @@ $("document").ready(function(){
     				        	url: requiredUrl,
     				            data: genderData, 	
     				        	success: function(data){
-    				        		if(typeof data=="object")
-    				        		{
+    				        		if(typeof data=="object"){
     				        			var htmlData = "";
         				        		var index = 0;
         				        		$(".gender").addClass("gender");
@@ -64,16 +63,11 @@ $("document").ready(function(){
            				                     +"</label>";
         				        			} 
         				                 });
-        				        		 
         				        		 $(".products-questionnaire").html(htmlData);
-    				        		}
-    				        		else
-    				        		{
+    				        		} else{
     				        			$(location).attr('href',ACC.config.encodedContextPath+"/login");
     				        		}
-    				        		
-    				        		
-    				        		
+
     				        	},
     				        	error: function(){
     				        		alert("Something is not right! Please try after sometime");
@@ -136,8 +130,7 @@ $("document").ready(function(){
     			url: requiredUrl,
     			data: categoryData, 	
     			success: function(data){
-    				if(typeof data=="object")
-	        		{
+    				if(typeof data=="object"){
     					var htmlData = "";
         				var index = 0;
         				$(".myInterestGender").css("display","none");
@@ -169,12 +162,11 @@ $("document").ready(function(){
         					}
         				});
         				$("#brandContainer").html(htmlData);
-	        		}
-	        		else
-	        		{
-	        			$(location).attr('href',ACC.config.encodedContextPath+"/login");
-	        		}
-	        		
+    				}else
+    				{
+    					$(location).attr('href',ACC.config.encodedContextPath+"/login");
+    				}
+
     			},
     			error: function(){
     				//alert("Something is not right! Please try after sometime");
@@ -228,8 +220,7 @@ $("document").ready(function(){
         			url: requiredUrl,
         			data: {"categoryData":selectedCats[0],"selectedCategory":categorySelected,"subCategoryData":JSON.stringify(selectedBrandCat)}, 	
         			success: function(data){
-        				if(typeof data=="object")
-		        		{
+        				if(typeof data=="object"){
         					$(".myInterestGender").css("display","none");
             				$(".myInterestCategory").css("display","none");
             				$(".brandsCategory").css("display","none");
@@ -312,11 +303,9 @@ $("document").ready(function(){
                 				});
                 				$("#objects").html(htmlData);
             				}
-						}
-		        		else
-		        		{
-		        			$(location).attr('href',ACC.config.encodedContextPath+"/login");
-		        		}
+        				} else {
+        					$(location).attr('href',ACC.config.encodedContextPath+"/login");
+        				}
         				
         			},
         			error: function(){

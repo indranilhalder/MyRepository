@@ -14,7 +14,7 @@
 		<property qualifier="SimpleCMSComponent.deeplinkType" />
         <property qualifier="SimpleCMSComponent.deeplinkTypeId" />
         <property qualifier="SimpleCMSComponent.deeplinkTypeVal" />
-		
+        <property qualifier="SimpleCMSComponent.componentType" />		
 		<property qualifier="AbstractBannerComponent.media" editor="simpleMediaReferenceSelector">
 			<parameter>
 				<name>mimeTypes</name>

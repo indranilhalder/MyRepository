@@ -3,161 +3,186 @@
  */
 package com.tisl.mpl.search.converters.populator;
 
-import de.hybris.platform.commerceservices.converter.Populator;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.data.SearchQueryPageableData;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchRequest;
+import de.hybris.platform.converters.Populator;
+import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
+import de.hybris.platform.solrfacetsearch.provider.FieldNameProvider;
+import de.hybris.platform.solrfacetsearch.provider.FieldNameProvider.FieldType;
 import de.hybris.platform.solrfacetsearch.search.SearchQuery;
+import de.hybris.platform.solrfacetsearch.search.SearchQuery.QueryParser;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.util.ClientUtils;
+import org.springframework.beans.factory.annotation.Required;
 
 
 /**
- * @author 361234
+ * @author 1210148
  *
  */
 public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SORT_TYPE>
 		implements
 		Populator<SearchQueryPageableData<SolrSearchQueryData>, SolrSearchRequest<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, INDEXED_PROPERTY_TYPE, SearchQuery, INDEXED_TYPE_SORT_TYPE>>
 {
+	private FieldNameProvider solrFieldNameProvider;
 
-
-
-
-	public void populate(final SearchQueryPageableData<SolrSearchQueryData> source,
-			final SolrSearchRequest<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, INDEXED_PROPERTY_TYPE, SearchQuery, INDEXED_TYPE_SORT_TYPE> target)
+	/**
+	 * @return the solrFieldNameProvider
+	 */
+	public FieldNameProvider getSolrFieldNameProvider()
 	{
-		final String cleanedFreeTextSearch = cleanupSolrSearchText(target.getSearchQueryData().getFreeTextSearch());
-		target.setSearchText(cleanedFreeTextSearch);
-		if (cleanedFreeTextSearch.isEmpty())
+		return solrFieldNameProvider;
+	}
+
+	/**
+	 * @param solrFieldNameProvider
+	 *           the solrFieldNameProvider to set
+	 */
+	@Required
+	public void setSolrFieldNameProvider(final FieldNameProvider solrFieldNameProvider)
+	{
+		this.solrFieldNameProvider = solrFieldNameProvider;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
+	 */
+
+	@Override
+	public void populate(
+			final SearchQueryPageableData<SolrSearchQueryData> source,
+			final SolrSearchRequest<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, INDEXED_PROPERTY_TYPE, SearchQuery, INDEXED_TYPE_SORT_TYPE> target)
+			throws ConversionException
+	{
+
+		final String searchText = target.getSearchQueryData().getFreeTextSearch();
+		final String cleanSearchText = cleanup(searchText);
+		if (StringUtils.isEmpty(cleanSearchText))
 		{
 			return;
 		}
-		addFreeTextQuery(target.getSearchQuery(), cleanedFreeTextSearch);
+
+		setUpQuery(target.getSearchQuery(), cleanSearchText);
+
+		target.setSearchText(searchText);
+
 	}
 
-	protected String cleanupSolrSearchText(final String text)
+
+	/**
+	 * @param searchText
+	 * @return String
+	 */
+	private String cleanup(final String searchText)
 	{
-		String cleanedText = text;
-		if (text == null)
+
+		String cleanedText = "";
+
+		if (searchText == null)
 		{
 			cleanedText = "";
 		}
 		else
 		{
-			cleanedText = cleanedText.replace(':', ' ').trim();
+			final String[] words = searchText.split("\\s+");
+			final StringBuilder sb = new StringBuilder();
+			for (final String w : words)
+			{
 
-			cleanedText = cleanedText.replaceAll("AND", "and");
-			cleanedText = cleanedText.replaceAll("OR", "or");
+				if ("and".equalsIgnoreCase(w) || "or".equalsIgnoreCase(w) || "not".equalsIgnoreCase(w) || "for".equalsIgnoreCase(w))
+				{
+					continue;
+				}
+				sb.append(ClientUtils.escapeQueryChars(w.replaceAll(":", "")));
+				sb.append(' ');
+				cleanedText = sb.toString().trim();
+			}
+
 		}
-
 		return cleanedText;
+
 	}
 
-	protected void addFreeTextQuery(final SearchQuery searchQuery, final String cleanedFreeTextSearch)
+	/**
+	 * @param searchQuery
+	 * @param cleanSearchText
+	 */
+
+
+	private void setUpQuery(final SearchQuery searchQuery, final String cleanSearchText)
 	{
-		final String[] words = cleanedFreeTextSearch.split("\\s+");
-
-		final Map<String, IndexedProperty> indexedProperty = searchQuery.getIndexedType().getIndexedProperties();
-		//	final List<IndexedProperty> listIndexedProperty = new ArrayList<IndexedProperty>();
-
-		for (final Map.Entry<String, IndexedProperty> entry : indexedProperty.entrySet())
+		final Map<String, IndexedProperty> originalProps = searchQuery.getIndexedType().getIndexedProperties();
+		final Map<String, IndexedProperty> props = new HashMap<>();
+		int maxBoostValue = 0;
+		for (final Map.Entry<String, IndexedProperty> entry : originalProps.entrySet())
 		{
-
 			if (entry.getValue().getBoost() != null)
 			{
-				addFreeTextQuery(searchQuery, cleanedFreeTextSearch, words, entry.getValue().getBoost().intValue(), entry.getValue());
+				props.put(entry.getKey(), entry.getValue());
+				maxBoostValue = maxBoostValue > entry.getValue().getBoost().intValue() ? maxBoostValue : entry.getValue().getBoost()
+						.intValue();
 			}
 		}
 
+		// Lets get the query filter
+		final String qf = formFilter(props, 0, searchQuery.getLanguage(), searchQuery.getCurrency());
+
+		// Lets get the phrase filter
+		final String pf = formFilter(props, maxBoostValue, searchQuery.getLanguage(), searchQuery.getCurrency());
+
+		// Setup query parser information.
+
+		// e-dismax parser
+		searchQuery.setQueryParser(QueryParser.EDISMAX);
+		// actual query text
+		searchQuery.getAllFields().clear();
 
 
 
-
-
-
+		searchQuery.addSolrParams("q", cleanSearchText);
+		// list of filtered fields for the query
+		searchQuery.addSolrParams("qf", qf);
+		// list of filtered fields for phrase query
+		searchQuery.addSolrParams("pf", pf);
+		// phrase slop for getting better relevance
+		searchQuery.addSolrParams("ps", "5");
+		// minimum match
+		searchQuery.addSolrParams("mm", "2");
 	}
 
-	public void addFreeTextQuery(final SearchQuery searchQuery, final String fullText, final String[] textWords,
-			final int boostValue, final IndexedProperty indexedProperty)
+
+
+	/**
+	 * @param props
+	 * @return String
+	 */
+
+	@Required
+	private String formFilter(final Map<String, IndexedProperty> props, final int maxBoostValue, final String lang,
+			final String currency)
 	{
 
+		final StringBuilder sp = new StringBuilder();
+		for (final String key : props.keySet())
+		{
+			final IndexedProperty value = props.get(key);
+			sp.append(String.format(
+					"%s^%.2f ",
+					getSolrFieldNameProvider().getFieldName(value, value.isLocalized() ? lang : value.isCurrency() ? currency : null,
+							FieldType.INDEX), Double.valueOf(value.getBoost().intValue() + maxBoostValue)));
 
-		addFreeTextQuery(searchQuery, indexedProperty, fullText, textWords, indexedProperty.getBoost().intValue());
+
+		}
+		return sp.toString().trim();
 
 	}
 
-	protected void addFreeTextQuery(final SearchQuery searchQuery, final IndexedProperty indexedProperty, final String fullText,
-			final String[] textWords, final int boost)
-	{
-		addFreeTextQuery(searchQuery, indexedProperty, fullText, boost * 2.0D);
-
-		if ((textWords == null) || (textWords.length <= 1))
-		{
-			return;
-		}
-		for (final String word : textWords)
-		{
-			addFreeTextQuery(searchQuery, indexedProperty, word, boost);
-		}
-	}
-
-	protected void addFreeTextQuery(final SearchQuery searchQuery, final IndexedProperty indexedProperty, final String value,
-			final double boost)
-	{
-		final String field = indexedProperty.getName();
-		if (!(indexedProperty.isFacet()))
-		{
-
-
-			addFreeTextQuery(searchQuery, field, value.toLowerCase(), "", boost);
-			addFreeTextQuery(searchQuery, field, value.toLowerCase(), "*", boost / 4.0D);
-			//Removed fuzzy logic from search query
-			//addFreeTextQuery(searchQuery, field, value.toLowerCase(), "~", boost / 4.0D);
-
-
-		}
-		//SONAR Fix
-		//else
-		//{
-		//LOG.debug("Not searching " + indexedProperty
-		//	+ ". Free text search not available in facet property. Configure an additional text property for searching.");
-		//}
-	}
-
-	protected boolean isProduct(final String productCode)
-	{
-		boolean isProduct = false;
-		if (productCode != null && productCode.startsWith("mp"))
-		{
-
-			final String remainingChars = productCode.substring(2);
-			if (StringUtils.isNumeric(remainingChars))
-			{
-				isProduct = true;
-
-			}
-		}
-
-		return isProduct;
-	}
-
-	protected void addFreeTextQuery(final SearchQuery searchQuery, final String field, final String value, final String suffixOp,
-			final double boost)
-	{
-		if (!isProduct(value))
-		{
-			searchQuery.searchInField(field, ClientUtils.escapeQueryChars(value) + suffixOp + "^" + boost, SearchQuery.Operator.OR);
-
-		}
-		else
-		{
-			searchQuery.searchInField("code_string", value.toUpperCase());
-
-		}
-	}
 }

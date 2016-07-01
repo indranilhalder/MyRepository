@@ -13,6 +13,7 @@
 		<property qualifier="SimpleCMSComponent.deeplinkType" />
         <property qualifier="SimpleCMSComponent.deeplinkTypeId" />
         <property qualifier="SimpleCMSComponent.deeplinkTypeVal" />
+        <property qualifier="SimpleCMSComponent.componentType" />
 		
 	</group>
 	

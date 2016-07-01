@@ -1,22 +1,23 @@
 var headerLoggedinStatus = false;
+var csrfDataChanged = false;
 $(function() {
-      $.ajax({
-         url: ACC.config.encodedContextPath + "/fetchToken",
-         type: 'GET',
-         async:false,
-         cache:false,
-         success: function(data) {
-             $("input[name='CSRFToken']").each(function() {
-                 this.value = data;
-             });
-             ACC.config.CSRFToken = data;
-             var crsfSession = window.sessionStorage.getItem("csrf-token");
-             if(window.sessionStorage && (null == crsfSession || crsfSession != data)){
-            	 csrfDataChanged = true;
-            	 window.sessionStorage.setItem("csrf-token",data);
-             }
-         }
-     });
+    $.ajax({
+       url: ACC.config.encodedContextPath + "/fetchToken",
+       type: 'GET',
+       async:false,
+       cache:false,
+       success: function(data) {
+           $("input[name='CSRFToken']").each(function() {
+               this.value = data;
+           });
+           ACC.config.CSRFToken = data;
+           var crsfSession = window.sessionStorage.getItem("csrf-token");
+           if(window.sessionStorage && (null == crsfSession || crsfSession != data)){
+          	 csrfDataChanged = true;
+          	 window.sessionStorage.setItem("csrf-token",data);
+           }
+       }
+   });
 });
 $(function() {
 	//TISPRO-522 IE Issue Fix
@@ -81,7 +82,9 @@ $("div.departmenthover").on("mouseover touchend", function() {
 
 
     }
+    
 });
+
 
 $(".A-ZBrands").on("mouseover touchend", function(e) {
 	var componentUid = $("#componentUid").val();
@@ -1050,14 +1053,10 @@ function appendIcid(url, icid) {
 }
 $(document).ready(function(){
 	//TISPT-290
-	if($('#pageTemplateId').val() ==
-	            'LandingPage2Template'){
+	if($('#pageTemplateId').val() =='LandingPage2Template'){
 	lazyLoadDivs();
 	setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
-	
 }
-	
-
 //Fix for defect TISPT-202
 getFooterOnLoad();
 
@@ -1147,7 +1146,7 @@ function populateEnhancedSearch(enhancedSearchData)
 	var notPresentBrand=true;
 	var notPresentSeller=true;
 	if(enhancedSearchData.categoryData.length > 0){
-		$(".select-view #searchCategory").append('<optgroup label="Departments"></optgroup>');
+		$(".select-view #enhancedSearchCategory").append('<optgroup label="Departments"></optgroup>');
 		for (var i=0; i<enhancedSearchData.categoryData.length; i++){
 			var code=enhancedSearchData.categoryData[i].code;
 			var name=enhancedSearchData.categoryData[i].name;
@@ -1158,14 +1157,14 @@ function populateEnhancedSearch(enhancedSearchData)
 				notPresentCategory=false;
 			}
 			$(".enhanced-search ul[label=Departments]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$(".select-view #searchCategory optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".select-view #enhancedSearchCategory optgroup[label=Departments]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
 		$("#searchBoxSpan").html(selectedText);
 	}
 	
 	if(enhancedSearchData.brandData.length > 0){
-		$(".select-view #searchCategory").append('<optgroup label="Brands"></optgroup>');
+		$(".select-view #enhancedSearchCategory").append('<optgroup label="Brands"></optgroup>');
 		for (var i=0; i<enhancedSearchData.brandData.length; i++){
 			var code=enhancedSearchData.brandData[i].code;
 			var name=enhancedSearchData.brandData[i].name;
@@ -1176,7 +1175,7 @@ function populateEnhancedSearch(enhancedSearchData)
 				notPresentBrand=false;
 			}
 			$(".enhanced-search ul[label=Brands]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$(".select-view #searchCategory optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".select-view #enhancedSearchCategory optgroup[label=Brands]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 			
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
@@ -1184,7 +1183,7 @@ function populateEnhancedSearch(enhancedSearchData)
 	}
 	
 	if(enhancedSearchData.sellerData.length > 0){
-		$(".select-view #searchCategory").append('<optgroup label="Sellers"></optgroup>');
+		$(".select-view #enhancedSearchCategory").append('<optgroup label="Sellers"></optgroup>');
 		for (var i=0; i<enhancedSearchData.sellerData.length; i++){
 			var code=enhancedSearchData.sellerData[i].id;
 			var name=enhancedSearchData.sellerData[i].name;
@@ -1195,7 +1194,7 @@ function populateEnhancedSearch(enhancedSearchData)
 				notPresentSeller=false;
 			}
 			$(".enhanced-search ul[label=Sellers]").append('<li id="'+code+'" class="'+className+'">'+name+'</li>');
-			$(".select-view #searchCategory optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
+			$(".select-view #enhancedSearchCategory optgroup[label=Sellers]").append('<option value="'+code+'" '+ className+' >'+name+'</option>');
 		}
 		var selectedText = $(".select-list .dropdown li.selected").text();
 		$("#searchBoxSpan").html(selectedText);
@@ -1449,6 +1448,167 @@ function populateEnhancedSearch(enhancedSearchData)
 	        }
 	}
 }
+$(document).ready(function(){
+	//start//
+	$('header .content nav > ul > li > div.toggle').on('mouseover touchend',function(){
+		$(this).parent().addClass('hovered');
+		
+		//department/////////////////////
+		if($('header .content nav > ul > li:first-child').hasClass('hovered')) {
+			var id = $('header .content nav > ul > li.hovered > ul > li:first-child .departmenthover').attr('id');
+		    var code = id.substring(4);
+
+		    if (!$.cookie("dept-list") && window.localStorage) {
+		        for (var key in localStorage) {
+		            if (key.indexOf("deptmenuhtml") >= 0) {
+		                window.localStorage.removeItem(key);
+		                // console.log("Deleting.." + key);
+
+		            }
+		        }
+		    }
+		    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
+		        // console.log("Local");
+		        $("ul." + id).html(decodeURI(html));
+		        //LazyLoad();
+		        
+		    } else {
+		        $.ajax({
+		            url: ACC.config.encodedContextPath +
+		                "/departmentCollection",
+		            type: 'GET',
+		            data: "department=" + code,
+		            success: function(html) {
+		                // console.log("Server");
+		                $("ul." + id).html(html);
+		                if (window.localStorage) {
+		                    $.cookie("dept-list", "true", {
+		                        expires: 1,
+		                        path: "/"
+
+		                    });
+		                    window.localStorage.setItem(
+		                        "deptmenuhtml-" + code,
+		                        encodeURI(html));
+
+		                }
+		            }
+		        });
+
+
+		    }
+		    
+		} else {
+			if($('header .content nav > ul > li.hovered > ul > li:first-child > div').hasClass('brandClass')) {
+			////newbrand
+				var componentUid = $('header .content nav > ul > li.hovered > ul > li:first-child > div > a ').attr('id');
+				 if (!$.cookie("dept-list") && window.localStorage) {
+				        for (var key in localStorage) {
+				            if (key.indexOf("brandhtml") >= 0) {
+				                window.localStorage.removeItem(key);
+				                // console.log("Deleting.." + key);
+
+				            }
+				        }
+				    }
+				 if (window.localStorage && (html = window.localStorage.getItem("brandhtml-" + componentUid)) && html != "") {
+				        // console.log("Local");
+				        //$("ul#"+componentUid).html(decodeURI(html));
+					    $("ul[id='"+componentUid+"']").html(decodeURI(html));
+				    }else{
+				    	
+				    	 $.ajax({
+					            url: ACC.config.encodedContextPath +
+					            "/shopbybrand",
+					            type: 'GET',
+					            data:{"compId":componentUid},
+					            success: function(html) {
+					                //$("ul#"+componentUid).html(html);
+					            	$("ul[id='"+componentUid+"']").html(html); 
+					                if (window.localStorage) {
+					                    $.cookie("dept-list", "true", {
+					                        expires: 1,
+					                        path: "/"
+
+					                    });
+					                    window.localStorage.setItem(
+					                        "brandhtml-" + componentUid,
+					                        encodeURI(html));
+
+					                }
+					                
+					            }
+					        });
+				    	
+				    }
+			       
+				 ////////new brand
+			} else if($('header .content nav > ul > li.hovered > ul > li:first-child > div').hasClass('A-ZBrands')) {
+
+				var componentUid = $("#componentUid").val();
+			    if ($("li#atozbrandsdiplay").length) {
+			        // console.log("Dipslaying A-Z Brands..");
+
+			        if (!$.cookie("dept-list") && window.localStorage) {
+			            for (var key in localStorage) {
+			                if (key.indexOf("atozbrandmenuhtml") >= 0) {
+			                    window.localStorage.removeItem(key);
+			                    // console.log("Deleting.." + key);
+
+			                }
+			            }
+			        }
+			        if (window.localStorage && (html = window.localStorage.getItem("atozbrandmenuhtml")) && html != "") {
+			            // console.log("Local");
+			            if ($("div#appendedAtoZBrands") == null || $(
+			                "div#appendedAtoZBrands").length == 0) {
+			                $("li#atozbrandsdiplay").append(decodeURI(html));
+			            }
+			        } else {
+			            // console.log("Server");
+
+			            $.ajax({
+			                url: ACC.config.encodedContextPath +
+			                    "/atozbrands",
+			                type: 'GET',
+			                data : {
+								 "componentUid" : componentUid
+								},
+			                success: function(html) {
+			                    //console.log(html)
+			                    if ($("div#appendedAtoZBrands") == null ||
+			                        $("div#appendedAtoZBrands").length ==
+			                        0) {
+			                        $("li#atozbrandsdiplay").append(
+			                            html);
+			                    }
+			                    if (window.localStorage) {
+			                        $.cookie("dept-list", "true", {
+			                            expires: 1,
+			                            path: "/"
+
+			                        });
+			                        window.localStorage.setItem(
+			                            "atozbrandmenuhtml",
+			                            encodeURI(html));
+			                    }
+			                }
+			            });
+			        }
+			    }
+
+			}
+		}
+	});
+	$(document).on('mouseover touchend','header .content nav > ul > li#shopMicrositeSeller > div.toggle',function(){
+		$(this).parent().addClass('hovered');
+	});
+	$(document).on('mouseleave','header .content nav > ul > li.hovered > ul > li:first-child,header .content nav > ul > li > div.toggle',function(){
+		$('header .content nav > ul > li').removeClass('hovered');
+	});
+	
+});
+
 
 	function forceUpdateHeader(){
 		$.ajax({

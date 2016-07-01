@@ -88,8 +88,8 @@ $(document).ready(function(){
 })(document, 'script', 'gcb-js',
 //'http://10.9.17.46:8700/cobrowse/js/gcb.min.js' (http://10.9.17.46:8700/cobrowse/js/gcb.min.js%27) ,
 //'http://10.9.17.46:8700/cobrowse' (http://10.9.17.46:8700/cobrowse%27) );
-'http://219.65.91.73:8700/cobrowse/js/gcb.min.js',
-'http://219.65.91.73:8700/cobrowse');
+'https://219.65.91.73:8700/cobrowse/js/gcb.min.js');
+//'http://219.65.91.73:8700/cobrowse');
 
 
 var chatSession = null;
