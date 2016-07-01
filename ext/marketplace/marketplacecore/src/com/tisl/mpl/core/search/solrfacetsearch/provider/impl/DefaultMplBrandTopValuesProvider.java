@@ -4,6 +4,7 @@
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 import de.hybris.platform.commerceservices.search.solrfacetsearch.provider.TopValuesProvider;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.search.FacetValue;
 
@@ -11,14 +12,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 /**
- * @author 361234
+ * @author TCS
  *
  */
 public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 {
-	private int topFacetCount = 6;
+	@Autowired
+	private ConfigurationService configurationService;
+
+	private int topFacetCount = 0;
+
 
 	protected int getTopFacetCount()
 	{
@@ -30,20 +38,41 @@ public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 		this.topFacetCount = topFacetCount;
 	}
 
+	@Override
 	public List<FacetValue> getTopValues(final IndexedProperty indexedProperty, final List<FacetValue> facets)
 	{
 
 		final List topFacetValues = new ArrayList();
 
-		if (facets != null)
+		if (indexedProperty != null && facets != null)
 		{
-			for (final FacetValue facetValue : facets)
+			if (indexedProperty.getExportId().equalsIgnoreCase("category"))
 			{
-				if ((facetValue == null) || ((topFacetValues.size() >= getTopFacetCount()) && (!(facetValue.isSelected()))))
+				topFacetCount = Integer.parseInt(configurationService.getConfiguration().getString("search.categoryFacet.topValue"));
+				for (final FacetValue facetValue : facets)
 				{
-					continue;
+					if ((facetValue == null)
+							|| ((StringUtils.length(facetValue.getName()) < 10) && (topFacetValues.size() >= getTopFacetCount()) && (!(facetValue
+									.isSelected()))))//For L3 categories only, length 7 ????
+					{
+						continue;
+					}
+					topFacetValues.add(facetValue);
 				}
-				topFacetValues.add(facetValue);
+
+			}
+			else
+			{
+				topFacetCount = Integer.parseInt(configurationService.getConfiguration().getString("search.Facet.topValue"));
+
+				for (final FacetValue facetValue : facets)
+				{
+					if ((facetValue == null) || ((topFacetValues.size() >= getTopFacetCount()) && (!(facetValue.isSelected()))))
+					{
+						continue;
+					}
+					topFacetValues.add(facetValue);
+				}
 			}
 
 			if (topFacetValues.size() >= facets.size())
