@@ -71,7 +71,7 @@
 															value="${fn:split(swatchColor, '_')}" />
 														<c:choose>
 															<c:when
-																test="${swatchColorAry[0]=='Multi' || swatchColorAry[0]=='multi'}">
+																test="${fn:startsWith(swatchColorAry[0],'Multi') || fn:startsWith(swatchColorAry[0],'multi')}">
 																<li><img class="multicolor-serp"
 																	src="${commonResourcePath}/images/multi.jpg"
 																	height="12" width="12" title="Multicolor" /></li>
@@ -92,7 +92,7 @@
 															value="${fn:split(swatchColor, '_')}" />
 														<c:choose>
 															<c:when
-																test="${swatchColorAry[0]=='Multi' || swatchColorAry[0]=='multi'}">
+																test="${fn:startsWith(swatchColorAry[0],'Multi') || fn:startsWith(swatchColorAry[0],'multi')}">
 																<li><img class="multicolor-serp"
 																	src="${commonResourcePath}/images/multi.jpg"
 																	height="12" width="12" title="Multicolor" /></li>
