@@ -27,6 +27,7 @@
 		<span id="wrongPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.invalid"/></span>
 		<span id="unsevisablePin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
 		<span id="unableprocessPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unableprocess"/></span>
+		<span id="seviceablePin" style="display:none;color:#ff1c47"><spring:theme code="pincode.seviceable"/></span>			
 		</span>
 	   <c:forEach var="entry" items="${deliveryModeMap}">
 		<%-- Key: <c:out value="${entry.key}"/> --%>
