@@ -26,6 +26,7 @@
 		<span id="emptyPin" style="display:none;color:#ff1c47"><spring:theme code="product.empty.pincode"/></span>
 		<span id="wrongPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.invalid"/></span>
 		<span id="unsevisablePin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
+		<span id="serviceablePin" style="display:none;color:#00994d"><spring:theme code="pincode.serviceable"/></span> <!-- Changes for TISPRM-20 -->
 		<span id="unableprocessPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unableprocess"/></span>
 		</span>
 	   <c:forEach var="entry" items="${deliveryModeMap}">
