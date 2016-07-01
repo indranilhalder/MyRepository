@@ -1049,7 +1049,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
 			/*
 			 * TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
-			 * 
+			 *
 			 * {
 			 */
 			for (final AbstractOrderEntryModel abstractOrderEntry : finalCart.getEntries())
@@ -1895,6 +1895,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		try
 		{
 			//cartData = getMplExtendedCartConverter().convert(cartModel);
+			cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
 			/**** Pincode check Details ***/
 			try
 			{
@@ -1905,7 +1906,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					{
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
 					}
-					cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
 					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, pincode);
 					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
 
@@ -1968,11 +1968,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					cartDataDetails.setTotalPrice(String.valueOf(totalPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 			}
-
-			final PriceData discountPrice = cartDataOrdered.getTotalDiscounts();
-			if (null != discountPrice.getValue())
+			if (null != cartDataOrdered.getTotalDiscounts())
 			{
-				cartDataDetails.setDiscountPrice(String.valueOf(discountPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				final PriceData discountPrice = cartDataOrdered.getTotalDiscounts();
+				if (null != discountPrice.getValue())
+				{
+					cartDataDetails.setDiscountPrice(String.valueOf(discountPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
 			}
 			/*** Address details ***/
 			if (null != addressListWsDto)
@@ -2023,6 +2025,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		try
 		{
 			//cartData = getMplExtendedCartConverter().convert(cartModel);
+			cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
 			/**** Pincode check Details ***/
 			try
 			{
@@ -2033,7 +2036,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					{
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
 					}
-					cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
+
 					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, pincode);
 					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
 				}

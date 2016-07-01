@@ -2454,6 +2454,7 @@ public class CartsController extends BaseCommerceController
 				/*** Product Details ***/
 				LOG.debug("productCheckout CartModel to CartData of :" + cartId);
 				//cartData = getMplExtendedCartConverter().convert(cartModel);
+				cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
 				/**** Pincode check Details ***/
 				try
 				{
@@ -2461,7 +2462,6 @@ public class CartsController extends BaseCommerceController
 					{
 						//gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + postalCode);
-						cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
 						final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(cartDataOrdered, postalCode);
 						deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
 						LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
@@ -2585,13 +2585,13 @@ public class CartsController extends BaseCommerceController
 			{
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelisted(cartModel);
 				//cartData = getMplExtendedCartConverter().convert(cartModel);
+				cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
 				/**** Pincode check Details ***/
 				try
 				{
 					if (null != pincode && !pincode.isEmpty())
 					{
 						//gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
-						cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
 						final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(cartDataOrdered, pincode);
 						deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
