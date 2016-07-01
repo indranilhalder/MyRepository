@@ -59,10 +59,10 @@
 				                      <c:if test="${sort.code ne 'promotedpriority-asc' }">				                      				                       
 				                       <c:choose>			                     
 				                         <c:when test="${not empty sort.name}">			                       			                       
-											 <a href="#" class="filter-sort-by" data-filter="${sort.code}" >${sort.name}</a>
+											 <a href="#" class="filter-sort-by" data-filter="${sort.code}" id="${sort.code}">${sort.name}</a>
 									     </c:when> 
 									     <c:otherwise>
-									         <a href="#" class="filter-sort-by" data-filter="${sort.code}"><spring:theme code="${themeMsgKey}.sort.${sort.code}"/></a>										 
+									         <a href="#" class="filter-sort-by" data-filter="${sort.code}" id="${sort.code}"><spring:theme code="${themeMsgKey}.sort.${sort.code}"/></a>										 
 									     </c:otherwise>	
 									   </c:choose>									   		                    				                    
 					                  </c:if>

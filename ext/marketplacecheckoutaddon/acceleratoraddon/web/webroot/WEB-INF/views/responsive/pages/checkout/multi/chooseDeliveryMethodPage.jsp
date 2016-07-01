@@ -193,7 +193,7 @@
 															</c:choose>	
 															<c:choose>
 																<c:when test="${deliveryAddress.addressType eq 'Work'}">
-																<label class="commercial" >
+																<label class="commercial" for="radio_${deliveryAddress.id}">
 																	<spring:theme code="checkout.multi.deliveryAddress.commercialAddress" text="Commercial Addresses"/> <c:out value="${countWork}"></c:out>
 																	<c:if test="${deliveryAddress.defaultAddress}">
 																	 - <spring:theme code="checkout.multi.deliveryAddress.defaultAddress" text="Default Addresses"/> <br/>
@@ -202,7 +202,7 @@
 																	<c:set var='countWork'  value='${countWork+1}' />
 																</c:when>
 																<c:otherwise>
-																<label class="residential">
+																<label class="residential" for="radio_${deliveryAddress.id}">
 																	<spring:theme code="checkout.multi.deliveryAddress.residentialAddress" text="Residential Addresses"/> <c:out value="${countHome}"></c:out>
 																	<c:if test="${deliveryAddress.defaultAddress}">
 																	 - <spring:theme code="checkout.multi.deliveryAddress.defaultAddress" text="Default Addresses"/> <br/>
