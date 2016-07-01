@@ -24,7 +24,7 @@
 		
 		<c:otherwise>
 			<c:choose>
-				<c:when test="${(fn:length(searchCategory) > 5 || fn:length(categoryCode) > 5)}">
+				<c:when test="${(fn:length(searchCategory) > 5 || fn:length(categoryCode) > 5 && !fn:contains(categoryCode, 'mbh'))}">
 					<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData=""/>
 			   	</c:when>
 		   		<c:otherwise>
