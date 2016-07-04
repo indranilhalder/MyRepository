@@ -1033,9 +1033,9 @@ h2 {
             transition: z-index 0s, border 0.3s; } */
             header .content .right > ul > li.bag:hover .mini-bag {
               max-height: 2000px;
-              -webkit-transition: max-height 0.15s;
-              -moz-transition: max-height 0.15s;
-              transition: max-height 0.15s; }
+              -webkit-transition: max-height 0.15s 0.35s;
+              -moz-transition: max-height 0.15s 0.35s;
+              transition: max-height 0.15s 0.35s; }
          /*    header .content .right > ul > li.bag.clicked .mini-bag {
               max-height: 2000px;
               -webkit-transition: max-height 0.15s;
@@ -1099,9 +1099,9 @@ h2 {
           header .content .right > ul > li.wishlist:hover .wishlist-info {
             z-index: 10;
             max-height: 1000px;
-            -webkit-transition: max-height 0.15s, z-index 0s;
-            -moz-transition: max-height 0.15s, z-index 0s;
-            transition: max-height 0.15s, z-index 0s; }
+            -webkit-transition: max-height 0.15s 0.35s;
+            -moz-transition: max-height 0.15s 0.35s;
+            transition: max-height 0.15s 0.35s; }
         header .content .right > ul > li.sign-in .sign-in-info {
           display: block;
           position: absolute;
@@ -1216,9 +1216,9 @@ h2 {
           header .content .right > ul > li.sign-in:hover .sign-in-info {
             max-height: 1000px;
             z-index: 10;
-            -webkit-transition: max-height 0.15s, z-index 0s;
-            -moz-transition: max-height 0.15s, z-index 0s;
-            transition: max-height 0.15s, z-index 0s; }
+            -webkit-transition: max-height 0.15s 0.35s, z-index 0s;
+            -moz-transition: max-height 0.15s 0.35s, z-index 0s;
+            transition: max-height 0.15s 0.35s, z-index 0s; }
         header .content .right > ul > li.signed-in .signed-in-info {
           position: absolute;
           left: 0;
@@ -16043,7 +16043,6 @@ body .account .right-account .order-history.order-details li.item .status>ul>li 
     font-weight: 500;
     text-align: center;
     line-height: 30px;
-    cursor:pointer;
 }
 /*TISSIT-2006 start*/
 body .account .right-account .order-history.order-details li.item .status> ul.nav >li{
@@ -16064,7 +16063,8 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     display: block;
     text-transform: uppercase;
     letter-spacing: .5px;
-    font-size: 20px
+    font-size: 20px;
+    cursor:pointer;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot:before {
     z-index: 2;
@@ -24516,11 +24516,15 @@ div#cartItems.products p{
 	position: absolute;
 	width: 250px;
 	left: 0;
-	display: none;
-	max-height: 400px;
+	max-height: 0px;
 	overflow: auto;
+	-webkit-transition: max-height 0.15s 0.35s;
+    -moz-transition: max-height 0.15s 0.35s;
+    transition: max-height 0.15s 0.35s; 
 }
-
+.track.trackOrder #tracklink,li.wishlist #myWishlistHeader {
+	display: block;
+}
 .trackorder-dropdown li {
 	min-height: 35px;
 	line-height: 18px;
@@ -24550,7 +24554,7 @@ ul.trackorder-dropdown li > div > h4 {
     font-weight: 600; 
 }
 .track.trackOrder:hover .trackorder-dropdown{
-display:block;
+max-height: 500px;
 z-index:10;
 }
 
@@ -27004,6 +27008,7 @@ body .account .right-account .updatePassword-wrapper{
 	font-weight: bold;
     letter-spacing: 0.5px;
     font-size:10px;
+    cursor:pointer;
 }
 @media (max-width:790px){
 #track-more-info p{
@@ -29808,12 +29813,11 @@ li.store-locator-header a:before{
     position: relative;
 }
 
-#stayQued>h1>span:first-child{
+#stayQued>h1>span.spriteImg{
 	display: inline-block;
     height: 45px;
     width: 50px;
-    background-image: url("../images/stay-qued.png");
-    background-size: 100%;
+    background-position: -17px -23px;
     background-repeat: no-repeat;
     margin-right: 15px;
 }
@@ -40271,3 +40275,83 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 .smartbanner-windows .smartbanner-button-text:active,
 .smartbanner-windows .smartbanner-button-text:hover {
 }
+
+/************** Sprite images start *****************/
+
+.spriteImg {
+	background-image: url("../images/icons_sprite.png");
+}
+
+.shop-promos .promos li a span.spriteImg {
+	display: inline-block;
+    height: 45px;
+    width: 45px;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -o-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.shop-promos .promos li a span.spriteImg.hotBrands {
+	background-position: -262px -23px;
+}
+.shop-promos .promos li a span.spriteImg.coolDeals {
+	background-position: -413px -23px;
+}
+.shop-promos .promos li a span.spriteImg.realStories {
+	background-position: -183px -23px;
+}
+.shop-promos .promos li a span.spriteImg.trackOrders {
+	background-position: -101px -23px;
+}
+.shop-promos .promos li a span.spriteImg.storePickup {
+	background-position: -338px -23px;
+}
+
+.shop-promos .promos li a span.spriteImg:after {
+	content: "";
+	display: none;
+}
+
+.social.share .links a span.spriteImg {
+	display: inline-block;
+    height: 32px;
+    width: 32px;
+    background-repeat: no-repeat;
+}
+.social.share .links a:after {
+	content:"";
+	display: none;
+}
+.social.share .links a.facebook span.spriteImg {
+	background-position: -269px -92px;
+}
+.social.share .links a.gplus span.spriteImg {
+	background-position: -345px -92px;
+}
+.social.share .links a.twitter span.spriteImg {
+	background-position: -190px -92px;
+}
+.social.share .links a.insta span.spriteImg {
+	background-position: -108px -92px;
+}
+.social.share .links a.youtube span.spriteImg {
+	background-position: -26px -92px;
+}
+
+.social.app-download .links a span.spriteImg {
+	display: inline-block;
+    height: 32px;
+    width: 28px;
+    background-position: -28px -155px;
+    background-repeat: no-repeat;
+}
+.social.app-download .links a:last-child span.spriteImg {
+    background-position: -111px -155px;
+}
+/************** Sprite images end *****************/

@@ -15,6 +15,7 @@ import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
 import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.promotions.result.PromotionEvaluationContext;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -54,6 +55,8 @@ public class GenericUtilityMethods
 {
 	private static final Logger LOG = Logger.getLogger(GenericUtilityMethods.class);
 	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
+	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+
 
 	/**
 	 * @Description: Checks whether the requested Date lies within range provided
@@ -971,9 +974,31 @@ public class GenericUtilityMethods
 				LOG.debug("::::::::Session is not active:::::::");
 				isSessionActive = false;
 			}
+
 		}
 		return isSessionActive;
-
 	}
 
+
+	/**
+	 * @return String This method returns the missing image url
+	 */
+	public static String getMissingImageUrl()
+
+	{
+		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext().getBean(
+				"configurationService");
+		String missingImageUrl = MISSING_IMAGE_URL;
+		String staticHost = null;
+		if (null != configService)
+		{
+			staticHost = configService.getConfiguration().getString("marketplace.static.resource.host");
+		}
+		if (StringUtils.isNotEmpty(staticHost))
+		{
+			missingImageUrl = "//" + staticHost + MISSING_IMAGE_URL;
+		}
+		return missingImageUrl;
+
+	}
 }

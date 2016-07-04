@@ -77,14 +77,38 @@
 				
 				<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/check" method="post" commandName="deliveryMethodForm">
 				<!-- TISCR-305 starts -->
-				<button class="button" id="deliveryMethodSubmitUp" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
+				<!-- TISPRO-625 starts -->
+				<input type="hidden"  id="isExpressCheckoutSelected" value="${isExpressCheckoutSelected}" />
+					<c:choose>
+						<c:when test="${isExpressCheckoutSelected}">
+								<button class="button" id="deliveryMethodSubmitUp" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.expresscheckout.continue" text="Next"/></button>
+						</c:when>
+						<c:otherwise>
+									<button class="button" id="deliveryMethodSubmitUp" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
+						</c:otherwise>
+					</c:choose>
+				<!-- TISPRO-625 ends -->
 				<!-- TISCR-305 ends -->
 					<div class="checkout-shipping left-block">
 					
 						<div class="checkout-indent">
 							<%-- <form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm"> --%>
 									<multi-checkout:shipmentItems cartData="${cartData}" defaultPincode="${defaultPincode}" showDeliveryAddress="true" />
+								<%--
 								<button class="button" id="deliveryMethodSubmit" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
+							--%>
+								<!-- TISPRO-625 starts -->
+									<c:choose>
+										<c:when test="${isExpressCheckoutSelected}">
+												<button class="button" id="deliveryMethodSubmit" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.expresscheckout.continue" text="Next"/></button>
+										</c:when>
+										<c:otherwise>
+													<button class="button" id="deliveryMethodSubmit" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
+										</c:otherwise>
+									</c:choose>
+							 <!-- TISPRO-625 ends -->
+						
+							
 							<%-- </form:form> --%>
 							<%-- <p><spring:theme code="checkout.multi.deliveryMethod.message" text="Items will ship as soon as they are available. <br> See Order Summary for more information." /></p> --%>
 						</div>
