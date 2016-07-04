@@ -9,6 +9,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 
 <spring:theme code="text.addToCart" var="addToCartText" />
 <c:url value="${product.url}" var="productUrl" />
@@ -24,7 +25,7 @@
 				 <c:if test="${product.isProductNew eq true}">
 					<div style="z-index: 1;" class="new">
 					<img class="brush-strokes-sprite sprite-New"
-					src="/_ui/responsive/common/images/transparent.png"><span>New</span>
+					src="//${staticHost}/_ui/responsive/common/images/transparent.png"><span>New</span>
 					</div>  </c:if> <a
 					class="thumb" href="${productUrl}" title="${product.name}"> <product:productPrimaryImage
 						product="${product}" format="searchPage" /> <%-- 	<product:productSearchPrimaryImage product="${product}" format="searchPage" index="1"/> --%>
@@ -34,14 +35,14 @@
 				<c:if test="${!product.isOnlineExclusive && product.isOfferExisting}">
 					<div style="z-index: 2;" class="on-sale">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="/_ui/responsive/common/images/transparent.png"> <span>On Offer</span>
+							src="//${staticHost}/_ui/responsive/common/images/transparent.png"> <span>On Offer</span>
 					</div>
 				</c:if>
 				
 				<c:if test="${product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="/_ui/responsive/common/images/transparent.png"> <span>online
+							src="//${staticHost}/_ui/responsive/common/images/transparent.png"> <span>online
 							exclusive</span>
 					</div>
 				</c:if>

@@ -7,38 +7,19 @@
 		<property qualifier="AbstractCMSComponent.visible"/>
 	</group>
 
-	<group qualifier="editorial" visible="true" initially-opened="false">
+	<group qualifier="editorial" visible="true" initially-opened="true">
 		<label key="config.general.editorial" />
-		<property qualifier="AbstractBannerComponent.urlLink"/>
-		<property qualifier="AbstractBannerComponent.external"/>
+		<property qualifier="ImageCarouselComponent.collectionItems">
+			<parameter>
+				<name>predefinedValuesStrategy</name>
+				<value>cmsItemPredefinedValuesStrategy</value>
+			</parameter>		
+		</property>
+		<property qualifier="SimpleCMSComponent.componentType" />				
 		<property qualifier="SimpleCMSComponent.deeplinkType" />
         <property qualifier="SimpleCMSComponent.deeplinkTypeId" />
         <property qualifier="SimpleCMSComponent.deeplinkTypeVal" />
-        <property qualifier="SimpleCMSComponent.componentType" />		
-		<property qualifier="AbstractBannerComponent.media" editor="simpleMediaReferenceSelector">
-			<parameter>
-				<name>mimeTypes</name>
-				<value>
-					image/jpeg;image/gif;image/png
-				</value>
-			</parameter>
-			<parameter>
-				<name>allowCreate</name>
-				<value>true</value>
-			</parameter>
-			<parameter>
-				<name>restrictToCreateTypes</name>
-				<value>Media</value>
-			</parameter>
-			<parameter>
-				<name>celumMediaFormat</name>
-				<value>picture</value>
-			</parameter>
-			<parameter>
-				<name>predefinedValuesStrategy</name>
-				<value>imageMediaPredefinedValuesStrategy</value>
-			</parameter>
-		</property>
+            		
 	</group>
 
 	<group qualifier="visibility" visible="true" initially-opened="false">
