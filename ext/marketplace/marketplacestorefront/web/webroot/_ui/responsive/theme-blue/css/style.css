@@ -1358,7 +1358,9 @@ h2 {
     margin-left: 35px; } }
            @media (min-width:791px) {
     header .content nav > ul {
-      clear: both; }
+      clear: both;
+      padding-top: 10px;
+      padding-bottom: 9px; }
       header .content nav > ul::after {
         clear: both;
         content: "";
@@ -1368,7 +1370,6 @@ h2 {
         margin-right: 20px;
         padding: 0;
         width: 120px;
-        padding-top: 10px;
         -webkit-transition: background-color 0.3s 0.3s;
         -moz-transition: background-color 0.3s 0.3s;
         transition: background-color 0.3s 0.3s; }
@@ -20020,8 +20021,6 @@ body.page-shoe .feature-collections ul.collections li.chef.sub h3 span a{
 }
 .listing.wrapper .right-block .listing-menu > div .wrapped-form.sort {
   display: inline-block;
-  padding: 0 0 0 15px;
-  border: 2px solid #f0f4f5;
 }
 
 }
@@ -30155,9 +30154,9 @@ li#ratingDiv {
  	header .content nav > ul > li > .toggle > span:first-child{
  	font-size: 11.1px;
      line-height: 15px;
-     height: 17px;
+     height: 26px;
      font-weight: 500;
-     margin-top: 9px;
+     padding-top: 9px;
      display: block;
      letter-spacing: 1px;}
      
@@ -31705,6 +31704,45 @@ display:none;
 .jqtree-title.jqtree_common:not(.jqtree-title-folder){
 	color:#857D7B;
 }
+.sort-by-sec {
+    font-size: 13px;
+    padding: 0;
+    text-align: center;
+    margin: 10px 0;
+}
+.sort-by-sec strong {
+    color: #857D7B;
+    font-weight: 400;
+}
+.sort-by-sec a {
+    display: inline-block;
+    padding: 10px 15px;
+    position: relative;
+    font-weight: 400;
+}
+.sort-by-sec a.active, .sort-by-sec a:hover {
+    color: #a9143c;
+    border-bottom: 2px solid #A91E3E;
+    margin-bottom: -1px;
+}
+.sort-by-sec a.active:before {
+    top: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(136, 183, 213, 0);
+    border-bottom-color: #a9143c;
+    border-width: 4px;
+    margin: -8px 0 0 -4px;
+}
+.sort-by-inline{
+	display:inline;
+}
+
 /*--------------maincss-----------*/
 .row
 {
