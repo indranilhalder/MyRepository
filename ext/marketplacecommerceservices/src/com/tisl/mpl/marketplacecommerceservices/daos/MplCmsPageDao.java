@@ -39,4 +39,10 @@ public interface MplCmsPageDao extends CMSPageDao
 	 * @return ContentPageModel
 	 */
 	ContentPageModel getHomePageForMobile(CMSChannel cms, String pageUid);
+	
+	/**
+	 * @param pageUid
+	 * @return ContentPageModel
+	 */
+	ContentPageModel getPageForAppById(String pageUid);
 }
