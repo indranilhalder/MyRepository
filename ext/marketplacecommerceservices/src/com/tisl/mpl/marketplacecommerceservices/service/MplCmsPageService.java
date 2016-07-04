@@ -42,5 +42,11 @@ public interface MplCmsPageService extends CMSPageService
 	 * @return
 	 */
 	ContentPageModel getHomePageForMobile(String pageUid);
+	
+	/**
+	 * @param pageUid
+	 * @return ContentPageModel
+	 */
+	ContentPageModel getPageForAppById(String pageUid);
 }
 
