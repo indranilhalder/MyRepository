@@ -1,25 +1,23 @@
 var headerLoggedinStatus = false;
 var csrfDataChanged = false;
 $(function() {
-      $.ajax({
-         url: ACC.config.encodedContextPath + "/fetchToken",
-         type: 'GET',
-         async:false,
-         cache:false,
-         success: function(data) {
-             $("input[name='CSRFToken']").each(function() {
-                 this.value = data.token;
-             });
-             ACC.config.CSRFToken = data.token;
-             ACC.config.SessionId = data.sessionId;
-             ACC.config.VisitorIp = data.vistiorIp;
-             var crsfSession = window.sessionStorage.getItem("csrf-token");
-             if(window.sessionStorage && (null == crsfSession || crsfSession != data.token)){
-            	 csrfDataChanged = true;
-            	 window.sessionStorage.setItem("csrf-token",data.token);
-             }
-         }
-     });
+    $.ajax({
+       url: ACC.config.encodedContextPath + "/fetchToken",
+       type: 'GET',
+       async:false,
+       cache:false,
+       success: function(data) {
+           $("input[name='CSRFToken']").each(function() {
+               this.value = data;
+           });
+           ACC.config.CSRFToken = data;
+           var crsfSession = window.sessionStorage.getItem("csrf-token");
+           if(window.sessionStorage && (null == crsfSession || crsfSession != data)){
+          	 csrfDataChanged = true;
+          	 window.sessionStorage.setItem("csrf-token",data);
+           }
+       }
+   });
 });
 $(function() {
 	//TISPRO-522 IE Issue Fix
@@ -353,10 +351,11 @@ function getBrandsYouLoveContentAjaxCall(id) {
                 type: "GET",
                 dataType: "json",
                 beforeSend: function() {
+                	var staticHost=$('#staticHost').val();
                     $(".home-brands-you-love-carousel").css(
                         "margin-bottom", "120px");
                     $("#brandsYouLove").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -441,7 +440,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         id, encodeURI(defaultHtml));
                 },
                 complete: function() {
-                    $('#brandsYouLove .loaderDiv').remove();
+                   $('#brandsYouLove .loaderDiv').remove();
                 },
                 error: function() {
                     $('#brandsYouLove .loaderDiv').remove();
@@ -730,6 +729,7 @@ function getNewAndExclusiveAjaxCall() {
         data: dataString,
         success: function(response) {
             //console.log(response.newAndExclusiveProducts);
+        	var staticHost=$('#staticHost').val();
             var defaultHtml = "";
             renderHtml = "<h1>" + response.title + "</h1>" +
                 "<div class='carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
@@ -737,7 +737,7 @@ function getNewAndExclusiveAjaxCall() {
                 key, value) {
             	if(value.isNew == 'Y')
             	{
-            	renderNewHtml = "<div style='z-index: 1;' class='new'><img class='brush-strokes-sprite sprite-New' src='/_ui/responsive/common/images/transparent.png'><span>New</span></div>";
+            	renderNewHtml = "<div style='z-index: 1;' class='new'><img class='brush-strokes-sprite sprite-New' src='"+staticHost+"/_ui/responsive/common/images/transparent.png'><span>New</span></div>";
             	} else {
             		renderNewHtml = '';
             	}
@@ -962,7 +962,7 @@ function getShowCaseAjaxCall() {
     // Get Showcase Content AJAX
 
 function getShowcaseContentAjaxCall(id) {
-        if (window.localStorage && (html = window.localStorage.getItem(
+	if (window.localStorage && (html = window.localStorage.getItem(
             "showcaseContent-" + id)) && html != "") {
             // console.log("Local");
             $('.about-one showcase-section').remove();
@@ -973,10 +973,11 @@ function getShowcaseContentAjaxCall(id) {
                 type: "GET",
                 dataType: "json",
                 beforeSend: function() {
+                	var staticHost=$('#staticHost').val();
                     $(".showcase-switch").css("margin-bottom",
                         "80px");
                     $("#showcase").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -985,6 +986,7 @@ function getShowcaseContentAjaxCall(id) {
                     "id": id
                 },
                 success: function(response) {
+                	
                     $('.about-one.showcase-section').remove();
                     defaultHtml =
                         "<div class='about-one showcase-section'>";
@@ -1078,6 +1080,7 @@ $(document).ready(function(){
 	//TISPT-290
 	if($('#pageTemplateId').val() =='LandingPage2Template'){
 	lazyLoadDivs();
+
 	setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
 }
 //Fix for defect TISPT-202

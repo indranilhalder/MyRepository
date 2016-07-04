@@ -1681,6 +1681,7 @@
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
     	<property name="imageDiscription" type="String" />
+	<property name="componentType" type="String" />
     </bean>
     
      <bean class="com.tisl.mpl.wsdto.TextComponentWsDTO">
@@ -1699,14 +1700,25 @@
     	<property name="type" type="String" />
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
+		<property name="productID" type="String" />
+    	<property name="componentType" type="String" />
     </bean>
     
+    <bean class="com.tisl.mpl.wsdto.ImageListComponentWsDTO">
+    	<property name="type" type="String" />
+    	<property name="typeId" type="String" />
+    	<property name="typeVal" type="String" />
+    	<property name="imageDiscription" type="String" />
+    	<property name="bannerslist" type="java.util.List&lt;com.tisl.mpl.wsdto.BannerComponentWsDTO>"/>
+    	<property name="componentType" type="String" />
+    </bean> 
    
     <bean class="com.tisl.mpl.wsdto.MplPageWsDTO">
     	<property name="sectionId" type="String" />
     	<property name="textComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.TextComponentWsDTO>"/>
     	<property name="bannerComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.BannerComponentWsDTO>"/>
     	<property name="productComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductListComponentWsDTO>"/>
+		<property name="bannerslistComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.ImageListComponentWsDTO>"/>
     	<property name="sectionName" type="String" />
     </bean>
 

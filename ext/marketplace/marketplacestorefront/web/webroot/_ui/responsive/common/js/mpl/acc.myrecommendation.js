@@ -166,7 +166,6 @@ $("document").ready(function(){
     				{
     					$(location).attr('href',ACC.config.encodedContextPath+"/login");
     				}
-
     			},
     			error: function(){
     				//alert("Something is not right! Please try after sometime");
