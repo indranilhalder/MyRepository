@@ -1497,10 +1497,9 @@ $(document).ready(function(){
 		$(document).on('touchend','.select-view .select-list ul li',function(e){
 			$(this).click();
 		});
-		
-		$(".sort-by-inline a").click(function(){
-			$(".sort-by-inline a").removeClass("active");
-			$(this).addClass("active");
+		$(window).on("load resize", function() {
+			var filter_height=$(".facet-list.filter-opt").height() + 55;
+			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");
 		});
 		//loadGigya();
 });
