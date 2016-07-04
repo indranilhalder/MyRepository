@@ -6,20 +6,26 @@ ACC.minicart = {
 	 * using this function for click & hover over the 'MyBag' Link
 	 */
 	bindMiniCart : function() {
-
+		var miniBagHover;
 		$(document).on(
 				"mouseenter",
 				".mini-cart-link",
 				function(e) {
-					var url = $(this).data("miniCartUrl") + "?stamp="
-							+ (new Date()).getTime();
-					$.get(url, function(html) {
-						$(".mini-bag").html(html);
+					var $this = $(this);
+					miniBagHover = setTimeout(function(){
+						var url = $this.data("miniCartUrl") + "?stamp="
+								+ (new Date()).getTime();
+						$.get(url, function(html) {
+							$(".mini-bag").html(html);
 
-					});
+						});
+					},300);
+				});
 
-				})
-
+		$("header li.bag").on("mouseleave", function() {
+			clearTimeout(miniBagHover);
+		});
+		
 		$(document).on("click", ".js-mini-cart-close-button", function(e) {
 			e.preventDefault();
 			ACC.colorbox.close();

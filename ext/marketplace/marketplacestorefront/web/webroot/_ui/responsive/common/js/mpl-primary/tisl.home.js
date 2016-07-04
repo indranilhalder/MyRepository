@@ -191,43 +191,64 @@ $(document).on('click',"div#closeConceirge",function(e) {
 	$(this).parents('.banner').removeClass('active');
 });
 
-
+var trackLinkHover;
 $("a#tracklink").on("mouseover touchend", function(e) {
     e.stopPropagation();
-    $.ajax({
-        url: ACC.config.encodedContextPath +
-            "/headerTrackOrder",
-        type: 'GET',
-        cache:false,
-        success: function(html) {
-            $("ul.trackorder-dropdown").html(html);
-        }
-    });
-});
-$("a#myWishlistHeader").on("mouseover touchend", function(e) {
-    e.stopPropagation();
-    $.ajax({
-        url: ACC.config.encodedContextPath + "/headerWishlist",
-        type: 'GET',
-        data: "&productCount=" + $(this).attr("data-count"),
-        success: function(html) {
-            $("div.wishlist-info").html(html);
-        }
-    });
-});
-//TISPRO-522-IE Issue Fix
-$("li.ajaxloginhi").on("mouseover touchend", function(e) {
-    e.stopPropagation();
-    if ($("ul.ajaxflyout").html().trim().length <= 0) {
-        $.ajax({
+    trackLinkHover = setTimeout(function(){
+    	$.ajax({
             url: ACC.config.encodedContextPath +
-                "/headerloginhi?timestamp="+Date.now(),
+                "/headerTrackOrder",
             type: 'GET',
+            cache:false,
             success: function(html) {
-                $("ul.ajaxflyout").html(html);
+                $("ul.trackorder-dropdown").html(html);
             }
         });
-    }
+    },300);
+});
+$("li.track.trackOrder").on("mouseleave", function() {
+	clearTimeout(trackLinkHover);
+});
+
+
+var wishlistHover;
+$("a#myWishlistHeader").on("mouseover touchend", function(e) {
+    e.stopPropagation();
+    wishlistHover = setTimeout(function(){
+    	$.ajax({
+            url: ACC.config.encodedContextPath + "/headerWishlist",
+            type: 'GET',
+            data: "&productCount=" + $(this).attr("data-count"),
+            success: function(html) {
+                $("div.wishlist-info").html(html);
+            }
+        });
+    },300);
+    
+});
+$("li.wishlist").on("mouseleave", function() {
+	clearTimeout(wishlistHover);
+});
+//TISPRO-522-IE Issue Fix
+var loginHover;
+$("li.ajaxloginhi").on("mouseover touchend", function(e) {
+    e.stopPropagation();
+    loginHover = setTimeout(function(){
+    	if ($("ul.ajaxflyout").html().trim().length <= 0) {
+            $.ajax({
+                url: ACC.config.encodedContextPath +
+                    "/headerloginhi?timestamp="+Date.now(),
+                type: 'GET',
+                success: function(html) {
+                    $("ul.ajaxflyout").html(html);
+                }
+            });
+        }
+    },300);
+});
+
+$("li.logIn-hi").on("mouseleave", function(e) {
+	clearTimeout(loginHover);
 });
 //
 var activePos = 0;
@@ -883,7 +904,7 @@ function showStayQued(response){
         linkText = promoText2;
     }
     renderHtml =
-        '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">' +
+        '<h1><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">' +
         promoText1 + '<a href="' + bannerUrlLink +
         '" class="button maroon">' + linkText +
         '</a></div><div class="qued-image"><img class="lazy" src="' +
