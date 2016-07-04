@@ -102,7 +102,7 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 					continue;
 				}
 				sb.append(ClientUtils.escapeQueryChars(w.replaceAll(":", "")));
-				sb.append(" ");
+				sb.append(' ');
 				cleanedText = sb.toString().trim();
 			}
 
