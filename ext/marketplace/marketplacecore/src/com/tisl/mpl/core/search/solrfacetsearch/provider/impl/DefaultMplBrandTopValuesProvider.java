@@ -30,6 +30,7 @@ public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 		this.topFacetCount = topFacetCount;
 	}
 
+	@Override
 	public List<FacetValue> getTopValues(final IndexedProperty indexedProperty, final List<FacetValue> facets)
 	{
 

@@ -1501,6 +1501,10 @@ $(document).ready(function(){
 			var filter_height=$(".facet-list.filter-opt").height() + 55;
 			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");
 		});
+		
+		$('.checkout.wrapper .product-block.addresses li.item .addressEntry').click(function(){
+			$(this).find('input:radio[name=selectedAddressCode]').prop('checked', true);
+			});
 		//loadGigya();
 });
 

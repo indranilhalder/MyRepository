@@ -960,13 +960,14 @@ $(function() {
 											$("#collect").hide();
 											$("#collectli").hide();
 
-											$('#wrongPin,#unableprocessPin,#emptyPin').hide();
+											$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin').hide();
 
 
 											$('#addToCartFormTitle').hide();
 											$('#addToCartButton-wrong').show();
 											$('#addToCartButton').hide();
 											$('#unsevisablePin').show();
+											
 											$('#buyNowButton').attr("disabled",true);
 											return false;
 										}
@@ -992,6 +993,8 @@ $(function() {
 												if (ussid == buyboxSeller) {
 
 													if (pincodedata['isServicable'] == 'Y') {
+														
+														 $('#serviceablePin').show();  //TISPRM-20::PDP show pincode serviceability msg  
 														checkBuyBoxIdPresent = true;
 														deliveryModes = pincodedata['validDeliveryModes'];
 														var home = false;
@@ -1091,7 +1094,7 @@ $(function() {
 														$("#express").hide();
 														$("#collectli").hide();
 														$(
-																'#wrongPin,#unableprocessPin,#emptyPin')
+																'#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin')
 																.hide();
 														$('#addToCartFormTitle')
 																.hide();
