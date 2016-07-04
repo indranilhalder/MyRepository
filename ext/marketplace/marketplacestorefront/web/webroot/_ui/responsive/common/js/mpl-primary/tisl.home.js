@@ -8,13 +8,16 @@ $(function() {
        cache:false,
        success: function(data) {
            $("input[name='CSRFToken']").each(function() {
-               this.value = data;
+               this.value = data.token;
            });
-           ACC.config.CSRFToken = data;
+           ACC.config.CSRFToken = data.token;
+           ACC.config.SessionId = data.sessionId;
+           ACC.config.VisitorIp = data.vistiorIp;
+           
            var crsfSession = window.sessionStorage.getItem("csrf-token");
-           if(window.sessionStorage && (null == crsfSession || crsfSession != data)){
+           if(window.sessionStorage && (null == crsfSession || crsfSession != data.token)){
           	 csrfDataChanged = true;
-          	 window.sessionStorage.setItem("csrf-token",data);
+          	 window.sessionStorage.setItem("csrf-token",data.token);
            }
        }
    });
