@@ -40356,3 +40356,7 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
     background-position: -111px -155px;
 }
 /************** Sprite images end *****************/
+body.page-checkout-login header .content nav>ul {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
