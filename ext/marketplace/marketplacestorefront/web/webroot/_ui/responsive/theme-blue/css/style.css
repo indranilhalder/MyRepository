@@ -16042,7 +16042,6 @@ body .account .right-account .order-history.order-details li.item .status>ul>li 
     font-weight: 500;
     text-align: center;
     line-height: 30px;
-    cursor:pointer;
 }
 /*TISSIT-2006 start*/
 body .account .right-account .order-history.order-details li.item .status> ul.nav >li{
@@ -16063,7 +16062,8 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     display: block;
     text-transform: uppercase;
     letter-spacing: .5px;
-    font-size: 20px
+    font-size: 20px;
+    cursor:pointer;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot:before {
     z-index: 2;
@@ -27009,6 +27009,7 @@ body .account .right-account .updatePassword-wrapper{
 	font-weight: bold;
     letter-spacing: 0.5px;
     font-size:10px;
+    cursor:pointer;
 }
 @media (max-width:790px){
 #track-more-info p{
