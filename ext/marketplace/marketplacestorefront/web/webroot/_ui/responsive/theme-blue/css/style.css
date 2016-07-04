@@ -11001,6 +11001,7 @@ button.otherSellersFont {
     content: "\f0d5"
 }
 .product-info .product-content .delivery-block {
+	margin-top: 40px;
     width: 100%;
     border: 1px solid #f0f4f5;
     display: inline-block
@@ -12018,6 +12019,7 @@ button.otherSellersFont {
     }
 }
 .star-review {
+    padding-right: 14px;
     display: inline-block;
     color: #A9143C;
 }
@@ -31513,6 +31515,8 @@ body.page-homepage .feature-collections{
 @media(max-width:790px){
 	header.brand-header .content .bottom nav > ul > li#shopMicrositeSeller.active{
     padding-top: 47px;}
+    .product-info .product-content .swatch .qty{
+    margin-bottom:50px;}
 }
 @media(min-width:790px){
 	.product-info .product-image-container .image-list li img {

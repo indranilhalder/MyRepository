@@ -134,7 +134,7 @@ tr.d0 td {
 				<cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot>
-
+        
 			</div>
 			
 			
@@ -144,14 +144,7 @@ tr.d0 td {
 			<span id="sharepretext" style="display:none"><spring:theme code="share.pretext"/></span>
 			<span id="shareposttext" style="display:none"><spring:theme code="share.posttext"/></span>
 			
-			<ul class="wish-share">
-				<li><!-- <span id="addedMessage" style="display:none"></span> -->
-				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
-				<li>
-				<product:socialSharing product="${product}" />
-					
-				</li>
-			</ul>
+			
 	
 			<!-- Social sharing -->
 	<script>
@@ -178,7 +171,15 @@ tr.d0 td {
 			<cms:pageSlot position="PinCodeService" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
-
+          
+          <ul class="wish-share">
+				<li><!-- <span id="addedMessage" style="display:none"></span> -->
+				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
+				<li>
+				<product:socialSharing product="${product}" />
+					
+				</li>
+			</ul>
 		</div>
 
 

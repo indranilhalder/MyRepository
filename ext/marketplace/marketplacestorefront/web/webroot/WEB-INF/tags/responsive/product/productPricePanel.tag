@@ -64,7 +64,7 @@
 				</script> 
 </c:if>
 </div>
-<c:if test="${isGigyaEnabled=='Y'}">
+<%-- <c:if test="${isGigyaEnabled=='Y'}">
  <ul class="star-review" id="pdp_rating">
 				<li class="empty"></li>
 				<li class="empty"></li>
@@ -73,7 +73,7 @@
 				<li class="empty"></li>
 				<span class="gig-rating-readReviewsLink_pdp"> <spring:theme code="rating.noreviews"/></span>
 				<!-- OOTB Code Commented to facilitate Rest Call -->
-		<%-- <c:choose>
+		<c:choose>
 				<c:when test="${not empty product.ratingCount}">
 					<a href="">${product.ratingCount} <spring:theme code="text.account.reviews"/></a> 
 				</c:when>
@@ -81,6 +81,6 @@
 					<span><spring:theme code="text.no.reviews"/></span>
 					 
 				</c:otherwise>
-			</c:choose>  --%>
+			</c:choose> 
 			</ul>
-</c:if>
+</c:if> --%>
