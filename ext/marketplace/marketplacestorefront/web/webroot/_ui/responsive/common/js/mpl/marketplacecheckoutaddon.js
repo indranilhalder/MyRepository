@@ -1,5 +1,6 @@
 var isCodSet = false;	//this is a variable to check whether convenience charge is set or not
 var binStatus= false;
+var isNewCard = false; //this is variable to fix paynow blackout issue
 
 var couponApplied=false;
 var bankNameSelected;
@@ -563,6 +564,7 @@ function submitForm(){
 							$('#paymentButtonId').prop('disabled', false); //TISPRD-958
 						}
 						else{
+							var staticHost=$('#staticHost').val();
 							//TISPRO-153
 							sendTealiumData();	
 							$("#form-actions, #otpNUM").css("display","block");
@@ -571,7 +573,7 @@ function submitForm(){
 							$(".pay .payment-button,.cod_payment_button_top").prop("disabled",true);
 							$(".pay .payment-button,.cod_payment_button_top").css("opacity","0.5");
 							//store url change
-							$(".pay").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 100px; height: 30px;">');
+							$(".pay").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 100px; height: 30px;">');
 							$(".pay .spinner").css("left",(($(".pay#paymentFormButton").width()+$(".pay#paymentFormButton .payment-button").width())/2)+10);
 							$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 							$("#silentOrderPostForm").submit();
@@ -1067,10 +1069,12 @@ function displayFormForCC(){
   
 
 function mobileBlacklist(){
-	//Check if the session is active before generating OTP
+
+//Check if the session is active before generating OTP
 	if(isSessionActive()){
 	//store url change
-	$("#sendOTPButton").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
+	var staticHost=$('#staticHost').val();
+	$("#sendOTPButton").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
 	if($("#sendOTPButton #resendOTPMessage").css("display") == 'block') {
 		$("#sendOTPButton .spinner").css("bottom","33px")
 	}
@@ -1392,10 +1396,11 @@ $("#otpMobileNUMField").focus(function(){
  
  
   function createJuspayOrderForSavedCard(){
+	  	var staticHost=$('#staticHost').val();
 		$(".pay button, #make_saved_cc_payment_up").prop("disabled",true);
 		$(".pay button, #make_saved_cc_payment_up").css("opacity","0.5");
 		//store url change
-		$(".pay").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
+		$(".pay").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.saved-card-button").width()+$(".pay.saved-card-button button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	  // TISPRO-153		
@@ -1487,10 +1492,12 @@ $("#otpMobileNUMField").focus(function(){
   
   
   function createJuspayOrderForNewCard(){
+	    var staticHost=$('#staticHost').val();  
+	   isNewCard = true;////this is variable to fix paynow blackout issue
 		$(".pay button, #make_cc_payment_up").prop("disabled",true);
 		$(".pay button, #make_cc_payment_up").css("opacity","0.5");
 		//store url change
-		$(".pay").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
+		$(".pay").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 92px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		// TISPRO-153
@@ -1557,6 +1564,7 @@ $("#otpMobileNUMField").focus(function(){
 					 }, 1000);
 			
 				}
+				$("#no-click").remove();
 			},
 			error : function(resp) {
 				if($(".redirect").val()=="false"){
@@ -1616,7 +1624,8 @@ $("#otpMobileNUMField").focus(function(){
 	 return status;
   }
  
- 
+
+
 
  function dopayment(bin_current_status){
 	 var name = validateName();
@@ -1665,6 +1674,7 @@ $("#otpMobileNUMField").focus(function(){
 			 if (name && cardNo){
 				 createJuspayOrderForNewCard();		 
 			 }
+			 
 			 else{
 				 return false;
 			 }
@@ -1681,9 +1691,10 @@ $("#otpMobileNUMField").focus(function(){
 			 }
 		 }
 	 }
+
  }
  
- 
+
 
  function submitCardForm(){
 	 var baseUrl=window.location.origin;
@@ -2617,9 +2628,10 @@ function setBankForSavedCard(bankName){
 
 function applyPromotion(bankName)
 {
+	var staticHost=$('#staticHost').val();
 	$("body").append("<div id='no-click1' style='opacity:0.15; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner1" style="position: fixed; left: 40%;top:45%; height: 30px;">'); 
-	
+	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner1" style="position: fixed; left: 40%;top:45%; height: 30px;">'); 
+
 	$(".make_payment").attr('disabled','true');
 	var paymentMode=$("#paymentMode").val();
 	$("#promotionApplied,#promotionMessage").css("display","none");
@@ -2686,18 +2698,20 @@ function applyPromotion(bankName)
 				{
 					for (var x = 0; x < response.mplPromo.length; x++)
 					{
-						var promoIdentifier=response.mplPromo[x].promoTypeIdentifier;
-						if(promoIdentifier=="PotentialPromotion")
+						if(!(response.mplPromo[x]==null || response.mplPromo[x]=='null' || response.mplPromo[x]=='undefined')) //TISSIT-2046 TISBM-4449
 						{
-							var spanTag = document.createElement("p");
-							spanTag.id = "p"+x;	
-							$("#promotionApplied").css("display","none");
-							$("#promotionMessage").css("display","block");
-							spanTag.innerHTML=response.mplPromo[x].potentialPromotion.promoMessage;
-							$("#promotionMessage").append(spanTag);
-							$("spanTag.id").append('</br>');
+							var promoIdentifier=response.mplPromo[x].promoTypeIdentifier;
+							if(promoIdentifier=="PotentialPromotion")
+							{
+								var spanTag = document.createElement("p");
+								spanTag.id = "p"+x;	
+								$("#promotionApplied").css("display","none");
+								$("#promotionMessage").css("display","block");
+								spanTag.innerHTML=response.mplPromo[x].potentialPromotion.promoMessage;
+								$("#promotionMessage").append(spanTag);
+								$("spanTag.id").append('</br>');
+							}
 						}
-						
 					}
 					
 					//TISEE-352
@@ -2818,7 +2832,12 @@ function applyPromotion(bankName)
 				$("#no-click").remove();
 				$(".make_payment").removeAttr('disabled');
 			}
-			$("#no-click1,.spinner1").remove();
+			$("#no-click1,.spinner1").remove();			
+			if(isNewCard){//if this variable is true resetting the opacity
+			$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			isNewCard = false;
+		}
+
 		},
 		error : function(resp) {
 			$("#no-click").remove();
@@ -3067,17 +3086,24 @@ $('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li 
 function changeCTAButtonName(deliveryCode) {
 	//console.log(deliveryCode);
 	//TISPRO-625
-	//var buttonText=$('#deliveryMethodSubmit').text();
-	
+	var isExpressCheckoutSelected=$('#isExpressCheckoutSelected').val();
 	if(deliveryCode == "click-and-collect") {
 		$("#deliveryMethodSubmit").text("Choose Store");
 		$("#deliveryMethodSubmitUp").text("Choose Store");
 	} else if(deliveryCode== "DefaultName") {
 		//TISPRO-625
-		$("#deliveryMethodSubmit").text("Choose Address");
-		$("#deliveryMethodSubmitUp").text("Choose Address");
-		//$("#deliveryMethodSubmit").text(buttonText);
-		//$("#deliveryMethodSubmitUp").text(buttonText);
+		//$("#deliveryMethodSubmit").text("Choose Address");
+		//$("#deliveryMethodSubmitUp").text("Choose Address");
+		if(isExpressCheckoutSelected=='true')
+		{
+			$("#deliveryMethodSubmit").text("Proceed to Payment");
+			$("#deliveryMethodSubmitUp").text("Proceed to Payment");
+		}
+		else
+		{
+			$("#deliveryMethodSubmit").text("Choose Address");
+			$("#deliveryMethodSubmitUp").text("Choose Address");
+		}
 	}
 }
 
@@ -3670,6 +3696,7 @@ $("#cardNo").blur(function(){
 		}
 	} else {
 		 document.getElementById("cardNoError").innerHTML="Please enter a valid card number ";
+
 	}
 });
 $(".name_on_card").blur(function(){
@@ -4110,7 +4137,7 @@ $("#couponSubmitButton").click(function(){
 	 		}
 	 	});	 
 	}
-	}
+	}//End of session checking
 });
 
 $("#couponFieldId").focus(function(){
