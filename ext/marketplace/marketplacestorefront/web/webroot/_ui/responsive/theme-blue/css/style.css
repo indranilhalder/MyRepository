@@ -9786,7 +9786,9 @@ body .account .right-account .order-history .pagination li{
   max-height: 255px;
   overflow-y: auto;
 }
-
+.facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form,.facet.js-facet.Size .facet-values.js-facet-values.js-facet-form {
+	max-height: none;
+}
 @media ( max-width :650px) {
 	.facet-values.js-facet-values.js-facet-form, .brandSelectAllMain
 		{
@@ -40236,4 +40238,8 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 
 .smartbanner-windows .smartbanner-button-text:active,
 .smartbanner-windows .smartbanner-button-text:hover {
+}
+/**/
+li.filter-colour.deactivate,li.filter-Size.deactivate{
+	display:none !important;
 }
