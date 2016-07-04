@@ -1,5 +1,6 @@
 var isCodSet = false;	//this is a variable to check whether convenience charge is set or not
 var binStatus= false;
+var isNewCard = false; //this is variable to fix paynow blackout issue
 
 var couponApplied=false;
 var bankNameSelected;
@@ -1067,7 +1068,8 @@ function displayFormForCC(){
   
 
 function mobileBlacklist(){
-	//Check if the session is active before generating OTP
+
+//Check if the session is active before generating OTP
 	if(isSessionActive()){
 	//store url change
 	$("#sendOTPButton").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
@@ -1487,6 +1489,9 @@ $("#otpMobileNUMField").focus(function(){
   
   
   function createJuspayOrderForNewCard(){
+	  
+	   isNewCard = true;////this is variable to fix paynow blackout issue
+	  
 		$(".pay button, #make_cc_payment_up").prop("disabled",true);
 		$(".pay button, #make_cc_payment_up").css("opacity","0.5");
 		//store url change
@@ -1557,6 +1562,7 @@ $("#otpMobileNUMField").focus(function(){
 					 }, 1000);
 			
 				}
+				$("#no-click").remove();
 			},
 			error : function(resp) {
 				if($(".redirect").val()=="false"){
@@ -1616,7 +1622,8 @@ $("#otpMobileNUMField").focus(function(){
 	 return status;
   }
  
- 
+
+
 
  function dopayment(bin_current_status){
 	 var name = validateName();
@@ -1665,6 +1672,7 @@ $("#otpMobileNUMField").focus(function(){
 			 if (name && cardNo){
 				 createJuspayOrderForNewCard();		 
 			 }
+			 
 			 else{
 				 return false;
 			 }
@@ -1681,9 +1689,10 @@ $("#otpMobileNUMField").focus(function(){
 			 }
 		 }
 	 }
+
  }
  
- 
+
 
  function submitCardForm(){
 	 var baseUrl=window.location.origin;
@@ -2821,6 +2830,11 @@ function applyPromotion(bankName)
 				$(".make_payment").removeAttr('disabled');
 			}
 			$("#no-click1,.spinner1").remove();
+			
+			if(isNewCard){//if this variable is true resetting the opacity
+			$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			isNewCard = false;
+		}
 		},
 		error : function(resp) {
 			$("#no-click").remove();
@@ -3315,6 +3329,12 @@ function populatePincodeDeliveryMode(response,buttonType){
 					newUi.appendChild(newLi);
 				}
 			}
+			/****TISPRM-65 - Cart Page show pincode serviceability msg***/
+			var cartMessage = document.createElement("span");
+			cartMessage.style.color = "green";
+			var message = document.createTextNode("Yes,it's available. Go ahead.");
+			cartMessage.appendChild(message);
+			newUi.appendChild(cartMessage);
 			$("#"+ussId+"_li").append(newUi);
 			
 		}
@@ -3672,6 +3692,7 @@ $("#cardNo").blur(function(){
 		}
 	} else {
 		 document.getElementById("cardNoError").innerHTML="Please enter a valid card number ";
+
 	}
 });
 $(".name_on_card").blur(function(){
@@ -4112,7 +4133,7 @@ $("#couponSubmitButton").click(function(){
 	 		}
 	 	});	 
 	}
-	}
+	}//End of session checking
 });
 
 $("#couponFieldId").focus(function(){

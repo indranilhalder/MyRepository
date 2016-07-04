@@ -289,6 +289,7 @@ function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isAppa
 			if(status == "parsererror"){
 				window.location.href = ACC.config.encodedContextPath + "/login";
 			} else {
+
 				 alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");	
 			}
            

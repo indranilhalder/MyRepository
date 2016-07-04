@@ -65,11 +65,11 @@ function navigateToPage(queryString,textString)
 				<h4 class="${facetData.genericFilter}">${facetData.name}</h4>
 			</c:if>		 
 			</c:when> 
-			<c:when test="${facetData.code == 'price'}">
+			<%-- <c:when test="${facetData.code == 'price'}">
 				<h4 class="true">${facetData.name}</h4>
-			</c:when>
+			</c:when> --%>
 			<c:otherwise>
-				<h4 class="${facetData.genericFilter}">${facetData.name}</h4>
+				<h4 class="true">${facetData.name}</h4>
 			</c:otherwise>
 	   </c:choose>
 		
@@ -123,6 +123,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="isFacet" value="true"/>
 								
 								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg');border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
+								<span><span>All Color</span></span>
 								</form>
 								<%-- <a   onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" >
 							<!-- 	<a href="onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')"> -->
@@ -141,6 +142,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="isFacet" value="true"/>
 								
 								<input type="submit" title="${facetValue.name}" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />
+								<span><span>${facetValue.name}</span></span>
 								</form>
 									<%-- 
 									<a  title="${facetValue.name}" onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a>
@@ -224,6 +226,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
+								
 								</form>
 								<%-- <a href="#">
 								<a href="/search/helpmeshop&amp;text=${searchPageData.freeTextSearch}&amp;q=${facetValue.query.query.value}">
@@ -380,21 +383,22 @@ function navigateToPage(queryString,textString)
 
 			<c:if test="${not empty facetData.topValues}">
 			
-			<c:set var="remainingFacetValues" value="${facetData.values}" />			
+			<c:set var="remainingFacetValues" value="${facetData.values}" />
+	
+		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-8}" />
 		    
 			<div class="more-lessFacetLinks active">
 				<div class="more js-more-facet-values checkbox-menu">
-				  <c:choose>
-		              <c:when test="${facetData.code eq 'category' }">  <!-- && not empty facetValue.name -->
-		              <a href="#" class="js-more-facet-values-link more" > <spring:theme code="SHOW ALL" text="SHOW ALL" /> </a>
-		              </c:when>
-		              <c:otherwise>
-		              <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('search.Facet.topValue')" var="facetTopValue"/>				
-				       <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-facetTopValue}" /> 
-				       <a href="#" class="js-more-facet-values-link more" > ${remainingFacetValuesSize} &nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
-		              </c:otherwise>
-                  </c:choose>
-					
+				<c:choose>
+				<c:when test="${facetData.code eq 'colour'}" >
+				<a href="#" class="js-more-facet-values-link more" >+&nbsp;${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
+				
+				</c:when>
+				<c:otherwise>
+					<a href="#" class="js-more-facet-values-link more" >${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
+				</c:otherwise>
+				</c:choose>
+				
 				</div>
 				<div class="less js-less-facet-values checkbox-menu">
 				    	<form action="${url}" method="get"> 
