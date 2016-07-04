@@ -3339,6 +3339,12 @@ function populatePincodeDeliveryMode(response,buttonType){
 					newUi.appendChild(newLi);
 				}
 			}
+			/****TISPRM-65 - Cart Page show pincode serviceability msg***/
+			var cartMessage = document.createElement("span");
+			cartMessage.style.color = "green";
+			var message = document.createTextNode("Yes, it's available. Go ahead.");
+			cartMessage.appendChild(message);
+			newUi.appendChild(cartMessage);
 			$("#"+ussId+"_li").append(newUi);
 			
 		}
