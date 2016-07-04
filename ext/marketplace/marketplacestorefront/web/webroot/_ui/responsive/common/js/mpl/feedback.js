@@ -1497,43 +1497,10 @@ $(document).ready(function(){
 		$(document).on('touchend','.select-view .select-list ul li',function(e){
 			$(this).click();
 		});
-		
-		//$(".sort-by-inline a").click(function(e){
-		//e.preventDefault();
-//			var pgurl = window.location.href.substr(window.location.href.lastIndexOf("/")+1);
-//			alert(pgurl);
-//			pgurl = pgurl.substr(pgurl.indexOf("sort")+5, pgurl.length);
-//			alert(pgurl);
-//			pgurl = pgurl.substr(0, pgurl.indexOf("&"));
-//			alert(pgurl);
-//			
-//		$(".sort-by-inline a").addClass("active");		
-//		});
-		
-		$(function(){			
-			var pgurl = $.urlParam('sort');			
-			
-		    $(".sort-by-inline a").each(function(){
-		    	if( pgurl == null || $(this).attr("data-filter") == pgurl )
-				{					        	 
-					 $(this).addClass("active");	
-					 return false;
-				}
-					          
-		    })					
+		$(window).on("load resize", function() {
+			var filter_height=$(".facet-list.filter-opt").height() + 55;
+			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");
 		});
-		
-		$.urlParam = function(name){
-		    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-		    if (results==null){
-		       return null;
-		    }
-		    else{
-		       return results[1] || 0;
-		    }
-		}
-		
-		
 		//loadGigya();
 });
 
