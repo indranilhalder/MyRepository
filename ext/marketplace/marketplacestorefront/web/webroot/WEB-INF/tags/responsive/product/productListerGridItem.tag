@@ -21,6 +21,7 @@
 <c:url value="${product.url}" var="productUrl" />
 <c:set value="${not empty product.potentialPromotions}"
 	var="hasPromotion" />
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 
 
 <li class="product-item"><ycommerce:testId
@@ -32,7 +33,7 @@
 					<div style="z-index: 1;" class="new">
 						<img class="brush-strokes-sprite sprite-New"
 
-							src="/_ui/responsive/common/images/transparent.png"><span>New</span>
+							src="//${staticHost}/_ui/responsive/common/images/transparent.png"><span>New</span>
 					</div>
 				</c:if>
 
@@ -47,14 +48,14 @@
 						<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">
 				<%-- 	<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}"> --%>
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="/_ui/responsive/common/images/transparent.png">
+							src="//${staticHost}/_ui/responsive/common/images/transparent.png">
 						<span>On Offer</span>
 					</div>
 		         </c:if>
 				<c:if test="${product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="/_ui/responsive/common/images/transparent.png">
+							src="//${staticHost}/_ui/responsive/common/images/transparent.png">
 						<span>online exclusive</span>
 					</div>
 				</c:if>

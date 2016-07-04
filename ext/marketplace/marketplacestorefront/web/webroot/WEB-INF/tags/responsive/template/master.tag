@@ -154,14 +154,6 @@
 
 <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi" /> 
 <meta name="viewport" content="width=640, initial-scale=1" />-->
-<script>
-if($(window).width() < 650) {
-	$('head').append('<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />');
-}
-</script>
-
-
-
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
@@ -240,32 +232,5 @@ if($(window).width() < 650) {
 </body>
 
 <debug:debugFooter/>
-<script>
-/* 	banner = undefined;
-		var n = document.querySelector('.smartbanner');
-		if (n) {
-			n.parentNode.removeChild(n);
-		} */
-		new SmartBanner({
-				daysHidden: 0, // days to hide banner after close button is clicked (defaults to 15)
-				daysReminder: 0, // days to hide banner after "VIEW" button is clicked (defaults to 90)
-				appStoreLanguage: 'us', // language code for the App Store (defaults to user's browser language)
-				title: 'TataCLiQ',
-				author: 'TataCLiQ',
-				speedIn: 300, // Show animation speed of the banner
-			    speedOut: 400, // Close animation speed of the banner
-				button: 'OPEN',
-				force: null,
-				store: {
-		              ios: 'On the App Store',
-		              android: 'In Google Play'
-		          },
-		          price: {
-		              ios: 'FREE',
-		              android: 'FREE'
-		          }
-		});
-
-</script>
 </html>
 <%-- </compress:html> --%>

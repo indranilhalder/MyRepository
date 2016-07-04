@@ -45,6 +45,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -84,6 +85,7 @@ import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -164,7 +166,7 @@ public class HomePageController extends AbstractPageController
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
 	//store url changes
-	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+	//private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 	private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
 
@@ -847,7 +849,7 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getShowcaseContent", method = RequestMethod.GET)
-	public JSONObject getShowcaseContent(@RequestParam(value = "id") final String componentId)
+	public JSONObject getShowcaseContent(@RequestParam(value = "id") final String componentId, final HttpServletRequest request)
 	{
 		MplShowcaseItemComponentModel showcaseItem = null;
 		JSONObject showCaseItemJson = new JSONObject();
@@ -893,7 +895,8 @@ public class HomePageController extends AbstractPageController
 	private String getProductPrimaryImageUrl(final ProductData productData)
 	{
 		final List<ImageData> images = (List<ImageData>) productData.getImages();
-		String imageUrl = MISSING_IMAGE_URL;
+		//String imageUrl = MISSING_IMAGE_URL;
+		String imageUrl = GenericUtilityMethods.getMissingImageUrl();
 
 		if (CollectionUtils.isNotEmpty(images))
 		{
@@ -1056,7 +1059,7 @@ public class HomePageController extends AbstractPageController
 
 
 	@RequestMapping(value = "/listOffers", method = RequestMethod.GET)
-	public String get(final Model model)
+	public String get(final Model model, final HttpServletRequest request)
 	{
 		LatestOffersData latestOffersData = new LatestOffersData();
 		try
