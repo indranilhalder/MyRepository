@@ -38,6 +38,20 @@ public class SellerMasterWsDTO implements java.io.Serializable
 	private String Title;
 	private String Language;
 	private String Customer;
+	private String isCDAllowed;
+
+
+
+	public String getisCDAllowed()
+	{
+		return isCDAllowed;
+	}
+
+	public void setCDAllowed(final String isCDAllowed)
+	{
+		this.isCDAllowed = isCDAllowed;
+	}
+
 	@XStreamImplicit(itemFieldName = "corporateAddress")
 	private List<CorporateAddressWsDTO> corporateAddress;
 	private RegisteredAddressWsDTO registerAddress;
@@ -145,6 +159,7 @@ public class SellerMasterWsDTO implements java.io.Serializable
 	{
 		this.lastname = lastname;
 	}
+
 
 	/**
 	 * @return the type
