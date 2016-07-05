@@ -747,6 +747,10 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 					masterModel.setType(description);
 				}
 			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getisCDAllowed()))
+			{
+				masterModel.setIsCDAllowed(sellerMasterWsDTO.getisCDAllowed());
+			}
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getMidname()))
 			{
 				masterModel.setMidname(sellerMasterWsDTO.getMidname());
@@ -1121,7 +1125,10 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 				}
 			}
 
-
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getisCDAllowed()))
+			{
+				masterModelUpdate.setIsCDAllowed(sellerMasterWsDTO.getisCDAllowed());
+			}
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getMidname()))
 			{
 				masterModelUpdate.setMidname(sellerMasterWsDTO.getMidname());
