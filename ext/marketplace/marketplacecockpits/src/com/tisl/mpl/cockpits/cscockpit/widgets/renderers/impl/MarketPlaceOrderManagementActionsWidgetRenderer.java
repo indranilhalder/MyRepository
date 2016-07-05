@@ -18,6 +18,7 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Div;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
+import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceOrderManagementActionsWidgetController;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -44,7 +45,8 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 					.getName());
 	@Autowired
 	private ConfigurationService configurationService;
-
+	@Autowired
+    private MarketPlaceOrderManagementActionsWidgetController marketPlaceOrderManagementActionsWidgetController;
 	// added
 	private CallContextController callContextController;
 
@@ -63,7 +65,6 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 		/* 80 */return getCallContextController().getCurrentOrder();
 		/*     */}
 
-	@Override
 	protected HtmlBasedComponent createContentInternal(
 			Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			HtmlBasedComponent rootContainer) {
@@ -105,11 +106,20 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 
 		if (isUserInRole(configurationService.getConfiguration().getString(
 				"cscockpit.user.group.refunddelcsagentgroup"))) {
-
+			     
 			createButton(widget, (Div) component, "refundDeliveryCharge",
 					"csRefundDeliveryChargeWidgetConfig",
 					"refundDeliveryCharge-popup", "refundDeliveryCharge",
 					"refunddeliverycharge.request", false);
+		}
+		if (isUserInRole(configurationService.getConfiguration().getString(
+				"cscockpit.user.group.refunddelcsagentgroup"))) {
+
+			createButton(widget, (Div) component, "ChangeDeliveryAddress",
+					"csChangeDeliveryAddressWidgetConfig",
+					"ChangeDeliveryAddress-popup", "ChangeDeliveryAddress",
+					"ChangeDeliveryAddress.request", !marketPlaceOrderManagementActionsWidgetController.isChangeDeliveryAddressPossible(widget
+							.getWidgetController().getOrder()));
 		}
 		return component;
 	}
