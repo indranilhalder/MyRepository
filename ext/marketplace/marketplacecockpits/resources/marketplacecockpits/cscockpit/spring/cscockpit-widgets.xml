@@ -650,19 +650,24 @@
 	<alias alias="csCouponOrderWidgetRenderer" name="csCouponOrderWidgetRenderer" />
 	<bean id="csCouponOrderWidgetRenderer" parent="abstractWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponOrderWidgetRenderer">
-	</bean> 
-	
-<!--Alternate Conatct details for CNC -->
-<alias alias="csAlternateContactDetailsCreateWidgetConfig" name="defaultCsAlternateContactDetailsCreateWidgetConfig"/>
-	<bean id="defaultCsAlternateContactDetailsCreateWidgetConfig" parent="csBaseWidgetConfig">
-	
-		<property name="widgetTitle" value="cscockpit.widget.order.alternateContactDetails.create"/>
-		<property name="widgetRenderer" ref="csAlternateContactDetailsCreateWidgetRenderer"/>
-		<property name="widgetController" ref="csCustomerController"/>
-		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
-		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame"/>
+	</bean>
+
+	<!--Alternate Conatct details for CNC -->
+	<alias alias="csAlternateContactDetailsCreateWidgetConfig" name="defaultCsAlternateContactDetailsCreateWidgetConfig" />
+	<bean id="defaultCsAlternateContactDetailsCreateWidgetConfig"
+		parent="csBaseWidgetConfig">
+
+		<property name="widgetTitle"
+			value="cscockpit.widget.order.alternateContactDetails.create" />
+		<property name="widgetRenderer"
+			ref="csAlternateContactDetailsCreateWidgetRenderer" />
+		<property name="widgetController" ref="csCustomerController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame" />
 		<property name="widgetModel">
-			<bean class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel"/>
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel" />
 		</property>
 
 	</bean>
@@ -678,5 +683,60 @@
 		<property name="callContextController" ref="csCallContextController"/>
 		
 	</bean>
-	
+
+
+
+	<alias alias="csChangeDeliveryAddressWidgetConfig" name="defaultCsChangeDeliveryAddressWidgetConfig" />
+	<bean id="defaultCsChangeDeliveryAddressWidgetConfig" parent="csBaseWidgetConfig">
+
+		<property name="widgetTitle"
+			value="cscockpit.widget.order.changeDeliveryAddress.create" />
+		<property name="widgetRenderer" ref="csChangeDeliveryAddressCreateWidgetRenderer" />
+		<property name="widgetController" ref="csCustomerController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame" />
+		<property name="widgetModel">
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel" />
+		</property>
+
+	</bean>
+
+	<alias alias="csChangeDeliveryAddressCreateWidgetRenderer" name="defaultCsChangeDeliveryAddressCreateWidgetRenderer" />
+	<bean id="defaultCsChangeDeliveryAddressCreateWidgetRenderer"
+		parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceChangeDeliveryAddressWidgetRenderer">
+		<!-- <property name="editorConfigurationCode" value="editCustomerDetails"/> -->
+		<!-- <property name="listConfigurationCode" value="cncEntryList" /> <property 
+			name="listConfigurationType" value="AbstractOrderEntry" /> -->
+		<!-- <property name="commonI18NService" ref="commonI18NService" /> -->
+		<!-- <property name="formatFactory" ref="formatFactory" /> -->
+		<!-- <property name="sessionService" ref="sessionService" /> -->
+		<property name="callContextController" ref="csCallContextController" />
+
+	</bean>
+
+	<alias alias="csOrderManagementActionsWidgetController" name="defaultCsOrderManagementActionsWidgetController" />
+	<bean id="defaultCsOrderManagementActionsWidgetController" parent="csBaseWidgetController"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketPlaceOrderManagementActionsWidgetControllerImpl"
+		scope="session">
+	<property name="callContextController" ref="csCallContextController"/>
+		<property name="orderCancelService" ref="orderCancelService"/>
+		<property name="userService" ref="userService"/>
+	</bean>
+
+		<alias alias="csOrderActionsWidgetConfig" name="defaultCsOrderActionsWidgetConfig"/>
+	<bean id="defaultCsOrderActionsWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.order.ordermanagement"/>
+		<property name="widgetRenderer" ref="csOrderActionsWidgetRenderer"/>
+		<property name="widgetController" ref="csOrderManagementActionsWidgetController"/>
+		<property name="widgetModel">
+			<bean class="de.hybris.platform.cockpit.widgets.models.impl.DefaultItemWidgetModel"/>
+		</property>
+		<property name="widgetAdapter">
+			<bean class="de.hybris.platform.cscockpit.widgets.adapters.UpdateWidgetAdapter"/>
+		</property>
+	</bean>
+
 </beans>
