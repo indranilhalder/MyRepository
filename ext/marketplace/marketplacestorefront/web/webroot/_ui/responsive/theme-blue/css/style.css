@@ -18212,14 +18212,21 @@ font-weight: 600;
 .product-facet .facet .facet-list .facet-text {		
 	line-height: 16px;		
 	float:left;
-	width: -webkit-calc(100% - 25px);
-	width: calc(100% - 25px);
+	/* width: -webkit-calc(100% - 25px);
+	width: calc(100% - 25px); */
+	width:auto;
 	color:#000;
 	opacity:0.9;
 	font-size:13px;					
 	text-transform:capitalize !important;
 		margin-bottom:6px;			
-}		
+}	
+.product-facet .facet .facet-list .facet-count{
+	font-size: 13px;
+	color:#a9143c;
+	line-height: normal;
+    padding-left: 5px;
+}	
 .product-facet .facet .facet-list .facet-text a{		
 	color:#000;		
 }		
