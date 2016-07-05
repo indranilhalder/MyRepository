@@ -9771,6 +9771,7 @@ body .account .right-account .order-history .pagination li{
 .facet.js-facet.colour .facet-values.js-facet-values.js-facet-form {
 	padding-bottom: 10px;
 	margin-left:-7px;
+	overflow-x:hidden;
 }
 
 .facet-values.js-facet-values.js-facet-form, .brandSelectAllMain {
