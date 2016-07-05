@@ -12,18 +12,19 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
@@ -64,12 +65,15 @@ public class SalesOrderReverseXMLUtility
 	private final static Logger LOG = Logger.getLogger(SalesOrderReverseXMLUtility.class.getName());
 	@Autowired
 	private PaymentInfoCancelReversalImpl paymentInfoCancelService;
+	@Resource
+	private ModelService modelService;
 	/*
 	 * @Autowired private MplSellerInformationService mplSellerInformationService;
 	 */
 
 	private String payemntrefid = null;
 	private boolean xmlToFico = true;
+	private final boolean toSentToFico = true;
 	private final String RET = MarketplacecommerceservicesConstants.RETURN_FLAG;
 	private final String CAN = MarketplacecommerceservicesConstants.CANCEL_FLAG;
 
@@ -174,35 +178,33 @@ public class SalesOrderReverseXMLUtility
 				LOG.debug("Inside order history entry model");
 				LOG.warn("Inside order history entry model" + orderHistoryEntryModel.getOrder());
 				//	if (checkOrderHistoryEntryDate(orderHistoryEntryModel.getCreationtime().toString()))
-				final Calendar calendar = Calendar.getInstance();
-				calendar.add(Calendar.HOUR_OF_DAY, -24);
-				if (orderHistoryEntryModel.getModifiedtime().after(calendar.getTime()))
+				//	final Calendar calendar = Calendar.getInstance();
+				//calendar.add(Calendar.HOUR_OF_DAY, -24);
+
+				if ((orderHistoryEntryModel.getDescription().equals(orderCancel)))
+
 				{
+					lineID = orderHistoryEntryModel.getLineId(); // line ID is trnsction id
+					orderCancelReturn = CAN;
+					cancelReturnDate = sdformat.format(orderHistoryEntryModel.getModifiedtime());
 
-					if ((orderHistoryEntryModel.getDescription().equals(orderCancel)))
+					final Map<String, String> orderTagDateMap = new HashMap<String, String>();
+					orderTagDateMap.put(orderCancelReturn, cancelReturnDate);
+					LOG.debug("cancel map size>>>>>" + orderTagDateMap.size());
+					returnCancelMap.put(lineID, orderTagDateMap);
 
-					{
-						lineID = orderHistoryEntryModel.getLineId(); // line ID is trnsction id
-						orderCancelReturn = CAN;
-						cancelReturnDate = sdformat.format(orderHistoryEntryModel.getModifiedtime());
-
-						final Map<String, String> orderTagDateMap = new HashMap<String, String>();
-						orderTagDateMap.put(orderCancelReturn, cancelReturnDate);
-						LOG.debug("cancel map size>>>>>" + orderTagDateMap.size());
-						returnCancelMap.put(lineID, orderTagDateMap);
-
-					}
-					if ((orderHistoryEntryModel.getDescription().equals(retRef)))
-					{
-						lineID = orderHistoryEntryModel.getLineId();
-						orderCancelReturn = RET;
-						cancelReturnDate = sdformat.format(orderHistoryEntryModel.getModifiedtime());
-						final Map<String, String> orderTagDateMap = new HashMap<String, String>();
-						orderTagDateMap.put(orderCancelReturn, cancelReturnDate);
-						LOG.debug("return map size>>>>>" + orderTagDateMap.size());
-						returnCancelMap.put(lineID, orderTagDateMap);
-					}
 				}
+				if ((orderHistoryEntryModel.getDescription().equals(retRef)))
+				{
+					lineID = orderHistoryEntryModel.getLineId();
+					orderCancelReturn = RET;
+					cancelReturnDate = sdformat.format(orderHistoryEntryModel.getModifiedtime());
+					final Map<String, String> orderTagDateMap = new HashMap<String, String>();
+					orderTagDateMap.put(orderCancelReturn, cancelReturnDate);
+					LOG.debug("return map size>>>>>" + orderTagDateMap.size());
+					returnCancelMap.put(lineID, orderTagDateMap);
+				}
+
 			}
 		}
 		return returnCancelMap;
@@ -331,14 +333,14 @@ public class SalesOrderReverseXMLUtility
 								salesXMLData = null;
 							}
 
-							if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico)
+							if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico && toSentToFico)
 							{
 								salesXMLData.setSubOrderList(subOrderDataList);
 								LOG.debug("set sub order list");
 							}
 						}
 						//TISSIT-1780
-						if (salesXMLData != null && xmlToFico)
+						if (salesXMLData != null && xmlToFico && toSentToFico)
 						{
 							bulkSalesDataList.add(salesXMLData);
 							LOG.debug("xml order:" + salesXMLData.getOrderId());
@@ -416,7 +418,7 @@ public class SalesOrderReverseXMLUtility
 
 				}
 
-				if (null != childOrderDataList && !childOrderDataList.isEmpty() && xmlToFico)
+				if (null != childOrderDataList && !childOrderDataList.isEmpty() && xmlToFico && toSentToFico)
 				{
 					LOG.debug("before child order list set");
 					xmlData.setTransactionInfoList(childOrderDataList);
@@ -460,7 +462,8 @@ public class SalesOrderReverseXMLUtility
 					boolean canOrRetflag = false; //flag for checking if order line is cancelled or returned. If flag is false the order line will not be set in the XML
 					boolean returnFlag = false;
 					boolean cancelFlag = false;
-					if (null != entry && null != entry.getProduct())
+					if (null != entry && null != entry.getProduct()
+							&& (null == entry.getIsSentToFico() || !(entry.getIsSentToFico().booleanValue()))) // null ==  entry.getIsSentToFico() is added for n/a scenarios for previous placed orders
 					{
 						final ProductModel product = entry.getProduct();
 						LOG.debug("inside AbstractOrderEntryModel");
@@ -748,8 +751,11 @@ public class SalesOrderReverseXMLUtility
 						if (canOrRetflag)
 						{
 							childOrderDataList.add(xmlData);
+							entry.setIsSentToFico(Boolean.TRUE);
+							modelService.save(entry);
 						}
 					}
+
 				}
 			}
 		}
