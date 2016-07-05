@@ -211,12 +211,12 @@ function navigateToPage(queryString,textString)
 
 
 
-				<c:forEach items="${facetData.values}" var="facetValue">
+				<c:forEach items="${facetData.values}" var="facetValue">					
 				  <c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 					<li class="filter-${facetData.code}">
 
 					<c:choose>
-						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">
+						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">						
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
@@ -284,7 +284,8 @@ function navigateToPage(queryString,textString)
 								</c:otherwise>
 							</c:choose>
 						</c:when>
-						<c:when test="${facetData.name eq 'size'}">
+						<%-- <c:when test="${facetData.name eq 'size'}"> --%>	
+						<c:when test="${facetData.code eq 'size' && not empty facetValue.name}">					
 							  <form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
@@ -302,7 +303,7 @@ function navigateToPage(queryString,textString)
 							
 						
 					
-						<c:if test="${facetData.multiSelect}">						
+						<c:if test="${facetData.multiSelect}">											
 							<ycommerce:testId code="facetNav_selectForm"> 
 							<!-- Added for TISPRO-490 Start here -->							
 							<c:if test="${facetData.code eq 'dialColour'}">
