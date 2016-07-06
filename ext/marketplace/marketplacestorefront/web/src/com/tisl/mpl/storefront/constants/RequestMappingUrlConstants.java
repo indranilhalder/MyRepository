@@ -29,7 +29,13 @@ public final class RequestMappingUrlConstants
 	public static final String LINK_PROFILE = "/profile";
 	public static final String LINK_COUPONS = "/coupons";
 	public static final String UPDATE_PICKUP_DETAILS = "/updatepickUp_Details";
+	public static final String PINCODE_CHECK = "/pincodeCheck";
+	public static final String OTP_GENERAT = "/otpGenerat";
+
 	public static final String CREATE_TICKET_CRM_UPDATE_PICKUP_DETAILS = "crmTicketCreateUpdatePickUpDetail";
+	public static final String CHANGE_DELIVERY_ADDRES_URL = "/{orderCode}/changeDeliveryAddress";
+	public static final String OTP_VALIDATION_URL = "/validationOTP";
+
 
 
 	public static final String LINK_UPDATE_EMAIL = "/update-email";

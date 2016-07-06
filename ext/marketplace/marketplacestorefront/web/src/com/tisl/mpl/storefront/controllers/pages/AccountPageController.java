@@ -127,6 +127,7 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.tis.mpl.facade.changedelivery.ChangeDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
@@ -173,6 +174,7 @@ import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.MplPreferencePopulationData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
+import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
 import com.tisl.mpl.facades.product.data.DayData;
@@ -406,6 +408,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private MplGigyaReviewCommentService gigyaCommentService;
 	@Autowired
 	private DefaultMplReviewFacade mplReviewrFacade;
+
+	@Autowired
+	private ChangeDeliveryAddressFacade changeDeliveryAddressFacade;
+
+	/**
+	 *
+	 */
+	@Resource(name = "mplPaymentFacade")
+	private MplPaymentFacade mplPaymentFacade;
 
 	/*
 	 * @Autowired private DiscountUtility discountUtility;
@@ -874,7 +885,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			final String finalOrderDate = getFormattedDate(orderDetail.getCreated());
 			final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
-
+			boolean changeDeliveryAddressStatus = false;
 			for (final OrderData subOrder : subOrderList)
 			{
 				for (final OrderEntryData orderEntry : subOrder.getEntries())
@@ -1062,9 +1073,25 @@ public class AccountPageController extends AbstractMplSearchPageController
 							orderEntry.getOrderLineId());
 					currentProductMap.put(orderEntry.getOrderLineId(), cancelProduct);
 
+
+					if (!orderEntry.getMplDeliveryMode().getCode().equalsIgnoreCase("click-and-collect")
+							&& changeDeliveryAddressStatus == false)
+					{
+						changeDeliveryAddressStatus = true;
+					}
 				}
+
 			}
 
+
+			changeDeliveryAddressStatus = changeDeliveryAddressStatus ? mplOrderFacade.changeShippingAddressStatus(orderDetail)
+					: false;
+			model.addAttribute("editShippingAddressStatus", changeDeliveryAddressStatus);
+			if (changeDeliveryAddressStatus)
+			{
+				final AccountAddressForm accountAddressForm = new AccountAddressForm();
+				model.addAttribute("addressForm", accountAddressForm);
+			}
 
 			////TISEE-6290
 			fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
@@ -1177,6 +1204,84 @@ public class AccountPageController extends AbstractMplSearchPageController
 			mplOrderFacade.createCrmTicketUpdatePickDetails(orderId);
 		}
 	}
+
+
+	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method = RequestMethod.POST)
+	@ResponseBody
+	public String changeDeliveryAddress(@PathVariable final String orderCode,
+			@ModelAttribute final AccountAddressForm accountaddressForm)
+	{
+
+		final String validatetionCheckMsg;
+		accountaddressForm.setAddressType("HOME");
+
+		LOG.debug("AddressForm validation ");
+		final String errorMsg = mplAddressValidator.validate(accountaddressForm);
+
+		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCESS))
+		{
+			final AddressData addressData = new AddressData();
+
+			addressData.setAddressType("Home");
+			addressData.setCity(accountaddressForm.getTownCity());
+			addressData.setPhone(accountaddressForm.getMobileNo());
+			addressData.setFirstName(accountaddressForm.getFirstName());
+			addressData.setLastName(accountaddressForm.getLastName());
+			addressData.setLandmark(accountaddressForm.getLine3());
+			addressData.setLine1(accountaddressForm.getLine1());
+			addressData.setLine2(accountaddressForm.getLine2());
+			addressData.setPostalCode(accountaddressForm.getPostcode());
+			addressData.setState(accountaddressForm.getState());
+			addressData.setPostalCode(accountaddressForm.getPostcode());
+			addressData.setLocality(accountaddressForm.getLocality());
+			addressData.setShippingAddress(true);
+
+			final CustomerData customerData = customerFacade.getCurrentCustomer();
+			final String customerId = customerData.getUid();
+
+			LOG.debug("if Address is diffrent  then Save TemproryAddressModel and OTP genarate");
+
+			validatetionCheckMsg = changeDeliveryAddressFacade.saveAsTemproryAddressForCustomer(customerId, orderCode,
+					addressData);
+		}
+		else
+		{
+			LOG.debug("AddrressData is incorent then send erorr Msg");
+			validatetionCheckMsg = errorMsg;
+		}
+
+
+		return validatetionCheckMsg;
+	}
+
+
+	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.POST)
+	@ResponseBody
+	public String validateOTP(@RequestParam(value = "orderId") final String orderId,
+			@RequestParam(value = "otpNumber") final String enteredOTPNumber)
+	{
+		String validateOTPMesg;
+		final CustomerData customerData = customerFacade.getCurrentCustomer();
+		final String customerId = customerData.getUid();
+		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
+		{
+			LOG.debug("OTP Validation And Oms Calling status");
+			validateOTPMesg = changeDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber);
+			LOG.debug("OTP and OMS Respose is  sucess then Save to OrderModel and  remove TemproryAddressModel based On orderId");
+		}
+		else
+		{
+			validateOTPMesg = "Enter OTP Number";
+		}
+
+		return validateOTPMesg;
+
+	}
+
+
+
+
+
 
 	/**
 	 *
@@ -6938,5 +7043,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 		model.addAttribute(ModelAttributetConstants.COMMENTS, commentsWithProductDataModified);
 	}
 
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
 
 }
