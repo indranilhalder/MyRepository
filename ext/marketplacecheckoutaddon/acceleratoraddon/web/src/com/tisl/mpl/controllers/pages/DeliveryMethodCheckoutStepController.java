@@ -99,10 +99,12 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.facade.pincode.PincodeFacede;
 import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.FreebieProduct;
+import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -210,6 +212,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
+	
+	@Autowired
+	private PincodeFacede pincodeFacede;
 
 
 	private static final Logger LOG = Logger.getLogger(DeliveryMethodCheckoutStepController.class);
@@ -2321,6 +2326,21 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 		return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/choose";
 	}
+	
+	
+
+
+
+@RequestMapping(value = MarketplacecheckoutaddonConstants.LANDMARKS, method = RequestMethod.POST)
+	@ResponseBody
+	public PincodeData getPincodedata(@RequestParam(value = "pincode") final String pincode)
+	{
+		LOG.info("Before Facade Call and Entered Pincode is  : " + pincode);
+		PincodeData pincodeData = pincodeFacede.getAllDetails(pincode);
+		LOG.info("After Getting the All Details of the entered Pincode is  : "+ pincodeData.toString() );
+		return pincodeData;
+		}
+	
 
 	private void setExpressCheckout(final CartModel serviceCart)
 	{
