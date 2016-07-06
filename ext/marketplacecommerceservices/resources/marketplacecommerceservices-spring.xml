@@ -1734,6 +1734,14 @@
 		<property name="password" value="${jdbc.iastg.pass}" />
 	</bean>
 	
+	
+	<!-- R2.3 FL04 Changes -->
+	
+	<bean id="pincodeDetailsService" class="com.tisl.mpl.marketplacecommerceservices.pincode.impl.PincodeServiceImpl"/>
+	
+	<bean id="pincodeDetailsDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PincodeDetailsDaoImpl"/>
+	
+	<!-- closing FL04 -->
 
 </beans>
 
