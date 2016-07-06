@@ -23,6 +23,7 @@ import com.tisl.mpl.data.ReturnAddressInfo;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.marketplacecommerceservices.service.MplChangeDeliveryAddressService;
 import com.tisl.mpl.service.MplChangeDeliveryAddressClientService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.xml.pojo.MplChangeDeliveryAddressRequest;
@@ -37,6 +38,8 @@ public class ChangeDeliveryAddressFacadeImpl implements ChangeDeliveryAddressFac
 {
 	@Autowired
 	private MplChangeDeliveryAddressClientService mplChangeDeliveryAddressClientService;
+	@Autowired
+	private MplChangeDeliveryAddressService mplChangeDeliveryAddressService;
 	@Autowired
 	private TicketCreationCRMservice ticketCreate;
 	private static final Logger LOG = Logger.getLogger(ChangeDeliveryAddressFacadeImpl.class);
@@ -230,6 +233,17 @@ public class ChangeDeliveryAddressFacadeImpl implements ChangeDeliveryAddressFac
 		{
 			LOG.info(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.tis.mpl.facade.changedelivery.ChangeDeliveryAddressFacade#isDeliveryAddressChangable(de.hybris.platform.core.model.order.OrderModel)
+	 */
+	@Override
+	public boolean isDeliveryAddressChangable(OrderModel orderModel)
+	{
+		
+		boolean changable=mplChangeDeliveryAddressService.isDeliveryAddressChangable(orderModel);
+		return changable;
 	}
 
 }

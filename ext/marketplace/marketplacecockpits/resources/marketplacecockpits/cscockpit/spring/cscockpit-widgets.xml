@@ -707,36 +707,21 @@
 	<bean id="defaultCsChangeDeliveryAddressCreateWidgetRenderer"
 		parent="abstractWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceChangeDeliveryAddressWidgetRenderer">
-		<!-- <property name="editorConfigurationCode" value="editCustomerDetails"/> -->
-		<!-- <property name="listConfigurationCode" value="cncEntryList" /> <property 
-			name="listConfigurationType" value="AbstractOrderEntry" /> -->
-		<!-- <property name="commonI18NService" ref="commonI18NService" /> -->
-		<!-- <property name="formatFactory" ref="formatFactory" /> -->
-		<!-- <property name="sessionService" ref="sessionService" /> -->
 		<property name="callContextController" ref="csCallContextController" />
 
 	</bean>
 
-	<alias alias="csOrderManagementActionsWidgetController" name="defaultCsOrderManagementActionsWidgetController" />
-	<bean id="defaultCsOrderManagementActionsWidgetController" parent="csBaseWidgetController"
-		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketPlaceOrderManagementActionsWidgetControllerImpl"
+ <!--  Change DeliveryAddress Controller  -->
+ <alias alias="csChangeDeliveryAddressControler" name="marketPlaceChangeDeliveryAddressControler" />
+	<bean id="marketPlaceChangeDeliveryAddressControler" parent="csBaseWidgetController"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketPlaceChangeDeliveryAddressControllerImpl"
 		scope="session">
-	<property name="callContextController" ref="csCallContextController"/>
+		<property name="callContextController" ref="csCallContextController"/>
 		<property name="orderCancelService" ref="orderCancelService"/>
 		<property name="userService" ref="userService"/>
 	</bean>
 
-		<alias alias="csOrderActionsWidgetConfig" name="defaultCsOrderActionsWidgetConfig"/>
-	<bean id="defaultCsOrderActionsWidgetConfig" parent="csBaseWidgetConfig">
-		<property name="widgetTitle" value="cscockpit.widget.order.ordermanagement"/>
-		<property name="widgetRenderer" ref="csOrderActionsWidgetRenderer"/>
-		<property name="widgetController" ref="csOrderManagementActionsWidgetController"/>
-		<property name="widgetModel">
-			<bean class="de.hybris.platform.cockpit.widgets.models.impl.DefaultItemWidgetModel"/>
-		</property>
-		<property name="widgetAdapter">
-			<bean class="de.hybris.platform.cscockpit.widgets.adapters.UpdateWidgetAdapter"/>
-		</property>
-	</bean>
+
+
 
 </beans>

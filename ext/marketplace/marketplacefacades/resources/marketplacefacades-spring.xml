@@ -1538,23 +1538,24 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultMplCommerceIndexedPropertyPopulator" alias="commerceIndexedPropertyPopulator" />
 	<bean id="defaultMplCommerceIndexedPropertyPopulator"
 		class="com.tisl.mpl.search.converters.populator.MplCommerceIndexedPropertyPopulator" />
-		
+		<bean id="changeDeliveryAddressFacade"
+		class="com.tis.mpl.facade.changedelivery.Impl.ChangeDeliveryAddressFacadeImpl">
 		<!-- 	R2.3 FL04 changes	 -->
 	
-	<bean id="pincodeFacadeImpl" class="com.tisl.mpl.facade.pincode.impl.PincodeFacadeImpl"/>
+	<!-- <bean id="pincodeFacadeImpl" class="com.tisl.mpl.facade.pincode.impl.PincodeFacadeImpl"/> -->
 		
-	<bean id="statePopulator" class="com.tisl.mpl.facades.populators.StatePopulator"/>
+	<!-- <bean id="statePopulator" class="com.tisl.mpl.facades.populators.StatePopulator"/> -->
 	
-	<bean id="stateConverter" parent="abstractPopulatingConverter">
+	<!-- <bean id="stateConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.facades.product.data.StateData"/>
 		<property name="populators">
 			<list>
 				<ref bean="statePopulator"/>
 			</list>
 		</property>
-	</bean>
+	</bean> -->
 	
-	<bean id="landMarksPopulator" class="com.tisl.mpl.facades.populators.LandMarksPopulator"/>
+	<!-- <bean id="landMarksPopulator" class="com.tisl.mpl.facades.populators.LandMarksPopulator"/>
 	
 	<bean id="landMarksConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.facade.data.LandMarksData"/>
@@ -1576,8 +1577,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			<list>
 				<ref bean="pincodePopulator"/>
 			</list>
-		</property>
-	</bean>
+		</property>-->
+	</bean> 
 	
 	<!-- close R2.3 Changes -->
 	
