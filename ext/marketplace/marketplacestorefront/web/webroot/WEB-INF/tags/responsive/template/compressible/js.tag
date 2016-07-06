@@ -40,6 +40,9 @@ if(loginStatus){
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
 
+	<!-- R2.3 FL04 -->
+	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script>
+
 
 <c:choose>
 	<c:when test="${isMinificationEnabled}">
