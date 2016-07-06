@@ -154,7 +154,10 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String TNCLINKVALUE = "payment.termsNConditions.url".intern();
 	public final static String PROMOAVAILABLE = "promoAvailable".intern();
 	public final static String BANKAVAILABLE = "bankAvailable".intern();
-
+	
+	//R2.3 FL04
+	
+	public static final String LANDMARKS = "/landmarks";
 
 	// Model Attribute
 
