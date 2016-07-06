@@ -1089,6 +1089,18 @@
 			<targetElement type="Product" cardinality="many"
 				qualifier="collectionProducts"></targetElement>
 		</relation>
+		
+		<!-- R2.3 FL04 Changes -->
+
+		<relation code="Pincode2LandMarkRelation" localized="false"
+			autocreate="true">
+			<sourceElement type="Pincode" cardinality="one" qualifier="pincode"></sourceElement>
+			<targetElement type="LandMarks" cardinality="many"
+				qualifier="landmarks" collectiontype="list"></targetElement>
+		</relation>
+		
+		<!-- close -->
+		
 	</relations>
 
 	<itemtypes>
@@ -8080,6 +8092,24 @@
 						<modifiers read="true" write="true" search="true"
 							optional="false" />
 					</attribute>
+					
+					<!-- R2.3 FL04 Added Propertie -->
+					
+					<attribute autocreate="true" qualifier="cityName"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="isActive"
+						type="java.lang.Boolean">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<!-- close -->
+					
 				</attributes>
 			</itemtype>
 
@@ -8318,6 +8348,36 @@
 			</itemtype>
 		</typegroup>
 	
+			<!-- R2.3 changes Landmarks Model -->
+		
+		<typegroup name="LandMarks">
+			<itemtype code="LandMarks" autocreate="true" generate="true">
+				<deployment table="LandMarks" typecode="15009" />
+				<attributes>
+				
+					<attribute autocreate="true" qualifier="landmarksCode" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="landmark" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="isActive"
+						type="java.lang.Boolean" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+	
+		<!-- close -->
 		
 	</itemtypes>
 </items>
