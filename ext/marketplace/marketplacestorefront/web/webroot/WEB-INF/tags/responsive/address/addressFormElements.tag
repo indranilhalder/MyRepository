@@ -197,17 +197,27 @@
 			 <div class="help-block has-error" id="address3Error" style="display: none;">
 			</div>
 			</div>
+			<div class='full'>
+		<formElement:formInputBox idKey="address.postcode" inputCSS="address_postcode"
+			labelKey="address.postcode" path="postcode"
+			mandatory="true" maxLength="6" />
+		<div class="help-block has-error" id="addressPincodeServicableDiv"
+			style="display: none;"></div>
+			<div class="help-block has-error" id="pincodeError" style="display: none;">
+			</div>
+			</div>
+			
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
 		<div class='full'>
 		<!-- TISUAT-4696 -->
-		<formElement:formInputBox idKey="address.townCity"
+		<formElement:formInputBox idKey="address.townCity" inputCSS="address_townCity"
 			labelKey="address.townCity" path="townCity" 
 			mandatory="true" maxLength="30"/>
 			<div class="help-block has-error" id="cityError" style="display: none;">
 			</div>
 			</div>
 			<div class="half address-select">
-		<formElement:formSelectBox idKey="address.states"
+		<formElement:formSelectBox idKey="address.states" selectCSSClass="address_states"
 			labelKey="address.states" path="state" mandatory="true"
 			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelect"
 			items="${stateDataList}" selectedValue="${addressForm.state}"
@@ -234,12 +244,12 @@
 				
 		<%-- <formElement:formInputBox idKey="address.states" labelKey="address.states" path="state" inputCSS="form-control" mandatory="true"/> --%>
 		<div class='half'>
-		<formElement:formInputBox idKey="address.postcode"
-			labelKey="address.postcode" path="postcode"
-			mandatory="true" maxLength="6" />
-		<div class="help-block has-error" id="addressPincodeServicableDiv"
-			style="display: none;"></div>
-			<div class="help-block has-error" id="pincodeError" style="display: none;">
+			<formElement:formSelectBox idKey="address.landmarks" selectCSSClass="address_landmarks"
+			labelKey="Landmarks" path="state" mandatory="true"
+			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelect"
+			items="${abc}" selectedValue="${addressForm.state}"
+			itemValue="name"  />
+			<div class="help-block has-error" id="stateError" style="display: none;">		
 			</div>
 			</div>
 				
