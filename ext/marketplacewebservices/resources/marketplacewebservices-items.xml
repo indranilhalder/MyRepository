@@ -15,6 +15,18 @@
 	<collectiontypes>
 		<collectiontype elementtype="BaseSite" code="BaseSiteCollection" autocreate="true"/>
 	</collectiontypes>
+	
+	<relations>
+	 	<!-- R2.3 FL04 Changes -->
+  		<relation code="State2PincodeRelation" localized="false"
+			autocreate="true">
+			<sourceElement type="State" cardinality="one"
+				qualifier="state"></sourceElement>
+			<targetElement type="Pincode" cardinality="many"
+				qualifier="city"></targetElement>
+		</relation>
+		<!-- R2.3 FL04 Close -->
+  	</relations>
 
 	<itemtypes>
 		<itemtype code="ProductExpressUpdateCleanerCronJob" autocreate="true" generate="true" extends="CronJob"
