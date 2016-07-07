@@ -165,15 +165,18 @@ function navigateToPage(queryString,textString)
 										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" />
 										<span class="facet-label">
 											<span class="facet-mark"></span>
+											<div class="facet-text">
 											<span class="facet-text">
 												${facetValue.name}
 												<%-- <ycommerce:testId code="facetNav_count">
 													<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 												</ycommerce:testId> --%>
-											</span>
-											<span class="facet-count">
+												</span>
+												<span class="facet-count">
 												<spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/>											
 											</span>
+											
+											</div>
 										</span>
 									</label>
 								</form>
@@ -349,15 +352,18 @@ function navigateToPage(queryString,textString)
 										<c:if test="${not empty facetValue.name}">
 											<span class="facet-mark"></span>
 										</c:if>	
+										<div class="facet-text">
 											<span class="facet-text">
-												${facetValue.name}&nbsp;
+												${facetValue.name}
 												<%-- <ycommerce:testId code="facetNav_count">
 													<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
-												</ycommerce:testId> --%>												
-											</span>
-											<span class="facet-count">
+												</ycommerce:testId> --%>
+												</span>
+												<span class="facet-count">
 												<spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/>											
-											</span>
+											</span>												
+											</div>
+											
 										</span>
 									</c:if>
 								</label>
