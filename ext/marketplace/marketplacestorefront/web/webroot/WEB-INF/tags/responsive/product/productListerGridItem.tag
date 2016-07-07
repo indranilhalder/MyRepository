@@ -254,10 +254,9 @@
 								</c:choose>
 							</p>
 							<!-- TISCR-405: set the savings for the current currency -->																		
-							<p class="savings">	
-							(-${product.savingsOnProduct.value} %)														
+							<p class="savings">																				
 							<%-- <span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValue} </span> --%>
-							<%-- <span id="savings_${product.code}">  You save ${product.savingsOnProduct.value} % </span> --%>
+							 <span id="savings_${product.code}">  (-${product.savingsOnProduct.value} %) </span>
 							</p>
 							
 							
