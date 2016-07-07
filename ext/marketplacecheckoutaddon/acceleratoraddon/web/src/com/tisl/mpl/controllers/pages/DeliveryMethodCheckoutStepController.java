@@ -99,7 +99,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
-import com.tisl.mpl.facade.pincode.PincodeFacede;
+import com.tisl.mpl.facade.pincode.MplPincodeFacede;
 import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.data.ATSResponseData;
@@ -212,9 +212,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
-	
+
 	@Autowired
-	private PincodeFacede pincodeFacede;
+	private MplPincodeFacede mplPincodeFacade;
 
 
 	private static final Logger LOG = Logger.getLogger(DeliveryMethodCheckoutStepController.class);
@@ -2326,21 +2326,41 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 		return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/choose";
 	}
-	
-	
 
 
+	/**
+	 * Getting Details about the given pincode city, state, country and list of landmarks
+	 * 
+	 * @param pincode
+	 * @return PincodeData
+	 */
 
-@RequestMapping(value = MarketplacecheckoutaddonConstants.LANDMARKS, method = RequestMethod.POST)
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.LANDMARKS, method = RequestMethod.POST)
 	@ResponseBody
 	public PincodeData getPincodedata(@RequestParam(value = "pincode") final String pincode)
 	{
-		LOG.info("Before Facade Call and Entered Pincode is  : " + pincode);
-		PincodeData pincodeData = pincodeFacede.getAllDetails(pincode);
-		LOG.info("After Getting the All Details of the entered Pincode is  : "+ pincodeData.toString() );
-		return pincodeData;
+		PincodeData pincodeData = null;
+		try
+		{
+			pincodeData = mplPincodeFacade.getAllDetails(pincode);
 		}
-	
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+			LOG.error("EtailNonBusinessExceptions in getting the pincode Details :: ", ex);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions in getting the pincode Details :: ", e);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception in getting the pincode Details :: ", ex);
+		}
+		return pincodeData;
+	}
+
 
 	private void setExpressCheckout(final CartModel serviceCart)
 	{
