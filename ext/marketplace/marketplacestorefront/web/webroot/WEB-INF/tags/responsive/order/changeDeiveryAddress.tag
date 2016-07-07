@@ -81,8 +81,8 @@
 								<div class="form-group">
 									<label for="pincode">Pincode*</label>
 
-									<form:input path="postcode"
-										class="form-control textInputChangeAddress" id="pincode"
+									<form:input path="postcode" 
+										class="address_postcode" id="pincode"
 										placeholder="Pincode"
 										onblur="checkPincode('${orderDetails.code}')" />
 								</div>
@@ -96,8 +96,8 @@
 								<div class="input-group-addon">
 									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 								</div>
-								<form:input path="line3"
-									class="form-control textInputChangeAddress" id="line3"
+								<form:select path="line3" items="${abc}" 
+									class="address_landmarks" id="line3"
 									placeholder="Enter your nearest landmark" />
 							</div>
 						</div>
@@ -106,7 +106,7 @@
 								<div class="form-group">
 									<label for="city">City*</label>
 									<form:input path="townCity"
-										class="form-control textInputChangeAddress" id="city"
+										class="address_townCity" id="city"
 										placeholder="City" />
 								</div>
 							</div>
