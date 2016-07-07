@@ -40,9 +40,9 @@
 					    return this.indexOf(searchString, position) === position;
 					  };
 					}
-				
+				//TISPRO=660
 				if (dropdownValue.startsWith("MSH") || dropdownValue.startsWith("MBH")) {
-					actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue);
+					actionText = (actionText +'/c-' + dropdownValue);
 				} else if (!dropdownValue.startsWith("all")) {
 					actionText = (actionText + '/s/' + dropdownValue);
 				}
