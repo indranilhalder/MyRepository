@@ -526,12 +526,13 @@ display:none;
 	<product:viewQuickViewVariant/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantityCount"/>
 	<div class="qty">
-		<p> <spring:theme code="product.configureproductscount.qty"/></p>
-		<select id="quantity">		
+	<!-- TISPRM-131 -->
+		<%-- <p> <spring:theme code="product.configureproductscount.qty"/></p> --%>
+		<%-- <select id="quantity">		
 		<c:forEach var="qtyCnt" begin="1" end="${maxQuantityCount}">
    		<option value="${qtyCnt}">${qtyCnt}</option>
 		</c:forEach>
-		</select>
+		</select> --%>
 	</div> 
 
 </div>
