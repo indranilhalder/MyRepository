@@ -626,7 +626,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			// anonymous user TISSAM-7
 			if (StringUtils.equalsIgnoreCase(ANONYMOUS_USER, emailId))
 			{
-				if (deviceId != null)
+				if (StringUtils.isNotEmpty(deviceId))
 				{
 					//Without userLogin when device id is not null
 					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
@@ -678,6 +678,29 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					modelService.save(customer);
 					result = true;
 				}
+
+				if (StringUtils.isNotEmpty(deviceId))
+				{
+					//Without userLogin when device id is not null
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchCatBrandOfDevice(deviceId);
+					if (CollectionUtils.isNotEmpty(myStyleProfileList))
+					{
+						styleProfileModelToSave = myStyleProfileList.get(0);
+						selectedCategory = new ArrayList(styleProfileModelToSave.getPreferredCategory());
+						for (final CategoryModel entry : selectedCategory)
+						{
+							if (!entry.getCode().equalsIgnoreCase(code))
+							{
+								newCategory.add(entry);
+							}
+						}
+						styleProfileModelToSave.setPreferredCategory(newCategory);
+						modelService.save(styleProfileModelToSave);
+						customer.setMyStyleProfile(styleProfileModelToSave);
+						modelService.save(customer);
+						result = true;
+					}
+				}
 			}
 		}
 		catch (final ModelSavingException ex)
@@ -706,7 +729,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			// anonymous user TISSAM-7
 			if (StringUtils.equalsIgnoreCase(ANONYMOUS_USER, emailId))
 			{
-				if (deviceId != null)
+				if (StringUtils.isNotEmpty(deviceId))
 				{
 
 					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchBrandOfDevice(deviceId);
@@ -761,8 +784,32 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					modelService.save(customer);
 					result = true;
 				}
-			}
+				if (StringUtils.isNotEmpty(deviceId))
+				{
 
+					final List<MplStyleProfileModel> myStyleProfileList = myStyleProfileDao.fetchBrandOfDevice(deviceId);
+					if (CollectionUtils.isNotEmpty(myStyleProfileList))
+					{
+						styleProfileModelToSave = myStyleProfileList.get(0);
+						selectedBrands = new ArrayList(styleProfileModelToSave.getPreferredBrand());
+						if (CollectionUtils.isNotEmpty(selectedBrands))
+						{
+							for (final CategoryModel entry : selectedBrands)
+							{
+								if (!entry.getCode().equalsIgnoreCase(code))
+								{
+									newBrands.add(entry);
+								}
+							}
+						}
+						styleProfileModelToSave.setPreferredBrand(newBrands);
+						modelService.save(styleProfileModelToSave);
+						customer.setMyStyleProfile(styleProfileModelToSave);
+						modelService.save(customer);
+						result = true;
+					}
+				}
+			}
 		}
 		catch (final ModelSavingException ex)
 		{
@@ -837,10 +884,9 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 
 					}
 				}
-				/*else
-				{
-					//LOG.info("Email id is anonymous and device id is null");
-				}*/
+				/*
+				 * else { //LOG.info("Email id is anonymous and device id is null"); }
+				 */
 				return categoryList;
 			}
 			else
@@ -913,10 +959,9 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 						brandList = new ArrayList(styleProfileModelUpdate.getPreferredBrand());
 					}
 				}
-				/*else
-				{
-					//LOG.info("Email id is anonymous and device id is null");
-				}*/
+				/*
+				 * else { //LOG.info("Email id is anonymous and device id is null"); }
+				 */
 				return brandList;
 			}
 			else
