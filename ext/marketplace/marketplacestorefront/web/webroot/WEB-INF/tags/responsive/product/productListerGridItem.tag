@@ -253,12 +253,13 @@
 									</c:otherwise>
 								</c:choose>
 							</p>
-							<!-- TISCR-405: set the savings for the current currency -->																		
+							<!-- TISCR-405: set the savings for the current currency -->
+							<c:if test="${product.savingsOnProduct.value > 0}">																		
 							<p class="savings">																				
 							<%-- <span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValue} </span> --%>
 							 <span id="savings_${product.code}">  (-${product.savingsOnProduct.value} %) </span>
 							</p>
-							
+							</c:if>
 							
 						</div>
 					</c:if>
