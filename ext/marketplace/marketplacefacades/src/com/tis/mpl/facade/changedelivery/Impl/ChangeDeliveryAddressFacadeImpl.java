@@ -3,11 +3,15 @@
  */
 package com.tis.mpl.facade.changedelivery.Impl;
 
+import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +23,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tis.mpl.facade.changedelivery.ChangeDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.data.ReturnAddressInfo;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
+import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplChangeDeliveryAddressService;
+import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.service.MplChangeDeliveryAddressClientService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.xml.pojo.MplChangeDeliveryAddressRequest;
@@ -42,6 +49,10 @@ public class ChangeDeliveryAddressFacadeImpl implements ChangeDeliveryAddressFac
 	private MplChangeDeliveryAddressService mplChangeDeliveryAddressService;
 	@Autowired
 	private TicketCreationCRMservice ticketCreate;
+	@Autowired
+   private ConfigurationService configurationService;
+	@Autowired
+	private OTPGenericService otpGenericService;
 	private static final Logger LOG = Logger.getLogger(ChangeDeliveryAddressFacadeImpl.class);
 
 	/*
@@ -245,5 +256,102 @@ public class ChangeDeliveryAddressFacadeImpl implements ChangeDeliveryAddressFac
 		boolean changable=mplChangeDeliveryAddressService.isDeliveryAddressChangable(orderModel);
 		return changable;
 	}
+	@Override
+	public String saveAsTemproryAddressForCustomer(final String customerId, final String orderCode, final AddressData addressData)
+	{
+		String status = "fail";
+		try
+		{
+			if (StringUtils.isNotEmpty(addressData.getPhone()))
+			{
+				//Frist Save Address into temproryAddressModel
+
+
+				if (status.equalsIgnoreCase("sucess"))
+				{
+					final String mobileNumber = addressData.getPhone();
+					status = generateOTP(customerId, mobileNumber);
+				}
+			}
+
+		}
+		catch (final Exception exp)
+		{
+			exp.printStackTrace();
+		}
+		return status;
+
+	}
+
+
+	/**
+	 *
+	 * @param customerId
+	 * @param mobileNumber
+	 * @return
+	 * @throws InvalidKeyException
+	 * @throws NoSuchAlgorithmException
+	 */
+	String generateOTP(final String customerId, final String mobileNumber) throws InvalidKeyException, NoSuchAlgorithmException
+	{
+		final String otp = otpGenericService.generateOTP(customerId, OTPTypeEnum.COD.getCode(), mobileNumber);
+		return otp;
+	}
+
+
+
+
+
+
+	
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.account.changeDeliverryAddress.ChangeDeliveryAddressFacade#validateOTP()
+	 */
+	@Override
+	public String validateOTP(final String customerID, final String enteredOTPNumber)
+	{
+
+		String valditionMsg;
+		Boolean otpValidate;
+
+		final OTPResponseData otpResponse = otpGenericService.validateOTP(
+				customerID,
+				null,
+				enteredOTPNumber,
+				OTPTypeEnum.COD,
+				Long.parseLong(configurationService.getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
+
+		otpValidate = otpResponse.getOTPValid();
+
+		//If OTP Valid then call to OMS for Pincode ServiceableCheck
+		if (otpValidate.booleanValue())
+		{
+			final boolean serviceablePincode = true;
+
+
+			//Based On oms response we set DeliveryAddreass
+			if (serviceablePincode)
+			{
+				valditionMsg = "sucess";
+			}
+			else
+			{
+				valditionMsg = "PinCodeNotServceable";
+			}
+
+
+		}
+		else
+		{
+			valditionMsg = otpResponse.getInvalidErrorMessage();
+		}
+		return valditionMsg;
+	}
+
 
 }
