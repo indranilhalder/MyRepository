@@ -1539,45 +1539,46 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="defaultMplCommerceIndexedPropertyPopulator"
 		class="com.tisl.mpl.search.converters.populator.MplCommerceIndexedPropertyPopulator" />
 		<bean id="changeDeliveryAddressFacade"
-		class="com.tis.mpl.facade.changedelivery.Impl.ChangeDeliveryAddressFacadeImpl">
+		class="com.tis.mpl.facade.changedelivery.Impl.ChangeDeliveryAddressFacadeImpl"/>
+		
 		<!-- 	R2.3 FL04 changes	 -->
 	
-	<!-- <bean id="pincodeFacadeImpl" class="com.tisl.mpl.facade.pincode.impl.PincodeFacadeImpl"/> -->
+	<bean id="mplPincodeFacade" class="com.tisl.mpl.facade.pincode.impl.MplPincodeFacadeImpl"/>
 		
-	<!-- <bean id="statePopulator" class="com.tisl.mpl.facades.populators.StatePopulator"/> -->
+	<bean id="mplStatePopulator" class="com.tisl.mpl.facades.populators.MplStatePopulator"/>
 	
-	<!-- <bean id="stateConverter" parent="abstractPopulatingConverter">
+	<bean id="mplStateConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.facades.product.data.StateData"/>
 		<property name="populators">
 			<list>
-				<ref bean="statePopulator"/>
+				<ref bean="mplStatePopulator"/>
 			</list>
 		</property>
-	</bean> -->
+	</bean> 
 	
-	<!-- <bean id="landMarksPopulator" class="com.tisl.mpl.facades.populators.LandMarksPopulator"/>
+	<bean id="mplLandMarksPopulator" class="com.tisl.mpl.facades.populators.MplLandMarksPopulator"/>
 	
-	<bean id="landMarksConverter" parent="abstractPopulatingConverter">
+	<bean id="mplLandMarksConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.facade.data.LandMarksData"/>
 		<property name="populators">
 			<list>
-				<ref bean="landMarksPopulator"/>
+				<ref bean="mplLandMarksPopulator"/>
 			</list>
 		</property>
 	</bean>
 	
-	<bean id="pincodePopulator" class="com.tisl.mpl.facades.populators.PincodePopulator">
-		<property name="landMarksConverter" ref="landMarksConverter"/>
-		<property name="stateConverter" ref="stateConverter"/>
+	<bean id="mplPincodePopulator" class="com.tisl.mpl.facades.populators.MplPincodePopulator">
+		<property name="mplLandMarksConverter" ref="mplLandMarksConverter"/>
+		<property name="mplStateConverter" ref="mplStateConverter"/>
 	</bean>
 	
-		<bean id="pincodeConverter" parent="abstractPopulatingConverter">
+		<bean id="mplPincodeConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.facades.data.PincodeData"/>
 		<property name="populators">
 			<list>
-				<ref bean="pincodePopulator"/>
+				<ref bean="mplPincodePopulator"/>
 			</list>
-		</property>-->
+		</property>
 	</bean> 
 	
 	<!-- close R2.3 Changes -->
