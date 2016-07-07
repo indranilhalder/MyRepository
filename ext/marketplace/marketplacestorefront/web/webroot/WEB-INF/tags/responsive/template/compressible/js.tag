@@ -8,6 +8,43 @@
 
 <script>
 var loginStatus = '${sessionScope.loginSuccess}';
+
+$(document).on("click", ".header-myAccountSignOut", function() {
+	window.localStorage.removeItem("eventFired");
+});
+
+$(document).on("click","form .pagination_a_link",function(e){
+	event.preventDefault();
+	var hrefurl = $(this).attr('href');
+	$("#paginationForm").attr("action", hrefurl);
+	$(this).closest('form').submit();
+ });  
+ $(document).on("click","form .pagination_a_link",function(e){
+		event.preventDefault();
+		var hrefurl = $(this).attr('href');
+		$("#paginationFormBottom").attr("action", hrefurl);
+		$(this).closest('form').submit();
+	 }); 
+
+//TISPRO-183 -- Firing Tealium event only after successful user login
+if(loginStatus){
+	if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {
+		localStorage.setItem("eventFired","true");
+	//	console.log("Login Success!!!");
+		if(typeof utag == "undefined"){
+			console.log("Utag is undefined")
+		}
+		else{
+			console.log("Firing Tealium Event")
+			utag.link({ "event_type" : "Login", "link_name" : "Login" });
+		}
+		
+		//fireTealiumEvent();
+		
+		
+		
+	}  
+}
 </script>
 
 <%-- <script type="text/javascript"

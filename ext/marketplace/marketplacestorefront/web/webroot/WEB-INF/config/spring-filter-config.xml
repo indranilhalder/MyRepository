@@ -281,6 +281,8 @@
 		<ref bean="springSecurityFilterChain"/>
 		<ref bean="anonymousCheckoutFilter"/>
 		<ref bean="customerLocationRestorationFilter"/>
+		<!-- needs to be added for making calls to IA on search page,brand page -->
+		<ref bean="userDetailsRestorationFilter"/>
 	</util:list>
 	
 	<bean id="withoutCartRestorationFilterChain" class="de.hybris.platform.servicelayer.web.PlatformFilterChain">

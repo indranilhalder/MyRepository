@@ -40,9 +40,9 @@
 					    return this.indexOf(searchString, position) === position;
 					  };
 					}
-				
+				//TISPRO=660
 				if (dropdownValue.startsWith("MSH") || dropdownValue.startsWith("MBH")) {
-					actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue);
+					actionText = (actionText +'/c-' + dropdownValue);
 				} else if (!dropdownValue.startsWith("all")) {
 					actionText = (actionText + '/s/' + dropdownValue);
 				}
@@ -65,9 +65,9 @@
 		//end
 		
 		//Tealium js.tag
-		$(document).on("click", ".header-myAccountSignOut", function() {
+		/*$(document).on("click", ".header-myAccountSignOut", function() {
 			window.localStorage.removeItem("eventFired");
-		});
+		});*/
 
 		 $(document).on("click","form .pagination_a_link",function(e){
 			event.preventDefault();
@@ -77,15 +77,15 @@
 		 });  
 
 		//TISPRO-183 -- Firing Tealium event only after successful user login
-		if(loginStatus){
+	/*	if(loginStatus){
 			if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {
 				localStorage.setItem("eventFired","true");
-			//	console.log("Login Success!!!");
+				console.log("Login Success!!!");
 				if(typeof utag == "undefined"){
 					console.log("Utag is undefined")
 				}
 				else{
-					//console.log("Firing Tealium Event");
+					console.log("Firing Tealium Event");
 					utag.link({ "event_type" : "Login", "link_name" : "Login" });
 				}
 				
@@ -94,7 +94,7 @@
 				
 				
 			}  
-		}
+		}*/
 		//End
 		
 		//Smart Banner
