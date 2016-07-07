@@ -8378,6 +8378,20 @@
 		</typegroup>
 	
 		<!-- close -->
+   <!-- R2.3 changesDeliveryAddress for  TemproryAddress Model-->
+	  <typegroup name="TemproryAddress">
+			<itemtype code="TemproryAddress" autocreate="true"  extends="Address" generate="true">
+				<deployment table="TempAddress" typecode="15010" />
+				<attributes>
+					<attribute autocreate="true" qualifier="orderId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" optional="false" unique="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+	 </typegroup>
+	<!-- END  -->
 		
 	</itemtypes>
 </items>
