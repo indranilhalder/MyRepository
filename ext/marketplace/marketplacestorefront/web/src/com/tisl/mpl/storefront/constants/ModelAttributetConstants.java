@@ -728,5 +728,7 @@ public final class ModelAttributetConstants
 	public static final String USER_FIRST_NAME = "userFirstName";
 
 	public static final String BUILD_NUMBER = "buildNumber";
+	//TISPRM-33
+	public static final String SAVINGONPRODUCT = "savingsOnProduct";
 
 }

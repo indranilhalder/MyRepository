@@ -55,8 +55,7 @@ tr.d0 td {
    
    
    </li>
-   
-  
+
    
    <li class="moveToWishlistMsg" style="display: none;"></li>
    
@@ -84,8 +83,6 @@ tr.d0 td {
 	<input type="hidden" name="subPriceForMSD"  class="cartMSD" value="${entry.basePrice.value}" />
 	</div>										<!-- End MSD -->  
    <!-- End MSD -->
-      
-    
    <li class="item">
    <ul class="desktop">
    
@@ -351,6 +348,12 @@ tr.d0 td {
 								<%-- <c:if test="${not empty entry.cartLevelDisc && not empty entry.productLevelDisc}">
 								<format:price priceData="${entry.totalSalePrice}"/>
 								</c:if> --%>
+								<%-- ---
+								${entry.totalPrice.value}
+								sds
+								${entry.totalSalePrice.value}
+								--
+								${entry.amountAfterAllDisc.value} --%>
 								<c:choose>
 								<c:when test="${not empty entry.cartLevelDisc}">
 								<c:choose>
@@ -394,6 +397,7 @@ tr.d0 td {
 									<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
 								</c:if>  --%>
 							</ycommerce:testId>
+							<%-- You saved ${savingsOnProduct} % --%>
 					</ul>
 				  </li>  
    
@@ -420,7 +424,7 @@ tr.d0 td {
    </li>
    	</c:forEach>
 </ul>
-   	
+
 
 <div class="add-to-wishlist-container">
 <form>

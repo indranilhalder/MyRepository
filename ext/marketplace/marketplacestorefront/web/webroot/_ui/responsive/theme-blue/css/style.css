@@ -40360,3 +40360,30 @@ body.page-checkout-login header .content nav>ul {
         padding-top: 0px;
         padding-bottom: 0px;
     }
+
+#defaultPinDiv #defaultPinCodeIdsq {
+	border: none;
+    outline: none;
+    padding: 0;
+    display: inline;
+    width: 50px;
+    float: none;
+    height: auto;
+    margin-left: 5px;
+}
+div#defaultPinDiv a#changePinAnchor{
+	color:#00cbe9;
+}
+div#defaultPinDiv p{
+	    display: inline-block;
+}
+/* div#defaultPinDiv a#changePinAnchor:before {
+    font-family: FontAwesome;
+    color: #00cbe9;
+    content: "\f040";
+    font-size: 18px;
+    line-height: 18px;
+    margin-right: 5px;
+    top: 2px;
+    position: relative;
+} */

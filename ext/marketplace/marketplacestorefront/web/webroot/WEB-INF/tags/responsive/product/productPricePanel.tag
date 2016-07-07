@@ -12,7 +12,6 @@
 
 <h2 class="company author">
           </h2>
-
 <div class="price">
 	<p class="old" id="mrpPriceId" style="display:none">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
@@ -23,6 +22,10 @@
 	<p class="sale" id="spPriceId" style="display:none">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
+	<!-- <p class="savings">															
+		  You save <p class="sale" id="savingsOnProductId" style="display:none"> 
+	</p> -->
+	
 	<br>
 	<!--- START: INSERTED for MSD --->
 	<input type="hidden" id="price-for-mad" value=""/>		

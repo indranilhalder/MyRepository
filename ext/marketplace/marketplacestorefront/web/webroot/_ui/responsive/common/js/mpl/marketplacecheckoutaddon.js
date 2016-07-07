@@ -3145,9 +3145,6 @@ function checkPincodeServiceability(buttonType)
     	$("#defaultPinCodeIds").css("color","red");
         $("#error-Id").show();
 		$("#emptyId").hide();
-        //$("#checkoutBtnIdLink").hide();
-		//$("#expresscheckoutid").hide();
-		//$("#checkoutBtnIdButton").show();
 		$("#error-Id").css({
 			"color":"red",
 			"display":"block",
@@ -3180,7 +3177,10 @@ function checkPincodeServiceability(buttonType)
  					populatePincodeDeliveryMode(response,buttonType);
  					reloadpage(selectedPincode,buttonType);
  				}
- 			
+ 			//TISPRM-33
+	 			$("#defaultPinDiv").show();
+ 	 			$("#changePinDiv").hide();
+ 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
  		},
  		error : function(resp) {
  			//TISTI-255
@@ -3433,7 +3433,6 @@ function redirectToCheckout(checkoutLinkURlId)
 
 function checkIsServicable()
 {
-	
 	var selectedPincode=$("#defaultPinCodeIds").val();
 	if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
 	
@@ -3443,6 +3442,8 @@ function checkIsServicable()
 	 		cache: false,
 	 		success : function(response) {
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');
+	 			$("#defaultPinDiv").show();
+	 			$("#changePinDiv").hide();
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
@@ -3456,6 +3457,10 @@ function checkIsServicable()
 	 			
 	 			console.log('Some issue occured in checkPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
+	 			//TISPRM-65
+ 	 			$("#defaultPinDiv").show();
+ 	 			$("#changePinDiv").hide();
+ 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
 	 		}
 	 	});
 	}

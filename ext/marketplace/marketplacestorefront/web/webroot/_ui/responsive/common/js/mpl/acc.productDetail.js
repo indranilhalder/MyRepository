@@ -1250,13 +1250,15 @@ $( document ).ready(function() {
 					var spPrice = data['specialPrice'];
 					var mrpPrice = data['mrp'];
 					var mop = data['price'];
-
+					var savingsOnProduct= data['savingsOnProduct'];
+				//	alert(mrpPrice);
 					$("#stock").val(data['availablestock']);
 					$(".selectQty").change(function() {
 						$("#qty").val($(".selectQty :selected").val());
 					});
 					displayDeliveryDetails(sellerName);
-					dispPrice(mrpPrice, mop, spPrice);
+					//TISPRM-33 savingsOnProduct added
+					dispPrice(mrpPrice, mop, spPrice);//, savingsOnProduct);
 					if (isproductPage == 'false') {
 						fetchAllSellers();
 						$("#minPrice").html(data['minPrice'].formattedValue);
@@ -1402,8 +1404,8 @@ function displayDeliveryDetails(sellerName) {
 		}
 	});
 }
-function dispPrice(mrp, mop, spPrice) {
-	
+function dispPrice(mrp, mop, spPrice) {//, savingsOnProduct) {
+	//alert("mrp "+ mrp.formattedValue +"mop "+mop.formattedValue +"spPrice "+spPrice.formattedValue +"savingsOnProduct "+ savingsOnProduct.formattedValue);
 	if(null!= mrp){
 		$("#mrpPriceId").append(mrp.formattedValue);
 	}
@@ -1413,7 +1415,16 @@ function dispPrice(mrp, mop, spPrice) {
 	if(null!= spPrice){
 		$("#spPriceId").append(spPrice.formattedValue);
 	} 
+	////TISPRM-33
+	/*if(null!= savingsOnProduct){
+		$("#savingsOnProductId").append(savingsOnProduct+" %");
+	} 
 
+	if(null!= savingsOnProduct && savingsOnProduct != 0){
+		$("#savingsOnProductId").show();
+	} */
+	
+	//TISPRM-33
 	if (null!=spPrice && spPrice != 0) {
 
 		if (mop.value == mrp.value) {
