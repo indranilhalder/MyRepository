@@ -1358,7 +1358,9 @@ h2 {
     margin-left: 35px; } }
            @media (min-width:791px) {
     header .content nav > ul {
-      clear: both; }
+      clear: both;
+      padding-top: 10px;
+      padding-bottom: 9px; }
       header .content nav > ul::after {
         clear: both;
         content: "";
@@ -1368,7 +1370,6 @@ h2 {
         margin-right: 20px;
         padding: 0;
         width: 120px;
-        padding-top: 10px;
         -webkit-transition: background-color 0.3s 0.3s;
         -moz-transition: background-color 0.3s 0.3s;
         transition: background-color 0.3s 0.3s; }
@@ -9251,13 +9252,12 @@ footer .banner {
 .listing.wrapper .left-block {
   width: 100%;
    padding: 0px 5px;
-   margin-top:31px;
   }
   @media (min-width: 651px) {
     .listing.wrapper .left-block {
       width: 30%;
       padding-top: 5px; 
-      margin-top:2px;
+      margin-top:55px;
       position:relative;
       z-index:1;
      }
@@ -9292,8 +9292,7 @@ footer .banner {
       padding: 15px 0 20px 5px;
       display:block; } }
   .listing.wrapper .right-block .listing-menu {
-    padding: 0 0 30px 0;
-  
+    padding: 0 0 20px 0;
     margin-bottom: 20px;
     clear: both;
      }
@@ -9785,7 +9784,7 @@ body .account .right-account .order-history .pagination li{
 }
 
 .facet-values.js-facet-values.js-facet-form {
-  max-height: 185px;
+  max-height: 255px;
   overflow-y: auto;
 }
 
@@ -9874,7 +9873,7 @@ body .account .right-account .order-history .pagination li{
   }
   .listing.wrapper .left-block {
   	width: 100%;
-  	margin-top: 0px;
+  	margin-top: 0px !important;
   }
   }
   .listing-leftmenu > li > a, .listing-leftmenu > div > li > a {
@@ -9902,8 +9901,7 @@ body .account .right-account .order-history .pagination li{
   padding: 10px;
   clear:both; }
     .listing-leftmenu .checkbox-menu > a.more {
-      margin-bottom: 0;
-      margin-top: 20px; }
+      margin-bottom: 0; }
   .listing-leftmenu .checkbox-menu li {
     margin: 10px 0; }
     .listing-leftmenu .checkbox-menu li label {
@@ -9952,12 +9950,12 @@ body .account .right-account .order-history .pagination li{
     clear: both;
     content: "";
     display: table; }
-  .listing-leftmenu .size li {
+ /*  .listing-leftmenu .size li {
     display: inline-block;
     float: left;
     width: 25%;
     padding: 4px;
-    margin: 0; }
+    margin: 0; } */
     .listing-leftmenu .size li a {
       border: 1px solid #b9b9b9;
       color: #b9b9b9;
@@ -18184,7 +18182,8 @@ font-weight: 600;
 	border: 1px solid #c6c6c6;		
 	text-align: center;		
 	vertical-align: middle;		
-	background: #fff;		
+	background: #fff;	
+	position:relative;	
 }		
 .product-facet .facet .facet-list .facet-checkbox:checked+.facet-label .facet-mark:after	
 	{		
@@ -18193,7 +18192,8 @@ font-weight: 600;
     height: 12px;
     background: url(../images/check.png) no-repeat 0 0;
     position: absolute;
-    left: 15px;		
+    left: -1px;		
+    top: -1px;
 }		
 .product-facet .facet .facet-list .facet-checkbox:checked+.facet-label .facet-text		
 	{		
@@ -18272,13 +18272,13 @@ font-weight: 600;
   -moz-transition: border-color 0.3s;
   transition: border-color 0.3s;
 }
-.product-facet .facet.size .facet-list li{
+/* .product-facet .facet.size .facet-list li{
 	width:auto;
 	height:42px;
 	padding:4px;
 	float:left;
 	margin:0px;
-}
+} */
 .product-facet .facet.size .facet-list li a{
 	height:100%;
 	width:100%;
@@ -20021,8 +20021,6 @@ body.page-shoe .feature-collections ul.collections li.chef.sub h3 span a{
 }
 .listing.wrapper .right-block .listing-menu > div .wrapped-form.sort {
   display: inline-block;
-  padding: 0 0 0 15px;
-  border: 2px solid #f0f4f5;
 }
 
 }
@@ -26108,6 +26106,10 @@ li#savedCVVError{
 @media(min-width:651px){
 	.facet-name.js-facet-name h4.tree-dept{
 		    padding-bottom: 10px;
+		    padding-left:10px;
+	}
+	.left-block ul.product-facet.js-product-facet.listing-leftmenu{
+	display:block !important;
 	}
 	#savedCreditCard .credit-card-group,#savedDebitCard .debit-card-group,#savedEMICard .credit-card-group{
 		min-height: 90px;
@@ -26722,7 +26724,13 @@ top: 14px;
     color: #000 !important;
 }
 .product-facet .facet.size .facet-list li.filter-size {
-    padding: 0 2px;
+    padding: 0 8px 0 0;
+    width: auto;
+    height: 42px;
+    float: left;
+    margin: 0;
+    margin-left: -4px;
+    display: inline-block;
 } 
 .listing-leftmenu .Size .facet-list .filter-Size form {
     display: table;
@@ -30142,9 +30150,9 @@ li#ratingDiv {
  	header .content nav > ul > li > .toggle > span:first-child{
  	font-size: 11.1px;
      line-height: 15px;
-     height: 17px;
+     height: 26px;
      font-weight: 500;
-     margin-top: 9px;
+     padding-top: 9px;
      display: block;
      letter-spacing: 1px;}
      
@@ -31692,6 +31700,45 @@ display:none;
 .jqtree-title.jqtree_common:not(.jqtree-title-folder){
 	color:#857D7B;
 }
+.sort-by-sec {
+    font-size: 13px;
+    padding: 0;
+    text-align: center;
+    margin: 10px 0;
+}
+.sort-by-sec strong {
+    color: #857D7B;
+    font-weight: 400;
+}
+.sort-by-sec a {
+    display: inline-block;
+    padding: 10px 15px;
+    position: relative;
+    font-weight: 400;
+}
+.sort-by-sec a.active, .sort-by-sec a:hover {
+    color: #a9143c;
+    border-bottom: 2px solid #A91E3E;
+    margin-bottom: -1px;
+}
+.sort-by-sec a.active:before {
+    top: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(136, 183, 213, 0);
+    border-bottom-color: #a9143c;
+    border-width: 4px;
+    margin: -8px 0 0 -4px;
+}
+.sort-by-inline{
+	display:inline;
+}
+
 /*--------------maincss-----------*/
 .row
 {
@@ -39482,7 +39529,7 @@ transform-origin:0 0;
 .listing-leftmenu .checkbox-menu input.js-less-facet-values-link{
 	padding: 0px;
     height: auto;
-    margin: 20px 0 0 0;
+    margin: 0;
 }
 /* Order History CSS */
 

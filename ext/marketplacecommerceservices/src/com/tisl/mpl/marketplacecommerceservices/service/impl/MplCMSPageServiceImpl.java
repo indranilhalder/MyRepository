@@ -113,6 +113,13 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	}
 
+	@Override
+	public ContentPageModel getPageForAppById(final String pageUid)
+	{
+		// YTODO Auto-generated method stub
+		return mplCmsPageDao.getPageForAppById(pageUid);
+
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

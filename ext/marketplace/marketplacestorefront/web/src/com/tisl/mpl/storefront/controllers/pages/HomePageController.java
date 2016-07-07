@@ -953,6 +953,11 @@ public class HomePageController extends AbstractPageController
 		return matcher.matches();
 	}
 
+	/*
+	 * private static HttpServletRequest getRequest() { return ((ServletRequestAttributes)
+	 * RequestContextHolder.currentRequestAttributes()).getRequest(); }
+	 */
+
 	@ResponseBody
 	@RequestMapping(value = "/fetchToken", method = RequestMethod.GET)
 	public Object fetchToken(final HttpSession session)
@@ -1138,4 +1143,6 @@ public class HomePageController extends AbstractPageController
 		}
 		return ControllerConstants.Views.Fragments.Home.FooterPanel;
 	}
+
+
 }
