@@ -5511,6 +5511,15 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- End TISPRO-318 -->
+					<!-- TISPRD- 2511 -->
+					<attribute qualifier="isSentToFico" autocreate="true"
+						type="java.lang.Boolean">
+						<description>Sent to FICO attribute</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>						
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -7635,6 +7644,7 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					
 				</attributes>
 			</itemtype>
 

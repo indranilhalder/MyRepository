@@ -180,6 +180,30 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	}
 
 	@Override
+	public ContentPageModel getPageForAppById(final String pageUid)
+	{
+		// YTODO Auto-generated method stub
+		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
+				.append(ContentPageModel._TYPECODE).append(" AS C}, {").append(CatalogVersionModel._TYPECODE)
+				.append(" AS CV} Where {C:").append(ContentPageModel.UID).append("} = ?uid").append(" And {C:")
+				.append(ContentPageModel.CATALOGVERSION).append("} = {CV:").append(CatalogVersionModel.PK).append(" } AND {CV:")
+				.append(CatalogVersionModel.VERSION).append("} = ?version");
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
+		query.addQueryParameter("uid", pageUid);
+		query.addQueryParameter("version", ONLINE_CATALOG_VERSION);
+
+		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
+		{
+			return contentPages.get(0);
+		}
+
+		return null;
+	}
+	
+	@Override
 	public ContentPageModel getCollectionLandingPageForMobile(final CMSChannel cms, final MplShopByLookModel shopByLook)
 	{
 		final StringBuilder queryString = getCollectionQuery();
