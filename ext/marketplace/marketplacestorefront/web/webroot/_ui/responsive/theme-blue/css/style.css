@@ -10812,9 +10812,10 @@ button.otherSellersFont {
 }
 .product-info .product-content .swatch .size,
 .product-info .product-content .swatch .qty {
-    width: 50%;
+    width: 49%;
     display: inline-block;
-    float: left
+    float: none;
+    vertical-align: top;
 }
 .product-info .product-content .swatch .size p,
 .product-info .product-content .swatch .qty p {
