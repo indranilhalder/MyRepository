@@ -24,7 +24,7 @@
 	<script type="text/javascript" src="${addOnJavaScript}?v=${buildNumber}"></script>
 </c:forEach>
 
-<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
+<%-- <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/populateAddressDetail') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/addNewAddress') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/editAddress') or
@@ -38,7 +38,7 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnSuccess') 
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}">
 	<script type="text/javascript"
 		src="${commonResourcePath}/js/acc.accountpagination.js?v=${buildNumber}"></script>
-</c:if>
+</c:if> --%>
 
 <%-- <!-- Fix for defect TISPT-202 -->
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/store-finder') || (requestScope['javax.servlet.forward.request_uri']=='/') || fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/check')}">
