@@ -28,7 +28,7 @@ public class DefaultMplProductSearchService<ITEM> extends DefaultSolrProductSear
 {
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.solrfacet.search.service.impl.DefaultMplProductSearchService#mplProductSearch(java.lang.Object,
 	 * de.hybris.platform.commerceservices.search.pagedata.PageableData)
 	 */
