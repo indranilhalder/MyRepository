@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.marketplacecommerceservices.pincode.impl;
 
@@ -9,8 +9,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.exception.EtailBusinessExceptions;
-import com.tisl.mpl.marketplacecommerceservices.daos.PincodeDetailsDao;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplPincodeDetailsDao;
 import com.tisl.mpl.marketplacecommerceservices.pincode.PincodeService;
+import com.tisl.mpl.util.ExceptionUtil;
+
 
 /**
  * @author Dileep
@@ -19,23 +21,25 @@ import com.tisl.mpl.marketplacecommerceservices.pincode.PincodeService;
 public class PincodeServiceImpl implements PincodeService
 {
 	@Autowired
-	private PincodeDetailsDao pincodeDetailsDao;
-	
+	private MplPincodeDetailsDao mplPincodeDetailsDao;
+
 	private static final Logger LOG = Logger.getLogger(PincodeServiceImpl.class);
 
 	@Override
-	public PincodeModel getDetails(String pincode)
+	public PincodeModel getDetails(final String pincode)
 	{
-		PincodeModel pincodeModel;
-		LOG.info("Pincode Service class ");
+		PincodeModel pincodeModel = null;
 		try
 		{
-			pincodeModel = pincodeDetailsDao.getPincodeModel(pincode);
-			LOG.info("Getting all the details of the pincode in  Service Class");
+			pincodeModel = mplPincodeDetailsDao.getPincodeModel(pincode);
 		}
-		catch(Exception e)
+		catch (final EtailBusinessExceptions businessException)
 		{
-			throw new EtailBusinessExceptions();
+			ExceptionUtil.etailBusinessExceptionHandler(businessException, null);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(" Fails to get Details of the pincode  :: " + e);
 		}
 		return pincodeModel;
 	}
