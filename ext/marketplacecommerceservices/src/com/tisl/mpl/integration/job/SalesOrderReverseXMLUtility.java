@@ -73,7 +73,6 @@ public class SalesOrderReverseXMLUtility
 
 	private String payemntrefid = null;
 	private boolean xmlToFico = true;
-	private final boolean toSentToFico = true;
 	private final String RET = MarketplacecommerceservicesConstants.RETURN_FLAG;
 	private final String CAN = MarketplacecommerceservicesConstants.CANCEL_FLAG;
 
@@ -333,14 +332,14 @@ public class SalesOrderReverseXMLUtility
 								salesXMLData = null;
 							}
 
-							if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico && toSentToFico)
+							if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico)
 							{
 								salesXMLData.setSubOrderList(subOrderDataList);
 								LOG.debug("set sub order list");
 							}
 						}
 						//TISSIT-1780
-						if (salesXMLData != null && xmlToFico && toSentToFico)
+						if (salesXMLData != null && xmlToFico)
 						{
 							bulkSalesDataList.add(salesXMLData);
 							LOG.debug("xml order:" + salesXMLData.getOrderId());
@@ -397,7 +396,7 @@ public class SalesOrderReverseXMLUtility
 				 * ptModel.getType().equals(PaymentTransactionType.MANUAL_REFUND) ||
 				 * ptModel.getType().equals(PaymentTransactionType.RETURN)) { reversepayemntrefid = payTransModel.getCode();
 				 * LOG.info(reversepayemntrefid); LOG.debug(ptModel.getType()); break; } }
-				 * 
+				 *
 				 * } } } }
 				 */
 				final SubOrderXMLData xmlData = new SubOrderXMLData();
@@ -418,7 +417,7 @@ public class SalesOrderReverseXMLUtility
 
 				}
 
-				if (null != childOrderDataList && !childOrderDataList.isEmpty() && xmlToFico && toSentToFico)
+				if (null != childOrderDataList && !childOrderDataList.isEmpty() && xmlToFico)
 				{
 					LOG.debug("before child order list set");
 					xmlData.setTransactionInfoList(childOrderDataList);
@@ -560,7 +559,7 @@ public class SalesOrderReverseXMLUtility
 
 						/*
 						 * final String ussId = entry.getSelectedUSSID();
-						 * 
+						 *
 						 * final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
 						 * if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null &&
 						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null &&
