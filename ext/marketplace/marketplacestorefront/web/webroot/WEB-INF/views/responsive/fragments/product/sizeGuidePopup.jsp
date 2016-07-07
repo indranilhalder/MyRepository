@@ -441,12 +441,13 @@ var productCodeSG = '${product.code}';
 			</div>
 			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantCount"/>
 			<div class="qty" id="">
-				<label>Qty:</label>
+			<!-- TISPRM-131 -->
+			<%-- 	<label>Qty:</label>
 				<select id="sizeGuideQty">
 				<c:forEach var="qtyCount" begin="1" end="${maxQuantCount}">
 		   		<option value="${qtyCount}">${qtyCount}</option>
 				</c:forEach>
-				</select>
+				</select> --%>
 			</div>
 
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">

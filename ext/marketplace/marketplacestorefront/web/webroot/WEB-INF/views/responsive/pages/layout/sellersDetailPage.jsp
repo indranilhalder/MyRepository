@@ -472,16 +472,7 @@ var allSellers='${allsellers}';
 		<input type="hidden" id="loggedIn" value="true"/> 
 		</sec:authorize>   
 				       
-		   <ul class="wish-share">
-				<li>
-				<span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
-				<!-- <span id="addedMessage" style="display:none"></span> -->
-				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'>Add to Wishlist</a></li>
-				<li>
-				<product:socialSharing product="${product}" />
-					
-				</li>
-			</ul>
+		   
                 
     <script>
 			$(".g-interactivepost").attr("data-contenturl",window.location.host+$('#productUrl').text());
@@ -502,7 +493,16 @@ var allSellers='${allsellers}';
 <cms:pageSlot position="PinCodeService" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
-
+    <ul class="wish-share">
+				<li>
+				<span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
+				<!-- <span id="addedMessage" style="display:none"></span> -->
+				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'>Add to Wishlist</a></li>
+				<li>
+				<product:socialSharing product="${product}" />
+					
+				</li>
+			</ul>
 	</div>
  </div>
 </div>

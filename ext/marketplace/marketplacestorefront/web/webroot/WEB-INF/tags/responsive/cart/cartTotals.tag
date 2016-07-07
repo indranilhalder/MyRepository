@@ -11,6 +11,7 @@
 <script type="text/javascript">		
 $(document).ready(function() {
 	//TISPRM-65
+	alert($("#defaultPinCodeIdsDefault").val());
 	if($("#defaultPinCodeIdsDefault").val() == null || $("#defaultPinCodeIdsDefault").val() == "")
 	{
 		$("#defaultPinDiv").hide();
