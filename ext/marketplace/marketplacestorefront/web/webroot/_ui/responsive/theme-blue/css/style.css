@@ -40005,6 +40005,18 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 .smartbanner-show {
 	margin-top: 80px;
 }
+.smartbanner-show body.template-pages-search-searchGridPage .smartbanner-container,
+.smartbanner-show body.template-pages-category-productGridPage .smartbanner-container,
+.smartbanner-show body.template-pages-my-account-accountMarketPreference .smartbanner-container,
+.smartbanner-show body.template-pages-my-account-inviteFriends .smartbanner-container,
+.smartbanner-show body.template-pages-my-account-myStyleProfile .smartbanner-container
+{
+	padding-top:15px;
+}
+.smartbanner-show body header .content .top.active{
+	margin-top: 80px;
+}
+
 .smartbanner-show .smartbanner {
 	display: block;
 }
