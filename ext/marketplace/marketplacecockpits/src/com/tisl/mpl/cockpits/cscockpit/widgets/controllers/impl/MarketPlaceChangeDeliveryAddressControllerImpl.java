@@ -3,7 +3,7 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tis.mpl.facade.changedelivery.ChangeDeliveryAddressFacade;
+import com.tis.mpl.facade.changedelivery.MplChangeDeliveryAddressFacade;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceChangeDeliveryAddressController;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 
@@ -15,7 +15,7 @@ import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultOrderManagem
 public class MarketPlaceChangeDeliveryAddressControllerImpl extends DefaultOrderManagementActionsWidgetController implements MarketPlaceChangeDeliveryAddressController{
 	private static final Logger LOG = Logger.getLogger(MarketPlaceChangeDeliveryAddressControllerImpl.class);
 	@Autowired
-	private ChangeDeliveryAddressFacade changeDeliveryAddressFacade;
+	private MplChangeDeliveryAddressFacade mplChangeDeliveryAddressFacade;
 	@Autowired
 	private MplOrderFacade mplOrderFacade;
 	@Override
@@ -23,7 +23,7 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends DefaultOrder
 		OrderModel orderModel = (OrderModel) orderObject.getObject();
 		boolean changable = false;
 		try {
-			changable = changeDeliveryAddressFacade
+			changable = mplChangeDeliveryAddressFacade
 					.isDeliveryAddressChangable(orderModel);
 		} catch (Exception e) {
 			LOG.error("Exception occurred " + e.getCause());
@@ -36,13 +36,13 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends DefaultOrder
 	@Override
 	public void ticketCreateToCrm(OrderModel Order, String customerId,
 			String source) {
-		changeDeliveryAddressFacade.createcrmTicketForChangeDeliveryAddress(Order, customerId,source);
+		mplChangeDeliveryAddressFacade.createcrmTicketForChangeDeliveryAddress(Order, customerId,source);
 		
 	}
 	
 	public boolean changeDeliveryAddressCallToOMS(String orderId,AddressModel newDeliveryAddress) 
 	{
-		return changeDeliveryAddressFacade.changeDeliveryRequestToOMS(orderId, newDeliveryAddress);
+		return mplChangeDeliveryAddressFacade.changeDeliveryRequestToOMS(orderId, newDeliveryAddress);
 		
 	}
 
