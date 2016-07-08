@@ -40424,6 +40424,9 @@ div#defaultPinDiv p{
 li.filter-colour.deactivate,li.filter-Size.deactivate{
 	display:none !important;
 }
+p.savings {
+    display: inline-block;
+}
 p.savings.pdp-savings,
 p.savings.cart-savings {
     display: inline-block;
