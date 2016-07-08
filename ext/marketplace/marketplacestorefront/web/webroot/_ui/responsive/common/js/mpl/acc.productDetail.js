@@ -1413,7 +1413,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	} 
 	////TISPRM-33
 	if(null!= savingsOnProduct){
-		$("#savingsOnProductId").append(savingsOnProduct+" %");
+		$("#savingsOnProductId").append("(-"+savingsOnProduct+" %)");
 	} 
 
 	if(null!= savingsOnProduct && savingsOnProduct != 0){

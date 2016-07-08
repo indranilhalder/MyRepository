@@ -277,7 +277,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 *
+	 * 
 	 * }
 	 */
 
@@ -379,18 +379,16 @@ public class CartPageController extends AbstractPageController
 								}
 							}
 							//TISPRM-33
-							if (null != entryLatest.getTotalSalePrice() && null != entryLatest.getAmountAfterAllDisc())
-							{
-								final double savingPriceCal = entryLatest.getTotalSalePrice().getDoubleValue()
-										- entryLatest.getAmountAfterAllDisc().getDoubleValue();
-								final double savingPriceCalPer = (savingPriceCal / entryLatest.getTotalSalePrice().getDoubleValue()) * 100;
-								final double roundedOffValue = Math.round(savingPriceCalPer * 100.0) / 100.0;
-								model.addAttribute(ModelAttributetConstants.SAVINGONPRODUCT, roundedOffValue);
-							}
-							else if (null != entryLatest.getTotalPrice())
-							{
-								model.addAttribute(ModelAttributetConstants.SAVINGONPRODUCT, null);
-							}
+							/*
+							 * if (null != entryLatest.getTotalSalePrice() && null != entryLatest.getAmountAfterAllDisc()) {
+							 * final double savingPriceCal = entryLatest.getTotalSalePrice().getDoubleValue() -
+							 * entryLatest.getAmountAfterAllDisc().getDoubleValue(); final double savingPriceCalPer =
+							 * (savingPriceCal / entryLatest.getTotalSalePrice().getDoubleValue()) * 100; final double
+							 * roundedOffValue = Math.round(savingPriceCalPer * 100.0) / 100.0;
+							 * model.addAttribute(ModelAttributetConstants.SAVINGONPRODUCT, roundedOffValue); } else if (null
+							 * != entryLatest.getTotalPrice()) { model.addAttribute(ModelAttributetConstants.SAVINGONPRODUCT,
+							 * null); }
+							 */
 							//TISPRM-33
 
 						}
@@ -484,7 +482,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 *
+	 * 
 	 * @param model ,redirectModel
 	 */
 
@@ -1271,7 +1269,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1328,7 +1326,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

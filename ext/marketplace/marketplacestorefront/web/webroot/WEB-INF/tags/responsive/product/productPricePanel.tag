@@ -22,8 +22,8 @@
 	<p class="sale" id="spPriceId" style="display:none">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
-	<p class="savings pdp-savings">															
-		  <spring:theme code="product.yousave"/> <span id="savingsOnProductId" style="display:none"> </span>
+	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															
+		  <span></span>
 	</p>
 	<br>
 	<!--- START: INSERTED for MSD --->
