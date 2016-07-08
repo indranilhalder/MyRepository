@@ -127,7 +127,7 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
-import com.tis.mpl.facade.changedelivery.ChangeDeliveryAddressFacade;
+import com.tis.mpl.facade.changedelivery.MplChangeDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
@@ -410,7 +410,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private DefaultMplReviewFacade mplReviewrFacade;
 
 	@Autowired
-	private ChangeDeliveryAddressFacade changeDeliveryAddressFacade;
+	private MplChangeDeliveryAddressFacade changeDeliveryAddressFacade;
 
 	/**
 	 *
@@ -1241,8 +1241,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			LOG.debug("if Address is diffrent  then Save TemproryAddressModel and OTP genarate");
 
-			validatetionCheckMsg = changeDeliveryAddressFacade.saveAsTemproryAddressForCustomer(customerId, orderCode,
-					addressData);
+			validatetionCheckMsg = changeDeliveryAddressFacade.saveAsTemproryAddressForCustomer(customerId, orderCode, addressData);
 		}
 		else
 		{
