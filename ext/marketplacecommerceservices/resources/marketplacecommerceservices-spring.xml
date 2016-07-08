@@ -1742,9 +1742,8 @@
 	<bean id="mplPincodeDetailsDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPincodeDetailsDaoImpl"/>
 	
 	<!-- closing FL04 -->
-<bean id="changeDeliveryAddressService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ChangeDeliveryAddressServiceImpl">
-	</bean>
 
+<bean id="mplChangeDeliveryAddressServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplChangeDeliveryAddressServiceImpl"/>
 </beans>
 
