@@ -40,13 +40,13 @@ public class MplChangeDeliveryAddressClientServiceImpl implements MplChangeDeliv
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.service.MplChangeDeliveryAddressClientService#changeDeliveryAddressDataToOMS(com.tisl.mpl.xml.pojo
 	 * .MplChangeDeliveryAddressRequest)
 	 */
 	@Override
-	public MplChangeDeliveryAddressResponce changeDeliveryAddressDataToOMS(
+	public MplChangeDeliveryAddressResponce changeDeliveryRequestCallToOMS(
 			final MplChangeDeliveryAddressRequest changeDeliveryAddressRequest)
 	{
 		final Client client = Client.create();
