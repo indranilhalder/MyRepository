@@ -40401,13 +40401,14 @@ body.page-checkout-login header .content nav>ul {
     width: 50px;
     float: none;
     height: auto;
-    margin-left: 5px;
+    margin-top: -1px;
 }
 div#defaultPinDiv a#changePinAnchor{
 	color:#00cbe9;
+	line-height: 20px;
 }
 div#defaultPinDiv p{
-	    display: inline-block;
+	    display: inline;
 }
 /* div#defaultPinDiv a#changePinAnchor:before {
     font-family: FontAwesome;
