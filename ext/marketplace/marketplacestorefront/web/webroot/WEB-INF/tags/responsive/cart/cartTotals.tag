@@ -65,7 +65,7 @@ function isNumber(evt) {
 function pinCodeDiv(){
 	$("#changePinDiv").show();
 	$("#defaultPinDiv").hide();
-	$("#defaultPinCodeIdDefault").val("");
+	$("#defaultPinCodeIds").val("");
 }
 //TISPRM-65
 
