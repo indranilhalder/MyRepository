@@ -30,7 +30,7 @@
 <!-- <meta name="msApplication-ID" content="microsoft.build.App"/>
 <meta name="msApplication-PackageFamilyName" content="microsoft.build_8wekyb3d8bbwe"/> -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
-<link rel="icon" href="//${favHost}/_ui/responsive/common/images/preload.png" type="image/png">
+<%-- <link rel="icon" href="//${favHost}/_ui/responsive/common/images/preload.png" type="image/png"> --%>
 <link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
 <link rel="android-touch-icon" href="${themeResourcePath}/images/Appicon.png" />
 <!-- <link rel="windows-touch-icon" href="icon.png" /> -->
