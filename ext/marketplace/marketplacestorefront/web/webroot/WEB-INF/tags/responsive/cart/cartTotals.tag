@@ -61,11 +61,14 @@ function isNumber(evt) {
     }
     return true;
 }
-//TISPRM-65
 function pinCodeDiv(){
+//TISPRM-65
 	$("#changePinDiv").show();
 	$("#defaultPinDiv").hide();
 	$("#defaultPinCodeIds").val("");
+	$(".pincodeServiceError").text("");	
+	$(".less-stock").text("");	
+	$("#successPin").text("");	
 }
 //TISPRM-65
 
@@ -76,17 +79,8 @@ function pinCodeDiv(){
 <%-- <form:form id="cartFormId" action="${request.contextPath}/cart/setPincode" method="GET">   --%>
 
   
-	<div class="top block">
+	<div class="top block" id="pinCodeDispalyDiv">
 		<h2><spring:theme code="cart.delivery.options" /></h2>
-		<%-- <p><spring:theme code="product.pincode" /></p>
-		
-		<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeId" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" /> 
-
-		<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit');"><spring:theme code="product.submit"/></button>
-		
-		<div id="unsevisablePin" style="display:none;color:#ff1c47;padding-top: 45px;line-height:15px;"><spring:theme code="pincode.unsevisable"/></div> --%>
-		
-		<%-- <input type="hidden"  name = "defaultPinCodeIdsData" id= "defaultPinCode"  value="${defaultPinCode}"/> --%>
 		<input type="hidden"  name = "defaultPinCodeIdsDefault" id= "defaultPinCodeIdsDefault"  value="${defaultPinCode}"/>
 			<div id="defaultPinDiv">
 				<p><spring:theme code="product.pincode" /> 
