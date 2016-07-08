@@ -42,7 +42,7 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends DefaultOrder
 	
 	public boolean changeDeliveryAddressCallToOMS(String orderId,AddressModel newDeliveryAddress) 
 	{
-		return mplChangeDeliveryAddressFacade.changeDeliveryRequestToOMS(orderId, newDeliveryAddress);
+		return mplChangeDeliveryAddressFacade.changeDeliveryRequestCallToOMS(orderId, newDeliveryAddress);
 		
 	}
 
