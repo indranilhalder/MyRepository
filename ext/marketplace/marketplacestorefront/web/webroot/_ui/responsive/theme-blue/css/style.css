@@ -10168,17 +10168,17 @@ body .account .right-account .order-history .pagination li{
         display: inline-block; }
        .short-info .company .old,  .short-info .price .old {
         text-decoration: line-through;
-        color:#000; }
+        color: gray; }
          .old {
         text-decoration: line-through;
-        color:#000; }
+        color: gray; }
        .short-info .company .sale,  .short-info .price .sale {
         padding-left: 10px;
-        color: #cc3827; }
+        color: #000; }
         @media(max-width:790px) {
 	         .short-info .company .sale,  .short-info .price .sale {
 	        padding-left: 0px;
-	        color: #cc3827;
+	        color: #000;
 	        display:block; }
         }
        .short-info .company .normal,  .short-info .price .normal {
@@ -10663,11 +10663,12 @@ body .account .right-account .order-history .pagination li{
     display: inline-block
 }
 .product-info .product-detail .price .old {
-    text-decoration: line-through
+    text-decoration: line-through;
+        color: gray;
 }
 .product-info .product-detail .price .sale {
     padding-left: 10px;
-    color: #cc3827
+    color: #000;
 }
 .product-info .product-detail .price .normal {
     color: #000;
@@ -30019,7 +30020,7 @@ header:not(.compact) .content .marketplace.compact{
    
 }
 .modal.size-guide .sizes .details .price .sale {
-	color: #cc3827;
+	color: #000;
 }
 @media ( max-width :650px) {
 	.sizeGuide-message {
@@ -31435,8 +31436,7 @@ width:130%;}
 p.savings span {
   display: inline-block;
     padding: 0 5px;
-    background: #A91E3E;
-    color: #ffffff;
+    color: #ee5f73;
     margin-top: 5px;
     margin-bottom: 5px;
     line-height: 20px;
@@ -40415,8 +40415,7 @@ p.savings.pdp-savings,
 p.savings.cart-savings {
     display: inline-block;
     padding: 0 5px;
-    background: #a91e3e;
-    color: #fff;
+    color: #ee5f73;
     margin-top: 5px;
     margin-bottom: 5px;
     line-height: 20px;
