@@ -3664,3 +3664,28 @@ th.csPropReturnEntryexpectedQuantity.z-list-header  {
 th.csPropReturnEntryreceivedQuantity.z-list-header{
 	        min-width: 70px !important;/*UI Fix*/
 }
+.changeDeliveryAddress {
+	margin-top: 20px;
+	margin-left: 30px;
+	margin-bottom: 20px;
+}
+.hbox {
+	margin-top: 20px;
+	margin-left: 30px;
+	margin-bottom: 20px;
+}
+.updateDeliveryAddress {
+	text-align: center;
+	margin-right: 500px;
+	margin-top: 20px;
+}
+.validateOTP{
+	margin-top: 5px;
+	margin-left: 500px;
+	
+}
+.otpHbox{
+	margin-top: 30px;
+	margin-right: 500px;
+	margin-bottom: 50px;
+}
