@@ -130,14 +130,17 @@
 	<!-- DNS prefetching starts -->
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>	
 
 	<link rel="dns-prefetch" href="//${mediaHost}">
-	<link rel="dns-prefetch" href="//${staticResourceHost}"> 
-	<c:choose>
-	    <c:when test="${not empty productMediadnsHost}">
-	       <link rel="dns-prefetch" href="//${productMediadnsHost}">
-	    </c:when>
-	</c:choose>	
+	<link rel="dns-prefetch" href="//${staticResourceHost}"> 	
+	<c:if test="${not empty productMediadnsHost}">
+	<link rel="dns-prefetch" href="//${productMediadnsHost}">
+	</c:if>
+	<c:if test="${not empty productMediadnsHost1}">
+	<link rel="dns-prefetch" href="//${productMediadnsHost1}">
+	</c:if>
+	
 	<!-- DNS prefetching ends --> 
 	
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
