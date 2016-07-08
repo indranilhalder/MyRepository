@@ -13,7 +13,7 @@ $(document).on("click", ".header-myAccountSignOut", function() {
 	window.localStorage.removeItem("eventFired");
 });
 
- $(document).on("click","form .pagination_a_link",function(e){
+$(document).on("click","form .pagination_a_link",function(e){
 	event.preventDefault();
 	var hrefurl = $(this).attr('href');
 	$("#paginationForm").attr("action", hrefurl);
@@ -25,6 +25,7 @@ $(document).on("click", ".header-myAccountSignOut", function() {
 		$("#paginationFormBottom").attr("action", hrefurl);
 		$(this).closest('form').submit();
 	 }); 
+
 //TISPRO-183 -- Firing Tealium event only after successful user login
 if(loginStatus){
 	if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {
@@ -34,7 +35,7 @@ if(loginStatus){
 			console.log("Utag is undefined")
 		}
 		else{
-			//console.log("Firing Tealium Event")
+			console.log("Firing Tealium Event")
 			utag.link({ "event_type" : "Login", "link_name" : "Login" });
 		}
 		
@@ -101,15 +102,6 @@ if(loginStatus){
 	</c:choose>
 </c:if>
 
-<script>
-function globalErrorPopup(msg) {
-	$("body").append('<div class="modal fade" id="globalErrorPopupMsg"><div class="content" style="padding: 10px;"><span style="display: block; margin: 7px 16px;line-height: 18px;">'+msg+'</span><button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
-	$("#globalErrorPopupMsg").modal('show');
-} 
-$(document).on('hide.bs.modal', function () {
-    $("#globalErrorPopupMsg").remove();
-}); 
-</script>
 
 <style type="text/css">
 div.blockMsg {

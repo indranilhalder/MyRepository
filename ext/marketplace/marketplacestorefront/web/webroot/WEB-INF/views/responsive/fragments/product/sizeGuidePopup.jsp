@@ -312,7 +312,7 @@ var productCodeSG = '${product.code}';
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
 								<c:choose> 
-								<c:when test="${color=='multi'}"> 
+								<c:when test="${fn:startsWith(color, 'multi')}"> 
 						     	<img src="${commonResourcePath}/images/multi.jpg" style="width:100%;height:100%;cursor: pointer;" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"/>
 								</c:when>
 								<%-- <span style="background-color: ${color};border: 1px solid rgb(204, 211, 217);" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span> --%>

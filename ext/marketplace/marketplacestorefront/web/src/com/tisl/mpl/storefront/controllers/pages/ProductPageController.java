@@ -1583,8 +1583,6 @@ public class ProductPageController extends AbstractPageController
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
 			if (buyboxdata != null)
 			{
-
-
 				if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
 				{
 					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice());
@@ -1599,6 +1597,29 @@ public class ProductPageController extends AbstractPageController
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MIN_PRICE, buyboxdata.getMinPrice());
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+
+				//TISPRM-33
+				if (null != buyboxdata.getMrp())
+				{
+					if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
+					{
+						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue()
+								- buyboxdata.getSpecialPrice().getDoubleValue();
+						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
+						final double roundedOffValue = Math.round(savingPriceCalPer * 100.0) / 100.0;
+
+						//final PriceData savingPricePercent = productDetailsHelper.formPriceData(savingPriceCal);
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+					}
+					else if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getValue().doubleValue() > 0)
+					{
+						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
+						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
+						final double roundedOffValue = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						//final PriceData savingPricePercent = productDetailsHelper.formPriceData(savingPriceCal);
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+					}
+				}
 			}
 			else
 			{
