@@ -172,4 +172,22 @@ public final class MarketplaceCockpitsConstants extends
 	
 	public static final String SOURCE="CSCockpit";
 	public static final String PAYMENT_MODE_COD="COD";
+
+	public static final String FIRST_NAME_EMPTY = "Enter First Name ";
+
+	public static final String LAST_NAME_EMPTY = "Enter Last Name";
+
+	public static final String LINE1_EMPTY = "Enter Line1";
+
+	public static final String LINE2_EMPTY = "Enter Line2";
+
+	public static final String COUNTRY_EMPTY = "Select Country";
+
+	public static final String STATE_EMPTY = "Select state";
+
+	public static final String CITY_EMPTY = "Select City";
+
+	public static final String MOBILENUMBER_EMPTY = "Enter Mobile Number";
+
+	public static final String PINCODE_NOT_SERVISABLE = "Pincode Is Not Servisable";
 }
