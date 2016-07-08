@@ -40411,3 +40411,18 @@ div#defaultPinDiv p{
 li.filter-colour.deactivate,li.filter-Size.deactivate{
 	display:none !important;
 }
+p.savings.pdp-savings,
+p.savings.cart-savings {
+    display: inline-block;
+    padding: 0 5px;
+    background: #a91e3e;
+    color: #fff;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    line-height: 20px;
+    font-size:14px;
+}
+p.savings.pdp-savings span{
+	margin-top: 2px;
+    margin-bottom: 2px;
+}

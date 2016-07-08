@@ -397,7 +397,11 @@ tr.d0 td {
 									<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
 								</c:if>  --%>
 							</ycommerce:testId>
-							<%-- You saved ${savingsOnProduct} % --%>
+							<c:if test="${not empty savingsOnProduct  && savingsOnProduct gt 0}">
+								<p class="savings cart-savings">															
+		  							<spring:theme code="product.yousave"/> ${savingsOnProduct} 
+								</p>
+							</c:if>
 					</ul>
 				  </li>  
    
