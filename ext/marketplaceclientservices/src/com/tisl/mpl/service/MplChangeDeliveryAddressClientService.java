@@ -13,5 +13,5 @@ import com.tisl.mpl.xml.pojo.MplChangeDeliveryAddressResponce;
  */
 public interface MplChangeDeliveryAddressClientService
 {
-	MplChangeDeliveryAddressResponce changeDeliveryAddressDataToOMS(MplChangeDeliveryAddressRequest changeDeliveryAddressRequest);
+	MplChangeDeliveryAddressResponce changeDeliveryRequestCallToOMS(MplChangeDeliveryAddressRequest changeDeliveryAddressRequest);
 }
