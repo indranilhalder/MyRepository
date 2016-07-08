@@ -172,7 +172,7 @@ function navigateToPage(queryString,textString)
 													<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 												</ycommerce:testId> --%>
 												</span>
-												<span class="facet-count">
+												<span class="facet-count">												
 												<spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/>											
 											</span>
 											
@@ -341,9 +341,9 @@ function navigateToPage(queryString,textString)
 												<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 											</ycommerce:testId> --%>
 										</span>
-										<%-- <span class="facet-count">
+										 <span class="facet-count">
 												<spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/>											
-										</span> --%>
+										</span>
 									</span>
 									</c:if>
 									</c:if>
@@ -359,7 +359,7 @@ function navigateToPage(queryString,textString)
 													<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 												</ycommerce:testId> --%>
 												</span>
-												<span class="facet-count">
+												<span class="facet-count">												
 												<spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/>											
 											</span>												
 											</div>
