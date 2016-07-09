@@ -63,6 +63,7 @@ public class MplAddressValidator
 		final String mobile = addressForm.getMobileNo();
 		final String postcode = addressForm.getPostcode();
 		final String addressType = addressForm.getAddressType();
+		final String landmark = addressForm.getLandmark();
 
 		for (final StateData stateData : stateDataList)
 		{
@@ -154,6 +155,10 @@ public class MplAddressValidator
 		else if (StringUtils.isEmpty(addressType))
 		{
 			returnStatement = "address.addressType.select";
+		}
+		else if (StringUtils.isEmpty(landmark) || StringUtils.length(landmark) > MAX_FIELD_LENGTH_UPDATED)
+		{
+			returnStatement = "address.landmark.invalid";
 		}
 		else
 		{
