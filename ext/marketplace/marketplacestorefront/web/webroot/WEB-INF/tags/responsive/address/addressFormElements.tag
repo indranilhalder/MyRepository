@@ -207,6 +207,16 @@
 			</div>
 			</div>
 			
+			<div class='full'>
+			<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
+			labelKey="Landmarks" path="landmark" mandatory="true"
+			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelect"
+			items="${abc}" selectedValue="${addressForm.state}"
+			itemValue="name"  />
+			<div class="help-block has-error" id="stateError" style="display: none;">		
+			</div>
+			</div>
+			
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
 		<div class='full'>
 		<!-- TISUAT-4696 -->
@@ -243,15 +253,6 @@
 		</div>
 				
 		<%-- <formElement:formInputBox idKey="address.states" labelKey="address.states" path="state" inputCSS="form-control" mandatory="true"/> --%>
-		<div class='half'>
-			<formElement:formSelectBox idKey="address.landmarks" selectCSSClass="address_landmarks"
-			labelKey="Landmarks" path="state" mandatory="true"
-			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelect"
-			items="${abc}" selectedValue="${addressForm.state}"
-			itemValue="name"  />
-			<div class="help-block has-error" id="stateError" style="display: none;">		
-			</div>
-			</div>
 				
          <div class='half'>
           <label for="myselect"><spring:theme code="text.addressBook.PhoneNumber" text="Mobile Number" /></label>		
