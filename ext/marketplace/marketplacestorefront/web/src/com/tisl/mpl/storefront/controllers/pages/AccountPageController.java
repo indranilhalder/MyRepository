@@ -410,7 +410,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private DefaultMplReviewFacade mplReviewrFacade;
 
 	@Autowired
-	private MplChangeDeliveryAddressFacade changeDeliveryAddressFacade;
+	private MplChangeDeliveryAddressFacade mplchangeDeliveryAddressFacade;
 
 	/**
 	 *
@@ -1203,78 +1203,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 			LOG.info("Create CRM  Ticket For UpdatePickUpDetails ");
 			mplOrderFacade.createCrmTicketUpdatePickDetails(orderId);
 		}
-	}
-
-
-	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method = RequestMethod.POST)
-	@ResponseBody
-	public String changeDeliveryAddress(@PathVariable final String orderCode,
-			@ModelAttribute final AccountAddressForm accountaddressForm)
-	{
-
-		final String validatetionCheckMsg;
-		accountaddressForm.setAddressType("HOME");
-
-		LOG.debug("AddressForm validation ");
-		final String errorMsg = mplAddressValidator.validate(accountaddressForm);
-
-		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCESS))
-		{
-			final AddressData addressData = new AddressData();
-
-			addressData.setAddressType("Home");
-			addressData.setCity(accountaddressForm.getTownCity());
-			addressData.setPhone(accountaddressForm.getMobileNo());
-			addressData.setFirstName(accountaddressForm.getFirstName());
-			addressData.setLastName(accountaddressForm.getLastName());
-			addressData.setLandmark(accountaddressForm.getLine3());
-			addressData.setLine1(accountaddressForm.getLine1());
-			addressData.setLine2(accountaddressForm.getLine2());
-			addressData.setPostalCode(accountaddressForm.getPostcode());
-			addressData.setState(accountaddressForm.getState());
-			addressData.setPostalCode(accountaddressForm.getPostcode());
-			addressData.setLocality(accountaddressForm.getLocality());
-			addressData.setShippingAddress(true);
-
-			final CustomerData customerData = customerFacade.getCurrentCustomer();
-			final String customerId = customerData.getUid();
-
-			LOG.debug("if Address is diffrent  then Save TemproryAddressModel and OTP genarate");
-
-			validatetionCheckMsg = changeDeliveryAddressFacade.saveAsTemproryAddressForCustomer(customerId, orderCode, addressData);
-		}
-		else
-		{
-			LOG.debug("AddrressData is incorent then send erorr Msg");
-			validatetionCheckMsg = errorMsg;
-		}
-
-
-		return validatetionCheckMsg;
-	}
-
-
-	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.POST)
-	@ResponseBody
-	public String validateOTP(@RequestParam(value = "orderId") final String orderId,
-			@RequestParam(value = "otpNumber") final String enteredOTPNumber)
-	{
-		String validateOTPMesg;
-		final CustomerData customerData = customerFacade.getCurrentCustomer();
-		final String customerId = customerData.getUid();
-		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
-		{
-			LOG.debug("OTP Validation And Oms Calling status");
-			validateOTPMesg = changeDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber);
-			LOG.debug("OTP and OMS Respose is  sucess then Save to OrderModel and  remove TemproryAddressModel based On orderId");
-		}
-		else
-		{
-			validateOTPMesg = "Enter OTP Number";
-		}
-
-		return validateOTPMesg;
-
 	}
 
 
@@ -7043,6 +6971,80 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
+
+	@RequestMapping(value = "/{orderCode}/changeDeliveryAddress", method = RequestMethod.POST)
+	@ResponseBody
+	public String changeDeliveryAddress(@PathVariable final String orderCode,
+			@ModelAttribute final AccountAddressForm accountaddressForm)
+	{
+
+		final String validatetionCheckMsg;
+		accountaddressForm.setAddressType("HOME");
+
+		LOG.debug("AddressForm validation ");
+		final String errorMsg = mplAddressValidator.validate(accountaddressForm);
+
+		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCESS))
+		{
+			final AddressData addressData = new AddressData();
+
+			addressData.setAddressType("Home");
+			addressData.setCity(accountaddressForm.getTownCity());
+			addressData.setPhone(accountaddressForm.getMobileNo());
+			addressData.setFirstName(accountaddressForm.getFirstName());
+			addressData.setLastName(accountaddressForm.getLastName());
+			addressData.setLandmark(accountaddressForm.getLine3());
+			addressData.setLine1(accountaddressForm.getLine1());
+			addressData.setLine2(accountaddressForm.getLine2());
+			addressData.setPostalCode(accountaddressForm.getPostcode());
+			addressData.setState(accountaddressForm.getState());
+			addressData.setPostalCode(accountaddressForm.getPostcode());
+			addressData.setLocality(accountaddressForm.getLocality());
+			addressData.setShippingAddress(true);
+
+			final CustomerData customerData = customerFacade.getCurrentCustomer();
+			final String customerId = customerData.getUid();
+
+			LOG.debug("if Address is diffrent  then Save TemproryAddressModel and OTP genarate");
+
+			validatetionCheckMsg = mplchangeDeliveryAddressFacade.saveAsTemproryAddressForCustomer(customerId, orderCode, addressData);
+		}
+		else
+		{
+			LOG.debug("AddrressData is incorent then send erorr Msg");
+			validatetionCheckMsg = errorMsg;
+		}
+
+
+		return validatetionCheckMsg;
+	}
+
+
+	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.POST)
+	@ResponseBody
+	public String validateOTP(@RequestParam(value = "orderId") final String orderId,
+			@RequestParam(value = "otpNumber") final String enteredOTPNumber)
+	{
+		String validateOTPMesg;
+		final CustomerData customerData = customerFacade.getCurrentCustomer();
+		final String customerId = customerData.getUid();
+		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
+		{
+			LOG.debug("OTP Validation And Oms Calling status");
+			validateOTPMesg = mplchangeDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber,orderId);
+			LOG.debug("OTP and OMS Respose is  sucess then Save to OrderModel and  remove TemproryAddressModel based On orderId");
+		}
+		else
+		{
+			validateOTPMesg = "Enter OTP Number";
+		}
+
+		return validateOTPMesg;
+
+	}
+
+
+
 	/**
 	 * @return the configurationService
 	 */
@@ -7050,7 +7052,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 	{
 		return configurationService;
 	}
-
 
 
 	/**
