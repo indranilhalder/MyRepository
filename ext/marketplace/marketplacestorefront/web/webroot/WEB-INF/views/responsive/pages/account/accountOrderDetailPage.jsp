@@ -1556,7 +1556,7 @@ h4 {
 		</div>
 	</div>
 			<div class="removeModalAfterLoad" id="changeAddressPopup">
-			  <order:changeDeiveryAddress orderDetails="${subOrder}" addressForm="${addressForm}"/>
+			  <order:changeDeliveryAddress orderDetails="${subOrder}" addressForm="${addressForm}"/>
             </div><!-- /.modal -->
             
             <div class="removeModalAfterLoad" id="showOTP">
