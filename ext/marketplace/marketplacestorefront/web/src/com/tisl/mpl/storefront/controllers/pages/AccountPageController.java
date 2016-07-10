@@ -6972,7 +6972,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 
-	@RequestMapping(value = "/{orderCode}/changeDeliveryAddress", method = RequestMethod.POST)
+	@RequestMapping(value = "/{orderCode}/changeDeliveryAddress", method={RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public String changeDeliveryAddress(@PathVariable final String orderCode,
 			@ModelAttribute final AccountAddressForm accountaddressForm)
@@ -6980,7 +6980,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 		final String validatetionCheckMsg;
 		accountaddressForm.setAddressType("HOME");
-
+		
 		LOG.debug("AddressForm validation ");
 		final String errorMsg = mplAddressValidator.validate(accountaddressForm);
 
@@ -7014,7 +7014,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 			LOG.debug("AddrressData is incorent then send erorr Msg");
 			validatetionCheckMsg = errorMsg;
 		}
-
 
 		return validatetionCheckMsg;
 	}
