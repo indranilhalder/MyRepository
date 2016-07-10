@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="content-editor.xsd" hideEmpty="true"
+	hideReadOnly="true" groupCollections="true">
+	<template>
+	<![CDATA[
+		<table width="100%" style="margin:0px;padding:0px" class="structViewCnt">
+			<tbody>
+				<tr>
+					<td><cockpit code="property" value="PromotionalProductsComponent.title"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="PromotionalProductsComponent.Promotion"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="PromotionalProductsComponent.brand"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="PromotionalProductsComponent.seller"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+			</tbody>
+		</table>
+	]]>
+	</template>
+	 <custom-editors>
+        <property qualifier="PromotionalProductsComponent.Promotion" editorCode="single">
+            <parameter>
+                <name>allowCreate</name>
+                <value>false</value>
+            </parameter>
+            <parameter>
+                <name>restrictToCreateTypes</name>
+                <value>ProductPromotion</value>
+            </parameter>
+        </property>
+        <!-- <property qualifier="CMSMediaParagraphComponent.link"/> -->
+			
+  </custom-editors>
+</content-editor>
+

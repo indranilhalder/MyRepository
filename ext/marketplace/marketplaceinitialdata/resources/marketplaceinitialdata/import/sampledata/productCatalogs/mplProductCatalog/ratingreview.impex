@@ -1,0 +1,23 @@
+$productCatalog=mplProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$supercategories=supercategories(code, $catalogVersion)
+$baseProduct=baseProduct(code,$catalogVersion)
+$approved=approvalstatus(code)[default='approved']
+$unit=unit(code)[default='pieces']
+$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
+$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+$variantType=variantType(code)[default='PcmProductVariant']
+$lang=en
+$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
+$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+
+
+INSERT_UPDATE RATINGREVIEW;MPLPRODUCTID[unique=true];MPLREVIEWCOUNT;MPLAVERAGERATING;MPLONESTAR;MPLTWOSTAR;MPLTHREESTAR;MPLFOURSTAR;MPLFIVESTAR;$catalogversion
+;987654321;100;1.5;20;20;20;20;20
+;987654322;200;2.5;40;40;40;40;40
+;987654323;300;3.5;60;60;60;60;60
+
+UPDATE Product;code[unique=true];ratingReview(mplproductID,$catalogversion);$catalogversion;
+;987654321;987654321    			
+;987654323;987654323
+;987654322;987654322

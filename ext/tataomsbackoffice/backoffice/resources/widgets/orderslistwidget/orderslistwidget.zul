@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<widget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.zkoss.org/2005/zul">
+<style>
+.label_css {font-size:12px; Padding:
+			10px 20px 0px 20px;color:#ffffff;}
+</style>
+
+	<listbox   id="listView" emptyMessage="No result found in the result"
+		mold="paging" pagingPosition="top" pageSize="10">
+		<listhead>
+			<listheader label="Order RefNo"></listheader>
+			<listheader label="Original Order RefNo"></listheader>
+			<listheader label="Order Submission DateTime"></listheader>
+			<listheader label="Order Issue DateTim"></listheader>
+			<listheader label="OrderType"></listheader>
+			<listheader label="Channel"></listheader>
+		</listhead>
+	</listbox>
+	
+</widget>

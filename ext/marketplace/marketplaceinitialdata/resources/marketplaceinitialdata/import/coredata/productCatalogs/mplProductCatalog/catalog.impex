@@ -1,0 +1,29 @@
+$productCatalog=mplProductCatalog
+$classificationCatalog=pcmClassification
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$languages=ja,en,de,zh
+
+
+# Product catalog
+INSERT_UPDATE Catalog;id[unique=true]
+;$productCatalog
+
+
+# Classification catalog
+INSERT_UPDATE ClassificationSystem;id[unique=true];name[lang=en];;;;
+;pcmClassification;PCM Classification;;;;
+
+
+# Product versions for product catalogs
+INSERT_UPDATE CatalogVersion;catalog(id)[unique=true];version[unique=true];active;languages(isoCode);readPrincipals(uid)
+;$productCatalog;Staged;false;$languages;employeegroup
+;$productCatalog;Online;true;$languages;employeegroup
+
+
+INSERT_UPDATE ClassificationSystemVersion;catalog(id)[unique=true];version;readPrincipals(uid);writePrincipals(uid);active;;;
+;pcmClassification;1;admingroup,marketplaceGroup,ETAILREAD;admingroup,marketplaceGroup,ETAILREAD,employeegroup;true;;;;
+
+
+# Create default tax row for all products in product catalog
+INSERT_UPDATE TaxRow;$catalogVersion;tax(code)[unique=true];pg(code)[unique=true];ug(code)[unique=true]
+;;jp-vat-full;jp-vat-full;jp-taxes

@@ -1,0 +1,9 @@
+#Ant properties
+#Fri Mar 13 14:22:18 CET 2015
+builddate=20150313 1422
+description=tataomsbackoffice
+name=tataomsbackoffice
+releasedate=20150313 1221
+vendor=hybris
+version=5.5.1.0
+version.api=5.5.1

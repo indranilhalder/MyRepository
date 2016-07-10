@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd">	  
+	  
+	<alias name="mplCouponFacade" alias="mplCouponFacade"/>
+	<bean id="mplCouponFacade" class="com.tisl.mpl.coupon.facade.impl.MplCouponFacadeImpl" />
+	
+	<bean id="mplCouponDao" class="com.tisl.mpl.coupon.dao.impl.MplCouponDaoImpl" />
+	
+	<bean id="mplCouponService" class="com.tisl.mpl.coupon.service.impl.MplCouponServiceImpl" />
+	
+	<alias name="customerDetailsService" alias="customerDetailsService" />
+	<bean id="customerDetailsService"
+		class="com.tisl.mpl.coupon.service.impl.MplCustomerDetailsServiceImpl">
+		<property name="customerDetailsDao" ref="customerDetailsDao" />
+	</bean>
+
+	<alias name="cronJobDataService" alias="cronJobDataService" />
+	<bean id="cronJobDataService"
+		class="com.tisl.mpl.coupon.service.impl.CronJobDataServiceImpl">
+	</bean>
+
+	<bean id="customerDetailsDao"
+		class="com.tisl.mpl.coupon.dao.impl.MplCustomerDetailsDaoImpl" >
+	</bean>
+	
+	<alias name="defaultCustomerDetailsFacade" alias="customerDetailsFacade" />
+	<bean id="defaultCustomerDetailsFacade"
+		class="com.tisl.mpl.coupon.facade.impl.MplCustomerDetailsFacadeImpl">
+	</bean>
+	
+	<!-- <bean id="couponEventJob" class="com.tisl.mpl.coupon.job.CouponEventJob" autowire="byName"/> -->
+     
+     <!-- Coupon Helper Class -->
+	<bean id="mplCouponHelper" class="com.tisl.mpl.helper.MplCouponHelper" />
+	
+	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.job.CustomerListGenerationJob" parent="abstractJobPerformable" />
+	
+	<!-- Tata Cliq Job : Campaign Team -->
+	<bean id="campaignVoucherDataService"
+		class="com.tisl.mpl.coupon.service.impl.DefaultCampaignVoucherDataService">
+	</bean>
+	
+	<bean id="campaignVoucherData" class="com.tisl.mpl.coupon.pojo.CampaignVoucherData" />
+	
+	<!-- Tata Cliq : For Campaign Team   -->
+   	<bean id="campaignVoucherJob" class="com.tisl.mpl.coupon.job.CampaignVoucherJob" parent="abstractJobPerformable" />
+   	
+   	<!-- CouponRestrictionSaveInterceptor starts -->
+	<bean id="CouponProdRestSaveInterceptor" class="com.tisl.mpl.interceptor.CouponProdRestSaveInterceptor" />
+
+	<bean id="CouponProdRestSaveInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="CouponProdRestSaveInterceptor" />
+		<property name="typeCode" value="ProductRestriction" />
+	</bean>
+	<!-- CouponSaveInterceptor ends -->			
+
+</beans>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<widget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.zkoss.org/2005/zul">
+
+
+
+
+	<div>
+		<style>
+			.search-area{ width:300px; height:31px; } .search-button{
+			background-image: none; border-radius: 0px; color: #FFF;
+			cursor: pointer; font-family: "Roboto",Arial,sans-serif;
+			font-size: 16px; font-style: normal; font-weight: 100;
+			height: 30px; line-height: 25px; padding: 0px 15px;
+			transition: background-color 0.3s ease 0s;
+
+			} .search-label{ color :#A6A6A7; font-size:15px; Padding:
+			10px 20px 0px 20px;
+
+			}
+
+		</style>
+		<hbox>
+			<label sclass="search-label" value="ORDERID"></label>
+			<textbox id="searchText" sclass="search-area" />
+			<button id="searchButton" style="background-color: #1169F6; border: medium none;" sclass="search-button"
+				label="Search" />
+
+		</hbox>
+	</div>
+
+
+
+
+
+</widget>

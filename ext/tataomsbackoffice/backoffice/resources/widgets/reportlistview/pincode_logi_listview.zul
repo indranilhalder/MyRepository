@@ -1,0 +1,29 @@
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+	<button id="savecsv" sclass="cng-action-icon" style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
+		image="${wr}/images/csv_text.png" label="Download"/>
+
+	<listbox id="listview" 
+		emptyMessage="No result found in the result" mold="paging"
+		pagingPosition="top" pageSize="10">
+		<listhead sizable="true">
+			<listheader width="150px"  label="Seller-ID"></listheader>
+			<listheader width="150px" label="Order Ref. No."></listheader>
+			<listheader width="150px" label="Transaction ID"></listheader>
+			<listheader width="200px" label="OrderSubmis DateTime"></listheader>
+			<listheader width="150px" label="Customer ID"></listheader>
+			<listheader width="150px" label="Email-address"></listheader>
+			<listheader width="150px" label="Mobile Number"></listheader>
+			<listheader width="200px" label="Configured HOTC TAT"></listheader>
+			<listheader width="200px" label="Actual HOTC TAT"></listheader>
+			<listheader width="200px" label="Configured SHIPMENT TAT"></listheader>
+			<listheader width="200px" label="Actual SHIPMENT TAT"></listheader>
+		</listhead>
+	</listbox>
+
+</widget>

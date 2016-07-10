@@ -1,0 +1,120 @@
+<html>
+	<head>
+		<title>Email | Account Update</title>
+	</head>
+	<body bgcolor="#ffffff">
+	
+	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#ffffff">
+		<tr style="height:50px;">
+			<td>&emsp;</td>
+		</tr>
+		<tr>
+			<td align="center" valign="top">
+				<table width="900" border="6" align="center" cellpadding="0" cellspacing="0" bordercolor="#CED8F6">
+					<tr>
+						<td align="center" valign="top" bgcolor="#ffffff">
+							<table width="850" cellpadding="0" cellspacing="0" border="0" align="center">
+								<tr style="height:30px;">
+									<td valign="middle">&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left" valign="top">
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Hi #if ($ctx.isFirstName) ${firstName}#end,</font></p>
+									
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Thank you for your order! </font></p>
+										
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">We will send you another email once the items in your order have been shipped.</font></p>
+										
+										<p><font color="#11309F" size="2" face="Arial, Helvetica, sans-serif"><b>Meanwhile, you can check the status of your order on tatamall.com </b></font></p>
+										<p><font color="#11309F" size="2" face="Arial, Helvetica, sans-serif"><b>Please find below the summary of your order with reference number :($ctx.orderCode) </b></font></p>
+										
+										<p>
+											<table width="100%">
+												#foreach( $childorder in ${ctx.childOrders} )
+												<tr>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif"><b>Order Number</b></font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif"><b>${childorder.code}</b></font></td>
+												</tr>
+												#foreach($entry in ${childorder.childEntries})
+												<tr>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">Sr.No</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">Transaction ID</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">Name Of Product</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">Qty</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">Price</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">Shipping Charge if any</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">COD charges if any</font></td>
+												</tr>
+												<tr>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">$entry.entryNumber</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">$entry.orderLineId</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">$entry.product.name</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">$entry.quantity</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">$entry.product.priceQuantity</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif">$entry.deliveryAddress</font></td>
+													<td><font color="#000" face="Arial, Helvetica, sans-serif"></font></td>
+												</tr>
+												#end
+												#end
+											</table>
+										</p>
+										
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										
+										<p>	<span>Total=INR</span><span>${ctx.totalPrice}</span><span>with INR</span><span>${ctx.shippingCharge}</span><span>Shipping Charge</span></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Please note that the Order Reference Number uniquely identifies your order and the order number uniquely identifies each sub- order at a seller level. Quoting Order Reference Number or order number in communications with us, will help us serve you faster.</font></p>
+										<p>&nbsp;</p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Delivery details are as follows:</font></p>
+                                        									
+										<p>Name of person-not yet done</p>
+										<p>${ctx.deliveryAddress}</p>
+										<p>Mobile Number of person-not yet done</p>
+										<p>Please note that you have chosen to receive SMS alerts on order status on your number</p>
+										<p>{$ctx.mobilenumber}</p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Yours Truly,</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Tata Mall Team</font></p>	
+										<p>
+											<table width="40%">
+												<tr><td>---------------------------------------------------</td></tr>
+												<tr><td><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Tata Mall.... The Joy of Shopping</font></td></tr>
+												<tr>
+													<td>
+														<font color="#000" size="2" face="Arial, Helvetica, sans-serif">
+															<a href="mailto:www.tatamall.com" style="color: #11309F;">www.tatamall.com</a>
+														</font>
+													</td>
+												</tr>
+												<tr><td>---------------------------------------------------</td></tr>
+											</table>
+										</p>
+										
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										
+										<p><font color="#848484" size="2" face="Arial, Helvetica, sans-serif">
+											This email can't receive replies. For more information, visit Tata Mall's 
+											<a href="mailto:talktous@mpl.com" style="color: #11309F;">talktous@mpl.com</a> or write to us at
+											<a href="mailto:support@tatamall.com" style="color: #11309F;">support@tatamall.com</a>.
+										</font></p>
+									</td>
+								</tr>
+								<tr>	
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+</body>
+</html>
+

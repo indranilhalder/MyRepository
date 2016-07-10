@@ -1,0 +1,52 @@
+# ImpEx for Importing Category Media into Electronics Store
+
+# Macros / Replacement Parameter definitions
+$productCatalog=mplProductCatalog
+$productCatalogName=MarketPlace ProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$thumbnail=thumbnail(code, $catalogVersion)
+$picture=picture(code, $catalogVersion)
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/productCatalogs/$productCatalog
+
+
+# Import Category Media
+INSERT_UPDATE Media;code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];$catalogVersion
+;/thumbs/MPH1111100100.jpg;MPH1111100100.jpg;$siteResource/images/thumbs/MPH1111100100.jpg;
+;/thumbs/MPH1111100101.jpg;MPH1111100100.jpg;$siteResource/images/thumbs/MPH1111100101.jpg;
+;/thumbs/MPH1111100102.jpg;MPH1111100100.jpg;$siteResource/images/thumbs/MPH1111100102.jpg;
+;/thumbs/MPH1111100103.jpg;MPH1111100100.jpg;$siteResource/images/thumbs/MPH1111100103.jpg;
+;/thumbs/MPH1111100103.jpg;MPH1111100100.jpg;$siteResource/images/thumbs/MPH1111100103.jpg;
+;/thumbs/MSH1010.jpg;MSH1010.jpg;$siteResource/images/thumbs/MSH1010.jpg;
+;/thumbs/MSH1010101.jpg;MSH1010101.jpg;$siteResource/images/thumbs/MSH1010101.jpg;
+;/thumbs/MSH1011.jpg;MSH1011.jpg;$siteResource/images/thumbs/MSH1011.jpg;
+;/thumbs/MSH1014.jpg;MSH1014.jpg;$siteResource/images/thumbs/MSH1014.jpg;
+;/thumbs/MSH1110102.jpg;MSH1110102.jpg;$siteResource/images/thumbs/MSH1110102.jpg;
+;/thumbs/MSH1110103.jpg;MSH1110103.jpg;$siteResource/images/thumbs/MSH1110103.jpg;
+;/thumbs/MSH1112.jpg;MSH1112.jpg;$siteResource/images/thumbs/MSH1112.jpg;
+;/thumbs/MSH1210_New.jpg;MSH1210_New.jpg;$siteResource/images/thumbs/MSH1210_New.jpg;
+;/thumbs/MSH1211_New.jpg;MSH1211_New.jpg;$siteResource/images/thumbs/MSH1211_New.jpg;
+;/thumbs/MSH1212_New.jpg;MSH1212_New.jpg;$siteResource/images/thumbs/MSH1212_New.jpg;
+;/thumbs/MSH1215_New.jpg;MSH1215_New.jpg;$siteResource/images/thumbs/MSH1215_New.jpg;
+;/thumbs/MSH1216_New.jpg;MSH1216_New.jpg;$siteResource/images/thumbs/MSH1216_New.jpg;
+;/thumbs/MSH1220_New.jpg;MSH1220_New.jpg;$siteResource/images/thumbs/MSH1220_New.jpg;
+;/thumbs/MSH1221_New.jpg;MSH1221_New.jpg;$siteResource/images/thumbs/MSH1221_New.jpg;
+
+UPDATE Category;code[unique=true];$thumbnail;$picture;allowedPrincipals(uid)[default='customergroup'];$catalogVersion
+ ;MPH1111100100;/thumbs/MPH1111100100.jpg;
+ ;MPH1111100101;/thumbs/MPH1111100101.jpg;
+ ;MPH1111100102;/thumbs/MPH1111100102.jpg;
+ ;MPH1111100103;/thumbs/MPH1111100103.jpg;
+ ;MSH1010;/thumbs/MSH1010.jpg;
+ ;MSH1010101		 ;/thumbs/MSH1010101.jpg;
+ ;MSH1011       ;/thumbs/MSH1011.jpg;
+ ;MSH1014      ;/thumbs/MSH1014.jpg;
+ ;MSH1110102       ;/thumbs/MSH1110102.jpg;
+ ;MSH1110103		 ;/thumbs/MSH1110103.jpg;
+ ;MSH1112		 ;/thumbs/MSH1112.jpg;
+ ;MSH1210       ;/thumbs/MSH1210_New.jpg;
+ ;MSH1211       ;/thumbs/MSH1211_New.jpg;
+ ;MSH1212       ;/thumbs/MSH1212_New.jpg;
+ ;MSH1215       ;/thumbs/MSH1216_New.jpg;
+ ;MSH1216       ;/thumbs/MSH1215_New.jpg;
+ ;MSH1220       ;/thumbs/MSH1220_New.jpg;
+ ;MSH1221       ;/thumbs/MSH1221_New.jpg;

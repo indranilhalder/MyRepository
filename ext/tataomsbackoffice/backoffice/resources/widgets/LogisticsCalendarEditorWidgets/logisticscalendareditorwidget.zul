@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+ 
+<widget xmlns="http://www.zkoss.org/2005/zul"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:w="http://www.zkoss.org/2005/zk/client"
+		xmlns:zk="http://www.zkoss.org/2005/zk"
+		xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+ 		height="100%">
+ 		
+<grid id="createGrid" visible="false" class="grid_logistic" >
+		<rows>
+			
+			<row>
+				<label sclass="prop_label" value="Logistics Id   ">
+				</label>
+				<textbox id="logisticsId"   />
+
+			</row>
+
+			<row>
+				<label sclass="prop_label"
+					value="Start Time">
+				</label>
+				<timebox id="startTime" cols="5" format="short" />
+			</row>
+			<row>
+				<label sclass="prop_label"
+					value="End Time">
+				</label>
+				<timebox id="endTime" cols="5" format="short" />
+				
+
+			</row>
+			<row>
+				<label sclass="prop_label"
+					value="Working Days">
+				</label>
+				<listbox id="workingDays"  multiple="true">
+
+                        <listitem>
+							<listcell><checkbox value="0" label="Sunday"></checkbox></listcell>
+						</listitem>
+					   <listitem>
+							<listcell><checkbox value="1" label="Monday"></checkbox></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox value="2" label="Tuesday"></checkbox></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox value="3" label="Wednesday"></checkbox></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox value="4" label="Thursday"></checkbox></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox value="5" label="Friday"></checkbox></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox value="6" label="Saturday"></checkbox></listcell>
+						</listitem>
+						
+				</listbox>
+
+			</row>
+			
+			<row>
+				<div></div>
+				<button label="Add" id="addSave"></button>
+
+			</row>
+		</rows>
+	</grid>
+	
+	<grid  id="editorGrid" visible="false">
+     
+     <rows>
+			
+			<row>
+				<label value="Logistics Id   ">
+				</label>
+				<textbox id="logisticsIdEdit" readonly="true"   />
+
+			</row>
+
+			<row>
+				<label sclass="prop_label"
+					value="Start Time">
+				</label>
+				<timebox id="startTimeEdit" cols="5" format="short" />
+			</row>
+			<row>
+				<label sclass="prop_label"
+					value="End Time">
+				</label>
+				<timebox id="endTimeEdit" cols="5" format="short" />
+				
+
+			</row>
+			<row>
+				<label sclass="prop_label"
+					value="Working Days">
+				</label>
+				<listbox id="workingDaysEdit"   multiple="true">
+
+						<listitem>
+							<listcell><checkbox value="0" label="Sunday"></checkbox></listcell>
+						</listitem>
+					   <listitem>
+							<listcell><checkbox value="1" label="Monday"></checkbox></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox value="2" label="Tuesday"></checkbox></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox value="3" label="Wednesday"></checkbox></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox value="4" label="Thursday"></checkbox></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox value="5" label="Friday"></checkbox></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox value="6" label="Saturday"></checkbox></listcell>
+						</listitem>
+				</listbox>
+
+			</row>
+			
+			<row>
+				<div></div>
+				<button label="Update and Save" id="updateSave"></button>
+
+			</row>
+		</rows>
+	
+ </grid>
+
+</widget>
+ 
+ 

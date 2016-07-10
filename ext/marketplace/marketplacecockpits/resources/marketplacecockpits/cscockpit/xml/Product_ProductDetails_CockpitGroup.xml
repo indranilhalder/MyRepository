@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list-view>
+	<group name="General">
+		<custom
+			class="de.hybris.platform.cscockpit.services.config.impl.ProductThumbnailColumn"
+			name="Thumbnail" visible="true">
+			<label key="config.general.thumbnail" />
+		</custom>
+		<group name="ProductDetails">
+			<label key="config.general.productdetails" />
+
+			<custom
+				class="com.tisl.mpl.cockpits.cscockpit.services.config.impl.MarketplaceProductDescriptionColumn"
+				name="Description" visible="true">
+				<label key="config.general.description" />
+			</custom>
+		</group>
+		<!-- <group name="ProductFeatures"> <label key="config.general.features" 
+			/> <property qualifier="Product.remarks" visible="true"/> </group> -->
+		<!-- <group name="ProductTitle">
+			<label key="config.general.productTitle" />
+			<property qualifier="Product.productTitle" visible="true" />
+		</group>
+ -->
+		<group name="ProductCategory">
+			<label key="config.general.category" />
+
+			<custom
+				class="com.tisl.mpl.cockpits.cscockpit.services.config.impl.ProductCategoryColumn"
+				name="Category" visible="true">
+				<label key="config.general.description" />
+			</custom>
+		</group>
+		<group name="ProductName">
+			<label key="config.general.name" />
+			<property qualifier="Product.name" visible="true" />
+		</group>
+		<group name="BrandName">
+			<label key="config.general.brandName" />
+			<custom
+				class="com.tisl.mpl.cockpits.cscockpit.services.config.impl.ProductBrandColumn"
+				name="Category" visible="true">
+				<label key="config.general.description" />
+			</custom>
+		</group>
+		<!-- <group name="">
+			<label key="config.general.brandName" />
+			<property qualifier="Product.brandName" visible="true" />
+		</group> -->
+		<!-- <group name="Seller">
+			<label key="config.general.seller" />
+			<custom
+				class="com.tisl.mpl.cockpits.cscockpit.services.config.impl.ProductSellerColumn"
+				name="Seller" visible="true">
+				<label key="config.general.seller" />
+			</custom>
+		</group> -->
+		<group name="ListingID">
+			<label key="config.general.listingId" />
+			<property qualifier="Product.code" visible="true" />
+		</group>
+		<!-- <group name="ProductFeatures"> <label key="config.general.features" 
+			/> <property qualifier="Product.remarks" visible="true"/> </group> -->
+	</group>
+</list-view>

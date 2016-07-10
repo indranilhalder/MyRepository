@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<editor>
+	<group qualifier="General" visible="true" initially-opened="true">
+		<label key="cockpit.config.label.General" />
+		<property qualifier="Address.title" visible="false" />
+		<property qualifier="Address.firstname" visible="false" />
+		<property qualifier="Address.lastname" visible="false" />
+		<property qualifier="Address.phone1" visible="false" />	
+		<property qualifier="Address.email" visible="true" />	
+	</group>
+</editor>

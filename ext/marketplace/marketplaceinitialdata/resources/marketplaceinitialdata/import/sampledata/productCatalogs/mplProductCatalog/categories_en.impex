@@ -1,0 +1,170 @@
+# ImpEx for Importing Categories
+
+# Macros / Replacement Parameter definitions
+$productCatalog=mplProductCatalog
+$productCatalogName=Marketplace Product Catalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+
+
+# Language
+$lang=en
+
+# Create Categories
+UPDATE Category;$catalogVersion;code[unique=true];name[lang=$lang]
+;;MPH1;Primary; 
+;;MPH11;Clothing;
+;;MPH1110;Womens Clothing;
+;;MPH1111;Men's Clothing;
+;;MPH1112;Kids Clothing;
+;;MPH1112100;Boys;
+;;MPH1112101;Girls;
+;;MPH1112102;Infants;
+;;MPH1112100100;Tshirts;
+;;MPH1112100101;Shirts;
+;;MPH1112100102;Sets;
+;;MPH1112100103;Cargos and shorts;
+;;MPH1112100104;Jeans & pants;
+;;MPH1112100105;Ethnic;
+;;MPH1112100106;Winter; 
+;;MPH1112100107;Innerwear and nightwear;
+;;MPH1112100108;Swimwear;
+;;MPH1112100109;Accessories;
+;;MPH1112101100;Tees and tops;
+;;MPH1112101101;Sets;
+;;MPH1112101102;Cargos and shorts;
+;;MPH1112101103;Jeans & pants;
+;;MPH1112101104;Ethnic;
+;;MPH1112101105;Winter;
+;;MPH1112101106;Innerwear and nightwear;
+;;MPH1112101107;Swimwear;
+;;MPH1112101108;Dresses and skirts;
+;;MPH1112101109;Leggings and jeggings; 
+;;MPH1112101110;jumpsuits;
+;;MPH1112101111;Accessories;
+;;MPH1112101100;Tees and tops;
+;;MPH1112101101;Sets;
+;;MPH1112101102;Cargos and shorts; 
+;;MPH1112101103;Jeans & pants;
+;;MPH1112101104;Ethnic;
+;;MPH1112101105;Winter;
+;;MPH1112101106;Innerwear and nightwear;
+;;MPH1112101107;Swimwear;
+;;MPH1112101108;Dresses and skirts;
+;;MPH1112101109;Leggings and jeggings;
+;;MPH1112101110;jumpsuits; 
+;;MPH1112101111;Accessories;
+;;MPH1111100;Mens formal;
+;;MPH1111101;Mens causal; 
+;;MPH1111102;Mens Sports;
+;;MPH1111103;Mens Ethnic;
+;;MPH1111104;Mens Innerwear and sleepwear;
+;;MPH1111101100;T-Shirts;
+;;MPH1111101101;Causal shirts;
+;;MPH1111101102;Jeans;
+;;MPH1111101103;Casual trousers;
+;;MPH1111101104;Cargos and shorts;
+;;MPH1111101105;Swetshirts and hoodies;
+;;MPH1111101106;Sweaters;
+;;MPH1111101107;Casual jackets and blazers;
+;;MPH1111101108;Track pants;
+;;MPH1111100100;Formal shirt;
+;;MPH1111100101;Formal trousers;
+;;MPH1111100102;Formal suits;
+;;MPH1111100103;Formal coats & jackets; 
+;;MPH1110100;Womens Ethnic;
+;;MPH1110101;Womens Western Wear;
+;;MPH1110102;Women Formal;
+;;MPH1110103;Women Maternity; 
+;;MPH1110104;Womens Sports;
+;;MPH1110105;Womens Lingerie;
+;;MPH1111103100;Kurta & kurtis; 
+;;MPH1111103101;Kurta pyjama set;
+;;MPH1111103102;Pyjamas;
+;;MPH1111103103;Ethnic suits;
+;;MPH1111103104;Ethnic headgear;
+;;MPH1111104100;Underwear;
+;;MPH1111104101;Boxers;
+;;MPH1111104102;Vests;
+;;MPH1111104103;Sleepwear;
+;;MPH1111104104;Swimwear;
+;;MPH1110102100;Sports tshirt;
+;;MPH1110102101;Sports shorts;
+;;MPH1110102102;Sports sets;
+;;MPH1110102103;Sports jackets;
+;;MPH1110102104;Track pants;
+;;MPH1110102105;Swimwear;
+;;MPH1110100100;Sarees;
+;;MPH1110100101;Kurta & kurtis;
+;;MPH1110100102;Suits;
+;;MPH1110100103;Dress material;
+;;MPH1110100104;Ethnic bottom ;
+;;MPH1110100105;Ethnic sets;
+;;MPH1110100106;Duppatta;
+;;MPH1110102100;Formal shirt;
+;;MPH1110102101;Formal trousers;
+;;MPH1110102102;Formal suits; 
+;;MPH1110102103;Formal coats jackets;
+;;MPH1110102104;Formal dress;
+;;MPH1110105100;Bras & Bra Sets;
+;;MPH1110105101;Camisoles & Camisole Sets;
+;;MPH1110105102;Lingerie Sets;
+;;MPH1110105103;Corsets & Bustiers;
+;;MPH1110105104;Sleepwear & Robes;
+;;MPH1110105105;Gowns;
+;;MPH1110105106;Panties;
+;;MPH1110105107;Sensual wear;
+;;MPH1110103100;Maternity Day Wear;
+;;MPH1110103101;Maternity Lingerie;
+;;MPH1110103102;Maternity Sleepwear;
+;;MPH1110103103;Maternity Accessories;
+;;MPH1110104100;Sports tshirt;
+;;MPH1110104101;Sports shorts;
+;;MPH1110104102;Sports sets;
+;;MPH1110104103;Sports jackets;
+;;MPH1110104104;Track pants;
+;;MPH1110104105;Swimwear;
+;;MPH1110104106;Sports innerwear;
+;;MPH1110101100;Tops and tees;
+;;MPH1110101101;Causal shirts;
+;;MPH1110101102;Jeans;
+;;MPH1110101103;Casual trousers; 
+;;MPH1110101104;Cargos and shorts;
+;;MPH1110101105;Sweatshirts and hoodies;
+;;MPH1110101106;Sweaters;
+;;MPH1110101107;Casual jackets and blazers;
+;;MPH1110101108;Track pants;
+;;MPH1110101109;Casual dresses;
+;;MPH1110101110;Shurgs and cardigans;
+;;MPH1110101111;Skirts;
+;;MPH1110101112;Leggings and capris;
+;;MPH1110101113;Jeggings;
+;;MPH1110101114;Jump suits;
+
+####### Categories only For Microsite :::: SART
+UPDATE Category;$catalogVersion;code[unique=true];name[lang=$lang]
+;;SSH1;SSH1 
+;;SSH1000;Westside;
+;;SSH1001;Men;
+;;SSH10011;Mens Shirt;
+;;SSH100111;Mens Formal Shirt;
+;;SSH100112;Mens Casual Shirt;
+;;SSH100113;Mens T Shirt;
+;;SSH1002;Women;
+;;SSH10021;Womens Sarees;
+;;SSH10022;Womens  Accessories;
+;;SSH1003;Kids;
+;;SSH1100;Croma;
+;;SSH1101;TV;
+;;SSH11011;Samsung;
+;;SSH110111;Sony;
+;;SSH110112;Uv;
+;;SSH110113;Panasonic;
+;;SSH1102;Computers;
+;;SSH11021;Desktop;
+;;SSH11022;Laptop;
+;;SSH1103;Mobile;
+;;SSH1200;Tanishq;
+;;SSH1101;Silver;
+;;SSH1101;Gold;
+;;SSH1101;Platinum;
+####### Categories only For Microsite :::: END

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd"
+	default-autowire="byName">
+
+	<!-- For customer search -->
+	<alias alias="csCustomerSearchQueryBuilder" name="marketplaceCsCustomerSearchQueryBuilder" />
+	<bean id="marketplaceCsCustomerSearchQueryBuilder" parent="defaultCsCustomerSearchQueryBuilder"
+		class="com.tisl.mpl.cockpits.cscockpit.services.impl.MarketplaceCustomerSearchQueryBuilder">
+	</bean>
+
+	<!-- For order search -->
+	<alias alias="csOrderSearchQueryBuilder" name="marketplaceOrderSearchQueryBuilder" />
+	<bean id="marketplaceOrderSearchQueryBuilder" parent="baseCsFlexibleSearchQueryBuilder"
+		class="com.tisl.mpl.cockpits.cscockpit.services.impl.MarketplaceDefaultOrderSearchQueryBuilder">
+		<property name="channelCodeMap">
+			<map>
+				<entry key="Empty" value="" />
+				<entry key="WEB" value="web" />
+				<entry key="WEBMOBILE" value="webmobile" />
+				<entry key="MOBILE" value="mobile" />
+				<entry key="CALLCENTER" value="callcenter" />
+			</map>
+		</property>
+		<property name="deliveryCodeMap">
+			<map>
+				<entry key="Empty" value="" />
+				<entry key="HD" value="home-delivery" />
+				<entry key="ED" value="express-delivery" />
+				<entry key="CC" value="click-and-collect" />
+			</map>
+		</property>
+		
+	</bean>
+    <alias name="defaultItemModificationHistoryService" alias="itemModificationHistoryService"/>
+    <bean id="defaultItemModificationHistoryService"
+          class="com.tisl.mpl.cockpits.cscockpit.services.impl.DefaultItemModificationHistoryService">
+        <property name="modelService" ref="modelService"/>
+        <property name="flexibleSearchService" ref="flexibleSearchService"/>
+        <property name="i18NService" ref="i18NService"/>
+        <property name="commonI18NService" ref="commonI18NService"/>
+    </bean>
+    
+    <bean id="marketplaceServiceabilityCheckHelper"	
+    	class="com.tisl.mpl.cockpits.cscockpit.widgets.helpers.impl.MarketplaceServiceabilityCheckHelperImpl">
+	</bean>
+	
+		<!-- Product Search using Commerce API -->
+	<alias alias="mplDefaultCsCommerceSearchService" name="mplDefaultCsCommerceSearchService" />
+	<bean id="mplDefaultCsCommerceSearchService" parent="defaultCsCommerceSearchService" scope="tenant" >
+		<property name="productSearchService"  ref="commerceProductSearchService"/>
+		<property name="typeService" ref="typeService"/>
+		<property name="baseSiteService" ref="baseSiteService"/>
+		<property name="productService" ref="productService"/>
+		<property name="catalogVersionService" ref="catalogVersionService"/>
+		<property name="impersonationService" ref="impersonationService"/>
+		<property name="postSearchMetaProcessors">
+			<list>
+				<bean class="de.hybris.platform.cscockpit.services.search.meta.processor.ProductPromotionsProcessor">
+					<property name="csPromotionService" ref="csPromotionService"/>
+				</bean>
+				<bean class="com.tisl.mpl.cockpits.cscockpit.services.search.meta.processor.MplProductPriceProcessor">
+					<property name="buyBoxFacade" ref="buyBoxFacade" />
+				</bean>
+				<bean class="com.tisl.mpl.cockpits.cscockpit.services.search.meta.processor.MPLProductStockLevelProcessor">
+					<property name="commerceStockService" ref="commerceStockService"/>
+					<property name="baseStoreService" ref="baseStoreService"/>
+					<property name="buyBoxFacade" ref="buyBoxFacade" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<alias alias="csProductSearchService" name="mplDefaultCsCommerceSearchService"/> 
+
+</beans>

@@ -1,0 +1,1115 @@
+
+#
+# Import the CMS content for the site
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=mplProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+
+#############################################################Brand Electronics Page ###########################################################
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];description;folder(qualifier)[default='images']
+;;mobileCamera;text/png;Camera.png;$siteResource/images/mobile/Camera.png;Camera;
+;;mobileCroma;text/png;logoCroma.png;$siteResource/images/mobile/logoCroma.png;Croma;
+;;mobileIpad;text/jpeg;ipad.png;$siteResource/images/mobile/ipad.jpg;Ipad;
+;;mobileSamsung;text/png;Samsung.png;$siteResource/images/mobile/Samsung.png;Samsung;
+;;mobileElectronics;text/jpeg;Electronics.png;$siteResource/images/mobile/Electronics.jpeg;Electronics;
+
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;MobileAppBrandPageTemplate;Mobile App Brand Electronics Page Template;;ContentPage;true;
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;MobileAppBrandPageTemplate;$jarResourceCms/structure-view/structure_mobileBrandElectronicsPageTemplate.vm
+
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;MobileAppComponent
+;wide;MobileAppHeroComponent
+
+# Error Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppBrandPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;BrandHeroSection;;;wide
+
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;BrandHeroSlot;Brand Banner Slot;true
+;;BrandSection1Slot;Brand Banner Slot;true
+;;BrandSection2Slot;Brand Banner Slot;true
+;;BrandSection3Slot;Brand Banner Slot;true
+;;BrandSection4Slot;Brand Banner Slot;true
+;;BrandSection5Slot;Brand Banner Slot;true
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='MobileAppBrandPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;BrandHeroSlot1-MobileAppBrandPageTemplate;WestsideHero;;BrandHeroSlot;true
+;;BrandSection1Slot1-MobileAppBrandPageTemplate;WestsideBrandSection1;;BrandSection1Slot;true
+;;BrandSection2Slot1-MobileAppBrandPageTemplate;WestsideBrandSection2;;BrandSection2Slot;true
+;;BrandSection3Slot1-MobileAppBrandPageTemplate;WestsideBrandSection3;;BrandSection3Slot;true
+;;BrandSection4Slot1-MobileAppBrandPageTemplate;WestsideBrandSection4;;BrandSection4Slot;true
+;;BrandSection5Slot1-MobileAppBrandPageTemplate;WestsideBrandSection5;;BrandSection5Slot;true
+
+
+INSERT_UPDATE MobileAppHeroComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);logo(code,$contentCV);description;targetCategory(code,$productCV);&componentRef
+;;WestsideMobileAppHeroComponent;Brand Electronics Hero Component;mobileCroma;mobileCroma;We help you buy! We provide our customers with the latest technology and electronics available!;MSH10;WestsideMobileAppHeroComponent;
+
+INSERT_UPDATE MobileAppComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);targetCategory(code,$productCV);imageText;imageText2;linkText;&componentRef
+;;WestsideMobileAppComponent1Section1;Brand Electronics Category/Brand Component ;mobileCamera;MSH1010;;;Shop Now;WestsideMobileAppComponent1Section1;
+;;WestsideMobileAppComponent2Section1;Brand Electronics Category/Brand Component;mobileCamera;MSH1010;;;Shop Now;WestsideMobileAppComponent2Section1;
+;;WestsideMobileAppComponent3Section1;Brand Electronics Category/Brand Component;mobileCamera;MSH1010;;;Shop Now;WestsideMobileAppComponent3Section1;
+;;WestsideMobileAppComponent4Section1;Brand Electronics Category/Brand Component;mobileCamera;MSH1010;;;Shop Now;WestsideMobileAppComponent4Section1;
+
+;;WestsideMobileAppComponent1Section2;Brand Electronics Category/Brand Component;mobileSamsung;MSH1011;;;Shop Now;WestsideMobileAppComponent1Section2;
+
+;;WestsideMobileAppComponent1Section3;Brand Electronics Category/Brand Component;mobileSamsung;MSH1011;;;;WestsideMobileAppComponent1Section3;
+;;WestsideMobileAppComponent2Section3;Brand Electronics Category/Brand Component;mobileSamsung;MSH1011;;;;WestsideMobileAppComponent2Section3;
+;;WestsideMobileAppComponent3Section3;Brand Electronics Category/Brand Component;mobileSamsung;MSH1011;;;;WestsideMobileAppComponent3Section3;
+;;WestsideMobileAppComponent4Section3;Brand Electronics Category/Brand Component;mobileSamsung;MSH1011;;;;WestsideMobileAppComponent4Section3;
+;;WestsideMobileAppComponent5Section3;Brand Electronics Category/Brand Component;mobileSamsung;MSH1011;;;;WestsideMobileAppComponent5Section3;
+;;WestsideMobileAppComponent6Section3;Brand Electronics Category/Brand Component;mobileSamsung;MSH1011;;;;WestsideMobileAppComponent6Section3;
+
+
+;;WestsideMobileAppComponent1Section4;Brand Electronics Category/Brand Component;mobileElectronics;MSH1011;Welcome Westside;Westside Clothing;Shop Now;WestsideMobileAppComponent1Section4;
+
+;;WestsideMobileAppComponent1Section5;Brand Electronics Category/Brand Component;mobileIpad;MSH1011;Westside Clothing;;;WestsideMobileAppComponent1Section5;
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=en];&componentRef
+;;WestsideParagraphComponentSection1;Brand Electronics Title Component;We carry over 6,000 products across all categories;WestsideParagraphComponentSection1
+;;WestsideParagraphComponentSection2;Brand Electronics Title Component;Top Brands;WestsideParagraphComponentSection2
+;;WestsideParagraphComponentSection5;Brand Electronics Title Component;Discover the latest;WestsideParagraphComponentSection5
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);channel(code);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;WestsideMobileAppPage;Croma Mobile App Brand Landing Page;MobileAppBrandPageTemplate;Croma;MBH12E00008;Mobile
+
+
+#WestsideBrandHeroSlot Page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+;;WestsideBrandHeroSlot;Brand Electronics Hero Slot;true;WestsideMobileAppHeroComponent
+;;WestsideBrandSection1Slot;Brand Electronics Top Categories Slot  ;true;WestsideMobileAppComponent1Section1,WestsideMobileAppComponent2Section1,WestsideMobileAppComponent3Section1,WestsideMobileAppComponent4Section1,WestsideParagraphComponentSection1
+;;WestsideBrandSection2Slot;Brand Electronics Top Brands Slot;true;WestsideMobileAppComponent1Section2,WestsideParagraphComponentSection2
+;;WestsideBrandSection3Slot;Brand Electronics Smaller Brands Slot ;true;WestsideMobileAppComponent1Section3,WestsideMobileAppComponent2Section3,WestsideMobileAppComponent3Section3,WestsideMobileAppComponent4Section3,WestsideMobileAppComponent5Section3,WestsideMobileAppComponent6Section3,
+;;WestsideBrandSection4Slot;Brand Electronics Promotional Slot 1;true;WestsideMobileAppComponent1Section4
+;;WestsideBrandSection5Slot;Brand Electronics Promotional Slot 2;true;WestsideMobileAppComponent1Section5,WestsideParagraphComponentSection5
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];sequenceNumber;page(uid,$contentCV)[unique=true][default='WestsideMobileAppPage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;WestsideBrandHeroSlot1-WestsideMobileAppPage;WestsideHero;;;WestsideBrandHeroSlot;;;
+;;WestsideBrandSection1Slot1-WestsideMobileAppPage;WestsideBrandSection1;0;;WestsideBrandSection1Slot;;;
+;;WestsideBrandSection2Slot1-WestsideMobileAppPage;WestsideBrandSection2;1;;WestsideBrandSection2Slot;;;
+;;WestsideBrandSection3Slot1-WestsideMobileAppPage;WestsideBrandSection3;2;;WestsideBrandSection3Slot;;;
+;;WestsideBrandSection4Slot1-WestsideMobileAppPage;WestsideBrandSection4;3;;WestsideBrandSection4Slot;;;
+;;WestsideBrandSection5Slot1-WestsideMobileAppPage;WestsideBrandSection5;4;;WestsideBrandSection5Slot;;;
+
+
+#############################################################Category Apparel Page ###########################################################
+
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];description;folder(qualifier)[default='images']
+;;categoryHeroImage;text/jpg;categoryhero.png;$siteResource/images/mobile/categoryhero.jpg;;
+;;categorySectionImage;text/jpg;categorysection.png;$siteResource/images/mobile/categorysection.jpg;Women;
+
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;MobileCategoryLandingPage;Mobile App Category Page Template;;ContentPage;true;
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;MobileCategoryLandingPage;$jarResourceCms/structure-view/structure_mobileCategoryApparelPageTemplate.vm
+
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;MobileAppComponent
+;wide;MobileAppHeroComponent
+;wide;SmallBrandMobileAppComponent
+
+# Error Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileCategoryLandingPage'];validComponentTypes(code);compTypeGroup(code)
+;CategoryHeroSection;;;wide
+
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;CategoryHeroSlot;Category Hero Slot;true
+;;CategorySection1Slot;Category Section1 Slot;true
+;;CategorySection2Slot;Category Section2 Slot;true
+;;CategorySection3Slot;Category Section3 Slot;true
+;;CategorySection4Slot;Category Section4 Slot;true
+;;CategorySection5Slot;Category Section5 Slot;true
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='MobileCategoryLandingPage'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;CategoryHeroSlot-MobileCategoryLandingPage;CategoryHero;;CategoryHeroSlot;true
+;;CategorySection1Slot-MobileCategoryLandingPage;CategorySection1Position;;CategorySection1Slot;true
+;;CategorySection2Slot-MobileCategoryLandingPage;CategorySection2Position;;CategorySection2Slot;true
+;;CategorySection3Slot-MobileCategoryLandingPage;CategorySection3Position;;CategorySection3Slot;true
+;;CategorySection4Slot-MobileCategoryLandingPage;CategorySection4Position;;CategorySection4Slot;true
+;;CategorySection5Slot-MobileCategoryLandingPage;CategorySection5Position;;CategorySection5Slot;true
+
+
+INSERT_UPDATE MobileAppHeroComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);logo(code,$contentCV);description;title;targetCategory(code,$productCV);&componentRef
+;;WomenMobileAppHeroComponent;Category Apparel Hero Component;categoryHeroImage;;;Women;MSH10;WomenMobileAppHeroComponent;
+
+INSERT_UPDATE MobileAppComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);targetCategory(code,$productCV);imageText;imageText2;linkText;&componentRef
+;;WomenMobileAppComponent1Section1;Category Apparel Banner Component;categorySectionImage;MSH1010;;;Shop Now;WomenMobileAppComponent1Section1;
+;;WomenMobileAppComponent1Section2;Category Apparel Category/Brand Component;mobileSamsung;MSH1010;;;Shop Now;WomenMobileAppComponent1Section2;
+;;WomenMobileAppComponent2Section2;Category Apparel Category/Brand Component;mobileSamsung;MSH1010;;;Shop Now;WomenMobileAppComponent2Section2;
+;;WomenMobileAppComponent3Section2;Category Apparel Category/Brand Component;mobileSamsung;MSH1010;;;Shop Now;WomenMobileAppComponent3Section2;
+;;WomenMobileAppComponent4Section2;Category Apparel Category/Brand Component;mobileSamsung;MSH1010;;;Shop Now;WomenMobileAppComponent4Section2;
+;;WomenMobileAppComponent1Section4;Category Apparel Collection Banner Component;categorySectionImage;MSH1010;;;Shop Now;WomenMobileAppComponent1Section4;
+;;WomenMobileAppComponent1Section5;Category Apparel Collection Banner Component;categorySectionImage;MSH1010;;;;WomenMobileAppComponent1Section5;
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=en];&componentRef
+;;WomenParagraphComponentSection1;Category Apparel Banner Component's Title;We all have a story to tell;WomenParagraphComponentSection1
+;;WomenParagraphComponentSection2;Category Apparel Top Categories Title Component;We all have a story to tell;WomenParagraphComponentSection2
+;;WomenParagraphComponentSection3;Category Apparel Collection Title Component;Be Inspired;WomenParagraphComponentSection3
+
+INSERT_UPDATE SmallBrandMobileAppComponent;$contentCV[unique=true];uid[unique=true];name;image1(code,$contentCV);image2(code,$contentCV);description;linkText;targetCategory(code,$productCV);subTitle;&componentRef
+;;CategoryTwoImageComponentSection3;Category Apparel Collection Banner Component;smallBrandImage1;smallBrandImage2;Rooted In Vintage inspiration;Shop the Collection;MPH1110101102;Shop the Latest Looks;CategoryTwoImageComponentSection3
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);channel(code);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;WomenMobileAppPage;Women Mobile App Category Landing Page;MobileCategoryLandingPage;Women;MSH10;Mobile
+
+
+#WestsideBrandHeroSlot Page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+;;WomenCategoryHeroSlot;Category Apparel Hero Slot;true;WomenMobileAppHeroComponent
+;;WomenCategorySection1Slot;Category Apparel Promotional Slot;true;WomenMobileAppComponent1Section1,WomenParagraphComponentSection1
+;;WomenCategorySection2Slot;Category Apparel Top Categories Slot;true;WomenMobileAppComponent1Section2,WomenMobileAppComponent2Section2,WomenMobileAppComponent3Section2,WomenMobileAppComponent4Section2,WomenParagraphComponentSection2
+;;WomenCategorySection3Slot;Category Apparel Collection Slot1;true;CategoryTwoImageComponentSection3,WomenParagraphComponentSection3
+;;WomenCategorySection4Slot;Category Apparel Collection Slot2;true;WomenMobileAppComponent1Section4
+;;WomenCategorySection5Slot;Category Apparel Collection Slot3;true;WomenMobileAppComponent1Section5
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];sequenceNumber;page(uid,$contentCV)[unique=true][default='WomenMobileAppPage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;WomenCategoryHeroSlot-WomenMobileAppPage;CategoryHero;;;WomenCategoryHeroSlot;;;
+;;WomenCategorySection1Slot-WomenMobileAppPage;CategorySection1Position;0;;WomenCategorySection1Slot;;;
+;;WomenCategorySection2Slot-WomenMobileAppPage;CategorySection2Position;1;;WomenCategorySection2Slot;;;
+;;WomenCategorySection3Slot-WomenMobileAppPage;CategorySection3Position;2;;WomenCategorySection3Slot;;;
+;;WomenCategorySection4Slot-WomenMobileAppPage;CategorySection4Position;3;;WomenCategorySection4Slot;;;
+;;WomenCategorySection5Slot-WomenMobileAppPage;CategorySection5Position;4;;WomenCategorySection5Slot;;;
+
+#######################################################HomePage####################################################################
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+;;bannerImage1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png
+;;bannerImage2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png
+;;bannerImage3;text/png;banner_image3.png;$siteResource/images/mobile/banner_image3.png
+;;bannerImage4;text/png;banner_image4.png;$siteResource/images/mobile/banner_image4.png
+;;bannerImage5;text/png;banner_image5.png;$siteResource/images/mobile/banner_image5.png
+;;bannerImage6;text/png;banner_image6.png;$siteResource/images/mobile/banner_image6.png
+
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;MobileBannerComponent
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;MobileAppHomePageTemplate;Mobile App Home Page Template;;ContentPage;true;
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;MobileAppHomePageTemplate;$jarResourceCms/structure-view/structure_mobileHomePageTemplate.vm
+
+
+# Error Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppHomePageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;homePageSection;;;wide
+
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;RotatingImageContentSlot; Home Page Hero Slot;true
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='MobileAppHomePageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;RotatingImageContentSlot-MobileAppHomePageTemplate;MobileRotatingImagePosition;;RotatingImageContentSlot;true
+
+
+INSERT_UPDATE MobileBannerComponent;$contentCV[unique=true];uid[unique=true];name;media(code,$contentCV);&componentRef;targetCategory(code,$productCV);targetProduct(code,$productCV);targetCollection(collectionId)
+;;MobileBannerComponent1;Home Page Banner Component;bannerImage1;MobileBannerComponent1;MSH11
+;;MobileBannerComponent2;Home Page Banner Component;bannerImage2;MobileBannerComponent2;MSH11;
+;;MobileBannerComponent3;Home Page Banner Component;bannerImage3;MobileBannerComponent3;MSH11
+;;MobileBannerComponent4;Home Page Banner Component;bannerImage4;MobileBannerComponent4;MSH11;
+;;MobileBannerComponent5;Home Page Banner Component;bannerImage5;MobileBannerComponent5;MSH11
+;;MobileBannerComponent6;Home Page Banner Component;bannerImage6;MobileBannerComponent6;MSH11;
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;channel(code);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;MobileHomepage;Mobile Home Page;MobileAppHomePageTemplate;Mobile Homepage;Mobile
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+;;HomePageRotatingImageSlot;Home Page Hero Slot;true;MobileBannerComponent1,MobileBannerComponent2,MobileBannerComponent3,MobileBannerComponent4,MobileBannerComponent5,MobileBannerComponent6
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='MobileHomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;HomePageRotatingImageSlot-MobileHomepage;MobileRotatingImagePosition;;HomePageRotatingImageSlot;;;
+
+######################################################Sub Brand Page ################################################################
+
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;SmallBrandMobileAppComponent
+
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+;;smallBrandHeroImage;text/png;smallbrandHero.png;$siteResource/images/mobile/smallbrandHero.png
+;;smallBrandImage1;text/jpg;smallbrandimage1.jpg;$siteResource/images/mobile/smallbrandimage1.jpg
+;;smallBrandImage2;text/jpg;smallbrandimage2.jpg;$siteResource/images/mobile/smallbrandimage2.jpg
+
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;MobileAppSmallBrandTemplate;Mobile App Home Page Template;;ContentPage;true;
+
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;MobileAppSmallBrandTemplate;$jarResourceCms/structure-view/structure_mobileSmallBrandTemplate.vm
+
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppSmallBrandTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SmallBrandSection;;;wide
+
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;HeroContentSlotForSmallBrand;Hero Component for Small Brand;true
+;;SectionSlotForSmallBrand;Small Brand Component Slot;true
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='MobileAppSmallBrandTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;HeroContentSlotForSmallBrand-MobileAppSmallBrandTemplate;HeroContentSlotForSmallBrand;;HeroContentSlotForSmallBrand;true
+;;SectionSlotForSmallBrand-MobileAppSmallBrandTemplate;SectionContentSlotForSmallBrand;;SectionSlotForSmallBrand;true
+
+
+
+INSERT_UPDATE MobileAppHeroComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);title;description;targetCategory(code,$productCV);&componentRef
+;;SmallBrandHeroComponent;Small Brand Hero Component;smallBrandHeroImage;Nuon Brand;Rooted in vintage inspiration, Wilfred embodies the essence of modern luxury with particular attention to quality, fit, craftsmanship, and detail.;MSH11;SmallBrandHeroComponent
+
+INSERT_UPDATE SmallBrandMobileAppComponent;$contentCV[unique=true];uid[unique=true];name;image1(code,$contentCV);image2(code,$contentCV);description;linkText;targetCategory(code,$productCV);&componentRef
+;;SmallBrandComponentForSection;Small Brand Collection Component;smallBrandImage1;smallBrandImage2;Nuon Brand;Shop the Collection;MSH11;SmallBrandComponentForSection
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;channel(code);categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;SmallBrandPage;Small Brand Page;MobileAppSmallBrandTemplate;Small Brand Page;Mobile;MSH1221100
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+;;SmallBrandHeroContentSlot;Small Brand Hero Slot;true;SmallBrandHeroComponent
+;;SmallBrandSectionContentSlot;Small Brand Collection Slot;true;SmallBrandComponentForSection
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];sequenceNumber;page(uid,$contentCV)[unique=true][default='SmallBrandPage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;SmallBrandHeroContentSlot-SmallBrandPage;HeroContentSlotForSmallBrand;;;SmallBrandHeroContentSlot;;;
+;;SmallBrandSectionContentSlot-SmallBrandPage;SectionContentSlotForSmallBrand;0;;SmallBrandSectionContentSlot;;;
+
+
+#######################################################Collection Page ###############################################################
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;MobileCollectionBannerComponent
+;wide;MobileAppCollectionHeroComponent
+
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+;;collectionHeroImage;text/jpg;herocollection.jpg;$siteResource/images/mobile/herocollection.jpg
+;;collectionBanner1Image;text/jpg;banner1.jpg;$siteResource/images/mobile/banner1.jpg
+;;collectionBanner2Image;text/jpg;banner2.jpg;$siteResource/images/mobile/banner2.jpg
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;MobileCollectionPageTemplate;Mobile App Collection Page Template;;ContentPage;true;
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;MobileCollectionPageTemplate;$jarResourceCms/structure-view/structure_mobileCollectionPageTemplate.vm
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileCollectionPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;collectionBrand;;;wide
+
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;HeroContentSlotForCollection;Hero Slot for Collection;true
+;;Section1SlotForCollection;Section 1 Slot;true
+;;Section2SlotForCollection;Section 2 Slot;true
+;;Section3SlotForCollection;Section 3 Slot;true
+;;Section4SlotForCollection;Section 4 Slot;true
+;;Section5SlotForCollection;Section 5 Slot;true
+
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='MobileCollectionPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;HeroContentSlotForCollection-MobileCollectionPageTemplate;HeroCollectionPosition;;HeroContentSlotForCollection;true
+;;Section1SlotForCollection-MobileCollectionPageTemplate;Section1SlotForCollectionPosition;;Section1SlotForCollection;true
+;;Section2SlotForCollection-MobileCollectionPageTemplate;Section2SlotForCollectionPosition;;Section2SlotForCollection;true
+;;Section3SlotForCollection-MobileCollectionPageTemplate;Section3SlotForCollectionPosition;;Section3SlotForCollection;true
+;;Section4SlotForCollection-MobileCollectionPageTemplate;Section4SlotForCollectionPosition;;Section4SlotForCollection;true
+;;Section5SlotForCollection-MobileCollectionPageTemplate;Section5SlotForCollectionPosition;;Section5SlotForCollection;true
+
+
+INSERT_UPDATE MobileAppCollectionHeroComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);title;subTitle;description1;description2;description3;targetCategory(code,$productCV);&componentRef
+;;CollectionHeroComponent1;Collection Hero Component;collectionHeroImage;Pretty in Petals;Exclusive in TATA;Nullam id dolor id nibh ultricies vehicula ut id elit;Integer posuere erat a ante venenatis dapibus posuere velit aliquet;Cras mattis consectetur purus sit amet fermentum;MSH10;CollectionHeroComponent1
+
+INSERT_UPDATE MobileCollectionBannerComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);title;description;products(code,$productCV)[append=true];&componentRef
+;;collectionCasualWear;Collection Promotional Component 1;collectionBanner1Image;Casual Wear;Nunc venenatis, ex sed molestie lobortis, est nunc cursus turpis, ac condimentum nibh risus et ligula;;collectionCasualWear
+;;collectionPerfectLook;Collection Promotional Component 2;collectionBanner1Image;The Perfect Look;Nunc venenatis, ex sed molestie lobortis, est nunc cursus turpis, ac condimentum nibh risus et ligula.;;collectionPerfectLook
+;;collectionDressDown;Collection Promotional Component 3;collectionBanner2Image;Dress Down;Nunc venenatis, ex sed molestie lobortis, est nunc cursus turpis, ac condimentum nibh risus et ligula.;;collectionDressDown
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=en];&componentRef
+;;collectionSeasonalComponent;Collection Paragraph Component;Seasonal Collections;collectionSeasonalComponent
+
+INSERT_UPDATE MobileCollectionLinkComponent;$contentCV[unique=true];uid[unique=true];name;previousCollectionName;previousCollection(collectionId);nextCollectionName;nextCollection(collectionId);&componentRef
+;;collectionPreviousNextComponent;Previous Next collection component;Spring Summer;;;;collectionPreviousNextComponent
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;channel(code);collectionAssociated(collectionId);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;collectionPageForMobile;Collection Page For Mobile;MobileCollectionPageTemplate;CollectionPage;Mobile;chef
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+;;collectionHeroContentSlot; Collection Hero Slot;true;CollectionHeroComponent1
+;;section1ForCollectionPage;Collection Promotional Slot 1;true;collectionCasualWear
+;;section2ForCollectionPage;Collection Promotional Slot 2;true;collectionPerfectLook
+;;section3ForCollectionPage;Collection Promotional Slot 3;true;collectionDressDown
+;;section4ForCollectionPage;Collection Paragraph Slot;true;collectionSeasonalComponent
+;;section5ForCollectionPage;Previous Next Collection Slot;true;collectionPreviousNextComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];sequenceNumber;page(uid,$contentCV)[unique=true][default='collectionPageForMobile'];contentSlot(uid,$contentCV)[unique=true];;;
+;;collectionHeroContentSlot-collectionPageForMobile;HeroCollectionPosition;;;collectionHeroContentSlot;;;
+;;section1ForCollectionPage-collectionPageForMobile;Section1SlotForCollectionPosition;0;;section1ForCollectionPage;;;
+;;section2ForCollectionPage-collectionPageForMobile;Section2SlotForCollectionPosition;1;;section2ForCollectionPage;;;
+;;section3ForCollectionPage-collectionPageForMobile;Section3SlotForCollectionPosition;2;;section3ForCollectionPage;;;
+;;section4ForCollectionPage-collectionPageForMobile;Section4SlotForCollectionPosition;3;;section4ForCollectionPage;;;
+;;section5ForCollectionPage-collectionPageForMobile;Section5SlotForCollectionPosition;;;section5ForCollectionPage;;;
+
+#############################################################Brand Apparel Page ###########################################################
+
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+;;mobileCamera;text/png;Camera.png;$siteResource/images/mobile/Camera.png
+;;mobileCroma;text/png;logoCroma.png;$siteResource/images/mobile/logoCroma.png
+;;mobileIpad;text/jpeg;ipad.png;$siteResource/images/mobile/ipad.jpg
+;;mobileSamsung;text/png;Samsung.png;$siteResource/images/mobile/Samsung.png
+;;mobileElectronics;text/jpeg;Electronics.png;$siteResource/images/mobile/Electronics.jpeg
+
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;MobileAppBrandApparelPageTemplate;Mobile App Brand Page Template;;ContentPage;true;
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;MobileAppBrandApparelPageTemplate;$jarResourceCms/structure-view/structure_mobileBrandApparelPageTemplate.vm
+
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;MobileAppComponent
+;wide;MobileAppHeroComponent
+;wide;PromotionalProductsComponent
+
+# Error Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppBrandApparelPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;BrandApparelHeroSection;;;wide
+
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;BrandApparelHeroSlot;Brand Banner Slot;true
+;;BrandApparelSection1Slot;Brand Banner Slot;true
+;;BrandApparelSection2Slot;Brand Banner Slot;true
+;;BrandApparelSection3Slot;Brand Banner Slot;true
+;;BrandApparelSection4Slot;Brand Banner Slot;true
+;;BrandApparelSection5Slot;Brand Banner Slot;true
+;;BrandApparelSection6Slot;Brand Banner Slot;true
+;;BrandApparelSection7Slot;Brand Banner Slot;true
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='MobileAppBrandApparelPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;BrandApparelHeroSlot-MobileAppBrandApparelPageTemplate;WestsideApparelHero;;BrandApparelHeroSlot;true
+;;BrandApparelSection1Slot-MobileAppBrandApparelPageTemplate;WestsideApparelBrandSection1;;BrandApparelSection1Slot;true
+;;BrandApparelSection2Slot-MobileAppBrandApparelPageTemplate;WestsideApparelBrandSection2;;BrandApparelSection2Slot;true
+;;BrandApparelSection3Slot-MobileAppBrandApparelPageTemplate;WestsideApparelBrandSection3;;BrandApparelSection3Slot;true
+;;BrandApparelSection4Slot-MobileAppBrandApparelPageTemplate;WestsideApparelBrandSection4;;BrandApparelSection4Slot;true
+;;BrandApparelSection5Slot-MobileAppBrandApparelPageTemplate;WestsideApparelBrandSection5;;BrandApparelSection5Slot;true
+;;BrandApparelSection6Slot-MobileAppBrandApparelPageTemplate;WestsideApparelBrandSection6;;BrandApparelSection6Slot;true
+;;BrandApparelSection7Slot-MobileAppBrandApparelPageTemplate;WestsideApparelBrandSection7;;BrandApparelSection7Slot;true
+
+
+INSERT_UPDATE MobileAppHeroComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);logo(code,$contentCV);description;targetCategory(code,$productCV);&componentRef
+;;BrandApparelHeroComponent;Brand Apparel Hero Component;mobileCroma;mobileCroma;We make everyday look good. Express your style and mood at anytime;MSH10;BrandApparelHeroComponent;
+
+INSERT_UPDATE MobileAppComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);targetCategory(code,$productCV);imageText;imageText2;linkText;&componentRef;youtubeUrl
+;;WestsideMobileApparelComponent1Section1;Brand Apparel Category/Brand Component;mobileCamera;MSH1010;;;Shop Now;WestsideMobileApparelComponent1Section1;
+;;WestsideMobileApparelComponent2Section1;Brand Apparel Category/Brand Component;mobileCamera;MSH1010;;;Shop Now;WestsideMobileApparelComponent2Section1;
+;;WestsideMobileApparelComponent3Section1;Brand Apparel Category/Brand Component;mobileCamera;MSH1010;;;Shop Now;WestsideMobileApparelComponent3Section1;
+;;WestsideMobileApparelComponent4Section1;Brand Apparel Category/Brand Component;mobileCamera;MSH1010;;;Shop Now;WestsideMobileApparelComponent4Section1;
+
+
+;;WestsideMobileApparelComponent1Section3;Brand Apparel Category/Brand Component;mobileSamsung;MSH1011;Calling on all Youth. Find Your Style;;Shop Noun;WestsideMobileApparelComponent1Section3;
+
+
+;;WestsideMobileApparelComponent1Section4;Brand Apparel Category/Brand Component;mobileSamsung;MSH1011;;;;WestsideMobileApparelComponent1Section4;
+;;WestsideMobileApparelComponent2Section4;Brand Apparel Category/Brand Component;mobileSamsung;MSH1011;;;;WestsideMobileApparelComponent2Section4;
+;;WestsideMobileApparelComponent3Section4;Brand Apparel Category/Brand Component;mobileSamsung;MSH1011;;;;WestsideMobileApparelComponent3Section4;
+;;WestsideMobileApparelComponent4Section4;Brand Apparel Category/Brand Component;mobileSamsung;MSH1011;;;;WestsideMobileApparelComponent4Section4;
+;;WestsideMobileApparelComponent5Section4;Brand Apparel Category/Brand Component;mobileSamsung;MSH1011;;;;WestsideMobileApparelComponent5Section4;
+;;WestsideMobileApparelComponent6Section4;Brand Apparel Category/Brand Component;mobileElectronics;MSH1011;;;;WestsideMobileApparelComponent6Section4;
+
+;;WestsideMobileApparelComponent1Section5;Brand Apparel Category/Brand Component;mobileIpad;MSH1011;Calling on all Youth. Find Your Style;;Shop Ascot;WestsideMobileApparelComponent1Section5;
+
+;;WestsideMobileApparelComponent1Section6;Brand Apparel Category/Brand Component;mobileIpad;MSH1011;Calling on all Youth. Find Your Style;;Shop L.O.V;WestsideMobileApparelComponent1Section6;
+
+;;WestsideMobileApparelComponent1Section7;Brand Apparel Category/Brand Component;mobileIpad;MSH1011;Calling on all Youth. Find Your Style;;Shop Noun;WestsideMobileApparelComponent1Section7;6FkG-Bh9J9c;
+
+INSERT_UPDATE PromotionalProductsComponent;$contentCV[unique=true];uid[unique=true];name;title;Promotion(code);&componentRef
+;;apparelBrandPromotionComponent;Brand Apparel Promotion Component;ProductPromotion;;apparelBrandPromotionComponent
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=en];&componentRef
+;;WestsideApparelParagraphComponentSection1;Brand Apparel Title Component;Products For the whole family;WestsideApparelParagraphComponentSection1
+;;WestsideApparelParagraphComponentSection3;Brand Apparel Title Component;Our Premier Brands;WestsideApparelParagraphComponentSection3
+;;WestsideApparelParagraphComponentSection5;Brand Apparel Title Component;Try Something New;WestsideApparelParagraphComponentSection5
+
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);channel(code);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;BrandApparelMobileAppPage;Mobile Brand Apparel Landing Page;MobileAppBrandApparelPageTemplate;Brand Apparel Category/Brand Component;MBH11A00005;Mobile
+
+
+#WestsideBrandHeroSlot Page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+;;WestsideApparelBrandHeroSlot;Brand Apparel Hero Slot;true;BrandApparelHeroComponent
+;;WestsideApparelBrandSection1Slot;Brand Apparel Top Categories Slot;true;WestsideMobileApparelComponent1Section1,WestsideMobileApparelComponent2Section1,WestsideMobileApparelComponent3Section1,WestsideMobileApparelComponent4Section1,WestsideApparelParagraphComponentSection1
+;;WestsideApparelBrandSection2Slot;Brand Apparel Promotion Slot;true;apparelBrandPromotionComponent
+;;WestsideApparelBrandSection3Slot;Brand Apparel Top Brands Slot;true;WestsideMobileApparelComponent1Section3,WestsideApparelParagraphComponentSection3
+;;WestsideApparelBrandSection4Slot;Brand Apparel Smaller Brands Slot;true;WestsideMobileApparelComponent1Section4,WestsideMobileApparelComponent2Section4,WestsideMobileApparelComponent3Section4,WestsideMobileApparelComponent4Section4,WestsideMobileApparelComponent5Section4,WestsideMobileApparelComponent6Section4
+;;WestsideApparelBrandSection5Slot;Brand Apparel Promotional Slot1;true;WestsideMobileApparelComponent1Section5,WestsideApparelParagraphComponentSection5
+;;WestsideApparelBrandSection6Slot;Brand Apparel Promotional Slot2;true;WestsideMobileApparelComponent1Section6
+;;WestsideApparelBrandSection7Slot;Brand Apparel Promotional Slot with Video;true;WestsideMobileApparelComponent1Section7
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];sequenceNumber;page(uid,$contentCV)[unique=true][default='BrandApparelMobileAppPage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;WestsideApparelBrandHeroSlot-BrandApparelMobileAppPage;WestsideApparelHero;;;WestsideApparelBrandHeroSlot;;;
+;;WestsideApparelBrandSection1Slot-BrandApparelMobileAppPage;WestsideApparelBrandSection1;0;;WestsideApparelBrandSection1Slot;;;
+;;WestsideApparelBrandSection2Slot-BrandApparelMobileAppPage;WestsideApparelBrandSection2;;;WestsideApparelBrandSection2Slot;;;
+;;WestsideApparelBrandSection3Slot-BrandApparelMobileAppPage;WestsideApparelBrandSection3;1;;WestsideApparelBrandSection3Slot;;;
+;;WestsideApparelBrandSection4Slot-BrandApparelMobileAppPage;WestsideApparelBrandSection4;2;;WestsideApparelBrandSection4Slot;;;
+;;WestsideApparelBrandSection5Slot-BrandApparelMobileAppPage;WestsideApparelBrandSection5;3;;WestsideApparelBrandSection5Slot;;;
+;;WestsideApparelBrandSection6Slot-BrandApparelMobileAppPage;WestsideApparelBrandSection6;4;;WestsideApparelBrandSection6Slot;;;
+;;WestsideApparelBrandSection7Slot-BrandApparelMobileAppPage;WestsideApparelBrandSection7;5;;WestsideApparelBrandSection7Slot;;;
+
+
+
+
+
+#############################################################Category Electronics Page ###########################################################
+
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+;;categoryHeroImage;text/jpg;categoryhero.png;$siteResource/images/mobile/categoryhero.jpg
+;;categorySectionImage;text/jpg;categorysection.png;$siteResource/images/mobile/categorysection.jpg
+
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;MobileCategoryElectronicsLandingPageTemplate;Mobile App Electronics Category Page Template;;ContentPage;true;
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;MobileCategoryElectronicsLandingPageTemplate;$jarResourceCms/structure-view/structure_mobileCategoryElectronicsTemplate.vm
+
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;MobileAppComponent
+;wide;MobileAppHeroComponent
+;wide;SmallBrandMobileAppComponent
+
+# Error Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileCategoryElectronicsLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;CategoryHeroSection;;;wide
+
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;CategoryElectronicsHeroSlot;Category Hero Slot;true
+;;CategoryElectronicsSection1Slot;Category Electronics Section1 Slot;true
+;;CategoryElectronicsSection2Slot;Category Electronics Section2 Slot;true
+;;CategoryElectronicsSection3Slot;Category Electronics Section3 Slot;true
+;;CategoryElectronicsSection4Slot;Category Electronics Section4 Slot;true
+;;CategoryElectronicsSection5Slot;Category Electronics Section5 Slot;true
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='MobileCategoryElectronicsLandingPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;CategoryElectronicsHeroSlot-MobileCategoryElectronicsLandingPageTemplate;ElectronicsHero;;CategoryElectronicsHeroSlot;true
+;;CategoryElectronicsSection1Slot-MobileCategoryElectronicsLandingPageTemplate;ElectronicsSection1Position;;CategoryElectronicsSection1Slot;true
+;;CategoryElectronicsSection2Slot-MobileCategoryElectronicsLandingPageTemplate;ElectronicsSection2Position;;CategoryElectronicsSection2Slot;true
+;;CategoryElectronicsSection3Slot-MobileCategoryElectronicsLandingPageTemplate;ElectronicsSection3Position;;CategoryElectronicsSection3Slot;true
+;;CategoryElectronicsSection4Slot-MobileCategoryElectronicsLandingPageTemplate;ElectronicsSection4Position;;CategoryElectronicsSection4Slot;true
+;;CategoryElectronicsSection5Slot-MobileCategoryElectronicsLandingPageTemplate;ElectronicsSection5Position;;CategoryElectronicsSection5Slot;true
+
+
+INSERT_UPDATE MobileAppHeroComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);logo(code,$contentCV);description;title;targetCategory(code,$productCV);&componentRef
+;;ElectronicsMobileAppHeroComponent;Category Electronics Hero Component;categoryHeroImage;;;Electronics;MSH10;ElectronicsMobileAppHeroComponent;
+
+INSERT_UPDATE MobileAppComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);targetCategory(code,$productCV);imageText;imageText2;linkText;&componentRef
+;;ElectronicsMobileAppComponent1Section1;Category Electronics Banner Component;categorySectionImage;MSH1010;;;Shop Now;ElectronicsMobileAppComponent1Section1;
+;;ElectronicsMobileAppComponent1Section2;Category Electronics Category/Brand Component;mobileSamsung;MSH1010;;;Shop Now;ElectronicsMobileAppComponent1Section2;
+;;ElectronicsMobileAppComponent2Section2;Category Electronics Category/Brand Component;mobileSamsung;MSH1010;;;Shop Now;ElectronicsMobileAppComponent2Section2;
+;;ElectronicsMobileAppComponent3Section2;Category Electronics Category/Brand Component;mobileSamsung;MSH1010;;;Shop Now;ElectronicsMobileAppComponent3Section2;
+;;ElectronicsMobileAppComponent4Section2;Category Electronics Category/Brand Component;mobileSamsung;MSH1010;;;Shop Now;ElectronicsMobileAppComponent4Section2;
+;;ElectronicsMobileAppComponent1Section4;Women Banner Image;categorySectionImage;MSH1010;;;Shop Now;ElectronicsMobileAppComponent1Section4;
+;;ElectronicsMobileAppComponent1Section5;Women Banner Image;categorySectionImage;MSH1010;;;;ElectronicsMobileAppComponent1Section5;
+
+INSERT_UPDATE SmallBrandMobileAppComponent;$contentCV[unique=true];uid[unique=true];name;image1(code,$contentCV);image2(code,$contentCV);description;linkText;targetCategory(code,$productCV);subTitle;&componentRef
+;;ElectronicsTwoImageComponentSection3;Category Electronics Collection Banner Component;smallBrandImage1;smallBrandImage2;The Latest, Greatest Life Changing Electronics;Shop the Collection;MSH11;Shop the Latest Technology;ElectronicsTwoImageComponentSection3
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=en];&componentRef
+;;ElectronicsParagraphComponentSection1;Category Electronics Banner Component's Title;The hottest products;ElectronicsParagraphComponentSection1
+;;ElectronicsParagraphComponentSection3;Category Electronics Top Categories Title Component;Tech trendsetters;ElectronicsParagraphComponentSection3
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);channel(code);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;ElectronicMobileAppPage;Electronic Mobile App Category Landing Page;MobileCategoryElectronicsLandingPageTemplate;Electronic;MSH1210;Mobile
+
+
+#WestsideBrandHeroSlot Page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+;;ElectronicCategoryHeroSlot;Category Electronics Hero Slot;true;ElectronicsMobileAppHeroComponent
+;;ElectronicCategorySection1Slot;Category Electronics Promotional Slot;true;ElectronicsMobileAppComponent1Section1,ElectronicsParagraphComponentSection1
+;;ElectronicCategorySection2Slot;Category Electronics Top Categories Slot;true;ElectronicsMobileAppComponent1Section2,ElectronicsMobileAppComponent2Section2,ElectronicsMobileAppComponent3Section2,ElectronicsMobileAppComponent4Section2
+;;ElectronicCategorySection3Slot;Category Electronics Collections Slot 1 ;true;ElectronicsTwoImageComponentSection3,ElectronicsParagraphComponentSection3
+;;ElectronicCategorySection4Slot;Category Electronics Collections Slot 2 ;true;ElectronicsMobileAppComponent1Section4
+;;ElectronicCategorySection5Slot;Category Electronics Collections Slot 3 ;true;ElectronicsMobileAppComponent1Section5
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];sequenceNumber;page(uid,$contentCV)[unique=true][default='ElectronicMobileAppPage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;ElectronicCategoryHeroSlot-ElectronicMobileAppPage;ElectronicsHero;;;ElectronicCategoryHeroSlot;;;
+;;ElectronicCategorySection1Slot-ElectronicMobileAppPage;ElectronicsSection1Position;0;;ElectronicCategorySection1Slot;;;
+;;ElectronicCategorySection2Slot-ElectronicMobileAppPage;ElectronicsSection2Position;1;;ElectronicCategorySection2Slot;;;
+;;ElectronicCategorySection3Slot-ElectronicMobileAppPage;ElectronicsSection3Position;2;;ElectronicCategorySection3Slot;;;
+;;ElectronicCategorySection4Slot-ElectronicMobileAppPage;ElectronicsSection4Position;3;;ElectronicCategorySection4Slot;;;
+;;ElectronicCategorySection5Slot-ElectronicMobileAppPage;ElectronicsSection5Position;4;;ElectronicCategorySection5Slot;;;
+
+
+#############################################################Seller Page###################################################################
+
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+;;mobileSeller;text/png;Camera.png;$siteResource/images/mobile/Camera.png
+;;mobileCroma;text/png;logoCroma.png;$siteResource/images/mobile/logoCroma.png
+;;mobileIpad;text/jpeg;ipad.png;$siteResource/images/mobile/ipad.jpg
+;;mobileSamsung;text/png;Samsung.png;$siteResource/images/mobile/Samsung.png
+;;mobileElectronics;text/jpeg;Electronics.png;$siteResource/images/mobile/Electronics.jpeg
+
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;MobileAppSellerPageTemplate;Mobile App Seller Page Template;;ContentPage;true;
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;MobileAppSellerPageTemplate;$jarResourceCms/structure-view/structure_mobileSellerPageTemplate.vm
+
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;MobileAppComponent
+;wide;MobileAppHeroComponent
+;wide;PromotionalProductsComponent
+
+# Error Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppSellerPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SellerHeroSection;;;wide
+
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;SellerHeroSlot;Seller Banner Slot;true
+;;SellerSection1Slot;Seller Banner Slot;true
+;;SellerSection2Slot;Seller Banner Slot;true
+;;SellerSection3Slot;Seller Banner Slot;true
+;;SellerSection4Slot;Seller Banner Slot;true
+;;SellerSection5Slot;Seller Banner Slot;true
+;;SellerSection6Slot;Seller Banner Slot;true
+;;SellerSection7Slot;Seller Banner Slot;true
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='MobileAppSellerPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SellerHeroSlot-MobileAppSellerPageTemplate;SellerHero;;SellerHeroSlot;true
+;;SellerSection1Slot-MobileAppSellerPageTemplate;SellerSection1;;SellerSection1Slot;true
+;;SellerSection2Slot-MobileAppSellerPageTemplate;SellerSection2;;SellerSection2Slot;true
+;;SellerSection3Slot-MobileAppSellerPageTemplate;SellerSection3;;SellerSection3Slot;true
+;;SellerSection4Slot-MobileAppSellerPageTemplate;SellerSection4;;SellerSection4Slot;true
+;;SellerSection5Slot-MobileAppSellerPageTemplate;SellerSection5;;SellerSection5Slot;true
+;;SellerSection6Slot-MobileAppSellerPageTemplate;SellerSection6;;SellerSection6Slot;true
+;;SellerSection7Slot-MobileAppSellerPageTemplate;SellerSection7;;SellerSection7Slot;true
+
+
+INSERT_UPDATE MobileAppHeroComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);logo(code,$contentCV);description;targetCategory(code,$productCV);&componentRef
+;;SellerHeroComponent;Seller;mobileSeller;mobileCroma;We make everyday look good. Express your style and mood at anytime;MSH10;SellerHeroComponent;
+
+INSERT_UPDATE MobileAppComponent;$contentCV[unique=true];uid[unique=true];name;image(code,$contentCV);targetCategory(code,$productCV);imageText;imageText2;linkText;&componentRef;youtubeUrl
+;;MobileSellerComponent1Section1;Seller;mobileSeller;MSH1010;;;Shop Now;MobileSellerComponent1Section1;
+;;MobileSellerComponent2Section1;Seller;mobileSeller;MSH1010;;;Shop Now;MobileSellerComponent2Section1;
+;;MobileSellerComponent3Section1;Seller;mobileSeller;MSH1010;;;Shop Now;MobileSellerComponent3Section1;
+;;MobileSellerComponent4Section1;Seller;mobileSeller;MSH1010;;;Shop Now;MobileSellerComponent4Section1;
+
+
+;;MobileSellerComponent1Section3;Seller;mobileSamsung;MSH1011;Calling on all Youth. Find Your Style;;Shop Noun;MobileSellerComponent1Section3;
+
+
+;;MobileSellerComponent1Section4;Seller;mobileSamsung;MSH1011;;;;MobileSellerComponent1Section4;
+;;MobileSellerComponent2Section4;Seller;mobileSamsung;MSH1011;;;;MobileSellerComponent2Section4;
+;;MobileSellerComponent3Section4;Seller;mobileSamsung;MSH1011;;;;MobileSellerComponent3Section4;
+;;MobileSellerComponent4Section4;Seller;mobileSamsung;MSH1011;;;;MobileSellerComponent4Section4;
+;;MobileSellerComponent5Section4;Seller;mobileSamsung;MSH1011;;;;MobileSellerComponent5Section4;
+;;MobileSellerComponent6Section4;Seller;mobileElectronics;MSH1011;;;;MobileSellerComponent6Section4;
+
+;;MobileSellerComponent1Section5;Seller;mobileIpad;MSH1011;Calling on all Youth. Find Your Style;;Shop Ascot;MobileSellerComponent1Section5;
+
+;;MobileSellerComponent1Section6;Seller;mobileIpad;MSH1011;Calling on all Youth. Find Your Style;;Shop L.O.V;MobileSellerComponent1Section6;
+
+;;MobileSellerComponent1Section7;Seller;mobileIpad;MSH1011;Calling on all Youth. Find Your Style;;Shop Noun;MobileSellerComponent1Section7;6FkG-Bh9J9c;
+
+INSERT_UPDATE PromotionalProductsComponent;$contentCV[unique=true];uid[unique=true];name;title;Promotion(code);&componentRef
+;;sellerPromotionComponent;Promotion Component;ProductPromotion;;sellerPromotionComponent
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=en];&componentRef
+;;SellerParagraphComponentSection1;Seller Paragrapgh Component;Products For the whole family;SellerParagraphComponentSection1
+;;SellerParagraphComponentSection3;Seller Paragrapgh Component;Our Premier Brands;SellerParagraphComponentSection3
+;;SellerParagraphComponentSection5;Seller Paragrapgh Component;Try Something New;SellerParagraphComponentSection5
+
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;associatedSeller(id);channel(code);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;SellerlMobileAppPage;Seller App Seller Landing Page;MobileAppSellerPageTemplate;Seller;123654;Mobile
+
+
+#SellerHeroSlot Page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+;;SellerHeroSlot;SellerHero Slot;true;SellerHeroComponent
+;;SellerSection1Slot;Sellersection1 Slot;true;MobileSellerComponent1Section1,MobileSellerComponent2Section1,MobileSellerComponent3Section1,MobileSellerComponent4Section1,SellerParagraphComponentSection1
+;;SellerSection2Slot;Sellersection2 Slot;true;sellerPromotionComponent
+;;SellerSection3Slot;Sellersection3 Slot;true;MobileSellerComponent1Section3,SellerParagraphComponentSection3
+;;SellerSection4Slot;Sellersection4 Slot;true;MobileSellerComponent1Section4,MobileSellerComponent2Section4,MobileSellerComponent3Section4,MobileSellerComponent4Section4,MobileSellerComponent5Section4,MobileSellerComponent6Section4
+;;SellerSection5Slot;Sellersection5 Slot;true;MobileSellerComponent1Section5,SellerParagraphComponentSection5
+;;SellerSection6Slot;Sellersection6 Slot;true;MobileSellerComponent1Section6
+;;SellerSection7Slot;Sellersection7 Slot;true;MobileSellerComponent1Section7
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];sequenceNumber;page(uid,$contentCV)[unique=true][default='SellerlMobileAppPage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;SellerHeroSlot-SellerlMobileAppPage;SellerHero;;;SellerHeroSlot;;;
+;;SellerSection1Slot-SellerlMobileAppPage;SellerSection1;0;;SellerSection1Slot;;;
+;;SellerSection2Slot-SellerlMobileAppPage;SellerSection2;;;SellerSection2Slot;;;
+;;SellerSection3Slot-SellerlMobileAppPage;SellerSection3;1;;SellerSection3Slot;;;
+;;SellerSection4Slot-SellerlMobileAppPage;SellerSection4;2;;SellerSection4Slot;;;
+;;SellerSection5Slot-SellerlMobileAppPage;SellerSection5;3;;SellerSection5Slot;;;
+;;SellerSection6Slot-SellerlMobileAppPage;SellerSection6;4;;SellerSection6Slot;;;
+;;SellerSection7Slot-SellerlMobileAppPage;SellerSection7;5;;SellerSection7Slot;;;
+
+
+###############################################################################################################################
+
+# CMS Site Settings
+UPDATE CMSSite;uid[unique=true];defaultPreviewCategory(code, $productCV);defaultPreviewProduct(code, $productCV)
+
+# Site Logo
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;folder(qualifier)[default='images']
+
+# Site Logo Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+
+INSERT_UPDATE LogoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;logo(&componentRef)
+
+# CMS Link Components
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];styleAttributes
+
+# Lightbox Banner for Mini Cart
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+
+# CMS Mini Cart Component
+INSERT_UPDATE MiniCartComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;totalDisplay(code);shownProductCount;lightboxBannerComponent(&componentRef)
+
+# Navigation Bar Component
+INSERT_UPDATE NavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;link(uid, $contentCV);styleClass;&componentRef
+
+# Navigation Bar Component
+INSERT_UPDATE AccountNavigationComponent;$contentCV[unique=true];uid[unique=true];name;navigationNode(&nodeRef);styleClass;&componentRef
+
+# Account Navigation Bar Component
+INSERT_UPDATE AccountNavigationComponent;$contentCV[unique=true];uid[unique=true];name;navigationNode(&nodeRef);styleClass;&componentRef
+
+# CMS Language and Currency Component
+INSERT_UPDATE LanguageCurrencyComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+# CMS Store Finder Component
+INSERT_UPDATE StoreFinderComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+# CMS Account Control Component
+INSERT_UPDATE AccountControlComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+# CMS Product List Component
+INSERT_UPDATE CMSProductListComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+# CMS Product Grid Component
+INSERT_UPDATE ProductGridComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+# CMS Search Results List Component
+INSERT_UPDATE SearchResultsListComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+# CMS Search Results Grid Component
+INSERT_UPDATE SearchResultsGridComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+# CMS tabs components
+INSERT_UPDATE CMSTabParagraphComponent;$contentCV[unique=true];uid[unique=true];name;visible;&componentRef
+
+INSERT_UPDATE CMSTabParagraphContainer;$contentCV[unique=true];uid[unique=true];name;visible;simpleCMSComponents(uid, $contentCV);&componentRef
+
+# CMS Footer Component
+INSERT_UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;&componentRef
+
+# CMS Paragraph Component (Contact information)
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+# CMS SubCategoryList Component
+INSERT_UPDATE SubCategoryListComponent;$contentCV[unique=true];uid[unique=true];&componentRef
+
+# CMS ProductReferences Components
+INSERT_UPDATE ProductReferencesComponent;$contentCV[unique=true];uid[unique=true];name;productReferenceTypes(code);maximumNumberProducts;&componentRef
+
+# CMS ProductAddToCart Components
+INSERT_UPDATE ProductAddToCartComponent;$contentCV[unique=true];uid[unique=true];name;actions(&actionRef);&componentRef
+
+# CMS VariantSelector Components
+INSERT_UPDATE ProductVariantSelectorComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+# CMS CartSuggestion Components
+INSERT_UPDATE CartSuggestionComponent;$contentCV[unique=true];uid[unique=true];name;productReferenceTypes(code);maximumNumberProducts;filterPurchased;&componentRef
+
+# CMS SearchBox Components
+INSERT_UPDATE SearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+# Actions
+# CMS Action Restrictions
+INSERT_UPDATE CMSActionRestriction;$contentCV[unique=true];uid[unique=true];name;
+
+# CMS AddToCart Action
+INSERT_UPDATE AddToCartAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
+
+# CMS PickUpInStoreAction Action
+INSERT_UPDATE PickUpInStoreAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
+
+# CMS ShareOnSocialNetwork Action
+INSERT_UPDATE ShareOnSocialNetworkAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid, $contentCV)
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+
+# Category Page Restrictions
+INSERT_UPDATE CMSCategoryRestriction;$contentCV[unique=true];uid[unique=true];name;categories(code, $productCV)
+
+# Category Pages
+INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved'];previewImage(code, $contentCV);restrictions(uid,$contentCV)[default='MobileExperienceRestriction'];onlyOneRestrictionMustApply[default='false']
+
+# CMS Navigation Nodes #
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;children(uid,$contentCV)[mode=append]
+
+# CMS Navigation Nodes
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(uid, $contentCV);&nodeRef
+
+# Navigation Bar Component
+INSERT_UPDATE NavigationBarComponent;$contentCV[unique=true];uid[unique=true];navigationNode(&nodeRef);dropDownLayout(code)
+
+# Update CMS Footer Component with Nav Nodes
+INSERT_UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];navigationNodes(&nodeRef)
+
+# Preview Image for use in the CMS Cockpit for special ContentPages
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+
+# Site-wide Homepage
+UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];previewImage(code, $contentCV)
+
+# Functional Content Pages
+UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];previewImage(code, $contentCV)
+
+# Product Details Page
+UPDATE ProductPage;$contentCV[unique=true];uid[unique=true];previewImage(code, $contentCV)
+
+# Category Pages
+UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];previewImage(code, $contentCV)
+
+###### Homepage ######
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;&imageRef;folder(qualifier)[default='images']
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+
+INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef
+
+INSERT_UPDATE ProductFeatureComponent;$contentCV[unique=true];uid[unique=true];name;product(code,$productCV);&componentRef
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-homepage'];contentSlot(uid,$contentCV)[unique=true]
+
+###### FAQ Page ######
+
+# CMS Paragraph Component (Contact information)
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-faq'];contentSlot(uid,$contentCV)[unique=true]
+
+###### Terms And Conditions Page ######
+
+# CMS Paragraph Component (Contact information)
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-termsAndConditions'];contentSlot(uid,$contentCV)[unique=true];;;
+
+###### Camera Accessories and Supplies Category Landing Page ######
+
+INSERT_UPDATE CMSCategoryRestriction;$contentCV[unique=true];uid[unique=true];name;categories(code, $productCV)
+
+INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved'];previewImage(code, $contentCV);restrictions(uid,$contentCV)[default='MobileExperienceRestriction'];onlyOneRestrictionMustApply[default='false']
+
+INSERT_UPDATE CategoryFeatureComponent;$contentCV[unique=true];uid[unique=true];name;category(code, $productCV);&componentRef
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-CamerasAccessoriesAndSuppliesCategoryPage'];contentSlot(uid,$contentCV)[unique=true]
+
+###### Search Results Page ######
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-searchEmpty'];contentSlot(uid,$contentCV)[unique=true]
+
+###### Cart Page ######
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-cartPage'];contentSlot(uid,$contentCV)[unique=true]
+
+############Camcorder Category Banner###############
+INSERT_UPDATE CMSCategoryRestriction;$contentCV[unique=true];uid[unique=true];name;categories(code, $productCV)
+
+INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved'];previewImage(code, $contentCV);restrictions(uid,$contentCV)[default='MobileExperienceRestriction'];onlyOneRestrictionMustApply[default='false']
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-CamcorderCategoryPage'];contentSlot(uid,$contentCV)[unique=true]
+
+##############################################################
+
+
+############Digital Camera Category Banner###############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-DigitalCameras'];contentSlot(uid,$contentCV)[unique=true]
+
+##############################################################
+
+
+##############Cameras Category Banner###########################
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-Cameras'];contentSlot(uid,$contentCV)[unique=true]
+
+##########################################################################
+
+
+####################Store finder Digital Compacts Banner###########
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-storefinderPage'];contentSlot(uid,$contentCV)[unique=true]
+####################################################################
+
+#################### My account online save Banner###########
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-account'];contentSlot(uid,$contentCV)[unique=true]
+####################################################################
+
+
+############Digital Compacts Category###############
+INSERT_UPDATE CMSCategoryRestriction;$contentCV[unique=true];uid[unique=true];name;categories(code, $productCV)
+
+INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved'];previewImage(code, $contentCV);restrictions(uid,$contentCV)[default='MobileExperienceRestriction'];onlyOneRestrictionMustApply[default='false']
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-DigitalCompactsCategoryPage'];contentSlot(uid,$contentCV)[unique=true]
+##############################################################
+
+
+############Lens Banner###############
+INSERT_UPDATE CMSCategoryRestriction;$contentCV[unique=true];uid[unique=true];name;categories(code, $productCV)
+
+INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved'];previewImage(code, $contentCV);restrictions(uid,$contentCV)[default='MobileExperienceRestriction'];onlyOneRestrictionMustApply[default='false']
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-LensCategoryPage'];contentSlot(uid,$contentCV)[unique=true]
+##############################################################
+
+
+############SubCategoryList Component for Product List Page###############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-productList'];contentSlot(uid,$contentCV)[unique=true]
+####################################################################
+
+
+############SubCategoryList Component for Product Grid Page###############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-productGrid'];contentSlot(uid,$contentCV)[unique=true]
+####################################################################
+
+############Account bookmark components############
+
+INSERT_UPDATE AccountBookmarkComponent;$contentCV[unique=true];uid[unique=true];name;link(uid, $contentCV);&componentRef
+
+INSERT_UPDATE NavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(uid, $contentCV);&componentRef
+####################################################################
+
+############Account Page Components and Slots############
+
+INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];name;page;&componentRef
+
+INSERT_UPDATE BreadcrumbComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+####################################################################
+
+############Account payment detail page############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-payment-details'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############Account Order History############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-orders'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############Account Profile############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-profile'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############  Address Book ############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-address-book'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+
+############ Add Edit Address  ############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-add-edit-address'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############  Update Profile  ############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-update-profile'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############ Update Profile ############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-update-profile'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############ Update Email ############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-update-email'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############ Update Password ############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-updatePassword'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############ Account Order Detail ############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-order'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############ Customer Login ############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-login'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############ Customer Checkout Login ############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-checkout-login'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############ Customer Register ############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-register'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+
+############ Checkout Register ############
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mobile-checkout-register'];contentSlot(uid,$contentCV)[unique=true];;;
+####################################################################
+

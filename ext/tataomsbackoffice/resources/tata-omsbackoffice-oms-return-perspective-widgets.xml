@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widgets>
+
+    <widget-extension widgetId="backofficeMainSlot">
+
+
+<!-- Added by sana to remove i.e. overriding the original widget.xml coming from oms ext-->
+<remove widgetId="returnBackofficePerspective"/>
+
+        <widget id="returnBackofficePerspective" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
+                slotId="perspectives" title="RETURN" template="false" access="omsadmin">
+            <widget id="returnExplorerTree" widgetDefinitionId="com.hybris.cockpitng.widgets.common.explorertree"
+                    slotId="leftSlot" template="false">
+                <widget id="returnExplorerTreeUnsavedStateHandler"
+                        widgetDefinitionId="com.hybris.oms.widgets.unsavedstatehandler"
+                        slotId="cockpitWidgetChildrenInvisible" template="false">
+                    <setting key="socketDataType_$T" value="com.hybris.backoffice.navigation.NavigationNode"
+                             type="String"/>
+                    <setting key="widgetStyleAttribute" value="" type="String"/>
+                    <setting key="widgetStyleClass" value="" type="String"/>
+                    <virtual-sockets/>
+                </widget>
+                <widget id="conditionEvaluator"
+                        widgetDefinitionId="com.hybris.cockpitng.conditionevaluator"
+                        slotId="cockpitWidgetChildrenInvisible" template="false">
+                    <setting key="expression" value="#root?.isChanged()" type="String"/>
+                    <setting key="socketDataType_$T" value="java.lang.Object" type="String"/>
+                    <setting key="widgetStyleAttribute" value="" type="String"/>
+                    <setting key="widgetStyleClass" value="" type="String"/>
+                    <virtual-sockets/>
+                </widget>
+                <widget id="returnPerspectiveSelector" widgetDefinitionId="com.hybris.cockpitng.widgets.common.multiplexer"
+                        slotId="cockpitWidgetChildrenInvisible" template="false">
+                    <setting key="widgetStyleAttribute" value="" type="String"/>
+                    <setting key="widgetStyleClass" value="" type="String"/>
+                    <setting key="returnSelected_expression" value="#root.getId().startsWith('return.')"
+                             type="String"/>
+                    <virtual-sockets>
+                        <output id="returnSelected" type="com.hybris.backoffice.navigation.NavigationNode"
+                                visibility="external"/>
+                    </virtual-sockets>
+                </widget>
+                <setting key="shortcutSectionRowHeight" value="28" type="Integer"/>
+                <setting key="explorerTreeConfigCtx" value="explorer-tree" type="String"/>
+                <setting key="widgetStyleAttribute" value="min-height: 30px; height:100%" type="String"/>
+                <setting key="refreshBtnVisiblility" value="false" type="Boolean"/>
+                <setting key="cacheTreemodel" value="false" type="Boolean"/>
+                <setting key="searchVisible" value="false" type="Boolean"/>
+                <setting key="#cp_invisibleContainer_visible" value="true" type="String"/>
+                <setting key="searchAsYouType" value="true" type="Boolean"/>
+                <setting key="shortcutSectionScrollAfter" value="8" type="Integer"/>
+                <setting key="shortcutSectionInitHeight" value="50" type="Integer"/>
+                <setting key="navigationVisible" value="false" type="Boolean"/>
+                <setting key="widgetStyleClass" value="" type="String"/>
+                <setting key="config.context.component" value="return-explorer-tree" type="String"/>
+                <setting key="shortcutSectionMaxHeight" value="274" type="Integer"/>
+                <setting key="dropAreaVisible" value="false" type="Boolean"/>
+                <virtual-sockets/>
+            </widget>
+            <widget id="returnPerspectiveContainer" widgetDefinitionId="com.hybris.backoffice.perspectiveContainer"
+                    slotId="centerSlot" template="false">
+                <widget id="returnPerspectiveWrapper" widgetDefinitionId="com.hybris.cockpitng.perspectivewrapper"
+                        slotId="perspectives" title="RETURN" template="true">
+                    <widget id="returnDefaultPerspective"
+                            widgetDefinitionId="com.hybris.cockpitng.widgets.common.multilayout" slotId="content"
+                            title="RETURN Perspective" template="false">
+                        <widget id="returnPerspectiveControllingWidget"
+                                widgetDefinitionId="com.hybris.cockpitng.omsnavigation"
+                                slotId="cockpitWidgetChildrenInvisible" template="false">
+                            <setting key="widgetStyleAttribute" value="" type="String"/>
+                            <setting key="widgetStyleClass" value="" type="String"/>
+                            <setting key="navigationCode" value="returns_navigation_code" type="String"/>
+                            <virtual-sockets/>
+                        </widget>
+                        <widget id="returnMainList" widgetDefinitionId="com.hybris.cockpitng.widgets.common.listview"
+                                slotId="secSlot" template="false">
+                            <widget id="returnEditorAreaMultiplexer"
+                                    widgetDefinitionId="com.hybris.cockpitng.widgets.common.multiplexer"
+                                    slotId="cockpitWidgetChildrenInvisible" template="false">
+                                <setting key="activateReturnDetails_expression"
+                                         value="(#root instanceof T(com.hybris.oms.domain.returns.Return))"
+                                         type="String"/>
+                                <setting key="activateCreateReturn_expression"
+                                         value="#root instanceof T(com.hybris.oms.ui.api.order.UIOrderDetails)"
+                                         type="String"/>
+                                <setting key="widgetStyleAttribute" value="" type="String"/>
+                                <setting key="default_output" value="default_output" type="String"/>
+                                <setting key="widgetStyleClass" value="" type="String"/>
+                                <virtual-sockets>
+                                    <output id="activateReturnDetails" type="com.hybris.oms.domain.returns.Return"
+                                            visibility="external"/>
+                                    <output id="activateCreateReturn" type="com.hybris.oms.ui.api.order.UIOrder"
+                                            visibility="external"/>
+                                    <output id="default_output" type="java.lang.Object" visibility="external"/>
+                                </virtual-sockets>
+                            </widget>
+                            <widget id="returnMainListUnsavedStateHandler"
+                                    widgetDefinitionId="com.hybris.oms.widgets.unsavedstatehandler"
+                                    slotId="cockpitWidgetChildrenInvisible" template="false">
+                                <setting key="socketDataType_$T" value="java.lang.Object" type="String"/>
+                                <setting key="widgetStyleAttribute" value="" type="String"/>
+                                <setting key="widgetStyleClass" value="" type="String"/>
+                                <virtual-sockets/>
+                            </widget>
+                            <setting key="treeActionsVisible" value="true" type="Boolean"/>
+                            <setting key="socketDataType_$T" value="" type="String"/>
+                            <setting key="widgetStyleAttribute" value="" type="String"/>
+                            <setting key="treeSelectableRows" value="false" type="Boolean"/>
+                            <setting key="#cp_invisibleContainer_visible" value="true" type="String"/>
+                            <setting key="titleVisible" value="true" type="Boolean"/>
+                            <setting key="treeViewInitiallyExpanded" value="false" type="Boolean"/>
+                            <setting key="fixedPageSize" value="false" type="Boolean"/>
+                            <setting key="maxPageSize" value="100" type="Integer"/>
+                            <setting key="configurationContext" value="listView" type="String"/>
+                            <setting key="availableModes" value="list" type="String"/>
+                            <setting key="pagingVisible" value="true" type="Boolean"/>
+                            <setting key="sortableListHeader" value="true" type="Boolean"/>
+                            <setting key="widgetStyleClass" value="" type="String"/>
+                            <setting key="listHeaderVisible" value="true" type="Boolean"/>
+                            <virtual-sockets/>
+                        </widget>
+                        <widget id="returnDefaulttabwidget"
+                                widgetDefinitionId="com.hybris.cockpitng.defaulttabwidget" slotId="thrdSlot"
+                                template="false">
+                            <widget id="returnEmptyEditor" widgetDefinitionId="com.hybris.oms.widgets.emptyselectioninfo" slotId="children" 
+                                    template="true">
+                                <instance-settings socketEventRoutingMode="LAST_USED">
+                                    <create onInit="true" reuseExisting="true">
+                                        <all-incoming-events/>
+                                    </create>
+                                    <close/>
+                                    <select onInit="true">
+                                        <all-incoming-events/>
+                                    </select>
+                                </instance-settings>
+                                <setting key="widgetStyleAttribute" value="" type="String"/>
+                                <setting key="widgetStyleClass" value="" type="String"/>
+                                <virtual-sockets>
+                                    <input id="default_input" type="java.lang.Object" visibility="external"/>
+                                </virtual-sockets>
+                            </widget>
+                            <widget id="returnEditor"
+                                    widgetDefinitionId="com.hybris.cockpitng.widgets.common.returneditor" template="true" slotId="children">
+                                <widget id="returnOrderLines" widgetDefinitionId="com.hybris.cockpitng.widgets.common.listview" 
+                                		title="title.returnOrderLines" template="false" slotId="return.editor.list">
+					                <setting key="treeActionsVisible" value="false" type="Boolean"/>
+					                <setting key="treeSelectableRows" value="false" type="Boolean"/>
+					                <setting key="widgetStyleAttribute" value="" type="String"/>
+					                <setting key="titleVisible" value="false" type="Boolean"/>
+					                <setting key="treeViewInitiallyExpanded" value="false" type="Boolean"/>
+					                <setting key="fixedPageSize" value="false" type="Boolean"/>
+					                <setting key="maxPageSize" value="100" type="Integer"/>
+					                <setting key="configurationContext" value="listView" type="String"/>
+					                <setting key="availableModes" value="list" type="String"/>
+					                <setting key="pagingVisible" value="false" type="Boolean"/>
+					                <setting key="sortableListHeader" value="false" type="Boolean"/>
+					                <setting key="widgetStyleClass" value="" type="String"/>
+					                <setting key="listHeaderVisible" value="false" type="Boolean"/>
+					                <virtual-sockets>
+					                	<output id="returnableQuantityChange" type="java.util.Map" visibility="default"/>
+					                </virtual-sockets>
+					            </widget>
+					            <instance-settings socketEventRoutingMode="LAST_USED">
+                                    <create onInit="false" reuseExisting="true">
+                                        <all-incoming-events/>
+                                    </create>
+                                    <close/>
+                                    <select onInit="false">
+                                        <all-incoming-events/>
+                                    </select>
+                                </instance-settings>
+                                <setting key="headerVisible" value="true" type="Boolean"/>
+                                <setting key="handleUnsaved" value="false" type="Boolean"/>
+                                <setting key="mold" value="edit" type="String"/>
+                                <setting key="widgetStyleAttribute" value="" type="String"/>
+                                <setting key="widgetStyleClass" value="" type="String"/>
+                                <setting key="type" value="" type="String"/>
+                                <virtual-sockets>
+                                	<output id="selectAllReturnsNode"
+                                            type="com.hybris.backoffice.navigation.NavigationNode"
+                                            visibility="external"/>
+                                    <output id="initReturnSearch"
+                                            type="com.hybris.cockpitng.widgets.common.searchwidget.query.SearchQuery"
+                                            visibility="external"/>
+                                    <output id="selectReturnItem"
+                                            type="com.hybris.oms.domain.returns.Return"
+                                            visibility="external"/>
+                                </virtual-sockets>
+                            </widget>
+                            <setting key="widgetStyleAttribute" value="background: #EDEDED" type="String"/>
+                            <setting key="widgetStyleClass" value="" type="String"/>
+                            <setting key="#cp_invisibleContainer_visible" value="true" type="String"/>
+                            <setting key="type" value="flow" type="String"/>
+                            <virtual-sockets/>
+                        </widget>
+                        <widget id="returnSearchWidgetAdapter"
+                                widgetDefinitionId="com.hybris.cockpitng.omssearchwidgetadapter"
+                                slotId="cockpitWidgetChildrenInvisible" template="false">
+                            <setting key="widgetStyleAttribute" value="" type="String"/>
+                            <setting key="widgetStyleClass" value="" type="String"/>
+                            <virtual-sockets/>
+                        </widget>
+                        <widget id="returnSearchWidget"
+                                widgetDefinitionId="com.hybris.cockpitng.searchwidget" slotId="firstSlot"
+                                template="false">
+                            <widget id="referenceSelector"
+                                    widgetDefinitionId="com.hybris.cockpitng.widgets.common.referenceselector.oms"
+                                    slotId="cockpitWidgetChildrenInvisible" title="add.location" template="true">
+                                <instance-settings socketEventRoutingMode="LAST_USED">
+                                    <create onInit="false" reuseExisting="true">
+                                        <incoming-events>
+                                            <socket-event id="referenceValueRequestInput"/>
+                                        </incoming-events>
+                                    </create>
+                                    <close>
+                                        <outgoing-events>
+                                            <socket-event id="closeOutput"/>
+                                            <socket-event id="referenceValuesOutput"/>
+                                        </outgoing-events>
+                                    </close>
+                                    <select onInit="false">
+                                        <incoming-events>
+                                            <socket-event id="referenceValueRequestInput"/>
+                                        </incoming-events>
+                                    </select>
+                                </instance-settings>
+                                <setting key="/06c6714f-0574-4077-a825-e3bc3ec12d6a/rightSwitchBtnVisible" value="false"
+                                         type="Boolean"/>
+                                <setting key="/06c6714f-0574-4077-a825-e3bc3ec12d6a/leftToolbarVisible" value="true"
+                                         type="Boolean"/>
+                                <setting key="_height" value="465px" type="String"/>
+                                <setting key="_width" value="600px" type="String"/>
+                                <setting key="/06c6714f-0574-4077-a825-e3bc3ec12d6a/rightToolbarVisible" value="true"
+                                         type="Boolean"/>
+                                <setting key="widgetStyleAttribute" value="" type="String"/>
+                                <setting key="widgetStyleClass" value="" type="String"/>
+                                <setting key="/06c6714f-0574-4077-a825-e3bc3ec12d6a/leftSwitchBtnVisible" value="false"
+                                         type="Boolean"/>
+                                <virtual-sockets/>
+                            </widget>
+                            <widget id="returnSearchWidgetLogic"
+                                    widgetDefinitionId="com.hybris.cockpitng.omssearchwidgetlogic"
+                                    slotId="cockpitWidgetChildrenInvisible" template="false">
+                                <setting key="widgetStyleAttribute" value="" type="String"/>
+                                <setting key="widgetStyleClass" value="" type="String"/>
+                                <virtual-sockets/>
+                            </widget>
+                            <setting key="widgetStyleAttribute" value="" type="String"/>
+                            <setting key="fireSearchAfterNLetter" value="3" type="Integer"/>
+                            <setting key="widgetStyleClass" value="" type="String"/>
+                            <setting key="#cp_invisibleContainer_visible" value="true" type="String"/>
+                            <virtual-sockets/>
+                        </widget>
+                        <setting key="widgetStyleAttribute" value="" type="String"/>
+                        <setting key="#cp_invisibleContainer_visible" value="false" type="String"/>
+                        <setting key="northSplittable" value="false" type="Boolean"/>
+                        <setting key="northExpandedHeight" value="230px" type="String"/>
+                        <setting key="north2ExpandedHeight" value="40%" type="String"/>
+                        <setting key="toolbarDisabled" value="true" type="Boolean"/>
+                        <setting key="centerCollapsedHeight" value="45%" type="String"/>
+                        <setting key="centerExpandedHeight" value="45%" type="String"/>
+                        <setting key="northCollapsedHeightInPx" value="108" type="Integer"/>
+                        <setting key="adminModeSclass" value="cng-adminmode" type="String"/>
+                        <setting key="widgetStyleClass" value="" type="String"/>
+                        <setting key="popupTitle" value="Edit" type="String"/>
+                        <setting key="hideSplitterWhenCollapsed" value="true" type="Boolean"/>
+                        <virtual-sockets>
+                            <input id="activate" type="java.lang.Object" visibility="external"/>
+                        </virtual-sockets>
+                    </widget>
+                    <instance-settings socketEventRoutingMode="LAST_USED">
+                        <create onInit="false" reuseExisting="true">
+                            <all-incoming-events/>
+                        </create>
+                        <close/>
+                        <select onInit="false">
+                            <all-incoming-events/>
+                        </select>
+                    </instance-settings>
+                    <setting key="socketDataType_$T" value="com.hybris.backoffice.navigation.NavigationNode"
+                             type="String"/>
+                    <setting key="widgetStyleAttribute" value="" type="String"/>
+                    <setting key="widgetStyleClass" value="" type="String"/>
+                    <virtual-sockets/>
+                </widget>
+                <setting key="southDisabled" value="true" type="Boolean"/>
+                <setting key="autoCloseInactive" value="false" type="Boolean"/>
+                <setting key="opaqueBG" value="true" type="Boolean"/>
+                <setting key="widgetStyleAttribute" value="" type="String"/>
+                <setting key="eastWidth" value="0px" type="String"/>
+                <setting key="widgetStyleClass" value="" type="String"/>
+                <setting key="northHeight" value="0px" type="String"/>
+                <setting key="#cp_invisibleContainer_visible" value="true" type="String"/>
+                <setting key="westWidth" value="300px" type="String"/>
+                <setting key="eastDisabled" value="true" type="String"/>
+                <virtual-sockets/>
+            </widget>
+            <setting key="opaqueBG" value="true" type="Boolean"/>
+            <setting key="southHeight" value="50px" type="String"/>
+            <setting key="widgetStyleAttribute" value="" type="String"/>
+            <setting key="#cp_invisibleContainer_visible" value="false" type="String"/>
+            <setting key="northHeight" value="0px" type="String"/>
+            <setting key="westBorder" value="normal" type="String"/>
+            <setting key="northBorder" value="none" type="String"/>
+            <setting key="eastDisabled" value="true" type="Boolean"/>
+            <setting key="southBorder" value="none" type="String"/>
+            <setting key="southDisabled" value="true" type="Boolean"/>
+            <setting key="eastBorder" value="none" type="String"/>
+            <setting key="northDisabled" value="true" type="Boolean"/>
+            <setting key="westCollapsible" value="true" type="Boolean"/>
+            <setting key="eastWidth" value="25%" type="String"/>
+            <setting key="widgetStyleClass" value="oms-backoffice-perspective" type="String"/>
+            <setting key="southCollapsible" value="true" type="Boolean"/>
+            <setting key="northCollapsible" value="true" type="Boolean"/>
+            <setting key="border" value="none" type="String"/>
+            <setting key="westWidth" value="300px" type="String"/>
+            <setting key="perspectiveImageUrl" value="cng/images/return-icon.png" type="String"/>
+            <setting key="centerBorder" value="none" type="String"/>
+            <setting key="westDisabled" value="false" type="Boolean"/>
+            <setting key="eastCollapsible" value="true" type="Boolean"/>
+            <virtual-sockets/>
+        </widget>
+
+    </widget-extension>
+    
+    <widget-connection sourceWidgetId="returnExplorerTree" outputId="nodeSelected"
+                       targetWidgetId="returnExplorerTreeUnsavedStateHandler" inputId="itemSelected"/>
+    <widget-connection sourceWidgetId="returnExplorerTreeUnsavedStateHandler" outputId="previousItem"
+                       targetWidgetId="returnExplorerTree" inputId="nodeSelected"/>
+    <widget-connection sourceWidgetId="conditionEvaluator" outputId="true"
+                       targetWidgetId="returnExplorerTreeUnsavedStateHandler" inputId="setUnsavedChanges"/>
+    <widget-connection sourceWidgetId="conditionEvaluator" outputId="false"
+                       targetWidgetId="returnExplorerTreeUnsavedStateHandler" inputId="clearUnsavedChanges"/>
+    <widget-connection sourceWidgetId="returnMainListUnsavedStateHandler" outputId="unsavedChangesCleared"
+                       targetWidgetId="returnExplorerTreeUnsavedStateHandler" inputId="clearUnsavedChanges"/>
+    <widget-connection sourceWidgetId="returnExplorerTreeUnsavedStateHandler" outputId="unsavedChangesCleared"
+                       targetWidgetId="returnMainListUnsavedStateHandler" inputId="clearUnsavedChanges"/>
+    <widget-connection sourceWidgetId="returnExplorerTreeUnsavedStateHandler" outputId="itemSelected"
+                       targetWidgetId="returnPerspectiveSelector" inputId="element"/>
+    <widget-connection sourceWidgetId="returnEditor" outputId="changedObject"
+                       targetWidgetId="conditionEvaluator" inputId="input"/>
+    <widget-connection sourceWidgetId="conditionEvaluator" outputId="true"
+                       targetWidgetId="returnMainListUnsavedStateHandler" inputId="setUnsavedChanges"/>
+    <widget-connection sourceWidgetId="conditionEvaluator" outputId="false"
+                       targetWidgetId="returnMainListUnsavedStateHandler" inputId="clearUnsavedChanges"/>
+    <widget-connection sourceWidgetId="returnPerspectiveSelector" outputId="returnSelected"
+                       targetWidgetId="returnPerspectiveWrapper" inputId="activate"/>
+    <widget-connection sourceWidgetId="returnPerspectiveWrapper" outputId="initialize"
+                       targetWidgetId="returnPerspectiveControllingWidget" inputId="nodeSelected"/>
+    <widget-connection sourceWidgetId="returnSearchWidget" outputId="headerClicked"
+                       targetWidgetId="returnDefaultPerspective" inputId="toggleNorth"/>
+    <widget-connection sourceWidgetId="returnMainList" outputId="updated" targetWidgetId="returnPerspectiveControllingWidget"
+                       inputId="refreshAndActivateItem"/>
+    <widget-connection sourceWidgetId="returnMainList" outputId="created" targetWidgetId="returnPerspectiveControllingWidget"
+                       inputId="refreshAndActivateItem"/>
+    <widget-connection sourceWidgetId="returnMainList" outputId="deleted" targetWidgetId="returnPerspectiveControllingWidget"
+                       inputId="refreshAndCloseItem"/>
+    <widget-connection sourceWidgetId="returnMainListUnsavedStateHandler" outputId="unsavedChangesCleared"
+                       targetWidgetId="returnPerspectiveControllingWidget" inputId="refresh"/>
+    <widget-connection sourceWidgetId="returnMainListUnsavedStateHandler" outputId="itemSelected"
+                       targetWidgetId="returnPerspectiveControllingWidget" inputId="activateItem"/>
+    <widget-connection sourceWidgetId="returnEditor" outputId="updated"
+                       targetWidgetId="returnPerspectiveControllingWidget" inputId="refreshAndActivateItem"/>
+    <widget-connection sourceWidgetId="returnEditor" outputId="created"
+                       targetWidgetId="returnPerspectiveControllingWidget" inputId="refreshAndActivateItem"/>
+    <widget-connection sourceWidgetId="returnEditor" outputId="deleted"
+                       targetWidgetId="returnPerspectiveControllingWidget" inputId="refreshAndCloseItem"/>
+    <widget-connection sourceWidgetId="returnPerspectiveControllingWidget" outputId="refresh"
+                       targetWidgetId="returnSearchWidgetLogic" inputId="refresh"/>
+    <widget-connection sourceWidgetId="returnPerspectiveControllingWidget" outputId="activateItem"
+                       targetWidgetId="returnEditorAreaMultiplexer" inputId="element"/>
+    <widget-connection sourceWidgetId="returnPerspectiveControllingWidget" outputId="selectItem"
+                       targetWidgetId="returnMainList" inputId="selectItem"/>
+    <widget-connection sourceWidgetId="returnPerspectiveControllingWidget" outputId="clear"
+                       targetWidgetId="returnMainList" inputId="resultPage"/>
+    <widget-connection sourceWidgetId="returnPerspectiveControllingWidget" outputId="initialize"
+                       targetWidgetId="returnSearchWidgetAdapter" inputId="nodeSelected"/>
+    <widget-connection sourceWidgetId="returnSearchWidget" outputId="result"
+                       targetWidgetId="returnMainList" inputId="resultPage"/>
+    <widget-connection sourceWidgetId="returnSearchWidgetLogic" outputId="result"
+                       targetWidgetId="returnMainList" inputId="resultPage"/>
+    <widget-connection sourceWidgetId="returnMainListUnsavedStateHandler" outputId="previousItem" targetWidgetId="returnMainList"
+                       inputId="selectItem"/>
+    <widget-connection sourceWidgetId="returnMainList" outputId="pagingState"
+                       targetWidgetId="returnSearchWidget" inputId="pagingState"/>
+    <widget-connection sourceWidgetId="returnMainList" outputId="com.hybris.oms.actions.create.location.success"
+                       targetWidgetId="returnEditor" inputId="toCreate"/>
+    <widget-connection sourceWidgetId="returnMainList" outputId="selectedItem" targetWidgetId="returnMainListUnsavedStateHandler"
+                       inputId="itemSelected"/>
+    <widget-connection sourceWidgetId="returnEditorAreaMultiplexer" outputId="default_output" targetWidgetId="returnEmptyEditor"
+                       inputId="default_input"/>
+    <widget-connection sourceWidgetId="returnSearchWidgetAdapter" outputId="initialSearchQuery"
+                       targetWidgetId="returnSearchWidget" inputId="initialSearchQuery"/>
+    <widget-connection sourceWidgetId="returnSearchWidgetAdapter" outputId="initialSearchQuery"
+                       targetWidgetId="returnSearchWidget" inputId="initialSearchQuery"/>
+    <widget-connection sourceWidgetId="referenceSelector" outputId="referenceValuesOutput"
+                       targetWidgetId="returnSearchWidget" inputId="referenceValues"/>
+    <widget-connection sourceWidgetId="returnSearchWidget" outputId="searchQuery"
+                       targetWidgetId="returnSearchWidgetLogic" inputId="searchQuery"/>
+    <widget-connection sourceWidgetId="returnSearchWidget" outputId="referenceValueRequest"
+                       targetWidgetId="referenceSelector" inputId="referenceValueRequestInput"/>
+    <widget-connection sourceWidgetId="returnEditorAreaMultiplexer" outputId="activateReturnDetails"
+                       targetWidgetId="returnEditor" inputId="toEdit"/>
+    <widget-connection sourceWidgetId="returnEditorAreaMultiplexer" outputId="activateCreateReturn"
+                       targetWidgetId="returnEditor" inputId="toCreate"/>
+    <widget-connection sourceWidgetId="returnEditor" outputId="elements"
+    				   targetWidgetId="returnOrderLines" inputId="resultPage"/>
+    <widget-connection sourceWidgetId="returnEditor" outputId="returnState" 
+    				   targetWidgetId="conditionEvaluator" inputId="input"/>
+    <widget-connection sourceWidgetId="returnOrderLines" outputId="returnableQuantityChange"
+    				   targetWidgetId="returnEditor" inputId="returnableQuantityChange"/>
+    <widget-connection sourceWidgetId="returnEditor" outputId="selectAllReturnsNode"
+                       targetWidgetId="returnExplorerTree" inputId="nodeSelected"/>
+    <widget-connection sourceWidgetId="returnEditor" outputId="initReturnSearch"
+                       targetWidgetId="returnSearchWidget" inputId="initialSearchQuery"/>
+    <widget-connection sourceWidgetId="returnEditor" outputId="selectReturnItem"
+                       targetWidgetId="returnMainList" inputId="selectItem"/>
+</widgets>
+

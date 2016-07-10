@@ -1,0 +1,72 @@
+<html>
+	<head>
+		<title>Order placed subjected to terms due to medium risk/High risk</title>
+	</head>
+	<body bgcolor="#ffffff">
+	
+	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#ffffff">
+		<tr style="height:50px;">
+			<td>&emsp;</td>
+		</tr>
+		<tr>
+			<td align="center" valign="top">
+				<table width="900" border="6" align="center" cellpadding="0" cellspacing="0" bordercolor="#CED8F6">
+					<tr>
+						<td align="center" valign="top" bgcolor="#ffffff">
+							<table width="850" cellpadding="0" cellspacing="0" border="0" align="center">
+								<tr style="height:30px;">
+									<td valign="middle">&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left" valign="top">
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Hi {$ctx.customerName},</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">As we had informed you a while back, your recent Tata Mall order{$ctx.orderReferenceNumber} was flagged as carrying some level of risk. Our colleagues from the finance and security studied this in greater detail, but unfortunately we are unable to accept your order.</font></p>
+									    <p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+ 										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif"><p>If you would like further clarifications, please contact us @ <a href="mailto:www.tatamall.com" style="color: #11309F;">www.tatamall.com </a></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif"><p>Sorry for the inconvenience, but as you would agree, safety first! We look forward to the opportunity of serving you once again. Do visit tatamall.com </p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Yours Truly,</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Tata Mall Team</font></p>
+										
+										<p>
+											<table width="40%">
+												<tr><td>---------------------------------------------------</td></tr>
+												<tr><td><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Tata Mall.... The Joy of Shopping</font></td></tr>
+												<tr>
+													<td>
+														<font color="#000" size="2" face="Arial, Helvetica, sans-serif">
+															<a href="mailto:www.tatamall.com" style="color: #11309F;">www.tatamall.com </a>
+														</font>
+													</td>
+												</tr>
+												<tr><td>---------------------------------------------------</td></tr>
+											</table>
+										</p>
+										
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										
+										<p><font color="#848484" size="2" face="Arial, Helvetica, sans-serif">
+											This email can't receive replies. For more information, visit Tata Mall’s Customer First Centre (hyperlinked to customer care page on site) or write to us at support@tatamall.com
+					                       </font></p>
+									</td>
+								</tr>
+								<tr>	
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+</body>
+</html>

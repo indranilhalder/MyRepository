@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2015 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd"
+       default-lazy-init="true">
+
+    <context:annotation-config/>
+
+    <alias name="defaultTmpProductCacheRegion" alias="tmpProductCacheRegion"/>
+    <bean name="defaultTmpProductCacheRegion" class="de.hybris.platform.regioncache.region.impl.EHCacheRegion">
+        <constructor-arg name="name" value="tmpProductCacheRegion" />
+        <constructor-arg name="maxEntries" value="${regioncache.tmpproductregion.size}" />
+        <constructor-arg name="evictionPolicy" value="${regioncache.tmpproductregion.evictionpolicy}" />
+        <constructor-arg name="statsEnabled" value="${tmpproductregion.cache.enabled}" />
+        <constructor-arg name="exclusiveComputation" value="${regioncache.exclusivecomputation}" />
+        <constructor-arg name="ttlSeconds" value="${regioncache.tmpproductregion.ttl}"/>
+        <property name="handledTypes">
+            <array>
+                <value>1</value>
+                <value>607</value>
+                <value>608</value>
+                <value>610</value>
+                <value>611</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean id="tmpProductCacheRegionRegistrar" class="de.hybris.platform.regioncache.region.CacheRegionRegistrar" c:region-ref="defaultTmpProductCacheRegion" />
+
+	<!--Start  TIS-3167 -->
+	<bean id="productCacheRegionMBean" class="de.hybris.platform.jmx.mbeans.impl.RegionCacheMBeanImpl">
+		<property name="beanInterface" value="de.hybris.platform.jmx.mbeans.RegionCacheMBean"/>
+		<property name="jmxPath" value="region=TMP Product Region Cache"/>
+		<property name="cacheRegion" ref="defaultTmpProductCacheRegion"/>
+	</bean>
+	<!--End  TIS-3167 -->
+</beans>

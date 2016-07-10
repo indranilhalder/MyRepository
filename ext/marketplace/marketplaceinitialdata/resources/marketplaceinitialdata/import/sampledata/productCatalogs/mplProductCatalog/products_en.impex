@@ -1,0 +1,21 @@
+# Macros / Replacement Parameter definitions
+$productCatalog=mplProductCatalog
+$productCatalogName=Marketplace Product Catalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+
+$lang=en
+
+
+UPDATE Product;code[unique=true];$catalogVersion;name[lang=$lang];summary[lang=$lang];description[lang=$lang];
+;987654322;;Blue Medium Mens formal shirt  - Van Heusen;Van Heusen is a premium lifestyle brand for men, women and youth;Van Heusen is a premium lifestyle brand for men, women and youth;
+;987654321;;White Medium Mens formal shirt  - Van Heusen;Van Heusen is a premium lifestyle brand for men, women and youth;Van Heusen is a premium lifestyle brand for men, women and youth;
+;987654323;;White Large Mens formal shirt  - Van Heusen;Van Heusen is a premium lifestyle brand for men, women and youth;Van Heusen is a premium lifestyle brand for men, women and youth;
+;987654324;;White Medium Mens formal shirt  - Van Heusen;Van Heusen is a premium lifestyle brand for men, women and youth;Van Heusen is a premium lifestyle brand for men, women and youth;
+;98765432;;Van Heusen - Mens formal shirt Parent - Van Heusen;Van Heusen is a premium lifestyle brand for men, women and youth;Van Heusen is a premium lifestyle brand for men, women and youth;
+;987654331;;Black Medium Mens formal Trouser  - nike;nike is a premium lifestyle brand for men, women and youth;nike is a premium lifestyle brand for men, women and youth;
+;987654332;;Brown Medium Mens formal Trouser  - nike;nike is a premium lifestyle brand for men, women and youth;nike is a premium lifestyle brand for men, women and youth;
+;98765433;;Van Heusen - Mens formal Trouser Parent - Van Heusen;Van Heusen is a premium lifestyle brand for men, women and youth;Van Heusen is a premium lifestyle brand for men, women and youth;
+;987654335;;Yellow Reebok Boys Swimmer wear;Yellow Reebok Boys Swimmer wear;Yellow Reebok Boys Swimmer wear;
+;987654335;;Yellow Reebok Boys Swimmer wear;Yellow Reebok Boys Swimmer wear;Yellow Reebok Boys Swimmer wear;
+;987654335;;Red Reebok Boys Swimmer wear;Red Reebok Boys Swimmer wear;Red Reebok Boys Swimmer wear;
+;987654335;;Red Reebok Boys Swimmer wear;Red Reebok Boys Swimmer wear;Red Reebok Boys Swimmer wear;

@@ -1,0 +1,23 @@
+<widget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.zkoss.org/2005/zul">
+<style>
+.headlabel_hl{
+text-align:center;
+padding:10px 0px 10px 0px;
+background-color:#4D82A6;
+color:white;
+
+}
+.label_css{
+font-size:15px;
+}
+</style>
+   <hlayout style="height:80px" sclass="headlabel_hl" >
+	 <label sclass="label_css"  value="Pin Code Serviceability And Logistics Report"/>   
+	</hlayout>
+	<div style="position:fixed;top:80px;bottom:0px;overflow:auto">
+	<listbox id="listview" 
+		emptyMessage="No result found in the result">
+	</listbox>
+	</div>
+</widget>

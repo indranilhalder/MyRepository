@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ [y] hybris Platform
+  ~
+  ~ Copyright (c) 2000-2015 hybris AG
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information of hybris
+  ~ ("Confidential Information"). You shall not disclose such Confidential
+  ~ Information and shall use it only in accordance with the terms of the
+  ~ license agreement you entered into with hybris.
+  -->
+
+<widget-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd"
+	id="com.hybris.oms.logisticsContactsEditor">
+	<name>logistic editor Widget</name>
+	<view src="logisticscontactseditorwidget.zul" />
+	<sockets>
+	<input id="isactivecreate_contact"  type="java.lang.Boolean"/>
+	<input id="isactiveedit_contact"  type="java.lang.Object"/>
+	<input id="contact_disble_contact_editor"  type="java.lang.Boolean"/>
+	<output id="refreshlogisticscontactlist"  type="java.lang.Boolean"/>
+	<output id="refreshlogisticscontactlist_edit"  type="java.lang.Boolean"/>
+	
+	</sockets>
+ <controller class="com.hybris.oms.tata.logisticscontacts.LogisticsContactsEditor" />  
+</widget-definition>

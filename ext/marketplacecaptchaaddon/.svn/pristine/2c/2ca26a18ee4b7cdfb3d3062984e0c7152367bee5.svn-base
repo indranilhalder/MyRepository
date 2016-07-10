@@ -1,0 +1,130 @@
+/*
+ * [y] hybris Platform
+ *
+ * Copyright (c) 2000-2014 hybris AG
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information of hybris
+ * ("Confidential Information"). You shall not disclose such Confidential
+ * Information and shall use it only in accordance with the terms of the
+ * license agreement you entered into with hybris.
+ *
+ *  
+ */
+package com.tisl.mpl.controllers.pages;
+
+import de.hybris.platform.acceleratorservices.config.SiteConfigService;
+import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.tisl.mpl.security.captcha.MplRecaptchaImpl;
+import com.tisl.mpl.security.captcha.MplRecaptchaResponse;
+
+
+/**
+ * This controller responsible to render captcha widget
+ */
+@Controller
+@RequestMapping(value = "/login/captcha")
+public class CaptchaPageController
+{
+	@Autowired
+	private SessionService sessionService;
+	@Autowired
+	private BaseStoreService baseStoreService;
+	@Autowired
+	private SiteConfigService siteConfigService;
+	private static final String RECAPTCHA_RESPONSE_FIELD_PARAM = "recaptcha_response_field";
+	private static final String RECAPTCHA_CHALLENGE_FIELD_PARAM = "recaptcha_challenge_field";
+
+	private static final String RECAPTCHA_PRIVATE_KEY_PROPERTY = "recaptcha.privatekey";
+	private static final String RECAPTCHA_PUBLIC_KEY_PROPERTY = "recaptcha.publickey";
+
+
+
+	@RequestMapping(value = "/widget/{widgetName:.*}", method = RequestMethod.GET)
+	public String getWidget(@PathVariable("widgetName") final String widgetName, final Model model,
+			final HttpServletRequest request)
+	{
+		return "addon:/marketplacecaptchaaddon/pages/" + widgetName;
+	}
+
+	@RequestMapping(value = "/savedata/{responseFieldValue:.*}" + "/challenge/" + "{challengeFieldValue:.*}", method = RequestMethod.GET)
+	public @ResponseBody
+	String saveData(@PathVariable("responseFieldValue") final String responseFieldValue,
+			@PathVariable("challengeFieldValue") final String challengeFieldValue, final HttpServletRequest request)
+	{
+		final boolean captcaEnabledForCurrentStore = isCaptcaEnabledForCurrentStore();
+		if (captcaEnabledForCurrentStore)
+		{
+			request.setAttribute("captcaEnabledForCurrentStore", Boolean.valueOf(captcaEnabledForCurrentStore));
+			request.setAttribute("recaptchaPublicKey", siteConfigService.getProperty(RECAPTCHA_PUBLIC_KEY_PROPERTY));
+			if ((StringUtils.isBlank(challengeFieldValue) || StringUtils.isBlank(responseFieldValue))
+					|| !checkAnswer(request, challengeFieldValue, responseFieldValue))
+			{
+				sessionService.setAttribute("recaptchaChallangeAnswered", Boolean.FALSE);
+			}
+			else
+			{
+				sessionService.setAttribute("recaptchaChallangeAnswered", Boolean.TRUE);
+			}
+		}
+		return resultOfCatpcha();
+
+	}
+
+	public String resultOfCatpcha()
+	{
+		if (sessionService.getAttribute("recaptchaChallangeAnswered") != null)
+		{
+			final Boolean boolean1 = sessionService.getAttribute("recaptchaChallangeAnswered");
+			if (boolean1.booleanValue())
+			{
+				sessionService.removeAttribute("recaptchaChallangeAnswered");
+				return "success";
+			}
+			else
+			{
+				sessionService.removeAttribute("recaptchaChallangeAnswered");
+				return "fail";
+			}
+		}
+		else
+		{
+			//LOG.info("not got session attribute");
+		}
+		return "fail";
+	}
+
+	protected boolean isCaptcaEnabledForCurrentStore()
+	{
+		final BaseStoreModel currentBaseStore = baseStoreService.getCurrentBaseStore();
+		return currentBaseStore != null && Boolean.TRUE.equals(currentBaseStore.getCaptchaCheckEnabled());
+	}
+
+	protected boolean checkAnswer(final HttpServletRequest request, final String challengeFieldValue,
+			final String responseFieldValue)
+	{
+
+		final MplRecaptchaImpl reCaptcha = new MplRecaptchaImpl();
+		reCaptcha.setPrivateKey(siteConfigService.getProperty(RECAPTCHA_PRIVATE_KEY_PROPERTY));
+		final MplRecaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(request.getRemoteAddr(), challengeFieldValue,
+				responseFieldValue);
+
+		return reCaptchaResponse.isValid();
+	}
+
+
+}

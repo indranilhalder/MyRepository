@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<widget xmlns="http://www.zkoss.org/2005/zul"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:w="http://www.zkoss.org/2005/zk/client"
+		xmlns:zk="http://www.zkoss.org/2005/zk"
+		xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+ 		height="100%">
+	<listbox id="listview" rows="6" emptyMessage="No result found in the result"
+		mold="paging" pagingPosition="top" pageSize="6">
+		<listhead>
+			<listheader label="DELIVERY MODE"></listheader>
+			<listheader label="CUT OFF TIME"></listheader>
+			<listheader label="DFM TAT"></listheader>
+			<listheader label="SELLER RESP TAT"></listheader>
+			<listheader label="HOTC TAT"></listheader>
+			<listheader label="SHIPMENT TAT"></listheader>
+		</listhead>
+	</listbox>
+	<label id="errorLabel"></label>
+
+</widget>

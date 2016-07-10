@@ -1,0 +1,1 @@
+# solr configurations will be available in this folder

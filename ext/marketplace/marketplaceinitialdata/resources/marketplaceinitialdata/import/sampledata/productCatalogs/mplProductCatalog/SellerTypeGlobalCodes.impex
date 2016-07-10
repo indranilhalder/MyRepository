@@ -1,0 +1,5 @@
+INSERT_UPDATE SellerTypeGlobalCodes;globalcode[unique=true];description
+;SLR_TYPE_PLT;Platinum
+;SLR_TYPE_GOLD;Gold
+;SLR_TYPE_SLVR;Silver
+;SLR_TYPE_TRST;Trusted

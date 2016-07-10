@@ -1,0 +1,91 @@
+#
+# Import Sample Customers
+# 
+$regulargroup=regulargroup
+$customergroup=customergroup
+
+$passwordEncoding=md5
+$defaultPassword=12341234
+$setPassword=@password[translator=de.hybris.platform.impex.jalo.translators.ConvertPlaintextToEncodedUserPasswordTranslator][default='$passwordEncoding:$defaultPassword']
+
+
+# Create Customer Group
+INSERT_UPDATE Usergroup;uid[unique=true];groups(uid)[mode=append]
+;$regulargroup;customergroup
+
+# Payment Modes
+INSERT_UPDATE StandardPaymentMode;code[unique=true];name[lang=de];name[lang=en];description[lang=de];description[lang=en];active;paymentinfotype(code)
+
+INSERT_UPDATE StandardPaymentModeValue;paymentmode(code)[unique=true];currency(isoCode)[unique=true];value;;;;
+
+INSERT_UPDATE DeliveryMode;code[unique=true];active;net;supportedpaymentmodes(code);
+
+
+# Sample customers
+INSERT_UPDATE Customer;originalUid[unique=true];uid[unique=true];title(code);name;description;sessionLanguage(isocode);sessionCurrency(isocode);groups(uid);$setPassword;&userId
+
+# Sample customer addresses
+INSERT_UPDATE Address;&addId;owner(&userId)[unique=true];streetname[unique=true];postalcode[unique=true];duplicate[unique=true];town;country(isocode);region(isocode);billingAddress;contactAddress;shippingAddress;unloadingAddress;firstname;lastname;email;gender(code);middlename;phone1;title(code);url;company;fax;department
+
+# Set default payment and shipping addresses for sample customers
+UPDATE Customer;uid[unique=true];defaultPaymentAddress(&addId);defaultShipmentAddress(&addId)
+
+
+INSERT_UPDATE Customer;uid[unique=true];originalUid;name;sessionLanguage(isocode);sessionCurrency(isocode);groups(uid);$setPassword;
+;acceptanceuser@test.com;AcceptanceUser@test.com;John Acceptance;en;USD;$customergroup;;
+
+INSERT_UPDATE Address;owner(Customer.uid)[unique=true];streetname[unique=true];streetnumber[unique=true];postalcode[unique=true];duplicate[unique=true];town;country(isocode);billingAddress;contactAddress;shippingAddress;unloadingAddress;lastname;firstname;email;gender(code);&addressID
+
+
+INSERT_UPDATE Customer;uid[unique=true];defaultPaymentaddress(&addressID);defaultShipmentAddress(&addressID)
+;acceptanceuser@test.com;231;231
+
+
+INSERT_UPDATE Order;code[unique=true];user(uid);date[dateformat=dd.MM.yyyy HH:mm];currency(isocode);net;deliveryMode(code[default='premium-gross']);paymentMode(code);Discounts(code);calculated;site(uid);store(uid);status(code)
+;acceptanceTestOrder1;acceptanceuser@test.com;17.04.2011 15:10;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder2;acceptanceuser@test.com;17.04.2011 15:12;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder3;acceptanceuser@test.com;17.04.2011 15:14;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder4;acceptanceuser@test.com;17.04.2011 15:16;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder5;acceptanceuser@test.com;17.04.2011 15:18;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder6;acceptanceuser@test.com;17.04.2011 15:20;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder7;acceptanceuser@test.com;17.04.2011 15:22;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder8;acceptanceuser@test.com;17.04.2011 15:24;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder9;acceptanceuser@test.com;17.04.2011 15:26;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder0;acceptanceuser@test.com;17.04.2011 15:28;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder10;acceptanceuser@test.com;17.04.2011 15:30;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder11;acceptanceuser@test.com;17.04.2011 15:32;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+;acceptanceTestOrder12;acceptanceuser@test.com;17.04.2011 15:34;USD;false;;advance;;false;electronics;electronics;CREATED
+"#%   impex.getLastImportedItem().setDeliveryAddress(impex.getLastImportedItem().getUser().getDefaultDeliveryAddress());impex.getLastImportedItem().setPaymentAddress(impex.getLastImportedItem().getUser().getDefaultPaymentAddress());";
+"#%   impex.getLastImportedItem().calculate();";
+
+
+INSERT_UPDATE OrderEntry;order(code)[unique=true];product(code,catalogVersion(catalog(id),version))[unique=true];quantity;calculated;unit(code);entryNumber;
+
+
+INSERT_UPDATE CreditCardPaymentInfo;code[unique=true];user(uid)[unique=true];ccOwner;number;type(code);validFromMonth;validFromYear;validToMonth;validToYear;subscriptionId;duplicate[default=false];saved[default=true]
+
+

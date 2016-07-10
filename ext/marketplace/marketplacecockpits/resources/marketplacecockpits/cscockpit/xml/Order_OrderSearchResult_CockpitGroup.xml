@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list-view unassigned-group-name="Other">
+	<group name="General">
+		<property qualifier="AbstractOrder.code" visible="true"/>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.OrderingDateColumn" name="Order date / time" visible="true">
+			<label key="cscockpit.widget.order.details.orderingdate" />
+		</custom>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerFirstNameColumn" name="Customer Name" visible="true">
+			<label key="cscockpit.widget.order.search.firstName" />
+		</custom>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerLastNameColumn" name="Customer Name" visible="true">
+			<label key="cscockpit.widget.order.search.lastName" />
+		</custom>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerEmailColum" name="Email" visible="true">
+			<label key="cscockpit.widget.order.details.email" />
+		</custom>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerPhoneColum" name="Mobile" visible="true">
+			<label key="cscockpit.widget.order.details.Phone" />
+		</custom>
+		<property qualifier="AbstractOrder.status" visible="true"/>
+		<property qualifier="AbstractOrder.totalPriceWithConv" visible="true"/>
+	</group>
+</list-view>

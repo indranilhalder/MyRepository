@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list-view>
+	<group name="General">
+		<group name="column">
+			<label key="config.general.transactionid" />
+
+			<group name="line">
+				<property qualifier="AbstractOrderEntry.transactionID"
+					visible="true" />
+			</group>
+		</group>
+		<group name="column">
+			<label key="config.general.product.invoice" />
+
+			<group name="line">
+				<property qualifier="AbstractOrderEntry.product.name"
+					visible="true" />
+			</group>
+		</group>
+		<!-- <group name="column"> <label key="config.general.USSID" /> <group 
+			name="line"> <property qualifier="AbstractOrderEntry.selectedUSSID" visible="true" 
+			/> </group> </group> -->
+		<group name="column">
+			<label key="config.general.sellerName" />
+			<group name="line">
+				<property qualifier="AbstractOrderEntry.sellerInfo"
+					visible="true" />
+			</group>
+		</group>
+		<group name="column">
+			<label key="config.general.orderlinestatus" />
+			<group name="line">
+				<custom
+					class="com.tisl.mpl.cockpits.services.config.impl.OrderStatusColumn"
+					name="OrderLine Status" visible="true">
+				</custom>
+			</group>
+		</group>
+	</group>
+</list-view>

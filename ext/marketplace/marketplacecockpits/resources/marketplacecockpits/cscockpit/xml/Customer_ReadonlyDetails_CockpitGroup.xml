@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list-view unassigned-group-name="Other">
+	<group name="General">
+		<property qualifier="Customer.type" visible="false"/>
+		<property qualifier="Principal.UID" visible="false" />
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerIdColumn" name="Customer ID" visible="true">
+			<label key="config.general.Id" /></custom>
+		<property qualifier="Customer.customerID" visible="false"/>
+		<property qualifier="Customer.creationTime" visible="false"/>
+	</group>
+</list-view>

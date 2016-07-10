@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widgets>
+
+    <widget-extension widgetId="backofficeMainSlot">
+    
+    
+      <remove widgetId="omsAdminBackofficePerspective"/>
+        <widget id="omsAdminBackofficePerspective" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
+                slotId="perspectives" title="OMS Admin" template="false" access="omsadmin">
+                
+                
+            <widget id="omaAdminExplorerTree" widgetDefinitionId="com.hybris.cockpitng.widgets.common.explorertree"
+                    slotId="leftSlot" template="false">
+                <setting key="shortcutSectionRowHeight" value="28" type="Integer"/>
+                <setting key="refreshBtnVisiblility" value="false" type="Boolean"/>
+                <setting key="widgetStyleAttribute" value="min-height: 30px; height:100%" type="String"/>
+                <setting key="cacheTreemodel" value="false" type="Boolean"/>
+                <setting key="searchVisible" value="false" type="Boolean"/>
+                <setting key="searchAsYouType" value="true" type="Boolean"/>
+                <setting key="shortcutSectionScrollAfter" value="8" type="Integer"/>
+                <setting key="shortcutSectionInitHeight" value="50" type="Integer"/>
+                <setting key="navigationVisible" value="false" type="Boolean"/>
+                <setting key="widgetStyleClass" value="" type="String"/>
+                <setting key="config.context.component" value="oms-admin-explorer-tree" type="String"/>
+                <setting key="shortcutSectionMaxHeight" value="274" type="Integer"/>
+                <setting key="dropAreaVisible" value="false" type="Boolean"/>
+                <virtual-sockets/>
+            </widget>
+            <widget id="omaAdminPerspectiveContainer" widgetDefinitionId="com.hybris.backoffice.perspectiveContainer"
+                    slotId="centerSlot" template="false">
+                <widget id="inventoryrules" widgetDefinitionId="com.hybris.oms.omsadmin.widgets.inventoryrules"
+                        slotId="perspectives" title="Inventory Rules" template="true">
+                    <instance-settings socketEventRoutingMode="LAST_USED">
+                        <create onInit="false" reuseExisting="true">
+                            <all-incoming-events/>
+                        </create>
+                        <close/>
+                        <select onInit="false">
+                            <all-incoming-events/>
+                        </select>
+                    </instance-settings>
+                    <setting key="widgetStyleAttribute" value="" type="String"/>
+                    <setting key="widgetStyleClass" value="" type="String"/>
+                    <virtual-sockets/>
+                </widget>
+                <widget id="atsconfigurations" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
+                        slotId="perspectives" title="ATS Configurations" template="true">
+                    <widget id="1fa81735-418b-429a-96ac-bea1dcee7c1d"
+                            widgetDefinitionId="com.hybris.oms.omsadmin.widgets.atslist" slotId="centerSlot"
+                            template="false">
+                        <setting key="widgetStyleAttribute" value="" type="String"/>
+                        <setting key="widgetStyleClass" value="" type="String"/>
+                        <virtual-sockets/>
+                    </widget>
+                    <widget id="033cb737-6218-4109-9e94-1ee121466d49"
+                            widgetDefinitionId="com.hybris.oms.omsadmin.widgets.atsconfiguration" slotId="bottomSlot"
+                            template="false">
+                        <setting key="widgetStyleAttribute" value="" type="String"/>
+                        <setting key="widgetStyleClass" value="" type="String"/>
+                        <virtual-sockets/>
+                    </widget>
+                    <instance-settings socketEventRoutingMode="LAST_USED">
+                        <create onInit="false" reuseExisting="true">
+                            <all-incoming-events/>
+                        </create>
+                        <close/>
+                        <select onInit="false">
+                            <all-incoming-events/>
+                        </select>
+                    </instance-settings>
+                    <setting key="opaqueBG" value="true" type="Boolean"/>
+                    <setting key="southHeight" value="50%" type="String"/>
+                    <setting key="widgetStyleAttribute" value="" type="String"/>
+                    <setting key="northHeight" value="0px" type="String"/>
+                    <setting key="westBorder" value="none" type="String"/>
+                    <setting key="northBorder" value="none" type="String"/>
+                    <setting key="eastDisabled" value="true" type="Boolean"/>
+                    <setting key="southBorder" value="none" type="String"/>
+                    <setting key="southDisabled" value="false" type="Boolean"/>
+                    <setting key="eastBorder" value="none" type="String"/>
+                    <setting key="eastWidth" value="50%" type="String"/>
+                    <setting key="northDisabled" value="true" type="Boolean"/>
+                    <setting key="westCollapsible" value="true" type="Boolean"/>
+                    <setting key="widgetStyleClass" value="" type="String"/>
+                    <setting key="southCollapsible" value="true" type="Boolean"/>
+                    <setting key="northCollapsible" value="true" type="Boolean"/>
+                    <setting key="border" value="none" type="String"/>
+                    <setting key="westWidth" value="300px" type="String"/>
+                    <setting key="westDisabled" value="true" type="Boolean"/>
+                    <setting key="centerBorder" value="none" type="String"/>
+                    <setting key="eastCollapsible" value="true" type="Boolean"/>
+                    <virtual-sockets/>
+                </widget>
+                <widget id="inventorystatuses" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
+                        slotId="perspectives" title="Inventory Statuses" template="true">
+                    <widget id="b2b6bb9f-c6bd-41bb-b903-6c64f5cdd64b"
+                            widgetDefinitionId="com.hybris.oms.omsadmin.widgets.inventorystatuslist" slotId="centerSlot"
+                            template="false">
+                        <setting key="widgetStyleAttribute" value="" type="String"/>
+                        <setting key="widgetStyleClass" value="" type="String"/>
+                        <virtual-sockets/>
+                    </widget>
+                    <widget id="b73dc2aa-7de5-41a1-ac33-d59b2af6b5f8"
+                            widgetDefinitionId="com.hybris.oms.omsadmin.widgets.inventorystatus" slotId="bottomSlot"
+                            template="false">
+                        <setting key="widgetStyleAttribute" value="" type="String"/>
+                        <setting key="widgetStyleClass" value="" type="String"/>
+                        <virtual-sockets/>
+                    </widget>
+                    <instance-settings socketEventRoutingMode="LAST_USED">
+                        <create onInit="false" reuseExisting="true">
+                            <all-incoming-events/>
+                        </create>
+                        <close/>
+                        <select onInit="false">
+                            <all-incoming-events/>
+                        </select>
+                    </instance-settings>
+                    <setting key="opaqueBG" value="true" type="Boolean"/>
+                    <setting key="southHeight" value="50%" type="String"/>
+                    <setting key="widgetStyleAttribute" value="" type="String"/>
+                    <setting key="northHeight" value="0px" type="String"/>
+                    <setting key="westBorder" value="none" type="String"/>
+                    <setting key="northBorder" value="none" type="String"/>
+                    <setting key="eastDisabled" value="true" type="Boolean"/>
+                    <setting key="southBorder" value="none" type="String"/>
+                    <setting key="southDisabled" value="false" type="Boolean"/>
+                    <setting key="eastBorder" value="none" type="String"/>
+                    <setting key="eastWidth" value="50%" type="String"/>
+                    <setting key="northDisabled" value="true" type="Boolean"/>
+                    <setting key="westCollapsible" value="true" type="Boolean"/>
+                    <setting key="widgetStyleClass" value="" type="String"/>
+                    <setting key="southCollapsible" value="true" type="Boolean"/>
+                    <setting key="northCollapsible" value="true" type="Boolean"/>
+                    <setting key="border" value="none" type="String"/>
+                    <setting key="westWidth" value="300px" type="String"/>
+                    <setting key="westDisabled" value="true" type="Boolean"/>
+                    <setting key="centerBorder" value="none" type="String"/>
+                    <setting key="eastCollapsible" value="true" type="Boolean"/>
+                    <virtual-sockets/>
+                </widget>
+                <widget id="tenantpreferences" widgetDefinitionId="com.hybris.oms.omsadmin.widgets.tenantpreferences"
+                        slotId="perspectives" title="Tenant Preferences" template="true">
+                    <instance-settings socketEventRoutingMode="LAST_USED">
+                        <create onInit="false" reuseExisting="true">
+                            <all-incoming-events/>
+                        </create>
+                        <close/>
+                        <select onInit="false">
+                            <all-incoming-events/>
+                        </select>
+                    </instance-settings>
+                    <setting key="widgetStyleAttribute" value="background-color: #FFFFFF;" type="String"/>
+                    <setting key="widgetStyleClass" value="" type="String"/>
+                    <virtual-sockets/>
+                </widget>
+                <widget id="sourcingstrategiessequence"
+                        widgetDefinitionId="com.hybris.oms.omsadmin.widgets.sourcingstrategies" slotId="perspectives"
+                        title="Sequencing of Sourcing Algorithms" template="true">
+                    <instance-settings socketEventRoutingMode="LAST_USED">
+                        <create onInit="false" reuseExisting="true">
+                            <all-incoming-events/>
+                        </create>
+                        <close/>
+                        <select onInit="false">
+                            <all-incoming-events/>
+                        </select>
+                    </instance-settings>
+                    <setting key="widgetStyleAttribute" value="background-color: #FFFFFF;" type="String"/>
+                    <setting key="widgetStyleClass" value="" type="String"/>
+                    <virtual-sockets/>
+                </widget>
+                <widget id="orderlinequantitystatusmanagement"
+                        widgetDefinitionId="com.hybris.oms.omsadmin.widgets.olqstatusmanagement" slotId="perspectives"
+                        title="Order Line Statuses" template="true">
+                    <instance-settings socketEventRoutingMode="LAST_USED">
+                        <create onInit="false" reuseExisting="true">
+                            <all-incoming-events/>
+                        </create>
+                        <close/>
+                        <select onInit="false">
+                            <all-incoming-events/>
+                        </select>
+                    </instance-settings>
+                    <setting key="widgetStyleAttribute" value="" type="String"/>
+                    <setting key="widgetStyleClass" value="" type="String"/>
+                    <virtual-sockets/>
+                </widget>
+                <widget id="attributeconfiguration"
+                        widgetDefinitionId="com.hybris.oms.cockpit.widgets.preferences.attribute.AttributeConfigurationVM"
+                        slotId="perspectives" title="Attribute Configuration" template="true">
+                    <instance-settings socketEventRoutingMode="LAST_USED">
+                        <create onInit="false" reuseExisting="true">
+                            <all-incoming-events/>
+                        </create>
+                        <close/>
+                        <select onInit="false">
+                            <all-incoming-events/>
+                        </select>
+                    </instance-settings>
+                    <setting key="widgetStyleAttribute" value="" type="String"/>
+                    <setting key="widgetStyleClass" value="" type="String"/>
+                    <virtual-sockets/>
+                </widget>
+                <setting key="autoCloseInactive" value="true" type="Boolean"/>
+                <setting key="widgetStyleAttribute" value="background: #EDEDED" type="String"/>
+                <setting key="widgetStyleClass" value="" type="String"/>
+                <virtual-sockets/>
+            </widget>
+            <setting key="opaqueBG" value="true" type="Boolean"/>
+            <setting key="southHeight" value="50px" type="String"/>
+            <setting key="widgetStyleAttribute" value="background-color: #EDEDED;" type="String"/>
+            <setting key="northHeight" value="0px" type="String"/>
+            <setting key="westBorder" value="none" type="String"/>
+            <setting key="northBorder" value="none" type="String"/>
+            <setting key="eastDisabled" value="true" type="Boolean"/>
+            <setting key="southBorder" value="none" type="String"/>
+            <setting key="southDisabled" value="true" type="Boolean"/>
+            <setting key="eastBorder" value="none" type="String"/>
+            <setting key="eastWidth" value="25%" type="String"/>
+            <setting key="westCollapsible" value="true" type="Boolean"/>
+            <setting key="northDisabled" value="true" type="Boolean"/>
+            <setting key="widgetStyleClass" value="oms-backoffice-perspective" type="String"/>
+            <setting key="southCollapsible" value="true" type="Boolean"/>
+            <setting key="northCollapsible" value="true" type="Boolean"/>
+            <setting key="border" value="normal" type="String"/>
+            <setting key="westWidth" value="300px" type="String"/>
+            <setting key="centerBorder" value="none" type="String"/>
+            <setting key="eastCollapsible" value="true" type="Boolean"/>
+            <setting key="perspectiveImageUrl" value="cng/images/admin-icon.png" type="String"/>
+            <virtual-sockets/>
+        </widget>
+
+    </widget-extension>
+
+
+    <widget-connection sourceWidgetId="omaAdminExplorerTree" outputId="nodeSelected"
+                       targetWidgetId="omaAdminPerspectiveContainer"
+                       inputId="selectPerspective"/>
+    <widget-connection sourceWidgetId="b2b6bb9f-c6bd-41bb-b903-6c64f5cdd64b" outputId="selectedStatus"
+                       targetWidgetId="b73dc2aa-7de5-41a1-ac33-d59b2af6b5f8" inputId="inventoryStatusEvent"/>
+    <widget-connection sourceWidgetId="1fa81735-418b-429a-96ac-bea1dcee7c1d" outputId="selectedFormula"
+                       targetWidgetId="033cb737-6218-4109-9e94-1ee121466d49" inputId="selectedFormula"/>
+</widgets>

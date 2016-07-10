@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list-view>
+	<group name="General">
+		<group name="column">
+			<label key="config.general.refundentry.orderLineId" />
+			<group name="line">
+				<property qualifier="AbstractOrderEntry.transactionID"
+					visible="true" />
+			</group>
+		</group>
+		<group name="column">
+			<label key="config.general.refundentry.product" />
+			<group name="line">
+				<property qualifier="AbstractOrderEntry.product.name"
+					visible="true" />
+			</group>
+		</group>
+		<!-- <group name="column"> <label key="config.general.refundentry.selectedUSSID" 
+			/> <group name="line"> <property qualifier="AbstractOrderEntry.selectedUSSID" 
+			visible="true" /> </group> </group> -->
+		<group name="column">
+			<label key="config.general.sellerName" />
+			<group name="line">
+				<custom
+					class="com.tisl.mpl.cockpits.services.config.impl.OrderSellerColumn"
+					name="Seller" visible="true">
+
+				</custom>
+			</group>
+		</group>
+	</group>
+</list-view>

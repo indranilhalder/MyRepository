@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-editor hideEmpty="true" hideReadOnly="true" groupCollections="false">
+  <template>
+    <![CDATA[
+        <table width="100%" style="margin:0px;padding:0px">
+            <tbody>
+                <tr>
+                    <td colspan="2"><div style="height:6px"/></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><div class="contentEditorHeader" style="background-color:#C3C3C3;font-size:11px;padding:3px;"><b>$label</b></div></td>
+                </tr>
+                <tr>
+                    <td style="width:900px"><cockpit code="property" value="CMSParagraphComponent.content"/></td>
+                    <td><div style="height:6px"/></td>
+                </tr>
+                <tr>
+                    <td style="width:900px"><cockpit code="property" value="CMSMediaParagraphComponent.media"/></td>
+                    <td><div style="height:6px"/></td>
+                </tr>     
+                <tr>
+                    <td style="width:900px"><cockpit code="property" value="CMSMediaParagraphComponent.url"/></td>
+                    <td><div style="height:6px"/></td>
+                </tr>            
+            </tbody>
+        </table>
+    ]]>
+  </template>
+  <custom-editors>
+    <property qualifier="CMSParagraphComponent.content" editorCode="wysiwyg">
+        <parameter>
+            <name>inline</name>
+            <value>true</value>
+        </parameter>
+        <parameter>
+            <name>fckToolbarConfiguration</name>
+            <value>
+                [['Bold', 'Italic','Underline','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyFull','-','OrderedList','UnorderedList','-','Outdent','Indent','-','Table','Link','Unlink'],'/',['FontName','FontSize','TextColor','-','Source']]
+          </value>
+        </parameter>
+        <parameter>
+            <name>editorWidth</name>
+            <value>700px</value>
+        </parameter>
+        <parameter>
+            <name>editorHeight</name>
+            <value>200px</value>
+        </parameter>
+        <parameter>
+            <name>labelWidth</name>
+            <value>120px</value>
+        </parameter>
+    </property>
+        <property qualifier="CMSMediaParagraphComponent.media" editorCode="simpleMediaReferenceSelector">
+            <parameter>
+                <name>mimeTypes</name>
+                <value>image/jpeg;image/gif</value>
+            </parameter>
+            <parameter>
+                <name>allowCreate</name>
+                <value>true</value>
+            </parameter>
+            <parameter>
+                <name>restrictToCreateTypes</name>
+                <value>Media</value>
+            </parameter>
+            <parameter>
+                <name>imageHeight</name>
+                <value>80px</value>
+            </parameter>
+            <parameter>
+                <name>celumMediaFormat</name>
+                <value>picture</value>
+            </parameter>
+        </property>
+        <!-- <property qualifier="CMSMediaParagraphComponent.link"/> -->
+			
+  </custom-editors>
+</content-editor>
