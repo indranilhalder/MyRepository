@@ -1921,7 +1921,6 @@ $(function() {
 			// $(".pickupeditbtn").css("display","block");
 			 
             });
-		 
 		 $("#changeAddressLink").click(function(){
 			  $("#changeAddressPopup").show();
 			  $(".wrapBG").show();
@@ -1937,4 +1936,26 @@ $(function() {
 		 //$(".pickupeditbtn").hide(); 
 	 });	 
 	
+	
+	function generateOTP(orderId) {	
+		console.log(orderId);
+		console.log($("#OTP").val());
+
+		$.ajax({
+			type : "POST",
+			url : ACC.config.encodedContextPath + "/my-account/validationOTP",
+			data : "orderId=" + orderId + "&otpNumber="+$("#OTP").val(),
+			success : function(response) {
+				alert("Hi" +response);
+				console.log(response);
+				location.reload();
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+			  console.log(textStatus, errorThrown);
+			  $("#showOTP .error_text").text("Please Re-enter OTP.");
+			  
+			}
+		});
+
+	}
 </script>
