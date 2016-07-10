@@ -83,8 +83,7 @@
 
 									<form:input path="postcode" 
 										class="address_postcode" id="pincode"
-										placeholder="Pincode"
-										onblur="checkPincode('${orderDetails.code}')" />
+										placeholder="Pincode" />
 								</div>
 							</div>
 							<div class="col-md-6"></div>
@@ -233,6 +232,7 @@
 						function(event) {
 							var data = $("#changeAddressForm").serialize();
 							var orderCode = $('#deliveryAddorderCode').val();
+							//alert(data)					
 							$.ajax({
 								url : ACC.config.encodedContextPath
 										+ "/my-account/" + orderCode
