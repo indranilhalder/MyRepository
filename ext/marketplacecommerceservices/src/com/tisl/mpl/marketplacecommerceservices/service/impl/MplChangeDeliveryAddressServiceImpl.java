@@ -7,7 +7,8 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 //import com.sap.security.core.server.csi.util.StringUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.TemproryAddressModel;
+import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
+import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplChangeDeliveryAddressDaoImpl;
 //import com.tis.mpl.facade.changedelivery.Impl.ChangeDeliveryAddressFacadeImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.MplChangeDeliveryAddressService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
@@ -34,6 +38,16 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 	
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
+	
+	@Autowired
+	private MplChangeDeliveryAddressDaoImpl mplChangeDeliveryAddressDaoImpl;
+	
+	@Autowired
+	private ModelService modelService;
+	
+	@Autowired
+	OrderModelDao orderModelDao;
+	
 	private static final Logger LOG = Logger.getLogger(MplChangeDeliveryAddressServiceImpl.class);
 
 
@@ -106,5 +120,75 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 		}
 		return changable;
 	}
+	
+
+	   /**
+	    * save AddressForCustomer in 
+	    * TemproryAddressModel with orderId
+	    * 
+	    *return boolean true false
+	    */
+	@Override
+	public boolean saveAsTemproryAddressForCustomer(final String orderCode, final TemproryAddressModel temproryAddressModel)
+	{
+		boolean flag = false;
+		try
+		{
+			if (StringUtils.isNotEmpty(orderCode) && temproryAddressModel != null)
+			{
+				temproryAddressModel.setOrderId(orderCode);
+				modelService.save(temproryAddressModel);
+				flag = true;
+			}
+		}
+		catch (final ModelSavingException expection)
+		{
+			LOG.error("TemproryAddressModel" + expection.getMessage());
+		}
+		catch (final NullPointerException expection)
+		{
+			LOG.error("TemproryAddressModel" + expection.getMessage());
+		}
+		return flag;
+	}
+
+
+
+	@Override
+	public boolean changeDeliveryAddress(final String orderCode)
+	{
+		boolean flag = false;
+		try
+		{
+			if (StringUtils.isNotEmpty(orderCode))
+			{
+				OrderModel orderModel;
+				final TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDaoImpl.geTemproryAddressModel(orderCode);
+				orderModel = orderModelDao.getOrder(orderCode);
+
+				orderModel.setDeliveryAddress(temproryAddressModel);
+				modelService.save(orderModel);
+				modelService.remove(temproryAddressModel);
+				flag = true;
+			}
+		}
+		catch (final ModelSavingException expection)
+		{
+			LOG.error("OrderModel chnage deliveryAddress" + expection.getMessage());
+		}
+		return flag;
+	}
+
+
+   /***
+    * 
+    * 
+    */
+	@Override
+	public TemproryAddressModel geTemproryAddressModel(final String orderCode)
+	{
+		return mplChangeDeliveryAddressDaoImpl.geTemproryAddressModel(orderCode);
+	}
+
 
 }
