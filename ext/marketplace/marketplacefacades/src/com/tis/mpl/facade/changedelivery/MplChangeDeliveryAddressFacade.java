@@ -25,16 +25,16 @@ public interface MplChangeDeliveryAddressFacade
 	 * @param customerId
 	 * @param orderCode
 	 * @param addressData
-	 * @return String Status Msg Failure, sucess
+	 * @return String Status Msg Failure, success
 	 */
 	public String saveAsTemproryAddressForCustomer(String customerId, String orderCode, AddressData addressData);
 
 	/**
-	 * S *
-	 * 
+	 *
 	 * @param customerId
 	 * @param enteredOTPNumber
 	 * @return String msg Valid or not
 	 */
-	public String validateOTP(String customerId, String enteredOTPNumber);
+	public String validateOTP(String customerId, String enteredOTPNumber,String orderCode);
+
 }
