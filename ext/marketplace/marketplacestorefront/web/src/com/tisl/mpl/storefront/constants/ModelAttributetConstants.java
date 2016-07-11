@@ -729,4 +729,7 @@ public final class ModelAttributetConstants
 
 	public static final String BUILD_NUMBER = "buildNumber";
 
+	//TISPRM-56
+	public static final String PRODUCT_SIZE = "productSize";
+
 }

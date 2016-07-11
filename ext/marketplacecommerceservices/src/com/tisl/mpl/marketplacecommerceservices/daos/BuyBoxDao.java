@@ -24,6 +24,8 @@ public interface BuyBoxDao
 
 	List<BuyBoxModel> buyBoxPrice(String ProductCode) throws EtailNonBusinessExceptions;
 
+	//List<BuyBoxModel> getStockFromBuyBox(String ProductCode) throws EtailNonBusinessExceptions;
+
 	List<BuyBoxModel> getBuyboxPricesForSearch(String ProductCode) throws EtailNonBusinessExceptions;
 
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
