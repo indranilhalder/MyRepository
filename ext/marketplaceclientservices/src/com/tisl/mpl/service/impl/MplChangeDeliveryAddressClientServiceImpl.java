@@ -84,7 +84,7 @@ public class MplChangeDeliveryAddressClientServiceImpl implements MplChangeDeliv
 				LOG.debug(xmlString);
 				LOG.debug("Posting to >>>>>>>>>>>>>>>>>>>>" + webResource.getURI());
 				response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("x-tenantId", "single")
-						.entity(xmlString).post(ClientResponse.class);
+						.entity(xmlString).put(ClientResponse.class);
 			}
 			if (null != response)
 			{
