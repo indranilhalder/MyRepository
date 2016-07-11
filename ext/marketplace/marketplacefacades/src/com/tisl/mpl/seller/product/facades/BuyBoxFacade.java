@@ -21,7 +21,9 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
  */
 public interface BuyBoxFacade
 {
-	public List<BuyBoxData> buyboxPrice(String ProductCode) throws EtailNonBusinessExceptions;
+	public BuyBoxData buyboxPrice(String ProductCode) throws EtailNonBusinessExceptions;
+
+	public List<BuyBoxData> buyboxPricePDP(String ProductCode) throws EtailNonBusinessExceptions;
 
 	//public List<BuyBoxData> getStockFromBuyBox(String ProductCode) throws EtailNonBusinessExceptions;
 
