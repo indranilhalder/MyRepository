@@ -23,10 +23,6 @@ public interface BuyBoxFacade
 {
 	public BuyBoxData buyboxPrice(String ProductCode) throws EtailNonBusinessExceptions;
 
-	public List<BuyBoxData> buyboxPricePDP(String ProductCode) throws EtailNonBusinessExceptions;
-
-	//public List<BuyBoxData> getStockFromBuyBox(String ProductCode) throws EtailNonBusinessExceptions;
-
 	public List<SellerInformationData> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
 
 	/**

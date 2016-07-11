@@ -155,7 +155,7 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 
 					variantOptions.add(variantOptionData);
 				}
-				productData.setAllVariantsId(allVariantsId);
+				/* productData.setAllVariantsId(allVariantsId); */
 				variantOptions = populateColor(variantOptions, defaultColorMap);
 				productData.setVariantOptions(variantOptions);
 				if (isSizeVariantPresent)

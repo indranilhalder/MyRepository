@@ -68,37 +68,22 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 	 */
 
 	@Override
-	public List<BuyBoxModel> buyBoxPrice(String productCode)
+	public List<BuyBoxModel> buyBoxPrice(final String productCode)
 	{
+
 		try
 		{
-			if (productCode.indexOf(",") != -1)
-			{
-				final StringBuilder stringBuilder = new StringBuilder();
-				final String[] codes = productCode.split(",");
-				for (final String id : codes)
-				{
-					stringBuilder.append('\'').append(escapeString(id)).append('\'').append(',');
-				}
-				final int index = stringBuilder.lastIndexOf(",");
-				productCode = stringBuilder.replace(index, index + 1, "").toString();
-			}
 
+			final String queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
 
-			if (productCode.indexOf("'") == -1)
-			{
-				productCode = "'" + productCode + "'";
-			}
-
-			final String queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + WHERE_CLASS + BuyBoxModel.PRODUCT
-					+ "} IN (" + productCode + ") AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED
-					+ "}=0)    AND   {bb:" + BuyBoxModel.AVAILABLE + "} > 0 AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE
-					+ "} and {bb:" + BuyBoxModel.SELLERENDDATE + "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0  ORDER BY {bb:"
-					+ BuyBoxModel.WEIGHTAGE + "} DESC,{bb:" + BuyBoxModel.AVAILABLE + "} DESC";
+			+ WHERE_CLASS + BuyBoxModel.PRODUCT + "}=?productBuyBox" + " AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:"
+					+ BuyBoxModel.DELISTED + "}=0)    AND   {bb:" + BuyBoxModel.AVAILABLE + "} > 0 AND (sysdate between  {bb:"
+					+ BuyBoxModel.SELLERSTARTDATE + "} and {bb:" + BuyBoxModel.SELLERENDDATE + "}) AND {bb:" + BuyBoxModel.PRICE
+					+ "} > 0  ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE + "} DESC,{bb:" + BuyBoxModel.AVAILABLE + "} DESC";
 
 			log.debug("QueryStringFetchingPrice" + queryStringForPrice);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForPrice);
-			//query.addQueryParameter("productBuyBox", productCode);
+			query.addQueryParameter("productBuyBox", productCode);
 			return flexibleSearchService.<BuyBoxModel> search(query).getResult();
 		}
 		catch (final FlexibleSearchException e)
@@ -114,6 +99,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
+
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
@@ -588,17 +574,6 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-	}
-
-	private String escapeString(final String id)
-	{
-		String escapedId = id;
-		if (null != id)
-		{
-			escapedId = id.replaceAll("'", "''");
-		}
-
-		return escapedId;
 	}
 
 }
