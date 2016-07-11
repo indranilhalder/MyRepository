@@ -695,7 +695,6 @@ public class HomePageController extends AbstractPageController
 
 			if (buyBoxData != null)
 			{
-
 				if (buyBoxData.getSpecialPrice() != null)
 				{
 					productPrice = buyBoxData.getSpecialPrice().getFormattedValue();

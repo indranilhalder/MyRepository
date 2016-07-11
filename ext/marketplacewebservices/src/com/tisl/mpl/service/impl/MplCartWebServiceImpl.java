@@ -9,7 +9,6 @@ import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
@@ -118,8 +117,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	protected CartFacade cartFacade;
 	@Autowired
 	private MplCartFacade mplCartFacade;
-	@Resource(name = "customerFacade")
-	private CustomerFacade customerFacade;
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
 	@Autowired
@@ -674,20 +671,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 			if (userFacade.isAnonymousUser())
 			{
-
 				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug("************ Anonymous cart mobile **************" + cartId);
+					LOG.debug("************ Anonymous cart mobile (addProductToCart) **************" + cartId);
 				}
 			}
 			else
 			{
-
 				cartModel = mplPaymentWebFacade.findCartValues(cartId);
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug("************ Logged-in cart mobile **************" + cartId);
+					LOG.debug("************ Logged-in cart mobile (addProductToCart)**************" + cartId);
 				}
 			}
 
@@ -1963,6 +1958,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					cartDataDetails.setTotalPrice(String.valueOf(totalPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 			}
+
 			if (null != cartDataOrdered.getTotalDiscounts())
 			{
 				final PriceData discountPrice = cartDataOrdered.getTotalDiscounts();
@@ -2096,11 +2092,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					cartDataDetails.setTotalPrice(String.valueOf(totalPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 			}
-
-			final PriceData discountPrice = cartDataOrdered.getTotalDiscounts();
-			if (null != discountPrice.getValue())
+			if (null != cartDataOrdered.getTotalDiscounts())
 			{
-				cartDataDetails.setDiscountPrice(String.valueOf(discountPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				final PriceData discountPrice = cartDataOrdered.getTotalDiscounts();
+				if (null != discountPrice.getValue())
+				{
+					cartDataDetails.setDiscountPrice(String.valueOf(discountPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
 			}
 			/*** Address details ***/
 			if (null != addressListWsDto)

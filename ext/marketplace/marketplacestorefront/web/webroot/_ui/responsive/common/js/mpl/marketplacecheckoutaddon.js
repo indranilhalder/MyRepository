@@ -3128,6 +3128,11 @@ $(document).ready(function(){
 
 function checkPincodeServiceability(buttonType)
 {
+	$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
+	//$("#pinCodeDispalyDiv .spinner").css("left",(($("#pinCodeDispalyDiv").width()+$("#pinCodeDispalyDiv").width())/2)+10);
+	$("body").append("<div id='no-click' style='opacity:0.6; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+
+	
 	var selectedPincode=$('#defaultPinCodeIds').val();
 	var regPostcode = /^([1-9])([0-9]){5}$/;
 	
@@ -3145,9 +3150,6 @@ function checkPincodeServiceability(buttonType)
     	$("#defaultPinCodeIds").css("color","red");
         $("#error-Id").show();
 		$("#emptyId").hide();
-        //$("#checkoutBtnIdLink").hide();
-		//$("#expresscheckoutid").hide();
-		//$("#checkoutBtnIdButton").show();
 		$("#error-Id").css({
 			"color":"red",
 			"display":"block",
@@ -3180,7 +3182,14 @@ function checkPincodeServiceability(buttonType)
  					populatePincodeDeliveryMode(response,buttonType);
  					reloadpage(selectedPincode,buttonType);
  				}
- 			
+ 			//TISPRM-33
+	 			$("#defaultPinDiv").show();
+ 	 			$("#changePinDiv").hide();
+ 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
+ 	 			//setTimeout(function(){
+ 	 				$("#pinCodeDispalyDiv .spinner").remove();
+ 	 				$("#no-click").remove();
+ 	 			//},500);
  		},
  		error : function(resp) {
  			//TISTI-255
@@ -3195,6 +3204,10 @@ function checkPincodeServiceability(buttonType)
  			
  			handleExceptionOnServerSide(errorDetails);
  			console.log('Some issue occured in checkPincodeServiceability');
+ 			//setTimeout(function(){
+ 	 			$("#pinCodeDispalyDiv .spinner").remove();
+ 	 			$("#no-click").remove();
+ 	 		//},500);
  		}
  	});
 
@@ -3341,6 +3354,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 			}
 			/****TISPRM-65 - Cart Page show pincode serviceability msg***/
 			var cartMessage = document.createElement("span");
+			cartMessage.id = "successPin"
 			cartMessage.style.color = "green";
 			var message = document.createTextNode("Yes, it's available. Go ahead.");
 			cartMessage.appendChild(message);
@@ -3433,7 +3447,6 @@ function redirectToCheckout(checkoutLinkURlId)
 
 function checkIsServicable()
 {
-	
 	var selectedPincode=$("#defaultPinCodeIds").val();
 	if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
 	
@@ -3443,6 +3456,8 @@ function checkIsServicable()
 	 		cache: false,
 	 		success : function(response) {
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');
+	 			$("#defaultPinDiv").show();
+	 			$("#changePinDiv").hide();
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
@@ -3456,6 +3471,10 @@ function checkIsServicable()
 	 			
 	 			console.log('Some issue occured in checkPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
+	 			//TISPRM-65
+ 	 			$("#defaultPinDiv").show();
+ 	 			$("#changePinDiv").hide();
+ 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
 	 		}
 	 	});
 	}

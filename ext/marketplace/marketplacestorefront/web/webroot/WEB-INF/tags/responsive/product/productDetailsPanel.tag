@@ -71,6 +71,9 @@ tr.d0 td {
 <input type="hidden" id="site_section_detail" value="${site_section_detail}" />
 <input type="hidden" id="product_category" value="${product_category}" />	
 <!-- End Tealium -->
+<!-- TISPRM-56 -->
+<input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
+
 
 
 
@@ -105,6 +108,32 @@ tr.d0 td {
 				<product:productPricePanel product="${product}" />
 			</ycommerce:testId>
 			
+			<!-- TISPRM-97 starts -->
+			<c:if test="${not empty product.potentialPromotions}">
+			
+			<c:choose>
+				<c:when test="${not empty product.potentialPromotions[0].channels}">
+				
+				<c:forEach var="channel"
+							items="${product.potentialPromotions[0].channels}">
+				<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">	
+			<div class="pdp-promo-title">
+				${product.potentialPromotions[0].title}
+			</div>
+			</c:if> <!-- end if check for channel web -->
+			</c:forEach>
+			</c:when>
+			
+			<c:otherwise>
+			<div class="pdp-promo-title">
+				${product.potentialPromotions[0].title}
+			</div>
+			</c:otherwise>
+			</c:choose>
+			
+			</c:if>
+			<!-- TISPRM-97 ends -->
+			
 			<div class="fullfilled-by">
 			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
 			<span id="fulFilledBySship"  style="display:none;"></span>
@@ -135,7 +164,7 @@ tr.d0 td {
 				<cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot>
-
+        
 			</div>
 			
 			
@@ -145,14 +174,7 @@ tr.d0 td {
 			<span id="sharepretext" style="display:none"><spring:theme code="share.pretext"/></span>
 			<span id="shareposttext" style="display:none"><spring:theme code="share.posttext"/></span>
 			
-			<ul class="wish-share">
-				<li><!-- <span id="addedMessage" style="display:none"></span> -->
-				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
-				<li>
-				<product:socialSharing product="${product}" />
-					
-				</li>
-			</ul>
+			
 	
 			<!-- Social sharing -->
 	<script>
@@ -179,7 +201,15 @@ tr.d0 td {
 			<cms:pageSlot position="PinCodeService" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
-
+          
+          <ul class="wish-share">
+				<li><!-- <span id="addedMessage" style="display:none"></span> -->
+				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
+				<li>
+				<product:socialSharing product="${product}" />
+					
+				</li>
+			</ul>
 		</div>
 
 
