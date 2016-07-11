@@ -261,23 +261,59 @@ $(document).ready(function(){
 			
 	/*-----------Start of SERP codes-----------------*/ 
 			
-	$(".facet-name.js-facet-name h4").on("click",function(){
-				
-			    if($(this).hasClass('active')) {
-			    	$(this).removeClass('active');
-			    	$(this).parent().siblings('.facet-values.js-facet-values.js-facet-form').hide(100);
-			     	$(this).siblings('.brandSelectAllMain').hide(100);
-			    	$(this).parent().siblings('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").hide(100);
-			    	$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").hide(100);
-			    } else {
-			    	$(this).addClass('active');
-			    	$(this).parent().siblings('.facet-values.js-facet-values.js-facet-form').show(100);
-			    	$(this).siblings('.brandSelectAllMain').show(100);
-			    	$(this).parent().siblings('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").show(100);
-			    	$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").show(100);
+			var sessionFacetName;
+			$(".facet-name.js-facet-name h4").on("click",function(){
+				if(typeof(Storage) !== "undefined") {
+					
+					    if($(this).hasClass('active')) {
+					    	$(this).removeClass('active');
+					    	$(this).parent().siblings('.facet-values.js-facet-values.js-facet-form').hide(100);
+					     	$(this).siblings('.brandSelectAllMain').hide(100);
+					    	$(this).parent().siblings('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").hide(100);
+					    	$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").hide(100);
+					    } else {
+					    	$(this).addClass('active');
+					    	$(this).parent().siblings('.facet-values.js-facet-values.js-facet-form').show(100);
+					    	$(this).siblings('.brandSelectAllMain').show(100);
+					    	$(this).parent().siblings('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").show(100);
+					    	$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").show(100);
+					    }
+					    
+					    
+					    	sessionFacetName = $(this).text();
+							if(sessionStorage.getItem(sessionFacetName) == null){
+								sessionStorage.setItem(sessionFacetName, false);
+							} else{
+								if($(this).hasClass('active')) {
+									sessionStorage.setItem(sessionFacetName, true);
+								} else {
+									sessionStorage.setItem(sessionFacetName, false);
+								}
+							}
+					    
+							
+				}
+				else {
+			        document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
 			    }
 			});
-	
+			
+			
+			$(".js-facet").each(function(){
+				if(sessionStorage.getItem($(this).find('.js-facet-name > h4').text()) == "false" && null != sessionStorage.getItem($(this).find('.js-facet-name > h4').text())) {
+					$(this).find('.js-facet-name h4').removeClass('active');
+					$(this).find('.facet-values.js-facet-values.js-facet-form').hide(100);
+					$(this).find('.brandSelectAllMain').hide(100);
+				}
+			});
+			if(sessionStorage.getItem($('ul.product-facet > .js-facet-name > h4').text()) == "false" && null != sessionStorage.getItem($('ul.product-facet > .js-facet-name > h4').text())) {
+				$('ul.product-facet > .js-facet-name > h4').removeClass('active');
+				$('#searchPageDeptHierTreeForm #searchPageDeptHierTree').hide(100);
+		    	$("#categoryPageDeptHierTreeForm #categoryPageDeptHierTree").hide(100);
+			}
+			
+			
+			
 			$(".toggle-filterSerp").click(function(){
 				$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
 				$(this).toggleClass("active");
@@ -1501,6 +1537,10 @@ $(document).ready(function(){
 			var filter_height=$(".facet-list.filter-opt").height() + 55;
 			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");
 		});
+		
+		$('.checkout.wrapper .product-block.addresses li.item .addressEntry').click(function(){
+			$(this).find('input:radio[name=selectedAddressCode]').prop('checked', true);
+			});
 		//loadGigya();
 });
 

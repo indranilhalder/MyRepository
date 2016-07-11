@@ -1605,11 +1605,13 @@ public class ProductPageController extends AbstractPageController
 			{
 				productCode = productCode.toUpperCase();
 			}
+
 			final LinkedList<BuyBoxData> buydata = (LinkedList<BuyBoxData>) buyBoxFacade.buyboxPrice(productCode);
 
 			if (buydata != null)
 			{
 				final BuyBoxData buyboxdata = buydata.getLast();
+
 
 				if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
 				{
@@ -1625,6 +1627,7 @@ public class ProductPageController extends AbstractPageController
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MIN_PRICE, buyboxdata.getMinPrice());
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+
 				final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 				for (final BuyBoxData remaining : buydata)
 				{
@@ -1634,6 +1637,31 @@ public class ProductPageController extends AbstractPageController
 					}
 				}
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABILITY, stockAvailibilty);
+
+
+				//TISPRM-33
+				if (null != buyboxdata.getMrp())
+				{
+					if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
+					{
+						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue()
+								- buyboxdata.getSpecialPrice().getDoubleValue();
+						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
+						final double roundedOffValue = Math.round(savingPriceCalPer * 100.0) / 100.0;
+
+						//final PriceData savingPricePercent = productDetailsHelper.formPriceData(savingPriceCal);
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+					}
+					else if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getValue().doubleValue() > 0)
+					{
+						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
+						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
+						final double roundedOffValue = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						//final PriceData savingPricePercent = productDetailsHelper.formPriceData(savingPriceCal);
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+					}
+				}
+
 			}
 			else
 			{

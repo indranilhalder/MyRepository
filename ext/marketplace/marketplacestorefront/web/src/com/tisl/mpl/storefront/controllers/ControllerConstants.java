@@ -337,8 +337,13 @@ public interface ControllerConstants
 				public static final String IS_COD = "isCod";
 				public static final String ALL_OF_STOCK = "allOOStock";
 				public static final String BUYBOZFORSIZEGUIDEAJAX = "-buyboxDataForSizeGuide";
+
 				//TISPRM-56
 				public static final String AVAILABILITY = "availibility";
+
+				//TISPRM-33
+				public static final String SAVINGONPRODUCT = "savingsOnProduct";
+
 
 			}
 		}

@@ -14,6 +14,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/js/popover.js"></script>
 	
@@ -352,13 +353,13 @@ display:none;
 	<%-- <c:if test="${isNew=='Y'}"> --%>
 		 <div id ="newProduct" style="z-index: 1;display:none;" class="new new-product">
 					<img class="brush-strokes-sprite sprite-New"
-					src="/_ui/responsive/common/images/transparent.png"><span>New</span>
+					src="//${staticHost}/_ui/responsive/common/images/transparent.png"><span>New</span>
 					</div>
 	 	  <%--  </c:if>  --%>
 	  <%--  <c:if test="${isOnline=='true'}"> --%>
 		 	<div style="z-index: 1;;display:none;" class="online-exclusive">
 					<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-						src="/_ui/responsive/common/images/transparent.png"> <span><spring:theme code="quickview.onlineexclusive"/></span>
+						src="//${staticHost}/_ui/responsive/common/images/transparent.png"> <span><spring:theme code="quickview.onlineexclusive"/></span>
 				</div>
 		<%-- </c:if> --%>
 		</div>
@@ -526,12 +527,13 @@ display:none;
 	<product:viewQuickViewVariant/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantityCount"/>
 	<div class="qty">
-		<p> <spring:theme code="product.configureproductscount.qty"/></p>
-		<select id="quantity">		
+	<!-- TISPRM-131 -->
+		<%-- <p> <spring:theme code="product.configureproductscount.qty"/></p> --%>
+		<%-- <select id="quantity">		
 		<c:forEach var="qtyCnt" begin="1" end="${maxQuantityCount}">
    		<option value="${qtyCnt}">${qtyCnt}</option>
 		</c:forEach>
-		</select>
+		</select> --%>
 	</div> 
 
 </div>
