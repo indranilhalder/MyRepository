@@ -179,7 +179,7 @@ function navigateToPage(queryString,textString)
 											<span class="facet-text">
 												${facetValue.name}
 												 <ycommerce:testId code="facetNav_count">
-													<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 												</ycommerce:testId> 
 											</span>
 										</span>
