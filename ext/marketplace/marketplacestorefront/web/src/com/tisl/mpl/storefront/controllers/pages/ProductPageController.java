@@ -56,6 +56,7 @@ import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1650,7 +1651,8 @@ public class ProductPageController extends AbstractPageController
 						final double roundedOffValue = Math.round(savingPriceCalPer * 100.0) / 100.0;
 
 						//final PriceData savingPricePercent = productDetailsHelper.formPriceData(savingPriceCal);
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT,
+								BigDecimal.valueOf(Double.valueOf(roundedOffValue).intValue()));
 					}
 					else if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getValue().doubleValue() > 0)
 					{
@@ -1658,7 +1660,8 @@ public class ProductPageController extends AbstractPageController
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
 						final double roundedOffValue = Math.round(savingPriceCalPer * 100.0) / 100.0;
 						//final PriceData savingPricePercent = productDetailsHelper.formPriceData(savingPriceCal);
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT,
+								BigDecimal.valueOf(Double.valueOf(roundedOffValue).intValue()));
 					}
 				}
 
