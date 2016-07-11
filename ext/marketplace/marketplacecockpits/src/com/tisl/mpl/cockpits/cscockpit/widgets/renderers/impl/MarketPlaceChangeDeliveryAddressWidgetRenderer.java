@@ -273,7 +273,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 						.getLandmarks();
 				landMarkListbox = createLandMarkListBox(widget, landMarkHbox,
 						landMarkListbox, landMarks);
-				
+
 				landMarkHbox.setClass("hbox");
 				content.appendChild(landMarkHbox);
 
@@ -315,7 +315,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 								countryListbox.getSelectedItem(),
 								stateListbox.getSelectedItem(),
 								cityListbox.getSelectedItem(),
-								landMarkListbox.getSelectedItem(),
+								landMarkListbox,
 								mobileNumberFieldTextBox, content));
 				return content;
 
@@ -545,7 +545,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			Textbox lastNameFieldTextBox, Textbox line1FieldTextBox,
 			Textbox line2FieldTextBox, Textbox pincodeFieldTextBox,
 			Listitem countryListItem, Listitem stateListItem,
-			Listitem citylistItem, Listitem landMarkListItem,
+			Listitem citylistItem, Listbox landMarkListItem,
 			Textbox mobileNumberFieldTextBox, Div content) {
 
 		return new UpdateDetailsEventListener(widget, deliveryAddress,
@@ -570,7 +570,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		private final Listitem countryListbox;
 		private final Listitem stateFieldTextBox;
 		private final Listitem cityFieldTextBox;
-		private final Listitem landMarkFieldTextBox;
+		private final Listbox landMarkListItem;
 		private final Textbox mobileNumberFieldTextBox;
 		private Div content;
 
@@ -583,7 +583,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				final Textbox line2FieldTextBox,
 				final Textbox pincodeFieldTextBox,
 				final Listitem countryListItem, final Listitem stateListItem,
-				final Listitem citylistItem, final Listitem landMarkListItem,
+				final Listitem citylistItem, final Listbox landMarkListItem,
 				final Textbox mobileNumberFieldTextBox, Div content) {
 			this.widget = widget2;
 			this.deliveryAddress = deliveryAddress;
@@ -596,7 +596,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			this.countryListbox = countryListItem;
 			this.stateFieldTextBox = stateListItem;
 			this.cityFieldTextBox = citylistItem;
-			this.landMarkFieldTextBox = landMarkListItem;
+			this.landMarkListItem = landMarkListItem;
 			this.mobileNumberFieldTextBox = mobileNumberFieldTextBox;
 			this.content = content;
 		}
@@ -610,7 +610,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 						firstNameFieldTextBox, lastNameFieldTextBox,
 						line1FieldTextBox, line2FieldTextBox,
 						pincodeFieldTextBox, countryListbox, stateFieldTextBox,
-						cityFieldTextBox, landMarkFieldTextBox,
+						cityFieldTextBox, landMarkListItem,
 						mobileNumberFieldTextBox, content);
 			}
 		}
@@ -624,7 +624,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				final Listitem countryListbox,
 				final Listitem stateFieldTextBox,
 				final Listitem cityFieldTextBox,
-				final Listitem landMarkFieldTextBox,
+				final Listbox landMarkListItem,
 				final Textbox mobileNumberFieldTextBox, Div content)
 				throws InterruptedException, ParseException,
 				InvalidKeyException, NoSuchAlgorithmException {
@@ -637,8 +637,17 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			final String changedCountry = countryListbox.getValue().toString();
 			final String changedState = stateFieldTextBox.getValue().toString();
 			final String changedCity = cityFieldTextBox.getValue().toString();
-			final String changedlandMark = landMarkFieldTextBox.getValue()
-					.toString();
+			      String changedLandMark = StringUtils.EMPTY;
+			landMarkListItem.getSelectedItem().getValue();
+			List<Listitem >items = landMarkListItem.getItems();
+			for (  Listitem item : items )
+			{
+				
+				if(item.isSelected())
+				{
+					 changedLandMark = (String) item.getValue(); 
+				}
+			}
 			final String changedMobileNumber = mobileNumberFieldTextBox
 					.getValue();
 			final AddressModel newDeliveryAddress = modelService
@@ -711,9 +720,9 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				newDeliveryAddress
 						.setCity(MarketplacecommerceservicesConstants.EMPTY);
 			}
-			if (changedlandMark != null && !changedlandMark.isEmpty()) {
-				newDeliveryAddress.setLandmark(changedlandMark);
-				 LOG.debug("Changed LandMark :"+changedlandMark);
+			if (changedLandMark != null && !changedLandMark.isEmpty()) {
+				newDeliveryAddress.setLandmark(changedLandMark);
+				 LOG.debug("Changed LandMark :"+changedLandMark);
 			} else {
 				newDeliveryAddress
 						.setLandmark(MarketplacecommerceservicesConstants.EMPTY);
@@ -952,6 +961,9 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 					CustomerModel customermodel = (CustomerModel) customer
 							.getObject();
 					String customerId = customermodel.getUid();
+					modelService.save(orderModel);
+					orderModel.getParentReference().setDeliveryAddress(newDeliveryAddress);
+					modelService.save(orderModel.getParentReference());
 					mplChangeDeliveryAddressController
 							.ticketCreateToCrm(orderModel.getParentReference(),
 									customerId,
