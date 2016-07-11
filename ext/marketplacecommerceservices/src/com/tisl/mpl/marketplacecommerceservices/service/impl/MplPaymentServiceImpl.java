@@ -2385,6 +2385,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 		}
 		modelService.save(address);
+		//TISPRD-3025
+		LOG.error("Address for new card is :::" + (address != null ? address : null));
+
 		return address;
 
 	}
@@ -2420,6 +2423,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 			}
 		}
+		//TISPRD-3025
+		LOG.error("Address for saved card is :::" + (address != null ? address : null));
 		return address;
 	}
 
