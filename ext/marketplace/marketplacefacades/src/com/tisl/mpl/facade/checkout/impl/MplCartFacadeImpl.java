@@ -74,6 +74,7 @@ import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -1200,16 +1201,16 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 
 	@Override
-	public GetWishListWsDTO getTopTwoWishlistForUser(final UserModel userModel, final String pincode,
-			final Collection<CartModel> cartModelList) throws CMSItemNotFoundException
+	public GetWishListWsDTO getTopTwoWishlistForUser(final UserModel userModel, final String pincode, final CartModel cartModel)
+			throws EtailNonBusinessExceptions
 	{
 		if (userModel != null)
 		{
-			return mplCommerceCartService.getTopTwoWishlistForUser(userModel, pincode, cartModelList);
+			return mplCommerceCartService.getTopTwoWishlistForUser(userModel, pincode, cartModel);
 		}
 		else
 		{
-			throw new CMSItemNotFoundException("User model is null");
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0006);
 		}
 	}
 

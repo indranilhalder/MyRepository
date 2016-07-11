@@ -241,8 +241,8 @@ public interface MplCartFacade extends CartFacade
 	 * @throws EtailNonBusinessExceptions
 	 */
 
-	GetWishListWsDTO getTopTwoWishlistForUser(UserModel userModel, String pincode, Collection<CartModel> cartModelList)
-			throws CMSItemNotFoundException;
+	GetWishListWsDTO getTopTwoWishlistForUser(UserModel userModel, String pincode, CartModel cartModel)
+			throws EtailNonBusinessExceptions;
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product

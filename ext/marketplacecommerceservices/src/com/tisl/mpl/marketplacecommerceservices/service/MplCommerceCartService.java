@@ -129,7 +129,8 @@ public interface MplCommerceCartService
 			CartModel cartModel) throws CMSItemNotFoundException;
 
 	List<Wishlist2EntryModel> getGiftYourselfDetailsMobile(int minGiftQuantity, final List<Wishlist2Model> allWishlists,
-			String pincode, Collection<CartModel> cartModelList) throws CMSItemNotFoundException;
+			String pincode, CartModel cartModel) throws EtailNonBusinessExceptions;
+
 
 	/**
 	 * Method for fetching cart details without session
@@ -245,8 +246,8 @@ public interface MplCommerceCartService
 	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
-	GetWishListWsDTO getTopTwoWishlistForUser(final UserModel userModel, final String pincode,
-			final Collection<CartModel> cartModelList) throws CMSItemNotFoundException;
+	GetWishListWsDTO getTopTwoWishlistForUser(final UserModel userModel, final String pincode, final CartModel cartModel)
+			throws EtailNonBusinessExceptions;
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product

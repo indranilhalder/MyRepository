@@ -80,6 +80,7 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
@@ -89,7 +90,6 @@ import java.net.MalformedURLException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -256,6 +256,9 @@ public class CartsController extends BaseCommerceController
 
 	@Resource(name = "mplStoreLocatorFacade")
 	private MplStoreLocatorFacade mplStoreLocatorFacade;
+
+	@Resource
+	private BaseSiteService baseSiteService;
 
 	/**
 	 * @return the binService
@@ -1143,7 +1146,7 @@ public class CartsController extends BaseCommerceController
 	 *           postal code(postalCode), region (region.isocode)
 	 * @queryparam fields Response configuration (list of fields, which should be returned in response)
 	 * @bodyparams titleCode,firstName,lastName,line1,line2,town,postalCode,country(isocode),region(isocode),
-	 *             defaultAddress >>>>>>> refs/remotes/origin/Release1
+	 *             defaultAddress
 	 * @return Created address
 	 * @throws WebserviceValidationException
 	 *            When address parameters are incorrect
@@ -1918,7 +1921,6 @@ public class CartsController extends BaseCommerceController
 			@RequestParam(required = false, defaultValue = "1") final String quantity,
 			@RequestParam(required = true) final boolean addedToCartWl) throws InvalidCartException,
 			CommerceCartModificationException
-
 	{
 		WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		if (LOG.isDebugEnabled())
@@ -2219,146 +2221,134 @@ public class CartsController extends BaseCommerceController
 			LOG.debug("updateCartEntry: " + logParam(ENTRY_NUMBER, entryNumber) + ", " + logParam("quantity", quantity) + ", "
 					+ logParam(PICK_UP_STORE, pickupStore));
 		}
-		final CartData cart = getSessionCart();
-		final OrderEntryData orderEntry = getCartEntryForNumber(cart, entryNumber);
 		CartDataDetailsWsDTO cartDataDetails = null;
 		cartDataDetails = new CartDataDetailsWsDTO();
-		Collection<CartModel> cartModelList = null;
-		String cartIdentifier;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
+		CartModel cartModel = null;
+		CartData cartData = null;
 		try
 		{
-
-			if (quantity == null && StringUtils.isEmpty(pickupStore))
+			if (userFacade.isAnonymousUser())
 			{
-				LOG.debug(MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
-				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-				cartDataDetails.setError(MarketplacecommerceservicesConstants.FIELD_QUANTITY
-						+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
-				return cartDataDetails;
-			}
-
-			if (quantity != null)
-			{
-				validate(quantity, "quantity", greaterThanZeroValidator);
-			}
-
-			if (pickupStore != null)
-			{
-				validate(pickupStore, PICK_UP_STORE, pointOfServiceValidator);
-			}
-
-			updateCartEntryInternal(baseSiteId, cart, orderEntry, quantity, pickupStore, fields, false);
-
-
-			cartModelList = mplCartFacade.getCartDetails(customerFacade.getCurrentCustomer().getUid());
-
-			if (null != cartModelList && cartModelList.size() > 0)
-			{
-				for (final CartModel cartModel : cartModelList)
+				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+				if (LOG.isDebugEnabled())
 				{
-					if (userFacade.isAnonymousUser())
-					{
-						cartIdentifier = cartModel.getGuid();
-					}
-					else
-					{
-						cartIdentifier = cartModel.getCode();
-					}
-					if (cartIdentifier.equals(cartId))
-					{
-						//duplciate cart fix for mobile
-						final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cartModel);
-
-						LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus);
-						final CartModel newCartModel = mplCartFacade.removeDeliveryMode(cartModel);
-
-						final List<AbstractOrderEntryModel> abstractOrderEntryList = newCartModel.getEntries();
-						final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
-						List<GetWishListProductWsDTO> gwlpFreeItemList = new ArrayList<GetWishListProductWsDTO>();
-						GetWishListProductWsDTO gwlp = null;
-						for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderEntryList)
-						{
-							if (null != abstractOrderEntry)
-							{
-								gwlp = new GetWishListProductWsDTO();
-
-								if (StringUtils.isNotEmpty((abstractOrderEntry.getQuantity().toString())))
-								{
-									/////////// TISSAM-14
-									for (final AbstractOrderEntryModel pr : cartModel.getEntries())
-									{
-										final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
-										if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
-										{
-											throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
-										}
-										/*
-										 * if ((abstractOrderEntry.getQuantity().longValue() + pr.getQuantity().longValue()) >
-										 * maximum_configured_quantiy) { throw new
-										 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9066); }
-										 */
-										break;
-
-									}
-									////////
-									gwlp.setQtySelectedByUser(abstractOrderEntry.getQuantity().toString());
-								}
-								gwlpList.add(gwlp);
-							}
-						}
-						//End of AbstractOrderEntryModel for loop,Product Details
-						cartDataDetails.setProducts(gwlpList);
-						gwlpFreeItemList = mplCartWebService.freeItems(abstractOrderEntryList);
-						if (null != gwlpFreeItemList)
-						{
-							cartDataDetails.setFreeItemsList(gwlpFreeItemList);
-						}
-						if (StringUtils.isNotEmpty(newCartModel.getSubtotal().toString()))
-						{
-							final PriceData subtotalprice = discountUtility.createPrice(newCartModel,
-									Double.valueOf(newCartModel.getSubtotal().toString()));
-							if (null != subtotalprice && null != subtotalprice.getValue())
-							{
-								cartDataDetails.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2,
-										BigDecimal.ROUND_HALF_UP)));
-							}
-						}
-						if (StringUtils.isNotEmpty(newCartModel.getTotalPrice().toString()))
-						{
-							final PriceData totalPrice = discountUtility.createPrice(newCartModel,
-									Double.valueOf(newCartModel.getTotalPrice().toString()));
-							if (null != totalPrice && null != totalPrice.getValue())
-							{
-								cartDataDetails
-										.setTotalPrice(String.valueOf(totalPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
-							}
-						}
-						if (StringUtils.isNotEmpty(newCartModel.getDeliveryCost().toString()))
-						{
-							cartDataDetails.setDeliveryCharge(newCartModel.getDeliveryCost().toString());
-						}
-						if (deListedStatus)
-						{
-							delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
-							cartDataDetails.setDelistedMessage(delistMessage);
-						}
-					}
+					LOG.debug("************ Anonymous cart mobile **************" + cartId);
 				}
 			}
 			else
 			{
-				throw new RequestParameterException(MarketplacecommerceservicesConstants.B9038);
+				cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("************ Logged-in cart mobile **************" + cartId);
+				}
 			}
+			if (cartModel != null)
+			{
+				//duplicate cart fix for mobile and delisting
+				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cartModel);
+				LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus);
 
-		}
-		catch (final InvalidCartException ce)
-		{
-			cartDataDetails = new CartDataDetailsWsDTO();
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ce);
-			cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			cartDataDetails.setError(MarketplacecommerceservicesConstants.COULD_NOT_MODIFY_CART + ce);
-			return cartDataDetails;
+				cartData = getMplExtendedCartConverter().convert(cartModel);
+				final OrderEntryData orderEntry = getCartEntryForNumber(cartData, entryNumber);
+				if (quantity == null && StringUtils.isEmpty(pickupStore))
+				{
+					LOG.debug(MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
+					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					cartDataDetails.setError(MarketplacecommerceservicesConstants.FIELD_QUANTITY
+							+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+							+ MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
+					return cartDataDetails;
+				}
+
+				if (quantity != null)
+				{
+					validate(quantity, "quantity", greaterThanZeroValidator);
+				}
+
+				if (pickupStore != null)
+				{
+					validate(pickupStore, PICK_UP_STORE, pointOfServiceValidator);
+				}
+
+				updateCartEntryInternal(baseSiteId, cartData, orderEntry, quantity, pickupStore, fields, false);
+				//final CartModel newCartModel = mplCartFacade.removeDeliveryMode(cartModel);
+				final List<AbstractOrderEntryModel> abstractOrderEntryList = cartModel.getEntries();
+				final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
+				List<GetWishListProductWsDTO> gwlpFreeItemList = new ArrayList<GetWishListProductWsDTO>();
+				GetWishListProductWsDTO gwlp = null;
+				for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderEntryList)
+				{
+					if (null != abstractOrderEntry)
+					{
+						gwlp = new GetWishListProductWsDTO();
+
+						if (StringUtils.isNotEmpty((abstractOrderEntry.getQuantity().toString())))
+						{
+							/////////// TISSAM-14
+							for (final AbstractOrderEntryModel pr : cartModel.getEntries())
+							{
+								final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+								if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
+								{
+									throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
+								}
+								/*
+								 * if ((abstractOrderEntry.getQuantity().longValue() + pr.getQuantity().longValue()) >
+								 * maximum_configured_quantiy) { throw new
+								 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9066); }
+								 */
+								break;
+
+							}
+							////////
+							gwlp.setQtySelectedByUser(abstractOrderEntry.getQuantity().toString());
+						}
+						gwlpList.add(gwlp);
+					}
+				}
+				//End of AbstractOrderEntryModel for loop,Product Details
+				cartDataDetails.setProducts(gwlpList);
+				gwlpFreeItemList = mplCartWebService.freeItems(abstractOrderEntryList);
+				if (null != gwlpFreeItemList)
+				{
+					cartDataDetails.setFreeItemsList(gwlpFreeItemList);
+				}
+				if (StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
+				{
+					final PriceData subtotalprice = discountUtility.createPrice(cartModel,
+							Double.valueOf(cartModel.getSubtotal().toString()));
+					if (null != subtotalprice && null != subtotalprice.getValue())
+					{
+						cartDataDetails
+								.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					}
+				}
+				if (StringUtils.isNotEmpty(cartModel.getTotalPrice().toString()))
+				{
+					final PriceData totalPrice = discountUtility.createPrice(cartModel,
+							Double.valueOf(cartModel.getTotalPrice().toString()));
+					if (null != totalPrice && null != totalPrice.getValue())
+					{
+						cartDataDetails.setTotalPrice(String.valueOf(totalPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					}
+				}
+				if (StringUtils.isNotEmpty(cartModel.getDeliveryCost().toString()))
+				{
+					cartDataDetails.setDeliveryCharge(cartModel.getDeliveryCost().toString());
+				}
+				if (deListedStatus)
+				{
+					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
+					cartDataDetails.setDelistedMessage(delistMessage);
+				}
+
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9040);
+			}
 		}
 		catch (final ConversionException ce)
 		{
@@ -2366,6 +2356,7 @@ public class CartsController extends BaseCommerceController
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ce);
 			cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			cartDataDetails.setError(MarketplacecommerceservicesConstants.COULD_NOT_MODIFY_CART + ce);
+			cartDataDetails.setErrorCode(MarketplacecommerceservicesConstants.B9056);
 			return cartDataDetails;
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -2399,7 +2390,8 @@ public class CartsController extends BaseCommerceController
 			cartDataDetails = new CartDataDetailsWsDTO();
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ce);
 			cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			cartDataDetails.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + ce);
+			cartDataDetails.setError(MarketplacecommerceservicesConstants.COULD_NOT_MODIFY_CART + ce);
+			cartDataDetails.setErrorCode(MarketplacecommerceservicesConstants.B9056);
 			return cartDataDetails;
 		}
 		return cartDataDetails;
@@ -2435,16 +2427,19 @@ public class CartsController extends BaseCommerceController
 		{
 			if (userFacade.isAnonymousUser())
 			{
-
-				LOG.debug("CartDetails:  AnonymousUser ");
 				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
-				LOG.debug("************ Anonymous cart mobile **************" + cartId);
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("************ Anonymous cart mobile **************" + cartId);
+				}
 			}
 			else
 			{
-				LOG.debug("CartDetails:  loged in User ");
 				cartModel = mplPaymentWebFacade.findCartValues(cartId);
-				LOG.debug("************ Logged-in cart mobile **************" + cartId);
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("************ Logged-in cart mobile **************" + cartId);
+				}
 			}
 			// Validate Cart Model is not null
 			if (null != cartModel)
@@ -2509,7 +2504,6 @@ public class CartsController extends BaseCommerceController
 				cartDetailsData.setError(MarketplacewebservicesConstants.CARTMODELEMPTY);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
-
 		}
 		catch (final ConversionException ce)
 		{
@@ -2570,13 +2564,11 @@ public class CartsController extends BaseCommerceController
 		{
 			if (userFacade.isAnonymousUser())
 			{
-				LOG.debug("CartDetails:  AnonymousUser ");
 				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
 				LOG.debug("************ Anonymous cart mobile **************" + cartId);
 			}
 			else
 			{
-				LOG.debug("CartDetails:  loged in User ");
 				cartModel = mplPaymentWebFacade.findCartValues(cartId);
 				LOG.debug("************ Logged-in cart mobile **************" + cartId);
 			}
@@ -2584,7 +2576,13 @@ public class CartsController extends BaseCommerceController
 			if (null != cartModel)
 			{
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelisted(cartModel);
-				//cartData = getMplExtendedCartConverter().convert(cartModel);
+				//Delisted
+				if (deListedStatus)
+				{
+					//							cartModel = mplCartFacade.removeDeliveryMode(cartModel);
+					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
+					cartDetailsData.setDelistedMessage(delistMessage);
+				}
 				cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
 				/**** Pincode check Details ***/
 				try
@@ -2618,7 +2616,6 @@ public class CartsController extends BaseCommerceController
 				{
 					cartDetailsData.setShippingAddress(getShippingAddress(cartModel.getDeliveryAddress()));
 				}
-
 				//set Pickup person details ,if cart contains
 				if (null != cartModel.getPickupPersonName())
 				{
@@ -2634,7 +2631,6 @@ public class CartsController extends BaseCommerceController
 							Double.valueOf(cartModel.getSubtotal().toString()));
 					if (null != subtotalprice && null != subtotalprice.getValue())
 					{
-
 						cartDetailsData
 								.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 					}
@@ -2662,8 +2658,6 @@ public class CartsController extends BaseCommerceController
 					final double totalafterpromotion = cartModel.getSubtotal().doubleValue()
 							+ cartModel.getDeliveryCost().doubleValue()
 							- Double.parseDouble(cartDataOrdered.getTotalDiscounts().getValue().toString());
-
-					LOG.debug("********** displayOrderSummary *************** totalAfterPromotion" + totalafterpromotion);
 					final PriceData totalPrice = discountUtility.createPrice(cartModel, Double.valueOf(totalafterpromotion));
 					if (null != totalPrice && null != totalPrice.getValue())
 					{
@@ -2674,15 +2668,6 @@ public class CartsController extends BaseCommerceController
 				{
 					cartDetailsData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 					cartDetailsData.setError(MarketplacecommerceservicesConstants.NOTOTALPRICE);
-				}
-				//Delisted
-				//final boolean deListedStatus = mplCartFacade.isCartEntryDelisted(cartModel);
-				LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus);
-				if (deListedStatus)
-				{
-					//							cartModel = mplCartFacade.removeDeliveryMode(cartModel);
-					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
-					cartDetailsData.setDelistedMessage(delistMessage);
 				}
 			}
 			else
@@ -3256,21 +3241,16 @@ public class CartsController extends BaseCommerceController
 		GetWishListWsDTO getWishListWsDTO = new GetWishListWsDTO();
 		boolean successFlag = true;
 		boolean dtoFlag = true;
-		if (userFacade.isAnonymousUser())
-		{
-			throw new AccessDeniedException("Access is denied");
-		}
-		Collection<CartModel> cartModelList = null;
+		CartModel cartModel = null;
 		String error = null;
 		String errorCode = null;
 		try
 		{
-			if (userId != null)
+			//anonymous user must not get toptwo wishlist
+			if (!userFacade.isAnonymousUser())
 			{
-				cartModelList = mplCartFacade.getCartDetails(customerFacade.getCurrentCustomer().getUid());
 				MplCustomerProfileData mplCustData = new MplCustomerProfileData();
 				mplCustData = mplCustomerProfileService.getCustomerProfileDetail(userId);
-
 				if (mplCustData == null)
 				{
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9007);
@@ -3279,9 +3259,10 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug("Customer UID is : " + mplCustData.getUid());
 				}
-
 				final UserModel user = userService.getUserForUID(mplCustData.getUid());
-				getWishListWsDTO = mplCartFacade.getTopTwoWishlistForUser(user, pincode, cartModelList);
+				cartModel = commerceCartService.getCartForGuidAndSiteAndUser(null, baseSiteService.getCurrentBaseSite(), user);
+
+				getWishListWsDTO = mplCartFacade.getTopTwoWishlistForUser(user, pincode, cartModel);
 				if (null != getWishListWsDTO)
 				{
 					if (null != getWishListWsDTO.getStatus()
@@ -3307,7 +3288,7 @@ public class CartsController extends BaseCommerceController
 			}
 
 		}
-		catch (InvalidCartException | ConversionException ex)
+		catch (final ConversionException ex)
 		{
 			// Error message for ModelSavingException Exceptions
 			LOG.debug(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex.getMessage());
@@ -3340,13 +3321,12 @@ public class CartsController extends BaseCommerceController
 		}
 		catch (final Exception ex)
 		{
-			// Error message for All Exceptions
-			if (null != ((EtailNonBusinessExceptions) ex).getErrorMessage())
-			{
-				error = ((EtailNonBusinessExceptions) ex).getErrorMessage();
-				errorCode = ((EtailNonBusinessExceptions) ex).getErrorCode();
-				successFlag = false;
-			}
+			// Error message for Exceptions
+			LOG.debug(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex.getMessage());
+			error = MarketplacecommerceservicesConstants.ERROR_FLAG;
+			errorCode = MarketplacecommerceservicesConstants.B9800;
+			successFlag = false;
+
 		}
 
 		if (successFlag && dtoFlag)
@@ -3969,6 +3949,23 @@ public class CartsController extends BaseCommerceController
 			cartModel.setDeliveryAddress(null);
 		}
 		modelService.save(cartModel);
+	}
+
+	/**
+	 * @return the baseSiteService
+	 */
+	public BaseSiteService getBaseSiteService()
+	{
+		return baseSiteService;
+	}
+
+	/**
+	 * @param baseSiteService
+	 *           the baseSiteService to set
+	 */
+	public void setBaseSiteService(final BaseSiteService baseSiteService)
+	{
+		this.baseSiteService = baseSiteService;
 	}
 
 
