@@ -12,25 +12,25 @@ import javax.xml.bind.annotation.XmlType;
  * @author prasad1
  *
  */
-@XmlRootElement(name = "changeDeliveryAddressRequest")
+@XmlRootElement(name = "ChangeDeliveryAddress")
 @XmlType(propOrder =
-{ "OrderID", "FName", "LName", "EmailID", "PhoneNo", "Address1", "Address2", "Address3", "Landmark", "Country", "City", "State",
-		"Pincode" })
+{ "orderID", "FName", "LName", "emailID", "phoneNo", "address1", "address2", "address3", "landmark", "country", "city", "state",
+		"pincode" })
 public class MplChangeDeliveryAddressRequest
 {
-	private String OrderID;
-	private String FName;
-	private String LName;
-	private String EmailID;
-	private String PhoneNo;
-	private String Address1;
-	private String Address2;
-	private String Address3;
-	private String Landmark;
-	private String Country;
-	private String City;
-	private String State;
-	private String Pincode;
+	private String orderID;
+	private String fName;
+	private String lName;
+	private String emailID;
+	private String phoneNo;
+	private String address1;
+	private String address2;
+	private String address3;
+	private String landmark;
+	private String country;
+	private String city;
+	private String state;
+	private String pincode;
 
 	/**
 	 * @return the orderId
@@ -38,12 +38,12 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "OrderID")
 	public String getOrderID()
 	{
-		return OrderID;
+		return orderID;
 	}
 
-	public void setOrderID(final String orderID)
+	public void setOrderID(final String orderId)
 	{
-		OrderID = orderID;
+		orderID = orderId;
 	}
 
 	/**
@@ -53,12 +53,12 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "FName")
 	public String getFName()
 	{
-		return FName;
+		return fName;
 	}
 
 	public void setFName(final String fName)
 	{
-		FName = fName;
+		this.fName = fName;
 	}
 
 	/**
@@ -68,12 +68,12 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "LName")
 	public String getLName()
 	{
-		return LName;
+		return lName;
 	}
 
 	public void setLName(final String lName)
 	{
-		LName = lName;
+		this.lName = lName;
 	}
 
 	/**
@@ -83,12 +83,12 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "EmailID")
 	public String getEmailID()
 	{
-		return EmailID;
+		return emailID;
 	}
 
 	public void setEmailID(final String emailID)
 	{
-		EmailID = emailID;
+		this.emailID = emailID;
 	}
 
 	/**
@@ -98,12 +98,12 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "PhoneNo")
 	public String getPhoneNo()
 	{
-		return PhoneNo;
+		return phoneNo;
 	}
 
 	public void setPhoneNo(final String phoneNo)
 	{
-		PhoneNo = phoneNo;
+		this.phoneNo = phoneNo;
 	}
 
 	/**
@@ -113,13 +113,13 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "Address1")
 	public String getAddress1()
 	{
-		return Address1;
+		return address1;
 	}
 
 
 	public void setAddress1(final String address1)
 	{
-		Address1 = address1;
+		this.address1 = address1;
 	}
 
 	/**
@@ -127,15 +127,15 @@ public class MplChangeDeliveryAddressRequest
 	 * @return Address2
 	 */
 	@XmlElement(name = "Address2")
-	public String getAddress2()
+	public String getaddress2()
 	{
-		return Address2;
+		return address2;
 	}
 
 
 	public void setAddress2(final String address2)
 	{
-		Address2 = address2;
+		this.address2 = address2;
 	}
 
 	/**
@@ -145,13 +145,13 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "Address3")
 	public String getAddress3()
 	{
-		return Address3;
+		return address3;
 	}
 
 
 	public void setAddress3(final String address3)
 	{
-		Address3 = address3;
+		this.address3 = address3;
 	}
 
 	/**
@@ -161,12 +161,12 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "Landmark")
 	public String getLandmark()
 	{
-		return Landmark;
+		return landmark;
 	}
 
 	public void setLandmark(final String landmark)
 	{
-		Landmark = landmark;
+		this.landmark = landmark;
 	}
 
 	/**
@@ -176,12 +176,12 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "Country")
 	public String getCountry()
 	{
-		return Country;
+		return country;
 	}
 
 	public void setCountry(final String country)
 	{
-		Country = country;
+		this.country = country;
 	}
 
 	/**
@@ -191,12 +191,12 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "City")
 	public String getCity()
 	{
-		return City;
+		return city;
 	}
 
 	public void setCity(final String city)
 	{
-		City = city;
+		this.city = city;
 	}
 
 	/**
@@ -206,12 +206,12 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "State")
 	public String getState()
 	{
-		return State;
+		return state;
 	}
 
 	public void setState(final String state)
 	{
-		State = state;
+		this.state = state;
 	}
 
 	/**
@@ -221,12 +221,12 @@ public class MplChangeDeliveryAddressRequest
 	@XmlElement(name = "Pincode")
 	public String getPincode()
 	{
-		return Pincode;
+		return pincode;
 	}
 
 	public void setPincode(final String pincode)
 	{
-		Pincode = pincode;
+		this.phoneNo = pincode;
 	}
 
 
