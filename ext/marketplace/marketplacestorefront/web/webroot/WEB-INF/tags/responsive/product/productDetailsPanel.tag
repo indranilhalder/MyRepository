@@ -108,6 +108,32 @@ tr.d0 td {
 				<product:productPricePanel product="${product}" />
 			</ycommerce:testId>
 			
+			<!-- TISPRM-97 starts -->
+			<c:if test="${not empty product.potentialPromotions}">
+			
+			<c:choose>
+				<c:when test="${not empty product.potentialPromotions[0].channels}">
+				
+				<c:forEach var="channel"
+							items="${product.potentialPromotions[0].channels}">
+				<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">	
+			<div class="pdp-promo-title">
+				${product.potentialPromotions[0].title}
+			</div>
+			</c:if> <!-- end if check for channel web -->
+			</c:forEach>
+			</c:when>
+			
+			<c:otherwise>
+			<div class="pdp-promo-title">
+				${product.potentialPromotions[0].title}
+			</div>
+			</c:otherwise>
+			</c:choose>
+			
+			</c:if>
+			<!-- TISPRM-97 ends -->
+			
 			<div class="fullfilled-by">
 			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
 			<span id="fulFilledBySship"  style="display:none;"></span>
