@@ -21,6 +21,7 @@ import de.hybris.platform.product.ProductService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -106,6 +107,7 @@ public class ComparePageController extends AbstractPageController
 			final HttpSession session, @RequestParam("maximumSize") final int maximumSize, final HttpServletRequest request)
 
 	{
+
 		List<ProductData> sessionCompareList = new ArrayList();//3
 		//get the products from session which are not in the list of selected product codes
 		if (session.getAttribute(COMPARE_LIST) != null)
@@ -120,9 +122,10 @@ public class ComparePageController extends AbstractPageController
 		//Check if the compare list size is less than 4 and product is comparable
 		if (sessionCompareList.size() < maximumSize && addToCompareList(productModel, sessionCompareList))
 		{
-			final BuyBoxData buyBoxData = buyBoxFacade.buyboxPrice(productData.getCode());
-			if (buyBoxData != null)
+			final LinkedList<BuyBoxData> buyBox = (LinkedList<BuyBoxData>) buyBoxFacade.buyboxPrice(productData.getCode());
+			if (buyBox != null)
 			{
+				final BuyBoxData buyBoxData = buyBox.getLast();
 				if (buyBoxData.getMrpPriceValue() != null)
 				{
 					productData.setProductMRP(buyBoxData.getMrpPriceValue());

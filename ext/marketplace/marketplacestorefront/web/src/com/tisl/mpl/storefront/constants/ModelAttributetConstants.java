@@ -731,4 +731,7 @@ public final class ModelAttributetConstants
 	//TISPRM-33
 	public static final String SAVINGONPRODUCT = "savingsOnProduct";
 
+	//TISPRM-56
+	public static final String PRODUCT_SIZE = "productSize";
+
 }

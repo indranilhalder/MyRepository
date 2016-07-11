@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -691,11 +692,11 @@ public class HomePageController extends AbstractPageController
 		String productPrice = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
-			final BuyBoxData buyBoxData = buyBoxFacade.buyboxPrice(product.getCode());
+			final LinkedList<BuyBoxData> buyBox = (LinkedList<BuyBoxData>) buyBoxFacade.buyboxPrice(product.getCode());
 
-			if (buyBoxData != null)
+			if (buyBox != null)
 			{
-
+				final BuyBoxData buyBoxData = buyBox.getLast();
 				if (buyBoxData.getSpecialPrice() != null)
 				{
 					productPrice = buyBoxData.getSpecialPrice().getFormattedValue();

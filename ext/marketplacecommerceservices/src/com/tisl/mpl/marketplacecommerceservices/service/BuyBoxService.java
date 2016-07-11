@@ -19,13 +19,15 @@ public interface BuyBoxService
 
 	List<BuyBoxModel> buyboxPrice(String productCode) throws EtailNonBusinessExceptions;
 
+	//List<BuyBoxModel> getStockFromBuyBox(String ProductCode) throws EtailNonBusinessExceptions;
+
 	List<BuyBoxModel> getBuyboxPricesForSearch(String productCode) throws EtailNonBusinessExceptions;
 
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
 
 	/**
 	 * This service method will return buybox prices for product code
-	 * 
+	 *
 	 * @param productCode
 	 * @param sellerId
 	 * @return

@@ -8,6 +8,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -135,11 +136,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 
 	@Override
-	public BuyBoxData buyboxPrice(final String productCode) throws EtailNonBusinessExceptions
+	public List<BuyBoxData> buyboxPrice(final String productCode) throws EtailNonBusinessExceptions
 	{
 		final BuyBoxData buyboxData = new BuyBoxData();
+		BuyBoxData stockBuyboxData = null;
 		boolean onlyBuyBoxHasStock = false;
 		BuyBoxModel buyBoxMod = null;
+		final String products[] = productCode.split(",");
+		final LinkedList<BuyBoxData> remainingBuyBoxDataList = new LinkedList<BuyBoxData>();
 
 		try
 		{
@@ -154,7 +158,16 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				buyboxModelList = buyBoxService.buyBoxPriceNoStock(productCode);
 				if (CollectionUtils.isNotEmpty(buyboxModelList))
 				{
-					buyBoxMod = buyboxModelList.get(0);
+					//TODO
+					for (final BuyBoxModel buyBoxModel : buyboxModelList)
+					{
+						if (buyBoxModel.getProduct().equalsIgnoreCase(products[0]))
+						{
+							//buyBoxMod = buyboxModelList.get(0);
+							buyBoxMod = buyBoxModel;
+							break;
+						}
+					}
 				}
 				else
 				{
@@ -179,7 +192,17 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			}
 			else
 			{
-				buyBoxMod = buyboxModelList.get(0);
+				//buyBoxMod = buyboxModelList.get(0);
+				//TODO
+				for (final BuyBoxModel buyBoxModel : buyboxModelList)
+				{
+					if (buyBoxModel.getProduct().equalsIgnoreCase(products[0]))
+					{
+						//buyBoxMod = buyboxModelList.get(0);
+						buyBoxMod = buyBoxModel;
+						break;
+					}
+				}
 			}
 			if (buyboxModelList.size() > 0)
 			{
@@ -274,6 +297,17 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				LOG.warn("No buybox present for the product with product code ::: " + productCode);
 				//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3001);
 			}
+			//TODO
+			//buyboxModelList.remove(buyBoxMod);
+
+			for (final BuyBoxModel buyBoxModel : buyboxModelList)
+			{
+				stockBuyboxData = new BuyBoxData();
+				stockBuyboxData.setProductCode(buyBoxModel.getProduct());
+				//buyBoxModel.getProduct();
+				stockBuyboxData.setAvailable(buyBoxModel.getAvailable());
+				remainingBuyBoxDataList.add(stockBuyboxData);
+			}
 		}
 		catch (final NumberFormatException e)
 		{
@@ -291,7 +325,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-		return buyboxData;
+		remainingBuyBoxDataList.remove(buyboxData);
+		remainingBuyBoxDataList.add(buyboxData);
+		return remainingBuyBoxDataList;
 	}
 
 	/**
@@ -636,7 +672,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
