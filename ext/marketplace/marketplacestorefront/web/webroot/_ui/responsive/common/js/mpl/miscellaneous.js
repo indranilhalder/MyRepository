@@ -1,0 +1,134 @@
+ $(document).ready(function() {
+	 //master tag
+	 if($(window).width() < 650) {
+	 	$('head').append('<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />');
+	 }
+	//Simple banner component 
+	 	var removeHref = $("div[data-logo=marketplace]").find("a").attr("href");
+	 	var href = removeHref.split("?");
+	 	$("div[data-logo=marketplace]").find("a").attr("href",href[0]);
+	
+	//Search box
+	 	var selectedItemText = $("#enhancedSearchCategory").find('option:selected').text();
+		 $("#searchBoxSpan").html(selectedItemText);
+		 
+		 $('.select-view .select-list').hover(function(){
+			 $(this).find('ul').slideDown();
+		 });
+		$(document).on('click',".select-list .dropdown li",function(e) {
+			 $("#enhancedSearchCategory").val(this.id);
+			 $("#searchCodeForDropdown").val(this.id);
+			//sessionStorage.setItem("selectedItemValue",$("#searchCategory").val());
+			//sessionStorage.setItem("selectedItemText",$(this).html());
+			$(".select-list .dropdown li").removeClass("selected");
+			$(this).addClass("selected");
+			$("#searchBoxSpan").html($(this).text());
+			$(this).parents('.select-list').find('ul').slideUp();
+			$("#js-site-search-input").focus(); 
+		}); 
+		
+		
+		$("#search_form").submit(function(event) {
+			if($("#js-site-search-input").val().trim()=="") {
+				var actionText = ACC.config.contextPath;
+				var dropdownValue = $("#enhancedSearchCategory").val();
+				//var dropdownName = $("#searchCategory").find('option:selected').text();
+
+				if (!String.prototype.startsWith) {
+					  String.prototype.startsWith = function(searchString, position) {
+					    position = position || 0;
+					    return this.indexOf(searchString, position) === position;
+					  };
+					}
+				//TISPRO=660
+				if (dropdownValue.startsWith("MSH") || dropdownValue.startsWith("MBH")) {
+					actionText = (actionText +'/c-' + dropdownValue);
+				} else if (!dropdownValue.startsWith("all")) {
+					actionText = (actionText + '/s/' + dropdownValue);
+				}
+				$("#search_form :input").prop("disabled", true);
+				$('#search_form').attr('action',actionText);
+			} 
+		});
+		
+		//End
+		
+		//Rotating images component
+		$(".hero li").each(function() {
+			if($(this).has("href")){
+				var icid = $(this).attr("data-bannerid");
+				var link = $(this).find("a").attr("href");
+				link = link + "?icid="+icid;
+				$(this).find("a").attr("href",link);
+			}
+		});
+		//end
+		
+		//Tealium js.tag
+		/*$(document).on("click", ".header-myAccountSignOut", function() {
+			window.localStorage.removeItem("eventFired");
+		});*/
+
+		 $(document).on("click","form .pagination_a_link",function(e){
+			event.preventDefault();
+			var hrefurl = $(this).attr('href');
+			$("#paginationForm").attr("action", hrefurl);
+			$(this).closest('form').submit();
+		 });  
+
+		//TISPRO-183 -- Firing Tealium event only after successful user login
+	/*	if(loginStatus){
+			if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {
+				localStorage.setItem("eventFired","true");
+				console.log("Login Success!!!");
+				if(typeof utag == "undefined"){
+					console.log("Utag is undefined")
+				}
+				else{
+					console.log("Firing Tealium Event");
+					utag.link({ "event_type" : "Login", "link_name" : "Login" });
+				}
+				
+				//fireTealiumEvent();
+				
+				
+				
+			}  
+		}*/
+		//End
+		
+		//Smart Banner
+		new SmartBanner({
+			daysHidden: 0, // days to hide banner after close button is clicked (defaults to 15)
+			daysReminder: 0, // days to hide banner after "VIEW" button is clicked (defaults to 90)
+			appStoreLanguage: 'us', // language code for the App Store (defaults to user's browser language)
+			title: 'TataCLiQ',
+			author: 'TataCLiQ',
+			speedIn: 300, // Show animation speed of the banner
+		    speedOut: 400, // Close animation speed of the banner
+			button: 'OPEN',
+			force: null,
+			store: {
+	              ios: 'On the App Store',
+	              android: 'In Google Play'
+	          },
+	          price: {
+	              ios: 'FREE',
+	              android: 'FREE'
+	          }
+	});
+
+		//End
+		//Global Error Popup remove
+		$(document).on('hide.bs.modal', function () {
+		    $("#globalErrorPopupMsg").remove();
+		}); 
+		//End
+	
+ });
+ 
+	//Global Error Popup
+	function globalErrorPopup(msg) {
+		$("body").append('<div class="modal fade" id="globalErrorPopupMsg"><div class="content" style="padding: 10px;"><span style="display: block; margin: 7px 16px;line-height: 18px;">'+msg+'</span><button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+		$("#globalErrorPopupMsg").modal('show');
+	} 

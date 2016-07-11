@@ -1033,9 +1033,9 @@ h2 {
             transition: z-index 0s, border 0.3s; } */
             header .content .right > ul > li.bag:hover .mini-bag {
               max-height: 2000px;
-              -webkit-transition: max-height 0.15s;
-              -moz-transition: max-height 0.15s;
-              transition: max-height 0.15s; }
+              -webkit-transition: max-height 0.15s 0.35s;
+              -moz-transition: max-height 0.15s 0.35s;
+              transition: max-height 0.15s 0.35s; }
          /*    header .content .right > ul > li.bag.clicked .mini-bag {
               max-height: 2000px;
               -webkit-transition: max-height 0.15s;
@@ -1099,9 +1099,9 @@ h2 {
           header .content .right > ul > li.wishlist:hover .wishlist-info {
             z-index: 10;
             max-height: 1000px;
-            -webkit-transition: max-height 0.15s, z-index 0s;
-            -moz-transition: max-height 0.15s, z-index 0s;
-            transition: max-height 0.15s, z-index 0s; }
+            -webkit-transition: max-height 0.15s 0.35s;
+            -moz-transition: max-height 0.15s 0.35s;
+            transition: max-height 0.15s 0.35s; }
         header .content .right > ul > li.sign-in .sign-in-info {
           display: block;
           position: absolute;
@@ -1216,9 +1216,9 @@ h2 {
           header .content .right > ul > li.sign-in:hover .sign-in-info {
             max-height: 1000px;
             z-index: 10;
-            -webkit-transition: max-height 0.15s, z-index 0s;
-            -moz-transition: max-height 0.15s, z-index 0s;
-            transition: max-height 0.15s, z-index 0s; }
+            -webkit-transition: max-height 0.15s 0.35s, z-index 0s;
+            -moz-transition: max-height 0.15s 0.35s, z-index 0s;
+            transition: max-height 0.15s 0.35s, z-index 0s; }
         header .content .right > ul > li.signed-in .signed-in-info {
           position: absolute;
           left: 0;
@@ -1358,7 +1358,9 @@ h2 {
     margin-left: 35px; } }
            @media (min-width:791px) {
     header .content nav > ul {
-      clear: both; }
+      clear: both;
+      padding-top: 10px;
+      padding-bottom: 9px; }
       header .content nav > ul::after {
         clear: both;
         content: "";
@@ -1368,7 +1370,6 @@ h2 {
         margin-right: 20px;
         padding: 0;
         width: 120px;
-        padding-top: 10px;
         -webkit-transition: background-color 0.3s 0.3s;
         -moz-transition: background-color 0.3s 0.3s;
         transition: background-color 0.3s 0.3s; }
@@ -7231,7 +7232,8 @@ text-transform: uppercase;
       line-height: 1.5;
       margin-top: 5px;
       margin-bottom: 20px; 
-      font-size: 14px;}
+      font-size: 14px;
+      cursor: pointer;}
       @media (min-width: 651px) {
         .checkout.wrapper .product-block.addresses li.item address {
           margin-left: 40px;
@@ -8247,26 +8249,26 @@ footer {
 	background-color: #fff;
 	}
 
-footer>ul>li {
+footer>div>ul>li {
 	border-top: 2px solid #fff;
 }
 
-footer>ul>li:first-child h3 {
+footer>div>ul>li:first-child h3 {
 	font-size: 18px;
 	font-weight: 500;
 	padding: 0 10px;
 }
 
-footer>ul>li:nth-of-type(1) h3 span {
+footer>div>ul>li:nth-of-type(1) h3 span {
 	text-transform: none;
 	color: #A9143C;
 	font-family: inherit;
 	font-weight: 500;
 }
-footer>ul {
+footer>div>ul {
 	margin-bottom: 0;
 }
-footer>ul>li h3 {
+footer>div>ul>li h3 {
 	position: relative;
 	font-size: 14px;
 	text-transform: uppercase;
@@ -8280,7 +8282,7 @@ footer>ul>li h3 {
 	margin-bottom: 0;
 }
 
-footer>ul>li h3:after {
+footer>div>ul>li h3:after {
 	content: "";
 	display: block;
 	position: absolute;
@@ -8305,11 +8307,11 @@ footer>ul>li h3:after {
 	transition: transform 0.3s;
 }
 
-footer>ul>li h3:after {
+footer>div>ul>li h3:after {
 	right: 20px;
 }
 
-footer>ul>li ul li {
+footer>div>ul>li ul li {
 	line-height: 25px;
 	vertical-align: middle;
 	height: 0; 
@@ -8322,23 +8324,23 @@ footer>ul>li ul li {
 	-moz-transition: height 0.3s;
 	transition: height 0.3s;
 }
-footer>ul>li h3.toggle {
+footer>div>ul>li h3.toggle {
 	cursor: auto;
 }
 
-footer>ul>li ul li a {
+footer>div>ul>li ul li a {
 	color: #000;
 }
 
-footer>ul>li ul li a:hover {
+footer>div>ul>li ul li a:hover {
 	color: #A9143C;
 	text-decoration: none;
 }
 @media (max-width: 790px) {
-	footer > ul > li h3.toggle {
+	footer >div> ul > li h3.toggle {
 		cursor:pointer;
 	}
-	footer>ul>li.active h3:after {
+	footer>div>ul>li.active h3:after {
 	content: "";
 	display: block;
 	position: absolute;
@@ -8362,7 +8364,7 @@ footer>ul>li ul li a:hover {
 	-moz-transition: -moz-transform 0.3s;
 	transition: transform 0.3s;
 	}
-	footer>ul>li.active h3:after {
+	footer>div>ul>li.active h3:after {
 		-webkit-transform: rotate(135deg) translateY(-50%);
 		-moz-transform: rotate(135deg) translateY(-50%);
 		-ms-transform: rotate(135deg) translateY(-50%);
@@ -8370,7 +8372,7 @@ footer>ul>li ul li a:hover {
 		transform: rotate(135deg) translateY(-50%);
 	}
 	
-	footer>ul>li.active ul li {
+	footer>div>ul>li.active ul li {
 		height: 30px;
 		-webkit-transition: height 0.15s;
 		-moz-transition: height 0.15s;
@@ -8403,34 +8405,34 @@ footer .banner {
 		width: 33.33%;
 		position: relative;
 	}
-	footer>ul {
+	footer>div>ul {
 		float: left;
 		width: 66.67%;
 		position: relative;
 		background-color: #fff;
 	}
-	footer>ul>li {
+	footer>div>ul>li {
 		border: none;
 		float: left;
 		width: 33.33%;
 		padding-top: 23px;
 		padding-bottom: 5px;
 	}
-	footer>ul>li h3 {
+	footer>div>ul>li h3 {
 		font-size: 13px;
 		line-height: 20px;
 		padding: 15px 0 15px 20px;
 		font-weight: 700;
 	}
-	footer>ul>li h3:after {
+	footer>div>ul>li h3:after {
 		display: none;
 	}
 	@media ( max-width : 900px) {
-		footer>ul>li h3 {
+		footer>div>ul>li h3 {
 			width: 80%;
 		}
 	}
-	footer>ul>li ul li {
+	footer>div>ul>li ul li {
 		height: 25px;
 	}
 	footer .banner {
@@ -16042,7 +16044,6 @@ body .account .right-account .order-history.order-details li.item .status>ul>li 
     font-weight: 500;
     text-align: center;
     line-height: 30px;
-    cursor:pointer;
 }
 /*TISSIT-2006 start*/
 body .account .right-account .order-history.order-details li.item .status> ul.nav >li{
@@ -16063,7 +16064,8 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     display: block;
     text-transform: uppercase;
     letter-spacing: .5px;
-    font-size: 20px
+    font-size: 20px;
+    cursor:pointer;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot:before {
     z-index: 2;
@@ -20020,8 +20022,6 @@ body.page-shoe .feature-collections ul.collections li.chef.sub h3 span a{
 }
 .listing.wrapper .right-block .listing-menu > div .wrapped-form.sort {
   display: inline-block;
-  padding: 0 0 0 15px;
-  border: 2px solid #f0f4f5;
 }
 
 }
@@ -24517,11 +24517,15 @@ div#cartItems.products p{
 	position: absolute;
 	width: 250px;
 	left: 0;
-	display: none;
-	max-height: 400px;
+	max-height: 0px;
 	overflow: auto;
+	-webkit-transition: max-height 0.15s 0.35s;
+    -moz-transition: max-height 0.15s 0.35s;
+    transition: max-height 0.15s 0.35s; 
 }
-
+.track.trackOrder #tracklink,li.wishlist #myWishlistHeader {
+	display: block;
+}
 .trackorder-dropdown li {
 	min-height: 35px;
 	line-height: 18px;
@@ -24551,7 +24555,7 @@ ul.trackorder-dropdown li > div > h4 {
     font-weight: 600; 
 }
 .track.trackOrder:hover .trackorder-dropdown{
-display:block;
+max-height: 500px;
 z-index:10;
 }
 
@@ -27005,6 +27009,7 @@ body .account .right-account .updatePassword-wrapper{
 	font-weight: bold;
     letter-spacing: 0.5px;
     font-size:10px;
+    cursor:pointer;
 }
 @media (max-width:790px){
 #track-more-info p{
@@ -29063,11 +29068,11 @@ width:100%;
     height:10px;
 }
 /*New Homepage change ends*/
-footer>ul>li>.toggle>img{
+footer>div>ul>li>.toggle>img{
 	width: 160px;
 	}
 	@media(max-width:790px){
-footer>ul>li>.toggle>img{
+footer>div>ul>li>.toggle>img{
 	    margin-top: -10px;
 	}
 	}
@@ -29809,12 +29814,11 @@ li.store-locator-header a:before{
     position: relative;
 }
 
-#stayQued>h1>span:first-child{
+#stayQued>h1>span.spriteImg{
 	display: inline-block;
     height: 45px;
     width: 50px;
-    background-image: url("../images/stay-qued.png");
-    background-size: 100%;
+    background-position: -17px -23px;
     background-repeat: no-repeat;
     margin-right: 15px;
 }
@@ -30051,7 +30055,7 @@ header div.bottom .marketplace.linear-logo {
 		display: none;
 	}
 @media ( max-width : 790px){ 
-	footer>ul>li ul li {
+	footer>div>ul>li ul li {
 		line-height: 30px;
 	}
 	
@@ -30151,9 +30155,9 @@ li#ratingDiv {
  	header .content nav > ul > li > .toggle > span:first-child{
  	font-size: 11.1px;
      line-height: 15px;
-     height: 17px;
+     height: 26px;
      font-weight: 500;
-     margin-top: 9px;
+     padding-top: 9px;
      display: block;
      letter-spacing: 1px;}
      
@@ -31701,6 +31705,45 @@ display:none;
 .jqtree-title.jqtree_common:not(.jqtree-title-folder){
 	color:#857D7B;
 }
+.sort-by-sec {
+    font-size: 13px;
+    padding: 0;
+    text-align: center;
+    margin: 10px 0;
+}
+.sort-by-sec strong {
+    color: #857D7B;
+    font-weight: 400;
+}
+.sort-by-sec a {
+    display: inline-block;
+    padding: 10px 15px;
+    position: relative;
+    font-weight: 400;
+}
+.sort-by-sec a.active, .sort-by-sec a:hover {
+    color: #a9143c;
+    border-bottom: 2px solid #A91E3E;
+    margin-bottom: -1px;
+}
+.sort-by-sec a.active:before {
+    top: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(136, 183, 213, 0);
+    border-bottom-color: #a9143c;
+    border-width: 4px;
+    margin: -8px 0 0 -4px;
+}
+.sort-by-inline{
+	display:inline;
+}
+
 /*--------------maincss-----------*/
 .row
 {
@@ -40386,3 +40429,87 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 .smartbanner-windows .smartbanner-button-text:active,
 .smartbanner-windows .smartbanner-button-text:hover {
 }
+
+/************** Sprite images start *****************/
+
+.spriteImg {
+	background-image: url("../images/icons_sprite.png");
+}
+
+.shop-promos .promos li a span.spriteImg {
+	display: inline-block;
+    height: 45px;
+    width: 45px;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -o-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.shop-promos .promos li a span.spriteImg.hotBrands {
+	background-position: -262px -23px;
+}
+.shop-promos .promos li a span.spriteImg.coolDeals {
+	background-position: -413px -23px;
+}
+.shop-promos .promos li a span.spriteImg.realStories {
+	background-position: -183px -23px;
+}
+.shop-promos .promos li a span.spriteImg.trackOrders {
+	background-position: -101px -23px;
+}
+.shop-promos .promos li a span.spriteImg.storePickup {
+	background-position: -338px -23px;
+}
+
+.shop-promos .promos li a span.spriteImg:after {
+	content: "";
+	display: none;
+}
+
+.social.share .links a span.spriteImg {
+	display: inline-block;
+    height: 32px;
+    width: 32px;
+    background-repeat: no-repeat;
+}
+.social.share .links a:after {
+	content:"";
+	display: none;
+}
+.social.share .links a.facebook span.spriteImg {
+	background-position: -269px -92px;
+}
+.social.share .links a.gplus span.spriteImg {
+	background-position: -345px -92px;
+}
+.social.share .links a.twitter span.spriteImg {
+	background-position: -190px -92px;
+}
+.social.share .links a.insta span.spriteImg {
+	background-position: -108px -92px;
+}
+.social.share .links a.youtube span.spriteImg {
+	background-position: -26px -92px;
+}
+
+.social.app-download .links a span.spriteImg {
+	display: inline-block;
+    height: 32px;
+    width: 28px;
+    background-position: -28px -155px;
+    background-repeat: no-repeat;
+}
+.social.app-download .links a:last-child span.spriteImg {
+    background-position: -111px -155px;
+}
+/************** Sprite images end *****************/
+body.page-checkout-login header .content nav>ul {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }

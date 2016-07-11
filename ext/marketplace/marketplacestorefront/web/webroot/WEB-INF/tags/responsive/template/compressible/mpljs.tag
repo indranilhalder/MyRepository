@@ -180,7 +180,7 @@
 <!-- Search feed back End -->
 
 
-<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/update-profile') or
+<%-- <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/update-profile') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/update-password') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/update-parsonal-detail') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/checkCurrentPassword') or
@@ -211,23 +211,9 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account/') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
 	<script type="text/javascript" 
 		src="${commonResourcePath}/js/mpl/acc.accountaddress.js"></script>
-</c:if>
-
-<%-- <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/populateAddressDetail') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/addNewAddress') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/editAddress') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/set-default-address/*') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/remove-address/*') or
-
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/orders') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/order/*') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnRequest') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnSuccess') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}">
-	<script type="text/javascript"
-		src="${commonResourcePath}/js/mpl/acc.accountpagination.js"></script>
 </c:if> --%>
+
+
 
 <%-- AddOn JavaScript files --%>
 <c:forEach items="${addOnJavaScriptPaths}" var="addOnJavaScript">
@@ -250,7 +236,7 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <script type="text/javascript" src="${commonResourcePath}/js/ia-plugins/tataia.js" defer="defer"></script>
 </c:if>
 
-<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
+<%-- <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
 
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/populateAddressDetail') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/addNewAddress') or
@@ -265,7 +251,7 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnSuccess') 
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}">
 	<script type="text/javascript"
 		src="${commonResourcePath}/js/acc.accountpagination.js"></script>
-</c:if>
+</c:if> --%>
 
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/feedback.js"></script>
