@@ -28664,6 +28664,7 @@ header .content .bottom.active nav > ul > li:first-child + li > ul {
 	float: left;
     width: 22%;
     position:relative;
+    margin-left:60px;
 }
 .modal.size-guide .sizes .details .attributes #addToCartButton,#add_to_wishlist-sizeguide,.modal.size-guide .sizes .details .attributes #addToCartButtonQuick{
 height:30px;
@@ -40455,3 +40456,8 @@ p.savings.pdp-savings span{
     text-transform: uppercase;
     text-align: center;
 }
+@media(max-width:890px) and (min-width:651px){
+.sizeGuide-message{
+bottom:35px;
+}
+} 
