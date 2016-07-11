@@ -110,11 +110,13 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 	protected CallContextController getCallContextController() {
 		return callContextController;
 	}
+
 	@Required
 	public void setCallContextController(
 			CallContextController callContextController) {
 		this.callContextController = callContextController;
 	}
+
 	public TypedObject getOrder() {
 		return getCallContextController().getCurrentOrder();
 	}
@@ -122,7 +124,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 	int otpCount = 0;
 
 	protected HtmlBasedComponent createContentInternal(
-			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
+			final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			HtmlBasedComponent rootContainer) {
 
 		final Div content = new Div();
@@ -135,7 +137,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				ordermodel = (OrderModel) order.getObject();
 			}
 			String paymentMode = StringUtils.EMPTY;
-			
+
 			if (mplChangeDeliveryAddressController
 					.isDeliveryAddressChangable(order)) {
 				if (null != ordermodel.getPaymentTransactions()) {
@@ -143,10 +145,10 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 							.getPaymentTransactions().get(0);
 					paymentMode = payment.getEntries().get(0).getPaymentMode()
 							.getMode();
-					LOG.debug("Payment mode = "+paymentMode);
+					LOG.debug("Payment mode = " + paymentMode);
 				}
 
-				if (!paymentMode
+				if (paymentMode
 						.equalsIgnoreCase(MarketplaceCockpitsConstants.PAYMENT_MODE_COD)) {
 					Label label = new Label(
 							"For prepaid orders please use commerce to change delivery Address");
@@ -163,17 +165,18 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				final Hbox firstNameHbox = createHbox(widget, "firstName",
 						false, true);
 				final Textbox firstNameFieldTextBox = createTextbox(firstNameHbox);
-				firstNameFieldTextBox.setConstraint("/[a-zA-Z, ]*$/:"+ errorMsgName);
+				firstNameFieldTextBox.setConstraint("/[a-zA-Z, ]*$/:"
+						+ errorMsgName);
 				firstNameFieldTextBox.setValue(deliveryAddress.getFirstname()
 						.toString());
-				firstNameHbox.setClass("hbox");
 				content.appendChild(firstNameHbox);
 
 				// Last name hbox
 				final Hbox lastNameHbox = createHbox(widget, "lastName", false,
 						true);
 				final Textbox lastNameFieldTextBox = createTextbox(lastNameHbox);
-				lastNameFieldTextBox.setConstraint("/[a-zA-Z, ]*$/:"+ errorMsgName);
+				lastNameFieldTextBox.setConstraint("/[a-zA-Z, ]*$/:"
+						+ errorMsgName);
 				if (null != deliveryAddress.getLastname()) {
 					lastNameFieldTextBox.setValue(deliveryAddress.getLastname()
 							.toString());
@@ -200,6 +203,25 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				}
 				line2Hbox.setClass("hbox");
 				content.appendChild(line2Hbox);
+
+				// line 3
+				final Hbox line3Hbox = createHbox(widget, "line3", false, true);
+				final Textbox line3FieldTextBox = createTextbox(line3Hbox);
+				if (null != deliveryAddress.getAddressLine3()) {
+					line2FieldTextBox.setValue(deliveryAddress
+							.getAddressLine3().toString());
+				}
+				line3Hbox.setClass("hbox");
+				content.appendChild(line3Hbox);
+
+				final Hbox emailHbox = createHbox(widget, "Email", false, true);
+				final Textbox emailFieldTextBox = createTextbox(emailHbox);
+				if (null != deliveryAddress.getEmail()) {
+					line2FieldTextBox.setValue(deliveryAddress.getEmail()
+							.toString());
+				}
+				emailHbox.setClass("hbox");
+				content.appendChild(emailHbox);
 
 				// pincode
 				final Hbox pincodeHbox = createHbox(widget, "pincode", false,
@@ -237,14 +259,14 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				Hbox CountryHbox = createHbox(widget, "country", false, true);
 				countryListbox = createCountryListBox(widget, CountryHbox,
 						countries, countryName);
-				
+
 				CountryHbox.setClass("hbox");
 				content.appendChild(CountryHbox);
 				countryListbox.getSelectedItem();
 
 				final List<StateData> States = accountAddressFacade.getStates();
 				Listbox stateListbox = new Listbox();
-				
+
 				final Hbox stateHbox = createHbox(widget, "state", false, true);
 				createStateListBox(widget, stateHbox, stateListbox, States,
 						stateName);
@@ -265,18 +287,31 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 				// landMark
 				Listbox landMarkListbox = new Listbox();
-				final Textbox landMarkTextBox = new Textbox();
+				// final Textbox landMarkTextBox = new Textbox();
 				Hbox landMarkHbox = createHbox(widget, "landMark", false, true);
-				landMarkListbox.setMultiple(true);
-			//	landMarkListbox.set
+				// landMarkListbox.set
 				Collection<LandMarksModel> landMarks = pincodeModel
 						.getLandmarks();
-				landMarkListbox = createLandMarkListBox(widget, landMarkHbox,
-						landMarkListbox, landMarks);
+				createLandMarkListBox(widget, landMarkHbox, landMarkListbox,
+						landMarks);
+				landMarkHbox.setClass("hbox");
+				final Textbox landMarkTextBox = new Textbox();
+
+				landMarkHbox.appendChild(landMarkTextBox);
+				content.appendChild(landMarkHbox);
 
 				landMarkHbox.setClass("hbox");
 				content.appendChild(landMarkHbox);
+				landMarkListbox.addEventListener(
+						Events.ON_SELECT,
+						createLandMarkChangeEventListener(widget,
+								landMarkListbox, landMarkTextBox));
 
+				/*
+				 * landMarkListbox.addEventListener( Events.ON_OPEN,
+				 * createLandMarkChangeEventListener(widget, landMarkListbox,
+				 * landMarkTextBox));
+				 */
 				final Hbox mobileNumberHbox = createHbox(widget,
 						"mobileNumber", false, true);
 				final Textbox mobileNumberFieldTextBox = createTextbox(mobileNumberHbox);
@@ -291,8 +326,8 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				}
 				mobileNumberHbox.setClass("hbox");
 				content.appendChild(mobileNumberHbox);
-				Div div = new Div();
-				content.appendChild(div);
+				Div division = new Div();
+				content.appendChild(division);
 				pincodeFieldTextBox
 						.addEventListener(
 								Events.ON_BLUR,
@@ -311,12 +346,13 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 						createUpdateDetailsEventListener(widget,
 								deliveryAddress, firstNameFieldTextBox,
 								lastNameFieldTextBox, line1FieldTextBox,
-								line1FieldTextBox, pincodeFieldTextBox,
+								line2FieldTextBox, line3FieldTextBox,
+								pincodeFieldTextBox,
 								countryListbox.getSelectedItem(),
 								stateListbox.getSelectedItem(),
-								cityListbox.getSelectedItem(),
-								landMarkListbox,
-								mobileNumberFieldTextBox, content));
+								cityListbox.getSelectedItem(), landMarkListbox,
+								landMarkTextBox, mobileNumberFieldTextBox,
+								content));
 				return content;
 
 			} else {
@@ -326,25 +362,82 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				return content;
 			}
 
-		}catch(UiException e) 
-		{
-			LOG.error(" UiException occurred "+e.getMessage());
-		}
-		catch(NullPointerException e) 
-		{
-			LOG.error(" NullPointerException Exception "+e.getMessage());
-		}catch(FlexibleSearchException e) 
-		{
-			LOG.error(" FlexibleSearchException Exception : no result for the given pincode "+e.getMessage());
-		}catch (Exception e) {
+		} catch (UiException e) {
+			LOG.error(" UiException occurred " + e.getMessage());
+		} catch (NullPointerException e) {
+			LOG.error(" NullPointerException Exception " + e.getMessage());
+		} catch (FlexibleSearchException e) {
+			LOG.error(" FlexibleSearchException Exception : no result for the given pincode "
+					+ e.getMessage());
+		} catch (Exception e) {
 			LOG.error("Exception occurred " + e.getMessage());
 		}
 		return rootContainer;
 	}
+
+	// Landmark Event Listener
+
+	private EventListener createLandMarkChangeEventListener(
+			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
+			Listbox landMarkListbox, Textbox landMarkTextbox) {
+
+		return new AddLandMarkChangeEventListener(widget, landMarkListbox,
+				landMarkTextbox);
+	}
+
+	protected class AddLandMarkChangeEventListener implements EventListener {
+
+		private final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget;
+
+		private Listbox landMarkListbox;
+		private Textbox landMarkTextbox;
+
+		public AddLandMarkChangeEventListener(
+				Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
+				Listbox landMarkListbox, Textbox landMarkTextbox) {
+			this.widget = widget;
+			this.landMarkListbox = landMarkListbox;
+			this.landMarkTextbox = landMarkTextbox;
+		}
+
+		/**//**
+		 * On event.
+		 *
+		 * @param event
+		 *            the event
+		 * @throws InterruptedException
+		 */
+		public void onEvent(Event event) throws InterruptedException {
+			try {
+				List<Listitem> items = landMarkListbox.getItems();
+				String selectedLandmark = StringUtils.EMPTY;
+				for (Listitem item : items) {
+					if (item.isSelected()) {
+						selectedLandmark = (String) item.getValue();
+					}
+				}
+				if (null != selectedLandmark
+						&& selectedLandmark.equalsIgnoreCase("None of Above")) {
+					landMarkTextbox.setValue(StringUtils.EMPTY);
+					landMarkTextbox.setDisabled(false);
+				} else {
+
+					landMarkTextbox.setDisabled(true);
+				}
+
+			} catch (NullPointerException e) {
+				LOG.error("NullPointerException Occurred " + e.getMessage());
+			} catch (Exception e) {
+				LOG.error("Exception Occurred " + e.getMessage());
+			}
+
+		}
+	}
+
 	private Listbox createCityListBox(
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
-			Hbox cityHbox, Listbox cityListbox, Collection<PincodeModel> cities,
-			String cityName) {
+			Hbox cityHbox, Listbox cityListbox,
+			Collection<PincodeModel> cities, String cityName) {
 		if (null != cityListbox && null != cityListbox.getItems()) {
 			cityListbox.getItems().clear();
 		}
@@ -362,8 +455,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		cityHbox.appendChild(cityListbox);
 		return cityListbox;
 	}
-	
-
 
 	private Listbox createLandMarkListBox(
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
@@ -379,9 +470,12 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			listItem.setValue(landMark.getLandmark());
 			listItem.setParent(landMarkListbox);
 			landMarkListbox.addItemToSelection(listItem);
-			//landMarkListbox.setSelectedItem(listItem);
+			// landMarkListbox.setSelectedItem(listItem);
 		}
-		
+		Listitem listItem = new Listitem("None of Above");
+		listItem.setValue("None of Above");
+		listItem.setParent(landMarkListbox);
+		landMarkListbox.addItemToSelection(listItem);
 		landMarkHbox.appendChild(landMarkListbox);
 		return landMarkListbox;
 	}
@@ -392,7 +486,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		Listbox countryListbox = new Listbox();
 		countryListbox.setMultiple(false);
 		countryListbox.setMold("select");
-		//countryListbox.getli
+		// countryListbox.getli
 		for (final CountryModel country : countries) {
 			final Listitem listItem = new Listitem(country.getName());
 			listItem.setParent(countryListbox);
@@ -427,7 +521,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		return stateListbox;
 	}
 
-	
 	private EventListener createAddPinCodeListener(
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			Textbox pincodeFieldTextBox, Listbox cityListbox,
@@ -484,29 +577,29 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 						PincodeModel pincodeModel = new PincodeModel();
 						pincodeModel.setPincode(pincode);
 						try {
-						pincodeModel = flexibleSearhService
-								.getModelByExample(pincodeModel);
-						}catch (FlexibleSearchException e) {
+							pincodeModel = flexibleSearhService
+									.getModelByExample(pincodeModel);
+						} catch (FlexibleSearchException e) {
 							LOG.error("FlexibleSearchException No result for the given pincode "
 									+ pincodeValue.getValue());
 						}
-						if(null != pincodeModel) {
-						String cityName = pincodeModel.getCityName();
-						StateModel statemodel = pincodeModel.getState();
-						createCityListBox(widget, cityHbox, cityListbox,
-								statemodel.getCity(), cityName);
-						List<StateData> states = accountAddressFacade
-								.getStates();
-						createStateListBox(widget, stateHbox, stateListbox,
-								states, statemodel.getDescription());
-						Collection<LandMarksModel> landMarks = pincodeModel
-								.getLandmarks();
-						landMarkListBox = createLandMarkListBox(widget,
-								landMarkHbox, landMarkListBox, landMarks);
-						}
-						else {
+						if (null != pincodeModel) {
+							String cityName = pincodeModel.getCityName();
+							StateModel statemodel = pincodeModel.getState();
+							createCityListBox(widget, cityHbox, cityListbox,
+									statemodel.getCity(), cityName);
+							List<StateData> states = accountAddressFacade
+									.getStates();
+							createStateListBox(widget, stateHbox, stateListbox,
+									states, statemodel.getDescription());
+							Collection<LandMarksModel> landMarks = pincodeModel
+									.getLandmarks();
+							landMarkListBox = createLandMarkListBox(widget,
+									landMarkHbox, landMarkListBox, landMarks);
+						} else {
 							LOG.info("Pincode is Not Servisable ");
-							popupMessage(widget,
+							popupMessage(
+									widget,
 									MarketplaceCockpitsConstants.PINCODE_NOT_SERVISABLE);
 						}
 					} else {
@@ -517,7 +610,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 								MarketplaceCockpitsConstants.PIN_CODE_INVALID);
 					}
 				}
-			
+
 			} catch (NullPointerException e) {
 				LOG.error("NullPointerException Occurred " + e.getMessage());
 			} catch (Exception e) {
@@ -526,7 +619,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 		}
 	}
-	
+
 	private void popupMessage(
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			final String message) {
@@ -543,16 +636,17 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			AddressModel deliveryAddress, Textbox firstNameFieldTextBox,
 			Textbox lastNameFieldTextBox, Textbox line1FieldTextBox,
-			Textbox line2FieldTextBox, Textbox pincodeFieldTextBox,
-			Listitem countryListItem, Listitem stateListItem,
-			Listitem citylistItem, Listbox landMarkListItem,
+			Textbox line2FieldTextBox, Textbox line3FieldTextBox,
+			Textbox pincodeFieldTextBox, Listitem countryListItem,
+			Listitem stateListItem, Listitem citylistItem,
+			Listbox landMarkListItem, Textbox landMarkFieldTextBox,
 			Textbox mobileNumberFieldTextBox, Div content) {
 
 		return new UpdateDetailsEventListener(widget, deliveryAddress,
 				firstNameFieldTextBox, lastNameFieldTextBox, line1FieldTextBox,
-				line2FieldTextBox, pincodeFieldTextBox, countryListItem,
-				stateListItem, citylistItem, landMarkListItem,
-				mobileNumberFieldTextBox, content);
+				line2FieldTextBox, line3FieldTextBox, pincodeFieldTextBox,
+				countryListItem, stateListItem, citylistItem, landMarkListItem,
+				landMarkFieldTextBox, mobileNumberFieldTextBox, content);
 	}
 
 	protected class UpdateDetailsEventListener implements EventListener {
@@ -566,11 +660,13 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		private final Textbox lastNameFieldTextBox;
 		private final Textbox line1FieldTextBox;
 		private final Textbox line2FieldTextBox;
+		private final Textbox line3FieldTextBox;
 		private final Textbox pincodeFieldTextBox;
 		private final Listitem countryListbox;
 		private final Listitem stateFieldTextBox;
 		private final Listitem cityFieldTextBox;
 		private final Listbox landMarkListItem;
+		private final Textbox landMarkFieldTextBox;
 		private final Textbox mobileNumberFieldTextBox;
 		private Div content;
 
@@ -581,9 +677,11 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				final Textbox lastNameFieldTextBox,
 				final Textbox line1FieldTextBox,
 				final Textbox line2FieldTextBox,
+				final Textbox line3FieldTextBox,
 				final Textbox pincodeFieldTextBox,
 				final Listitem countryListItem, final Listitem stateListItem,
 				final Listitem citylistItem, final Listbox landMarkListItem,
+				final Textbox landMarkFieldTextBox,
 				final Textbox mobileNumberFieldTextBox, Div content) {
 			this.widget = widget2;
 			this.deliveryAddress = deliveryAddress;
@@ -592,11 +690,13 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			this.lastNameFieldTextBox = lastNameFieldTextBox;
 			this.line1FieldTextBox = line1FieldTextBox;
 			this.line2FieldTextBox = line2FieldTextBox;
+			this.line3FieldTextBox = line3FieldTextBox;
 			this.pincodeFieldTextBox = pincodeFieldTextBox;
 			this.countryListbox = countryListItem;
 			this.stateFieldTextBox = stateListItem;
 			this.cityFieldTextBox = citylistItem;
 			this.landMarkListItem = landMarkListItem;
+			this.landMarkFieldTextBox = landMarkFieldTextBox;
 			this.mobileNumberFieldTextBox = mobileNumberFieldTextBox;
 			this.content = content;
 		}
@@ -609,22 +709,25 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				handleUpdateDetails(event, deliveryAddress,
 						firstNameFieldTextBox, lastNameFieldTextBox,
 						line1FieldTextBox, line2FieldTextBox,
-						pincodeFieldTextBox, countryListbox, stateFieldTextBox,
-						cityFieldTextBox, landMarkListItem,
-						mobileNumberFieldTextBox, content);
+						line3FieldTextBox, pincodeFieldTextBox, countryListbox,
+						stateFieldTextBox, cityFieldTextBox, landMarkListItem,
+						landMarkFieldTextBox, mobileNumberFieldTextBox, content);
 			}
 		}
+
 		void handleUpdateDetails(final Event event,
 				final AddressModel deliveryAddress,
 				final Textbox firstNameFieldTextBox,
 				final Textbox lastNameFieldTextBox,
 				final Textbox line1FieldTextBox,
 				final Textbox line2FieldTextBox,
+				final Textbox line3FieldTextBox,
 				final Textbox pincodeFieldTextBox,
 				final Listitem countryListbox,
 				final Listitem stateFieldTextBox,
 				final Listitem cityFieldTextBox,
 				final Listbox landMarkListItem,
+				final Textbox landMarkFieldTextBox,
 				final Textbox mobileNumberFieldTextBox, Div content)
 				throws InterruptedException, ParseException,
 				InvalidKeyException, NoSuchAlgorithmException {
@@ -633,19 +736,22 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			final String changedLastName = lastNameFieldTextBox.getValue();
 			final String changedLine1 = line1FieldTextBox.getValue();
 			final String changedLine2 = line2FieldTextBox.getValue();
+			final String changedLine3 = line3FieldTextBox.getValue();
 			final String changedPincode = pincodeFieldTextBox.getValue();
 			final String changedCountry = countryListbox.getValue().toString();
 			final String changedState = stateFieldTextBox.getValue().toString();
 			final String changedCity = cityFieldTextBox.getValue().toString();
-			      String changedLandMark = StringUtils.EMPTY;
-			landMarkListItem.getSelectedItem().getValue();
-			List<Listitem >items = landMarkListItem.getItems();
-			for (  Listitem item : items )
-			{
-				
-				if(item.isSelected())
-				{
-					 changedLandMark = (String) item.getValue(); 
+			String changedLandMark = StringUtils.EMPTY;
+			if (null != landMarkFieldTextBox
+					&& null != landMarkFieldTextBox.getValue()) {
+				changedLandMark = landMarkFieldTextBox.getValue();
+			} else {
+				List<Listitem> items = landMarkListItem.getItems();
+				for (Listitem item : items) {
+
+					if (item.isSelected()) {
+						changedLandMark = (String) item.getValue();
+					}
 				}
 			}
 			final String changedMobileNumber = mobileNumberFieldTextBox
@@ -657,14 +763,14 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 			if (changedFirstName != null && !changedFirstName.isEmpty()) {
 				newDeliveryAddress.setFirstname(changedFirstName);
-				LOG.debug(" Changed First Name ="+changedFirstName);
+				LOG.debug(" Changed First Name =" + changedFirstName);
 			} else {
 				newDeliveryAddress
 						.setFirstname(MarketplacecommerceservicesConstants.EMPTY);
 			}
 			if (changedLastName != null && !changedLastName.isEmpty()) {
 				newDeliveryAddress.setLastname(changedLastName);
-				LOG.debug("Changed last Name ="+changedLastName);
+				LOG.debug("Changed last Name =" + changedLastName);
 			} else {
 				newDeliveryAddress
 						.setLastname(MarketplacecommerceservicesConstants.EMPTY);
@@ -682,6 +788,13 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				newDeliveryAddress
 						.setLine2(MarketplacecommerceservicesConstants.EMPTY);
 			}
+
+			if (changedLine3 != null && !changedLine3.isEmpty()) {
+				newDeliveryAddress.setAddressLine3(changedLine3);
+			} else {
+				newDeliveryAddress
+						.setAddressLine3(MarketplacecommerceservicesConstants.EMPTY);
+			}
 			if (changedPincode != null && !changedPincode.isEmpty()) {
 				newDeliveryAddress.setPostalcode(changedPincode);
 			} else {
@@ -690,7 +803,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			}
 			if (changedState != null && !changedState.isEmpty()) {
 				newDeliveryAddress.setState(changedState);
-				LOG.debug("Changed State Name ="+changedState);
+				LOG.debug("Changed State Name =" + changedState);
 			} else {
 				newDeliveryAddress
 						.setState(MarketplacecommerceservicesConstants.EMPTY);
@@ -722,20 +835,20 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			}
 			if (changedLandMark != null && !changedLandMark.isEmpty()) {
 				newDeliveryAddress.setLandmark(changedLandMark);
-				 LOG.debug("Changed LandMark :"+changedLandMark);
+				LOG.debug("Changed LandMark :" + changedLandMark);
 			} else {
 				newDeliveryAddress
 						.setLandmark(MarketplacecommerceservicesConstants.EMPTY);
 			}
 			if (changedMobileNumber != null) {
 				newDeliveryAddress.setPhone1(changedMobileNumber);
-				 LOG.debug("Changed Mobile Number :"+changedMobileNumber);
+				LOG.debug("Changed Mobile Number :" + changedMobileNumber);
 			} else {
 				newDeliveryAddress
 						.setPhone1(MarketplacecommerceservicesConstants.EMPTY);
 			}
 			String validatemessage = validateNewDeliveryAddress(newDeliveryAddress);
-			
+
 			if (validatemessage
 					.equalsIgnoreCase(MarketplaceCockpitsConstants.YES)) {
 				TypedObject order = getOrder();
@@ -754,10 +867,9 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				final Toolbarbutton resendOtp = new Toolbarbutton("Resend OTP");
 				OTP = sendSmsToCustomer(ordermodel);
 				content.getAttribute("otparea");
-				if (otpCount ==1) {
+				if (otpCount == 1) {
 					Div otparea = new Div();
-					final Hbox otpHbox = createHbox(widget, "OTP", false,
-							true);
+					final Hbox otpHbox = createHbox(widget, "OTP", false, true);
 					otparea.setClass("changeDeliveryotpArea");
 					otpHbox.setClass("otpHbox");
 					otpHbox.setParent(content);
@@ -779,7 +891,8 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 								@Override
 								public void onEvent(Event arg0)
 										throws Exception {
-									handleResendOtpButtonClickEvent(ordermodel, otpCount,resendOtp);
+									handleResendOtpButtonClickEvent(ordermodel,
+											otpCount, resendOtp);
 								}
 							});
 
@@ -788,10 +901,9 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 							createValidateOTPEventListener(widget, OTPTextBox,
 									ordermodel, newDeliveryAddress));
 				}
-				
-			}
-			else {
-			            popupMessage(widget, validatemessage);	
+
+			} else {
+				popupMessage(widget, validatemessage);
 			}
 		}
 
@@ -812,7 +924,8 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			if (!StringUtils.isNotEmpty(newDeliveryAddress.getPostalcode())) {
 				return MarketplaceCockpitsConstants.PIN_CODE_EMPTY;
 			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getCountry().getName())) {
+			if (!StringUtils.isNotEmpty(newDeliveryAddress.getCountry()
+					.getName())) {
 				return MarketplaceCockpitsConstants.COUNTRY_EMPTY;
 			}
 			if (!StringUtils.isNotEmpty(newDeliveryAddress.getState())) {
@@ -830,21 +943,21 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 	}
 
-	private void handleResendOtpButtonClickEvent(OrderModel ordermodel, int otpcount,Toolbarbutton resendOtp) throws InvalidKeyException, NoSuchAlgorithmException 
-	{
-			if(otpcount >=4) {
-				resendOtp.setVisible(false);
-			}
-			else {
-				sendSmsToCustomer(ordermodel);
-				otpcount++;
-			}
+	private void handleResendOtpButtonClickEvent(OrderModel ordermodel,
+			int otpcount, Toolbarbutton resendOtp) throws InvalidKeyException,
+			NoSuchAlgorithmException {
+		if (otpcount >= 4) {
+			resendOtp.setVisible(false);
+		} else {
+			sendSmsToCustomer(ordermodel);
+			otpcount++;
+		}
 	}
+
 	// To send SMS
-	private OTPModel sendSmsToCustomer(OrderModel ordermodel/*, int otpcount*/)
+	private OTPModel sendSmsToCustomer(OrderModel ordermodel/* , int otpcount */)
 			throws InvalidKeyException, NoSuchAlgorithmException {
-		
-		
+
 		String oTPMobileNumber = ordermodel.getDeliveryAddress().getPhone1();
 		OTPModel OTP = oTPGenericService.getLatestOTPModel(ordermodel.getUser()
 				.getUid(), OTPTypeEnum.COD);
@@ -857,7 +970,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				: ordermodel.getUser().getName();
 		String smsContent = oTPGenericService.generateOTP(userId,
 				OTPTypeEnum.COD.getCode(), oTPMobileNumber);
-		
+
 		sendSMSFacade
 				.sendSms(
 						MarketplacecommerceservicesConstants.SMS_SENDER_ID,
@@ -872,12 +985,11 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 								.replace(
 										MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,
 										contactNumber), oTPMobileNumber);
-		
+
 		otpCount++;
-		
+
 		return OTP;
-		}
-	
+	}
 
 	private void popupMessage(
 			final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
@@ -918,7 +1030,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			this.newDeliveryAddress = newDeliveryAddress;
 		}
 
-
 		@Override
 		public void onEvent(Event event) throws InterruptedException {
 			if (!oTPTextBox.getText().isEmpty()) {
@@ -950,8 +1061,11 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 							.getValue(), OTPTypeEnum.COD, time);
 			boolean validate = otpResponse.getOTPValid();
 			if (validate) {
-				boolean omsStatus = mplChangeDeliveryAddressController.changeDeliveryAddressCallToOMS(orderModel.getParentReference().getCode(), newDeliveryAddress);
-										 	
+				boolean omsStatus = mplChangeDeliveryAddressController
+						.changeDeliveryAddressCallToOMS(orderModel
+								.getParentReference().getCode(),
+								newDeliveryAddress);
+
 				if (omsStatus) {
 					orderModel.setDeliveryAddress(newDeliveryAddress);
 					orderModel.getParentReference().setDeliveryAddress(
@@ -962,12 +1076,12 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 							.getObject();
 					String customerId = customermodel.getUid();
 					modelService.save(orderModel);
-					orderModel.getParentReference().setDeliveryAddress(newDeliveryAddress);
+					orderModel.getParentReference().setDeliveryAddress(
+							newDeliveryAddress);
 					modelService.save(orderModel.getParentReference());
-					mplChangeDeliveryAddressController
-							.ticketCreateToCrm(orderModel.getParentReference(),
-									customerId,
-									MarketplaceCockpitsConstants.SOURCE);
+					mplChangeDeliveryAddressController.ticketCreateToCrm(
+							orderModel.getParentReference(), customerId,
+							MarketplaceCockpitsConstants.SOURCE);
 					Messagebox.show(LabelUtils.getLabel(widget,
 							CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO,
 							Messagebox.OK, Messagebox.INFORMATION);
