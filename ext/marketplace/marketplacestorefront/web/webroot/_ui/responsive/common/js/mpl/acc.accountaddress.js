@@ -12,6 +12,9 @@ $(document).ready(function(){
  
  $(document).ready(function(){
 	 /*To highlight the active link*/
+	 //TISPRO-554
+	 	$("select#menuPageSelect").val('');
+	 	
 	    $("#currentPassword").val('');
 		var pageName = $("#pageName").val();
 		var pageNameDropdown = $("#pageNameDropdown").val();
