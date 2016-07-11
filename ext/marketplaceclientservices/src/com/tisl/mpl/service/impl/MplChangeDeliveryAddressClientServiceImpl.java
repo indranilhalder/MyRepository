@@ -67,7 +67,7 @@ public class MplChangeDeliveryAddressClientServiceImpl implements MplChangeDeliv
 		{
 			if (null != webResource)
 			{
-				final JAXBContext context = JAXBContext.newInstance(MplCancelOrderRequest.class);
+				final JAXBContext context = JAXBContext.newInstance(MplChangeDeliveryAddressRequest.class);
 				if (null != context)
 				{
 					marshaller = context.createMarshaller();
@@ -90,7 +90,7 @@ public class MplChangeDeliveryAddressClientServiceImpl implements MplChangeDeliv
 			{
 				final String output = response.getEntity(String.class);
 				LOG.debug("xml response<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + output);
-				final JAXBContext jaxbContext = JAXBContext.newInstance(MplOrderIsCancellableResponse.class);
+				final JAXBContext jaxbContext = JAXBContext.newInstance(MplChangeDeliveryAddressResponce.class);
 				Unmarshaller unmarshaller = null;
 				if (null != jaxbContext)
 				{
