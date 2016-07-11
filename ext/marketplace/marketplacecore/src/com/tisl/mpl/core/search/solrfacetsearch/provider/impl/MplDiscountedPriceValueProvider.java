@@ -130,7 +130,8 @@ public class MplDiscountedPriceValueProvider extends AbstractPropertyFieldValueP
 	{
 
 		//	boolean offerExists = false;
-		double discountedPrice = 0.0;
+		//final double discountedPrice = 0.0;
+		double discountedPercent = 0.0;
 		final BuyBoxModel buyboxWinner = mplBuyBoxUtility.getLeastPriceBuyBoxModel(product);
 		if (buyboxWinner != null)
 		{
@@ -138,18 +139,21 @@ public class MplDiscountedPriceValueProvider extends AbstractPropertyFieldValueP
 			if (null != buyboxWinner.getSpecialPrice() && buyboxWinner.getSpecialPrice().intValue() > 0)
 			{
 				//	offerExists = true;
-				discountedPrice = buyboxWinner.getMrp().doubleValue() - buyboxWinner.getSpecialPrice().doubleValue();
+				// TISPRM-133
+				discountedPercent = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getPrice().doubleValue()) * 100)
+						/ buyboxWinner.getMrp().doubleValue();
 			}
 			else if (null != buyboxWinner.getPrice() && buyboxWinner.getPrice().intValue() > 0
 					&& buyboxWinner.getMrp().intValue() > buyboxWinner.getPrice().intValue())
 			{
 				//offerExists = true;
-				discountedPrice = buyboxWinner.getMrp().doubleValue() - buyboxWinner.getPrice().doubleValue();
-
+				//Discount in percent
+				// TISPRM-133
+				discountedPercent = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getPrice().doubleValue()) * 100)
+						/ buyboxWinner.getMrp().doubleValue();
 			}
 		}
-
-		return discountedPrice;
+		return discountedPercent;
 
 	}
 

@@ -63,10 +63,13 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException,
 			EtailNonBusinessExceptions
 	{
+		final List<String> allVariantsId = new ArrayList<String>();
 		VariantOptionData variantOptionData = null;
 		if (productModel instanceof PcmProductVariantModel)
 		{
 			final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) productModel;
+			//TISPRM-56
+
 			final String selectedSize = selectedVariantModel.getSize();
 			final String selectedCapacity = selectedVariantModel.getCapacity();
 			final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
@@ -79,11 +82,17 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 
 				for (final VariantProductModel vm : baseProduct.getVariants())
 				{
+					if (null != vm.getCode())
+					{
+						allVariantsId.add(vm.getCode());
+					}
+
 					final Map<String, String> sizeLink = new HashMap<String, String>();
 					final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
 					variantOptionData = getVariantOptionDataConverter().convert(pm);
 					if (null != pm.getSize())
 					{
+
 						//chceking size variant exists or not
 						//TISPRO-50 - null check added
 						if (null != selectedSize && selectedSize.equals(pm.getSize()))
@@ -146,6 +155,7 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 
 					variantOptions.add(variantOptionData);
 				}
+				/* productData.setAllVariantsId(allVariantsId); */
 				variantOptions = populateColor(variantOptions, defaultColorMap);
 				productData.setVariantOptions(variantOptions);
 				if (isSizeVariantPresent)
