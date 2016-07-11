@@ -1192,11 +1192,10 @@ $( document ).ready(function() {
 			//TISPRM-56
 			//var stockInfo = '{"mp000000000124935":"1","mp000000000126616":"2","mp000000000126175":"0","mp000000000124936":"0"}';
 			var stockInfo = data['availibility'];
-			$.each($.parseJSON(stockInfo),function(key,value){
+			$.each(stockInfo,function(key,value){
 				$("#variant option").each(function(){
 				if($(this).val().indexOf(key)!= -1 && value == 0){
 					$(this).attr("disabled","disabled");
-					$(this).attr("text-decoration","line-through");
 					}
 				});
 			});
