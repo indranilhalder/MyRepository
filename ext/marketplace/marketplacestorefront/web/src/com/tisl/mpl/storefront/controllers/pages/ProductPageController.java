@@ -1611,7 +1611,7 @@ public class ProductPageController extends AbstractPageController
 
 						//final PriceData savingPricePercent = productDetailsHelper.formPriceData(savingPriceCal);
 						buyboxJson
-								.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, BigDecimal.valueOf(roundedOffValue));
+								.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, BigDecimal.valueOf(Double.valueOf(roundedOffValue).intValue()));
 					}
 					else if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getValue().doubleValue() > 0)
 					{
@@ -1620,7 +1620,7 @@ public class ProductPageController extends AbstractPageController
 						final double roundedOffValue = Math.round(savingPriceCalPer * 100.0) / 100.0;
 						//final PriceData savingPricePercent = productDetailsHelper.formPriceData(savingPriceCal);
 						buyboxJson
-								.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, BigDecimal.valueOf(roundedOffValue));
+								.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, BigDecimal.valueOf(Double.valueOf(roundedOffValue).intValue()));
 					}
 				}
 			}
