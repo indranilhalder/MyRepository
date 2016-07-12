@@ -60,15 +60,6 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 				OrderStatus.PICK_CONFIRMED.getCode());
 		boolean changable = false;
 
-		if (null != orderModel && null != orderModel.getPaymentMode()
-				&& orderModel.getPaymentMode().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
-		{
-			changable = true;
-		}
-		else
-		{
-			return false;
-		}
 		try
 		{
 			if (null != orderModel.getChildOrders())
