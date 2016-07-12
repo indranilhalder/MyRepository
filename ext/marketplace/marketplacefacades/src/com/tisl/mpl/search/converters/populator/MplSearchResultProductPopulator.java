@@ -226,7 +226,6 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 			final double savingsAmt = mrpPriceValue.doubleValue() - priceValue.doubleValue();
 			final double calculatedPerSavings = (savingsAmt / mrpPriceValue.doubleValue()) * 100;
 			final double roundedOffValuebefore = Math.round(calculatedPerSavings * 100.0) / 100.0;
-			//int roundedOffValuebeforeNew=Integer.valueroundedOffValuebefore
 			final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY, roundedOffValue,
 					getCommonI18NService().getCurrentCurrency());
@@ -255,20 +254,20 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 	/*
 	 * @Override protected void addImageData(final SearchResultValueData source, final String imageFormat, final String
 	 * mediaFormatQualifier, final ImageDataType type, final List<ImageData> images) {
-	 * 
+	 *
 	 * final Object imgObj = getValue(source, "img-" + mediaFormatQualifier); List<String> imgList = new ArrayList(); if
 	 * (imgObj instanceof ArrayList) { imgList = (List) imgObj; } else { final String imgStr = (String) imgObj;
 	 * imgList.add(imgStr); }
-	 * 
-	 * 
+	 *
+	 *
 	 * if (!imgList.isEmpty()) { for (int i = 0; i < imgList.size(); i++) { final ImageData imageSearchData =
 	 * createImageData(); imageSearchData.setImageType(type); imageSearchData.setFormat(imageFormat);
 	 * imageSearchData.setUrl(imgList.get(i)); images.add(imageSearchData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
-	 * 
-	 * 
+	 *
+	 *
 	 * } }
 	 */
 

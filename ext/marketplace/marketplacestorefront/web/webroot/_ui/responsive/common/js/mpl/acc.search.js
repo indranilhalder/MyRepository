@@ -1,4 +1,5 @@
 	function constructDepartmentHierarchy(inputArray) {
+		alert(inputArray);
 		var output = [];
 		if(inputArray!=""){
 		for (var i = 0; i < inputArray.length; i++) {
@@ -14,6 +15,12 @@
 					var categoryDetails = categoryArray[j].split(":");
 					var categoryCode = categoryDetails[0];
 					var categoryName = categoryDetails[1];
+					
+					if(categoryDetails[2] == "L3")
+					{
+						categoryName += "  (" +categoryDetails[5] + ")";
+					}
+					
 					var categoryType = "category";
 					if(categoryDetails[3] == 'true') {
 						categoryType = "department"

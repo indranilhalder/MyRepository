@@ -205,13 +205,13 @@ function navigateToPage(queryString,textString)
 											<div class="facet-text">
 											<span class="facet-text">
 												${facetValue.name}
-												<%-- <ycommerce:testId code="facetNav_count">
-													<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
-												</ycommerce:testId> --%>
+												<ycommerce:testId code="facetNav_count">
+													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+												</ycommerce:testId>
 												</span>
-												<span class="facet-count">												
+												<%-- <span class="facet-count">												
 												<spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/>											
-											</span>
+											</span> --%>
 											
 											</div>
 										</span>
@@ -237,7 +237,7 @@ function navigateToPage(queryString,textString)
 								<%-- <a href="#">${facetValue.name}</a> --%>
 									<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}">${facetValue.name}</a> --%>&nbsp;
 									<%-- <ycommerce:testId code="facetNav_count">
-										<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+										<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 									</ycommerce:testId> --%>
 								</span>
 							</c:if>
@@ -300,7 +300,7 @@ function navigateToPage(queryString,textString)
 										<span class="facet-text">
 											<spring:theme code="text.exclude.outOfStock"/>&nbsp;
 											<ycommerce:testId code="facetNav_count">
-												<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+												<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 											</ycommerce:testId>
 										</span>
 									</span>
@@ -314,7 +314,7 @@ function navigateToPage(queryString,textString)
 											<span class="facet-text">
 												${facetValue.name}&nbsp;
 												<ycommerce:testId code="facetNav_count">
-													<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 												</ycommerce:testId>
 											</span>
 										</span>
@@ -433,13 +433,13 @@ function navigateToPage(queryString,textString)
 										<div class="facet-text">
 										<span class="facet-text">
 											<spring:theme code="text.exclude.outOfStock"/>&nbsp;											
-											<%-- <ycommerce:testId code="facetNav_count">
-												<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
-											</ycommerce:testId> --%>
+											<ycommerce:testId code="facetNav_count">
+												<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+											</ycommerce:testId>
 										</span>
-										 <span class="facet-count">
+										 <%-- <span class="facet-count">
 												<spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/>											
-										</span>
+										</span> --%>
 										</div>
 									</span>
 									</c:if>
@@ -452,13 +452,13 @@ function navigateToPage(queryString,textString)
 										<div class="facet-text">
 											<span class="facet-text">
 												${facetValue.name}
-												<%-- <ycommerce:testId code="facetNav_count">
-													<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
-												</ycommerce:testId> --%>
+												 <ycommerce:testId code="facetNav_count">
+													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+												</ycommerce:testId>
 												</span>
-												<span class="facet-count">												
+												<%-- <span class="facet-count">												
 												<spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/>											
-											</span>												
+											</span> --%>												
 											</div>
 											
 										</span>
@@ -487,7 +487,7 @@ function navigateToPage(queryString,textString)
 							<%-- <a href="#">${facetValue.name}</a>	 --%>					
 								<%-- <a href="${facetValueQueryUrl}">${facetValue.name}</a> --%>
 								 <%-- <ycommerce:testId code="facetNav_count">
-									<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+									<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 								</ycommerce:testId> --%> 
 							</span>
 						</c:if>
