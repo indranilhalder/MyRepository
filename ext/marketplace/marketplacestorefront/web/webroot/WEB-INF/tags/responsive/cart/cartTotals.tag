@@ -66,9 +66,9 @@ function pinCodeDiv(){
 	$("#changePinDiv").show();
 	$("#defaultPinDiv").hide();
 	$("#defaultPinCodeIds").val("");
-	$(".pincodeServiceError").text("");	
-	$(".less-stock").text("");	
-	$("#successPin").text("");	
+	//$(".pincodeServiceError").text("");	
+	//$(".less-stock").text("");	
+	//$("#successPin").text("");	
 }
 //TISPRM-65
 

@@ -3143,6 +3143,11 @@ function checkPincodeServiceability(buttonType)
 			"color":"#ff1c47",
 			"display":"block",
 			});
+		
+		//setTimeout(function(){
+		$("#pinCodeDispalyDiv .spinner").remove();
+		$("#no-click").remove();
+		//},500);
 
 		return false;
 	}
@@ -3155,6 +3160,10 @@ function checkPincodeServiceability(buttonType)
 			"display":"block",
 
 			});
+		//setTimeout(function(){
+		$("#pinCodeDispalyDiv .spinner").remove();
+		$("#no-click").remove();
+		//},500);
 		
         return false;  
     }
