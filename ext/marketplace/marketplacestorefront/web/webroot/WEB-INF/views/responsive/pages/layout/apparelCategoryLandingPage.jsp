@@ -28,6 +28,16 @@
 			</cms:pageSlot>
 		</ul>
 	</div>
+	<div class="listing wrapper">
+			<div class="left-block">
+			<cms:pageSlot position="Section4A" var="feature">
+				<cms:component component="${feature}"/>
+			</cms:pageSlot>
+			</div>
+			<cms:pageSlot position="Section4B" var="feature">
+				<cms:component component="${feature}"/>
+			</cms:pageSlot>
+			</div>
 	<!-- For Infinite Analytics Start -->
 	<div class="trending" id="ia_products_new"></div>
 	<!-- For Infinite Analytics End -->

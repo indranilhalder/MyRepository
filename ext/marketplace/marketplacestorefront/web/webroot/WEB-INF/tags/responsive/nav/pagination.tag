@@ -29,8 +29,45 @@
 
 <c:if test="${searchPageData.pagination.totalNumberOfResults > 0}">
 
-	<div class="pagination-bar listing-menu ${(top)?"top":"bottom"}">
+<!-- Added for 30th Jun Change starts -->
+<c:set var="breadCrumbList" value="${searchPageData.breadcrumbs}" />
+<c:set var="breadCrumbSize" value="${fn:length(breadCrumbList)}" />
+<div class="facet-values js-facet-values">
+			<ul class="facet-list filter-opt">
+				<c:forEach items="${searchPageData.breadcrumbs}" var="breadcrumb">
+					<c:if test="${breadcrumb.facetName == 'inStockFlag'}">
+						<li>
+							<c:url value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}" var="removeQueryUrl"/>
+							Exclude OutofStock&nbsp;<a href="${removeQueryUrl}" ><span class="remove_filter">x</span></a>
+						</li>
+					</c:if>
+					<c:if test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' &&  breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'}">
+						<li>
+						   <c:choose>
+						   <c:when test="${breadcrumb.removeQuery.url!='' && not empty offers}">
+						   <c:set var="removeQueryUrl" value="${fn:replace(breadcrumb.removeQuery.url, 
+                                'search', 'view-all-offers')}" />
+                            <c:url value="${removeQueryUrl}&searchCategory=${searchCategory}" var="removeQueryUrl"/>
+						   </c:when>
+						   <c:when test="${breadcrumb.removeQuery.url!='' && not empty newProduct}">
+						   <c:set var="removeQueryUrl" value="${fn:replace(breadcrumb.removeQuery.url, 
+                                'search', 'search/viewOnlineProducts')}" />
+                            <c:url value="${removeQueryUrl}&searchCategory=${searchCategory}" var="removeQueryUrl"/>
+						   </c:when>
+						   <c:otherwise>
+						   <c:url value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}" var="removeQueryUrl"/>
+						   </c:otherwise>
+						   </c:choose>
+							<input type="hidden" class="applied-color" value="${breadcrumb.facetValueName}">
+							${breadcrumb.facetValueName}&nbsp;<a href="${removeQueryUrl}" ><span class="remove_filter">x</span></a>
+						</li>
+					</c:if>
+				</c:forEach>
+			</ul>
+		</div>              
+<!-- Added for 30th Jun Change ends -->
 
+	<div class="pagination-bar listing-menu ${(top)?"top":"bottom"}">
 
 			<%-- <div class="col-xs-6 col-md-4">
 				<ycommerce:testId code="searchResults_productsFound_label">
@@ -38,12 +75,7 @@
 				</ycommerce:testId>
 			</div> --%>
 
-			<c:if test="${not empty searchPageData.sorts}">
-
-				
-					
-				
-				
+			<c:if test="${not empty searchPageData.sorts}">				
 				<c:if test="${ top}">
 					<!-- <div class="helper clearfix hidden-md hidden-lg"></div> -->
 					<div>
@@ -170,7 +202,7 @@
 				</c:if>
 				<div>
 
-<pagination:pageSelectionPagination searchUrl="${searchUrl}" searchPageData="${searchPageData}" numberPagesShown="${numberPagesShown}" themeMsgKey="${themeMsgKey}"/>
+<pagination:pageSelectionPagination top="${top}" searchUrl="${searchUrl}" searchPageData="${searchPageData}" numberPagesShown="${numberPagesShown}" themeMsgKey="${themeMsgKey}"/>
 </div>
 			</c:if>
 

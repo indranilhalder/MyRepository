@@ -201,9 +201,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				if (null != buyBoxMod.getMrp())
 				{
 					buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
-					buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 				}
-
+				buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 
 				//other sellers count
 				final int sellerSize = buyboxModelList.size() - 1;
@@ -270,9 +269,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			}
 			else
 			{
-				//Fix for Defect TISPT-152
-				LOG.warn("No buybox present for the product with product code ::: " + productCode);
-				//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3001);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3001);
 			}
 		}
 		catch (final NumberFormatException e)

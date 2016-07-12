@@ -71,7 +71,9 @@
 		<property name="mrpPriceValue"
 			type="de.hybris.platform.commercefacades.product.data.PriceData"></property>
 		<property name="allOOStock" type="String" />
-<property name="sellerAssociationstatus" type="String" />
+		<property name="sellerAssociationstatus" type="String" />
+		<!-- TISPRM-56 -->
+		<property name="productCode" type="String" />
 		<!-- <property name="deliveryModes" type="String" />
 		<property name="isCod" type="String" />
 		 -->
@@ -181,7 +183,8 @@
 		<!-- Added for TISCR-405: % off or You save XYZ iN PLP -->
 	<property name="savingsOnProduct"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
-
+		<!-- Added for TISPRM-56 -->
+		<property name="allVariantsId" type="java.util.List&lt;java.lang.String>"/>
 	</bean>
 
 	<!-- pdp changes begins -->
@@ -640,6 +643,7 @@
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
     	<property name="imageDiscription" type="String" />
+    	<property name="componentType" type="String" />
     </bean>
 
     <bean class="com.tisl.mpl.facades.cms.data.TextComponentData">
@@ -647,8 +651,10 @@
     	<property name="type" type="String" />
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
+    	<property name="componentType" type="String" />
     </bean>
      
+       
     <bean class="com.tisl.mpl.facades.cms.data.ProductListComponentData">
     	<property name="image" type="String" />
     	<property name="name" type="String" />
@@ -658,6 +664,17 @@
     	<property name="type" type="String" />
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
+    	<property name="productID" type="String" />
+       	<property name="componentType" type="String" />
+    </bean>
+    
+    <bean class="com.tisl.mpl.facades.cms.data.ImageListComponentData">
+    	<property name="type" type="String" />
+    	<property name="typeId" type="String" />
+    	<property name="typeVal" type="String" />
+    	<property name="imageDiscription" type="String" />
+    	<property name="bannerslist" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.BannerComponentData>"/>
+       	<property name="componentType" type="String" />
     </bean>
     
     <bean class="com.tisl.mpl.facades.cms.data.MplPageData">
@@ -665,6 +682,7 @@
     	<property name="textComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.TextComponentData>"/>
     	<property name="bannerComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.BannerComponentData>"/>
     	<property name="productComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ProductListComponentData>"/>
+    	<property name="bannerslistComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ImageListComponentData>"/>
     	<property name="sectionName" type="String" />
        	<property name="lastModifiedTime" type="java.util.Date" />
     </bean>    

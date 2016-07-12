@@ -4,6 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%-- <c:url var="sizeGuideUrl"
 
 	value="/p/sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url> --%>
@@ -70,7 +71,6 @@ $("#variant").change(function() {
 <spring:theme code="text.colour" />
 </p>
 </c:if>	
-
 	<c:choose>
 		<c:when test="${not empty product.variantOptions}">
 			
@@ -94,7 +94,7 @@ $("#variant").change(function() {
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
 									<c:choose>
-								<c:when test="${color=='multi'}">
+								<c:when test="${fn:startsWith(color, 'multi')}">
 						     	<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
 								</c:when>
 								<c:otherwise>

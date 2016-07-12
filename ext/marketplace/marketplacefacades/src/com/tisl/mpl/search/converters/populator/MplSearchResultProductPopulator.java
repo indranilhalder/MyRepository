@@ -223,16 +223,20 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 
 		if (null != mrpPriceValue && null != priceValue)
 		{
-			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY,
-					BigDecimal.valueOf(mrpPriceValue.doubleValue() - priceValue.doubleValue()),
+			final double savingsAmt = mrpPriceValue.doubleValue() - priceValue.doubleValue();
+			final double calculatedPerSavings = (savingsAmt / mrpPriceValue.doubleValue()) * 100;
+			final double roundedOffValuebefore = Math.round(calculatedPerSavings * 100.0) / 100.0;
+			//int roundedOffValuebeforeNew=Integer.valueroundedOffValuebefore
+			final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
+			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY, roundedOffValue,
 					getCommonI18NService().getCurrentCurrency());
+
 			target.setSavingsOnProduct(priceData);
 
 		}
 
 
 	}
-
 
 
 	@Override
