@@ -75,6 +75,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 	private static final String CUSTOMER_DETAILS_UPDATED = "customerdetailsupdated";
 	private static final String INFO = "info";
 	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
+	private static final int MAX_LENGTH = 20;
 
 	@Autowired
 	private FlexibleSearchService flexibleSearhService;
@@ -148,25 +149,22 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 					LOG.debug("Payment mode = " + paymentMode);
 				}
 
-				if (paymentMode
+				if (!paymentMode
 						.equalsIgnoreCase(MarketplaceCockpitsConstants.PAYMENT_MODE_COD)) {
 					Label label = new Label(
 							"For prepaid orders please use commerce to change delivery Address");
 					content.appendChild(label);
-					// content.setHeight("350px");
 					return content;
 				}
 				AddressModel deliveryAddress = ordermodel.getParentReference()
 						.getDeliveryAddress();
 				content.setClass("changeDeliveryAddress");
 				// First Name Hbox
-				String errorMsgName = LabelUtils.getLabel(widget,
-						"error.msg.name", new Object[0]);
 				final Hbox firstNameHbox = createHbox(widget, "firstName",
 						false, true);
+				firstNameHbox.setClass("hbox");
 				final Textbox firstNameFieldTextBox = createTextbox(firstNameHbox);
-				firstNameFieldTextBox.setConstraint("/[a-zA-Z, ]*$/:"
-						+ errorMsgName);
+				firstNameFieldTextBox.setMaxlength(MAX_LENGTH);
 				firstNameFieldTextBox.setValue(deliveryAddress.getFirstname()
 						.toString());
 				content.appendChild(firstNameHbox);
@@ -175,8 +173,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				final Hbox lastNameHbox = createHbox(widget, "lastName", false,
 						true);
 				final Textbox lastNameFieldTextBox = createTextbox(lastNameHbox);
-				lastNameFieldTextBox.setConstraint("/[a-zA-Z, ]*$/:"
-						+ errorMsgName);
+				lastNameFieldTextBox.setMaxlength(MAX_LENGTH);
 				if (null != deliveryAddress.getLastname()) {
 					lastNameFieldTextBox.setValue(deliveryAddress.getLastname()
 							.toString());
@@ -187,6 +184,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				// line1 hbox
 				final Hbox line1Hbox = createHbox(widget, "line1", false, true);
 				final Textbox line1FieldTextBox = createTextbox(line1Hbox);
+				line1FieldTextBox.setMaxlength(MAX_LENGTH);
 				if (null != deliveryAddress.getLine1()) {
 					line1FieldTextBox.setValue(deliveryAddress.getLine1()
 							.toString());
@@ -197,6 +195,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				// line2 hbox
 				final Hbox line2Hbox = createHbox(widget, "line2", false, true);
 				final Textbox line2FieldTextBox = createTextbox(line2Hbox);
+				line2FieldTextBox.setMaxlength(MAX_LENGTH);
 				if (null != deliveryAddress.getLine2()) {
 					line2FieldTextBox.setValue(deliveryAddress.getLine2()
 							.toString());
@@ -207,8 +206,9 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				// line 3
 				final Hbox line3Hbox = createHbox(widget, "line3", false, true);
 				final Textbox line3FieldTextBox = createTextbox(line3Hbox);
+				line3FieldTextBox.setMaxlength(MAX_LENGTH);
 				if (null != deliveryAddress.getAddressLine3()) {
-					line2FieldTextBox.setValue(deliveryAddress
+					line3FieldTextBox.setValue(deliveryAddress
 							.getAddressLine3().toString());
 				}
 				line3Hbox.setClass("hbox");
@@ -234,23 +234,20 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				// pincode = pincodeFieldTextBox.getValue();
 				pincodeHbox.setClass("hbox");
 				content.appendChild(pincodeHbox);
-
 				pincodeFieldTextBox.setMaxlength(Integer.valueOf(LabelUtils
 						.getLabel(widget, "maxLength", new Object[0])));
-
 				PincodeModel pincodeModel = new PincodeModel();
-
 				pincodeModel = new PincodeModel();
 				pincodeModel.setPincode(pincodeFieldTextBox.getValue());
 				pincodeModel = flexibleSearhService
 						.getModelByExample(pincodeModel);
-				// CityModel cityModel = pincodeModel.getCityCode();
 				String cityName = pincodeModel.getCityName();
 				StateModel stateModel = pincodeModel.getState();
-				// String cityName = cityModel.getName();
 				String stateName = stateModel.getDescription();
 				String countryName = commonI18NService.getCountry("IN")
 						.getName();
+				
+             // Country Data
 				final List<CountryModel> countries = commonI18NService
 						.getAllCountries();
 				final Div countryDiv = new Div();
@@ -259,11 +256,11 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				Hbox CountryHbox = createHbox(widget, "country", false, true);
 				countryListbox = createCountryListBox(widget, CountryHbox,
 						countries, countryName);
-
 				CountryHbox.setClass("hbox");
 				content.appendChild(CountryHbox);
 				countryListbox.getSelectedItem();
 
+				// State data
 				final List<StateData> States = accountAddressFacade.getStates();
 				Listbox stateListbox = new Listbox();
 
@@ -287,19 +284,16 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 				// landMark
 				Listbox landMarkListbox = new Listbox();
-				// final Textbox landMarkTextBox = new Textbox();
 				Hbox landMarkHbox = createHbox(widget, "landMark", false, true);
-				// landMarkListbox.set
 				Collection<LandMarksModel> landMarks = pincodeModel
 						.getLandmarks();
 				createLandMarkListBox(widget, landMarkHbox, landMarkListbox,
 						landMarks);
 				landMarkHbox.setClass("hbox");
 				final Textbox landMarkTextBox = new Textbox();
-
+				landMarkTextBox.setMaxlength(MAX_LENGTH);
 				landMarkHbox.appendChild(landMarkTextBox);
 				content.appendChild(landMarkHbox);
-
 				landMarkHbox.setClass("hbox");
 				content.appendChild(landMarkHbox);
 				landMarkListbox.addEventListener(
@@ -307,19 +301,10 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 						createLandMarkChangeEventListener(widget,
 								landMarkListbox, landMarkTextBox));
 
-				/*
-				 * landMarkListbox.addEventListener( Events.ON_OPEN,
-				 * createLandMarkChangeEventListener(widget, landMarkListbox,
-				 * landMarkTextBox));
-				 */
 				final Hbox mobileNumberHbox = createHbox(widget,
 						"mobileNumber", false, true);
 				final Textbox mobileNumberFieldTextBox = createTextbox(mobileNumberHbox);
-				String errorMsgMobile = LabelUtils.getLabel(widget,
-						"error.msg.mobile", new Object[0]);
 				mobileNumberFieldTextBox.setMaxlength(10);
-				mobileNumberFieldTextBox.setConstraint("/[0-9]*$/:"
-						+ errorMsgMobile);
 				if (null != deliveryAddress.getPhone1()) {
 					mobileNumberFieldTextBox.setValue(deliveryAddress
 							.getPhone1());
@@ -345,9 +330,9 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 						Events.ON_CLICK,
 						createUpdateDetailsEventListener(widget,
 								deliveryAddress, firstNameFieldTextBox,
-								lastNameFieldTextBox, line1FieldTextBox,
-								line2FieldTextBox, line3FieldTextBox,
-								pincodeFieldTextBox,
+								lastNameFieldTextBox, emailFieldTextBox,
+								line1FieldTextBox, line2FieldTextBox,
+								line3FieldTextBox, pincodeFieldTextBox,
 								countryListbox.getSelectedItem(),
 								stateListbox.getSelectedItem(),
 								cityListbox.getSelectedItem(), landMarkListbox,
@@ -421,7 +406,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 					landMarkTextbox.setValue(StringUtils.EMPTY);
 					landMarkTextbox.setDisabled(false);
 				} else {
-
+					landMarkTextbox.setValue(StringUtils.EMPTY);
 					landMarkTextbox.setDisabled(true);
 				}
 
@@ -603,7 +588,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 									MarketplaceCockpitsConstants.PINCODE_NOT_SERVISABLE);
 						}
 					} else {
-
 						pincodeValue.setValue(StringUtils.EMPTY);
 						pincodeValue.setFocus(true);
 						popupMessage(widget,
@@ -635,29 +619,33 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 	private EventListener createUpdateDetailsEventListener(
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			AddressModel deliveryAddress, Textbox firstNameFieldTextBox,
-			Textbox lastNameFieldTextBox, Textbox line1FieldTextBox,
-			Textbox line2FieldTextBox, Textbox line3FieldTextBox,
-			Textbox pincodeFieldTextBox, Listitem countryListItem,
-			Listitem stateListItem, Listitem citylistItem,
-			Listbox landMarkListItem, Textbox landMarkFieldTextBox,
-			Textbox mobileNumberFieldTextBox, Div content) {
+			Textbox lastNameFieldTextBox, Textbox emailFieldTextBox,
+			Textbox line1FieldTextBox, Textbox line2FieldTextBox,
+			Textbox line3FieldTextBox, Textbox pincodeFieldTextBox,
+			Listitem countryListItem, Listitem stateListItem,
+			Listitem citylistItem, Listbox landMarkListItem,
+			Textbox landMarkFieldTextBox, Textbox mobileNumberFieldTextBox,
+			Div content) {
 
 		return new UpdateDetailsEventListener(widget, deliveryAddress,
-				firstNameFieldTextBox, lastNameFieldTextBox, line1FieldTextBox,
-				line2FieldTextBox, line3FieldTextBox, pincodeFieldTextBox,
-				countryListItem, stateListItem, citylistItem, landMarkListItem,
-				landMarkFieldTextBox, mobileNumberFieldTextBox, content);
+				firstNameFieldTextBox, lastNameFieldTextBox, emailFieldTextBox,
+				line1FieldTextBox, line2FieldTextBox, line3FieldTextBox,
+				pincodeFieldTextBox, countryListItem, stateListItem,
+				citylistItem, landMarkListItem, landMarkFieldTextBox,
+				mobileNumberFieldTextBox, content);
 	}
 
 	protected class UpdateDetailsEventListener implements EventListener {
 
 		private final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget;
-		private static final String FAILED_TO_UPDATE_CUSTOMER_FORM = "failedToUpdateCustomerForm";
+		private static final String NAME_REGEX = "[a-zA-Z ]+";
+		private static final String ADDRESS_LINE1_REGEX = "[a-zA-Z0-9 ]+";
 		private static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-		private static final String MOBILENUMBER_REGEX = "^[0-9]{10}";
+		private static final String MOBILENUMBER_REGEX = "[0-9 ]+";
 		private final AddressModel deliveryAddress;
 		private final Textbox firstNameFieldTextBox;
 		private final Textbox lastNameFieldTextBox;
+		private final Textbox emailFieldTextBox;
 		private final Textbox line1FieldTextBox;
 		private final Textbox line2FieldTextBox;
 		private final Textbox line3FieldTextBox;
@@ -675,6 +663,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				final AddressModel deliveryAddress,
 				final Textbox firstNameFieldTextBox,
 				final Textbox lastNameFieldTextBox,
+				final Textbox emailFieldTextBox,
 				final Textbox line1FieldTextBox,
 				final Textbox line2FieldTextBox,
 				final Textbox line3FieldTextBox,
@@ -688,6 +677,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 			this.firstNameFieldTextBox = firstNameFieldTextBox;
 			this.lastNameFieldTextBox = lastNameFieldTextBox;
+			this.emailFieldTextBox = emailFieldTextBox;
 			this.line1FieldTextBox = line1FieldTextBox;
 			this.line2FieldTextBox = line2FieldTextBox;
 			this.line3FieldTextBox = line3FieldTextBox;
@@ -708,9 +698,10 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			{
 				handleUpdateDetails(event, deliveryAddress,
 						firstNameFieldTextBox, lastNameFieldTextBox,
-						line1FieldTextBox, line2FieldTextBox,
-						line3FieldTextBox, pincodeFieldTextBox, countryListbox,
-						stateFieldTextBox, cityFieldTextBox, landMarkListItem,
+						emailFieldTextBox, line1FieldTextBox,
+						line2FieldTextBox, line3FieldTextBox,
+						pincodeFieldTextBox, countryListbox, stateFieldTextBox,
+						cityFieldTextBox, landMarkListItem,
 						landMarkFieldTextBox, mobileNumberFieldTextBox, content);
 			}
 		}
@@ -719,6 +710,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				final AddressModel deliveryAddress,
 				final Textbox firstNameFieldTextBox,
 				final Textbox lastNameFieldTextBox,
+				final Textbox emailFieldTextBox,
 				final Textbox line1FieldTextBox,
 				final Textbox line2FieldTextBox,
 				final Textbox line3FieldTextBox,
@@ -734,6 +726,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 			final String changedFirstName = firstNameFieldTextBox.getValue();
 			final String changedLastName = lastNameFieldTextBox.getValue();
+			final String changedEmail = emailFieldTextBox.getValue();
 			final String changedLine1 = line1FieldTextBox.getValue();
 			final String changedLine2 = line2FieldTextBox.getValue();
 			final String changedLine3 = line3FieldTextBox.getValue();
@@ -774,6 +767,21 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			} else {
 				newDeliveryAddress
 						.setLastname(MarketplacecommerceservicesConstants.EMPTY);
+			}
+
+			if (changedLastName != null && !changedLastName.isEmpty()) {
+				newDeliveryAddress.setLastname(changedLastName);
+				LOG.debug("Changed last Name =" + changedLastName);
+			} else {
+				newDeliveryAddress
+						.setLastname(MarketplacecommerceservicesConstants.EMPTY);
+			}
+			if (changedEmail != null && !changedEmail.isEmpty()) {
+				newDeliveryAddress.setEmail(changedEmail);
+				LOG.debug("Changed Email =" + changedEmail);
+			} else {
+				newDeliveryAddress
+						.setEmail(MarketplacecommerceservicesConstants.EMPTY);
 			}
 			if (changedLine1 != null && !changedLine1.isEmpty()) {
 				newDeliveryAddress.setLine1(changedLine1.toString());
@@ -850,12 +858,11 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			String validatemessage = validateNewDeliveryAddress(newDeliveryAddress);
 
 			if (validatemessage
-					.equalsIgnoreCase(MarketplaceCockpitsConstants.YES)) {
+					.equalsIgnoreCase(MarketplaceCockpitsConstants.SUCCESS)) {
 				TypedObject order = getOrder();
 				final OrderModel ordermodel = (OrderModel) order.getObject();
 				AbstractOrderModel parentOrder = ordermodel
 						.getParentReference();
-				AddressModel address = parentOrder.getDeliveryAddress();
 				List<AddressModel> deliveryAddressList = new ArrayList<AddressModel>();
 				if (null == deliveryAddressList
 						|| deliveryAddressList.isEmpty()) {
@@ -863,9 +870,8 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 							.getOriginal());
 				}
 				newDeliveryAddress.setOwner(customer);
-				OTPModel OTP = new OTPModel();
 				final Toolbarbutton resendOtp = new Toolbarbutton("Resend OTP");
-				OTP = sendSmsToCustomer(ordermodel);
+				sendSmsToCustomer(ordermodel);
 				content.getAttribute("otparea");
 				if (otpCount == 1) {
 					Div otparea = new Div();
@@ -909,35 +915,47 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 		private String validateNewDeliveryAddress(
 				AddressModel newDeliveryAddress) {
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getFirstname())) {
-				return MarketplaceCockpitsConstants.FIRST_NAME_EMPTY;
+			if (!StringUtils.isNotEmpty(newDeliveryAddress.getFirstname())
+					|| !newDeliveryAddress.getFirstname().matches(NAME_REGEX)) {
+				return MarketplaceCockpitsConstants.FIRST_NAME_NOT_VALID;
 			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getLastname())) {
-				return MarketplaceCockpitsConstants.LAST_NAME_EMPTY;
+			if (!StringUtils.isNotEmpty(newDeliveryAddress.getLastname())
+					|| !newDeliveryAddress.getLastname().matches(NAME_REGEX)) {
+				return MarketplaceCockpitsConstants.LAST_NAME_NOT_VALID;
 			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getLine1())) {
-				return MarketplaceCockpitsConstants.LINE1_EMPTY;
+			if (StringUtils.isNotEmpty(newDeliveryAddress.getEmail())
+					&& !newDeliveryAddress.getEmail().matches(EMAIL_REGEX)) {
+				return MarketplaceCockpitsConstants.EMAIL_NOT_VALID;
 			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getLine2())) {
-				return MarketplaceCockpitsConstants.LINE2_EMPTY;
+			if (!StringUtils.isNotEmpty(newDeliveryAddress.getLine1())
+					|| !newDeliveryAddress.getLine1().matches(
+							ADDRESS_LINE1_REGEX)) {
+				return MarketplaceCockpitsConstants.LINE1_NOT_VALID;
+			}
+			if (!StringUtils.isNotEmpty(newDeliveryAddress.getLine2())
+					|| !newDeliveryAddress.getLine2().matches(
+							ADDRESS_LINE1_REGEX)) {
+				return MarketplaceCockpitsConstants.LINE2_NOT_VALID;
+			}
+			if (StringUtils.isNotEmpty(newDeliveryAddress.getAddressLine3())
+					&& !newDeliveryAddress.getAddressLine3().matches(
+							ADDRESS_LINE1_REGEX)) {
+				return MarketplaceCockpitsConstants.LINE3_NOT_VALID;
 			}
 			if (!StringUtils.isNotEmpty(newDeliveryAddress.getPostalcode())) {
 				return MarketplaceCockpitsConstants.PIN_CODE_EMPTY;
 			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getCountry()
-					.getName())) {
-				return MarketplaceCockpitsConstants.COUNTRY_EMPTY;
+			if (!StringUtils.isNotEmpty(newDeliveryAddress.getPhone1())
+					|| !newDeliveryAddress.getPhone1().matches(
+							MOBILENUMBER_REGEX)) {
+				return MarketplaceCockpitsConstants.MOBILENUMBER_NOT_VALID;
 			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getState())) {
-				return MarketplaceCockpitsConstants.STATE_EMPTY;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getCity())) {
-				return MarketplaceCockpitsConstants.CITY_EMPTY;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getPhone1())) {
-				return MarketplaceCockpitsConstants.MOBILENUMBER_EMPTY;
+			if (!StringUtils.isNotEmpty(newDeliveryAddress.getLandmark())
+					|| !newDeliveryAddress.getLandmark().matches(
+							ADDRESS_LINE1_REGEX)) {
+				return MarketplaceCockpitsConstants.LAND_MARK_NOT_VALID;
 			} else {
-				return MarketplaceCockpitsConstants.YES;
+				return MarketplaceCockpitsConstants.SUCCESS;
 			}
 		}
 
@@ -955,7 +973,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 	}
 
 	// To send SMS
-	private OTPModel sendSmsToCustomer(OrderModel ordermodel/* , int otpcount */)
+	private  void sendSmsToCustomer(OrderModel ordermodel)
 			throws InvalidKeyException, NoSuchAlgorithmException {
 
 		String oTPMobileNumber = ordermodel.getDeliveryAddress().getPhone1();
@@ -988,7 +1006,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 		otpCount++;
 
-		return OTP;
 	}
 
 	private void popupMessage(
@@ -1067,25 +1084,29 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 								newDeliveryAddress);
 
 				if (omsStatus) {
-					orderModel.setDeliveryAddress(newDeliveryAddress);
-					orderModel.getParentReference().setDeliveryAddress(
-							newDeliveryAddress);
-					TypedObject customer = marketplaceCallContextController
-							.getCurrentCustomer();
-					CustomerModel customermodel = (CustomerModel) customer
-							.getObject();
-					String customerId = customermodel.getUid();
-					modelService.save(orderModel);
-					orderModel.getParentReference().setDeliveryAddress(
-							newDeliveryAddress);
-					modelService.save(orderModel.getParentReference());
-					mplChangeDeliveryAddressController.ticketCreateToCrm(
-							orderModel.getParentReference(), customerId,
-							MarketplaceCockpitsConstants.SOURCE);
-					Messagebox.show(LabelUtils.getLabel(widget,
-							CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO,
-							Messagebox.OK, Messagebox.INFORMATION);
-					popupWidgetHelper.dismissCurrentPopup();
+					try {
+						orderModel.setDeliveryAddress(newDeliveryAddress);
+						orderModel.getParentReference().setDeliveryAddress(
+								newDeliveryAddress);
+						TypedObject customer = marketplaceCallContextController
+								.getCurrentCustomer();
+						CustomerModel customermodel = (CustomerModel) customer
+								.getObject();
+						String customerId = customermodel.getUid();
+						modelService.save(orderModel);
+						orderModel.getParentReference().setDeliveryAddress(
+								newDeliveryAddress);
+						modelService.save(orderModel.getParentReference());
+						mplChangeDeliveryAddressController.ticketCreateToCrm(
+								orderModel.getParentReference(), customerId,
+								MarketplaceCockpitsConstants.SOURCE);
+						Messagebox.show(LabelUtils.getLabel(widget,
+								CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO,
+								Messagebox.OK, Messagebox.INFORMATION);
+						popupWidgetHelper.dismissCurrentPopup();
+					} catch (Exception e) {
+						LOG.error("Exception while calling ticketCreate to CRM methoid");
+					}
 				} else {
 					Messagebox.show(LabelUtils.getLabel(widget, "FailedAtOMS ",
 							new Object[0]), INFO, Messagebox.OK,
