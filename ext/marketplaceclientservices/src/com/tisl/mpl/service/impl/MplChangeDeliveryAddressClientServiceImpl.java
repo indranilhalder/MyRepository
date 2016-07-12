@@ -81,6 +81,7 @@ public class MplChangeDeliveryAddressClientServiceImpl implements MplChangeDeliv
 					marshaller.marshal(changeDeliveryAddressRequest, stringWriter);
 				}
 				xmlString = stringWriter.toString();
+				LOG.debug("Change Delivery Address Request XML");
 				LOG.debug(xmlString);
 				LOG.debug("Posting to >>>>>>>>>>>>>>>>>>>>" + webResource.getURI());
 				response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("x-tenantId", "single")
