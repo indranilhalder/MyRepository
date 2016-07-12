@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author prasad1
  *
  */
-@XmlRootElement(name = "ChangeDeliveryAddress")
+@XmlRootElement(name = "ChangeDeliveryAddressRequest")
 @XmlType(propOrder =
 { "orderID", "FName", "LName", "emailID", "phoneNo", "address1", "address2", "address3", "landmark", "country", "city", "state",
 		"pincode" })
