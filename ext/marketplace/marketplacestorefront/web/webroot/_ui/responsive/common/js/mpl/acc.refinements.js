@@ -99,6 +99,16 @@ ACC.refinements = {
 			$("body#no-click").remove();
 			$("body.spinner").remove();
 		})
+		$(document).on("click",".facet.js-facet li.filter-colour,.facet.js-facet li.filter-size",function(){
+			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		})
+		
+		//Loader while removing filters
+		$(document).on("click",".facet-list.filter-opt .remove_filter",function(){
+			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		})
 		
 		$(document).on("click",".js-product-facet .js-more-facet-values-link",function(e){
 			e.preventDefault();

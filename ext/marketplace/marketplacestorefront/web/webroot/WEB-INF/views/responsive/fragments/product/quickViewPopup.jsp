@@ -527,12 +527,13 @@ display:none;
 	<product:viewQuickViewVariant/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantityCount"/>
 	<div class="qty">
-		<p> <spring:theme code="product.configureproductscount.qty"/></p>
-		<select id="quantity">		
+	<!-- TISPRM-131 -->
+		<%-- <p> <spring:theme code="product.configureproductscount.qty"/></p> --%>
+		<%-- <select id="quantity">		
 		<c:forEach var="qtyCnt" begin="1" end="${maxQuantityCount}">
    		<option value="${qtyCnt}">${qtyCnt}</option>
 		</c:forEach>
-		</select>
+		</select> --%>
 	</div> 
 
 </div>
@@ -548,8 +549,8 @@ display:none;
 		<%-- <form:form method="post" id="addToCartFormQuick" class="add_to_cart_form"
 		action="${request.contextPath }/cart/add"> --%>
 		<c:if test="${product.purchasable}">
-			<input type="hidden" maxlength="3" size="1" id="qty1" name="qty"
-				class="qty js-qty-selector-input" value="">
+			<input type="hidden" maxlength="3" size="1" name="qty"
+				class="qty js-qty-selector-input" value="1">
 		</c:if>
 		<input type="hidden" name="productCodePost" id="productCodePost" value="${product.code}" />
 		<input type="hidden" name="wishlistNamePost" id="wishlistNamePost" value="N" />
