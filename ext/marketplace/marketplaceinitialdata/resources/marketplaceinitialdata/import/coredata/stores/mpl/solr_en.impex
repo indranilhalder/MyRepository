@@ -28,7 +28,7 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;colour							   ;"Colour"
  ;$solrIndexedType		   ;size							   ;"Size"
  ;$solrIndexedType		   ;rating							   ;"Rating"
-  ;$solrIndexedType		   ;Occasion						   ;"Occasion"
+ ;$solrIndexedType		   ;Occasion						   ;"Occasion"
  ;$solrIndexedType         ;brand          		               ;"Brand"	  
  ;$solrIndexedType         ;setContents-classification	                       ;"Set Contents"           
  ;$solrIndexedType         ;length-classification	          		           ;"Length"
