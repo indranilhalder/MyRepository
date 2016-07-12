@@ -736,7 +736,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			final String changedCity = cityFieldTextBox.getValue().toString();
 			String changedLandMark = StringUtils.EMPTY;
 			if (null != landMarkFieldTextBox
-					&& null != landMarkFieldTextBox.getValue()) {
+					&& StringUtils.isNotEmpty(landMarkFieldTextBox.getValue())) {
 				changedLandMark = landMarkFieldTextBox.getValue();
 			} else {
 				List<Listitem> items = landMarkListItem.getItems();
@@ -785,7 +785,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			}
 			if (changedLine1 != null && !changedLine1.isEmpty()) {
 				newDeliveryAddress.setLine1(changedLine1.toString());
-
 			} else {
 				newDeliveryAddress
 						.setLine1(MarketplacecommerceservicesConstants.EMPTY);
