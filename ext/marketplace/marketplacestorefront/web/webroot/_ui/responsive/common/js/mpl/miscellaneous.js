@@ -103,7 +103,7 @@
 			daysReminder: 0, // days to hide banner after "VIEW" button is clicked (defaults to 90)
 			appStoreLanguage: 'us', // language code for the App Store (defaults to user's browser language)
 			title: 'TataCLiQ',
-			author: 'TataCLiQ',
+			author: 'Tata Unistore Ltd',
 			speedIn: 300, // Show animation speed of the banner
 		    speedOut: 400, // Close animation speed of the banner
 			button: 'OPEN',

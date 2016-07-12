@@ -228,7 +228,7 @@ var productSizeVar = '${productSize}';
 											</c:choose>
 										</c:when>
 										<c:otherwise>
-											<option value="${link}?selectedSize=true">${entry.value}</option>
+											<option data-vcode="${link}" value="${link}?selectedSize=true">${entry.value}</option>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
