@@ -872,15 +872,21 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="categoryService" ref="categoryService" />
 		<property name="categorySource" ref="allCategoriesSource" />
 	</bean>
-
-	<bean id="mplProductInStockFlagValueProvider"
+<!-- TISPRM-92 START -->
+	<bean id="mplDiscountFlagValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDiscountFlagValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+	</bean>
+<!-- TISPRM-92 END -->
+<bean id="mplProductInStockFlagValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplProductInStockFlagValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="commerceStockService" ref="commerceStockService" />
 		<property name="buyBoxService" ref="buyBoxService" />
-	</bean>
-
+	</bean> 
 	<bean id="mplStockLevelStatusValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplStockLevelStatusValueProvider"
 		parent="abstractPropertyFieldValueProvider">
