@@ -56,6 +56,7 @@ import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1567,6 +1568,7 @@ public class ProductPageController extends AbstractPageController
 	 * @throws UnsupportedEncodingException
 	 * @throws com.granule.json.JSONException
 	 */
+	@SuppressWarnings("boxing")
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/buybox", method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxPrice(
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode) throws JSONException,
@@ -1583,8 +1585,6 @@ public class ProductPageController extends AbstractPageController
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
 			if (buyboxdata != null)
 			{
-
-
 				if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
 				{
 					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice());
@@ -1599,6 +1599,33 @@ public class ProductPageController extends AbstractPageController
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MIN_PRICE, buyboxdata.getMinPrice());
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+
+				//TISPRM-33
+				if (null != buyboxdata.getMrp())
+				{
+					if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
+					{
+						@SuppressWarnings("boxing")
+						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue()
+								- buyboxdata.getSpecialPrice().getDoubleValue();
+						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
+						//Critical Sonar Fix
+						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
+
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+					}
+					else if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getValue().doubleValue() > 0)
+					{
+						@SuppressWarnings("boxing")
+						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
+						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
+						//Critical Sonar Fix
+						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+					}
+				}
 			}
 			else
 			{

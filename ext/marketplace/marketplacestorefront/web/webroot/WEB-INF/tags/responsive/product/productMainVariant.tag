@@ -102,7 +102,7 @@ var productSizeVar = '${productSize}';
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
 									<c:choose>
-								<c:when test="${color=='multi'}">
+								<c:when test="${fn:startsWith(color, 'multi')}">
 						     	<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
 								</c:when>
 								<c:otherwise>
@@ -228,7 +228,7 @@ var productSizeVar = '${productSize}';
 											</c:choose>
 										</c:when>
 										<c:otherwise>
-											<option value="${link}?selectedSize=true">${entry.value}</option>
+											<option data-vcode="${link}" value="${link}?selectedSize=true">${entry.value}</option>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>

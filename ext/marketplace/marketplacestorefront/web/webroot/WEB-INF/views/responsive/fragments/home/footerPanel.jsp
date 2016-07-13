@@ -22,9 +22,14 @@
 	 <div class="social share">
 		<h3><spring:theme code="text.stay.connected"/></h3>
 		<div class="links">
-			<c:forEach items="${footerSocialIconList}" var="banner">
-					<a href="${banner.urlLink}"><img src="${banner.media.URL}" ></a>
-			</c:forEach> 
+			<%-- <c:forEach items="${component.footerImageList}" var="banner">
+					<a href="${banner.urlLink}" ><span class="spriteImg"></span></a>
+			</c:forEach> --%>
+			<a href="https://plus.google.com/107413929814020009505" class="gplus"><span class="spriteImg"></span></a>
+			<a href="https://www.facebook.com/TataCLiQ/" class="facebook"><span class="spriteImg"></span></a>
+			<a href="https://twitter.com/tatacliq" class="twitter"><span class="spriteImg"></span></a>
+			<a href="https://www.instagram.com/tatacliq/" class="insta"><span class="spriteImg"></span></a>
+			<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" class="youtube"><span class="spriteImg"></span></a>
 		</div>
 	</div>
 	
@@ -36,7 +41,7 @@
 		<h3><spring:theme code="text.download.app"/></h3>
 		<div class="links">
 			<c:forEach items="${footerAppImageList}" var="banner">
-					<a href="${banner.urlLink}" class="appios"><img src="${banner.media.URL}" ></a>
+					<a href="${banner.urlLink}" class="appios"><span class="spriteImg"></span></a>
 			</c:forEach>
 		</div>
 	</div>
@@ -132,94 +137,3 @@
 		//return true;
 	}
 </script>
-<!-- This is used for displaying text in footer -->
-<div class="footer-text">
-	${footerText}
-</div>
-<!-- This is used for displaying copyright in footer -->
-<div class="banner">
-	<span>${notice}</span>
-</div>
-
-
-<div class="modal size-guide fade" id="popUpModal" style="z-index:1000000000;" tabindex="-1" role="modal" aria-labelledby="popUpModalLabel" aria-hidden="true">
-	<div class="overlay" data-dismiss="modal"></div>
-		<div class="modal-content content" style="width:90%; max-width:90%;">
-			
-		</div>
-		<!-- /.modal-content -->
-	
-	<!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-
-<!-- Added for Need help section -->
-
-
-	<div id="up" onclick="openNeedHelpSec()">
-		<spring:theme code="needhelp.needhelptext" />
-
-		<div id="h">
-			<span class="cclose-ico"></span>
-			<div class="chat">
-				<h5>
-					<span class="cicon icon-comment"></span>
-					<a href="${request.contextPath}/clickto/chat" id="chatMe"
-					data-title="">
-					<spring:theme code="needhelp.chatwithus" />
-					<!-- &nbsp;<span class="bubble">1</span> -->
-					</a>
-				</h5>
-					<!-- Commented as part of the chairman demo feedback -->
-			<%-- 	<a href="${request.contextPath}/clickto/chat" id="chatMe"
-					data-title="">
-					<spring:theme code="needhelp.availablenow" />
-				</a> --%>
-
-			</div>
-			<div class="call">
-				<h5>
-					<span class="cicon icon-earphone"></span>
-					<a href="${request.contextPath}/clickto/call" id="callMe"
-					data-title="">${contactNumber}
-					<%-- <spring:theme code="needhelp.callus" /> --%>
-					</a>
-				</h5>
-				
-				<!--  Post chairman demo Changes -->
-				<%-- <a href="${request.contextPath}/clickto/call" id="callMe">${contactNumber}</a> --%>
-			</div>
-		</div>
-	</div>
-	<%-- <div class="feedback-links">
-		<a id="feedback" href="#nogo"><spring:theme code="text.feedback.survey"/></a>
-		<input type="hidden" id="feedbackUrlPath" value="${feebBackSurveyUrl}" />
-		</div> --%>
-	<script>
-		$(document).ready(function() {
-			$('.glyphicon-remove').click(function() {
-				helpMe();
-			});
-			/* $('#up').click(function() {
-					$(this).removeClass("minimize");
-					$("#h").toggle();
-			}); */
-			$(document).on("blur",".input-box input",function(){	
-				if( $(this).val() != ""){
-					$(this).addClass("used");
-				}
-				else {
-					$(this).removeClass("used");
-				}
-			});
-			$(document).on("blur",".input-box select",function(){	
-				if( $(this).val() != ""){
-					$(this).addClass("used");
-				}
-				else {
-					$(this).removeClass("used");
-				}
-			});
-
-		});
-	</script>

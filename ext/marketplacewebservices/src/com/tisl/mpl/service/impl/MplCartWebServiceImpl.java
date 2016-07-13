@@ -7,7 +7,6 @@ import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
@@ -117,8 +116,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	protected CartFacade cartFacade;
 	@Autowired
 	private MplCartFacade mplCartFacade;
-	@Resource(name = "customerFacade")
-	private CustomerFacade customerFacade;
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
 	@Autowired
@@ -670,13 +667,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				LOG.debug("addProducToCart:  AnonymousUser ");
 				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
-				LOG.debug("************ Anonymous cart mobile **************" + cartId);
+				LOG.debug("************ Anonymous cart mobile (addProductToCart) **************" + cartId);
 			}
 			else
 			{
 				LOG.debug("addProducToCart:  loged in User ");
 				cartModel = mplPaymentWebFacade.findCartValues(cartId);
-				LOG.debug("************ Logged-in cart mobile **************" + cartId);
+				LOG.debug("************ Logged-in cart mobile (addProductToCart)**************" + cartId);
 			}
 
 			if (cartModel == null)
@@ -2024,13 +2021,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			 * !cartModel.getEntries().isEmpty()) { for (final AbstractOrderEntryModel entry : cartModel.getEntries()) { if
 			 * (null != entry.getBasePrice() && null != entry.getQuantity()) { totalPrice = totalPrice +
 			 * (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue()); } }
-			 *
+			 * 
 			 * if (null != cartModel.getDeliveryCost() && null != cartModel.getConvenienceCharges() && null !=
 			 * cartModel.getTotalPriceWithConv()) { LOG.debug("*************  Discount **************** totalPrice" +
 			 * totalPrice + "Delivery cost" + cartModel.getDeliveryCost() + "Conv charges" +
 			 * cartModel.getConvenienceCharges().doubleValue() + "Total price with conv" +
 			 * cartModel.getTotalPriceWithConv().doubleValue() + "discount" + discount);
-			 *
+			 * 
 			 * discount = (totalPrice + cartModel.getDeliveryCost().doubleValue() +
 			 * cartModel.getConvenienceCharges().doubleValue()) - cartModel.getTotalPriceWithConv().doubleValue(); } } if
 			 * (discount >= 0) { final PriceData priceDiscount = discountUtility.createPrice(cartModel,
@@ -2145,13 +2142,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			 * !cartModel.getEntries().isEmpty()) { for (final AbstractOrderEntryModel entry : cartModel.getEntries()) { if
 			 * (null != entry.getBasePrice() && null != entry.getQuantity()) { totalPrice = totalPrice +
 			 * (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue()); } }
-			 *
+			 * 
 			 * if (null != cartModel.getDeliveryCost() && null != cartModel.getConvenienceCharges() && null !=
 			 * cartModel.getTotalPriceWithConv()) { LOG.debug("*************  Discount **************** totalPrice" +
 			 * totalPrice + "Delivery cost" + cartModel.getDeliveryCost() + "Conv charges" +
 			 * cartModel.getConvenienceCharges().doubleValue() + "Total price with conv" +
 			 * cartModel.getTotalPriceWithConv().doubleValue() + "discount" + discount);
-			 *
+			 * 
 			 * discount = (totalPrice + cartModel.getDeliveryCost().doubleValue() +
 			 * cartModel.getConvenienceCharges().doubleValue()) - cartModel.getTotalPriceWithConv().doubleValue(); } } if
 			 * (discount >= 0) { final PriceData priceDiscount = discountUtility.createPrice(cartModel,

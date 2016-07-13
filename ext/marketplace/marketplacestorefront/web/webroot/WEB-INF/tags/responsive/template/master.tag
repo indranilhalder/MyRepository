@@ -29,7 +29,10 @@
 
 <!-- <meta name="msApplication-ID" content="microsoft.build.App"/>
 <meta name="msApplication-PackageFamilyName" content="microsoft.build_8wekyb3d8bbwe"/> -->
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
+<%-- <link rel="icon" href="//${favHost}/_ui/responsive/common/images/preload.png" type="image/png"> --%>
 
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/>
 <link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
 <link rel="android-touch-icon" href="${themeResourcePath}/images/Appicon.png" />
 <!-- <link rel="windows-touch-icon" href="icon.png" /> -->
@@ -129,14 +132,17 @@
 	<!-- DNS prefetching starts -->
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>	
 
 	<link rel="dns-prefetch" href="//${mediaHost}">
-	<link rel="dns-prefetch" href="//${staticResourceHost}"> 
-	<c:choose>
-	    <c:when test="${not empty productMediadnsHost}">
-	       <link rel="dns-prefetch" href="//${productMediadnsHost}">
-	    </c:when>
-	</c:choose>	
+	<link rel="dns-prefetch" href="//${staticResourceHost}"> 	
+	<c:if test="${not empty productMediadnsHost}">
+	<link rel="dns-prefetch" href="//${productMediadnsHost}">
+	</c:if>
+	<c:if test="${not empty productMediadnsHost1}">
+	<link rel="dns-prefetch" href="//${productMediadnsHost1}">
+	</c:if>
+	
 	<!-- DNS prefetching ends --> 
 	
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
@@ -154,14 +160,6 @@
 
 <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi" /> 
 <meta name="viewport" content="width=640, initial-scale=1" />-->
-<script>
-if($(window).width() < 650) {
-	$('head').append('<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />');
-}
-</script>
-
-
-
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
@@ -240,32 +238,5 @@ if($(window).width() < 650) {
 </body>
 
 <debug:debugFooter/>
-<script>
-/* 	banner = undefined;
-		var n = document.querySelector('.smartbanner');
-		if (n) {
-			n.parentNode.removeChild(n);
-		} */
-		new SmartBanner({
-				daysHidden: 0, // days to hide banner after close button is clicked (defaults to 15)
-				daysReminder: 0, // days to hide banner after "VIEW" button is clicked (defaults to 90)
-				appStoreLanguage: 'us', // language code for the App Store (defaults to user's browser language)
-				title: 'TataCLiQ',
-				author: 'TataCLiQ',
-				speedIn: 300, // Show animation speed of the banner
-			    speedOut: 400, // Close animation speed of the banner
-				button: 'OPEN',
-				force: null,
-				store: {
-		              ios: 'On the App Store',
-		              android: 'In Google Play'
-		          },
-		          price: {
-		              ios: 'FREE',
-		              android: 'FREE'
-		          }
-		});
-
-</script>
 </html>
 <%-- </compress:html> --%>

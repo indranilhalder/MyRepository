@@ -55,12 +55,26 @@
 		</ul>
 	</div>
 
-
-
 	<cms:pageSlot position="Section6A" var="feature">
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
 
+<div class="listing wrapper">
+			<div class="left-block">
+				<cms:pageSlot position="Section7A" var="feature">
+
+					<cms:component component="${feature}" />
+
+				</cms:pageSlot>
+			</div>
+
+				<cms:pageSlot position="Section7B" var="feature">
+
+					<cms:component component="${feature}" />
+
+				</cms:pageSlot>
+			</div>
+	
 
 
 
