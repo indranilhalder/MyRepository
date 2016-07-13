@@ -59,8 +59,8 @@
 			});
 
 });	*/	
-
-function sendMessage(){
+//code commented for establishing live chat//
+/*function sendMessage(){
 	//alert('triggering');
 	chatSession.sendMessage($('#txtMessage').val());
 	$('#txtMessage').val('');
@@ -131,12 +131,12 @@ var _genesys = {
 				});
 
 				//cobrowseAPI.startChat({ui:true});
-			/*.done(function(session, options) {
+			.done(function(session, options) {
 				  // Implement your own UI using session API
 				  session.startSession();
 
 			});
-			*/
+			
 				//alert('chat ready');
 				chatObj = cobrowseAPI;
 				cobrowseAPI.onSession(function(session) {
@@ -175,11 +175,98 @@ var _genesys = {
 		}
 };
 
-/*
+
 _genesys.chat.onReady.push(function(chat) {
   chat.onSession(function(session) {
 	session.sendMessage('Automatically sent chat message');
   });
 
+});
+*/
+//code commented for establishing live chat end//
+function sendMessage(){
+	//alert('triggering');
+	chatSession.sendMessage($('#txtMessage').val());
+	$('#txtMessage').val('');
+	//var e = $.Event("keypress");
+		//e.keyCode = 13; // # Some key code value
+		//$('#txtMessage').trigger(e);
+}
+$(document).ready(function(){
+	//$('.selectpicker').selectpicker();
+
+	$(document).on("click", "#chatMe", function(e) {
+		e.preventDefault();
+		$('.gcb-startChat').click();
+		$('#h').hide();
+	})
+});
+(function(co, b, r, o, w, s, e) {
+      e = co.getElementsByTagName(b)[0];
+      if (co.getElementById(r)){
+            return;
+      }
+      s = co.createElement(b); s.id = r; s.src = o;
+      s.setAttribute('data-gcb-url', w);
+      e.parentNode.insertBefore(s, e);
+})(document, 'script', 'gcb-js',
+//'http://10.9.17.46:8700/cobrowse/js/gcb.min.js',
+//'http://10.9.17.46:8700/cobrowse');
+'https://219.65.91.73:443/cobrowse/js/gcb.min.js',
+'https://219.65.91.73:443/cobrowse');
+var chatSession = null;
+var chatObj = null;
+var _genesys = {
+	debug: true,
+		buttons:{
+			chat:true,
+			cobrowse:false
+		},
+		integration:
+		{
+			buttons: {
+				position: "left", // Set to "right" to stick buttons to right side of the page.
+				cobrowse: false, // Set to false to disable button completely (you can start Co-browse manually via API call).
+				chat: true // Set to false if you don't want to use built-in chat button.
+			},
+			onReady: function() {
+				//alert('button ready');
+			}//,
+		},
+		chat:{
+			templates:'https://219.65.91.73:443/static/chatTemplates2.html',
+			onReady: function(cobrowseAPI, isTopContext){
+				//cobrowseAPI.startChat({ui:true});
+			/*.done(function(session, options) {
+				  // Implement your own UI using session API
+				  session.startSession();
+				  
+			});
+			*/
+				//alert('chat ready');
+				cobrowseAPI.onSession(function(session) {
+					//alert('on session');
+					chatSession = session;
+					chatObj = cobrowseAPI;
+					$('.csi-chat-icon-close').on('click',function(){
+						alert('closing');
+						chatObj.close();
+					});
+					$('.csi-chat-icon-min').on('click',function(){
+						alert('toggle');
+						chatObj.toggle();
+					});
+					//chatSession.sendMessage('Automatically sent chat message');
+				});
+			},
+		}
+};
+
+/*
+_genesys.chat.onReady.push(function(chat) {
+  chat.onSession(function(session) {
+	session.sendMessage('Automatically sent chat message');
+  });
+ 
 });
 */

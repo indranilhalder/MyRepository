@@ -40005,10 +40005,30 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 
 /* piczoomer css end */
 /*live chat start*/
+/* Previous different code
+.gwc-chat-head .gwc-chat-title div{
+	color:#5A5757;
+	font-size:2em;
+}
+.gwc-chat-body{
+	height:310px;
+	width:352px;
+	background-color:#F5F5F5;
+}
+
+
+.gwc-chat-embedded-window{
+	border:1px solid #D4D2D2;
+	border-radius: 4px;
+	width:355px;
+	height:418px;
+}
+Previous different code end*/
 .gwc-chat-agent-cmsg{
 	text-align:right;
 	font-weight:700;
 }
+
 .box-shadow-100{
   height: 34px;
   width: 100%;
@@ -40046,14 +40066,13 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 .gwc-chat-message-text{
 	font:Monts;
 }
-.gwc-chat-head .gwc-chat-title div{
+.gwc-chat-head .gwc-chat-title{
 	color:#5A5757;
 	font-size:2em;
 }
 .gwc-chat-body{
-	height:310px;
-	width:352px;
-	background-color:#F5F5F5;
+	height:418px;
+	width:355px;
 }
 .gwc-chat-controls,
 .gwc-chat-label {
@@ -40066,6 +40085,7 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
     background: none;
 	height:30px;
 }
+
 .gwc-chat-embedded-window{
 	border:1px solid #D4D2D2;
 	border-radius: 4px;
@@ -40078,7 +40098,7 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 	color:#fff;
 }
 .gwc-chat-button:hover{
-
+	
 }
 .gwc-chat input.gwc-chat-registration-input{
 	margin-top:3px;
@@ -40152,10 +40172,10 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
         background-image: -o-linear-gradient(top, #eaeaea, #fff);
         background-image: linear-gradient(to bottom, #eaeaea, #fff)
     }
-.gcb-startChat,.gcb-startChat:hover {
-	background-image:none !important;
-	cursor: none !important;
-}  
+    	.gcb-startChat,.gcb-startChat:hover {		
+	background-image:none !important;		
+	cursor: none !important;		
+}
 /*live chat end*/
 
 .smartbanner-show {
