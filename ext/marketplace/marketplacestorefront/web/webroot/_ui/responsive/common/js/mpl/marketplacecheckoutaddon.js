@@ -3143,6 +3143,11 @@ function checkPincodeServiceability(buttonType)
 			"color":"#ff1c47",
 			"display":"block",
 			});
+		
+		//setTimeout(function(){
+		$("#pinCodeDispalyDiv .spinner").remove();
+		$("#no-click").remove();
+		//},500);
 
 		return false;
 	}
@@ -3155,6 +3160,10 @@ function checkPincodeServiceability(buttonType)
 			"display":"block",
 
 			});
+		//setTimeout(function(){
+		$("#pinCodeDispalyDiv .spinner").remove();
+		$("#no-click").remove();
+		//},500);
 		
         return false;  
     }
@@ -3456,6 +3465,7 @@ function checkIsServicable()
 	 		cache: false,
 	 		success : function(response) {
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');
+	 			$('#defaultPinCodeIdsq').val(selectedPincode);
 	 			$("#defaultPinDiv").show();
 	 			$("#changePinDiv").hide();
 	 		},
@@ -3472,10 +3482,12 @@ function checkIsServicable()
 	 			console.log('Some issue occured in checkPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
 	 			//TISPRM-65
+	 			$('#defaultPinCodeIdsq').val(selectedPincode);
  	 			$("#defaultPinDiv").show();
  	 			$("#changePinDiv").hide();
- 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
-	 		}
+			}
+	 			
+
 	 	});
 	}
 	
@@ -3672,6 +3684,7 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			
 	 			handleExceptionOnServerSide(errorDetails);
 	 		}
+
 	 	});	 
 	}
 	else{
@@ -4014,6 +4027,7 @@ function expressbutton()
 	 		cache: false,
 	 		success : function(response) {
 	 			populatePincodeDeliveryMode(response,'typeExpressCheckout');
+	 		
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
@@ -4023,7 +4037,6 @@ function expressbutton()
 	 			console.log(resp);
 	 			var errorDetails=JSON.stringify(resp);
 	 			console.log("errorDetails 1>> "+errorDetails);
-	 			
 	 			handleExceptionOnServerSide(errorDetails);
 	 		}
 	 	});	 
