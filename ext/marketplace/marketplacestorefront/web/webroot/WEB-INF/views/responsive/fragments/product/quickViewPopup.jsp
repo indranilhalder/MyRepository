@@ -549,8 +549,8 @@ display:none;
 		<%-- <form:form method="post" id="addToCartFormQuick" class="add_to_cart_form"
 		action="${request.contextPath }/cart/add"> --%>
 		<c:if test="${product.purchasable}">
-			<input type="hidden" maxlength="3" size="1" id="qty1" name="qty"
-				class="qty js-qty-selector-input" value="">
+			<input type="hidden" maxlength="3" size="1" name="qty"
+				class="qty js-qty-selector-input" value="1">
 		</c:if>
 		<input type="hidden" name="productCodePost" id="productCodePost" value="${product.code}" />
 		<input type="hidden" name="wishlistNamePost" id="wishlistNamePost" value="N" />
