@@ -62,8 +62,8 @@ public class MplCouponWebServiceImpl implements MplCouponWebService
 	@Resource(name = "couponRestrictionService")
 	private CouponRestrictionService couponRestrictionService;
 
-	@Autowired
-	private DiscountUtility discountUtility;
+	//@Autowired
+	//private DiscountUtility discountUtility;
 
 	/**
 	 * @Description : For getting the details of all the Coupons available for the User
