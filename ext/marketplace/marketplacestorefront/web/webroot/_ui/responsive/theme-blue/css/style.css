@@ -19807,7 +19807,6 @@ color: #ff829a;
           {
           	padding:0px;
           	width:115px;
-          	padding-top:10px;
           }
      header .content  .bottom.active .search form
      {
@@ -31766,7 +31765,16 @@ display:none;
 .sort-by-inline{
 	display:inline;
 }
-
+label.applyBrandFilters {
+    font-size: 13px;
+    padding: 10px 22px;
+    width:125px;
+    margin: 15px 0 25px;
+    background: #a9143c;
+    color: #fff;
+    text-transform: uppercase;
+    cursor: pointer;
+}
 /*--------------maincss-----------*/
 .row
 {
