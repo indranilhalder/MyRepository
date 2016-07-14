@@ -1549,7 +1549,14 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			newAddress.setPhone(addressForm.getMobileNo());
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
-			newAddress.setLandmark(addressForm.getLandmark());
+			if(null != addressForm.getLandmark() && StringUtils.isEmpty(addressForm.getLandmark().trim()) )
+			{
+				newAddress.setLandmark(addressForm.getOtherLandmark());
+			}
+			else
+			{
+				newAddress.setLandmark(addressForm.getLandmark());
+			}
 			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
 			{
 				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
@@ -2347,12 +2354,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
 			LOG.error("EtailNonBusinessExceptions in getting the pincode Details :: ", ex);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions in getting the pincode Details :: ", e);
 		}
 		catch (final Exception ex)
