@@ -880,7 +880,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
 <!-- TISPRM-92 END -->
-<bean id="mplProductInStockFlagValueProvider"
+	<bean id="mplProductInStockFlagValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplProductInStockFlagValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
