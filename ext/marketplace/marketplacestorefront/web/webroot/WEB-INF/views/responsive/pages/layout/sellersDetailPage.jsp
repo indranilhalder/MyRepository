@@ -429,12 +429,15 @@ var allSellers='${allsellers}';
 
 		<div class="product-detail">
 			<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
-			<h2 class="company">${product.brand.brandname} by <span id="sellerNameId"></span></h2>
+			<h2 class="company">${product.brand.brandname}</h2>
 				<h3 class="product-name">${product.productTitle}</h3>
 			</ycommerce:testId>
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
 				<product:productPricePanel product="${product}" /> <!-- Displaying buybox price -->
+			</ycommerce:testId>
+			<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
+				<h3 class="seller">Sold by <span id="sellerNameId"></span></h3>
 			</ycommerce:testId>
 			<div class="fullfilled-by">
 			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
