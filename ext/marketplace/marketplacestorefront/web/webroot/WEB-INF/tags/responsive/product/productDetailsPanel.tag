@@ -100,7 +100,7 @@ tr.d0 td {
 				code="productDetails_productNamePrice_label_${product.code}">
 				<h2 class="company">${product.brand.brandname}</h2>
 				<h3 class="seller">Seller:  <span id="sellerNameId"></span></h3>
-				<h4 class="product-name">${product.productTitle}</h4>
+				<h1 class="product-name">${product.productTitle}</h1>
 			</ycommerce:testId>
 
 			<ycommerce:testId
