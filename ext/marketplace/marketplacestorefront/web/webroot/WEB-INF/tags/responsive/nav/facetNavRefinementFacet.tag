@@ -178,8 +178,7 @@ function navigateToPage(queryString,textString)
 											<span class="facet-mark"></span>
 											<div class="facet-text">
 											<span class="facet-text">
-												${facetValue.name}
-												 
+												${facetValue.name}												 
 											</span>
 											 <ycommerce:testId code="facetNav_count">
 													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
@@ -204,15 +203,11 @@ function navigateToPage(queryString,textString)
 											<span class="facet-mark"></span>
 											<div class="facet-text">
 											<span class="facet-text">
-												${facetValue.name}
+												${facetValue.name}												
+												</span>
 												<ycommerce:testId code="facetNav_count">
 													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
-												</ycommerce:testId>
-												</span>
-												<%-- <span class="facet-count">												
-												<spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/>											
-											</span> --%>
-											
+												</ycommerce:testId>																							
 											</div>
 										</span>
 									</label>
@@ -384,8 +379,7 @@ function navigateToPage(queryString,textString)
 										<span class="facet-mark"></span>
 										<div class="facet-text">
 										<span class="facet-text">
-											<spring:theme code="text.exclude.outOfStock"/>&nbsp;
-											
+											<spring:theme code="text.exclude.outOfStock"/>&nbsp;											
 										</span>
 										 <ycommerce:testId code="facetNav_count">
 												<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
@@ -433,13 +427,10 @@ function navigateToPage(queryString,textString)
 										<div class="facet-text">
 										<span class="facet-text">
 											<spring:theme code="text.exclude.outOfStock"/>&nbsp;											
-											<ycommerce:testId code="facetNav_count">
-												<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
-											</ycommerce:testId>
 										</span>
-										 <%-- <span class="facet-count">
-												<spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/>											
-										</span> --%>
+										 <ycommerce:testId code="facetNav_count">
+												<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+										</ycommerce:testId>
 										</div>
 									</span>
 									</c:if>
@@ -451,14 +442,11 @@ function navigateToPage(queryString,textString)
 										</c:if>	
 										<div class="facet-text">
 											<span class="facet-text">
-												${facetValue.name}
-												 <ycommerce:testId code="facetNav_count">
-													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
-												</ycommerce:testId>
+												${facetValue.name}												 
 												</span>
-												<%-- <span class="facet-count">												
-												<spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/>											
-											</span> --%>												
+												<ycommerce:testId code="facetNav_count">
+													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+												</ycommerce:testId>												
 											</div>
 											
 										</span>
