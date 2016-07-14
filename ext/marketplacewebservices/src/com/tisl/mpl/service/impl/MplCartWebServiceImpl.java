@@ -913,7 +913,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
 			/*
 			 * TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
-			 *
+			 * 
 			 * {
 			 */
 			for (final AbstractOrderEntryModel abstractOrderEntry : finalCart.getEntries())
@@ -1601,18 +1601,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 * @param promotionResult
 	 * @return List<CartOfferDetailsWsDTO>
 	 */
-	private List<CartOfferDetailsWsDTO> offerDetails(final List<PromotionResultModel> promotionResult, final String cartId)
+	private List<CartOfferDetailsWsDTO> offerDetails(final List<PromotionResultModel> promotionResult, final CartModel cart)
 	{
 		CartOfferDetailsWsDTO cartOffer = null;
-		CartModel cart = null;
-		if (userFacade.isAnonymousUser())
-		{
-			cart = mplPaymentWebFacade.findCartAnonymousValues(cartId);
-		}
-		else
-		{
-			cart = mplPaymentWebFacade.findCartValues(cartId);
-		}
+		/*
+		 * CartModel cart = null; if (userFacade.isAnonymousUser()) { cart =
+		 * mplPaymentWebFacade.findCartAnonymousValues(cartId); } else { cart =
+		 * mplPaymentWebFacade.findCartValues(cartId); }
+		 */
 		final List<CartOfferDetailsWsDTO> cartOfferList = new ArrayList<>();
 		MplPromotionData responseData = new MplPromotionData();
 		float orderPriorityInitial = -1;
@@ -1855,7 +1851,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			List<CartOfferDetailsWsDTO> cartOfferList = null;
 			if (null != promotionResult && !promotionResult.isEmpty())
 			{
-				cartOfferList = offerDetails(promotionResult, cartId);
+				cartOfferList = offerDetails(promotionResult, cartModel);
 			}
 			if (null != cartOfferList && !cartOfferList.isEmpty())
 			{
@@ -1988,7 +1984,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			List<CartOfferDetailsWsDTO> cartOfferList = null;
 			if (null != promotionResult && !promotionResult.isEmpty())
 			{
-				cartOfferList = offerDetails(promotionResult, cartId);
+				cartOfferList = offerDetails(promotionResult, cartModel);
 			}
 			if (null != cartOfferList && !cartOfferList.isEmpty())
 			{
