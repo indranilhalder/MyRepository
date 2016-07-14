@@ -1879,7 +1879,7 @@ function validEmail(email) {
 	  }	  
 	  return true;	  
 	}
-function dispPriceForSizeGuide(mrp, mop, spPrice) {
+function dispPriceForSizeGuide(mrp, mop, spPrice, savingsOnProduct) {
 	//alert("mrp: "+mrp +" Mop: "+mop+" spPrice: "+spPrice);
 	if(null!= mrp){
 		$("#sizemrpPriceId").append(mrp);
@@ -1891,6 +1891,15 @@ function dispPriceForSizeGuide(mrp, mop, spPrice) {
 		$("#sizespPriceId").append(spPrice);
 	} 
 
+	////TISPRM-33
+	if(null!= savingsOnProduct){
+		$("#savingsOnProductIdSG").append("(-"+savingsOnProduct+" %)");
+	} 
+
+	if(null!= savingsOnProduct && savingsOnProduct != 0){
+		$("#savingsOnProductIdSG").show();
+	} 
+	
 	if (null!=spPrice && spPrice != 0) {
 
 		if (mop == mrp) {
@@ -1948,6 +1957,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				var availableStock = data['availablestock'];
 				var ussid = data['sellerArticleSKU'];
 				var nosellerData = data['noseller'];
+				var savingsOnProduct= data['savingsOnProduct'];
 				//var sizeSelected=true;
 				
 				var count =0;
@@ -1989,7 +1999,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#sellerSelArticleSKU").html(ussid);
 				$("#sellerSelArticleSKUVal").val(ussid);
 				$("#nosellerVal").val(nosellerData);
-				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice);
+				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice,savingsOnProduct);
 				if(availableStock==0  && $(".variant-select-sizeGuidePopUp option:selected").val()!="#"){	//changes for TISPRO-338
 					$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();

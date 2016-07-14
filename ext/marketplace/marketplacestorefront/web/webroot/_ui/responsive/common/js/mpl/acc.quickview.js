@@ -129,6 +129,8 @@ function setBuyBoxDetails()
 				var spPrice = data['specialPrice'];
 				var mrpPrice = data['mrp'];
 				var mop = data['price'];
+				var savingsOnProduct= data['savingsOnProduct'];
+				
 				$("#ussid_quick").val(data['sellerArticleSKU']);				
 				$("#stock").val(data['availablestock']);					
 				var allStockZero = data['allOOStock'];
@@ -156,7 +158,7 @@ function setBuyBoxDetails()
 					$("#outOfStockIdQuick").hide();
 					}				
 				
-				dispQuickViewPrice(mrpPrice, mop, spPrice);
+				dispQuickViewPrice(mrpPrice, mop, spPrice, savingsOnProduct);
 				
 				
 				var sellerName = data['sellerName'];
@@ -211,8 +213,8 @@ function getRichAttributeQuickView(sellerName)
 		});
 }
 
-function dispQuickViewPrice(mrp, mop, spPrice) {
-	
+function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
+
 	if(null!= mrp){
 		$("#quickMrpPriceId").append(mrp.formattedValue);
 	}
@@ -221,6 +223,14 @@ function dispQuickViewPrice(mrp, mop, spPrice) {
 	}
 	if(null!= spPrice){
 		$("#quickSpPriceId").append(spPrice.formattedValue);
+	} 
+////TISPRM-33
+	if(null!= savingsOnProduct){
+		$("#savingsOnProductIdQV").append("(-"+savingsOnProduct+" %)");
+	} 
+
+	if(null!= savingsOnProduct && savingsOnProduct != 0){
+		$("#savingsOnProductIdQV").show();
 	} 
 
 	if (null!=spPrice && spPrice != 0) {		

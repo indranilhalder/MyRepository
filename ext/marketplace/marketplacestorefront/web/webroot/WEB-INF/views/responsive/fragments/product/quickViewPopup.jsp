@@ -469,6 +469,9 @@ display:none;
 	</p>
 	<p class="sale" id="quickSpPriceId" style="display:none">
 	</p>
+	<p class="savings pdp-savings" id="savingsOnProductIdQV" style="display:none">															
+	  <span></span>
+	</p>
     
   </div>   
 <a href="#" class="gig--readReviewsLink"></a>
