@@ -9,6 +9,34 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
+<!-- Move it to style.css before committing -->
+
+<style>
+	.address_landmarks, .address_landmarkOther, .address_landmarkOtherDiv {
+		width: 100% !important;
+		display: inline-block;
+	}
+	
+	.address_landmarkOther, .address_landmarkOtherDiv label, .address_landmarkOtherDiv {
+		display: inherit;
+	}
+	
+	.address_landmarkOtherDiv {
+		display: none;
+	}
+	
+	.address_landmarkOtherDiv {
+		margin: inherit;
+	}
+	
+	.address_landmarkOtherDiv {
+		margin: 0px !important;
+	}
+	
+	
+</style>
+
+
 <c:choose>
 	<c:when test="${country == 'US'}">
 		<formElement:formSelectBox idKey="address.title"
@@ -207,18 +235,27 @@
 			</div>
 			</div>
 			
-			<div class='full'>
-			<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
-			labelKey="Landmarks" path="landmark" mandatory="true"
-			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelect"
-			items="${abc}" selectedValue="${addressForm.state}"
-			itemValue="name"  />
-			<div class="help-block has-error" id="stateError" style="display: none;">		
-			</div>
+			<div class='half'>
+				<div class="optionsLandmark">
+					<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
+						labelKey="Landmarks" path="landmark" mandatory="true"
+						skipBlank="false" skipBlankMessageKey="address.state.pleaseSelect"
+						items="${abc}"
+						itemValue="name"  />
+				</div>
+				<div class='half address_landmarkOtherDiv'>
+					<formElement:formInputBox inputCSS="address_landmarkOther" idKey="address.landmarks"
+						labelKey="Enter Nearest Landmark" path="otherLandmark"
+						maxLength="30" />
+						<div class="help-block has-error" id="stateError" style="display: none;"></div>
+				</div>
 			</div>
 			
+				
+			
+			
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
-		<div class='full'>
+		<div class='half'>
 		<!-- TISUAT-4696 -->
 		<formElement:formInputBox idKey="address.townCity" inputCSS="address_townCity"
 			labelKey="address.townCity" path="townCity" 
