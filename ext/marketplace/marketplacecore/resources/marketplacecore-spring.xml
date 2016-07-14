@@ -29,8 +29,9 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_import-spring.xml" />
 		
-		
-
+	<!-- Added for landmarks -->
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_landmarks-spring.xml" />
+	
 
 		<!-- TISPRD-207 Changes Start-->
 		<import
