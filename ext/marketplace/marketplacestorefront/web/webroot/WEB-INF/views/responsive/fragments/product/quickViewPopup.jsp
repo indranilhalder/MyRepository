@@ -696,9 +696,11 @@ display:none;
 						</table>
 
 						 <input type="hidden" name="hidWishlist" id="hidWishlist_quick">
+						 <p id='wishlistErrorId_quick' style="display: none ; color:red ;"> </p>
 						<span id="addedMessage_quick" style="display:none;color:#60A119"></span>
+						<input type="hidden" name="alreadyAddedWlName_quick" id="alreadyAddedWlName_quick">
 						
-						<button type='button' onclick="addToWishlist_quick()" name='saveToWishlist' id='saveToWishlist' class="savetowishlistbutton"><spring:theme code="product.wishlistBt"/></button>
+						<button type='button' onclick="addToWishlist_quick($('#alreadyAddedWlName_quick').val())" name='saveToWishlist' id='saveToWishlist' class="savetowishlistbutton"><spring:theme code="product.wishlistBt"/></button>
 					</div>
 
 					<div id="wishListNonLoggedInId_quick" style="display: none"><spring:theme code="product.wishListNonLoggedIn"/></div>
