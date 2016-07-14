@@ -42,22 +42,16 @@
         <property name="storeBaseDirectory" ref="baseDirectoryMarketplaceLandMarks" />
     </bean>
     
-    <!-- City Data Importing -->
-    <bean id="batchMplCityConverterMapping"
-    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="LandMarks"
-    p:converter-ref="batchMplCityConverter"/>
-    
-    <!-- LandMarks Data Importing -->
+    <!-- Landmarks Data Importing -->
     <bean id="batchMplLandMarksConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="LandMarks"
     p:converter-ref="batchMplLandMarksConverter"/>
     
     
-    <!-- Converter for City Import -->
+    <!-- Converter for Landmarks Import -->
     
-     <bean id="batchMplCityConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+     <bean id="batchMplLandMarksConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value> 
             	# importing LandMarks Details
@@ -65,21 +59,8 @@
        		</value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};true;{+3}</value>
+            <value>;{+0};{+1};true;{+2}</value>
         </property>
         </bean>
         
-         <!-- Converter for LandMarks Import -->
-        
-        <bean id="batchMplLandMarksConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
-        <property name="header">
-            <value> 
-            	# importing LandMArks Details
-				INSERT_UPDATE LandMarks;isoCode[unique=true];code[unique=true];name;isActive[default=true];City(code) 
-       		</value>
-        </property>
-        <property name="impexRow">
-            <value>;{+4};{+5};{+6};true;{+1}</value>
-        </property>
-        </bean>
 </beans>
