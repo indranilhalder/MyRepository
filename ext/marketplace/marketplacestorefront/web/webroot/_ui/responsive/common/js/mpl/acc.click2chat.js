@@ -199,6 +199,8 @@ $(document).ready(function(){
 		e.preventDefault();
 		$('.gcb-startChat').click();
 		$('#h').hide();
+		$(".gwc-chat-registration-submit button").text("CONNECT");
+		$("#gcbChatSkipRegistration").text("CANCEL");
 	})
 });
 (function(co, b, r, o, w, s, e) {
@@ -231,6 +233,8 @@ var _genesys = {
 			},
 			onReady: function() {
 				//alert('button ready');
+				/*$(".gwc-chat-registration-submit button").text("CONNECT");
+				$("#gcbChatSkipRegistration").text("CANCEL");*/
 			}//,
 		},
 		chat:{
@@ -258,6 +262,8 @@ var _genesys = {
 					});
 					//chatSession.sendMessage('Automatically sent chat message');
 				});
+				/*$(".gwc-chat-registration-submit button").text("CONNECT");
+				$("#gcbChatSkipRegistration").text("CANCEL");*/
 			},
 		}
 };

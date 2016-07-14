@@ -40071,8 +40071,8 @@ Previous different code end*/
 	font-size:2em;
 }
 .gwc-chat-body{
-	height:418px;
-	width:355px;
+	height:350px;
+	width:352px;
 }
 .gwc-chat-controls,
 .gwc-chat-label {
@@ -40090,7 +40090,7 @@ Previous different code end*/
 	border:1px solid #D4D2D2;
 	border-radius: 4px;
 	width:355px;
-	/*height:418px;*/
+	/* height:418px; */
 }
 .gwc-chat-button{
 	border:1px solid #7323dc;
@@ -40175,6 +40175,57 @@ Previous different code end*/
     	.gcb-startChat,.gcb-startChat:hover {		
 	background-image:none !important;		
 	cursor: none !important;		
+}
+#chatReason.form-control{
+	        width: 100%;
+	        border: 1px solid #dfd1d5;
+	        line-height: 1;
+	        height: 40px;
+	        outline: 0;
+	        padding-left: 10px;
+	        margin-top: 3px;
+           margin-bottom: 10px;
+           box-shadow: inset 0 1px 2px rgba(0,0,0,.39),0 -1px 1px #FFF,0 1px 0 #FFF !important;
+           border-radius: 3px;
+}
+.gwc-chat-control.gwc-chat-control-close{
+	background-image: url("../images/close.png");
+	background-repeat: no-repeat;
+}
+.gwc-chat-control.gwc-chat-control-close img{
+	opacity: 0;
+}
+.gwc-chat-control{
+	background-image: url("../images/minimize.png");
+	background-repeat: no-repeat;
+}
+.gwc-chat-control img{
+	opacity: 0;
+}
+.gwc-chat-message>div>div:first-child{
+	background-image: url("../images/profile.png") !important;
+	background-repeat: no-repeat;
+	margin-top:-2px;
+}
+.gwc-chat-message-text{
+	float: none !important;
+}
+/* .gwc-chat-control.gwc-chat-control-close,.gwc-chat-control,.gwc-chat-message>div>div:first-child:hover{
+	cursor:none !important;
+} */
+#gcbChatSkipRegistration{
+	border: 2px solid #A9144C;
+	line-height:1;
+}
+#gcbChatRegister,#gcbChatSkipRegistration{
+	width:130px !important;
+}
+#gcbChatRegister{
+	border: 2px outset #ddd;
+	line-height: 1;
+}
+.gwc-chat-registration-buttons{
+	    margin-top: 10px;
 }
 /*live chat end*/
 
