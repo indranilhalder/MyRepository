@@ -3251,6 +3251,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 	var isServicable=values[0];
 	var selectedPincode=values[1];
 	var deliveryModeJsonMap=values[2];
+	
 	$(".pincodeServiceError").hide();
 	if(deliveryModeJsonMap=="null"){
 		$('#unsevisablePin').show();
@@ -3659,11 +3660,13 @@ function checkSignUpValidation(path){
 
 function checkExpressCheckoutPincodeService(buttonType){
 	//TISPRM-33
-
+	
 	//TISBOX-1631
 	var selectedAddressId= $("#addressListSelectId").val();
 	selectedAddressId =$.trim(selectedAddressId);
 	$("#expressCheckoutAddressSelector").val(selectedAddressId);
+	//$("#defaultPinCodeIds").val($("#defaultPinCodeIds").val());
+	//alert($("#expressCheckoutAddressSelector").val(selectedAddressId));
 	
 	if(selectedAddressId.length > 0){
 		//TISBOX-882
@@ -3683,8 +3686,8 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			$("#pinCodeDispalyDiv .spinner").remove();
 	 			$("#no-click").remove();
 	 			//},500);
-		 		$("#changePinDiv").hide();
-		 		$("#defaultPinDiv").show();
+		 		//$("#changePinDiv").hide();
+		 		//$("#defaultPinDiv").show();
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
@@ -3706,8 +3709,8 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			$("#pinCodeDispalyDiv .spinner").remove();
 	 			$("#no-click").remove();
 	 			//},500);
-		 		$("#changePinDiv").hide();
-		 		$("#defaultPinDiv").show();
+		 		//$("#changePinDiv").hide();
+		 		//$("#defaultPinDiv").show();
 	 		}
 
 	 	});	 
@@ -4058,8 +4061,8 @@ function expressbutton()
 
 	 			$$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			
-		 		$("#changePinDiv").hide();
-		 		$("#defaultPinDiv").show();
+		 		//$("#changePinDiv").hide();
+		 		//$("#defaultPinDiv").show();
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
@@ -4075,8 +4078,8 @@ function expressbutton()
 
 	 			$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			
-		 		$("#changePinDiv").hide();
-		 		$("#defaultPinDiv").show();
+		 		//$("#changePinDiv").hide();
+		 		//$("#defaultPinDiv").show();
 	 		}
 	 	});	 
 	}
