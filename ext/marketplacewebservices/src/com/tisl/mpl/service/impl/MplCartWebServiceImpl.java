@@ -77,7 +77,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 
 import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
@@ -92,6 +91,7 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
@@ -115,62 +115,25 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//TODO change commerceWebServicesCartFacade2 to commerceWebServicesCartFacade after removing it in commercefacades
 	@Resource(name = "commerceWebServicesCartFacade2")
 	protected CartFacade cartFacade;
-	@Autowired
+	@Resource
 	private MplCartFacade mplCartFacade;
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
-	@Autowired
+	@Resource
 	private MplCommerceCartServiceImpl mplCommerceCartService;
-	@Autowired
+	@Resource
 	private WishlistFacade wishlistFacade;
-
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
-
 	@Resource(name = "mplDataMapper")
 	protected DataMapper mplDataMapper;
-
 	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService mplDeliveryCostService;
-
-
-	/**
-	 * @return the wishlistFacade
-	 */
-	public WishlistFacade getWishlistFacade()
-	{
-		return wishlistFacade;
-	}
-
-	/**
-	 * @param wishlistFacade
-	 *           the wishlistFacade to set
-	 */
-	public void setWishlistFacade(final WishlistFacade wishlistFacade)
-	{
-		this.wishlistFacade = wishlistFacade;
-	}
-
-	/**
-	 * @return the mplCommerceCartService
-	 */
-	public MplCommerceCartServiceImpl getMplCommerceCartService()
-	{
-		return mplCommerceCartService;
-	}
-
-	/**
-	 * @param mplCommerceCartService
-	 *           the mplCommerceCartService to set
-	 */
-	public void setMplCommerceCartService(final MplCommerceCartServiceImpl mplCommerceCartService)
-	{
-		this.mplCommerceCartService = mplCommerceCartService;
-	}
-
-	@Autowired
+	@Resource(name = "defaultPromotionManager")
+	private DefaultPromotionManager defaultPromotionManager;
+	@Resource
 	private ExtendedUserService extendedUserService;
-	@Autowired
+	@Resource
 	private BaseSiteService baseSiteService;
 	@Resource(name = "productService")
 	private ProductService productService;
@@ -178,116 +141,26 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	protected UserFacade userFacade;
 	@Resource(name = "cartService")
 	protected CartService cartService;
-	@Autowired
+	@Resource
 	private ModelService modelService;
-	@Autowired
+	@Resource
 	private DiscountUtility discountUtility;
-	@Autowired
+	@Resource
 	private MplProductWebServiceImpl mplProductWebService;
-	@Autowired
+	@Resource
 	private CommerceCartService commerceCartService;
-	@Autowired
+	@Resource
 	private MplPaymentWebFacade mplPaymentWebFacade;
-	@Autowired
+	@Resource
 	private SiteConfigService siteConfigService;
-
-	@Autowired
+	@Resource
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
-
-	/**
-	 * @return the mplExtendedCartConverter
-	 */
-	public Converter<CartModel, CartData> getMplExtendedCartConverter()
-	{
-		return mplExtendedCartConverter;
-	}
-
-	/**
-	 * @param mplExtendedCartConverter
-	 *           the mplExtendedCartConverter to set
-	 */
-	public void setMplExtendedCartConverter(final Converter<CartModel, CartData> mplExtendedCartConverter)
-	{
-		this.mplExtendedCartConverter = mplExtendedCartConverter;
-	}
-
-	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
-
-	/**
-	 * @return the mplProductWebService
-	 */
-	public MplProductWebServiceImpl getMplProductWebService()
-	{
-		return mplProductWebService;
-	}
-
-	/**
-	 * @param mplProductWebService
-	 *           the mplProductWebService to set
-	 */
-	public void setMplProductWebService(final MplProductWebServiceImpl mplProductWebService)
-	{
-		this.mplProductWebService = mplProductWebService;
-	}
-
-	/**
-	 * @return the discountUtility
-	 */
-	public DiscountUtility getDiscountUtility()
-	{
-		return discountUtility;
-	}
-
-	/**
-	 * @param discountUtility
-	 *           the discountUtility to set
-	 */
-	public void setDiscountUtility(final DiscountUtility discountUtility)
-	{
-		this.discountUtility = discountUtility;
-	}
-
-	@Autowired
+	@Resource
 	private MplDiscountUtil mplDiscountUtil;
-
-	/**
-	 * @return the modelService
-	 */
-	public ModelService getModelService()
-	{
-		return modelService;
-	}
-
-	/**
-	 * @param modelService
-	 *           the modelService to set
-	 */
-	public void setModelService(final ModelService modelService)
-	{
-		this.modelService = modelService;
-	}
-
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
-
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
-	}
-
 	@Resource(name = "addressReversePopulator")
 	private Populator<AddressData, AddressModel> addressReversePopulator;
 
-
+	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
 	private final static Logger LOG = Logger.getLogger(MplCartWebServiceImpl.class);
 
@@ -721,7 +594,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 			if (selectedProductModel == null)
 			{
-				selectedProductModel = productService.getProductForCode(productCode);
+				selectedProductModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
 				if (selectedProductModel == null)
 				{
 					LOG.debug(MarketplacecommerceservicesConstants.INVALID_PRODUCT_CODE + productCode);
@@ -2287,5 +2160,122 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		this.mplDeliveryCostService = mplDeliveryCostService;
 	}
 
+	/**
+	 * @return the wishlistFacade
+	 */
+	public WishlistFacade getWishlistFacade()
+	{
+		return wishlistFacade;
+	}
 
+	/**
+	 * @param wishlistFacade
+	 *           the wishlistFacade to set
+	 */
+	public void setWishlistFacade(final WishlistFacade wishlistFacade)
+	{
+		this.wishlistFacade = wishlistFacade;
+	}
+
+	/**
+	 * @return the mplCommerceCartService
+	 */
+	public MplCommerceCartServiceImpl getMplCommerceCartService()
+	{
+		return mplCommerceCartService;
+	}
+
+	/**
+	 * @param mplCommerceCartService
+	 *           the mplCommerceCartService to set
+	 */
+	public void setMplCommerceCartService(final MplCommerceCartServiceImpl mplCommerceCartService)
+	{
+		this.mplCommerceCartService = mplCommerceCartService;
+	}
+
+	/**
+	 * @return the mplExtendedCartConverter
+	 */
+	public Converter<CartModel, CartData> getMplExtendedCartConverter()
+	{
+		return mplExtendedCartConverter;
+	}
+
+	/**
+	 * @param mplExtendedCartConverter
+	 *           the mplExtendedCartConverter to set
+	 */
+	public void setMplExtendedCartConverter(final Converter<CartModel, CartData> mplExtendedCartConverter)
+	{
+		this.mplExtendedCartConverter = mplExtendedCartConverter;
+	}
+
+	/**
+	 * @return the mplProductWebService
+	 */
+	public MplProductWebServiceImpl getMplProductWebService()
+	{
+		return mplProductWebService;
+	}
+
+	/**
+	 * @param mplProductWebService
+	 *           the mplProductWebService to set
+	 */
+	public void setMplProductWebService(final MplProductWebServiceImpl mplProductWebService)
+	{
+		this.mplProductWebService = mplProductWebService;
+	}
+
+	/**
+	 * @return the discountUtility
+	 */
+	public DiscountUtility getDiscountUtility()
+	{
+		return discountUtility;
+	}
+
+	/**
+	 * @param discountUtility
+	 *           the discountUtility to set
+	 */
+	public void setDiscountUtility(final DiscountUtility discountUtility)
+	{
+		this.discountUtility = discountUtility;
+	}
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
+
+	/**
+	 * @return the addressReversePopulator
+	 */
+	public Populator<AddressData, AddressModel> getAddressReversePopulator()
+	{
+		return addressReversePopulator;
+	}
+
+	/**
+	 * @param addressReversePopulator
+	 *           the addressReversePopulator to set
+	 */
+	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
+	{
+		this.addressReversePopulator = addressReversePopulator;
+	}
 }

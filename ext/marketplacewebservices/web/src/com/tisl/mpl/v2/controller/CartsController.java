@@ -1946,7 +1946,6 @@ public class CartsController extends BaseCommerceController
 			}
 			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
