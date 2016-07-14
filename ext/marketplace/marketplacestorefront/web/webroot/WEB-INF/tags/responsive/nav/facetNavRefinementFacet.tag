@@ -84,15 +84,15 @@ function navigateToPage(queryString,textString)
 			</form>
 			
 		<input type="checkbox" id="brandSelectAll" data-url="">
-				<label class="applyBrandFilters" style="float: right;margin-right: 12%;margin-top: -1%;padding-bottom: 4%;">Apply</label>
-				<%-- Below currentQueryParams input tag is for (brand facet) apply option in SERT page --%>
+				<%-- <label class="applyBrandFilters" style="float: right;margin-right: 12%;margin-top: -1%;padding-bottom: 4%;">Apply</label>
+				Below currentQueryParams input tag is for (brand facet) apply option in SERT page
 				<input type="hidden" name="currentQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentQueryParamsApply"/>
 							<form action="${url}" method="get" id="brandApply"> 
 									<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 									<input type="hidden" name="q" value="" class="qValueForApply"/>
 									<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 									<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
-							</form>
+							</form> --%>
 		<%-- <c:choose>
 		
 		<c:when test="${param.selectAllBrand eq 'true' }">
@@ -522,6 +522,20 @@ function navigateToPage(queryString,textString)
 				</div>
 			</c:if>
 		</div>
+		
+		
+		<c:if test="${facetData.code eq 'brand'}">
+				<label class="applyBrandFilters">Apply Now</label>
+				<%-- Below currentQueryParams input tag is for (brand facet) apply option in SERT page --%>
+				<input type="hidden" name="currentQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentQueryParamsApply"/>
+							<form action="${url}" method="get" id="brandApply"> 
+									<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+									<input type="hidden" name="q" value="" class="qValueForApply"/>
+									<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+									<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
+							</form>
+		</c:if>
+		
 		
 	</li> </c:if> 
 			</ycommerce:testId>
