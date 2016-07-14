@@ -22,7 +22,7 @@ public class AccountAddressForm extends AddressForm
 	private String line3;
 	private String locality;
 	private String landmark;
-
+	private String otherLandmark;
 
 
 	/**
@@ -128,6 +128,22 @@ public class AccountAddressForm extends AddressForm
 	public void setLandmark(final String landmark)
 	{
 		this.landmark = landmark;
+	}
+
+	/**
+	 * @return the otherLandmark
+	 */
+	public String getOtherLandmark()
+	{
+		return otherLandmark;
+	}
+
+	/**
+	 * @param otherLandmark the otherLandmark to set
+	 */
+	public void setOtherLandmark(String otherLandmark)
+	{
+		this.otherLandmark = otherLandmark;
 	}
 
 }
