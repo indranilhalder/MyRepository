@@ -10564,17 +10564,14 @@ body .account .right-account .order-history .pagination li{
 .promo-block .product-name {
     font-size: 12px;
     margin: 5px 0;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     /* font-weight: 600; */
     text-align:center;
 }
 .promo-block .product-name.highlight {
-   background-color: #F5F5F5;
     margin-top: 20px;
-    -webkit-box-shadow: -3px 4px 5px 0px rgba(203,203,203,1);
-    -moz-box-shadow: -3px 4px 5px 0px rgba(203,203,203,1);
-    box-shadow: -3px 4px 5px 0px rgba(203,203,203,1);
-    padding: 5px;
+    padding: 10px;
+    border:1px solid #bbb;
     word-break: break-word;
 }
 .promo-block select {
@@ -10632,11 +10629,14 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-detail .company {
     vertical-align: middle;
-    font-size: 12px;
-    font-weight: 500
+    font-size: 14px;
+    font-weight: 600;
 }
 .product-info .product-detail .company.author {
     padding-bottom: 10px
+}
+.pdp .product-info .product-detail .company.author {
+    padding-bottom: 0px
 }
 @media (max-width: 790px) {
     .product-info .product-detail .company {
@@ -31775,6 +31775,12 @@ label.applyBrandFilters {
     text-transform: uppercase;
     cursor: pointer;
 }
+.product-info .product-detail .fullfilled-by{
+	margin: 5px 0 30px;
+}
+.product-info .product-detail h3.seller{
+	margin: 20px 0 0 0;
+}
 /*--------------maincss-----------*/
 .row
 {
@@ -40678,16 +40684,13 @@ p.savings.pdp-savings span{
     margin-bottom: 2px;
 }
 .pdp-promo-title{
-	background-color: #f5f5f5;
-    -webkit-box-shadow: -3px 4px 5px 0 rgba(203,203,203,1);
-    -moz-box-shadow: -3px 4px 5px 0 rgba(203,203,203,1);
-    box-shadow: -3px 4px 5px 0 rgba(203,203,203,1);
-    padding: 5px;
+    padding: 10px;
     word-break: break-word;
     font-size: 12px;
-    margin: 5px 0;
-    text-transform: uppercase;
+    margin: 15px 0 5px;
+    /* text-transform: uppercase; */
     text-align: center;
+    border: 1px solid #bbb;
 }
 @media(max-width:890px) and (min-width:651px){
 .sizeGuide-message{
