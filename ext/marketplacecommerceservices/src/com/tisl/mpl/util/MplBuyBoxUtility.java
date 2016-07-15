@@ -364,7 +364,7 @@ public class MplBuyBoxUtility
 			code = COLORFAMILYFOOTWEAR;
 		}
 
-		if (!code.equals(""))
+		if (StringUtils.isNotEmpty(code))
 		{
 			final List<ClassAttributeAssignmentModel> classAttrAssgnList = buyBoxService.getClassAttrAssignmentsForCode(code);
 
