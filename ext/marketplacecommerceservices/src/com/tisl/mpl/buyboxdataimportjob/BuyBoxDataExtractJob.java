@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.buyBoxDataImportJob;
+package com.tisl.mpl.buyboxdataimportjob;
 
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.cronjob.enums.CronJobResult;
@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 
-import com.tisl.mpl.buyBoxDataImport.BuyBoxImportUtility;
+import com.tisl.mpl.buyboxdataimport.BuyBoxImportUtility;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService;

@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.buyBoxDataImport;
+package com.tisl.mpl.buyboxdataimport;
 
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jdbcwrapper.HybrisDataSource;
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
