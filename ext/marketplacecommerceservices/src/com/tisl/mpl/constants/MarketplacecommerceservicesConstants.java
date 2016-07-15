@@ -1602,6 +1602,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String DEFAULT_RISK = "-1.0";
 
 	public static final String CURRENT = "current".intern();
+	public static final String INVERTED_COMMA = "'".intern();
+
+
 
 	private MarketplacecommerceservicesConstants()
 	{
