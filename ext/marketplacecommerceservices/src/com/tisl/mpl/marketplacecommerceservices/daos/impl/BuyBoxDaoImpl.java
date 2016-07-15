@@ -60,11 +60,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -81,18 +81,17 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 				final String[] codes = productCode.split(MarketplacecommerceservicesConstants.COMMA);
 				for (final String id : codes)
 				{
-					stringBuilder.append(MarketplacecommerceservicesConstants.QUOTE).append(escapeString(id))
-							.append(MarketplacecommerceservicesConstants.QUOTE).append(MarketplacecommerceservicesConstants.COMMA);
+					stringBuilder.append('\'').append(escapeString(id)).append('\'')
+							.append(MarketplacecommerceservicesConstants.COMMA);
 				}
 				final int index = stringBuilder.lastIndexOf(MarketplacecommerceservicesConstants.COMMA);
 				productCode = stringBuilder.replace(index, index + 1, "").toString();
 			}
 
 
-			if (productCode.indexOf(MarketplacecommerceservicesConstants.INVERTED_COMMA) == -1)
+			if (productCode.indexOf("'") == -1)
 			{
-				productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA + productCode
-						+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
+				productCode = "'" + productCode + "'";
 			}
 
 			final String queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + WHERE_CLASS + BuyBoxModel.PRODUCT
@@ -123,22 +122,22 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
 	public List<BuyBoxModel> getBuyboxPricesForSearch(final String productCode) throws EtailNonBusinessExceptions
 	{
 
-		String priceQueryString = MarketplacecommerceservicesConstants.EMPTY;
+		String priceQueryString = "";
 		try
 		{
 
-			if (!productCode.contains(MarketplacecommerceservicesConstants.INVERTED_COMMA))
+			if (!productCode.contains("'"))
 			{
 				priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product} IN ('"
 						+ productCode
@@ -175,11 +174,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the inventory for a buybox wining seller against a product code.
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -243,11 +242,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for invalidating pk of the buybox sellers in the cache.
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -298,9 +297,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given product code if all the seller has stock zero
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -344,7 +343,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getRichAttributeData(java.lang.String)
 	 */
 	@Override
@@ -457,9 +456,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given ussid if all the seller has stock zero
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -485,7 +484,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#priceForUssid(java.lang.String)
 	 */
 	@Override
@@ -519,11 +518,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
