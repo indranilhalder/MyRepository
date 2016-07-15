@@ -83,7 +83,6 @@ INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=tru
 ;avgRatingRef4;mplFacetAvgRating;4;3.5;4.49
 ;avgRatingRef5;mplFacetAvgRating;5;4.5;5
 
-
 # Non-facet properties
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
 ;$solrIndexedType; itemtype               ;string ;            ;    ;    ;    ;    ;    ;
