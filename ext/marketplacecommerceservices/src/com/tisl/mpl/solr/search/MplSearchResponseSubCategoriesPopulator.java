@@ -55,8 +55,8 @@ public class MplSearchResponseSubCategoriesPopulator<FACET_SEARCH_CONFIG_TYPE, I
 			final ProductCategorySearchPageData<SolrSearchQueryData, ITEM, CategoryModel> target)
 	{
 		super.populate(source, target);
-		target.setDepartmentHierarchyData(
-				buildDepartmentHierarchy(source.getSearchResult(), source.getRequest().getSearchQueryData()));
+		target.setDepartmentHierarchyData(buildDepartmentHierarchy(source.getSearchResult(), source.getRequest()
+				.getSearchQueryData()));
 		target.setDepartments(buildDepartments(source.getSearchResult()));
 	}
 
@@ -99,7 +99,9 @@ public class MplSearchResponseSubCategoriesPopulator<FACET_SEARCH_CONFIG_TYPE, I
 
 						if (facet.length() > 0 && !facet.contains(MplConstants.LEVEL_ZERO))
 						{
-							departmentHierarchyWithCount.append(MplConstants.PIPE).append(facet);
+							final StringBuffer facetWithCount = new StringBuffer(MplConstants.EMPTY_STRING);
+							facetWithCount.append(facet).append(MplConstants.COLON).append(String.valueOf(facetValue.getCount()));
+							departmentHierarchyWithCount.append(MplConstants.PIPE).append(facetWithCount);
 							if (facet.contains(MplConstants.LEVEL_ONE))
 							{
 								final String[] facetItems = facet.split(MplConstants.COLON);
