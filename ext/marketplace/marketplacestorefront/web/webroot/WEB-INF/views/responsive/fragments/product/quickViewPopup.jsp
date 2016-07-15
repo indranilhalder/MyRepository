@@ -92,6 +92,7 @@ tr.d0 td {
  var productSizeQuickVar = '${productSizeQuick}';
  var emiCuttOffAmount = '${emiCuttOffAmount}';
  var productCodeQuickView = '${product.code}';
+ var variantCodesPdp = '${allVariantsString}';
 
  
  $( document ).ready(function() {
@@ -468,6 +469,9 @@ display:none;
 	<p class="sale" id="quickMopPriceId" style="display:none">
 	</p>
 	<p class="sale" id="quickSpPriceId" style="display:none">
+	</p>
+	<p class="savings pdp-savings" id="savingsOnProductIdQV" style="display:none">															
+	  <span></span>
 	</p>
     
   </div>   

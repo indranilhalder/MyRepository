@@ -284,6 +284,9 @@ var productCodeSG = '${product.code}';
 	</p>
 	<p class="sale" id="sizespPriceId" style="display:none">
 	</p>
+	<p class="savings pdp-savings" id="savingsOnProductIdSG" style="display:none">															
+		  <span></span>
+	</p>
 	<br>
     </div>
         <div class="attributes">

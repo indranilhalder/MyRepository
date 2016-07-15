@@ -7,7 +7,9 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -123,7 +125,215 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 
 
+	//TISPRM-56
 
+	/**
+	 * This method is responsible for get the winning buybox seller and other sellers count and minimum price information
+	 * for the given product code
+	 *
+	 * @param productCode
+	 * @return-buyboxData
+	 */
+
+
+	@Override
+	public Map<String, Object> buyboxPricePDP(final String productCode) throws EtailNonBusinessExceptions
+	{
+		final BuyBoxData buyboxData = new BuyBoxData();
+		boolean onlyBuyBoxHasStock = false;
+		BuyBoxModel buyBoxMod = null;
+		//TISPRM -56
+		String products[] = null;
+		final List<String> productsList = new ArrayList<String>();
+
+		final Map<String, Object> returnData = new HashMap<String, Object>();
+		List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>();
+		List<String> productsWithNoStock = new ArrayList<String>();
+
+		if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)
+		{
+			products = productCode.split(",");
+		}
+		final List<String> arrayToProductList = new ArrayList<String>(Arrays.asList(products));
+		//END
+		try
+		{
+			//TISPRM -56
+			final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
+			for (final BuyBoxModel buyBoxModel : buyboxModelListAll)
+			{
+				if (null != products && products[0].equalsIgnoreCase(buyBoxModel.getProduct()))
+				{
+					buyboxModelList.add(buyBoxModel);
+				}
+				if (!productsList.contains(buyBoxModel.getProduct()))
+				{
+					productsList.add(buyBoxModel.getProduct());
+				}
+			}
+			//END
+
+			buyboxData.setAllOOStock(MarketplaceFacadesConstants.N);
+
+			//If all the sellers has stock zero, then display any product having non zero price
+			if (buyboxModelList.isEmpty())
+			{
+				LOG.info("************* No Seller with inventory>0 inventory, Fetching buy box rows having price>0 *********");
+				buyboxData.setAllOOStock(MarketplaceFacadesConstants.Y);
+				buyboxModelList = buyBoxService.buyBoxPriceNoStock(products[0]);
+				if (CollectionUtils.isNotEmpty(buyboxModelList))
+				{
+					//TODO
+					buyBoxMod = buyboxModelList.get(0);
+				}
+				else
+				{
+					LOG.info("************* Fetching buy box rows having price>0 and without inventory check *********");
+					buyboxData.setSellerAssociationstatus(SellerAssociationStatusEnum.NO.toString());
+				}
+				//no stock for all products
+				arrayToProductList.removeAll(productsList);
+				productsWithNoStock = arrayToProductList;
+			}
+
+			else if (buyboxModelList.size() == 1)
+			{
+				onlyBuyBoxHasStock = true;
+				buyboxModelList = buyBoxService.buyBoxPriceNoStock(products[0]);
+				for (final BuyBoxModel buybx : buyboxModelList)
+				{
+					if (buybx.getAvailable().doubleValue() > 0)
+					{
+						buyBoxMod = buybx;
+						break;
+					}
+				}
+				//Availability counts
+				arrayToProductList.removeAll(productsList);
+				productsWithNoStock = arrayToProductList;
+			}
+			else
+			{
+				buyBoxMod = buyboxModelList.get(0);
+				//Availability counts
+				arrayToProductList.removeAll(productsList);
+				productsWithNoStock = arrayToProductList;
+			}
+			if (buyboxModelList.size() > 0)
+			{
+
+
+				if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
+				{
+					final double spPrice = buyBoxMod.getSpecialPrice().doubleValue();
+					//final double roundedSpPrice = Math.round(spPrice * 100) / 100;
+					buyboxData.setSpecialPrice(productDetailsHelper.formPriceData(new Double(spPrice)));
+				}
+				final double price = buyBoxMod.getPrice().doubleValue();
+				buyboxData.setPrice(productDetailsHelper.formPriceData(new Double(price)));
+				buyboxData.setSellerAssociationstatus(SellerAssociationStatusEnum.YES.toString());
+				buyboxData.setSellerName(buyBoxMod.getSellerName());
+				buyboxData.setSellerId(buyBoxMod.getSellerId());
+				buyboxData.setSellerArticleSKU(buyBoxMod.getSellerArticleSKU());
+				buyboxData.setAvailable(buyBoxMod.getAvailable());
+				if (null != buyBoxMod.getMrp())
+				{
+					buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
+					buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
+				}
+
+
+				//other sellers count
+				final int sellerSize = buyboxModelList.size() - 1;
+				final Integer noofsellers = Integer.valueOf(sellerSize);
+				if (onlyBuyBoxHasStock && sellerSize > 0)
+				{
+					buyboxData.setNumberofsellers(Integer.valueOf(-1));
+					//buyboxData.setNumberofsellers(Integer.valueOf(-1));
+				}
+				else
+				{
+					buyboxData.setNumberofsellers(noofsellers);
+				}
+				//Minimum price for other sellers
+				double minPrice = 0.0d;
+				if (sellerSize > 0)
+				{
+
+					for (int i = 1; i <= sellerSize; i++)
+					{
+						if (null != buyboxModelList.get(i).getSpecialPrice()
+								&& buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0)
+						{
+
+							final double specialPrice = buyboxModelList.get(i).getSpecialPrice().doubleValue();
+
+							if (i == 1)
+							{
+								minPrice = specialPrice;
+							}
+							else
+							{
+								if (minPrice > specialPrice)
+								{
+									minPrice = specialPrice;
+								}
+							}
+						}
+						else
+						{
+							double actualPrice = 0.0D;
+							if (null != buyboxModelList.get(i).getPrice())
+							{
+								actualPrice = buyboxModelList.get(i).getPrice().doubleValue();
+							}
+							if (i == 1)
+							{
+								minPrice = actualPrice;
+							}
+							else
+							{
+								if (minPrice > actualPrice)
+								{
+									minPrice = actualPrice;
+								}
+							}
+						}
+					}
+
+				}
+				final double roundedMinPrice = Math.round(minPrice * 100) / 100;
+				buyboxData.setMinPrice(productDetailsHelper.formPriceData(new Double(roundedMinPrice)));
+
+			}
+			else
+			{
+				//Fix for Defect TISPT-152
+				LOG.warn("No buybox present for the product with product code ::: " + productCode);
+				//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3001);
+			}
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		returnData.put("pdp_buy_box", buyboxData);
+		returnData.put("no_stock_p_codes", productsWithNoStock);
+
+		return returnData;
+	}
 
 	/**
 	 * This method is responsible for get the winning buybox seller and other sellers count and minimum price information
@@ -633,7 +843,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
