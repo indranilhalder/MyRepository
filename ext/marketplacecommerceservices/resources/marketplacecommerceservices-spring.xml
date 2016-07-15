@@ -1751,9 +1751,9 @@
 <!-- 	</bean> -->
 	
 
-	<bean id="buyBoxImportUtil" class="com.tisl.mpl.BuyBoxDataImport.BuyBoxImportUtility">
+	<bean id="buyBoxImportUtil" class="com.tisl.mpl.buyBoxDataImport.BuyBoxImportUtility">
 	</bean>
-	<bean id="buyBoxDataImportJob" class="com.tisl.mpl.BuyBoxDataImportJob.BuyBoxDataExtractJob"
+	<bean id="buyBoxDataImportJob" class="com.tisl.mpl.buyBoxDataImportJob.BuyBoxDataExtractJob"
 		parent="abstractJobPerformable">
 			<property name="modelService" ref="modelService" />
 			</bean>
