@@ -1540,10 +1540,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		class="com.tisl.mpl.search.converters.populator.MplCommerceIndexedPropertyPopulator" />
 		<bean id="changeDeliveryAddressFacade"
 		class="com.tis.mpl.facade.changedelivery.Impl.MplChangeDeliveryAddressFacadeImpl"/>
-		<!-- 	R2.3 FL04 changes	 -->
-	
-	<bean id="mplPincodeFacade" class="com.tisl.mpl.facade.pincode.impl.MplPincodeFacadeImpl"/>
 		
+		<!-- 	R2.3 FL04 changes	 -->
+			
 	<bean id="mplStatePopulator" class="com.tisl.mpl.facades.populators.MplStatePopulator"/>
 	
 	<bean id="mplStateConverter" parent="abstractPopulatingConverter">
