@@ -124,7 +124,7 @@ public class ChangeDeliveryAddressFacadeImpl implements ChangeDeliveryAddressFac
 		}
 		try
 		{
-			omsResponce = mplChangeDeliveryAddressClientService.changeDeliveryAddressDataToOMS(requestData);
+			omsResponce = mplChangeDeliveryAddressClientService.changeDeliveryRequestCallToOMS(requestData);
 		}
 		catch (final Exception e)
 		{
