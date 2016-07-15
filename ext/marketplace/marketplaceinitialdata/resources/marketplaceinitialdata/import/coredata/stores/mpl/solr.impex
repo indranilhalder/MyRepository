@@ -83,15 +83,6 @@ INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=tru
 ;avgRatingRef4;mplFacetAvgRating;4;3.5;4.49
 ;avgRatingRef5;mplFacetAvgRating;5;4.5;5
 
-# Discount Range TISPRM-134
-#INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=true];name[unique=true];from;to
-#;mplDiscountRange1;mplDiscountRange;	Discounted Items;		0;			100
-#;mplDiscountRange2;mplDiscountRange;	0%-20%;					0;			20
-#;mplDiscountRange3;mplDiscountRange;	20.01%-40%;				20.01;		40
-#;mplDiscountRange4;mplDiscountRange;	40.01%-60%;				40.01;		60
-#;mplDiscountRange5;mplDiscountRange;	60.01%-80%;				60.01;		80
-#;mplDiscountRange6;mplDiscountRange;	80.01%-100%;			80.01;		100
-
 # Non-facet properties
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
 ;$solrIndexedType; itemtype               ;string ;            ;    ;    ;    ;    ;    ;
