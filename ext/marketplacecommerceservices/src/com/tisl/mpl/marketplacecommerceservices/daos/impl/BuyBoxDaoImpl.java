@@ -75,24 +75,22 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		try
 		{
 			//TISPRM-56
-			if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)
+			if (productCode.indexOf(",") != -1)
 			{
 				final StringBuilder stringBuilder = new StringBuilder();
-				final String[] codes = productCode.split(MarketplacecommerceservicesConstants.COMMA);
+				final String[] codes = productCode.split(",");
 				for (final String id : codes)
 				{
-					stringBuilder.append(MarketplacecommerceservicesConstants.QUOTE).append(escapeString(id))
-							.append(MarketplacecommerceservicesConstants.QUOTE).append(MarketplacecommerceservicesConstants.COMMA);
+					stringBuilder.append('\'').append(escapeString(id)).append('\'').append(',');
 				}
-				final int index = stringBuilder.lastIndexOf(MarketplacecommerceservicesConstants.COMMA);
+				final int index = stringBuilder.lastIndexOf(",");
 				productCode = stringBuilder.replace(index, index + 1, "").toString();
 			}
 
 
-			if (productCode.indexOf(MarketplacecommerceservicesConstants.INVERTED_COMMA) == -1)
+			if (productCode.indexOf("'") == -1)
 			{
-				productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA + productCode
-						+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
+				productCode = "'" + productCode + "'";
 			}
 
 			final String queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + WHERE_CLASS + BuyBoxModel.PRODUCT
@@ -134,11 +132,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 	public List<BuyBoxModel> getBuyboxPricesForSearch(final String productCode) throws EtailNonBusinessExceptions
 	{
 
-		String priceQueryString = MarketplacecommerceservicesConstants.EMPTY;
+		String priceQueryString = "";
 		try
 		{
 
-			if (!productCode.contains(MarketplacecommerceservicesConstants.INVERTED_COMMA))
+			if (!productCode.contains("'"))
 			{
 				priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product} IN ('"
 						+ productCode
