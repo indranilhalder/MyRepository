@@ -312,6 +312,7 @@
 		class="com.tisl.mpl.util.MplBuyBoxUtility">
 		<property name="buyBoxService" ref="buyBoxService" />
 		<property name="variantOptionDataConverter" ref="variantOptionDataConverter" />
+		<property name="classificationService" ref="classificationService" />
 </bean>
 <bean id="mplCompetingProductsUtility"
 		class="com.tisl.mpl.util.MplCompetingProductsUtility">
