@@ -26,6 +26,7 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;price							   ;"Price"
  ;$solrIndexedType		   ;deliveryMode					   ;"Delivery"
  ;$solrIndexedType		   ;discountFlag					   ;"Discount"
+ ;$solrIndexedType		   ;discountAll							;"All Discount"
  ;$solrIndexedType		   ;colour							   ;"Colour"
  ;$solrIndexedType		   ;size							   ;"Size"
  ;$solrIndexedType		   ;rating							   ;"Rating"
