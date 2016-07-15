@@ -16,13 +16,16 @@ import de.hybris.platform.storelocator.impl.GeometryUtils;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
+
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.PincodeDao;
 
 
@@ -47,6 +50,12 @@ public class PincodeDaoImpl implements PincodeDao
 	private final String LATITUDE = "latitude";
 	private final String LONGITUDE = "longitude";
 	private final String IS_NOT_NULL = "} is not null AND {"; 
+	
+	private final String SELECT_CLASS = "select {";
+	private final String FROM_CLASS = "} from {";
+	private final String WHERE_CLASS = "} where {";
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -192,6 +201,42 @@ public class PincodeDaoImpl implements PincodeDao
 			throw new PointOfServiceDaoException("Could not fetch locations from database, due to :" + e.getMessage(), e);
 		}
 	}
+	
+	/**
+	 * Get the Details of the given pincode
+	 * 
+	 * @param pincode
+	 * @return PincodeModel
+	 */
+	@Override
+	public List<PincodeModel> getAllDetailsOfPinocde(final String pincode)
+	{
+		try
+		{
+			final String query = SELECT_CLASS + PincodeModel.PK + FROM_CLASS + PincodeModel._TYPECODE + WHERE_CLASS
+					+ PincodeModel.PINCODE + "}=?pincode";
+			final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(query);
+			flexQuery.addQueryParameter("pincode", pincode);
+			LOG.debug("Pincode Query String ::::::::: " + query);
+			final SearchResult<PincodeModel> result = flexibleSearchService.search(flexQuery);
+			if (null != result && null != result.getResult())
+			{
+				return result.getResult();
+			}
+		
+		}
+		catch (final FlexibleSearchException exception)
+		{
+			throw new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final Exception ex)
+		{
+			throw ex;
+		}
+		return Collections.EMPTY_LIST;
+	}
+	
+	
 
 	/**
 	 * @return the flexibleSearchService
