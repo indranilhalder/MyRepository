@@ -1,6 +1,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.internal.dao.AbstractItemDao;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -604,6 +605,36 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		}
 
 		return escapedId;
+	}
+
+	@Override
+	public List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(final String code)
+	{
+		try
+		{
+			final String classAttrquery = "select {clattass.pk} from {ClassAttributeAssignment as clattass} "
+					+ "									 where {clattass.classificationAttribute} " + "	 IN ({{"
+					+ "												select {clattr.pk} from {ClassificationAttribute as clattr}  where {clattr.code} " + "		IN ('"
+					+ code + "')}})";
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(classAttrquery);
+			return flexibleSearchService.<ClassAttributeAssignmentModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 }

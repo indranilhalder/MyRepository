@@ -153,11 +153,10 @@ public class MplDisplayPromotionCodeValueProvider extends AbstractPropertyFieldV
 
 
 				//Included for Electronics Product
-				final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel,
-						pcmSizeVariantModel.getFeatures());
+				final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel);
 
 
-				final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(product, product.getFeatures());
+				final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(product);
 
 
 				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
