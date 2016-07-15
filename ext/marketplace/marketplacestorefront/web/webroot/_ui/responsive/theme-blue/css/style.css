@@ -40454,9 +40454,14 @@ p.savings.cart-savings {
     line-height: 20px;
     font-size:14px;
 }
+p.savings.pdp-savings{
+	margin:0px !important;
+}
 p.savings.pdp-savings span{
-	margin-top: 2px;
-    margin-bottom: 2px;
+	/* margin-top: 2px;
+    margin-bottom: 2px; */
+        margin: 0px;
+    padding: 0px;
 }
 .pdp-promo-title{
     padding: 10px;
