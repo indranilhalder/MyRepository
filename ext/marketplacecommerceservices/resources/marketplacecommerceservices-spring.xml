@@ -1742,13 +1742,13 @@
 		<property name="password" value="${jdbc.iastg.pass}" />
 	</bean>
 	<!-- New Buy Box Implementation Start -->
-	<bean id="buyBoxDataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="${buybox.jdbc.url}" />
-		<property name="username" value="${buybox.jdbc.user}" />
-		<property name="password" value="${buybox.jdbc.pass}" />
-	</bean>
+<!-- 	<bean id="buyBoxDataSource" -->
+<!-- 		class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+<!-- 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> -->
+<!-- 		<property name="url" value="${buybox.jdbc.url}" /> -->
+<!-- 		<property name="username" value="${buybox.jdbc.user}" /> -->
+<!-- 		<property name="password" value="${buybox.jdbc.pass}" /> -->
+<!-- 	</bean> -->
 	
 
 	<bean id="buyBoxImportUtil" class="com.tisl.mpl.BuyBoxDataImport.BuyBoxImportUtility">
