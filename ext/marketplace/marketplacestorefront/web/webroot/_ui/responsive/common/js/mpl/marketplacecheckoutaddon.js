@@ -1641,15 +1641,18 @@ $("#otpMobileNUMField").focus(function(){
 	 var firstName=validateNameOnAddress($("#firstName").val(), document.getElementById("firstNameError"), "firstName");
 	 var lastName=validateNameOnAddress($("#lastName").val(), document.getElementById("lastNameError"), "lastName");
 	 var addressLine1=validateAddressLine1($("#address1").val(), document.getElementById("address1Error"));
-	 var addressLine2=validateAddressLine2($("#address2").val(), document.getElementById("address2Error"));
-	 var addressLine3=validateLandmark($("#address3").val(), document.getElementById("address3Error"));
+	 //var addressLine2=validateAddressLine2($("#address2").val(), document.getElementById("address2Error"));
+	 //var addressLine3=validateLandmark($("#address3").val(), document.getElementById("address3Error"));
+	 var addressLine2=$("#address2").val();
+	 var addressLine3=$("#address3").val();
 	 var pin = validatePin();
 	 var city=validateCity();
 	 var state=validateState();
 	 var cardType=$("#cardType").val();
 	 if($("#paymentMode").val()=="Credit Card" || $("#paymentMode").val()=="EMI"){
 		 if(cardType=="MAESTRO"){
-			 if (name && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
+			 //if (name && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
+			if (name && cardNo && pin && firstName && lastName && addressLine1 && city && state){
 				 createJuspayOrderForNewCard();
 			 }
 			 else{
@@ -1660,7 +1663,8 @@ $("#otpMobileNUMField").focus(function(){
 			 var cvv = validateCVV();
 			 var expMM = validateExpMM();
 			 var expYY = validateExpYY();
-			 if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
+			// if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
+			 if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && city && state){
 				 createJuspayOrderForNewCard();
 			 }
 			 else{
@@ -2461,18 +2465,18 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 		$("#address1Error").html("<p>Address Line 1 cannot be blank</p>");	
 		validate= false;
 	}
-	else if(regAddress.test(result) == false)  
+	/*else if(regAddress.test(result) == false)  
 	{ 
 		$("#address1Error").show();
 		$("#address1Error").html("<p>Address Line 1 must be alphanumeric only</p>");
 		validate= false;
-	}  
+	}  */
 		else
 	{
 		$("#address1Error").hide();
 	}	
 	
-	    result=address2.value;
+	   /* result=address2.value;
 		if(result == undefined || result == "")
 	{	
 		$("#address2Error").show();
@@ -2488,9 +2492,9 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	else
 	{
 		$("#address2Error").hide();
-	}
+	}*/
 	
-	result=address3.value;
+	/*result=address3.value;
 	if(result == undefined || result == "")
 	{	
 		$("#address3Error").show();
@@ -2506,7 +2510,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	else
 	{
 		$("#address3Error").hide();	
-	}
+	}*/
 	
 	
 	  result=city.value;
