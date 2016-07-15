@@ -37,4 +37,12 @@ public interface PincodeService
 	 */
 	public Collection<PointOfServiceModel> getStoresForPincode(final GPS gps, final double distance);
 
+	/**
+	 * Gets the Details of the pincode
+	 * 
+	 * @param pincode
+	 * @return PincodeModel
+	 */
+	public PincodeModel getDetailsOfPincode(final String pincode);
+
 }
