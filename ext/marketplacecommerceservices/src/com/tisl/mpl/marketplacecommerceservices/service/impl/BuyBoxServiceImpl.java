@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -163,6 +165,19 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	{
 		// YTODO Auto-generated method stub
 		return buyBoxDao.buyBoxStockForSeller(sellerID);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getClassAttrAssignmentsForCode(java.lang.String)
+	 */
+	@Override
+	public List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(final String code)
+	{
+		// YTODO Auto-generated method stub
+		return buyBoxDao.getClassAttrAssignmentsForCode(code);
 	}
 
 }
