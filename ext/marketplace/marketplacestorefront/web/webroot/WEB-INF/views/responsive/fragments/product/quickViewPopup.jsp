@@ -92,6 +92,7 @@ tr.d0 td {
  var productSizeQuickVar = '${productSizeQuick}';
  var emiCuttOffAmount = '${emiCuttOffAmount}';
  var productCodeQuickView = '${product.code}';
+ var variantCodesPdp = '${allVariantsString}';
 
  
  $( document ).ready(function() {

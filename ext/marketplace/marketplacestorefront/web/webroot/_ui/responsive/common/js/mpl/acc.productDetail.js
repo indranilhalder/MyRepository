@@ -1159,7 +1159,8 @@ $(function() {
 /**
  * This method is used to display delivery modes against a sku id
  */
-$( document ).ready(function() { 
+$( document ).ready(function() {
+	var availibility = null;
 //function fetchPrice() {
 	var categoryType = $("#categoryType").val();
 	var selectedSize = "";
@@ -1170,6 +1171,8 @@ $( document ).ready(function() {
 	$("#addToCartButton").show();
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
+	var variantCodes = $("#product_allVariantsListingId").val();
+	var code = productCode+","+variantCodes;
 	//alert("----"+productCode);
 	
 	//changes done to restrict buybox AJAX call from every page.
@@ -1178,7 +1181,7 @@ $( document ).ready(function() {
 		return false;
 		}
 	
-	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + code
 			+ "/buybox";
 	var dataString = 'productCode=' + productCode;
 	$.ajax({
@@ -1188,6 +1191,43 @@ $( document ).ready(function() {
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
+			//TISPRM-56
+			//var stockInfo = '{"mp000000000124935":"1","mp000000000126616":"2","mp000000000126175":"0","mp000000000124936":"0"}';
+			var stockInfo = data['availibility'];
+			availibility = stockInfo;
+			$.each(stockInfo,function(key,value){
+				
+				$("#variant option").each(function(){
+				if($(this).val().toUpperCase().indexOf(key)!= -1 && value == 0){
+					$(this).attr("disabled","disabled");
+					$(this).css({
+						"color": "gray",
+						"text-decoration": "line-through"
+					
+				});
+					$(this).parent().css("border-color","gray");
+					}
+					$("#outOfStockId").hide();
+				});
+				
+				
+				/*		$(".capacity-box a").each(function(){
+							if($(this).attr("href").indexOf(key) != -1 && value == 0){
+								$(this).removeAttr("href");
+								$(this).css({
+										"color": "gray",
+							  "text-decoration": "line-through"
+								});
+								$(this).parent().css("border-color","gray");
+							}
+							});*/
+						
+						$(".variant-select-sizeGuidePopUp option").each(function(){
+							if(typeof($(this).attr("data-producturl"))!= 'undefined' && $(this).attr("data-producturl").indexOf(key)!= -1 && value == 0){
+								$(this).attr("disabled","disabled");
+								}
+						});
+					});
 			if (data['sellerArticleSKU'] != undefined) {
 				if (data['errMsg'] != "") {
 
@@ -1286,6 +1326,19 @@ $( document ).ready(function() {
 	});
 //}
 }); 
+
+$(".size-guide").click(function(){
+	if(null!= availibility){
+		$.each(availibility,function(key,value){
+			$(".variant-select-sizeGuidePopUp option").each(function(){
+				if(typeof($(this).attr("data-producturl"))!= 'undefined' && $(this).attr("data-producturl").indexOf(key)!= -1 && value == 0){
+					$(this).attr("disabled","disabled");
+					}
+			});
+		});
+	}
+});
+ 
 
 /**
  * This method is used to display delivery modes against a sku id
