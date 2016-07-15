@@ -1573,8 +1573,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISCR-421
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
-
 	public static final String EBS_SESSION_ID = "session_id";
+	public static final String WISHLIST_BY_USSID = "SELECT {wishentry.pk} FROM {Wishlist2entry as wishentry}, {Wishlist2 as wish}  WHERE {wish.user} = ?user AND {wishentry.wishlist}={wish.pk} AND {wishentry.ussid}= ?ussid ORDER BY {creationtime} desc";
 
 	//TISPRO-497
 	public static final String CARTAMOUNTINVALID = "cartAmountInvalid";
@@ -1590,7 +1590,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISPT-200
 	public static final String GETAUDITID = "select {a.pk} from {mplpaymentaudit as a} where {a.cartGUID}=?cartGUID ORDER BY {a.requestDate} DESC"
 			.intern();
-
 	public static final String MOBILE_SOURCE = "&source=App".intern();
 
 	public final static String PROXYENABLED = "proxy.enabled";
@@ -1601,6 +1600,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String IMAGEDIMENSION = "257Wx257H";
 
 	public final static String DEFAULT_RISK = "-1.0";
+
+	public static final String CURRENT = "current".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

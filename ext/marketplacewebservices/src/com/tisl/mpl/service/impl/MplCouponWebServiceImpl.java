@@ -80,35 +80,29 @@ public class MplCouponWebServiceImpl implements MplCouponWebService
 			final CustomerModel customer = (CustomerModel) extUserService.getUserForUID(StringUtils.lowerCase(emailId));
 			//*Pagination For used Coupons
 			//TISPT-390 disable the Coupon
+			//final int pageSizeVoucherHistory = Integer.parseInt(configurationService.getConfiguration()
+			//		.getString(MarketplacewebservicesConstants.PAZE_SIZE_COUPONS, "20").trim());
+			//final PageableData pageableData = createPageableData(currentPage, pageSizeVoucherHistory, sortCode);
 			/*
-			 * final int pageSizeVoucherHistory = Integer.parseInt(
-			 * configurationService.getConfiguration().getString(MarketplacewebservicesConstants.PAZE_SIZE_COUPONS,
-			 * "20").trim());
-			 *
-			 * final PageableData pageableData = createPageableData(currentPage, pageSizeVoucherHistory, sortCode);
-			 *
 			 * if (usedCoupon.equals(MarketplacecommerceservicesConstants.Y)) { final Map<String, Double> countSavedSumMap
 			 * = mplCouponFacade.getInvalidatedCouponCountSaved(customer);
-			 *
+			 * 
 			 * final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = mplCouponFacade
 			 * .getVoucherHistoryTransactions(customer, pageableData);
-			 *
-			 * final String totalCouponCount = String
-			 * .valueOf(searchPageDataVoucherHistoryFinal.getPagination().getTotalNumberOfResults()); couponHistoryDTOList
-			 * = searchPageDataVoucherHistoryFinal.getResults(); final Collection<OrderModel> orders =
-			 * customer.getOrders(); final List<OrderModel> orderList = new ArrayList<OrderModel>(); if
-			 * (CollectionUtils.isNotEmpty(orders)) { orderList.addAll(orders);
-			 *
+			 * 
+			 * final String totalCouponCount = String.valueOf(searchPageDataVoucherHistoryFinal.getPagination()
+			 * .getTotalNumberOfResults()); couponHistoryDTOList = searchPageDataVoucherHistoryFinal.getResults(); final
+			 * Collection<OrderModel> orders = customer.getOrders(); final List<OrderModel> orderList = new
+			 * ArrayList<OrderModel>(); if (CollectionUtils.isNotEmpty(orders)) { orderList.addAll(orders);
+			 * 
 			 * } if (null != countSavedSumMap) { for (final Map.Entry<String, Double> iterator :
 			 * countSavedSumMap.entrySet()) { double value = 0.0d; if (null != iterator.getValue()) { value =
 			 * Math.round(iterator.getValue().doubleValue() * 100.0) / 100.0; } if (CollectionUtils.isNotEmpty(orderList))
-			 * { savings = String .valueOf(discountUtility.createPrice(orderList.get(0),
-			 * Double.valueOf(value)).getDoubleValue()); } if (null != couponHistoryStoreDTO.getSavedSum()) {
-			 * couponDTO.setTotalSavings(savings); } if (CollectionUtils.isNotEmpty(couponHistoryDTOList)) {
-			 * couponDTO.setTotalCount(totalCouponCount);
-			 *
+			 * { savings = String.valueOf(discountUtility.createPrice(orderList.get(0), Double.valueOf(value))
+			 * .getDoubleValue()); } if (null != couponHistoryStoreDTO.getSavedSum()) { couponDTO.setTotalSavings(savings);
+			 * } if (CollectionUtils.isNotEmpty(couponHistoryDTOList)) { couponDTO.setTotalCount(totalCouponCount);
 			 * couponDTO.setTotalUniqueCouponsUsed(iterator.getKey()); } }
-			 *
+			 * 
 			 * } if (CollectionUtils.isNotEmpty(couponHistoryDTOList)) { UsedCouponsDTO usedCoupondto = null; for (final
 			 * CouponHistoryData couponHistory : couponHistoryDTOList) { usedCoupondto = new UsedCouponsDTO(); if
 			 * (StringUtils.isNotEmpty(couponHistory.getCouponCode())) {
@@ -147,9 +141,10 @@ public class MplCouponWebServiceImpl implements MplCouponWebService
 						final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
 						/*
 						 * final UserRestrictionModel userRestrObj =
-						 * couponRestrictionService.getUserRestriction(promoVoucher); final List<PrincipalModel>
-						 * restrCustomerList = userRestrObj != null ? couponRestrictionService
-						 * .getRestrictionCustomerList(userRestrObj) : new ArrayList<PrincipalModel>();
+						 * couponRestrictionService.getUserRestriction(promoVoucher); final List<PrincipalModel> <<<<<<< HEAD
+						 * restrCustomerList = userRestrObj != null ?
+						 * couponRestrictionService.getRestrictionCustomerList(userRestrObj) : new
+						 * ArrayList<PrincipalModel>();
 						 */
 						UnusedCouponsDTO unusedCouponsDTO = null;
 						if (null != promoVoucher.getVoucherCode()
