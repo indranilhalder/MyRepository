@@ -197,11 +197,11 @@ tr.d0 td {
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
 <c:choose>
-		<c:when test="${productCategoryType==clothing || productCategoryType== footwear || productCategoryType==accessories}">  <!-- Added for TISPRO-271 -->
+		<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">  <!-- Added for TISPRO-271 -->
 			<div class="trending"  id="ia_products_complements"></div>
 			<div class="trending"  id="ia_products"></div>
 		</c:when>
-		<c:when test="${productCategoryType==electronics || productCategoryType==watches}">
+		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 			<div class="trending"  id="ia_products_bought_together"></div>
 			<div class="trending"  id="ia_products_similar"></div>
 		</c:when>
@@ -212,7 +212,7 @@ tr.d0 td {
 <!--- START: INSERTED for MSD --->
 <br/><br/>
 <c:choose>
-<c:when test="${product.rootCategory==clothing || productCategoryType== footwear || productCategoryType==Accessories}">
+<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">
 <div class="view-similar-items" id="view-similar-items"></div>
 </c:when>
 <c:otherwise>
@@ -221,7 +221,7 @@ tr.d0 td {
 <!--- END:MSD ---> 
 	
 <c:choose>
-<c:when test="${product.rootCategory==electronics  || productCategoryType==watches}">
+<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 <product:productDetailsClassifications product="${product}"/>
 </c:when>
 <c:otherwise>

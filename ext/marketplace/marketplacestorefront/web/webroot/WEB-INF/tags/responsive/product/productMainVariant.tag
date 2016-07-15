@@ -125,7 +125,7 @@ var productSizeVar = '${productSize}';
 					</c:otherwise>
 				</c:choose>
 
-				<c:if test="${product.rootCategory=='Electronics'}">
+				<c:if test="${product.rootCategory=='Electronics' || product.rootCategory=='Watches'}">
 					<c:set var="notApparel" value="true" />
 				</c:if>
 				<c:if test="${not empty notApparel}">

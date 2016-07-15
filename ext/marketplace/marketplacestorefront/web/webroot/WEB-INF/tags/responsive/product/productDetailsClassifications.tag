@@ -44,13 +44,21 @@
 <c:if test="${not empty product.classifications}">
 <div class="view-button">Check The Specs</div>
 </c:if>
+<c:set var="electronics"><spring:theme code='product.electronics'/></c:set>
+<c:set var="watches"><spring:theme code='product.watches'/></c:set>
 <!-- <div class="hide-button" style="display:none;">Hide Specifications</div> -->
 <div class="product-classifications wrapper" >
 	<c:if test="${not empty product.classifications}">
 		<table class="stats-table">
 			<tbody>
+				<c:if test="${product.rootCategory!=electronics}">
+					<tr style="background-color: #f0f4f5;"><td colspan='2' style="font-weight: 700;"><div class="headline">Functions and Features</div></td></tr>
+				</c:if>
 				<c:forEach items="${product.classifications}" var="classification" varStatus="outer">
-				<tr style="background-color: #f0f4f5;"><td colspan='2' style="font-weight: 700;"><div class="headline">${classification.name}</div></td></tr>
+				
+				<c:if test="${product.rootCategory==electronics }">
+					<tr style="background-color: #f0f4f5;"><td colspan='2' style="font-weight: 700;"><div class="headline">${classification.name}</div></td></tr>
+				</c:if>
 					<c:forEach items="${classification.features}" var="feature" varStatus="inner">
 						<tr style="border: 1px solid #f0f4f5;">
 							<td style="border-right: 1px solid #f0f4f5;" class="title"><%-- ${outer.index} - ${inner.index} --%>  ${feature.name}</td>
