@@ -331,24 +331,35 @@ function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 }
 
 
-function addToWishlist_quick() {
+function addToWishlist_quick(alreadyAddedWlName_quick) {
 	var productCodePost = $("#product_quick").val();
 //	var productCodePost = $("#productCodePostQuick").val();
 	var wishName = "";
 	
    
 	if (wishListList == "") {
-		wishName = $("#defaultWishName_quick").val().trim();
+		wishName = $("#defaultWishName_quick").val();
 	} else {
-		wishName = wishListList[$("#hidWishlist_quick").val().trim()];
+		wishName = wishListList[$("#hidWishlist_quick").val()];
 	}
-	if(wishName=="" || wishName.trim()==""){
+	if(wishName==""){
 		var msg=$('#wishlistnotblank_quick').text();
 		$('#addedMessage_quick').show();
 		$('#addedMessage_quick').html(msg);
 		return false;
 	}
     if(wishName==undefined||wishName==null){
+    	if(alreadyAddedWlName_quick!=undefined || alreadyAddedWlName_quick!=""){
+    		if(alreadyAddedWlName_quick=="[]"){
+    			$("#wishlistErrorId_quick").html("Please select a wishlist");
+    		}
+    		else{
+    			alreadyAddedWlName_quick=alreadyAddedWlName_quick.replace("[","");
+    			alreadyAddedWlName_quick=alreadyAddedWlName_quick.replace("]","");
+    			$("#wishlistErrorId_quick").html("Product already added in your wishlist "+alreadyAddedWlName_quick);
+    		}
+    		$("#wishlistErrorId_quick").css("display","block");
+    	}
     	return false;
     }
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
@@ -429,6 +440,7 @@ function addToWishlist_quick() {
 
 function LoadWishLists_quick(ussid, data, productCode) {
 	// modified for ussid
+	var addedWlList_quick = [];
 	var wishListContent = "";
 	var wishName = "";
 	$this = this;
@@ -461,6 +473,7 @@ function LoadWishLists_quick(ussid, data, productCode) {
 					+ "' style='display: none' onclick='selectWishlist_quick("
 					+ i + ")' disabled><label for='radio_"
 					+ i + "'>"+wishName+"</label></td></tr>";
+			addedWlList_quick.push(wishName);
 		} else {
 			index++;
 		  
@@ -471,7 +484,7 @@ function LoadWishLists_quick(ussid, data, productCode) {
 					+ i + ")'><label for='radio_"
 					+ i + "'>"+wishName+"</label></td></tr>";
 		}
-
+		$("#alreadyAddedWlName_quick").val(JSON.stringify(addedWlList_quick));
 	}
 
 	$("#wishlistTbodyId_quick").html(wishListContent);
