@@ -4643,3 +4643,13 @@ function isSessionActive(){
 function redirectToCheckoutLogin(){
 	window.location=ACC.config.encodedContextPath + "/checkout/multi/checkoutlogin/login";
 }
+ //TISPRM-33
+function pinCodeDiv(){
+	//TISPRM-65
+		$("#changePinDiv").show();
+		$("#defaultPinDiv").hide();
+		$("#defaultPinCodeIds").val("");
+		//$(".pincodeServiceError").text("");	
+		//$(".less-stock").text("");	
+		//$("#successPin").text("");	
+	}
