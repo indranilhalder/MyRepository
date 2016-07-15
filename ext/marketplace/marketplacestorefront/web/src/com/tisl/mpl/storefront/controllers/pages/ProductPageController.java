@@ -658,6 +658,34 @@ public class ProductPageController extends AbstractPageController
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU,
 						null != buyboxdata.getSellerArticleSKU() ? buyboxdata.getSellerArticleSKU() : ModelAttributetConstants.EMPTY);
+
+
+				//TISPRM-33
+				if (null != buyboxdata.getMrp())
+				{
+					if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
+					{
+						@SuppressWarnings("boxing")
+						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue()
+								- buyboxdata.getSpecialPrice().getDoubleValue();
+						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
+						//Critical Sonar Fix
+						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
+
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+					}
+					else if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getValue().doubleValue() > 0)
+					{
+						@SuppressWarnings("boxing")
+						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
+						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
+						//Critical Sonar Fix
+						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
+					}
+				}
 			}
 			else
 			{

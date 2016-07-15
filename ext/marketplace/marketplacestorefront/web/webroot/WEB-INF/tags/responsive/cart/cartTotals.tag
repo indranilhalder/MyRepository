@@ -61,7 +61,7 @@ function isNumber(evt) {
     }
     return true;
 }
-function pinCodeDiv(){
+/* function pinCodeDiv(){
 //TISPRM-65
 	$("#changePinDiv").show();
 	$("#defaultPinDiv").hide();
@@ -69,7 +69,7 @@ function pinCodeDiv(){
 	//$(".pincodeServiceError").text("");	
 	//$(".less-stock").text("");	
 	//$("#successPin").text("");	
-}
+} */
 //TISPRM-65
 
 </script>
