@@ -375,8 +375,6 @@ public class MplBuyBoxUtility
 				final Feature feature = (Feature) itr.next();
 				if (null != feature.getValue())
 				{
-					System.out.println(code + "-Newcode->" + feature.getCode() + ", name->" + feature.getName() + ", value->"
-							+ feature.getValue().getValue());
 					variantColor = (String) feature.getValue().getValue();
 					break;
 				}
