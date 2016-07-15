@@ -19,10 +19,12 @@ $(function() {
           	 csrfDataChanged = true;
           	 window.sessionStorage.setItem("csrf-token",data.token);
            }
+           //TISPRD-3357
+           callSetHeader();
        }
    });
 });
-$(function() {
+function callSetHeader() {
 	//TISPRO-522 IE Issue Fix
 	
 	var header = window.sessionStorage.getItem("header");
@@ -41,7 +43,7 @@ $(function() {
 		 header = JSON.parse(header);
 		 setHeader(header);
 	 	}
-	});
+	}
  
 $("div.departmenthover").on("mouseover touchend", function() {
     var id = this.id;
