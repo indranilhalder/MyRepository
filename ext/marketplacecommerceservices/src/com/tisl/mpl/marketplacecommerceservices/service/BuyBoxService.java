@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,8 @@ public interface BuyBoxService
 	 * @return
 	 */
 	BuyBoxModel getpriceForUssid(String ussid);
+
+	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code);
 
 
 }

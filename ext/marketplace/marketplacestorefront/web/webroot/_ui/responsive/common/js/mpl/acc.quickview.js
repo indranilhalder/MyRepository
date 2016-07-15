@@ -93,8 +93,10 @@ function setSizeforAkamai()
 function setBuyBoxDetails()
 {
 	var productCode = productCodeQuickView;//$("#productCodePost").val();
-	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
+	var code = productCode+","+variantCodesPdp;
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + code
 	+ "/buybox";
+	var availibility = null;
 		var dataString = 'productCode=' + productCode;		
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
@@ -103,6 +105,35 @@ function setBuyBoxDetails()
 			cache : false,
 			dataType : "json",
 			success : function(data) {
+				var stockInfo = data['availibility'];
+				availibility = stockInfo;
+				
+				$.each(stockInfo,function(key,value){
+					$("ul[label=sizes] li a").each(function(){
+						
+				if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
+								
+								$(this).attr("disabled",true);
+								
+								$(this).css({
+									"color": "gray",
+						  "text-decoration": "line-through"
+						  
+							});
+								$(this).on("mouseenter",function(){
+									$(this).parent("li").css("background","#fff");
+									
+								});
+								
+								 $(this).on('click', function(event) {
+								      event.preventDefault();
+								      return false;
+								   });
+							$(this).parent().css("border-color","gray");
+							}
+						
+					});
+				});
 				
 				//alert("...>>"+data['sellerArticleSKU']+"<<"+productCode+"..."+productCodeQuickView);
 				
@@ -129,6 +160,8 @@ function setBuyBoxDetails()
 				var spPrice = data['specialPrice'];
 				var mrpPrice = data['mrp'];
 				var mop = data['price'];
+				var savingsOnProduct= data['savingsOnProduct'];
+				
 				$("#ussid_quick").val(data['sellerArticleSKU']);				
 				$("#stock").val(data['availablestock']);					
 				var allStockZero = data['allOOStock'];
@@ -156,7 +189,7 @@ function setBuyBoxDetails()
 					$("#outOfStockIdQuick").hide();
 					}				
 				
-				dispQuickViewPrice(mrpPrice, mop, spPrice);
+				dispQuickViewPrice(mrpPrice, mop, spPrice, savingsOnProduct);
 				
 				
 				var sellerName = data['sellerName'];
@@ -167,6 +200,18 @@ function setBuyBoxDetails()
 			}
 
 		});	
+		
+		$(".size-guide").on("click",function(){
+			if(null!= availibility){
+				$.each(availibility,function(key,value){
+					$(".variant-select-sizeGuidePopUp option").each(function(){
+						if(typeof($(this).attr("data-producturl"))!= 'undefined' && $(this).attr("data-producturl").indexOf(key)!= -1 && value == 0){
+							$(this).attr("disabled","disabled");
+							}
+					});
+				});
+			}
+		});
 		
 }
 
@@ -211,8 +256,8 @@ function getRichAttributeQuickView(sellerName)
 		});
 }
 
-function dispQuickViewPrice(mrp, mop, spPrice) {
-	
+function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
+
 	if(null!= mrp){
 		$("#quickMrpPriceId").append(mrp.formattedValue);
 	}
@@ -221,6 +266,14 @@ function dispQuickViewPrice(mrp, mop, spPrice) {
 	}
 	if(null!= spPrice){
 		$("#quickSpPriceId").append(spPrice.formattedValue);
+	} 
+////TISPRM-33
+	if(null!= savingsOnProduct){
+		$("#savingsOnProductIdQV").append("(-"+savingsOnProduct+" %)");
+	} 
+
+	if(null!= savingsOnProduct && savingsOnProduct != 0){
+		$("#savingsOnProductIdQV").show();
 	} 
 
 	if (null!=spPrice && spPrice != 0) {		
