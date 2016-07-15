@@ -25,13 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
-import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.coupon.service.MplCouponService;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.CouponRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.service.MplCouponWebService;
-import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.UnusedCouponsDTO;
 
@@ -48,15 +46,12 @@ public class MplCouponWebServiceImpl implements MplCouponWebService
 	private ExtendedUserService extUserService;
 
 	@Autowired
-	private MplCouponFacade mplCouponFacade;
-
-	@Autowired
 	private MplCouponService mplCouponService;
 
 	@Autowired
 	private VoucherModelService voucherModelService;
 
-	@Autowired
+	@Resource
 	private ConfigurationService configurationService;
 
 	@Resource(name = "couponRestrictionService")
