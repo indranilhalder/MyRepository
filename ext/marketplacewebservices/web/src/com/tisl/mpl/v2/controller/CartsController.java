@@ -2081,6 +2081,7 @@ public class CartsController extends BaseCommerceController
 			{
 				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9056);
 			}
+
 			for (final AbstractOrderEntryModel cartEntry : cartModel.getEntries())
 			{
 				if (cartEntry.getEntryNumber().intValue() == entryNumber.intValue())
@@ -3227,7 +3228,6 @@ public class CartsController extends BaseCommerceController
 			return null;
 		}
 	}
-
 
 	@SuppressWarnings(MarketplacewebservicesConstants.DEPRECATION)
 	@Secured(
