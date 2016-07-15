@@ -61,7 +61,7 @@
 		<property name="header">
 			<value>
 				# InsertUpdate BuyBox Data
-				INSERT_UPDATE BuyBox;product[unique=true];price;mrp;sellerArticleSKU;specialPrice;available;weightage;sellerId;sellerName;sellerType;delisted;sellerStartDate[dateformat=yyyyMMddHHmmss];sellerEndDate[dateformat=yyyyMMddHHmmss]
+				INSERT_UPDATE BuyBox;product;price;mrp;sellerArticleSKU[unique=true];specialPrice;available;weightage;sellerId;sellerName;sellerType;delisted;sellerStartDate[dateformat=yyyyMMddHHmmss];sellerEndDate[dateformat=yyyyMMddHHmmss]
 			</value>
 		</property>
 		<property name="impexRow">
