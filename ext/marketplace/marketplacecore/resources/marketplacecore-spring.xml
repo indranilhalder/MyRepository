@@ -872,9 +872,17 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="categoryService" ref="categoryService" />
 		<property name="categorySource" ref="allCategoriesSource" />
 	</bean>
-<!-- TISPRM-92 START -->
+<!-- TISPRM-134 START -->
 	<bean id="mplDiscountFlagValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDiscountFlagValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+	</bean>
+<!-- TISPRM-134 END -->
+<!-- TISPRM-92 START -->
+	<bean id="mplAllDiscountValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplAllDiscountValueProdiver"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />

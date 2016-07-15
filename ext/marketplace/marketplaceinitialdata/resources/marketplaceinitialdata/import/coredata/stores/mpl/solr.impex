@@ -409,7 +409,9 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;
 				 ;$solrIndexedType				;discountFlag		;string	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplDiscountFlagValueProvider			; ;						;				;							;
 				 
-				 
+#For All Discount Facet Search
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;
+				 ;$solrIndexedType				;discountAll		;string	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplAllDiscountValueProvider			; ;						;				;							;				 
 				 
 				 
 ##Conceirge Search 
