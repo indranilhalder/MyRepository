@@ -171,11 +171,11 @@ function setBuyBoxDetails()
 				//alert("--"+ $(".quickViewSelect").html());
 				
 				//if (allStockZero == 'Y' && data['othersSellersCount']>0) {
-				if (allStockZero == 'Y') {
-					if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
+				if (allStockZero == 'Y' && data['othersSellersCount']>0) { //TPR-465
+					//if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173 TPR-465
 					$("#addToCartButtonQuick").hide();
 					$("#outOfStockIdQuick").show();
-					}					
+					//}					
 				}
 				/*else if (allStockZero == 'Y' && data['othersSellersCount']==0){
 					if($(".quickViewSelect").html()!="Select"){	//TISPRD-1173
