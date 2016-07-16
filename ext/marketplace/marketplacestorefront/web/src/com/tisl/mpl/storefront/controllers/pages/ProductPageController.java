@@ -580,7 +580,7 @@ public class ProductPageController extends AbstractPageController
 
 				final int length = allVariants.length();
 				final String allVariantsString = allVariants.substring(0, length - 1);
-				model.addAttribute("allVariantsString", allVariantsString.toString());
+				model.addAttribute("allVariantsString", allVariantsString);
 			}
 
 		}
@@ -1111,7 +1111,7 @@ public class ProductPageController extends AbstractPageController
 
 				final int length = allVariants.length();
 				final String allVariantsString = allVariants.substring(0, length - 1);
-				model.addAttribute("allVariantsString", allVariantsString.toString());
+				model.addAttribute("allVariantsString", allVariantsString);
 			}
 			//returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
 		}
@@ -1393,7 +1393,7 @@ public class ProductPageController extends AbstractPageController
 
 				final int length = allVariants.length();
 				final String allVariantsString = allVariants.substring(0, length - 1);
-				model.addAttribute("allVariantsString", allVariantsString.toString());
+				model.addAttribute("allVariantsString", allVariantsString);
 			}
 		}
 		//populateVariantSizes(productData);
@@ -1681,7 +1681,7 @@ public class ProductPageController extends AbstractPageController
 
 				for (final String pCode : noStockPCodes)
 				{
-					stockAvailibilty.put(pCode, new Integer(0));
+					stockAvailibilty.put(pCode, Integer.valueOf(0));
 				}
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABILITY, stockAvailibilty);
 				//TISPRM-33
