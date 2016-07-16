@@ -430,8 +430,11 @@ public class PaymentService
 
 		//TIPRO-572
 		orderStatusResponse.setBankEmi((String) jsonResponse.get("emi_bank") == null ? "" : (String) jsonResponse.get("emi_bank"));
-		orderStatusResponse.setBankTenure((String) jsonResponse.get("emi_tenure") == null ? "" : (String) jsonResponse
-				.get("emi_tenure"));
+		//orderStatusResponse.setBankTenure((String) jsonResponse.get("emi_tenure") == null ? "" : (String) jsonResponse.get("emi_tenure"));
+
+		orderStatusResponse.setBankTenure((String) jsonResponse.get("emi_tenure") == null ? "" : String.valueOf(jsonResponse
+				.get("emi_tenure")));
+
 
 		final JSONObject gatewayResponse = (JSONObject) jsonResponse.get("payment_gateway_response");
 		final JSONObject card = (JSONObject) jsonResponse.get("card");
