@@ -17752,8 +17752,8 @@ header .content .bottom .search .select-list select
       position: relative;
       /* border: 1px solid transparent; */
       margin: 0 -2px -2px -2px; }
-       #variantForm .select-size li:hover {
-        font-weight: 600; }
+       /* #variantForm .select-size li:hover {
+        font-weight: 600; } */
      
      #variantForm .select-size.active {
       border-color: #DFD1D5;

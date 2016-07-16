@@ -1192,7 +1192,6 @@ $( document ).ready(function() {
 		dataType : "json",
 		success : function(data) {
 			//TISPRM-56
-			//var stockInfo = '{"mp000000000124935":"1","mp000000000126616":"2","mp000000000126175":"0","mp000000000124936":"0"}';
 			var stockInfo = data['availibility'];
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
@@ -1253,11 +1252,11 @@ $( document ).ready(function() {
 					$("#sellerSelId").val(sellerID);
 					
 					if (allStockZero == 'Y' && data['othersSellersCount']>0) {
-						if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173
+						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
 						$("#buyNowButton").hide();
-						}
+						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
 					}
@@ -1325,19 +1324,20 @@ $( document ).ready(function() {
 		}
 	});
 //}
+	$(".size-guide").click(function(){
+		if(null!= availibility){
+			$.each(availibility,function(key,value){
+				$(".variant-select-sizeGuidePopUp option").each(function(){
+					if(typeof($(this).attr("data-producturl"))!= 'undefined' && $(this).attr("data-producturl").indexOf(key)!= -1 && value == 0){
+						$(this).attr("disabled","disabled");
+						}
+				});
+			});
+		}
+	});
 }); 
 
-$(".size-guide").click(function(){
-	if(null!= availibility){
-		$.each(availibility,function(key,value){
-			$(".variant-select-sizeGuidePopUp option").each(function(){
-				if(typeof($(this).attr("data-producturl"))!= 'undefined' && $(this).attr("data-producturl").indexOf(key)!= -1 && value == 0){
-					$(this).attr("disabled","disabled");
-					}
-			});
-		});
-	}
-});
+
  
 
 /**
