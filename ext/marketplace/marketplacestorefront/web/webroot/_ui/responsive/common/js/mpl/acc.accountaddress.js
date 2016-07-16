@@ -12,6 +12,9 @@ $(document).ready(function(){
  
  $(document).ready(function(){
 	 /*To highlight the active link*/
+	 //TISPRO-554
+	 	$("select#menuPageSelect").val('');
+	 	
 	    $("#currentPassword").val('');
 		var pageName = $("#pageName").val();
 		var pageNameDropdown = $("#pageNameDropdown").val();
@@ -1025,7 +1028,7 @@ function editAddress(addressId) {
         	document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 1</font>";
         	flagAd1 = false;
         }
-        if (addressForm.line2.value == null || addressForm.line2.value == "") {
+       /* if (addressForm.line2.value == null || addressForm.line2.value == "") {
         	$("#errddressline2").css({"display":"block"});
         	document.getElementById("erraddressline2").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 2</font>";
         	flagAd2 = false;
@@ -1034,7 +1037,7 @@ function editAddress(addressId) {
         	$("#errddressline3").css({"display":"block"});
         	document.getElementById("erraddressline3").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 3</font>";
         	flagAd3 = false;
-        }
+        }*/
         if (addressForm.postcode.value == null || addressForm.postcode.value == "") {
         	$("#errddressPost").css({"display":"block"});
         	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter post code</font>";
@@ -1090,7 +1093,8 @@ function editAddress(addressId) {
         	flagMob = false;
         }
         
-        if(flagFn && flagLn && flagAd1 && flagAd2 && flagAd3 && flagPost && flagCity && flagState && flagMob)
+       // if(flagFn && flagLn && flagAd1 && flagAd2 && flagAd3 && flagPost && flagCity && flagState && flagMob)
+        if(flagFn && flagLn && flagAd1 && flagPost && flagCity && flagState && flagMob)	
         {
         	 return true;
         }

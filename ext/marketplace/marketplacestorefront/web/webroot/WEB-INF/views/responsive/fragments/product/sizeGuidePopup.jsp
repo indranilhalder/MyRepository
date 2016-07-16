@@ -284,6 +284,9 @@ var productCodeSG = '${product.code}';
 	</p>
 	<p class="sale" id="sizespPriceId" style="display:none">
 	</p>
+	<p class="savings pdp-savings" id="savingsOnProductIdSG" style="display:none">															
+		  <span></span>
+	</p>
 	<br>
     </div>
         <div class="attributes">
@@ -441,19 +444,21 @@ var productCodeSG = '${product.code}';
 			</div>
 			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantCount"/>
 			<div class="qty" id="">
-				<label>Qty:</label>
+			<!-- TISPRM-131 -->
+			<%-- 	<label>Qty:</label>
 				<select id="sizeGuideQty">
 				<c:forEach var="qtyCount" begin="1" end="${maxQuantCount}">
 		   		<option value="${qtyCount}">${qtyCount}</option>
 				</c:forEach>
-				</select>
+				</select> --%>
 			</div>
 
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
 		
 	<c:if test="${product.purchasable}">
 	
-	<input type="hidden" maxlength="3" size="1" id="sizeQty" name="qty" class="qty js-qty-selector-input" value="2" />
+	<!-- <input type="hidden" maxlength="3" size="1" id="sizeQty" name="qty" class="qty js-qty-selector-input" value="2" /> -->
+	<input type="hidden" maxlength="3" size="1" name="qty" class="qty js-qty-selector-input" value="1" />
   	<!-- <input type="hidden" maxlength="3" size="1" id="pinCodeChecked"
 		name="pinCodeChecked" value="false"> -->
 	</c:if>

@@ -105,18 +105,16 @@ public class MplAddressValidator
 		{
 			returnStatement = "address.line1.invalid.length";
 		}
-		else if (StringUtils.isEmpty(line2))
-		{
-			returnStatement = "address.line2.invalid";
-		}
+		/*
+		 * else if (StringUtils.isEmpty(line2)) { returnStatement = "address.line2.invalid"; }
+		 */
 		else if (StringUtils.length(line2) > MAX_FIELD_LENGTH_UPDATED)
 		{
 			returnStatement = "address.line2.invalid.length";
 		}
-		else if (StringUtils.isEmpty(line3))
-		{
-			returnStatement = "address.line3.invalid";
-		}
+		/*
+		 * else if (StringUtils.isEmpty(line3)) { returnStatement = "address.line3.invalid"; }
+		 */
 		else if (StringUtils.length(line3) > MAX_FIELD_LENGTH_UPDATED)
 		{
 			returnStatement = "address.line3.invalid.length";

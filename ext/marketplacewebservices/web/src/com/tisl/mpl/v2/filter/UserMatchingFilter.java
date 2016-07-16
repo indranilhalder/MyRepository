@@ -53,6 +53,7 @@ public class UserMatchingFilter extends AbstractUrlMatchingFilter
 	private static final String ANONYMOUS_USER = "anonymous";
 	private static final String REGISTRATION = "registration";
 	private static final String SOCIAL_MEDIA_REGISTRATION = "socialMediaRegistration";
+	private static final String LOGOUT = "logout";
 	private String regexp;
 	private UserService userService;
 	@Autowired
@@ -109,7 +110,8 @@ public class UserMatchingFilter extends AbstractUrlMatchingFilter
 		//Mobile registration
 		boolean isRegistrationorSocialMediaReg = false;
 		if (!StringUtils.isEmpty(userID)
-				&& (StringUtils.equalsIgnoreCase(REGISTRATION, userID) || (StringUtils.equalsIgnoreCase(SOCIAL_MEDIA_REGISTRATION,
+				&& (StringUtils.equalsIgnoreCase(REGISTRATION, userID)
+						|| (StringUtils.equalsIgnoreCase(SOCIAL_MEDIA_REGISTRATION, userID)) || (StringUtils.equalsIgnoreCase(LOGOUT,
 						userID))))
 		{
 			isRegistrationorSocialMediaReg = true;

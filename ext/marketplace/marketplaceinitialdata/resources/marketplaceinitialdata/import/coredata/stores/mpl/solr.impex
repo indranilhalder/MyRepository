@@ -83,7 +83,6 @@ INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=tru
 ;avgRatingRef4;mplFacetAvgRating;4;3.5;4.49
 ;avgRatingRef5;mplFacetAvgRating;5;4.5;5
 
-
 # Non-facet properties
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
 ;$solrIndexedType; itemtype               ;string ;            ;    ;    ;    ;    ;    ;
@@ -280,7 +279,7 @@ INSERT_UPDATE SolrSortField;sort(indexedType(identifier),code)[unique=true];fiel
 
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider			;facetDisplayNameProvider			;customFacetSortProvider;topValuesProvider		 ;rangeSets(name);$classificationAttributeAssignments;
-								 	 ;$solrIndexedType						  ;colour           				;string    ;true                ;    			    ;     				        ;     				    ;true;     				;MultiSelectOr;Alpha 		 	;2500	;true;; ;mplClassificationColourCodeValueProvider;mplColorFacetDisplayNameProvider;;defaultTopValuesProvider;;colorfamilyapparel:apparelCC,colorfamilyfootwear:footwearCC,colorelectronics:appliancesgf,colorelectronics:audioandhometheatresystemsgf,colorelectronics:actioncamcordersgf,colorelectronics:camerasgf,colorelectronics:computersandlaptopsgf,colorelectronics:gaminggf,colorelectronics:headphonesandspeakersgf,colorelectronics:health&groominggf,colorelectronics:small&kitchenappliancesgf,colorelectronics:smartphonesgf,colorelectronics:tabletscef,colorelectronics:tvandentertainmentgf,colorelectronics:wearabletechgf
+								 	 ;$solrIndexedType						  ;colour           				;string    ;true                ;    			    ;     				        ;     				    ;true;     				;MultiSelectOr;Alpha 		 	;2500	;true;; ;mplClassificationColourCodeValueProvider;mplColorFacetDisplayNameProvider;;;;colorfamilyapparel:apparelCC,colorfamilyfootwear:footwearCC,colorelectronics:appliancesgf,colorelectronics:audioandhometheatresystemsgf,colorelectronics:actioncamcordersgf,colorelectronics:camerasgf,colorelectronics:computersandlaptopsgf,colorelectronics:gaminggf,colorelectronics:headphonesandspeakersgf,colorelectronics:health&groominggf,colorelectronics:small&kitchenappliancesgf,colorelectronics:smartphonesgf,colorelectronics:tabletscef,colorelectronics:tvandentertainmentgf,colorelectronics:wearabletechgf
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=false];facetType(code);facetSort(code);priority;visible		;fieldValueProvider  ;facetDisplayNameProvider  ;customFacetSortProvider;rangeSets(name);$classAttributeAssignment;
 								 ;$solrIndexedType                        ;Occasion							;string		;					; 					;true						;true 					;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyCodeValueProvider;mplOccasionDisplayNameProvider;;;occasion:apparelCC;
@@ -406,8 +405,13 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;
 				 ;$solrIndexedType				;inStockFlag		;boolean	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplProductInStockFlagValueProvider			;mplInStockFacetDisplayNameProvider ;						;				;							;
 				 
+#For Discount Facet Search
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;
+				 ;$solrIndexedType				;discountFlag		;string	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplDiscountFlagValueProvider			; ;						;				;							;
 				 
-				 
+#For All Discount Facet Search
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;
+				 ;$solrIndexedType				;discountAll		;string	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplAllDiscountValueProvider			; ;						;				;							;				 
 				 
 				 
 ##Conceirge Search 

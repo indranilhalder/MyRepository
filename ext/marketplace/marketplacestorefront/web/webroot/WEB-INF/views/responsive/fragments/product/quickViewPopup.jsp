@@ -92,6 +92,7 @@ tr.d0 td {
  var productSizeQuickVar = '${productSizeQuick}';
  var emiCuttOffAmount = '${emiCuttOffAmount}';
  var productCodeQuickView = '${product.code}';
+ var variantCodesPdp = '${allVariantsString}';
 
  
  $( document ).ready(function() {
@@ -469,6 +470,9 @@ display:none;
 	</p>
 	<p class="sale" id="quickSpPriceId" style="display:none">
 	</p>
+	<p class="savings pdp-savings" id="savingsOnProductIdQV" style="display:none">															
+	  <span></span>
+	</p>
     
   </div>   
 <a href="#" class="gig--readReviewsLink"></a>
@@ -527,12 +531,13 @@ display:none;
 	<product:viewQuickViewVariant/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantityCount"/>
 	<div class="qty">
-		<p> <spring:theme code="product.configureproductscount.qty"/></p>
-		<select id="quantity">		
+	<!-- TISPRM-131 -->
+		<%-- <p> <spring:theme code="product.configureproductscount.qty"/></p> --%>
+		<%-- <select id="quantity">		
 		<c:forEach var="qtyCnt" begin="1" end="${maxQuantityCount}">
    		<option value="${qtyCnt}">${qtyCnt}</option>
 		</c:forEach>
-		</select>
+		</select> --%>
 	</div> 
 
 </div>
@@ -548,8 +553,8 @@ display:none;
 		<%-- <form:form method="post" id="addToCartFormQuick" class="add_to_cart_form"
 		action="${request.contextPath }/cart/add"> --%>
 		<c:if test="${product.purchasable}">
-			<input type="hidden" maxlength="3" size="1" id="qty1" name="qty"
-				class="qty js-qty-selector-input" value="">
+			<input type="hidden" maxlength="3" size="1" name="qty"
+				class="qty js-qty-selector-input" value="1">
 		</c:if>
 		<input type="hidden" name="productCodePost" id="productCodePost" value="${product.code}" />
 		<input type="hidden" name="wishlistNamePost" id="wishlistNamePost" value="N" />
@@ -695,9 +700,11 @@ display:none;
 						</table>
 
 						 <input type="hidden" name="hidWishlist" id="hidWishlist_quick">
+						 <p id='wishlistErrorId_quick' style="display: none ; color:red ;"> </p>
 						<span id="addedMessage_quick" style="display:none;color:#60A119"></span>
+						<input type="hidden" name="alreadyAddedWlName_quick" id="alreadyAddedWlName_quick">
 						
-						<button type='button' onclick="addToWishlist_quick()" name='saveToWishlist' id='saveToWishlist' class="savetowishlistbutton"><spring:theme code="product.wishlistBt"/></button>
+						<button type='button' onclick="addToWishlist_quick($('#alreadyAddedWlName_quick').val())" name='saveToWishlist' id='saveToWishlist' class="savetowishlistbutton"><spring:theme code="product.wishlistBt"/></button>
 					</div>
 
 					<div id="wishListNonLoggedInId_quick" style="display: none"><spring:theme code="product.wishListNonLoggedIn"/></div>

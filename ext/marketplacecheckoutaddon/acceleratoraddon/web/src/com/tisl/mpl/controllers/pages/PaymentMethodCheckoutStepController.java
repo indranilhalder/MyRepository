@@ -2408,6 +2408,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				+ getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYRETURNMETHOD);
 		try
 		{
+			//TISPRD-3025 - LOG to handle address
+			String cartGuid = "";
+			if (null != cart && StringUtils.isNotEmpty(cart.getGuid()))
+			{
+				cartGuid = cart.getGuid();
+			}
+
+			final StringBuilder sb = new StringBuilder();
+			sb.append("firstName:::").append(firstName).append("|lastName:::").append(lastName).append("|addressLine1:::")
+					.append(addressLine1).append("|addressLine2:::").append(addressLine2).append("|addressLine3:::")
+					.append(addressLine3).append("|country:::").append(country).append("|state:::").append(state).append("|city:::")
+					.append(city).append("|pincode:::").append(pincode).append("|cardSaved:::").append(cardSaved)
+					.append("|sameAsShipping:::").append(sameAsShipping).append("|cartGUID:::").append(cartGuid);
+
+			LOG.error("Address details entered >>>" + sb.toString());
 
 			LOG.debug(" TIS-414  : Checking - onclick of pay now button pincode servicabilty and promotion");
 			if (!redirectFlag && !mplCheckoutFacade.isPromotionValid(cart))
@@ -2496,7 +2511,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		return orderId;
 	}
-
 
 	/**
 	 * This method is used to get the banks for EMI

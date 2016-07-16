@@ -71,7 +71,9 @@
 		<property name="mrpPriceValue"
 			type="de.hybris.platform.commercefacades.product.data.PriceData"></property>
 		<property name="allOOStock" type="String" />
-<property name="sellerAssociationstatus" type="String" />
+		<property name="sellerAssociationstatus" type="String" />
+		<!-- TISPRM-56 -->
+		<property name="productCode" type="String" />
 		<!-- <property name="deliveryModes" type="String" />
 		<property name="isCod" type="String" />
 		 -->
@@ -165,6 +167,8 @@
 		<property name="isOnlineExclusive" type="Boolean" />
 		<property name="leastSizeProduct" type="String" />
 		<property name="productTitle" type="String" />
+		<property name="fulfillmentType" type="String" />
+		<property name="sellerName" type="String" />
 		<!-- pdp changes ends -->
 
 		<property name="freebieProducts" type="java.util.List&lt;com.tisl.mpl.facades.data.FreebieProduct>"/>
@@ -181,7 +185,8 @@
 		<!-- Added for TISCR-405: % off or You save XYZ iN PLP -->
 	<property name="savingsOnProduct"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
-
+		<!-- Added for TISPRM-56 -->
+		<property name="allVariantsId" type="java.util.List&lt;java.lang.String>"/>
 	</bean>
 
 	<!-- pdp changes begins -->

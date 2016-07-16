@@ -49,6 +49,20 @@
 					<cockpit code="Section3" />
 				</td>
 			</tr>
+			
+			
+			<tr>
+				<td width="20%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section4A" />
+				</td>
+				<td width="80%" colspan="4" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section4B" />
+				</td>
+			</tr>
+			
+			
+			
+			
 			<tr>
 				<td height="270px" colspan="5" class="structureViewSection">
 					<cockpit code="Footer" />

@@ -47,6 +47,19 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 	public boolean apply(final SessionContext ctx)
 	{
 		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
+		boolean isFreebiePromo = false;
+
+		//****New Code Added for TISPRO-670*******
+		if (null != getPromotionResult(ctx) && null != getPromotionResult(ctx).getPromotion()
+				&& getPromotionResult(ctx).getPromotion() instanceof BuyABFreePrecentageDiscount)
+		{
+			isFreebiePromo = true;
+			if (log.isDebugEnabled())
+			{
+				log.debug("Freebie Plus Discount Promotion : Adding Associated Item Data");
+			}
+		}
+		//****New Code Added for TISPRO-670 ends *******
 
 		if (log.isDebugEnabled())
 		{
@@ -141,7 +154,14 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, cartEntry.getProduct()
 							.getDescription());
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, Integer.valueOf(qualifyingCount));
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
+
+					//****New Code Added for TISPRO-670*******
+					if (isFreebiePromo)
+					{
+						cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
+					}
+					//****New Code Added for TISPRO-670 ends*******
+
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
 					cartEntry
 							.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
