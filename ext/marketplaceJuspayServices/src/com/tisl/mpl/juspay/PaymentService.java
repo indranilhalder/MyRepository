@@ -432,7 +432,7 @@ public class PaymentService
 		orderStatusResponse.setBankEmi((String) jsonResponse.get("emi_bank") == null ? "" : (String) jsonResponse.get("emi_bank"));
 		//orderStatusResponse.setBankTenure((String) jsonResponse.get("emi_tenure") == null ? "" : (String) jsonResponse.get("emi_tenure"));
 
-		orderStatusResponse.setBankTenure((String) jsonResponse.get("emi_tenure") == null ? "" : String.valueOf(jsonResponse
+		orderStatusResponse.setBankTenure((Long) jsonResponse.get("emi_tenure") == null ? "" : String.valueOf(jsonResponse
 				.get("emi_tenure")));
 
 
