@@ -4425,7 +4425,7 @@ function loadDefaultWishLstForCart(productCode,ussid) {
 
 
 //Added
-function addToWishlistForCart(ussid,productCode)
+function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 {
 	var wishName = "";
 	var sizeSelected=true;
@@ -4444,8 +4444,17 @@ function addToWishlistForCart(ussid,productCode)
 		return false;
 	}
     if(wishName==undefined||wishName==null){
-    	$("#wishlistErrorId").html("Please select a wishlist");
-    	$("#wishlistErrorId").css("display","block");
+    	if(alreadyAddedWlName!=undefined || alreadyAddedWlName!=""){
+    		if(alreadyAddedWlName=="[]"){
+    			$("#wishlistErrorId").html("Please select a wishlist");
+    		}
+    		else{
+    			alreadyAddedWlName=alreadyAddedWlName.replace("[","");
+    			alreadyAddedWlName=alreadyAddedWlName.replace("]","");
+    			$("#wishlistErrorId").html("Product already added in your wishlist "+alreadyAddedWlName);
+    		}
+    		$("#wishlistErrorId").css("display","block");
+    	}
     	return false;
     }
    	
@@ -4541,7 +4550,7 @@ function LoadWishListsFromCart(data, productCode,ussid) {
 	// modified for ussid
 	
 	//var ussid = $("#ussid").val()
-	
+	var addedWlList_cart = [];
 	var wishListContent = "";
 	var wishName = "";
 	$this = this;
@@ -4573,6 +4582,7 @@ function LoadWishListsFromCart(data, productCode,ussid) {
 					+ "' style='display: none' onclick='selectWishlist("
 					+ i + ")' disabled><label for='radio_"
 					+ i + "'>"+wishName+"</label></td></tr>";
+			addedWlList_cart.push(wishName);
 		} else {
 			index++;
 		  
@@ -4583,7 +4593,7 @@ function LoadWishListsFromCart(data, productCode,ussid) {
 					+ i + ")'><label for='radio_"
 					+ i + "'>"+wishName+"</label></td></tr>";
 		}
-
+		$("#alreadyAddedWlName_cart").val(JSON.stringify(addedWlList_cart));
 	}
 
 	$("#wishlistTbodyId").html(wishListContent);

@@ -376,7 +376,6 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 							selectedCategory.add(entry);
 						}
 						styleProfileModelToSave.setPreferredCategory(selectedCategory);
-
 						styleProfileModelToSave.setDeviceId(deviceId);
 						modelService.save(styleProfileModelToSave);
 						result = true;
@@ -391,9 +390,14 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			else
 			{
 				//With using userLogin, when device id is neglected
+
 				MplStyleProfileModel styleProfileModelToSave = modelService.create(MplStyleProfileModel.class);
-				styleProfileModelToSave = styleProfileModel;
-				selectedCategory = (List<CategoryModel>) styleProfileModelToSave.getPreferredCategory();
+				//If MY StyleProfile not set
+				if (styleProfileModel != null)
+				{
+					styleProfileModelToSave = styleProfileModel;
+					selectedCategory = (List<CategoryModel>) styleProfileModelToSave.getPreferredCategory();
+				}
 				final List<CategoryModel> newEntries = fetchCategoryData(codeList);
 
 				if (CollectionUtils.isNotEmpty(selectedCategory))
@@ -643,8 +647,8 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 						}
 						styleProfileModelToSave.setPreferredCategory(newCategory);
 						modelService.save(styleProfileModelToSave);
-						customer.setMyStyleProfile(styleProfileModelToSave);
-						modelService.save(customer);
+						//customer.setMyStyleProfile(styleProfileModelToSave);
+						//modelService.save(customer);
 						result = true;
 					}
 				}
@@ -653,7 +657,6 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9219);
 				}
 			}
-
 			//  Logged in user
 			else
 			{
@@ -749,8 +752,8 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 						}
 						styleProfileModelToSave.setPreferredBrand(newBrands);
 						modelService.save(styleProfileModelToSave);
-						customer.setMyStyleProfile(styleProfileModelToSave);
-						modelService.save(customer);
+						//customer.setMyStyleProfile(styleProfileModelToSave);
+						//modelService.save(customer);
 						result = true;
 					}
 				}
