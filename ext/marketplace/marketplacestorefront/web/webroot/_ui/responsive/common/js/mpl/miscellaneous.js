@@ -54,14 +54,18 @@
 		//End
 		
 		//Rotating images component
-		$(".hero li").each(function() {
-			if($(this).has("href")){
-				var icid = $(this).attr("data-bannerid");
-				var link = $(this).find("a").attr("href");
-				link = link + "?icid="+icid;
-				$(this).find("a").attr("href",link);
-			}
-		});
+		var winloc = window.location;
+        var pathName = winloc.pathname.substring(winloc.pathname.lastIndexOf('/') + 1, winloc.pathname.length);
+        if(pathName!="brandlist"){
+        	$(".hero li").each(function() {
+        		if($(this).has("href")){
+        			var icid = $(this).attr("data-bannerid");
+        			var link = $(this).find("a").attr("href");
+        			link = link + "?icid="+icid;
+        			$(this).find("a").attr("href",link);
+        		}
+        	});
+        }
 		//end
 		
 		//Tealium js.tag
