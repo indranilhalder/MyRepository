@@ -7,13 +7,14 @@ import com.tis.mpl.facade.changedelivery.MplChangeDeliveryAddressFacade;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceChangeDeliveryAddressController;
 import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplChangeDeliveryAddressDao;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultOrderManagementActionsWidgetController;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -32,14 +33,16 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 	private MplChangeDeliveryAddressDao changeDeliveryAddressDao;
 	@Autowired
 	private ModelService modelService;
-
+	@Autowired
+    private MplCheckoutFacade mplCheckoutFacade;
 	@Override
 	public boolean isDeliveryAddressChangable(TypedObject orderObject) {
 		OrderModel orderModel = (OrderModel) orderObject.getObject();
 		boolean changable = false;
+		final OrderData orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel.getCode());
 		try {
 			changable = mplChangeDeliveryAddressFacade
-					.isDeliveryAddressChangable(orderModel);
+					.isDeliveryAddressChangable(orderData);
 		} catch (Exception e) {
 			LOG.error("Exception occurred " + e.getCause());
 		}
