@@ -1579,6 +1579,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		</property>
 	</bean> 
 	
+	<bean id="temproryAddressReversePopulator"
+			class="com.tisl.mpl.facades.populators.TemproryAddressReversePopulator">
+		<property name="commonI18NService" ref="commonI18NService"/> 
+	</bean>
 	<!-- close R2.3 Changes -->
 	
 </beans>
