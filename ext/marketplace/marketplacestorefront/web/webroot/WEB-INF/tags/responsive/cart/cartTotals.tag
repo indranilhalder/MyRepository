@@ -70,6 +70,7 @@ function isNumber(evt) {
 	//$(".less-stock").text("");	
 	//$("#successPin").text("");	
 } */
+
 //TISPRM-65
 
 </script>
