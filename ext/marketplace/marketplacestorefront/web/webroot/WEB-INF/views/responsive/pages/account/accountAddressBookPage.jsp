@@ -113,8 +113,8 @@
 																		<c:if test="${address.defaultAddress}">&nbsp;-&nbsp;Default Address</c:if>
 																	</h3>
 																</c:if>	
-																<c:set var="myline2" value="${address.line2}"/>
-																<c:set var="myline3" value="${address.line3}"/>
+																<c:set var="myline2" value="${fn:trim(address.line2)}"/>
+																<c:set var="myline3" value="${fn:trim(address.line3)}"/>
 																<c:if test="${empty myline2  && empty myline3}">
 																
 																<address>
