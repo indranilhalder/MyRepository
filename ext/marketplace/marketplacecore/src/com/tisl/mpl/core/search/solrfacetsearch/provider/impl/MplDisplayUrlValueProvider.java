@@ -92,11 +92,10 @@ public class MplDisplayUrlValueProvider extends AbstractPropertyFieldValueProvid
 				final PcmProductVariantModel pcmSizeVariantModel = (PcmProductVariantModel) pcmProductVariantModel;
 
 				//Included for Electronics Product
-				final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel,
-						pcmSizeVariantModel.getFeatures());
+				final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel);
 
 
-				final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel, pcmVariantModel.getFeatures());
+				final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
 				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
 						&& pcmSizeVariantModel.getSize() != null)
 				{

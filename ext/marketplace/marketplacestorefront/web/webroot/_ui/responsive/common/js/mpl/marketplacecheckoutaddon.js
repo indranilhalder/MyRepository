@@ -1641,15 +1641,18 @@ $("#otpMobileNUMField").focus(function(){
 	 var firstName=validateNameOnAddress($("#firstName").val(), document.getElementById("firstNameError"), "firstName");
 	 var lastName=validateNameOnAddress($("#lastName").val(), document.getElementById("lastNameError"), "lastName");
 	 var addressLine1=validateAddressLine1($("#address1").val(), document.getElementById("address1Error"));
-	 var addressLine2=validateAddressLine2($("#address2").val(), document.getElementById("address2Error"));
-	 var addressLine3=validateLandmark($("#address3").val(), document.getElementById("address3Error"));
+	 //var addressLine2=validateAddressLine2($("#address2").val(), document.getElementById("address2Error"));
+	 //var addressLine3=validateLandmark($("#address3").val(), document.getElementById("address3Error"));
+	 var addressLine2=$("#address2").val();
+	 var addressLine3=$("#address3").val();
 	 var pin = validatePin();
 	 var city=validateCity();
 	 var state=validateState();
 	 var cardType=$("#cardType").val();
 	 if($("#paymentMode").val()=="Credit Card" || $("#paymentMode").val()=="EMI"){
 		 if(cardType=="MAESTRO"){
-			 if (name && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
+			 //if (name && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
+			if (name && cardNo && pin && firstName && lastName && addressLine1 && city && state){
 				 createJuspayOrderForNewCard();
 			 }
 			 else{
@@ -1660,7 +1663,8 @@ $("#otpMobileNUMField").focus(function(){
 			 var cvv = validateCVV();
 			 var expMM = validateExpMM();
 			 var expYY = validateExpYY();
-			 if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
+			// if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && addressLine2 && addressLine3 && city && state){
+			 if (cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && city && state){
 				 createJuspayOrderForNewCard();
 			 }
 			 else{
@@ -2405,14 +2409,14 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
     var mob = /^[1-9]{1}[0-9]{9}$/;
     var letters = /^[a-zA-Z]+$/; 
     var cityPattern = /^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/;
-    var firstName = document.getElementById("address.firstName");
-	var lastName = document.getElementById("address.surname");
-	var address1 = document.getElementById("address.line1");
+    var firstName = document.getElementById("address.firstName").value.trim();
+	var lastName = document.getElementById("address.surname").value.trim();
+	var address1 = document.getElementById("address.line1").value.trim();
 	var regAddress = /^[0-9a-zA-Z\-\/\,\s]+$/;
-	var address2 = document.getElementById("address.line2");
-	var address3 = document.getElementById("address.line3");
-	var city= document.getElementById("address.townCity");
-	var stateValue = document.getElementById("address.states");
+	var address2 = document.getElementById("address.line2").value.trim();
+	var address3 = document.getElementById("address.line3").value.trim();
+	var city= document.getElementById("address.townCity").value.trim();
+	var stateValue = document.getElementById("address.states").value.trim();
 	var zipcode = document.getElementsByName("postcode")[0].value;
 	var txtMobile = document.getElementsByName("MobileNo")[0].value;
 	var result=firstName.value;
@@ -2461,18 +2465,18 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 		$("#address1Error").html("<p>Address Line 1 cannot be blank</p>");	
 		validate= false;
 	}
-	else if(regAddress.test(result) == false)  
+	/*else if(regAddress.test(result) == false)  
 	{ 
 		$("#address1Error").show();
 		$("#address1Error").html("<p>Address Line 1 must be alphanumeric only</p>");
 		validate= false;
-	}  
+	}  */
 		else
 	{
 		$("#address1Error").hide();
 	}	
 	
-	    result=address2.value;
+	   /* result=address2.value;
 		if(result == undefined || result == "")
 	{	
 		$("#address2Error").show();
@@ -2488,9 +2492,9 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	else
 	{
 		$("#address2Error").hide();
-	}
+	}*/
 	
-	result=address3.value;
+	/*result=address3.value;
 	if(result == undefined || result == "")
 	{	
 		$("#address3Error").show();
@@ -2506,7 +2510,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	else
 	{
 		$("#address3Error").hide();	
-	}
+	}*/
 	
 	
 	  result=city.value;
@@ -4421,7 +4425,7 @@ function loadDefaultWishLstForCart(productCode,ussid) {
 
 
 //Added
-function addToWishlistForCart(ussid,productCode)
+function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 {
 	var wishName = "";
 	var sizeSelected=true;
@@ -4440,8 +4444,17 @@ function addToWishlistForCart(ussid,productCode)
 		return false;
 	}
     if(wishName==undefined||wishName==null){
-    	$("#wishlistErrorId").html("Please select a wishlist");
-    	$("#wishlistErrorId").css("display","block");
+    	if(alreadyAddedWlName!=undefined || alreadyAddedWlName!=""){
+    		if(alreadyAddedWlName=="[]"){
+    			$("#wishlistErrorId").html("Please select a wishlist");
+    		}
+    		else{
+    			alreadyAddedWlName=alreadyAddedWlName.replace("[","");
+    			alreadyAddedWlName=alreadyAddedWlName.replace("]","");
+    			$("#wishlistErrorId").html("Product already added in your wishlist "+alreadyAddedWlName);
+    		}
+    		$("#wishlistErrorId").css("display","block");
+    	}
     	return false;
     }
    	
@@ -4537,7 +4550,7 @@ function LoadWishListsFromCart(data, productCode,ussid) {
 	// modified for ussid
 	
 	//var ussid = $("#ussid").val()
-	
+	var addedWlList_cart = [];
 	var wishListContent = "";
 	var wishName = "";
 	$this = this;
@@ -4569,6 +4582,7 @@ function LoadWishListsFromCart(data, productCode,ussid) {
 					+ "' style='display: none' onclick='selectWishlist("
 					+ i + ")' disabled><label for='radio_"
 					+ i + "'>"+wishName+"</label></td></tr>";
+			addedWlList_cart.push(wishName);
 		} else {
 			index++;
 		  
@@ -4579,7 +4593,7 @@ function LoadWishListsFromCart(data, productCode,ussid) {
 					+ i + ")'><label for='radio_"
 					+ i + "'>"+wishName+"</label></td></tr>";
 		}
-
+		$("#alreadyAddedWlName_cart").val(JSON.stringify(addedWlList_cart));
 	}
 
 	$("#wishlistTbodyId").html(wishListContent);

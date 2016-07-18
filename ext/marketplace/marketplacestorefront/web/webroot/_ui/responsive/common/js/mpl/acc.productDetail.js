@@ -501,6 +501,7 @@ var wishListList = [];
 function LoadWishLists(ussid, data, productCode) {
     
 	// modified for ussid
+	var addedWlList_pdp = [];
 	var wishListContent = "";
 	var wishName = "";
 	$this = this;
@@ -533,6 +534,7 @@ function LoadWishLists(ussid, data, productCode) {
 					+ "' style='display: none' onclick='selectWishlist("
 					+ i + ")' disabled><label for='radio_"
 					+ i + "'>"+wishName+"</label></td></tr>";
+			addedWlList_pdp.push(wishName);
 		} else {
 			index++;
 		  
@@ -543,7 +545,7 @@ function LoadWishLists(ussid, data, productCode) {
 					+ i + ")'><label for='radio_"
 					+ i + "'>"+wishName+"</label></td></tr>";
 		}
-
+		$("#alreadyAddedWlName_pdp").val(JSON.stringify(addedWlList_pdp));
 	}
 
 	$("#wishlistTbodyId").html(wishListContent);
@@ -554,24 +556,35 @@ function selectWishlist(i) {
 	$("#hidWishlist").val(i);
 }
 
-function addToWishlist() {
+function addToWishlist(alreadyAddedWlName_pdp) {
 
 	var productCodePost = $("#productCodePost").val();
 
 	var wishName = "";
   
 	if (wishListList == "") {
-		wishName = $("#defaultWishName").val().trim();
+		wishName = $("#defaultWishName").val();
 	} else {
-		wishName = wishListList[$("#hidWishlist").val().trim()];
+		wishName = wishListList[$("#hidWishlist").val()];
 	}
-	if(wishName=="" || wishName.trim()==""){
+	if(wishName==""){
 		var msg=$('#wishlistnotblank').text();
 		$('#addedMessage').show();
 		$('#addedMessage').html(msg);
 		return false;
 	}
     if(wishName==undefined||wishName==null){
+    	if(alreadyAddedWlName_pdp!=undefined || alreadyAddedWlName_pdp!=""){
+    		if(alreadyAddedWlName_pdp=="[]"){
+    			$("#wishlistErrorId_pdp").html("Please select a wishlist");
+    		}
+    		else{
+    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("[","");
+    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("]","");
+    			$("#wishlistErrorId_pdp").html("Product already added in your wishlist "+alreadyAddedWlName_pdp);
+    		}
+    		$("#wishlistErrorId_pdp").css("display","block");
+    	}
     	return false;
     }
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
@@ -1200,9 +1213,7 @@ $( document ).ready(function() {
 				if($(this).val().toUpperCase().indexOf(key)!= -1 && value == 0){
 					$(this).attr("disabled","disabled");
 					$(this).css({
-						"color": "gray",
-						"text-decoration": "line-through"
-					
+						"color": "gray"
 				});
 					$(this).parent().css("border-color","gray");
 					}
@@ -2054,8 +2065,9 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#nosellerVal").val(nosellerData);
 				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice,savingsOnProduct);
 				//if(availableStock==0  && $(".variant-select-sizeGuidePopUp option:selected").val()!="#"){	//changes for TISPRO-338
-					if(availableStock==0){	//changes for TPR-465	
-					$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
+
+				if(availableStock==0){	//changes for TPR-465	
+				$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
 				}

@@ -318,8 +318,9 @@ tr.d0 td {
 
 						 <input type="hidden" name="hidWishlist" id="hidWishlist">
 						<span id="addedMessage" style="display:none"></span>
-						
-						<button type='button' onclick="addToWishlist()" name='saveToWishlist' id='saveToWishlist' class="savetowishlistbutton"><spring:theme code="product.wishlistBt"/></button>
+						<input type="hidden" name="alreadyAddedWlName_pdp" id="alreadyAddedWlName_pdp">
+						<p id='wishlistErrorId_pdp' style="display: none ; color:red ;"> </p>
+						<button type='button' onclick="addToWishlist($('#alreadyAddedWlName_pdp').val())" name='saveToWishlist' id='saveToWishlist' class="savetowishlistbutton"><spring:theme code="product.wishlistBt"/></button>
 					</div>
 
 					<div id="wishListNonLoggedInId" style="display: none"><spring:theme code="product.wishListNonLoggedIn"/></div>

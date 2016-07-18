@@ -142,7 +142,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		final BuyBoxData buyboxData = new BuyBoxData();
 		boolean onlyBuyBoxHasStock = false;
 		BuyBoxModel buyBoxMod = null;
-		final String COMMA_SEPARATED = ",";
+
 		//TISPRM -56
 		String products[] = null;
 		final List<String> productsList = new ArrayList<String>();
@@ -151,9 +151,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>();
 		List<String> productsWithNoStock = new ArrayList<String>();
 
-		if (productCode.indexOf(COMMA_SEPARATED) != -1)
+
+		if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)
 		{
-			products = productCode.split(COMMA_SEPARATED);
+
+			products = productCode.split(MarketplacecommerceservicesConstants.COMMA);
 		}
 		final List<String> arrayToProductList = new ArrayList<String>(Arrays.asList(products));
 		//END

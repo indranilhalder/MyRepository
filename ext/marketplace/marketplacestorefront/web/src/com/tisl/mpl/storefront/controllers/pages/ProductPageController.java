@@ -181,6 +181,7 @@ public class ProductPageController extends AbstractPageController
 	private static final String CUSTOMER_CARE_NUMBER = "1-800-282-8282";
 	private static final String CUSTOMER_CARE_EMAIL = "hello@tatacliq.com";
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
+	private static final String BOXING = "boxing";
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
@@ -477,7 +478,7 @@ public class ProductPageController extends AbstractPageController
 		catch (final Exception ex)
 		{
 			LOG.error("Exception while populating tealium Data for product" + productData.getCode() + ":::" + ex.getMessage());
-			throw ex;
+			//throw ex;
 		}
 	}
 
@@ -619,7 +620,7 @@ public class ProductPageController extends AbstractPageController
 	 * @throws com.granule.json.JSONException
 	 */
 
-
+	@SuppressWarnings(BOXING)
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxDataForSizeGuide(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
@@ -665,7 +666,7 @@ public class ProductPageController extends AbstractPageController
 				{
 					if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
 					{
-						@SuppressWarnings("boxing")
+
 						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue()
 								- buyboxdata.getSpecialPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
@@ -677,7 +678,6 @@ public class ProductPageController extends AbstractPageController
 					}
 					else if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getValue().doubleValue() > 0)
 					{
-						@SuppressWarnings("boxing")
 						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
 						//Critical Sonar Fix
@@ -1642,7 +1642,7 @@ public class ProductPageController extends AbstractPageController
 	 * @throws UnsupportedEncodingException
 	 * @throws com.granule.json.JSONException
 	 */
-	@SuppressWarnings("boxing")
+	@SuppressWarnings(BOXING)
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/buybox", method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxPrice(
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode) throws JSONException,
@@ -1689,7 +1689,6 @@ public class ProductPageController extends AbstractPageController
 				{
 					if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
 					{
-						@SuppressWarnings("boxing")
 						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue()
 								- buyboxdata.getSpecialPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
@@ -1701,7 +1700,6 @@ public class ProductPageController extends AbstractPageController
 					}
 					else if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getValue().doubleValue() > 0)
 					{
-						@SuppressWarnings("boxing")
 						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
 						//Critical Sonar Fix
