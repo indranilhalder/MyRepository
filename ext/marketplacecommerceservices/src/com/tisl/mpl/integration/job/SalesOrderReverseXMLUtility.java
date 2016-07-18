@@ -396,7 +396,7 @@ public class SalesOrderReverseXMLUtility
 				 * ptModel.getType().equals(PaymentTransactionType.MANUAL_REFUND) ||
 				 * ptModel.getType().equals(PaymentTransactionType.RETURN)) { reversepayemntrefid = payTransModel.getCode();
 				 * LOG.info(reversepayemntrefid); LOG.debug(ptModel.getType()); break; } }
-				 *
+				 * 
 				 * } } } }
 				 */
 				final SubOrderXMLData xmlData = new SubOrderXMLData();
@@ -421,10 +421,11 @@ public class SalesOrderReverseXMLUtility
 				{
 					LOG.debug("before child order list set");
 					xmlData.setTransactionInfoList(childOrderDataList);
+					subOrderDataList.add(xmlData);
 					LOG.debug("child order list set");
 				}
 
-				subOrderDataList.add(xmlData);
+				//	subOrderDataList.add(xmlData);
 			}
 
 		}
@@ -559,7 +560,7 @@ public class SalesOrderReverseXMLUtility
 
 						/*
 						 * final String ussId = entry.getSelectedUSSID();
-						 *
+						 * 
 						 * final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
 						 * if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null &&
 						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null &&
