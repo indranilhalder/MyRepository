@@ -17,7 +17,7 @@
 			<div class="container">
 			
 				<div class="body-Content" style="padding-bottom: 0px;"><div class="error-template-message">
-				<div class="homebanner_ hero">
+				<div class="homebanner_ hero icid">
 				<div class="image">
 					
 				</div>

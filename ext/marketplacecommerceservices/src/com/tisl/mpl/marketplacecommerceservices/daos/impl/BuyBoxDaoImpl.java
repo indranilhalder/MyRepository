@@ -71,10 +71,12 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 	@Override
 	public List<BuyBoxModel> buyBoxPrice(String productCode)
 	{
-
+		final String COMMA_SEPARATED = ",";
+		final String SEMICOLON = "'";
 		try
 		{
 			//TISPRM-56
+
 			if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)
 			{
 				final StringBuilder stringBuilder = new StringBuilder();
@@ -89,7 +91,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			}
 
 
-			if (productCode.indexOf('\'') == -1)
+			if (productCode.indexOf(SEMICOLON) == -1)
 			{
 				productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA + productCode
 						+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
