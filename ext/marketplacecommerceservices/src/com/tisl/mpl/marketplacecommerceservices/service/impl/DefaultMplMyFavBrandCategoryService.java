@@ -399,7 +399,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				if (styleProfileModel != null)
 				{
 					styleProfileModelToSave = styleProfileModel;
-					selectedCategory = (List<CategoryModel>) styleProfileModelToSave.getPreferredCategory();
+					if (styleProfileModelToSave.getPreferredCategory() != null)
+					{
+						selectedCategory = (List<CategoryModel>) styleProfileModelToSave.getPreferredCategory();
+					}
 				}
 				final List<CategoryModel> newEntries = fetchCategoryData(codeList);
 
@@ -572,7 +575,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				if (null != styleProfileModel)
 				{
 					styleProfileModelToSave = styleProfileModel;
-					selectedBrands = (List<CategoryModel>) styleProfileModelToSave.getPreferredBrand();
+					if (styleProfileModelToSave.getPreferredBrand() != null)
+					{
+						selectedBrands = (List<CategoryModel>) styleProfileModelToSave.getPreferredBrand();
+					}
 					final List<CategoryModel> newEntries = fetchCategoryData(codeList);
 					if (CollectionUtils.isNotEmpty(selectedBrands))
 					{
@@ -644,7 +650,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
 						styleProfileModelToSave = myStyleProfileList.get(0);
-						selectedCategory = new ArrayList(styleProfileModelToSave.getPreferredCategory());
+						if (styleProfileModelToSave.getPreferredCategory() != null)
+						{
+							selectedCategory = new ArrayList(styleProfileModelToSave.getPreferredCategory());
+						}
 						for (final CategoryModel entry : selectedCategory)
 						{
 							if (!entry.getCode().equalsIgnoreCase(code))
@@ -670,7 +679,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				if (null != styleProfileModel)
 				{
 					styleProfileModelToSave = styleProfileModel;
-					selectedCategory = (List<CategoryModel>) styleProfileModelToSave.getPreferredCategory();
+					if (styleProfileModelToSave.getPreferredCategory() != null)
+					{
+						selectedCategory = (List<CategoryModel>) styleProfileModelToSave.getPreferredCategory();
+					}
 					//if (null != selectedCategory && selectedCategory.size() > 0)
 					if (CollectionUtils.isNotEmpty(selectedCategory))
 					{
@@ -696,7 +708,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
 						styleProfileModelToSave = myStyleProfileList.get(0);
-						selectedCategory = new ArrayList(styleProfileModelToSave.getPreferredCategory());
+						if (styleProfileModelToSave.getPreferredCategory() != null)
+						{
+							selectedCategory = new ArrayList(styleProfileModelToSave.getPreferredCategory());
+						}
 						for (final CategoryModel entry : selectedCategory)
 						{
 							if (!entry.getCode().equalsIgnoreCase(code))
@@ -746,7 +761,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
 						styleProfileModelToSave = myStyleProfileList.get(0);
-						selectedBrands = new ArrayList(styleProfileModelToSave.getPreferredBrand());
+						if (styleProfileModelToSave.getPreferredBrand() != null)
+						{
+							selectedBrands = new ArrayList(styleProfileModelToSave.getPreferredBrand());
+						}
 						if (CollectionUtils.isNotEmpty(selectedBrands))
 						{
 							for (final CategoryModel entry : selectedBrands)
@@ -776,7 +794,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				if (null != styleProfileModel)
 				{
 					styleProfileModelToSave = styleProfileModel;
-					selectedBrands = (List<CategoryModel>) styleProfileModelToSave.getPreferredBrand();
+					if (styleProfileModelToSave.getPreferredBrand() != null)
+					{
+						selectedBrands = (List<CategoryModel>) styleProfileModelToSave.getPreferredBrand();
+					}
 					//if (null != selectedBrands && selectedBrands.size() > 0)
 					if (CollectionUtils.isNotEmpty(selectedBrands))
 					{
@@ -801,7 +822,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					if (CollectionUtils.isNotEmpty(myStyleProfileList))
 					{
 						styleProfileModelToSave = myStyleProfileList.get(0);
-						selectedBrands = new ArrayList(styleProfileModelToSave.getPreferredBrand());
+						if (styleProfileModelToSave.getPreferredBrand() != null)
+						{
+							selectedBrands = new ArrayList(styleProfileModelToSave.getPreferredBrand());
+						}
 						if (CollectionUtils.isNotEmpty(selectedBrands))
 						{
 							for (final CategoryModel entry : selectedBrands)
