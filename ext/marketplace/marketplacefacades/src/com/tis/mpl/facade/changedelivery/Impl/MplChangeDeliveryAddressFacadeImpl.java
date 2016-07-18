@@ -4,6 +4,7 @@
 package com.tis.mpl.facade.changedelivery.Impl;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
+import de.hybris.platform.commercefacades.user.converters.populator.AddressReversePopulator;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -25,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tis.mpl.facade.changedelivery.MplChangeDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.enums.DeliveryAddressEnum;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.DeliveryAddressEnum;
 import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.data.ReturnAddressInfo;
@@ -34,12 +35,9 @@ import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-<<<<<<< HEAD
 import com.tisl.mpl.facades.populators.TemproryAddressReversePopulator;
-import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
-=======
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
->>>>>>> 8fe70cecf7ce7eb918b33752bd41881ee74d2c7b
+import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplChangeDeliveryAddressService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.service.MplChangeDeliveryAddressClientService;
@@ -65,23 +63,22 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	@Autowired
 	private OTPGenericService otpGenericService;
 	@Autowired
-<<<<<<< HEAD
-	private TemproryAddressReversePopulator temproryAddressReversePopulator;
+	private AddressReversePopulator addressReversePopulator;
+	@Autowired
+	private CustomOmsOrderService customOmsOrderService;
+	@Autowired
+	TemproryAddressReversePopulator temproryAddressReversePopulator;
+
 	@Autowired
 	private CustomerFacade customerFacade;
 	@Autowired
 	OrderModelDao orderModelDao;
-=======
-	private AddressReversePopulator addressReversePopulator;
-	@Autowired
-	private CustomOmsOrderService customOmsOrderService;
->>>>>>> 8fe70cecf7ce7eb918b33752bd41881ee74d2c7b
 
 	private static final Logger LOG = Logger.getLogger(MplChangeDeliveryAddressFacadeImpl.class);
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tis.mpl.facade.changedelivery.ChangeDeliveryAddressFacade#changeDeliveryRequestToOMS(java.lang.String,
 	 * de.hybris.platform.core.model.user.AddressModel)
 	 */
@@ -294,7 +291,6 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 
 
-
 	@Override
 	public boolean saveAsTemproryAddressForCustomer(final String orderCode, final AddressData addressData)
 	{
@@ -303,27 +299,20 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		{
 			if (addressData != null)
 			{
-<<<<<<< HEAD
-				 mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
-				 TemproryAddressModel temproryAddressModel= new TemproryAddressModel();
-				 temproryAddressReversePopulator.populate(addressData, temproryAddressModel);
-				 temproryAddressModel.setLine1(addressData.getLine1());
-				 temproryAddressModel.setLine2(addressData.getLine2());
-	 
-				CustomerData customerData = customerFacade.getCurrentCustomer();
-				temproryAddressModel.setEmail(customerData.getEmail());
-				String customerId=customerData.getUid();
-				
-=======
+				mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
 				final TemproryAddressModel temproryAddressModel = new TemproryAddressModel();
-				addressReversePopulator.populate(addressData, temproryAddressModel);
-				//First Save Address into temproryAddressModel
+				temproryAddressReversePopulator.populate(addressData, temproryAddressModel);
+				temproryAddressModel.setLine1(addressData.getLine1());
+				temproryAddressModel.setLine2(addressData.getLine2());
 
->>>>>>> 8fe70cecf7ce7eb918b33752bd41881ee74d2c7b
+				final CustomerData customerData = customerFacade.getCurrentCustomer();
+				temproryAddressModel.setEmail(customerData.getEmail());
+				final String customerId = customerData.getUid();
+
 				flag = mplChangeDeliveryAddressService.saveAsTemproryAddressForCustomer(orderCode, temproryAddressModel);
 				if (flag)
 				{
-					OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+					final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 					String mobileNumber = null;
 					if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
 					{
@@ -338,17 +327,17 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 				}
 			}
 
-		}catch (final NullPointerException e)
+		}
+		catch (final NullPointerException e)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
 		}
 		catch (final Exception exp)
 		{
 			exp.printStackTrace();
- 		}
+		}
 		return flag;
 	}
-
 
 
 	/**
@@ -366,9 +355,6 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	}
 
 
-<<<<<<< HEAD
-	@SuppressWarnings("deprecation")
-=======
 
 	/**
 	 * First Check OTP If OTP Validate then Call To OMS
@@ -378,7 +364,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	 * @param orderCode
 	 * @return Validation flag Value
 	 */
->>>>>>> 8fe70cecf7ce7eb918b33752bd41881ee74d2c7b
+	@SuppressWarnings("deprecation")
 	@Override
 	public String validateOTP(final String customerID, final String enteredOTPNumber, final String orderCode)
 	{
@@ -393,32 +379,21 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		//If OTP Valid then call to OMS for Pincode ServiceableCheck
 		if (otpValidate.booleanValue())
 		{
-<<<<<<< HEAD
-			TemproryAddressModel addressModel = mplChangeDeliveryAddressService.geTemproryAddressModel(orderCode);
-			LOG.debug("pincode serviceable Checking::MplChangeDeliveryAddressFacadeImpl");
-=======
 			final TemproryAddressModel addressModel = mplChangeDeliveryAddressService.geTemproryAddressModel(orderCode);
->>>>>>> 8fe70cecf7ce7eb918b33752bd41881ee74d2c7b
+			LOG.debug("pincode serviceable Checking::MplChangeDeliveryAddressFacadeImpl");
 
 			boolean flag = changeDeliveryRequestCallToOMS(orderCode, addressModel);
 
 			if (flag)
 			{
-<<<<<<< HEAD
-				LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
-=======
 				//if Serviceable Pincode then Save in Order and remove to temporaryAddressModel
->>>>>>> 8fe70cecf7ce7eb918b33752bd41881ee74d2c7b
+				LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
 				flag = mplChangeDeliveryAddressService.changeDeliveryAddress(orderCode);
 			}
 			else
 			{
-<<<<<<< HEAD
 				mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
-				valditionMsg = DeliveryAddressEnum.PINCODENOTSERVICEABLE.getCode();
-=======
-				return valditionMsg = "This Pincode not serviceable";
->>>>>>> 8fe70cecf7ce7eb918b33752bd41881ee74d2c7b
+				valditionMsg = DeliveryAddressEnum.PINCODENOTSERVICEABLE;
 			}
 		}
 		else
@@ -427,6 +402,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		}
 		return valditionMsg;
 	}
+
 
 
 }
