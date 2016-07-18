@@ -30,7 +30,7 @@
  
     <!-- 2) move the file to processing and setup header -->
     
-    <file:outbound-gateway request-channel="batchFilesMarketplaceBuybox" reply-channel="batchFilesMarketplaceBinProc"
+    <file:outbound-gateway request-channel="batchFilesMarketplaceBuybox" reply-channel="batchFilesMarketplaceBuyboxProc"
         directory="#{baseDirectoryMarketplaceBuyBox}/processing" delete-source-files="true" />
 
 	<!-- 3) transform csv to impex file -->
