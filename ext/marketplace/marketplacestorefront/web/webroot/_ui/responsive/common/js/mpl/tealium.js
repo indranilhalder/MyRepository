@@ -1,13 +1,27 @@
 $(document).ready(
 		function() {
 
+            var UTAG_SCRIPT_PROD = "<script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/prod/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
+			
+			var UTAG_SCRIPT_DEV = "<script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
+			var session_id = ACC.config.SessionId;
+			
+			
+			var visitor_ip = ACC.config.VisitorIp;
+			
+			var user_type = $.cookie("mpl-userType");
+			var user_id = $.cookie("mpl-user");
+			var site_region = 'en';
+			var site_currency ='INR';
+			var domain_name = document.domain;
 			
 			var pageType = $('#pageType').val();
 			var pageName=$('#pageName').val();
+			
 			// Added for tealium
 			if (pageType == "homepage") {
 				// Added for tealium
-				$
+				/*$
 						.ajax({
 							url : ACC.config.encodedContextPath
 									+ "/getTealiumDataHome",
@@ -17,7 +31,27 @@ $(document).ready(
 								// console.log(data);
 								$('#tealiumHome').html(data);
 							}
-						});
+						});*/
+				// Added for TISPT-324
+				
+				
+				
+				var pageTypeHome = 'home';
+				var site_section = 'home';
+				var homePageTealium = '';
+				
+				homePageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeHome+'","page_name":"'+pageName+'","session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
+				var script="";
+				if(domain_name =="www.tatacliq.com"){
+					
+					script=UTAG_SCRIPT_PROD;
+				}
+				else{
+					
+					script=UTAG_SCRIPT_DEV;
+				}
+				homePageTealium+=script;
+				$('#tealiumHome').html(homePageTealium);
 			}
 			// Tealium end
 
@@ -79,7 +113,7 @@ $(document).ready(
 					&& pageType != 'productsearch') {
 				
 				// Added for tealium
-				$
+				/*$
 						.ajax({
 							url : ACC.config.encodedContextPath
 									+ "/getTealiumDataGeneric",
@@ -90,7 +124,24 @@ $(document).ready(
 								// console.log(data);
 								$('#tealiumHome').html(data);
 							}
-						});
+						});*/
+			
+				var pageTypeGeneric = 'generic';
+				var site_section = pageName;
+                var genericPageTealium = '';
+				
+                genericPageTealium+='<script type="text/javascript"> var utag_data ={"site_region":"'+site_region+'","user_type":"'+user_type+'","user_id":"'+user_id+'","page_type":"'+pageTypeGeneric+'","page_name":"'+pageName+'","session_id":"'+session_id+'","visitor_ip":"'+visitor_ip+'","site_currency":"'+site_currency+'","site_section":"'+site_section+'","IA_company":"'+domain_name+'"}</script>';
+				var script="";
+				if(domain_name =="www.tatacliq.com"){
+					
+					script=UTAG_SCRIPT_PROD;
+				}
+				else{
+					
+					script=UTAG_SCRIPT_DEV;
+				}
+				genericPageTealium+=script;
+				$('#tealiumHome').html(genericPageTealium);
 			}
 			// Tealium end
 			

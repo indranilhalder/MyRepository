@@ -10,7 +10,7 @@ $(document).ready(function(){
 				//ACC.click2chat.clickToCallModalEvents();
 			});
 			});
-		
+
 			$(document).on("click","#submitC2C",function(){
 			$(".error").each(function(){
 				$(this).empty();
@@ -22,7 +22,7 @@ $(document).ready(function(){
 				data:$("#chatForm").serialize(),
 				success:function(data){
 					var error = false;
-					
+
 					if(data.error_name != null){
 						$("label[for=errorCustomerName]").text(data.error_name);
 						error = true;
@@ -35,7 +35,7 @@ $(document).ready(function(){
 						$("label[for=errorCustomerMobileNo]").text(data.error_contact);
 						error = true;
 					}
-					
+
 					if(!error) {
 						var url = chatUrl+"?name="+encodeURI($("input[name=customerName]").val())+"&email="+$("input[name=emailId]").val()+"&phone="+$("input[name=contactNo]").val()+"&reason="+encodeURI($("select[name=reason]").val());
 						var title = "Chat";
@@ -52,10 +52,10 @@ $(document).ready(function(){
 				}
 			});
 		});
-		
+
 			$(document).on('hide.bs.modal', function () {
 	            $("#clicktoChatModal").remove();
 	            $(".modal-backdrop.in").remove();
 			});
 
-});		
+});	

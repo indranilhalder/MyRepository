@@ -12,6 +12,9 @@ $(document).ready(function(){
  
  $(document).ready(function(){
 	 /*To highlight the active link*/
+	 //TISPRO-554
+	 	$("select#menuPageSelect").val('');
+	 	
 	    $("#currentPassword").val('');
 		var pageName = $("#pageName").val();
 		var pageNameDropdown = $("#pageNameDropdown").val();
@@ -257,7 +260,8 @@ function editAddress(addressId) {
         			url: ACC.config.encodedContextPath + "/my-account/cancelSuccess",
         			type: "GET",
         			beforeSend:function() {
-        				$("body").append("<div id='no-click' style='opacity:0.40; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div><img src='/_ui/responsive/common/images/spinner.gif' class='spinner' style=' z-index: 10001;position: fixed;top: 50%;left:50%;height: 30px;'>");
+        				var staticHost=$('#staticHost').val();
+        				$("body").append("<div id='no-click' style='opacity:0.40; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div><img src='"+staticHost+"/_ui/responsive/common/images/spinner.gif' class='spinner' style=' z-index: 10001;position: fixed;top: 50%;left:50%;height: 30px;'>");
         			},
         			data: { 'orderCode' : orderCode, 'transactionId' : transactionId, 'reasonCode' : reasonCode, 'ticketTypeCode' : ticketTypeCode, 'ussid' : ussid },
         			cache: false,
@@ -1024,7 +1028,7 @@ function editAddress(addressId) {
         	document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 1</font>";
         	flagAd1 = false;
         }
-        if (addressForm.line2.value == null || addressForm.line2.value == "") {
+       /* if (addressForm.line2.value == null || addressForm.line2.value == "") {
         	$("#errddressline2").css({"display":"block"});
         	document.getElementById("erraddressline2").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 2</font>";
         	flagAd2 = false;
@@ -1033,7 +1037,7 @@ function editAddress(addressId) {
         	$("#errddressline3").css({"display":"block"});
         	document.getElementById("erraddressline3").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 3</font>";
         	flagAd3 = false;
-        }
+        }*/
         if (addressForm.postcode.value == null || addressForm.postcode.value == "") {
         	$("#errddressPost").css({"display":"block"});
         	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter post code</font>";
@@ -1089,7 +1093,8 @@ function editAddress(addressId) {
         	flagMob = false;
         }
         
-        if(flagFn && flagLn && flagAd1 && flagAd2 && flagAd3 && flagPost && flagCity && flagState && flagMob)
+       // if(flagFn && flagLn && flagAd1 && flagAd2 && flagAd3 && flagPost && flagCity && flagState && flagMob)
+        if(flagFn && flagLn && flagAd1 && flagPost && flagCity && flagState && flagMob)	
         {
         	 return true;
         }

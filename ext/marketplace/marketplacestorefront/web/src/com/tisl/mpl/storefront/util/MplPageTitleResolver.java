@@ -20,6 +20,7 @@ import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -35,16 +36,35 @@ public class MplPageTitleResolver extends PageTitleResolver
 	public String resolveCategoryPageTitle(final CategoryModel category)
 	{
 		String pageTitle = null;
+		int i = 0;
 		final StringBuilder stringBuilder = new StringBuilder();
 		final CMSSiteModel currentSite = getCmsSiteService().getCurrentSite();
 		if (currentSite != null)
 		{
-			stringBuilder.append(currentSite.getName());
+			if (null != currentSite.getName())
+			{
+				stringBuilder.append(currentSite.getName());
+			}
 		}
 		final List<CategoryModel> categories = this.getCategoryPath(category);
-		for (final CategoryModel c : categories)
+		if (null != currentSite.getName())
 		{
-			stringBuilder.append(TITLE_WORD_SEPARATOR).append(c.getName());
+			for (final CategoryModel c : categories)
+			{
+				stringBuilder.append(TITLE_WORD_SEPARATOR).append(c.getName());
+			}
+		}
+		else
+		{
+			for (final CategoryModel c : categories)
+			{
+				if (i > 0)
+				{
+					stringBuilder.append(TITLE_WORD_SEPARATOR);
+				}
+				stringBuilder.append(c.getName());
+				i = i + 1;
+			}
 		}
 
 		pageTitle = StringEscapeUtils.escapeHtml(stringBuilder.toString());
@@ -52,5 +72,43 @@ public class MplPageTitleResolver extends PageTitleResolver
 		return pageTitle;
 	}
 
+	@Override
+	public String resolveHomePageTitle(final String title)
+	{
+		final CMSSiteModel currentSite = getCmsSiteService().getCurrentSite();
+		final StringBuilder builder = new StringBuilder();
 
+		if (currentSite != null)
+		{
+			if (null != currentSite.getName())
+			{
+				builder.append(currentSite.getName()).append(TITLE_WORD_SEPARATOR);
+			}
+		}
+		if (!StringUtils.isEmpty(title))
+		{
+			builder.append(title);
+		}
+		return StringEscapeUtils.escapeHtml(builder.toString());
+	}
+
+	@Override
+	public String resolveContentPageTitle(final String title)
+	{
+		final CMSSiteModel currentSite = getCmsSiteService().getCurrentSite();
+
+		final StringBuilder builder = new StringBuilder();
+		if (!StringUtils.isEmpty(title))
+		{
+			builder.append(title);
+		}
+		if (currentSite != null)
+		{
+			if (null != currentSite.getName())
+			{
+				builder.append(TITLE_WORD_SEPARATOR).append(currentSite.getName());
+			}
+		}
+		return StringEscapeUtils.escapeHtml(builder.toString());
+	}
 }

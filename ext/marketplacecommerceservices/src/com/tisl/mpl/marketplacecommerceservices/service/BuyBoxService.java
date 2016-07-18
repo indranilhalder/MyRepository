@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +21,15 @@ public interface BuyBoxService
 
 	List<BuyBoxModel> buyboxPrice(String productCode) throws EtailNonBusinessExceptions;
 
+	//List<BuyBoxModel> getStockFromBuyBox(String ProductCode) throws EtailNonBusinessExceptions;
+
 	List<BuyBoxModel> getBuyboxPricesForSearch(String productCode) throws EtailNonBusinessExceptions;
 
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
 
 	/**
 	 * This service method will return buybox prices for product code
-	 * 
+	 *
 	 * @param productCode
 	 * @param sellerId
 	 * @return
@@ -51,6 +55,8 @@ public interface BuyBoxService
 	 * @return
 	 */
 	BuyBoxModel getpriceForUssid(String ussid);
+
+	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code);
 
 
 }

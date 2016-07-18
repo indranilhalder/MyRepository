@@ -33,7 +33,7 @@
 									</c:forEach>
 									</span>
 					<div class="pdp-promoDesc">
-					<h3 class="product-name highlight"  >${product.potentialPromotions[0].title}</h3>
+					<h3 class="product-name highlight"><b>OFFER:</b> ${product.potentialPromotions[0].title}</h3>
 					<h3 class="promo-price"></h3>
 					<%-- <p>${product.potentialPromotions[0].description}</p> --%>
 					<input type="hidden" id="promotedSellerId" value="${product.potentialPromotions[0].allowedSellers}"/>
@@ -68,7 +68,7 @@
 									</c:forEach>
 									</span>
 					<div class="pdp-promoDesc">
-					<h3 class="product-name highlight"  >${product.potentialPromotions[0].title}</h3>
+					<h3 class="product-name highlight"><b>OFFER:</b> ${product.potentialPromotions[0].title}</h3>
 					<h3 class="promo-price"></h3>
 					<%-- <p>${product.potentialPromotions[0].description}</p> --%>
 					<input type="hidden" id="promotedSellerId" value="${product.potentialPromotions[0].allowedSellers}"/>

@@ -8,18 +8,23 @@ $(function() {
        cache:false,
        success: function(data) {
            $("input[name='CSRFToken']").each(function() {
-               this.value = data;
+               this.value = data.token;
            });
-           ACC.config.CSRFToken = data;
+           ACC.config.CSRFToken = data.token;
+           ACC.config.SessionId = data.sessionId;
+           ACC.config.VisitorIp = data.vistiorIp;
+           
            var crsfSession = window.sessionStorage.getItem("csrf-token");
-           if(window.sessionStorage && (null == crsfSession || crsfSession != data)){
+           if(window.sessionStorage && (null == crsfSession || crsfSession != data.token)){
           	 csrfDataChanged = true;
-          	 window.sessionStorage.setItem("csrf-token",data);
+          	 window.sessionStorage.setItem("csrf-token",data.token);
            }
+           //TISPRD-3357
+           callSetHeader();
        }
    });
 });
-$(function() {
+function callSetHeader() {
 	//TISPRO-522 IE Issue Fix
 	
 	var header = window.sessionStorage.getItem("header");
@@ -38,7 +43,7 @@ $(function() {
 		 header = JSON.parse(header);
 		 setHeader(header);
 	 	}
-	});
+	}
  
 $("div.departmenthover").on("mouseover touchend", function() {
     var id = this.id;
@@ -191,43 +196,64 @@ $(document).on('click',"div#closeConceirge",function(e) {
 	$(this).parents('.banner').removeClass('active');
 });
 
-
+var trackLinkHover;
 $("a#tracklink").on("mouseover touchend", function(e) {
     e.stopPropagation();
-    $.ajax({
-        url: ACC.config.encodedContextPath +
-            "/headerTrackOrder",
-        type: 'GET',
-        cache:false,
-        success: function(html) {
-            $("ul.trackorder-dropdown").html(html);
-        }
-    });
-});
-$("a#myWishlistHeader").on("mouseover touchend", function(e) {
-    e.stopPropagation();
-    $.ajax({
-        url: ACC.config.encodedContextPath + "/headerWishlist",
-        type: 'GET',
-        data: "&productCount=" + $(this).attr("data-count"),
-        success: function(html) {
-            $("div.wishlist-info").html(html);
-        }
-    });
-});
-//TISPRO-522-IE Issue Fix
-$("li.ajaxloginhi").on("mouseover touchend", function(e) {
-    e.stopPropagation();
-    if ($("ul.ajaxflyout").html().trim().length <= 0) {
-        $.ajax({
+    trackLinkHover = setTimeout(function(){
+    	$.ajax({
             url: ACC.config.encodedContextPath +
-                "/headerloginhi?timestamp="+Date.now(),
+                "/headerTrackOrder",
             type: 'GET',
+            cache:false,
             success: function(html) {
-                $("ul.ajaxflyout").html(html);
+                $("ul.trackorder-dropdown").html(html);
             }
         });
-    }
+    },300);
+});
+$("li.track.trackOrder").on("mouseleave", function() {
+	clearTimeout(trackLinkHover);
+});
+
+
+var wishlistHover;
+$("a#myWishlistHeader").on("mouseover touchend", function(e) {
+    e.stopPropagation();
+    wishlistHover = setTimeout(function(){
+    	$.ajax({
+            url: ACC.config.encodedContextPath + "/headerWishlist",
+            type: 'GET',
+            data: "&productCount=" + $(this).attr("data-count"),
+            success: function(html) {
+                $("div.wishlist-info").html(html);
+            }
+        });
+    },300);
+    
+});
+$("li.wishlist").on("mouseleave", function() {
+	clearTimeout(wishlistHover);
+});
+//TISPRO-522-IE Issue Fix
+var loginHover;
+$("li.ajaxloginhi").on("mouseover touchend", function(e) {
+    e.stopPropagation();
+    loginHover = setTimeout(function(){
+    	if ($("ul.ajaxflyout").html().trim().length <= 0) {
+            $.ajax({
+                url: ACC.config.encodedContextPath +
+                    "/headerloginhi?timestamp="+Date.now(),
+                type: 'GET',
+                success: function(html) {
+                    $("ul.ajaxflyout").html(html);
+                }
+            });
+        }
+    },300);
+});
+
+$("li.logIn-hi").on("mouseleave", function(e) {
+	clearTimeout(loginHover);
 });
 //
 var activePos = 0;
@@ -330,10 +356,11 @@ function getBrandsYouLoveContentAjaxCall(id) {
                 type: "GET",
                 dataType: "json",
                 beforeSend: function() {
+                	var staticHost=$('#staticHost').val();
                     $(".home-brands-you-love-carousel").css(
                         "margin-bottom", "120px");
                     $("#brandsYouLove").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -418,7 +445,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         id, encodeURI(defaultHtml));
                 },
                 complete: function() {
-                    $('#brandsYouLove .loaderDiv').remove();
+                   $('#brandsYouLove .loaderDiv').remove();
                 },
                 error: function() {
                     $('#brandsYouLove .loaderDiv').remove();
@@ -707,6 +734,7 @@ function getNewAndExclusiveAjaxCall() {
         data: dataString,
         success: function(response) {
             //console.log(response.newAndExclusiveProducts);
+        	var staticHost=$('#staticHost').val();
             var defaultHtml = "";
             renderHtml = "<h1>" + response.title + "</h1>" +
                 "<div class='carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
@@ -714,7 +742,7 @@ function getNewAndExclusiveAjaxCall() {
                 key, value) {
             	if(value.isNew == 'Y')
             	{
-            	renderNewHtml = "<div style='z-index: 1;' class='new'><img class='brush-strokes-sprite sprite-New' src='/_ui/responsive/common/images/transparent.png'><span>New</span></div>";
+            	renderNewHtml = "<div style='z-index: 1;' class='new'><img class='brush-strokes-sprite sprite-New' src='"+staticHost+"/_ui/responsive/common/images/transparent.png'><span>New</span></div>";
             	} else {
             		renderNewHtml = '';
             	}
@@ -881,7 +909,7 @@ function showStayQued(response){
         linkText = promoText2;
     }
     renderHtml =
-        '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">' +
+        '<h1><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">' +
         promoText1 + '<a href="' + bannerUrlLink +
         '" class="button maroon">' + linkText +
         '</a></div><div class="qued-image"><img class="lazy" src="' +
@@ -939,7 +967,7 @@ function getShowCaseAjaxCall() {
     // Get Showcase Content AJAX
 
 function getShowcaseContentAjaxCall(id) {
-        if (window.localStorage && (html = window.localStorage.getItem(
+	if (window.localStorage && (html = window.localStorage.getItem(
             "showcaseContent-" + id)) && html != "") {
             // console.log("Local");
             $('.about-one showcase-section').remove();
@@ -950,10 +978,11 @@ function getShowcaseContentAjaxCall(id) {
                 type: "GET",
                 dataType: "json",
                 beforeSend: function() {
+                	var staticHost=$('#staticHost').val();
                     $(".showcase-switch").css("margin-bottom",
                         "80px");
                     $("#showcase").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -962,6 +991,7 @@ function getShowcaseContentAjaxCall(id) {
                     "id": id
                 },
                 success: function(response) {
+                	
                     $('.about-one.showcase-section').remove();
                     defaultHtml =
                         "<div class='about-one showcase-section'>";
@@ -1055,6 +1085,7 @@ $(document).ready(function(){
 	//TISPT-290
 	if($('#pageTemplateId').val() =='LandingPage2Template'){
 	lazyLoadDivs();
+
 	setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
 }
 //Fix for defect TISPT-202

@@ -8,6 +8,7 @@ import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.List;
+import java.util.Map;
 
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -22,6 +23,8 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 public interface BuyBoxFacade
 {
 	public BuyBoxData buyboxPrice(String ProductCode) throws EtailNonBusinessExceptions;
+
+	public Map<String, Object> buyboxPricePDP(String ProductCode) throws EtailNonBusinessExceptions;
 
 	public List<SellerInformationData> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
 
