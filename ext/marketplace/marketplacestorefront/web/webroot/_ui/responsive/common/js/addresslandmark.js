@@ -51,3 +51,77 @@ function changeFunction(value) {
 		$(".optionsLandmark label").hide();
 	}
 }
+
+
+$(document).ready(
+		function() {
+			$("#deliveryAddressForm").submit(
+					function(event) {
+						if ($("#firstName").val().length < 1) {
+							$(".firstNameError").show();
+							$(".firstNameError").text("First Name cannot be Blank");
+						} else if ($("#lastName").val().length < 1) {
+							$(".lastNameError").show();
+							$(".lastNameError").text("Last Name cannot be Blank ");
+						} else if ($("#addressLine1").val().length < 1) {
+							$(".address1Error").show();
+							$(".address1Error").text("Address Line 1 cannot be blank");
+						} else if ($("#addressLine2").val().length < 1) {
+							$(".address2Error").show();
+							$(".address2Error").text("Address Line 2 cannot be blank");
+						} else if ($("#addressLine3").val().length < 1) {
+							$(".address3Error").show();
+							$(".address3Error").text("Address Line 3 cannot be blank");
+						}else{
+						
+						var data = $("#deliveryAddressForm").serialize();
+						var orderCode = $('#deliveryAddorderCode').val();
+						$.ajax({
+							url : ACC.config.encodedContextPath
+									+ "/my-account/" + orderCode
+									+ "/changeDeliveryAddress/",
+							type : 'GET',
+							data : data,
+							  contentType: "application/json",
+							  dataType: 'json',
+							success : function(result) {
+								if(result="sucess"){
+									$("#changeAddressPopup").hide();
+									$("wrapBG1").hide();
+									$("#showOTP").show();
+									$(".wrapBG").show();
+									var height = $(window).height();
+									$(".wrapBG1").css("height", height);
+									$("#showOTP").css("z-index", "999999");
+								}else{
+									 $("#changeAddressPopup .error_text").text("Please Re-enter Address.");
+								}
+
+							},
+							error : function(result) {
+								alert("error")
+							}
+
+						});
+						}
+						event.preventDefault();
+					});
+		});
+
+
+$(document).ready(function() {
+	$("#geneateOTP").click(function() {
+		$("#changeAddressPopup").hide();
+		$("wrapBG1").hide();
+		$("#showOTP").show();
+		$(".wrapBG").show();
+		var height = $(window).height();
+		$(".wrapBG1").css("height", height);
+		$("#showOTP").css("z-index", "999999");
+	});
+	$(".close").click(function() {
+		$("#showOTP").hide();
+		$(".wrapBG1").hide();
+	});
+});
+
