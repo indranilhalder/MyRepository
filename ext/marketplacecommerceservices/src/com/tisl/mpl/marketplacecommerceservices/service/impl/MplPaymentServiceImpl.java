@@ -36,6 +36,7 @@ import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
@@ -981,16 +982,25 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 
 		//EMI bank and tenure setup
-		if (StringUtils.isNotEmpty(response.getBankEmi()))
+		try
 		{
-			EMIBankModel emiBankModel = modelService.create(EMIBankModel.class);
-			emiBankModel.setCode(response.getBankEmi());
-			emiBankModel = flexibleSearchService.getModelByExample(emiBankModel);
-			emiPaymentInfoModel.setBankSelected(emiBankModel);
+			if (StringUtils.isNotEmpty(response.getBankEmi()))
+			{
+				EMIBankModel emiBankModel = modelService.create(EMIBankModel.class);
+				emiBankModel.setCode(response.getBankEmi());
+				emiBankModel = flexibleSearchService.getModelByExample(emiBankModel);
+				emiPaymentInfoModel.setBankSelected(emiBankModel);
+			}
+		}
+		catch (final ModelNotFoundException e)
+		{
+			LOG.error("EMIBank Model not found", e);
+			throw new EtailNonBusinessExceptions(e);
 		}
 		if (StringUtils.isNotEmpty(response.getBankTenure()))
 		{
-			emiPaymentInfoModel.setTermSelected(response.getBankEmi());
+			//emiPaymentInfoModel.setTermSelected(response.getBankEmi());
+			emiPaymentInfoModel.setTermSelected(response.getBankTenure());
 		}
 
 		//TODO:Add EMI related values from response to emiPaymentInfoModel

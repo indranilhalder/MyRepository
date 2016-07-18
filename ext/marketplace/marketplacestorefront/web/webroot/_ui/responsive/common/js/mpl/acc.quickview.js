@@ -116,9 +116,7 @@ function setBuyBoxDetails()
 								$(this).attr("disabled",true);
 								
 								$(this).css({
-									"color": "gray",
-						  "text-decoration": "line-through"
-						  
+									"color": "gray"
 							});
 								$(this).on("mouseenter",function(){
 									$(this).parent("li").css("background","#fff");
@@ -171,11 +169,12 @@ function setBuyBoxDetails()
 				//alert("--"+ $(".quickViewSelect").html());
 				
 				//if (allStockZero == 'Y' && data['othersSellersCount']>0) {
-				if (allStockZero == 'Y') {
-					if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
+				if (allStockZero == 'Y' && data['othersSellersCount']>0) { //TPR-465
+
+					//if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
 					$("#addToCartButtonQuick").hide();
 					$("#outOfStockIdQuick").show();
-					}					
+					//}					
 				}
 				/*else if (allStockZero == 'Y' && data['othersSellersCount']==0){
 					if($(".quickViewSelect").html()!="Select"){	//TISPRD-1173
