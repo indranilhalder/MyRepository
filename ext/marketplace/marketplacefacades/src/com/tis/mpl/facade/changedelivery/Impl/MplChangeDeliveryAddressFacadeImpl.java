@@ -4,6 +4,7 @@
 package com.tis.mpl.facade.changedelivery.Impl;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.user.converters.populator.AddressReversePopulator;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
@@ -270,12 +271,12 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 
 	@Override
-	public boolean isDeliveryAddressChangable(final OrderModel orderModel) throws EtailNonBusinessExceptions
+	public boolean isDeliveryAddressChangable(final OrderData orderData) throws EtailNonBusinessExceptions
 	{
 		boolean changable = false;
 		try
 		{
-			changable = mplChangeDeliveryAddressService.isDeliveryAddressChangable(orderModel);
+			changable = mplChangeDeliveryAddressService.isDeliveryAddressChangable(orderData);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
