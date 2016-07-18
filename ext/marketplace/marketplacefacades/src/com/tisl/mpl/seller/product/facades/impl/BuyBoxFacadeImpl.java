@@ -142,6 +142,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		final BuyBoxData buyboxData = new BuyBoxData();
 		boolean onlyBuyBoxHasStock = false;
 		BuyBoxModel buyBoxMod = null;
+
 		//TISPRM -56
 		String products[] = null;
 		final List<String> productsList = new ArrayList<String>();
@@ -152,7 +153,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 		if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)
 		{
-			products = productCode.split(",");
+			products = productCode.split(MarketplacecommerceservicesConstants.COMMA);
 		}
 		final List<String> arrayToProductList = new ArrayList<String>(Arrays.asList(products));
 		//END
@@ -843,7 +844,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 *
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
