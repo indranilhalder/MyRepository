@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
-import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplChangeDeliveryAddressDaoImpl;
+import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplChangeDeliveryAddressDao;
 //import com.tis.mpl.facade.changedelivery.Impl.ChangeDeliveryAddressFacadeImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.MplChangeDeliveryAddressService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
@@ -40,7 +40,7 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 	private MplSellerInformationService mplSellerInformationService;
 	
 	@Autowired
-	private MplChangeDeliveryAddressDaoImpl mplChangeDeliveryAddressDaoImpl;
+	private MplChangeDeliveryAddressDao mplChangeDeliveryAddressDao;
 	
 	@Autowired
 	private ModelService modelService;
@@ -154,7 +154,7 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 			if (StringUtils.isNotEmpty(orderCode))
 			{
 				OrderModel orderModel;
-				final TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDaoImpl.geTemproryAddressModel(orderCode);
+				final TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
 				orderModel = orderModelDao.getOrder(orderCode);
 
 				orderModel.setDeliveryAddress(temproryAddressModel);
@@ -178,8 +178,29 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 	@Override
 	public TemproryAddressModel geTemproryAddressModel(final String orderCode)
 	{
-		return mplChangeDeliveryAddressDaoImpl.geTemproryAddressModel(orderCode);
+		return mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
 	}
 
+
+	@Override
+	public void removeTemproryAddress(String orderCode)
+	{
+		try
+		{
+			if (StringUtils.isNotEmpty(orderCode))
+			{
+				final TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
+				if (temproryAddressModel != null)
+				{
+					modelService.remove(temproryAddressModel);
+				}
+			}
+		}
+		catch (NullPointerException exception)
+		{
+			LOG.error(" Remove TemprorydeliveryAddress" + exception.getMessage());
+		}
+
+	}
 
 }
