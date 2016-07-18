@@ -155,6 +155,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 
 
 	@Override
+	@Deprecated
 	public boolean addFavCategories(final String emailId, final List<String> codeList)
 	{
 		try
@@ -216,6 +217,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 	}
 
 	@Override
+	@Deprecated
 	public boolean addFavBrands(final String emailId, final List<String> codeList)
 	{
 		try

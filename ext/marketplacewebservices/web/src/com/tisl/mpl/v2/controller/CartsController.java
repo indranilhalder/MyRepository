@@ -2060,7 +2060,7 @@ public class CartsController extends BaseCommerceController
 				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug("************ Anonymous cart mobile **************" + cartId);
+					LOG.debug("************ Anonymous cart mobile removeCartEntryMobile **************" + cartId);
 				}
 			}
 			else
@@ -2068,7 +2068,7 @@ public class CartsController extends BaseCommerceController
 				cartModel = mplPaymentWebFacade.findCartValues(cartId);
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug("************ Logged-in cart mobile **************" + cartId);
+					LOG.debug("************ Logged-in cart mobile removeCartEntryMobile**************" + cartId);
 				}
 			}
 
@@ -2081,6 +2081,7 @@ public class CartsController extends BaseCommerceController
 			{
 				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9056);
 			}
+
 			for (final AbstractOrderEntryModel cartEntry : cartModel.getEntries())
 			{
 				if (cartEntry.getEntryNumber().intValue() == entryNumber.intValue())
@@ -2232,7 +2233,7 @@ public class CartsController extends BaseCommerceController
 				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug("************ Anonymous cart mobile **************" + cartId);
+					LOG.debug("************ Anonymous cart mobile updateCartEntryMobile**************" + cartId);
 				}
 			}
 			else
@@ -2240,7 +2241,7 @@ public class CartsController extends BaseCommerceController
 				cartModel = mplPaymentWebFacade.findCartValues(cartId);
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug("************ Logged-in cart mobile **************" + cartId);
+					LOG.debug("************ Logged-in cart mobile updateCartEntryMobile**************" + cartId);
 				}
 			}
 			if (cartModel != null)
@@ -2429,7 +2430,7 @@ public class CartsController extends BaseCommerceController
 				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug("************ Anonymous cart mobile **************" + cartId);
+					LOG.debug("************ Anonymous cart mobile cartCheckout**************" + cartId);
 				}
 			}
 			else
@@ -2437,16 +2438,14 @@ public class CartsController extends BaseCommerceController
 				cartModel = mplPaymentWebFacade.findCartValues(cartId);
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug("************ Logged-in cart mobile **************" + cartId);
+					LOG.debug("************ Logged-in cart mobile cartCheckout**************" + cartId);
 				}
 			}
 			// Validate Cart Model is not null
 			if (null != cartModel)
 			{
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cartModel);
-				LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus);
-				/*** Product Details ***/
-				LOG.debug("productCheckout CartModel to CartData of :" + cartId);
+				LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus + "productCheckout:" + cartId);
 				//cartData = getMplExtendedCartConverter().convert(cartModel);
 				cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
 				/**** Pincode check Details ***/
@@ -2564,12 +2563,12 @@ public class CartsController extends BaseCommerceController
 			if (userFacade.isAnonymousUser())
 			{
 				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
-				LOG.debug("************ Anonymous cart mobile **************" + cartId);
+				LOG.debug("************ Anonymous cart mobile displayOrderSummary**************" + cartId);
 			}
 			else
 			{
 				cartModel = mplPaymentWebFacade.findCartValues(cartId);
-				LOG.debug("************ Logged-in cart mobile **************" + cartId);
+				LOG.debug("************ Logged-in cart mobile displayOrderSummary**************" + cartId);
 			}
 			// Validate Cart Model is not null
 			if (null != cartModel)
@@ -3227,7 +3226,6 @@ public class CartsController extends BaseCommerceController
 			return null;
 		}
 	}
-
 
 	@SuppressWarnings(MarketplacewebservicesConstants.DEPRECATION)
 	@Secured(

@@ -21,11 +21,9 @@ import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
-import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.coupon.service.MplCouponService;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.CouponRestrictionService;
@@ -43,26 +41,20 @@ import com.tisl.mpl.wsdto.UnusedCouponsDTO;
 public class MplCouponWebServiceImpl implements MplCouponWebService
 {
 
-	@Autowired
+	@Resource
 	private ExtendedUserService extUserService;
 
-	@Autowired
-	private MplCouponFacade mplCouponFacade;
-
-	@Autowired
+	@Resource
 	private MplCouponService mplCouponService;
 
-	@Autowired
+	@Resource
 	private VoucherModelService voucherModelService;
 
-	@Autowired
+	@Resource
 	private ConfigurationService configurationService;
 
 	@Resource(name = "couponRestrictionService")
 	private CouponRestrictionService couponRestrictionService;
-
-	//@Autowired
-	//private DiscountUtility discountUtility;
 
 	/**
 	 * @Description : For getting the details of all the Coupons available for the User
@@ -73,38 +65,37 @@ public class MplCouponWebServiceImpl implements MplCouponWebService
 	public CommonCouponsDTO getCoupons(final int currentPage, final String emailId, final String usedCoupon, final String sortCode)
 	{
 		final CommonCouponsDTO couponDTO = new CommonCouponsDTO();
-		//final CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
-		//final List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
-		//	final List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
-		//final List<UsedCouponsDTO> usedCouponList = new ArrayList<UsedCouponsDTO>();
 		final List<UnusedCouponsDTO> unusedCouponList = new ArrayList<UnusedCouponsDTO>();
-		//final String savings = MarketplacecommerceservicesConstants.EMPTY;
+		UnusedCouponsDTO unusedCouponsDTO = null;
 		try
 		{
 			final CustomerModel customer = (CustomerModel) extUserService.getUserForUID(StringUtils.lowerCase(emailId));
 			//*Pagination For used Coupons
-			//TISPT-390 disable the Coupon
-			//final int pageSizeVoucherHistory = Integer.parseInt(configurationService.getConfiguration()
-			//		.getString(MarketplacewebservicesConstants.PAZE_SIZE_COUPONS, "20").trim());
-			//final PageableData pageableData = createPageableData(currentPage, pageSizeVoucherHistory, sortCode);
+			//TISPT-390 commented
 			/*
-			 * if (usedCoupon.equals(MarketplacecommerceservicesConstants.Y)) { final Map<String, Double> countSavedSumMap
-			 * = mplCouponFacade.getInvalidatedCouponCountSaved(customer);
+			 * final int pageSizeVoucherHistory = Integer.parseInt(configurationService.getConfiguration()
+			 * .getString(MarketplacewebservicesConstants.PAZE_SIZE_COUPONS, "20").trim()); final PageableData pageableData
+			 * = createPageableData(currentPage, pageSizeVoucherHistory, sortCode); if
+			 * (usedCoupon.equals(MarketplacecommerceservicesConstants.Y)) { final Map<String, Double> countSavedSumMap =
+			 * mplCouponFacade.getInvalidatedCouponCountSaved(customer);
 			 * 
 			 * final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = mplCouponFacade
 			 * .getVoucherHistoryTransactions(customer, pageableData);
 			 * 
-			 * final String totalCouponCount = String.valueOf(searchPageDataVoucherHistoryFinal.getPagination()
-			 * .getTotalNumberOfResults()); couponHistoryDTOList = searchPageDataVoucherHistoryFinal.getResults(); final
-			 * Collection<OrderModel> orders = customer.getOrders(); final List<OrderModel> orderList = new
-			 * ArrayList<OrderModel>(); if (CollectionUtils.isNotEmpty(orders)) { orderList.addAll(orders);
+			 * final String totalCouponCount = String
+			 * .valueOf(searchPageDataVoucherHistoryFinal.getPagination().getTotalNumberOfResults()); couponHistoryDTOList
+			 * = searchPageDataVoucherHistoryFinal.getResults(); final Collection<OrderModel> orders =
+			 * customer.getOrders(); final List<OrderModel> orderList = new ArrayList<OrderModel>(); if
+			 * (CollectionUtils.isNotEmpty(orders)) { orderList.addAll(orders);
 			 * 
 			 * } if (null != countSavedSumMap) { for (final Map.Entry<String, Double> iterator :
 			 * countSavedSumMap.entrySet()) { double value = 0.0d; if (null != iterator.getValue()) { value =
 			 * Math.round(iterator.getValue().doubleValue() * 100.0) / 100.0; } if (CollectionUtils.isNotEmpty(orderList))
-			 * { savings = String.valueOf(discountUtility.createPrice(orderList.get(0), Double.valueOf(value))
-			 * .getDoubleValue()); } if (null != couponHistoryStoreDTO.getSavedSum()) { couponDTO.setTotalSavings(savings);
-			 * } if (CollectionUtils.isNotEmpty(couponHistoryDTOList)) { couponDTO.setTotalCount(totalCouponCount);
+			 * { savings = String .valueOf(discountUtility.createPrice(orderList.get(0),
+			 * Double.valueOf(value)).getDoubleValue()); } if (null != couponHistoryStoreDTO.getSavedSum()) {
+			 * couponDTO.setTotalSavings(savings); } if (CollectionUtils.isNotEmpty(couponHistoryDTOList)) {
+			 * couponDTO.setTotalCount(totalCouponCount);
+			 * 
 			 * couponDTO.setTotalUniqueCouponsUsed(iterator.getKey()); } }
 			 * 
 			 * } if (CollectionUtils.isNotEmpty(couponHistoryDTOList)) { UsedCouponsDTO usedCoupondto = null; for (final
@@ -145,12 +136,11 @@ public class MplCouponWebServiceImpl implements MplCouponWebService
 						final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
 						/*
 						 * final UserRestrictionModel userRestrObj =
-						 * couponRestrictionService.getUserRestriction(promoVoucher); final List<PrincipalModel> <<<<<<< HEAD
-						 * restrCustomerList = userRestrObj != null ?
-						 * couponRestrictionService.getRestrictionCustomerList(userRestrObj) : new
-						 * ArrayList<PrincipalModel>();
+						 * couponRestrictionService.getUserRestriction(promoVoucher); final List<PrincipalModel>
+						 * restrCustomerList = userRestrObj != null ? couponRestrictionService
+						 * .getRestrictionCustomerList(userRestrObj) : new ArrayList<PrincipalModel>();
 						 */
-						UnusedCouponsDTO unusedCouponsDTO = null;
+
 						if (null != promoVoucher.getVoucherCode()
 								&& voucherModelService.isReservable(promoVoucher, promoVoucher.getVoucherCode(), customer))
 						//&& restrCustomerList.contains(customer))
@@ -200,6 +190,7 @@ public class MplCouponWebServiceImpl implements MplCouponWebService
 			{
 				couponDTO.setUnusedCouponsList(unusedCouponList);
 			}
+			//TISPT-390 commented
 			/*
 			 * if (CollectionUtils.isNotEmpty(usedCouponList)) { couponDTO.setUsedCouponsList(usedCouponList); }
 			 */

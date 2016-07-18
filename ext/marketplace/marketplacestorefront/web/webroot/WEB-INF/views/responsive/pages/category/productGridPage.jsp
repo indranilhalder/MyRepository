@@ -10,7 +10,7 @@
 <input type="hidden" id="categoryId" value="${categoryCode}"/>
 <input type="hidden" id="site_section" value="${site_section}"/>
 <template:page pageTitle="${pageTitle}">
-<div class="list_title"><h2>${dropDownText}</h2></div>
+<div class="list_title"><h1>${dropDownText}</h1></div>
 <div class="listing wrapper">
 	<c:if test="${searchPageData.pagination.totalNumberOfResults ne 0}">
 	<div class="left-block">

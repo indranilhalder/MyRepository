@@ -51,7 +51,6 @@ public interface MplCartFacade extends CartFacade
 	 * @throws CommerceCartModificationException
 	 *            if the cart cannot be modified
 	 */
-	@Override
 	CartModificationData addToCart(String code, long quantity, String ussid) throws CommerceCartModificationException;
 
 	/*
