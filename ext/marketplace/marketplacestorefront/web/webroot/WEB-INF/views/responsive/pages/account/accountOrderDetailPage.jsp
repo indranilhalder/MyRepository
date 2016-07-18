@@ -1560,46 +1560,10 @@ h4 {
             </div><!-- /.modal -->
             
             <div class="removeModalAfterLoad" id="showOTP">
-            	<div class="modal-dialog">
-			        <div class="modal-content">
-			         <form class="form-horizontal">
-			             <div class="modal-body">
-			             	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			             	<h4>One-Time-Password (OTP)</h4>
-			             	
-			             	To save the changes, please enter the One-Time-Password(OTP) received via SMS on your registered mobile number: XXXXXXX799 and click on 'submit'.
-			             	
-			             	<div class="row">
-			             		<div class="col-md-6 col-sm-6">
-			              		<label for="otp">One-Time-Password (OTP)*</label>
-							<input type="text" class="form-control textOTP" id="OTP" placeholder="******">
-							<div class="error_text"></div>
-			             		</div>
-			             		<div class="col-md-6 col-sm-6 otpMessage">
-			             			<span style="font-size: 10px">
-			             				If you did not receive OTP via SMS or your SMS-OTP has expired. Please click <a href="">here</a> to get new OTP to your mobile phone via SMS
-			             			</span>
-			             		</div>
-			             		
-			             	</div>
-			             </div>
-			             <p style="clear:both"></p>
-			             
-			              <p style="clear: both;"></p>
-			             <div class="modal-footer">
-			                 <button type="button" class="btn btn-primary" onclick="generateOTP('${subOrder.code}')">SUBMIT</button>
-			             </div>
-			         </form>
-			        </div>
-			    </div>
+            	   <order:otpPopup/>	
             </div>
         <div class="wrapBG" style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; z-index: 99999; display: none;"></div>
-
-
-
-
-		</div>
-	</div>
+        
 </template:page>
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
@@ -1903,6 +1867,51 @@ $(function() {
 				});
 		      } 
 	}	 
+	 
+	 
+	 function generateOTP(orderId){	
+			$.ajax({
+				type : "GET",
+				url : ACC.config.encodedContextPath + "/my-account/validationOTP",
+				data : "orderId=" + orderId + "&otpNumber="+$("#OTP").val(),
+				success : function(response) {
+					if(response=="pincodeNotServiceable"){
+						$("#changeAddressPopup").show();
+						$("wrapBG1").show();
+						$("#showOTP").hide();
+						$(".wrapBG").hide();
+						var height = $(window).height();
+						$(".wrapBG").css("height", height);
+						$("#changeAddressPopup").css("z-index", "999999");
+						$(".pincodeNoError").show();
+						$(".pincodeNoError").text(response);
+					}
+					else if(response=="INVALID"){
+						alert(response);
+						$("#changeAddressPopup").hide();
+						$("wrapBG1").hide();
+						$("#showOTP").show();
+						$(".wrapBG").show();
+						var height = $(window).height();
+						$(".wrapBG1").css("height", height);
+						$("#showOTP").css("z-index", "999999");	
+						$(".otpError").show();
+						$(".otpError").text.text("Please Re-enter OTP.");
+						
+					}else{
+						console.log(response);
+					    location.reload();
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+				  console.log(textStatus, errorThrown);
+				  $("#showOTP .error_text").text("Please Re-enter OTP.");
+				  
+				}
+			}); 
+
+		}	 
+	 
 	$(document).ready(function(){
 		    var length = $(".returnStatus .dot").length;
 		    if(length >=3) {
@@ -1935,27 +1944,4 @@ $(function() {
 		 });
 		 //$(".pickupeditbtn").hide(); 
 	 });	 
-	
-	
-	function generateOTP(orderId) {	
-		console.log(orderId);
-		console.log($("#OTP").val());
-
-		$.ajax({
-			type : "POST",
-			url : ACC.config.encodedContextPath + "/my-account/validationOTP",
-			data : "orderId=" + orderId + "&otpNumber="+$("#OTP").val(),
-			success : function(response) {
-				alert("Hi" +response);
-				console.log(response);
-				location.reload();
-			},
-			error: function(jqXHR, textStatus, errorThrown) {
-			  console.log(textStatus, errorThrown);
-			  $("#showOTP .error_text").text("Please Re-enter OTP.");
-			  
-			}
-		});
-
-	}
 </script>
