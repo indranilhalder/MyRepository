@@ -24,7 +24,7 @@ var homePageBannerTimeout='${timeout}';
 					<!-- START: code for adding  3 sided and  4 sided banner component-->
 					<c:choose>
 						<c:when test="${ banner.type eq 'Big 3 Sided Banner Component'}">
-							<div class="hero">
+							<div class="hero icid">
 								<div class="image">
 									<img src="${banner.bannerImage.url}">
 								</div>
@@ -40,7 +40,7 @@ var homePageBannerTimeout='${timeout}';
 
 
 						<c:when test="${ banner.type eq 'Big 4 Sided Banner Component'}">
-							<div class="hero fourPromoBanner">
+							<div class="hero icid fourPromoBanner">
 								<div class="image">
 									<img src="${banner.bannerImage.url}">
 								</div>
@@ -102,7 +102,7 @@ var homePageBannerTimeout='${timeout}';
 					<!-- START: code for adding  3 sided and  4 sided banner component-->
 					<c:choose>
 						<c:when test="${ banner.type eq 'Big 3 Sided Banner Component'}">
-							<div class="hero">
+							<div class="hero icid">
 								<div class="image">
 									<img src="${banner.bannerImage.url}">
 								</div>
@@ -118,7 +118,7 @@ var homePageBannerTimeout='${timeout}';
 
 
 						<c:when test="${ banner.type eq 'Big 4 Sided Banner Component'}">
-							<div class="hero fourPromoBanner">
+							<div class="hero icid fourPromoBanner">
 								<div class="image">
 									Hello<img src="${banner.bannerImage.url}">
 								</div>
