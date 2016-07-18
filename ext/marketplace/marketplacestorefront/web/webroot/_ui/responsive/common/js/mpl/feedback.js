@@ -1715,3 +1715,51 @@ function sizeSwatch() {
 
 }
 /*colour and size swatch 3 lines TISPRM-123*/
+
+/*added for gigya   TISPT-203 */
+function callGigya(){
+	//Start
+	
+	$.ajax({
+	        type: "GET",
+	        url:gigyasocialloginurl+'?apikey='+gigyaApiKey,
+	        success: function() {
+	        	 $.ajax({
+	 		        type: "GET",
+	 		        url: commonResource+'/js/minified/acc.gigya.min.js?v='+buildNumber,
+	 		        success: function() {
+	 		        	loadGigya();
+	 		        },
+	 		        dataType: "script",
+	 		        cache: true
+	 		    });
+	        },
+	        dataType: "script",
+	        cache: true
+	    });
+	//End 
+}
+
+function callGigyaWhenNotMinified(){
+	//Start
+	$.ajax({
+	        type: "GET",
+	        url:gigyasocialloginurl+'?apikey='+gigyaApiKey,
+	        success: function() {
+	        	 $.ajax({
+	 		        type: "GET",
+	 		        url: commonResource+'/js/minified/acc.gigya.js?v='+buildNumber,
+	 		        success: function() {
+	 		        	loadGigya();
+	 		        },
+	 		        dataType: "script",
+	 		        cache: true
+	 		    });
+	        },
+	        dataType: "script",
+	        cache: true
+	    });
+	//End 
+}
+
+/* Changes for TISPT-203 ends  */

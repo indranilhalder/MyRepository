@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -794,6 +795,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		{
 			searchQueryData.setCategoryCode(categoryCode);
 		}
+
+		final SolrSearchQueryTermData solrSearchQueryTermDataCategory = new SolrSearchQueryTermData();
+
+		//TISPRD-3816 starts
+		if (StringUtils.isNotEmpty(categoryCode) && !searchState.isSns()
+				&& (categoryCode.startsWith("MBH") || categoryCode.startsWith("mbh")))
+		{
+			solrSearchQueryTermDataCategory.setKey("brand");
+			solrSearchQueryTermDataCategory.setValue(categoryCode);
+			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermDataCategory));
+
+		}
+		//TISPRD-3816 ends
 		searchQueryData.setSns(searchState.isSns());
 		return searchQueryData;
 	}
