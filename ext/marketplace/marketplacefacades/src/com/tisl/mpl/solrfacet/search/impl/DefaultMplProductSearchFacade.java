@@ -435,11 +435,11 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		{
 			final SolrSearchQueryTermData solrSearchQueryTermData1 = new SolrSearchQueryTermData();
 
-			if (categoryCode.startsWith("MSH"))
+			if (categoryCode.startsWith(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
 			{
 				solrSearchQueryTermData1.setKey(MarketplaceCoreConstants.CATEGORY);
 			}
-			else if (categoryCode.startsWith("MBH"))
+			else if (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX))
 			{
 				solrSearchQueryTermData1.setKey(MarketplaceCoreConstants.BRAND);
 			}
@@ -477,7 +477,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 			final SolrSearchQueryTermData solrSearchQueryTermDataCategory = new SolrSearchQueryTermData();
 
-			if (categoryCode.startsWith("MBH"))
+			if (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX))
 			{
 
 				solrSearchQueryTermDataCategory.setKey(MarketplaceCoreConstants.BRAND);
@@ -738,11 +738,11 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		if (categoryCode != null)
 		{
 
-			if (categoryCode.startsWith("MSH"))
+			if (categoryCode.startsWith(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
 			{
 				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
 			}
-			else if (categoryCode.startsWith("MBH"))
+			else if (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX))
 			{
 				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.BRAND);
 			}
@@ -799,8 +799,10 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryTermData solrSearchQueryTermDataCategory = new SolrSearchQueryTermData();
 
 		//TISPRD-3816 starts
-		if (StringUtils.isNotEmpty(categoryCode) && !searchState.isSns()
-				&& (categoryCode.startsWith("MBH") || categoryCode.startsWith("mbh")))
+		if (StringUtils.isNotEmpty(categoryCode)
+				&& !searchState.isSns()
+				&& (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX) || categoryCode
+						.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX_LOWER)))
 		{
 			solrSearchQueryTermDataCategory.setKey("brand");
 			solrSearchQueryTermDataCategory.setValue(categoryCode);
