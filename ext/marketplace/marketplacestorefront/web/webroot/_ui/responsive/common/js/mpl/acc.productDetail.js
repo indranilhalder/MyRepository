@@ -1205,7 +1205,6 @@ $( document ).ready(function() {
 		dataType : "json",
 		success : function(data) {
 			//TISPRM-56
-			//var stockInfo = '{"mp000000000124935":"1","mp000000000126616":"2","mp000000000126175":"0","mp000000000124936":"0"}';
 			var stockInfo = data['availibility'];
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
@@ -2066,6 +2065,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#nosellerVal").val(nosellerData);
 				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice,savingsOnProduct);
 				//if(availableStock==0  && $(".variant-select-sizeGuidePopUp option:selected").val()!="#"){	//changes for TISPRO-338
+
 				if(availableStock==0){	//changes for TPR-465	
 				$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();

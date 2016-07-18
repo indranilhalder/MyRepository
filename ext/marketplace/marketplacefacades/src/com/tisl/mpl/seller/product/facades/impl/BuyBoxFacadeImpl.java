@@ -151,8 +151,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>();
 		List<String> productsWithNoStock = new ArrayList<String>();
 
+
 		if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)
 		{
+
 			products = productCode.split(MarketplacecommerceservicesConstants.COMMA);
 		}
 		final List<String> arrayToProductList = new ArrayList<String>(Arrays.asList(products));

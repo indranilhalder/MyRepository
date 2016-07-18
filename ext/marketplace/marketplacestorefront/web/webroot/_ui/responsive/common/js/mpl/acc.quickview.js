@@ -170,6 +170,7 @@ function setBuyBoxDetails()
 				
 				//if (allStockZero == 'Y' && data['othersSellersCount']>0) {
 				if (allStockZero == 'Y' && data['othersSellersCount']>0) { //TPR-465
+
 					//if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
 					$("#addToCartButtonQuick").hide();
 					$("#outOfStockIdQuick").show();
