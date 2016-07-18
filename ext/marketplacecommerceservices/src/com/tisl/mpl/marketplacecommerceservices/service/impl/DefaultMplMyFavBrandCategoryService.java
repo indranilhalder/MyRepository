@@ -263,6 +263,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 	}
 
 	@Override
+	@Deprecated
 	public boolean addFavCategories(final String emailId, final List<String> codeList)
 	{
 		boolean result = false;
@@ -348,8 +349,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					{
 						//"Inside if, device id consists of categories
 						styleProfileModelUpdate = myStyleProfileList.get(0);
-
-						selectedCategory = new ArrayList(styleProfileModelUpdate.getPreferredCategory());
+						if (styleProfileModelUpdate.getPreferredCategory() != null)
+						{
+							selectedCategory = new ArrayList(styleProfileModelUpdate.getPreferredCategory());
+						}
 						final List<CategoryModel> newEntries = fetchCategoryData(codeList);
 						for (final CategoryModel entry : newEntries)
 						{
@@ -432,6 +435,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 
 
 	@Override
+	@Deprecated
 	public boolean addFavBrands(final String emailId, final List<String> codeList)
 	{
 		boolean result = false;
@@ -521,7 +525,10 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 					{
 						//Inside if, device id consists of brands
 						styleProfileModelUpdate = myStyleProfileList.get(0);
-						selectedBrands = new ArrayList(styleProfileModelUpdate.getPreferredBrand());
+						if (styleProfileModelUpdate.getPreferredBrand() != null)
+						{
+							selectedBrands = new ArrayList(styleProfileModelUpdate.getPreferredBrand());
+						}
 						final List<CategoryModel> newEntries = fetchCategoryData(codeList);
 						for (final CategoryModel entry : newEntries)
 						{
