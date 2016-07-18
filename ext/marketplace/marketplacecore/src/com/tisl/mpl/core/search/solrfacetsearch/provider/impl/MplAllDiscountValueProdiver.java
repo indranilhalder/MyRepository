@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
+
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
@@ -28,11 +29,10 @@ import com.tisl.mpl.util.MplBuyBoxUtility;
 
 
 /**
- * @author TCS
+ * @author 880282
  *
  */
-public class MplDiscountedPriceValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
-		Serializable
+public class MplAllDiscountValueProdiver extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 	private MplBuyBoxUtility mplBuyBoxUtility;
@@ -65,11 +65,6 @@ public class MplDiscountedPriceValueProvider extends AbstractPropertyFieldValueP
 	{
 		this.fieldNameProvider = fieldNameProvider;
 	}
-
-
-	/**
-	 * checking discounted price
-	 */
 
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
@@ -109,7 +104,7 @@ public class MplDiscountedPriceValueProvider extends AbstractPropertyFieldValueP
 
 		final List fieldValues = new ArrayList();
 
-		addFieldValues(fieldValues, indexedProperty, null, Double.valueOf(checkIfDiscountExist(indexConfig, product)));
+		addFieldValues(fieldValues, indexedProperty, null, checkIfDiscountExist(indexConfig, product));
 
 		return fieldValues;
 	}
@@ -126,34 +121,48 @@ public class MplDiscountedPriceValueProvider extends AbstractPropertyFieldValueP
 	 * @param indexConfig
 	 * @param product
 	 */
-	private double checkIfDiscountExist(final IndexConfig indexConfig, final ProductModel product)
+	private String checkIfDiscountExist(final IndexConfig indexConfig, final ProductModel product)
 	{
 
-		//	boolean offerExists = false;
-		//final double discountedPrice = 0.0;
-		double discountedPercent = 0.0;
+		boolean offerExists = false;
+		//		double percentDiscount = 0.0;
 		final BuyBoxModel buyboxWinner = mplBuyBoxUtility.getLeastPriceBuyBoxModel(product);
 		if (buyboxWinner != null)
 		{
 
 			if (null != buyboxWinner.getSpecialPrice() && buyboxWinner.getSpecialPrice().intValue() > 0)
 			{
-				//	offerExists = true;
-				// TISPRM-133
-				discountedPercent = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getSpecialPrice().doubleValue()) * 100)
-						/ buyboxWinner.getMrp().doubleValue();
+
+				// TISPRM-92
+				if (buyboxWinner.getMrp().doubleValue() - buyboxWinner.getSpecialPrice().doubleValue() > 0)
+				{
+					offerExists = true;
+					//					percentDiscount = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getSpecialPrice().doubleValue()) * 100) / buyboxWinner.getMrp().doubleValue();
+				}
+
 			}
 			else if (null != buyboxWinner.getPrice() && buyboxWinner.getPrice().intValue() > 0
 					&& buyboxWinner.getMrp().intValue() > buyboxWinner.getPrice().intValue())
 			{
-				//offerExists = true;
-				//Discount in percent
-				// TISPRM-133
-				discountedPercent = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getPrice().doubleValue()) * 100)
-						/ buyboxWinner.getMrp().doubleValue();
+
+				// TISPRM-92
+				if (buyboxWinner.getMrp().doubleValue() - buyboxWinner.getPrice().doubleValue() > 0)
+				{
+					offerExists = true;
+					//					percentDiscount = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getPrice().doubleValue()) * 100) / buyboxWinner.getMrp().doubleValue();
+				}
 			}
 		}
-		return discountedPercent;
+
+		if (offerExists)
+		{
+			return "Discounted Items";
+		}
+		else
+		{
+			return null;
+		}
+
 
 	}
 

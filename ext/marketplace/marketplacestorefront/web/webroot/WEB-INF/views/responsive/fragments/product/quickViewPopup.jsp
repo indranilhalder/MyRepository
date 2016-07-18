@@ -92,6 +92,7 @@ tr.d0 td {
  var productSizeQuickVar = '${productSizeQuick}';
  var emiCuttOffAmount = '${emiCuttOffAmount}';
  var productCodeQuickView = '${product.code}';
+ var variantCodesPdp = '${allVariantsString}';
 
  
  $( document ).ready(function() {
@@ -469,6 +470,9 @@ display:none;
 	</p>
 	<p class="sale" id="quickSpPriceId" style="display:none">
 	</p>
+	<p class="savings pdp-savings" id="savingsOnProductIdQV" style="display:none">															
+	  <span></span>
+	</p>
     
   </div>   
 <a href="#" class="gig--readReviewsLink"></a>
@@ -696,9 +700,11 @@ display:none;
 						</table>
 
 						 <input type="hidden" name="hidWishlist" id="hidWishlist_quick">
+						 <p id='wishlistErrorId_quick' style="display: none ; color:red ;"> </p>
 						<span id="addedMessage_quick" style="display:none;color:#60A119"></span>
+						<input type="hidden" name="alreadyAddedWlName_quick" id="alreadyAddedWlName_quick">
 						
-						<button type='button' onclick="addToWishlist_quick()" name='saveToWishlist' id='saveToWishlist' class="savetowishlistbutton"><spring:theme code="product.wishlistBt"/></button>
+						<button type='button' onclick="addToWishlist_quick($('#alreadyAddedWlName_quick').val())" name='saveToWishlist' id='saveToWishlist' class="savetowishlistbutton"><spring:theme code="product.wishlistBt"/></button>
 					</div>
 
 					<div id="wishListNonLoggedInId_quick" style="display: none"><spring:theme code="product.wishListNonLoggedIn"/></div>
