@@ -40,4 +40,6 @@ public boolean changeDeliveryAddress(String orderCode);
  * @return TemproryAddressModel
  */
 public TemproryAddressModel geTemproryAddressModel(String orderCode);
+
+public void removeTemproryAddress(String orderCode);
 }
