@@ -493,6 +493,9 @@
 			type="de.hybris.platform.commercefacades.order.data.ImeiDetailData"></property>
 			<property name="productPromoCode"
 			type="String"></property>
+		<!-- TISPT-385-->	
+			<property name="parentTransactionID"
+			type="String"></property>
 	</bean>
 	
 	<bean class="de.hybris.platform.commercefacades.order.data.ImeiDetailData">

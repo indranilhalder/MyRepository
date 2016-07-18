@@ -42,12 +42,12 @@ public class MplCouponWebServiceImpl implements MplCouponWebService
 {
 
 	@Resource
-	private ExtendedUserService extUserService;
+	private ExtendedUserService extendedUserService;
 
 	@Resource
 	private MplCouponService mplCouponService;
 
-	@Resource
+	@Resource(name = "voucherModelService")
 	private VoucherModelService voucherModelService;
 
 	@Resource
@@ -69,7 +69,7 @@ public class MplCouponWebServiceImpl implements MplCouponWebService
 		UnusedCouponsDTO unusedCouponsDTO = null;
 		try
 		{
-			final CustomerModel customer = (CustomerModel) extUserService.getUserForUID(StringUtils.lowerCase(emailId));
+			final CustomerModel customer = (CustomerModel) extendedUserService.getUserForUID(StringUtils.lowerCase(emailId));
 			//*Pagination For used Coupons
 			//TISPT-390 commented
 			/*
