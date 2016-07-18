@@ -107,7 +107,6 @@
 
 		<collectiontype elementtype="java.lang.String" code="mplImageUrl"
 			autocreate="true" generate="true" type="list" />
-
 	</collectiontypes>
 
 
@@ -4953,6 +4952,10 @@
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="crmSubmitStatus" type="java.lang.String">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="deliveryAddresses" type="AddressCollection">
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
