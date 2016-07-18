@@ -787,6 +787,11 @@
  			<value code="no" />
  		</enumtype>
  		<!-- added by i324321 end -->
+ 		
+ 		 <enumtype code="deliveryAddressEnum" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="pincodeNotServiceable" />
+		</enumtype>
 	</enumtypes>
 		<!-- Product Feature Enum Ends -->
 
