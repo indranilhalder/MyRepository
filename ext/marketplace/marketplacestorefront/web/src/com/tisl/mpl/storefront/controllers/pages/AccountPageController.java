@@ -191,7 +191,6 @@ import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.model.cms.components.MyWishListInHeaderComponentModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.GigyaService;
@@ -1084,8 +1083,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 
 
-			changeDeliveryAddressStatus = changeDeliveryAddressStatus ? mplOrderFacade.changeShippingAddressStatus(orderDetail)
-					: false;
+			changeDeliveryAddressStatus = changeDeliveryAddressStatus ? mplchangeDeliveryAddressFacade
+					.isDeliveryAddressChangable(orderDetail) : false;
 			model.addAttribute("editShippingAddressStatus", changeDeliveryAddressStatus);
 			if (changeDeliveryAddressStatus)
 			{
@@ -6972,19 +6971,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 
-	@RequestMapping(value = "/{orderCode}/changeDeliveryAddress", method =RequestMethod.GET)
+	@RequestMapping(value = "/{orderCode}/changeDeliveryAddress", method = RequestMethod.GET)
 	@ResponseBody
 	public String changeDeliveryAddress(@PathVariable final String orderCode,
 			@ModelAttribute("addressForm") final AccountAddressForm addressForm)
 	{
 
-		 String validatetionCheckMsg=null;
+		String validatetionCheckMsg = null;
 		LOG.debug("AddressForm validation ");
 		final String errorMsg = mplAddressValidator.validate(addressForm);
 
 		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCCESS))
 		{
-			boolean flag=false;
+			boolean flag = false;
 			final AddressData addressData = new AddressData();
 			addressData.setAddressType(addressForm.getAddressType());
 			addressData.setId(addressForm.getAddressId());
@@ -6999,19 +6998,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 			addressData.setPostalCode(addressForm.getPostcode());
 			addressData.setState(addressForm.getState());
 			addressData.setBillingAddress(false);
-			addressData.setShippingAddress(true);	
+			addressData.setShippingAddress(true);
 			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
 			{
 				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
 				addressData.setCountry(countryData);
 			}
-			
-	           LOG.debug("Save TemproryAddressModel and OTP genarate");
-	    flag=mplchangeDeliveryAddressFacade.saveAsTemproryAddressForCustomer(orderCode, addressData);
-	    
-	    if(flag){
-	   	 validatetionCheckMsg="success";
-	    }	
+
+			LOG.debug("Save TemproryAddressModel and OTP genarate");
+			flag = mplchangeDeliveryAddressFacade.saveAsTemproryAddressForCustomer(orderCode, addressData);
+
+			if (flag)
+			{
+				validatetionCheckMsg = "success";
+			}
 		}
 		else
 		{
@@ -7028,14 +7028,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public String validateOTP(@RequestParam(value = "orderId") final String orderId,
 			@RequestParam(value = "otpNumber") final String enteredOTPNumber)
 	{
-		String validateOTPMesg=null;
+		String validateOTPMesg = null;
 		final CustomerData customerData = customerFacade.getCurrentCustomer();
 		final String customerId = customerData.getUid();
 		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
 		{
 			LOG.debug("OTP Validation And Oms Calling status");
-			validateOTPMesg = mplchangeDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber,orderId);
-		}	
+			validateOTPMesg = mplchangeDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber, orderId);
+		}
 		return validateOTPMesg;
 
 	}
