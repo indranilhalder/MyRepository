@@ -23,7 +23,6 @@ import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,6 +45,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -84,6 +84,9 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
+	
+	@Resource(name = "mplPincodeConverter")
+	private Converter<PincodeModel, PincodeData> mplPincodeConverter;
 
 
 	/**
@@ -623,6 +626,53 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	public List<Location> getSortedLocationsNearby(final GPS gps, final double distance, final String sellerId)
 	{
 		return pincodeService.getSortedLocationsNearby(gps, distance, sellerId);
+	}
+	
+	/**
+	 * Get the Pincode Details
+	 *
+	 * @param pincode
+	 * @return PincodeData
+	 */
+	@Override
+	public PincodeData getAutoPopulatePincodeData(final String pincode)
+	{
+		PincodeData pincodeData = null;
+		LOG.debug("Pincode Facade Class :"+pincode);
+		try
+		{
+			final PincodeModel pincodeModel = pincodeService.getDetailsOfPincode(pincode);
+			LOG.debug("Getting Pincode  Details of the Pincode and call to Converted");
+			if(null != pincodeModel)
+			{
+				pincodeData = getMplPincodeConverter().convert(pincodeModel);
+			}
+		}
+		catch (final Exception ex)
+		{
+			throw ex;
+		}
+		return pincodeData;
+	}
+
+
+
+	/**
+	 * @return the mplPincodeConverter
+	 */
+	public Converter<PincodeModel, PincodeData> getMplPincodeConverter()
+	{
+		return mplPincodeConverter;
+	}
+
+
+
+	/**
+	 * @param mplPincodeConverter the mplPincodeConverter to set
+	 */
+	public void setMplPincodeConverter(Converter<PincodeModel, PincodeData> mplPincodeConverter)
+	{
+		this.mplPincodeConverter = mplPincodeConverter;
 	}
 
 }
