@@ -3,6 +3,7 @@
  */
 package com.tis.mpl.facade.changedelivery;
 
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -18,7 +19,7 @@ public interface MplChangeDeliveryAddressFacade
 
 	public void createcrmTicketForChangeDeliveryAddress(OrderModel order, String customerId, String source);
 
-	public boolean isDeliveryAddressChangable(OrderModel order);
+	public boolean isDeliveryAddressChangable(OrderData orderData);
 
 	/**
 	 *
@@ -35,6 +36,6 @@ public interface MplChangeDeliveryAddressFacade
 	 * @param enteredOTPNumber
 	 * @return String msg Valid or not
 	 */
-	public String validateOTP(String customerId, String enteredOTPNumber,String orderCode);
+	public String validateOTP(String customerId, String enteredOTPNumber, String orderCode);
 
 }
