@@ -45,7 +45,7 @@
     <!-- Landmarks Data Importing -->
     <bean id="batchMplLandMarksConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="LandMarks"
+    p:mapping="Landmarks"
     p:converter-ref="batchMplLandMarksConverter"/>
     
     
