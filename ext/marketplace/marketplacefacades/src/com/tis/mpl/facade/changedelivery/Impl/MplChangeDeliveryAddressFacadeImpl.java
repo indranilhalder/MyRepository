@@ -30,7 +30,9 @@ import com.tisl.mpl.data.ReturnAddressInfo;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.enums.OTPTypeEnum;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplChangeDeliveryAddressService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.service.MplChangeDeliveryAddressClientService;
@@ -57,15 +59,18 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	private OTPGenericService otpGenericService;
 	@Autowired
 	private AddressReversePopulator addressReversePopulator;
+	@Autowired
+	private CustomOmsOrderService customOmsOrderService;
 
 	private static final Logger LOG = Logger.getLogger(MplChangeDeliveryAddressFacadeImpl.class);
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tis.mpl.facade.changedelivery.ChangeDeliveryAddressFacade#changeDeliveryRequestToOMS(java.lang.String,
 	 * de.hybris.platform.core.model.user.AddressModel)
 	 */
+
 	@Override
 	public boolean changeDeliveryRequestCallToOMS(final String orderId, final AddressModel newDeliveryAddress)
 	{
@@ -253,15 +258,26 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 
 	@Override
-	public boolean isDeliveryAddressChangable(final OrderModel orderModel)
+	public boolean isDeliveryAddressChangable(final OrderModel orderModel) throws EtailNonBusinessExceptions
 	{
-
-		final boolean changable = mplChangeDeliveryAddressService.isDeliveryAddressChangable(orderModel);
+		boolean changable = false;
+		try
+		{
+			changable = mplChangeDeliveryAddressService.isDeliveryAddressChangable(orderModel);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw new EtailNonBusinessExceptions(e.getRootCause());
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occurred " + e.getMessage());
+		}
 		return changable;
 	}
 
-	
-	
+
+
 
 	@Override
 	public String saveAsTemproryAddressForCustomer(final String customerId, final String orderCode, final AddressData addressData)
@@ -272,11 +288,11 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		{
 			if (StringUtils.isNotEmpty(addressData.getPhone()))
 			{
-				TemproryAddressModel temproryAddressModel = new TemproryAddressModel();
+				final TemproryAddressModel temproryAddressModel = new TemproryAddressModel();
 				addressReversePopulator.populate(addressData, temproryAddressModel);
 				//First Save Address into temproryAddressModel
-		
-				flag = mplChangeDeliveryAddressService.saveAsTemproryAddressForCustomer(orderCode ,temproryAddressModel);
+
+				flag = mplChangeDeliveryAddressService.saveAsTemproryAddressForCustomer(orderCode, temproryAddressModel);
 				if (flag)
 				{
 					final String mobileNumber = addressData.getPhone();
@@ -314,14 +330,14 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 	/**
 	 * First Check OTP If OTP Validate then Call To OMS
-	 * 
+	 *
 	 * @param customerID
 	 * @param enteredOTPNumber
 	 * @param orderCode
 	 * @return Validation flag Value
 	 */
 	@Override
-	public String validateOTP(final String customerID, final String enteredOTPNumber, String orderCode)
+	public String validateOTP(final String customerID, final String enteredOTPNumber, final String orderCode)
 	{
 		String valditionMsg = null;
 		Boolean otpValidate;
@@ -329,23 +345,26 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		final OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.COD,
 				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
 
-	   	otpValidate = otpResponse.getOTPValid();
+		otpValidate = otpResponse.getOTPValid();
 
 		//If OTP Valid then call to OMS for Pincode ServiceableCheck
 		if (otpValidate.booleanValue())
 		{
-			TemproryAddressModel addressModel = mplChangeDeliveryAddressService.geTemproryAddressModel(orderCode);
+			final TemproryAddressModel addressModel = mplChangeDeliveryAddressService.geTemproryAddressModel(orderCode);
 
 			boolean flag = changeDeliveryRequestCallToOMS(orderCode, addressModel);
 			if (flag)
 			{
-				//if Serviceable Pincode then Save in Order and remove to temporaryAddressModel  
+				//if Serviceable Pincode then Save in Order and remove to temporaryAddressModel
 				flag = mplChangeDeliveryAddressService.changeDeliveryAddress(orderCode);
-			}else{
+			}
+			else
+			{
 				return valditionMsg = "This Pincode not serviceable";
 			}
 		}
-		else	{
+		else
+		{
 			valditionMsg = otpResponse.getInvalidErrorMessage();
 		}
 		return valditionMsg;
