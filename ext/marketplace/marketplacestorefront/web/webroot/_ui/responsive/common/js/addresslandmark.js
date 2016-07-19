@@ -53,10 +53,10 @@ function changeFunction(value) {
 }
 
 
-$(document).ready(
-		function() {
+$(document).ready(function() {
 			$("#deliveryAddressForm").submit(
 					function(event) {
+						$(".main_error").hide();
 						if ($("#firstName").val().length < 1) {
 							$(".firstNameError").show();
 							$(".firstNameError").text("First Name cannot be Blank");
@@ -85,7 +85,9 @@ $(document).ready(
 							  contentType: "application/json",
 							  dataType: 'json',
 							success : function(result) {
-								if(result="sucess"){
+								alert("AJAX Call Success"+result);
+								if(result=="success"){
+									alert("Save Success");
 									$("#changeAddressPopup").hide();
 									$("wrapBG1").hide();
 									$("#showOTP").show();
@@ -94,7 +96,8 @@ $(document).ready(
 									$(".wrapBG1").css("height", height);
 									$("#showOTP").css("z-index", "999999");
 								}else{
-									 $("#changeAddressPopup .error_text").text("Please Re-enter Address.");
+									$(".main_error").show();
+									 $("#changeAddressPopup .main_error").text("Please Re-Check the data, there is some error.");
 								}
 
 							},
@@ -106,10 +109,9 @@ $(document).ready(
 						}
 						event.preventDefault();
 					});
-		});
 
 
-$(document).ready(function() {
+
 	$("#geneateOTP").click(function() {
 		$("#changeAddressPopup").hide();
 		$("wrapBG1").hide();
@@ -119,9 +121,17 @@ $(document).ready(function() {
 		$(".wrapBG1").css("height", height);
 		$("#showOTP").css("z-index", "999999");
 	});
+	
+	
 	$(".close").click(function() {
 		$("#showOTP").hide();
 		$(".wrapBG1").hide();
 	});
+	
+	$(".addAddressToForm").click(function(){
+		//console.log($(this).attr("data-item"));
+		var className = $(this).attr("data-item");
+		$("#firstName").val($("."+className+" .firstName").text());
+	});
+	
 });
-
