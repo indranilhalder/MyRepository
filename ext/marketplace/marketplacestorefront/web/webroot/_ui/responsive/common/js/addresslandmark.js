@@ -111,7 +111,6 @@ $(document).ready(function() {
 					});
 
 
-
 	$("#geneateOTP").click(function() {
 		$("#changeAddressPopup").hide();
 		$("wrapBG1").hide();
@@ -133,5 +132,5 @@ $(document).ready(function() {
 		var className = $(this).attr("data-item");
 		$("#firstName").val($("."+className+" .firstName").text());
 	});
-	
+		
 });
