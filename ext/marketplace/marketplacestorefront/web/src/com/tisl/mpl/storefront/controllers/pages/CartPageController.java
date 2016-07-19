@@ -776,13 +776,14 @@ public class CartPageController extends AbstractPageController
 								{
 									ussidMap.put(productData.getCode(), entryModel.getUssid());
 									model.addAttribute("ussidMap", ussidMap);
-									model.addAttribute("sellerName", sellerName);
+									//model.addAttribute("sellerName", sellerName);
+									productData.setSellerName(sellerName); //Added for TISPRD-3799
 									LOG.info("Category of the product selected >>>>>>>>>>>>>>>>>>" + productData.getRootCategory());
 								}
 								if (StringUtils.isNotEmpty(fulfillmentType))
 								{
-									model.addAttribute("fulfillmentType", fulfillmentType);
-
+									//model.addAttribute("fulfillmentType", fulfillmentType); //Added for TISPRD-3799
+									productData.setFulfillmentType(fulfillmentType);
 								}
 							}
 

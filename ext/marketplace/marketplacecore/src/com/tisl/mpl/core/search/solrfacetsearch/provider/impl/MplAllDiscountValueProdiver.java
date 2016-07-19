@@ -160,7 +160,7 @@ public class MplAllDiscountValueProdiver extends AbstractPropertyFieldValueProvi
 		}
 		else
 		{
-			return null;
+			return "Non - Discounted Items";
 		}
 
 
