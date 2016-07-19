@@ -26,6 +26,8 @@
 </style>
 <c:set var="hasShippedItems" value="${cartData.deliveryItemsQuantity > 0}" />
 <c:set var="deliveryAddress" value="${cartData.deliveryAddress}"/>
+<c:set var="deliveryAddressLine2" value="${fn:trim(deliveryAddress.line2)}"/>
+<c:set var="deliveryAddressLine3" value="${fn:trim(deliveryAddress.line3)}"/>
 
 <c:if test="${not hasShippedItems}">
 	<%-- <spring:theme code="checkout.pickup.no.delivery.required"/> --%>
@@ -44,10 +46,12 @@
 					<c:if test="${ not empty deliveryAddress.line1 }">
 						${fn:escapeXml(deliveryAddress.line1)},&nbsp;
 					</c:if>
-					<c:if test="${ not empty deliveryAddress.line2 }">
+					<c:if test="${ not empty deliveryAddressLine2 }">
+					
 						${fn:escapeXml(deliveryAddress.line2)},
 					</c:if>
-					<c:if test="${ not empty deliveryAddress.line3 }">
+					<c:if test="${ not empty deliveryAddressLine3 }">
+					2222222
 						${fn:escapeXml(deliveryAddress.line3)},
 					</c:if>
 					<br>

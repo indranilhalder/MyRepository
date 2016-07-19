@@ -124,10 +124,10 @@
 	<meta property="og:site_name" content="${siteName}" />
 	
 	<%-- Favourite Icon --%>
-	<spring:theme code="img.favIcon" text="/" var="favIconPath"/>
+	<%-- <spring:theme code="img.favIcon" text="/" var="favIconPath"/> --%>
     <%-- <link rel="shortcut icon" type="image/x-icon" media="all" href="${themeResourcePath}/${favIconPath}" /> --%>
     <!-- fix for defect TISPT-320 -->
-     <link rel="shortcut icon" type="image/x-icon" media="all" href="${baseURL}${favIconPath}" />
+     <link rel="shortcut icon" type="image/x-icon" media="all" href="${baseURL}/favicon.ico" />
     
 	<!-- DNS prefetching starts -->
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>

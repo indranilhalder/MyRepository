@@ -2409,14 +2409,14 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
     var mob = /^[1-9]{1}[0-9]{9}$/;
     var letters = /^[a-zA-Z]+$/; 
     var cityPattern = /^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/;
-    var firstName = document.getElementById("address.firstName").value.trim();
-	var lastName = document.getElementById("address.surname").value.trim();
-	var address1 = document.getElementById("address.line1").value.trim();
+    var firstName = document.getElementById("address.firstName");
+	var lastName = document.getElementById("address.surname");
+	var address1 = document.getElementById("address.line1");
 	var regAddress = /^[0-9a-zA-Z\-\/\,\s]+$/;
-	var address2 = document.getElementById("address.line2").value.trim();
-	var address3 = document.getElementById("address.line3").value.trim();
-	var city= document.getElementById("address.townCity").value.trim();
-	var stateValue = document.getElementById("address.states").value.trim();
+	var address2 = document.getElementById("address.line2");
+	var address3 = document.getElementById("address.line3");
+	var city= document.getElementById("address.townCity");
+	var stateValue = document.getElementById("address.states");
 	var zipcode = document.getElementsByName("postcode")[0].value;
 	var txtMobile = document.getElementsByName("MobileNo")[0].value;
 	var result=firstName.value;
@@ -3491,7 +3491,6 @@ function checkIsServicable()
  	 			$("#defaultPinDiv").show();
  	 			$("#changePinDiv").hide();
 	 		}
-	 			
 
 	 	});
 	}
@@ -4066,7 +4065,7 @@ function expressbutton()
 	 			$$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			
 		 		//$("#changePinDiv").hide();
-		 		//$("#defaultPinDiv").show();
+		 		//$("#defaultPinDiv").show();	 		
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
@@ -4076,7 +4075,6 @@ function expressbutton()
 	 			console.log(resp);
 	 			var errorDetails=JSON.stringify(resp);
 	 			console.log("errorDetails 1>> "+errorDetails);
-	 			
 	 			handleExceptionOnServerSide(errorDetails);
 	 			//TISPRM-33
 

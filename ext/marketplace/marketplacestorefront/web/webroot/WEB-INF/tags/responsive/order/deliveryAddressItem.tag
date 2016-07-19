@@ -17,8 +17,8 @@
 </style>
 
 <c:set var="hasShippedItems" value="${order.deliveryItemsQuantity > 0}" />
-<c:set var="myline2" value="${order.deliveryAddress.line2}"/>
-<c:set var="myline3" value="${order.deliveryAddress.line3}"/>
+<c:set var="myline2" value="${fn:trim(order.deliveryAddress.line2)}"/>
+<c:set var="myline3" value="${fn:trim(order.deliveryAddress.line3)}"/>
 <h1 style="margin-left: 15px"><spring:theme code="text.deliveryAddress" text="Delivery Details"/></h1>
 <div class="orderBox address orderBoxalignment">
 	<h4>Shipping Address</h4>
