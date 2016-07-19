@@ -1870,7 +1870,6 @@ $(function() {
 		      } 
 	}	 
 	 
-	 
 	 function generateOTP(orderId){	
 			$.ajax({
 				type : "GET",
