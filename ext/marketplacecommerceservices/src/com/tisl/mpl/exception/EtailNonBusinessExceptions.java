@@ -2,10 +2,6 @@ package com.tisl.mpl.exception;
 
 import de.hybris.platform.util.localization.Localization;
 
-import java.util.Properties;
-
-import org.apache.log4j.Logger;
-
 
 public class EtailNonBusinessExceptions extends RuntimeException
 {
@@ -16,8 +12,8 @@ public class EtailNonBusinessExceptions extends RuntimeException
 	private Exception rootCause;
 	private String errorCode;
 
-	private final Properties prop = new Properties();
-	private static final Logger LOG = Logger.getLogger(EtailBusinessExceptions.class);
+	//private final Properties prop = new Properties();
+	//private static final Logger LOG = Logger.getLogger(EtailBusinessExceptions.class);
 
 
 	/**

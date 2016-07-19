@@ -54,14 +54,16 @@
 		//End
 		
 		//Rotating images component
-		$(".hero li").each(function() {
-			if($(this).has("href")){
-				var icid = $(this).attr("data-bannerid");
-				var link = $(this).find("a").attr("href");
-				link = link + "?icid="+icid;
-				$(this).find("a").attr("href",link);
-			}
-		});
+        	$(".icid li").each(function() {
+        		if($(this).has("href")){
+        			var icid = $(this).attr("data-bannerid");
+        			var link = $(this).find("a").attr("href");
+        			if(icid!=undefined && link!=undefined){
+        				link = link + "?icid="+icid;
+        				$(this).find("a").attr("href",link);
+        			}
+        		}
+        	});
 		//end
 		
 		//Tealium js.tag
