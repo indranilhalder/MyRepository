@@ -19,7 +19,7 @@ public interface MplChangeDeliveryAddressFacade
 
 	public void createcrmTicketForChangeDeliveryAddress(OrderModel order, String customerId, String source);
 
-	public boolean isDeliveryAddressChangable(OrderData orderData);
+	public boolean isDeliveryAddressChangable(String orderid);
 
 	/**
 	 *

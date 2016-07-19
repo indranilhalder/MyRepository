@@ -79,7 +79,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tis.mpl.facade.changedelivery.ChangeDeliveryAddressFacade#changeDeliveryRequestToOMS(java.lang.String,
 	 * de.hybris.platform.core.model.user.AddressModel)
 	 * 
@@ -272,12 +272,12 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 
 	@Override
-	public boolean isDeliveryAddressChangable(final OrderData orderData) throws EtailNonBusinessExceptions
+	public boolean isDeliveryAddressChangable(final String orderId) throws EtailNonBusinessExceptions
 	{
 		boolean changable = false;
 		try
 		{
-			changable = mplChangeDeliveryAddressService.isDeliveryAddressChangable(orderData);
+			changable = mplChangeDeliveryAddressService.isDeliveryAddressChangable(orderId);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -311,7 +311,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 				temproryAddressModel.setEmail(customerData.getEmail());
 				final String customerId = customerData.getUid();
 
-				flag = mplChangeDeliveryAddressService.saveAsTemproryAddressForCustomer(orderCode, temproryAddressModel);
+				flag = mplChangeDeliveryAddressService.saveTemproryAddress(orderCode, temproryAddressModel);
 				if (flag)
 				{
 					final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
@@ -390,7 +390,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 			{
 				//if Serviceable Pincode then Save in Order and remove to temporaryAddressModel
 				LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
-				flag = mplChangeDeliveryAddressService.changeDeliveryAddress(orderCode);
+				flag = mplChangeDeliveryAddressService.saveDeliveryAddress(orderCode);
 				final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 				LOG.debug("Change Delivery Address updated into commerce then Call to CRM");
 				createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);

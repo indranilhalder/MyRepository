@@ -16,28 +16,28 @@ public interface MplChangeDeliveryAddressService
 {
 
 
-	public boolean isDeliveryAddressChangable(OrderData orderData);
+	public boolean isDeliveryAddressChangable(String orderId);
 
 
 	/**
 	 * If Old Address and Changed address both are different then save TemproryAddressModel
-	 * 
+	 *
 	 * @param orderCode
 	 * @return flag true or false
 	 */
-	public boolean saveAsTemproryAddressForCustomer(final String orderCode, final TemproryAddressModel temproryAddressModel);
+	public boolean saveTemproryAddress(final String orderCode, final TemproryAddressModel temproryAddressModel);
 
 	/**
 	 * Based on orderCode We get TemproryAddressModel And OrderModel
-	 * 
+	 *
 	 * @param orderCode
 	 * @return flag
 	 */
-	public boolean changeDeliveryAddress(String orderCode);
+	public boolean saveDeliveryAddress(String orderCode);
 
 
 	/**
-	 * 
+	 *
 	 * @param orderCode
 	 * @return TemproryAddressModel
 	 */

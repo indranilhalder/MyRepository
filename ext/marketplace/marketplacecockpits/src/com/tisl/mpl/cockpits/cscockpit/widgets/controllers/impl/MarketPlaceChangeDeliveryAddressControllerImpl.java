@@ -41,8 +41,12 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 		boolean changable = false;
 		final OrderData orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel.getCode());
 		try {
-			changable = mplChangeDeliveryAddressFacade
-					.isDeliveryAddressChangable(orderData);
+			if (null != orderModel.getParentReference()
+					&& null != orderModel.getParentReference().getCode()) {
+				changable = mplChangeDeliveryAddressFacade
+						.isDeliveryAddressChangable(orderModel
+								.getParentReference().getCode());
+			}
 		} catch (Exception e) {
 			LOG.error("Exception occurred " + e.getCause());
 		}
