@@ -996,7 +996,9 @@ function editAddress(addressId) {
         var flagCity = true;
         var flagState = true;
         var flagMob = true;
-        
+        var addLine1=encodeURIComponent(addressForm.line1.value);
+        var addLine2=encodeURIComponent(addressForm.line2.value);
+        var addLine3=encodeURIComponent(addressForm.line3.value);        
         if ((addressForm.addressRadioType[0].checked == false) && (addressForm.addressRadioType[1].checked == false )){
         	document.getElementById("errtype").innerHTML = "<font color='#ff1c47' size='2'>Please select an address type</font>";
         	flagFn = false;
@@ -1096,6 +1098,9 @@ function editAddress(addressId) {
        // if(flagFn && flagLn && flagAd1 && flagAd2 && flagAd3 && flagPost && flagCity && flagState && flagMob)
         if(flagFn && flagLn && flagAd1 && flagPost && flagCity && flagState && flagMob)	
         {
+        	addressForm.line1.value=addLine1;
+            addressForm.line2.value=addLine2;
+            addressForm.line3.value=addLine3;
         	 return true;
         }
         else{

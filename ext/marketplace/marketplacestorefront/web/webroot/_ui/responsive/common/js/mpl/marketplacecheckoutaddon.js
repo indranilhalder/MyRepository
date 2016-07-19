@@ -1504,9 +1504,9 @@ $("#otpMobileNUMField").focus(function(){
 		sendTealiumData();
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
-		var addressLine1=$("#address1").val();
-		var addressLine2=$("#address2").val();
-		var addressLine3=$("#address3").val();
+		var addressLine1=encodeURIComponent($("#address1").val());
+		var addressLine2=encodeURIComponent($("#address2").val());
+		var addressLine3=encodeURIComponent($("#address3").val());
 		var country=$("#country").val();
 		var state=$("#state").val();
 		var city=$("#city").val();
@@ -2581,6 +2581,10 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	}
 	else
 	{
+		
+		address1.value=encodeURIComponent(address1.value);
+		address2.value=encodeURIComponent(address2.value);
+		address3.value=encodeURIComponent(address3.value);
 		$('#addressForm').submit();	
 		
 //		$.ajax({
