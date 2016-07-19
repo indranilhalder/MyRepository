@@ -80,6 +80,46 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	 */
 	private static final String CNC = "CNC";
 	private static final Logger LOG = Logger.getLogger(PinCodeDeliveryModeServiceImpl.class);
+	//TISPT-401 Start
+	static final JAXBContext context = initContext();
+	static final Client client = initClient();
+
+	private static JAXBContext initContext()
+	{
+		try
+		{
+			return JAXBContext.newInstance(PinCodeDeliveryModeListResponse.class, PinCodeDeliveryModeListRequest.class,
+					StoreLocatorAtsResponseObject.class, StoreLocatorATS.class);
+		}
+
+		catch (final ClientHandlerException cex)
+		{
+			LOG.error("Error While Creating JAXB context " + MarketplacecclientservicesConstants.EXCEPTION_IS, cex);
+			throw new ClientEtailNonBusinessExceptions(MarketplacecclientservicesConstants.O0001_EXCEP, cex);
+		}
+		catch (final ClientEtailNonBusinessExceptions ex)
+		{
+			LOG.error("Error While Creating JAXB context - " + ex.getMessage());
+			throw ex;
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Error While Creating JAXB context  " + MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
+			throw new ClientEtailNonBusinessExceptions(ex);
+		}
+	}
+
+	public static Client initClient()
+	{
+		if(client == null){
+			return Client.create();
+		}else{
+			return client;
+		}
+	}
+
+	//TISPT-401 End
+
 	//OMS Pin code serviceablity
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
@@ -261,8 +301,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				}
 				final String output = mockXMLFirstPhase + mockXMLThirdPhase;
 				LOG.debug("****** Pincode serviceability response for non-real time call :" + output);
-				final JAXBContext jaxbContext = JAXBContext.newInstance(PinCodeDeliveryModeListResponse.class);
-				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+				//Commented as a part of TISPT-401
+				//Single Instance Declared for the whole class
+				//final JAXBContext jaxbContext = JAXBContext.newInstance(PinCodeDeliveryModeListResponse.class);
+				final Unmarshaller unmarshaller = context.createUnmarshaller();
 				final StringReader reader = new StringReader(output);
 				responsefromOMS = (PinCodeDeliveryModeListResponse) unmarshaller.unmarshal(reader);
 			}
@@ -271,7 +313,9 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				ClientResponse response = null;
 				try
 				{
-					final Client client = Client.create();
+					//Commented as a part of TISPT-401
+					//Single Instance Declared for the whole class
+					//final Client client = Client.create();
 
 					//Start : Code added for OMS fallback cases
 					final String connectionTimeout = configurationService.getConfiguration()
@@ -288,7 +332,9 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					final WebResource webResource = client.resource(UriBuilder.fromUri(
 							configurationService.getConfiguration().getString(
 									MarketplacecclientservicesConstants.PIN_CODE_DELIVERY_MODE_OMS_URL)).build());
-					final JAXBContext context = JAXBContext.newInstance(PinCodeDeliveryModeListRequest.class);
+					//Commented as a part of TISPT-401
+					//Single Instance Declared for the whole class
+					//final JAXBContext context = JAXBContext.newInstance(PinCodeDeliveryModeListRequest.class);
 
 					final Marshaller m = context.createMarshaller(); //for pretty-print XML in JAXB
 					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
@@ -321,8 +367,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 
 				final String output = response.getEntity(String.class);
 				LOG.debug("****** Pincode serviceability response for real time call:" + output);
-				final JAXBContext jaxbContext = JAXBContext.newInstance(PinCodeDeliveryModeListResponse.class);
-				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+				//Commented as a part of TISPT-401
+				//Single Instance Declared for the whole class
+				//final JAXBContext jaxbContext = JAXBContext.newInstance(PinCodeDeliveryModeListResponse.class);
+				final Unmarshaller unmarshaller = context.createUnmarshaller();
 
 				final StringReader reader = new StringReader(output);
 				responsefromOMS = (PinCodeDeliveryModeListResponse) unmarshaller.unmarshal(reader);
@@ -353,13 +401,13 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	/*
 	 * @desc used for validate connect timeout and read time out exceptions from oms rest call for pincode serviceabilty
 	 * and inventory reservation
-	 *
+	 * 
 	 * @param ex
-	 *
+	 * 
 	 * @param exceptionType
-	 *
+	 * 
 	 * @return void
-	 *
+	 * 
 	 * @throws ClientEtailNonBusinessExceptions
 	 */
 	@Override
@@ -468,10 +516,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					}
 				}
 				final CartModel cartModel = cartService.getSessionCart();
-				if(null != cartModel && null != cartModel.getGuid()) 
+				if (null != cartModel && null != cartModel.getGuid())
 				{
 					storeLocatorRequest.setCartId(cartModel.getGuid());
-					LOG.debug("Cart ID is :"+cartModel.getGuid());
+					LOG.debug("Cart ID is :" + cartModel.getGuid());
 				}
 				storeLocatorRequest.setItem(storeLocatorList);
 				LOG.debug("****************calls to oms to get valid stores having inventories*************");
@@ -524,8 +572,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				}
 				final String output = mockXMLFirstPhase + mockXMLThirdPhase;
 				LOG.debug("*********************** StoreLocator  non- real time response xml :" + output);
-				final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
-				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+				//Commented as a part of TISPT-401
+				//Single Instance Declared for the whole class
+				//final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
+				final Unmarshaller unmarshaller = context.createUnmarshaller();
 				final StringReader reader = new StringReader(output);
 				responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
 			}
@@ -533,8 +583,9 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 			{
 				ClientResponse response = null;
 				try
-				{
-					final Client client = Client.create();
+				{ //Commented as a part of TISPT-401
+				  //Single Instance Declared for the whole class
+				  //final Client client = Client.create();
 
 					//Start : Code added for OMS fallback cases
 					final String connectionTimeout = configurationService.getConfiguration()
@@ -551,7 +602,9 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					final WebResource webResource = client.resource(UriBuilder.fromUri(
 							configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_URL))
 							.build());
-					final JAXBContext context = JAXBContext.newInstance(StoreLocatorATS.class);
+					//Commented as a part of TISPT-401
+					//Single Instance Declared for the whole class
+					//final JAXBContext context = JAXBContext.newInstance(StoreLocatorATS.class);
 					final Marshaller m = context.createMarshaller();
 					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 					final StringWriter sw = new StringWriter();
@@ -581,8 +634,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 
 				final String output = response.getEntity(String.class);
 				LOG.debug("*********************** StoreLocator Real Time Serviceability response xml :" + output);
-				final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
-				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+				//Commented as a part of TISPT-401
+				//Single Instance Declared for the whole class
+				//final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
+				final Unmarshaller unmarshaller = context.createUnmarshaller();
 
 				final StringReader reader = new StringReader(output);
 				responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
