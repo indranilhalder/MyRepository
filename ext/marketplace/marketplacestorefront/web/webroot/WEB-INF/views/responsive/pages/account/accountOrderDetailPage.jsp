@@ -26,7 +26,7 @@
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 <style>
-..ordermargingalignment {
+.ordermargingalignment {
 	height: 41px;
 	padding-top: 7px;
 	font-size: 12px;
@@ -235,29 +235,31 @@
 	z-index: 9999999999;
 }
 
-#showOTP .error_text {
-	margin-top: 5px;
-}
-
 h4 {
 	font-size: 18px !important;
     font-weight: bolder !important;
     margin-bottom: 15px !important;
 }
 
+.changeAdddd {
+	height: 550px;
+	overflow-y: scroll;
+}
+
 @media (max-width: 1024px) {
-	.removeModalAfterLoad .changeAdddd {
+	.changeAdddd {
 		height: 550px;
 		overflow-y: scroll;
 	}
 }
 
 @media (max-width: 720px) {
-	.removeModalAfterLoad .changeAdddd {
+	.changeAdddd {
 		height: 400px;
 		overflow-y: scroll;
 	}
 }
+
 </style>
 <template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">
@@ -1556,7 +1558,7 @@ h4 {
 		</div>
 	</div>
 			<div class="removeModalAfterLoad" id="changeAddressPopup">
-			  <order:changeDeliveryAddress orderDetails="${subOrder}" addressForm="${addressForm}"/>
+			  <order:changeDeliveryAddress orderDetails="${subOrder}" />
             </div><!-- /.modal -->
             
             <div class="removeModalAfterLoad" id="showOTP">
@@ -1875,6 +1877,7 @@ $(function() {
 				url : ACC.config.encodedContextPath + "/my-account/validationOTP",
 				data : "orderId=" + orderId + "&otpNumber="+$("#OTP").val(),
 				success : function(response) {
+					console.log(response);
 					if(response=="pincodeNotServiceable"){
 						$("#changeAddressPopup").show();
 						$("wrapBG1").show();
@@ -1896,23 +1899,32 @@ $(function() {
 						$(".wrapBG1").css("height", height);
 						$("#showOTP").css("z-index", "999999");	
 						$(".otpError").show();
-						$(".otpError").text.text("Please Re-enter OTP.");
+						$(".otpError").text("Invalid OTP, Please Re-enter.");
 						
 					}else{
 						console.log(response);
 					    location.reload();
-					}
+					} 
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 				  console.log(textStatus, errorThrown);
-				  $("#showOTP .error_text").text("Please Re-enter OTP.");
-				  
+				  $("#showOTP .error_text").text("Internal Server Error, Please try again later.");
+				  alert("Internal Server Error, Please try again later.");
+				  location.reload();
 				}
 			}); 
 
 		}	 
 	 
 	$(document).ready(function(){
+		 $("#changeAddressLink").click(function(){
+			  $("#changeAddressPopup").show();
+			  $(".wrapBG").show();
+			  var height = $(window).height();
+			  $(".wrapBG").css("height",height);
+			  $("#changeAddressPopup").css("z-index","999999");
+		});
+		
 		    var length = $(".returnStatus .dot").length;
 		    if(length >=3) {
 			    var percent = 100/parseInt(length);
@@ -1925,18 +1937,7 @@ $(function() {
 			$(".pickup_Edit").css("display","block");
 			$(".pickupeditbtn").css("display","none");		
 		});
-		 $(".savebtn").click(function(){	
 		
-			// $(".pickupeditbtn").css("display","block");
-			 
-            });
-		 $("#changeAddressLink").click(function(){
-			  $("#changeAddressPopup").show();
-			  $(".wrapBG").show();
-			  var height = $(window).height();
-			  $(".wrapBG").css("height",height);
-			  $("#changeAddressPopup").css("z-index","999999");
-		});
 		 
 		 $(".close").click(function(){
 			 $("#changeAddressPopup").hide();
