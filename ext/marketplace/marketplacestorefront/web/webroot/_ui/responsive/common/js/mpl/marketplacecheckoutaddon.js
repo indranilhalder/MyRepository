@@ -3491,7 +3491,6 @@ function checkIsServicable()
  	 			$("#defaultPinDiv").show();
  	 			$("#changePinDiv").hide();
 	 		}
-	 			
 
 	 	});
 	}
@@ -4066,7 +4065,7 @@ function expressbutton()
 	 			$$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			
 		 		//$("#changePinDiv").hide();
-		 		//$("#defaultPinDiv").show();
+		 		//$("#defaultPinDiv").show();	 		
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
@@ -4076,7 +4075,6 @@ function expressbutton()
 	 			console.log(resp);
 	 			var errorDetails=JSON.stringify(resp);
 	 			console.log("errorDetails 1>> "+errorDetails);
-	 			
 	 			handleExceptionOnServerSide(errorDetails);
 	 			//TISPRM-33
 

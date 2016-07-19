@@ -612,6 +612,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INTERESTED_IN_EMAIL = "I am interested in receiving e-mails";
 	public static final String NOT_INTERESTED_IN_EMAIL = "I am not interested in receiving e-mails";
 	public static final String BRAND_NAME_PREFIX = "MBH";
+
 	public static final String CUSTOMERNOTFOUND = "Customer not found";
 	public static final String NOBANKLIST = "bank list is not available";
 
@@ -1613,7 +1614,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CURRENT = "current".intern();
 	public static final String INVERTED_COMMA = "'".intern();
-
+	public static final String BRAND_NAME_PREFIX_LOWER = "mbh";
+	public static final String SELLER_NAME_PREFIX = "MSH";
 
 	private MarketplacecommerceservicesConstants()
 	{
