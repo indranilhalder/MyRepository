@@ -1087,11 +1087,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			changeDeliveryAddressStatus = changeDeliveryAddressStatus ? mplchangeDeliveryAddressFacade
 					.isDeliveryAddressChangable(orderDetail) : false;
 			model.addAttribute("editShippingAddressStatus", changeDeliveryAddressStatus);
-			if (changeDeliveryAddressStatus)
-			{
-				final AccountAddressForm accountAddressForm = new AccountAddressForm();
-				model.addAttribute("addressForm", accountAddressForm);
-			}
+	
+			final AccountAddressForm accountAddressForm = new AccountAddressForm();
+			model.addAttribute("addressForm", accountAddressForm);
 
 			////TISEE-6290
 			fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
