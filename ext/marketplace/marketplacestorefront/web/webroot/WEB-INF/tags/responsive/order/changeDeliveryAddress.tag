@@ -203,6 +203,5 @@
 </div>
 <!-- /.modal-dialog -->
 
-
 <div class="wrapBG1"
 	style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; z-index: 99999; display: none;"></div>
