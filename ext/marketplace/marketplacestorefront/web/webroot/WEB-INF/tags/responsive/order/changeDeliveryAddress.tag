@@ -15,13 +15,12 @@
 
 <input type="hidden" id="deliveryAddorderCode"
 	value="${orderDetails.code}" />
-<div class="modal-dialog">
+<div class="modal-dialog changeAdddd">
 	<div class="modal-content">
-
 		<form:form method="GET" id="deliveryAddressForm"
 			action="${request.contextPath}/my-account/changeDeliveryAddress"
 			commandName="addressForm">
-			<div class="modal-header">
+			<div class="modal-body">
 				<div class="row">
 					<div class="col-md-6">
 						<h4>Edit Shipping Address</h4>
@@ -160,17 +159,20 @@
 					<form:input type="hidden" path="addressType" name="addressType"
 						id="new-address-option-1" value="Home" />
 					<div class="col-md-5">
+					
+					<!-- varStatus="i" -->
+					
 						<div class="row">
 							<div class="col-md-2">
-								<input type="radio" name="select_address"
+								<input type="radio" class="addAddressToForm" data-item="changeAddress1" name="select_address"
 									style="width: 15px; height: 15px; display: block; cursor: pointer;" />
 							</div>
-							<div class="col-md-9 addressTextChange">
+							<div class="col-md-9 addressTextChange changeAddress1"> <%-- add ${i.count} --%>
 								<b>Residential Address 1 - Default</b> <br />
-								${orderDetails.deliveryAddress.firstName}<br />
-								${orderDetails.deliveryAddress.lastName}<br>
-								${orderDetails.deliveryAddress.line1},&nbsp;
-								${orderDetails.deliveryAddress.line2},
+								<span class="firstName">${orderDetails.deliveryAddress.firstName}</span><br />
+								<span class="lastName">${orderDetails.deliveryAddress.lastName}</span><br>
+								<span class="addressLine1">${orderDetails.deliveryAddress.line1}</span>,&nbsp;
+								<span class="addressLine2">${orderDetails.deliveryAddress.line2}</span>,
 								<c:if test="${not empty orderDetails.deliveryAddress.line3}">
 												&nbsp;${orderDetails.deliveryAddress.line3},
 							   </c:if>
@@ -185,14 +187,13 @@
 							</div>
 						</div>
 						<p style="clear: both;"></p>
-
-
 					</div>
 				</div>
 			</div>
 
 			<p style="clear: both;"></p>
 			<div class="modal-footer">
+				<div class="error_text main_error"></div>
 				<button type="submit" id="saveBlockData" class="btn btn-primary">Save</button>
 			</div>
 		</form:form>
