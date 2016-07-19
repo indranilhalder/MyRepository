@@ -190,9 +190,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 *
+	 * 
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 *
+	 * 
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -401,9 +401,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 *
+	 * 
 	 * @param orderNumber
-	 *
+	 * 
 	 * @param lineID
 	 */
 
@@ -451,7 +451,7 @@ public class OrdersController extends BaseCommerceController
 
 									/*
 									 * final File invoiceFile = new File(invoicePathURL); FileInputStream input = null;
-									 *
+									 * 
 									 * if (invoiceFile.exists()) { String invoiceFileName = null; final String preInvoiceFileName
 									 * = invoiceFile.getName(); if (!preInvoiceFileName.isEmpty()) { final int index =
 									 * preInvoiceFileName.lastIndexOf('.'); if (index > 0) { invoiceFileName =
@@ -950,11 +950,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1147,6 +1147,7 @@ public class OrdersController extends BaseCommerceController
 		String consignmentStatus = "";
 		OrderStatusCodeMasterModel customerStatusModel = null;
 		OrderData orderDetail = null;
+		OrderModel subOrderModel = null;
 		String isGiveAway = "N", formattedProductDate = MarketplacecommerceservicesConstants.EMPTY, formattedActualProductDate = MarketplacecommerceservicesConstants.EMPTY;
 		ConsignmentModel consignmentModel = null;
 		try
@@ -1258,7 +1259,8 @@ public class OrdersController extends BaseCommerceController
 				{
 					for (final OrderData subOrder : subOrderList)
 					{
-
+						//TISPT-385
+						subOrderModel = orderModelService.getOrder(subOrder.getCode());
 						for (final OrderEntryData entry : subOrder.getEntries())
 						{
 							List<String> parentTransactionIds = new ArrayList<>();
@@ -1341,10 +1343,10 @@ public class OrdersController extends BaseCommerceController
 								//Delivery date is the final delivery date
 								/*
 								 * if (null != entry.getMplDeliveryMode()) {
-								 *
+								 * 
 								 * if (null != entry.getMplDeliveryMode().getDescription() &&
 								 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
-								 *
+								 * 
 								 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
 								 */
 
@@ -1379,7 +1381,7 @@ public class OrdersController extends BaseCommerceController
 
 								/*
 								 * if (null != orderproductdto.getUSSID()) {
-								 *
+								 * 
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
 								 */
@@ -1453,7 +1455,7 @@ public class OrdersController extends BaseCommerceController
 												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
 												 * orderproductdto.setCancel(Boolean.TRUE);
-												 *
+												 * 
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1481,9 +1483,9 @@ public class OrdersController extends BaseCommerceController
 												 * actualCancelWindow && checkOrderStatus(consignmentStatus,
 												 * MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied())
-												 *
+												 * 
 												 * { orderproductdto.setCancel(Boolean.TRUE);
-												 *
+												 * 
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1511,7 +1513,7 @@ public class OrdersController extends BaseCommerceController
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 *
+											 * 
 											 * }
 											 */
 											//for return
@@ -1602,12 +1604,12 @@ public class OrdersController extends BaseCommerceController
 								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
 								 * consignmentModel.getReturnCarrier()) {
 								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
-								 *
+								 * 
 								 * }
 								 */
 								//End
 								final Map<String, List<AWBResponseData>> returnMap = getOrderDetailsFacade.getOrderStatusTrack(entry,
-										subOrder, orderDetail);
+										subOrder, subOrderModel);
 								orderproductdto.setStatusDisplayMsg(setStatusDisplayMessage(returnMap, consignmentModel));
 								//setting current product status Display
 								if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
