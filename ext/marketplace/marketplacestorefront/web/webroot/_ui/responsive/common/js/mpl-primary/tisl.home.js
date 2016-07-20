@@ -167,7 +167,24 @@ $("span.latestOffersBanner").on("click touchend", function() {
 		
 		complete : function() {
 			$(".topConcierge").owlCarousel({
-				navigation:true,
+				items:5,
+	    		loop: true,
+	    		nav:true,
+	    		dots:false,
+	    		navText:[],
+	    		slideBy:'page',
+	    		responsive : {
+	    			// breakpoint from 0 up
+	    			0 : {
+	    				items:1,
+	    				stagePadding: 50,
+	    			},			
+	    			// breakpoint from 650 up
+	    			650 : {
+	    				items:5,
+	    			}			
+	    		}	
+				/*navigation:true,
 				navigationText : [],
 				pagination:false,
 				itemsDesktop : [5000,5], 
@@ -175,7 +192,7 @@ $("span.latestOffersBanner").on("click touchend", function() {
 				itemsTablet: [650,1], 
 				itemsMobile : [480,1], 
 				rewindNav: false,
-				scrollPerPage:true
+				scrollPerPage:true*/
 			});
 			
 			var tcitemLength = $(".topConcierge .owl-item").length,tcitemWidth = $(".topConcierge .owl-item").outerWidth() ;
@@ -305,7 +322,26 @@ function getBrandsYouLoveAjaxCall() {
             },
             complete: function() {
                 $(".home-brands-you-love-carousel").owlCarousel({
-                    navigation: false,
+                items:7,
+	    		loop: true,
+	    		nav:true,
+	    		dots:false,
+	    		navText:[],
+	    		slideBy:'page',
+	    		mouseDrag: false,
+                touchDrag: false,
+	    		responsive : {
+	    			// breakpoint from 0 up
+	    			0 : {
+	    				items:1,
+	    				stagePadding: 50,
+	    			},			
+	    			// breakpoint from 790 up
+	    			790 : {
+	    				items:7,
+	    			}			
+	    		}	
+                    /*navigation: false,
                     navigationText: [],
                     pagination: false,
                     itemsDesktop: [5000, 7],
@@ -314,7 +350,7 @@ function getBrandsYouLoveAjaxCall() {
                     itemsMobile: [480, 3],
                     rewindNav: false,
                     mouseDrag: false,
-                    touchDrag: false,
+                    touchDrag: false,*/
                 });
                 var index = $(
                     ".home-brands-you-love-carousel-brands.active"
@@ -605,7 +641,7 @@ function getBestPicksAjaxCall() {
                     }
                     if (v.imageUrl) {
                         renderHtml +=
-                            "<div class='home-best-pick-carousel-img'> <img class='lazyOwl' data-src='" +
+                            "<div class='home-best-pick-carousel-img'> <img class='owl-lazy' data-src='" +
                             v.imageUrl + "'></img></div>";
                     }
                     if (v.text) {
@@ -644,7 +680,28 @@ function getBestPicksAjaxCall() {
             },
             complete: function() {
                 $(".home-best-pick-carousel").owlCarousel({
-                    navigation: true,
+                	items:5,
+            		loop: true,
+            		nav:true,
+            		dots:false,
+            		navText:[],
+            		lazyLoad: true,
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},			
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
+            				items:5,
+            			}			
+            		}		
+                    /*navigation: true,
                     navigationText: [],
                     pagination: false,
                     itemsDesktop: [5000, 5],
@@ -653,7 +710,7 @@ function getBestPicksAjaxCall() {
                     itemsMobile: [480, 1],
                     rewindNav: false,
                     lazyLoad: true,
-                    scrollPerPage: true
+                    scrollPerPage: true*/
                 });
             }
         });
@@ -687,7 +744,7 @@ function getProductsYouCareAjaxCall() {
                         "' class='item'>";
                     //for image
                     renderHtml +=
-                        "<div class='home-product-you-care-carousel-img'> <img class='lazyOwl' data-src='" +
+                        "<div class='home-product-you-care-carousel-img'> <img class='owl-lazy' data-src='" +
                         v.mediaURL + "'></img></div>";
                     renderHtml +=
                         "<div class='short-info'><h3 class='product-name'><span>" +
@@ -704,7 +761,28 @@ function getProductsYouCareAjaxCall() {
             },
             complete: function() {
                 $(".home-product-you-care-carousel").owlCarousel({
-                    navigation: true,
+                	items:4,
+		loop: true,
+		nav:true,
+		dots:false,
+		navText:[],
+		lazyLoad: true,
+		responsive : {
+			// breakpoint from 0 up
+			0 : {
+				items:1,
+				stagePadding: 50,
+			},			
+			// breakpoint from 768 up
+			768 : {
+				items:3,
+			},
+			// breakpoint from 768 up
+			1280 : {
+				items:4,
+			}			
+		}
+                    /*navigation: true,
                     navigationText: [],
                     pagination: false,
                     itemsDesktop: [5000, 4],
@@ -713,7 +791,7 @@ function getProductsYouCareAjaxCall() {
                     itemsMobile: [480, 2],
                     rewindNav: false,
                     lazyLoad: true,
-                    scrollPerPage: true
+                    scrollPerPage: true*/
                 });
             }
         });
@@ -749,7 +827,7 @@ function getNewAndExclusiveAjaxCall() {
                 renderHtml +=
                     "<div class='item slide'><div class='newExclusiveElement'><a href='" +
                     ACC.config.encodedContextPath +
-                    value.productUrl + "'>"+renderNewHtml+"<img class='lazyOwl' data-src='" +
+                    value.productUrl + "'>"+renderNewHtml+"<img class='owl-lazy' data-src='" +
                     value.productImageUrl +
                     "'></img><p class='New_Exclusive_title'>" +
                     value.productTitle +
@@ -766,7 +844,24 @@ function getNewAndExclusiveAjaxCall() {
         },
         complete: function() {
             $("#new_exclusive").owlCarousel({
-                navigation: true,
+            	items:2,
+        		loop: true,
+        		nav:true,
+        		dots:false,
+        		navText:[],
+        		lazyLoad: true,
+        		responsive : {
+        			// breakpoint from 0 up
+        			0 : {
+        				items:1,
+        				stagePadding: 50,
+        			},			
+        			// breakpoint from 768 up
+        			768 : {
+        				items:2,
+        			}		
+        		}		
+                /*navigation: true,
                 rewindNav: false,
                 navigationText: [],
                 pagination: false,
@@ -776,7 +871,7 @@ function getNewAndExclusiveAjaxCall() {
                 itemsTablet: false,
                 itemsMobile: false,
                 scrollPerPage: true,
-                lazyLoad: true
+                lazyLoad: true*/
             });
             setTimeout(function() {
                 /*if($(window).width() > 773) {
@@ -909,11 +1004,11 @@ function showStayQued(response){
         linkText = promoText2;
     }
     renderHtml =
-        '<h1><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">' +
+        '<div class="qued-padding"><div class="qued-content"><h1><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h1>' +
         promoText1 + '<a href="' + bannerUrlLink +
         '" class="button maroon">' + linkText +
         '</a></div><div class="qued-image"><img class="lazy" src="' +
-        bannerImage + '" class="img-responsive"></div>';
+        bannerImage + '" class="img-responsive"></div></div>';
     $('#stayQued').html(renderHtml);
 }
 
