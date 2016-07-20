@@ -56,6 +56,9 @@ function changeFunction(value) {
 $(document).ready(function() {
 			$("#deliveryAddressForm").submit(
 					function(event) {
+				      var mobile=$("#mobileNo").val();
+				      var mobile=mobile.trim();
+				      var isString = isNaN(mobile);
 						$(".main_error").hide();
 						if ($("#firstName").val().length < 1) {
 							$(".firstNameError").show();
@@ -72,7 +75,14 @@ $(document).ready(function() {
 						} else if ($("#addressLine3").val().length < 1) {
 							$(".address3Error").show();
 							$(".address3Error").text("Address Line 3 cannot be blank");
-						}else{
+						}else if(isString==true || mobile.trim()==''){
+							    $(".mobileNumberError").show();
+					            $(".mobileNumberError").text("Enter only Numbers");
+						}else if(mobile.length<=9 || mobile.length >= 11) {   
+					    	  $(".mobileNumberError").show();
+					          $(".mobileNumberError").text("Enter 10 Digit Number");
+					      }	
+						else{
 						
 						var data = $("#deliveryAddressForm").serialize();
 						var orderCode = $('#deliveryAddorderCode').val();
@@ -85,9 +95,7 @@ $(document).ready(function() {
 							  contentType: "application/json",
 							  dataType: 'json',
 							success : function(result) {
-								alert("AJAX Call Success"+result);
 								if(result=="success"){
-									alert("Save Success");
 									$("#changeAddressPopup").hide();
 									$("wrapBG1").hide();
 									$("#showOTP").show();
