@@ -594,7 +594,7 @@ ElementsRenderer = (function() {
     div.className = "jqtree-element jqtree_common";
     li.appendChild(div);
     title_span = document.createElement('span');
-    title_span.className = "jqtree-title jqtree_common";
+    title_span.className = "jqtree-title jqtree_common" + node.count;
     title_span.innerHTML = escaped_name;
     div.appendChild(title_span);
     return li;

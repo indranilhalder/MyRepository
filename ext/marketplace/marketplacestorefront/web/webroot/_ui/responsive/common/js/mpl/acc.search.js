@@ -1,5 +1,6 @@
 	function constructDepartmentHierarchy(inputArray) {		
 		var output = [];
+		var count = 0;
 		if(inputArray!=""){
 		for (var i = 0; i < inputArray.length; i++) {
 			var categoryArray = inputArray[i].split("|");
@@ -18,6 +19,7 @@
 					if(categoryDetails[2] == "L3")
 					{
 						categoryName += "  (" +categoryDetails[5] + ")";
+						count++;
 					}
 					
 					var categoryType = "category";
@@ -32,7 +34,7 @@
 						}
 					}
 					if (lastNode == currentNode) {
-						var newNode = currentNode[k] = {label: categoryName, children: [], categoryCode: categoryCode, categoryType: categoryType, categoryName: categoryName};
+						var newNode = currentNode[k] = {label: categoryName, children: [], categoryCode: categoryCode, categoryType: categoryType, categoryName: categoryName, count: count};
 						currentNode = newNode.children;
 					}
 				}
