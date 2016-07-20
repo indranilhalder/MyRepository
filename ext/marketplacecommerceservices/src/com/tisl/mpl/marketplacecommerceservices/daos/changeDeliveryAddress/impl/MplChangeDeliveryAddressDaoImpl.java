@@ -85,14 +85,14 @@ public class MplChangeDeliveryAddressDaoImpl implements MplChangeDeliveryAddress
 
 	/***
 	 * OrderId Based On We will get TemproryAddressModel
-	 *
-	 * @param orderCode
+	 * 
+	 * 
 	 * @return TemproryAddressModel
 	 */
 	@Override
-	public TemproryAddressModel geTemproryAddressModel(final String orderId)
+	public TemproryAddressModel geTemproryAddressModel(String orderId)
 	{
-		TemproryAddressModel tempAddress = modelService.create(TemproryAddressModel.class);
+		TemproryAddressModel tempAddress =new TemproryAddressModel();
 		try
 		{
 			tempAddress.setOrderId(orderId);
@@ -100,11 +100,11 @@ public class MplChangeDeliveryAddressDaoImpl implements MplChangeDeliveryAddress
 		}
 		catch (final FlexibleSearchException e)
 		{
-			LOG.error(" FlexibleSearchException exception " + e.getMessage());
+			LOG.error(" FlSearchException exception " + e.getMessage());
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occurred while getting the temparory address " + e.getMessage());
+			LOG.error("Exception occurree getting the temparory address " + e.getMessage());
 		}
 		return tempAddress;
 	}
