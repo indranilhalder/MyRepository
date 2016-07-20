@@ -547,15 +547,13 @@ h4 {
 											${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}
 											<br>
 											91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
-											<!-- <a href="#" id="changeAddressLink" >Edit / Change Address </a> -->
-																				  <!--  <input type="button" id="changeAddressLink" value="Edit / Change Address"  /> -->
-											<c:if test="${changeDeliveryAddressStatus eq true}">
-										   </c:if>
-										</address>
+									  </address>
 									</div>
 									<div class="col-md-4 col-sm-6">
 										<div class="editIconCSS">
-											<a href="#" id="changeAddressLink">Edit / Change Address </a>
+										<c:if test="${editShippingAddressStatus eq true}">
+									       <a href="#" id="changeAddressLink">Edit / Change Address </a>
+										</c:if>
 										</div>
 									</div>
 									<div class="col-md-4">
@@ -1876,7 +1874,6 @@ $(function() {
 				url : ACC.config.encodedContextPath + "/my-account/validationOTP",
 				data : "orderId=" + orderId + "&otpNumber="+$("#OTP").val(),
 				success : function(response) {
-					console.log(response);
 					if(response=="pincodeNotServiceable"){
 						$("#changeAddressPopup").show();
 						$("wrapBG1").show();
@@ -1889,7 +1886,6 @@ $(function() {
 						$(".pincodeNoError").text(response);
 					}
 					else if(response=="INVALID"){
-						alert(response);
 						$("#changeAddressPopup").hide();
 						$("wrapBG1").hide();
 						$("#showOTP").show();
