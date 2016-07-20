@@ -132,13 +132,12 @@
 								<div class="error_text stateError"></div>
 							</div>
 							<div class="col-md-6 form-group">
-								<label for="country">Country*</label> 
-								<input type="text"
+								<label for="country">Country*</label> <input type="text"
 									id="country"
 									value='${orderDetails.deliveryAddress.country.name}' readonly />
 								<form:input path="countryIso" type="hidden" id="country"
 									name="countryIso"
-									value="${orderDetails.deliveryAddress.country.isocode}"/>
+									value="${orderDetails.deliveryAddress.country.isocode}" />
 							</div>
 						</div>
 
@@ -159,38 +158,46 @@
 					<form:input type="hidden" path="addressType" name="addressType"
 						id="new-address-option-1" value="Home" />
 					<div class="col-md-5">
-					
-					<!-- varStatus="i" -->
-					
-						<div class="row">
-							<div class="col-md-2">
-								<input type="radio" class="addAddressToForm" data-item="changeAddress1" name="select_address"
-									style="width: 15px; height: 15px; display: block; cursor: pointer;" />
-							</div>
-							<div class="col-md-9 addressTextChange changeAddress1"> <%-- add ${i.count} --%>
-								<b>Residential Address 1 - Default</b> <br />
-								<span class="firstName">${orderDetails.deliveryAddress.firstName}</span><br />
-								<span class="lastName">${orderDetails.deliveryAddress.lastName}</span><br>
-								<span class="addressLine1">${orderDetails.deliveryAddress.line1}</span>,&nbsp;
-								<span class="addressLine2">${orderDetails.deliveryAddress.line2}</span>,
-								<c:if test="${not empty orderDetails.deliveryAddress.line3}">
-												&nbsp;${orderDetails.deliveryAddress.line3},
-							   </c:if>
-								<br> ${orderDetails.deliveryAddress.town},&nbsp;
-								<c:if test="${not empty orderDetails.deliveryAddress.state}">
-												${orderDetails.deliveryAddress.state},&nbsp;
-								</c:if>
-								${orderDetails.deliveryAddress.postalCode}&nbsp;
-								${orderDetails.deliveryAddress.country.isocode} <br>
-								91&nbsp;${orderDetails.deliveryAddress.phone} <br>
 
-							</div>
-						</div>
-						<p style="clear: both;"></p>
+						<!-- varStatus="i" -->
+						<c:if test="${not empty orderDetails.deliveryAddressList}">
+							<c:forEach items="${orderDetails.deliveryAddressList}"
+								var="orderDeliveryAddressList">
+								<div class="row">
+									<div class="col-md-2">
+										<input type="radio" class="addAddressToForm"
+											data-item="changeAddress1" name="select_address"
+											style="width: 15px; height: 15px; display: block; cursor: pointer;" />
+									</div>
+									<div class="col-md-9 addressTextChange changeAddress1">
+										<%-- add ${i.count} --%>
+										<b>Residential Address 1 - Default</b> <br /> <span
+											class="firstName">${orderDeliveryAddresssList.firstName}</span><br />
+										<span class="lastName">${orderDeliveryAddresssList.lastName}</span><br>
+										<span class="addressLine1">${orderDeliveryAddresssList.line1}</span>,&nbsp;
+										<span class="addressLine2">${orderDeliveryAddresssList.line2}</span>,
+										<c:if test="${not empty orderDeliveryAddresssList.line3}">
+											<span class="addressLine3">
+												&nbsp;${orderDeliveryAddresssList.line3},</span>
+										</c:if>
+										<br> ${orderDeliveryAddresssList.town},&nbsp;
+										<c:if test="${not empty orderDeliveryAddresssList.state}">
+											<span class="state">${orderDeliveryAddresssList.state},</span>&nbsp;
+								      </c:if>
+										<span class="postalCode">${orderDeliveryAddresssList.postalCode}&nbsp;</span>
+										<span class="isocode">${orderDeliveryAddresssList.country.isocode}
+											<br>
+										</span> <span class="phone">91&nbsp;${orderDeliveryAddresssList.phone}
+											<br>
+										</span>
+									</div>
+								</div>
+								<p style="clear: both;"></p>
+							</c:forEach>
+						</c:if>
 					</div>
 				</div>
 			</div>
-
 			<p style="clear: both;"></p>
 			<div class="modal-footer">
 				<div class="error_text main_error"></div>
