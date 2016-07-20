@@ -37362,7 +37362,7 @@ button.make_payment[disabled] {
 	transition: all 0.5s ease;
 }
 
-#brandsYouLove .bulprev, #brandsYouLove .bulnext	
+/* #brandsYouLove .bulprev, #brandsYouLove .bulnext	
 	{
 		cursor: pointer;
     position: absolute !important;
@@ -37423,7 +37423,7 @@ button.make_payment[disabled] {
 	content: "\f105";
 	top: 0;
 	left: 11px;
-}
+} */
 
 .modal.size-guide .apparelSizes table{
 width: 100%;

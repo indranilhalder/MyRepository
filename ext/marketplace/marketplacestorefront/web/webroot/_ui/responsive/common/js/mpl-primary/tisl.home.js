@@ -311,8 +311,6 @@ function getBrandsYouLoveAjaxCall() {
                     }
                 });
                 renderHtml += "</div>";
-                renderHtml +=
-                    '<div class="bulprev"></div><div class="bulnext"></div>';
                 $('#brandsYouLove').html(renderHtml);
                 getBrandsYouLoveContentAjaxCall(defaultComponentId);
             },
@@ -323,35 +321,29 @@ function getBrandsYouLoveAjaxCall() {
             complete: function() {
                 $(".home-brands-you-love-carousel").owlCarousel({
                 items:7,
+                center: true,
 	    		loop: true,
 	    		nav:true,
 	    		dots:false,
 	    		navText:[],
-	    		slideBy:'page',
-	    		mouseDrag: false,
-                touchDrag: false,
 	    		responsive : {
 	    			// breakpoint from 0 up
 	    			0 : {
-	    				items:1,
-	    				stagePadding: 50,
+	    				items:3,
 	    			},			
 	    			// breakpoint from 790 up
 	    			790 : {
 	    				items:7,
 	    			}			
 	    		}	
-                    /*navigation: false,
-                    navigationText: [],
-                    pagination: false,
-                    itemsDesktop: [5000, 7],
-                    itemsDesktopSmall: [1400, 7],
-                    itemsTablet: [790, 3],
-                    itemsMobile: [480, 3],
-                    rewindNav: false,
-                    mouseDrag: false,
-                    touchDrag: false,*/
                 });
+                
+                $(".home-brands-you-love-carousel").on('changed.owl.carousel', function(event) {
+                    setTimeout(function(){
+                    	$(".home-brands-you-love-carousel .owl-item.active").eq(activePos).find(".home-brands-you-love-carousel-brands").click();
+                    },80)
+                })
+                
                 var index = $(
                     ".home-brands-you-love-carousel-brands.active"
                 ).parents('.owl-item').index()
@@ -505,59 +497,34 @@ var bulCount = $(".home-brands-you-love-carousel-brands.active").index() - 1;
 			bulCount = $(this).parent().index();
 			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 		});*/
+var bulIndex = 0;
 $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
-    $(".home-brands-you-love-carousel-brands").removeClass('active');
+   
+	$(".home-brands-you-love-carousel-brands").removeClass('active');
     $(this).addClass('active');
     $('.home-brands-you-love-desc').remove();
-    var iw = $('.home-brands-you-love-carousel .owl-item').outerWidth();
-    var index = $(this).parents('.owl-item').index();
-    if (index > activePos) {
-        for (var i = 0; i < index - activePos; i++) {
-            $("#brandsYouLove .owl-wrapper").css('transition',
-                'all 0.2s linear');
-            $("#brandsYouLove .owl-wrapper").css('transform',
-                'translate3d(-' + iw + 'px, 0px, 0px)');
-            setTimeout(function() {
-                $(".home-brands-you-love-carousel .owl-wrapper")
-                    .append($(
-                        ".home-brands-you-love-carousel .owl-item"
-                    ).first());
-                $("#brandsYouLove .owl-wrapper").css(
-                    'transition', 'all 0s linear');
-                $("#brandsYouLove .owl-wrapper").css(
-                    'transform',
-                    'translate3d(0px, 0px, 0px)');
-            }, 200);
-        }
-    } else if (index < activePos) {
-        for (var i = 0; i < activePos - index; i++) {
-            $("#brandsYouLove .owl-wrapper").css('transition',
-                'all 0.2s linear');
-            $("#brandsYouLove .owl-wrapper").css('transform',
-                'translate3d(' + iw + 'px, 0px, 0px)');
-            setTimeout(function() {
-                $(".home-brands-you-love-carousel .owl-wrapper")
-                    .prepend($(
-                        ".home-brands-you-love-carousel .owl-item"
-                    ).last());
-                $("#brandsYouLove .owl-wrapper").css(
-                    'transition', 'all 0s linear');
-                $("#brandsYouLove .owl-wrapper").css(
-                    'transform',
-                    'translate3d(0px, 0px, 0px)');
-            }, 200);
-        }
-    }
-    var index = $(this).parents('.owl-item').index();
+  
+    	//bulIndex = $(this).parents('.owl-item').index();
+
     getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 });
-
-$(document).on("click", ".bulprev", function() {
-    /*$('.home-brands-you-love-desc').remove();
+/*$(document).on("click", ".home-brands-you-love-carousel .owl-item.active", function() {
+	 	if (bulIndex > activePos) {
+	    	for (var i = 0; i < bulIndex - activePos; i++) {
+	    		$('.home-brands-you-love-carousel .owl-controls .owl-next').click();
+	    	}
+	    } else if (bulIndex < activePos) {
+	    	for (var i = 0; i < activePos - bulIndex; i++) {
+	    		$('.home-brands-you-love-carousel .owl-controls .owl-prev').click();
+	    	}
+	    }
+});*/
+/*$(document).on("click", ".bulprev", function() {
+    $('.home-brands-you-love-desc').remove();
 		$(".home-brands-you-love-carousel .owl-wrapper").prepend($(".home-brands-you-love-carousel .owl-item").last());
 		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").removeClass('active');
 		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").eq(activePos).addClass('active');
-		getBrandsYouLoveContentAjaxCall($(".home-brands-you-love-carousel-brands.active").attr('id'));*/
+		getBrandsYouLoveContentAjaxCall($(".home-brands-you-love-carousel-brands.active").attr('id'));
     var iw = $('.home-brands-you-love-carousel .owl-item').outerWidth();
     $('.home-brands-you-love-desc').remove();
     $("#brandsYouLove .owl-wrapper").css('transition', 'all 0.3s ease');
@@ -606,7 +573,7 @@ $(document).on("click", ".bulnext", function() {
         $("#brandsYouLove .owl-wrapper").css('transform',
             'translate3d(0px, 0px, 0px)');
     }, 300);
-});
+});*/
 if ($('#ia_site_page_id').val() == 'homepage') {
     /*setInterval(function() {
 
@@ -759,44 +726,40 @@ function getProductsYouCareAjaxCall() {
                 console.log(
                     'Error while getting getProductsYouCare');
             },
-            complete: function() {
-                $(".home-product-you-care-carousel").owlCarousel({
-                	items:4,
-		loop: true,
-		nav:true,
-		dots:false,
-		navText:[],
-		lazyLoad: true,
-		responsive : {
-			// breakpoint from 0 up
-			0 : {
-				items:1,
-				stagePadding: 50,
-			},			
-			// breakpoint from 768 up
-			768 : {
-				items:3,
-			},
-			// breakpoint from 768 up
-			1280 : {
-				items:4,
-			}			
-		}
-                    /*navigation: true,
-                    navigationText: [],
-                    pagination: false,
-                    itemsDesktop: [5000, 4],
-                    itemsDesktopSmall: [1400, 4],
-                    itemsTablet: [650, 2],
-                    itemsMobile: [480, 2],
-                    rewindNav: false,
-                    lazyLoad: true,
-                    scrollPerPage: true*/
-                });
-            }
+				            complete : function() {
+					$(".home-product-you-care-carousel").owlCarousel({
+						items : 4,
+						loop : true,
+						nav : true,
+						dots : false,
+						navText : [],
+						lazyLoad : true,
+						responsive : {
+							// breakpoint from 0 up
+							0 : {
+								items : 1,
+								stagePadding : 50,
+							},
+							// breakpoint from 768 up
+							768 : {
+								items : 3,
+							},
+							// breakpoint from 768 up
+							1280 : {
+								items : 4,
+							}
+						}
+					/*
+					 * navigation: true, navigationText: [], pagination: false,
+					 * itemsDesktop: [5000, 4], itemsDesktopSmall: [1400, 4],
+					 * itemsTablet: [650, 2], itemsMobile: [480, 2], rewindNav:
+					 * false, lazyLoad: true, scrollPerPage: true
+					 */
+					});
+				}
         });
     }
-    //AJAX CALL PRODUCTS YOU CARE END
+    // AJAX CALL PRODUCTS YOU CARE END
 
 function getNewAndExclusiveAjaxCall() {
     var env = $("#previewVersion").val();
