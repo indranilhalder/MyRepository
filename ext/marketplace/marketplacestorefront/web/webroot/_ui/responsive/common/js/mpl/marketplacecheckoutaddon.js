@@ -1504,9 +1504,9 @@ $("#otpMobileNUMField").focus(function(){
 		sendTealiumData();
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
-		var addressLine1=$("#address1").val();
-		var addressLine2=$("#address2").val();
-		var addressLine3=$("#address3").val();
+		var addressLine1=encodeURIComponent($("#address1").val());
+		var addressLine2=encodeURIComponent($("#address2").val());
+		var addressLine3=encodeURIComponent($("#address3").val());
 		var country=$("#country").val();
 		var state=$("#state").val();
 		var city=$("#city").val();
@@ -2409,14 +2409,14 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
     var mob = /^[1-9]{1}[0-9]{9}$/;
     var letters = /^[a-zA-Z]+$/; 
     var cityPattern = /^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/;
-    var firstName = document.getElementById("address.firstName").value.trim();
-	var lastName = document.getElementById("address.surname").value.trim();
-	var address1 = document.getElementById("address.line1").value.trim();
+    var firstName = document.getElementById("address.firstName");
+	var lastName = document.getElementById("address.surname");
+	var address1 = document.getElementById("address.line1");
 	var regAddress = /^[0-9a-zA-Z\-\/\,\s]+$/;
-	var address2 = document.getElementById("address.line2").value.trim();
-	var address3 = document.getElementById("address.line3").value.trim();
-	var city= document.getElementById("address.townCity").value.trim();
-	var stateValue = document.getElementById("address.states").value.trim();
+	var address2 = document.getElementById("address.line2");
+	var address3 = document.getElementById("address.line3");
+	var city= document.getElementById("address.townCity");
+	var stateValue = document.getElementById("address.states");
 	var zipcode = document.getElementsByName("postcode")[0].value;
 	var txtMobile = document.getElementsByName("MobileNo")[0].value;
 	var result=firstName.value;
@@ -2581,6 +2581,10 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	}
 	else
 	{
+		
+		address1.value=encodeURIComponent(address1.value);
+		address2.value=encodeURIComponent(address2.value);
+		address3.value=encodeURIComponent(address3.value);
 		$('#addressForm').submit();	
 		
 //		$.ajax({
