@@ -17,7 +17,6 @@ import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
-import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -171,7 +170,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -587,13 +586,12 @@ public class SearchSuggestUtilityMethods
 		String url = null;
 		Map<String, List<String>> params = null;
 		final List<String> urlList = new ArrayList<String>();
-		ProductSearchPageData<SearchStateData, ProductData> searchPageData = null;
 		try
 		{
 			//searchText = URLParamUtil.getQueryParamParsed(searchText);
 			searchText = URLParamUtil.filter(searchText);
-			searchPageData = searchFacade.textSearch(searchText);
-			url = mplProductWebService.getKeywordSearch(searchPageData, searchText);
+			//searchPageData = searchFacade.textSearch(searchText);
+			url = mplProductWebService.getKeywordSearch(searchText);
 			if (StringUtils.isNotEmpty(url))
 			{
 				//fetching the Parameters from the redirect URL in Map with Key and values

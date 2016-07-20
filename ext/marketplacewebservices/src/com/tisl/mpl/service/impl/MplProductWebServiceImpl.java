@@ -16,9 +16,7 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
-import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
-import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -62,10 +60,10 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplKeywordRedirectDao;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplProductWebService;
-import com.tisl.mpl.solr.search.KeywordRedirectValue;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.CapacityLinkData;
 import com.tisl.mpl.wsdto.ClassificationMobileWsData;
@@ -107,6 +105,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private ModelService modelService;
 	@Resource
 	private ProductDetailsHelper productDetailsHelper;
+	@Resource
+	private MplKeywordRedirectDao mplKeywordRedirectDao;
 	private Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers;
 
 	private static final String Y = "Y";
@@ -1735,18 +1735,17 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @return keywordRedirect
 	 */
 	@Override
-	public String getKeywordSearch(final ProductSearchPageData<SearchStateData, ProductData> searchPageData,
-			final String searchText)
+	public String getKeywordSearch(final String searchText)
 	{
 		//suggestion to remove new Arraylist
-		KeywordRedirectValue result = null;
+		SolrFacetSearchKeywordRedirectModel result = null;
 		String url = null;
 		try
 		{
 			//searching the keyword in solr search config
 			if (StringUtils.isNotBlank(searchText))
 			{
-				result = getSingleKeywordRedirect(searchText);
+				result = findKeywordRedirect(searchText);
 			}
 			//FOR Direct URL redirection only
 			if (null != result && null != result.getRedirectMobile())
@@ -1765,53 +1764,19 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		return url;
 	}
 
-	private List<SolrFacetSearchKeywordRedirectModel> findKeywordRedirects(final String searchQuery)
+	private SolrFacetSearchKeywordRedirectModel findKeywordRedirect(final String searchQuery)
 	{
+		SolrFacetSearchKeywordRedirectModel keywordRedirect = null;
 		final String langIso = commonI18NService.getCurrentLanguage().getIsocode();
-		final List result = solrFacetSearchKeywordDao.findKeywords(
+		List<SolrFacetSearchKeywordRedirectModel> result = mplKeywordRedirectDao.findKeywords(searchQuery,
+				KeywordRedirectMatchType.EXACT,
 				configurationService.getConfiguration().getString(MarketplacewebservicesConstants.SEARCH_FACET_CONFIG), langIso);
-		return keywordRedirectSorter.sort(result);
-	}
-
-	private void handleKeywordMatch(final List<KeywordRedirectValue> result, final String theQuery,
-			final SolrFacetSearchKeywordRedirectModel redirect)
-	{
-		final KeywordRedirectHandler handler = redirectHandlers.get(redirect.getMatchType());
-		if ((handler == null)
-				|| (!(handler.keywordMatches(theQuery, redirect.getKeyword(), redirect.getIgnoreCase().booleanValue()))))
+		result = keywordRedirectSorter.sort(result);
+		if (CollectionUtils.isNotEmpty(result))
 		{
-			return;
+			keywordRedirect = result.get(0);
 		}
-		result.add(new KeywordRedirectValue(redirect.getKeyword(), redirect.getMatchType(), redirect.getRedirect(), redirect
-				.getRedirectMobile()));
-	}
-
-	public List<KeywordRedirectValue> getKeywordRedirect(final String query)
-	{
-		final List result = new ArrayList();
-
-		if (StringUtils.isNotBlank(query))
-		{
-			final Collection<SolrFacetSearchKeywordRedirectModel> redirects = findKeywordRedirects(query);
-
-			for (final SolrFacetSearchKeywordRedirectModel redirect : redirects)
-			{
-				handleKeywordMatch(result, query, redirect);
-			}
-		}
-
-		return result;
-	}
-
-	private KeywordRedirectValue getSingleKeywordRedirect(final String query)
-	{
-		final List<KeywordRedirectValue> keywordRedirects = getKeywordRedirect(query);
-		KeywordRedirectValue keywordRedirectValue = null;
-		if (!(keywordRedirects.isEmpty()))
-		{
-			keywordRedirectValue = keywordRedirects.get(0);
-		}
-		return keywordRedirectValue;
+		return keywordRedirect;
 	}
 
 	/**

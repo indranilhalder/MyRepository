@@ -54,7 +54,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -101,44 +100,42 @@ import com.tisl.mpl.xml.pojo.ReturnLogisticsResponse;
  */
 public class CancelReturnFacadeImpl implements CancelReturnFacade
 {
-	@Autowired
+	@Resource
 	private MplOrderService mplOrderService;
-
-	@Autowired
+	@Resource
 	private MplSNSMobilePushServiceImpl mplSNSMobilePushService;
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
-	@Autowired
+	@Resource
 	private MplOrderCancelClientService mplOrderCancelClientService;
-	@Autowired
+	@Resource
 	private TicketCreationCRMservice ticketCreate;
-	@Autowired
+	@Resource
 	private MplJusPayRefundService mplJusPayRefundService;
-	@Autowired
+	@Resource
 	private BaseStoreService baseStoreService;
-	@Autowired
+	@Resource
 	private UserService userService;
-	@Autowired
+	@Resource
 	private CustomerAccountService customerAccountService;
-	@Autowired
+	@Resource
 	private ReturnLogisticsService returnLogistics;
-	@Autowired
+	@Resource
 	private ModelService modelService;
-	@Autowired
+	@Resource
 	private OrderCancelService orderCancelService;
-
-	private OrderCancelRecordsHandler orderCancelRecordsHandler;
-	@Autowired
+	@Resource
 	private ReturnService returnService;
-	@Autowired
+	@Resource
 	private ConfigurationService configurationService;
-	@Autowired
+	@Resource
 	private SessionService sessionService;
-	@Autowired
+	@Resource
 	private MplCheckoutFacade mplCheckoutFacade;
-	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
-	@Autowired
+	@Resource
 	private MPLRefundService mplRefundService;
+	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
+	private OrderCancelRecordsHandler orderCancelRecordsHandler;
 
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
@@ -154,8 +151,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		boolean cancelOrRetrnanable = true;
 		boolean omsCancellationStatus = false;
 
-		final OrderModel subOrderModel = customerAccountService.getOrderForCode((CustomerModel) userService.getCurrentUser(),
-				subOrderDetails.getCode(), baseStoreService.getCurrentBaseStore());
+		final OrderModel subOrderModel = orderModelService.getOrder(subOrderDetails.getCode());
+		/*
+		 * customerAccountService.getOrderForCode((CustomerModel) userService.getCurrentUser(), subOrderDetails.getCode(),
+		 * baseStoreService.getCurrentBaseStore());
+		 */
 		boolean bogoOrFreeBie = false;
 		try
 		{
@@ -237,8 +237,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					final PaymentTransactionEntryModel paymentTransEntry = tranactions.iterator().next().getEntries().iterator()
 							.next();
-					if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
-							&& MarketplacecommerceservicesConstants.CASH_ON_DELIVERY.equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
+					if (paymentTransEntry.getPaymentMode() != null
+							&& paymentTransEntry.getPaymentMode().getMode() != null
+							&& MarketplacecommerceservicesConstants.CASH_ON_DELIVERY.equalsIgnoreCase(paymentTransEntry.getPaymentMode()
+									.getMode()))
 					{
 						refundType = "N";
 					}
