@@ -7,10 +7,12 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -56,9 +58,9 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 	public boolean isDeliveryAddressChangable(final String orderId)
 	{
 		final List<String> ChangableOrdeStatus = Arrays.asList(OrderStatus.PAYMENT_SUCCESSFUL.getCode(),
-				OrderStatus.ORDER_ALLOCATED.getCode(), OrderStatus.PICK_LIST_GENERATED.getCode(),OrderStatus.ORDER_REALLOCATED.getCode(),
+				OrderStatus.ORDER_ALLOCATED.getCode(), OrderStatus.PICK_LIST_GENERATED.getCode(),
 				OrderStatus.PICK_CONFIRMED.getCode());
-		boolean changable = true;
+		final boolean changable = false;
 
 		try
 		{
@@ -79,14 +81,9 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 						}
 						if (null != entry && null != entry.getSelectedUSSID())
 						{
-							final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
-									.getSelectedUSSID());
-							if (null != sellerInfoModel && null != sellerInfoModel.getSellerMaster()
-									&& null != sellerInfoModel.getSellerMaster().getIsCDAllowed())
-							{
-								isCdAllowed = sellerInfoModel.getSellerMaster().getIsCDAllowed();
-							}
-
+							final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerInformation(
+									entry.getSelectedUSSID()).get(0);
+							isCdAllowed = sellerInfoModel.getSellerMaster().getIsCDAllowed();
 						}
 						if (!deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
 								&& entry.getQuantity().longValue() > 0)
@@ -105,10 +102,6 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 							if (!ChangableOrdeStatus.contains(entryStatus))
 							{
 								return false;
-							}
-							else
-							{
-								changable = true;
 							}
 						}
 					}
@@ -129,7 +122,7 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 	 * return boolean true false
 	 */
 	@Override
-	public boolean saveTemproryAddress(final String orderCode, final TemproryAddressModel temproryAddressModel)
+	public boolean saveTemproryAddress(String orderCode,TemproryAddressModel temproryAddressModel)
 	{
 		boolean flag = false;
 		try
@@ -137,7 +130,7 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 			if (StringUtils.isNotEmpty(orderCode) && temproryAddressModel != null)
 			{
 				temproryAddressModel.setOrderId(orderCode);
-				temproryAddressModel.setOwner(orderModelDao.getOrderModel(orderCode).getOwner());
+				temproryAddressModel.setOwner(orderModelDao.getOrderModel(orderCode));
 				modelService.save(temproryAddressModel);
 				flag = true;
 			}
@@ -165,10 +158,14 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 			{
 				OrderModel orderModel;
 				final TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
-				orderModel = orderModelDao.getOrder(orderCode);
+				orderModel = orderModelDao.getOrderModel(orderCode);
 				if (orderModel != null)
 				{
 					orderModel.setDeliveryAddress(temproryAddressModel);
+
+					/*final Collection<AddressModel> deliveryAddressLis = orderModel.getDeliveryAddresses();
+					deliveryAddressLis.add(temproryAddressModel);
+					orderModel.setDeliveryAddresses(deliveryAddressLis);*/
 					modelService.save(orderModel);
 					modelService.remove(temproryAddressModel);
 					flag = true;
@@ -201,8 +198,8 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 		{
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-				final TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
-				if (temproryAddressModel != null)
+				TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
+				if (temproryAddressModel != null && StringUtils.isNotEmpty(temproryAddressModel.getPostalcode()))
 				{
 					modelService.remove(temproryAddressModel);
 				}
