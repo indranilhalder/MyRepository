@@ -6983,7 +6983,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCCESS))
 		{
 			boolean flag = false;
-			final AddressData addressData = new AddressData();
+			AddressData addressData = new AddressData();
 			addressData.setAddressType(addressForm.getAddressType());
 			addressData.setId(addressForm.getAddressId());
 			addressData.setPhone(addressForm.getMobileNo());
