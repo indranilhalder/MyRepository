@@ -124,10 +124,10 @@
 	<meta property="og:site_name" content="${siteName}" />
 	
 	<%-- Favourite Icon --%>
-	<spring:theme code="img.favIcon" text="/" var="favIconPath"/>
+	<%-- <spring:theme code="img.favIcon" text="/" var="favIconPath"/> --%>
     <%-- <link rel="shortcut icon" type="image/x-icon" media="all" href="${themeResourcePath}/${favIconPath}" /> --%>
     <!-- fix for defect TISPT-320 -->
-     <link rel="shortcut icon" type="image/x-icon" media="all" href="${baseURL}${favIconPath}" />
+     <link rel="shortcut icon" type="image/x-icon" media="all" href="${baseURL}/favicon.ico" />
     
 	<!-- DNS prefetching starts -->
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
@@ -185,23 +185,31 @@
 		<c:choose>
  		<c:when test="${isMinificationEnabled}">
  		<script type="text/javascript">
+ 		var gigyasocialloginurl='${gigyasocialloginurl}';
+ 		var gigyaApiKey='${gigyaAPIKey}';
+ 		var commonResource='${commonResourcePath}';
+ 		var buildNumber='${buildNumber}'; 
+ 		/* done for TISPT-203 */
  		$(window).on('load',function(){
- 			$.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
+ 			/* $.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
  				$.getScript('${commonResourcePath}/js/minified/acc.gigya.min.js?v=${buildNumber}').done(function(){
  					loadGigya();
  				});
- 			});
+ 			}); */
+ 			callGigya();
  		});
  		</script>
  	</c:when>
  		<c:otherwise>
  		<script type="text/javascript">
+ 		/* done for TISPT-203 */
  		$(window).on('load',function(){
- 			$.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
+ 		/* 	$.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
  				$.getScript('${commonResourcePath}/js/gigya/acc.gigya.js').done(function(){
  					loadGigya();
  				});
- 			});
+ 			}); */
+ 			callGigyaWhenNotMinified();
  		});
  		</script>
  		</c:otherwise>
@@ -209,6 +217,7 @@
 		</c:otherwise>
 		</c:choose>
 	</c:if>
+
 
 	<tealium:sync/> 
 <!-- <script type="text/javascript">

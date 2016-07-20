@@ -612,6 +612,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INTERESTED_IN_EMAIL = "I am interested in receiving e-mails";
 	public static final String NOT_INTERESTED_IN_EMAIL = "I am not interested in receiving e-mails";
 	public static final String BRAND_NAME_PREFIX = "MBH";
+
 	public static final String CUSTOMERNOTFOUND = "Customer not found";
 	public static final String NOBANKLIST = "bank list is not available";
 
@@ -857,6 +858,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9322 = "B9322";
 	public static final String B9323 = "B9323";
 	public static final String B9324 = "B9324";
+	public static final String B9325 = "B9325";
+	public static final String B9326 = "B9326";
+	public static final String B9327 = "B9327";
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -1613,7 +1617,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CURRENT = "current".intern();
 	public static final String INVERTED_COMMA = "'".intern();
-
+	public static final String BRAND_NAME_PREFIX_LOWER = "mbh";
+	public static final String SELLER_NAME_PREFIX = "MSH";
 
 	private MarketplacecommerceservicesConstants()
 	{
