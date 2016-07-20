@@ -1,5 +1,10 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl;
 
+/**
+ * @author Techouts
+ * 
+ */
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -41,6 +46,17 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
     private MplCheckoutFacade mplCheckoutFacade;
 	@Resource
     private PincodeServiceFacade pincodeServiceFacade;
+	
+	
+	/**
+	 * this method is used to check whether delivery Address is changable or not
+	 * if this method returns false ,then change delivery Address button is
+	 * disabled
+	 * 
+	 * @author Techouts
+	 * @param orderObject
+	 * @return boolean
+	 */
 	@Override
 	public boolean isDeliveryAddressChangable(TypedObject orderObject) {
 		OrderModel orderModel = (OrderModel) orderObject.getObject();
@@ -59,7 +75,15 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 		return changable;
 	}
 
-	
+
+	/**
+	 * This method is used to create CRM Ticket for Change Delivery Address
+	 * @author Techouts
+	 * @param Order
+	 * @param customerId
+	 * @param source
+	 * @return void
+	 */
 	@Override
 	public void ticketCreateToCrm(OrderModel Order, String customerId,
 			String source) {
@@ -68,6 +92,15 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 
 	}
 
+	/**
+	 * This method is used to Call OMS for changeDeliveryAddress Request
+	 * 
+	 * @author Techouts
+	 * @param code
+	 * @param newDeliveryAddress
+	 * @return boolean
+	 */
+	@Override
 	public boolean changeDeliveryAddressCallToOMS(String orderId,
 			AddressModel newDeliveryAddress) throws EtailNonBusinessExceptions {
 		boolean omsResponce = false;
@@ -83,7 +116,14 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 		return omsResponce;
 
 	}
-
+	
+	/**
+	 * This Method is used to Get the temprory Address
+	 * 
+	 * @author Techouts
+	 * @param orderId
+	 * @return TemproryAddressModel
+	 */
 	@Override
 	public TemproryAddressModel getTempororyAddress(String orderId) throws ModelNotFoundException{
 		TemproryAddressModel tempAddress = modelService
@@ -99,6 +139,16 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 		return tempAddress;
 	}
 
+	/**
+	 * This method is used to save the delivery address and customer Addresses
+	 * and delivery Addresses for an order
+	 * 
+	 * @author Techouts
+	 * @param order
+	 * @param address
+	 * @return void
+	 * 
+	 */
 	@Override
 	public void saveDeliveryAddress(OrderModel order, AddressModel address)
 			throws ModelSavingException {
@@ -113,7 +163,13 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 
 	}
 
-
+	/**
+	 * This method is used to get The PincodeData for a particular pincode
+	 * 
+	 * @author Techouts
+	 * @param pincode
+	 * @return PincodeData
+	 */
 	@Override
 	public PincodeData getPincodeData(String pincode) {
 		 PincodeData pincodeData = null;

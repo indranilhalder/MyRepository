@@ -1,5 +1,9 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
+/**
+ * @author Techouts
+ */
+
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -41,6 +45,7 @@ import de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.AbstractCsWidgetRenderer;
 import de.hybris.platform.cscockpit.widgets.renderers.utils.PopupWidgetHelper;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
@@ -92,7 +97,6 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 		try {
 			sendSmsToCustomer(ordermodel);
 		} catch (InvalidKeyException | NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		final Hbox otpHbox = createHbox(widget, "OTP", false, true);
@@ -278,25 +282,34 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 							i--;
 						}
 
+					} catch (ModelRemovalException e) {
+						LOG.error("ModelRemovalException " + e.getMessage());
 					} catch (Exception e) {
 						LOG.error("Exception while calling ticketCreate to CRM methoid");
 					}
 				} else {
-					modelService.remove(newDeliveryAddress);
-					Messagebox.show(LabelUtils.getLabel(widget, "FailedAtOMS ",
-							new Object[0]), INFO, Messagebox.OK,
-							Messagebox.ERROR);
-					int i = popupWidgetHelper.getCurrentPopup().getParent()
-							.getChildren().size();
-					while (i >= 1) {
-						popupWidgetHelper
-								.getCurrentPopup()
-								.getParent()
-								.getChildren()
-								.remove(popupWidgetHelper.getCurrentPopup()
-										.getParent().getChildren().size() - 1);
-						i--;
-					}			
+					try {
+						modelService.remove(newDeliveryAddress);
+						Messagebox.show(LabelUtils.getLabel(widget,
+								"FailedAtOMS ", new Object[0]), INFO,
+								Messagebox.OK, Messagebox.ERROR);
+						int i = popupWidgetHelper.getCurrentPopup().getParent()
+								.getChildren().size();
+						while (i >= 1) {
+							popupWidgetHelper
+									.getCurrentPopup()
+									.getParent()
+									.getChildren()
+									.remove(popupWidgetHelper.getCurrentPopup()
+											.getParent().getChildren().size() - 1);
+							i--;
+						}
+					} catch (ModelRemovalException e) {
+						LOG.error("ModelRemovalException  while removing temprory Address"
+								+ e.getMessage());
+					} catch (Exception e) {
+						LOG.error("Exception occurred " + e.getMessage());
+					}
 				}
 			} else {
 				Messagebox.show(LabelUtils.getLabel(widget, "INVALID_OTP",
