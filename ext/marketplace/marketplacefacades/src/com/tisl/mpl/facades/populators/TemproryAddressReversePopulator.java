@@ -25,7 +25,7 @@ public class TemproryAddressReversePopulator implements Populator<AddressData, T
 	private CommonI18NService commonI18NService;
 	
 	@Override
-	public void populate(final AddressData addressData, final TemproryAddressModel temproryAddressModel)
+	public void populate(AddressData addressData,TemproryAddressModel temproryAddressModel)
 			throws ConversionException
 	{
 
@@ -35,8 +35,8 @@ public class TemproryAddressReversePopulator implements Populator<AddressData, T
 		temproryAddressModel.setFirstname(addressData.getFirstName());
 		temproryAddressModel.setLastname(addressData.getLastName());
 		temproryAddressModel.setAddressType(addressData.getAddressType());
-		temproryAddressModel.setLine1(addressData.getLine1());
-		temproryAddressModel.setLine2(addressData.getLine2());
+	   temproryAddressModel.setStreetname(addressData.getLine1());
+	   temproryAddressModel.setStreetnumber(addressData.getLine2());
 		temproryAddressModel.setAddressLine3(addressData.getLine3());
 		temproryAddressModel.setTown(addressData.getTown());
 		temproryAddressModel.setLandmark(addressData.getLandmark());
