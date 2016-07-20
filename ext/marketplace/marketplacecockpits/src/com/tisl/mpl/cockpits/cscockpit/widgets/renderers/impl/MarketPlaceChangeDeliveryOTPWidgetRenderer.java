@@ -26,9 +26,7 @@ import com.tisl.mpl.core.model.OTPModel;
 import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
-import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
-import com.tisl.mpl.sms.facades.SendSMSFacade;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.widgets.Widget;
@@ -40,13 +38,11 @@ import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.CallContextController;
 import de.hybris.platform.cscockpit.widgets.controllers.OrderManagementActionsWidgetController;
 import de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel;
-import de.hybris.platform.cscockpit.widgets.popup.PopupWindowCreator;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.AbstractCsWidgetRenderer;
 import de.hybris.platform.cscockpit.widgets.renderers.utils.PopupWidgetHelper;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 		extends
@@ -58,21 +54,13 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 	private static final String INFO = "info";
 
 	@Autowired
-	private FlexibleSearchService flexibleSearhService;
-	@Autowired
-	private MplOrderFacade mplOrderFacade;
-	@Autowired
 	private OTPGenericService oTPGenericService;
 	@Autowired
 	private ModelService modelService;
 	@Autowired
-	private SendSMSFacade sendSMSFacade;
-	@Autowired
 	private MarketplaceCallContextController marketplaceCallContextController;
 	@Autowired
 	private ConfigurationService configurationService;
-	@Autowired
-	private PopupWindowCreator popupWindowCreator;
 	@Autowired
 	private PopupWidgetHelper popupWidgetHelper;
 	@Autowired
@@ -160,7 +148,7 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 			throws InvalidKeyException, NoSuchAlgorithmException {
 		String oTPMobileNumber = ordermodel.getDeliveryAddress().getPhone1();
 		OTPModel OTP = oTPGenericService.getLatestOTPModel(ordermodel.getUser()
-				.getUid(), OTPTypeEnum.COD);
+				.getUid(), OTPTypeEnum.CDA);
 		String userId = ordermodel.getUser().getUid();
 		final String contactNumber = configurationService
 				.getConfiguration()
@@ -169,7 +157,7 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 		String mplCustomerName = (null == ordermodel.getUser().getName()) ? ""
 				: ordermodel.getUser().getName();
 		String smsContent = oTPGenericService.generateOTP(userId,
-				OTPTypeEnum.COD.getCode(), oTPMobileNumber);
+				OTPTypeEnum.CDA.getCode(), oTPMobileNumber);
 
 		// sendSMSFacade
 		// .sendSms(
@@ -244,7 +232,7 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 			OTPResponseData otpResponse = oTPGenericService.validateOTP(
 					orderModel.getUser().getUid(), orderModel
 							.getDeliveryAddress().getPhone1(), oTPTextBox
-							.getValue(), OTPTypeEnum.COD, time);
+							.getValue(), OTPTypeEnum.CDA, time);
 			boolean validate = otpResponse.getOTPValid();
 			if (validate) {
 				boolean omsStatus = mplChangeDeliveryAddressController

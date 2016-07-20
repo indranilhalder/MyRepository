@@ -1,5 +1,7 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,13 +11,15 @@ import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
+import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplChangeDeliveryAddressDao;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
-import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultOrderManagementActionsWidgetController;
+import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -35,11 +39,12 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 	private ModelService modelService;
 	@Autowired
     private MplCheckoutFacade mplCheckoutFacade;
+	@Resource
+    private PincodeServiceFacade pincodeServiceFacade;
 	@Override
 	public boolean isDeliveryAddressChangable(TypedObject orderObject) {
 		OrderModel orderModel = (OrderModel) orderObject.getObject();
 		boolean changable = false;
-		final OrderData orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel.getCode());
 		try {
 			if (null != orderModel.getParentReference()
 					&& null != orderModel.getParentReference().getCode()) {
@@ -106,6 +111,20 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 			LOG.error("Exception occurred " + e.getMessage());
 		}
 
+	}
+
+
+	@Override
+	public PincodeData getPincodeData(String pincode) {
+		 PincodeData pincodeData = null;
+		try {
+			   pincodeData = pincodeServiceFacade.getAutoPopulatePincodeData(pincode);
+		}catch ( FlexibleSearchException e) {
+			LOG.error(" FlexibleSearchException while getting pincode data "+e.getMessage());
+		}catch(Exception e) {
+			LOG.error(" Exception occurred while getting pincode data "+e.getMessage());
+		}
+		return pincodeData;
 	}
 
 }

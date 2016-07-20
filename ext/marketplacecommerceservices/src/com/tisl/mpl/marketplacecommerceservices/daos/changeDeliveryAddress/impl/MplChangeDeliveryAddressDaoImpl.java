@@ -5,13 +5,13 @@ package com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl
 
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.log4j.Logger;
@@ -30,18 +30,18 @@ public class MplChangeDeliveryAddressDaoImpl implements MplChangeDeliveryAddress
 	private static final Logger LOG = Logger.getLogger(MplChangeDeliveryAddressDaoImpl.class);
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-	@Autowired 
+	@Autowired
 	private ModelService modelService;
 
 	/***
 	 * OrderId Based On We will get TemproryAddressModel
-	 * 
+	 *
 	 * @param orderCode
 	 * @return TemproryAddressModel
 	 */
 
 	@Override
-	public void saveDeliveryAddress(OrderModel orderModel,AddressModel address)
+	public void saveDeliveryAddress(final OrderModel orderModel, final AddressModel address)
 	{
 		try
 		{
@@ -49,23 +49,34 @@ public class MplChangeDeliveryAddressDaoImpl implements MplChangeDeliveryAddress
 			OrderModel parentorder = orderModel.getParentReference();
 			UserModel user = orderModel.getUser();
 			parentorder.setDeliveryAddress(address);
-			modelService.save(orderModel);
-			modelService.save(orderModel.getParentReference());
-			//modelService.remove(address);
-			Collection<AddressModel> addresses = orderModel.getParentReference().getDeliveryAddresses();
-			addresses.add(address);
-			modelService.save(addresses);
+			Collection<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
+			Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
+			Collection<AddressModel> deliveryAddresses = orderModel.getParentReference().getDeliveryAddresses();
+			if (null != deliveryAddresses)
+			{
+				deliveryAddressesList.addAll(deliveryAddresses);
+			}
 			if (null != user.getAddresses())
 			{
-				user.getAddresses().add(address);
+				customerAddressesList.addAll(user.getAddresses());
 			}
+			if (null != address)
+			{
+				deliveryAddressesList.add(address);
+				customerAddressesList.add(address);
+			}
+			user.setAddresses(customerAddressesList);
+			orderModel.getParentReference().setDeliveryAddresses(deliveryAddressesList);
+			modelService.save(orderModel);
+			modelService.save(orderModel.getParentReference());
 			modelService.save(user);
-		}catch (ModelSavingException e)
+		}
+		catch (final ModelSavingException e)
 		{
 			LOG.debug("Model saving Exception" + e.getMessage());
 
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			LOG.debug("Exception while saving Address" + e.getMessage());
 		}
@@ -74,12 +85,12 @@ public class MplChangeDeliveryAddressDaoImpl implements MplChangeDeliveryAddress
 
 	/***
 	 * OrderId Based On We will get TemproryAddressModel
-	 * 
+	 *
 	 * @param orderCode
 	 * @return TemproryAddressModel
 	 */
 	@Override
-	public TemproryAddressModel geTemproryAddressModel(String orderId)
+	public TemproryAddressModel geTemproryAddressModel(final String orderId)
 	{
 		TemproryAddressModel tempAddress = modelService.create(TemproryAddressModel.class);
 		try
@@ -87,16 +98,16 @@ public class MplChangeDeliveryAddressDaoImpl implements MplChangeDeliveryAddress
 			tempAddress.setOrderId(orderId);
 			tempAddress = flexibleSearchService.getModelByExample(tempAddress);
 		}
-		catch (FlexibleSearchException e)
+		catch (final FlexibleSearchException e)
 		{
 			LOG.error(" FlexibleSearchException exception " + e.getMessage());
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			LOG.error("Exception occurred while getting the temparory address " + e.getMessage());
 		}
 		return tempAddress;
 	}
 
-	
+
 }

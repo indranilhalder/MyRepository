@@ -33,11 +33,12 @@ import org.zkoss.zul.Window;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceChangeDeliveryAddressController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.LandMarksModel;
 import com.tisl.mpl.core.model.TemproryAddressModel;
+import com.tisl.mpl.facade.data.LandMarksData;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.data.PincodeData;
+import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
-import com.tisl.mpl.model.StateModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -96,6 +97,8 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 	@Autowired
 	private MarketPlaceChangeDeliveryAddressController mplChangeDeliveryAddressController;
 	private CallContextController callContextController;
+	
+	
 
 	protected CallContextController getCallContextController() {
 		return callContextController;
@@ -222,14 +225,13 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				content.appendChild(pincodeHbox);
 				pincodeFieldTextBox.setMaxlength(Integer.valueOf(LabelUtils
 						.getLabel(widget, "maxLength", new Object[0])));
-				PincodeModel pincodeModel = new PincodeModel();
-				pincodeModel = new PincodeModel();
-				pincodeModel.setPincode(pincodeFieldTextBox.getValue());
-				pincodeModel = flexibleSearhService
-						.getModelByExample(pincodeModel);
-				String cityName = pincodeModel.getCityName();
-				StateModel stateModel = pincodeModel.getState();
-				String stateName = stateModel.getDescription();
+				PincodeData pincodeData = new PincodeData();
+				//pincodeModel = new PincodeModel();
+				//pincodeModel.setPincode(pincodeFieldTextBox.getValue());
+				pincodeData = mplChangeDeliveryAddressController.getPincodeData(pincodeFieldTextBox.getValue());
+				String cityName = pincodeData.getCityName();
+				StateData stateData = pincodeData.getState();
+				String stateName = stateData.getName();
 				String countryName = commonI18NService.getCountry("IN")
 						.getName();
 
@@ -278,8 +280,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 			    final Listbox landMarkListbox = new Listbox();
 
-				Collection<LandMarksModel> landMarks = pincodeModel
-						.getLandmarks();
+				Collection<LandMarksData> landMarks = pincodeData.getLandMarks();
 				createLandMarkListBox(widget, landMarkHbox, landMarkListbox,
 						landMarks);
 				landMarkHbox.setClass("hbox");
@@ -409,13 +410,13 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 	private Listbox createLandMarkListBox(
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			Hbox landMarkHbox, Listbox landMarkListbox,
-			Collection<LandMarksModel> landMarks) {
+			Collection<LandMarksData> landMarks) {
 		if (null != landMarkListbox && null != landMarkListbox.getItems()) {
 			landMarkListbox.getItems().clear();
 		}
 		landMarkListbox.setMultiple(false);
 		landMarkListbox.setMold("select");
-		for (final LandMarksModel landMark : landMarks) {
+		for (final LandMarksData landMark : landMarks) {
 			final Listitem listItem = new Listitem(landMark.getLandmark());
 			listItem.setValue(landMark.getLandmark());
 			listItem.setParent(landMarkListbox);
@@ -489,38 +490,36 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				if (null != pincode) {
 					if (String.valueOf(pincode).matches(PIN_REGEX)) {
 						LOG.info("Pin code entered:" + pincode);
-						PincodeModel pincodeModel = new PincodeModel();
+						PincodeData pincodeData = new PincodeData();
 						try {
-							pincodeModel.setPincode(pincode);
-							pincodeModel = flexibleSearhService
-									.getModelByExample(pincodeModel);
+							pincodeData.setPincode(pincode);
+							pincodeData = mplChangeDeliveryAddressController.getPincodeData(pincode);
 						} catch (Exception e) {
 							LOG.error("FlexibleSearchException No result for the given pincode "
 									+ pincodeValue.getValue());
 						}
-						if (null != pincodeModel) {
-							if (null != pincodeModel.getCityName()) {
-								cityFieldTextBox.setValue(pincodeModel
+						if (null != pincodeData) {
+							if (null != pincodeData.getCityName()) {
+								cityFieldTextBox.setValue(pincodeData
 										.getCityName());
 							} else {
 								cityFieldTextBox
 										.setValue(MarketplacecommerceservicesConstants.EMPTY);
 							}
-							StateModel statemodel = pincodeModel.getState();
-							if (null != statemodel
-									&& null != statemodel.getDescription()) {
-								stateFieldTextBox.setValue(statemodel
-										.getDescription());
+							StateData stateData = pincodeData.getState();
+							if (null != stateData
+									&& null != stateData.getName()) {
+								stateFieldTextBox.setValue(stateData.getName());
 							} else {
 								stateFieldTextBox
 										.setValue(MarketplacecommerceservicesConstants.EMPTY);
 							}
-							if (null != pincodeModel.getLandmarks()) {
+							if (null != pincodeData.getLandMarks()) {
 								landMarkListBox.setDisabled(false);
 								landMarkTextBox.setDisabled(true);
 								createLandMarkListBox(widget, landMarkHbox,
 										landMarkListBox,
-										pincodeModel.getLandmarks());
+										pincodeData.getLandMarks());
 							} else {
 								landMarkListBox.getItems().clear();
 								landMarkListBox.setDisabled(true);

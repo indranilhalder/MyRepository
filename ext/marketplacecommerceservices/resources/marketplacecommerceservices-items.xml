@@ -58,6 +58,7 @@
 			<value code="COD" />
 			<value code="Easy_Checkout" />
 			<value code="C2C" />
+			<value code="CDA" />
 		</enumtype>
 		<enumtype code="orderStatus" autocreate="false" generate="true"
 			dynamic="true">
