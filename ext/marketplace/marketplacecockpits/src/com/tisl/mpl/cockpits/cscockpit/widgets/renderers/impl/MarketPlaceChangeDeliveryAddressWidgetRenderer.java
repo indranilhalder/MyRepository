@@ -1,5 +1,8 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
+/**
+ * @author Techouts
+ */
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -71,7 +74,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 	private static final Logger LOG = Logger
 			.getLogger(MarketPlaceChangeDeliveryAddressWidgetRenderer.class);
-	private static final String CUSTOMER_DETAILS_UPDATED = "customerdetailsupdated";
 	private static final String INFO = "info";
 	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
 	private static final String NAME_REGEX = "[a-zA-Z ]+";
@@ -97,8 +99,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 	@Autowired
 	private MarketPlaceChangeDeliveryAddressController mplChangeDeliveryAddressController;
 	private CallContextController callContextController;
-	
-	
 
 	protected CallContextController getCallContextController() {
 		return callContextController;
@@ -146,8 +146,8 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 					content.appendChild(label);
 					return content;
 				}
-				final AddressModel deliveryAddress = ordermodel.getParentReference()
-						.getDeliveryAddress();
+				final AddressModel deliveryAddress = ordermodel
+						.getParentReference().getDeliveryAddress();
 				content.setClass("changeDeliveryAddress");
 				// First Name Hbox
 				final Hbox firstNameHbox = createHbox(widget, "firstName",
@@ -226,9 +226,10 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				pincodeFieldTextBox.setMaxlength(Integer.valueOf(LabelUtils
 						.getLabel(widget, "maxLength", new Object[0])));
 				PincodeData pincodeData = new PincodeData();
-				//pincodeModel = new PincodeModel();
-				//pincodeModel.setPincode(pincodeFieldTextBox.getValue());
-				pincodeData = mplChangeDeliveryAddressController.getPincodeData(pincodeFieldTextBox.getValue());
+				// pincodeModel = new PincodeModel();
+				// pincodeModel.setPincode(pincodeFieldTextBox.getValue());
+				pincodeData = mplChangeDeliveryAddressController
+						.getPincodeData(pincodeFieldTextBox.getValue());
 				String cityName = pincodeData.getCityName();
 				StateData stateData = pincodeData.getState();
 				String stateName = stateData.getName();
@@ -278,9 +279,10 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				landMarkHbox.setClass("hbox");
 				content.appendChild(landMarkHbox);
 
-			    final Listbox landMarkListbox = new Listbox();
+				final Listbox landMarkListbox = new Listbox();
 
-				Collection<LandMarksData> landMarks = pincodeData.getLandMarks();
+				Collection<LandMarksData> landMarks = pincodeData
+						.getLandMarks();
 				createLandMarkListBox(widget, landMarkHbox, landMarkListbox,
 						landMarks);
 				landMarkHbox.setClass("hbox");
@@ -306,7 +308,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 						createAddPinCodeListener(widget, pincodeFieldTextBox,
 								cityFieldTextBox, stateFieldTextBox,
 								landMarkListbox, landMarkTextBox, cityHbox,
-								stateHbox, CountryHbox, landMarkHbox));				
+								stateHbox, CountryHbox, landMarkHbox));
 				Div div = new Div();
 				final Button update = new Button(LabelUtils.getLabel(widget,
 						"Update"));
@@ -314,18 +316,19 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				div.appendChild(update);
 				content.appendChild(div);
 				update.addEventListener(Events.ON_CLICK, new EventListener() {
-						@Override
-						public void onEvent(final Event event) throws InterruptedException,
-								ParseException, InvalidKeyException, NoSuchAlgorithmException {
+					@Override
+					public void onEvent(final Event event)
+							throws InterruptedException, ParseException,
+							InvalidKeyException, NoSuchAlgorithmException {
 
-							handleUpdateDetails(widget,deliveryAddress, firstNameFieldTextBox,
-									lastNameFieldTextBox, emailFieldTextBox,
-									line1FieldTextBox, line2FieldTextBox,
-									line3FieldTextBox, pincodeFieldTextBox,
-									countryFieldTextBox, stateFieldTextBox,
-									cityFieldTextBox, landMarkListbox,
-									landMarkTextBox, mobileNumberFieldTextBox,
-									content);
+						handleUpdateDetails(widget, deliveryAddress,
+								firstNameFieldTextBox, lastNameFieldTextBox,
+								emailFieldTextBox, line1FieldTextBox,
+								line2FieldTextBox, line3FieldTextBox,
+								pincodeFieldTextBox, countryFieldTextBox,
+								stateFieldTextBox, cityFieldTextBox,
+								landMarkListbox, landMarkTextBox,
+								mobileNumberFieldTextBox, content);
 					}
 				});
 				return content;
@@ -493,7 +496,8 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 						PincodeData pincodeData = new PincodeData();
 						try {
 							pincodeData.setPincode(pincode);
-							pincodeData = mplChangeDeliveryAddressController.getPincodeData(pincode);
+							pincodeData = mplChangeDeliveryAddressController
+									.getPincodeData(pincode);
 						} catch (Exception e) {
 							LOG.error("FlexibleSearchException No result for the given pincode "
 									+ pincodeValue.getValue());
@@ -561,315 +565,288 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		}
 	}
 
-		public void handleUpdateDetails(
-				final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget, final AddressModel deliveryAddress,
-				final Textbox firstNameFieldTextBox,
-				final Textbox lastNameFieldTextBox,
-				final Textbox emailFieldTextBox,
-				final Textbox line1FieldTextBox,
-				final Textbox line2FieldTextBox,
-				final Textbox line3FieldTextBox,
-				final Textbox pincodeFieldTextBox,
-				final Textbox countryFieldTextBox,
-				final Textbox stateFieldTextBox,
-				final Textbox cityFieldTextBox, final Listbox landMarkListItem,
-				final Textbox landMarkFieldTextBox,
-				final Textbox mobileNumberFieldTextBox, Div content)
-				throws InterruptedException, ParseException,
-				InvalidKeyException, NoSuchAlgorithmException {
+	public void handleUpdateDetails(
+			final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
+			final AddressModel deliveryAddress,
+			final Textbox firstNameFieldTextBox,
+			final Textbox lastNameFieldTextBox,
+			final Textbox emailFieldTextBox, final Textbox line1FieldTextBox,
+			final Textbox line2FieldTextBox, final Textbox line3FieldTextBox,
+			final Textbox pincodeFieldTextBox,
+			final Textbox countryFieldTextBox, final Textbox stateFieldTextBox,
+			final Textbox cityFieldTextBox, final Listbox landMarkListItem,
+			final Textbox landMarkFieldTextBox,
+			final Textbox mobileNumberFieldTextBox, Div content)
+			throws InterruptedException, ParseException, InvalidKeyException,
+			NoSuchAlgorithmException {
 
-			final String changedFirstName = firstNameFieldTextBox.getValue();
-			final String changedLastName = lastNameFieldTextBox.getValue();
-			final String changedEmail = emailFieldTextBox.getValue();
-			final String changedLine1 = line1FieldTextBox.getValue();
-			final String changedLine2 = line2FieldTextBox.getValue();
-			final String changedLine3 = line3FieldTextBox.getValue();
-			final String changedPincode = pincodeFieldTextBox.getValue();
-			final String changedCountry = countryFieldTextBox.getValue()
-					.toString();
-			final String changedState = stateFieldTextBox.getValue().toString();
-			final String changedCity = cityFieldTextBox.getValue().toString();
-			String changedLandMark = StringUtils.EMPTY;
-			PincodeModel pincodeModel = modelService.create(PincodeModel.class);
-			pincodeModel.setPincode(changedPincode);
+		final String changedFirstName = firstNameFieldTextBox.getValue();
+		final String changedLastName = lastNameFieldTextBox.getValue();
+		final String changedEmail = emailFieldTextBox.getValue();
+		final String changedLine1 = line1FieldTextBox.getValue();
+		final String changedLine2 = line2FieldTextBox.getValue();
+		final String changedLine3 = line3FieldTextBox.getValue();
+		final String changedPincode = pincodeFieldTextBox.getValue();
+		final String changedCountry = countryFieldTextBox.getValue().toString();
+		final String changedState = stateFieldTextBox.getValue().toString();
+		final String changedCity = cityFieldTextBox.getValue().toString();
+		String changedLandMark = StringUtils.EMPTY;
+		PincodeModel pincodeModel = modelService.create(PincodeModel.class);
+		pincodeModel.setPincode(changedPincode);
 
-			if (!landMarkFieldTextBox.isDisabled()) {
-				if (null != landMarkFieldTextBox.getValue()) {
-					changedLandMark = landMarkFieldTextBox.getValue();
-				}
-			} else {
-				List<Listitem> items = landMarkListItem.getItems();
-				for (Listitem item : items) {
+		if (!landMarkFieldTextBox.isDisabled()) {
+			if (null != landMarkFieldTextBox.getValue()) {
+				changedLandMark = landMarkFieldTextBox.getValue();
+			}
+		} else {
+			List<Listitem> items = landMarkListItem.getItems();
+			for (Listitem item : items) {
 
-					if (item.isSelected()) {
-						changedLandMark = (String) item.getValue();
-					}
-				}
-			}
-			final String changedMobileNumber = mobileNumberFieldTextBox
-					.getValue();
-			TypedObject order = getOrder();
-			final OrderModel ordermodel = (OrderModel) order.getObject();
-			AbstractOrderModel parentOrder = ordermodel.getParentReference();
-			final TemproryAddressModel tempororyAddress = modelService
-					.create(TemproryAddressModel.class);
-			tempororyAddress.setOrderId(parentOrder.getCode());
-			CustomerModel customer = (CustomerModel) callContextController
-					.getCurrentCustomer().getObject();
-			tempororyAddress.setOwner(customer);
-			if (changedFirstName != null && !changedFirstName.isEmpty()) {
-				tempororyAddress.setFirstname(changedFirstName);
-				LOG.debug(" Changed First Name =" + changedFirstName);
-			} else {
-				tempororyAddress
-						.setFirstname(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedLastName != null && !changedLastName.isEmpty()) {
-				tempororyAddress.setLastname(changedLastName);
-				LOG.debug("Changed last Name =" + changedLastName);
-			} else {
-				tempororyAddress
-						.setLastname(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedLastName != null && !changedLastName.isEmpty()) {
-				tempororyAddress.setLastname(changedLastName);
-				LOG.debug("Changed last Name =" + changedLastName);
-			} else {
-				tempororyAddress
-						.setLastname(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedEmail != null && !changedEmail.isEmpty()) {
-				tempororyAddress.setEmail(changedEmail);
-				LOG.debug("Changed Email =" + changedEmail);
-			} else {
-				tempororyAddress
-						.setEmail(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedLine1 != null && !changedLine1.isEmpty()) {
-				tempororyAddress.setLine1(changedLine1.toString());
-			} else {
-				tempororyAddress
-						.setLine1(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedLine2 != null && !changedLine2.isEmpty()) {
-				tempororyAddress.setLine2(changedLine2);
-			} else {
-				tempororyAddress
-						.setLine2(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedLine3 != null && !changedLine3.isEmpty()) {
-				tempororyAddress.setAddressLine3(changedLine3);
-			} else {
-				tempororyAddress
-						.setAddressLine3(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedPincode != null && !changedPincode.isEmpty()) {
-				tempororyAddress.setPostalcode(changedPincode);
-			} else {
-				tempororyAddress
-						.setPostalcode(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedState != null && !changedState.isEmpty()) {
-				tempororyAddress.setState(changedState);
-				LOG.debug("Changed State Name =" + changedState);
-			} else {
-				tempororyAddress
-						.setState(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedCity != null && !changedCity.isEmpty()) {
-				tempororyAddress.setCity(changedCity);
-			} else {
-				tempororyAddress
-						.setCity(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedState != null && !changedState.isEmpty()) {
-				tempororyAddress.setState(changedState);
-			} else {
-				tempororyAddress
-						.setState(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedCountry != null && !changedCountry.isEmpty()) {
-				CountryModel countrymodel = commonI18NService.getCountry("IN");
-				Locale loc = new Locale("en");
-				countrymodel.setName(changedCountry, loc);
-
-				tempororyAddress.setCountry(countrymodel);
-			}
-			if (changedCity != null && !changedCity.isEmpty()) {
-				tempororyAddress.setCity(changedCity);
-			} else {
-				tempororyAddress
-						.setCity(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedLandMark != null && !changedLandMark.isEmpty()) {
-				tempororyAddress.setLandmark(changedLandMark);
-				LOG.debug("Changed LandMark :" + changedLandMark);
-			} else {
-				tempororyAddress
-						.setLandmark(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			if (changedMobileNumber != null) {
-				tempororyAddress.setPhone1(changedMobileNumber);
-				LOG.debug("Changed Mobile Number :" + changedMobileNumber);
-			} else {
-				tempororyAddress
-						.setPhone1(MarketplacecommerceservicesConstants.EMPTY);
-			}
-			String validatemessage = validatenewDeliveryAddress(tempororyAddress);
-			if (!validatemessage
-					.equalsIgnoreCase(MarketplaceCockpitsConstants.SUCCESS)) {
-				popupMessage(widget, validatemessage);
-			} else {
-				try {
-					Messagebox.show(LabelUtils.getLabel(widget,
-							"ConfirmToChangeDeliveryAddress", new Object[0]),
-							"Question", Messagebox.OK | Messagebox.CANCEL,
-							Messagebox.QUESTION,
-							new org.zkoss.zk.ui.event.EventListener() {
-								public void onEvent(Event e)
-										throws InterruptedException {
-									if (e.getName().equals("onOK")) {
-										changeDeliveryok(widget);
-										return;
-									} else {
-										return;
-									}
-								}
-								private void changeDeliveryok(
-										Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget) {
-									modelService.save(tempororyAddress);
-									createOTPPopupWindow(widget,
-											popupWidgetHelper.getCurrentPopup()
-													.getParent());
-								}
-								protected Widget createPopupWidget(
-										WidgetContainer<Widget> widgetContainer,
-										String widgetConfig, String popupCode) {
-									WidgetConfig popupWidgetConfig = (WidgetConfig) SpringUtil
-											.getBean(widgetConfig);
-									Map<String, Widget> widgetMap = widgetContainer
-											.initialize(Collections
-													.singletonMap(popupCode,
-															popupWidgetConfig));
-									return (Widget) widgetMap.get(popupCode);
-								}
-
-								private Window createOTPPopupWindow(
-										final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> parentWidget,
-										final Component parentWindow) {
-									final WidgetContainer<Widget> widgetContainer = new DefaultWidgetContainer(
-											new DefaultWidgetFactory());
-									Widget popupWidget = createPopupWidget(
-											widgetContainer,
-											"csChangeDeliveryAddressOtpWidgetConfig",
-											"csChangeDeliveryAddressOtpWidgetConfig-Popup");
-									final Window popup = new Window();
-									popup.appendChild(popupWidget);
-									popup.addEventListener("onClose",
-											new EventListener() {
-												public void onEvent(Event event) {
-													handleOTPPopupCloseEvent(
-															parentWidget,
-															parentWindow,
-															widgetContainer,
-															popup);
-												}
-
-												private void handleOTPPopupCloseEvent(
-														Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> parentWidget,
-														Component parentWindow,
-														WidgetContainer<Widget> widgetContainer,
-														Window popup) {
-													widgetContainer.cleanup();
-													parentWindow
-															.removeChild(popup);
-													modelService
-															.remove(tempororyAddress);
-												}
-											});
-									popup.setTitle(LabelUtils.getLabel(
-											popupWidget,
-											"popup.changeDeliveryConfirmation",
-											new Object[0]));
-									popup.setParent(parentWindow);
-									popup.doHighlighted();
-									popup.setClosable(true);
-									popup.setWidth("900px");
-									return popup;
-								}
-							});
-				} catch (Exception e) {
-					LOG.error("Exception occurred " + e.getMessage());
+				if (item.isSelected()) {
+					changedLandMark = (String) item.getValue();
 				}
 			}
 		}
+		final String changedMobileNumber = mobileNumberFieldTextBox.getValue();
+		TypedObject order = getOrder();
+		final OrderModel ordermodel = (OrderModel) order.getObject();
+		AbstractOrderModel parentOrder = ordermodel.getParentReference();
+		final TemproryAddressModel tempororyAddress = modelService
+				.create(TemproryAddressModel.class);
+		tempororyAddress.setOrderId(parentOrder.getCode());
+		CustomerModel customer = (CustomerModel) callContextController
+				.getCurrentCustomer().getObject();
+		tempororyAddress.setOwner(customer);
+		if (changedFirstName != null && !changedFirstName.isEmpty()) {
+			tempororyAddress.setFirstname(changedFirstName);
+			LOG.debug(" Changed First Name =" + changedFirstName);
+		} else {
+			tempororyAddress
+					.setFirstname(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedLastName != null && !changedLastName.isEmpty()) {
+			tempororyAddress.setLastname(changedLastName);
+			LOG.debug("Changed last Name =" + changedLastName);
+		} else {
+			tempororyAddress
+					.setLastname(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedLastName != null && !changedLastName.isEmpty()) {
+			tempororyAddress.setLastname(changedLastName);
+			LOG.debug("Changed last Name =" + changedLastName);
+		} else {
+			tempororyAddress
+					.setLastname(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedEmail != null && !changedEmail.isEmpty()) {
+			tempororyAddress.setEmail(changedEmail);
+			LOG.debug("Changed Email =" + changedEmail);
+		} else {
+			tempororyAddress
+					.setEmail(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedLine1 != null && !changedLine1.isEmpty()) {
+			tempororyAddress.setLine1(changedLine1.toString());
+		} else {
+			tempororyAddress
+					.setLine1(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedLine2 != null && !changedLine2.isEmpty()) {
+			tempororyAddress.setLine2(changedLine2);
+		} else {
+			tempororyAddress
+					.setLine2(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedLine3 != null && !changedLine3.isEmpty()) {
+			tempororyAddress.setAddressLine3(changedLine3);
+		} else {
+			tempororyAddress
+					.setAddressLine3(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedPincode != null && !changedPincode.isEmpty()) {
+			tempororyAddress.setPostalcode(changedPincode);
+		} else {
+			tempororyAddress
+					.setPostalcode(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedState != null && !changedState.isEmpty()) {
+			tempororyAddress.setState(changedState);
+			LOG.debug("Changed State Name =" + changedState);
+		} else {
+			tempororyAddress
+					.setState(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedCity != null && !changedCity.isEmpty()) {
+			tempororyAddress.setCity(changedCity);
+		} else {
+			tempororyAddress
+					.setCity(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedState != null && !changedState.isEmpty()) {
+			tempororyAddress.setState(changedState);
+		} else {
+			tempororyAddress
+					.setState(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedCountry != null && !changedCountry.isEmpty()) {
+			CountryModel countrymodel = commonI18NService.getCountry("IN");
+			Locale loc = new Locale("en");
+			countrymodel.setName(changedCountry, loc);
 
-		private String validatenewDeliveryAddress(
-				TemproryAddressModel newDeliveryAddress) {
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getFirstname())
-					|| !newDeliveryAddress.getFirstname().matches(NAME_REGEX)) {
-				return MarketplaceCockpitsConstants.FIRST_NAME_NOT_VALID;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getLastname())
-					|| !newDeliveryAddress.getLastname().matches(NAME_REGEX)) {
-				return MarketplaceCockpitsConstants.LAST_NAME_NOT_VALID;
-			}
-			if (StringUtils.isNotEmpty(newDeliveryAddress.getEmail())
-					&& !newDeliveryAddress.getEmail().matches(EMAIL_REGEX)) {
-				return MarketplaceCockpitsConstants.EMAIL_NOT_VALID;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getLine1())
-					|| !newDeliveryAddress.getLine1().matches(
-							ADDRESS_LINE1_REGEX)) {
-				return MarketplaceCockpitsConstants.LINE1_NOT_VALID;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getAddressLine3())
-					|| !newDeliveryAddress.getAddressLine3().matches(
-							ADDRESS_LINE1_REGEX)) {
-				return MarketplaceCockpitsConstants.LINE3_NOT_VALID;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getLine2())
-					|| !newDeliveryAddress.getLine2().matches(
-							ADDRESS_LINE1_REGEX)) {
-				return MarketplaceCockpitsConstants.LINE2_NOT_VALID;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getCity())
-					|| !newDeliveryAddress.getCity().matches(NAME_REGEX)) {
-				return MarketplaceCockpitsConstants.CITY_NOT_VALID;
-			}
-			if (null == newDeliveryAddress.getCountry()
-					|| StringUtils.isNotEmpty(newDeliveryAddress.getCountry()
-							.getName())
-					&& !newDeliveryAddress.getCountry().getName()
-							.matches(NAME_REGEX)) {
-				return MarketplaceCockpitsConstants.COUNTRY_NOT_VALID;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getState())
-					|| !newDeliveryAddress.getState().matches(NAME_REGEX)) {
-				return MarketplaceCockpitsConstants.STATE_NOT_VALID;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getAddressLine3())
-					|| !newDeliveryAddress.getAddressLine3().matches(
-							ADDRESS_LINE1_REGEX)) {
-				return MarketplaceCockpitsConstants.LINE3_NOT_VALID;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getPostalcode())) {
-				return MarketplaceCockpitsConstants.PIN_CODE_EMPTY;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getPhone1())
-					|| !newDeliveryAddress.getPhone1().matches(
-							MOBILENUMBER_REGEX)) {
-				return MarketplaceCockpitsConstants.MOBILENUMBER_NOT_VALID;
-			}
-			if (!StringUtils.isNotEmpty(newDeliveryAddress.getLandmark())
-					|| !newDeliveryAddress.getLandmark().matches(
-							ADDRESS_LINE1_REGEX)) {
-				return MarketplaceCockpitsConstants.LAND_MARK_NOT_VALID;
-			} else {
-				return MarketplaceCockpitsConstants.SUCCESS;
+			tempororyAddress.setCountry(countrymodel);
+		}
+		if (changedCity != null && !changedCity.isEmpty()) {
+			tempororyAddress.setCity(changedCity);
+		} else {
+			tempororyAddress
+					.setCity(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedLandMark != null && !changedLandMark.isEmpty()) {
+			tempororyAddress.setLandmark(changedLandMark);
+			LOG.debug("Changed LandMark :" + changedLandMark);
+		} else {
+			tempororyAddress
+					.setLandmark(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		if (changedMobileNumber != null) {
+			tempororyAddress.setPhone1(changedMobileNumber);
+			LOG.debug("Changed Mobile Number :" + changedMobileNumber);
+		} else {
+			tempororyAddress
+					.setPhone1(MarketplacecommerceservicesConstants.EMPTY);
+		}
+		String validatemessage = validatenewDeliveryAddress(tempororyAddress);
+		if (!validatemessage
+				.equalsIgnoreCase(MarketplaceCockpitsConstants.SUCCESS)) {
+			popupMessage(widget, validatemessage);
+		} else {
+			try {
+				proceedToChangeAddress(widget, tempororyAddress);
+			} catch (Exception e) {
+				LOG.error("Exception occurred " + e.getMessage());
 			}
 		}
-	
+	}
+
+	private void proceedToChangeAddress(
+			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
+			TemproryAddressModel tempororyAddress) {
+		modelService.save(tempororyAddress);
+		createOTPPopupWindow(widget, popupWidgetHelper.getCurrentPopup()
+				.getParent(), tempororyAddress);
+	}
+
+	protected Widget createPopupWidget(WidgetContainer<Widget> widgetContainer,
+			String widgetConfig, String popupCode) {
+		WidgetConfig popupWidgetConfig = (WidgetConfig) SpringUtil
+				.getBean(widgetConfig);
+		Map<String, Widget> widgetMap = widgetContainer.initialize(Collections
+				.singletonMap(popupCode, popupWidgetConfig));
+		return (Widget) widgetMap.get(popupCode);
+	}
+
+	private Window createOTPPopupWindow(
+			final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> parentWidget,
+			final Component parentWindow,
+			final TemproryAddressModel tempororyAddress) {
+		final WidgetContainer<Widget> widgetContainer = new DefaultWidgetContainer(
+				new DefaultWidgetFactory());
+		Widget popupWidget = createPopupWidget(widgetContainer,
+				"csChangeDeliveryAddressOtpWidgetConfig",
+				"csChangeDeliveryAddressOtpWidgetConfig-Popup");
+		final Window popup = new Window();
+		popup.appendChild(popupWidget);
+		popup.addEventListener("onClose", new EventListener() {
+			public void onEvent(Event event) {
+				handleOTPPopupCloseEvent(tempororyAddress, parentWidget,
+						parentWindow, widgetContainer, popup);
+			}
+			private void handleOTPPopupCloseEvent(
+					TemproryAddressModel tempororyAddress,
+					Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> parentWidget,
+					Component parentWindow,
+					WidgetContainer<Widget> widgetContainer, Window popup) {
+				widgetContainer.cleanup();
+				parentWindow.removeChild(popup);
+				modelService.remove(tempororyAddress);
+			}
+		});
+		popup.setTitle(LabelUtils.getLabel(popupWidget,
+				"popup.changeDeliveryConfirmation", new Object[0]));
+		popup.setParent(parentWindow);
+		popup.doHighlighted();
+		popup.setClosable(true);
+		popup.setWidth("900px");
+		return popup;
+	}
+
+	// }catch (Exception e) {
+	// LOG.error("Exception occurred " + e.getMessage());
+	// }
+	//
+
+	private String validatenewDeliveryAddress(
+			TemproryAddressModel newDeliveryAddress) {
+		if (!StringUtils.isNotEmpty(newDeliveryAddress.getFirstname())
+				|| !newDeliveryAddress.getFirstname().matches(NAME_REGEX)) {
+			return MarketplaceCockpitsConstants.FIRST_NAME_NOT_VALID;
+		}
+		if (!StringUtils.isNotEmpty(newDeliveryAddress.getLastname())
+				|| !newDeliveryAddress.getLastname().matches(NAME_REGEX)) {
+			return MarketplaceCockpitsConstants.LAST_NAME_NOT_VALID;
+		}
+		if (StringUtils.isNotEmpty(newDeliveryAddress.getEmail())
+				&& !newDeliveryAddress.getEmail().matches(EMAIL_REGEX)) {
+			return MarketplaceCockpitsConstants.EMAIL_NOT_VALID;
+		}
+		if (!StringUtils.isNotEmpty(newDeliveryAddress.getLine1())
+				|| !newDeliveryAddress.getLine1().matches(ADDRESS_LINE1_REGEX)) {
+			return MarketplaceCockpitsConstants.LINE1_NOT_VALID;
+		}
+		if (!StringUtils.isNotEmpty(newDeliveryAddress.getAddressLine3())
+				|| !newDeliveryAddress.getAddressLine3().matches(
+						ADDRESS_LINE1_REGEX)) {
+			return MarketplaceCockpitsConstants.LINE3_NOT_VALID;
+		}
+		if (!StringUtils.isNotEmpty(newDeliveryAddress.getLine2())
+				|| !newDeliveryAddress.getLine2().matches(ADDRESS_LINE1_REGEX)) {
+			return MarketplaceCockpitsConstants.LINE2_NOT_VALID;
+		}
+		if (!StringUtils.isNotEmpty(newDeliveryAddress.getCity())
+				|| !newDeliveryAddress.getCity().matches(NAME_REGEX)) {
+			return MarketplaceCockpitsConstants.CITY_NOT_VALID;
+		}
+		if (null == newDeliveryAddress.getCountry()
+				|| StringUtils.isNotEmpty(newDeliveryAddress.getCountry()
+						.getName())
+				&& !newDeliveryAddress.getCountry().getName()
+						.matches(NAME_REGEX)) {
+			return MarketplaceCockpitsConstants.COUNTRY_NOT_VALID;
+		}
+		if (!StringUtils.isNotEmpty(newDeliveryAddress.getState())
+				|| !newDeliveryAddress.getState().matches(NAME_REGEX)) {
+			return MarketplaceCockpitsConstants.STATE_NOT_VALID;
+		}
+		if (!StringUtils.isNotEmpty(newDeliveryAddress.getAddressLine3())
+				|| !newDeliveryAddress.getAddressLine3().matches(
+						ADDRESS_LINE1_REGEX)) {
+			return MarketplaceCockpitsConstants.LINE3_NOT_VALID;
+		}
+		if (!StringUtils.isNotEmpty(newDeliveryAddress.getPostalcode())) {
+			return MarketplaceCockpitsConstants.PIN_CODE_EMPTY;
+		}
+		if (!StringUtils.isNotEmpty(newDeliveryAddress.getPhone1())
+				|| !newDeliveryAddress.getPhone1().matches(MOBILENUMBER_REGEX)) {
+			return MarketplaceCockpitsConstants.MOBILENUMBER_NOT_VALID;
+		}
+		if (!StringUtils.isNotEmpty(newDeliveryAddress.getLandmark())
+				|| !newDeliveryAddress.getLandmark().matches(
+						ADDRESS_LINE1_REGEX)) {
+			return MarketplaceCockpitsConstants.LAND_MARK_NOT_VALID;
+		} else {
+			return MarketplaceCockpitsConstants.SUCCESS;
+		}
+	}
 
 	private void popupMessage(
 			final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,

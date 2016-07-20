@@ -56,6 +56,7 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 	private static final Logger LOG = Logger
 			.getLogger(MarketPlaceChangeDeliveryAddressWidgetRenderer.class);
 	private static final String CUSTOMER_DETAILS_UPDATED = "customerdetailsupdated";
+	private static final String FAILED_AT_OMS = "failedAtOms";
 	private static final String INFO = "info";
 
 	@Autowired
@@ -291,7 +292,7 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 					try {
 						modelService.remove(newDeliveryAddress);
 						Messagebox.show(LabelUtils.getLabel(widget,
-								"FailedAtOMS ", new Object[0]), INFO,
+								FAILED_AT_OMS, new Object[0]), INFO,
 								Messagebox.OK, Messagebox.ERROR);
 						int i = popupWidgetHelper.getCurrentPopup().getParent()
 								.getChildren().size();
