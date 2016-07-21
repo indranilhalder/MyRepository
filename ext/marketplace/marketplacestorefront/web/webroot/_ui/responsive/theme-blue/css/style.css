@@ -4481,7 +4481,7 @@ text-transform: uppercase;
   text-align: center; }
   .trending h1 {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     left: 50%;
     margin: 60px 0 35px;
     padding: 0 30px;
@@ -29325,7 +29325,7 @@ margin: 10px 0px;
 }
 /*best picks end*/
 div#promobannerhomepage{
-margin:45px 0 10px;
+margin: 0px;
 }
 div#promobannerhomepage a{
 color:inherit;
@@ -29355,7 +29355,7 @@ height:80px;
     word-break: break-word;
    }
 .showcase .desc-section h1 {
-    font-size: 24px;
+   line-height:30px;
 
 }
 .showcase-switch> div{
@@ -29364,8 +29364,9 @@ float:left;
 text-align:center;
 }
 .showcaseItem > a.showcase-border{
-	border-bottom: 1px solid #000;
-	color:#000;
+	    border-bottom: 1px solid #a9143c;
+    font-weight: bold;
+    padding: 0 0 7px;
 	
 }
 .showcase-heading {
@@ -29376,7 +29377,7 @@ text-align:center;
     letter-spacing: 1px;
     font-weight: 600;
 	    overflow: hidden;
-    padding-bottom: 30px;
+    padding-bottom: 10px;
 }
 
 .showcase section {
@@ -29402,9 +29403,11 @@ p.showcase-para {
     margin: 20px 0px;
 }
 .showcaseItem > a{
-	color:#bbb;
+	color:#000;
 	 word-break: break-word;
 	 line-height: 22px;
+	 font-size:14px;
+	 font-weight:normal;
 }
 .showcase-center h3{
 	font-weight:600;
@@ -29537,6 +29540,7 @@ color:#000;
     font-weight: 500;
     letter-spacing: 0;
     padding: 25px;
+    margin: 45px 0 10px;
 }
 .buy-banner p span {
     color: #ecc76f;
@@ -31693,6 +31697,11 @@ body.page-homepage .feature-collections h1 {
     font-weight: bold;
     font-size: 22px;
 }
+body.page-homepage .trending h1 span{
+	 text-transform: uppercase;
+    font-weight: bold;
+    font-size: 22px;
+}
 #productYouCare .home-product-you-care-carousel-img:after {
     width: 100%;
     height: 100%;
@@ -31706,7 +31715,7 @@ body.page-homepage .feature-collections h1 {
     background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 25%,rgba(0,0,0,0.85) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#bf000000',GradientType=0 );
 }
-.timeout-slider .carousel .item a:after {
+.timeout-slider .carousel .item .image:after {
     width: 100%;
     height: 100%;
     content: "";
@@ -31811,6 +31820,187 @@ body.page-homepage .feature-collections h1 {
 }
 .spacer{
 	padding:0 !important;
+}
+#rotatingImageTimeout.owl-theme .owl-controls {
+    bottom: 20px;
+    margin: 0;
+    position: absolute;
+    width: 100%;
+    top: inherit;
+    z-index: 1;
+}
+@media (max-width: 1023px){
+#rotatingImageTimeout .owl-controls {
+    display: block !important;
+}
+}
+body.page-homepage .trending .button{
+border: 1px solid #a9143c;
+}
+body.page-homepage .trending .button:hover{
+background-color: transparent;
+    color: #a9143c;
+}
+.feature-collections .qued .qued-content {
+    padding: 0;
+}
+#newAndExclusive {
+    padding: 0 0 60px;
+}
+#newAndExclusive h1 {
+    font-size: 22px;
+    padding: 0 0 40px;
+}
+#newAndExclusive #new_exclusive {
+    padding: 0 40px;
+}
+#newAndExclusive a.new_exclusive_viewAll {
+    background-color: #a9143c;
+    border: 1px solid #a9143c;
+    bottom: 0;
+    color: #fbf4f6;
+    left: 50%;
+    margin: 0 0 0 -100px;
+    width: 200px;
+}
+#newAndExclusive a.new_exclusive_viewAll:hover {
+    background-color: transparent;
+}
+#newAndExclusive .New_Exclusive_title, #newAndExclusive .New_Exclusive_price {
+    text-align: center;
+    font-size: 12px;
+    font-weight: normal;
+}
+#newAndExclusive .New_Exclusive_price {
+    font-size: 12px;
+    font-weight: bold;
+}
+#bestPicks .short-info h4 {
+    color: #a7183e;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+#bestPicks a:hover .short-info h4 {
+    color: #000;
+}
+#showcase.feature-collections h1 {
+    padding: 70px 0 10px;
+}
+#showcase .mobile {
+    display: none;
+}
+.showcase-heading > div:first-child {
+    text-align: right;
+}
+.showcase-heading > div:last-child {
+    text-align: left;
+}
+.showcase-section .desc-section {
+    padding: 0;
+}
+.showcase-section .desc-section:first-child {
+    padding: 0 0 0 15%;
+}
+.showcase-section .desc-section:last-child {
+    padding: 0 15% 0 0;
+}
+.showcase-center h3 {
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    line-height: 15px;
+    text-align: center;
+}
+.showcase-center .price span.priceFormat {
+    display: block;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+    margin: 3px 0 40px;
+}
+p.showcase-para {
+    width: 70%;
+    font-size: 12px;
+    letter-spacing: 1px;
+    line-height: 16px;
+}
+#showcase a.button.maroon {
+    background-color: #a9143c;
+    border: 1px solid #a9143c;
+    color: #fbf4f6;
+    padding-top: 14px;
+    width: 200px;
+    margin: 35px auto 12px;
+}
+#showcase a.button.maroon:hover {
+    background-color: transparent;
+    color: #a9143c;
+}
+#showcase a.button.trending-button {
+    padding-top: 14px;
+    width: 200px;
+}
+@media (max-width: 767px){
+	.MenuWrap {
+    position: relative;
+}
+#showcase .mobile {
+    display: block;
+}
+.selectmenu {
+    border: 1px solid #ccc;
+    color: #000;
+    text-transform: uppercase;
+    padding: 14px;
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    margin: 0 auto 30px;
+}
+.selectmenu::after {
+    color: rgb(0, 0, 0);
+    content: "\f107";
+    font-family: FontAwesome;
+    font-size: 20px;
+    font-weight: lighter;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+.showcase-heading {
+    background: #f7f8fa none repeat scroll 0 0;
+    border: 1px solid #ccc;
+    border-bottom: 0;
+    padding: 0;
+    width: 100%;
+    position: absolute;
+    top: 41px;
+    text-indent: 15px;
+    display: none;
+    margin: 0 auto 35px;
+}
+.showcase-heading > div:first-child {
+    text-align: left;
+}
+.showcase-heading > div {
+    margin: 10px 0 0;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    display: inline-block;
+    float: left;
+    padding: 0 0 10px;
+    width: 100%;
+    cursor: pointer;
+}
+.showcaseItem > a {
+    font-size: 12px;
+}
+.showcaseItem > a.showcase-border {
+    border-bottom: 0 none;
+    font-weight: bold;
+    padding: 0;
+}
 }
 /*New homepage changes ends*/
 

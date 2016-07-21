@@ -117,6 +117,7 @@ ACC.carousel = {
 				dots:true,
 				loop: true,
 		        autoplay: true,
+		        autoHeight : true,
 		        autoplayTimeout: timeout
 		    });
 		/*	$("#rotatingImageTimeout").append('<div class="hbpagination"></div>');

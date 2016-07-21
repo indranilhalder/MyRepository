@@ -778,7 +778,7 @@ function getNewAndExclusiveAjaxCall() {
         	var staticHost=$('#staticHost').val();
             var defaultHtml = "";
             renderHtml = "<h1>" + response.title + "</h1>" +
-                "<div class='carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
+                "<div class='js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
             $.each(response.newAndExclusiveProducts, function(
                 key, value) {
             	if(value.isNew == 'Y')
@@ -996,7 +996,7 @@ function getShowCaseAjaxCall() {
                 //console.log(response.subComponents);
                 defaultComponentId = "";
                 renderHtml = "<h1>" + response.title + "</h1>" +
-                    "<div class='showcase-heading showcase-switch'>";
+                    "<div class='MenuWrap'><div class='mobile selectmenu'></div> <div class='showcase-heading showcase-switch'>";
                 $.each(response.subComponents, function(k, v) {
                     if (!v.showByDefault) {
                         renderHtml +=
@@ -1012,7 +1012,7 @@ function getShowCaseAjaxCall() {
                         defaultComponentId = v.compId;
                     }
                 });
-                renderHtml += "</div>";
+                renderHtml += "</div></div>";
                 $('#showcase').html(renderHtml);
                 getShowcaseContentAjaxCall(defaultComponentId);
             },
@@ -1117,10 +1117,13 @@ function getShowcaseContentAjaxCall(id) {
         }
     }
     // ENd AJAX CALL
+console.log($(".showcaseItem .showcase-border").text());
+$('.selectmenu').text($(".showcaseItem .showcase-border").text());
 $(document).on("click", ".showcaseItem", function() {
     var id = $(this).find('a').attr("id");
     $(".showcaseItem").find("a").removeClass("showcase-border");
     $(this).find('a').addClass('showcase-border');
+    $('.selectmenu').text($(this).children().text());
     $('.about-one.showcase-section').remove();
     getShowcaseContentAjaxCall(id);
 });
@@ -1129,7 +1132,26 @@ $(window).on('resize', function() {
         $('#stayQued').css('min-height', 'auto');
     }
 });
-
+$(window).on("load resize", function() {
+    if ($(window).width() <= 767) {
+        $(".showcase-heading").hide();
+        //$(".selectmenu").unbind();
+        $(document).on("click",".selectmenu",function() {
+        	console.log("menu clicked");
+      //  $(".selectmenu").unbind().click(function() {
+            $(".showcase-heading").slideToggle();
+        });
+       // $(".showcase-heading").unbind();
+        $(document).on("click",".showcase-heading",function() {
+        	console.log("showcase clicked");
+       // $(".showcase-heading").unbind().click(function() {
+            $(this).slideUp();
+        });
+    } else {
+        $(".showcase-heading").show();
+        $(".showcase-heading,.selectmenu").unbind();
+    }
+});
 function appendIcid(url, icid) {
     if (url != null) {
         if (url.indexOf("?") != -1) {
