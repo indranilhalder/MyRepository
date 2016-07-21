@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
@@ -98,6 +99,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
 
+		//final paymentMode = transactionEntry.getEntries().get(0).getPaymentMode().getMode();
 
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
@@ -118,7 +120,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
 			{
 				final PointOfServiceModel model = entryModel.getDeliveryPointOfService();
-				AddressModel address = model.getAddress();
+				final AddressModel address = model.getAddress();
 				for (final StateData state : stateDataList)
 				{
 					if (address.getState().equalsIgnoreCase(state.getCode()))
@@ -154,10 +156,19 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			put(MOBILENUMBER, (null != deliveryAddress.getPhone1() ? deliveryAddress.getPhone1() : deliveryAddress.getCellphone()));
 			put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
 
+			deliveryAddr.append(deliveryAddress.getStreetname());
+			if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
+			{
+				deliveryAddr.append(COMMA).append(deliveryAddress.getStreetnumber());
+			}
+			if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
+			{
+				deliveryAddr.append(COMMA).append(deliveryAddress.getAddressLine3());
+			}
 
-			deliveryAddr.append(deliveryAddress.getStreetname()).append(COMMA).append(deliveryAddress.getStreetnumber())
-					.append(COMMA).append(deliveryAddress.getAddressLine3()).append(COMMA).append(deliveryAddress.getTown())
-					.append(COMMA).append(deliveryAddress.getDistrict()).append(COMMA).append(deliveryAddress.getPostalcode());
+			deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
+					.append(COMMA).append(deliveryAddress.getPostalcode());
+
 			put(DELIVERYADDRESS, deliveryAddr);
 		}
 
@@ -214,9 +225,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	}
 
 	/**
-	 * @param accountAddressFacade the accountAddressFacade to set
+	 * @param accountAddressFacade
+	 *           the accountAddressFacade to set
 	 */
-	public void setAccountAddressFacade(AccountAddressFacade accountAddressFacade)
+	public void setAccountAddressFacade(final AccountAddressFacade accountAddressFacade)
 	{
 		this.accountAddressFacade = accountAddressFacade;
 	}
