@@ -32,7 +32,24 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
 <%-- <link rel="icon" href="//${favHost}/_ui/responsive/common/images/preload.png" type="image/png"> --%>
 
-<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/>
+<!-- TISPT-325 -->
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('media.dammedia.host')" var="mediaHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>
+
+<link rel="stylesheet" type="text/css" media="all" href="//${mediaHost}/preload.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="//${staticResourceHost}/preload.css"/>
+<c:if test="${not empty productMediadnsHost}">
+<link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost}/preload.css"/>
+</c:if>
+<c:if test="${not empty productMediadnsHost1}">
+<link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css"/>
+</c:if>
+
+<!-- TISPT-325 ENDS -->
+
+<%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
 <link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
 <link rel="android-touch-icon" href="${themeResourcePath}/images/Appicon.png" />
 <!-- <link rel="windows-touch-icon" href="icon.png" /> -->
@@ -101,7 +118,7 @@
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
 	<!-- Changes for TISPT-113 -->
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('media.dammedia.host')" var="mediaHost"/>
+	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('media.dammedia.host')" var="mediaHost"/> --%>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('seo.media.url')" var="seoMediaURL"/>
 	
 	<!-- Markup for Google+ -->
@@ -130,9 +147,9 @@
      <link rel="shortcut icon" type="image/x-icon" media="all" href="${baseURL}/favicon.ico" />
     
 	<!-- DNS prefetching starts -->
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>	
+	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/> --%>
+	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/> --%>	
 
 	<link rel="dns-prefetch" href="//${mediaHost}">
 	<link rel="dns-prefetch" href="//${staticResourceHost}"> 	
