@@ -47,7 +47,7 @@
 								<label for="firstName">First Name*</label>
 								<form:input path="firstName"
 									class="form-control textInputChangeAddress" id="firstName"
-									placeholder="${orderDetails.deliveryAddress.firstName}" />
+									value="${orderDetails.deliveryAddress.firstName}" placeholder="First Name" />
 								<div class="error_text firstNameError"></div>
 							</div>
 							<div class="col-md-6 form-group">
@@ -55,7 +55,7 @@
 
 								<form:input path="lastName"
 									class="form-control textInputChangeAddress" id="lastName"
-									placeholder="${orderDetails.deliveryAddress.lastName}" />
+									value="${orderDetails.deliveryAddress.lastName}" placeholder="Last Name" />
 								<div class="error_text lastNameError"></div>
 							</div>
 						</div>
@@ -65,7 +65,7 @@
 
 								<form:input path="line1"
 									class="form-control textInputChangeAddress" id="addressLine1"
-									placeholder="${orderDetails.deliveryAddress.line1}" />
+									value="${orderDetails.deliveryAddress.line1}" placeholder="Address Line 1" />
 								<div class="error_text address1Error"></div>
 							</div>
 						</div>
@@ -73,7 +73,7 @@
 							<div class="col-md-12 form-group">
 								<label for="addressLine2">Address Line 2*</label>
 								<form:input path="line2"
-									placeholder="${orderDetails.deliveryAddress.line2}"
+									value="${orderDetails.deliveryAddress.line2}" placeholder="Address Line 2"
 									class="form-control textInputChangeAddress" id="addressLine2" />
 								<div class="error_text address2Error"></div>
 							</div>
@@ -83,7 +83,7 @@
 								<label for="addressLine2">Address Line 3*</label>
 								<form:input path="line3" id="addressLine3"
 									class="form-control textInputChangeAddress"
-									placeholder="${orderDetails.deliveryAddress.line3}" />
+									value="${orderDetails.deliveryAddress.line3}" placeholder="Address Line 3" />
 								<div class="error_text address3Error"></div>
 							</div>
 						</div>
@@ -93,23 +93,29 @@
 									<label for="pincode">Pincode*</label>
 									<form:input path="postcode" class="address_postcode"
 										id="pincode"
-										placeholder="${orderDetails.deliveryAddress.postalCode}" />
+										value="${orderDetails.deliveryAddress.postalCode}"  placeholder="Pincode" />
 									<div class="error_text pincodeNoError"></div>
 								</div>
 							</div>
 							<div class="col-md-6"></div>
 						</div>
 						<div class="row">
-							<div class="col-md-12">
-
-								<label for="landmark">Landmark</label>
-								<div class="input-group-addon">
-									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+							<div class="optionsLandmark">
+								<div class="col-md-12">
+									<label for="landmark">Landmark</label>
+									<form:select path="landmark" 
+										class="form-control textInputChangeAddress address_landmarks" id="landmark"
+										placeholder="select Landmark" />
+									<div class="error_text landMarkError"></div>
 								</div>
-								<form:input path="landmark"
-									class="form-control textInputChangeAddress" id="landmark"
-									placeholder="${orderDetails.deliveryAddress.landmark}" />
-								<div class="error_text landMarkError"></div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="address_landmarkOtherDiv">
+								<div class="col-md-12">
+									<label>Landmark</label>
+										<form:input class="otherLandMark" placeholder="Other Landmark" path="otherLandmark"/>
+								</div>
 							</div>
 						</div>
 						<div class="row">
@@ -117,7 +123,7 @@
 								<div class="form-group">
 									<label for="city">City*</label>
 									<form:input path="townCity" class="address_townCity" id="city"
-										placeholder="${orderDetails.deliveryAddress.town}" />
+										value="${orderDetails.deliveryAddress.town}" placeholder="City" />
 									<div class="error_text cityError"></div>
 
 								</div>
@@ -127,8 +133,8 @@
 							<div class="col-md-6 form-group">
 								<label for="state">State*</label>
 								<form:input path="state"
-									class="form-control textInputChangeAddress" id="state"
-									placeholder="${orderDetails.deliveryAddress.state}" />
+									class="form-control textInputChangeAddress address_states" id="state"
+									value="${orderDetails.deliveryAddress.state}" placeholder="State" />
 								<div class="error_text stateError"></div>
 							</div>
 							<div class="col-md-6 form-group">
@@ -146,7 +152,7 @@
 								<label for="phonenumber">Phone Number*</label>
 								<form:input path="mobileNo"
 									class="form-control textInputChangeAddress" id="mobileNo"
-									placeholder="${orderDetails.deliveryAddress.phone}" />
+									value="${orderDetails.deliveryAddress.phone}" placeholder="Mobile Number" />
 								<div class="error_text mobileNumberError"></div>
 							</div>
 						</div>
