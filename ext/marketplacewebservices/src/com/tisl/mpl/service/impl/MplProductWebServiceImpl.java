@@ -1771,9 +1771,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		List<SolrFacetSearchKeywordRedirectModel> result = mplKeywordRedirectDao.findKeywords(searchQuery,
 				KeywordRedirectMatchType.EXACT,
 				configurationService.getConfiguration().getString(MarketplacewebservicesConstants.SEARCH_FACET_CONFIG), langIso);
-		result = keywordRedirectSorter.sort(result);
 		if (CollectionUtils.isNotEmpty(result))
 		{
+			result = keywordRedirectSorter.sort(result);
 			keywordRedirect = result.get(0);
 		}
 		return keywordRedirect;
