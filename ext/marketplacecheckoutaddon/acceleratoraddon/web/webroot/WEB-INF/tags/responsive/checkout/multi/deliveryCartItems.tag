@@ -51,7 +51,7 @@
 						${fn:escapeXml(deliveryAddress.line2)},
 					</c:if>
 					<c:if test="${ not empty deliveryAddressLine3 }">
-					2222222
+					
 						${fn:escapeXml(deliveryAddress.line3)},
 					</c:if>
 					<br>
