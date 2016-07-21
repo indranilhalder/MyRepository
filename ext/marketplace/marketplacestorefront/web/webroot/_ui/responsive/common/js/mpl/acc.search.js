@@ -1,9 +1,8 @@
 	function constructDepartmentHierarchy(inputArray) {		
 		var output = [];
-		
+		var count = 0;
 		if(inputArray!=""){
-		for (var i = 0; i < inputArray.length; i++) {	
-			var count = 0;
+		for (var i = 0; i < inputArray.length; i++) {				
 			var categoryArray = inputArray[i].split("|");			
 			var currentNode = output;
 			//Construct 'All' tree node initially for search page
@@ -20,7 +19,7 @@
 					if(categoryDetails[2] == "L3")
 					{					
 						categoryName += "  (" +categoryDetails[5] + ")";
-						//count++;						
+						count++;						
 					}
 					
 					var categoryType = "category";
@@ -32,11 +31,7 @@
 						if (currentNode[k].categoryName == categoryName) {							
 							currentNode = currentNode[k].children;								
 							break;
-						}
-						else
-						{
-							count++;
-						}
+						}						
 					}
 					if (lastNode == currentNode) {
 						var newNode = currentNode[k] = {label: categoryName, children: [], categoryCode: categoryCode, categoryType: categoryType, categoryName: categoryName, count: count};
