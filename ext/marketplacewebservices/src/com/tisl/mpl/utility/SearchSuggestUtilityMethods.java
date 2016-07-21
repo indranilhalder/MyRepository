@@ -170,7 +170,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -598,7 +598,7 @@ public class SearchSuggestUtilityMethods
 				params = URLParamUtil.getQueryParams(url);
 				urlList.add(url);
 				params.put("keywordUrl", urlList);
-				LOG.debug("---search keyword url" + url);
+				//LOG.debug("---search keyword url" + url);
 			}
 		}
 		catch (final Exception e)
