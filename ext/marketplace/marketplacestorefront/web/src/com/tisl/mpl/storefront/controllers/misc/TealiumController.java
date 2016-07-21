@@ -164,6 +164,57 @@ public class TealiumController extends AbstractController
 		return tealiumData.toString();
 	}
 
+	@RequestMapping(value = "/getTealiumDataCart", method = RequestMethod.GET)
+	@ResponseBody
+	public String getTealiumDataCart() throws Exception
+	{
+		final StringBuilder tealiumData = new StringBuilder(1000); // SONAR FIX
+		try
+		{
+			final JSONObject utag = populateCommonTealiumData();
+			utag.put(PAGETYPE, "checkout");
+			utag.put("site_section", "My Bag");
+			utag.put("page_name", "Cart Page");
+			final String utagData = utag.toJSONString();
+			tealiumData.append(UTAG_DATA);
+			tealiumData.append(utagData);
+			tealiumData.append("<TealiumScript>");
+			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
+		}
+		LOG.debug(tealiumData.toString());
+		return tealiumData.toString();
+	}
+
+	@RequestMapping(value = "/getTealiumDataCheckout", method = RequestMethod.GET)
+	@ResponseBody
+	public String getTealiumDataCart(@RequestParam("checkoutPageName") final String checkoutPageName) throws Exception
+	{
+		final StringBuilder tealiumData = new StringBuilder(1000); // SONAR FIX
+		try
+		{
+			final JSONObject utag = populateCommonTealiumData();
+			utag.put(PAGETYPE, "checkout");
+			utag.put("site_section", "Checkout");
+			utag.put("page_name", "Multi Checkout Summary Page:" + checkoutPageName);
+			final String utagData = utag.toJSONString();
+			tealiumData.append(UTAG_DATA);
+			tealiumData.append(utagData);
+			tealiumData.append("<TealiumScript>");
+			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
+		}
+		LOG.debug(tealiumData.toString());
+		return tealiumData.toString();
+	}
+
+
 	private static String getVisitorIpAddress(final HttpServletRequest request)
 	{
 		final String[] HEADERS_TO_TRY =
