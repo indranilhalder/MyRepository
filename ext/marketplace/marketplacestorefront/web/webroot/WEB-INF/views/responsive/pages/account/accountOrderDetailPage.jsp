@@ -169,11 +169,19 @@
 }
 
 #landmark {
-	padding-left: 47px;
+	/* padding-left: 47px; */
+}
+
+.address_townCity, .otherLandMark {
+	width: 100%;
 }
 
 .addressTextChange {
 	line-height: 15px;
+}
+
+#deliveryAddressForm input, #deliveryAddressForm option, #deliveryAddressForm select {
+	color: #000;
 }
 
 .modal-dialog {
@@ -191,8 +199,8 @@
 	left: 0px;
 }
 
-.modal-header h4 {
-	font-size: 14px;
+.modal-body h4 {
+	font-size: 13px;
 	font-weight: bold;
 }
 
@@ -235,11 +243,6 @@
 	z-index: 9999999999;
 }
 
-h4 {
-	font-size: 18px !important;
-    font-weight: bolder !important;
-    margin-bottom: 15px !important;
-}
 
 .changeAdddd {
 	height: 550px;
@@ -555,9 +558,6 @@ h4 {
 									       <a href="#" id="changeAddressLink">Edit / Change Address </a>
 										</c:if>
 										</div>
-									</div>
-									<div class="col-md-4">
-										
 									</div>
 								</div>
 							</div>
@@ -1918,6 +1918,8 @@ $(function() {
 			  var height = $(window).height();
 			  $(".wrapBG").css("height",height);
 			  $("#changeAddressPopup").css("z-index","999999");
+			  setTimeout(function() { console.log($("#deliveryAddressForm #firstName").attr("value")); $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value")); $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value")) }, 100);
+			  loadPincodeData();
 		});
 		
 		    var length = $(".returnStatus .dot").length;
