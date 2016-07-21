@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,9 +135,18 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 
 
 
-		deliveryAddr.append(deliveryAddress.getStreetname()).append(COMMA).append(deliveryAddress.getStreetnumber()).append(COMMA)
-				.append(deliveryAddress.getAddressLine3()).append(COMMA).append(deliveryAddress.getTown()).append(COMMA)
-				.append(deliveryAddress.getDistrict()).append(COMMA).append(deliveryAddress.getPostalcode());
+		deliveryAddr.append(deliveryAddress.getStreetname());
+		if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
+		{
+			deliveryAddr.append(COMMA).append(deliveryAddress.getStreetnumber());
+		}
+		if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
+		{
+			deliveryAddr.append(COMMA).append(deliveryAddress.getAddressLine3());
+		}
+
+		deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
+				.append(COMMA).append(deliveryAddress.getPostalcode());
 
 		put(DELIVERYADDRESS, deliveryAddr);
 

@@ -1677,8 +1677,6 @@ public class ProductPageController extends AbstractPageController
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
 				final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 				final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
-
-
 				for (final String pCode : noStockPCodes)
 				{
 					stockAvailibilty.put(pCode, Integer.valueOf(0));

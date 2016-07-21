@@ -197,6 +197,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	private final String checkoutPageName = "Payment Options";
 	private final String RECEIVED_INR = "Received INR ";
 	private final String DISCOUNT_MSSG = " discount on purchase of Promoted Product";
+	private static final String UTF = "UTF-8";
 
 	/**
 	 * This is the GET method which renders the Payment Page
@@ -399,9 +400,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//return values
 		model.addAttribute("checkoutPageName", checkoutPageName);
+		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, getMplCustomAddressFacade().getCheckoutCart());
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddPaymentMethodPage;
 	}
-
 
 	/**
 	 * This method sets timeout
@@ -2415,11 +2416,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				cartGuid = cart.getGuid();
 			}
 
+			final String paymentAddressLine1 = java.net.URLDecoder.decode(addressLine1, UTF);
+			final String paymentAddressLine2 = java.net.URLDecoder.decode(addressLine2, UTF);
+			final String paymentAddressLine3 = java.net.URLDecoder.decode(addressLine3, UTF);
 			final StringBuilder sb = new StringBuilder();
 			sb.append("firstName:::").append(firstName).append("|lastName:::").append(lastName).append("|addressLine1:::")
-					.append(addressLine1).append("|addressLine2:::").append(addressLine2).append("|addressLine3:::")
-					.append(addressLine3).append("|country:::").append(country).append("|state:::").append(state).append("|city:::")
-					.append(city).append("|pincode:::").append(pincode).append("|cardSaved:::").append(cardSaved)
+					.append(paymentAddressLine1).append("|addressLine2:::").append(paymentAddressLine2).append("|addressLine3:::")
+					.append(paymentAddressLine3).append("|country:::").append(country).append("|state:::").append(state)
+					.append("|city:::").append(city).append("|pincode:::").append(pincode).append("|cardSaved:::").append(cardSaved)
 					.append("|sameAsShipping:::").append(sameAsShipping).append("|cartGUID:::").append(cartGuid);
 
 			LOG.error("Address details entered >>>" + sb.toString());
@@ -2478,8 +2482,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				orderId = getMplPaymentFacade().createJuspayOrder(cart, firstName, lastName, addressLine1, addressLine2,
-						addressLine3, country, state, city, pincode,
+				orderId = getMplPaymentFacade().createJuspayOrder(cart, firstName, lastName, paymentAddressLine1,
+						paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 						cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrl, uid,
 						MarketplacecheckoutaddonConstants.CHANNEL_WEB);
 			}

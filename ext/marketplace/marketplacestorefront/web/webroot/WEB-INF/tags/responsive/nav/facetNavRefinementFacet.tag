@@ -427,7 +427,9 @@ function navigateToPage(queryString,textString)
 										<div class="facet-text">
 										<span class="facet-text">
 											<spring:theme code="text.exclude.outOfStock"/>&nbsp;											
+
 										</span>
+
 										 <ycommerce:testId code="facetNav_count">
 												<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 										</ycommerce:testId>
@@ -475,7 +477,11 @@ function navigateToPage(queryString,textString)
 							<%-- <a href="#">${facetValue.name}</a>	 --%>					
 								<%-- <a href="${facetValueQueryUrl}">${facetValue.name}</a> --%>
 								 <%-- <ycommerce:testId code="facetNav_count">
+<<<<<<< HEAD
+									<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+=======
 									<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+>>>>>>> refs/remotes/origin/TCS_PROD_SUPPORT
 								</ycommerce:testId> --%> 
 							</span>
 						</c:if>

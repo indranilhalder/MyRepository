@@ -3371,7 +3371,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ADD_NEW_ADDRESS, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String addAddress(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
-			final HttpServletRequest request) throws CMSItemNotFoundException
+			final HttpServletRequest request) throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		try
 		{
@@ -3477,7 +3477,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_ADDRESS_NEW, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String editAddress(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
-			final RedirectAttributes redirectModel, final HttpServletRequest request) throws CMSItemNotFoundException
+			final RedirectAttributes redirectModel, final HttpServletRequest request) throws CMSItemNotFoundException,UnsupportedEncodingException
 	{
 		try
 		{

@@ -3,9 +3,11 @@
  */
 package com.tisl.mpl.storefront.web.forms.validator;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,11 +36,13 @@ public class MplAddressValidator
 
 	public static final String MOBILE_REGEX = "^[0-9]*$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
+	private static final String UTF = "UTF-8";
 
+	private static final Logger LOG = Logger.getLogger(MplAddressValidator.class);
 	@Autowired
 	private AccountAddressFacade accountAddressFacade;
 
-	public String validate(final AccountAddressForm addressForm)
+	public String validate(final AccountAddressForm addressForm) throws UnsupportedEncodingException
 	{
 		final String errorMsg = validateStandardFields(addressForm);
 		return errorMsg;
@@ -47,9 +51,11 @@ public class MplAddressValidator
 	/**
 	 * @param addressForm
 	 * @return String
+	 * @throws UnsupportedEncodingException
 	 */
-	private String validateStandardFields(final AccountAddressForm addressForm)
+	private String validateStandardFields(final AccountAddressForm addressForm) throws UnsupportedEncodingException
 	{
+		decodeAddressLineValues(addressForm);
 		String returnStatement = null;
 		final List<StateData> stateDataList = accountAddressFacade.getStates();
 		boolean validState = false;
@@ -161,4 +167,27 @@ public class MplAddressValidator
 
 	}
 
+	/**
+	 * @param addressForm
+	 * @throws UnsupportedEncodingException
+	 */
+	private void decodeAddressLineValues(final AccountAddressForm addressForm) throws UnsupportedEncodingException
+	{
+		try
+		{
+			final String line1 = java.net.URLDecoder.decode(addressForm.getLine1(), UTF);
+			final String line2 = java.net.URLDecoder.decode(addressForm.getLine2(), UTF);
+			final String line3 = java.net.URLDecoder.decode(addressForm.getLine3(), UTF);
+
+			addressForm.setLine1(line1);
+			addressForm.setLine2(line2);
+			addressForm.setLine3(line3);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception while decoding address lines ::::" + ex.getMessage());
+		}
+
+
+	}
 }
