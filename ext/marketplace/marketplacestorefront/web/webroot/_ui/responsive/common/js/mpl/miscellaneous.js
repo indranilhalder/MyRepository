@@ -3,6 +3,13 @@
 	 if($(window).width() < 650) {
 	 	$('head').append('<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />');
 	 }
+	 //TISPRT-304 starts
+	 $.each($(".facet-name js-facet-name").find("h3"), function() {
+			if ($(this).text() == "Departments") {
+				$(this).remove();
+			}
+		});
+	 //TISPRT-304 ends
 	//Simple banner component 
 	 	var removeHref = $("div[data-logo=marketplace]").find("a").attr("href");
 	 	var href = removeHref.split("?");
@@ -145,6 +152,7 @@
 	var sizeCount=0;
 	var size= $('#sizeCountForAppliedFilter').val();
 	var searchQuery=$('#searchQueryForAppliedFilter').val();
+	if(typeof(searchQuery)!= "undefined"){
 	var arr = searchQuery.split(':');
 	for(var i = 0; i < arr.length; i++)
 	{
@@ -161,6 +169,7 @@
 				break;
 			}
 		}
+	}
 	}
 	//End
  

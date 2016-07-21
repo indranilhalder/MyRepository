@@ -24,7 +24,19 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 
 
-<li class="product-item"><ycommerce:testId
+<li class="product-item">
+<span class="serpProduct">
+<input type ="hidden"  id="productCode" value="${product.code}"/>
+<input type ="hidden"  id="categoryType" value="${product.productCategoryType}"/>
+<input type ="hidden"  id="productUrl" value='${product.displayUrl}'/>
+<input type ="hidden"  id="productPrice" value='${product.displayPrice}'/>
+<input type ="hidden"  id="list" value='${product.displaySize}'/>
+<input type ="hidden"  id="mrpPriceValue" value='${product.displayMrp}'/>
+<input type ="hidden"  id="sizeStockLevel" value='${product.displayStock}'/>
+<input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/>
+</span>
+
+<ycommerce:testId
 		code="product_wholeProduct">
 		<div class="product-tile">
 			<div class="image">
@@ -352,7 +364,7 @@
 
 	</ycommerce:testId></li>
 
-<script>
+<!-- <script>
 	$(document).ready(function() {
 		$.each($(".facet-name js-facet-name").find("h3"), function() {
 			if ($(this).text() == "Departments") {
@@ -372,7 +384,7 @@
 			modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
 		 }
 	});
-</script>
+</script> -->
 <style>
 .product-tile:hover .image .quickview .serp-addtobag.disabled {
 	display: none;
