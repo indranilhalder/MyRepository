@@ -58,9 +58,9 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 	public boolean isDeliveryAddressChangable(final String orderId)
 	{
 		final List<String> ChangableOrdeStatus = Arrays.asList(OrderStatus.PAYMENT_SUCCESSFUL.getCode(),
-				OrderStatus.ORDER_ALLOCATED.getCode(), OrderStatus.PICK_LIST_GENERATED.getCode(),
+				OrderStatus.ORDER_ALLOCATED.getCode(), OrderStatus.PICK_LIST_GENERATED.getCode(),OrderStatus.ORDER_REALLOCATED.getCode(),
 				OrderStatus.PICK_CONFIRMED.getCode());
-		final boolean changable = false;
+		boolean changable = true;
 
 		try
 		{
@@ -81,9 +81,14 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 						}
 						if (null != entry && null != entry.getSelectedUSSID())
 						{
-							final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerInformation(
-									entry.getSelectedUSSID()).get(0);
-							isCdAllowed = sellerInfoModel.getSellerMaster().getIsCDAllowed();
+							final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
+									.getSelectedUSSID());
+							if (null != sellerInfoModel && null != sellerInfoModel.getSellerMaster()
+									&& null != sellerInfoModel.getSellerMaster().getIsCDAllowed())
+							{
+								isCdAllowed = sellerInfoModel.getSellerMaster().getIsCDAllowed();
+							}
+
 						}
 						if (!deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
 								&& entry.getQuantity().longValue() > 0)
@@ -102,6 +107,10 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 							if (!ChangableOrdeStatus.contains(entryStatus))
 							{
 								return false;
+							}
+							else
+							{
+								changable = true;
 							}
 						}
 					}
