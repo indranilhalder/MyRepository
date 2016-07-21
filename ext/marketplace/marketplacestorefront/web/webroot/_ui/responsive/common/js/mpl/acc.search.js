@@ -29,8 +29,7 @@
 					}
 					var lastNode = currentNode;
 					for (var k = 0; k < currentNode.length; k++) {
-						if (currentNode[k].categoryName == categoryName) {
-							alert("***"+categoryName);
+						if (currentNode[k].categoryName == categoryName) {							
 							currentNode = currentNode[k].children;								
 							break;
 						}
