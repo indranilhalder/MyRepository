@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<items 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xsi:noNamespaceSchemaLocation="items.xsd">
+
+	<relations>
+		<relation code="CacheClearCronJob2CacheClearingStatus" localized="false"
+			generate="true" autocreate="true">
+			<sourceElement type="CacheClearCronJob" qualifier="CacheClearCronJob"
+				cardinality="one">
+				<modifiers read="true" write="true" search="true"
+					optional="true" />
+			</sourceElement>
+			<targetElement type="CacheClearingStatus" qualifier="CacheClearingStatus"
+				cardinality="many" collectiontype="list" >
+				<modifiers read="true" write="true" search="true"
+					optional="true" partof="true" />
+			</targetElement>
+		</relation>
+	</relations>
+
+	<itemtypes>
+	
+		<itemtype generate="true"
+		   code="CacheClearingStatus"
+		   jaloclass="com.cacheclear.jalo.CacheClearingStatus"
+		   extends="GenericItem"
+		   autocreate="true">
+		   <deployment table="CacheClearingStatus" typecode="30001"/>
+			<attributes>
+				<attribute qualifier="code" type="java.lang.String">
+					<description>Identifier</description>
+					<modifiers read="true" write="true" optional="false" search="true" unique="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="status" type="StringCollection">
+					<description>Status</description>
+					<modifiers read="true" write="true" optional="true" search="false"/>
+					<persistence type="property"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype generate="true"
+		   code="CacheClearCronJob"
+		   jaloclass="com.cacheclear.jalo.CacheClearCronJob"
+		   extends="CronJob"
+		   autocreate="true">
+			<attributes>
+				<attribute qualifier="nodesToClear" type="java.lang.String">
+					<description>Nodes to Clear</description>
+					<modifiers read="true" write="true" optional="true" search="false"/>
+					<persistence type="property"/>
+				</attribute>
+
+				<attribute qualifier="regionsToClear" type="java.lang.String">
+					<description>Regions to Clear</description>
+					<modifiers read="true" write="true" optional="true" search="false"/>
+					<persistence type="property"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+	</itemtypes>
+</items>
