@@ -1056,7 +1056,7 @@ public class GenericUtilityMethods
 							}
 							if (null != entry.getQuantity())
 							{
-								quantity = appendQuote(entry.getQuantity() + "");
+								quantity = appendQuote(String.valueOf(entry.getQuantity()));
 							}
 
 							if (null != entry.getBasePrice() && null != entry.getBasePrice().getValue())
@@ -1153,7 +1153,7 @@ public class GenericUtilityMethods
 	public static String appendQuote(final String param)
 	{
 		final StringBuilder str = new StringBuilder(100);
-		str.append("\"").append(param).append("\"");
+		str.append('\"').append(param).append('\"');
 		return str.toString();
 	}
 
