@@ -38,6 +38,9 @@ public class TealiumController extends AbstractController
 	private final String TEALIUM_ERROR = "Exception while populating tealium data ::::";
 	private final String PAGETYPE = "page_type";
 	private final String UTAG_DATA = "<script type='text/javascript'> var utag_data =";
+	private final String TEALIUM_SCRIPT = "<TealiumScript>";
+	private final String PAGE_NAME = "page_name";
+	private final String SITE_SECTION = "site_section";
 
 	@RequestMapping(value = "/getTealiumDataHome", method = RequestMethod.GET)
 	@ResponseBody
@@ -48,8 +51,8 @@ public class TealiumController extends AbstractController
 		{
 			final JSONObject utag = populateCommonTealiumData();
 			utag.put(PAGETYPE, "home");
-			utag.put("page_name", "Homepage");
-			utag.put("site_section", "home");
+			utag.put(PAGE_NAME, "Homepage");
+			utag.put(SITE_SECTION, "home");
 			final String utagData = utag.toJSONString();
 			tealiumData.append(UTAG_DATA);
 			tealiumData.append(utagData);
@@ -76,7 +79,7 @@ public class TealiumController extends AbstractController
 			final String utagData = utag.toJSONString();
 			tealiumData.append(UTAG_DATA);
 			tealiumData.append(utagData);
-			tealiumData.append("<TealiumScript>");
+			tealiumData.append(TEALIUM_SCRIPT);
 			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
 		}
 		catch (final Exception ex)
@@ -97,8 +100,8 @@ public class TealiumController extends AbstractController
 		{
 			final JSONObject utag = populateCommonTealiumData();
 			utag.put(PAGETYPE, "generic");
-			utag.put("page_name", pageName);
-			utag.put("site_section", pageName);
+			utag.put(PAGE_NAME, pageName);
+			utag.put(SITE_SECTION, pageName);
 			final String utagData = utag.toJSONString();
 			tealiumData.append(UTAG_DATA);
 			tealiumData.append(utagData);
@@ -127,7 +130,7 @@ public class TealiumController extends AbstractController
 			final String utagData = utag.toJSONString();
 			tealiumData.append(UTAG_DATA);
 			tealiumData.append(utagData);
-			tealiumData.append("<TealiumScript>");
+			tealiumData.append(TEALIUM_SCRIPT);
 			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
 		}
 		catch (final Exception ex)
@@ -148,11 +151,11 @@ public class TealiumController extends AbstractController
 		{
 			final JSONObject utag = populateCommonTealiumData();
 			utag.put(PAGETYPE, "search");
-			utag.put("site_section", "Search Results");
+			utag.put(SITE_SECTION, "Search Results");
 			final String utagData = utag.toJSONString();
 			tealiumData.append(UTAG_DATA);
 			tealiumData.append(utagData);
-			tealiumData.append("<TealiumScript>");
+			tealiumData.append(TEALIUM_SCRIPT);
 			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
 		}
 		catch (final Exception ex)
@@ -163,6 +166,57 @@ public class TealiumController extends AbstractController
 		LOG.debug(tealiumData.toString());
 		return tealiumData.toString();
 	}
+
+	@RequestMapping(value = "/getTealiumDataCart", method = RequestMethod.GET)
+	@ResponseBody
+	public String getTealiumDataCart() throws Exception
+	{
+		final StringBuilder tealiumData = new StringBuilder(1000); // SONAR FIX
+		try
+		{
+			final JSONObject utag = populateCommonTealiumData();
+			utag.put(PAGETYPE, "checkout");
+			utag.put(SITE_SECTION, "My Bag");
+			utag.put(PAGE_NAME, "Cart Page");
+			final String utagData = utag.toJSONString();
+			tealiumData.append(UTAG_DATA);
+			tealiumData.append(utagData);
+			tealiumData.append(TEALIUM_SCRIPT);
+			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
+		}
+		LOG.debug(tealiumData.toString());
+		return tealiumData.toString();
+	}
+
+	@RequestMapping(value = "/getTealiumDataCheckout", method = RequestMethod.GET)
+	@ResponseBody
+	public String getTealiumDataCart(@RequestParam("checkoutPageName") final String checkoutPageName) throws Exception
+	{
+		final StringBuilder tealiumData = new StringBuilder(1000); // SONAR FIX
+		try
+		{
+			final JSONObject utag = populateCommonTealiumData();
+			utag.put(PAGETYPE, "checkout");
+			utag.put(SITE_SECTION, "Checkout");
+			utag.put(PAGE_NAME, "Multi Checkout Summary Page:" + checkoutPageName);
+			final String utagData = utag.toJSONString();
+			tealiumData.append(UTAG_DATA);
+			tealiumData.append(utagData);
+			tealiumData.append(TEALIUM_SCRIPT);
+			tealiumData.append(getTealiumScript((String) utag.get(IA_COMPANY)));
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(TEALIUM_ERROR + ex.getMessage());
+		}
+		LOG.debug(tealiumData.toString());
+		return tealiumData.toString();
+	}
+
 
 	private static String getVisitorIpAddress(final HttpServletRequest request)
 	{

@@ -12,8 +12,11 @@
 	 //TISPRT-304 ends
 	//Simple banner component 
 	 	var removeHref = $("div[data-logo=marketplace]").find("a").attr("href");
-	 	var href = removeHref.split("?");
-	 	$("div[data-logo=marketplace]").find("a").attr("href",href[0]);
+	 	if(typeof removeHref!== "undefined"){
+	 		var href = removeHref.split("?");
+		 	$("div[data-logo=marketplace]").find("a").attr("href",href[0]);
+	 	}
+	 	
 	
 	//Search box
 	 	var selectedItemText = $("#enhancedSearchCategory").find('option:selected').text();
