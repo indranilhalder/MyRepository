@@ -317,6 +317,14 @@ public class JuspayWebhookInsertServiceImpl implements JuspayWebhookInsertServic
 			orderResponse.setPaymentMethodType((String) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.PAYMENTMETHODTYPE));
 		}
 
+		//TISPRO-675
+		orderResponse.setEmiBank((String) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.EMIBANK) == null ? ""
+				: (String) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.EMIBANK));
+		//orderStatusResponse.setBankTenure((String) jsonResponse.get("emi_tenure") == null ? "" : (String) jsonResponse.get("emi_tenure"));
+
+		orderResponse.setEmiTenure(jobjectOrdrRes.get(MarketplacecommerceservicesConstants.EMITENURE) == null ? "" : String
+				.valueOf(jobjectOrdrRes.get(MarketplacecommerceservicesConstants.EMITENURE)));
+
 		return orderResponse;
 	}
 
@@ -359,6 +367,7 @@ public class JuspayWebhookInsertServiceImpl implements JuspayWebhookInsertServic
 		{
 			cardResponse.setCardIssuer((String) jobjectCard.get(MarketplacecommerceservicesConstants.CARDISSUER));
 		}
+
 		//saving card response
 		getModelService().save(cardResponse);
 
