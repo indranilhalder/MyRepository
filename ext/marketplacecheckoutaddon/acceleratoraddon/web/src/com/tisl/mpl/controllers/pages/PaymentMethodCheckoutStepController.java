@@ -1494,13 +1494,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										final PaymentModesEnum paymentMode = richAttributeModel.get(0).getPaymentModes();
 										if (null != paymentMode)
 										{
-											if (PaymentModesEnum.COD.equals(paymentMode) || PaymentModesEnum.BOTH.equals(paymentMode)
-													&& null != cart.getIsCODEligible() && !cart.getIsCODEligible().booleanValue())
+											if (PaymentModesEnum.COD.equals(paymentMode) || PaymentModesEnum.BOTH.equals(paymentMode))
 											{
-												//Adding to model true if the pincode is serviceable
-												model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-														CodCheckMessage.NOT_PINCODE_SERVICEABLE.toString());
-												break;
+												if (null != cart.getIsCODEligible() && cart.getIsCODEligible().equals(Boolean.FALSE))
+												{
+													//Adding to model true if the pincode is serviceable
+													model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
+															CodCheckMessage.NOT_PINCODE_SERVICEABLE.toString());
+													break;
+												}
 											}
 											else
 											{
