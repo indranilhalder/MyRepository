@@ -6993,11 +6993,18 @@ public class AccountPageController extends AbstractMplSearchPageController
 			addressData.setLine2(addressForm.getLine2());
 			addressData.setLine3(addressForm.getLine3());
 			addressData.setTown(addressForm.getTownCity());
-			addressData.setLandmark(addressForm.getLandmark());
 			addressData.setPostalCode(addressForm.getPostcode());
 			addressData.setState(addressForm.getState());
 			addressData.setBillingAddress(false);
 			addressData.setShippingAddress(true);
+			if(StringUtils.isEmpty(addressForm.getLandmark().trim()) && null != addressForm.getLandmark())
+			{
+				addressData.setLandmark(addressForm.getOtherLandmark());
+			}
+			else
+			{
+				addressData.setLandmark(addressForm.getLandmark());
+			}
 			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
 			{
 				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
