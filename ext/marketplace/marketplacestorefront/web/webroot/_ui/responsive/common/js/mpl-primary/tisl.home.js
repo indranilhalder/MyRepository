@@ -1015,6 +1015,7 @@ function getShowCaseAjaxCall() {
                 renderHtml += "</div></div>";
                 $('#showcase').html(renderHtml);
                 getShowcaseContentAjaxCall(defaultComponentId);
+                $('.selectmenu').text($(".showcaseItem .showcase-border").text());
             },
             error: function() {
                 // globalErrorPopup('Failure!!!');
@@ -1117,13 +1118,11 @@ function getShowcaseContentAjaxCall(id) {
         }
     }
     // ENd AJAX CALL
-console.log($(".showcaseItem .showcase-border").text());
-$('.selectmenu').text($(".showcaseItem .showcase-border").text());
+
 $(document).on("click", ".showcaseItem", function() {
     var id = $(this).find('a').attr("id");
     $(".showcaseItem").find("a").removeClass("showcase-border");
     $(this).find('a').addClass('showcase-border');
-    $('.selectmenu').text($(this).children().text());
     $('.about-one.showcase-section').remove();
     getShowcaseContentAjaxCall(id);
 });
@@ -1132,26 +1131,7 @@ $(window).on('resize', function() {
         $('#stayQued').css('min-height', 'auto');
     }
 });
-$(window).on("load resize", function() {
-    if ($(window).width() <= 767) {
-        $(".showcase-heading").hide();
-        //$(".selectmenu").unbind();
-        $(document).on("click",".selectmenu",function() {
-        	console.log("menu clicked");
-      //  $(".selectmenu").unbind().click(function() {
-            $(".showcase-heading").slideToggle();
-        });
-       // $(".showcase-heading").unbind();
-        $(document).on("click",".showcase-heading",function() {
-        	console.log("showcase clicked");
-       // $(".showcase-heading").unbind().click(function() {
-            $(this).slideUp();
-        });
-    } else {
-        $(".showcase-heading").show();
-        $(".showcase-heading,.selectmenu").unbind();
-    }
-});
+
 function appendIcid(url, icid) {
     if (url != null) {
         if (url.indexOf("?") != -1) {
@@ -1170,6 +1150,26 @@ $(document).ready(function(){
 }
 //Fix for defect TISPT-202
 getFooterOnLoad();
+
+$(document).on("click", ".showcaseItem", function() {
+$('.selectmenu').text($(this).children().text());
+});
+
+$(window).on("load resize", function() {
+    if ($(window).width() <= 767) {
+        $(".showcase-heading").hide();
+        $(document).off("click",".selectmenu").on("click",".selectmenu",function() {
+            $(".showcase-heading").slideToggle();
+        });
+        $(document).off("click",".showcase-heading").on("click",".showcase-heading",function() {
+            $(this).slideUp();
+        });
+    } else {
+        $(".showcase-heading").show();
+        $(document).off("click",".showcase-heading").on("click",".showcase-heading",function() {
+        });
+    }
+});
 
 });
 //call lazy load after ajaz for page stops
