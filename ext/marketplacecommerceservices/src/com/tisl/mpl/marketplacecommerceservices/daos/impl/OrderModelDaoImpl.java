@@ -118,7 +118,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrder(java.util.Date)
 	 */
 	@Override
@@ -156,6 +156,31 @@ public class OrderModelDaoImpl implements OrderModelDao
 			throw new EtailNonBusinessExceptions(e);
 		}
 		return order;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrder(java.util.Date)
+	 */
+	@Override
+	public List<OrderModel> getOrders(final String code) throws EtailNonBusinessExceptions
+	{
+		List<OrderModel> orderlist = null;
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put(MarketplacecommerceservicesConstants.ORDERCODE, code);
+		params.put(MarketplacecommerceservicesConstants.ORDERTYPE, MarketplacecommerceservicesConstants.SUBORDER);
+		try
+		{
+			//forming the flexible search query
+			final FlexibleSearchQuery orderQuery = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.ORDER_QUERY, params);
+			orderlist = flexibleSearchService.<OrderModel> search(orderQuery).getResult();
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
+		return orderlist;
 	}
 
 	/**
