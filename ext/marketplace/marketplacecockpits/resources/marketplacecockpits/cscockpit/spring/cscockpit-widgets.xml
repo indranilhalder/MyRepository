@@ -752,5 +752,43 @@
 
 
 
+<!-- Address  history widget -->
+	
+<alias alias="csAddressHistoryWidgetConfig" name="defaultCsAddressHistoryWidgetConfig"/>
+	<bean id="defaultCsAddressHistoryWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.order.addressHistory"/>
+		<property name="widgetRenderer" ref="csAddressHistoryWidgetRenderer"/>
+		<property name="widgetController" ref="csOrderController"/>
+		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
+		<property name="widgetModel">
+			<bean class="com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.AddressHistoryListWidgetModel"/>
+		</property>
+		<property name="widgetAdapter">
+			<bean class="com.tisl.mpl.cockpits.cscockpit.widgets.adapter.impl.MplOrderDeliveryAddressHistoryWidgetAdapter">
+				<property name="cockpitTypeService" ref="cockpitTypeService"/>
+				<property name="orderHistoryService" ref="orderHistoryService"/>
+			</bean>
+		</property>
+	</bean>
+
+	<alias alias="csAddressHistoryWidgetRenderer" name="defaultCsAddressHistoryWidgetRenderer"/>
+	<bean id="defaultCsAddressHistoryWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplDeliveryAddressHistoryWidgetRenderer">
+		<property name="listConfigurationCode" value="addressHistoryList"/>
+		<property name="listConfigurationType" value="Address"/>
+		<property name="callContextController" ref="csCallContextController"/>
+	</bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </beans>
