@@ -180,7 +180,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsList.add(buyBoxModel.getProduct());
 				}
 			}
-
 			//END
 			buyboxData.setAllOOStock(MarketplaceFacadesConstants.N);
 
@@ -188,7 +187,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			if (buyboxModelList.isEmpty())
 			{
 				LOG.info("************* No Seller with inventory>0 inventory, Fetching buy box rows having price>0 *********");
-				buyboxData.setAllOOStock(MarketplaceFacadesConstants.Y);
+				buyboxData.setAllOOStock(MarketplaceFacadesConstants.Y);// its is valid for electronics product
 				buyboxModelList = buyBoxService.buyBoxPriceNoStock(pdpProduct);
 				if (CollectionUtils.isNotEmpty(buyboxModelList))
 				{

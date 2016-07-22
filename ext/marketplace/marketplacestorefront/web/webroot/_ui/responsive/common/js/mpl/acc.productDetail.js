@@ -1277,7 +1277,6 @@ $( document ).ready(function() {
 					
 					$("#sellerNameId").html(sellerName);
 					$("#sellerSelId").val(sellerID);
-					
 					if (isOOS() && data['othersSellersCount']>0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();

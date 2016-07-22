@@ -89,7 +89,16 @@ function setSizeforAkamai()
 			 $(".select-size").append("<span class='selected quickViewSelect'>"+productSizeQuickVar+"</span>");
 			} 
 }
-
+function isOOSQuick(){
+	var totalOptions = $("ul[label=sizes] li").length;
+	totalOptions = totalOptions -1;
+	var disabledOption = $("ul[label=sizes] li").find("[style]").length;
+	if(totalOptions == disabledOption){
+		return true;
+	}else{
+		return false;
+	}
+}
 function setBuyBoxDetails()
 {
 	var productCode = productCodeQuickView;//$("#productCodePost").val();
@@ -174,8 +183,13 @@ function setBuyBoxDetails()
 				//alert("--"+ $(".quickViewSelect").html());
 				
 				//if (allStockZero == 'Y' && data['othersSellersCount']>0) {
-				if (allStockZero == 'Y' && data['othersSellersCount']>0) { //TPR-465
-
+				if (isOOSQuick() && data['othersSellersCount']>0) {
+					$("#addToCartButtonQuick").hide();
+					$("#outOfStockIdQuick").show();
+				}else if (isOOSQuick() && data['othersSellersCount']==0){
+					$("#addToCartButtonQuick").hide();
+					$("#outOfStockIdQuick").show();
+				}else if (allStockZero == 'Y' && data['othersSellersCount']>0) { //TPR-465
 					//if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
 					$("#addToCartButtonQuick").hide();
 					$("#outOfStockIdQuick").show();
