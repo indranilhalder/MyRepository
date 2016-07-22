@@ -1167,7 +1167,16 @@ $(function() {
 
 });
 
-
+function isOOS(){
+	var totalOptions = $("#variant option").length;
+	totalOptions = totalOptions -1;
+	var disabledOption = $("#variant option:disabled").length;
+	if(totalOptions == disabledOption){
+		return true;
+	}else{
+		return false;
+	}
+}
 
 /**
  * This method is used to display delivery modes against a sku id
@@ -1185,7 +1194,12 @@ $( document ).ready(function() {
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
-	var code = productCode+","+variantCodes;
+	var variantCodesJson = "";
+	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
+		variantCodes = variantCodes.split(",");
+		variantCodesJson = JSON.stringify(variantCodes);
+	}
+	//var code = productCode+","+variantCodes;
 	//alert("----"+productCode);
 	
 	//changes done to restrict buybox AJAX call from every page.
@@ -1194,13 +1208,14 @@ $( document ).ready(function() {
 		return false;
 		}
 	
-	var requiredUrl = ACC.config.encodedContextPath + "/p-" + code
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/buybox";
-	var dataString = 'productCode=' + productCode;
+	//var dataString = 'productCode=' + productCode;
+	var data = 
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
-		data : dataString,
+		data : {productCode:productCode,variantCode:variantCodesJson},
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
@@ -1262,7 +1277,24 @@ $( document ).ready(function() {
 					$("#sellerNameId").html(sellerName);
 					$("#sellerSelId").val(sellerID);
 					
-					if (allStockZero == 'Y' && data['othersSellersCount']>0) {
+					if (isOOS() && data['othersSellersCount']>0) {
+						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
+						$("#addToCartButton").hide();
+						$("#outOfStockId").show();
+						$("#buyNowButton").hide();
+						//}
+						$("#otherSellerInfoId").hide();
+						$("#otherSellerLinkId").show();
+					}
+					else if (isOOS() && data['othersSellersCount']==0){
+						//if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173 TPR-465
+							$("#addToCartButton").hide();
+							$("#buyNowButton").hide();
+							$("#outOfStockId").show();
+						//}
+						$("#otherSellerInfoId").hide();
+						$("#otherSellerLinkId").hide();
+					}else if (allStockZero == 'Y' && data['othersSellersCount']>0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
@@ -1289,7 +1321,6 @@ $( document ).ready(function() {
 						$("#otherSellerLinkId").show();
 					}
 					else {
-
 						$("#otherSellersId").html(data['othersSellersCount']);
 						$("#minPriceId").html(data['minPrice'].formattedValue);
 					}

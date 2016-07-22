@@ -1103,7 +1103,10 @@ public class ProductPageController extends AbstractPageController
 			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
 			{
 				//get left over variants
-				productData.getAllVariantsId().remove(productData.getCode());
+				if (productData.getAllVariantsId().size() > 1)
+				{
+					productData.getAllVariantsId().remove(productData.getCode());
+				}
 				for (final String variants : productData.getAllVariantsId())
 				{
 					allVariants.append(variants).append(',');
@@ -1388,15 +1391,15 @@ public class ProductPageController extends AbstractPageController
 				if (productData.getAllVariantsId().size() > 1)
 				{
 					productData.getAllVariantsId().remove(productData.getCode());
-				}
-				for (final String variants : productData.getAllVariantsId())
-				{
-					allVariants.append(variants).append(',');
-				}
+					for (final String variants : productData.getAllVariantsId())
+					{
+						allVariants.append(variants).append(',');
+					}
 
-				final int length = allVariants.length();
-				final String allVariantsString = allVariants.substring(0, length - 1);
-				model.addAttribute("allVariantsString", allVariantsString);
+					final int length = allVariants.length();
+					final String allVariantsString = allVariants.substring(0, length - 1);
+					model.addAttribute("allVariantsString", allVariantsString);
+				}
 			}
 		}
 		//populateVariantSizes(productData);
@@ -1648,8 +1651,9 @@ public class ProductPageController extends AbstractPageController
 	@SuppressWarnings(BOXING)
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/buybox", method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxPrice(
-			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode) throws JSONException,
-			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
+			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
+			@RequestParam("variantCode") String variantCode) throws JSONException, CMSItemNotFoundException,
+			UnsupportedEncodingException, com.granule.json.JSONException
 	{
 		final JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
@@ -1657,6 +1661,12 @@ public class ProductPageController extends AbstractPageController
 		{
 			if (null != productCode)
 			{
+				if (!StringUtils.isEmpty(variantCode))
+				{
+					final List<String> variantCodes = (List<String>) JSON.parse(variantCode);
+					variantCode = StringUtils.join(variantCodes, ",");
+					productCode = productCode + "," + variantCode;
+				}
 				productCode = productCode.toUpperCase();
 			}
 			final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(productCode);

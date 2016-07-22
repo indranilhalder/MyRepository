@@ -145,19 +145,25 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 		//TISPRM -56
 		String products[] = null;
+		String pdpProduct = null;
 		final List<String> productsList = new ArrayList<String>();
 
 		final Map<String, Object> returnData = new HashMap<String, Object>();
 		List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>();
 		List<String> productsWithNoStock = new ArrayList<String>();
-
+		List<String> arrayToProductList = null;
 
 		if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)
 		{
-
 			products = productCode.split(MarketplacecommerceservicesConstants.COMMA);
+			pdpProduct = products[0];
+			arrayToProductList = new ArrayList<String>(Arrays.asList(products));
 		}
-		final List<String> arrayToProductList = new ArrayList<String>(Arrays.asList(products));
+		else
+		{
+			pdpProduct = productCode;
+		}
+
 		//END
 		try
 		{
@@ -165,7 +171,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
 			for (final BuyBoxModel buyBoxModel : buyboxModelListAll)
 			{
-				if (null != products && products[0].equalsIgnoreCase(buyBoxModel.getProduct()))
+				if (null != pdpProduct && pdpProduct.equalsIgnoreCase(buyBoxModel.getProduct()))
 				{
 					buyboxModelList.add(buyBoxModel);
 				}
@@ -174,8 +180,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsList.add(buyBoxModel.getProduct());
 				}
 			}
-			//END
 
+			//END
 			buyboxData.setAllOOStock(MarketplaceFacadesConstants.N);
 
 			//If all the sellers has stock zero, then display any product having non zero price
@@ -183,7 +189,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			{
 				LOG.info("************* No Seller with inventory>0 inventory, Fetching buy box rows having price>0 *********");
 				buyboxData.setAllOOStock(MarketplaceFacadesConstants.Y);
-				buyboxModelList = buyBoxService.buyBoxPriceNoStock(products[0]);
+				buyboxModelList = buyBoxService.buyBoxPriceNoStock(pdpProduct);
 				if (CollectionUtils.isNotEmpty(buyboxModelList))
 				{
 					//TODO
@@ -195,14 +201,17 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					buyboxData.setSellerAssociationstatus(SellerAssociationStatusEnum.NO.toString());
 				}
 				//no stock for all products
-				arrayToProductList.removeAll(productsList);
-				productsWithNoStock = arrayToProductList;
+				if (null != arrayToProductList)
+				{
+					arrayToProductList.removeAll(productsList);
+					productsWithNoStock = arrayToProductList;
+				}
 			}
 
 			else if (buyboxModelList.size() == 1)
 			{
 				onlyBuyBoxHasStock = true;
-				buyboxModelList = buyBoxService.buyBoxPriceNoStock(products[0]);
+				buyboxModelList = buyBoxService.buyBoxPriceNoStock(pdpProduct);
 				for (final BuyBoxModel buybx : buyboxModelList)
 				{
 					if (buybx.getAvailable().doubleValue() > 0)
@@ -212,15 +221,21 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					}
 				}
 				//Availability counts
-				arrayToProductList.removeAll(productsList);
-				productsWithNoStock = arrayToProductList;
+				if (null != arrayToProductList)
+				{
+					arrayToProductList.removeAll(productsList);
+					productsWithNoStock = arrayToProductList;
+				}
 			}
 			else
 			{
 				buyBoxMod = buyboxModelList.get(0);
 				//Availability counts
-				arrayToProductList.removeAll(productsList);
-				productsWithNoStock = arrayToProductList;
+				if (null != arrayToProductList)
+				{
+					arrayToProductList.removeAll(productsList);
+					productsWithNoStock = arrayToProductList;
+				}
 			}
 			if (buyboxModelList.size() > 0)
 			{
