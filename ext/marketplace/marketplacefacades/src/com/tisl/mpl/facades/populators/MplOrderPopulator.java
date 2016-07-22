@@ -342,5 +342,4 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		}
 		target.setDeliveryAddressList(addressDataList);
 	}
-
 }
