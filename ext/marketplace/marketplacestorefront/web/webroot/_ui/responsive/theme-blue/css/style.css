@@ -32325,6 +32325,17 @@ body.page-homepage .feature-collections h1, body.page-homepage .trending h1>span
     font-size: 15px;
 }
 }
+.shop-promos .promos li:last-child {
+    border-right: 0;
+}
+.shop-promos .promos li {
+    border-bottom: 0;
+}
+.shop-promos .promos {
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+}
 /*New homepage changes ends*/
 
 /*--------------maincss-----------*/
