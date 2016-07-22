@@ -469,6 +469,10 @@
 														${fn:escapeXml(creditCardBillingAddress.line3)},
 													</c:if>
 										<br>
+										<c:if test="${not empty creditCardBillingAddress.landmark}">
+														${fn:escapeXml(creditCardBillingAddress.landmark)},
+										</c:if>
+										<br>${fn:escapeXml(creditCardBillingAddress.landmark)}
 										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
 										<c:if test="${not empty creditCardBillingAddress.state}">
 														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
@@ -543,6 +547,9 @@
 											<c:if test="${not empty subOrder.deliveryAddress.line3}">
 														&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
 													</c:if>
+											<c:if test="${not empty subOrder.deliveryAddress.landmark}">
+														&nbsp;${fn:escapeXml(subOrder.deliveryAddress.landmark)},
+											</c:if>
 											<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
 											<c:if test="${not empty subOrder.deliveryAddress.state}">
 														${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
