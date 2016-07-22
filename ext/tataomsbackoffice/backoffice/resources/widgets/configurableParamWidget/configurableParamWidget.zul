@@ -1,0 +1,160 @@
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+	<style>
+		.popuped{ position: absolute; top: 0%; left: 0%; width: 100%;
+		height: 100%; background-color: black; z-index:1001;
+		-moz-opacity: 0.8; opacity:.80; filter: alpha(opacity=80);
+		padding: 15%;} 
+		.popuped .content{
+		padding: 20%;
+		background-color: white;
+		}
+		.popuped .close{
+		float:right;	
+	    background-color: white;
+	    border:0px;
+
+		}
+		.lheading{
+		float:left;
+		color:black;
+		font-size: 13px;
+		}
+		.headingpopup{
+		padding:10px;
+		float:left;
+		color:black;
+		font-size: 13px;
+		}
+	</style>
+	<grid id="gridForm" style="width:90%;padding-left:10px">
+
+		<rows>
+		    <row>
+			<label class="lheading" value="Delivery Time Lines"/>
+			</row>
+			<row style="border-bottom:none">
+				<label value="AIR Delivery Time Line" hflex="1" />
+				<intbox/>
+				<label value="days" />
+			</row>
+
+			<row style="border-bottom:none">
+				<label value="SUR Delivery Time Line" hflex="1" />
+				<intbox/>
+				<label value="days"  />
+			</row>
+			
+			<row style="border-bottom:none">
+				<label value="Scheduled delivey Charge" hflex="1" />
+		       <doublebox />
+			</row>
+			<row style="border-bottom:none">
+				<label value="Express delivey Charge" hflex="1" />
+		       <doublebox />
+			</row>
+			<row>
+			<label class="lheading" value="Scheduled Delivery Time Slots"/>
+			
+			<listbox height="100%" hflex="1"
+					emptyMessage="No result found in the result"
+					style="font-size:10px">
+					<listhead sizable="true">
+						<listheader style="width:40px;">
+							<button tooltiptext="Add new time slot" onClick="sdpopup.setVisible(true)"
+								image="${wr}/images/add.png" />
+						</listheader>
+						<listheader
+							style="text-align:center;font-size:10px" label="From">
+						</listheader>
+						<listheader
+							style="text-align:center;font-size:10px" label="To">
+						</listheader>
+					</listhead>
+				</listbox>
+			
+			</row>
+			<row style="border-bottom:none">
+				<label value="Express delivery" hflex="1" />
+				<listbox height="100%" hflex="1"
+					emptyMessage="No result found in the result"
+					style="font-size:10px">
+					<listhead sizable="true">
+						<listheader style="width:40px;">
+							<button tooltiptext="Add new time slot" onClick="edpopup.setVisible(true)"
+								image="${wr}/images/add.png" />
+						</listheader>
+						<listheader
+							style="text-align:center;font-size:10px" label="From">
+						</listheader>
+						<listheader
+							style="text-align:center;font-size:10px" label="To">
+						</listheader>
+					</listhead>
+				</listbox>
+
+				
+			</row>
+			<row>
+			<label class="lheading" value="SSHIP Requirement"/>
+			</row>
+			<row style="border-bottom:none">
+				<label value="No.of days within which customer can confirm product receipt" hflex="1" />
+				<textbox style="width:30px" hflex="1" />
+			</row>		
+			<row style="border-bottom:none">
+				<cell></cell>
+				<button label="Save"/>
+			</row>
+		</rows>
+	</grid>
+	<div class="popuped" id="sdpopup" visible="false" action="show: slideDown;hide: slideUp">
+	   <label  class="headingpopup" value="Scheduled Delivery Time Slot" />
+		<button class="close" image="${wr}/images/close-button.gif" onClick="sdpopup.setVisible(false)" />
+		<div class="content">
+		   <div  style="border:#555 1px solid;padding:20px">
+			<hlayout style="width:80%" >
+				<vlayout style="margin-right:20px">
+					<label value="From Time" />
+					<timebox cols="5" format="short" />
+				</vlayout>
+				<vlayout style="margin-right:30px">
+					<label value="To Time" />
+					<timebox cols="5" format="short" />
+				</vlayout>
+				<vlayout>
+					<label value="" />
+					<button label="Save" />
+				</vlayout>
+			</hlayout>
+			</div>
+		</div>
+	</div>
+	 <div class="popuped" id="edpopup" visible="false" action="show: slideDown;hide: slideUp">
+	   <label class="headingpopup" value="Express Delivery Time Slot" />
+		<button class="close" image="${wr}/images/close-button.gif" onClick="edpopup.setVisible(false)" />
+		<div class="content">
+		   <div  style="border:#555 1px solid;padding:20px">
+			<hlayout style="width:80%" >
+				<vlayout style="margin-right:20px">
+					<label value="From Time" />
+					<timebox />
+				</vlayout>
+				<vlayout style="margin-right:30px">
+					<label value="To Time" />
+					<timebox />
+				</vlayout>
+				<vlayout>
+					<label value="" />
+					<button label="Save" />
+				</vlayout>
+			</hlayout>
+			</div>
+		</div>
+	</div> 
+</widget>
