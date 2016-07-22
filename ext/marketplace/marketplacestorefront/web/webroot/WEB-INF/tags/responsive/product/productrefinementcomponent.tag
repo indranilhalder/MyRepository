@@ -11,15 +11,7 @@ $(function() {
 	}
 	});
 	
-	
-$(document).ready(function(){
-	 $(".facet-name.js-facet-name h4").each(function(){
-		if($(this).hasClass("false")){
-	    	$(this).parent().siblings('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").hide(100);
-	    	$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").hide(100);
-		}
-	}); 
-});
+
 	
 </script>
 

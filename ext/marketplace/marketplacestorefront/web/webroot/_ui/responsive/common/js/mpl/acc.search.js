@@ -1,4 +1,4 @@
-	function constructDepartmentHierarchy(inputArray) {		
+function constructDepartmentHierarchy(inputArray) {		
 		var output = [];
 		if(inputArray!=""){
 		for (var i = 0; i < inputArray.length; i++) {
@@ -47,6 +47,34 @@
 //		expandTree = true;
 //	}
 	//TISCF-4 End
+	
+	//TISPT-304 starts
+	
+	$( ".serpProduct" ).each(function( index ) {
+		  var product=$(this).closest('span').find('#productCode').val();
+		 // console.log("prod"+product);
+		  var categoryTypeValue=$(this).closest('span').find('#categoryType').val()
+		 //  console.log("categoryTypeValue"+categoryTypeValue);
+		  var productUrl=$(this).closest('span').find('#productUrl').val();
+		 // console.log("productUrl"+productUrl);
+		  var productPrice=$(this).closest('span').find('#productPrice').val();
+		//  console.log("productPrice"+productPrice);
+		  var list=$(this).closest('span').find('#list').val();
+		//  console.log("list"+list);
+		  var mrpPriceValue=$(this).closest('span').find('#mrpPriceValue').val();
+		//  console.log("mrpPriceValue"+mrpPriceValue);
+		  var sizeStockLevel=$(this).closest('span').find('#sizeStockLevel').val();
+		 // console.log("sizeStockLevel"+sizeStockLevel);
+		  var productPromotion=$(this).closest('span').find('#productPromotion').val();
+		 // console.log("productPromotion"+productPromotion);
+		 
+		  if(typeof(serpSizeList)!= "undefined"){
+			modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
+		 } 
+		});
+	
+	//TISPT-304 ends
+	
 	
 	if($('#isCategoryPage').val() == 'true'){	
 		// Assign tree object to category page

@@ -145,6 +145,9 @@
 	    
 	    <!-- Extension for Coupon -->
 	     <extension name="marketplacecoupon" />
+	     
+	     <!-- Extension for individual cache clear - TISPT-358 -->
+		 <extension name="cacheclear" />
 
 	</extensions>
 </hybrisconfig>

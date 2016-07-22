@@ -36,9 +36,9 @@
 			
 			$("#savebtn").click(function(e) {
 				hideErrorMessage();
-				 //alert("coming"); 
+				
 				 
-				if ($("#firstName").val().length < 1 || $("#lastName").val().length <1 || isNaN($("#mobileNo").val()) == true || $("#mobileNo").val().length < 10 || $("#addressLane1").val().length < 1 || $("#addressLane2").val().length < 1 || isNaN($("#pincode").val()) == true || $("#pincode").val().length < 5 || $("#landmark").val().length < 1 || $("#city").val().length < 1 || $("#state").val() == "00"){	
+				if ($("#firstName").val().length < 1 || $("#lastName").val().length <1 || isNaN($("#mobileNo").val()) == true || $("#mobileNo").val().length < 10 || $("#addressLane1").val().length < 1 || isNaN($("#pincode").val()) == true || $("#pincode").val().length < 5 || $("#city").val().length < 1 || $("#state").val() == "00"){	
 					e.preventDefault();
 					if ($("#firstName").val().length <1 ) {
 			            $(".firstNameError").show();
@@ -68,10 +68,10 @@
 			            $(".address1Error").text("Address Line 1 cannot be blank");
 			        }
 
-			        if ($("#addressLane2").val().length < 1) {
+			       /*  if ($("#addressLane2").val().length < 1) {
 			            $(".address2Error").show();
 			            $(".address2Error").text("Address Line 2 cannot be blank");
-			        }
+			        } */
 
 
 
@@ -86,10 +86,10 @@
 			        }
 
 
-			        if ($("#landmark").val().length < 1) {
+			       /*  if ($("#landmark").val().length < 1) {
 			            $(".landMarkError").show();
 			            $(".landMarkError").text("Landmark cannot be blank");
-			        }
+			        } */
 
 			        if ($("#city").val().length < 1) {
 			            $(".cityError").show();
@@ -102,7 +102,36 @@
 			            $(".stateError").text("Please choose a state");
 			        }
 			    } else {
-						$("#returnPincodeCheckForm").submit();
+			    	
+			    	
+			    	var addressLine1 = $("#addressLane1").val();
+			    	var addressLine2 = $("#addressLane2").val();
+			    	var addressLine3 = $("#landmark").val();
+			    	if(addressLine1.indexOf('#')!=-1)
+			    	{
+			    		
+			    	$("#addressLane1").val(encodeURIComponent($("#addressLane1").val()));
+			    	}
+			    	
+			    	if(addressLine2.indexOf('#')!=-1)
+		    		{
+			    		
+		    		$("#addressLane2").val(encodeURIComponent($("#addressLane2").val()));
+		    		
+		    		}
+			    	if(addressLine3.indexOf('#')!=-1)
+		    		{
+			    	
+		    		$("#landmark").val(encodeURIComponent($("#landmark").val()));
+		    		
+		    		}
+			    	
+			    	/* $("#addressLane1").val(encodeURIComponent($("#addressLane1").val()));
+			    	$("#addressLane2").val(encodeURIComponent($("#addressLane2").val()));
+			    	$("#addressLane2").val(encodeURIComponent($("#landmark").val())); */
+				
+					$("#returnPincodeCheckForm").submit();
+						
 			   		 }
 			});
 			
@@ -175,7 +204,7 @@
 								
 								<div class="row">
 									<div class="col-md-12 inputBoxHeight">
-										<label class="returnLabel">Address Line2*</label><br>
+										<label class="returnLabel">Address Line2</label><br>
 										<form:input path="addressLane2" maxlength="40" class="Address2"
 											placeholder="Enter Address Line2"
 											 />
@@ -191,7 +220,7 @@
 									</div>
 									
 									<div class="col-md-8 inputBoxHeight">
-										<label class="returnLabel">LandMark*</label><br>
+										<label class="returnLabel">LandMark</label><br>
 										<form:input path="landmark" maxlength="40" placeholder="Enter Your Nearest Land mark" />
 										<div class="error_text landMarkError"></div>
 									</div>
@@ -286,6 +315,7 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				function loadFormData() {
+					
 					$(".firstName").val("${returnPincodeCheckForm.firstName }");
 					$(".lastName").val("${returnPincodeCheckForm.lastName }");
 					$(".mobileNo").val("${returnPincodeCheckForm.mobileNo }");
