@@ -80,7 +80,7 @@
 			
 			</row>
 			<row style="border-bottom:none">
-				<label value="Express delivery" hflex="1" />
+				<label class="lheading"  value="Express delivery Time Slots"  />
 				<listbox height="100%" hflex="1"
 					emptyMessage="No result found in the result"
 					style="font-size:10px">
