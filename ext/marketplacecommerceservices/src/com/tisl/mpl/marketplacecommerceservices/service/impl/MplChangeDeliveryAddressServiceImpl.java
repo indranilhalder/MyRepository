@@ -7,10 +7,14 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -137,13 +141,8 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 	}
 
 
-	/**
-	 * save AddressForCustomer in TemproryAddressModel with orderId
-	 *
-	 * return boolean true false
-	 */
 	@Override
-	public boolean saveTemproryAddress(final String orderCode, final TemproryAddressModel temproryAddressModel)
+	public boolean saveTemproryAddress(String orderCode, TemproryAddressModel temproryAddressModel)
 	{
 		boolean flag = false;
 		try
@@ -178,17 +177,34 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 			if (StringUtils.isNotEmpty(orderCode))
 			{
 				OrderModel orderModel;
-				final TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
+				TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
 				orderModel = orderModelDao.getOrderModel(orderCode);
 				if (orderModel != null)
 				{
-					orderModel.setDeliveryAddress(temproryAddressModel);
+					UserModel user = orderModel.getUser();
+					Collection<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
+					Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
+					Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
+					if (null != deliveryAddresses)
+					{
+						deliveryAddressesList.addAll(deliveryAddresses);
+					}
+					if (null != user.getAddresses())
+					{
+						customerAddressesList.addAll(user.getAddresses());
+					}
 
-					/*
-					 * final Collection<AddressModel> deliveryAddressLis = orderModel.getDeliveryAddresses();
-					 * deliveryAddressLis.add(temproryAddressModel); orderModel.setDeliveryAddresses(deliveryAddressLis);
-					 */
-					modelService.save(orderModel);
+					AddressModel addrModel = new AddressModel();
+					addrModel = setNewDeliveryAddress(temproryAddressModel);
+					addrModel.setOwner(temproryAddressModel.getOwner());
+					modelService.save(addrModel);	
+					deliveryAddressesList.add(addrModel);
+					customerAddressesList.add(addrModel);
+					orderModel.setDeliveryAddress(addrModel);
+					user.setAddresses(customerAddressesList);
+					orderModel.setDeliveryAddresses(deliveryAddressesList);
+					modelService.saveAll(orderModel);
+					modelService.saveAll(user);
 					modelService.remove(temproryAddressModel);
 					flag = true;
 				}
@@ -200,6 +216,7 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 		}
 		return flag;
 	}
+
 
 
 	/***
@@ -220,7 +237,7 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 		{
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-				final TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
+				TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
 				if (temproryAddressModel != null && StringUtils.isNotEmpty(temproryAddressModel.getPostalcode()))
 				{
 					modelService.remove(temproryAddressModel);
@@ -233,5 +250,59 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 		}
 
 	}
+	private AddressModel setNewDeliveryAddress(TemproryAddressModel newDeliveryAddress)
+	{
+		AddressModel deliveryAddress = new AddressModel();
+		if (null != newDeliveryAddress.getFirstname())
+		{
+			deliveryAddress.setFirstname(newDeliveryAddress.getFirstname());
+		}
+		if (null != newDeliveryAddress.getLastname())
+		{
+			deliveryAddress.setLastname(newDeliveryAddress.getLastname());
+		}
+		if (null != newDeliveryAddress.getStreetname())
+		{
+			deliveryAddress.setStreetname(newDeliveryAddress.getStreetname());
+		}
+		if (null != newDeliveryAddress.getStreetnumber())
+		{
+			deliveryAddress.setStreetnumber(newDeliveryAddress.getStreetnumber());
+		}
+		if (null != newDeliveryAddress.getAddressLine3())
+		{
+			deliveryAddress.setAddressLine3(newDeliveryAddress.getAddressLine3());
+		}
+		if (null != newDeliveryAddress.getEmail())
+		{
+			deliveryAddress.setEmail(newDeliveryAddress.getEmail());
+		}
+		if (null != newDeliveryAddress.getPostalcode())
+		{
+			deliveryAddress.setPostalcode(newDeliveryAddress.getPostalcode());
+		}
+		if (null != newDeliveryAddress.getCountry())
+		{
+			deliveryAddress.setCountry(newDeliveryAddress.getCountry());
+		}
+		if (null != newDeliveryAddress.getCity())
+		{
+			deliveryAddress.setCity(newDeliveryAddress.getCity());
+		}
+		if (null != newDeliveryAddress.getState())
+		{
+			deliveryAddress.setState(newDeliveryAddress.getState());
+		}
+		if (null != newDeliveryAddress.getLandmark())
+		{
+			deliveryAddress.setLandmark(newDeliveryAddress.getLandmark());
+		}
+		if (null != newDeliveryAddress.getPhone1())
+		{
+			deliveryAddress.setPhone1(newDeliveryAddress.getPhone1());
+		}
+		return deliveryAddress;
+	}
+
 
 }
