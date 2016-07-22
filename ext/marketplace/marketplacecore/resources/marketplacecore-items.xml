@@ -1526,6 +1526,13 @@
 							</columntype>
 						</persistence>
 					</attribute>
+							<attribute qualifier='categoryId' type="java.lang.String">
+						<description>Seo Content unique Id</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="true" />
+						<persistence type="property">
+									</persistence>
+					</attribute>
 					<attribute type="CatalogVersion" qualifier="catalogVersion">
 						<description></description>
 						<modifiers read="true" write="true" optional="true"
@@ -1595,6 +1602,12 @@
 					</attribute>
 					<attribute qualifier="ranking" type="java.lang.Integer">
 						<description>Ranking value for departments/category</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="seoContent" type="SeoContent">
+						<description>Seo Content for category</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true"/>
 						<persistence type="property" />
 					</attribute>
 				</attributes>
@@ -6826,6 +6839,17 @@
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="paymentMethodType" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TISPRO-675 -->
+					<attribute qualifier="emiBank" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="emiTenure" type="java.lang.String"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />

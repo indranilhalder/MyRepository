@@ -159,25 +159,25 @@ public class MplDiscountFlagValueProvider extends AbstractPropertyFieldValueProv
 		//		discountRange = "Non-Discounted Items";
 		//		if (offerExists)
 		//		{
-		if (percentDiscount > 0 && percentDiscount <= 20)
+		if (percentDiscount > 0 && percentDiscount <= 10)
 		{
-			return "Upto 20%";
+			return "Upto 10%";
 		}
-		else if (percentDiscount > 20 && percentDiscount <= 40)
+		else if (percentDiscount > 10 && percentDiscount <= 30)
 		{
-			return "20%-40%";
+			return "10% - 30%";
 		}
-		else if (percentDiscount > 40 && percentDiscount <= 60)
+		else if (percentDiscount > 30 && percentDiscount <= 50)
 		{
-			return "40%-60%";
-		}                                                                                       
-		else if (percentDiscount > 60 && percentDiscount <= 80)
-		{
-			return "60%-80%";
+			return "30% - 50%";
 		}
-		else if (percentDiscount > 80 && percentDiscount <= 100)
+		else if (percentDiscount > 50 && percentDiscount <= 70)
 		{
-			return "80%-100%";
+			return "50% - 70%";
+		}
+		else if (percentDiscount > 70 && percentDiscount <= 100)
+		{
+			return "70% and more";
 		}
 		else
 		{
