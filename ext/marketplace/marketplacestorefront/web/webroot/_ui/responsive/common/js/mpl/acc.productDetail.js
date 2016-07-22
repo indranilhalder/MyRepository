@@ -935,9 +935,10 @@ $(function() {
 								+ "-checkPincode";
 
 						if (pin == "") {
-							$('#unsevisablePin,#unableprocessPin,#wrongPin')
+							$('#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin')
 									.hide();
 							$("#emptyPin").show();
+							
 							$('#addToCartButton').show();
 							$('#buyNowButton').attr("disabled",false);
 

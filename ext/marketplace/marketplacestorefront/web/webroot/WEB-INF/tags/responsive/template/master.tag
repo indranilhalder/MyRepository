@@ -21,7 +21,17 @@
 <html lang="${currentLanguage.isocode}">
 <head>
 	<title>
-		${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
+	<%--(TPR-243) SEO Meta Tags and Titles--%>
+	<c:choose>
+		<c:when test="${isCategoryPage}">
+		 ${metaPageTitle}
+		</c:when>
+		<c:otherwise>
+			 ${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
+		</c:otherwise>
+	</c:choose>	
+		
+	
 	</title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">
@@ -54,9 +64,9 @@
 <link rel="android-touch-icon" href="${themeResourcePath}/images/Appicon.png" />
 <!-- <link rel="windows-touch-icon" href="icon.png" /> -->
 	
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta charset="utf-8">
+	<!-- <meta charset="utf-8"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	
