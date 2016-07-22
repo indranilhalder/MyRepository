@@ -744,7 +744,6 @@
 		<property name="imageURL" type="String"/>
 		<property name="leastSizeProduct" type="String"/>
 		<property name="isOfferExisting" type="Boolean"/>
-		<property name="discountPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.MplAutoCompleteResultWsData">
