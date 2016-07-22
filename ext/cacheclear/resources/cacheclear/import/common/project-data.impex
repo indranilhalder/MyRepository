@@ -1,0 +1,2 @@
+INSERT_UPDATE CacheClearCronJob;code[unique=true];job(code);sessionLanguage(isocode)
+;cacheClearJob;clearCacheJob;en

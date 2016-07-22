@@ -1620,6 +1620,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BRAND_NAME_PREFIX_LOWER = "mbh";
 	public static final String SELLER_NAME_PREFIX = "MSH";
 
+	//TISPRO-675
+	public static final String EMIBANK = "emi_bank".intern();
+	public static final String EMITENURE = "emi_tenure".intern();
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class

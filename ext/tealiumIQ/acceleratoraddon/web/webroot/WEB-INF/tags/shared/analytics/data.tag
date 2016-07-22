@@ -43,13 +43,13 @@
 		<%=HybrisDataConverter.getProductPageScript()%>
 	</c:when> --%>
 
-	<c:when test="${currentPageType == 'cart'}">
+	<%-- <c:when test="${currentPageType == 'cart'}">
 		<%=HybrisDataConverter.getCartScript()%>
-	</c:when>
+	</c:when> --%>
 
-	<c:when test="${currentPageType == 'multistepcheckoutsummary'}">
+	<%-- <c:when test="${currentPageType == 'multistepcheckoutsummary'}">
 		<%=HybrisDataConverter.getCartScript()%>
-	</c:when>
+	</c:when> --%>
 
 	<c:when test="${currentPageType == 'profile'}">
 		<%=HybrisDataConverter.getCustomerDetailScript()%>
