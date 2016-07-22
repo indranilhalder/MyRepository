@@ -124,9 +124,9 @@ public class MplDiscountFlagValueProvider extends AbstractPropertyFieldValueProv
 	private String checkIfDiscountExist(final IndexConfig indexConfig, final ProductModel product)
 	{
 
-		boolean offerExists = false;
+		//		boolean offerExists = false;
 		//		final List<String> discountRangeList = new ArrayList<String>(0);
-		String discountRange;
+		//		String discountRange;
 		double percentDiscount = 0.0;
 		final BuyBoxModel buyboxWinner = mplBuyBoxUtility.getLeastPriceBuyBoxModel(product);
 		if (buyboxWinner != null)
@@ -137,7 +137,7 @@ public class MplDiscountFlagValueProvider extends AbstractPropertyFieldValueProv
 
 				if (buyboxWinner.getMrp().doubleValue() - buyboxWinner.getSpecialPrice().doubleValue() > 0)
 				{
-					offerExists = true;
+					//					offerExists = true;
 					percentDiscount = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getSpecialPrice().doubleValue()) * 100)
 							/ buyboxWinner.getMrp().doubleValue();
 				}
@@ -149,39 +149,41 @@ public class MplDiscountFlagValueProvider extends AbstractPropertyFieldValueProv
 
 				if (buyboxWinner.getMrp().doubleValue() - buyboxWinner.getPrice().doubleValue() > 0)
 				{
-					offerExists = true;
+					//					offerExists = true;
 					percentDiscount = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getPrice().doubleValue()) * 100)
 							/ buyboxWinner.getMrp().doubleValue();
 				}
 			}
 		}
 		// TISPRM-134
-		discountRange = "Non-Discounted Items";
-		if (offerExists)
+		//		discountRange = "Non-Discounted Items";
+		//		if (offerExists)
+		//		{
+		if (percentDiscount > 0 && percentDiscount <= 20)
 		{
-			if (percentDiscount > 0 && percentDiscount <= 20)
-			{
-				discountRange = "0%-20%";
-			}
-			else if (percentDiscount > 20 && percentDiscount <= 40)
-			{
-				discountRange = "20%-40%";
-			}
-			else if (percentDiscount > 40 && percentDiscount <= 60)
-			{
-				discountRange = "40%-60%";
-			}
-			else if (percentDiscount > 60 && percentDiscount <= 80)
-			{
-				discountRange = "60%-80%";
-			}
-			else if (percentDiscount > 80 && percentDiscount <= 100)
-			{
-				discountRange = "80%-100%";
-			}
+			return "Upto 20%";
 		}
-
-		return discountRange;
+		else if (percentDiscount > 20 && percentDiscount <= 40)
+		{
+			return "20%-40%";
+		}
+		else if (percentDiscount > 40 && percentDiscount <= 60)
+		{
+			return "40%-60%";
+		}                                                                                       
+		else if (percentDiscount > 60 && percentDiscount <= 80)
+		{
+			return "60%-80%";
+		}
+		else if (percentDiscount > 80 && percentDiscount <= 100)
+		{
+			return "80%-100%";
+		}
+		else
+		{
+			return null;
+		}
+		//		}
 
 	}
 
