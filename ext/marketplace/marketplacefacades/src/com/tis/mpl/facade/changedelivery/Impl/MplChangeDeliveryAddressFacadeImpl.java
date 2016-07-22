@@ -159,7 +159,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		}
 		else
 		{
-			addressChangable = true;
+			addressChangable = false;
 		}
 		return addressChangable;
 	}
