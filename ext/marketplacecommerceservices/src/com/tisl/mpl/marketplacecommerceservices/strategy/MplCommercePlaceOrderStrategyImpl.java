@@ -11,6 +11,7 @@ import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CalculationService;
 import de.hybris.platform.order.InvalidCartException;
@@ -28,6 +29,8 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -156,7 +159,12 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 				{
 					orderModel.setTotalPrice(totalPrice);
 				}
-
+				if (orderModel.getDeliveryAddress() != null)
+				{
+					final Collection<AddressModel> addressModelList = new ArrayList<AddressModel>();
+					addressModelList.add(orderModel.getDeliveryAddress());
+					orderModel.setDeliveryAddresses(addressModelList);
+				}
 				getModelService().save(orderModel);
 
 				result.setOrder(orderModel);
