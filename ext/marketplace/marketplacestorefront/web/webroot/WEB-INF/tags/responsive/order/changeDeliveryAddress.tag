@@ -59,6 +59,19 @@
 								<div class="error_text lastNameError"></div>
 							</div>
 						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="pincode">Pincode*</label>
+									<form:input path="postcode" class="address_postcode"
+										id="pincode"
+										value="${orderDetails.deliveryAddress.postalCode}"  placeholder="Pincode" />
+									<div class="error_text pincodeNoError"></div>
+								</div>
+							</div>
+							<div class="col-md-6"></div>
+						</div>
 						<div class="row">
 							<div class="col-md-12 form-group">
 								<label for="addressLine1">Address Line 1*</label>
@@ -87,18 +100,7 @@
 								<div class="error_text address3Error"></div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="pincode">Pincode*</label>
-									<form:input path="postcode" class="address_postcode"
-										id="pincode"
-										value="${orderDetails.deliveryAddress.postalCode}"  placeholder="Pincode" />
-									<div class="error_text pincodeNoError"></div>
-								</div>
-							</div>
-							<div class="col-md-6"></div>
-						</div>
+				
 						<div class="row">
 							<div class="optionsLandmark">
 								<div class="col-md-12">
@@ -166,34 +168,34 @@
 					<div class="col-md-5">
 
 						<!-- varStatus="i" -->
-						<c:if test="${not empty orderDetails.deliveryAddressList}">
+					<c:if test="${not empty orderDetails.deliveryAddressList}">
 							<c:forEach items="${orderDetails.deliveryAddressList}"
-								var="orderDeliveryAddressList">
+								var="orderDeliveryAddressList" varStatus="status">
 								<div class="row">
 									<div class="col-md-2">
 										<input type="radio" class="addAddressToForm"
-											data-item="changeAddress1" name="select_address"
+											data-item="changeAddress${status.count}" name="select_address"
 											style="width: 15px; height: 15px; display: block; cursor: pointer;" />
 									</div>
-									<div class="col-md-9 addressTextChange changeAddress1">
-										<%-- add ${i.count} --%>
+									<div class="col-md-9 addressTextChange changeAddress${status.count}">
 										<b>Residential Address 1 - Default</b> <br /> <span
-											class="firstName">${orderDeliveryAddresssList.firstName}</span><br />
-										<span class="lastName">${orderDeliveryAddresssList.lastName}</span><br>
-										<span class="addressLine1">${orderDeliveryAddresssList.line1}</span>,&nbsp;
-										<span class="addressLine2">${orderDeliveryAddresssList.line2}</span>,
-										<c:if test="${not empty orderDeliveryAddresssList.line3}">
+											class="firstName">${orderDeliveryAddressList.firstName}</span><br />
+										<span class="lastName">${orderDeliveryAddressList.lastName}</span><br>
+										<span class="addressLine1">${orderDeliveryAddressList.line1}</span>,&nbsp;
+										<span class="addressLine2">${orderDeliveryAddressList.line2}</span>,
+										<c:if test="${not empty orderDeliveryAddressList.line3}">
 											<span class="addressLine3">
-												&nbsp;${orderDeliveryAddresssList.line3},</span>
+												&nbsp;${orderDeliveryAddressList.line3},</span>
 										</c:if>
+										 <span class="landmark">${orderDeliveryAddressList.landmark}</span>
 										<br> ${orderDeliveryAddresssList.town},&nbsp;
-										<c:if test="${not empty orderDeliveryAddresssList.state}">
-											<span class="state">${orderDeliveryAddresssList.state},</span>&nbsp;
+										<c:if test="${not empty orderDeliveryAddressList.state}">
+											<span class="state">${orderDeliveryAddressList.state},</span>&nbsp;
 								      </c:if>
-										<span class="postalCode">${orderDeliveryAddresssList.postalCode}&nbsp;</span>
-										<span class="isocode">${orderDeliveryAddresssList.country.isocode}
+										<span class="postalCode">${orderDeliveryAddressList.postalCode}&nbsp;</span>
+										<span class="isocode">${orderDeliveryAddressList.country.isocode}
 											<br>
-										</span> <span class="phone">91&nbsp;${orderDeliveryAddresssList.phone}
+										</span> 91&nbsp;<span class="phone">${orderDeliveryAddressList.phone}
 											<br>
 										</span>
 									</div>
