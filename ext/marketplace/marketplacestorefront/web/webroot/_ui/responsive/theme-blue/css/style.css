@@ -32131,7 +32131,7 @@ footer .footer-text p {
 footer>div>ul>li h3 {
     font-size: 12px;
 }
-footer > div > ul > li h3:after {
+footer > div > ul > li h3:after,footer>div>ul>li.active h3:after {
     width: 8px;
     height: 8px;
 }
@@ -32199,6 +32199,12 @@ body.page-homepage #newAndExclusive h1 {
 }
 body.page-homepage .trending h1 > span {
     font-size: 18px;
+}
+body.page-homepage .trending .button {
+    font-size: 10px !important;
+    height: 30px !important;
+    letter-spacing: 2px;
+    line-height: 28px !important;
 }
 }
 @media (max-width: 790px){
@@ -32312,6 +32318,11 @@ footer>div>ul>li h3 {
     line-height: inherit;
     font-weight: normal;
     font-weight: normal;
+}
+}
+@media (max-width: 1200px) and (min-width: 791px){
+body.page-homepage .feature-collections h1, body.page-homepage .trending h1>span {
+    font-size: 15px;
 }
 }
 /*New homepage changes ends*/
