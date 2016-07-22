@@ -161,7 +161,7 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 				}
 				if (orderModel.getDeliveryAddress() != null)
 				{
-					final Collection<AddressModel> addressModelList = new ArrayList<AddressModel>();
+					final List<AddressModel> addressModelList = new ArrayList<AddressModel>();
 					addressModelList.add(orderModel.getDeliveryAddress());
 					orderModel.setDeliveryAddresses(addressModelList);
 				}
