@@ -182,7 +182,7 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 				if (orderModel != null)
 				{
 					UserModel user = orderModel.getUser();
-					Collection<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
+					List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
 					Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
 					Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
 					if (null != deliveryAddresses)
