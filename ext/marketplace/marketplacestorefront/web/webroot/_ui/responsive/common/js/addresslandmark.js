@@ -150,8 +150,18 @@ $(document).ready(function() {
 	$(".addAddressToForm").click(function(){
 		//console.log($(this).attr("data-item"));
 		var className = $(this).attr("data-item");
+	
 		$("#firstName").val($("."+className+" .firstName").text());
+		$("#lastName").val($("."+className+" .lastName").text());
+		$("#addressLine1").val($("."+className+" .addressLine1").text());
+		$("#addressLine2").val($("."+className+" .addressLine2").text());
+		$("#addressLine3").val($("."+className+" .addressLine3").text());
+		$("#landmark").val($("."+className+" .landmark").text());
+		$("#state").val($("."+className+" .state").text());
+		$("#pincode").val($("."+className+" .postalCode").text());
+		$("#mobileNo").val($("."+className+" .phone").text());
 	});
+	
 	
 	function onloadFunction() {
 		//$("#deliveryAddressForm #firstName").attr("value", "Dileep");
