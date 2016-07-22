@@ -6,12 +6,19 @@
  */
 package com.hybris.oms.tata.widgets;
 
+import de.hybris.platform.core.model.c2l.RegionModel;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.zkoss.io.Files;
 import org.zkoss.util.media.Media;
@@ -27,10 +34,9 @@ import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.api.logisticserviceability.LogisticServiceabilityFacade;
 import com.hybris.oms.buc.bulkupload.LogisticsServBulkUpldErrFacade;
+import com.hybris.oms.tata.exceltocsv.main.ExcelToCsvConverter;
 import com.hybris.oms.tata.services.CsvFileToZipFileService;
 import com.hybris.oms.tata.services.FilePathProviderService;
-
-import xlstocsv.ExceltoCSVUsingBufferDynamic;
 
 
 /**
@@ -57,7 +63,7 @@ public class LogisticDataUploadController extends DefaultWidgetController
 
 	private static final String[] PROPERTY_FILE_ERRORS =
 	{ "Temporary file path", "Validation_Error file path", "Tpl Inbound file path", "Tpl Outbound file path" };
-	private static final Logger LOG = Logger.getLogger(LogisticDataUploadController.class.getName());
+	private static final Logger LOG = LoggerFactory.getLogger(LogisticDataUploadController.class.getName());
 
 	@Autowired
 	private LogisticServiceabilityFacade logisticServiceabilityFacade;
@@ -70,6 +76,11 @@ public class LogisticDataUploadController extends DefaultWidgetController
 
 	@WireVariable("csvFileToZipFileService")
 	private CsvFileToZipFileService csvFileToZipFileService;
+
+	@Autowired
+	private CommonI18NService commonI18NService;
+
+	private Map<String, String> stateCodes;
 
 	public void show()
 	{
@@ -93,6 +104,12 @@ public class LogisticDataUploadController extends DefaultWidgetController
 		{
 			LOG.error("filePathProviderService is con't be null");
 
+		}
+		stateCodes = new HashMap<>();
+		final List<RegionModel> statecodes = commonI18NService.getAllRegions();
+		for (final RegionModel code : statecodes)
+		{
+			stateCodes.put(code.getName().toLowerCase(), code.getIsocode());
 		}
 	}
 
@@ -167,15 +184,18 @@ public class LogisticDataUploadController extends DefaultWidgetController
 
 			try
 			{
-				final File statePropFile = new File(filePathProviderService.getStatesPropFilePath(), "statecodes.properties");
+				final File statePropFile = new File(filePathProviderService.getStatesPropFilePath(), "local.properties");
 				LOG.info("State code file path " + statePropFile.getAbsolutePath());
-				final ExceltoCSVUsingBufferDynamic xlsxtoCSVUsingBufferDynamic = new ExceltoCSVUsingBufferDynamic();
-				xlsxtoCSVUsingBufferDynamic.setPropertiesPath(statePropFile.getAbsolutePath());
+				//				final ExceltoCSVUsingBufferDynamic xlsxtoCSVUsingBufferDynamic = new ExceltoCSVUsingBufferDynamic();
+				//				xlsxtoCSVUsingBufferDynamic.setPropertiesPath(statePropFile.getAbsolutePath());
+				//
+				//				LOG.info("Start Converting the file from xlsx file to required CSV format in TempLogServFile ");
+				//				xlsxtoCSVUsingBufferDynamic.xlsx("HD", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
+				final ExcelToCsvConverter excelToCsv = new ExcelToCsvConverter(statePropFile.getAbsolutePath());
+				excelToCsv.setStateCodesMap(stateCodes);
+				excelToCsv.convertEcelToCsv("HD", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
 
-				LOG.info("Start Converting the file from xlsx file to required CSV format in TempLogServFile ");
-				xlsxtoCSVUsingBufferDynamic.xlsx("HD", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
 				LOG.info("End Of Converting the file from xlsx file to required CSV format in TempLogServFile");
-
 				if (validationErrorFile.length() == 0)
 				{
 
@@ -229,8 +249,8 @@ public class LogisticDataUploadController extends DefaultWidgetController
 	public void selectExpressUploadZip(final UploadEvent uploadEvent) throws InterruptedException
 	{
 
-		if (!filePathProviderService.propertyFilePathValidation(PROPERTY_FILE_ERRORS,tmpFilePath, validationErrorPath, tplCSVInboundPath,
-				tplCSVOutboundPath))
+		if (!filePathProviderService.propertyFilePathValidation(PROPERTY_FILE_ERRORS, tmpFilePath, validationErrorPath,
+				tplCSVInboundPath, tplCSVOutboundPath))
 		{
 			return;
 		}
@@ -275,8 +295,8 @@ public class LogisticDataUploadController extends DefaultWidgetController
 				LOG.info("Start Copying of ED file from another system to Commerce Server");
 				final long copyStartTime = System.nanoTime();
 				Files.copy(dest, media.getStreamData());
-				LOG.info("Total Time taken ED file for copying from host system To commerce  " + (System.nanoTime() - copyStartTime)
-						/ 1e6 + MIL_SEC);
+				LOG.info("Total Time taken ED file for copying from host system To commerce  "
+						+ (System.nanoTime() - copyStartTime) / 1e6 + MIL_SEC);
 				LOG.info("End of Copying of ED file from another system to Commerce Server");
 			}
 			catch (final IOException ioexception)
@@ -286,12 +306,16 @@ public class LogisticDataUploadController extends DefaultWidgetController
 			}
 			try
 			{
-				final File statePropFile = new File(filePathProviderService.getStatesPropFilePath(), "statecodes.properties");
-				LOG.info("State code file path " + statePropFile.getAbsolutePath());
-				final ExceltoCSVUsingBufferDynamic xlsxtoCSVUsingBufferDynamic = new ExceltoCSVUsingBufferDynamic();
-				xlsxtoCSVUsingBufferDynamic.setPropertiesPath(statePropFile.getAbsolutePath());
-				LOG.info("Start Converting the file from xlsx file to required CSV format in TempLogServFile ");
-				xlsxtoCSVUsingBufferDynamic.xlsx("ED", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
+				final File statePropFile = new File(filePathProviderService.getStatesPropFilePath(), "local.properties");
+				LOG.info("State code File path " + statePropFile.getAbsolutePath());
+				//				final ExceltoCSVUsingBufferDynamic xlsxtoCSVUsingBufferDynamic = new ExceltoCSVUsingBufferDynamic();
+				//				xlsxtoCSVUsingBufferDynamic.setPropertiesPath(statePropFile.getAbsolutePath());
+				//				LOG.info("Start Converting the file from xlsx file to required CSV format in TempLogServFile ");
+				//				xlsxtoCSVUsingBufferDynamic.xlsx("ED", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
+				final ExcelToCsvConverter excelToCsv = new ExcelToCsvConverter(statePropFile.getAbsolutePath());
+				excelToCsv.setStateCodesMap(stateCodes);
+				excelToCsv.convertEcelToCsv("ED", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
+
 				LOG.info("End Of Converting the file from xlsx file to required CSV format in TempLogServFile");
 
 				if (validationErrorFile.length() == 0)
