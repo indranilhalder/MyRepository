@@ -17,7 +17,6 @@ import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -38,8 +37,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
-import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
+import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
@@ -92,6 +91,8 @@ public class SearchSuggestUtilityMethods
 	private ProductFacade productFacade;
 	@Resource(name = "defaultMplProductSearchFacade")
 	private DefaultMplProductSearchFacade searchFacade;
+	@Resource(name = "productDetailsHelper")
+	private ProductDetailsHelper productDetailsHelper;
 
 	/**
 	 * @Description : Sets Category Data to a DTO
@@ -614,8 +615,8 @@ public class SearchSuggestUtilityMethods
 		final List<SellerItemDetailWsDto> sellerItemDetailWsDtoList = new ArrayList<>();
 		final List<SellingItemDetailWsDto> searchProductDTOList = new ArrayList<>();
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
-
-		for (final ProductData productData : searchPageData.getResults())
+		List<GalleryImageData> galleryImages = null;
+		for (ProductData productData : searchPageData.getResults())
 		{
 
 			final SellingItemDetailWsDto sellingItemDetail = new SellingItemDetailWsDto();
@@ -624,35 +625,29 @@ public class SearchSuggestUtilityMethods
 			if (null != productData && null != productData.getCode())
 			{
 
-				final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
-						productData.getCode());
+				/*
+				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
+				 * productData.getCode());
+				 *
+				 * ProductData productData1 = null; if (null != productModel) { productData1 =
+				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
+				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
+				 *
+				 *
+				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
+				 * mplProductWebService.getGalleryImages(productData1);
+				 *
+				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
+				 *
+				 * }
+				 */
+				productData = productFacade.getProductForCodeAndOptions(productData.getCode(), Arrays.asList(ProductOption.GALLERY));
 
-				ProductData productData1 = null;
-				if (null != productModel)
+				galleryImages = productDetailsHelper.getGalleryImagesMobile(productData);
+				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
-					productData1 = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY));
+					sellingItemDetail.setGalleryImagesList(galleryImages);
 				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037);
-				}
-
-
-				if (null != productData1)
-				{
-					final List<GalleryImageData> gallaryImages = mplProductWebService.getGalleryImages(productData1);
-
-					if (!gallaryImages.isEmpty())
-					{
-						sellingItemDetail.setGalleryImagesList(gallaryImages);
-					}
-
-				}
-
-				//					if (null != mplProductWebService.getGalleryImages(productData1))
-				//					{
-				//						sellingItemDetail.setGalleryImagesList(mplProductWebService.getGalleryImages(productData1));
-				//					}
 				if (null != productData.getName())
 				{
 					sellingItemDetail.setProductname(productData.getName());
