@@ -1,6 +1,7 @@
-	function constructDepartmentHierarchy(inputArray) {		
+	function constructDepartmentHierarchy(inputArray) {	
+		alert(inputArray);
 		var output = [];
-		var count = 0;
+		//var count = 0;
 		if(inputArray!=""){
 		for (var i = 0; i < inputArray.length; i++) {				
 			var categoryArray = inputArray[i].split("|");			
@@ -19,9 +20,9 @@
 					if(categoryDetails[2] == "L3")
 					{					
 						categoryName += "  (" +categoryDetails[5] + ")";
-						count++;						
+						//count++;						
 					}
-					
+					var count = categoryDetails[6];
 					var categoryType = "category";
 					if(categoryDetails[3] == 'true') {
 						categoryType = "department"

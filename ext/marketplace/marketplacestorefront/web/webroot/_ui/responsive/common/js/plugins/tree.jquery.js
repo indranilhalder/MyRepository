@@ -555,7 +555,7 @@ ElementsRenderer = (function() {
   };
 
   ElementsRenderer.prototype.createFolderLi = function(node) {
-    var button_classes, button_link, div, escaped_name, folder_classes, icon_element, li, title_span;
+    var button_classes, button_link, div, escaped_name, folder_classes, icon_element, li, title_span, count_span;
     button_classes = this.getButtonClasses(node);
     folder_classes = this.getFolderClasses(node);
     escaped_name = this.escapeIfNecessary(node.name);
@@ -577,11 +577,16 @@ ElementsRenderer = (function() {
     title_span.className = "jqtree_common jqtree-title jqtree-title-folder";
     div.appendChild(title_span);
     title_span.innerHTML = escaped_name;
+    
+    count_span = document.createElement('span');
+    count_span.className = "counterDept_" + node.count;    
+    div.appendChild(count_span);
+    
     return li;
   };
 
   ElementsRenderer.prototype.createNodeLi = function(node) {
-    var class_string, div, escaped_name, li, li_classes, title_span;
+    var class_string, div, escaped_name, li, li_classes, title_span, count_span;
     li_classes = ['jqtree_common'];
     if (this.tree_widget.select_node_handler && this.tree_widget.select_node_handler.isNodeSelected(node)) {
       li_classes.push('jqtree-selected');
@@ -594,9 +599,14 @@ ElementsRenderer = (function() {
     div.className = "jqtree-element jqtree_common";
     li.appendChild(div);
     title_span = document.createElement('span');
-    title_span.className = "jqtree-title jqtree_common_" + node.count;
+    title_span.className = "jqtree-title jqtree_common";
     title_span.innerHTML = escaped_name;
     div.appendChild(title_span);
+
+    count_span = document.createElement('span');
+    count_span.className = "counterDept_" + node.count;    
+    div.appendChild(count_span);
+    
     return li;
   };
 

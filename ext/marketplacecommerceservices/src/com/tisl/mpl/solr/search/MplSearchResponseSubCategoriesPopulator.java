@@ -16,7 +16,9 @@ import de.hybris.platform.solrfacetsearch.search.SearchResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Required;
@@ -74,6 +76,9 @@ public class MplSearchResponseSubCategoriesPopulator<FACET_SEARCH_CONFIG_TYPE, I
 			final String categorySelected = getCategoryFilter(solrSearchQueryData);
 
 			boolean sortByRanking = false;
+			final Map<String, Long> categoryCounterMap = new HashMap<String, Long>();
+			long counter = 0;
+
 			for (final FacetValue facetValue : salesHierarchyFacets)
 			{
 				final String currentFacetName = facetValue.getName();
@@ -85,6 +90,17 @@ public class MplSearchResponseSubCategoriesPopulator<FACET_SEARCH_CONFIG_TYPE, I
 					if (!currentFacetName.contains(categorySelected))
 					{
 						constructDeptHierarchy = false;
+					}
+				}
+
+				for (final String facetForCount : currentFacetName.split("\\|"))
+				{
+					if ((facetForCount.contains(":L2:") || facetForCount.contains(MplConstants.LEVEL_THREE)) && constructDeptHierarchy)
+					{
+						if (!facetForCount.isEmpty() && !categoryCounterMap.containsKey(facetForCount))
+						{
+							categoryCounterMap.put(facetForCount, Long.valueOf(++counter));
+						}
 					}
 				}
 
@@ -101,6 +117,10 @@ public class MplSearchResponseSubCategoriesPopulator<FACET_SEARCH_CONFIG_TYPE, I
 						{
 							final StringBuffer facetWithCount = new StringBuffer(MplConstants.EMPTY_STRING);
 							facetWithCount.append(facet).append(MplConstants.COLON).append(String.valueOf(facetValue.getCount()));
+							if (categoryCounterMap.get(facet) != null)
+							{
+								facetWithCount.append(MplConstants.COLON).append(categoryCounterMap.get(facet));
+							}
 							departmentHierarchyWithCount.append(MplConstants.PIPE).append(facetWithCount);
 							if (facet.contains(MplConstants.LEVEL_ONE))
 							{
