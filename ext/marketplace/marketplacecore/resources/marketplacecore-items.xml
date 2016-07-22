@@ -107,6 +107,9 @@
 
 		<collectiontype elementtype="java.lang.String" code="mplImageUrl"
 			autocreate="true" generate="true" type="list" />
+			
+			<collectiontype elementtype="Address" code="addressList"
+			autocreate="true" generate="true" type="list" />
 	</collectiontypes>
 
 
@@ -4955,7 +4958,7 @@
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="deliveryAddresses" type="AddressCollection">
+					<attribute qualifier="deliveryAddresses" type="addressList">
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
