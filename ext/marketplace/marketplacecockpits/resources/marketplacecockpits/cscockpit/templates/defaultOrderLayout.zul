@@ -24,6 +24,7 @@
 		<!--<div id="orderTicketListWidget" class="orderTicketListWidget"/>-->
 		<div id="orderReturnRequestsWidget" class="orderReturnRequestsWidget"/>
 		<div id="orderReverseConsignmentsWidget" class="orderReverseConsignmentsWidget"/>
+		<div id="addressHistoryWidget" class="orderHistoryWidget"/>
 		<div id="orderHistoryWidget" class="orderHistoryWidget"/>
 		<div id="orderModificationsHistoryWidget" class="orderModificationsHistoryWidget"/>
 		<div id="orderActionsWidget" class="csOrderActionsWidget" />
