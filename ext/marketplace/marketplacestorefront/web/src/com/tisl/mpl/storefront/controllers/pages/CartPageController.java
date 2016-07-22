@@ -105,6 +105,7 @@ import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /*@author TCS*/
@@ -956,8 +957,12 @@ public class CartPageController extends AbstractPageController
 			}
 
 		}
+		//TISPT-174
+		//populateTealiumData(model, cartData);
+		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 
 	}
+
 
 	/**
 	 * Remove the session data of the cart restoration.

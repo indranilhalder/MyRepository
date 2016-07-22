@@ -197,6 +197,88 @@ $(document).ready(
 				});
 				
 			}
+			
+			if(pageType =="cart"){
+				$
+				.ajax({
+					url : ACC.config.encodedContextPath
+							+ "/getTealiumDataCart",
+					type : 'GET',
+					cache : false,
+					success : function(data) {
+						var tealiumData = "";
+						tealiumData += ',"cart_total":"'
+								+ $("#cart_total").val() + '",';
+						tealiumData += '"product_unit_price":'
+								+ $("#product_unit_price").val() + ',';
+						tealiumData += '"product_list_price":'
+							+ $("#product_list_price").val() + ',';
+						tealiumData += '"product_name":'
+							+ $("#product_name").val() + ',';
+						tealiumData += '"product_quantity":'
+							+ $("#product_quantity").val() + ',';
+						tealiumData += '"adobe_product":"'
+							+ $("#adobe_product").val() + '",';
+						tealiumData += '"product_sku":'
+							+ $("#product_sku").val() + ',';
+						tealiumData += '"product_id":'
+							+ $("#product_id").val() + ',';
+						tealiumData += '"product_brand":'
+							+ $("#product_brand").val() + ',';
+						tealiumData += '"page_subcategory_name":'
+							+ $("#page_subcategory_name").val() + ',';
+						tealiumData += '"product_category":'
+							+ $("#product_category").val() + '}';
+						data = data.replace("}<TealiumScript>", tealiumData);
+						$('#tealiumHome').html(data);
+					}
+				});
+			}
+			
+			if(pageType =="multistepcheckoutsummary"){
+				var checkoutPageName=$('#checkoutPageName').val();
+				$
+				.ajax({
+					url : ACC.config.encodedContextPath
+							+ "/getTealiumDataCheckout",
+					type : 'GET',
+					data:'checkoutPageName='+checkoutPageName,
+					cache : false,
+					success : function(data) {
+						var tealiumData = "";
+						tealiumData += ',"cart_total":"'
+								+ $("#cart_total").val() + '",';
+						tealiumData += '"product_unit_price":'
+								+ $("#product_unit_price").val() + ',';
+						tealiumData += '"product_list_price":'
+							+ $("#product_list_price").val() + ',';
+						tealiumData += '"product_name":'
+							+ $("#product_name").val() + ',';
+						tealiumData += '"product_quantity":'
+							+ $("#product_quantity").val() + ',';
+						tealiumData += '"adobe_product":"'
+							+ $("#adobe_product").val() + '",';
+						tealiumData += '"product_sku":'
+							+ $("#product_sku").val() + ',';
+						tealiumData += '"product_id":'
+							+ $("#product_id").val() + ',';
+						tealiumData += '"product_brand":'
+							+ $("#product_brand").val() + ',';
+						tealiumData += '"page_subcategory_name":'
+							+ $("#page_subcategory_name").val() + ',';
+						tealiumData += '"product_category":'
+							+ $("#product_category").val() + '}';
+						data = data.replace("}<TealiumScript>", tealiumData);
+						$("#tealiumHome").html(data);
+					
+						
+					}
+				});
+				
+				
+				
+				
+			}
 
 		
 		});

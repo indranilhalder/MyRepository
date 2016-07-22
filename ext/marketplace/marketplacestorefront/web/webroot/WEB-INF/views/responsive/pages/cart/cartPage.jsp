@@ -6,7 +6,7 @@
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common" %>
 <template:page pageTitle="${pageTitle}">
-
+	<cart:tealiumCartParameters/>
 	<cart:cartValidation/>
 	<cart:cartPickupValidation/>
 

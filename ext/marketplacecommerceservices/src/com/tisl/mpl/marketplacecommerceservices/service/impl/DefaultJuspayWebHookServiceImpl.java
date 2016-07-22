@@ -808,6 +808,14 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 									getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
 											oModel.getOrderStatus().getPaymentMethodType());
 								}
+								//TISPRO-675
+								else if (StringUtils.isNotEmpty(oModel.getOrderStatus().getEmiBank())
+										&& StringUtils.isNotEmpty(oModel.getOrderStatus().getEmiTenure()))
+								{
+									//calling refund service where there will be cart only for EMI
+									getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
+											MarketplacecommerceservicesConstants.EMI);
+								}
 								else
 								{
 									//calling refund service where there will be cart only for CARD
