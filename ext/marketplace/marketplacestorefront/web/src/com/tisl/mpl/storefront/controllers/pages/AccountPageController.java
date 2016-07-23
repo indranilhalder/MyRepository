@@ -3436,6 +3436,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setCountry(getI18NFacade().getCountryForIsocode(ModelAttributetConstants.INDIA_ISO_CODE));
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
+			if(StringUtils.isEmpty(addressForm.getLandmark().trim()) && null != addressForm.getLandmark())
+			{
+				newAddress.setLandmark(addressForm.getOtherLandmark());
+			}
+			else
+			{
+				newAddress.setLandmark(addressForm.getLandmark());
+			}
 
 			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
 			{
