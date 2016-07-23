@@ -2118,7 +2118,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#nosellerVal").val(nosellerData);
 				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice,savingsOnProduct);
 				//if(availableStock==0  && $(".variant-select-sizeGuidePopUp option:selected").val()!="#"){	//changes for TISPRO-338
-
+				$(".variant-select-sizeGuidePopUp").trigger('click');
 				if(isOOSSizeGuide()){	//changes for TPR-465	
 				$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
