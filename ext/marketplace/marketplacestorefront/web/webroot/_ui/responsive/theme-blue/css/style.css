@@ -31908,7 +31908,7 @@ p.showcase-para {
     color: #fbf4f6;
     padding-top: 14px;
     width: 200px;
-    margin: 35px auto 0px;
+    margin: 35px auto 12px;
 }
 #showcase a.button.maroon:hover {
     background-color: transparent;
@@ -32140,9 +32140,9 @@ footer > div > ul > li h3:after,footer>div>ul>li.active h3:after {
     width: 180px;
     padding: 0;
 }
-/* #showcase a.button.trending-button{
+#showcase a.button.trending-button{
 	margin-top:12px;
-} */
+}
 #showcase.feature-collections .desc-section h1 {
     padding: 15px 0 5px;
     font-size: 16px;
@@ -32237,9 +32237,9 @@ header > .content .top .toggle span:last-child {
     box-shadow: 0px 1px 5px 0px rgba(214,211,214,1);
     border-top: none;
 }
-/* #showcase a.button.trending-button{
+#showcase a.button.trending-button{
 	margin-top:12px;
-} */
+}
 header > .content {
     padding: 0 23px 20px;
 }
