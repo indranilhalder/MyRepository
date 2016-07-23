@@ -1648,8 +1648,9 @@ public class ProductPageController extends AbstractPageController
 	@SuppressWarnings(BOXING)
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/buybox", method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxPrice(
-			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode) throws JSONException,
-			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
+			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
+			@RequestParam("variantCode") String variantCode) throws JSONException, CMSItemNotFoundException,
+			UnsupportedEncodingException, com.granule.json.JSONException
 	{
 		final JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
@@ -1657,6 +1658,12 @@ public class ProductPageController extends AbstractPageController
 		{
 			if (null != productCode)
 			{
+				if (!StringUtils.isEmpty(variantCode))
+				{
+					final List<String> variantCodes = (List<String>) JSON.parse(variantCode);
+					variantCode = StringUtils.join(variantCodes, ",");
+					productCode = productCode + "," + variantCode;
+				}
 				productCode = productCode.toUpperCase();
 			}
 			final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(productCode);
@@ -1680,8 +1687,6 @@ public class ProductPageController extends AbstractPageController
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
 				final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 				final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
-
-
 				for (final String pCode : noStockPCodes)
 				{
 					stockAvailibilty.put(pCode, Integer.valueOf(0));
