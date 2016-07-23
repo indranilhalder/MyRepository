@@ -1182,8 +1182,9 @@ function isOOS(){
 /**
  * This method is used to display delivery modes against a sku id
  */
+ var availibility = null;
 $( document ).ready(function() {
-	var availibility = null;
+	
 //function fetchPrice() {
 	var categoryType = $("#categoryType").val();
 	var selectedSize = "";
