@@ -214,6 +214,17 @@
 					slotId="perspectives" template="true">
 				 </widget>
 				 
+				 
+				<!-- awb edit -->
+				<widget id="awbedit" widgetDefinitionId="com.hybris.oms.widgets.awbwidget"
+					slotId="perspectives" template="true">
+				</widget>
+				
+				<!-- lp override -->
+				<widget id="lpoverride" widgetDefinitionId="com.hybris.oms.widgets.lpoverride"
+					slotId="perspectives" template="true">
+				</widget>
+				 
 				 <!-- Add for Configurable Parameters  -->
 				 
 				  <widget id="configarable_params" widgetDefinitionId="com.hybris.oms.widgets.configurableParamWidget"

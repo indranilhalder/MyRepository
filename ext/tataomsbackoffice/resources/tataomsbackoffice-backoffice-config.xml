@@ -187,6 +187,10 @@
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="pincodes_upload">
      </explorer-tree:navigation-node>
+       <explorer-tree:navigation-node  id="awbedit">
+     </explorer-tree:navigation-node>
+     <explorer-tree:navigation-node  id="lpoverride">
+     </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="configarable_params">
      </explorer-tree:navigation-node>
      
