@@ -733,5 +733,31 @@ public final class ModelAttributetConstants
 
 	//TISPRM-56
 	public static final String PRODUCT_SIZE = "productSize";
+	public static final String KEYWORDS = "keywords";
+
+	//TISPRM-136
+	public static final String META_VARIABLE_ZERO = "{0}";
+	public static final String META_VARIABLE_ONE = "{1}";
+	public static final String META_VARIABLE_TWO = "{2}";
+	public static final String META_VARIABLE_THREE = "{3}";
+	public static final String META_VARIABLE_FOUR = "{4}";
+	public static final String META_VARIABLE_FIVE = "{5}";
+	public static final String META_VARIABLE_SIX = "{6}";
+
+
+
+	public static final String CATEGORY_PAGE_META_DESCRIPTION = "Buy {0} Online at best price in India. Shop from wide range of {1} online from popular brands and get 100% Genuine Products!";
+	public static final String CATEGORY_PAGE_META_KEYWORDS = "Buy {0}, buy {1} online, buy {2} online India, buy {3} online in India, {4} price";
+	public static final String CATEGORY_PAGE_TITLE = "{0} | Buy {1} Online in India at best price at TataCLiQ";
+	public static final String Product_Page_Title = "Buy {0} Online at best price at TataCLiQ";
+	public static final String Product_Page_Meta_Keywords = "buy {0}, buy {1} online, {2} price, {3} price in india, {4} specifications";
+	public static final String Product_Page_Meta_Description = "Buy {0} Online at best price in India. Shop from wide range of {1} {2} at TataCLiQ. Get 100% Genuine products!";
+	public static final String BRAND_PAGE_META_DESCRIPTION = "{0} Online Store in India at TataCliQ.com. Shop genuine {1} products online and get 100% Genuine products!";
+	public static final String BRAND_PAGE_META_KEYWORD = "{0}, Buy {1}";
+	public static final String BRAND_PAGE_TITLE = "{0} India Online Store - Buy {1} products online in India at TataCLiQ";
+	public static final String Homepage_Title = "Online Shopping Site in India for Mobiles, Electronics & Fashion at TataCLiQ";
+	public static final String Homepage_Description = "Online Shopping in India for Mobiles, Electronics, Men & Women Clothing, Shoes at TataCLiQ. Get 100% Genuine products!";
+	public static final String Homepage_Keyword = "Online Shopping sites, online shopping store, online shopping, Online mobile shopping, shopping online, TataCLiQ";
+
 
 }
