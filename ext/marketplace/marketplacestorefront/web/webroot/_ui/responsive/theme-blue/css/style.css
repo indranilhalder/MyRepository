@@ -32343,31 +32343,7 @@ body.page-homepage .feature-collections h1, body.page-homepage .trending h1>span
     border-left: 1px solid #ccc;
 }
 /*New homepage changes ends*/
-.top .container > .right ul:first-child, .top .container > .right ul:first-child > li > div > span:first-child, .top .container > .right ul:first-child ul.a-z {
-    display: none;
-}
-@media (max-width: 790px){
-nav {
-    display: none;
-}
-header > .content .top ul:first-child li > div {
-    padding-left: 15px;
-}
-.words > li:first-child, .top .container > .right ul:first-child, .top .container > .right ul:first-child > li > div > span:first-child, .top .container > .right ul:first-child ul.a-z {
-    display: none;
-}
-#mobile-menu-toggle {
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 999;
-}
-}
-@media (max-width: 767px){
-nav {
-    display: none;
-}
-}	
+
 /*--------------maincss-----------*/
 .row
 {
