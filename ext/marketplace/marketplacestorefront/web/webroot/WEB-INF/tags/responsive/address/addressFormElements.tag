@@ -202,6 +202,15 @@
 			</div>
 			</div>
 			<div class='full'>
+		<formElement:formInputBox idKey="address.postcode" inputCSS="address_postcode"
+			labelKey="address.postcode" path="postcode"
+			mandatory="true" maxLength="6" />
+		<div class="help-block has-error" id="addressPincodeServicableDiv"
+			style="display: none;"></div>
+			<div class="help-block has-error" id="pincodeError" style="display: none;">
+			</div>
+			</div>
+			<div class='full'>
 			<!-- TISUAT-4696 -->
 		<formElement:formInputBox idKey="address.line1"
 			labelKey="address.line1" path="line1"
@@ -225,15 +234,6 @@
 			 <div class="help-block has-error" id="address3Error" style="display: none;">
 			</div>
 			</div>
-			<div class='full'>
-		<formElement:formInputBox idKey="address.postcode" inputCSS="address_postcode"
-			labelKey="address.postcode" path="postcode"
-			mandatory="true" maxLength="6" />
-		<div class="help-block has-error" id="addressPincodeServicableDiv"
-			style="display: none;"></div>
-			<div class="help-block has-error" id="pincodeError" style="display: none;">
-			</div>
-			</div>
 			
 			<div class='half'>
 				<div class="optionsLandmark">
@@ -243,15 +243,16 @@
 						items="${abc}"
 						itemValue="name"  />
 				</div>
+			</div>
+			<div class='half'>
+			
 				<div class='half address_landmarkOtherDiv'>
-					<formElement:formInputBox inputCSS="address_landmarkOther" idKey="address.landmarks"
-						labelKey="Enter Nearest Landmark" path="otherLandmark"
-						maxLength="30" />
-						<div class="help-block has-error" id="stateError" style="display: none;"></div>
+						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="address.landmarks"
+							labelKey="Enter Nearest Landmark" path="otherLandmark"
+							maxLength="30" />
+							<div class="help-block has-error" id="stateError" style="display: none;"></div>
 				</div>
 			</div>
-			
-				
 			
 			
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
