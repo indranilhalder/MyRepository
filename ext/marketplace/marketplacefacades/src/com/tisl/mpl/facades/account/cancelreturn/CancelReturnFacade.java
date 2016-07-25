@@ -55,7 +55,7 @@ public interface CancelReturnFacade
 	 */
 	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String ticketTypeCode, final String reasonCode, final String refundType, final String ussid,
-			final CustomerData customerData, final OrderModel subOrderModel);
+			final CustomerData customerData, final OrderModel subOrderModel, final boolean returnLogisticsCheck);
 
 	/**
 	 * @author Techouts
@@ -67,7 +67,6 @@ public interface CancelReturnFacade
 	 * @param ussid
 	 * @param customerData
 	 * @param subOrderModel
-	 * @param retunAddress
 	 * @return CRMTicketStatus
 	 */
 	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
