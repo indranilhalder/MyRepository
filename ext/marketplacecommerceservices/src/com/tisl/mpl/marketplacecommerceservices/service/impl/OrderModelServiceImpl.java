@@ -87,6 +87,12 @@ public class OrderModelServiceImpl implements OrderModelService
 		return getOrderModelDao().getOrder(code);
 	}
 
+	@Override
+	public List<OrderModel> getOrders(final String code)
+	{
+		return getOrderModelDao().getOrders(code);
+	}
+
 	/**
 	 * Get order for push notification --- versionId is not null
 	 *
