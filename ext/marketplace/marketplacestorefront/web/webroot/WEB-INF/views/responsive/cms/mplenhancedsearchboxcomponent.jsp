@@ -111,6 +111,7 @@
 				class="form-control js-site-search-input" name="text" value=""
 				maxlength="250" placeholder="${searchPlaceholder}"
 				data-options='{"autocompleteUrl" : "${autocompleteUrl}","minCharactersBeforeRequest" : "${component.minCharactersBeforeRequest}","waitTimeBeforeRequest" : "${component.waitTimeBeforeRequest}","displayProductImages" : ${component.displayProductImages}}'>
+		 <input type="hidden" id="spellingSearchterm" value="${spellingSearchterm}" />	
 		</ycommerce:testId>
 	</form>
 </div>

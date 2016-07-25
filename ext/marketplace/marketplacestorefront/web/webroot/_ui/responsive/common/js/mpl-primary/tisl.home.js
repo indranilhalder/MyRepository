@@ -240,7 +240,8 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
     	$.ajax({
             url: ACC.config.encodedContextPath + "/headerWishlist",
             type: 'GET',
-            data: "&productCount=" + $(this).attr("data-count"),
+            //data: "&productCount=" + $(this).attr("data-count"),
+            data: "&productCount=" + $('li.wishlist').find('a').attr("data-count"),
             success: function(html) {
                 $("div.wishlist-info").html(html);
             }

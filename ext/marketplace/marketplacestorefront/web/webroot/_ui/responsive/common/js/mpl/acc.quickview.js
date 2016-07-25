@@ -89,19 +89,33 @@ function setSizeforAkamai()
 			 $(".select-size").append("<span class='selected quickViewSelect'>"+productSizeQuickVar+"</span>");
 			} 
 }
-
+function isOOSQuick(){
+	var totalOptions = $("ul[label=sizes] li").length;
+	totalOptions = totalOptions -1;
+	var disabledOption = $("ul[label=sizes] li").find("[style]").length;
+	if(totalOptions == disabledOption){
+		return true;
+	}else{
+		return false;
+	}
+}
 function setBuyBoxDetails()
 {
 	var productCode = productCodeQuickView;//$("#productCodePost").val();
-	var code = productCode+","+variantCodesPdp;
-	var requiredUrl = ACC.config.encodedContextPath + "/p-" + code
+	var variantCodesJson = "";
+	if(typeof(variantCodesPdp)!= 'undefined' && variantCodesPdp!= ""){
+		variantCodes = variantCodesPdp.split(",");
+		variantCodesJson = JSON.stringify(variantCodes);
+	}
+	//var code = productCode+","+variantCodesPdp;
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 	+ "/buybox";
 	var availibility = null;
-		var dataString = 'productCode=' + productCode;		
+		//var dataString = 'productCode=' + productCode;		
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
 			url : requiredUrl,
-			data : dataString,
+			data : {productCode:productCode,variantCode:variantCodesJson},
 			cache : false,
 			dataType : "json",
 			success : function(data) {
@@ -169,19 +183,24 @@ function setBuyBoxDetails()
 				//alert("--"+ $(".quickViewSelect").html());
 				
 				//if (allStockZero == 'Y' && data['othersSellersCount']>0) {
-				if (allStockZero == 'Y' && data['othersSellersCount']>0) { //TPR-465
-
+				if (isOOSQuick() && data['othersSellersCount']>0) {
+					$("#addToCartButtonQuick").hide();
+					$("#outOfStockIdQuick").show();
+				}else if (isOOSQuick() && data['othersSellersCount']==0){
+					$("#addToCartButtonQuick").hide();
+					$("#outOfStockIdQuick").show();
+				}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("ul[label=sizes] li").length == 0) { //TPR-465
 					//if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
 					$("#addToCartButtonQuick").hide();
 					$("#outOfStockIdQuick").show();
 					//}					
 				}
-				/*else if (allStockZero == 'Y' && data['othersSellersCount']==0){
-					if($(".quickViewSelect").html()!="Select"){	//TISPRD-1173
+				else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("ul[label=sizes] li").length == 0){
+					//if($(".quickViewSelect").html()!="Select"){	//TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
 						$("#outOfStockIdQuick").show();
-					}					
-				}*/
+					//}					
+				}
 				else
 					{
 					$("#addToCartButtonQuick").show();
