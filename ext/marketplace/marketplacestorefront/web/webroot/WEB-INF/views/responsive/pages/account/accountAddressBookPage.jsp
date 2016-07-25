@@ -380,26 +380,26 @@
 											 <div class="errorMessage"><div id="erraddressline3">   </div></div> 
 									</div>
 									
-									<div class="half">
+									<div class="half no-display">
 										<div class="optionsLandmark">
 											<label>Landmark*</label>
-												<form:select path="landmark" onkeyup="kpressaddressln2()" class="address_landmarks"
-													maxlength="30" />
-												<div class="errorMessage"><div id="erraddressline2">   </div></div>
+												<form:select path="landmark" class="address_landmarks"
+													maxlength="30"></form:select>
+												<div class="errorMessage errland1">   </div>
 										</div>
 									</div>
 									
-									<div class="full">
+									<div class="half no-display">
 										<div class ="address_landmarkOtherDiv">
 										<label>Enter Nearest Landmark</label>
-											<form:input path="otherLandmark" onkeyup="kpressaddressln2()" class="address_landmarkOther"
+											<form:input path="otherLandmark" onkeyup="optionsLandmark1()" class="address_landmarkOther"
 												maxlength="30" />
-												<div class="errorMessage"><div id="erraddressline2">   </div></div>
+												<div class="errorMessage errland2"> hgsh  </div>
 										</div>
 									</div>
 									
 									<!-- TISUAT-4696 -->
-									<div class="half">
+									<div class="half" style="clear: both">
 									<label><spring:theme code="text.addressBook.City" text="City *" /></label>
 										<form:input path="townCity" id="townCity" class="address_townCity"
 											onkeyup="kpressaddresscity()" maxlength="30" />

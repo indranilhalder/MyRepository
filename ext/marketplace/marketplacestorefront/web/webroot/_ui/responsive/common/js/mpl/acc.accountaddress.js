@@ -117,6 +117,7 @@ function editAddress(addressId) {
    				$('#line2').val(data.line2);
    				$('#line3').val(data.line3);
    				$('#postcode').val(data.postcode);
+   				loadPincodeData();
    				$('#townCity').val(data.townCity);
    				$('#mobileNo').val(data.mobileNo);
    				$('#stateListBox').val(data.state);
