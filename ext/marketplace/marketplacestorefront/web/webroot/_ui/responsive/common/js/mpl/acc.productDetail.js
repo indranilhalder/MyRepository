@@ -1182,8 +1182,9 @@ function isOOS(){
 /**
  * This method is used to display delivery modes against a sku id
  */
+ var availibility = null;
 $( document ).ready(function() {
-	var availibility = null;
+	
 //function fetchPrice() {
 	var categoryType = $("#categoryType").val();
 	var selectedSize = "";
@@ -2118,6 +2119,16 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#nosellerVal").val(nosellerData);
 				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice,savingsOnProduct);
 				//if(availableStock==0  && $(".variant-select-sizeGuidePopUp option:selected").val()!="#"){	//changes for TISPRO-338
+				if(null!= availibility){
+				$.each(availibility,function(key,value){
+				$(".variant-select-sizeGuidePopUp option").each(function(){
+					if(typeof($(this).attr("data-producturl"))!= 'undefined' && $(this).attr("data-producturl").indexOf(key)!= -1 && value == 0){
+						$(this).attr("disabled","disabled");
+						}
+				});
+				});	
+		
+				}
 				$(".variant-select-sizeGuidePopUp").trigger('click');
 				if(isOOSSizeGuide()){	//changes for TPR-465	
 				$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
