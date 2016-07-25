@@ -17,7 +17,6 @@ import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
-import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
@@ -39,9 +38,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
-import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.service.MplProductWebService;
-import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.util.MplCompetingProductsUtility;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
@@ -81,16 +78,16 @@ public class SearchSuggestUtilityMethods
 	//	private ProductService productService;
 	//	@Resource(name = "cwsProductFacade")
 	//	private ProductFacade productFacade;
-	@Resource(name = "productService")
-	private ProductService productService;
+	//@Resource(name = "productService")
+	//private ProductService productService;
 
-	@Resource(name = "defaultPromotionManager")
-	private DefaultPromotionManager defaultPromotionManager;
+	//@Resource(name = "defaultPromotionManager")
+	//private DefaultPromotionManager defaultPromotionManager;
 
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
-	@Resource(name = "defaultMplProductSearchFacade")
-	private DefaultMplProductSearchFacade searchFacade;
+	//@Resource(name = "defaultMplProductSearchFacade")
+	//private DefaultMplProductSearchFacade searchFacade;
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
 
@@ -171,7 +168,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -628,17 +625,17 @@ public class SearchSuggestUtilityMethods
 				/*
 				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
 				 * productData.getCode());
-				 *
+				 * 
 				 * ProductData productData1 = null; if (null != productModel) { productData1 =
 				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
 				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
-				 *
-				 *
+				 * 
+				 * 
 				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
 				 * mplProductWebService.getGalleryImages(productData1);
-				 *
+				 * 
 				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
-				 *
+				 * 
 				 * }
 				 */
 				productData = productFacade.getProductForCodeAndOptions(productData.getCode(), Arrays.asList(ProductOption.GALLERY));
