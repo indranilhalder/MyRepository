@@ -119,7 +119,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -1109,7 +1109,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					}
 				}
 				othersellerDataList.add(sellerMobileData);
-				LOG.debug("****************** Other sellers added PDP mobile web service *********************");
+				//LOG.debug("****************** Other sellers added PDP mobile web service *********************");
 
 			}
 		}
