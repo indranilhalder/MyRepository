@@ -1168,13 +1168,23 @@ $(function() {
 
 });
 
-
+function isOOS(){
+	var totalOptions = $("#variant option").length;
+	totalOptions = totalOptions -1;
+	var disabledOption = $("#variant option:disabled").length;
+	if(totalOptions == disabledOption){
+		return true;
+	}else{
+		return false;
+	}
+}
 
 /**
  * This method is used to display delivery modes against a sku id
  */
+ var availibility = null;
 $( document ).ready(function() {
-	var availibility = null;
+	
 //function fetchPrice() {
 	var categoryType = $("#categoryType").val();
 	var selectedSize = "";
@@ -1186,7 +1196,12 @@ $( document ).ready(function() {
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
-	var code = productCode+","+variantCodes;
+	var variantCodesJson = "";
+	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
+		variantCodes = variantCodes.split(",");
+		variantCodesJson = JSON.stringify(variantCodes);
+	}
+	//var code = productCode+","+variantCodes;
 	//alert("----"+productCode);
 	
 	//changes done to restrict buybox AJAX call from every page.
@@ -1195,13 +1210,14 @@ $( document ).ready(function() {
 		return false;
 		}
 	
-	var requiredUrl = ACC.config.encodedContextPath + "/p-" + code
+	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/buybox";
-	var dataString = 'productCode=' + productCode;
+	//var dataString = 'productCode=' + productCode;
+	var data = 
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
-		data : dataString,
+		data : {productCode:productCode,variantCode:variantCodesJson},
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
@@ -1262,8 +1278,7 @@ $( document ).ready(function() {
 					
 					$("#sellerNameId").html(sellerName);
 					$("#sellerSelId").val(sellerID);
-					
-					if (allStockZero == 'Y' && data['othersSellersCount']>0) {
+					if (isOOS() && data['othersSellersCount']>0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
@@ -1272,7 +1287,24 @@ $( document ).ready(function() {
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
 					}
-					else if (allStockZero == 'Y' && data['othersSellersCount']==0){
+					else if (isOOS() && data['othersSellersCount']==0){
+						//if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173 TPR-465
+							$("#addToCartButton").hide();
+							$("#buyNowButton").hide();
+							$("#outOfStockId").show();
+						//}
+						$("#otherSellerInfoId").hide();
+						$("#otherSellerLinkId").hide();
+					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("#variant option").length == 0) {
+						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
+						$("#addToCartButton").hide();
+						$("#outOfStockId").show();
+						$("#buyNowButton").hide();
+						//}
+						$("#otherSellerInfoId").hide();
+						$("#otherSellerLinkId").show();
+					}
+					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("#variant option").length == 0){
 						//if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173 TPR-465
 							$("#addToCartButton").hide();
 							$("#buyNowButton").hide();
@@ -1290,7 +1322,6 @@ $( document ).ready(function() {
 						$("#otherSellerLinkId").show();
 					}
 					else {
-
 						$("#otherSellersId").html(data['othersSellersCount']);
 						$("#minPriceId").html(data['minPrice'].formattedValue);
 					}
@@ -1338,13 +1369,15 @@ $( document ).ready(function() {
 //}
 	$(".size-guide").click(function(){
 		if(null!= availibility){
+			setTimeout(function(){
 			$.each(availibility,function(key,value){
 				$(".variant-select-sizeGuidePopUp option").each(function(){
 					if(typeof($(this).attr("data-producturl"))!= 'undefined' && $(this).attr("data-producturl").indexOf(key)!= -1 && value == 0){
 						$(this).attr("disabled","disabled");
 						}
 				});
-			});
+			});	
+			},2000);
 		}
 	});
 }); 
@@ -2000,6 +2033,26 @@ function dispPriceForSizeGuide(mrp, mop, spPrice, savingsOnProduct) {
 	}
 
 }
+function isOOSSizeGuide(){
+	var totalOptions = $(".variant-select-sizeGuidePopUp option").length;
+	totalOptions = totalOptions -1;
+	var disabledOption = $(".variant-select-sizeGuidePopUp option:disabled").length;
+	if(totalOptions == disabledOption){
+		return true;
+	}else{
+		return false;
+	}
+}
+function isOOSQuicks(){
+	var totalOptions = $("ul[label=sizes] li").length;
+	totalOptions = totalOptions -1;
+	var disabledOption = $("ul[label=sizes] li").find("[style]").length;
+	if(totalOptions == disabledOption){
+		return true;
+	}else{
+		return false;
+	}
+}
 function buyboxDetailsForSizeGuide(productCode){
 	var sellerID= $("#sellerSelId").val();
 	var productCode = productCode;//$("#product").val();
@@ -2066,8 +2119,18 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#nosellerVal").val(nosellerData);
 				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice,savingsOnProduct);
 				//if(availableStock==0  && $(".variant-select-sizeGuidePopUp option:selected").val()!="#"){	//changes for TISPRO-338
-
-				if(availableStock==0){	//changes for TPR-465	
+				if(null!= availibility){
+				$.each(availibility,function(key,value){
+				$(".variant-select-sizeGuidePopUp option").each(function(){
+					if(typeof($(this).attr("data-producturl"))!= 'undefined' && $(this).attr("data-producturl").indexOf(key)!= -1 && value == 0){
+						$(this).attr("disabled","disabled");
+						}
+				});
+				});	
+		
+				}
+				$(".variant-select-sizeGuidePopUp").trigger('click');
+				if(isOOSSizeGuide()){	//changes for TPR-465	
 				$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
