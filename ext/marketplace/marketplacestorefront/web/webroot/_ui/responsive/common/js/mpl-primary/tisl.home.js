@@ -401,7 +401,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
         if (window.localStorage && (html = window.localStorage.getItem(
             "brandContent-" + id)) && html != "") {
             // console.log("Local");
-            $(".home-brands-you-love-carousel").css("margin-bottom", "20px");
+            $(".home-brands-you-love-carousel").css("margin-bottom", "50px");
             //$('#brandsYouLove').append(defaultHtml);
             $('.home-brands-you-love-desc').remove();
             $('#brandsYouLove').append(decodeURI(html));
@@ -494,7 +494,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                     }
                     defaultHtml += "</div>";
                     $(".home-brands-you-love-carousel").css(
-                        "margin-bottom", "20px");
+                        "margin-bottom", "50px");
                     $('#brandsYouLove').append(defaultHtml);
                     window.localStorage.setItem("brandContent-" +
                         id, encodeURI(defaultHtml));
@@ -505,7 +505,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                 error: function() {
                     $('#brandsYouLove .loaderDiv').remove();
                     $(".home-brands-you-love-carousel").css(
-                        "margin-bottom", "20px");
+                        "margin-bottom", "50px");
                     console.log(
                         "Error while getting brands you love content"
                     );
