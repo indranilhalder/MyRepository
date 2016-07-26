@@ -1095,7 +1095,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			final AccountAddressForm accountAddressForm = new AccountAddressForm();
 			model.addAttribute("addressForm", accountAddressForm);
-
+			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
+			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
+			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataListNew);
+		
 			////TISEE-6290
 			fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
 			model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
@@ -7022,6 +7025,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
 				addressData.setCountry(countryData);
+			}
+			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
+			{
+				addressData.setRegion(getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso()));
 			}
 
 			LOG.debug("Save TemproryAddressModel and OTP genarate");
