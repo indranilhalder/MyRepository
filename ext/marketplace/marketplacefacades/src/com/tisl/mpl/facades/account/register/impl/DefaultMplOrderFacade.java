@@ -1079,58 +1079,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	}
 
 
-	/**
-	 *
-	 * @return boolean value
-	 */
-	@Override
-	public boolean changeShippingAddressStatus(final OrderData orderData)
-	{
-		final ArrayList<String> status = shippingAddresStatus();
-		boolean editButtonStatus = true;
-
-		for (final OrderData subOrder : orderData.getSellerOrderList())
-		{
-
-			for (final OrderEntryData orderEntry : subOrder.getEntries())
-			{
-				if (orderEntry.getConsignment() != null)
-				{
-					if (!orderEntry.getMplDeliveryMode().getCode()
-							.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
-							&& StringUtils.isNotEmpty(orderEntry.getConsignment().getCode()))
-					{
-						editButtonStatus = status.contains(orderEntry.getConsignment().getStatus().getCode());
-					}
-
-					if (!editButtonStatus)
-					{
-						break;
-					}
-				}
-				if (!editButtonStatus)
-				{
-					break;
-				}
-
-
-			}
-		}
-		return editButtonStatus;
-	}
-
-	private ArrayList<String> shippingAddresStatus()
-	{
-
-		final ArrayList<String> lisOfConsimentStatus = new ArrayList<String>();
-		lisOfConsimentStatus.add(ConsignmentStatus.ORDER_ALLOCATED.getCode());
-		lisOfConsimentStatus.add(ConsignmentStatus.PENDING_SELLER_ASSIGNMENT.getCode());
-		lisOfConsimentStatus.add(ConsignmentStatus.PICK_LIST_GENERATED.getCode());
-		lisOfConsimentStatus.add(ConsignmentStatus.PICK_CONFIRMED.getCode());
-
-		return lisOfConsimentStatus;
-	}
-
+	
 	/**
 	 * @return the mplSellerInformationService
 	 */
@@ -1147,7 +1096,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	{
 		this.mplSellerInformationService = mplSellerInformationService;
 	}
-
 
 
 	/**
@@ -1225,9 +1173,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	{
 		this.orderConverter = orderConverter;
 	}
-
-
-
 
 
 }
