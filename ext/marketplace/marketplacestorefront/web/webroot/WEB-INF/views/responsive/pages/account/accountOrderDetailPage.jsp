@@ -1909,6 +1909,7 @@ $(function() {
 	 }
 
 	 function generateOTP(orderId){	
+	     $(".otpError").hide();
 		 var numberOTP=$("#OTP").val();
 		 var isString = isNaN(numberOTP);
 	     var numberOTP=numberOTP.trim();
