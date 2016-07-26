@@ -118,10 +118,18 @@ $(document).ready(function() {
 	onloadFunction();
 			$("#deliveryAddressForm").submit(
 					function(event) {
+						$(".main_error").hide();
+						$(".firstNameError").hide();
+						$(".lastNameError").hide();
+						$(".address1Error").hide();
+						$(".address2Error").hide();
+						$(".address3Error").hide();
+						$(".mobileNumberError").hide();
+						$(".cityError").hide();
 				      var mobile=$("#mobileNo").val();
 				      var mobile=mobile.trim();
 				      var isString = isNaN(mobile);
-						$(".main_error").hide();
+				      var pincode=$("#pincode").val();
 						if ($("#firstName").val().length < 1) {
 							$(".firstNameError").show();
 							$(".firstNameError").text("First Name cannot be Blank");
@@ -143,7 +151,13 @@ $(document).ready(function() {
 						}else if(mobile.length<=9 || mobile.length >= 11) {   
 					    	  $(".mobileNumberError").show();
 					          $(".mobileNumberError").text("Enter 10 Digit Number");
-					      }	
+					      }	else if ($("#city").val().length < 1){
+					    	  $(".cityError").show();
+					          $(".cityError").text("City cannot be blank");
+					      }else if(pincode.length < 1 && pincode.length > 6){
+					    	  $(".pincodeNoError").show();
+					          $(".pincodeNoError").text("Enter correct pincode");
+					      }
 						else{
 						
 						var data = $("#deliveryAddressForm").serialize();
