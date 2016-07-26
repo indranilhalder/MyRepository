@@ -1251,6 +1251,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					addressForm.setState(addressData.getState());
 					addressForm.setLine3(addressData.getLine3());
 					addressForm.setLocality(addressData.getLocality());
+					addressForm.setLandmark(addressData.getLandmark());
 
 					if (addressData.getRegion() != null && !StringUtils.isEmpty(addressData.getRegion().getIsocode()))
 					{
