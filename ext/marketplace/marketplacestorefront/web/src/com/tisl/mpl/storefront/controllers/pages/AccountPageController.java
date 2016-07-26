@@ -1086,8 +1086,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			changeDeliveryAddressStatus = changeDeliveryAddressStatus ? mplchangeDeliveryAddressFacade
 					.isDeliveryAddressChangable(orderDetail.getCode()) : false;
-			model.addAttribute("editShippingAddressStatus", changeDeliveryAddressStatus);
-
+			model.addAttribute(ModelAttributetConstants.EDIT_SHIPPING_ADDRESS_STATUS, changeDeliveryAddressStatus);
+			if (changeDeliveryAddressStatus)
+			{
+				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
+				phoneNumber = mplchangeDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
+				model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
+			}
 			final AccountAddressForm accountAddressForm = new AccountAddressForm();
 			model.addAttribute("addressForm", accountAddressForm);
 
