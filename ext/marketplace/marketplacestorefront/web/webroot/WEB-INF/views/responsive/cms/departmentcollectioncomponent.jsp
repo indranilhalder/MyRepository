@@ -6,6 +6,7 @@
 
 	<div class="toggle"><span><spring:theme code="navigation.department.shopBy"/></span>
 	<span><spring:theme code="navigation.department.shopByDepartment"/></span></div>
+	<span id="mobile-menu-toggle" class="mainli"></span>
 
 			<ul>
 				

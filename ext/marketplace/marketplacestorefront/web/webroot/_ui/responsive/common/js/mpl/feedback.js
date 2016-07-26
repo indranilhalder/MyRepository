@@ -1542,35 +1542,22 @@ $(document).ready(function(){
 			$(this).find('input:radio[name=selectedAddressCode]').prop('checked', true);
 			});
 		
-		/*New homepage js */
-			//Mobile Inspire Me menu
-	/*	$(window).on("load resize", function() {
-		    if ($(window).width() <= 767) {
-		        $(".showcase-heading").hide();
-		        $(".selectmenu").unbind();
-		        $(document).on("click",".selectmenu",function() {
-		      //  $(".selectmenu").unbind().click(function() {
-		            $(this).next().slideToggle();
-		        });
-		        $(".showcase-heading").unbind();
-		        $(document).on("click",".showcase-heading",function() {
-		       // $(".showcase-heading").unbind().click(function() {
-		            $(this).slideUp();
-		        });
-		    } else {
-		        $(".showcase-heading").show();
-		        $(".showcase-heading,.selectmenu").unbind();
-		    }
+		//Mobile menu
+		navhtml = $("nav").html();	
+		$('header .content .container > .right').prepend(navhtml);
+		$('header .content .container > .right ul:first-child > li div').removeClass('toggle');
+		
+		//Mobile level 1 active
+		$(document).on('click','header > .content .top ul:first-child li > span.mainli',function() {
+			console.log("clicked");
+			if($(this).prev().hasClass('bgred')){
+				$(' header > .content .top ul:first-child li > div').removeClass("bgred");
+				}else{
+				$(' header > .content .top ul:first-child li > div').removeClass("bgred");	
+				$(this).prev().addClass("bgred");			
+			}		
 		});
-		//INSPIRE ME menu append text
-		$('.selectmenu').text($(".showcaseItem .showcase-border").text());
 
-		//$(".showcaseItem").click(function() {
-			$(document).on("click",".showcaseItem",function() {
-			$('.selectmenu').text($(this).children().text());
-		});	*/
-
-		/*New homepage js */
 		//loadGigya();
 });
 
