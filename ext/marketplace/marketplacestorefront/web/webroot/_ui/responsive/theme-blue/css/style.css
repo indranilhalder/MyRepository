@@ -679,7 +679,8 @@ h2 {
         position: relative;		
         -webkit-transition: margin 0.3s;		
         -moz-transition: margin 0.3s;		
-        transition: margin 0.3s		
+        transition: margin 0.3s;
+        margin-bottom: 20px;	
     }
   header .banner {
     position: relative;
@@ -1811,7 +1812,7 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
            @media (min-width: 791px) {
     header .content .search form {
       height: 50px;
-      margin: 10px 30px 0px 0;
+      margin: 10px 20px 0px 0;
       position: relative;
       clear: both; }
     header .content .bottom.active .search form {
@@ -17114,7 +17115,7 @@ ul.helpmeshop-list{
 
 
 .home-brands-you-love-desc .left p, .home-brands-you-love-desc .right p {
-   font-size: 12px;
+   font-size: 14px;
     font-weight: bold;
     text-align: center;
 }
@@ -29515,16 +29516,16 @@ color:#000;
     color: #fff;
     text-transform: uppercase;
     text-align: center;
-    font-size: 14px;
-    background: #000;
+    font-size: 16px;
+    background: #a7183e;
     font-weight: 500;
     letter-spacing: 0;
     padding: 25px;
     margin: 50px 0 0px;
 }
-.buy-banner p span {
+/* .buy-banner p span {
     color: #ecc76f;
-}
+} */
 /*Tata cliq Stay Queu css starts*/
 .qued {
     background-color: #e4E4E4;
@@ -31696,7 +31697,7 @@ body.page-homepage .trending h1 > span{
     background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 25%,rgba(0,0,0,0.85) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#bf000000',GradientType=0 );
 }
-.timeout-slider .carousel .item > a:after , .timeout-slider .carousel .item .image:after {
+/* .timeout-slider .carousel .item > a:after , .timeout-slider .carousel .item .image:after {
     width: 100%;
     height: 100%;
     content: "";
@@ -31708,11 +31709,11 @@ body.page-homepage .trending h1 > span{
     background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,0.85) 100%);
     background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,0.85) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#bf000000',GradientType=0 );
-}
+} 
 #rotatingImageTimeout .hero > ul > li > a:after{
 	background:none;
 	border-left:none;
-} 
+} */
 .owl-prev::after,
 .owl-next::after {
     font-family:"FontAwesome";
@@ -31822,6 +31823,7 @@ body.page-homepage .trending h1 > span{
 }
 body.page-homepage .trending .button{
 border: 1px solid #a9143c;
+font-weight:bold;
 }
 body.page-homepage .trending .button:hover{
 background-color: transparent;
@@ -31859,7 +31861,6 @@ background-color: transparent;
     font-weight: normal;
 }
 #newAndExclusive .New_Exclusive_price {
-    font-size: 12px;
     font-weight: bold;
 }
 #bestPicks .short-info h4 {
@@ -31893,7 +31894,7 @@ background-color: transparent;
     padding: 0 15% 0 0;
 }
 .showcase-center h3 {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: normal;
     letter-spacing: 1px;
     line-height: 15px;
@@ -40974,7 +40975,8 @@ bottom:35px;
 	width:10px;
 	height:10px;
 	margin:5px 7px;
-	background:#fff;
+	/* background:#fff; */
+	border: 2px solid #fff;
 	display:block;
 	-webkit-backface-visibility:visible;
 	-webkit-transition:opacity 200ms ease;
@@ -40989,6 +40991,7 @@ bottom:35px;
 }
 .owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span {
 	opacity:1;
+	background: #fff;
 }
 .owl-prev:after{ left: 13px;}
 .owl-next:after {    left: 0;    right: 13px;}
