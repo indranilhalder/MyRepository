@@ -6986,14 +6986,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 
-	@RequestMapping(value = "/{orderCode}/changeDeliveryAddress", method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method = RequestMethod.GET)
 	@ResponseBody
 	public String changeDeliveryAddress(@PathVariable final String orderCode,
 			@ModelAttribute("addressForm") final AccountAddressForm addressForm)
 	{
 
 		String validatetionCheckMsg = null;
-		LOG.debug("AddressForm validation ");
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("AddressForm validation ");
+		}
 		final String errorMsg = mplAddressValidator.validate(addressForm);
 
 		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCCESS))
@@ -7054,7 +7057,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	@RequestMapping(value = "/validationOTP", method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.GET)
 	@ResponseBody
 	public String validateOTP(@RequestParam(value = "orderId") final String orderId,
 			@RequestParam(value = "otpNumber") final String enteredOTPNumber)
@@ -7075,7 +7078,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	}
 
-	@RequestMapping(value = "/newOTP", method = RequestMethod.GET)
+	@RequestMapping(value =RequestMappingUrlConstants.NEW_OTP_GENERATE, method = RequestMethod.GET)
 	@ResponseBody
 	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
 	{
