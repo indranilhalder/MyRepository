@@ -61,7 +61,7 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 	{
 		final List<String> ChangableOrdeStatus = Arrays.asList(OrderStatus.PAYMENT_SUCCESSFUL.getCode(),
 				OrderStatus.ORDER_ALLOCATED.getCode(), OrderStatus.PICK_LIST_GENERATED.getCode(),
-				OrderStatus.ORDER_REALLOCATED.getCode(), OrderStatus.PICK_CONFIRMED.getCode());
+				OrderStatus.ORDER_REALLOCATED.getCode(), OrderStatus.PICK_CONFIRMED.getCode(), OrderStatus.ORDER_REJECTED.getCode());
 		boolean changable = true;
 
 		try
@@ -142,7 +142,7 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 
 
 	@Override
-	public boolean saveTemproryAddress(String orderCode, TemproryAddressModel temproryAddressModel)
+	public boolean saveTemproryAddress(final String orderCode, final TemproryAddressModel temproryAddressModel)
 	{
 		boolean flag = false;
 		try
@@ -177,14 +177,14 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 			if (StringUtils.isNotEmpty(orderCode))
 			{
 				OrderModel orderModel;
-				TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
+				final TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
 				orderModel = orderModelDao.getOrderModel(orderCode);
 				if (orderModel != null)
 				{
-					UserModel user = orderModel.getUser();
-					List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
-					Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
-					Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
+					final UserModel user = orderModel.getUser();
+					final List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
+					final Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
+					final Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
 					if (null != deliveryAddresses)
 					{
 						deliveryAddressesList.addAll(deliveryAddresses);
@@ -197,7 +197,7 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 					AddressModel addrModel = new AddressModel();
 					addrModel = setNewDeliveryAddress(temproryAddressModel);
 					addrModel.setOwner(temproryAddressModel.getOwner());
-					modelService.save(addrModel);	
+					modelService.save(addrModel);
 					deliveryAddressesList.add(addrModel);
 					customerAddressesList.add(addrModel);
 					orderModel.setDeliveryAddress(addrModel);
@@ -237,7 +237,7 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 		{
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-				TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
+				final TemproryAddressModel temproryAddressModel = mplChangeDeliveryAddressDao.geTemproryAddressModel(orderCode);
 				if (temproryAddressModel != null && StringUtils.isNotEmpty(temproryAddressModel.getPostalcode()))
 				{
 					modelService.remove(temproryAddressModel);
@@ -250,9 +250,10 @@ public class MplChangeDeliveryAddressServiceImpl implements MplChangeDeliveryAdd
 		}
 
 	}
-	private AddressModel setNewDeliveryAddress(TemproryAddressModel newDeliveryAddress)
+
+	private AddressModel setNewDeliveryAddress(final TemproryAddressModel newDeliveryAddress)
 	{
-		AddressModel deliveryAddress = new AddressModel();
+		final AddressModel deliveryAddress = new AddressModel();
 		if (null != newDeliveryAddress.getFirstname())
 		{
 			deliveryAddress.setFirstname(newDeliveryAddress.getFirstname());
