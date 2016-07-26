@@ -243,15 +243,28 @@
 	z-index: 9999999999;
 }
 
-
-.changeAdddd {
-	height: 550px;
+.addressListPop {
+	height: 456px;
 	overflow-y: scroll;
 }
 
-@media (max-width: 1024px) {
+
+.changeAdddd {
+	height: auto;
+	overflow-y: scroll;
+}
+
+.address_postcode {
+	width: 100%;
+}
+
+@media (max-width: 1365px) {
 	.changeAdddd {
 		height: 550px;
+		overflow-y: scroll;
+	}
+	.addressListPop {
+		height: 356px;
 		overflow-y: scroll;
 	}
 }
@@ -259,6 +272,10 @@
 @media (max-width: 720px) {
 	.changeAdddd {
 		height: 400px;
+		overflow-y: scroll;
+	}
+	.addressListPop {
+		height: 300px;
 		overflow-y: scroll;
 	}
 }
@@ -469,6 +486,10 @@
 														${fn:escapeXml(creditCardBillingAddress.line3)},
 													</c:if>
 										<br>
+										<c:if test="${not empty creditCardBillingAddress.landmark}">
+														${fn:escapeXml(creditCardBillingAddress.landmark)},
+										</c:if>
+										<br>${fn:escapeXml(creditCardBillingAddress.landmark)}
 										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
 										<c:if test="${not empty creditCardBillingAddress.state}">
 														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
@@ -543,6 +564,9 @@
 											<c:if test="${not empty subOrder.deliveryAddress.line3}">
 														&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
 													</c:if>
+											<c:if test="${not empty subOrder.deliveryAddress.landmark}">
+														&nbsp;${fn:escapeXml(subOrder.deliveryAddress.landmark)},
+											</c:if>
 											<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
 											<c:if test="${not empty subOrder.deliveryAddress.state}">
 														${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
@@ -556,7 +580,7 @@
 										<div class="editIconCSS">
 										<c:if test="${editShippingAddressStatus eq true}">
 									       <a href="#" id="changeAddressLink">Edit / Change Address </a>
-										</c:if>
+									   </c:if>
 										</div>
 									</div>
 								</div>
@@ -1867,8 +1891,35 @@ $(function() {
 				});
 		      } 
 	}	 
-	 
+	 function newOTPGenerate(orderCode){
+		 $.ajax({
+				type : "GET",
+				url : ACC.config.encodedContextPath + "/my-account/newOTP",
+				data :"orderCode="+orderCode,
+				success : function(response) {
+					if(response==true){
+						$(".otpError").show();
+						$(".otpError").text("OTP has been sent");
+					}else{
+						$(".otpError").show();
+						$(".otpError").text("OTP sending fail try again ");
+					}
+				}
+			}); 
+	 }
+
 	 function generateOTP(orderId){	
+	     $(".otpError").hide();
+		 var numberOTP=$("#OTP").val();
+		 var isString = isNaN(numberOTP);
+	     var numberOTP=numberOTP.trim();
+	     if(isString==true || numberOTP.trim()==''){
+	    	 $(".otpError").show();
+		     $(".otpError").text("Invalid OTP, Please Re-enter.");
+	     }else if(numberOTP < 5 && numberOTP > 6){
+	    	 $(".otpError").show();
+		     $(".otpError").text("Invalid OTP, Please Re-enter.");
+	     } else{
 			$.ajax({
 				type : "GET",
 				url : ACC.config.encodedContextPath + "/my-account/validationOTP",
@@ -1910,6 +1961,7 @@ $(function() {
 			}); 
 
 		}	 
+	 }
 	 
 	$(document).ready(function(){
 		 $("#changeAddressLink").click(function(){

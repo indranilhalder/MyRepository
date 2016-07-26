@@ -1,4 +1,19 @@
 var addressLandMark = "";
+
+//alert($(".address_postcode").val());
+$(document).ready(function(){
+	if($(".address_postcode").val().length >= "3") {
+	//	alert("3");
+		loadPincodeData();
+	}
+});
+
+/*$(".address_postcode").focus();
+$(".address_postcode").focus(function(){
+	loadPincodeData();
+});
+$(".address_postcode").blur();*/
+
 $(".address_landmarkOtherDiv").hide();
 $(".address_postcode").blur(function() {
 	loadPincodeData();			
@@ -15,13 +30,18 @@ function loadPincodeData() {
 			console.log("Response : "+response);
 			if(response == "" || response == " " || response == "NULL") {
 				console.log("Its Here");
-				$(".address_landmarks").hide();
+				$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
+				$(".address_landmarkOtherDiv").css("margin-left","10px");
 				$('.otherOption').attr("value", "");
 				$('.otherOption').val("");
 				$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
-				$(".optionsLandmark label").hide();
+				$('.address_landmarks').append($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value","una"));
+				//$(".optionsLandmark label").hide();
 			} else {
     			//console.log(response.cityName);
+				$('.address_landmarks .unableto').remove();
+				$(".address_landmarks").removeAttr("disabled").css("padding-left","5px");
+				$(".address_landmarkOtherDiv").css("margin-left","10px");
     			$(".optionsLandmark, .optionsLandmark label, .optionsLandmark input,  .optionsLandmark select").show();
     			$(".address_landmarkOtherDiv").hide();
     			$(".address_landmarkOther").attr("value", "");
@@ -29,7 +49,7 @@ function loadPincodeData() {
     			$('.otherOption').attr("value", "Other");
         		$(".address_townCity").val(response['cityName']);
         		$('.address_landmarks').empty();
-        		 $('.address_landmarks').append($("<option></option>").attr("disabled","disabled").attr("selected","selected").text("Select a Landmark"));
+        		 $('.address_landmarks').append($("<option></option>").attr("selected","selected").text("Select a Landmark").attr("value", "sel"));
         		//then fill it with data from json post
         		  $.each(response.landMarks, function(key, value) {
         		       $('.address_landmarks').append($("<option></option>").attr("value",value.landmark)
@@ -48,19 +68,49 @@ function loadPincodeData() {
 }
 
 //onchange="changeFunction(this.value)"
+
+$(".errland1, .errland2").hide();
+
+$(".optionsLandmark .errorMessage").css("padding-bottom", "5px");
 	
 $('.address_landmarks').attr("onchange","changeFunction(this.value)");
 $(".address_landmarkOther, .address_landmarkOtherDiv label").hide();
 
+$("#addNewAddress").click(function(e){
+	optionsLandmark1(e);
+	optionsLandmark(e);
+});
+
 function changeFunction(value) {
 	//alert(value);
+	$('.otherOption').attr("value", "Other");
+	$(".errland1").hide();
 	if(value == "Other") {
-		$(".address_landmarks").hide();
+		//$(".address_landmarks").hide();
 		$('.otherOption').attr("value", "");
 		$('.otherOption').val("");
 		$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
-		$(".optionsLandmark label").hide();
+		//$(".optionsLandmark label").hide();
+	} else {
+		$(".address_landmarkOther").attr("value", "");
+		$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").hide();
 	}
+}
+
+function optionsLandmark(e) {
+	$(".errland1").hide();
+	if($(".address_landmarks").val().length <= "3" && $(".address_landmarks").val().length >= "1") {
+		$(".errland1").show().css("color", "#ff1c47").text("Please Select Landmark");
+		e.preventDefault();
+	}
+}
+
+function optionsLandmark1(e) {
+	$(".errland2").hide();
+	if($(".address_landmarkOther").val().length <= "1") {
+		$(".errland2").show().css("color", "#ff1c47").text("Please Enter Landmark");
+		e.preventDefault();
+	}	
 }
 
 
@@ -68,10 +118,19 @@ $(document).ready(function() {
 	onloadFunction();
 			$("#deliveryAddressForm").submit(
 					function(event) {
+						$(".main_error").hide();
+						$(".firstNameError").hide();
+						$(".lastNameError").hide();
+						$(".address1Error").hide();
+						$(".address2Error").hide();
+						$(".address3Error").hide();
+						$(".mobileNumberError").hide();
+						$(".cityError").hide();
+						$(".pincodeNoError").hide();
 				      var mobile=$("#mobileNo").val();
 				      var mobile=mobile.trim();
 				      var isString = isNaN(mobile);
-						$(".main_error").hide();
+				      var pincode=$("#pincode").val();
 						if ($("#firstName").val().length < 1) {
 							$(".firstNameError").show();
 							$(".firstNameError").text("First Name cannot be Blank");
@@ -93,7 +152,13 @@ $(document).ready(function() {
 						}else if(mobile.length<=9 || mobile.length >= 11) {   
 					    	  $(".mobileNumberError").show();
 					          $(".mobileNumberError").text("Enter 10 Digit Number");
-					      }	
+					      }	else if ($("#city").val().length < 1){
+					    	  $(".cityError").show();
+					          $(".cityError").text("City cannot be blank");
+					      }else if(pincode.length < 1 && pincode.length > 6){
+					    	  $(".pincodeNoError").show();
+					          $(".pincodeNoError").text("Enter correct pincode");
+					      }
 						else{
 						
 						var data = $("#deliveryAddressForm").serialize();
@@ -150,8 +215,18 @@ $(document).ready(function() {
 	$(".addAddressToForm").click(function(){
 		//console.log($(this).attr("data-item"));
 		var className = $(this).attr("data-item");
+	
 		$("#firstName").val($("."+className+" .firstName").text());
+		$("#lastName").val($("."+className+" .lastName").text());
+		$("#addressLine1").val($("."+className+" .addressLine1").text());
+		$("#addressLine2").val($("."+className+" .addressLine2").text());
+		$("#addressLine3").val($("."+className+" .addressLine3").text());
+		$("#landmark").val($("."+className+" .landmark").text());
+		$("#state").val($("."+className+" .state").text());
+		$("#pincode").val($("."+className+" .postalCode").text());
+		$("#mobileNo").val($("."+className+" .phone").text());
 	});
+	
 	
 	function onloadFunction() {
 		//$("#deliveryAddressForm #firstName").attr("value", "Dileep");

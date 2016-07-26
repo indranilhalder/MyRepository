@@ -5,10 +5,10 @@ package com.tis.mpl.facade.changedelivery.Impl;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
-import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -22,7 +22,8 @@ import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tis.mpl.facade.changedelivery.MplChangeDeliveryAddressFacade;
@@ -65,23 +66,22 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 	@Autowired
 	private CustomOmsOrderService customOmsOrderService;
-	
-	@Resource(name="tempAddressReverseConverter")
-	private Converter<AddressData,TemproryAddressModel>  tempAddressReverseConverter;
+
+	@Resource(name = "tempAddressReverseConverter")
+	private Converter<AddressData, TemproryAddressModel> tempAddressReverseConverter;
 
 	@Autowired
 	private CustomerFacade customerFacade;
 	@Autowired
 	OrderModelDao orderModelDao;
 
-	private static final Logger LOG = Logger.getLogger(MplChangeDeliveryAddressFacadeImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MplChangeDeliveryAddressFacadeImpl.class);
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tis.mpl.facade.changedelivery.ChangeDeliveryAddressFacade#changeDeliveryRequestToOMS(java.lang.String,
 	 * de.hybris.platform.core.model.user.AddressModel)
-	 * 
 	 */
 
 	@Override
@@ -159,7 +159,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		}
 		else
 		{
-			addressChangable = true;
+			addressChangable = false;
 		}
 		return addressChangable;
 	}
@@ -301,15 +301,15 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 			if (addressData != null)
 			{
 				mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
-			   TemproryAddressModel temproryAddressModel =tempAddressReverseConverter.convert(addressData);   
-				 CustomerData customerData = customerFacade.getCurrentCustomer();
-				 temproryAddressModel.setEmail(customerData.getEmail());
-				 String customerId = customerData.getUid();
+				TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
+				OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+				CustomerModel customer = (CustomerModel) orderModel.getUser();
+				temproryAddressModel.setEmail(customer.getOriginalUid());
+				String customerId = customer.getUid();
 
 				flag = mplChangeDeliveryAddressService.saveTemproryAddress(orderCode, temproryAddressModel);
 				if (flag)
 				{
-					final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 					String mobileNumber = null;
 					if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
 					{
@@ -367,7 +367,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	{
 		String valditionMsg = null;
 		Boolean otpValidate;
-
+		boolean flag = false;
 		final OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.COD,
 				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
 
@@ -379,8 +379,14 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 			TemproryAddressModel addressModel = mplChangeDeliveryAddressService.geTemproryAddressModel(orderCode);
 			LOG.debug("pincode serviceable Checking::MplChangeDeliveryAddressFacadeImpl");
 
-			boolean flag = changeDeliveryRequestCallToOMS(orderCode, addressModel);
-
+			try
+			{
+				flag = changeDeliveryRequestCallToOMS(orderCode, addressModel);
+			}
+			catch (Exception e)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
+			}
 			if (flag)
 			{
 				//if Serviceable Pincode then Save in Order and remove to temporaryAddressModel
@@ -388,8 +394,17 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 				flag = mplChangeDeliveryAddressService.saveDeliveryAddress(orderCode);
 				final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 				LOG.debug("Change Delivery Address updated into commerce then Call to CRM");
-/*		     createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
-*/			}
+
+				try
+				{
+					createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
+				}
+				catch (Exception e)
+				{
+					LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
+					valditionMsg = "success";
+				}
+			}
 			else
 			{
 				mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
@@ -403,6 +418,58 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		return valditionMsg;
 	}
 
+	@Override
+	public boolean generateNewOTP(String orderCode)
+	{
+		boolean falg = false;
+		OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+		CustomerModel customer = (CustomerModel) orderModel.getUser();
+
+		try
+		{
+			generateOTP(customer.getUid(), orderModel.getDeliveryAddress().getPhone1());
+			falg = true;
+		}
+		catch (InvalidKeyException excption)
+		{
+			LOG.error(excption.getMessage());
+		}
+		catch (NoSuchAlgorithmException excption)
+		{
+			LOG.error(excption.getMessage());
+		}
+		return falg;
+	}
+   @Override
+	public String getPartialEncryptValue(String encryptSymbol, int encryptLength, String source)
+	{
+		String result = "";
+		if (StringUtils.isNotEmpty(source) && source.length() >= encryptLength)
+		{
+			char charValue[] = source.toCharArray();
+			for (int count = 0; count < charValue.length; count++)
+			{
+				if (count <= encryptLength)
+				{
+					result += encryptSymbol;
+				}
+				else
+				{
+					result += String.valueOf(charValue[count]);
+				}
+
+			}
+		}
+		else
+		{
+			if (LOG.isInfoEnabled())
+			{
+				LOG.info("Unable to ecrypt the value[{}] : Reason :encrypt length value greater than of source value",source);
+			}
+		}
+		return result;
+
+	}
 
 
 }

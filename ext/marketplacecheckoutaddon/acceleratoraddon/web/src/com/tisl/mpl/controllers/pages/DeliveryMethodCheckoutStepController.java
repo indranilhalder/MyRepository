@@ -1689,7 +1689,14 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
 			newAddress.setState(addressForm.getState());
-
+			if (null != addressForm.getLandmark() && StringUtils.isEmpty(addressForm.getLandmark().trim()))
+			{
+				newAddress.setLandmark(addressForm.getOtherLandmark());
+			}
+			else
+			{
+				newAddress.setLandmark(addressForm.getLandmark());
+			}
 			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
 			{
 				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());

@@ -1086,11 +1086,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			changeDeliveryAddressStatus = changeDeliveryAddressStatus ? mplchangeDeliveryAddressFacade
 					.isDeliveryAddressChangable(orderDetail.getCode()) : false;
-			model.addAttribute("editShippingAddressStatus", changeDeliveryAddressStatus);
-
+			model.addAttribute(ModelAttributetConstants.EDIT_SHIPPING_ADDRESS_STATUS, changeDeliveryAddressStatus);
+			if (changeDeliveryAddressStatus)
+			{
+				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
+				phoneNumber = mplchangeDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
+				model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
+			}
 			final AccountAddressForm accountAddressForm = new AccountAddressForm();
 			model.addAttribute("addressForm", accountAddressForm);
-
+			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
+			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
+			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataListNew);
+		
 			////TISEE-6290
 			fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
 			model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
@@ -3436,6 +3444,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setCountry(getI18NFacade().getCountryForIsocode(ModelAttributetConstants.INDIA_ISO_CODE));
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
+			if(StringUtils.isEmpty(addressForm.getLandmark().trim()) && null != addressForm.getLandmark())
+			{
+				newAddress.setLandmark(addressForm.getOtherLandmark());
+			}
+			else
+			{
+				newAddress.setLandmark(addressForm.getLandmark());
+			}
 
 			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
 			{
@@ -6970,14 +6986,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 
-	@RequestMapping(value = "/{orderCode}/changeDeliveryAddress", method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method = RequestMethod.GET)
 	@ResponseBody
 	public String changeDeliveryAddress(@PathVariable final String orderCode,
 			@ModelAttribute("addressForm") final AccountAddressForm addressForm)
 	{
 
 		String validatetionCheckMsg = null;
-		LOG.debug("AddressForm validation ");
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("AddressForm validation ");
+		}
 		final String errorMsg = mplAddressValidator.validate(addressForm);
 
 		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCCESS))
@@ -7010,8 +7029,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
 				addressData.setCountry(countryData);
 			}
-
-			LOG.debug("Save TemproryAddressModel and OTP genarate");
+			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
+			{
+				addressData.setRegion(getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso()));
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Save TemproryAddressModel and OTP genarate");
+			}
 			flag = mplchangeDeliveryAddressFacade.saveAsTemproryAddressForCustomer(orderCode, addressData);
 
 			if (flag)
@@ -7021,7 +7046,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		else
 		{
-			LOG.debug("AddrressData is incorent then send erorr Msg");
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("AddrressData is incorent then send erorr Msg");
+			}
 			validatetionCheckMsg = errorMsg;
 		}
 
@@ -7029,7 +7057,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	@RequestMapping(value = "/validationOTP", method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.GET)
 	@ResponseBody
 	public String validateOTP(@RequestParam(value = "orderId") final String orderId,
 			@RequestParam(value = "otpNumber") final String enteredOTPNumber)
@@ -7039,13 +7067,29 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final String customerId = customerData.getUid();
 		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
 		{
-			LOG.debug("OTP Validation And Oms Calling status");
-			validateOTPMesg = mplchangeDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber, orderId);
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("OTP Validation And Oms Calling status");
+				validateOTPMesg = mplchangeDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber, orderId);
+
+			}
 		}
 		return validateOTPMesg;
 
 	}
 
+	@RequestMapping(value =RequestMappingUrlConstants.NEW_OTP_GENERATE, method = RequestMethod.GET)
+	@ResponseBody
+	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
+	{
+		boolean flag;
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Generate new OTP For changing Shapping Address ");
+		}
+		flag = mplchangeDeliveryAddressFacade.generateNewOTP(orderCode);
+		return flag;
+	}
 
 
 

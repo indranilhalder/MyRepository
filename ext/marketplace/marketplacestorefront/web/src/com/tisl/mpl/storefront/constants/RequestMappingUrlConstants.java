@@ -35,7 +35,7 @@ public final class RequestMappingUrlConstants
 	public static final String CREATE_TICKET_CRM_UPDATE_PICKUP_DETAILS = "crmTicketCreateUpdatePickUpDetail";
 	public static final String CHANGE_DELIVERY_ADDRES_URL = "/{orderCode}/changeDeliveryAddress";
 	public static final String OTP_VALIDATION_URL = "/validationOTP";
-
+	public static final String NEW_OTP_GENERATE = "/newOTP";
 
 
 	public static final String LINK_UPDATE_EMAIL = "/update-email";

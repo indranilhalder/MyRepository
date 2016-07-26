@@ -26,6 +26,7 @@ import de.hybris.platform.util.DiscountValue;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -324,24 +325,22 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		target.setPickupPhoneNumber(source.getPickupPersonMobile());
 	}
 
-	private void addDeliverryAddressList(final OrderModel source, final OrderData target)
+	private void addDeliverryAddressList(OrderModel source, OrderData target)
 	{
 		Assert.notNull(source, MarketplacecommerceservicesConstants.SOURCENOTNULL);
 		Assert.notNull(target, MarketplacecommerceservicesConstants.TARGETNOTNULL);
 
-		if (CollectionUtils.isNotEmpty(source.getDeliveryAddresses()))
+		List<AddressData> addressDataList = new ArrayList<AddressData>();
+	
+		Collection<AddressModel> addressModelListsource = 	source.getUser().getAddresses();
+		if (addressModelListsource != null)
 		{
-			final List<AddressData> addressDataList = new ArrayList<AddressData>();
-
-			for (final AddressModel addressModel : source.getDeliveryAddresses())
+			for (AddressModel addressModel : addressModelListsource)
 			{
-				if (addressModel != null)
-				{
-					addressDataList.add(getAddressConverter().convert(addressModel));
-				}
+				AddressData addressData = getAddressConverter().convert(addressModel);
+				addressDataList.add(addressData);
 			}
-			target.setDeliveryAddressList(addressDataList);
 		}
+		target.setDeliveryAddressList(addressDataList);
 	}
-
 }

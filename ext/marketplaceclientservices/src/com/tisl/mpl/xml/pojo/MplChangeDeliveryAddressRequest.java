@@ -226,7 +226,7 @@ public class MplChangeDeliveryAddressRequest
 
 	public void setPincode(final String pincode)
 	{
-		this.phoneNo = pincode;
+		this.pincode = pincode;
 	}
 
 

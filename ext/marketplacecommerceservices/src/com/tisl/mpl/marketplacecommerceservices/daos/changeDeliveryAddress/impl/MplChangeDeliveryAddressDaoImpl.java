@@ -13,6 +13,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class MplChangeDeliveryAddressDaoImpl implements MplChangeDeliveryAddress
 			OrderModel parentorder = orderModel.getParentReference();
 			UserModel user = orderModel.getUser();
 			parentorder.setDeliveryAddress(address);
-			Collection<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
+			List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
 			Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
 			Collection<AddressModel> deliveryAddresses = orderModel.getParentReference().getDeliveryAddresses();
 			if (null != deliveryAddresses)
@@ -85,14 +86,14 @@ public class MplChangeDeliveryAddressDaoImpl implements MplChangeDeliveryAddress
 
 	/***
 	 * OrderId Based On We will get TemproryAddressModel
-	 * 
-	 * 
+	 *
+	 *
 	 * @return TemproryAddressModel
 	 */
 	@Override
-	public TemproryAddressModel geTemproryAddressModel(String orderId)
+	public TemproryAddressModel geTemproryAddressModel(final String orderId)
 	{
-		TemproryAddressModel tempAddress =new TemproryAddressModel();
+		TemproryAddressModel tempAddress = new TemproryAddressModel();
 		try
 		{
 			tempAddress.setOrderId(orderId);

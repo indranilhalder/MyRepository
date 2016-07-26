@@ -226,15 +226,8 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				pincodeFieldTextBox.setMaxlength(Integer.valueOf(LabelUtils
 						.getLabel(widget, "maxLength", new Object[0])));
 				PincodeData pincodeData = new PincodeData();
-				// pincodeModel = new PincodeModel();
-				// pincodeModel.setPincode(pincodeFieldTextBox.getValue());
 				pincodeData = mplChangeDeliveryAddressController
 						.getPincodeData(pincodeFieldTextBox.getValue());
-				String cityName = pincodeData.getCityName();
-				StateData stateData = pincodeData.getState();
-				String stateName = stateData.getName();
-				String countryName = commonI18NService.getCountry("IN")
-						.getName();
 
 				// Country
 				Hbox CountryHbox = createHbox(widget, "country", false, true);
@@ -255,6 +248,10 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 					stateFieldTextBox.setValue(deliveryAddress.getDistrict()
 							.toString());
 				}
+				else if (null != deliveryAddress.getState()) {
+					stateFieldTextBox.setValue(deliveryAddress.getState()
+							.toString());
+				}
 				stateHbox.setClass("hbox");
 				content.appendChild(stateHbox);
 
@@ -265,15 +262,23 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				if (null != deliveryAddress.getTown()) {
 					cityFieldTextBox.setValue(deliveryAddress.getTown()
 							.toString());
+				} else if (null != deliveryAddress.getCity()) {
+					cityFieldTextBox.setValue(deliveryAddress.getCity()
+							.toString());
 				}
 				cityHbox.setClass("hbox");
 				content.appendChild(cityHbox);
 
 				// landMark
 				Hbox landMarkHbox = createHbox(widget, "landMark", false, true);
+
 				final Textbox landMarkTextBox = new Textbox();
 				landMarkTextBox.setMaxlength(MAX_LENGTH);
-				landMarkTextBox.setDisabled(true);
+				if (null != deliveryAddress.getLandmark()) {
+					landMarkTextBox.setValue(deliveryAddress.getLandmark());
+				} else {
+					landMarkTextBox.setDisabled(true);
+				}
 				landMarkHbox.appendChild(landMarkTextBox);
 				content.appendChild(landMarkHbox);
 				landMarkHbox.setClass("hbox");
@@ -396,10 +401,8 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				if (null != selectedLandmark
 						&& selectedLandmark
 								.equalsIgnoreCase(MarketplaceCockpitsConstants.NONE_OF_ABOVE)) {
-					landMarkTextbox.setValue(StringUtils.EMPTY);
 					landMarkTextbox.setDisabled(false);
 				} else {
-					landMarkTextbox.setValue(StringUtils.EMPTY);
 					landMarkTextbox.setDisabled(true);
 				}
 			} catch (NullPointerException e) {
@@ -430,7 +433,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		listItem.setValue(MarketplaceCockpitsConstants.NONE_OF_ABOVE);
 		listItem.setParent(landMarkListbox);
 		landMarkListbox.addItemToSelection(listItem);
-		landMarkListbox.setSelectedIndex(0);
+		landMarkListbox.setSelectedIndex(landMarkListbox.getItemCount()-1);
 		landMarkHbox.appendChild(landMarkListbox);
 
 		return landMarkListbox;
@@ -579,7 +582,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			final Textbox mobileNumberFieldTextBox, Div content)
 			throws InterruptedException, ParseException, InvalidKeyException,
 			NoSuchAlgorithmException {
-
+         LOG.info("Update button clicked ");
 		final String changedFirstName = firstNameFieldTextBox.getValue();
 		final String changedLastName = lastNameFieldTextBox.getValue();
 		final String changedEmail = emailFieldTextBox.getValue();
@@ -617,41 +620,37 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		CustomerModel customer = (CustomerModel) callContextController
 				.getCurrentCustomer().getObject();
 		tempororyAddress.setOwner(customer);
+		LOG.info("Change Delivery Address Details");
 		if (changedFirstName != null && !changedFirstName.isEmpty()) {
 			tempororyAddress.setFirstname(changedFirstName);
-			LOG.debug(" Changed First Name =" + changedFirstName);
+			LOG.debug(" First Name =" + changedFirstName);
 		} else {
 			tempororyAddress
 					.setFirstname(MarketplacecommerceservicesConstants.EMPTY);
 		}
 		if (changedLastName != null && !changedLastName.isEmpty()) {
 			tempororyAddress.setLastname(changedLastName);
-			LOG.debug("Changed last Name =" + changedLastName);
-		} else {
-			tempororyAddress
-					.setLastname(MarketplacecommerceservicesConstants.EMPTY);
-		}
-		if (changedLastName != null && !changedLastName.isEmpty()) {
-			tempororyAddress.setLastname(changedLastName);
-			LOG.debug("Changed last Name =" + changedLastName);
+			LOG.debug(" last Name =" + changedLastName);
 		} else {
 			tempororyAddress
 					.setLastname(MarketplacecommerceservicesConstants.EMPTY);
 		}
 		if (changedEmail != null && !changedEmail.isEmpty()) {
 			tempororyAddress.setEmail(changedEmail);
-			LOG.debug("Changed Email =" + changedEmail);
+			LOG.debug(" Email =" + changedEmail);
 		} else {
 			tempororyAddress
 					.setEmail(MarketplacecommerceservicesConstants.EMPTY);
 		}
 		if (changedLine1 != null && !changedLine1.isEmpty()) {
 			tempororyAddress.setLine1(changedLine1.toString());
+			
 		} else {
 			tempororyAddress
 					.setLine1(MarketplacecommerceservicesConstants.EMPTY);
 		}
 		if (changedLine2 != null && !changedLine2.isEmpty()) {
+			LOG.debug("Line2 =" + changedLine2);
 			tempororyAddress.setLine2(changedLine2);
 		} else {
 			tempororyAddress
@@ -671,23 +670,19 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		}
 		if (changedState != null && !changedState.isEmpty()) {
 			tempororyAddress.setState(changedState);
-			LOG.debug("Changed State Name =" + changedState);
+			LOG.debug(" State Name =" + changedState);
 		} else {
 			tempororyAddress
 					.setState(MarketplacecommerceservicesConstants.EMPTY);
 		}
 		if (changedCity != null && !changedCity.isEmpty()) {
+			LOG.debug(" City Name =" + changedCity);
 			tempororyAddress.setCity(changedCity);
 		} else {
 			tempororyAddress
 					.setCity(MarketplacecommerceservicesConstants.EMPTY);
 		}
-		if (changedState != null && !changedState.isEmpty()) {
-			tempororyAddress.setState(changedState);
-		} else {
-			tempororyAddress
-					.setState(MarketplacecommerceservicesConstants.EMPTY);
-		}
+
 		if (changedCountry != null && !changedCountry.isEmpty()) {
 			CountryModel countrymodel = commonI18NService.getCountry("IN");
 			Locale loc = new Locale("en");
@@ -703,14 +698,14 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		}
 		if (changedLandMark != null && !changedLandMark.isEmpty()) {
 			tempororyAddress.setLandmark(changedLandMark);
-			LOG.debug("Changed LandMark :" + changedLandMark);
+			LOG.debug(" LandMark :" + changedLandMark);
 		} else {
 			tempororyAddress
 					.setLandmark(MarketplacecommerceservicesConstants.EMPTY);
 		}
 		if (changedMobileNumber != null) {
 			tempororyAddress.setPhone1(changedMobileNumber);
-			LOG.debug("Changed Mobile Number :" + changedMobileNumber);
+			LOG.debug(" Mobile Number :" + changedMobileNumber);
 		} else {
 			tempororyAddress
 					.setPhone1(MarketplacecommerceservicesConstants.EMPTY);
