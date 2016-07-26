@@ -32347,6 +32347,13 @@ body.page-homepage .feature-collections h1, body.page-homepage .trending h1>span
     border-bottom: 1px solid #ccc;
     border-left: 1px solid #ccc;
 }
+body.page-homepage .showcase .desc-section h1 {
+    font-size: 22px;
+    line-height: 30px;
+}
+footer .footer-text p {
+    margin: 0 0 10px;
+}
 /*New homepage changes ends*/
 
 /*--------------maincss-----------*/
