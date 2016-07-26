@@ -341,6 +341,7 @@ public class AccountAddressFacade
 			addressModel.setAddressType(addressData.getAddressType());
 			addressModel.setLocality(addressData.getLocality());
 			addressModel.setAddressLine3(addressData.getLine3());
+			addressModel.setLandmark(addressData.getLandmark());
 			customerAccountService.saveAddressEntry(currentCustomer, addressModel);
 			if (addressData.isDefaultAddress())
 			{
