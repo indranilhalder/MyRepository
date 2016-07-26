@@ -101,9 +101,9 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 	 * @return boolean
 	 */
 	@Override
-	public boolean changeDeliveryAddressCallToOMS(String orderId,
+	public String changeDeliveryAddressCallToOMS(String orderId,
 			AddressModel newDeliveryAddress) throws EtailNonBusinessExceptions {
-		boolean omsResponce = false;
+		String omsResponce = null;
 		try {
 			omsResponce = mplChangeDeliveryAddressFacade
 					.changeDeliveryRequestCallToOMS(orderId, newDeliveryAddress);

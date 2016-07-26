@@ -793,6 +793,8 @@
  		 <enumtype code="deliveryAddressEnum" autocreate="true"
 			generate="true" dynamic="true">
 			<value code="pincodeNotServiceable" />
+			<value code="success" />
+			<value code="ErrorOccurredPleaseTryAfterSomeTime" />
 		</enumtype>
 	</enumtypes>
 		<!-- Product Feature Enum Ends -->

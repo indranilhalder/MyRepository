@@ -57,6 +57,7 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 			.getLogger(MarketPlaceChangeDeliveryAddressWidgetRenderer.class);
 	private static final String CUSTOMER_DETAILS_UPDATED = "customerdetailsupdated";
 	private static final String FAILED_AT_OMS = "failedAtOms";
+	private static final String AN_ERROR_OCCURRED = "erroroccurred";
 	private static final String INFO = "info";
 
 	@Autowired
@@ -240,11 +241,13 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 							.getValue(), OTPTypeEnum.CDA, time);
 			boolean validate = otpResponse.getOTPValid();
 			if (validate) {
-				boolean omsStatus = mplChangeDeliveryAddressController
+				String omsStatus = null;
+				omsStatus = mplChangeDeliveryAddressController
 						.changeDeliveryAddressCallToOMS(orderModel
 								.getParentReference().getCode(),
 								newDeliveryAddress);
-				if (omsStatus) {
+				if (omsStatus
+						.equalsIgnoreCase(MarketplaceCockpitsConstants.SUCCESS)) {
 					try {
 						TypedObject customer = marketplaceCallContextController
 								.getCurrentCustomer();
@@ -258,109 +261,117 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 
 							mplChangeDeliveryAddressController
 									.saveDeliveryAddress(orderModel, address);
+							LOG.debug("Delivery Address Changed Successfully");
 						} catch (ModelSavingException e) {
 							LOG.debug("Model saving Exception" + e.getMessage());
 						} catch (Exception e) {
 							LOG.debug("Exception while saving Address"
 									+ e.getMessage());
 						}
-						modelService.remove(newDeliveryAddress);
+						removeTempororyAddress(newDeliveryAddress);
+
 						mplChangeDeliveryAddressController.ticketCreateToCrm(
 								orderModel.getParentReference(), customerId,
 								MarketplaceCockpitsConstants.SOURCE);
+						LOG.debug("CRM Ticket Created for Change Delivery Request");
 						Messagebox.show(LabelUtils.getLabel(widget,
 								CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO,
 								Messagebox.OK, Messagebox.INFORMATION);
-						int i = popupWidgetHelper.getCurrentPopup().getParent()
-								.getChildren().size();
-						while (i >= 1) {
-							popupWidgetHelper
-									.getCurrentPopup()
-									.getParent()
-									.getChildren()
-									.remove(popupWidgetHelper.getCurrentPopup()
-											.getParent().getChildren().size() - 1);
-							i--;
-						}
-
+						closePopUp();
 					} catch (ModelRemovalException e) {
 						LOG.error("ModelRemovalException " + e.getMessage());
 					} catch (Exception e) {
 						LOG.error("Exception while calling ticketCreate to CRM methoid");
 					}
-				} else {
+				} else if (omsStatus
+						.equalsIgnoreCase(MarketplaceCockpitsConstants.FAILED)) {
 					try {
-						modelService.remove(newDeliveryAddress);
+						removeTempororyAddress(newDeliveryAddress);
 						Messagebox.show(LabelUtils.getLabel(widget,
 								FAILED_AT_OMS, new Object[0]), INFO,
 								Messagebox.OK, Messagebox.ERROR);
-						int i = popupWidgetHelper.getCurrentPopup().getParent()
-								.getChildren().size();
-						while (i >= 1) {
-							popupWidgetHelper
-									.getCurrentPopup()
-									.getParent()
-									.getChildren()
-									.remove(popupWidgetHelper.getCurrentPopup()
-											.getParent().getChildren().size() - 1);
-							i--;
-						}
+						closePopUp();
 					} catch (ModelRemovalException e) {
 						LOG.error("ModelRemovalException  while removing temprory Address"
 								+ e.getMessage());
 					} catch (Exception e) {
 						LOG.error("Exception occurred " + e.getMessage());
 					}
+				} else {
+					removeTempororyAddress(newDeliveryAddress);
+					closePopUp();
+					Messagebox.show(LabelUtils.getLabel(widget,
+							AN_ERROR_OCCURRED, new Object[0]), INFO,
+							Messagebox.OK, Messagebox.ERROR);
 				}
 			} else {
 				Messagebox.show(LabelUtils.getLabel(widget, "INVALID_OTP",
 						new Object[0]), INFO, Messagebox.OK, Messagebox.ERROR);
 			}
 		}
+	}
 
-		private AddressModel setNewDeliveryAddress(
-				TemproryAddressModel newDeliveryAddress) {
-			AddressModel deliveryAddress = new AddressModel();
-			if (null != newDeliveryAddress.getFirstname()) {
-				deliveryAddress.setFirstname(newDeliveryAddress.getFirstname());
-			}
-			if (null != newDeliveryAddress.getLastname()) {
-				deliveryAddress.setLastname(newDeliveryAddress.getLastname());
-			}
-			if (null != newDeliveryAddress.getLine1()) {
-				deliveryAddress.setLine1(newDeliveryAddress.getLine1());
-			}
-			if (null != newDeliveryAddress.getLine2()) {
-				deliveryAddress.setLine2(newDeliveryAddress.getLine2());
-			}
-			if (null != newDeliveryAddress.getAddressLine3()) {
-				deliveryAddress.setAddressLine3(newDeliveryAddress
-						.getAddressLine3());
-			}
-			if (null != newDeliveryAddress.getEmail()) {
-				deliveryAddress.setEmail(newDeliveryAddress.getEmail());
-			}
-			if (null != newDeliveryAddress.getPostalcode()) {
-				deliveryAddress.setPostalcode(newDeliveryAddress
-						.getPostalcode());
-			}
-			if (null != newDeliveryAddress.getCountry()) {
-				deliveryAddress.setCountry(newDeliveryAddress.getCountry());
-			}
-			if (null != newDeliveryAddress.getCity()) {
-				deliveryAddress.setCity(newDeliveryAddress.getCity());
-			}
-			if (null != newDeliveryAddress.getState()) {
-				deliveryAddress.setState(newDeliveryAddress.getState());
-			}
-			if (null != newDeliveryAddress.getLandmark()) {
-				deliveryAddress.setLandmark(newDeliveryAddress.getLandmark());
-			}
-			if (null != newDeliveryAddress.getPhone1()) {
-				deliveryAddress.setPhone1(newDeliveryAddress.getPhone1());
-			}
-			return deliveryAddress;
+	private void closePopUp() {
+		int i = popupWidgetHelper.getCurrentPopup().getParent().getChildren()
+				.size();
+		while (i >= 1) {
+			popupWidgetHelper
+					.getCurrentPopup()
+					.getParent()
+					.getChildren()
+					.remove(popupWidgetHelper.getCurrentPopup().getParent()
+							.getChildren().size() - 1);
+			i--;
+
 		}
+	}
+
+	private void removeTempororyAddress(TemproryAddressModel newDeliveryAddrfess) {
+		modelService.remove(newDeliveryAddrfess);
+
+	}
+
+	private AddressModel setNewDeliveryAddress(
+			TemproryAddressModel newDeliveryAddress) {
+		AddressModel deliveryAddress = new AddressModel();
+		if (null != newDeliveryAddress.getFirstname()) {
+			deliveryAddress.setFirstname(newDeliveryAddress.getFirstname());
+		}
+		if (null != newDeliveryAddress.getLastname()) {
+			deliveryAddress.setLastname(newDeliveryAddress.getLastname());
+		}
+		if (null != newDeliveryAddress.getLine1()) {
+			deliveryAddress.setLine1(newDeliveryAddress.getLine1());
+		}
+		if (null != newDeliveryAddress.getLine2()) {
+			deliveryAddress.setLine2(newDeliveryAddress.getLine2());
+		}
+		if (null != newDeliveryAddress.getAddressLine3()) {
+			deliveryAddress.setAddressLine3(newDeliveryAddress
+					.getAddressLine3());
+		}
+		if (null != newDeliveryAddress.getEmail()) {
+			deliveryAddress.setEmail(newDeliveryAddress.getEmail());
+		}
+		if (null != newDeliveryAddress.getPostalcode()) {
+			deliveryAddress.setPostalcode(newDeliveryAddress.getPostalcode());
+		}
+		if (null != newDeliveryAddress.getCountry()) {
+			deliveryAddress.setCountry(newDeliveryAddress.getCountry());
+		}
+		if (null != newDeliveryAddress.getCity()) {
+			deliveryAddress.setCity(newDeliveryAddress.getCity());
+		}
+		if (null != newDeliveryAddress.getState()) {
+			deliveryAddress.setState(newDeliveryAddress.getState());
+		}
+		if (null != newDeliveryAddress.getLandmark()) {
+			deliveryAddress.setLandmark(newDeliveryAddress.getLandmark());
+		}
+		if (null != newDeliveryAddress.getPhone1()) {
+			deliveryAddress.setPhone1(newDeliveryAddress.getPhone1());
+		}
+		return deliveryAddress;
 	}
 
 	private Hbox createHbox(

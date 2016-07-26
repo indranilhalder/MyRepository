@@ -14,7 +14,7 @@ import de.hybris.platform.core.model.user.AddressModel;
  */
 public interface MplChangeDeliveryAddressFacade
 {
-	public boolean changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress);
+	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress);
 
 	public void createcrmTicketForChangeDeliveryAddress(OrderModel order, String customerId, String source);
 

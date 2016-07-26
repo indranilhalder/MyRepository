@@ -50,7 +50,6 @@ import de.hybris.platform.cockpit.widgets.WidgetConfig;
 import de.hybris.platform.cockpit.widgets.WidgetContainer;
 import de.hybris.platform.cockpit.widgets.impl.DefaultWidgetContainer;
 import de.hybris.platform.cockpit.widgets.impl.DefaultWidgetFactory;
-import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
@@ -247,8 +246,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				if (null != deliveryAddress.getDistrict()) {
 					stateFieldTextBox.setValue(deliveryAddress.getDistrict()
 							.toString());
-				}
-				else if (null != deliveryAddress.getState()) {
+				}else if (null != deliveryAddress.getState()) {
 					stateFieldTextBox.setValue(deliveryAddress.getState()
 							.toString());
 				}
@@ -433,7 +431,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		listItem.setValue(MarketplaceCockpitsConstants.NONE_OF_ABOVE);
 		listItem.setParent(landMarkListbox);
 		landMarkListbox.addItemToSelection(listItem);
-		landMarkListbox.setSelectedIndex(landMarkListbox.getItemCount()-1);
+		landMarkListbox.setSelectedIndex(landMarkListbox.getItemCount() - 1);
 		landMarkHbox.appendChild(landMarkListbox);
 
 		return landMarkListbox;
@@ -582,7 +580,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			final Textbox mobileNumberFieldTextBox, Div content)
 			throws InterruptedException, ParseException, InvalidKeyException,
 			NoSuchAlgorithmException {
-         LOG.info("Update button clicked ");
+		LOG.info("Update button clicked ");
 		final String changedFirstName = firstNameFieldTextBox.getValue();
 		final String changedLastName = lastNameFieldTextBox.getValue();
 		final String changedEmail = emailFieldTextBox.getValue();
@@ -607,6 +605,10 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 				if (item.isSelected()) {
 					changedLandMark = (String) item.getValue();
+					if (changedLandMark
+							.equalsIgnoreCase(MarketplaceCockpitsConstants.NONE_OF_ABOVE)) {
+						changedLandMark = null;
+					}
 				}
 			}
 		}
@@ -644,7 +646,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		}
 		if (changedLine1 != null && !changedLine1.isEmpty()) {
 			tempororyAddress.setLine1(changedLine1.toString());
-			
+
 		} else {
 			tempororyAddress
 					.setLine1(MarketplacecommerceservicesConstants.EMPTY);
@@ -756,6 +758,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				handleOTPPopupCloseEvent(tempororyAddress, parentWidget,
 						parentWindow, widgetContainer, popup);
 			}
+
 			private void handleOTPPopupCloseEvent(
 					TemproryAddressModel tempororyAddress,
 					Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> parentWidget,

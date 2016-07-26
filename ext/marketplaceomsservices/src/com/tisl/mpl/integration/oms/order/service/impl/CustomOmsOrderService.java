@@ -29,7 +29,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.commons.client.RestCallException;
+import com.hybris.oms.api.changedeliveryaddress.ChangeDeliveryAddressFacade;
 import com.hybris.oms.api.order.OrderFacade;
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressDto;
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
 import com.hybris.oms.domain.exception.RestClientException;
 import com.hybris.oms.domain.order.Order;
 import com.hybris.oms.domain.order.UpdatedSinceList;
@@ -60,6 +63,8 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
+	@Autowired
+	private ChangeDeliveryAddressFacade changeDeliveryAddressFacade;
 
 	@Override
 	public OrderPlacementResult createCrmOrder(final OrderModel orderModel)
@@ -310,9 +315,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	/*
 	 * @Desc Used for generating xml
-	 * 
+	 *
 	 * @param order
-	 * 
+	 *
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)
@@ -458,6 +463,21 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+
+	public ChangeDeliveryAddressResponseDto changeDeliveryRequestCallToOMS(final ChangeDeliveryAddressDto request)
+	{
+		LOG.debug("Calling OMS for change delivery request ");
+		ChangeDeliveryAddressResponseDto responce = new ChangeDeliveryAddressResponseDto();
+		try
+		{
+			responce = changeDeliveryAddressFacade.update(request);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(" Exception While calling to OMS " + e.getCause());
+		}
+		return responce;
 	}
 
 	private String[] getOmsException()

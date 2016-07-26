@@ -22,10 +22,11 @@ import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressDto;
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
 import com.tis.mpl.facade.changedelivery.MplChangeDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.DeliveryAddressEnum;
@@ -43,8 +44,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplChangeDeliveryAddress
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.service.MplChangeDeliveryAddressClientService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
-import com.tisl.mpl.xml.pojo.MplChangeDeliveryAddressRequest;
-import com.tisl.mpl.xml.pojo.MplChangeDeliveryAddressResponce;
 
 
 /**
@@ -67,6 +66,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	@Autowired
 	private CustomOmsOrderService customOmsOrderService;
 
+
 	@Resource(name = "tempAddressReverseConverter")
 	private Converter<AddressData, TemproryAddressModel> tempAddressReverseConverter;
 
@@ -75,21 +75,21 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	@Autowired
 	OrderModelDao orderModelDao;
 
-	private static final Logger LOG = LoggerFactory.getLogger(MplChangeDeliveryAddressFacadeImpl.class);
+	private static final Logger LOG = Logger.getLogger(MplChangeDeliveryAddressFacadeImpl.class);
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tis.mpl.facade.changedelivery.ChangeDeliveryAddressFacade#changeDeliveryRequestToOMS(java.lang.String,
 	 * de.hybris.platform.core.model.user.AddressModel)
 	 */
 
 	@Override
-	public boolean changeDeliveryRequestCallToOMS(final String orderId, final AddressModel newDeliveryAddress)
+	public String changeDeliveryRequestCallToOMS(final String orderId, final AddressModel newDeliveryAddress)
 	{
-		final MplChangeDeliveryAddressRequest requestData = new MplChangeDeliveryAddressRequest();
-		MplChangeDeliveryAddressResponce omsResponse = new MplChangeDeliveryAddressResponce();
-		boolean addressChangable = false;
+		LOG.info("Inside  changeDeliveryRequestCallToOMS Method");
+		final ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
+		ChangeDeliveryAddressResponseDto omsResponse = new ChangeDeliveryAddressResponseDto();
 		if (null != orderId)
 		{
 			requestData.setOrderID(orderId);
@@ -147,21 +147,21 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		}
 		try
 		{
-			omsResponse = mplChangeDeliveryAddressClientService.changeDeliveryRequestCallToOMS(requestData);
+			omsResponse = customOmsOrderService.changeDeliveryRequestCallToOMS(requestData);
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception while calling to OMS" + e.getCause());
 		}
-		if (null != omsResponse && null != omsResponse.getResponse() && omsResponse.getResponse().equalsIgnoreCase("SUCCESS"))
+		if (null != omsResponse)
 		{
-			addressChangable = true;
+			return omsResponse.getResponse();
 		}
 		else
 		{
-			addressChangable = false;
+			LOG.error(" OMS responce is null for change change delivery address request ");
 		}
-		return addressChangable;
+		return null;
 	}
 
 	@Override
@@ -376,18 +376,22 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		//If OTP Valid then call to OMS for Pincode ServiceableCheck
 		if (otpValidate.booleanValue())
 		{
-			TemproryAddressModel addressModel = mplChangeDeliveryAddressService.geTemproryAddressModel(orderCode);
+			final TemproryAddressModel addressModel = mplChangeDeliveryAddressService.geTemproryAddressModel(orderCode);
 			LOG.debug("pincode serviceable Checking::MplChangeDeliveryAddressFacadeImpl");
 
 			try
 			{
-				flag = changeDeliveryRequestCallToOMS(orderCode, addressModel);
+				valditionMsg = changeDeliveryRequestCallToOMS(orderCode, addressModel);
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
+
 			}
-			if (flag)
+			if(valditionMsg ! =null) {
+
+
+			if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.STATUS_SUCESS))
 			{
 				//if Serviceable Pincode then Save in Order and remove to temporaryAddressModel
 				LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
@@ -397,18 +401,24 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 				try
 				{
-					createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
+					if (flag)
+					{
+						createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
+					}
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{
 					LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
-					valditionMsg = "success";
+					valditionMsg = DeliveryAddressEnum.SUCCESS.toString();
 				}
 			}
 			else
 			{
 				mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
 				valditionMsg = DeliveryAddressEnum.PINCODENOTSERVICEABLE.toString();
+			}
+			}else{
+				valditionMsg=DeliveryAddressEnum.ERROROCCURREDPLEASETRYAFTERSOMETIME.toString();
 			}
 		}
 		else

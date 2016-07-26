@@ -164,7 +164,7 @@ public final class MarketplaceCockpitsConstants extends
 		);
 	
 	public static final String FAILURE = "FAILURE";
-	
+	public static final String FAILED = "FAILED";
 	
 	public static final List<ConsignmentStatus> validInvoiceStatus = Arrays.asList(ConsignmentStatus.HOTC,
 			ConsignmentStatus.OUT_FOR_DELIVERY,ConsignmentStatus.REACHED_NEAREST_HUB,ConsignmentStatus.DELIVERED

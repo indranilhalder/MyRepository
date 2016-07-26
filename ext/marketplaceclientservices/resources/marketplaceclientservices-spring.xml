@@ -143,7 +143,5 @@
 		<bean id="gigyaCommentService" class="com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl"/>
 		<bean id="mplGigyaReviewCommentDao" class="com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl"/>
 		
-		<bean id="mplChangeDeliveryAddressClientService"
-		class="com.tisl.mpl.service.impl.MplChangeDeliveryAddressClientServiceImpl"/>
 </beans>
 
