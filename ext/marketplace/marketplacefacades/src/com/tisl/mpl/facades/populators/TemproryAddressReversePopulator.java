@@ -6,6 +6,7 @@ package com.tisl.mpl.facades.populators;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.c2l.CountryModel;
+import de.hybris.platform.core.model.c2l.RegionModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
@@ -63,7 +64,27 @@ public class TemproryAddressReversePopulator implements Populator<AddressData, T
 				throw new ConversionException("More than one country with the code " + isocode + " found.", e);
 			}
 		}
+	
+	
+	if (addressData.getRegion() != null)
+	{
+		final String isocode = addressData.getRegion().getIsocode();
+		try
+		{
+			final RegionModel regionModel = getCommonI18NService().getRegion(
+					getCommonI18NService().getCountry(addressData.getCountry().getIsocode()), isocode);
+			temproryAddressModel.setRegion(regionModel);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new ConversionException("No region with the code " + isocode + " found.", e);
+		}
+		catch (final AmbiguousIdentifierException e)
+		{
+			throw new ConversionException("More than one region with the code " + isocode + " found.", e);
+		}
 	}
+}
 
 	/**
 	 * @return the commonI18NService
