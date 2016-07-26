@@ -7054,6 +7054,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	}
 
+	@RequestMapping(value = "/newOTP", method = RequestMethod.GET)
+	@ResponseBody
+	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
+	{
+		boolean flag;
+		LOG.debug("Generate new OTP For changing Shapping Address ");
+		flag = mplchangeDeliveryAddressFacade.generateNewOTP(orderCode);
+		return flag;
+	}
 
 
 
