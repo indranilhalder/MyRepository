@@ -126,6 +126,7 @@ $(document).ready(function() {
 						$(".address3Error").hide();
 						$(".mobileNumberError").hide();
 						$(".cityError").hide();
+						$(".pincodeNoError").hide();
 				      var mobile=$("#mobileNo").val();
 				      var mobile=mobile.trim();
 				      var isString = isNaN(mobile);
