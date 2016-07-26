@@ -42,7 +42,6 @@ import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplChangeDeliveryAddressService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
-import com.tisl.mpl.service.MplChangeDeliveryAddressClientService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 
 
@@ -301,11 +300,11 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 			if (addressData != null)
 			{
 				mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
-				TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
-				OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-				CustomerModel customer = (CustomerModel) orderModel.getUser();
+				final TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
+				final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+				final CustomerModel customer = (CustomerModel) orderModel.getUser();
 				temproryAddressModel.setEmail(customer.getOriginalUid());
-				String customerId = customer.getUid();
+				final String customerId = customer.getUid();
 
 				flag = mplChangeDeliveryAddressService.saveTemproryAddress(orderCode, temproryAddressModel);
 				if (flag)
@@ -388,37 +387,40 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
 
 			}
-			if(valditionMsg ! =null) {
-
-
-			if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.STATUS_SUCESS))
+			if (valditionMsg != null)
 			{
-				//if Serviceable Pincode then Save in Order and remove to temporaryAddressModel
-				LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
-				flag = mplChangeDeliveryAddressService.saveDeliveryAddress(orderCode);
-				final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-				LOG.debug("Change Delivery Address updated into commerce then Call to CRM");
 
-				try
+
+				if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.STATUS_SUCESS))
 				{
-					if (flag)
+					//if Serviceable Pincode then Save in Order and remove to temporaryAddressModel
+					LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
+					flag = mplChangeDeliveryAddressService.saveDeliveryAddress(orderCode);
+					final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+					LOG.debug("Change Delivery Address updated into commerce then Call to CRM");
+
+					try
 					{
-						createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
+						if (flag)
+						{
+							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
+						valditionMsg = DeliveryAddressEnum.SUCCESS.toString();
 					}
 				}
-				catch (final Exception e)
+				else
 				{
-					LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
-					valditionMsg = DeliveryAddressEnum.SUCCESS.toString();
+					mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
+					valditionMsg = DeliveryAddressEnum.PINCODENOTSERVICEABLE.toString();
 				}
 			}
 			else
 			{
-				mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
-				valditionMsg = DeliveryAddressEnum.PINCODENOTSERVICEABLE.toString();
-			}
-			}else{
-				valditionMsg=DeliveryAddressEnum.ERROROCCURREDPLEASETRYAFTERSOMETIME.toString();
+				valditionMsg = DeliveryAddressEnum.ERROROCCURREDPLEASETRYAFTERSOMETIME.toString();
 			}
 		}
 		else
@@ -429,34 +431,35 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	}
 
 	@Override
-	public boolean generateNewOTP(String orderCode)
+	public boolean generateNewOTP(final String orderCode)
 	{
 		boolean falg = false;
-		OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-		CustomerModel customer = (CustomerModel) orderModel.getUser();
+		final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+		final CustomerModel customer = (CustomerModel) orderModel.getUser();
 
 		try
 		{
 			generateOTP(customer.getUid(), orderModel.getDeliveryAddress().getPhone1());
 			falg = true;
 		}
-		catch (InvalidKeyException excption)
+		catch (final InvalidKeyException excption)
 		{
 			LOG.error(excption.getMessage());
 		}
-		catch (NoSuchAlgorithmException excption)
+		catch (final NoSuchAlgorithmException excption)
 		{
 			LOG.error(excption.getMessage());
 		}
 		return falg;
 	}
-   @Override
-	public String getPartialEncryptValue(String encryptSymbol, int encryptLength, String source)
+
+	@Override
+	public String getPartialEncryptValue(final String encryptSymbol, final int encryptLength, final String source)
 	{
 		String result = "";
 		if (StringUtils.isNotEmpty(source) && source.length() >= encryptLength)
 		{
-			char charValue[] = source.toCharArray();
+			final char charValue[] = source.toCharArray();
 			for (int count = 0; count < charValue.length; count++)
 			{
 				if (count <= encryptLength)
@@ -474,7 +477,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		{
 			if (LOG.isInfoEnabled())
 			{
-				LOG.info("Unable to ecrypt the value[{}] : Reason :encrypt length value greater than of source value",source);
+				LOG.info("Unable to ecrypt the value[{}] : Reason :encrypt length value greater than of source value");
 			}
 		}
 		return result;
