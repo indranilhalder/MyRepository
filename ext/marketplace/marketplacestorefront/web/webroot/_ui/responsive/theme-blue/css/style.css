@@ -9965,6 +9965,11 @@ body .account .right-account .order-history .pagination li{
       -webkit-transition: border-color 0.3s, color 0.3s;
       -moz-transition: border-color 0.3s, color 0.3s;
       transition: border-color 0.3s, color 0.3s; }
+      
+.product-tile:hover .image .quickview .serp-addtobag.disabled {
+	display: none;
+	opacity: 0.7;
+}
 
 .product-tile {
   display: block;
