@@ -159,12 +159,7 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 				{
 					orderModel.setTotalPrice(totalPrice);
 				}
-				if (orderModel.getDeliveryAddress() != null)
-				{
-					final List<AddressModel> addressModelList = new ArrayList<AddressModel>();
-					addressModelList.add(orderModel.getDeliveryAddress());
-					orderModel.setDeliveryAddresses(addressModelList);
-				}
+				
 				getModelService().save(orderModel);
 
 				result.setOrder(orderModel);
