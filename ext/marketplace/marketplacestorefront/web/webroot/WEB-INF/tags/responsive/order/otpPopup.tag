@@ -10,7 +10,7 @@
 				<h4>One-Time-Password (OTP)</h4>
 
 				To save the changes, please enter the One-Time-Password(OTP)
-				received via SMS on your registered mobile number: ${subOrder.deliveryAddress.phone} and
+				received via SMS on your registered mobile number: ${phoneNumber}and
 				click on 'submit'.
 				<div class="row">
 					<div class="col-md-6 col-sm-6">
