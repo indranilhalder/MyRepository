@@ -10,7 +10,7 @@
 				<h4>One-Time-Password (OTP)</h4>
 
 				To save the changes, please enter the One-Time-Password(OTP)
-				received via SMS on your registered mobile number: XXXXXXX799 and
+				received via SMS on your registered mobile number: ${subOrder.deliveryAddress.phone} and
 				click on 'submit'.
 				<div class="row">
 					<div class="col-md-6 col-sm-6">
@@ -22,7 +22,7 @@
 					</div>
 					<div class="col-md-6 col-sm-6 otpMessage">
 						<span style="font-size: 10px"> If you did not receive OTP
-							via SMS or your SMS-OTP has expired. Please click <a href="">here</a>
+							via SMS or your SMS-OTP has expired. Please click <a href="#" onclick="newOTPGenerate('${subOrder.code}')"style="color: #C9C923; font-weight: bold;">here</a>
 							to get new OTP to your mobile phone via SMS
 						</span>
 					</div>
