@@ -17,13 +17,19 @@
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
 
-	<!--
-		Example Data POJO
 
-	<bean class="com.hybris.backoffice.data.MyPojo">
-		<property name="id" type="String"/>
-		<property name="flag" type="boolean"/>
+	<bean class="com.hybris.oms.tata.data.MplTimeSlotsData">
+		<property name="timeslotType" type="String"></property>
+		<property name="fromTime" type="int"></property>
+		<property name="toTime" type="int"></property>
 	</bean>
-	-->
+	
+	<bean class="com.hybris.oms.tata.data.MplBUCConfigurationsData">
+		<property name="airDeliveryBuffer" type="int"></property>
+		<property name="surDeliveryBuffer" type="int"></property>
+		<property name="sdCharge" type="double"></property>
+		<property name="edCharge" type="double"></property>
+	</bean>
+	
 
 </beans>

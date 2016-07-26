@@ -46,8 +46,9 @@
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 	</bean>
 	<bean id="filePathProviderService" class="com.hybris.oms.tata.services.FilePathProviderService">
-		<property name="pinSvcReptDwnldPath" value="${tata.oms.serviceability.report.download.path:#{null}}" />
-		
+		<property name="pinSvcReptDwnldPath"
+			value="${tata.oms.serviceability.report.download.path:#{null}}" />
+
 		<!-- for bulk upload -->
 		<property name="pinMstrTmpPath" value="${tata.oms.tpl.upload.tmp.path:#{null}}" />
 		<property name="tplInbndCsvPath" value="${tata.oms.tpl.upload.inbnd.path:#{null}}" />
@@ -59,7 +60,33 @@
 		<property name="landmarkUploadPath" value="${tata.oms.landmark.upload.path:#{null}}" />
 	</bean>
 	<bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
-	
+
 	<bean id="dataUploadService" class="com.hybris.oms.tata.util.DataUploadService"></bean>
-	
+
+	<!-- add by prabhakar for configarable parameters -->
+	<alias name="defaultConfigarableParameterFacade" alias="configarableParameterFacade" />
+	<bean id="defaultConfigarableParameterFacade"
+		class="com.hybris.oms.tata.facade.impl.DefaultConfigarableParameterFacade"></bean>
+
+	<alias name="defaultConfigarableParameterService" alias="configrableParameterService" />
+	<bean id="defaultConfigarableParameterService"
+		class="com.hybris.oms.tata.services.impl.DefaultConfigarableParameterService"></bean>
+
+	<alias name="defaultConfigarableParameterDAO" alias="configarableParameterDAO" />
+	<bean id="defaultConfigarableParameterDAO"
+		class="com.hybris.oms.tata.daos.impl.DefaultConfigarableParameterDAO"></bean>
+
+	<bean id="mplTimeSlotsPopulator"
+		class="com.hybris.oms.tata.populator.MplTimeSlotsModelToDataPopulator" />
+
+	<alias name="defaultMplTimeSlotsConverter" alias="mplTimeSlotsConverter" />
+	<bean id="defaultMplTimeSlotsConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.hybris.oms.tata.data.MplTimeSlotsData" />
+		<property name="populators">
+			<list>
+				<ref bean="mplTimeSlotsPopulator" />
+			</list>
+		</property>
+	</bean>
+
 </beans>

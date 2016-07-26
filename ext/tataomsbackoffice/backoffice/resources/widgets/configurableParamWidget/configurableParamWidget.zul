@@ -8,66 +8,50 @@
 	<style>
 		.popuped{ position: absolute; top: 0%; left: 0%; width: 100%;
 		height: 100%; background-color: black; z-index:1001;
-		-moz-opacity: 0.8; opacity:.80; filter: alpha(opacity=80);
-		padding: 15%;} 
-		.popuped .content{
-		padding: 20%;
-		background-color: white;
-		}
-		.popuped .close{
-		float:right;	
-	    background-color: white;
-	    border:0px;
+		-moz-opacity: 0.8; opacity:0.9; filter: alpha(opacity=80);
+		padding: 15%;} .popuped .content{ padding: 20%;
+		background-color: white; } .popuped .close{ float:right;
+		background-color: white; border:0px;
 
-		}
-		.lheading{
-		float:left;
-		color:black;
-		font-size: 13px;
-		}
-		.headingpopup{
-		padding:10px;
-		float:left;
-		color:black;
-		font-size: 13px;
-		}
+		} .lheading{ float:left; color:black; font-size: 13px; }
+		.headingpopup{ padding:10px; float:left; color:black; font-size:
+		13px; }
 	</style>
 	<grid id="gridForm" style="width:90%;padding-left:10px">
 
 		<rows>
-		    <row>
-			<label class="lheading" value="Delivery Time Lines"/>
+			<row>
+				<label class="lheading" value="Delivery Time Lines" />
 			</row>
 			<row style="border-bottom:none">
 				<label value="AIR Delivery Time Line" hflex="1" />
-				<intbox/>
+				<intbox />
 				<label value="days" />
 			</row>
 
 			<row style="border-bottom:none">
 				<label value="SUR Delivery Time Line" hflex="1" />
-				<intbox/>
-				<label value="days"  />
+				<intbox />
+				<label value="days" />
 			</row>
-			
+
 			<row style="border-bottom:none">
 				<label value="Scheduled delivey Charge" hflex="1" />
-		       <doublebox />
+				<doublebox />
 			</row>
 			<row style="border-bottom:none">
 				<label value="Express delivey Charge" hflex="1" />
-		       <doublebox />
+				<doublebox />
 			</row>
 			<row>
-			<label class="lheading" value="Scheduled Delivery Time Slots"/>
-			
-			<listbox height="100%" hflex="1"
+				<label value="Scheduled Delivery Time Slots" />
+				<listbox id="sdListbox" height="100%" hflex="1"
 					emptyMessage="No result found in the result"
 					style="font-size:10px">
 					<listhead sizable="true">
 						<listheader style="width:40px;">
-							<button tooltiptext="Add new time slot" onClick="sdpopup.setVisible(true)"
-								image="${wr}/images/add.png" />
+							<button tooltiptext="Add new time slot"
+								onClick="sdpopup.setVisible(true)" image="${wr}/images/add.png" />
 						</listheader>
 						<listheader
 							style="text-align:center;font-size:10px" label="From">
@@ -76,85 +60,160 @@
 							style="text-align:center;font-size:10px" label="To">
 						</listheader>
 					</listhead>
-				</listbox>
-			
-			</row>
-			<row style="border-bottom:none">
-				<label class="lheading"  value="Express delivery Time Slots"  />
-				<listbox height="100%" hflex="1"
-					emptyMessage="No result found in the result"
-					style="font-size:10px">
-					<listhead sizable="true">
-						<listheader style="width:40px;">
-							<button tooltiptext="Add new time slot" onClick="edpopup.setVisible(true)"
-								image="${wr}/images/add.png" />
-						</listheader>
-						<listheader
-							style="text-align:center;font-size:10px" label="From">
-						</listheader>
-						<listheader
-							style="text-align:center;font-size:10px" label="To">
-						</listheader>
-					</listhead>
-				</listbox>
-
+					<template name="model">
+						<listitem>
+							<listcell label="${each.timeslotType}"></listcell>
+							<listcell label="${each.fromTime}"></listcell>
+							<listcell label="${each.toTime}"></listcell>
 				
-			</row>
-			<row>
-			<label class="lheading" value="SSHIP Requirement"/>
+						</listitem>
+					</template>
+				</listbox>
+				<button id="saveSdTimeSlots" label="Save" />
+			
 			</row>
 			<row style="border-bottom:none">
-				<label value="No.of days within which customer can confirm product receipt" hflex="1" />
+				<label value="Express delivery Time Slots" />
+				<listbox id="edListbox" height="100%" hflex="1"
+					emptyMessage="No result found in the result"
+					style="font-size:10px">
+					<listhead sizable="true">
+						<listheader style="width:40px;">
+							<button tooltiptext="Add new time slot"
+								onClick="edpopup.setVisible(true)" image="${wr}/images/add.png" />
+						</listheader>
+						<listheader
+							style="text-align:center;font-size:10px" label="From">
+						</listheader>
+						<listheader
+							style="text-align:center;font-size:10px" label="To">
+						</listheader>
+					</listhead>
+						<template name="model">
+						<listitem>
+							<listcell label="${each.timeslotType}"></listcell>
+							<listcell label="${each.fromTime}"></listcell>
+							<listcell label="${each.toTime}"></listcell>						
+						</listitem>
+					</template>
+				</listbox>
+				<button id="saveEdTimeSlots" label="Save" />
+			</row>
+			<row style="border-bottom:none">
+				<label value="Return delivery Time Slots" />
+				<listbox id="rdListbox" height="100%" hflex="1"
+					emptyMessage="No result found in the result"
+					style="font-size:10px">
+					<listhead sizable="true">
+						<listheader style="width:40px;">
+							<button tooltiptext="Add new time slot"
+								onClick="rdpopup.setVisible(true)" image="${wr}/images/add.png" />
+						</listheader>
+						<listheader
+							style="text-align:center;font-size:10px" label="From">
+						</listheader>
+						<listheader
+							style="text-align:center;font-size:10px" label="To">
+						</listheader>
+					</listhead>
+						<template name="model">
+						<listitem>
+							<listcell label="${each.timeslotType}"></listcell>
+							<listcell label="${each.fromTime}"></listcell>
+							<listcell label="${each.toTime}"></listcell>	
+						</listitem>
+					</template>
+				</listbox>
+				<button id="saveRdTimeSlots" label="Save" />
+			</row>
+			<row>
+				<label class="lheading" value="SSHIP Requirement" />
+			</row>
+			<row style="border-bottom:none">
+				<label
+					value="No.of days within which customer can confirm product receipt"
+					hflex="1" />
 				<textbox style="width:30px" hflex="1" />
-			</row>		
+			</row>
 			<row style="border-bottom:none">
 				<cell></cell>
-				<button label="Save"/>
+				<button label="Save" />
 			</row>
 		</rows>
 	</grid>
-	<div class="popuped" id="sdpopup" visible="false" action="show: slideDown;hide: slideUp">
-	   <label  class="headingpopup" value="Scheduled Delivery Time Slot" />
-		<button class="close" image="${wr}/images/close-button.gif" onClick="sdpopup.setVisible(false)" />
+
+
+	<div class="popuped" id="sdpopup" visible="false"
+		action="show: slideDown;hide: slideUp">
+		<label class="headingpopup"
+			value="Scheduled Delivery Time Slot" />
+		<button class="close" image="${wr}/images/close-button.gif"
+			onClick="sdpopup.setVisible(false)" />
 		<div class="content">
-		   <div  style="border:#555 1px solid;padding:20px">
-			<hlayout style="width:80%" >
-				<vlayout style="margin-right:20px">
-					<label value="From Time" />
-					<timebox cols="5" format="short" />
-				</vlayout>
-				<vlayout style="margin-right:30px">
-					<label value="To Time" />
-					<timebox cols="5" format="short" />
-				</vlayout>
-				<vlayout>
-					<label value="" />
-					<button label="Save" />
-				</vlayout>
-			</hlayout>
+			<div style="border:#555 1px solid;padding:20px">
+				<hlayout style="width:80%">
+					<vlayout style="margin-right:20px">
+						<label value="From Time" />
+						<timebox cols="5" format="short" />
+					</vlayout>
+					<vlayout style="margin-right:30px">
+						<label value="To Time" />
+						<timebox cols="5" format="short" />
+					</vlayout>
+					<vlayout>
+						<label value="" />
+						<button label="Save" />
+					</vlayout>
+				</hlayout>
 			</div>
 		</div>
 	</div>
-	 <div class="popuped" id="edpopup" visible="false" action="show: slideDown;hide: slideUp">
-	   <label class="headingpopup" value="Express Delivery Time Slot" />
-		<button class="close" image="${wr}/images/close-button.gif" onClick="edpopup.setVisible(false)" />
+	<div class="popuped" id="edpopup" visible="false"
+		action="show: slideDown;hide: slideUp">
+		<label class="headingpopup" value="Express Delivery Time Slots" />
+		<button class="close" image="${wr}/images/close-button.gif"
+			onClick="edpopup.setVisible(false)" />
 		<div class="content">
-		   <div  style="border:#555 1px solid;padding:20px">
-			<hlayout style="width:80%" >
-				<vlayout style="margin-right:20px">
-					<label value="From Time" />
-					<timebox />
-				</vlayout>
-				<vlayout style="margin-right:30px">
-					<label value="To Time" />
-					<timebox />
-				</vlayout>
-				<vlayout>
-					<label value="" />
-					<button label="Save" />
-				</vlayout>
-			</hlayout>
+			<div style="border:#555 1px solid;padding:20px">
+				<hlayout style="width:80%">
+					<vlayout style="margin-right:20px">
+						<label value="From Time" />
+						<timebox cols="5" format="short" />
+					</vlayout>
+					<vlayout style="margin-right:30px">
+						<label value="To Time" />
+						<timebox cols="5" format="short" />
+					</vlayout>
+					<vlayout>
+						<label value="" />
+						<button label="Save" />
+					</vlayout>
+				</hlayout>
 			</div>
 		</div>
-	</div> 
+	</div>
+	<div class="popuped" id="rdpopup" visible="false"
+		action="show: slideDown;hide: slideUp">
+		<label class="headingpopup" value="Return Delivery Time Slots" />
+		<button class="close" image="${wr}/images/close-button.gif"
+			onClick="rdpopup.setVisible(false)" />
+		<div class="content">
+			<div style="border:#555 1px solid;padding:20px">
+				<hlayout style="width:80%">
+					<vlayout style="margin-right:20px">
+						<label value="From Time" />
+						<timebox cols="5" format="short" />
+					</vlayout>
+					<vlayout style="margin-right:30px">
+						<label value="To Time" />
+						<timebox cols="5" format="short" />
+					</vlayout>
+					<vlayout>
+						<label value="" />
+						<button label="Save" />
+					</vlayout>
+				</hlayout>
+			</div>
+		</div>
+	</div>
 </widget>
