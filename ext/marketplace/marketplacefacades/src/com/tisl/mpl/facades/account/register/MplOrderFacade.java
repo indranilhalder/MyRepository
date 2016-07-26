@@ -167,11 +167,4 @@ public interface MplOrderFacade
 	OrderModel getOrder(String orderCode);
 
 
-	/**
-	 *
-	 * @param status
-	 * @return
-	 */
-	public boolean changeShippingAddressStatus(OrderData orderData);
-
 }
