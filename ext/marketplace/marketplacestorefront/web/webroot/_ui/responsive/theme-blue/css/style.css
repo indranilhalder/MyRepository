@@ -29143,6 +29143,7 @@ p.home-brands-you-love-main-image-heading {
     color: #a9143c;
 	    font-size: 14px;
     text-transform: uppercase;
+    font-weight:bold;
 }
 p.home-brands-you-love-main-image-desc {
     text-align: center;
@@ -29155,7 +29156,7 @@ p.home-brands-you-love-main-image-desc {
 }
 .visit-store-wrapper{
 position: absolute;
-bottom:-65px;
+bottom:-60px;
 text-align: center;
 width:100%;
 }
@@ -29180,11 +29181,13 @@ width:100%;
     letter-spacing: 1px;
     margin:0px auto;
     display: block;
-    color:#a7183e;
-        border: 1px solid #a7183e;
+      color: #4a4a4a;
+    border: 1px solid #4a4a4a;
 }
 .home-brands-you-love-main-image-wrapper .visit-store:hover{
-	color:#a9143c;
+	color:#fff;
+	background:#a7183e;
+	border: 1px solid #a7183e;
 }
 .home-brands-you-love-wrapper h1{
 	text-align: center;
@@ -31671,15 +31674,14 @@ label.applyBrandFilters {
 
 /*New homepage changes starts*/
 body.page-homepage .feature-collections h1 {
-       padding: 50px 0 27px;
-    text-transform: uppercase;
+       padding: 50px 0 30px;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 28px;
 }
+
 body.page-homepage .trending h1 > span{
-	 text-transform: uppercase;
     font-weight: bold;
-    font-size: 22px;
+    font-size: 28px;
 }
 #productYouCare .home-product-you-care-carousel-img:after {
     width: 100%;
@@ -31694,7 +31696,7 @@ body.page-homepage .trending h1 > span{
     background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 25%,rgba(0,0,0,0.85) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#bf000000',GradientType=0 );
 }
-.timeout-slider .carousel .item a:after , .timeout-slider .carousel .item .image:after {
+.timeout-slider .carousel .item > a:after , .timeout-slider .carousel .item .image:after {
     width: 100%;
     height: 100%;
     content: "";
@@ -31735,7 +31737,7 @@ body.page-homepage .trending h1 > span{
     margin: 0 4%;
 }
 #productYouCare .home-product-you-care-carousel-img {
-    margin: 0 15px;
+    margin: 10px 15px 0;
     position: relative;
 }
 .home-product-you-care-carousel {
@@ -31782,6 +31784,7 @@ body.page-homepage .trending h1 > span{
     font-weight: bold;
     line-height: 30px;
     text-align: center;
+    text-transform:uppercase;
 }
 .qued-content p {
     font-size: 14px;
@@ -31831,8 +31834,9 @@ background-color: transparent;
     padding: 0 0 60px;
 }
 #newAndExclusive h1 {
-    font-size: 22px;
+    font-size: 28px;
     padding: 0 0 40px;
+        font-weight: bold;
 }
 #newAndExclusive #new_exclusive {
     padding: 0 40px;
@@ -31860,7 +31864,7 @@ background-color: transparent;
 }
 #bestPicks .short-info h4 {
     color: #a7183e;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
     letter-spacing: 1px;
 }
@@ -31868,7 +31872,7 @@ background-color: transparent;
     color: #000;
 }
 #showcase.feature-collections h1 {
-    padding: 50px 0 20px;
+    padding: 50px 0 30px;
 }
 #showcase .mobile {
     display: none;
