@@ -331,7 +331,8 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		Assert.notNull(target, MarketplacecommerceservicesConstants.TARGETNOTNULL);
 
 		List<AddressData> addressDataList = new ArrayList<AddressData>();
-		Collection<AddressModel> addressModelListsource = source.getDeliveryAddresses();
+	
+		Collection<AddressModel> addressModelListsource = 	source.getUser().getAddresses();
 		if (addressModelListsource != null)
 		{
 			for (AddressModel addressModel : addressModelListsource)
