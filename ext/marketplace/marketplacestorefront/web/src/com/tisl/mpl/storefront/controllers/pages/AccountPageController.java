@@ -7030,8 +7030,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				addressData.setRegion(getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso()));
 			}
-
-			LOG.debug("Save TemproryAddressModel and OTP genarate");
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Save TemproryAddressModel and OTP genarate");
+			}
 			flag = mplchangeDeliveryAddressFacade.saveAsTemproryAddressForCustomer(orderCode, addressData);
 
 			if (flag)
@@ -7041,7 +7043,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		else
 		{
-			LOG.debug("AddrressData is incorent then send erorr Msg");
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("AddrressData is incorent then send erorr Msg");
+			}
 			validatetionCheckMsg = errorMsg;
 		}
 
@@ -7059,8 +7064,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final String customerId = customerData.getUid();
 		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
 		{
-			LOG.debug("OTP Validation And Oms Calling status");
-			validateOTPMesg = mplchangeDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber, orderId);
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("OTP Validation And Oms Calling status");
+				validateOTPMesg = mplchangeDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber, orderId);
+
+			}
 		}
 		return validateOTPMesg;
 
@@ -7071,7 +7080,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
 	{
 		boolean flag;
-		LOG.debug("Generate new OTP For changing Shapping Address ");
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Generate new OTP For changing Shapping Address ");
+		}
 		flag = mplchangeDeliveryAddressFacade.generateNewOTP(orderCode);
 		return flag;
 	}
