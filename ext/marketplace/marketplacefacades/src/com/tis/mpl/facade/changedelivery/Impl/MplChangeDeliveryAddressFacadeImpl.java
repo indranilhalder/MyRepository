@@ -51,8 +51,7 @@ import com.tisl.mpl.service.TicketCreationCRMservice;
  */
 public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddressFacade
 {
-	@Autowired
-	private MplChangeDeliveryAddressClientService mplChangeDeliveryAddressClientService;
+
 	@Autowired
 	private MplChangeDeliveryAddressService mplChangeDeliveryAddressService;
 	@Autowired
@@ -78,7 +77,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tis.mpl.facade.changedelivery.ChangeDeliveryAddressFacade#changeDeliveryRequestToOMS(java.lang.String,
 	 * de.hybris.platform.core.model.user.AddressModel)
 	 */
