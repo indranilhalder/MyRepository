@@ -129,7 +129,7 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 		TemproryAddressModel tempAddress = modelService
 				.create(TemproryAddressModel.class);
 		try {
-			tempAddress = changeDeliveryAddressDao.geTemproryAddressModel(orderId);
+			tempAddress = changeDeliveryAddressDao.getTemporaryAddressModel(orderId);
 		} catch (ModelNotFoundException e) {
 			LOG.error("Model Not Found Exception " + e.getMessage());
 			throw new ModelNotFoundException(e);
