@@ -50,6 +50,7 @@ import de.hybris.platform.cockpit.widgets.WidgetConfig;
 import de.hybris.platform.cockpit.widgets.WidgetContainer;
 import de.hybris.platform.cockpit.widgets.impl.DefaultWidgetContainer;
 import de.hybris.platform.cockpit.widgets.impl.DefaultWidgetFactory;
+import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
