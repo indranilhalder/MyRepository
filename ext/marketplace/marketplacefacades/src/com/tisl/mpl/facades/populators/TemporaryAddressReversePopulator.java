@@ -29,7 +29,6 @@ public class TemporaryAddressReversePopulator implements Populator<AddressData, 
 	public void populate(final AddressData addressData, final TemproryAddressModel temproryAddressModel)
 			throws ConversionException
 	{
-
 		Assert.notNull(addressData, "Parameter addressData cannot be null.");
 		Assert.notNull(temproryAddressModel, "Parameter addressModel cannot be null.");
 
