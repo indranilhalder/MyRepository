@@ -515,7 +515,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 							}
 							if (null != pincodeData.getLandMarks()) {
 								landMarkListBox.setDisabled(false);
-								landMarkTextBox.setDisabled(true);
 								createLandMarkListBox(widget, landMarkHbox,
 										landMarkListBox,
 										pincodeData.getLandMarks());
