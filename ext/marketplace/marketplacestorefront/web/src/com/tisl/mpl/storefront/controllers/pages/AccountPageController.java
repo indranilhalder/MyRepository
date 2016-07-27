@@ -7037,7 +7037,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				LOG.debug("Save TemproryAddressModel and OTP genarate");
 			}
-			flag = mplchangeDeliveryAddressFacade.saveAsTemproryAddressForCustomer(orderCode, addressData);
+			flag = mplchangeDeliveryAddressFacade.saveAsTemporaryAddressForCustomer(orderCode, addressData);
 
 			if (flag)
 			{
