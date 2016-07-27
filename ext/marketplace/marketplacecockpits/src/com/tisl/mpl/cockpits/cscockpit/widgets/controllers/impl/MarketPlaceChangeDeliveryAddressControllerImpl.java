@@ -101,9 +101,9 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 	 * @return boolean
 	 */
 	@Override
-	public boolean changeDeliveryAddressCallToOMS(String orderId,
+	public String changeDeliveryAddressCallToOMS(String orderId,
 			AddressModel newDeliveryAddress) throws EtailNonBusinessExceptions {
-		boolean omsResponce = false;
+		String omsResponce = null;
 		try {
 			omsResponce = mplChangeDeliveryAddressFacade
 					.changeDeliveryRequestCallToOMS(orderId, newDeliveryAddress);
@@ -129,7 +129,7 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 		TemproryAddressModel tempAddress = modelService
 				.create(TemproryAddressModel.class);
 		try {
-			tempAddress = changeDeliveryAddressDao.geTemproryAddressModel(orderId);
+			tempAddress = changeDeliveryAddressDao.getTemporaryAddressModel(orderId);
 		} catch (ModelNotFoundException e) {
 			LOG.error("Model Not Found Exception " + e.getMessage());
 			throw new ModelNotFoundException(e);

@@ -6,6 +6,12 @@ $(document).ready(function(){
 	//	alert("3");
 		loadPincodeData();
 	}
+	
+	$(".address_states").change(function(){
+		if($(this).attr("readonly") == "readonly"){
+			$(".address_states").val($(this).data("stateValue"))
+		}
+	});
 });
 
 /*$(".address_postcode").focus();
@@ -31,23 +37,28 @@ function loadPincodeData() {
 			if(response == "" || response == " " || response == "NULL") {
 				console.log("Its Here");
 				$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
-				$(".address_landmarkOtherDiv").css("margin-left","10px");
+				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
+				$(".row .address_landmarkOtherDiv label").css("margin-top","15px");
 				$('.otherOption').attr("value", "");
 				$('.otherOption').val("");
 				$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
 				$('.address_landmarks').append($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value","una"));
+				$(".address_townCity").prop("readonly", false);
+				$(".address_states").removeAttr("readonly").removeData("stateValue");
+				
 				//$(".optionsLandmark label").hide();
 			} else {
     			//console.log(response.cityName);
 				$('.address_landmarks .unableto').remove();
 				$(".address_landmarks").removeAttr("disabled").css("padding-left","5px");
-				$(".address_landmarkOtherDiv").css("margin-left","10px");
+				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
+				$(".row .address_landmarkOtherDiv label").css("margin-top","15px");
     			$(".optionsLandmark, .optionsLandmark label, .optionsLandmark input,  .optionsLandmark select").show();
     			$(".address_landmarkOtherDiv").hide();
     			$(".address_landmarkOther").attr("value", "");
     			$(".address_landmarkOther").val("");
     			$('.otherOption').attr("value", "Other");
-        		$(".address_townCity").val(response['cityName']);
+        		$(".address_townCity").val(response['cityName']).prop("readonly", true);
         		$('.address_landmarks').empty();
         		 $('.address_landmarks').append($("<option></option>").attr("selected","selected").text("Select a Landmark").attr("value", "sel"));
         		//then fill it with data from json post
@@ -57,7 +68,7 @@ function loadPincodeData() {
         		    });
         		  $('.address_landmarks').append($("<option class='otherOption'></option>").attr("value","Other").text("Other"));
         		  
-        		  $(".address_states").val(response.state.name)
+        		  $(".address_states").val(response.state.name).attr("readonly", "true").data("stateValue",response.state.name);
 				/*$("#state").val(response['state']);*/
 			}
 		},
@@ -77,7 +88,6 @@ $('.address_landmarks').attr("onchange","changeFunction(this.value)");
 $(".address_landmarkOther, .address_landmarkOtherDiv label").hide();
 
 $("#addNewAddress").click(function(e){
-	optionsLandmark1(e);
 	optionsLandmark(e);
 });
 
@@ -99,9 +109,12 @@ function changeFunction(value) {
 
 function optionsLandmark(e) {
 	$(".errland1").hide();
+	//alert($(".address_landmarks").val());
 	if($(".address_landmarks").val().length <= "3" && $(".address_landmarks").val().length >= "1") {
 		$(".errland1").show().css("color", "#ff1c47").text("Please Select Landmark");
 		e.preventDefault();
+	} else if($(".address_landmarks").val() == "") {
+		optionsLandmark1(e);
 	}
 }
 

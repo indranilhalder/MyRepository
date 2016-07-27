@@ -85,13 +85,13 @@ public class MplChangeDeliveryAddressDaoImpl implements MplChangeDeliveryAddress
 
 
 	/***
-	 * OrderId Based On We will get TemproryAddressModel
+	 * OrderId Based On We will get Temporary AddressModel
 	 *
 	 *
 	 * @return TemproryAddressModel
 	 */
 	@Override
-	public TemproryAddressModel geTemproryAddressModel(final String orderId)
+	public TemproryAddressModel getTemporaryAddressModel(final String orderId)
 	{
 		TemproryAddressModel tempAddress = new TemproryAddressModel();
 		try

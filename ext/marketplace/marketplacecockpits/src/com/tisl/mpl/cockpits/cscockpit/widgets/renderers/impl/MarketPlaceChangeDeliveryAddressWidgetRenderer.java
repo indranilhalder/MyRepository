@@ -247,8 +247,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				if (null != deliveryAddress.getDistrict()) {
 					stateFieldTextBox.setValue(deliveryAddress.getDistrict()
 							.toString());
-				}
-				else if (null != deliveryAddress.getState()) {
+				}else if (null != deliveryAddress.getState()) {
 					stateFieldTextBox.setValue(deliveryAddress.getState()
 							.toString());
 				}
@@ -268,24 +267,18 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				}
 				cityHbox.setClass("hbox");
 				content.appendChild(cityHbox);
-
 				// landMark
 				Hbox landMarkHbox = createHbox(widget, "landMark", false, true);
-
 				final Textbox landMarkTextBox = new Textbox();
 				landMarkTextBox.setMaxlength(MAX_LENGTH);
 				if (null != deliveryAddress.getLandmark()) {
 					landMarkTextBox.setValue(deliveryAddress.getLandmark());
-				} else {
-					landMarkTextBox.setDisabled(true);
 				}
 				landMarkHbox.appendChild(landMarkTextBox);
 				content.appendChild(landMarkHbox);
 				landMarkHbox.setClass("hbox");
 				content.appendChild(landMarkHbox);
-
 				final Listbox landMarkListbox = new Listbox();
-
 				Collection<LandMarksData> landMarks = pincodeData
 						.getLandMarks();
 				createLandMarkListBox(widget, landMarkHbox, landMarkListbox,
@@ -295,7 +288,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 						Events.ON_SELECT,
 						createLandMarkChangeEventListener(widget,
 								landMarkListbox, landMarkTextBox));
-
 				final Hbox mobileNumberHbox = createHbox(widget,
 						"mobileNumber", false, true);
 				final Textbox mobileNumberFieldTextBox = createTextbox(mobileNumberHbox);
@@ -433,7 +425,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		listItem.setValue(MarketplaceCockpitsConstants.NONE_OF_ABOVE);
 		listItem.setParent(landMarkListbox);
 		landMarkListbox.addItemToSelection(listItem);
-		landMarkListbox.setSelectedIndex(landMarkListbox.getItemCount()-1);
+		landMarkListbox.setSelectedIndex(landMarkListbox.getItemCount() - 1);
 		landMarkHbox.appendChild(landMarkListbox);
 
 		return landMarkListbox;
@@ -523,7 +515,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 							}
 							if (null != pincodeData.getLandMarks()) {
 								landMarkListBox.setDisabled(false);
-								landMarkTextBox.setDisabled(true);
 								createLandMarkListBox(widget, landMarkHbox,
 										landMarkListBox,
 										pincodeData.getLandMarks());
@@ -582,7 +573,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 			final Textbox mobileNumberFieldTextBox, Div content)
 			throws InterruptedException, ParseException, InvalidKeyException,
 			NoSuchAlgorithmException {
-         LOG.info("Update button clicked ");
+		LOG.info("Update button clicked ");
 		final String changedFirstName = firstNameFieldTextBox.getValue();
 		final String changedLastName = lastNameFieldTextBox.getValue();
 		final String changedEmail = emailFieldTextBox.getValue();
@@ -607,6 +598,10 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 
 				if (item.isSelected()) {
 					changedLandMark = (String) item.getValue();
+					if (changedLandMark
+							.equalsIgnoreCase(MarketplaceCockpitsConstants.NONE_OF_ABOVE)) {
+						changedLandMark = null;
+					}
 				}
 			}
 		}
@@ -644,7 +639,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 		}
 		if (changedLine1 != null && !changedLine1.isEmpty()) {
 			tempororyAddress.setLine1(changedLine1.toString());
-			
+
 		} else {
 			tempororyAddress
 					.setLine1(MarketplacecommerceservicesConstants.EMPTY);
@@ -756,6 +751,7 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				handleOTPPopupCloseEvent(tempororyAddress, parentWidget,
 						parentWindow, widgetContainer, popup);
 			}
+
 			private void handleOTPPopupCloseEvent(
 					TemproryAddressModel tempororyAddress,
 					Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> parentWidget,

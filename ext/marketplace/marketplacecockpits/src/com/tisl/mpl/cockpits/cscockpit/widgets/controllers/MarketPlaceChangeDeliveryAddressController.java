@@ -42,7 +42,7 @@ public interface MarketPlaceChangeDeliveryAddressController {
 	 * @param newDeliveryAddress
 	 * @return boolean
 	 */
-	public abstract boolean changeDeliveryAddressCallToOMS(String code,
+	public abstract String changeDeliveryAddressCallToOMS(String code,
 			AddressModel newDeliveryAddress);
 
 	/**

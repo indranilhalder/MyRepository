@@ -22,10 +22,11 @@ import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressDto;
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
 import com.tis.mpl.facade.changedelivery.MplChangeDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.DeliveryAddressEnum;
@@ -41,10 +42,7 @@ import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplChangeDeliveryAddressService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
-import com.tisl.mpl.service.MplChangeDeliveryAddressClientService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
-import com.tisl.mpl.xml.pojo.MplChangeDeliveryAddressRequest;
-import com.tisl.mpl.xml.pojo.MplChangeDeliveryAddressResponce;
 
 
 /**
@@ -53,8 +51,7 @@ import com.tisl.mpl.xml.pojo.MplChangeDeliveryAddressResponce;
  */
 public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddressFacade
 {
-	@Autowired
-	private MplChangeDeliveryAddressClientService mplChangeDeliveryAddressClientService;
+
 	@Autowired
 	private MplChangeDeliveryAddressService mplChangeDeliveryAddressService;
 	@Autowired
@@ -67,6 +64,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	@Autowired
 	private CustomOmsOrderService customOmsOrderService;
 
+
 	@Resource(name = "tempAddressReverseConverter")
 	private Converter<AddressData, TemproryAddressModel> tempAddressReverseConverter;
 
@@ -75,7 +73,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	@Autowired
 	OrderModelDao orderModelDao;
 
-	private static final Logger LOG = LoggerFactory.getLogger(MplChangeDeliveryAddressFacadeImpl.class);
+	private static final Logger LOG = Logger.getLogger(MplChangeDeliveryAddressFacadeImpl.class);
 
 	/*
 	 * (non-Javadoc)
@@ -85,11 +83,11 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	 */
 
 	@Override
-	public boolean changeDeliveryRequestCallToOMS(final String orderId, final AddressModel newDeliveryAddress)
+	public String changeDeliveryRequestCallToOMS(final String orderId, final AddressModel newDeliveryAddress)
 	{
-		final MplChangeDeliveryAddressRequest requestData = new MplChangeDeliveryAddressRequest();
-		MplChangeDeliveryAddressResponce omsResponse = new MplChangeDeliveryAddressResponce();
-		boolean addressChangable = false;
+		LOG.info("Inside  changeDeliveryRequestCallToOMS Method");
+		  ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
+		ChangeDeliveryAddressResponseDto omsResponse = new ChangeDeliveryAddressResponseDto();
 		if (null != orderId)
 		{
 			requestData.setOrderID(orderId);
@@ -147,21 +145,21 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		}
 		try
 		{
-			omsResponse = mplChangeDeliveryAddressClientService.changeDeliveryRequestCallToOMS(requestData);
+			omsResponse = customOmsOrderService.changeDeliveryRequestCallToOMS(requestData);
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception while calling to OMS" + e.getCause());
 		}
-		if (null != omsResponse && null != omsResponse.getResponse() && omsResponse.getResponse().equalsIgnoreCase("SUCCESS"))
+		if (null != omsResponse)
 		{
-			addressChangable = true;
+			return omsResponse.getResponse();
 		}
 		else
 		{
-			addressChangable = false;
+			LOG.error(" OMS responce is null for change change delivery address request ");
 		}
-		return addressChangable;
+		return null;
 	}
 
 	@Override
@@ -293,21 +291,21 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 
 	@Override
-	public boolean saveAsTemproryAddressForCustomer(final String orderCode, final AddressData addressData)
+	public boolean saveAsTemporaryAddressForCustomer(String orderCode,AddressData addressData)
 	{
 		boolean flag = false;
 		try
 		{
 			if (addressData != null)
 			{
-				mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
-				TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
-				OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-				CustomerModel customer = (CustomerModel) orderModel.getUser();
-				temproryAddressModel.setEmail(customer.getOriginalUid());
-				String customerId = customer.getUid();
+				mplChangeDeliveryAddressService.removeTemporaryAddress(orderCode);
+				 TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
+				 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+				 CustomerModel customer = (CustomerModel) orderModel.getUser();
+				   temproryAddressModel.setEmail(customer.getOriginalUid());
+				 String customerId = customer.getUid();
 
-				flag = mplChangeDeliveryAddressService.saveTemproryAddress(orderCode, temproryAddressModel);
+				flag = mplChangeDeliveryAddressService.saveTemporaryAddress(orderCode, temproryAddressModel);
 				if (flag)
 				{
 					String mobileNumber = null;
@@ -363,12 +361,12 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public String validateOTP(final String customerID, final String enteredOTPNumber, final String orderCode)
+	public String validateOTP(String customerID,String enteredOTPNumber,String orderCode)
 	{
 		String valditionMsg = null;
 		Boolean otpValidate;
 		boolean flag = false;
-		final OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.COD,
+		 OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.COD,
 				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
 
 		otpValidate = otpResponse.getOTPValid();
@@ -376,39 +374,52 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		//If OTP Valid then call to OMS for Pincode ServiceableCheck
 		if (otpValidate.booleanValue())
 		{
-			TemproryAddressModel addressModel = mplChangeDeliveryAddressService.geTemproryAddressModel(orderCode);
+			 TemproryAddressModel addressModel = mplChangeDeliveryAddressService.getTemporaryAddressModel(orderCode);
 			LOG.debug("pincode serviceable Checking::MplChangeDeliveryAddressFacadeImpl");
 
 			try
 			{
-				flag = changeDeliveryRequestCallToOMS(orderCode, addressModel);
+				valditionMsg = changeDeliveryRequestCallToOMS(orderCode, addressModel);
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
-			}
-			if (flag)
-			{
-				//if Serviceable Pincode then Save in Order and remove to temporaryAddressModel
-				LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
-				flag = mplChangeDeliveryAddressService.saveDeliveryAddress(orderCode);
-				final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-				LOG.debug("Change Delivery Address updated into commerce then Call to CRM");
 
-				try
+			}
+			if (valditionMsg != null)
+			{
+
+
+				if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.STATUS_SUCESS))
 				{
-					createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
+					//if Serviceable Pincode then Save in Order and remove to temporaryAddressModel
+					LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
+					flag = mplChangeDeliveryAddressService.saveDeliveryAddress(orderCode);
+					final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+					LOG.debug("Change Delivery Address updated into commerce then Call to CRM");
+
+					try
+					{
+						if (flag)
+						{
+							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
+						valditionMsg = DeliveryAddressEnum.SUCCESS.toString();
+					}
 				}
-				catch (Exception e)
+				else
 				{
-					LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
-					valditionMsg = "success";
+					mplChangeDeliveryAddressService.removeTemporaryAddress(orderCode);
+					valditionMsg = DeliveryAddressEnum.PINCODENOTSERVICEABLE.toString();
 				}
 			}
 			else
 			{
-				mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
-				valditionMsg = DeliveryAddressEnum.PINCODENOTSERVICEABLE.toString();
+				valditionMsg = DeliveryAddressEnum.ERROROCCURREDPLEASETRYAFTERSOMETIME.toString();
 			}
 		}
 		else
@@ -419,34 +430,35 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	}
 
 	@Override
-	public boolean generateNewOTP(String orderCode)
+	public boolean generateNewOTP(final String orderCode)
 	{
 		boolean falg = false;
-		OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-		CustomerModel customer = (CustomerModel) orderModel.getUser();
+		 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+		 CustomerModel customer = (CustomerModel) orderModel.getUser();
 
 		try
 		{
 			generateOTP(customer.getUid(), orderModel.getDeliveryAddress().getPhone1());
 			falg = true;
 		}
-		catch (InvalidKeyException excption)
+		catch (final InvalidKeyException excption)
 		{
 			LOG.error(excption.getMessage());
 		}
-		catch (NoSuchAlgorithmException excption)
+		catch (final NoSuchAlgorithmException excption)
 		{
 			LOG.error(excption.getMessage());
 		}
 		return falg;
 	}
-   @Override
-	public String getPartialEncryptValue(String encryptSymbol, int encryptLength, String source)
+
+	@Override
+	public String getPartialEncryptValue(String encryptSymbol,int encryptLength,String source)
 	{
 		String result = "";
 		if (StringUtils.isNotEmpty(source) && source.length() >= encryptLength)
 		{
-			char charValue[] = source.toCharArray();
+			 char charValue[] = source.toCharArray();
 			for (int count = 0; count < charValue.length; count++)
 			{
 				if (count <= encryptLength)
@@ -464,7 +476,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		{
 			if (LOG.isInfoEnabled())
 			{
-				LOG.info("Unable to ecrypt the value[{}] : Reason :encrypt length value greater than of source value",source);
+				LOG.info("Unable to ecrypt the value[{}] : Reason :encrypt length value greater than of source value");
 			}
 		}
 		return result;
