@@ -679,7 +679,8 @@ h2 {
         position: relative;		
         -webkit-transition: margin 0.3s;		
         -moz-transition: margin 0.3s;		
-        transition: margin 0.3s		
+        transition: margin 0.3s;
+        margin-bottom: 20px;	
     }
   header .banner {
     position: relative;
@@ -1811,7 +1812,7 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
            @media (min-width: 791px) {
     header .content .search form {
       height: 50px;
-      margin: 10px 30px 0px 0;
+      margin: 10px 20px 0px 0;
       position: relative;
       clear: both; }
     header .content .bottom.active .search form {
@@ -17114,7 +17115,7 @@ ul.helpmeshop-list{
 
 
 .home-brands-you-love-desc .left p, .home-brands-you-love-desc .right p {
-   font-size: 12px;
+   font-size: 14px;
     font-weight: bold;
     text-align: center;
 }
@@ -29143,6 +29144,7 @@ p.home-brands-you-love-main-image-heading {
     color: #a9143c;
 	    font-size: 14px;
     text-transform: uppercase;
+    font-weight:bold;
 }
 p.home-brands-you-love-main-image-desc {
     text-align: center;
@@ -29155,7 +29157,7 @@ p.home-brands-you-love-main-image-desc {
 }
 .visit-store-wrapper{
 position: absolute;
-bottom:-65px;
+bottom:-60px;
 text-align: center;
 width:100%;
 }
@@ -29180,11 +29182,13 @@ width:100%;
     letter-spacing: 1px;
     margin:0px auto;
     display: block;
-    color:#a7183e;
-        border: 1px solid #a7183e;
+      color: #4a4a4a;
+    border: 1px solid #4a4a4a;
 }
 .home-brands-you-love-main-image-wrapper .visit-store:hover{
-	color:#a9143c;
+	color:#fff;
+	background:#a7183e;
+	border: 1px solid #a7183e;
 }
 .home-brands-you-love-wrapper h1{
 	text-align: center;
@@ -29512,16 +29516,16 @@ color:#000;
     color: #fff;
     text-transform: uppercase;
     text-align: center;
-    font-size: 14px;
-    background: #000;
+    font-size: 16px;
+    background: #a7183e;
     font-weight: 500;
     letter-spacing: 0;
     padding: 25px;
     margin: 50px 0 0px;
 }
-.buy-banner p span {
+/* .buy-banner p span {
     color: #ecc76f;
-}
+} */
 /*Tata cliq Stay Queu css starts*/
 .qued {
     background-color: #e4E4E4;
@@ -31671,15 +31675,14 @@ label.applyBrandFilters {
 
 /*New homepage changes starts*/
 body.page-homepage .feature-collections h1 {
-       padding: 50px 0 27px;
-    text-transform: uppercase;
+       padding: 50px 0 30px;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 28px;
 }
+
 body.page-homepage .trending h1 > span{
-	 text-transform: uppercase;
     font-weight: bold;
-    font-size: 22px;
+    font-size: 28px;
 }
 #productYouCare .home-product-you-care-carousel-img:after {
     width: 100%;
@@ -31694,7 +31697,7 @@ body.page-homepage .trending h1 > span{
     background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 25%,rgba(0,0,0,0.85) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#bf000000',GradientType=0 );
 }
-.timeout-slider .carousel .item > a:after , .timeout-slider .carousel .item .image:after {
+/* .timeout-slider .carousel .item > a:after , .timeout-slider .carousel .item .image:after {
     width: 100%;
     height: 100%;
     content: "";
@@ -31706,11 +31709,11 @@ body.page-homepage .trending h1 > span{
     background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,0.85) 100%);
     background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,0.85) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#bf000000',GradientType=0 );
-}
+} 
 #rotatingImageTimeout .hero > ul > li > a:after{
 	background:none;
 	border-left:none;
-} 
+} */
 .owl-prev::after,
 .owl-next::after {
     font-family:"FontAwesome";
@@ -31735,7 +31738,7 @@ body.page-homepage .trending h1 > span{
     margin: 0 4%;
 }
 #productYouCare .home-product-you-care-carousel-img {
-    margin: 0 15px;
+    margin: 10px 15px 0;
     position: relative;
 }
 .home-product-you-care-carousel {
@@ -31782,6 +31785,7 @@ body.page-homepage .trending h1 > span{
     font-weight: bold;
     line-height: 30px;
     text-align: center;
+    text-transform:uppercase;
 }
 .qued-content p {
     font-size: 14px;
@@ -31819,6 +31823,7 @@ body.page-homepage .trending h1 > span{
 }
 body.page-homepage .trending .button{
 border: 1px solid #a9143c;
+font-weight:bold;
 }
 body.page-homepage .trending .button:hover{
 background-color: transparent;
@@ -31831,8 +31836,9 @@ background-color: transparent;
     padding: 0 0 60px;
 }
 #newAndExclusive h1 {
-    font-size: 22px;
+    font-size: 28px;
     padding: 0 0 40px;
+        font-weight: bold;
 }
 #newAndExclusive #new_exclusive {
     padding: 0 40px;
@@ -31855,12 +31861,11 @@ background-color: transparent;
     font-weight: normal;
 }
 #newAndExclusive .New_Exclusive_price {
-    font-size: 12px;
     font-weight: bold;
 }
 #bestPicks .short-info h4 {
     color: #a7183e;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
     letter-spacing: 1px;
 }
@@ -31868,7 +31873,7 @@ background-color: transparent;
     color: #000;
 }
 #showcase.feature-collections h1 {
-    padding: 50px 0 20px;
+    padding: 50px 0 30px;
 }
 #showcase .mobile {
     display: none;
@@ -31889,7 +31894,7 @@ background-color: transparent;
     padding: 0 15% 0 0;
 }
 .showcase-center h3 {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: normal;
     letter-spacing: 1px;
     line-height: 15px;
@@ -32400,6 +32405,13 @@ body.page-homepage .feature-collections h1, body.page-homepage .trending h1>span
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     border-left: 1px solid #ccc;
+}
+body.page-homepage .showcase .desc-section h1 {
+    font-size: 22px;
+    line-height: 30px;
+}
+footer .footer-text p {
+    margin: 0 0 10px;
 }
 /*New homepage changes ends*/
 
@@ -41029,7 +41041,8 @@ bottom:35px;
 	width:10px;
 	height:10px;
 	margin:5px 7px;
-	background:#fff;
+	/* background:#fff; */
+	border: 2px solid #fff;
 	display:block;
 	-webkit-backface-visibility:visible;
 	-webkit-transition:opacity 200ms ease;
@@ -41044,6 +41057,7 @@ bottom:35px;
 }
 .owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span {
 	opacity:1;
+	background: #fff;
 }
 .owl-prev:after{ left: 13px;}
 .owl-next:after {    left: 0;    right: 13px;}
