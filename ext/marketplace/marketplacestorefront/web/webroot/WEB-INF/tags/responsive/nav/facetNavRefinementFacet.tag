@@ -506,7 +506,7 @@ function navigateToPage(queryString,textString)
 				
 				</c:when>
 				<c:otherwise>
-					<a href="#" class="js-more-facet-values-link more" >${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
+					<a href="#" class="js-more-facet-values-link more" >+&nbsp;${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" text="more" /></a>
 				</c:otherwise>
 				</c:choose>
 				
