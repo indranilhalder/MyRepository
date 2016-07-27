@@ -3,8 +3,9 @@
  */
 package com.hybris.oms.tata.populator;
 
-import com.hybris.commons.conversion.ConversionException;
-import com.hybris.commons.conversion.Populator;
+import de.hybris.platform.converters.Populator;
+import de.hybris.platform.servicelayer.dto.converter.ConversionException;
+
 import com.hybris.oms.tata.data.MplBUCConfigurationsData;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 
@@ -18,33 +19,22 @@ import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 public class MplBUCConfigurationsDataToModelReversePopulator implements
 		Populator<MplBUCConfigurationsData, MplBUCConfigurationsModel>
 
+
 {
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.hybris.commons.conversion.Populator#populate(java.lang.Object, java.lang.Object)
+	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void populate(final MplBUCConfigurationsData source, final MplBUCConfigurationsModel tartget)
-			throws ConversionException, IllegalArgumentException
+	public void populate(final MplBUCConfigurationsData source, final MplBUCConfigurationsModel target) throws ConversionException
 	{
-		tartget.setAirDeliveryBuffer(source.getAirDeliveryBuffer());
-		tartget.setSurDeliveryBuffer(source.getSurDeliveryBuffer());
-		tartget.setSdCharge(source.getSdCharge());
-		tartget.setEdCharge(source.getEdCharge());
+		target.setAirDeliveryBuffer(source.getAirDeliveryBuffer());
+		target.setSurDeliveryBuffer(source.getSurDeliveryBuffer());
+		target.setSdCharge(source.getSdCharge());
+		target.setEdCharge(source.getEdCharge());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.hybris.commons.conversion.Populator#populateFinals(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public void populateFinals(final MplBUCConfigurationsData paramS, final MplBUCConfigurationsModel paramT)
-			throws ConversionException, IllegalArgumentException
-	{
-		// YTODO Auto-generated method stub
 
-	}
 }
