@@ -20,8 +20,8 @@
 
 	<bean class="com.hybris.oms.tata.data.MplTimeSlotsData">
 		<property name="timeslotType" type="String"></property>
-		<property name="fromTime" type="int"></property>
-		<property name="toTime" type="int"></property>
+		<property name="fromTime" type="String"></property>
+		<property name="toTime" type="String"></property>
 	</bean>
 	
 	<bean class="com.hybris.oms.tata.data.MplBUCConfigurationsData">

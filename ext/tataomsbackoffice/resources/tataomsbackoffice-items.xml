@@ -25,11 +25,11 @@
 					<modifiers optional="false" read="true" write="true" unique="true" />
 					<persistence type="property" />
 				</attribute>
-				<attribute qualifier="fromTime" type="int">
+				<attribute qualifier="fromTime" type="java.lang.String">
 					<modifiers optional="false" read="true" write="true" unique="true"/>
 					<persistence type="property" />
 				</attribute>
-				<attribute qualifier="toTime" type="int">
+				<attribute qualifier="toTime" type="java.lang.String">
 					<modifiers optional="false" read="true" write="true" unique="true"/>
 					<persistence type="property" />
 				</attribute>
