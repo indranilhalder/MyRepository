@@ -24,6 +24,7 @@
 					<input type="hidden" id="for_ia_hot_dropdown_name" value="${department.name}">
 					<input type="hidden" id="for_ia_hot_dropdown_code" value="${department.code}">  
 					</div>
+					<span id="mobile-menu-toggle" class=""></span>
 
 					
 					<ul class="words dept${department.code}">
