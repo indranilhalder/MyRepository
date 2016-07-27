@@ -86,7 +86,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	public String changeDeliveryRequestCallToOMS(final String orderId, final AddressModel newDeliveryAddress)
 	{
 		LOG.info("Inside  changeDeliveryRequestCallToOMS Method");
-		final ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
+		  ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
 		ChangeDeliveryAddressResponseDto omsResponse = new ChangeDeliveryAddressResponseDto();
 		if (null != orderId)
 		{
@@ -291,7 +291,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 
 	@Override
-	public boolean saveAsTemporaryAddressForCustomer(final String orderCode, final AddressData addressData)
+	public boolean saveAsTemporaryAddressForCustomer(String orderCode,AddressData addressData)
 	{
 		boolean flag = false;
 		try
@@ -299,11 +299,11 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 			if (addressData != null)
 			{
 				mplChangeDeliveryAddressService.removeTemporaryAddress(orderCode);
-				final TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
-				final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-				final CustomerModel customer = (CustomerModel) orderModel.getUser();
-				temproryAddressModel.setEmail(customer.getOriginalUid());
-				final String customerId = customer.getUid();
+				 TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
+				 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+				 CustomerModel customer = (CustomerModel) orderModel.getUser();
+				   temproryAddressModel.setEmail(customer.getOriginalUid());
+				 String customerId = customer.getUid();
 
 				flag = mplChangeDeliveryAddressService.saveTemporaryAddress(orderCode, temproryAddressModel);
 				if (flag)
@@ -361,12 +361,12 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public String validateOTP(final String customerID, final String enteredOTPNumber, final String orderCode)
+	public String validateOTP(String customerID,String enteredOTPNumber,String orderCode)
 	{
 		String valditionMsg = null;
 		Boolean otpValidate;
 		boolean flag = false;
-		final OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.COD,
+		 OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.COD,
 				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
 
 		otpValidate = otpResponse.getOTPValid();
@@ -374,7 +374,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		//If OTP Valid then call to OMS for Pincode ServiceableCheck
 		if (otpValidate.booleanValue())
 		{
-			final TemproryAddressModel addressModel = mplChangeDeliveryAddressService.getTemporaryAddressModel(orderCode);
+			 TemproryAddressModel addressModel = mplChangeDeliveryAddressService.getTemporaryAddressModel(orderCode);
 			LOG.debug("pincode serviceable Checking::MplChangeDeliveryAddressFacadeImpl");
 
 			try
@@ -433,8 +433,8 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	public boolean generateNewOTP(final String orderCode)
 	{
 		boolean falg = false;
-		final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-		final CustomerModel customer = (CustomerModel) orderModel.getUser();
+		 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+		 CustomerModel customer = (CustomerModel) orderModel.getUser();
 
 		try
 		{
@@ -453,12 +453,12 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 	}
 
 	@Override
-	public String getPartialEncryptValue(final String encryptSymbol, final int encryptLength, final String source)
+	public String getPartialEncryptValue(String encryptSymbol,int encryptLength,String source)
 	{
 		String result = "";
 		if (StringUtils.isNotEmpty(source) && source.length() >= encryptLength)
 		{
-			final char charValue[] = source.toCharArray();
+			 char charValue[] = source.toCharArray();
 			for (int count = 0; count < charValue.length; count++)
 			{
 				if (count <= encryptLength)
