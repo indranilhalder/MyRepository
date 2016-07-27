@@ -26,7 +26,7 @@ public class TemporaryAddressReversePopulator implements Populator<AddressData, 
 	private CommonI18NService commonI18NService;
 
 	@Override
-	public void populate(final AddressData addressData, final TemproryAddressModel temproryAddressModel)
+	public void populate(AddressData addressData,TemproryAddressModel temproryAddressModel)
 			throws ConversionException
 	{
 		Assert.notNull(addressData, "Parameter addressData cannot be null.");
@@ -70,7 +70,7 @@ public class TemporaryAddressReversePopulator implements Populator<AddressData, 
 			final String isocode = addressData.getRegion().getIsocode();
 			try
 			{
-				final RegionModel regionModel = getCommonI18NService().getRegion(
+				 RegionModel regionModel = getCommonI18NService().getRegion(
 						getCommonI18NService().getCountry(addressData.getCountry().getIsocode()), isocode);
 				temproryAddressModel.setRegion(regionModel);
 			}
