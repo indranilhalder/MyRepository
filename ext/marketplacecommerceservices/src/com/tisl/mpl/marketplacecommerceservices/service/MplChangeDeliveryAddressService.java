@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
-import de.hybris.platform.commercefacades.order.data.OrderData;
 
 import com.tisl.mpl.core.model.TemproryAddressModel;
 
@@ -25,7 +24,7 @@ public interface MplChangeDeliveryAddressService
 	 * @param orderCode
 	 * @return flag true or false
 	 */
-	public boolean saveTemproryAddress(final String orderCode, final TemproryAddressModel temproryAddressModel);
+	public boolean saveTemporaryAddress(final String orderCode, final TemproryAddressModel temproryAddressModel);
 
 	/**
 	 * Based on orderCode We get TemproryAddressModel And OrderModel
@@ -41,7 +40,7 @@ public interface MplChangeDeliveryAddressService
 	 * @param orderCode
 	 * @return TemproryAddressModel
 	 */
-	public TemproryAddressModel geTemproryAddressModel(String orderCode);
+	public TemproryAddressModel getTemporaryAddressModel(String orderCode);
 
-	public void removeTemproryAddress(String orderCode);
+	public void removeTemporaryAddress(String orderCode);
 }
