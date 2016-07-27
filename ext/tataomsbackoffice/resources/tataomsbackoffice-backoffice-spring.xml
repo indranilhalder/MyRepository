@@ -88,5 +88,20 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="mplBUCConfigurationReversePopulator"
+		class="com.hybris.oms.tata.populator.MplBUCConfigurationsDataToModelReversePopulator" />
+
+	<alias name="defaultMplBUCReverseConverter" alias="mplBUCReverseConverter" />
+	<bean id="defaultMplBUCReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass"
+			value="com.hybris.oms.tata.model.MplBUCConfigurationsModel" />
+		<property name="populators">
+			<list>
+				<ref bean="mplBUCConfigurationReversePopulator" />
+			</list>
+		</property>
+	</bean> 
+	
 
 </beans>
