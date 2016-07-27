@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.hybris.oms.tata.data.MplBUCConfigurationsData;
 import com.hybris.oms.tata.data.MplTimeSlotsData;
 import com.hybris.oms.tata.facade.ConfigarableParameterFacade;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
@@ -30,8 +31,20 @@ public class DefaultConfigarableParameterFacade implements ConfigarableParameter
 	@Resource(name = "mplTimeSlotsConverter")
 	private Converter<MplTimeSlotsModel, MplTimeSlotsData> mplTimeSlotsConverter;
 
+	@Resource(name = "mplBUCReverseConverter")
+	private Converter<MplBUCConfigurationsData, MplBUCConfigurationsModel> mplBUCReverseConverter;
 
 	// converter dependency
+
+	/**
+	 * @param mplBUCReverseConverter
+	 *           the mplBUCReverseConverter to set
+	 */
+	public void setMplBUCReverseConverter(
+			final Converter<MplBUCConfigurationsData, MplBUCConfigurationsModel> mplBUCReverseConverter)
+	{
+		this.mplBUCReverseConverter = mplBUCReverseConverter;
+	}
 
 	/**
 	 * @param configrableParameterService
@@ -53,7 +66,7 @@ public class DefaultConfigarableParameterFacade implements ConfigarableParameter
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.oms.tata.facade.ConfigarableParameterFacade#onLoadMplTimeSlots()
 	 */
 	@Override
@@ -67,7 +80,7 @@ public class DefaultConfigarableParameterFacade implements ConfigarableParameter
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.oms.tata.facade.ConfigarableParameterFacade#saveMplTimeSlots(java.util.List)
 	 */
 	@Override
@@ -79,15 +92,15 @@ public class DefaultConfigarableParameterFacade implements ConfigarableParameter
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see com.hybris.oms.tata.facade.ConfigarableParameterFacade#saveMplBUCConfigurations(com.hybris.oms.tata.model.
-	 * MplBUCConfigurationsModel)
+	 *
+	 * @see com.hybris.oms.tata.facade.ConfigarableParameterFacade#saveMplBUCConfigurations(com.hybris.oms.tata.data.
+	 * MplBUCConfigurationsData)
 	 */
 	@Override
-	public void saveMplBUCConfigurations(final MplBUCConfigurationsModel mplBucConfigurations)
+	public void saveMplBUCConfigurations(final MplBUCConfigurationsData mplBucConfigurations)
 	{
-		// YTODO Auto-generated method stub
-
+		final MplBUCConfigurationsModel mplBucConfigModel = mplBUCReverseConverter.convert(mplBucConfigurations);
+		configrableParameterService.saveMplBUCConfigurations(mplBucConfigModel);
 	}
 
 }
