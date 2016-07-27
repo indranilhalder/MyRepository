@@ -267,24 +267,18 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 				}
 				cityHbox.setClass("hbox");
 				content.appendChild(cityHbox);
-
 				// landMark
 				Hbox landMarkHbox = createHbox(widget, "landMark", false, true);
-
 				final Textbox landMarkTextBox = new Textbox();
 				landMarkTextBox.setMaxlength(MAX_LENGTH);
 				if (null != deliveryAddress.getLandmark()) {
 					landMarkTextBox.setValue(deliveryAddress.getLandmark());
-				} else {
-					landMarkTextBox.setDisabled(true);
 				}
 				landMarkHbox.appendChild(landMarkTextBox);
 				content.appendChild(landMarkHbox);
 				landMarkHbox.setClass("hbox");
 				content.appendChild(landMarkHbox);
-
 				final Listbox landMarkListbox = new Listbox();
-
 				Collection<LandMarksData> landMarks = pincodeData
 						.getLandMarks();
 				createLandMarkListBox(widget, landMarkHbox, landMarkListbox,
@@ -294,7 +288,6 @@ public class MarketPlaceChangeDeliveryAddressWidgetRenderer
 						Events.ON_SELECT,
 						createLandMarkChangeEventListener(widget,
 								landMarkListbox, landMarkTextBox));
-
 				final Hbox mobileNumberHbox = createHbox(widget,
 						"mobileNumber", false, true);
 				final Textbox mobileNumberFieldTextBox = createTextbox(mobileNumberHbox);

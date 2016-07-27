@@ -84,10 +84,6 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 				.getItems().isEmpty()) {
 			Listhead header = new Listhead();
 			header.setParent(listBox);
-			Listheader listheader = new Listheader(LabelUtils.getLabel(widget,
-					"entryNumber", new Object[0]));
-			listheader.setWidth("20px");
-			header.appendChild(listheader);
 			List<ColumnConfiguration> columns = getColumnConfigurations();
 			populateHeaderRow(widget, header, columns);
 

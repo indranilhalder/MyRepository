@@ -6,6 +6,7 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -241,23 +242,23 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 							.getValue(), OTPTypeEnum.CDA, time);
 			boolean validate = otpResponse.getOTPValid();
 			if (validate) {
-				String omsStatus = null;
-				omsStatus = mplChangeDeliveryAddressController
-						.changeDeliveryAddressCallToOMS(orderModel
-								.getParentReference().getCode(),
-								newDeliveryAddress);
-				if (omsStatus
-						.equalsIgnoreCase(MarketplaceCockpitsConstants.SUCCESS)) {
-					try {
-						TypedObject customer = marketplaceCallContextController
-								.getCurrentCustomer();
-						CustomerModel customermodel = (CustomerModel) customer
-								.getObject();
-						String customerId = customermodel.getUid();
+				try {
+					String omsStatus = null;
+					TypedObject customer = marketplaceCallContextController
+							.getCurrentCustomer();
+					CustomerModel customermodel = (CustomerModel) customer
+							.getObject();
+					String customerId = customermodel.getUid();
+					AddressModel address = new AddressModel();
+					address = setNewDeliveryAddress(newDeliveryAddress);
+					address.setOwner(customermodel);
+					omsStatus = mplChangeDeliveryAddressController
+							.changeDeliveryAddressCallToOMS(orderModel
+									.getParentReference().getCode(), address);
+					if (omsStatus
+							.equalsIgnoreCase(MarketplaceCockpitsConstants.SUCCESS)) {
+
 						try {
-							AddressModel address = new AddressModel();
-							address = setNewDeliveryAddress(newDeliveryAddress);
-							address.setOwner(customermodel);
 
 							mplChangeDeliveryAddressController
 									.saveDeliveryAddress(orderModel, address);
@@ -278,31 +279,32 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 								CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO,
 								Messagebox.OK, Messagebox.INFORMATION);
 						closePopUp();
-					} catch (ModelRemovalException e) {
-						LOG.error("ModelRemovalException " + e.getMessage());
-					} catch (Exception e) {
-						LOG.error("Exception while calling ticketCreate to CRM methoid");
-					}
-				} else if (omsStatus
-						.equalsIgnoreCase(MarketplaceCockpitsConstants.FAILED)) {
-					try {
+
+					} else if (omsStatus
+							.equalsIgnoreCase(MarketplaceCockpitsConstants.FAILED)) {
+						try {
+							removeTempororyAddress(newDeliveryAddress);
+							Messagebox.show(LabelUtils.getLabel(widget,
+									FAILED_AT_OMS, new Object[0]), INFO,
+									Messagebox.OK, Messagebox.ERROR);
+							closePopUp();
+						} catch (ModelRemovalException e) {
+							LOG.error("ModelRemovalException  while removing temprory Address"
+									+ e.getMessage());
+						} catch (Exception e) {
+							LOG.error("Exception occurred " + e.getMessage());
+						}
+					} else {
 						removeTempororyAddress(newDeliveryAddress);
-						Messagebox.show(LabelUtils.getLabel(widget,
-								FAILED_AT_OMS, new Object[0]), INFO,
-								Messagebox.OK, Messagebox.ERROR);
 						closePopUp();
-					} catch (ModelRemovalException e) {
-						LOG.error("ModelRemovalException  while removing temprory Address"
-								+ e.getMessage());
-					} catch (Exception e) {
-						LOG.error("Exception occurred " + e.getMessage());
+						Messagebox.show(LabelUtils.getLabel(widget,
+								AN_ERROR_OCCURRED, new Object[0]), INFO,
+								Messagebox.OK, Messagebox.ERROR);
 					}
-				} else {
-					removeTempororyAddress(newDeliveryAddress);
-					closePopUp();
-					Messagebox.show(LabelUtils.getLabel(widget,
-							AN_ERROR_OCCURRED, new Object[0]), INFO,
-							Messagebox.OK, Messagebox.ERROR);
+				} catch (ModelRemovalException e) {
+					LOG.error("ModelRemovalException " + e.getMessage());
+				} catch (Exception e) {
+					LOG.error("Exception in changeDeliveryAddressCallToOMS"+e.getMessage());
 				}
 			} else {
 				Messagebox.show(LabelUtils.getLabel(widget, "INVALID_OTP",
@@ -334,6 +336,7 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 	private AddressModel setNewDeliveryAddress(
 			TemproryAddressModel newDeliveryAddress) {
 		AddressModel deliveryAddress = new AddressModel();
+		deliveryAddress.setCreationtime(new Date());
 		if (null != newDeliveryAddress.getFirstname()) {
 			deliveryAddress.setFirstname(newDeliveryAddress.getFirstname());
 		}
