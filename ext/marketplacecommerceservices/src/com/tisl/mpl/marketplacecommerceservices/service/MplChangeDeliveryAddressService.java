@@ -24,7 +24,7 @@ public interface MplChangeDeliveryAddressService
 	 * @param orderCode
 	 * @return flag true or false
 	 */
-	public boolean saveTemporaryAddress(final String orderCode, final TemproryAddressModel temproryAddressModel);
+	public boolean saveTemporaryAddress(String orderCode,TemproryAddressModel temproryAddressModel);
 
 	/**
 	 * Based on orderCode We get TemproryAddressModel And OrderModel
