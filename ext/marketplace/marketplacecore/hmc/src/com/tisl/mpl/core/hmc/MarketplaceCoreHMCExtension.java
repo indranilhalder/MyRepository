@@ -368,6 +368,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 	{
 		boolean errorFlag = false;
 		Double price = 0.0D;
+		Double maxDiscount = 0.0D;
 		boolean isPercentage = false;
 		boolean isEnabled = false;
 		Long quantity = 0L;
@@ -466,6 +467,13 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					quantity = (Long) item.getAttribute("quantity");
 				}
 
+				if (null != item.getAttribute("maxDiscountVal"))
+				{
+					maxDiscount = (Double) item.getAttribute("maxDiscountVal");
+				}
+
+
+
 				price = getDiscountPrice(isPercentage, item);
 
 				if ((null != productList && !productList.isEmpty()) && null != startDate && null != endDate && isEnabled
@@ -477,12 +485,12 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					if (isPercentage)
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(productList, null, price, startDate, endDate, true,
-								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList);
+								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount);
 					}
 					else
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(productList, null, price, startDate, endDate, false,
-								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList);
+								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount);
 					}
 
 				}
@@ -494,12 +502,12 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					if (isPercentage)
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(null, categoryList, price, startDate, endDate, true,
-								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList);
+								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount);
 					}
 					else
 					{
 						getUpdatePromotionalPriceService().updatePromotionalPrice(null, categoryList, price, startDate, endDate, false,
-								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList);
+								priority, sellerList, brandList, promoCode, rejectSellerList, rejectBrandList, maxDiscount);
 					}
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
