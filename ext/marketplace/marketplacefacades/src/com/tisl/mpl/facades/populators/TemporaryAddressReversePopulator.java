@@ -24,9 +24,9 @@ import com.tisl.mpl.core.model.TemproryAddressModel;
 public class TemporaryAddressReversePopulator implements Populator<AddressData, TemproryAddressModel>
 {
 	private CommonI18NService commonI18NService;
-	
+
 	@Override
-	public void populate(AddressData addressData,TemproryAddressModel temproryAddressModel)
+	public void populate(final AddressData addressData, final TemproryAddressModel temproryAddressModel)
 			throws ConversionException
 	{
 
@@ -36,8 +36,8 @@ public class TemporaryAddressReversePopulator implements Populator<AddressData, 
 		temproryAddressModel.setFirstname(addressData.getFirstName());
 		temproryAddressModel.setLastname(addressData.getLastName());
 		temproryAddressModel.setAddressType(addressData.getAddressType());
-	   temproryAddressModel.setStreetname(addressData.getLine1());
-	   temproryAddressModel.setStreetnumber(addressData.getLine2());
+		temproryAddressModel.setStreetname(addressData.getLine1());
+		temproryAddressModel.setStreetnumber(addressData.getLine2());
 		temproryAddressModel.setAddressLine3(addressData.getLine3());
 		temproryAddressModel.setTown(addressData.getTown());
 		temproryAddressModel.setLandmark(addressData.getLandmark());
@@ -46,7 +46,7 @@ public class TemporaryAddressReversePopulator implements Populator<AddressData, 
 		temproryAddressModel.setState(addressData.getState());
 		temproryAddressModel.setBillingAddress(Boolean.valueOf(addressData.isBillingAddress()));
 		temproryAddressModel.setShippingAddress(Boolean.valueOf(addressData.isShippingAddress()));
-		
+
 		if (addressData.getCountry() != null)
 		{
 			final String isocode = addressData.getCountry().getIsocode();
@@ -64,27 +64,27 @@ public class TemporaryAddressReversePopulator implements Populator<AddressData, 
 				throw new ConversionException("More than one country with the code " + isocode + " found.", e);
 			}
 		}
-	
-	
-	if (addressData.getRegion() != null)
-	{
-		final String isocode = addressData.getRegion().getIsocode();
-		try
+
+
+		if (addressData.getRegion() != null)
 		{
-			final RegionModel regionModel = getCommonI18NService().getRegion(
-					getCommonI18NService().getCountry(addressData.getCountry().getIsocode()), isocode);
-			temproryAddressModel.setRegion(regionModel);
-		}
-		catch (final UnknownIdentifierException e)
-		{
-			throw new ConversionException("No region with the code " + isocode + " found.", e);
-		}
-		catch (final AmbiguousIdentifierException e)
-		{
-			throw new ConversionException("More than one region with the code " + isocode + " found.", e);
+			final String isocode = addressData.getRegion().getIsocode();
+			try
+			{
+				final RegionModel regionModel = getCommonI18NService().getRegion(
+						getCommonI18NService().getCountry(addressData.getCountry().getIsocode()), isocode);
+				temproryAddressModel.setRegion(regionModel);
+			}
+			catch (final UnknownIdentifierException e)
+			{
+				throw new ConversionException("No region with the code " + isocode + " found.", e);
+			}
+			catch (final AmbiguousIdentifierException e)
+			{
+				throw new ConversionException("More than one region with the code " + isocode + " found.", e);
+			}
 		}
 	}
-}
 
 	/**
 	 * @return the commonI18NService
@@ -95,13 +95,14 @@ public class TemporaryAddressReversePopulator implements Populator<AddressData, 
 	}
 
 	/**
-	 * @param commonI18NService the commonI18NService to set
+	 * @param commonI18NService
+	 *           the commonI18NService to set
 	 */
-	public void setCommonI18NService(CommonI18NService commonI18NService)
+	public void setCommonI18NService(final CommonI18NService commonI18NService)
 	{
 		this.commonI18NService = commonI18NService;
 	}
-	
+
 
 
 
