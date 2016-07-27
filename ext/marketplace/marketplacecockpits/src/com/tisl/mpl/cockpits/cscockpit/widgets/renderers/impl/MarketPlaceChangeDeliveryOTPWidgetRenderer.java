@@ -32,6 +32,7 @@ import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
+import com.tisl.mpl.sms.facades.SendSMSFacade;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.widgets.Widget;
@@ -60,7 +61,8 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 	private static final String FAILED_AT_OMS = "failedAtOms";
 	private static final String AN_ERROR_OCCURRED = "erroroccurred";
 	private static final String INFO = "info";
-
+	@Autowired
+	private SendSMSFacade sendSMSFacade;
 	@Autowired
 	private OTPGenericService oTPGenericService;
 	@Autowired
@@ -166,20 +168,20 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 		String smsContent = oTPGenericService.generateOTP(userId,
 				OTPTypeEnum.CDA.getCode(), oTPMobileNumber);
 
-		// sendSMSFacade
-		// .sendSms(
-		// MarketplacecommerceservicesConstants.SMS_SENDER_ID,
-		// MarketplacecommerceservicesConstants.SMS_MESSAGE_CD_OTP
-		// .replace(
-		// MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
-		// mplCustomerName != null ? mplCustomerName
-		// : "There")
-		// .replace(
-		// MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE,
-		// smsContent)
-		// .replace(
-		// MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,
-		// contactNumber), oTPMobileNumber);
+		sendSMSFacade
+				.sendSms(
+						MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+						MarketplacecommerceservicesConstants.SMS_MESSAGE_CD_OTP
+								.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
+										mplCustomerName != null ? mplCustomerName
+												: "There")
+								.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE,
+										smsContent)
+								.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,
+										contactNumber), oTPMobileNumber);
 
 	}
 
@@ -304,7 +306,8 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 				} catch (ModelRemovalException e) {
 					LOG.error("ModelRemovalException " + e.getMessage());
 				} catch (Exception e) {
-					LOG.error("Exception in changeDeliveryAddressCallToOMS"+e.getMessage());
+					LOG.error("Exception in changeDeliveryAddressCallToOMS"
+							+ e.getMessage());
 				}
 			} else {
 				Messagebox.show(LabelUtils.getLabel(widget, "INVALID_OTP",
