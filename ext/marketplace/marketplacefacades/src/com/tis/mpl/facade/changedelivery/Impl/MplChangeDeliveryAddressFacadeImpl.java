@@ -291,7 +291,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 
 
 	@Override
-	public boolean saveAsTemproryAddressForCustomer(final String orderCode, final AddressData addressData)
+	public boolean saveAsTemporaryAddressForCustomer(final String orderCode, final AddressData addressData)
 	{
 		boolean flag = false;
 		try
