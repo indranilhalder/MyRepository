@@ -39,12 +39,12 @@ public class DefaultCheckOrderService implements CheckOrderService
 			//return false;
 			status = false;
 		}
-		else if (order.getPaymentInfo() == null)
-		{
-			// Order must have some payment info to use in the process
-			//return false;
-			status = false;
-		}
+		//		else if (order.getPaymentInfo() == null)
+		//		{
+		//			// Order must have some payment info to use in the process
+		//			//return false;
+		//			status = false;
+		//		}
 		//TISPRO-497
 		else if (order.getTotalPrice().doubleValue() <= 0.0 || order.getTotalPriceWithConv().doubleValue() <= 0.0)
 		{

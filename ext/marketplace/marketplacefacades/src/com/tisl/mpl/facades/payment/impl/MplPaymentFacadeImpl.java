@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -113,6 +114,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	private BinService binService;
 	@Autowired
 	private SendSMSFacade sendSMSFacade;
+
+	@Autowired
+	private FlexibleSearchService flexibleSearchService;
 
 
 
@@ -799,7 +803,14 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			final Map<String, Double> paymentMode = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.PAYMENTMODE);
-			final CartModel cart = getCartService().getSessionCart();
+			//final CartModel cart = getCartService().getSessionCart();
+
+			final String orderGuid = getSessionService().getAttribute("guid");
+			final OrderModel order = new OrderModel();
+			order.setGuid(orderGuid);
+			order.setType("Parent");
+			final OrderModel orderModel = flexibleSearchService.getModelByExample(order);
+
 			String orderStatus = null;
 			boolean updAuditErrStatus = false;
 
@@ -815,7 +826,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				juspayOrderId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
 				if (null == juspayOrderId)
 				{
-					juspayOrderId = getMplPaymentService().getAuditId(cart.getGuid());
+					//juspayOrderId = getMplPaymentService().getAuditId(cart.getGuid());
+					juspayOrderId = getMplPaymentService().getAuditId(orderGuid);
 				}
 			}
 			catch (final Exception e)
@@ -843,10 +855,12 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 					//TISPRD-2558
-					if (cart.getTotalPrice().equals(orderStatusResponse.getAmount()))
+					//if (cart.getTotalPrice().equals(orderStatusResponse.getAmount()))
+					if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount()))
 					{
 						//Update PaymentTransaction and PaymentTransactionEntry Models
-						getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, cart);
+						//getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, cart);
+						getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
 					}
 					else
 					{
@@ -860,14 +874,14 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						//TIS-3168
 						LOG.error("Payment successful with transaction ID::::" + juspayOrderId);
 						//saving card details
-						getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
+						getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, orderModel);
 					}
 					//TIS-3168
 					else
 					{
 						LOG.error("Payment failure with transaction ID::::" + juspayOrderId);
 					}
-					getMplPaymentService().paymentModeApportion(cart);
+					getMplPaymentService().paymentModeApportion(orderModel);
 
 					if (updAuditErrStatus)
 					{
@@ -1900,10 +1914,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			status = false;
 		}
-		else if (cart.getPaymentInfo() == null)
-		{
-			status = false;
-		}
+		//		else if (cart.getPaymentInfo() == null)
+		//		{
+		//			status = false;
+		//		}
 		else if (cart.getTotalPrice().doubleValue() <= 0.0 || cart.getTotalPriceWithConv().doubleValue() <= 0.0)
 		{
 			status = false;

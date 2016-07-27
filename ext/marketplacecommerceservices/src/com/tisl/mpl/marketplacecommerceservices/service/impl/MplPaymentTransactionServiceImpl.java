@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
@@ -51,7 +51,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 	 */
 	@Override
 	public List<PaymentTransactionEntryModel> createPaymentTranEntry(final GetOrderStatusResponse getOrderStatusResponse,
-			final CartModel cart, final Map.Entry<String, Double> entry,
+			final AbstractOrderModel cart, final Map.Entry<String, Double> entry,
 			final List<PaymentTransactionEntryModel> paymentTransactionEntryList)
 	{
 
@@ -99,10 +99,37 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 		//final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(entry.getKey());
 		//TISPRO-540 - Getting Payment mode from CartModel
-		if (StringUtils.isNotEmpty(cart.getModeOfPayment()))
+		//		if (StringUtils.isNotEmpty(cart.getModeOfPayment()))
+		//		{
+		//			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(cart.getModeOfPayment());
+		//			paymentTransactionEntry.setPaymentMode(paymenttype);
+		//		}
+
+		if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentMethodType())
+				&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("NB"))
 		{
-			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(cart.getModeOfPayment());
+			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Netbanking");
 			paymentTransactionEntry.setPaymentMode(paymenttype);
+		}
+		else if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentMethodType())
+				&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("CARD"))
+		{
+			final String cardType = getOrderStatusResponse.getCardResponse().getCardType();
+			if (cardType.equalsIgnoreCase("DEBIT"))
+			{
+				final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card");
+				paymentTransactionEntry.setPaymentMode(paymenttype);
+			}
+			else if (cardType.equalsIgnoreCase("CREDIT"))
+			{
+				final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card");
+				paymentTransactionEntry.setPaymentMode(paymenttype);
+			}
+			else
+			{
+				final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI");
+				paymentTransactionEntry.setPaymentMode(paymenttype);
+			}
 		}
 
 		try
@@ -165,7 +192,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 	 * @return List<PaymentTransactionModel>
 	 */
 	@Override
-	public List<PaymentTransactionModel> createPaymentTransaction(final CartModel cart,
+	public List<PaymentTransactionModel> createPaymentTransaction(final AbstractOrderModel cart,
 			final GetOrderStatusResponse orderStatusResponse, final List<PaymentTransactionEntryModel> paymentTransactionEntryList,
 			final List<PaymentTransactionModel> paymentTransactionList)
 	{

@@ -264,6 +264,7 @@
 			<value code="PARTIALLY_ORDER_COLLECTED" />
 			<value code="PARTIALLY_ORDER_UNCOLLECTED" />
 			<value code="PARTIALLY_RETURNINITIATED_BY_RTO" />
+			<value code="PAYMENT_PENDING" />
 
 		</enumtype>
 

@@ -3,6 +3,7 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -91,7 +92,8 @@ public interface MplPaymentService
 	 * @param paymentMode
 	 * @param cart
 	 */
-	void saveCardDetailsFromJuspay(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, CartModel cart);
+	void saveCardDetailsFromJuspay(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode,
+			AbstractOrderModel cart);
 
 
 	/**
@@ -117,7 +119,7 @@ public interface MplPaymentService
 	 * @param cart
 	 *
 	 */
-	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, CartModel cart);
+	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, AbstractOrderModel cart);
 
 
 	/**
@@ -138,7 +140,7 @@ public interface MplPaymentService
 	 * This method helps to save apportion for the PaymentModes which were successful
 	 *
 	 */
-	void paymentModeApportion(final CartModel cart);
+	void paymentModeApportion(final AbstractOrderModel cart);
 
 
 	/**
@@ -224,13 +226,13 @@ public interface MplPaymentService
 	 * @param cart
 	 * @param sameAsShipping
 	 */
-	void saveCreditCard(GetOrderStatusResponse orderStatusResponse, CartModel cart, String sameAsShipping);
+	void saveCreditCard(GetOrderStatusResponse orderStatusResponse, AbstractOrderModel cart, String sameAsShipping);
 
 	/**
 	 * @param orderStatusResponse
 	 * @param cart
 	 */
-	void saveDebitCard(GetOrderStatusResponse orderStatusResponse, CartModel cart);
+	void saveDebitCard(GetOrderStatusResponse orderStatusResponse, AbstractOrderModel cart);
 
 	/**
 	 * This method returns the customer model based on the CustomerUid

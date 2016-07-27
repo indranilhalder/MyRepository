@@ -220,10 +220,10 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 		{
 			status = false;
 		}
-		else if (order.getPaymentInfo() == null)
-		{
-			status = false;
-		}
+		//		else if (order.getPaymentInfo() == null)
+		//		{
+		//			status = false;
+		//		}
 		else if (order.getTotalPrice().doubleValue() <= 0.0 || order.getTotalPriceWithConv().doubleValue() <= 0.0)
 		{
 			status = false;

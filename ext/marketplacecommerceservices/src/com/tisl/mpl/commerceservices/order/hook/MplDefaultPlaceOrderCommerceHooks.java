@@ -293,7 +293,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAudit.getAuditEntries();
 						if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
 						{
-							updateOrderStatus(mplAuditEntryList, orderModel);
+
+							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+							//updateOrderStatus(mplAuditEntryList, orderModel);
 						}
 					}
 				}
@@ -301,7 +303,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		}
 		else
 		{
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+			//getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
 		}
 	}
 

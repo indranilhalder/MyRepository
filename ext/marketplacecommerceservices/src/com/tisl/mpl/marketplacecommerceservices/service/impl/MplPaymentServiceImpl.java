@@ -12,7 +12,9 @@ import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.enums.CreditCardType;
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
@@ -322,7 +324,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void saveCardDetailsFromJuspay(final GetOrderStatusResponse orderStatusResponse, final Map<String, Double> paymentMode,
-			final CartModel cart)
+			final AbstractOrderModel cart)
 	{
 		if (null != orderStatusResponse)
 		{
@@ -335,34 +337,44 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//			{
 			try
 			{
-				if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
-						&& MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(cart.getModeOfPayment()))
+				//				if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
+				//						&& MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(cart.getModeOfPayment()))
+				if (null != orderStatusResponse.getCardResponse()
+						&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardType())
+						&& orderStatusResponse.getCardResponse().getCardType().equalsIgnoreCase("DEBIT"))
 				{
 					//saving the cartmodel for Debit Card
 					getModelService().save(setValueInDebitCardPaymentInfo(cart, orderStatusResponse));
 					//						break;
 				}
-				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
-						&& MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(cart.getModeOfPayment()))
+				//				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
+				//						&& MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(cart.getModeOfPayment()))
+				else if (null != orderStatusResponse.getCardResponse()
+						&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardType())
+						&& orderStatusResponse.getCardResponse().getCardType().equalsIgnoreCase("CREDIT"))
 				{
 					//saving the cartmodel for Credit Card
 					getModelService().save(setValueInCreditCardPaymentInfo(cart, orderStatusResponse));
 					//						break;
 				}
-				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
-						&& MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
-				{
-					//saving the cartmodel for EMI
-					getModelService().save(setValueInEMIPaymentInfo(cart, orderStatusResponse));
-					//						break;
-				}
-				else if (StringUtils.isNotEmpty(cart.getModeOfPayment())
-						&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(cart.getModeOfPayment()))
+				//				else if (StringUtils.isNotEmpty(cart.getModeOfPayment())
+				//						&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(cart.getModeOfPayment()))
+				else if (StringUtils.isNotEmpty(orderStatusResponse.getPaymentMethodType())
+						&& orderStatusResponse.getPaymentMethodType().equalsIgnoreCase("NB"))
 				{
 					//saving the cartmodel for Netbanking
 					getModelService().save(setValueInNetbankingPaymentInfo(cart, orderStatusResponse));
 					//						break;
 				}
+				//				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
+				//						&& MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
+				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(orderStatusResponse.getBankEmi()))
+				{
+					//saving the cartmodel for EMI
+					getModelService().save(setValueInEMIPaymentInfo(cart, orderStatusResponse));
+					//						break;
+				}
+
 			}
 			catch (final ModelSavingException e)
 			{
@@ -385,7 +397,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void setPaymentTransaction(final GetOrderStatusResponse orderStatusResponse, final Map<String, Double> paymentMode,
-			final CartModel cart)
+			final AbstractOrderModel cart)
 	{
 		Collection<PaymentTransactionModel> collection = cart.getPaymentTransactions();
 		List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
@@ -459,6 +471,17 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					paymentTransactionEntryList, paymentTransactionList);
 		}
 		cart.setPaymentTransactions(paymentTransactionList);
+		//setting payment transaction against child order
+		if (cart instanceof OrderModel)
+		{
+			final List<OrderModel> subOrders = ((OrderModel) cart).getChildOrders();
+			for (final OrderModel order : subOrders)
+			{
+				order.setPaymentTransactions(paymentTransactionList);
+				getModelService().save(order);
+			}
+
+		}
 
 		try
 		{
@@ -580,7 +603,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param orderStatusResponse
 	 * @return CartModel
 	 */
-	private CartModel setValueInDebitCardPaymentInfo(final CartModel cart, final GetOrderStatusResponse orderStatusResponse)
+	private AbstractOrderModel setValueInDebitCardPaymentInfo(final AbstractOrderModel cart,
+			final GetOrderStatusResponse orderStatusResponse)
 	{
 		//creating debitCardPaymentInfoModel
 		final DebitCardPaymentInfoModel debitCardPaymentInfoModel = getModelService().create(DebitCardPaymentInfoModel.class);
@@ -683,6 +707,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		//setting paymentinfo in cart
 		cart.setPaymentInfo(debitCardPaymentInfoModel);
 		cart.setPaymentAddress(cart.getDeliveryAddress());
+
+		//setting payment info & address in child order
+		if (cart instanceof OrderModel)
+		{
+			final List<OrderModel> subOrders = ((OrderModel) cart).getChildOrders();
+			for (final OrderModel order : subOrders)
+			{
+				order.setPaymentInfo(debitCardPaymentInfoModel);
+				order.setPaymentAddress(cart.getDeliveryAddress());
+				getModelService().save(order);
+			}
+		}
+
 		//returning the cart
 		return cart;
 	}
@@ -695,7 +732,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param orderStatusResponse
 	 * @return CartModel
 	 */
-	private CartModel setValueInCreditCardPaymentInfo(final CartModel cart, final GetOrderStatusResponse orderStatusResponse)
+	private AbstractOrderModel setValueInCreditCardPaymentInfo(final AbstractOrderModel cart,
+			final GetOrderStatusResponse orderStatusResponse)
 	{
 		//creating creditCardPaymentInfoModel
 		final CreditCardPaymentInfoModel creditCardPaymentInfoModel = getModelService().create(CreditCardPaymentInfoModel.class);
@@ -875,6 +913,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		//setting paymentinfo in cart
 		cart.setPaymentInfo(creditCardPaymentInfoModel);
 		cart.setPaymentAddress(address);
+
+		//setting payment info & address in child order
+		if (cart instanceof OrderModel)
+		{
+			final List<OrderModel> subOrders = ((OrderModel) cart).getChildOrders();
+			for (final OrderModel order : subOrders)
+			{
+				order.setPaymentInfo(creditCardPaymentInfoModel);
+				order.setPaymentAddress(address);
+				getModelService().save(order);
+			}
+		}
+
 		//returning the cart
 		return cart;
 
@@ -887,7 +938,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param response
 	 * @return CartModel
 	 */
-	private CartModel setValueInEMIPaymentInfo(final CartModel cart, final GetOrderStatusResponse response)
+	private AbstractOrderModel setValueInEMIPaymentInfo(final AbstractOrderModel cart, final GetOrderStatusResponse response)
 	{
 		//creating EMIPaymentInfoModel
 		final EMIPaymentInfoModel emiPaymentInfoModel = getModelService().create(EMIPaymentInfoModel.class);
@@ -1078,6 +1129,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		//setting paymentinfo in cart
 		cart.setPaymentInfo(emiPaymentInfoModel);
 		cart.setPaymentAddress(address);
+
+		//setting payment info & address in child order
+		if (cart instanceof OrderModel)
+		{
+			final List<OrderModel> subOrders = ((OrderModel) cart).getChildOrders();
+			for (final OrderModel order : subOrders)
+			{
+				order.setPaymentInfo(emiPaymentInfoModel);
+				order.setPaymentAddress(address);
+				getModelService().save(order);
+			}
+		}
+
 		//returning the cart
 		return cart;
 
@@ -1091,7 +1155,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param response
 	 * @return CartModel
 	 */
-	private CartModel setValueInNetbankingPaymentInfo(final CartModel cart, final GetOrderStatusResponse response)
+	private AbstractOrderModel setValueInNetbankingPaymentInfo(final AbstractOrderModel cart, final GetOrderStatusResponse response)
 	{
 		try
 		{
@@ -1134,6 +1198,18 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//setting paymentinfo in cart
 			cart.setPaymentInfo(nbPaymentInfoModel);
 			cart.setPaymentAddress(cart.getDeliveryAddress());
+
+			//setting payment info & address in child order
+			if (cart instanceof OrderModel)
+			{
+				final List<OrderModel> subOrders = ((OrderModel) cart).getChildOrders();
+				for (final OrderModel order : subOrders)
+				{
+					order.setPaymentInfo(nbPaymentInfoModel);
+					order.setPaymentAddress(cart.getDeliveryAddress());
+					getModelService().save(order);
+				}
+			}
 		}
 		catch (final ModelSavingException e)
 		{
@@ -1382,7 +1458,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *
 	 */
 	@Override
-	public void paymentModeApportion(final CartModel cart)
+	public void paymentModeApportion(final AbstractOrderModel cart)
 	{
 		final List<AbstractOrderEntryModel> entries = cart.getEntries();
 		final List<PaymentTransactionModel> paymentTransactionList = cart.getPaymentTransactions();
@@ -2264,7 +2340,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *
 	 */
 	@Override
-	public void saveCreditCard(final GetOrderStatusResponse orderStatusResponse, final CartModel cart, final String sameAsShipping)
+	public void saveCreditCard(final GetOrderStatusResponse orderStatusResponse, final AbstractOrderModel cart,
+			final String sameAsShipping)
 	{
 		//for saving Billing Address against credit card
 		final AddressModel address = billingAddressForSavedCard(orderStatusResponse, cart, sameAsShipping);
@@ -2283,7 +2360,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param cart
 	 */
 	@Override
-	public void saveDebitCard(final GetOrderStatusResponse orderStatusResponse, final CartModel cart)
+	public void saveDebitCard(final GetOrderStatusResponse orderStatusResponse, final AbstractOrderModel cart)
 	{
 		String checkValues = "".intern();
 		String[] parts = null;
@@ -2316,8 +2393,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param sameAsShipping
 	 * @return AddressModel
 	 */
-	private AddressModel billingAddressForSavedCard(final GetOrderStatusResponse orderStatusResponse, final CartModel cart,
-			final String sameAsShipping)
+	private AddressModel billingAddressForSavedCard(final GetOrderStatusResponse orderStatusResponse,
+			final AbstractOrderModel cart, final String sameAsShipping)
 	{
 		AddressModel address = null;
 		if (StringUtils.isNotEmpty(orderStatusResponse.getUdf1()))
@@ -2449,16 +2526,23 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param sameAsShipping
 	 */
 	private void saveCards(final GetOrderStatusResponse orderStatusResponse, final Map<String, Double> paymentMode,
-			final CartModel cart, final String sameAsShipping)
+			final AbstractOrderModel cart, final String sameAsShipping)
 	{
-		if (null != orderStatusResponse && null != orderStatusResponse.getCardResponse()
-				&& StringUtils.isNotEmpty(cart.getModeOfPayment()))
+		//		if (null != orderStatusResponse && null != orderStatusResponse.getCardResponse()
+		//				&& StringUtils.isNotEmpty(cart.getModeOfPayment()))
+		if (null != orderStatusResponse
+				&& null != orderStatusResponse.getCardResponse()
+				&& (StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardType()) || StringUtils
+						.isNotEmpty(orderStatusResponse.getPaymentMethodType())))
 		{
 			//Logic if the order status response is not null
 			//			for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
 			//			{
 			//				if (MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(entry.getKey()))
-			if (MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(cart.getModeOfPayment()))
+
+
+			//			if (MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(cart.getModeOfPayment()))
+			if (orderStatusResponse.getCardResponse().getCardType().equalsIgnoreCase("DEBIT"))
 			{
 				try
 				{
@@ -2470,8 +2554,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG, e);
 				}
 			}
-			else if (MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(cart.getModeOfPayment())
-					|| MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
+			//			else if (MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(cart.getModeOfPayment())
+			//					|| MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
+			if (orderStatusResponse.getCardResponse().getCardType().equalsIgnoreCase("CREDIT"))
 			{
 				try
 				{
@@ -2487,8 +2572,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		}
 	}
-
-
 
 	/**
 	 * This method returns the customer model based on the CustomerUid
@@ -2510,7 +2593,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param cart
 	 * @return AddressModel
 	 */
-	private AddressModel createDummyAddress(final CartModel cart)
+	private AddressModel createDummyAddress(final AbstractOrderModel cart)
 	{
 		final AddressModel billingAddress = getModelService().create(AddressModel.class);
 

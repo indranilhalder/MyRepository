@@ -224,6 +224,11 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 			return Transition.OK;
 		}
 
+		else if (orderStatus.equalsIgnoreCase(MarketplaceFulfilmentProcessConstants.PAYMENT_PENDING))
+		{
+			return Transition.WAIT;
+		}
+
 		//returning NOK for order status "PAYMENT_FAILED"
 		else if (orderStatus.equalsIgnoreCase(MarketplaceFulfilmentProcessConstants.PAYMENT_FAILED))
 		{
@@ -418,7 +423,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 
 								refundAmount = subOrderEntryModel.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
 								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
-								//TISPRO-216 Ends	
+								//TISPRO-216 Ends
 
 								// Making RTM entry to be picked up by webhook job
 								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(

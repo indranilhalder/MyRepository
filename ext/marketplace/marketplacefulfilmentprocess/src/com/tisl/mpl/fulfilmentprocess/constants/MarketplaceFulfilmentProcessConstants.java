@@ -51,6 +51,7 @@ public final class MarketplaceFulfilmentProcessConstants extends GeneratedMarket
 	public static final String RMS_VERIFICATION_FAILED = "RMS_VERIFICATION_FAILED".intern();
 	public static final String CANCELLED = "CANCELLED".intern();
 	public static final String ORDER_CANCELLED = "ORDER_CANCELLED".intern();
+	public static final String PAYMENT_PENDING = "PAYMENT_PENDING".intern();
 
 	public static final String AUDITWITHGUIDQUERY = "select {a:pk} from {MplPaymentAudit As a} where {a.cartGUID}=?cartGUID order by {a.requestDate} desc"
 			.intern();
@@ -65,4 +66,3 @@ public final class MarketplaceFulfilmentProcessConstants extends GeneratedMarket
 		//empty to avoid instantiating this constant class
 	}
 }
-

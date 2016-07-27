@@ -33,9 +33,11 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -47,8 +49,10 @@ import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.promotions.PromotionsService;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
@@ -100,6 +104,8 @@ import com.tisl.mpl.core.enums.CodCheckMessage;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
+import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
+import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.SavedCardModel;
@@ -120,6 +126,7 @@ import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
+import com.tisl.mpl.marketplacecommerceservices.service.JuspayEBSService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.MplCustomerWebService;
@@ -128,6 +135,7 @@ import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
 /**
@@ -194,6 +202,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	private MplCouponFacade mplCouponFacade;
 	@Autowired
 	private VoucherFacade voucherFacade;
+
+	@Autowired
+	private FlexibleSearchService flexibleSearchService;
+
+	@Autowired
+	private Converter<OrderModel, OrderData> orderConverter;
+
+	@Autowired
+	private OrderStatusSpecifier orderStatusSpecifier;
+
+	@Autowired
+	private JuspayEBSService juspayEBSService;
 
 	private final String checkoutPageName = "Payment Options";
 	private final String RECEIVED_INR = "Received INR ";
@@ -1979,13 +1999,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			throws CMSItemNotFoundException, InvalidCartException
 	{
 		//getting cartdata
-		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-		LOG.info(getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE));
-		if (null != cartData)
-		{
-			//adding cartdata to model
-			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
-		}
+		//		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+		//		LOG.info(getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE));
+		//		if (null != cartData)
+		//		{
+		//			//adding cartdata to model
+		//			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
+		//		}
 
 		//Order Status from Juspay
 		try
@@ -1998,7 +2018,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
 					setCheckoutStepLinksForModel(model, getCheckoutStep());
-					return placeOrder(model, redirectAttributes);
+					//return placeOrder(model, redirectAttributes);
+					return updateOrder();
 				}
 				else if (MarketplacecheckoutaddonConstants.JUSPAY_DECLINED.equalsIgnoreCase(orderStatusResponse))
 				{
@@ -2552,6 +2573,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 						cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrl, uid,
 						MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+
+				//create order here
+
+				//Mandatory checks agains cart
+				final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
+				OrderData orderData;
+
+				getSessionService().setAttribute("guid", cart.getGuid());
+				if (isValidCart)
+				{
+					orderData = mplCheckoutFacade.placeOrder();
+				}
+				else
+				{
+					throw new InvalidCartException("************PaymentMethodCheckoutStepController : placeOrder : Invalid Cart!!!"
+							+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
+				}
+
 			}
 
 
@@ -2697,8 +2736,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	}
 
-
-
 	/**
 	 * This method displays top coupons in the payments page
 	 *
@@ -2714,6 +2751,76 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//		return getMplCouponFacade().displayTopCoupons(cart, customer, voucherList);
 	//	}
 
+
+	private String updateOrder()
+	{
+		LOG.info("========================Inside Update Order============================");
+
+		final String orderGuid = getSessionService().getAttribute("guid");
+		final OrderModel order = new OrderModel();
+		order.setGuid(orderGuid);
+		order.setType("Parent");
+		final OrderModel orderToBeUpdated = flexibleSearchService.getModelByExample(order);
+
+		final OrderData orderData = orderConverter.convert(orderToBeUpdated);
+
+		final MplPaymentAuditModel mplAudit = new MplPaymentAuditModel();
+		mplAudit.setCartGUID(orderGuid);
+		final MplPaymentAuditModel mplAuditModel = flexibleSearchService.getModelByExample(mplAudit);
+		if (null != mplAuditModel)
+		{
+			final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAuditModel.getAuditEntries();
+			if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
+			{
+
+				//orderStatusSpecifier.setOrderStatus(orderToBeUpdated, OrderStatus.PAYMENT_PENDING);
+				updateOrderStatus(mplAuditEntryList, orderToBeUpdated);
+			}
+		}
+
+		//Re-trigger submit order process from Payment_Pending to Payment_Successful
+		juspayEBSService.initiateProcess(orderToBeUpdated);
+
+		return redirectToOrderConfirmationPage(orderData);
+	}
+
+	private void updateOrderStatus(final List<MplPaymentAuditEntryModel> mplAuditEntryList, final OrderModel orderModel)
+	{
+		for (final MplPaymentAuditEntryModel mplAuditEntry : mplAuditEntryList)
+		{
+			if (null != mplAuditEntry.getResponseDate())
+			{
+				if (mplAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.COMPLETED))
+				{
+					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				}
+				else if (mplAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
+				{
+					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+
+					//					try
+					//					{
+					//						//Alert to Payment User Group when order is put on HOLD
+					//						getNotifyPaymentGroupMailService().sendMail(mplAuditEntry.getAuditId());
+					//					}
+					//					catch (final Exception e1)
+					//					{
+					//						LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
+					//					}
+					//					try
+					//					{
+					//						//send Notification
+					//						getRMSVerificationNotificationService().sendRMSNotification(orderModel);
+					//					}
+					//					catch (final Exception e1)
+					//					{
+					//						LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
+					//					}
+
+				}
+			}
+		}
+	}
 
 	/**
 	 * This method is used to place an order
