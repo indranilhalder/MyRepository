@@ -298,14 +298,14 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		{
 			if (addressData != null)
 			{
-				mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
+				mplChangeDeliveryAddressService.removeTemporaryAddress(orderCode);
 				final TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
 				final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 				final CustomerModel customer = (CustomerModel) orderModel.getUser();
 				temproryAddressModel.setEmail(customer.getOriginalUid());
 				final String customerId = customer.getUid();
 
-				flag = mplChangeDeliveryAddressService.saveTemproryAddress(orderCode, temproryAddressModel);
+				flag = mplChangeDeliveryAddressService.saveTemporaryAddress(orderCode, temproryAddressModel);
 				if (flag)
 				{
 					String mobileNumber = null;
@@ -374,7 +374,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 		//If OTP Valid then call to OMS for Pincode ServiceableCheck
 		if (otpValidate.booleanValue())
 		{
-			final TemproryAddressModel addressModel = mplChangeDeliveryAddressService.geTemproryAddressModel(orderCode);
+			final TemproryAddressModel addressModel = mplChangeDeliveryAddressService.getTemporaryAddressModel(orderCode);
 			LOG.debug("pincode serviceable Checking::MplChangeDeliveryAddressFacadeImpl");
 
 			try
@@ -413,7 +413,7 @@ public class MplChangeDeliveryAddressFacadeImpl implements MplChangeDeliveryAddr
 				}
 				else
 				{
-					mplChangeDeliveryAddressService.removeTemproryAddress(orderCode);
+					mplChangeDeliveryAddressService.removeTemporaryAddress(orderCode);
 					valditionMsg = DeliveryAddressEnum.PINCODENOTSERVICEABLE.toString();
 				}
 			}
