@@ -27,7 +27,7 @@ public interface MplChangeDeliveryAddressFacade
 	 * @param addressData
 	 * @return String Status Msg Failure, success
 	 */
-	public boolean saveAsTemproryAddressForCustomer(String orderCode, AddressData addressData);
+	public boolean saveAsTemporaryAddressForCustomer(String orderCode, AddressData addressData);
 
 	/**
 	 *
