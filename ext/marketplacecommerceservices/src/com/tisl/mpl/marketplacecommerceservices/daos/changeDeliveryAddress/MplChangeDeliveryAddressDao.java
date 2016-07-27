@@ -22,6 +22,6 @@ public interface MplChangeDeliveryAddressDao
 	 * @param orderCode
 	 * @return temproryAddressModel
 	 */
-	public TemproryAddressModel geTemproryAddressModel(String orderCode);
+	public TemproryAddressModel getTemporaryAddressModel(String orderCode);
 	public void  saveDeliveryAddress(OrderModel order,AddressModel address);
 }
