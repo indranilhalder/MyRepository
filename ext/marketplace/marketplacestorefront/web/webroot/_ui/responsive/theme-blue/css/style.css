@@ -29316,7 +29316,7 @@ height:80px;
 
 .showcase {
     height: auto;
-    background: #F7F8FA;
+    background: #FBFBFB;
     overflow: hidden;
     clear:both;
     margin:20px 0;
@@ -29351,7 +29351,7 @@ text-align:center;
     letter-spacing: 1px;
     font-weight: 600;
 	    overflow: hidden;
-    padding-bottom: 10px;
+    padding-bottom: 0px;
 }
 
 .showcase section {
@@ -29370,7 +29370,7 @@ p.showcase-para {
 }
 
 .showcase-heading > div {
-    margin: 20px 0px;
+    margin: 20px 0px 15px;
 }
 
 .showcase-center {
@@ -41053,5 +41053,6 @@ bottom:35px;
 
 #new_exclusive.owl-theme .owl-controls,
 .home-product-you-care-carousel .owl-theme .owl-controls,
-.home-best-pick-carousel .owl-theme .owl-controls{top: 38%;margin: 0;}
+.home-best-pick-carousel.owl-theme .owl-controls,
+#ia_products_hot_list.owl-theme .owl-controls {top: 38%;margin: 0;}
 /*Upgraded Owl carousel CSS ends*/
