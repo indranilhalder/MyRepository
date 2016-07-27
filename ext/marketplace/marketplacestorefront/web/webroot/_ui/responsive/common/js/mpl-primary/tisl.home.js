@@ -1822,3 +1822,19 @@ $(document).ready(function(){
 		 return true;
 	 }
 	}
+	
+	
+	
+	$(document).ajaxComplete(function(){
+		var arrHt=[],diffHt=0;
+		
+		$(".home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name").each(function(){
+			arrHt.push($(this).height());
+		});
+		//noprotect
+		var max1 = Math.max.apply(Math,arrHt);
+		for(var i=0;i < arrHt.length;i++){
+		    diffHt = max1 - arrHt[i];
+		    $("#brandsYouLove .home-brands-you-love-desc p.price").eq(i).css("margin-top",+diffHt);
+		  }
+	});
