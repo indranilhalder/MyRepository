@@ -29,6 +29,8 @@ Disallow: <c:url value="*msdclick=*"/>--%>
 
 Disallow: <c:url value="*/quickView"/>
 Disallow: <c:url value="*/page-1$"/>
+<%--TISPRD-3981 --%>
+Disallow: <c:url value="/search"/>
 Disallow: <c:url value="/p-sizeGuide"/>
 
 <%-- Request-rate: 1/10              # maximum rate is one page every 10 seconds
@@ -40,7 +42,9 @@ Visit-time: 0400-0845           # only visit between 04:00 and 08:45 UTC
 Sitemap: <c:url value="https://www.tatacliq.com/que/sitemap_index.xml" />--%>
 Sitemap: <c:url value="https://www.tatacliq.com/sitemap.xml" />
 Sitemap: <c:url value="https://www.tatacliq.com/que/sitemap.xml" />
-
+<%--TISPRD-3981 --%>
+User-agent: Test Certificate Info
+Disallow: /
 <%--# Block CazoodleBot as it does not present correct accept content headers
 User-agent: CazoodleBot
 Disallow: /
