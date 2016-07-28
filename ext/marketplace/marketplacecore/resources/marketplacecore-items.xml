@@ -6036,7 +6036,8 @@
 					</attribute>
 					<attribute qualifier="deviceId" type="java.lang.String">
 						<description>Stores the Device ID</description>
-						<modifiers optional="true" read="true" write="true" unique="true"/>
+						<!-- <modifiers optional="true" read="true" write="true" unique="true"/> -->
+						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
