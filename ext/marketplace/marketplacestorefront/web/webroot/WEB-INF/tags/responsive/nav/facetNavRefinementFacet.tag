@@ -495,8 +495,10 @@ function navigateToPage(queryString,textString)
 			<c:if test="${not empty facetData.topValues}">
 			
 			<c:set var="remainingFacetValues" value="${facetData.values}" />
-	
-		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-8}" />
+			
+	        <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('search.Facet.topValue')" var="facetTopValue"/>
+	        
+		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-facetTopValue}" />
 		    
 			<div class="more-lessFacetLinks active">
 				<div class="more js-more-facet-values checkbox-menu">
