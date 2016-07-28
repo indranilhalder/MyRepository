@@ -6830,6 +6830,17 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- TISPRO-675 -->
+ 					<attribute qualifier="emiBank" type="java.lang.String"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<persistence type="property" />
+ 					</attribute>
+ 					<attribute qualifier="emiTenure" type="java.lang.String"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<persistence type="property" />
+ 					</attribute>
 				</attributes>
 			</itemtype>
 			<itemtype code="JuspayCardResponse" autocreate="true"
