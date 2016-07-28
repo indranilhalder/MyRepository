@@ -30,7 +30,7 @@ Disallow: <c:url value="*msdclick=*"/>--%>
 Disallow: <c:url value="*/quickView"/>
 Disallow: <c:url value="*/page-1$"/>
 <%--TISPRD-3981 --%>
-Disallow: <c:url value="/search"/>
+Disallow: <c:url value="/search/"/>
 Disallow: <c:url value="/p-sizeGuide"/>
 
 <%-- Request-rate: 1/10              # maximum rate is one page every 10 seconds
