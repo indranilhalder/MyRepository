@@ -239,14 +239,14 @@
 				<div class="optionsLandmark">
 					<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
 						labelKey="Landmarks" path="landmark" mandatory="true"
-						skipBlank="false" skipBlankMessageKey="address.state.pleaseSelect"
+						skipBlank="false" selectedValue="${addressForm.landmark}" skipBlankMessageKey="address.state.pleaseSelect"
 						items="${abc}"
 						itemValue="name"  />
 				</div>
 			</div>
 			<div class='half'>
 			
-				<div class='half address_landmarkOtherDiv'>
+				<div class='half address_landmarkOtherDiv' data-value="${addressForm.landmark}">
 						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="address.landmarks"
 							labelKey="Enter Nearest Landmark" path="otherLandmark"
 							maxLength="30" />
@@ -273,7 +273,7 @@
 			<div class="help-block has-error" id="stateError" style="display: none;">		
 			</div>
 			</div>
-				   		
+			
 		<div class="half country-select">
 		<c:set var='count'  value='1' />
 		<div class="country">

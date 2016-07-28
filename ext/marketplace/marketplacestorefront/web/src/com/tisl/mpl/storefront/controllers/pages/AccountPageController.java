@@ -3357,6 +3357,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				addressForm.setState(addressData.getState());
 				addressForm.setLocality(addressData.getLocality());
 				addressForm.setLine3(addressData.getLine3());
+				addressForm.setLandmark(addressData.getLandmark());
 				if (addressData.getRegion() != null && !StringUtils.isEmpty(addressData.getRegion().getIsocode()))
 				{
 					addressForm.setRegionIso(addressData.getRegion().getIsocode());
@@ -3444,13 +3445,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setCountry(getI18NFacade().getCountryForIsocode(ModelAttributetConstants.INDIA_ISO_CODE));
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
-			if(StringUtils.isEmpty(addressForm.getLandmark().trim()) && null != addressForm.getLandmark())
+			if(null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()) )
 			{
-				newAddress.setLandmark(addressForm.getOtherLandmark());
+				newAddress.setLandmark(addressForm.getLandmark());
 			}
 			else
 			{
-				newAddress.setLandmark(addressForm.getLandmark());
+				newAddress.setLandmark(addressForm.getOtherLandmark());
 			}
 
 			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
@@ -3562,6 +3563,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setState(addressForm.getState());
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
+			if(null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()) )
+			{
+				newAddress.setLandmark(addressForm.getLandmark());
+			}
+			else
+			{
+				newAddress.setLandmark(addressForm.getOtherLandmark());
+			}
 
 			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
 			{
@@ -3706,6 +3715,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					addressForm.setState(addressData.getState());
 					addressForm.setLocality(addressData.getLocality());
 					addressForm.setLine3(addressData.getLine3());
+					addressForm.setLandmark(addressData.getLandmark());
 					if (addressData.getRegion() != null && !StringUtils.isEmpty(addressData.getRegion().getIsocode()))
 					{
 						addressForm.setRegionIso(addressData.getRegion().getIsocode());
@@ -3799,7 +3809,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 			selectedAddress.setVisibleInAddressBook(true);
 			selectedAddress.setLine3(addressForm.getLine3());
 			selectedAddress.setLocality(addressForm.getLocality());
-
+			if(null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()))
+			{
+				selectedAddress.setLandmark(addressForm.getLandmark());
+			}
+			else
+			{
+				selectedAddress.setLandmark(addressForm.getOtherLandmark());
+			}
+			selectedAddress.setLandmark(addressForm.getLandmark());
 			final CountryData countryData = i18NFacade.getCountryForIsocode(addressForm.getCountryIso());
 			selectedAddress.setCountry(countryData);
 			if (resolveCountryRegions.contains(countryData.getIsocode()) && null != addressForm.getRegionIso()
@@ -7016,13 +7034,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 			addressData.setState(addressForm.getState());
 			addressData.setBillingAddress(false);
 			addressData.setShippingAddress(true);
-			if(StringUtils.isEmpty(addressForm.getLandmark().trim()) && null != addressForm.getLandmark())
+			if(null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()))
 			{
-				addressData.setLandmark(addressForm.getOtherLandmark());
+				addressData.setLandmark(addressForm.getLandmark());
 			}
 			else
 			{
-				addressData.setLandmark(addressForm.getLandmark());
+				addressData.setLandmark(addressForm.getOtherLandmark());
 			}
 			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
 			{

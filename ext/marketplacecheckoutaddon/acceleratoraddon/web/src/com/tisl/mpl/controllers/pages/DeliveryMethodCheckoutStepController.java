@@ -1547,13 +1547,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			newAddress.setPhone(addressForm.getMobileNo());
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
-			if (null != addressForm.getLandmark() && StringUtils.isEmpty(addressForm.getLandmark().trim()))
+			if (null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()))
 			{
-				newAddress.setLandmark(addressForm.getOtherLandmark());
+				newAddress.setLandmark(addressForm.getLandmark());
 			}
 			else
 			{
-				newAddress.setLandmark(addressForm.getLandmark());
+				newAddress.setLandmark(addressForm.getOtherLandmark());
 			}
 			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
 			{
@@ -1690,13 +1690,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
 			newAddress.setState(addressForm.getState());
-			if (null != addressForm.getLandmark() && StringUtils.isEmpty(addressForm.getLandmark().trim()))
+			if (null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()))
 			{
-				newAddress.setLandmark(addressForm.getOtherLandmark());
+				newAddress.setLandmark(addressForm.getLandmark());
 			}
 			else
 			{
-				newAddress.setLandmark(addressForm.getLandmark());
+				newAddress.setLandmark(addressForm.getOtherLandmark());
 			}
 			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
 			{

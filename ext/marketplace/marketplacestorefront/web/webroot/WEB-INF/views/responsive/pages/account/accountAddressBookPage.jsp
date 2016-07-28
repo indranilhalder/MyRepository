@@ -383,16 +383,15 @@
 									<div class="half no-display">
 										<div class="optionsLandmark">
 											<label>Landmark*</label>
-												<form:select path="landmark" class="address_landmarks"
+												<form:select path="landmark" id="landmark" value="${addressForm.landmark}" class="address_landmarks"
 													maxlength="30"></form:select>
 												<div class="errorMessage errland1">   </div>
 										</div>
 									</div>
-									
 									<div class="half no-display">
 										<div class ="address_landmarkOtherDiv">
 										<label>Enter Nearest Landmark</label>
-											<form:input path="otherLandmark" onkeyup="optionsLandmark1()" class="address_landmarkOther"
+											<form:input path="otherLandmark" id="otherLandmark" onkeyup="optionsLandmark1()" class="address_landmarkOther"
 												maxlength="30" />
 												<div class="errorMessage errland2"> hgsh  </div>
 										</div>

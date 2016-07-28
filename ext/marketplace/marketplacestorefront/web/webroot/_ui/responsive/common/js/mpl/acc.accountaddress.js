@@ -117,7 +117,10 @@ function editAddress(addressId) {
    				$('#line2').val(data.line2);
    				$('#line3').val(data.line3);
    				$('#postcode').val(data.postcode);
+   				$('.address_landmarks').val(data.landmark);
+   				$('.address_landmarkOther').val(data.otherLandmark);
    				loadPincodeData();
+   				$('.address_landmarkOther').val(data.otherLandmark);
    				$('#townCity').val(data.townCity);
    				$('#mobileNo').val(data.mobileNo);
    				$('#stateListBox').val(data.state);
@@ -135,6 +138,24 @@ function editAddress(addressId) {
    				
    				$("#addNewAddress").css("display","none");
    				$("#edit").css("display","block");
+   				if(data.landmark.length != "") {
+   	            	setTimeout(function(){
+   	            		console.log($(".address_landmarks option[value='"+data.landmark+"']").length);
+   		            	if($(".address_landmarks option[value='"+data.landmark+"']").length > "0") {
+   		            		console.log(data.landmark); 
+   		            		$(".address_landmarks").val(data.landmark);
+   		            	} else {
+   	            			console.log(data.landmark); 
+   	            			if($(".address_landmarks option[value='Other']").length > "0") {
+   	            				$(".address_landmarks").val("Other"); 
+   	                			changeFunction("Other"); 
+   	                			$(".address_landmarkOther").val(data.landmark);
+   	            			} else {
+   	            				$(".address_landmarkOther").val(data.landmark);
+   	            			}	            	
+   		            	}
+   	            	}, 200);
+   	            }
     	   },
     	   error : function(data) {
     		   	console.log(data.responseText) 
