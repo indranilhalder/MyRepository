@@ -55,6 +55,7 @@ INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type;solrValueRanges
 ;mplElectronicsPriceRangeINR;INR-ELECTRONICS;double;mplRangeRefElectronicsINR1,mplRangeRefElectronicsINR2,mplRangeRefElectronicsINR3,mplRangeRefElectronicsINR4,mplRangeRefElectronicsINR5,mplRangeRefElectronicsINR6,mplRangeRefElectronicsINR7,mplRangeRefElectronicsINR8,mplRangeRefElectronicsINR9
 ;mplApparelPriceRangeINR;INR-APPAREL;double;mplRangeRefApparelINR1,mplRangeRefApparelINR2,mplRangeRefApparelINR3,mplRangeRefApparelINR4,mplRangeRefApparelINR5,mplRangeRefApparelINR6,mplRangeRefApparelINR7
 ;mplFacetAvgRating;;double;avgRatingRef1,avgRatingRef2,avgRatingRef3,avgRatingRef4,avgRatingRef5
+;mplDiscountRange;INR-DISCOUNT;double;discountRangeRef1,discountRangeRef2,discountRangeRef3,discountRangeRef4,discountRangeRef5
 
 
 # Define price ranges
@@ -82,6 +83,12 @@ INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=tru
 ;avgRatingRef3;mplFacetAvgRating;3;2.5;3.49
 ;avgRatingRef4;mplFacetAvgRating;4;3.5;4.49
 ;avgRatingRef5;mplFacetAvgRating;5;4.5;5
+
+;discountRangeRef1;mplDiscountRange;	Upto 10%;		0;		10
+;discountRangeRef2;mplDiscountRange;	10% - 30%;		10.01;	30
+;discountRangeRef3;mplDiscountRange;	30% - 50%;		30.01;	50
+;discountRangeRef4;mplDiscountRange;	50% - 70%;		50.01;	70
+;discountRangeRef5;mplDiscountRange;	70% and more;	70.01;	100
 
 # Non-facet properties
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
@@ -174,7 +181,8 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; capacity               ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplCapacityFacetValueProvider        ;                						;                           ;defaultTopValuesProvider
 ;$solrIndexedType; sellerId            	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSellerIdValueProvider             ;                						;                           ;defaultTopValuesProvider
 ;$solrIndexedType; deliveryMode           ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplDeliveryModeValueProvider         ;    									;                           ;
-;$solrIndexedType; collectionIds          ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplOccasionIDValueProvider           ;                						;                           ;defaultTopValuesProvider
+;$solrIndexedType; collectionIds          ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplOccasionIDValueProvider           ;                						;                           ;
+;$solrIndexedType; discountFlag			  ;double ;		;	 ;	   ;	 ;	   ;true ;MultiSelectOr	;Alpha ; 2500;true;		; 	  ;mplDiscountFlagValueProvider			;										;							;							;mplDiscountRange
 # ;$solrIndexedType; vouchers		          ;string ;     ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplVoucherCodeValueProvider		    ;	;                         	;
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;facet[default=true];facetDisplayNameProvider
@@ -406,8 +414,8 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name
 				 ;$solrIndexedType				;inStockFlag		;boolean	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplProductInStockFlagValueProvider			;mplInStockFacetDisplayNameProvider ;						;				;							;
 				 
 #For Discount Facet Search
-INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;topValuesProvider;rangeSets(name);$classAttributeAssignment	;
-				 ;$solrIndexedType				;discountFlag		;string	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplDiscountFlagValueProvider			; ;						;defaultTopValuesProvider;				;							;
+#INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;
+#				 ;$solrIndexedType				;discountFlag		;string	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplDiscountFlagValueProvider			; ;						;				;							;
 				 
 #For All Discount Facet Search
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;topValuesProvider;rangeSets(name);$classAttributeAssignment	;
