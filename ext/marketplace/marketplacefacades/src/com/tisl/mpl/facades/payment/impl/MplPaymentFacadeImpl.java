@@ -805,11 +805,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					MarketplacecommerceservicesConstants.PAYMENTMODE);
 			//final CartModel cart = getCartService().getSessionCart();
 
+			//New Soln - Order before Payment
 			final String orderGuid = getSessionService().getAttribute("guid");
-			final OrderModel order = new OrderModel();
-			order.setGuid(orderGuid);
-			order.setType("Parent");
-			final OrderModel orderModel = flexibleSearchService.getModelByExample(order);
+			final OrderModel orderModel = getOrderByGuid(orderGuid);
 
 			String orderStatus = null;
 			boolean updAuditErrStatus = false;
@@ -851,7 +849,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//Update Audit Table after getting payment response
 					//updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse);
 					//TIS-3168
-					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest);
+					//updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest);
+
+					//Payment Changes - Order before Payment
+					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest, orderModel);
 
 
 					//TISPRD-2558
@@ -1965,6 +1966,25 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 		return deliveryOptionCheck;
 	}
+
+
+
+
+	/**
+	 * This method handles fetching order model by guid for new Payment Soln - Order before payment
+	 *
+	 * @param guid
+	 * @return OrderModel
+	 */
+	@Override
+	public OrderModel getOrderByGuid(final String guid)
+	{
+		return getMplPaymentService().fetchOrderOnGUID(guid);
+	}
+
+
+
+
 
 	//Getters and setters
 	/**

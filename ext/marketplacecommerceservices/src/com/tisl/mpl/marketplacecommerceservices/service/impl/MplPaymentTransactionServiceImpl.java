@@ -268,6 +268,97 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 	}
 
 
+
+
+
+
+	/**
+	 * This method creates a new Payment Transaction Model after Payment
+	 *
+	 * @param cart
+	 * @param orderStatusResponse
+	 * @param paymentTransactionEntryList
+	 * @return PaymentTransactionModel
+	 */
+	@Override
+	public PaymentTransactionModel createPaymentTransaction(final AbstractOrderModel cart,
+			final GetOrderStatusResponse orderStatusResponse, final List<PaymentTransactionEntryModel> paymentTransactionEntryList)
+	{
+		final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+		if (null != cart.getPaymentInfo())
+		{
+			paymentTransactionModel.setInfo(cart.getPaymentInfo());
+		}
+
+		if (StringUtils.isNotEmpty(orderStatusResponse.getOrderId()))
+		{
+			paymentTransactionModel.setCode(orderStatusResponse.getOrderId() + "-" + System.currentTimeMillis());
+		}
+		else
+		{
+			paymentTransactionModel.setCode(cart.getCode() + "-" + System.currentTimeMillis());//TODO:Change required when Order Ref No. is ready
+		}
+
+		paymentTransactionModel.setCreationtime(new Date());
+		paymentTransactionModel.setCurrency(cart.getCurrency());
+		paymentTransactionModel.setEntries(paymentTransactionEntryList);
+		paymentTransactionModel.setOrder(cart);
+
+		if (StringUtils.isNotEmpty(orderStatusResponse.getGatewayId().toString()))
+		{
+			paymentTransactionModel.setPaymentProvider(orderStatusResponse.getGatewayId().toString());
+		}
+
+		paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPrice().doubleValue()));
+
+		if (StringUtils.isNotEmpty(orderStatusResponse.getTxnId()))
+		{
+			paymentTransactionModel.setRequestId(orderStatusResponse.getTxnId());
+		}
+
+		if (StringUtils.isNotEmpty(orderStatusResponse.getBankErrorCode()))
+		{
+			paymentTransactionModel.setRequestToken(orderStatusResponse.getBankErrorCode());
+		}
+
+		//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
+		boolean flag = false;
+		for (final PaymentTransactionEntryModel entry : paymentTransactionEntryList)
+		{
+			if (entry.getTransactionStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+			{
+				flag = true;
+			}
+			else
+			{
+				flag = false;
+			}
+		}
+		if (flag) //flag == true
+		{
+			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+		}
+		else
+		{
+			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+		}
+		try
+		{
+			getModelService().save(paymentTransactionModel);
+			//paymentTransactionList.add(paymentTransactionModel);
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("Exception while saving payment transaction with ", e);
+		}
+
+		return paymentTransactionModel;
+	}
+
+
+
+
+
 	//Getters and setters
 
 	/**

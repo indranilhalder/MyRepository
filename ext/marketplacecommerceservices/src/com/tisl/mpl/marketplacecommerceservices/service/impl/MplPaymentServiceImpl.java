@@ -10,6 +10,7 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.enums.CreditCardType;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -96,6 +97,7 @@ import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPaymentDao;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplFraudModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
@@ -104,6 +106,7 @@ import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.MplEMICalculator;
+import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
 /**
@@ -153,6 +156,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private FlexibleSearchService flexibleSearchService;
 	@Autowired
 	private MplVoucherService mplVoucherService;
+	@Autowired
+	private OrderStatusSpecifier orderStatusSpecifier;
+	@Autowired
+	private MplFraudModelService mplFraudModelService;
 
 	//@Autowired
 	//private ExtendedUserService extendedUserService;
@@ -392,22 +399,24 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *
 	 * @param orderStatusResponse
 	 * @param paymentMode
-	 * @param cart
+	 * @param order
 	 *
 	 */
 	@Override
 	public void setPaymentTransaction(final GetOrderStatusResponse orderStatusResponse, final Map<String, Double> paymentMode,
-			final AbstractOrderModel cart)
+			final AbstractOrderModel order)
 	{
-		Collection<PaymentTransactionModel> collection = cart.getPaymentTransactions();
-		List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+		Collection<PaymentTransactionModel> collection = order.getPaymentTransactions();
+		final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+		//Soln Changes
+		PaymentTransactionModel payTranModel = null;
 		if (null == collection || collection.isEmpty())
 		{
 			collection = new ArrayList<PaymentTransactionModel>();
 		}
 
 		paymentTransactionList.addAll(collection);
-		List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
+		//List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
 
 		//final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
 		final Date date = new Date();
@@ -418,6 +427,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		String sameAsShipping = "".intern();
 		if (null != orderStatusResponse)
 		{
+			List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
 			LOG.info(MarketplacecommerceservicesConstants.JUSPAY_ORDER_STAT_RESP + orderStatusResponse);
 			if (StringUtils.isNotEmpty(orderStatusResponse.getUdf10()))
 			{
@@ -443,7 +453,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					}
 					paymentTransactionEntry.setAmount(BigDecimal.valueOf(entry.getValue().doubleValue()));
 					paymentTransactionEntry.setTime(date);
-					paymentTransactionEntry.setCurrency(cart.getCurrency());
+					paymentTransactionEntry.setCurrency(order.getCurrency());
 					//	paymentTransactionEntry.setPaymentMode(MarketplacecommerceservicesConstants.WALLET);//TODO::Wallet not in scope of Release 1
 					paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
 
@@ -462,36 +472,57 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//Setting fields of paymentTransactionEntry with Payment Gateway Responses for other payment modes
 				else
 				{
-					paymentTransactionEntryList = getMplPaymentTransactionService().createPaymentTranEntry(orderStatusResponse, cart,
+					paymentTransactionEntryList = getMplPaymentTransactionService().createPaymentTranEntry(orderStatusResponse, order,
 							entry, paymentTransactionEntryList);
 				}
 			}
 
-			paymentTransactionList = getMplPaymentTransactionService().createPaymentTransaction(cart, orderStatusResponse,
-					paymentTransactionEntryList, paymentTransactionList);
+			//Soln Changes
+			payTranModel = getMplPaymentTransactionService().createPaymentTransaction(order, orderStatusResponse,
+					paymentTransactionEntryList);
+			paymentTransactionList.add(payTranModel);
 		}
-		cart.setPaymentTransactions(paymentTransactionList);
-		//setting payment transaction against child order
-		if (cart instanceof OrderModel)
-		{
-			final List<OrderModel> subOrders = ((OrderModel) cart).getChildOrders();
-			for (final OrderModel order : subOrders)
-			{
-				order.setPaymentTransactions(paymentTransactionList);
-				getModelService().save(order);
-			}
+		order.setPaymentTransactions(paymentTransactionList);
 
+
+		//setting payment transaction against child order
+		if (order instanceof OrderModel)
+		{
+			final List<OrderModel> subOrderList = ((OrderModel) order).getChildOrders();
+			for (final OrderModel subOrder : subOrderList)
+			{
+				final PaymentTransactionModel subOrderPayTranModel = getModelService().clone(payTranModel);
+				subOrderPayTranModel.setOrder(subOrder);
+				if (null != subOrder.getPaymentTransactions())
+				{
+					final Collection<PaymentTransactionModel> subOrderPaymentTransactionList = subOrder.getPaymentTransactions();
+					final List<PaymentTransactionModel> updatedPaymentTransactionList = new ArrayList<PaymentTransactionModel>();
+					if (CollectionUtils.isNotEmpty(subOrderPaymentTransactionList))
+					{
+						updatedPaymentTransactionList.addAll(subOrderPaymentTransactionList);
+					}
+					updatedPaymentTransactionList.add(subOrderPayTranModel);
+					subOrder.setPaymentTransactions(updatedPaymentTransactionList);
+				}
+
+				//subOrder.setPaymentTransactions(paymentTransactionList);
+				//getModelService().save(order);
+			}
+			if (CollectionUtils.isNotEmpty(subOrderList))
+			{
+				getModelService().saveAll(subOrderList);
+			}
 		}
 
 		try
 		{
-			getModelService().save(cart);
+			getModelService().save(order);
 			if (saveCard.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE)
 					&& null != orderStatusResponse.getCardResponse()
 					&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardReference()))
 			{
 				//setting as saved card
-				saveCards(orderStatusResponse, paymentMode, cart, sameAsShipping);
+				saveCards(orderStatusResponse, paymentMode, order, sameAsShipping);
 			}
 		}
 		catch (final ModelSavingException e)
@@ -2692,7 +2723,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public boolean updateAuditEntry(final GetOrderStatusResponse orderStatusResponse,
-			final GetOrderStatusRequest orderStatusRequest)
+			final GetOrderStatusRequest orderStatusRequest, final OrderModel orderModel)
 	{
 		boolean flag = false;
 		try
@@ -2923,6 +2954,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				LOG.debug("auditEntry status risk null------> " + auditEntry.getStatus());
 
 				getModelService().save(auditEntry);
+
 				auditEntryList.add(auditEntry);
 
 				getModelService().save(juspayEBSResponseModel);
@@ -2931,6 +2963,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				auditModel.setAuditEntries(auditEntryList);
 				auditModel.setRisk(juspayEBSResponseList);
 				getModelService().save(auditModel);
+
+				updateOrderStatus(orderModel, auditEntry);
+				updateFraudModel(orderModel, juspayEBSResponseModel, auditModel);
 			}
 		}
 		catch (final NullPointerException e)
@@ -2964,6 +2999,77 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 
+
+
+	/**
+	 * @Decsription : Fetch Order Details Based on GUID for new Payment Soln - Order before payment
+	 * @param: guid
+	 */
+	@Override
+	public OrderModel fetchOrderOnGUID(final String guid)
+	{
+		return getMplPaymentDao().fetchOrderOnGUID(guid);
+	}
+
+
+
+
+
+
+	/**
+	 * This method updates order status for new Payment Soln - Order before Payment
+	 *
+	 * @param orderModel
+	 * @param auditEntryModel
+	 */
+	private void updateOrderStatus(final OrderModel orderModel, final MplPaymentAuditEntryModel auditEntryModel)
+	{
+		if (auditEntryModel.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.COMPLETED))
+		{
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+		}
+		else if (auditEntryModel.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
+		{
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+
+			//			try
+			//			{
+			//				//Alert to Payment User Group when order is put on HOLD
+			//				getNotifyPaymentGroupMailService().sendMail(auditEntryModel.getAuditId());
+			//			}
+			//			catch (final Exception e1)
+			//			{
+			//				LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
+			//			}
+			//			try
+			//			{
+			//				//send Notification
+			//				getRMSVerificationNotificationService().sendRMSNotification(orderModel);
+			//			}
+			//			catch (final Exception e1)
+			//			{
+			//				LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
+			//			}
+
+		}
+	}
+
+
+
+
+	/**
+	 *
+	 * @param orderModel
+	 */
+	private void updateFraudModel(final OrderModel orderModel, final JuspayEBSResponseModel juspayEBSResponseModel,
+			final MplPaymentAuditModel mplAudit)
+	{
+		if (null != juspayEBSResponseModel && StringUtils.isNotEmpty(juspayEBSResponseModel.getEbsRiskPercentage())
+				&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase("-1.0"))
+		{
+			getMplFraudModelService().updateFraudModel(orderModel, mplAudit, juspayEBSResponseModel);
+		}
+	}
 
 
 
@@ -3309,4 +3415,46 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		this.mplVoucherService = mplVoucherService;
 	}
+
+
+	/**
+	 * @return the orderStatusSpecifier
+	 */
+	public OrderStatusSpecifier getOrderStatusSpecifier()
+	{
+		return orderStatusSpecifier;
+	}
+
+
+	/**
+	 * @param orderStatusSpecifier
+	 *           the orderStatusSpecifier to set
+	 */
+	public void setOrderStatusSpecifier(final OrderStatusSpecifier orderStatusSpecifier)
+	{
+		this.orderStatusSpecifier = orderStatusSpecifier;
+	}
+
+
+	/**
+	 * @return the mplFraudModelService
+	 */
+	public MplFraudModelService getMplFraudModelService()
+	{
+		return mplFraudModelService;
+	}
+
+
+	/**
+	 * @param mplFraudModelService
+	 *           the mplFraudModelService to set
+	 */
+	public void setMplFraudModelService(final MplFraudModelService mplFraudModelService)
+	{
+		this.mplFraudModelService = mplFraudModelService;
+	}
+
+
+
+
 }

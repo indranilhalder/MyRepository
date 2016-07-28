@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
@@ -305,11 +306,11 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -360,8 +361,8 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			final FlexibleSearchQuery paymentTransactionQuery = new FlexibleSearchQuery(queryString);
 			paymentTransactionQuery.addQueryParameter(MarketplacecommerceservicesConstants.CUSTOMERID, mplCustomerID);
 			paymentTransactionQuery.addQueryParameter(MarketplacecommerceservicesConstants.JUSPAYORDERID, juspayOrderId);
-			final List<PaymentTransactionModel> paymentTransactionList = flexibleSearchService
-					.<PaymentTransactionModel> search(paymentTransactionQuery).getResult();
+			final List<PaymentTransactionModel> paymentTransactionList = flexibleSearchService.<PaymentTransactionModel> search(
+					paymentTransactionQuery).getResult();
 			if (null != paymentTransactionList && !paymentTransactionList.isEmpty())
 			{
 				//fetching Payment Transaction from DB using flexible search query
@@ -605,9 +606,9 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -689,6 +690,51 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
+	}
+
+
+
+
+
+	/**
+	 * @Decsription : Fetch Order Details Based on GUID for new Payment Soln - Order before payment
+	 * @param: guid
+	 */
+	@Override
+	public OrderModel fetchOrderOnGUID(final String guid)
+	{
+		OrderModel orderModel = null;
+		try
+		{
+			final String queryString = //
+			"SELECT {om:" + OrderModel.PK
+					+ "} "//
+					+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS om } where" + "{om."
+					+ OrderModel.GUID + "} = ?code and " + "{om." + OrderModel.TYPE + "} = ?type";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, guid);
+			query.addQueryParameter("type", "Parent");
+			final List<OrderModel> orderModelList = getFlexibleSearchService().<OrderModel> search(query).getResult();
+			if (!CollectionUtils.isEmpty(orderModelList))
+			{
+				orderModel = orderModelList.get(0);
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		return orderModel;
 	}
 
 

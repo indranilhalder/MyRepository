@@ -3,6 +3,7 @@ package com.tisl.mpl.facades.payment;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -278,11 +279,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -290,9 +291,9 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return Map<String, List<MplNetbankingData>>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
@@ -337,5 +338,12 @@ public interface MplPaymentFacade
 	 * @return boolean
 	 */
 	boolean checkCart(final CartModel cart);
+
+
+	/**
+	 * @param guid
+	 * @return OrderModel
+	 */
+	OrderModel getOrderByGuid(String guid);
 
 }

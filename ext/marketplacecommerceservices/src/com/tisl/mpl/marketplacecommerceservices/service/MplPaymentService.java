@@ -5,6 +5,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -287,8 +288,16 @@ public interface MplPaymentService
 	 *
 	 * @param orderStatusResponse
 	 * @param orderStatusRequest
+	 * @param orderModel
 	 * @return boolean
 	 */
-	boolean updateAuditEntry(GetOrderStatusResponse orderStatusResponse, GetOrderStatusRequest orderStatusRequest);
+	boolean updateAuditEntry(GetOrderStatusResponse orderStatusResponse, GetOrderStatusRequest orderStatusRequest,
+			final OrderModel orderModel);
+
+	/**
+	 * @param guid
+	 * @return OrderModel
+	 */
+	OrderModel fetchOrderOnGUID(String guid);
 
 }

@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.core.model.order.OrderModel;
 
+import com.tisl.mpl.core.model.JuspayEBSResponseModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 
 
@@ -22,4 +23,11 @@ public interface MplFraudModelService
 	 * @param mplAudit
 	 */
 	public void updateFraudModel(final OrderModel orderModel, final MplPaymentAuditModel mplAudit);
+
+	/**
+	 * @param orderModel
+	 * @param mplAudit
+	 * @param juspayEBSResponseModel
+	 */
+	void updateFraudModel(OrderModel orderModel, MplPaymentAuditModel mplAudit, JuspayEBSResponseModel juspayEBSResponseModel);
 }

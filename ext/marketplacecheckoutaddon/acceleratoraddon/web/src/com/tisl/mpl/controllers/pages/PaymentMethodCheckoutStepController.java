@@ -33,7 +33,6 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
-import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -104,8 +103,6 @@ import com.tisl.mpl.core.enums.CodCheckMessage;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
-import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
-import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.SavedCardModel;
@@ -2752,31 +2749,31 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//	}
 
 
+	/**
+	 * This method updates already created order as per new Payment Soln - Order before Payment
+	 *
+	 * @return String
+	 */
 	private String updateOrder()
 	{
 		LOG.info("========================Inside Update Order============================");
-
 		final String orderGuid = getSessionService().getAttribute("guid");
-		final OrderModel order = new OrderModel();
-		order.setGuid(orderGuid);
-		order.setType("Parent");
-		final OrderModel orderToBeUpdated = flexibleSearchService.getModelByExample(order);
-
+		final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(orderGuid);
 		final OrderData orderData = orderConverter.convert(orderToBeUpdated);
-
-		final MplPaymentAuditModel mplAudit = new MplPaymentAuditModel();
-		mplAudit.setCartGUID(orderGuid);
-		final MplPaymentAuditModel mplAuditModel = flexibleSearchService.getModelByExample(mplAudit);
-		if (null != mplAuditModel)
-		{
-			final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAuditModel.getAuditEntries();
-			if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
-			{
-
-				//orderStatusSpecifier.setOrderStatus(orderToBeUpdated, OrderStatus.PAYMENT_PENDING);
-				updateOrderStatus(mplAuditEntryList, orderToBeUpdated);
-			}
-		}
+		//
+		//		final MplPaymentAuditModel mplAudit = new MplPaymentAuditModel();
+		//		mplAudit.setCartGUID(orderGuid);
+		//		final MplPaymentAuditModel mplAuditModel = flexibleSearchService.getModelByExample(mplAudit);
+		//		if (null != mplAuditModel)
+		//		{
+		//			final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAuditModel.getAuditEntries();
+		//			if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
+		//			{
+		//
+		//				//orderStatusSpecifier.setOrderStatus(orderToBeUpdated, OrderStatus.PAYMENT_PENDING);
+		//				updateOrderStatus(mplAuditEntryList, orderToBeUpdated);
+		//			}
+		//		}
 
 		//Re-trigger submit order process from Payment_Pending to Payment_Successful
 		juspayEBSService.initiateProcess(orderToBeUpdated);
@@ -2784,43 +2781,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return redirectToOrderConfirmationPage(orderData);
 	}
 
-	private void updateOrderStatus(final List<MplPaymentAuditEntryModel> mplAuditEntryList, final OrderModel orderModel)
-	{
-		for (final MplPaymentAuditEntryModel mplAuditEntry : mplAuditEntryList)
-		{
-			if (null != mplAuditEntry.getResponseDate())
-			{
-				if (mplAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.COMPLETED))
-				{
-					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-				}
-				else if (mplAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
-				{
-					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
 
-					//					try
-					//					{
-					//						//Alert to Payment User Group when order is put on HOLD
-					//						getNotifyPaymentGroupMailService().sendMail(mplAuditEntry.getAuditId());
-					//					}
-					//					catch (final Exception e1)
-					//					{
-					//						LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
-					//					}
-					//					try
-					//					{
-					//						//send Notification
-					//						getRMSVerificationNotificationService().sendRMSNotification(orderModel);
-					//					}
-					//					catch (final Exception e1)
-					//					{
-					//						LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
-					//					}
-
-				}
-			}
-		}
-	}
 
 	/**
 	 * This method is used to place an order
