@@ -980,6 +980,7 @@
 		<property name="freebieItems" type="java.util.List&lt;com.tisl.mpl.wsdto.FreebieDTO>"></property>	
 		<property name="isProductNew" type="java.lang.String"></property>
 		<property name="sellerAssociationstatus" type="String" />
+			<property name="discount" type="String" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.KnowMoreDTO">

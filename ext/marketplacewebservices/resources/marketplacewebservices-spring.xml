@@ -418,6 +418,7 @@
 	      class="de.hybris.platform.commercewebservicescommons.mapping.impl.DefaultFieldSetLevelHelper">
 	</bean>
 	<bean id="mplSlaveMasterFacade" class="com.tisl.mpl.facade.impl.MplSlaveMasterFacadeImpl"/>
+	<bean id="orderUtil" class="com.tisl.mpl.utility.OrderUtil"/>
 	
 	<!-- <bean id="performanceMonitor"
               class="com.tisl.mpl.interceptors.PerformanceMonitoring" />

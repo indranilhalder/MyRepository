@@ -20,7 +20,6 @@ import de.hybris.platform.acceleratorservices.storefront.data.MetaElementData;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
-import de.hybris.platform.acceleratorstorefrontcommons.util.MetaSanitizerUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
@@ -169,8 +168,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
 	{
-		final CategoryModel cm = new CategoryModel();
-		cm.getSeoContent();
 
 		categoryCode = categoryCode.toUpperCase();
 		String searchCode = new String(categoryCode);
@@ -300,7 +297,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 					metaDescription = seoContent.getSeoMetaDescription();
 					metaTitle = seoContent.getSeoMetaTitle();
 				}
-				metaKeywords = MetaSanitizerUtil.sanitizeKeywords(metaKeywords);
+				//metaKeywords = MetaSanitizerUtil.sanitizeKeywords(metaKeywords);
 				setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
 				updatePageTitle(model, metaTitle);
 
@@ -341,7 +338,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				/*
 				 * final List<ProductData> commonNormalProducts = new ArrayList<ProductData>(); final List<ProductData>
 				 * normalProductDatas = searchPageData.getResults();
-				 *
+				 * 
 				 * if (null != normalProductDatas) { for (final ProductData normalProduct : normalProductDatas) { for (final
 				 * ProductModel heroProduct : heroProducts) { if
 				 * (normalProduct.getCode().equalsIgnoreCase(heroProduct.getCode())) {
@@ -756,7 +753,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			metaDescription = seoContent.getSeoMetaDescription();
 			metaTitle = seoContent.getSeoMetaTitle();
 		}
-		metaKeywords = MetaSanitizerUtil.sanitizeKeywords(metaKeywords);
+		//metaKeywords = MetaSanitizerUtil.sanitizeKeywords(metaKeywords);
 		//	metaDescription = MetaSanitizerUtil.sanitizeDescription(metaDescription);
 		setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
 		updatePageTitle(model, metaTitle);
