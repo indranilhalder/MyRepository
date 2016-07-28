@@ -13,14 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
 import com.hybris.oms.tata.daos.ConfigarableParameterDAO;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
 
 
 /**
- * @author prabhakar
+ * Configarable search parameter dao class used for CURD operation
  *
+ * @author prabhakar
  */
 
 public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
@@ -59,7 +61,7 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc) this method is used to save mplTimeSlots by removing existing time slots
 	 * 
 	 * @see
 	 * com.hybris.oms.tata.daos.ConfigarableParameterDAO#saveMplTimeSlots(com.hybris.oms.tata.model.MplTimeSlotsModel)
@@ -68,7 +70,40 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 	public void saveMplTimeSlots(final List<MplTimeSlotsModel> mplTimeSlots)
 	{
 
-		modelService.saveAll(mplTimeSlots);
+		LOG.info("save MplTimeSlots dao");
+
+		final StringBuilder queryString = new StringBuilder("SELECT {p:" + MplTimeSlotsModel.PK + "} "//
+				+ "FROM {" + MplTimeSlotsModel._TYPECODE + " AS p} WHERE {p:" + MplTimeSlotsModel.TIMESLOTTYPE + "} " + "LIKE ");
+
+		LOG.info(queryString.toString());
+
+		if (mplTimeSlots.get(0).getTimeslotType().equalsIgnoreCase(TataomsbackofficeConstants.SCHEDULEDDELIVERY))
+		{
+			queryString.append("'" + TataomsbackofficeConstants.SCHEDULEDDELIVERY + "'");
+			LOG.info(queryString.toString());
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
+			final List<MplTimeSlotsModel> sdTimeSlotsList = flexibleSearchService.<MplTimeSlotsModel> search(query).getResult();
+			modelService.removeAll(sdTimeSlotsList);
+			modelService.saveAll(mplTimeSlots);
+		}
+		else if (mplTimeSlots.get(0).getTimeslotType().equalsIgnoreCase(TataomsbackofficeConstants.EXPRESSDELIVERY))
+		{
+			queryString.append("'" + TataomsbackofficeConstants.EXPRESSDELIVERY + "'");
+			LOG.info(queryString.toString());
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
+			final List<MplTimeSlotsModel> edTimeSlotsList = flexibleSearchService.<MplTimeSlotsModel> search(query).getResult();
+			modelService.removeAll(edTimeSlotsList);
+			modelService.saveAll(mplTimeSlots);
+		}
+		else if (mplTimeSlots.get(0).getTimeslotType().equalsIgnoreCase(TataomsbackofficeConstants.RETURNDELIVERY))
+		{
+			queryString.append("'" + TataomsbackofficeConstants.RETURNDELIVERY + "'");
+			LOG.info(queryString.toString());
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
+			final List<MplTimeSlotsModel> rdTimeSlotsList = flexibleSearchService.<MplTimeSlotsModel> search(query).getResult();
+			modelService.removeAll(rdTimeSlotsList);
+			modelService.saveAll(mplTimeSlots);
+		}
 	}
 
 	/*

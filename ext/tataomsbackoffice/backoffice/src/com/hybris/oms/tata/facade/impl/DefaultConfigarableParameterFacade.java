@@ -7,8 +7,11 @@ import de.hybris.platform.converters.Converters;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
 
 import com.hybris.oms.tata.data.MplBUCConfigurationsData;
 import com.hybris.oms.tata.data.MplTimeSlotsData;
@@ -25,6 +28,7 @@ import com.hybris.oms.tata.services.ConfigrableParameterService;
 
 public class DefaultConfigarableParameterFacade implements ConfigarableParameterFacade
 {
+	private static final Logger LOG = Logger.getLogger(DefaultConfigarableParameterFacade.class);
 	@Resource(name = "configrableParameterService")
 	private ConfigrableParameterService configrableParameterService;
 
@@ -34,7 +38,20 @@ public class DefaultConfigarableParameterFacade implements ConfigarableParameter
 	@Resource(name = "mplBUCReverseConverter")
 	private Converter<MplBUCConfigurationsData, MplBUCConfigurationsModel> mplBUCReverseConverter;
 
+	@Resource(name = "mplTimeSlotsReverseConverter")
+	private Converter<MplTimeSlotsData, MplTimeSlotsModel> mplTimeSlotsReverseConverter;
+
+
 	// converter dependency
+
+	/**
+	 * @param mplTimeSlotsReverseConverter
+	 *           the mplTimeSlotsReverseConverter to set
+	 */
+	public void setMplTimeSlotsReverseConverter(final Converter<MplTimeSlotsData, MplTimeSlotsModel> mplTimeSlotsReverseConverter)
+	{
+		this.mplTimeSlotsReverseConverter = mplTimeSlotsReverseConverter;
+	}
 
 	/**
 	 * @param mplBUCReverseConverter
@@ -84,9 +101,12 @@ public class DefaultConfigarableParameterFacade implements ConfigarableParameter
 	 * @see com.hybris.oms.tata.facade.ConfigarableParameterFacade#saveMplTimeSlots(java.util.List)
 	 */
 	@Override
-	public void saveMplTimeSlots(final List<MplTimeSlotsModel> mplTimeSlots)
+	public void saveMplTimeSlots(final Set<MplTimeSlotsData> mplTimeSlots)
 	{
-		// YTODO Auto-generated method stub
+		LOG.info("SaveMplTimeSlots");
+		final List<MplTimeSlotsModel> mplTimeSlotsModelList = Converters.convertAll(mplTimeSlots, mplTimeSlotsReverseConverter);
+
+		configrableParameterService.saveMplTimeSlots(mplTimeSlotsModelList);
 
 	}
 

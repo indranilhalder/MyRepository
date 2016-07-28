@@ -9,6 +9,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hybris.oms.tata.daos.ConfigarableParameterDAO;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
@@ -22,6 +25,8 @@ import com.hybris.oms.tata.services.ConfigrableParameterService;
 
 public class DefaultConfigarableParameterService implements ConfigrableParameterService
 {
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultConfigarableParameterService.class);
+
 
 	@Resource(name = "configarableParameterDAO")
 	private ConfigarableParameterDAO configarableParameterDAO;
@@ -37,7 +42,7 @@ public class DefaultConfigarableParameterService implements ConfigrableParameter
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.oms.tata.services.ConfigrableParameterService#onLoadMplTimeSlots()
 	 */
 	@Override
@@ -48,7 +53,7 @@ public class DefaultConfigarableParameterService implements ConfigrableParameter
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.oms.tata.services.ConfigrableParameterService#saveMplTimeSlots(java.util.List)
 	 */
 	@Override
@@ -56,12 +61,11 @@ public class DefaultConfigarableParameterService implements ConfigrableParameter
 	{
 
 		configarableParameterDAO.saveMplTimeSlots(mplTimeSlots);
-
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.hybris.oms.tata.services.ConfigrableParameterService#saveMplBUCConfigurations(com.hybris.oms.tata.model.
 	 * MplBUCConfigurationsModel)
 	 */

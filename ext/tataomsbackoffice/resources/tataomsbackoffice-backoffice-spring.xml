@@ -103,5 +103,17 @@
 		</property>
 	</bean> 
 	
+	<bean id="mplTimeSlotsReversePopulator"
+		class="com.hybris.oms.tata.populator.MplTimeSlotsDataToModelReversePopulator" />
+		
+	<alias name="defaultMplTimeSlotsReverseConverter" alias="mplTimeSlotsReverseConverter" />
+	<bean id="defaultMplTimeSlotsReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.hybris.oms.tata.model.MplTimeSlotsModel" />
+		<property name="populators">
+			<list>
+				<ref bean="mplTimeSlotsReversePopulator" />
+			</list>
+		</property>
+	</bean>
 
 </beans>

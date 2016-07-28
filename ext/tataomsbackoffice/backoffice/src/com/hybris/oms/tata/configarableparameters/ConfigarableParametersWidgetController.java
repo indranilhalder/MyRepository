@@ -26,13 +26,15 @@ import org.zkoss.zul.Timebox;
 
 import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
+import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
 import com.hybris.oms.tata.data.MplBUCConfigurationsData;
 import com.hybris.oms.tata.data.MplTimeSlotsData;
 import com.hybris.oms.tata.facade.ConfigarableParameterFacade;
-import com.hybris.oms.tata.jalo.MplTimeSlots;
 
 
 /**
+ * Configarable Serach parameters Controller class
+ *
  * @author prabhakar
  *
  */
@@ -114,51 +116,43 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	{
 		super.initialize(comp);
 		LOG.info("configarable facade" + configarableParameterFacade);
-
 		final List<MplTimeSlotsData> mplTimeSlotsList = configarableParameterFacade.onLoadMplTimeSlots();
-
 		if (sdTimeSlots == null)
 		{
 			sdTimeSlots = new HashSet<MplTimeSlotsData>();
-
 		}
 		if (edTimeSlots == null)
 		{
 			edTimeSlots = new HashSet<MplTimeSlotsData>();
 		}
-
 		if (rdTimeSlots == null)
 		{
 			rdTimeSlots = new HashSet<MplTimeSlotsData>();
-
 		}
 		for (final MplTimeSlotsData mplTimeSlots : mplTimeSlotsList)
 		{
-			if (mplTimeSlots.getTimeslotType().equalsIgnoreCase("SD"))
+			if (mplTimeSlots.getTimeslotType().equalsIgnoreCase(TataomsbackofficeConstants.SCHEDULEDDELIVERY))
 			{
 				sdTimeSlots.add(mplTimeSlots);
 			}
-			else if (mplTimeSlots.getTimeslotType().equalsIgnoreCase("ED"))
+			else if (mplTimeSlots.getTimeslotType().equalsIgnoreCase(TataomsbackofficeConstants.EXPRESSDELIVERY))
 			{
 				edTimeSlots.add(mplTimeSlots);
 			}
-			else if (mplTimeSlots.getTimeslotType().equalsIgnoreCase("RD"))
+			else if (mplTimeSlots.getTimeslotType().equalsIgnoreCase(TataomsbackofficeConstants.RETURNDELIVERY))
 			{
 				rdTimeSlots.add(mplTimeSlots);
 			}
-
 		}
 		sdListbox.setModel(new ListModelList<MplTimeSlotsData>(sdTimeSlots));
 		edListbox.setModel(new ListModelList<MplTimeSlotsData>(edTimeSlots));
 		rdListbox.setModel(new ListModelList<MplTimeSlotsData>(rdTimeSlots));
-
 	}
 
 	/*
 	 * this method is used save mplBucConfigaration airdays,surfacedays ,edcharge ,sd charge fields
 	 */
-
-	@ViewEvent(componentID = "saveMplBucConfigaration", eventName = Events.ON_CLICK)
+	@ViewEvent(componentID = TataomsbackofficeConstants.SAVEMPLBUCCONFIG, eventName = Events.ON_CLICK)
 	public void saveMplBucConfigaration()
 	{
 		final Integer airDays = airDeleveryDays.getValue();
@@ -196,9 +190,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			airDeleveryDays.setValue(0);
 			sdCharge.setValue(0.0);
 			edCharge.setValue(0.0);
-
 		}
-
 	}
 
 	/**
@@ -208,7 +200,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	 *
 	 * @throws InterruptedException
 	 */
-	@ViewEvent(componentID = "sdItemDelete", eventName = Events.ON_CLICK)
+	@ViewEvent(componentID = TataomsbackofficeConstants.SCHEDULEDDELIVERY_ITEMDELETE, eventName = Events.ON_CLICK)
 	public void sdTimeSlotsDelete() throws InterruptedException
 	{
 		if (sdListbox.getSelectedItem() == null || sdListbox.getSelectedItem().equals(""))
@@ -237,9 +229,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 							}
 						}
 					});
-
 		}
-
 	}
 
 	/**
@@ -249,7 +239,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	 *
 	 * @throws InterruptedException
 	 */
-	@ViewEvent(componentID = "edItemDelete", eventName = Events.ON_CLICK)
+	@ViewEvent(componentID = TataomsbackofficeConstants.EXPRESSDELIVERY_ITEMDELETE, eventName = Events.ON_CLICK)
 	public void edTimeSlotsDelete() throws InterruptedException
 	{
 		if (edListbox.getSelectedItem() == null || edListbox.getSelectedItem().equals(""))
@@ -267,7 +257,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 							{
 								final MplTimeSlotsData edTimeSlotsData = edListbox.getSelectedItem().getValue();
 								edTimeSlots.remove(edTimeSlotsData);
-								edListbox.setModel(new ListModelList<MplTimeSlotsData>(sdTimeSlots));
+								edListbox.setModel(new ListModelList<MplTimeSlotsData>(edTimeSlots));
 								Messagebox.show(" Item tempararly deleted  Click save button To Persist",
 										"Ed TimeSlots Item Remove Dialog", Messagebox.OK, Messagebox.INFORMATION);
 							}
@@ -280,7 +270,6 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 					});
 
 		}
-
 	}
 
 	/**
@@ -290,7 +279,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	 *
 	 * @throws InterruptedException
 	 */
-	@ViewEvent(componentID = "rdItemDelete", eventName = Events.ON_CLICK)
+	@ViewEvent(componentID = TataomsbackofficeConstants.RETURNDELIVERY_ITEMDELETE, eventName = Events.ON_CLICK)
 	public void rdTimeSlotsDelete() throws InterruptedException
 	{
 		if (rdListbox.getSelectedItem() == null || rdListbox.getSelectedItem().equals(""))
@@ -308,7 +297,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 							{
 								final MplTimeSlotsData rdTimeSlotsData = rdListbox.getSelectedItem().getValue();
 								rdTimeSlots.remove(rdTimeSlotsData);
-								rdListbox.setModel(new ListModelList<MplTimeSlotsData>(sdTimeSlots));
+								rdListbox.setModel(new ListModelList<MplTimeSlotsData>(rdTimeSlots));
 								Messagebox.show(" Item tempararly deleted  Click save button To Persist",
 										"Rd TimeSlots Item Remove Dialog", Messagebox.OK, Messagebox.INFORMATION);
 							}
@@ -319,9 +308,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 							}
 						}
 					});
-
 		}
-
 	}
 
 	/**
@@ -329,7 +316,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	 *
 	 * @throws InterruptedException
 	 */
-	@ViewEvent(componentID = "sdPopupSave", eventName = Events.ON_CLICK)
+	@ViewEvent(componentID = TataomsbackofficeConstants.SCHEDULEDDELIVERY_POPUP_ITEMADD, eventName = Events.ON_CLICK)
 	public void sdTimeSlotsAdd() throws InterruptedException
 	{
 		if (sdTimeBoxFrom == null || sdTimeBoxTo == null)
@@ -339,26 +326,17 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 		{
 			final String fromTime = sdTimeBoxFrom.getValue().getHours() + ":" + sdTimeBoxFrom.getValue().getMinutes();
 			final String toTime = sdTimeBoxTo.getValue().getHours() + ":" + sdTimeBoxTo.getValue().getMinutes();
+			final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
+			mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.SCHEDULEDDELIVERY);
+			mplTimeSlots.setFromTime(fromTime);
+			mplTimeSlots.setToTime(toTime);
+			sdTimeSlots.add(mplTimeSlots);
+			sdListbox.setModel(new ListModelList<MplTimeSlotsData>(sdTimeSlots));
 			if (sdpopup != null)
 			{
 				sdpopup.setVisible(false);
 			}
-
 		}
-
-	}
-
-	private void addTimeSlots(final String type, final String fromTime, final String toTime)
-	{
-		final MplTimeSlots mplTimeSlots = new MplTimeSlots();
-		mplTimeSlots.setTimeslotType(type);
-		//mplTimeSlots.setFromTime(fromTime);
-
-		if (type.equalsIgnoreCase("SD"))
-		{
-
-		}
-
 	}
 
 	/**
@@ -366,10 +344,28 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	 *
 	 * @throws InterruptedException
 	 */
-	@ViewEvent(componentID = "", eventName = Events.ON_CLICK)
+	@ViewEvent(componentID = TataomsbackofficeConstants.EXPRESSDELIVERY_POPUP_ITEMADD, eventName = Events.ON_CLICK)
 	public void edTimeSlotsAdd() throws InterruptedException
 	{
+		if (edTimeBoxFrom == null || edTimeBoxTo == null)
+		{
+		}
+		else
+		{
+			final String fromTime = edTimeBoxFrom.getValue().getHours() + ":" + edTimeBoxFrom.getValue().getMinutes();
+			final String toTime = edTimeBoxTo.getValue().getHours() + ":" + edTimeBoxTo.getValue().getMinutes();
+			final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
+			mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.EXPRESSDELIVERY);
+			mplTimeSlots.setFromTime(fromTime);
+			mplTimeSlots.setToTime(toTime);
+			edTimeSlots.add(mplTimeSlots);
+			edListbox.setModel(new ListModelList<MplTimeSlotsData>(edTimeSlots));
 
+			if (edpopup != null)
+			{
+				edpopup.setVisible(false);
+			}
+		}
 	}
 
 	/**
@@ -377,37 +373,58 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	 *
 	 * @throws InterruptedException
 	 */
-	@ViewEvent(componentID = "", eventName = Events.ON_CLICK)
+	@ViewEvent(componentID = TataomsbackofficeConstants.RETURNDELIVERY_POPUP_ITEMADD, eventName = Events.ON_CLICK)
 	public void rdTimeSlotsAdd() throws InterruptedException
 	{
-
+		if (rdTimeBoxFrom == null || rdTimeBoxTo == null)
+		{
+		}
+		else
+		{
+			final String fromTime = rdTimeBoxFrom.getValue().getHours() + ":" + rdTimeBoxFrom.getValue().getMinutes();
+			final String toTime = rdTimeBoxTo.getValue().getHours() + ":" + rdTimeBoxTo.getValue().getMinutes();
+			final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
+			mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.RETURNDELIVERY);
+			mplTimeSlots.setFromTime(fromTime);
+			mplTimeSlots.setToTime(toTime);
+			rdTimeSlots.add(mplTimeSlots);
+			rdListbox.setModel(new ListModelList<MplTimeSlotsData>(rdTimeSlots));
+			if (rdpopup != null)
+			{
+				rdpopup.setVisible(false);
+			}
+		}
 	}
 
 	/**
 	 * persist the sdTimeSlots when save button Clicked
 	 */
-	@ViewEvent(componentID = "", eventName = Events.ON_CLICK)
+	@ViewEvent(componentID = TataomsbackofficeConstants.SCHEDULEDDELIVERY_ITEMSAVE, eventName = Events.ON_CLICK)
 	public void sdTimeSlotsSave()
 	{
 
-		//it gos db
+
+		LOG.info("sd time slots save " + sdTimeSlots.toString());
+		configarableParameterFacade.saveMplTimeSlots(sdTimeSlots);
 	}
 
 	/**
 	 * persist the edTimeSlots when save button is Clicked
 	 */
-	@ViewEvent(componentID = "", eventName = Events.ON_CLICK)
+	@ViewEvent(componentID = TataomsbackofficeConstants.EXPRESSDELIVERY_ITEMSAVE, eventName = Events.ON_CLICK)
 	public void edTimeSlotsSave()
 	{
-		// it gos db
+		LOG.info("ed timeslots save" + edTimeSlots.toString());
+		configarableParameterFacade.saveMplTimeSlots(edTimeSlots);
 	}
 
 	/**
 	 * persist the rdTimeSlots when save button is Clicked
 	 */
-	@ViewEvent(componentID = "", eventName = Events.ON_CLICK)
+	@ViewEvent(componentID = TataomsbackofficeConstants.RETURNDELIVERY_ITEMSAVE, eventName = Events.ON_CLICK)
 	public void rdTimeSlotsSave()
 	{
-		// it gos db
+		LOG.info("rd timeslots save" + rdTimeSlots.toString());
+		configarableParameterFacade.saveMplTimeSlots(rdTimeSlots);
 	}
 }

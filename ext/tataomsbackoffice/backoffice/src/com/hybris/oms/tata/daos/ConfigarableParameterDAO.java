@@ -11,7 +11,7 @@ import com.hybris.oms.tata.model.MplTimeSlotsModel;
 
 /**
  * This incorporates the CRUD functionality we require for ConfigrableSearch Parameters
- *
+ * 
  * @author prabhakar
  */
 public interface ConfigarableParameterDAO
