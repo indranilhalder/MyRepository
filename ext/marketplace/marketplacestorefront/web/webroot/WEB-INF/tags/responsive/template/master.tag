@@ -124,6 +124,7 @@
 	    </c:when>
 	</c:choose> --%>
 	
+	
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.handle')" var="twitterHandle"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
@@ -145,7 +146,10 @@
 	
 	<!-- FB Open Graph data -->
 	<meta property="og:title" content="${metaTitle}" />
-	<meta property="og:url" content="${canonical}" />
+	<!-- TPR-514-OG tag chnages on PDP pages -->
+	<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="0">
+	<meta property="og:url" content="${container.thumbnail.url}"/></c:forEach>
+	
 	<meta property="og:image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}" />
 	<meta property="og:description" content="${metaDescription}" />
 	<meta property="og:site_name" content="${siteName}" />
