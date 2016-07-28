@@ -101,12 +101,12 @@ public class DefaultConfigarableParameterFacade implements ConfigarableParameter
 	 * @see com.hybris.oms.tata.facade.ConfigarableParameterFacade#saveMplTimeSlots(java.util.List)
 	 */
 	@Override
-	public void saveMplTimeSlots(final Set<MplTimeSlotsData> mplTimeSlots)
+	public void saveMplTimeSlots(final Set<MplTimeSlotsData> mplTimeSlots, final String timeSlottype)
 	{
 		LOG.info("SaveMplTimeSlots");
 		final List<MplTimeSlotsModel> mplTimeSlotsModelList = Converters.convertAll(mplTimeSlots, mplTimeSlotsReverseConverter);
 
-		configrableParameterService.saveMplTimeSlots(mplTimeSlotsModelList);
+		configrableParameterService.saveMplTimeSlots(mplTimeSlotsModelList, timeSlottype);
 
 	}
 

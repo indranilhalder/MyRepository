@@ -19,7 +19,7 @@ public interface ConfigarableParameterFacade
 
 	public List<MplTimeSlotsData> onLoadMplTimeSlots();
 
-	public void saveMplTimeSlots(Set<MplTimeSlotsData> mplTimeSlots);
+	public void saveMplTimeSlots(Set<MplTimeSlotsData> mplTimeSlots, String type);
 
 	public void saveMplBUCConfigurations(MplBUCConfigurationsData mplBucConfigurations);
 

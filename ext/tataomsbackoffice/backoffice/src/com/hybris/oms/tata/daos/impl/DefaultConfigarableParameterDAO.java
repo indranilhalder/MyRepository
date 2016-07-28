@@ -42,7 +42,7 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 
 	/*
 	 * (non-Javadoc)Finds all MplTimeSlots by performing a FlexibleSearch using the {@link FlexibleSearchService}.
-	 * 
+	 *
 	 * @see com.hybris.oms.tata.daos.ConfigarableParameterDAO#onLoadMplTimeSlots()
 	 */
 	@Override
@@ -62,12 +62,12 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 
 	/*
 	 * (non-Javadoc) this method is used to save mplTimeSlots by removing existing time slots
-	 * 
+	 *
 	 * @see
 	 * com.hybris.oms.tata.daos.ConfigarableParameterDAO#saveMplTimeSlots(com.hybris.oms.tata.model.MplTimeSlotsModel)
 	 */
 	@Override
-	public void saveMplTimeSlots(final List<MplTimeSlotsModel> mplTimeSlots)
+	public void saveMplTimeSlots(final List<MplTimeSlotsModel> mplTimeSlots, final String timeSlotType)
 	{
 
 		LOG.info("save MplTimeSlots dao");
@@ -77,7 +77,7 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 
 		LOG.info(queryString.toString());
 
-		if (mplTimeSlots.get(0).getTimeslotType().equalsIgnoreCase(TataomsbackofficeConstants.SCHEDULEDDELIVERY))
+		if (timeSlotType.equalsIgnoreCase(TataomsbackofficeConstants.SCHEDULEDDELIVERY))
 		{
 			queryString.append("'" + TataomsbackofficeConstants.SCHEDULEDDELIVERY + "'");
 			LOG.info(queryString.toString());
@@ -86,7 +86,7 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 			modelService.removeAll(sdTimeSlotsList);
 			modelService.saveAll(mplTimeSlots);
 		}
-		else if (mplTimeSlots.get(0).getTimeslotType().equalsIgnoreCase(TataomsbackofficeConstants.EXPRESSDELIVERY))
+		else if (timeSlotType.equalsIgnoreCase(TataomsbackofficeConstants.EXPRESSDELIVERY))
 		{
 			queryString.append("'" + TataomsbackofficeConstants.EXPRESSDELIVERY + "'");
 			LOG.info(queryString.toString());
@@ -95,7 +95,7 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 			modelService.removeAll(edTimeSlotsList);
 			modelService.saveAll(mplTimeSlots);
 		}
-		else if (mplTimeSlots.get(0).getTimeslotType().equalsIgnoreCase(TataomsbackofficeConstants.RETURNDELIVERY))
+		else if (timeSlotType.equalsIgnoreCase(TataomsbackofficeConstants.RETURNDELIVERY))
 		{
 			queryString.append("'" + TataomsbackofficeConstants.RETURNDELIVERY + "'");
 			LOG.info(queryString.toString());
@@ -108,7 +108,7 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.hybris.oms.tata.daos.ConfigarableParameterDAO#saveMplBUCConfigurations(com.hybris.oms.tata.model.
 	 * MplBUCConfigurationsModel)
 	 */

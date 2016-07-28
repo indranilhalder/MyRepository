@@ -57,10 +57,10 @@ public class DefaultConfigarableParameterService implements ConfigrableParameter
 	 * @see com.hybris.oms.tata.services.ConfigrableParameterService#saveMplTimeSlots(java.util.List)
 	 */
 	@Override
-	public void saveMplTimeSlots(final List<MplTimeSlotsModel> mplTimeSlots)
+	public void saveMplTimeSlots(final List<MplTimeSlotsModel> mplTimeSlots, final String timeSlotType)
 	{
 
-		configarableParameterDAO.saveMplTimeSlots(mplTimeSlots);
+		configarableParameterDAO.saveMplTimeSlots(mplTimeSlots, timeSlotType);
 	}
 
 	/*

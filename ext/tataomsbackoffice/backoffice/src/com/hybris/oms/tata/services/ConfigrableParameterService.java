@@ -17,7 +17,7 @@ public interface ConfigrableParameterService
 
 	public List<MplTimeSlotsModel> onLoadMplTimeSlots();
 
-	public void saveMplTimeSlots(List<MplTimeSlotsModel> mplTimeSlots);
+	public void saveMplTimeSlots(List<MplTimeSlotsModel> mplTimeSlots, String timeSlotType);
 
 	public void saveMplBUCConfigurations(MplBUCConfigurationsModel mplBucConfigurations);
 }

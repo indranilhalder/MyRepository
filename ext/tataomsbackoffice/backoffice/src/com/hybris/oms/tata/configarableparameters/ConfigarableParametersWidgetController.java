@@ -405,7 +405,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 
 
 		LOG.info("sd time slots save " + sdTimeSlots.toString());
-		configarableParameterFacade.saveMplTimeSlots(sdTimeSlots);
+		configarableParameterFacade.saveMplTimeSlots(sdTimeSlots, TataomsbackofficeConstants.SCHEDULEDDELIVERY);
 	}
 
 	/**
@@ -415,7 +415,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	public void edTimeSlotsSave()
 	{
 		LOG.info("ed timeslots save" + edTimeSlots.toString());
-		configarableParameterFacade.saveMplTimeSlots(edTimeSlots);
+		configarableParameterFacade.saveMplTimeSlots(edTimeSlots, TataomsbackofficeConstants.EXPRESSDELIVERY);
 	}
 
 	/**
@@ -425,6 +425,6 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	public void rdTimeSlotsSave()
 	{
 		LOG.info("rd timeslots save" + rdTimeSlots.toString());
-		configarableParameterFacade.saveMplTimeSlots(rdTimeSlots);
+		configarableParameterFacade.saveMplTimeSlots(rdTimeSlots, TataomsbackofficeConstants.RETURNDELIVERY);
 	}
 }
