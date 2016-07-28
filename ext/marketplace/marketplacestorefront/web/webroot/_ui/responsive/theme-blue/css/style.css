@@ -32382,9 +32382,8 @@ ul li #mobile-menu-toggle + ul li ul li {
 ul li #mobile-menu-toggle + ul li ul.words li.long {
     text-indent: 30px;
     background: #b9b8b8;
-}
-ul li #mobile-menu-toggle + ul li ul li ul li {
-    line-height: 30px;
+      line-height: 30px;
+    display:none;
 }
 }
 .top .container > .right ul:first-child, .top .container > .right ul:first-child > li > div > span:first-child, .top .container > .right ul:first-child ul.a-z {

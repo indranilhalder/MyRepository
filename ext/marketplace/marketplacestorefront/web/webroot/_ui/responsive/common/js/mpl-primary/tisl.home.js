@@ -45,7 +45,7 @@ function callSetHeader() {
 	 	}
 	}
  
-$("div.departmenthover").on("mouseover touchend", function() {
+$(document).on("mouseover touchend", "div.departmenthover", function() {
     var id = this.id;
     var code = id.substring(4);
 
@@ -61,6 +61,8 @@ $("div.departmenthover").on("mouseover touchend", function() {
     if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
         // console.log("Local");
         $("ul." + id).html(decodeURI(html));
+        $('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
         //LazyLoad();
     } else {
         $.ajax({
@@ -82,7 +84,12 @@ $("div.departmenthover").on("mouseover touchend", function() {
                         encodeURI(html));
 
                 }
-            }
+            },
+            complete: function(){
+	        	$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+	    		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
+	        	
+	        } 
         });
 
 
@@ -686,7 +693,12 @@ function getBestPicksAjaxCall() {
             			0 : {
             				items:1,
             				stagePadding: 50,
-            			},			
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:2,
+            				stagePadding: 50,
+            			},
             			// breakpoint from 768 up
             			768 : {
             				items:3,
@@ -770,6 +782,10 @@ function getProductsYouCareAjaxCall() {
 								items : 1,
 								stagePadding : 50,
 							},
+							480 : {
+								items:2,
+								stagePadding: 50,
+							},
 							// breakpoint from 768 up
 							768 : {
 								items : 3,
@@ -848,7 +864,11 @@ function getNewAndExclusiveAjaxCall() {
         			0 : {
         				items:1,
         				stagePadding: 50,
-        			},			
+        			},		
+        			480 : {
+        				items:2,
+        				stagePadding: 50,
+        			},	
         			// breakpoint from 768 up
         			768 : {
         				items:3,
@@ -1741,6 +1761,7 @@ $(document).ready(function(){
 			}
 		}
 	});
+	
 	$(document).on('mouseover touchend','header .content nav > ul > li#shopMicrositeSeller > div.toggle',function(){
 		$(this).parent().addClass('hovered');
 	});
@@ -1850,5 +1871,13 @@ $(document).ready(function(){
 			diffHtOwl = max2 - arrHtOwl[k];
 			$(".owl-item.active").eq(k).find(".New_Exclusive_price").css("margin-top",+diffHtOwl+defaultMarginTop1);
 		}
+		
+	});
+	
+	$(document).on("click","div.departmenthover + span#mobile-menu-toggle",function(){
+		if($(this).siblings("ul.words").children().length == 0){
+			$(this).siblings("div.departmenthover").mouseover();
+		}
+		
 		
 	});
