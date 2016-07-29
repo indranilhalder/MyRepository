@@ -1198,22 +1198,38 @@ $(document).ready(function(){
 					$(this).parent('li').siblings().find('#mobile-menu-toggle + ul').slideUp();
 					$(this).next().slideToggle();
 					$(this).toggleClass("menu-dropdown-arrow");
-					 $(this).parent('li').siblings("li.short.words").nextAll().each(function(){
-
+					
+					
+					/* $(this).parent('li').siblings("li.short.words").nextAll().each(function(){
+						 alert('1')
 					      if($(this).hasClass("short")) {
 					        return false;
 					      }
 					     $(this).siblings("li.long.words").hide(200);
 					    });
 					    $(this).parent('li.short.words').nextAll().each(function(){
-
+					    	alert('2')
 						      if($(this).hasClass("short")) {
 						        return false;
 						      }
 						      $(this).toggle(200);
-						    });
+					    });*/
 					
 				});
+				  $(document).on("click","ul.words span#mobile-menu-toggle",function() {
+					var id = $(this).parents('ul.words').siblings("div.departmenthover").attr("id"), ind = $(this).parent('li.short.words').index("."+id+" .short.words")
+						$(".long.words").hide();
+						if($(this).hasClass('menu-dropdown-arrow')){
+							for(var i = $("."+id+" .short.words").eq(ind).index(); i < $("."+id+" .short.words").eq(ind+1).index()-1; i++) {
+								$("."+id+" .long.words").eq(i-ind-1).show();
+							}
+							if(ind == ($("."+id+" .short.words").length/2)-1) {
+								$("."+id+" .short.words").eq(ind).nextAll().show();
+							}
+						} else {
+							$(".long.words").hide();
+						}
+				  });
 				/*--- Mobile view shop by brand and department ---*/
 
 				// $("li.short.words").siblings("li.long.words").hide();
