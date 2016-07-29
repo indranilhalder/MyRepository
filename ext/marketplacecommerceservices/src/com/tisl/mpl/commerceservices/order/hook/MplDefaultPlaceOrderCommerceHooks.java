@@ -269,21 +269,26 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		orderModel.setChildOrders(orderList);
 		getModelService().save(orderModel);
-
-		final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
-		if (realEbs.equalsIgnoreCase("Y"))
+		if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+		{
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+		}
+		else
 		{
 
-			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
-			{
-				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-			}
-			else
+			final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
+			if (realEbs.equalsIgnoreCase("Y"))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
-
-
 				//Commented for new Payment Soln -- order before payment
+
+				//			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+				//			{
+				//				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				//			}
+				//			else
+				//			{
+
 				//				if (StringUtils.isNotEmpty(orderModel.getGuid()))
 				//				{
 				//					final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
@@ -298,12 +303,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				//						}
 				//					}
 				//				}
+				//			}
 			}
-		}
-		else
-		{
-			//getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
 		}
 	}
 

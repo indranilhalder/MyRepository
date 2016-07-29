@@ -211,7 +211,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 		{
 			/*
 			 * TISOMSII-86
-			 * 
+			 *
 			 * This block will execute only incase of standalone CNC cart and OMS is not using pincode to deallocate cart
 			 * reservation. As pincode is mandatory in Inventory reservation adding dummy pincode for cart deallocation
 			 */
@@ -222,11 +222,6 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 		if (orderStatus.equalsIgnoreCase(MarketplaceFulfilmentProcessConstants.PAYMENT_SUCCESSFUL))
 		{
 			return Transition.OK;
-		}
-
-		else if (orderStatus.equalsIgnoreCase(MarketplaceFulfilmentProcessConstants.PAYMENT_PENDING))
-		{
-			return Transition.WAIT;
 		}
 
 		//returning NOK for order status "PAYMENT_FAILED"
@@ -318,6 +313,27 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 			{
 				return Transition.NOK;
 			}
+		}
+		//New block for new payment process --- order before payment
+		else if (orderStatus.equalsIgnoreCase(MarketplaceFulfilmentProcessConstants.PAYMENT_PENDING))
+		{
+			if (StringUtils.isNotEmpty(defaultPinCode))
+			{
+				//OMS Allocation 6 hours call for failed order
+				mplCommerceCartService.isInventoryReserved(orderModel,
+						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERHELD, defaultPinCode); //TODO: Changes as per new time
+
+				//Order Creation in CRM for held orders
+				orderCreationInCRM(orderModel);
+				process.setState(ProcessState.WAITING);
+				getModelService().save(process);
+				return Transition.WAIT;
+			}
+			else
+			{
+				return Transition.NOK;
+			}
+
 		}
 		else
 		{
