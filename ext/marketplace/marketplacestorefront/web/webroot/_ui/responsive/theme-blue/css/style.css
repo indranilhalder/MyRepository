@@ -32620,7 +32620,7 @@ header .banner > span {
 	.showcaseItem > a{font-size: 12px;}
 	.showcaseItem > a.showcase-border {    border-bottom: 0 none;    font-weight: bold;    padding: 0;}
 	.about-one.showcase-section {    padding: 0 10% 30px; }
-	#showcase.feature-collections .desc-section h1{ padding: 30px 0 5px; font-size: 18px; font-weight:bold;}
+	body.page-homepage #showcase.feature-collections .desc-section h1{ padding: 30px 0 5px; font-size: 18px; font-weight:bold;}
 	#showcase a.button.maroon{margin-top:15px !important;}
 	p.showcase-para{width: 100%;}
 	#showcase a.button.trending-button,
@@ -32629,6 +32629,13 @@ header .banner > span {
 	
 	body.page-homepage .trending h1 {
     margin-bottom: 30px;
+}
+.showcaseItem > a {
+    font-weight: normal;
+}
+#bestPicks .short-info h4 {
+    padding-top:5px;
+    padding-bottom:4px;
 }
 }
 
