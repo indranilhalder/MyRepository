@@ -385,9 +385,9 @@
 		 }
 	});
 </script> -->
-<style>
+<!-- <style>
 .product-tile:hover .image .quickview .serp-addtobag.disabled {
 	display: none;
 	opacity: 0.7;
 }
-</style>
+</style> -->
