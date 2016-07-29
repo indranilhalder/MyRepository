@@ -128,7 +128,7 @@
 		<property name="cartId" type="String"></property>
 		<property name="store" type="java.util.List&lt;java.lang.String>"></property>
 		<!-- Added new Rich Attributes  -->
-	    <property name="deliveryFulfillModebyP1" type="String" />
+	    <property name="deliveryFulfillModeByP1" type="String" />
 		<property name="isFragile" type="String" />
 		<property name="isPrecious" type="String" />
 		
