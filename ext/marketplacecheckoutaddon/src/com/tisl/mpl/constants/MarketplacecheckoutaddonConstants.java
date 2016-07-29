@@ -24,6 +24,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String PAYMENT_METHOD = "payment-method";
 	public final static String MPLSTORE = "mpl";
 	public final static String ADDVALUE = "/add";
+	public final static String PAYVALUE = "/pay";
 	public final static String CHOOSEVALUE = "/choose";
 	public final static String BACKVALUE = "/back";
 	public final static String NEXTVALUE = "/next";
