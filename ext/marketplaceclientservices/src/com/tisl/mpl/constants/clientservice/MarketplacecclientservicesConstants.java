@@ -236,5 +236,6 @@ public class MarketplacecclientservicesConstants
 
 	public static final String UIDSIG = "UIDSig";
 	public static final String UIDTIMESTAMP = "UIDTimestamp";
+	public static final String OMS_CHANGE_DELIVERY_URL="oms.changedelivery.endpoint.url";
 
 }

@@ -107,7 +107,9 @@
 
 		<collectiontype elementtype="java.lang.String" code="mplImageUrl"
 			autocreate="true" generate="true" type="list" />
-
+			
+			<collectiontype elementtype="Address" code="addressList"
+			autocreate="true" generate="true" type="list" />
 	</collectiontypes>
 
 
@@ -787,6 +789,13 @@
  			<value code="no" />
  		</enumtype>
  		<!-- added by i324321 end -->
+ 		
+ 		 <enumtype code="deliveryAddressEnum" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="pincodeNotServiceable" />
+			<value code="success" />
+			<value code="ErrorOccurredPleaseTryAfterSomeTime" />
+		</enumtype>
 	</enumtypes>
 		<!-- Product Feature Enum Ends -->
 
@@ -1089,6 +1098,18 @@
 			<targetElement type="Product" cardinality="many"
 				qualifier="collectionProducts"></targetElement>
 		</relation>
+		
+		<!-- R2.3 FL04 Changes -->
+
+		<relation code="Pincode2LandMarkRelation" localized="false"
+			autocreate="true">
+			<sourceElement type="Pincode" cardinality="one" qualifier="pincode"></sourceElement>
+			<targetElement type="LandMarks" cardinality="many"
+				qualifier="landmarks" collectiontype="list"></targetElement>
+		</relation>
+		
+		<!-- close -->
+		
 	</relations>
 
 	<itemtypes>
@@ -4939,6 +4960,10 @@
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="deliveryAddresses" type="addressList">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -8080,6 +8105,24 @@
 						<modifiers read="true" write="true" search="true"
 							optional="false" />
 					</attribute>
+					
+					<!-- R2.3 FL04 Added Propertie -->
+					
+					<attribute autocreate="true" qualifier="cityName"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="isActive"
+						type="java.lang.Boolean">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<!-- close -->
+					
 				</attributes>
 			</itemtype>
 
@@ -8318,6 +8361,50 @@
 			</itemtype>
 		</typegroup>
 	
+			<!-- R2.3 changes Landmarks Model -->
+		
+		<typegroup name="LandMarks">
+			<itemtype code="LandMarks" autocreate="true" generate="true">
+				<deployment table="LandMarks" typecode="15009" />
+				<attributes>
+				
+					<attribute autocreate="true" qualifier="landmarksCode" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="landmark" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="isActive"
+						type="java.lang.Boolean" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+	
+		<!-- close -->
+   <!-- R2.3 changesDeliveryAddress for  TemproryAddress Model-->
+	  <typegroup name="TemproryAddress">
+			<itemtype code="TemproryAddress" autocreate="true"  extends="Address" generate="true">
+				<deployment table="TempAddress" typecode="15010" />
+				<attributes>
+					<attribute autocreate="true" qualifier="orderId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" optional="false" unique="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+	 </typegroup>
+	<!-- END  -->
 		
 	</itemtypes>
 </items>

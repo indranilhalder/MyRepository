@@ -101,9 +101,11 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String CSCOCKPIT_USER_GROUP_REPLACECSAGENTGROUP = "cscockpit.user.group.replacecsagentgroup";
 
 
-	//added for new User Group
 	/** The Constant CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP. */
 	public static final String CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP="cscockpit.user.group.alternatecontactcsagentgroup";
+	
+	/** The Constant CSCOCKPIT_USER_GROUP_CHANGEDELIVERYCSAGENTGROUP. */
+	public static final String CSCOCKPIT_USER_GROUP_CHANGEDELIVERYCSAGENTGROUP="cscockpit.user.group.changedeliverycsagentgroup";
 
 	
 	/** The Constant CSCOCKPIT_USER_GROUP_SYCNCSAGENTGROUP. */
@@ -162,7 +164,7 @@ public final class MarketplaceCockpitsConstants extends
 		);
 	
 	public static final String FAILURE = "FAILURE";
-	
+	public static final String FAILED = "FAILED";
 	
 	public static final List<ConsignmentStatus> validInvoiceStatus = Arrays.asList(ConsignmentStatus.HOTC,
 			ConsignmentStatus.OUT_FOR_DELIVERY,ConsignmentStatus.REACHED_NEAREST_HUB,ConsignmentStatus.DELIVERED
@@ -171,5 +173,20 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String COUPON_REDEEM = "coupon_redeem";
 	
 	public static final String SOURCE="CSCockpit";
-	
+	public static final String PAYMENT_MODE_COD="COD";
+	public static final String FIRST_NAME_NOT_VALID = "Please Enter a Valid First Name";
+	public static final String LAST_NAME_NOT_VALID = "Please Enter a Valid Last Name";
+	public static final String LINE1_NOT_VALID = "Please enter valid Address line 1 ";
+	public static final String LINE2_NOT_VALID= "Please enter valid Address line 2";
+	public static final String LINE3_NOT_VALID = "Please enter valid  Address line 3";
+	public static final String EMAIL_NOT_VALID = "Please enter valid Email";
+	public static final String CITY_NOT_VALID = "Please enter valid City Name";
+	public static final String STATE_NOT_VALID = "Please enter valid State Name";
+	public static final String COUNTRY_NOT_VALID = "Please enter valid countryName";
+	public static final String MOBILENUMBER_NOT_VALID = "Please enter valid Mobile Number";
+	public static final String LAND_MARK_NOT_VALID = "Please enter valid landmark";
+	public static final String PINCODE_NOT_SERVISABLE = "Pincode Is Not Servisable";
+	public static final String SUCCESS="success";
+
+	public static final String NONE_OF_ABOVE = "None of Above";
 }

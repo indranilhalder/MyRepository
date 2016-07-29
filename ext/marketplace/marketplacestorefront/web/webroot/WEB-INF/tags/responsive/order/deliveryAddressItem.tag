@@ -25,9 +25,8 @@
 	</c:if>
 	<c:if test="${hasShippedItems}">
 	<address>
-	
 			${fn:escapeXml(order.deliveryAddress.title)}${fn:escapeXml(order.deliveryAddress.firstName)}&nbsp;${fn:escapeXml(order.deliveryAddress.lastName)}<br>
-			${fn:escapeXml(order.deliveryAddress.line1)},&nbsp;${fn:escapeXml(order.deliveryAddress.line2)},&nbsp;${fn:escapeXml(order.deliveryAddress.line3)},<br>
+			${fn:escapeXml(order.deliveryAddress.line1)},&nbsp;${fn:escapeXml(order.deliveryAddress.line2)},&nbsp;${fn:escapeXml(order.deliveryAddress.line3)},&nbsp;${fn:escapeXml(order.deliveryAddress.landmark)},<br>
 		${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
 			${fn:escapeXml(order.deliveryAddress.postalCode)}&nbsp;
 			${fn:escapeXml(order.deliveryAddress.country.isocode)}<br>

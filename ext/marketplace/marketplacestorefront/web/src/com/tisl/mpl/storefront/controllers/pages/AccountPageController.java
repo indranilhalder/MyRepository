@@ -127,6 +127,7 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.tis.mpl.facade.changedelivery.MplChangeDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
@@ -173,6 +174,7 @@ import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.MplPreferencePopulationData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
+import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
 import com.tisl.mpl.facades.product.data.DayData;
@@ -406,6 +408,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private MplGigyaReviewCommentService gigyaCommentService;
 	@Autowired
 	private DefaultMplReviewFacade mplReviewrFacade;
+
+	@Autowired
+	private MplChangeDeliveryAddressFacade mplchangeDeliveryAddressFacade;
+
+	/**
+	 *
+	 */
+	@Resource(name = "mplPaymentFacade")
+	private MplPaymentFacade mplPaymentFacade;
 
 	/*
 	 * @Autowired private DiscountUtility discountUtility;
@@ -874,7 +885,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			final String finalOrderDate = getFormattedDate(orderDetail.getCreated());
 			final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
-
+			boolean changeDeliveryAddressStatus = false;
 			for (final OrderData subOrder : subOrderList)
 			{
 				for (final OrderEntryData orderEntry : subOrder.getEntries())
@@ -1062,10 +1073,32 @@ public class AccountPageController extends AbstractMplSearchPageController
 							orderEntry.getOrderLineId());
 					currentProductMap.put(orderEntry.getOrderLineId(), cancelProduct);
 
+
+					if (!orderEntry.getMplDeliveryMode().getCode().equalsIgnoreCase("click-and-collect")
+							&& changeDeliveryAddressStatus == false)
+					{
+						changeDeliveryAddressStatus = true;
+					}
 				}
+
 			}
 
 
+			changeDeliveryAddressStatus = changeDeliveryAddressStatus ? mplchangeDeliveryAddressFacade
+					.isDeliveryAddressChangable(orderDetail.getCode()) : false;
+			model.addAttribute(ModelAttributetConstants.EDIT_SHIPPING_ADDRESS_STATUS, changeDeliveryAddressStatus);
+			if (changeDeliveryAddressStatus)
+			{
+				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
+				phoneNumber = mplchangeDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
+				model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
+			}
+			final AccountAddressForm accountAddressForm = new AccountAddressForm();
+			model.addAttribute("addressForm", accountAddressForm);
+			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
+			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
+			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataListNew);
+		
 			////TISEE-6290
 			fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
 			model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
@@ -1177,6 +1210,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			mplOrderFacade.createCrmTicketUpdatePickDetails(orderId);
 		}
 	}
+
+
+
+
+
 
 	/**
 	 *
@@ -3319,6 +3357,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				addressForm.setState(addressData.getState());
 				addressForm.setLocality(addressData.getLocality());
 				addressForm.setLine3(addressData.getLine3());
+				addressForm.setLandmark(addressData.getLandmark());
 				if (addressData.getRegion() != null && !StringUtils.isEmpty(addressData.getRegion().getIsocode()))
 				{
 					addressForm.setRegionIso(addressData.getRegion().getIsocode());
@@ -3406,6 +3445,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setCountry(getI18NFacade().getCountryForIsocode(ModelAttributetConstants.INDIA_ISO_CODE));
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
+			if(null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()) )
+			{
+				newAddress.setLandmark(addressForm.getLandmark());
+			}
+			else
+			{
+				newAddress.setLandmark(addressForm.getOtherLandmark());
+			}
 
 			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
 			{
@@ -3516,6 +3563,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setState(addressForm.getState());
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
+			if(null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()) )
+			{
+				newAddress.setLandmark(addressForm.getLandmark());
+			}
+			else
+			{
+				newAddress.setLandmark(addressForm.getOtherLandmark());
+			}
 
 			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
 			{
@@ -3660,6 +3715,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					addressForm.setState(addressData.getState());
 					addressForm.setLocality(addressData.getLocality());
 					addressForm.setLine3(addressData.getLine3());
+					addressForm.setLandmark(addressData.getLandmark());
 					if (addressData.getRegion() != null && !StringUtils.isEmpty(addressData.getRegion().getIsocode()))
 					{
 						addressForm.setRegionIso(addressData.getRegion().getIsocode());
@@ -3753,7 +3809,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 			selectedAddress.setVisibleInAddressBook(true);
 			selectedAddress.setLine3(addressForm.getLine3());
 			selectedAddress.setLocality(addressForm.getLocality());
-
+			if(null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()))
+			{
+				selectedAddress.setLandmark(addressForm.getLandmark());
+			}
+			else
+			{
+				selectedAddress.setLandmark(addressForm.getOtherLandmark());
+			}
+			selectedAddress.setLandmark(addressForm.getLandmark());
 			final CountryData countryData = i18NFacade.getCountryForIsocode(addressForm.getCountryIso());
 			selectedAddress.setCountry(countryData);
 			if (resolveCountryRegions.contains(countryData.getIsocode()) && null != addressForm.getRegionIso()
@@ -6938,5 +7002,131 @@ public class AccountPageController extends AbstractMplSearchPageController
 		model.addAttribute(ModelAttributetConstants.COMMENTS, commentsWithProductDataModified);
 	}
 
+
+
+	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method = RequestMethod.GET)
+	@ResponseBody
+	public String changeDeliveryAddress(@PathVariable final String orderCode,
+			@ModelAttribute("addressForm") final AccountAddressForm addressForm)
+	{
+
+		String validatetionCheckMsg = null;
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("AddressForm validation ");
+		}
+		final String errorMsg = mplAddressValidator.validate(addressForm);
+
+		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCCESS))
+		{
+			boolean flag = false;
+			AddressData addressData = new AddressData();
+			addressData.setAddressType(addressForm.getAddressType());
+			addressData.setId(addressForm.getAddressId());
+			addressData.setPhone(addressForm.getMobileNo());
+			addressData.setFirstName(addressForm.getFirstName());
+			addressData.setLastName(addressForm.getLastName());
+			addressData.setLine1(addressForm.getLine1());
+			addressData.setLine2(addressForm.getLine2());
+			addressData.setLine3(addressForm.getLine3());
+			addressData.setTown(addressForm.getTownCity());
+			addressData.setPostalCode(addressForm.getPostcode());
+			addressData.setState(addressForm.getState());
+			addressData.setBillingAddress(false);
+			addressData.setShippingAddress(true);
+			if(null != addressForm.getLandmark() && !StringUtils.isEmpty(addressForm.getLandmark().trim()))
+			{
+				addressData.setLandmark(addressForm.getLandmark());
+			}
+			else
+			{
+				addressData.setLandmark(addressForm.getOtherLandmark());
+			}
+			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
+			{
+				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
+				addressData.setCountry(countryData);
+			}
+			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
+			{
+				addressData.setRegion(getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso()));
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Save TemproryAddressModel and OTP genarate");
+			}
+			flag = mplchangeDeliveryAddressFacade.saveAsTemporaryAddressForCustomer(orderCode, addressData);
+
+			if (flag)
+			{
+				validatetionCheckMsg = "success";
+			}
+		}
+		else
+		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("AddrressData is incorent then send erorr Msg");
+			}
+			validatetionCheckMsg = errorMsg;
+		}
+
+		return validatetionCheckMsg;
+	}
+
+
+	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.GET)
+	@ResponseBody
+	public String validateOTP(@RequestParam(value = "orderId") final String orderId,
+			@RequestParam(value = "otpNumber") final String enteredOTPNumber)
+	{
+		String validateOTPMesg = null;
+		final CustomerData customerData = customerFacade.getCurrentCustomer();
+		final String customerId = customerData.getUid();
+		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
+		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("OTP Validation And Oms Calling status");
+				validateOTPMesg = mplchangeDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber, orderId);
+
+			}
+		}
+		return validateOTPMesg;
+
+	}
+
+	@RequestMapping(value =RequestMappingUrlConstants.NEW_OTP_GENERATE, method = RequestMethod.GET)
+	@ResponseBody
+	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
+	{
+		boolean flag;
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Generate new OTP For changing Shapping Address ");
+		}
+		flag = mplchangeDeliveryAddressFacade.generateNewOTP(orderCode);
+		return flag;
+	}
+
+
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
 
 }

@@ -203,6 +203,7 @@ public class AccountAddressFacade
 				addressmodel.setAddressType(newAddress.getAddressType());
 				addressmodel.setLocality(newAddress.getLocality());
 				addressmodel.setAddressLine3(newAddress.getLine3());
+				addressmodel.setLandmark(newAddress.getLandmark());
 			}
 
 			customerAccountService.saveAddressEntry(currentCustomer, addressmodel);
@@ -340,6 +341,7 @@ public class AccountAddressFacade
 			addressModel.setAddressType(addressData.getAddressType());
 			addressModel.setLocality(addressData.getLocality());
 			addressModel.setAddressLine3(addressData.getLine3());
+			addressModel.setLandmark(addressData.getLandmark());
 			customerAccountService.saveAddressEntry(currentCustomer, addressModel);
 			if (addressData.isDefaultAddress())
 			{

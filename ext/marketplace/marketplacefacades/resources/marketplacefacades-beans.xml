@@ -362,7 +362,9 @@
 		<property name="sellerOrderList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.OrderData>" />
 			<property name="pickupName" type="String"/>
-			<property name="pickupPhoneNumber" type="String"/>		
+			<property name="pickupPhoneNumber" type="String"/>
+			<property name="deliveryAddressList"
+			type="java.util.List&lt;de.hybris.platform.commercefacades.user.data.AddressData>" />		
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.data.OrderDataTransactionForXML">
@@ -872,5 +874,24 @@
 		<property name="brandData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchBrandData>"></property>
 		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
 	</bean>
+	
+	<!-- R2.3 FL04 Changes -->
+	
+	<bean class="com.tisl.mpl.facade.data.LandMarksData">
+		<property name="landmarksCode" type="String"></property>
+		<property name="landmark" type="String"></property>
+		<property name="isActive" type="java.lang.Boolean"></property>
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.data.PincodeData">
+		<property name="pincode" type="String"></property>
+		<property name="cityName" type="String"></property>
+		<property name="state" type="com.tisl.mpl.facades.product.data.StateData"></property>
+		<property name="landMarks" type="java.util.List&lt;com.tisl.mpl.facade.data.LandMarksData>"></property>
+		<property name="country" type="String"></property>
+		<property name="countryCode" type="String"></property>
+	</bean>
+	
+	<!-- FL04 Close -->
 	
 </beans>

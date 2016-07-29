@@ -118,7 +118,7 @@
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
 																	${fn:escapeXml(address.line1)},&nbsp;${fn:escapeXml(address.line2)},
-																	${fn:escapeXml(address.line3)},&nbsp;<br>
+																	${fn:escapeXml(address.line3)},&nbsp;${fn:escapeXml(address.landmark)},<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
@@ -190,6 +190,7 @@
 																<li>${fn:escapeXml(address.line1)},
 																	&nbsp;${fn:escapeXml(address.line2)},</li>
 																<li>${fn:escapeXml(address.line3)},</li>
+																<li>${fn:escapeXml(address.landmark)},</li>
 																<li>${fn:escapeXml(address.town)},
 																	&nbsp;${fn:escapeXml(address.state)},
 																	&nbsp;${fn:escapeXml(address.postalCode)} &emsp;IN</li>
@@ -346,6 +347,12 @@
 										<div class="errorMessage"><div id="erraddressln"></div></div>
 									</div>
 									
+									<div class="half" style="clear:both;">
+									<label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label>
+										<form:input path="postcode" id="postcode" class="address_postcode"
+											onkeyup="kpressaddresspost()" maxlength="6" />
+											<div class="errorMessage"><div id="erraddressPost">   </div></div> 
+									</div>
 
 									<!-- TISUAT-4696 -->
 									<div class="half" style="clear:both;">
@@ -372,12 +379,28 @@
 											maxlength="30" />
 											 <div class="errorMessage"><div id="erraddressline3">   </div></div> 
 									</div>
-								
+									
+									<div class="half no-display">
+										<div class="optionsLandmark">
+											<label>Landmark*</label>
+												<form:select path="landmark" id="landmark" value="${addressForm.landmark}" class="address_landmarks"
+													maxlength="30"></form:select>
+												<div class="errorMessage errland1">   </div>
+										</div>
+									</div>
+									<div class="half no-display">
+										<div class ="address_landmarkOtherDiv">
+										<label>Enter Nearest Landmark</label>
+											<form:input path="otherLandmark" id="otherLandmark" onkeyup="optionsLandmark1()" class="address_landmarkOther"
+												maxlength="30" />
+												<div class="errorMessage errland2"> hgsh  </div>
+										</div>
+									</div>
 									
 									<!-- TISUAT-4696 -->
-									<div class="half">
+									<div class="half" style="clear: both">
 									<label><spring:theme code="text.addressBook.City" text="City *" /></label>
-										<form:input path="townCity" id="townCity"
+										<form:input path="townCity" id="townCity" class="address_townCity"
 											onkeyup="kpressaddresscity()" maxlength="30" />
 											<div class="errorMessage"><div id="erraddressCity">  </div></div>
 									</div>
@@ -386,7 +409,7 @@
 
 									<div class="half no-display">
 										<label><spring:theme code="text.addressBook.State" text="State *" /></label>
-										<form:select name="stateList" id="stateListBox" path="state"
+										<form:select name="stateList" id="stateListBox" path="state" class="address_states"
 											 onChange="onAddressSelectValidate()">
 											<c:forEach items="${stateDataList}" var="state"
 												varStatus="stateStatus">
@@ -410,13 +433,6 @@
 										
 										<input type="text" name="CountryList" value="India" disabled="">
 										
-									</div>
-									
-									<div class="half" style="clear:both;">
-									<label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label>
-										<form:input path="postcode" id="postcode"
-											onkeyup="kpressaddresspost()" maxlength="6" />
-											<div class="errorMessage"><div id="erraddressPost">   </div></div> 
 									</div>
 									
 									<div class="half phone">

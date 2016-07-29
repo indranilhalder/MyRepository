@@ -1538,4 +1538,62 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultMplCommerceIndexedPropertyPopulator" alias="commerceIndexedPropertyPopulator" />
 	<bean id="defaultMplCommerceIndexedPropertyPopulator"
 		class="com.tisl.mpl.search.converters.populator.MplCommerceIndexedPropertyPopulator" />
+		<bean id="changeDeliveryAddressFacade"
+		class="com.tis.mpl.facade.changedelivery.Impl.MplChangeDeliveryAddressFacadeImpl"/>
+		
+		<!-- 	R2.3 FL04 changes	 -->
+			
+	<bean id="mplStatePopulator" class="com.tisl.mpl.facades.populators.MplStatePopulator"/>
+	
+	<bean id="mplStateConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.facades.product.data.StateData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplStatePopulator"/>
+			</list>
+		</property>
+	</bean> 
+	
+	<bean id="mplLandMarksPopulator" class="com.tisl.mpl.facades.populators.MplLandMarksPopulator"/>
+	
+	<bean id="mplLandMarksConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.facade.data.LandMarksData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplLandMarksPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mplPincodePopulator" class="com.tisl.mpl.facades.populators.MplPincodePopulator">
+		<property name="mplLandMarksConverter" ref="mplLandMarksConverter"/>
+		<property name="mplStateConverter" ref="mplStateConverter"/>
+	</bean>
+	
+		<bean id="mplPincodeConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.facades.data.PincodeData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplPincodePopulator"/>
+			</list>
+		</property>
+	</bean> 
+	
+	<alias name="defaultTempAddressReverseConverter" alias="tempAddressReverseConverter"/>
+	<bean id="defaultTempAddressReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.core.model.TemproryAddressModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="temporaryAddressReversePopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="temporaryAddressReversePopulator"
+			class="com.tisl.mpl.facades.populators.TemporaryAddressReversePopulator">
+		<property name="commonI18NService" ref="commonI18NService"/> 
+	</bean>
+	
+	<!-- close R2.3 Changes -->
+	
 </beans>

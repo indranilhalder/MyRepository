@@ -1078,6 +1078,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		return deliveryMode;
 	}
 
+
+	
 	/**
 	 * @return the mplSellerInformationService
 	 */
@@ -1094,7 +1096,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	{
 		this.mplSellerInformationService = mplSellerInformationService;
 	}
-
 
 
 	/**
@@ -1172,9 +1173,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	{
 		this.orderConverter = orderConverter;
 	}
-
-
-
 
 
 }

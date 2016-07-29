@@ -9,6 +9,9 @@
 	font-family: Arial, non-serif;
 }
 
+
+
+
 .loginContainerWindow {
 	background-image: url(../images/login-cscockpit.png);
 }
@@ -3663,4 +3666,29 @@ th.csPropReturnEntryexpectedQuantity.z-list-header  {
 }
 th.csPropReturnEntryreceivedQuantity.z-list-header{
 	        min-width: 70px !important;/*UI Fix*/
+}
+.changeDeliveryAddress {
+	margin-top: 20px;
+	margin-left: 30px;
+	margin-bottom: 20px;
+}
+.hbox {
+	margin-top: 20px;
+	margin-left: 150px;
+	margin-bottom: 20px;
+}
+.updateDeliveryAddress {
+	margin-left: 300px;
+	margin-top: 20px;
+}
+.validateOTP{
+	margin-top: 5px;
+	margin-left: 250px;
+	margin-bottom: 10px;
+	
+}
+.otpHbox{
+	margin-top: 30px;
+	margin-left: 200px;
+	margin-bottom: 20px;
 }

@@ -8,6 +8,7 @@ import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -31,11 +32,18 @@ public interface PincodeDao
 	 * @return List of PointOfService
 	 */
 	Collection<PointOfServiceModel> getAllGeocodedPOS(GPS gps, double distance);
-	
+
 	/**
 	 * @param model
 	 * @return
 	 */
 	PincodeModel getLatAndLongForPincode(final String pincode);
 
+	/**
+	 * Get the Available Details of the give pincode
+	 * 
+	 * @param pincode
+	 * @return PincodeModel
+	 */
+	public List<PincodeModel> getAllDetailsOfPinocde(final String pincode);
 }

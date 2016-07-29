@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.PincodeDao;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
@@ -40,7 +41,7 @@ public class PincodeServiceImpl implements PincodeService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PincodeService#getSortedLocationsNearby(de.hybris.platform.
 	 * storelocator.GPS, double)
 	 */
@@ -95,12 +96,13 @@ public class PincodeServiceImpl implements PincodeService
 
 	/**
 	 * Fetch all the Stores for a Pincode and radius.
+	 * 
 	 * @param gps
 	 * @param distance
-	 * @return Stores 
+	 * @return Stores
 	 */
 	@Override
-	public Collection<PointOfServiceModel> getStoresForPincode(GPS gps, double distance)
+	public Collection<PointOfServiceModel> getStoresForPincode(final GPS gps, final double distance)
 	{
 		try
 		{
@@ -121,7 +123,7 @@ public class PincodeServiceImpl implements PincodeService
 			throw new LocationServiceException(e.getMessage(), e);
 		}
 	}
-	
+
 	protected double calculateDistance(final GPS referenceGps, final PointOfServiceModel posModel) throws GeoLocatorException,
 			LocationServiceException
 	{
@@ -133,6 +135,41 @@ public class PincodeServiceImpl implements PincodeService
 		}
 		throw new LocationServiceException("Unable to calculate a distance for PointOfService(" + posModel
 				+ ") due to missing  latitude, longitude value");
+	}
+
+	@Override
+	public PincodeModel getDetailsOfPincode(final String pincode)
+	{
+		PincodeModel pincodeModel = null;
+		try
+		{
+			List<PincodeModel> pincodeModelList = pincodeDao.getAllDetailsOfPinocde(pincode);
+			if (!pincodeModelList.isEmpty())
+			{
+				return pincodeModelList.get(0);
+			}
+			else if(pincodeModelList.size()>1)
+			{	
+				LOG.error("More than one pincode model found for :" + pincode);
+			}
+			else
+			{
+				LOG.info("No pincode data found for :" + pincode);
+			}
+		}
+		catch (final EtailBusinessExceptions businessException)
+		{
+			throw businessException;
+		}
+		catch (final EtailNonBusinessExceptions nonBusiness)
+		{
+			throw nonBusiness;
+		}
+		catch (final Exception exception)
+		{
+			throw exception;
+		}
+		return pincodeModel;
 	}
 
 	/**
@@ -151,7 +188,6 @@ public class PincodeServiceImpl implements PincodeService
 	{
 		this.pincodeDao = pincodeDao;
 	}
-
 
 
 }

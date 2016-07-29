@@ -20,6 +20,25 @@ public class FilePathProviderService
 	private String validationErrFilePath;
 	private String statesPropFilePath;
 	private String pincodesUploadPath;
+	private String landmarkUploadPath;
+
+	/**
+	 * @author prabhakar
+	 * @return the landmarkUploadPath
+	 */
+	public String getLandmarkUploadPath()
+	{
+		return landmarkUploadPath;
+	}
+
+	/**
+	 * @param landmarkUploadPath
+	 *           the landmarkUploadPath to set
+	 */
+	public void setLandmarkUploadPath(final String landmarkUploadPath)
+	{
+		this.landmarkUploadPath = landmarkUploadPath;
+	}
 
 	/**
 	 *

@@ -80,7 +80,8 @@
 					slotId="perspectives" template="true">
 					<virtual-sockets />
 				</widget>
-
+      
+         
 				<!-- Added for logistics Calendar -->
 				<widget id="logisticcollapsibleContainer" widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
 					slotId="perspectives" template="true">
@@ -210,6 +211,23 @@
 				
 				<!-- Added for pincodesUpload -->
                 <widget id="pincodes_upload" widgetDefinitionId="com.hybris.oms.widgets.pincodesuploadwidget"
+					slotId="perspectives" template="true">
+				 </widget>
+				 
+				 
+				<!-- awb edit -->
+				<widget id="awbedit" widgetDefinitionId="com.hybris.oms.widgets.awbwidget"
+					slotId="perspectives" template="true">
+				</widget>
+				
+				<!-- lp override -->
+				<widget id="lpoverride" widgetDefinitionId="com.hybris.oms.widgets.lpoverride"
+					slotId="perspectives" template="true">
+				</widget>
+				 
+				 <!-- Add for Configurable Parameters  -->
+				 
+				  <widget id="configarable_params" widgetDefinitionId="com.hybris.oms.widgets.configurableParamWidget"
 					slotId="perspectives" template="true">
 				 </widget>
 

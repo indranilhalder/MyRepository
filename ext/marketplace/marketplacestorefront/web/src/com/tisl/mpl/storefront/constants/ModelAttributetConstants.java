@@ -736,5 +736,8 @@ public final class ModelAttributetConstants
 	public static final String USER_FIRST_NAME = "userFirstName";
 
 	public static final String BUILD_NUMBER = "buildNumber";
+	
+	public static final String PHONE_NUMBER = "phoneNumber";
+	public static final String EDIT_SHIPPING_ADDRESS_STATUS = "editShippingAddressStatus";
 
 }

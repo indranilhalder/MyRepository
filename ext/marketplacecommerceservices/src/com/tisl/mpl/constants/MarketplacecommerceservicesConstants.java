@@ -558,7 +558,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMAIL_BODY_EMPTY = "body must not be empty";
 	public static final String EMAIL_BODY_MEDIA = "bodyMedia-";
 
-
+	public static final String SMS_MESSAGE_CD_OTP = "Peek-a-boo {0}! One-time password to Change delivery Address {1}. Please feel free to call us at {2} in case of any queries.";
 
 	//For Bulk Upload in Promotions
 	public final static char FIELD_SEPARATOR = ',';
@@ -1584,7 +1584,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String GENPROXYPORT = "proxy.port";
 
 	public final static String IMAGEURLMSG = "Image url is:::";
-
+	public final static String TICKET_TYPE_CDA = "DAC";
+	public final static String TICKET_SUB_TYPE_CDA="D";
 
 	private MarketplacecommerceservicesConstants()
 	{
