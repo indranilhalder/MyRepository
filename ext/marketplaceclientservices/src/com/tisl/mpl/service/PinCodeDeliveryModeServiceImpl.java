@@ -131,9 +131,9 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					if (null != reqData.get(i))
 					{
 						List<String> fulfilmentTypeList=new ArrayList<String>();
-						if (null != reqData.get(i).getDeliveryFulfillModebyP1())
+						if (null != reqData.get(i).getDeliveryFulfillModeByP1())
 						{
-							fulfilmentTypeList.add(reqData.get(i).getDeliveryFulfillModebyP1().toUpperCase());
+							fulfilmentTypeList.add(reqData.get(i).getDeliveryFulfillModeByP1().toUpperCase());
 							//pincodereqObj.setFulfilmentType(reqData.get(i).getFullFillmentType().toUpperCase());
 						}
 						if (null != reqData.get(i).getFullFillmentType())
