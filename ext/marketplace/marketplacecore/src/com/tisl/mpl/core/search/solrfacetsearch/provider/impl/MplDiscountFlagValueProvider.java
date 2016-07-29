@@ -4,7 +4,7 @@
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 
-import de.hybris.platform.core.model.c2l.CurrencyModel;
+import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
@@ -22,9 +22,11 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.BuyBoxModel;
+import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.util.MplBuyBoxUtility;
 
@@ -240,7 +242,7 @@ public class MplDiscountFlagValueProvider extends AbstractPropertyFieldValueProv
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch.
 	 * config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -249,94 +251,142 @@ public class MplDiscountFlagValueProvider extends AbstractPropertyFieldValueProv
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException, EtailNonBusinessExceptions
 	{
-		final Collection fieldValues = new ArrayList();
-		try
-		{
-			List<String> rangeNameList = null;
-			ProductModel product = null;
-			if (model instanceof ProductModel)
-			{
-				product = (ProductModel) model;
-				System.out.println(product);
-			}
-			else
-			{
-				throw new FieldValueProviderException("Cannot evaluate price of non-product item");
-			}
-			if (indexConfig.getCurrencies().isEmpty())
-			{
-				System.out.println(indexConfig.getCurrencies().isEmpty());
-			}
-			else
-			{
 
-				for (final CurrencyModel currency : indexConfig.getCurrencies())
+		if (model instanceof PcmProductVariantModel)
+		{
+			//Model should be instance of PcmProductVariantModel
+			final PcmProductVariantModel product = (PcmProductVariantModel) model;
+			final Double value = getDiscountPrice(product);
+
+			if (null != value)
+			{
+				//final Double averageRating = product.getRatingReview().getMplAverageRating();
+				//If averageRating is not empty
+				//				if (averageRating != null)
+				//				{
+				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
+
 				{
-					final CurrencyModel sessionCurrency = this.i18nService.getCurrentCurrency();
-					try
+					final Collection<LanguageModel> languages = indexConfig.getLanguages();
+
+					for (final LanguageModel language : languages)
 					{
-						this.i18nService.setCurrentCurrency(currency);
-						final Double value = getDiscountPrice(product);
-						if (value != null && value > 0)
-						{
-
-							final String rangeKey = currency.getIsocode() + "-DISCOUNT";
-							rangeNameList = getRangeNameList(indexedProperty, value, rangeKey);
-							String currencyValue = "";
-							if (currency.getIsocode() != null)
-							{
-								currencyValue = currency.getIsocode().toLowerCase();
-							}
-							else
-							{
-								currencyValue = currency.getIsocode();
-							}
-							final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, currencyValue);
-							for (final String fieldName : fieldNames)
-							{
-								if (rangeNameList != null)
-								{
-
-									if (rangeNameList.isEmpty())
-									{
-										fieldValues.add(new FieldValue(fieldName, value));
-									}
-									else
-									{
-										for (final String rangeName : rangeNameList)
-										{
-											fieldValues.add(new FieldValue(fieldName, (rangeName == null) ? value : rangeName));
-										}
-									}
-								}
-							}
-
-
-						}
-						else
-						{
-							return Collections.emptyList();
-						}
+						fieldValues.addAll(createFieldValue(value, language, indexedProperty, "DISCOUNT"));
 					}
-					finally
-					{
-						this.i18nService.setCurrentCurrency(sessionCurrency);
-					}
+
 				}
+				//return the field values
+				return fieldValues;
+				//}
 
-
+				//				else
+				//				{
+				//					return Collections.emptyList();
+				//				}
 
 			}
 
+			else
+			{
+				return Collections.emptyList();
+			}
+
 		}
-		catch (final Exception e)
+		else
 		{
-			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
-					+ super.getClass().getName() + "exception" + e, e);
+			return Collections.emptyList();
 		}
 
-		return fieldValues;
-
+		//-------------------------------------------------------------------
+		//		final Collection fieldValues = new ArrayList();
+		//		try
+		//		{
+		//			List<String> rangeNameList = null;
+		//			ProductModel product = null;
+		//			if (model instanceof ProductModel)
+		//			{
+		//				product = (ProductModel) model;
+		//				System.out.println(product);
+		//			}
+		//			else
+		//			{
+		//				throw new FieldValueProviderException("Cannot evaluate price of non-product item");
+		//			}
+		//			if (indexConfig.getCurrencies().isEmpty())
+		//			{
+		//				System.out.println(indexConfig.getCurrencies().isEmpty());
+		//			}
+		//			else
+		//			{
+		//
+		//
+		//				for (final CurrencyModel currency : indexConfig.getCurrencies())
+		//				{
+		//					final CurrencyModel sessionCurrency = this.i18nService.getCurrentCurrency();
+		//					try
+		//					{
+		//						this.i18nService.setCurrentCurrency(currency);
+		//						final Double value = getDiscountPrice(product);
+		//						if (value != null && value > 0)
+		//						{
+		//
+		//							final String rangeKey = currency.getIsocode() + "-DISCOUNT";
+		//							rangeNameList = getRangeNameList(indexedProperty, value, rangeKey);
+		//							String currencyValue = "";
+		//							if (currency.getIsocode() != null)
+		//							{
+		//								currencyValue = currency.getIsocode().toLowerCase();
+		//							}
+		//							else
+		//							{
+		//								currencyValue = currency.getIsocode();
+		//							}
+		//							final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, currencyValue);
+		//							for (final String fieldName : fieldNames)
+		//							{
+		//								if (rangeNameList != null)
+		//								{
+		//
+		//									if (rangeNameList.isEmpty())
+		//									{
+		//										fieldValues.add(new FieldValue(fieldName, value));
+		//									}
+		//									else
+		//									{
+		//										for (final String rangeName : rangeNameList)
+		//										{
+		//											fieldValues.add(new FieldValue(fieldName, (rangeName == null) ? value : rangeName));
+		//										}
+		//									}
+		//								}
+		//							}
+		//
+		//
+		//						}
+		//						else
+		//						{
+		//							return Collections.emptyList();
+		//						}
+		//					}
+		//					finally
+		//					{
+		//						this.i18nService.setCurrentCurrency(sessionCurrency);
+		//					}
+		//				}
+		//
+		//
+		//
+		//			}
+		//
+		//		}
+		//		catch (final Exception e)
+		//		{
+		//			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
+		//					+ super.getClass().getName() + "exception" + e, e);
+		//		}
+		//
+		//		return fieldValues;
+		//
 	}
 
 
@@ -360,6 +410,55 @@ public class MplDiscountFlagValueProvider extends AbstractPropertyFieldValueProv
 			}
 		}
 		return discountedPercent;
+	}
+
+	/**
+	 * @return List<FieldValue>
+	 * @param size
+	 *           ,indexedProperty
+	 * @description: It creates field values
+	 *
+	 */
+	//Create field values
+	protected List<FieldValue> createFieldValue(final Double value, final LanguageModel language,
+			final IndexedProperty indexedProperty, final String rangeKey)
+	{
+		final List<FieldValue> fieldValues = new ArrayList<FieldValue>();
+		addFieldValues(fieldValues, language, indexedProperty, value, rangeKey);
+		/*
+		 * for (final String fieldName : fieldNames) { //Add field values fieldValues.add(new FieldValue(fieldName,
+		 * avgRating)); }
+		 */
+		return fieldValues;
+	}
+
+
+	protected void addFieldValues(final List<FieldValue> fieldValues, final LanguageModel language,
+			final IndexedProperty indexedProperty, final Object value, final String rangeKey)
+	{
+		List<String> rangeNameList = null;
+		try
+		{
+			rangeNameList = getRangeNameList(indexedProperty, value, rangeKey);
+		}
+		catch (final FieldValueProviderException e)
+		{
+			LOG.error("Could not get Range value", e);
+		}
+		String rangeName = null;
+		if (CollectionUtils.isNotEmpty(rangeNameList))
+		{
+			rangeName = rangeNameList.get(0);
+		}
+
+
+		final Collection<String> fieldNames = getFieldNameProvider().getFieldNames(indexedProperty,
+				language == null ? null : language.getIsocode());
+		final Object valueToPass = (rangeName == null ? value : rangeName);
+		for (final String fieldName : fieldNames)
+		{
+			fieldValues.add(new FieldValue(fieldName, valueToPass));
+		}
 	}
 
 	/**
