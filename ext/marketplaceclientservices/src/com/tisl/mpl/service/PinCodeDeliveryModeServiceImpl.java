@@ -130,10 +130,20 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					final PinCodeDeliveryModeRequest pincodereqObj = new PinCodeDeliveryModeRequest();
 					if (null != reqData.get(i))
 					{
+						List<String> fulfilmentTypeList=new ArrayList<String>();
+						if (null != reqData.get(i).getDeliveryFulfillModeByP1())
+						{
+							fulfilmentTypeList.add(reqData.get(i).getDeliveryFulfillModeByP1().toUpperCase());
+							//pincodereqObj.setFulfilmentType(reqData.get(i).getFullFillmentType().toUpperCase());
+						}
 						if (null != reqData.get(i).getFullFillmentType())
 						{
-							pincodereqObj.setFulfilmentType(reqData.get(i).getFullFillmentType().toUpperCase());
+							fulfilmentTypeList.add(reqData.get(i).getFullFillmentType().toUpperCase());
+							//pincodereqObj.setFulfilmentType(reqData.get(i).getFullFillmentType().toUpperCase());
 						}
+						if(fulfilmentTypeList.size()>0){
+						pincodereqObj.setFulfilmentType(fulfilmentTypeList);
+					   }
 						if (null != reqData.get(i).getIsCOD())
 						{
 							pincodereqObj.setIsCOD(reqData.get(i).getIsCOD());
@@ -192,6 +202,18 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						{
 							pincodereqObj.setIsDeliveryDateRequired(reqData.get(i).getIsDeliveryDateRequired());
 						}
+						
+						
+						if (null != reqData.get(i).getIsFragile())
+						{
+							pincodereqObj.setIsFragile(reqData.get(i).getIsFragile());
+						}
+						
+						if (null != reqData.get(i).getIsPrecious())
+						{
+							pincodereqObj.setIsPrecious(reqData.get(i).getIsPrecious());
+						}
+
 						pincodeList.add(pincodereqObj);
 					}
 				}
