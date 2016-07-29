@@ -733,7 +733,9 @@ function setValidPrice(sellersArray, index) {
 				$("#spPriceId").html("");
 			}
 		} else if(sellersArray[index].mopPrice != 0 && sellersArray[index].mopPrice <= 1){
-			$(".reviews").hide(); 	
+			 $(".size").hide(); 	
+			 $(".color-swatch").hide();
+			 $(".reviews").hide(); 	
 			 $('#addToCartButton-wrong').attr("disable",true);
 			 $('#addToCartButton-wrong').show();
 			 $('#addToCartButton').hide();
@@ -1564,7 +1566,9 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				$("#mopPriceId").show();
 			}
 		} else if(mop.value != 0 && mop.value <= 1){
-			$(".reviews").hide(); 	
+			 $(".size").hide(); 	
+			 $(".color-swatch").hide();
+			 $(".reviews").hide(); 	
 			 $('#addToCartButton-wrong').attr("disable",true);
 			 $('#addToCartButton-wrong').show();
 			 $('#addToCartButton').hide();
