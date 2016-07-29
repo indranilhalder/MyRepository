@@ -50,7 +50,30 @@
 		<property name="isPincodeServiceable" type="java.lang.Boolean" />
 		<property name="isCOD" type="java.lang.Boolean" />
 		<property name="deliveryDate" type="String" />
+		
+		<property name="serviceableSlaves" type="java.util.List&lt;ServiceableSlavesData>" />
+		<property name="cNCServiceableSlavesData" type="java.util.List&lt;CNCServiceableSlavesData>" />
 	</bean>
+	
+	
+	<!-- placeholder for delivery related details -->
+	<bean
+		class="de.hybris.platform.commercefacades.product.data.ServiceableSlavesData">
+		<property name="slaveId" type="String" />
+		<property name="logisticsID" type="String" />
+		<property name="codEligible" type="String" />
+		<property name="priority" type="String" />
+		<property name="transactionType" type="String" />
+	</bean>
+	
+	
+		<bean
+		class="de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData">
+		<property name="storeId" type="String" />
+		<property name="qty" type="Integer" />
+		<property name="fulfillmentType" type="String" />
+		<property name="serviceableSlaves" type="java.util.List&lt;ServiceableSlavesData>" />
+		</bean>
 
 
 	<!-- buybox data -->
@@ -104,6 +127,11 @@
 		<property name="productCode" type="String"></property>
 		<property name="cartId" type="String"></property>
 		<property name="store" type="java.util.List&lt;java.lang.String>"></property>
+		<!-- Added new Rich Attributes  -->
+	    <property name="deliveryFulfillModebyP1" type="String" />
+		<property name="isFragile" type="String" />
+		<property name="isPrecious" type="String" />
+		
 	</bean>
 
 
@@ -209,6 +237,9 @@
 		<property name="exchangePolicy" type="String" />
 		<property name="leadTimeForHomeDelivery" type="Integer"/>
 		<property name="sellerAssociationstatus" type="String" />
+		<property name="deliveryFulfillModebyP1" type="String" />
+		<property name="isFragile" type="String" />
+		<property name="isPrecious" type="String" />
 	</bean>
 
 

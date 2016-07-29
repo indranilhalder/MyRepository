@@ -325,6 +325,26 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				{
 					data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase()));
 				}
+				LOG.debug("seller.getFullfillment() :" + seller.getFullfillment());
+				LOG.debug("seller.getDeliveryFulfillModebyP1():" +seller.getDeliveryFulfillModebyP1());
+				
+				if (null != seller.getDeliveryFulfillModebyP1() && StringUtils.isNotEmpty(seller.getDeliveryFulfillModebyP1()))
+				{
+					data.setDeliveryFulfillModeByP1(seller.getDeliveryFulfillModebyP1().toUpperCase());
+				}
+				LOG.debug("seller.getDeliveryFulfillModebyP1()******:" +seller.getDeliveryFulfillModebyP1());
+				LOG.debug("seller.getIsFragile()******:" +seller.getIsFragile());
+				if (null != seller.getIsFragile() && StringUtils.isNotEmpty(seller.getIsFragile()))
+				{
+					data.setIsFragile(seller.getIsFragile().toUpperCase());
+				}
+				LOG.debug("seller.getIsPrecious()******:" +seller.getIsPrecious());
+				if (null != seller.getIsPrecious() && StringUtils.isNotEmpty(seller.getIsPrecious()))
+				{
+					data.setIsPrecious(seller.getIsPrecious().toUpperCase());
+				}
+				
+				
 				if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode())))
 				{
 					data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase()));
