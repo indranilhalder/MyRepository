@@ -59,6 +59,7 @@
 
 <!-- TISPT-325 ENDS -->
 
+
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
 <link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
 <link rel="android-touch-icon" href="${themeResourcePath}/images/Appicon.png" />
@@ -146,11 +147,22 @@
 	
 	<!-- FB Open Graph data -->
 	<meta property="og:title" content="${metaTitle}" />
-	<!-- TPR-514-OG tag chnages on PDP pages -->
-	<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="0">
-	<meta property="og:url" content="${container.thumbnail.url}"/></c:forEach>
+	<meta property="og:url" content="${canonical}" />
 	
+	
+	<!-- TPR-514-OG tag chnages on PDP pages-->
+	<c:choose>
+	<c:when test="${fn:contains(reqURI,'/p-')}">	
+	<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" end="0">
+	<meta property="og:image" content="${container.thumbnail.url}" />
+	</c:forEach>	
+	</c:when>
+	<c:otherwise>
 	<meta property="og:image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}" />
+	</c:otherwise>
+	</c:choose>
+	
+	
 	<meta property="og:description" content="${metaDescription}" />
 	<meta property="og:site_name" content="${siteName}" />
 	
