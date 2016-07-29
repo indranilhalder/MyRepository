@@ -25968,7 +25968,7 @@ body .account .right-account .order-history .navigation2 #ofPagination{
 		display:block;
 		 float: right;
     	font-size: 14px;
-    	width:10%;
+    	width:100%;
 	}
 	#mobile-menu-toggle:after {
 		font-family: 'FontAwesome';
