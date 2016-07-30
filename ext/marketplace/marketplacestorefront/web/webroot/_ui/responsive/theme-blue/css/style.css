@@ -40996,3 +40996,23 @@ bottom:35px;
 .home-product-you-care-carousel .owl-theme .owl-controls,
 .home-best-pick-carousel .owl-theme .owl-controls{top: 38%;margin: 0;}
 /*Upgraded Owl carousel CSS ends*/
+
+
+   #customPriceFilter .minPriceSearchTxt{
+    width: 39%;
+    height: auto;
+    padding: 4px 5px;
+    }
+   #customPriceFilter .maxPriceSearchTxt{
+    width: 40%;
+    height: auto;
+    padding: 4px 3px;
+   }
+   #customPriceFilter #applyCustomPriceFilter{
+   padding: 6px 4px;
+    height: auto;
+    background: #a9143c;
+    color: #fff;
+    border: none;
+    border-radius: 100%;
+   }

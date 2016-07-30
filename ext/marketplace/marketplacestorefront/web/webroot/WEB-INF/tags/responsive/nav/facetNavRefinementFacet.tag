@@ -107,6 +107,31 @@ function navigateToPage(queryString,textString)
 			
 				</div>
 		</c:if>
+		
+		
+		<c:if test="${facetData.code eq 'price'}">		
+						
+						 <!--  <label class="applyCustomPriceFilter" style="float: right;margin-right: 12%;margin-top: -1%;padding-bottom: 4%;">Go</label> --> 
+						    								
+						
+							<input type="hidden" name="currentPriceQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentPriceQueryParams"/>					  
+							 <form action="" method="get" id="customPriceFilter">
+							    <input type="hidden" name="offer" value="${offer}"/>
+							    <input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="" class="qValueForCustomPrice"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>		
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>	
+								<input type="hidden" name="isFacet" value="true"/>							
+								<input type="hidden" id="facetValue" name="facetValue" value="${facetValue.code}"/>						
+								<spring:theme code="text.minPriceSearch.placeholder" var="minPriceSearchPlaceholder" />
+							    <input class="minPriceSearchTxt" type="text" name="customMinPrice" width="30" height="20" placeholder="${minPriceSearchPlaceholder}">							
+							    <spring:theme code="text.maxPriceSearch.placeholder" var="maxPriceSearchPlaceholder" />
+							    <input class="maxPriceSearchTxt" type="text" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}">
+								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>			
+								
+							</form>							
+		</c:if>
+		
 		</div>
 
 		<div class="facet-values js-facet-values js-facet-form ">
