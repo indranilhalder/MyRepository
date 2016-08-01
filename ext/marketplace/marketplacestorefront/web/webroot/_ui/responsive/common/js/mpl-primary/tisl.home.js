@@ -281,9 +281,9 @@ $("li.logIn-hi").on("mouseleave", function(e) {
 	clearTimeout(loginHover);
 });
 //
-/*var activePos = 0;
-$(window).on("resize load", function() {
-    activePos = ($(window).width() > 790) ? 3 : 1;
+
+/*$(window).on("resize load", function() {
+    activePos = ($(window).width() > 767) ? 3 : 1;
     console.log("activePosload"+activePos);
 });*/
 
@@ -322,6 +322,23 @@ function getBrandsYouLoveAjaxCall() {
                     }
                     count++;
                 });
+                $.each(response.subComponents, function(k, v) {
+                    //console.log(v.brandLogoUrl);
+                	
+                    if (!v.showByDefault) {
+                        renderHtml +=
+                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
+                            v.compId + "'><img src='" + v.brandLogoUrl +
+                            "'></img></div>";
+                    } else {
+                        renderHtml +=
+                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
+                            v.compId + "'><img src='" + v.brandLogoUrl +
+                            "'></img></div>";
+                        defaultComponentId = v.compId;
+                    }
+                    count++;
+                });
                 renderHtml += "</div>";
                 $('#brandsYouLove').html(renderHtml);
                 getBrandsYouLoveContentAjaxCall(defaultComponentId);
@@ -343,7 +360,12 @@ function getBrandsYouLoveAjaxCall() {
             			0 : {
             				items:1,
             				stagePadding: 75,
-            			},			
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:3,
+            				stagePadding: 50,
+            			},
             			// breakpoint from 768 up
             			768 : {
             				items:3,
@@ -523,14 +545,14 @@ function getBrandsYouLoveContentAjaxCall(id) {
     // ENd AJAX CALL
 
 var bulCount = $(".home-brands-you-love-carousel-brands.active").index() - 1;
-/*$(document).on("click", ".home-brands-you-love-carousel-brands",
+$(document).on("click", ".home-brands-you-love-carousel-brands",
 		function() {
-			$(".home-brands-you-love-carousel-brands").removeClass('active');
-			$(this).addClass('active');
-			$('.home-brands-you-love-desc').remove();
-			bulCount = $(this).parent().index();
-			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
-		});*/
+//			$(".home-brands-you-love-carousel-brands").removeClass('active');
+//			$(this).addClass('active');
+//			$('.home-brands-you-love-desc').remove();
+	
+//			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
+		});
 var bulIndex = 0;
 
 /*$(document).on("click", ".home-brands-you-love-carousel-brands", function() {
@@ -543,17 +565,31 @@ var bulIndex = 0;
 
     getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 });*/
-/*$(document).on("click", ".home-brands-you-love-carousel .owl-item.active", function() {
+$(document).on("click", ".home-brands-you-love-carousel .owl-item", function() {
+	var activePos = $(".home-brands-you-love-carousel .owl-item.center").index(),carLoop,count=0;
+		bulIndex = $(this).index();
 	 	if (bulIndex > activePos) {
-	    	for (var i = 0; i < bulIndex - activePos; i++) {
-	    		$('.home-brands-you-love-carousel .owl-controls .owl-next').click();
-	    	}
+	    	count = bulIndex - activePos;
+	    	carLoop = setInterval(function(){
+	    		if(count != 0) {
+	    			$('.home-brands-you-love-carousel .owl-controls .owl-next').click();
+	    			count--;
+	    		} else {
+	    			clearInterval(carLoop);
+	    		}
+	    	},80)
 	    } else if (bulIndex < activePos) {
-	    	for (var i = 0; i < activePos - bulIndex; i++) {
-	    		$('.home-brands-you-love-carousel .owl-controls .owl-prev').click();
-	    	}
+	    	count = activePos - bulIndex;
+	    	carLoop = setInterval(function(){
+	    		if(count != 0) {
+	    			$('.home-brands-you-love-carousel .owl-controls .owl-prev').click();
+	    			count--;
+	    		} else {
+	    			clearInterval(carLoop);
+	    		}
+	    	},80)
 	    }
-});*/
+});
 /*$(document).on("click", ".bulprev", function() {
     $('.home-brands-you-love-desc').remove();
 		$(".home-brands-you-love-carousel .owl-wrapper").prepend($(".home-brands-you-love-carousel .owl-item").last());
