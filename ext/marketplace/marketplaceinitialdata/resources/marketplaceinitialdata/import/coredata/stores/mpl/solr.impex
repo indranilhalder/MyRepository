@@ -19,10 +19,6 @@ $priceRangeINR=$prefixPriceRangeINR
 $classAttributeAssignment=classAttributeAssignment(classificationAttribute(code),classificationClass(code))
 $classificationAttributeAssignments=classificationAttributeAssignments(classificationAttribute(code),classificationClass(code))
 
-# Import threshold from local properties into impex macros
-UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
-$freebiePriceThreshold=$config-freebiePriceThreshold
-
 
 #
 # Setup the Solr server, indexer, and search configs
@@ -190,8 +186,7 @@ INSERT_UPDATE SolrIndexerQuery;solrIndexedType(identifier)[unique=true];identifi
 ;$solrIndexedType;$searchIndexNamePrefix-fullQuery;full;;;false;"
  SELECT distinct{p.PK} FROM {Product AS p LEFT JOIN CategoryProductRelation AS c2p ON {p.PK}={c2p.target} LEFT JOIN Category AS c ON {c2p.source}={c.PK} } 
  WHERE {c.code} LIKE 'MSH%' AND EXISTS ({{ SELECT * FROM {BuyBox AS bbox} WHERE {bbox.product}={p.code} 
-                                                                          AND {bbox.delisted} != 1 
-                                                                          AND {bbox.price} > $freebiePriceThreshold
+                                                                          AND {bbox.delisted} != 1                                                                          
                                                                           AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})}}) 
 AND {p.varianttype} IS NULL   
 ";anonymous
@@ -216,8 +211,7 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:code} IN (
 			{{
 				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} >= ?lastIndexTime
-																	 AND {bbox.delisted} != 1 
-																	 AND {bbox.price} > $freebiePriceThreshold 																	  
+																	 AND {bbox.delisted} != 1 																	  																	  
 																	 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
 			}}
 		)
@@ -237,7 +231,6 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 where tbl.code IN ( 
 					{{ SELECT {bbox.product} FROM {BuyBox AS bbox} 
 								WHERE {bbox.delisted} != 1 
-								AND {bbox.price} > $freebiePriceThreshold 						 
 								AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
 					}} 
 				)
@@ -248,13 +241,11 @@ where tbl.code IN (
                                                              SELECT distinct{bbox.product} FROM{BuyBox AS bbox} 
 															 WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
 															 AND ({bbox.product}={p.code} 
-															 AND ({bbox.delisted} = 1 
-															 AND {bbox.price} > $freebiePriceThreshold 
+															 AND ({bbox.delisted} = 1 															 
 															 OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate}))) 
 															 AND {bbox.product} NOT IN ({{														
 															                             SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 
-																						 WHERE {bbox.delisted} != 1 
-																						 AND {bbox.price} > $freebiePriceThreshold 
+																						 WHERE {bbox.delisted} != 1 																						 
 																						 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
 																						 }})
 															}}) 
