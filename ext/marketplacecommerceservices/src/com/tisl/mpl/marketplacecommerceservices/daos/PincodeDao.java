@@ -45,5 +45,5 @@ public interface PincodeDao
 	 * @param pincode
 	 * @return PincodeModel
 	 */
-	public List<PincodeModel> getAllDetailsOfPinocde(final String pincode);
+	public List<PincodeModel> getAllDetailsOfPincode(final String pincode);
 }

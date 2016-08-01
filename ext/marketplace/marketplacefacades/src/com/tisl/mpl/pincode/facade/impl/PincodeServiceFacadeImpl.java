@@ -658,7 +658,10 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	public PincodeData getAutoPopulatePincodeData(final String pincode)
 	{
 		PincodeData pincodeData = null;
-		LOG.debug("Pincode Facade Class :"+pincode);
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Pincode Facade Class :"+pincode);
+		}
 		try
 		{
 			final PincodeModel pincodeModel = pincodeService.getDetailsOfPincode(pincode);
@@ -668,9 +671,10 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				pincodeData = getMplPincodeConverter().convert(pincodeModel);
 			}
 		}
-		catch (final Exception ex)
+		catch (final Exception exception)
 		{
-			throw ex;
+			LOG.error("No ProperDetails for the Given Pincode", exception);
+			throw exception;
 		}
 		return pincodeData;
 	}

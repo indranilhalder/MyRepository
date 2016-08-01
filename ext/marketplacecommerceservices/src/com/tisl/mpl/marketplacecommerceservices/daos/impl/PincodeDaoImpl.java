@@ -209,7 +209,7 @@ public class PincodeDaoImpl implements PincodeDao
 	 * @return PincodeModel
 	 */
 	@Override
-	public List<PincodeModel> getAllDetailsOfPinocde(final String pincode)
+	public List<PincodeModel> getAllDetailsOfPincode(final String pincode)
 	{
 		try
 		{
@@ -217,7 +217,10 @@ public class PincodeDaoImpl implements PincodeDao
 					+ PincodeModel.PINCODE + "}=?pincode";
 			final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(query);
 			flexQuery.addQueryParameter("pincode", pincode);
-			LOG.debug("Pincode Query String ::::::::: " + query);
+			if(LOG.isDebugEnabled())
+			{
+				LOG.debug("Pincode Query String ::::::::: " + query);
+			}
 			final SearchResult<PincodeModel> result = flexibleSearchService.search(flexQuery);
 			if (null != result && null != result.getResult())
 			{
@@ -227,10 +230,12 @@ public class PincodeDaoImpl implements PincodeDao
 		}
 		catch (final FlexibleSearchException exception)
 		{
+			LOG.error(exception.getMessage());
 			throw new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final Exception ex)
 		{
+			LOG.error(ex.getMessage());
 			throw ex;
 		}
 		return Collections.EMPTY_LIST;

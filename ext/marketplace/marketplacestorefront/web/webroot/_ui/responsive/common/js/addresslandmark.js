@@ -2,7 +2,6 @@ var addressLandMark = "";
 
 $(document).ready(function(){
 	if($(".address_postcode").val().length >= "3") {
-	//	alert("3");
 		loadPincodeData();
 	}
 	
@@ -20,15 +19,12 @@ $(".address_postcode").blur(function() {
 
 function loadPincodeData() {
 	var Pincode=$(".address_postcode").val();
-	//console.log("Ajax Call Started");
     $.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/landmarks",
 		data: { 'pincode' : Pincode },
 		type: "POST",	
 		success : function(response) {
-			console.log("Response : "+response);
 			if(response == "" || response == " " || response == "NULL") {
-				console.log("Its Here");
 				$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
 				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
 				$(".row .address_landmarkOtherDiv label").css("margin-top","15px");
@@ -39,7 +35,6 @@ function loadPincodeData() {
 				$(".address_townCity").prop("readonly", false);
 				$(".address_states").removeAttr("readonly").removeData("stateValue");
 				
-				//$(".optionsLandmark label").hide();
 			} else {
     			//console.log(response.cityName);
 				$('.address_landmarks .unableto').remove();
@@ -62,16 +57,15 @@ function loadPincodeData() {
         		  $('.address_landmarks').append($("<option class='otherOption'></option>").attr("value","Other").text("Other"));
         		  
         		  $(".address_states").val(response.state.name).attr("readonly", "true").data("stateValue",response.state.name);
-				/*$("#state").val(response['state']);*/
 			}
 			
 			var url = window.location.href;
 			var string = "edit-address";
+			var shippingAddress = "my-account";
 			if(url.indexOf(string) >= "0") {
 				//alert(url);
 				var value = $(".address_landmarkOtherDiv").attr("data-value");
 				if($(".address_landmarks option[value='"+value+"']").length > "0") {
-					console.log(value); 
 					$(".address_landmarks").val(value);
 				} else {
 					if($(".address_landmarks option[value='Other']").length > "0") {
@@ -79,7 +73,6 @@ function loadPincodeData() {
 		  			changeFunction("Other"); 
 		  			$(".address_landmarkOther").val(value);
 					} else {
-						console.log(value);
 						$(".address_landmarkOther").val(value);
 					}
 				}
@@ -136,7 +129,6 @@ function optionsLandmark1(e) {
 
 
 $(document).ready(function() {
-	onloadFunction();
 			$("#deliveryAddressForm").submit(
 					function(event) {
 						$(".main_error").hide();
@@ -248,11 +240,4 @@ $(document).ready(function() {
 		$("#mobileNo").val($("."+className+" .phone").text());
 	});
 	
-	
-	function onloadFunction() {
-		//$("#deliveryAddressForm #firstName").attr("value", "Dileep");
-		//$("#deliveryAddressForm #firstName").val();
-		
-	}
-		
 });

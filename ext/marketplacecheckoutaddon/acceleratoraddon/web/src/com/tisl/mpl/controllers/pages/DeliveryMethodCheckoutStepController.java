@@ -2355,7 +2355,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		PincodeData pincodeData = null;
 		try
 		{
-			pincodeData = pincodeServiceFacade.getAutoPopulatePincodeData(pincode);
+			if(null != pincode && !StringUtils.isEmpty(pincode))
+			{
+				pincodeData = pincodeServiceFacade.getAutoPopulatePincodeData(pincode);
+			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
