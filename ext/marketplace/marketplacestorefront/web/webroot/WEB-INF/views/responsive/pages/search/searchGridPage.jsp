@@ -26,10 +26,9 @@
 		<div class="search-result">
 			<h2>
 				<c:choose>
-					<c:when test="${not empty searchPageData.spellingSuggestion.suggestion}">
-						0 <spring:theme code="search.page.searchText"/> '<span class="searchString"><spring:theme code="search.page.searchTextValue"
-							arguments="${searchPageData.freeTextSearch}" /></span>', <spring:theme code="search.page.searchResultsCount"
-							arguments="${currentPageStart},${currentPageEnd},${searchPageData.pagination.totalNumberOfResults}" />
+					<c:when test="${not empty searchPageData.spellingSuggestion.suggestion && not empty searchPageData.results}">
+						0 Result for '<span class="searchString"><spring:theme code="search.page.searchTextValue"
+							arguments="${spellingSearchterm}" /></span>', <spring:theme code="search.page.searchTextForDYMShow"/>&nbsp;
 						results in 
 						<span class="searchString"><i>
 						
@@ -50,7 +49,7 @@
 							</c:when>
 							<c:otherwise>
 								<spring:theme code="search.page.searchTextValue"
-							arguments="${searchPageData.spellingSuggestion.suggestion}" />
+							arguments="${searchPageData.freeTextSearch}" />
 							</c:otherwise>
 						</c:choose>
 						

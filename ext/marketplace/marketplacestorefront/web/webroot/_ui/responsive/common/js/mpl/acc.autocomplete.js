@@ -312,11 +312,22 @@ ACC.autocomplete = {
 		$('#searchCategory').val('category-'+department);
 	},
 	
+	//Changes done for TPR-432
 	bindSearchText: function (searchText)
 	{
 		var count = searchText.match(/,/g);  
-		if(count == null || count.length<=2) {
-			$('#js-site-search-input').val(searchText);
+		var spellSearch = document.getElementById('spellingSearchterm').value;			
+		if(count == null || count.length<=2) {				
+			// Code Changes Done for TPR-432
+			if(spellSearch == "" ||spellSearch == null ){				
+				$('#js-site-search-input').val(searchText);
+			}
+			else if(spellSearch != "" ||spellSearch != null  && searchText != spellSearch){
+				$('#js-site-search-input').val(spellSearch);
+			}
+			else{				
+				$('#js-site-search-input').val(searchText);
+			}
 		}
 	},
 	// For Microsite ShopByBrand Component

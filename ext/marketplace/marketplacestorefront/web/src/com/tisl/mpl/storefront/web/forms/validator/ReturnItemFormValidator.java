@@ -3,8 +3,10 @@
  */
 package com.tisl.mpl.storefront.web.forms.validator;
 
-import org.apache.commons.lang.StringUtils;
+import java.io.UnsupportedEncodingException;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.storefront.businessvalidator.CommonAsciiValidator;
@@ -24,16 +26,19 @@ public class ReturnItemFormValidator
 	private static final int MAX_FIELD_LENGTH_UPDATED = 40;
 	public static final String MOBILE_REGEX = "^[0-9]*$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
+	private static final String UTF = "UTF-8";
 
+	private static final Logger LOG = Logger.getLogger(ReturnItemFormValidator.class);
 
-	public String returnValidate(final ReturnPincodeCheckForm addressForm)
+	public String returnValidate(final ReturnPincodeCheckForm addressForm) throws UnsupportedEncodingException
 	{
 		final String errorMsg = validateStandardFields(addressForm);
 		return errorMsg;
 	}
 
-	public String validateStandardFields(final ReturnPincodeCheckForm addressForm)
+	public String validateStandardFields(final ReturnPincodeCheckForm addressForm) throws UnsupportedEncodingException
 	{
+		decodeAddressLineValues(addressForm);
 		final String firstName = addressForm.getFirstName();
 		final String lastName = addressForm.getLastName();
 		final String line1 = addressForm.getAddressLane1();
@@ -72,10 +77,9 @@ public class ReturnItemFormValidator
 		{
 			return "address.line1.invalid.length";
 		}
-		else if (StringUtils.isEmpty(line2))
-		{
-			return "address.line2.invalid";
-		}
+		/*
+		 * else if (StringUtils.isEmpty(line2)) { return "address.line2.invalid"; }
+		 */
 		else if (StringUtils.length(line2) > MAX_FIELD_LENGTH_UPDATED)
 		{
 			return "address.line2.invalid.length";
@@ -112,11 +116,41 @@ public class ReturnItemFormValidator
 		{
 			return "address.country.invalid";
 		}
-		else if (StringUtils.isEmpty(landmark))
+
+		else if (StringUtils.length(landmark) > MAX_FIELD_LENGTH_UPDATED)
 		{
-			return "address.line3.invalid";
+			return "address.line2.invalid.length";
 		}
+		/*
+		 * else if (StringUtils.isEmpty(landmark)) { return "address.line3.invalid"; }
+		 */
 		return "success";
+
+	}
+
+
+
+	/**
+	 * @param addressForm
+	 * @throws UnsupportedEncodingException
+	 */
+	private void decodeAddressLineValues(final ReturnPincodeCheckForm addressForm) throws UnsupportedEncodingException
+	{
+		try
+		{
+			final String line1 = java.net.URLDecoder.decode(addressForm.getAddressLane1(), UTF);
+			final String line2 = java.net.URLDecoder.decode(addressForm.getAddressLane2(), UTF);
+			final String line3 = java.net.URLDecoder.decode(addressForm.getLandmark(), UTF);
+
+			addressForm.setAddressLane1(line1);
+			addressForm.setAddressLane2(line2);
+			addressForm.setLandmark(line3);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception while decoding address lines ::::" + ex.getMessage());
+		}
+
 
 	}
 }

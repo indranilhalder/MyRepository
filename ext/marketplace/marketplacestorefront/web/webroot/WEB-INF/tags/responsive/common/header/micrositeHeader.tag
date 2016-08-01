@@ -23,7 +23,7 @@
 
 <div class="marketplace">
         <div class="mobile-bag bag">
-           <a href="${cartUrl}"><span>(0)</span></a>
+           <a href="${cartUrl}"><span class="responsive-bag-count">0</span></a>
         </div>
 
       </div>

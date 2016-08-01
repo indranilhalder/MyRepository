@@ -1526,6 +1526,13 @@
 							</columntype>
 						</persistence>
 					</attribute>
+							<attribute qualifier='categoryId' type="java.lang.String">
+						<description>Seo Content unique Id</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="true" />
+						<persistence type="property">
+									</persistence>
+					</attribute>
 					<attribute type="CatalogVersion" qualifier="catalogVersion">
 						<description></description>
 						<modifiers read="true" write="true" optional="true"
@@ -1597,6 +1604,12 @@
 						<description>Ranking value for departments/category</description>
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="seoContent" type="SeoContent">
+						<description>Seo Content for category</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true"/>
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -1655,6 +1668,14 @@
 					</attribute>
 					<!-- PDP changes end -->
 					<attribute type="java.lang.Double" qualifier="mrp"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+					</attribute>
+					<attribute type="java.lang.Double" qualifier="maxDiscount"
 						autocreate="true" generate="true">
 						<persistence type='property' />
 						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
@@ -6023,7 +6044,8 @@
 					</attribute>
 					<attribute qualifier="deviceId" type="java.lang.String">
 						<description>Stores the Device ID</description>
-						<modifiers optional="true" read="true" write="true" unique="true"/>
+						<!-- <modifiers optional="true" read="true" write="true" unique="true"/> -->
+						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
@@ -6831,16 +6853,16 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TISPRO-675 -->
- 					<attribute qualifier="emiBank" type="java.lang.String"
- 						autocreate="true" generate="true">
- 						<modifiers read="true" write="true" search="true" />
- 						<persistence type="property" />
- 					</attribute>
- 					<attribute qualifier="emiTenure" type="java.lang.String"
- 						autocreate="true" generate="true">
- 						<modifiers read="true" write="true" search="true" />
- 						<persistence type="property" />
- 					</attribute>
+					<attribute qualifier="emiBank" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="emiTenure" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 			<itemtype code="JuspayCardResponse" autocreate="true"

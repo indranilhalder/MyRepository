@@ -5,7 +5,10 @@ package com.tisl.mpl.util;
 
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.Registry;
@@ -33,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -710,11 +714,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1001,4 +1005,156 @@ public class GenericUtilityMethods
 		return missingImageUrl;
 
 	}
+
+	public static void populateTealiumDataForCartCheckout(final Model model, final CartData cartData)
+	{
+		String sku = null;
+		String adobeSku = null;
+		String name = null;
+		String quantity = null;
+		String basePrice = null;//base price for a cart entry
+		String totalEntryPrice = null;
+		String category = null;
+		String brand = null;
+		String adobeProductSku = null;
+		String page_subCategory_name = null;
+		String cartTotal = null;
+		final List<String> productBrandList = new ArrayList<String>();
+		final List<String> productCategoryList = new ArrayList<String>();
+		final List<String> productIdList = new ArrayList<String>();
+		final List<String> productListPriceList = new ArrayList<String>();
+		final List<String> productNameList = new ArrayList<String>();
+		final List<String> productQuantityList = new ArrayList<String>();
+		final List<String> productSkuList = new ArrayList<String>();
+		final List<String> productUnitPriceList = new ArrayList<String>();
+		final List<String> pageSubCategories = new ArrayList<String>();
+		final List<String> adobeProductSkuList = new ArrayList<String>();
+
+		try
+		{
+			if (null != cartData)
+			{
+				if (null != cartData.getTotalPrice() && null != cartData.getTotalPrice().getValue())
+				{
+					cartTotal = cartData.getTotalPrice().getValue().toPlainString();
+				}
+				if (CollectionUtils.isNotEmpty(cartData.getEntries()))
+				{
+					for (final OrderEntryData entry : cartData.getEntries())
+					{
+						if (null != entry)
+						{
+							if (null != entry.getProduct() && StringUtils.isNotEmpty(entry.getProduct().getCode()))
+							{
+								adobeSku = entry.getProduct().getCode();
+								sku = appendQuote(adobeSku);
+
+							}
+							if (null != entry.getProduct() && StringUtils.isNotEmpty(entry.getProduct().getName()))
+							{
+								name = appendQuote(entry.getProduct().getName());
+							}
+							if (null != entry.getQuantity())
+							{
+								quantity = appendQuote(String.valueOf(entry.getQuantity()));
+							}
+
+							if (null != entry.getBasePrice() && null != entry.getBasePrice().getValue())
+							{
+								basePrice = appendQuote(entry.getBasePrice().getValue().toPlainString());//base price for a cart entry
+							}
+
+							if (null != entry.getTotalPrice() && null != entry.getTotalPrice().getValue())
+							{
+								totalEntryPrice = appendQuote(entry.getTotalPrice().getValue().toPlainString());//total price for a cart entry
+							}
+						}
+
+						final List<String> categoryList = new ArrayList<String>();
+						//START [05-Feb-2016] R2.1 - Adding only a Null Check to fix Card payment issue.
+						//Check that if (entry.getProduct().getCategories() != null) then only execute the loop. Else just log an
+						//error message and continue.
+						if (entry.getProduct() != null && entry.getProduct().getCategories() != null)
+						{
+							for (final CategoryData categoryData : entry.getProduct().getCategories())
+							{
+								categoryList.add(categoryData.getName());
+							}
+						}
+						//End [05-Feb-2016] R2.1 - Adding Null Check to fix Card payment issue.
+						final Object[] categoryStrings = categoryList.toArray();
+
+						if (categoryStrings.length > 0)
+						{
+							category = appendQuote((String) categoryStrings[0]);
+						}
+
+						if (entry.getProduct() != null && entry.getProduct().getBrand() != null)
+						{
+							brand = appendQuote(entry.getProduct().getBrand().getBrandname());
+						}
+						if (categoryStrings.length >= 2)
+						{
+							page_subCategory_name = appendQuote((String) categoryStrings[1]);
+							pageSubCategories.add(page_subCategory_name);
+						}
+						productBrandList.add(brand);
+						productCategoryList.add(category);
+						productIdList.add(sku);
+						productListPriceList.add(totalEntryPrice);
+						productNameList.add(name);
+						productQuantityList.add(quantity);
+						productSkuList.add(sku);
+						productUnitPriceList.add(basePrice);
+						adobeProductSkuList.add(adobeSku);
+					}
+				}
+
+				int count = 1;
+				for (final String productSku : adobeProductSkuList)
+				{
+					final String appendedSku = ";" + productSku;
+					if (adobeProductSku == null)
+					{
+						adobeProductSku = appendedSku;
+					}
+					else
+					{
+						adobeProductSku += appendedSku;
+					}
+
+					if (count < productSkuList.size())
+					{
+						adobeProductSku += ",";
+
+					}
+					count++;
+				}
+
+				model.addAttribute("productBrandList", productBrandList);
+				model.addAttribute("productCategoryList", productCategoryList);
+				model.addAttribute("productIdList", productIdList);
+				model.addAttribute("productListPriceList", productListPriceList);
+				model.addAttribute("productNameList", productNameList);
+				model.addAttribute("productQuantityList", productQuantityList);
+				model.addAttribute("productSkuList", productSkuList);
+				model.addAttribute("productUnitPriceList", productUnitPriceList);
+				model.addAttribute("pageSubCategories", pageSubCategories);
+				model.addAttribute("adobe_product", adobeProductSku);
+				model.addAttribute("cart_total", cartTotal);
+			}
+		}
+		catch (final Exception te)
+		{
+			LOG.error("Error while populating tealium data in cart page:::::" + te.getMessage());
+		}
+	}
+
+	public static String appendQuote(final String param)
+	{
+		final StringBuilder str = new StringBuilder(100);
+		str.append('\"').append(param).append('\"');
+		return str.toString();
+	}
+
 }

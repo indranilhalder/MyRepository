@@ -13,7 +13,7 @@ import com.tisl.mpl.model.MPLCancelCRMTaskModel;
 
 
 /**
- * @author 1047001
+ * @author TCS
  *
  */
 public class CancelAsyncTask implements TaskRunner<MPLCancelCRMTaskModel>
@@ -24,7 +24,7 @@ public class CancelAsyncTask implements TaskRunner<MPLCancelCRMTaskModel>
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.task.TaskRunner#handleError(de.hybris.platform.task.TaskService,
 	 * de.hybris.platform.task.TaskModel, java.lang.Throwable)
 	 */
@@ -37,7 +37,7 @@ public class CancelAsyncTask implements TaskRunner<MPLCancelCRMTaskModel>
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.task.TaskRunner#run(de.hybris.platform.task.TaskService,
 	 * de.hybris.platform.task.TaskModel)
 	 */
@@ -46,34 +46,34 @@ public class CancelAsyncTask implements TaskRunner<MPLCancelCRMTaskModel>
 	{
 		LOG.debug("***********************************Ticket creation Asynchronously failed");
 		/*
-		 *
+		 * 
 		 * OrderData subOrderDetail = null; boolean cancelSuccess = false; OrderEntryData subOrderEntry = null;
 		 * CustomerData customerData = null; CustomerModel customerModel = null;
-		 *
+		 * 
 		 * try { final Integer MAX_RETRIES = Integer.valueOf(configurationService.getConfiguration()
 		 * .getString(MarketplaceFacadesConstants.MAX_RETRY).trim());
-		 *
+		 * 
 		 * final Long TIME_DELAY = Long.valueOf(configurationService.getConfiguration()
 		 * .getString(MarketplaceFacadesConstants.TIME_DELAY).trim());
-		 *
+		 * 
 		 * final String orderCode = taskModel.getOrderCode(); //final String customerId = taskModel.getCustomerId(); final
 		 * String reasonCode = taskModel.getReasonCode(); final String refundType = taskModel.getRefundType(); final
 		 * String ticketTypeCode = taskModel.getTicketTypeCode(); final String transactionId =
 		 * taskModel.getTransactionId(); final String ussid = taskModel.getUssid(); final Boolean cancelOrReturn =
 		 * taskModel.getCancelOrReturn(); final Boolean consignmentPresent = taskModel.getConsignmentPresent();
 		 * subOrderDetail = (OrderData) taskModel.getContext();
-		 *
+		 * 
 		 * LOG.debug("Step 1:***********************************Ticket is to be created for sub order Asynchronously:" +
 		 * orderCode);
-		 *
+		 * 
 		 * final OrderModel subOrderModel = orderModelService.getOrder(orderCode); if (subOrderModel.getUser() instanceof
 		 * CustomerModel) { customerModel = (CustomerModel) subOrderModel.getUser(); customerData =
 		 * getCustomerConverter().convert(customerModel);
-		 *
-		 *
+		 * 
+		 * 
 		 * for (final OrderEntryData orderEntry : subOrderDetail.getEntries()) { if
 		 * (transactionId.equalsIgnoreCase(orderEntry.getTransactionId())) { subOrderEntry = orderEntry; } }
-		 *
+		 * 
 		 * //cancelSuccess = cancelReturnFacade.createTicketInCRM(subOrderDetail, subOrderEntry, ticketTypeCode,
 		 * reasonCode, refundType, ussid, customerData, subOrderModel, consignmentPresent.booleanValue(),
 		 * cancelOrReturn.booleanValue());
