@@ -1847,8 +1847,33 @@ $(document).ready(function(){
 	
 	
 	$(document).ajaxComplete(function(){
+	var arrHt=[],diffHt=0,arrHtOwl=[],diffHtOwl=0;
+	$(".home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name").each(function(){
+		arrHt.push($(this).height());
+	});
+	//noprotect
+	var max1 = Math.max.apply(Math,arrHt);
+	for(var i=0;i < arrHt.length;i++){
+	    diffHt = max1 - arrHt[i];
+	    $("#brandsYouLove .home-brands-you-love-desc p.price").eq(i).css("margin-top",+diffHt);
+	  }
+	
+	var len = $(".owl-item.active").length-1;
+	var defaultMarginTop = $(".owl-item.active .New_Exclusive_price").eq(0).css("margin-top");
+	var defaultMarginTop1 = parseInt(defaultMarginTop);
+	//noprotect
+	for(var j=0;j<len;j++){
+		arrHtOwl.push($(".owl-item.active").eq(j).find(".New_Exclusive_title").height());
+	}
+	var max2 = Math.max.apply(Math,arrHtOwl);
+	for(var k=0;k < arrHtOwl.length;k++){
+		diffHtOwl = max2 - arrHtOwl[k];
+		$(".owl-item.active").eq(k).find(".New_Exclusive_price").css("margin-top",+diffHtOwl+defaultMarginTop1);
+	}
+	
+	});
+	$(window).on("resize", function() {
 		var arrHt=[],diffHt=0,arrHtOwl=[],diffHtOwl=0;
-		
 		$(".home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name").each(function(){
 			arrHt.push($(this).height());
 		});
