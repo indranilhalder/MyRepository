@@ -24,6 +24,7 @@ UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.Conf
 $freebiePriceThreshold=$config-freebiePriceThreshold
 
 
+
 #
 # Setup the Solr server, indexer, and search configs
 #
