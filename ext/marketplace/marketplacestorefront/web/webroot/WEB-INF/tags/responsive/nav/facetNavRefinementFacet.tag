@@ -514,6 +514,7 @@ function navigateToPage(queryString,textString)
 				</c:choose>
 				
 				</div>
+				
 				<div class="less js-less-facet-values checkbox-menu">
 				    	<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>

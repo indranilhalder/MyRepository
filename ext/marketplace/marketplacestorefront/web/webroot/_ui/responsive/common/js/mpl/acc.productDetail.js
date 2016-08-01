@@ -704,7 +704,12 @@ function setValidPrice(sellersArray, index) {
 
 	var roundedSpPrice = Math.round(sellersArray[index].spPrice * 100) / 100;
 	if (mrp == "") {
-		$("#mrpPriceId").hide();
+		 $("#mrpPriceId").hide();
+		 $("#savingsOnProductId").hide();
+		 $('#addToCartButton-wrong').attr("disable",true);
+		 $('#addToCartButton-wrong').show();
+		 $('#addToCartButton').hide();
+		 $("#buyNowButton").attr("disabled",true);
 	} else {
 //		$("#mrpPriceId").show();
 //	}
@@ -721,8 +726,9 @@ function setValidPrice(sellersArray, index) {
 		}
 
 	} else {
+		var freebiePriceThresVal = $("#freebiePriceThreshId").val();
 		if (sellersArray[index].mopPrice != null
-				&& sellersArray[index].mopPrice != 0 && sellersArray[index].mopPrice > 1) {
+				&& sellersArray[index].mopPrice != 0 && sellersArray[index].mopPrice > freebiePriceThresVal) {
 			if (sellersArray[index].mopPrice == mrp) {
 				$("#mrpPriceId").append(mrp);
 				$("#mopPriceId").html("");
@@ -732,7 +738,7 @@ function setValidPrice(sellersArray, index) {
 				$("#mopPriceId").append(sellersArray[index].mopPrice);
 				$("#spPriceId").html("");
 			}
-		} else if(sellersArray[index].mopPrice != 0 && sellersArray[index].mopPrice <= 1){
+		} else if(sellersArray[index].mopPrice != 0 && sellersArray[index].mopPrice <= freebiePriceThresVal){
 			 $(".size").hide(); 	
 			 $(".color-swatch").hide();
 			 $(".reviews").hide(); 	
@@ -1535,9 +1541,14 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 		$("#savingsOnProductId").show();
 	} 
 	
-	if (mrp.value == "") {
-		$("#mrpPriceId").hide();
-	} else {
+	if (mrp.value == "") {			
+		 $("#mrpPriceId").hide();
+		 $("#savingsOnProductId").hide();
+		 $('#addToCartButton-wrong').attr("disable",true);
+		 $('#addToCartButton-wrong').show();
+		 $('#addToCartButton').hide();
+		 $("#buyNowButton").attr("disabled",true);
+	} else {		
 		//$("#mrpPriceId").show();
 	//}	
 	//TISPRM-33
@@ -1556,7 +1567,8 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 		}
 
 	} else {
-		if (null!=mop && mop.value != 0 && mop.value > 1) {
+		var freebiePriceThresVal = $("#freebiePriceThreshId").val();		
+		if (null!=mop && mop.value != 0 && mop.value > freebiePriceThresVal) {
 			if (mop.value == mrp.value) {
 				$("#mrpPriceId").removeClass("old").addClass("sale");
 				$("#mrpPriceId").show();
@@ -1565,7 +1577,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				$("#mrpPriceId").show();
 				$("#mopPriceId").show();
 			}
-		} else if(mop.value != 0 && mop.value <= 1){
+		} else if(mop.value != 0 && mop.value <= freebiePriceThresVal){
 			 $(".size").hide(); 	
 			 $(".color-swatch").hide();
 			 $(".reviews").hide(); 	
