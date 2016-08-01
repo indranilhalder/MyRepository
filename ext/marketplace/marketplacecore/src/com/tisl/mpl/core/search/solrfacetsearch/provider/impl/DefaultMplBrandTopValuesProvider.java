@@ -64,6 +64,7 @@ public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 		}
 
 		return topFacetValues;
+
 	}
 
 

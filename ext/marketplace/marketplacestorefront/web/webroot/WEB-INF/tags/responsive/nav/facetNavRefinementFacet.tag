@@ -502,6 +502,7 @@ function navigateToPage(queryString,textString)
 		    
 			<div class="more-lessFacetLinks active">
 				<div class="more js-more-facet-values checkbox-menu">
+				
 				<c:choose>
 				<c:when test="${facetData.code eq 'colour'}" >
 				<a href="#" class="js-more-facet-values-link more" >+&nbsp;${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
