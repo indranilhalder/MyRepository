@@ -29025,7 +29025,7 @@ footer>div>ul>li>.toggle>img{
     background: transparent;
     border: 1px solid #4a4a4a;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: bold;
     width: 300px;
     text-decoration: none;
     margin: 0px auto;
@@ -29181,7 +29181,7 @@ width:100%;
     width: 180px;
     text-transform: uppercase;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: bold;
     letter-spacing: 1px;
     margin:0px auto;
     display: block;
@@ -29290,7 +29290,7 @@ margin: 10px 0px;
 	padding: 13px;
     font-size: 12px;
     font-family: "Montserrat";
-    font-weight: 600;
+    font-weight: bold;
     text-transform: uppercase;
     display: block;
     width: 200px;
@@ -29421,7 +29421,7 @@ a.button.trending-button {
     color: #333;
     border: 1px solid #4a4a4a;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: bold;
     text-decoration: none;
 	width: 80%;
     display: block;
@@ -29444,7 +29444,7 @@ a.button.maroon {
     line-height: 1;
     padding-top:14px;
     letter-spacing: 1px;
-    font-weight: 600;
+    font-weight: bold;
     text-transform: uppercase;
 }
 @media(max-width:995px) and (min-width:651px){
@@ -32090,7 +32090,7 @@ select#enhancedSearchCategory {
     font-size: 20px;
 }
 .buy-banner p{
-	margin: 90px 0 0px !important;
+	margin: 78px 0 0px !important;
 	font-size: 13px;
     padding: 15px 25px;
 }
@@ -32353,7 +32353,14 @@ body.page-homepage .feature-collections h1,#showcase.feature-collections h1{
 	padding:40px 0 20px;
 }
 .home-brands-you-love-carousel{
-	margin-bottom:40px !important;
+	margin-bottom:34px !important;
+}
+.home-best-pick-carousel .item{
+	padding: 10px 0 6px;
+}
+.showcase-center .price p {
+    line-height: 1;
+    padding-top: 6px;
 }
 .home-brands-you-love-wrapper p.home-brands-you-love-main-image-desc,.home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name,
 #bestPicks .short-info span, #bestPicks .short-info p,.home-brands-you-love-desc .left p, .home-brands-you-love-desc .right p{
@@ -32546,7 +32553,7 @@ header .banner > span {
 	.home-brands-you-love-wrapper h1{padding: 30px 0;font-size: 20px;}	
 	.home-brands-you-love-wrapper p.home-brands-you-love-main-image-desc{ width: 100%;}
 	.home-brands-you-love-wrapper .home-brands-you-love-desc{padding: 0 12px;}	
-	.visit-store-wrapper{ bottom: -35px;}	
+	.visit-store-wrapper{ bottom: -28px;}	
 	#brandsYouLove h1{padding: 30px 0;}
 	.home-brands-you-love-carousel {
     margin-bottom: 24px !important;
@@ -32647,6 +32654,9 @@ header .banner > span {
 @media (max-width: 767px) and (min-width:479px){
 .visit-store-wrapper {
     bottom: -45px;
+}
+	.buy-banner p {
+    margin: 30px 0 0 !important;
 }
 }
 /*New homepage changes ends*/
