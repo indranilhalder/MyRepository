@@ -78,19 +78,13 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrder(java.lang.String)
 	 */
 	@Override
 	public OrderModel getOrder(final String code)
 	{
 		return getOrderModelDao().getOrder(code);
-	}
-
-	@Override
-	public List<OrderModel> getOrders(final String code)
-	{
-		return getOrderModelDao().getOrders(code);
 	}
 
 	@Override
@@ -113,7 +107,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrderStausCodeMaster(java.lang.String)
 	 */
 	@Override
@@ -124,7 +118,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrderStausCodeMasterList()
 	 */
 	@Override
