@@ -1098,6 +1098,7 @@ $(button_my_button).click(function(){
 	  var maxPriceSearchTxt = $('.maxPriceSearchTxt').val();
 	  var currentQryParam = $('.currentQueryParamsApply').val();
 	  var facetValue = $('.facetValue').val();
+	  alert("facetValue------"+facetValue+"minPriceSearchTxt---"+minPriceSearchTxt+"maxPriceSearchTxt---"+maxPriceSearchTxt+"currentQryParam---"+currentQryParam);
 	  var queryParamsAry = currentQryParam.split(':');
 	  var nonPriceQueryParams = "";
 	  facetValue ="₹"+minPriceSearchTxt+"-"+"₹"+maxPriceSearchTxt;	 
@@ -1124,11 +1125,25 @@ $(button_my_button).click(function(){
 		}
 	   $('.qValueForCustomPrice').val(nonPriceQueryParams+":price:"+Price);
 	
-	  // alert("qValueForCustomPrice---------------"+nonPriceQueryParams+":price:"+Price);
+	 
 	  // submit brand apply form
        $('form#customPriceFilter').submit();
 });
       //End of Custom Price Filter
+
+		function isNumber(evt) {
+		    evt = (evt) ? evt : window.event;
+		    var charCode = (evt.which) ? evt.which : evt.keyCode;
+		    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+		        return false;
+		    }
+		    return true;
+		}
+
+
+	
+
+
 
 
 

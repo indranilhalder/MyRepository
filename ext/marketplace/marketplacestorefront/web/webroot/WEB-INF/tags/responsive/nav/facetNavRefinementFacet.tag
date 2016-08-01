@@ -110,10 +110,6 @@ function navigateToPage(queryString,textString)
 		
 		
 		<c:if test="${facetData.code eq 'price'}">		
-						
-						 <!--  <label class="applyCustomPriceFilter" style="float: right;margin-right: 12%;margin-top: -1%;padding-bottom: 4%;">Go</label> --> 
-						    								
-						
 							<input type="hidden" name="currentPriceQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentPriceQueryParams"/>					  
 							 <form action="" method="get" id="customPriceFilter">
 							    <input type="hidden" name="offer" value="${offer}"/>
@@ -124,10 +120,11 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="isFacet" value="true"/>							
 								<input type="hidden" id="facetValue" name="facetValue" value="${facetValue.code}"/>						
 								<spring:theme code="text.minPriceSearch.placeholder" var="minPriceSearchPlaceholder" />
-							    <input class="minPriceSearchTxt" type="text" name="customMinPrice" width="30" height="20" placeholder="${minPriceSearchPlaceholder}">							
+							    <input class="minPriceSearchTxt" type="text" id="customMinPrice" name="customMinPrice" width="30" height="20" placeholder="${minPriceSearchPlaceholder}" onkeypress="return isNumber(event)">							
 							    <spring:theme code="text.maxPriceSearch.placeholder" var="maxPriceSearchPlaceholder" />
-							    <input class="maxPriceSearchTxt" type="text" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}">
-								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>			
+							    <input class="maxPriceSearchTxt" type="text" id="customMaxPrice" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}" onkeypress="return isNumber(event)">
+								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>	
+										
 								
 							</form>							
 		</c:if>

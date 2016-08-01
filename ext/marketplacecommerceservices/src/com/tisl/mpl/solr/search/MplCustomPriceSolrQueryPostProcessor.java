@@ -74,55 +74,51 @@ public class MplCustomPriceSolrQueryPostProcessor implements SolrQueryPostProces
 					final int s = priceRange.indexOf("-");
 					priceStartIndex = priceRange.substring(1, s - 1);
 					priceEndIndex = priceRange.substring(s + 2, length);
-					//					for (final Map.Entry<String, IndexedProperty> entry : props.entrySet())
-					//					{
-					//						if (entry.getKey().equals("price"))
-					//						{
+
 					for (final String fq : paramSolrQuery.getFilterQueries())
 					{
-						if (fq.contains("price"))
+						if (fq.contains("price_inr_string:"))
 
 						{
+
 							paramSolrQuery.removeFilterQuery(fq);
-							break;
-						}
 
-						//								paramSolrQuery.removeFilterQuery(getSolrFieldNameProvider().getFieldName(
-						//										entry.getValue(),
-						//										entry.getValue().isLocalized() ? paramSearchQuery.getLanguage()
-						//												: entry.getValue().isCurrency() ? paramSearchQuery.getCurrency() : null, FieldType.INDEX));
+							for (final Map.Entry<String, IndexedProperty> entry : props.entrySet())
+							{
+								if (entry.getKey().equals("priceValue"))
+								{
+									priceProperty = entry.getValue();
+									// Get the start value
+									final double start = Double.parseDouble(priceStartIndex.contains(",") ? priceStartIndex.replace(",",
+											"") : priceStartIndex);
+									// Get the end value
+									final double end = Double.parseDouble(priceEndIndex.contains(",") ? priceEndIndex.replace(",", "")
+											: priceEndIndex);
 
+									paramSolrQuery.addFilterQuery(String.format(
+											priceFacetFormat,
+											getSolrFieldNameProvider().getFieldName(
+													priceProperty,
+													priceProperty.isLocalized() ? paramSearchQuery.getLanguage()
+															: priceProperty.isCurrency() ? paramSearchQuery.getCurrency() : null,
+													FieldType.INDEX), Double.valueOf(start), Double.valueOf(end)));
+									break;
 
-						//							}
-						//						}
+								}
 
-					}
-					for (final Map.Entry<String, IndexedProperty> entry : props.entrySet())
-					{
-						if (entry.getKey().equals("priceValue"))
-						{
-							priceProperty = entry.getValue();
-							// Get the start value
-							final double start = Double.parseDouble(priceStartIndex);
-							// Get the end value
-							final double end = Double.parseDouble(priceEndIndex);
-
-							paramSolrQuery.addFilterQuery(String.format(
-									priceFacetFormat,
-									getSolrFieldNameProvider().getFieldName(
-											priceProperty,
-											priceProperty.isLocalized() ? paramSearchQuery.getLanguage()
-													: priceProperty.isCurrency() ? paramSearchQuery.getCurrency() : null, FieldType.INDEX),
-									Double.valueOf(start), Double.valueOf(end)));
+							}
 							break;
 
 						}
 
 					}
+
 				}
 
 			}
 		}
+
+
 		return paramSolrQuery;
 	}
 }
