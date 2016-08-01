@@ -50,13 +50,27 @@ public interface OrderModelService
 	 */
 
 	/**
-	 * Get order for push notification --- versionId is not null
+	 * Get order for versionId is null
 	 *
 	 * @param code
 	 * @return OrderModel
 	 */
 	OrderModel getOrder(final String code);
 
+	/**
+	 * Get order for versionId is null
+	 *
+	 * @param code
+	 * @return OrderModel
+	 */
+	List<OrderModel> getOrders(final String code);
+
+	/**
+	 * Get order for push notification --- versionId is not null
+	 *
+	 * @param code
+	 * @return OrderModel
+	 */
 	public OrderModel getOrderPushNotification(final String code);
 
 	/**
@@ -81,7 +95,7 @@ public interface OrderModelService
 
 	/**
 	 * UpdatePickUpdetails
-	 * 
+	 *
 	 * @param orderId
 	 * @param name
 	 * @param mobile

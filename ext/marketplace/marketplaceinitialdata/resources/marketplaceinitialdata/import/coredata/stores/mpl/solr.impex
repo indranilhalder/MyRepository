@@ -19,6 +19,11 @@ $priceRangeINR=$prefixPriceRangeINR
 $classAttributeAssignment=classAttributeAssignment(classificationAttribute(code),classificationClass(code))
 $classificationAttributeAssignments=classificationAttributeAssignments(classificationAttribute(code),classificationClass(code))
 
+# Import threshold from local properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$freebiePriceThreshold=$config-freebiePriceThreshold
+
+
 
 #
 # Setup the Solr server, indexer, and search configs
@@ -192,19 +197,12 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 # Create the queries that will be used to extract data for Solr
 INSERT_UPDATE SolrIndexerQuery;solrIndexedType(identifier)[unique=true];identifier[unique=true];type(code);injectCurrentDate[default=true];injectCurrentTime[default=true];injectLastIndexTime[default=true];query;user(uid)
 ;$solrIndexedType;$searchIndexNamePrefix-fullQuery;full;;;false;"
- SELECT distinct{p.PK} FROM {Product AS p 
-						LEFT JOIN CategoryProductRelation AS c2p ON {p.PK}={c2p.target} 
-						LEFT JOIN Category AS c ON {c2p.source}={c.PK} } 
-						WHERE {c.code} LIKE 'MSH%' 
-						AND (sysdate between {p.onlineDate} and {p.offlineDate})
-						AND EXISTS ( 
-										{{ SELECT * FROM {BuyBox AS bbox} 
-													WHERE {bbox.product}={p.code} 
-													AND {bbox.delisted} != 1 
-													AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
-										}} 
-									) 
-						AND {p.varianttype} IS NULL   
+ SELECT distinct{p.PK} FROM {Product AS p LEFT JOIN CategoryProductRelation AS c2p ON {p.PK}={c2p.target} LEFT JOIN Category AS c ON {c2p.source}={c.PK} } 
+ WHERE {c.code} LIKE 'MSH%' AND EXISTS ({{ SELECT * FROM {BuyBox AS bbox} WHERE {bbox.product}={p.code} 
+                                                                          AND {bbox.delisted} != 1 
+                                                                          AND {bbox.price} > $freebiePriceThreshold
+                                                                          AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})}}) 
+AND {p.varianttype} IS NULL   
 ";anonymous
 ;$solrIndexedType;$searchIndexNamePrefix-updateQuery;update;;;;"
 SELECT DISTINCT tbl.pk, tbl.code FROM (
@@ -217,9 +215,9 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 			 }
 		WHERE {c.code} LIKE 'MSH%' AND {p:varianttype} IS NULL 
 		AND (
-			 {p:modifiedtime}  >= ?lastIndexTime OR 
-			 {cr:modifiedtime}  >= ?lastIndexTime OR
-             {c2p:modifiedtime}  >= ?lastIndexTime
+			 {p:modifiedtime} >= ?lastIndexTime OR 
+			 {cr:modifiedtime} >= ?lastIndexTime OR
+             {c2p:modifiedtime} >= ?lastIndexTime
 			 )
 	}}
 	UNION
@@ -228,6 +226,7 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 			{{
 				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} >= ?lastIndexTime
 																	 AND {bbox.delisted} != 1 
+																	 AND {bbox.price} > $freebiePriceThreshold 																	  
 																	 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
 			}}
 		)
@@ -237,23 +236,39 @@ SELECT DISTINCT tbl.pk, tbl.code FROM (
 		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:PK} IN (
 			{{
 				SELECT DISTINCT {ppromorel.source} from {ProductPromotion as ppromo},{ ProductPromotionRelation as ppromorel} 
-																	 WHERE {ppromo:modifiedtime}  >= ?lastIndexTime
+																	 WHERE {ppromo:modifiedtime} >= ?lastIndexTime
 																	 AND {ppromo.PK} = {ppromorel.target}
 			}}
 		)
 	}}
-	
+
 ) tbl 
 where tbl.code IN ( 
 					{{ SELECT {bbox.product} FROM {BuyBox AS bbox} 
 								WHERE {bbox.delisted} != 1 
+								AND {bbox.price} > $freebiePriceThreshold 						 
 								AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
 					}} 
 				)
 
  ORDER BY tbl.code
 ";anonymous
-;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"SELECT distinct{p.PK} FROM {Product AS p} 						WHERE (sysdate not between {p.onlineDate} and {p.offlineDate}) OR {p.code} IN ( 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 													AND ({bbox.product}={p.code} 													AND ({bbox.delisted} = 1 														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})))													AND {bbox.product} NOT IN (													{{														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 															WHERE {bbox.delisted} != 1 															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})}})										}} 									) 						AND {p.varianttype} IS NULL";anonymous
+;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"SELECT distinct{p.PK} FROM {Product AS p} WHERE {p.code} IN ({{ 
+                                                             SELECT distinct{bbox.product} FROM{BuyBox AS bbox} 
+															 WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
+															 AND ({bbox.product}={p.code} 
+															 AND ({bbox.delisted} = 1 
+															 AND {bbox.price} > $freebiePriceThreshold 
+															 OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate}))) 
+															 AND {bbox.product} NOT IN ({{														
+															                             SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 
+																						 WHERE {bbox.delisted} != 1 
+																						 AND {bbox.price} > $freebiePriceThreshold 
+																						 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+																						 }})
+															}}) 
+AND {p.varianttype} IS NULL
+";anonymous
 
 # Define the available sorts
 INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
