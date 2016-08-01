@@ -931,6 +931,23 @@ function getNewAndExclusiveAjaxCall() {
                             $('#newAndExclusive').outerHeight() +
                             'px');
             }, 2500);
+            $("#new_exclusive").on('changed.owl.carousel', function(event) {
+        		setTimeout(function(){
+        			var arrHtOwl=[],diffHtOwl=0;
+        		var len = $("#newAndExclusive .owl-item.active").length;
+        		for(var j=0;j<len;j++){
+        			arrHtOwl.push($("#newAndExclusive .owl-item.active").eq(j).find(".New_Exclusive_title").height());
+        		}
+        		if($(window).width() > 790) {
+        		arrHtOwl.splice(-1,1);
+        		}
+        		var max2 = Math.max.apply(Math,arrHtOwl);
+        		for(var k=0;k < arrHtOwl.length;k++){
+        			diffHtOwl = max2 - arrHtOwl[k];
+        			$("#newAndExclusive .owl-item.active").eq(k).find(".New_Exclusive_title").css("padding-bottom",+diffHtOwl);
+        		}
+        		},80);
+            });
         }
     });
 }
@@ -1893,21 +1910,22 @@ $(document).ready(function(){
 	    diffHt = max1 - arrHt[i];
 	    $("#brandsYouLove .home-brands-you-love-desc p.price").eq(i).css("margin-top",+diffHt);
 	  }
-	
-	var len = $(".owl-item.active").length-1;
-	var defaultMarginTop = $(".owl-item.active .New_Exclusive_price").eq(0).css("margin-top");
-	var defaultMarginTop1 = parseInt(defaultMarginTop);
-	//noprotect
+	var len = $("#newAndExclusive .owl-item.active").length;
 	for(var j=0;j<len;j++){
-		arrHtOwl.push($(".owl-item.active").eq(j).find(".New_Exclusive_title").height());
+		arrHtOwl.push($("#newAndExclusive .owl-item.active").eq(j).find(".New_Exclusive_title").height());
+	}
+	if($(window).width() > 790) {
+	arrHtOwl.splice(-1,1);
 	}
 	var max2 = Math.max.apply(Math,arrHtOwl);
 	for(var k=0;k < arrHtOwl.length;k++){
 		diffHtOwl = max2 - arrHtOwl[k];
-		$(".owl-item.active").eq(k).find(".New_Exclusive_price").css("margin-top",+diffHtOwl+defaultMarginTop1);
+		$("#newAndExclusive .owl-item.active").eq(k).find(".New_Exclusive_title").css("padding-bottom",+diffHtOwl);
 	}
 	
+	
 	});
+	
 	$(window).on("resize", function() {
 		var arrHt=[],diffHt=0,arrHtOwl=[],diffHtOwl=0;
 		$(".home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name").each(function(){
@@ -1920,19 +1938,18 @@ $(document).ready(function(){
 		    $("#brandsYouLove .home-brands-you-love-desc p.price").eq(i).css("margin-top",+diffHt);
 		  }
 		
-		var len = $(".owl-item.active").length-1;
-		var defaultMarginTop = $(".owl-item.active .New_Exclusive_price").eq(0).css("margin-top");
-		var defaultMarginTop1 = parseInt(defaultMarginTop);
-		//noprotect
+		var len = $("#newAndExclusive .owl-item.active").length;
 		for(var j=0;j<len;j++){
-			arrHtOwl.push($(".owl-item.active").eq(j).find(".New_Exclusive_title").height());
+			arrHtOwl.push($("#newAndExclusive .owl-item.active").eq(j).find(".New_Exclusive_title").height());
+		}
+		if($(window).width() > 790) {
+		arrHtOwl.splice(-1,1);
 		}
 		var max2 = Math.max.apply(Math,arrHtOwl);
 		for(var k=0;k < arrHtOwl.length;k++){
 			diffHtOwl = max2 - arrHtOwl[k];
-			$(".owl-item.active").eq(k).find(".New_Exclusive_price").css("margin-top",+diffHtOwl+defaultMarginTop1);
+			$("#newAndExclusive .owl-item.active").eq(k).find(".New_Exclusive_title").css("padding-bottom",+diffHtOwl);
 		}
-		
 	});
 	
 	$(document).on("click","div.departmenthover + span#mobile-menu-toggle",function(){
