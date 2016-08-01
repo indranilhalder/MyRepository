@@ -519,14 +519,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 		{
 			if (paymentType.equalsIgnoreCase("CREDIT"))
 			{
-				paymentMode = MarketplacecommerceservicesConstants.CREDIT;
+				paymentMode = "Credit Card";
 				oModel = mplPaymentDao.getPaymentMode(paymentMode);
 			}
 			else if (paymentType.equalsIgnoreCase("DEBIT"))
 			{
-				paymentMode = MarketplacecommerceservicesConstants.DEBIT;
+				paymentMode = "Debit Card";
 				oModel = mplPaymentDao.getPaymentMode(paymentMode);
 			}
+			//TISPRO-675
 			else if (paymentType.equalsIgnoreCase("NB"))
 			{
 				paymentMode = MarketplacecommerceservicesConstants.NETBANKING;
