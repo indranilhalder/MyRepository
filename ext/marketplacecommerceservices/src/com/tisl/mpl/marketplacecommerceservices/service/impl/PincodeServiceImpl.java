@@ -136,14 +136,19 @@ public class PincodeServiceImpl implements PincodeService
 		throw new LocationServiceException("Unable to calculate a distance for PointOfService(" + posModel
 				+ ") due to missing  latitude, longitude value");
 	}
-
+	
+	/**
+	 * fetching all details about the given Pincode
+	 * @param  pincode
+	 * @return PincodeModel
+	 */
 	@Override
 	public PincodeModel getDetailsOfPincode(final String pincode)
 	{
 		PincodeModel pincodeModel = null;
 		try
 		{
-			List<PincodeModel> pincodeModelList = pincodeDao.getAllDetailsOfPinocde(pincode);
+			List<PincodeModel> pincodeModelList = pincodeDao.getAllDetailsOfPincode(pincode);
 			if (!pincodeModelList.isEmpty())
 			{
 				return pincodeModelList.get(0);
@@ -159,14 +164,17 @@ public class PincodeServiceImpl implements PincodeService
 		}
 		catch (final EtailBusinessExceptions businessException)
 		{
+			LOG.error("Exception while retrieving pincode Deatils");
 			throw businessException;
 		}
 		catch (final EtailNonBusinessExceptions nonBusiness)
 		{
+			LOG.error(nonBusiness.getMessage());
 			throw nonBusiness;
 		}
 		catch (final Exception exception)
 		{
+			LOG.error(exception.getCause().getMessage());
 			throw exception;
 		}
 		return pincodeModel;

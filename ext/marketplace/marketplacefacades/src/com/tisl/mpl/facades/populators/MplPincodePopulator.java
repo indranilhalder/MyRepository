@@ -13,8 +13,10 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.LandMarksModel;
 import com.tisl.mpl.facade.data.LandMarksData;
 import com.tisl.mpl.facades.data.PincodeData;
@@ -31,6 +33,9 @@ public class MplPincodePopulator implements Populator<PincodeModel, PincodeData>
 
 	private Converter<StateModel, StateData> mplStateConverter;
 	private Converter<LandMarksModel, LandMarksData> mplLandMarksConverter;
+	
+	private static final Logger LOG = Logger.getLogger(MplPincodePopulator.class);
+
 
 	/**
 	 * @description Based on pincode getting all the city, state,
@@ -40,9 +45,10 @@ public class MplPincodePopulator implements Populator<PincodeModel, PincodeData>
 	@Override
 	public void populate(final PincodeModel source, final PincodeData target) throws ConversionException
 	{
-		Assert.notNull(source, "Parameter source cannot be null.");
-		Assert.notNull(target, "Parameter target cannot be null.");
+		Assert.notNull(source, MarketplacecommerceservicesConstants.SOURCENOTNULL);
+		Assert.notNull(target, MarketplacecommerceservicesConstants.TARGETNOTNULL);
 
+		LOG.debug("Populating PincodeData from PincodeModel");
 		target.setPincode(source.getPincode());
 		target.setCityName(source.getCityName());
 		if (null != source.getState())
@@ -54,11 +60,11 @@ public class MplPincodePopulator implements Populator<PincodeModel, PincodeData>
 		{
 			final List<LandMarksModel> allLandmarks = source.getLandmarks();
 			final List<LandMarksModel> activeLandmarks = new ArrayList<LandMarksModel>();
-			for (final LandMarksModel l : allLandmarks)
+			for (final LandMarksModel landmark : allLandmarks)
 			{
-				if (l.getIsActive().booleanValue())
+				if (landmark.getIsActive().booleanValue())
 				{
-					activeLandmarks.add(l);
+					activeLandmarks.add(landmark);
 				}
 			}
 			target.setLandMarks(Converters.convertAll(activeLandmarks, getMplLandMarksConverter()));
