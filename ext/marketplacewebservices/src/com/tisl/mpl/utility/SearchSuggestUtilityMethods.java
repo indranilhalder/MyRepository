@@ -1612,14 +1612,16 @@ public class SearchSuggestUtilityMethods
 								if (CollectionUtils.isNotEmpty(l3Depart.getChildFilters()))
 								{
 									l3Depart.getChildFilters().add(l4Depart);
-									break;
+
 								}
 								else
 								{
 									lFinalList = new ArrayList<DepartmentFilterWsDto>();
 									lFinalList.add(l4Depart);
 									l3Depart.setChildFilters(lFinalList);
+
 								}
+								break;
 							}
 						}
 						//setting L3
@@ -1628,14 +1630,16 @@ public class SearchSuggestUtilityMethods
 							if (CollectionUtils.isNotEmpty(l2Depart.getChildFilters()))
 							{
 								l2Depart.getChildFilters().add(l3Depart);
-								break;
+								//break;
 							}
 							else
 							{
 								lFinalList = new ArrayList<DepartmentFilterWsDto>();
 								lFinalList.add(l3Depart);
 								l2Depart.setChildFilters(lFinalList);
+								//break;
 							}
+							break;
 						}
 
 					}
@@ -1645,6 +1649,7 @@ public class SearchSuggestUtilityMethods
 						if (CollectionUtils.isNotEmpty(l1Depart.getChildFilters()))
 						{
 							l1Depart.getChildFilters().add(l2Depart);
+							//break;
 						}
 						else
 						{
