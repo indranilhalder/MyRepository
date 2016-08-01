@@ -208,6 +208,7 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
             			},	
             			480 : {
             				items:2,
+            				stagePadding: 50,
             			},
             			768 : {
             				items:3,
