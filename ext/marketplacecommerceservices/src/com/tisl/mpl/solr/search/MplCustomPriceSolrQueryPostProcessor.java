@@ -25,7 +25,7 @@ public class MplCustomPriceSolrQueryPostProcessor implements SolrQueryPostProces
 {
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.search.SolrQueryPostProcessor#process(org.apache.solr.client.solrj.SolrQuery,
 	 * de.hybris.platform.solrfacetsearch.search.SearchQuery)
@@ -107,6 +107,7 @@ public class MplCustomPriceSolrQueryPostProcessor implements SolrQueryPostProces
 								}
 
 							}
+
 							break;
 
 						}
