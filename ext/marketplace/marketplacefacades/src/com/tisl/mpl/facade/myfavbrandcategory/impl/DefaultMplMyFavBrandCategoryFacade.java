@@ -253,7 +253,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade#fetchFavCategories(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -274,7 +274,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade#fetchFavBrands(java.lang.String,
 	 * java.lang.String)
 	 */

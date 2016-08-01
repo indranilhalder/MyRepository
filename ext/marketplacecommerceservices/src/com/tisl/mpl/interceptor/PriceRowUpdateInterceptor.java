@@ -49,25 +49,35 @@ public class PriceRowUpdateInterceptor implements PrepareInterceptor
 		if (object instanceof PriceRowModel)
 		{
 			final PriceRowModel priceRow = (PriceRowModel) object;
+			double specialPrice = 0.0D;
+
 			//final Date sysdate = new Date();
 			if (priceRow.getPromotionStartDate() != null && priceRow.getPromotionEndDate() != null
 			//&& sysdate.after(priceRow.getPromotionStartDate()) && sysdate.before(priceRow.getPromotionEndDate())
 			)
 			{
-
-
 				if (priceRow.getIsPercentage() != null && !priceRow.getIsPercentage().booleanValue())
 				{
-
-					priceRow.setSpecialPrice(
-							Double.valueOf(priceRow.getPrice().doubleValue() - priceRow.getPromotionValue().doubleValue()));
+					priceRow.setSpecialPrice(Double.valueOf(priceRow.getPrice().doubleValue()
+							- priceRow.getPromotionValue().doubleValue()));
 				}
-
 				else
 				{
+					specialPrice = priceRow.getPrice().doubleValue()
+							- ((priceRow.getPrice().doubleValue() * priceRow.getPromotionValue().doubleValue()) / 100);
+					if (null != priceRow.getMaxDiscount() && priceRow.getMaxDiscount().doubleValue() > 0.0
+							&& specialPrice > priceRow.getMaxDiscount().doubleValue())
+					{
+						specialPrice = priceRow.getPrice().doubleValue() - priceRow.getMaxDiscount().doubleValue();
+						LOG.debug("Special Price > Max Discount : Special Price:" + specialPrice);
+						priceRow.setSpecialPrice(Double.valueOf(specialPrice));
+					}
+					else
+					{
+						LOG.debug("Special Price < Max Discount : Special Price: " + specialPrice);
+						priceRow.setSpecialPrice(Double.valueOf(specialPrice));
+					}
 
-					priceRow.setSpecialPrice(Double.valueOf(priceRow.getPrice().doubleValue()
-							- ((priceRow.getPrice().doubleValue() * priceRow.getPromotionValue().doubleValue()) / 100)));
 				}
 
 			}

@@ -34,11 +34,11 @@ public class OrderUtil
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -238,3 +238,4 @@ public class OrderUtil
 
 
 }
+

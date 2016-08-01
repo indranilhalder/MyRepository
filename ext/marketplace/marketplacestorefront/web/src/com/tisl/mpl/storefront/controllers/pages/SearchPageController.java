@@ -42,6 +42,7 @@ import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetRefinement;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
+import de.hybris.platform.commerceservices.search.facetdata.SpellingSuggestionData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -217,6 +218,8 @@ public class SearchPageController extends AbstractSearchPageController
 		boolean allSearchFlag = false;
 		String searchCategory = ALL;
 		String micrositeDropDownText = "";
+		final String spellingSearchterm = searchText;
+		String spellingtermDYM = "";
 		final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
 
 		final SearchStateData searchState = new SearchStateData();
@@ -304,7 +307,29 @@ public class SearchPageController extends AbstractSearchPageController
 						searchStateAll.setQuery(searchQueryDataAll);
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
 								.textSearch(searchStateAll, pageableData);
+						// Code changes done for TPR-432
+						model.addAttribute("spellingSearchterm", spellingSearchterm);
+						if (CollectionUtils.isEmpty(searchPageData.getResults()) && searchPageData.getSpellingSuggestion() != null)
+						{
+							searchQueryDataAll.setValue(XSSFilterUtil.filter(searchPageData.getSpellingSuggestion().getSuggestion()));
+							searchStateAll.setQuery(searchQueryDataAll);
+							spellingtermDYM = searchPageData.getFreeTextSearch();
+							searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
+									.textSearch(searchStateAll, pageableData);
+							if (null == searchPageData.getSpellingSuggestion())
+							{
+								final SpellingSuggestionData spelling = new SpellingSuggestionData();
+								spelling.setSuggestion(spellingtermDYM);
+								searchPageData.setSpellingSuggestion(spelling);
+								model.addAttribute("spellingSearchterm", spellingSearchterm);
+							}
+						}
 						searchCategory = ALL;
+					}
+					//Changes Done for TPR-432
+					else if (!allSearchFlag && searchPageData.getResults() != null)
+					{
+						searchPageData.setSpellingSuggestion(null);
 					}
 
 				}
@@ -550,6 +575,12 @@ public class SearchPageController extends AbstractSearchPageController
 
 		model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
 
+		//Changes Done for TPR-432
+
+		if (searchPageData.getResults() != null)
+		{
+			searchPageData.setSpellingSuggestion(null);
+		}
 
 
 		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(

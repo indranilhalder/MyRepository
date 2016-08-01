@@ -311,10 +311,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("C"))
 				{
 					LOG.debug("Step 7:***********************************Create Cancel request" + subOrderDetails.getCode());
-
-					frameCancelPushNotification(subOrderModel, subOrderModelVersioned, subOrderEntry.getEntryNumber(), reasonCode,
-							customerData);
-
+					frameCancelPushNotification(subOrderModel, subOrderModelVersioned, subOrderEntry, reasonCode, customerData);
 					LOG.debug("*Step 7:*********************************Cancel request successful and push notification sent:");
 				}
 			}
@@ -560,7 +557,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 
 	private PushNotificationData frameCancelPushNotification(final OrderModel subOrderModel,
-			final OrderModel subOrderModelVersioned, final Integer suborderEntryNumber, final String reasonCode,
+			final OrderModel subOrderModelVersioned, final OrderEntryData suborderEntry, final String reasonCode,
 			final CustomerData customerData)
 	{
 		PushNotificationData pushData = null;
@@ -569,15 +566,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			String refundableAmount = null;
 			String cancelReason = null;
 			String cancelledItems = null;
-			AbstractOrderEntryModel entry = null;
-			for (final AbstractOrderEntryModel orderEntry : subOrderModel.getEntries())
-			{
-				if (null != orderEntry.getEntryNumber() && orderEntry.getEntryNumber().intValue() == suborderEntryNumber.intValue())
-				{
-					entry = orderEntry;
-					break;
-				}
-			}
+			double amount = 0d;
+			//final AbstractOrderEntryModel entry = null;
+			/*
+			 * for (final AbstractOrderEntryModel orderEntry : subOrderModel.getEntries()) { if (null !=
+			 * orderEntry.getEntryNumber() && orderEntry.getEntryNumber().intValue() == suborderEntryNumber.intValue()) {
+			 * entry = orderEntry; break; } }
+			 */
 
 			final List<PaymentTransactionModel> tranactions = subOrderModel.getPaymentTransactions();
 			if (CollectionUtils.isNotEmpty(tranactions))
@@ -587,16 +582,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
 						&& "COD".equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
 				{
-					refundableAmount = "0";
+					amount = 0d;
 				}
-				else
+				else if (suborderEntry.getAmountAfterAllDisc().getDoubleValue() != null)
 				{
-					final double amount = (entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc().doubleValue()
-							: 0D) + (entry.getCurrDelCharge() != null ? entry.getCurrDelCharge().doubleValue() : 0D);
-
-					refundableAmount = Double.toString(amount);
+					amount += suborderEntry.getAmountAfterAllDisc().getDoubleValue().doubleValue();
 				}
-
+				else if (suborderEntry.getCurrDelCharge().getDoubleValue() != null)
+				{
+					amount += suborderEntry.getCurrDelCharge().getDoubleValue().doubleValue();
+				}
+				refundableAmount = Double.toString(amount);
 			}
 			//TISPT-386
 			//OrderModel orderMod = null;
@@ -609,8 +605,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				for (final AbstractOrderEntryModel orderEntry : subOrderModelVersioned.getEntries())
 				{
-					if (null != orderEntry.getEntryNumber()
-							&& orderEntry.getEntryNumber().intValue() == suborderEntryNumber.intValue())
+					if (null != orderEntry.getEntryNumber() && orderEntry.getEntryNumber() == suborderEntry.getEntryNumber())
 					{
 						cancelledEntry = orderEntry;
 						break;

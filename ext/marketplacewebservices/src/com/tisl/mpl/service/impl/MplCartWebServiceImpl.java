@@ -933,6 +933,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				 * ProductOption.CATEGORIES ProductOption.PROMOTIONS, ProductOption.STOCK,
 				 * ProductOption.DELIVERY_MODE_AVAILABILITY ));
 				 */
+
 				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 				if (null != abstractOrderEntry.getDeliveryPointOfService())
 				{

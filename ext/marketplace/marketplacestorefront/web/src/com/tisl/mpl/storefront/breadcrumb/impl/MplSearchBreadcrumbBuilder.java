@@ -40,7 +40,7 @@ public class MplSearchBreadcrumbBuilder extends SearchBreadcrumbBuilder
 
 		if (categoryCode == null)
 		{
-			final Breadcrumb breadcrumb = new Breadcrumb("/search?text=" + getEncodedUrl(searchText),
+			final Breadcrumb breadcrumb = new Breadcrumb("/search?text=" + (searchText != null ? getEncodedUrl(searchText) : ""),
 					StringEscapeUtils.escapeHtml(searchText), (emptyBreadcrumbs ? LAST_LINK_CLASS : ""));
 			breadcrumbs.add(breadcrumb);
 		}
@@ -83,7 +83,7 @@ public class MplSearchBreadcrumbBuilder extends SearchBreadcrumbBuilder
 
 	/**
 	 * This method will return breadcrumb for empty search result
-	 * 
+	 *
 	 * @param searchText
 	 * @return emptyResultBreadcrumb
 	 * @throws IllegalArgumentException
