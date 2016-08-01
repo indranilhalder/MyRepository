@@ -32008,9 +32008,12 @@ p.showcase-para {
     font-weight: bold;
     padding: 0;
 }
-#bestPicks .owl-controls,#productYouCare .owl-controls,#new_exclusive .owl-controls,#brandsYouLove .bulprev, #brandsYouLove .bulnext ,#brandsYouLove .owl-controls{
+#bestPicks .owl-controls,#productYouCare .owl-controls,#new_exclusive .owl-controls,#brandsYouLove .bulprev, #brandsYouLove .bulnext ,#brandsYouLove .owl-controls,
+ .trending .owl-controls,.visuallySimilarItems .owl-controls {
     display: none !important;
 }
+.slider.product .frame .overflow{
+padding:0px;}
 header > .content {
     padding: 0 12px 15px;
 }
@@ -32478,6 +32481,9 @@ ul li #mobile-menu-toggle + ul li ul.words li.long {
     background: #b9b8b8;
       line-height: 30px;
     display:none;
+}
+ul li #mobile-menu-toggle + ul li ul.words li.long a{
+    display:block;
 }
 .showcaseItem > a {
     font-weight: bold;
