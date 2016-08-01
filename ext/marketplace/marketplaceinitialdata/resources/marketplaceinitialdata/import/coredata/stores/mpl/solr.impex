@@ -249,13 +249,11 @@ where tbl.code IN (
                                                              SELECT distinct{bbox.product} FROM{BuyBox AS bbox} 
 															 WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
 															 AND ({bbox.product}={p.code} 
-															 AND ({bbox.delisted} = 1 
-															 AND {bbox.price} > $freebiePriceThreshold 
+															 AND ({bbox.delisted} = 1 															 
 															 OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate}))) 
 															 AND {bbox.product} NOT IN ({{														
 															                             SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 
-																						 WHERE {bbox.delisted} != 1 
-																						 AND {bbox.price} > $freebiePriceThreshold 
+																						 WHERE {bbox.delisted} != 1 																						 
 																						 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
 																						 }})
 															}}) 
