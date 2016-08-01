@@ -48,6 +48,14 @@ public interface OrderModelDao
 	OrderModel getOrder(final String code);
 
 	/**
+	 * It gets Order
+	 *
+	 * @return OrderModel
+	 *
+	 */
+	List<OrderModel> getOrders(final String code);
+
+	/**
 	 * It gets Order when version id not null -- cancelled items
 	 *
 	 * @return OrderModel
@@ -66,9 +74,9 @@ public interface OrderModelDao
 	 */
 	OrderModel updatePickUpDetailsDao(final String orderId, final String name, final String mobile);
 
-	
+
 	/**
-	 * 
+	 *
 	 * @param orderId
 	 * @return order Model
 	 */

@@ -17,9 +17,6 @@ import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
-import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
-import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
@@ -39,11 +36,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
-import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
-import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.service.MplProductWebService;
-import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.util.MplCompetingProductsUtility;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
@@ -83,16 +78,18 @@ public class SearchSuggestUtilityMethods
 	//	private ProductService productService;
 	//	@Resource(name = "cwsProductFacade")
 	//	private ProductFacade productFacade;
-	@Resource(name = "productService")
-	private ProductService productService;
+	//@Resource(name = "productService")
+	//private ProductService productService;
 
-	@Resource(name = "defaultPromotionManager")
-	private DefaultPromotionManager defaultPromotionManager;
+	//@Resource(name = "defaultPromotionManager")
+	//private DefaultPromotionManager defaultPromotionManager;
 
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
-	@Resource(name = "defaultMplProductSearchFacade")
-	private DefaultMplProductSearchFacade searchFacade;
+	//@Resource(name = "defaultMplProductSearchFacade")
+	//private DefaultMplProductSearchFacade searchFacade;
+	@Resource(name = "productDetailsHelper")
+	private ProductDetailsHelper productDetailsHelper;
 
 	/**
 	 * @Description : Sets Category Data to a DTO
@@ -171,7 +168,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -587,20 +584,19 @@ public class SearchSuggestUtilityMethods
 		String url = null;
 		Map<String, List<String>> params = null;
 		final List<String> urlList = new ArrayList<String>();
-		ProductSearchPageData<SearchStateData, ProductData> searchPageData = null;
 		try
 		{
 			//searchText = URLParamUtil.getQueryParamParsed(searchText);
 			searchText = URLParamUtil.filter(searchText);
-			searchPageData = searchFacade.textSearch(searchText);
-			url = mplProductWebService.getKeywordSearch(searchPageData, searchText);
+			//searchPageData = searchFacade.textSearch(searchText);
+			url = mplProductWebService.getKeywordSearch(searchText);
 			if (StringUtils.isNotEmpty(url))
 			{
 				//fetching the Parameters from the redirect URL in Map with Key and values
 				params = URLParamUtil.getQueryParams(url);
 				urlList.add(url);
 				params.put("keywordUrl", urlList);
-				LOG.debug("---search keyword url" + url);
+				//LOG.debug("---search keyword url" + url);
 			}
 		}
 		catch (final Exception e)
@@ -616,8 +612,8 @@ public class SearchSuggestUtilityMethods
 		final List<SellerItemDetailWsDto> sellerItemDetailWsDtoList = new ArrayList<>();
 		final List<SellingItemDetailWsDto> searchProductDTOList = new ArrayList<>();
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
-
-		for (final ProductData productData : searchPageData.getResults())
+		List<GalleryImageData> galleryImages = null;
+		for (ProductData productData : searchPageData.getResults())
 		{
 
 			final SellingItemDetailWsDto sellingItemDetail = new SellingItemDetailWsDto();
@@ -626,35 +622,29 @@ public class SearchSuggestUtilityMethods
 			if (null != productData && null != productData.getCode())
 			{
 
-				final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
-						productData.getCode());
+				/*
+				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
+				 * productData.getCode());
+				 *
+				 * ProductData productData1 = null; if (null != productModel) { productData1 =
+				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
+				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
+				 *
+				 *
+				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
+				 * mplProductWebService.getGalleryImages(productData1);
+				 *
+				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
+				 *
+				 * }
+				 */
+				productData = productFacade.getProductForCodeAndOptions(productData.getCode(), Arrays.asList(ProductOption.GALLERY));
 
-				ProductData productData1 = null;
-				if (null != productModel)
+				galleryImages = productDetailsHelper.getGalleryImagesMobile(productData);
+				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
-					productData1 = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY));
+					sellingItemDetail.setGalleryImagesList(galleryImages);
 				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037);
-				}
-
-
-				if (null != productData1)
-				{
-					final List<GalleryImageData> gallaryImages = mplProductWebService.getGalleryImages(productData1);
-
-					if (!gallaryImages.isEmpty())
-					{
-						sellingItemDetail.setGalleryImagesList(gallaryImages);
-					}
-
-				}
-
-				//					if (null != mplProductWebService.getGalleryImages(productData1))
-				//					{
-				//						sellingItemDetail.setGalleryImagesList(mplProductWebService.getGalleryImages(productData1));
-				//					}
 				if (null != productData.getName())
 				{
 					sellingItemDetail.setProductname(productData.getName());
@@ -1084,7 +1074,8 @@ public class SearchSuggestUtilityMethods
 								l2List.add(l2DepartFilter);
 								oldL1Filter.setChildFilters(l2List);
 							}
-							traversedDepartments.addAll(concateDepartmentString(departmentFil));
+							traversedDepartments.addAll(concateDepartmentString(departmentFil,
+									MarketplacecommerceservicesConstants.DEPT_L1));
 						}
 					}
 
@@ -1147,7 +1138,8 @@ public class SearchSuggestUtilityMethods
 											l3List.add(l3DepartFilter);
 											oldL2DepartFilter.setChildFilters(l3List);
 										}
-										traversedDepartments.addAll(concateDepartmentString(departmentFil));
+										traversedDepartments.addAll(concateDepartmentString(departmentFil,
+												MarketplacecommerceservicesConstants.DEPT_L2));
 
 									}
 								}
@@ -1222,7 +1214,7 @@ public class SearchSuggestUtilityMethods
 							l3DepartFilter.setRanking(newCategories[4]);
 							//l3DepartFilter.setLevel3DepartmentFilter(newL3DepartmentFilter);
 						}
-						else if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L3))
+						else if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L4))
 						{
 							final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(newCategories);
 							l4List = new ArrayList<DepartmentFilterWsDto>();
@@ -1246,7 +1238,7 @@ public class SearchSuggestUtilityMethods
 						l1List.add(l1DepartFilter);
 						departmentHierarchy.setFilters(l1List);
 					}
-					traversedDepartments.addAll(concateDepartmentString(departmentFil));
+					traversedDepartments.addAll(concateDepartmentString(departmentFil, MarketplacecommerceservicesConstants.DEPT_L0));
 
 				}
 
@@ -1285,7 +1277,7 @@ public class SearchSuggestUtilityMethods
 		return departmentFound;
 	}
 
-	private List<String> concateDepartmentString(final String departmentFil)
+	private List<String> concateDepartmentString(final String departmentFil, final String type)
 	{
 		final String[] categories = departmentFil.split(MarketplacecommerceservicesConstants.COLON);
 		final List<String> allCategories = new ArrayList<String>();
@@ -1293,7 +1285,6 @@ public class SearchSuggestUtilityMethods
 		allCategories.add(concatedCategories);
 		allCategories.add(categories[1] + categories[5]);
 		allCategories.add(categories[1]);
-
 		return allCategories;
 	}
 
@@ -1455,223 +1446,37 @@ public class SearchSuggestUtilityMethods
 	public DepartmentHierarchyWs getDepartmentHierarchy(final List<String> departmentFilters,
 			final List<FacetValueData<SearchStateData>> facetValues)
 	{
-		final Set<String> traversedDepartments = new HashSet<String>();
 		final DepartmentHierarchyWs departmentHierarchy = new DepartmentHierarchyWs();
-		//	final List<L1DepartmentFilterWsDto> l1DepartmentFilterWsDtos = new ArrayList<L1DepartmentFilterWsDto>();
-
-		if (departmentFilters != null && !departmentFilters.isEmpty())
+		DepartmentFilterWsDto l1DepartFilter = new DepartmentFilterWsDto();
+		DepartmentFilterWsDto l2DepartFilter = new DepartmentFilterWsDto();
+		DepartmentFilterWsDto l3DepartFilter = new DepartmentFilterWsDto();
+		DepartmentFilterWsDto l4DepartFilter = new DepartmentFilterWsDto();
+		List<DepartmentFilterWsDto> l4List = new ArrayList<DepartmentFilterWsDto>();
+		List<DepartmentFilterWsDto> l3List = new ArrayList<DepartmentFilterWsDto>();
+		List<DepartmentFilterWsDto> l2List = new ArrayList<DepartmentFilterWsDto>();
+		final List<DepartmentFilterWsDto> l1List = new ArrayList<DepartmentFilterWsDto>();
+		String[] newCategories = null;
+		String[] newDeparts = null;
+		if (CollectionUtils.isNotEmpty(departmentFilters))
 		{
 			for (final String departmentFil : departmentFilters)
 			{
-				final String traverseString = findTraversedCategories(traversedDepartments, departmentFil);
-				if (traverseString.equals(MarketplacecommerceservicesConstants.DEPT_L3))
+				newDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
+				if (newDeparts.length < 4)
 				{
-					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
-					if (foundDeparts.length > 4)
-					{
-						for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
-						{
-							if (oldL1Filter.getCategoryCode().equals(
-									foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
-							{
-								for (final DepartmentFilterWsDto oldL2DepartFilter : oldL1Filter.getChildFilters())
-								{
-									if (oldL2DepartFilter.getCategoryCode().equals(
-											foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
-									{
-										for (final DepartmentFilterWsDto oldL3DepartFilter : oldL2DepartFilter.getChildFilters())
-										{
-											if (oldL3DepartFilter.getCategoryCode().equals(
-													foundDeparts[3].split(MarketplacecommerceservicesConstants.COLON)[0]))
-											{
-												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(foundDeparts[4]
-														.split(":"));
-												if (oldL3DepartFilter.getChildFilters() != null
-														&& !oldL3DepartFilter.getChildFilters().isEmpty())
-												{
-													oldL3DepartFilter.getChildFilters().add(newDepartmentFilter);
-												}
-												else
-												{
-													final List<DepartmentFilterWsDto> l4List = new ArrayList<DepartmentFilterWsDto>();
-													l4List.add(newDepartmentFilter);
-													oldL3DepartFilter.setChildFilters(l4List);
-												}
-											}
-										}
-									}
-								}
-
-							}
-						}
-					}
+					LOG.info("Error in Query");
 				}
-				else if (traverseString.equals(MarketplacecommerceservicesConstants.DEPT_L1))
+				for (int i = 1; i < newDeparts.length; i++)
 				{
-					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
-					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
+					//For L1
+					newCategories = newDeparts[i].split(MarketplacecommerceservicesConstants.COLON);
+					if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L1))
 					{
-						if (null != oldL1Filter.getCategoryCode()
-								&& oldL1Filter.getCategoryCode().equals(
-										foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
+						//l1List = new ArrayList<DepartmentFilterWsDto>();
+						if (null != l1DepartFilter.getCategoryCode()
+								&& l1DepartFilter.getCategoryCode().equals(
+										newDeparts[i].split(MarketplacecommerceservicesConstants.COLON)[0]))
 						{
-							final DepartmentFilterWsDto l2DepartFilter = new DepartmentFilterWsDto();
-							final DepartmentFilterWsDto l3DepartFilter = new DepartmentFilterWsDto();
-							List<DepartmentFilterWsDto> l4List = new ArrayList<DepartmentFilterWsDto>();
-							final List<DepartmentFilterWsDto> l3List = new ArrayList<DepartmentFilterWsDto>();
-							for (int i = 2; i < foundDeparts.length; i++)
-							{
-								final String[] newCategories = foundDeparts[i].split(MarketplacecommerceservicesConstants.COLON);
-								if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L2))
-								{
-									//final DepartmentFilterWsDto newL2DepartmentFilter = getDepartmentFilter(newCategories);
-									l2DepartFilter.setCategoryCode(newCategories[0]);
-									l2DepartFilter.setCategoryName(newCategories[1]);
-									l2DepartFilter.setLevel(newCategories[2]);
-									if (newCategories[3].equals(MarketplacecommerceservicesConstants.TRUE))
-									{
-										l2DepartFilter.setCategoryType(MarketplacecommerceservicesConstants.DEPARTMENT);
-									}
-									else
-									{
-										l2DepartFilter.setCategoryType(MarketplacecommerceservicesConstants.CATEGORY);
-									}
-									l2DepartFilter.setRanking(newCategories[4]);
-									//l2DepartFilter = new L2DepartmentFilterWsDto();
-									//l2DepartFilter.setLevel2DepartmentFilter(newL2DepartmentFilter);
-								}
-								else if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L3))
-								{
-									//final DepartmentFilterWsDto newL3DepartmentFilter = getDepartmentFilter(newCategories);
-									//l3DepartFilter = new L3DepartmentFilterWsDto();
-									l3DepartFilter.setCategoryCode(newCategories[0]);
-									l3DepartFilter.setCategoryName(newCategories[1]);
-									l3DepartFilter.setLevel(newCategories[2]);
-									if (newCategories[3].equals(MarketplacecommerceservicesConstants.TRUE))
-									{
-										l3DepartFilter.setCategoryType(MarketplacecommerceservicesConstants.DEPARTMENT);
-									}
-									else
-									{
-										l3DepartFilter.setCategoryType(MarketplacecommerceservicesConstants.CATEGORY);
-									}
-									l3DepartFilter.setRanking(newCategories[4]);
-									l3List.add(l3DepartFilter);
-									//l3DepartFilter.setLevel3DepartmentFilter(newL3DepartmentFilter);
-								}
-								else if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L4))
-								{
-									final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(newCategories);
-									l4List = new ArrayList<DepartmentFilterWsDto>();
-									l4List.add(newDepartmentFilter);
-								}
-
-								if (!l4List.isEmpty())
-								{
-									l3DepartFilter.setChildFilters(l4List);
-								}
-
-							}
-							l2DepartFilter.setChildFilters(l3List);
-
-							if (oldL1Filter.getChildFilters() != null && !oldL1Filter.getChildFilters().isEmpty())
-							{
-								oldL1Filter.getChildFilters().add(l2DepartFilter);
-							}
-							else
-							{
-								final List<DepartmentFilterWsDto> l2List = new ArrayList<DepartmentFilterWsDto>();
-								l2List.add(l2DepartFilter);
-								oldL1Filter.setChildFilters(l2List);
-							}
-							traversedDepartments.addAll(concateDepartmentString(departmentFil));
-						}
-					}
-
-				}
-				else if (traverseString.equals(MarketplacecommerceservicesConstants.DEPT_L2))
-				{
-					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
-					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
-					{
-						if (oldL1Filter.getCategoryCode().equals(foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
-						{
-							for (final DepartmentFilterWsDto oldL2DepartFilter : oldL1Filter.getChildFilters())
-							{
-								if (oldL2DepartFilter.getCategoryCode().equals(
-										foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
-								{
-									final DepartmentFilterWsDto l3DepartFilter = new DepartmentFilterWsDto();
-									List<DepartmentFilterWsDto> l4List = new ArrayList<DepartmentFilterWsDto>();
-									for (int i = 3; i < foundDeparts.length; i++)
-									{
-										final String[] newCategories = foundDeparts[i].split(MarketplacecommerceservicesConstants.COLON);
-										if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L3))
-										{
-
-											//final DepartmentFilterWsDto newL3DepartmentFilter = getDepartmentFilter(newCategories);
-											//l3DepartFilter = new L3DepartmentFilterWsDto();
-											l3DepartFilter.setCategoryCode(newCategories[0]);
-											l3DepartFilter.setCategoryName(newCategories[1]);
-											l3DepartFilter.setLevel(newCategories[2]);
-											if (newCategories[3].equals(MarketplacecommerceservicesConstants.TRUE))
-											{
-												l3DepartFilter.setCategoryType(MarketplacecommerceservicesConstants.DEPARTMENT);
-											}
-											else
-											{
-												l3DepartFilter.setCategoryType(MarketplacecommerceservicesConstants.CATEGORY);
-											}
-											l3DepartFilter.setRanking(newCategories[4]);
-											//l3DepartFilter.setLevel3DepartmentFilter(newL3DepartmentFilter);
-
-										}
-										else if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L4))
-										{
-											final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(newCategories);
-											l4List = new ArrayList<DepartmentFilterWsDto>();
-											l4List.add(newDepartmentFilter);
-										}
-										if (!l4List.isEmpty())
-										{
-											l3DepartFilter.setChildFilters(l4List);
-										}
-
-										if (oldL2DepartFilter.getChildFilters() != null && !oldL2DepartFilter.getChildFilters().isEmpty())
-										{
-											oldL2DepartFilter.getChildFilters().add(l3DepartFilter);
-										}
-										else
-										{
-											final List<DepartmentFilterWsDto> l3List = new ArrayList<DepartmentFilterWsDto>();
-											l3List.add(l3DepartFilter);
-											oldL2DepartFilter.setChildFilters(l3List);
-										}
-										traversedDepartments.addAll(concateDepartmentString(departmentFil));
-
-									}
-								}
-							}
-						}
-					}
-				}
-				else if (traverseString.equals(MarketplacecommerceservicesConstants.DEPT_L0))
-				{
-					final String[] newDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
-					final DepartmentFilterWsDto l1DepartFilter = new DepartmentFilterWsDto();
-					final DepartmentFilterWsDto l2DepartFilter = new DepartmentFilterWsDto();
-					final DepartmentFilterWsDto l3DepartFilter = new DepartmentFilterWsDto();
-					List<DepartmentFilterWsDto> l4List = new ArrayList<DepartmentFilterWsDto>();
-					final List<DepartmentFilterWsDto> l3List = new ArrayList<DepartmentFilterWsDto>();
-					final List<DepartmentFilterWsDto> l2List = new ArrayList<DepartmentFilterWsDto>();
-					final List<DepartmentFilterWsDto> l1List = new ArrayList<DepartmentFilterWsDto>();
-					for (int i = 1; i < newDeparts.length; i++)
-					{
-						final String[] newCategories = newDeparts[i].split(MarketplacecommerceservicesConstants.COLON);
-						if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L1))
-						{
-							//final DepartmentFilterWsDto newL1DepartmentFilter = getDepartmentFilter(newCategories);
-							//l1DepartFilter = new L1DepartmentFilterWsDto();
 							l1DepartFilter.setCategoryCode(newCategories[0]);
 							l1DepartFilter.setCategoryName(newCategories[1]);
 							l1DepartFilter.setLevel(newCategories[2]);
@@ -1684,11 +1489,30 @@ public class SearchSuggestUtilityMethods
 								l1DepartFilter.setCategoryType(MarketplacecommerceservicesConstants.CATEGORY);
 							}
 							l1DepartFilter.setRanking(newCategories[4]);
-							//l1DepartFilter.setLevel1DepartmentFilter(newL1DepartmentFilter);
+
 						}
-						else if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L2))
+						else
 						{
-							//final DepartmentFilterWsDto newL2DepartmentFilter = getDepartmentFilter(newCategories);
+							l1DepartFilter = getDepartmentFilter(newCategories);
+							l1List.add(l1DepartFilter);
+						}
+
+					}
+
+					//For L2
+					newCategories = newDeparts[i].split(MarketplacecommerceservicesConstants.COLON);
+					if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L2))
+					{
+						if (null != l2DepartFilter.getCategoryCode()
+								&& !(l2DepartFilter.getCategoryCode().contains(l1DepartFilter.getCategoryCode())))
+						{
+							l2List = new ArrayList<DepartmentFilterWsDto>();
+						}
+
+						if (null != l2DepartFilter.getCategoryCode()
+								&& l2DepartFilter.getCategoryCode().equals(
+										newDeparts[i].split(MarketplacecommerceservicesConstants.COLON)[0]))
+						{
 							l2DepartFilter.setCategoryCode(newCategories[0]);
 							l2DepartFilter.setCategoryName(newCategories[1]);
 							l2DepartFilter.setLevel(newCategories[2]);
@@ -1701,13 +1525,28 @@ public class SearchSuggestUtilityMethods
 								l2DepartFilter.setCategoryType(MarketplacecommerceservicesConstants.CATEGORY);
 							}
 							l2DepartFilter.setRanking(newCategories[4]);
-							//l2DepartFilter = new L2DepartmentFilterWsDto();
-							//l2DepartFilter.setLevel2DepartmentFilter(newL2DepartmentFilter);
 						}
-						else if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L3))
+						else
 						{
-							//final DepartmentFilterWsDto newL3DepartmentFilter = getDepartmentFilter(newCategories);
-							//l3DepartFilter = new L3DepartmentFilterWsDto();
+							l2DepartFilter = getDepartmentFilter(newCategories);
+							l2List.add(l2DepartFilter);
+						}
+
+					}
+
+					//For L3
+					newCategories = newDeparts[i].split(MarketplacecommerceservicesConstants.COLON);
+					if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L3))
+					{
+						if (null != l3DepartFilter.getCategoryCode()
+								&& !(l3DepartFilter.getCategoryCode().contains(l2DepartFilter.getCategoryCode())))
+						{
+							l3List = new ArrayList<DepartmentFilterWsDto>();
+						}
+						if (null != l3DepartFilter.getCategoryCode()
+								&& l3DepartFilter.getCategoryCode().equals(
+										newDeparts[i].split(MarketplacecommerceservicesConstants.COLON)[0]))
+						{
 							l3DepartFilter.setCategoryCode(newCategories[0]);
 							l3DepartFilter.setCategoryName(newCategories[1]);
 							l3DepartFilter.setLevel(newCategories[2]);
@@ -1720,38 +1559,107 @@ public class SearchSuggestUtilityMethods
 								l3DepartFilter.setCategoryType(MarketplacecommerceservicesConstants.CATEGORY);
 							}
 							l3DepartFilter.setRanking(newCategories[4]);
-							//l3DepartFilter.setLevel3DepartmentFilter(newL3DepartmentFilter);
 						}
-						else if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L3))
+						else
 						{
-							final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(newCategories);
+							l3DepartFilter = getDepartmentFilter(newCategories);
+							l3List.add(l3DepartFilter);
+						}
+
+					}
+
+					//For L4
+					newCategories = newDeparts[i].split(MarketplacecommerceservicesConstants.COLON);
+					if (newCategories[2].equals(MarketplacecommerceservicesConstants.DEPT_L4))
+					{
+						if (null != l4DepartFilter.getCategoryCode()
+								&& !(l4DepartFilter.getCategoryCode().contains(l3DepartFilter.getCategoryCode())))
+						{
 							l4List = new ArrayList<DepartmentFilterWsDto>();
-							l4List.add(newDepartmentFilter);
+						}
+
+						if (null != l4DepartFilter.getCategoryCode()
+								&& l4DepartFilter.getCategoryCode().equals(
+										newDeparts[i].split(MarketplacecommerceservicesConstants.COLON)[0]))
+						{
+							l4DepartFilter.setCategoryCode(newCategories[0]);
+							l4DepartFilter.setCategoryName(newCategories[1]);
+							l4DepartFilter.setLevel(newCategories[2]);
+							if (newCategories[3].equals(MarketplacecommerceservicesConstants.TRUE))
+							{
+								l4DepartFilter.setCategoryType(MarketplacecommerceservicesConstants.DEPARTMENT);
+							}
+							else
+							{
+								l4DepartFilter.setCategoryType(MarketplacecommerceservicesConstants.CATEGORY);
+							}
+							l4DepartFilter.setRanking(newCategories[4]);
+
+						}
+						else
+						{
+							l4DepartFilter = getDepartmentFilter(newCategories);
+							l4List.add(l4DepartFilter);
 						}
 					}
-					if (!l4List.isEmpty())
-					{
-						l3DepartFilter.setChildFilters(l4List);
-					}
-					l3List.add(l3DepartFilter);
-					l2DepartFilter.setChildFilters(l3List);
-					l2List.add(l2DepartFilter);
-					l1DepartFilter.setChildFilters(l2List);
-					if (departmentHierarchy.getFilters() != null && !departmentHierarchy.getFilters().isEmpty())
-					{
-						departmentHierarchy.getFilters().add(l1DepartFilter);
-					}
-					else
-					{
-						l1List.add(l1DepartFilter);
-						departmentHierarchy.setFilters(l1List);
-					}
-					traversedDepartments.addAll(concateDepartmentString(departmentFil));
 
 				}
 
+
+				if (CollectionUtils.isNotEmpty(l3DepartFilter.getChildFilters()))
+				{
+					if (CollectionUtils.isNotEmpty(l4List))
+					{
+						l3DepartFilter.setChildFilters(l4List);
+					}
+				}
+				else
+				{
+					//l4List.add(l4DepartFilter);
+					l3DepartFilter.setChildFilters(l4List);
+				}
+
+				if (CollectionUtils.isNotEmpty(l2DepartFilter.getChildFilters()))
+				{
+					if (CollectionUtils.isNotEmpty(l3List))
+					{
+						l2DepartFilter.setChildFilters(l3List);
+					}
+				}
+				else
+				{
+					//l3List.add(l3DepartFilter);
+					l2DepartFilter.setChildFilters(l3List);
+				}
+
+				if (CollectionUtils.isNotEmpty(l1DepartFilter.getChildFilters()))
+				{
+					if (CollectionUtils.isNotEmpty(l2List))
+					{
+						l1DepartFilter.setChildFilters(l2List);
+					}
+				}
+				else
+				{
+					//l2List.add(l2DepartFilter);
+					l1DepartFilter.setChildFilters(l2List);
+				}
+				if (CollectionUtils.isNotEmpty(departmentHierarchy.getFilters()))
+				{
+					if (CollectionUtils.isNotEmpty(l1List))
+					{
+						departmentHierarchy.setFilters(l1List);
+					}
+				}
+				else
+				{
+					departmentHierarchy.setFilters(l1List);
+				}
+
+
 			}
 		}
+
 		boolean flag = false;
 		for (final DepartmentFilterWsDto oldL0 : departmentHierarchy.getFilters())
 		{

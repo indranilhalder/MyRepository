@@ -127,12 +127,11 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
-import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.SellerAssociationStatusEnum;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
-import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.FeedbackArea;
-import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.Frequency;
 import com.tisl.mpl.core.enums.AddressType;
+import com.tisl.mpl.core.enums.FeedbackArea;
+import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
@@ -154,6 +153,7 @@ import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.data.WishlistData;
+import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -885,6 +885,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		//TISEE-6290
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		List<OrderEntryData> cancelProduct = new ArrayList<>();
+		OrderModel subOrderModel = null;
 		try
 		{
 			final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
@@ -893,6 +894,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			for (final OrderData subOrder : subOrderList)
 			{
+				//TISPT-385
+				subOrderModel = orderModelService.getOrder(subOrder.getCode());
 				for (final OrderEntryData orderEntry : subOrder.getEntries())
 				{
 					//getting the product code
@@ -1044,7 +1047,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									}
 								}
 							}
-							statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, subOrder, orderDetail);
+							statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, subOrder, subOrderModel);
 							trackStatusMap.put(orderEntry.getOrderLineId(), statusTrackMap);
 							currentStatusMap.put(orderEntry.getOrderLineId(), consignmentStatus);
 							if (consignmentModel != null)
@@ -3477,7 +3480,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_ADDRESS_NEW, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String editAddress(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
-			final RedirectAttributes redirectModel, final HttpServletRequest request) throws CMSItemNotFoundException,UnsupportedEncodingException
+			final RedirectAttributes redirectModel, final HttpServletRequest request) throws CMSItemNotFoundException,
+			UnsupportedEncodingException
 	{
 		try
 		{

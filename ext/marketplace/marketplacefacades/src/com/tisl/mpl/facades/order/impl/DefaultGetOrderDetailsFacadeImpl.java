@@ -82,7 +82,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	private MplSellerInformationService mplSellerInformationService;
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
-	
+
 	@Resource(name = "mplDataMapper")
 	protected DataMapper mplDataMapper;
 
@@ -120,7 +120,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 					//moved to generic utility
 					orderTrackingWsDTO.setBillingAddress(GenericUtilityMethods.setAddress(orderDetails, 1));
 					orderTrackingWsDTO.setDeliveryAddress(GenericUtilityMethods.setAddress(orderDetails, 2));
-				   //add pickup person details
+					//add pickup person details
 					if (StringUtils.isNotEmpty(orderDetails.getPickupName()))
 					{
 						orderTrackingWsDTO.setPickupPersonName(orderDetails.getPickupName());
@@ -137,7 +137,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 					{
 						orderTrackingWsDTO.setOrderId(orderDetails.getCode());
 					}
-					if (null !=orderDetails.getDeliveryAddress() && StringUtils.isNotEmpty(orderDetails.getDeliveryAddress().getLastName())
+					if (null != orderDetails.getDeliveryAddress()
+							&& StringUtils.isNotEmpty(orderDetails.getDeliveryAddress().getLastName())
 							&& StringUtils.isNotEmpty(orderDetails.getDeliveryAddress().getFirstName()))
 					{
 						final String name = orderDetails.getDeliveryAddress().getFirstName().concat(" ")
@@ -189,10 +190,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								orderproductdto = new OrderProductWsDTO();
 								//seller order no
 								orderproductdto.setSellerorderno(subOrder.getCode());
-								
-							if(null !=entry.getDeliveryPointOfService()){
-								orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(), PointOfServiceWsDTO.class, "DEFAULT"));
-							}							
+
+								if (null != entry.getDeliveryPointOfService())
+								{
+									orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
+											PointOfServiceWsDTO.class, "DEFAULT"));
+								}
 								final ProductData product = entry.getProduct();
 								ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
 								if (null != product)
@@ -326,7 +329,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									{
 										sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
 									}
-									if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
+									if (sellerInfoModel != null
+											&& sellerInfoModel.getRichAttribute() != null
 											&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
 													.getDeliveryFulfillModes() != null)
 									{
@@ -377,8 +381,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												{
 													consignmentStatus = subOrder.getStatus().getCode();
 													final Date sysDate = new Date();
-													final int cancelWindow = GenericUtilityMethods
-															.noOfDaysCalculatorBetweenDates(subOrder.getCreated(), sysDate);
+													final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+															subOrder.getCreated(), sysDate);
 													final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
 													if (cancelWindow < actualCancelWindow
 															&& checkOrderStatus(subOrder.getStatus().getCode(),
@@ -399,8 +403,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												{
 													consignmentStatus = entry.getConsignment().getStatus().getCode();
 													final Date sysDate = new Date();
-													final int cancelWindow = GenericUtilityMethods
-															.noOfDaysCalculatorBetweenDates(subOrder.getCreated(), sysDate);
+													final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+															subOrder.getCreated(), sysDate);
 													final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
 													if (cancelWindow < actualCancelWindow
 															&& checkOrderStatus(consignmentStatus,
@@ -444,10 +448,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 													if (null != consignmentModel)
 													{
 														final Date sDate = new Date();
-														final int returnWindow = GenericUtilityMethods
-																.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(), sDate);
+														final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+																consignmentModel.getDeliveryDate(), sDate);
 														final int actualReturnWindow = Integer.parseInt(rm.getReturnWindow());
-														if (!entry.isGiveAway() && !entry.isIsBOGOapplied() && returnWindow < actualReturnWindow
+														if (!entry.isGiveAway()
+																&& !entry.isIsBOGOapplied()
+																&& returnWindow < actualReturnWindow
 																&& !checkOrderStatus(consignmentStatus,
 																		MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
 																&& consignmentStatus
@@ -520,8 +526,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									if (entry.getConsignment().getStatus() != null
 											&& (entry.getConsignment().getStatus().equals(ConsignmentStatus.HOTC)
 													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.OUT_FOR_DELIVERY)
-													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB)
-													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
+													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB) || entry
+													.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
 									{
 										orderproductdto.setIsInvoiceAvailable(Boolean.TRUE);
 									}
@@ -859,7 +865,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 */
 	@Override
 	public Map<String, List<AWBResponseData>> getOrderStatusTrack(final OrderEntryData orderEntryDetail, final OrderData subOrder,
-			final OrderData parentOrder)
+			final OrderModel subOrderModel)
 	{
 
 		final Map<String, List<AWBResponseData>> returnMap = new HashMap<String, List<AWBResponseData>>();
@@ -879,12 +885,13 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 		try
 		{
-			final OrderModel orderMod = orderModelService.getOrder(subOrder.getCode());
+			//TISPT-385
+			//final OrderModel orderMod = orderModelService.getOrder(subOrder.getCode());
 			final Map<String, OrderStatusCodeMasterModel> orderStatusCodeMap = orderModelService.getOrderStausCodeMasterList();
 
-			if (orderMod.getHistoryEntries().size() > 0)
+			if (subOrderModel.getHistoryEntries().size() > 0)
 			{
-				for (final OrderHistoryEntryModel orderHistoryEntry : orderMod.getHistoryEntries())
+				for (final OrderHistoryEntryModel orderHistoryEntry : subOrderModel.getHistoryEntries())
 				{
 					if (orderEntryDetail.getOrderLineId().equalsIgnoreCase(orderHistoryEntry.getLineId()))
 					{
@@ -926,8 +933,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.CANCEL)
 								&& !isStatusAlradyExists(awbCancelMap, trackModel) && trackModel.getDisplay().booleanValue())
 						{
-							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
-									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode()) || trackModel
+									.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
 							{
 								if (awbCancelMap.size() >= 1)
 								{
@@ -947,8 +954,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.RETURN)
 								&& !isStatusAlradyExists(awbReturnMap, trackModel) && trackModel.getDisplay().booleanValue())
 						{
-							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
-									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode()) || trackModel
+									.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
 							{
 								if (awbReturnMap.size() >= 1)
 								{
@@ -1063,7 +1070,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 
 	}
-	
+
 	/**
 	 * @description: To find the pickup button is updatable or not
 	 * @param: OrderData
@@ -1072,7 +1079,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	@Override
 	public boolean isPickUpButtonEditable(final OrderData orderDetail)
 	{
-		LOG.debug("in check for pickup button updatable or not :"+orderDetail.getCode());
+		LOG.debug("in check for pickup button updatable or not :" + orderDetail.getCode());
 		for (final OrderData subOrder : orderDetail.getSellerOrderList())
 		{
 			for (final OrderEntryData entry : subOrder.getEntries())
@@ -1081,17 +1088,18 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						&& MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(entry.getMplDeliveryMode().getCode()))
 				{
 					final List<ConsignmentStatus> statuses = getPickUpButtonDisableOptions();
-				
-					if(null != entry.getConsignment()){
-							LOG.info("status code:"+entry.getConsignment().getStatus() +" for txn id "+entry.getTransactionId());
+
+					if (null != entry.getConsignment())
+					{
+						LOG.info("status code:" + entry.getConsignment().getStatus() + " for txn id " + entry.getTransactionId());
 					}
 					///if atleast one entry does not contain the listed disabling options,
 					//then enable the update pickup button.
 					if (null != entry.getConsignment() && null != entry.getConsignment().getStatus()
 							&& !statuses.contains(entry.getConsignment().getStatus()))
 					{
-							LOG.debug("update pickup button is enabled");
-							return true;
+						LOG.debug("update pickup button is enabled");
+						return true;
 					}
 				}
 			}

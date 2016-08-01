@@ -1758,7 +1758,9 @@
 			<property name="modelService" ref="modelService" />
 			</bean>
 	<!-- New Buy Box Implementation End -->
-
+	<!-- New Keyword Redirection Implementation End -->
+ 	<bean id="mplKeywordRedirectDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplKeywordRedirectDaoImpl">
+ 	</bean>
 
 </beans>
 
