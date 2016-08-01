@@ -508,6 +508,7 @@
 
 	<bean class="de.hybris.platform.solrfacetsearch.config.IndexedProperty">
 		<property name="boost" type="Integer" />
+		<property name="boostDouble" type="Double" />
 		<property name="classificationAttributeAssignments"
 			type="java.util.List&lt;de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel>" />
 		<property name="genericFacet" type="boolean" />
