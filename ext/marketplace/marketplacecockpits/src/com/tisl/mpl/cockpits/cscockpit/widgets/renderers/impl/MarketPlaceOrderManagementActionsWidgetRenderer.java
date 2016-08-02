@@ -18,7 +18,7 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Div;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
-import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceChangeDeliveryAddressController;
+import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -46,7 +46,7 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 	@Autowired
 	private ConfigurationService configurationService;
 	@Autowired
-	private MarketPlaceChangeDeliveryAddressController marketPlaceChangeDeliveryAddressController;
+	private MplDeliveryAddressController mplDeliveryAddressController;
 
 	private CallContextController callContextController;
 
@@ -118,7 +118,7 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 					"csChangeDeliveryAddressWidgetConfig",
 					"ChangeDeliveryAddress-popup", "ChangeDeliveryAddress",
 					"ChangeDeliveryAddress.request",
-					!marketPlaceChangeDeliveryAddressController
+					!mplDeliveryAddressController
 							.isDeliveryAddressChangable(widget
 									.getWidgetController().getOrder()));
 		}
