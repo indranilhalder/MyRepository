@@ -32547,7 +32547,11 @@ header .banner > span {
     position: inherit;
     width: 46%;
 }}
-
+#showcase a.button.trending-button{
+	height:auto;
+	min-height:40px;
+	padding-top:13px;
+}
 
 
 /*Mobile
@@ -32643,7 +32647,9 @@ header .banner > span {
 	#showcase a.button.trending-button,
 	#showcase a.button.maroon{font-size: 11px !important;    height: 35px;    letter-spacing: 1px;    line-height: 32px;    width: 180px; padding:0; margin: 10px auto 0;}
 	#showcase a.button.trending-button{margin: 0 auto}
-	
+	#showcase a.button.trending-button{
+	min-height:35px;
+}
 	body.page-homepage .trending h1 {
     margin-bottom: 30px;
 }
@@ -32665,6 +32671,7 @@ header .banner > span {
 }
 }
 /*New homepage changes ends*/
+
 
 /*--------------maincss-----------*/
 .row
