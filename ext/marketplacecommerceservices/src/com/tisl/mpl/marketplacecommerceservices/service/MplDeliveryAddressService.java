@@ -11,7 +11,7 @@ import com.tisl.mpl.core.model.TemproryAddressModel;
  * @author prasad1
  *
  */
-public interface MplChangeDeliveryAddressService
+public interface MplDeliveryAddressService
 {
 
 

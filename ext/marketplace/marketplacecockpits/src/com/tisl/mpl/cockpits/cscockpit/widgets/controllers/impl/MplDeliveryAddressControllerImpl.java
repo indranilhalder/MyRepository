@@ -10,14 +10,15 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tis.mpl.facade.changedelivery.MplChangeDeliveryAddressFacade;
-import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceChangeDeliveryAddressController;
+import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
+import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
 import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.data.PincodeData;
-import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplChangeDeliveryAddressDao;
+import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplDeliveryAddressDao;
+import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -29,17 +30,19 @@ import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
-public class MarketPlaceChangeDeliveryAddressControllerImpl extends
+public class MplDeliveryAddressControllerImpl extends
 		DefaultOrderManagementActionsWidgetController implements
-		MarketPlaceChangeDeliveryAddressController {
+		MplDeliveryAddressController {
 	private static final Logger LOG = Logger
-			.getLogger(MarketPlaceChangeDeliveryAddressControllerImpl.class);
+			.getLogger(MplDeliveryAddressControllerImpl.class);
 	@Autowired
-	private MplChangeDeliveryAddressFacade mplChangeDeliveryAddressFacade;
+	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
 	@Autowired
 	private MplOrderFacade mplOrderFacade;
 	@Autowired
-	private MplChangeDeliveryAddressDao changeDeliveryAddressDao;
+	private MplDeliveryAddressDao mplDeliveryAddressDao;
+	@Autowired
+	private MplDeliveryAddressService mplDeliveryAddressService;
 	@Autowired
 	private ModelService modelService;
 	@Autowired
@@ -64,7 +67,7 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 		try {
 			if (null != orderModel.getParentReference()
 					&& null != orderModel.getParentReference().getCode()) {
-				changable = mplChangeDeliveryAddressFacade
+				changable = mplDeliveryAddressFacade
 						.isDeliveryAddressChangable(orderModel
 								.getParentReference().getCode());
 			}
@@ -87,7 +90,7 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 	@Override
 	public void ticketCreateToCrm(OrderModel Order, String customerId,
 			String source) {
-		mplChangeDeliveryAddressFacade.createcrmTicketForChangeDeliveryAddress(
+		mplDeliveryAddressFacade.createcrmTicketForChangeDeliveryAddress(
 				Order, customerId, source);
 
 	}
@@ -105,7 +108,7 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 			AddressModel newDeliveryAddress) throws EtailNonBusinessExceptions {
 		String omsResponce = null;
 		try {
-			omsResponce = mplChangeDeliveryAddressFacade
+			omsResponce = mplDeliveryAddressFacade
 					.changeDeliveryRequestCallToOMS(orderId, newDeliveryAddress);
 		} catch (EtailNonBusinessExceptions e) {
 			throw new EtailNonBusinessExceptions(e.getRootCause(),
@@ -129,7 +132,7 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 		TemproryAddressModel tempAddress = modelService
 				.create(TemproryAddressModel.class);
 		try {
-			tempAddress = changeDeliveryAddressDao.getTemporaryAddressModel(orderId);
+			tempAddress = mplDeliveryAddressDao.getTemporaryAddressModel(orderId);
 		} catch (ModelNotFoundException e) {
 			LOG.error("Model Not Found Exception " + e.getMessage());
 			throw new ModelNotFoundException(e);
@@ -150,10 +153,10 @@ public class MarketPlaceChangeDeliveryAddressControllerImpl extends
 	 * 
 	 */
 	@Override
-	public void saveDeliveryAddress(OrderModel order, AddressModel address)
+	public void saveDeliveryAddress(String orderId)
 			throws ModelSavingException {
 		try {
-			changeDeliveryAddressDao.saveDeliveryAddress(order, address);
+			mplDeliveryAddressService.saveDeliveryAddress(orderId);
 		} catch (ModelSavingException e) {
 			LOG.error("ModelSavingException" + e.getMessage());
 			throw new ModelSavingException(e.getMessage());

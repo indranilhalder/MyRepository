@@ -24,7 +24,7 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Toolbarbutton;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
-import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceChangeDeliveryAddressController;
+import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCallContextController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OTPModel;
@@ -51,12 +51,12 @@ import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
-public class MarketPlaceChangeDeliveryOTPWidgetRenderer
+public class MplChangeDeliveryOTPWidgetRenderer
 		extends
 		AbstractCsWidgetRenderer<Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController>> {
 
 	private static final Logger LOG = Logger
-			.getLogger(MarketPlaceChangeDeliveryAddressWidgetRenderer.class);
+			.getLogger(MplChangeDeliveryOTPWidgetRenderer.class);
 	private static final String CUSTOMER_DETAILS_UPDATED = "customerdetailsupdated";
 	private static final String FAILED_AT_OMS = "failedAtOms";
 	private static final String AN_ERROR_OCCURRED = "erroroccurred";
@@ -74,7 +74,7 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 	@Autowired
 	private PopupWidgetHelper popupWidgetHelper;
 	@Autowired
-	private MarketPlaceChangeDeliveryAddressController mplChangeDeliveryAddressController;
+	private MplDeliveryAddressController mplDeliveryAddressController;
 
 	private CallContextController callContextController;
 
@@ -124,7 +124,7 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 		validateOtpButtonDiv.setParent(otpAreaDiv);
 		TemproryAddressModel tempAddress = new TemproryAddressModel();
 		tempAddress.setOrderId(parentOrder.getCode());
-		tempAddress = mplChangeDeliveryAddressController
+		tempAddress = mplDeliveryAddressController
 				.getTempororyAddress(parentOrder.getCode());
 		resendOtp.addEventListener(Events.ON_CLICK, new EventListener() {
 			@Override
@@ -254,7 +254,7 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 					AddressModel address = new AddressModel();
 					address = setNewDeliveryAddress(newDeliveryAddress);
 					address.setOwner(customermodel);
-					omsStatus = mplChangeDeliveryAddressController
+					omsStatus = mplDeliveryAddressController
 							.changeDeliveryAddressCallToOMS(orderModel
 									.getParentReference().getCode(), address);
 					if (omsStatus
@@ -262,8 +262,8 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 
 						try {
 
-							mplChangeDeliveryAddressController
-									.saveDeliveryAddress(orderModel, address);
+							mplDeliveryAddressController
+									.saveDeliveryAddress(orderModel.getParentReference().getCode());
 							LOG.debug("Delivery Address Changed Successfully");
 						} catch (ModelSavingException e) {
 							LOG.debug("Model saving Exception" + e.getMessage());
@@ -271,9 +271,9 @@ public class MarketPlaceChangeDeliveryOTPWidgetRenderer
 							LOG.debug("Exception while saving Address"
 									+ e.getMessage());
 						}
-						removeTempororyAddress(newDeliveryAddress);
+						//removeTempororyAddress(newDeliveryAddress);
 
-						mplChangeDeliveryAddressController.ticketCreateToCrm(
+						mplDeliveryAddressController.ticketCreateToCrm(
 								orderModel.getParentReference(), customerId,
 								MarketplaceCockpitsConstants.SOURCE);
 						LOG.debug("CRM Ticket Created for Change Delivery Request");
