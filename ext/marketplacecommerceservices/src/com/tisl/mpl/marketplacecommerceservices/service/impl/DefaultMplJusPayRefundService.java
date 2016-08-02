@@ -527,6 +527,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				paymentMode = MarketplacecommerceservicesConstants.DEBIT;
 				oModel = mplPaymentDao.getPaymentMode(paymentMode);
 			}
+			//TISPRO-675
 			else if (paymentType.equalsIgnoreCase("NB"))
 			{
 				paymentMode = MarketplacecommerceservicesConstants.NETBANKING;
