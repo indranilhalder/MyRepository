@@ -1098,7 +1098,7 @@ $(button_my_button).click(function(){
 	  var maxPriceSearchTxt = $('.maxPriceSearchTxt').val();
 	  var currentQryParam = $('.currentQueryParamsApply').val();
 	  var facetValue = $('.facetValue').val();
-	  alert("facetValue------"+facetValue+"minPriceSearchTxt---"+minPriceSearchTxt+"maxPriceSearchTxt---"+maxPriceSearchTxt+"currentQryParam---"+currentQryParam);
+	
 	  var queryParamsAry = currentQryParam.split(':');
 	  var nonPriceQueryParams = "";
 	  facetValue ="₹"+minPriceSearchTxt+"-"+"₹"+maxPriceSearchTxt;	 
