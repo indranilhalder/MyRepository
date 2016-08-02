@@ -21,7 +21,6 @@
 <%--  <c:set var = "addressFlag" scope="session" value = "${addressFlag}" />  --%>
 
 
-
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
 <cart:tealiumCartParameters/>
 	<%-- <div class="checkout-headline">
@@ -529,10 +528,9 @@
 			</multi-checkout:checkoutSteps>			
 				
 		</c:if>
-		
 	<div class="right-block shipping">
 			<div class="checkout-order-summary">
-				<multi-checkout:orderTotals cartData="${cartData}"
+				<multi-checkout:orderTotals cartData="${cartData}" isCart="${isCart}"
 					showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 			</div>
 			</div>

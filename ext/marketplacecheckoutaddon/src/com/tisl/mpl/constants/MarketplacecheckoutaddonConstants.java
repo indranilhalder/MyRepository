@@ -25,6 +25,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String MPLSTORE = "mpl";
 	public final static String ADDVALUE = "/add";
 	public final static String PAYVALUE = "/pay";
+	public final static String ISCART = "isCart";
 	public final static String CHOOSEVALUE = "/choose";
 	public final static String BACKVALUE = "/back";
 	public final static String NEXTVALUE = "/next";
@@ -36,6 +37,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String MARKREAD = "/markAsRead";
 	public final static String VIEWVALUE = "/view";
 	public final static String CARTDATA = "cartData";
+	public final static String ORDERDATA = "orderData";
 	public final static String CHECKOUTRESPONSEURL = "/checkout/multi/sop/response";
 	public final static String CHECKOUTCALLBACKURL = "/integration/merchant_callback";
 	public final static String SOPPAGEDATA = "silentOrderPageData";

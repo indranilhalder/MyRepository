@@ -687,12 +687,24 @@
 												</fieldset>
 		            							<div class="controls" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
+					                            <c:choose>
+					                            <c:when test="${isCart eq true}">
 					                            <c:forEach var="cartItem" items="${cartData.entries}">
 					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
 													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
 														 <c:set var="flag" value="true"/>
 													  </c:if>  
 										    	</c:forEach>
+										    	</c:when>
+										    	<c:otherwise>
+										    	<c:forEach var="cartItem" items="${orderData.entries}">
+					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
+													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+														 <c:set var="flag" value="true"/>
+													  </c:if>  
+										    	</c:forEach>
+										    	</c:otherwise>
+										    	</c:choose>
 										    	<c:if test="${flag eq true}">
 					                            	<input type="checkbox" id="sameAsShipping" name="billing-shipping" checked="checked" /><label for="sameAsShipping"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
 					                           	</c:if>   	
@@ -771,7 +783,7 @@
 			</div>
 		</jsp:body>
 		</multiCheckout:checkoutSteps>	
-		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" />
+		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 	</div>	
 </template:page>
 <style>

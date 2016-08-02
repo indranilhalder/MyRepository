@@ -3,11 +3,17 @@
  */
 package com.tisl.mpl.storefront.tags;
 
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.PromotionOrderEntryConsumedData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 
 import java.util.Collection;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -171,5 +177,53 @@ public class MPLFunctions
 		}
 		return null;
 	}
-}
 
+
+
+
+
+	/**
+	 * Test if a order has an applied promotion for the specified entry number.
+	 *
+	 * @param order
+	 *           the order
+	 * @param entryNumber
+	 *           the entry number
+	 * @return true if there is an applied promotion for the entry number
+	 */
+	public static boolean doesAppliedPromoExistForOrderEntry(final OrderData order, final int entryNumber)
+	{
+		return order != null && doesPromotionExistForOrderEntry(order.getAppliedProductPromotions(), entryNumber);
+	}
+
+
+
+	protected static boolean doesPromotionExistForOrderEntry(final List<PromotionResultData> productPromotions,
+			final int entryNumber)
+	{
+		if (productPromotions != null && !productPromotions.isEmpty())
+		{
+			final Integer entryNumberToFind = Integer.valueOf(entryNumber);
+
+			for (final PromotionResultData productPromotion : productPromotions)
+			{
+				if (StringUtils.isNotBlank(productPromotion.getDescription()))
+				{
+					final List<PromotionOrderEntryConsumedData> consumedEntries = productPromotion.getConsumedEntries();
+					if (consumedEntries != null && !consumedEntries.isEmpty())
+					{
+						for (final PromotionOrderEntryConsumedData consumedEntry : consumedEntries)
+						{
+							if (entryNumberToFind.equals(consumedEntry.getOrderEntryNumber()))
+							{
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+}
