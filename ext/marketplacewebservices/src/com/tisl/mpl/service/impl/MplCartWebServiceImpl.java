@@ -913,7 +913,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
 			/*
 			 * TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
-			 * 
+			 *
 			 * {
 			 */
 			for (final AbstractOrderEntryModel abstractOrderEntry : finalCart.getEntries())
@@ -921,12 +921,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 				//if (null != abstractOrderEntry && null != abstractOrderEntry.getProduct())
 				/*
-				 * review comments incorporated TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
+				 * review comments incorporated TISPT- 96
 				 */
 				//{
-				productData = productFacade.getProductForOptions(abstractOrderEntry.getProduct(), Arrays.asList(ProductOption.BASIC,
-				/* ProductOption.PRICE, */ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES
-				/* ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.DELIVERY_MODE_AVAILABILITY */));
+				productData = productFacade.getProductForOptions(abstractOrderEntry.getProduct(),
+						Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES));
+
+				/*
+				 * productData = productFacade.getProductForOptions(abstractOrderEntry.getProduct(),
+				 * Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+				 * ProductOption.CATEGORIES ProductOption.PROMOTIONS, ProductOption.STOCK,
+				 * ProductOption.DELIVERY_MODE_AVAILABILITY ));
+				 */
 
 				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 				if (null != abstractOrderEntry.getDeliveryPointOfService())
