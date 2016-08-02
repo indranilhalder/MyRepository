@@ -453,14 +453,23 @@ INSERT_UPDATE GlobalSolrSearchProfile;code;indexedType(identifier)[unique=true];
 INSERT_UPDATE Job;code[unique=true];nodeId
 ;solrIndexerJob;1
 
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;enableMplIndexingCompositeCronJob;enableMplIndexingCompositeJob;false;en
+;disableMplIndexingCompositeCronJob;disableMplIndexingCompositeJob;false;en
+
 # TISPRO-371 Start update and delete index solr cron job into single composite cronjob
 INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode);runningOnClusterNode
  ;mplIndexingCompositeCronjob;compositeJobPerformable;en;1
+ ;mplFullIndexingCompositeCronjob;compositeJobPerformable;en;1
  
 #Items to run from the Composite Cron Job
  INSERT_UPDATE CompositeEntry;code[unique=true];executablecronjob(code);compositecronjob(code);compositecronjobpos
  ;delete-mplIndex-cronJob;delete-mplIndex-cronJob;mplIndexingCompositeCronjob;1
  ;update-mplIndex-cronJob;update-mplIndex-cronJob;mplIndexingCompositeCronjob;2
+ 
+ ;disableMplIndexingCompositeCronJob;disableMplIndexingCompositeCronJob;mplFullIndexingCompositeCronjob;1
+ ;full-mplIndex-cronJob;full-mplIndex-cronJob;mplFullIndexingCompositeCronjob;2
+ ;enableMplIndexingCompositeCronJob;enableMplIndexingCompositeCronJob;mplFullIndexingCompositeCronjob;3
  
 INSERT_UPDATE CronJob;code[unique=true];runningOnClusterNode
 # Run the update-mplIndex-cronJob every 15 minutes

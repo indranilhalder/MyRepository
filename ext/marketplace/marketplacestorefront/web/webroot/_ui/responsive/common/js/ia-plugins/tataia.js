@@ -1128,6 +1128,7 @@ if (searchCategory_id){
 			            			},	
 			            			480 : {
 			            				items:2,
+			            				stagePadding: 50,
 			            			},
 			            			768 : {
 			            				items:2,
@@ -1181,6 +1182,7 @@ if (searchCategory_id){
 	            			},	
 	            			480 : {
 	            				items:2,
+	            				stagePadding: 50,
 	            			},
 	            			768 : {
 	            				items:3,
@@ -1421,6 +1423,7 @@ if (searchCategory_id){
 	            			},	
 	            			480 : {
 	            				items:2,
+	            				stagePadding: 50,
 	            			},
 	            			768 : {
 	            				items:2,

@@ -366,20 +366,20 @@ $(document).ready(function(){
 			    } else {
 			      p.addClass('active');
 			    }
-			    var style=null;
+			   /* var style=null;
 				if($(window).width() < 773) {
 					$("span#mobile-menu-toggle").unbind('click');
-					$("span#mobile-menu-toggle").click(function(){
+					$(document).on("click", "span#mobile-menu-toggle", function(){
 						$("a#tracklink").mouseover();
 						$(this).parent('li').siblings().find('#mobile-menu-toggle').removeClass("menu-dropdown-arrow");
 						$(this).parent('li').siblings().find('#mobile-menu-toggle + ul').slideUp();
 						$(this).next().slideToggle();
 						$(this).toggleClass("menu-dropdown-arrow");
 					});
-					/*--- Mobile view shop by brand and department ---*/
+					--- Mobile view shop by brand and department ---
 
-					 $("li.short.words").siblings("li.long.words").hide();
-					 $("li.short.words").unbind('click');
+					$("li.short.words").siblings("li.long.words").hide();
+					  $("li.short.words").unbind('click');
 					  $("li.short.words").click(function(){
 						$(this).toggleClass('active');
 					    $(this).nextAll().each(function(){
@@ -388,17 +388,17 @@ $(document).ready(function(){
 					        return false;
 					      }
 
-					      $(this).toggle(200);
+					      $(this).toggle();
 					    });
 
 					  });
 
-					/*--- Mobile view shop by brand and department ---*/ 
+					--- Mobile view shop by brand and department --- 
 				}
 				else {
 					$("#mobile-menu-toggle").next().attr("style",style);
 					$("li.short.words,li.long.words").next().attr("style",style); 
-				} 
+				} */
 			});
 			$(document).on("click","footer h3.toggle",function(e){
 				
@@ -1192,31 +1192,67 @@ $(document).ready(function(){
 	$(window).on("load resize",function(e){
 			var style=null;
 			if($(window).width() < 773) {
-				$("span#mobile-menu-toggle").unbind('click');
-				$("span#mobile-menu-toggle").click(function(){
+				  $(document).off("click","span#mobile-menu-toggle").on("click","span#mobile-menu-toggle",function() {
 					$("a#tracklink").mouseover();
 					$(this).parent('li').siblings().find('#mobile-menu-toggle').removeClass("menu-dropdown-arrow");
 					$(this).parent('li').siblings().find('#mobile-menu-toggle + ul').slideUp();
 					$(this).next().slideToggle();
 					$(this).toggleClass("menu-dropdown-arrow");
+					
+					
+					/* $(this).parent('li').siblings("li.short.words").nextAll().each(function(){
+						 alert('1')
+					      if($(this).hasClass("short")) {
+					        return false;
+					      }
+					     $(this).siblings("li.long.words").hide(200);
+					    });
+					    $(this).parent('li.short.words').nextAll().each(function(){
+					    	alert('2')
+						      if($(this).hasClass("short")) {
+						        return false;
+						      }
+						      $(this).toggle(200);
+					    });*/
+					
 				});
+				  $(document).on("click","ul.words span#mobile-menu-toggle",function() {
+					var id = $(this).parents('ul.words').siblings("div.departmenthover").attr("id"), ind = $(this).parent('li.short.words').index("."+id+" .short.words")
+						$(".long.words").hide();
+						if($(this).hasClass('menu-dropdown-arrow')){
+							for(var i = $("."+id+" .short.words").eq(ind).index(); i < $("."+id+" .short.words").eq(ind+1).index()-1; i++) {
+								$("."+id+" .long.words").eq(i-ind-1).show();
+							}
+							if(ind == ($("."+id+" .short.words").length/2)-1) {
+								$("."+id+" .short.words").eq(ind).nextAll().show();
+							}
+						} else {
+							$(".long.words").hide();
+						}
+				  });
 				/*--- Mobile view shop by brand and department ---*/
 
-				 $("li.short.words").siblings("li.long.words").hide();
-				 $("li.short.words").unbind('click');
-				  $("li.short.words").click(function(){
-					  $(this).toggleClass('active');
-				    $(this).nextAll().each(function(){
+				// $("li.short.words").siblings("li.long.words").hide();
+			/*	$(document).off("click","li.short.words ").on("click","li.short.words",function() {
+				    $(this).siblings("li.short.words").nextAll().each(function(){
 
 				      if($(this).hasClass("short")) {
 				        return false;
 				      }
 
-				      $(this).toggle(200);
+				      $(this).siblings("li.long.words").hide(200);
 				    });
+				    $(this).nextAll().each(function(){
+
+					      if($(this).hasClass("short")) {
+					        return false;
+					      }
+
+					      $(this).toggle(200);
+					    });
 
 				  });
-
+*/
 				/*--- Mobile view shop by brand and department ---*/ 
 			}
 			else {
@@ -1542,35 +1578,24 @@ $(document).ready(function(){
 			$(this).find('input:radio[name=selectedAddressCode]').prop('checked', true);
 			});
 		
-		/*New homepage js */
-			//Mobile Inspire Me menu
-	/*	$(window).on("load resize", function() {
-		    if ($(window).width() <= 767) {
-		        $(".showcase-heading").hide();
-		        $(".selectmenu").unbind();
-		        $(document).on("click",".selectmenu",function() {
-		      //  $(".selectmenu").unbind().click(function() {
-		            $(this).next().slideToggle();
-		        });
-		        $(".showcase-heading").unbind();
-		        $(document).on("click",".showcase-heading",function() {
-		       // $(".showcase-heading").unbind().click(function() {
-		            $(this).slideUp();
-		        });
-		    } else {
-		        $(".showcase-heading").show();
-		        $(".showcase-heading,.selectmenu").unbind();
-		    }
+		//Mobile menu
+		navhtml = $("nav").html();	
+		$('header .content .container > .right').prepend(navhtml);
+		$('header .content .container > .right ul:first-child > li div').removeClass('toggle');
+		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li').removeClass('toggle');
+		
+		//Mobile level 1 active
+		$(document).on('click','header > .content .top ul:first-child li > span.mainli',function() {
+			console.log("clicked");
+			if($(this).prev().hasClass('bgred')){
+				$(' header > .content .top ul:first-child li > div').removeClass("bgred");
+				}else{
+				$(' header > .content .top ul:first-child li > div').removeClass("bgred");	
+				$(this).prev().addClass("bgred");			
+			}		
 		});
-		//INSPIRE ME menu append text
-		$('.selectmenu').text($(".showcaseItem .showcase-border").text());
 
-		//$(".showcaseItem").click(function() {
-			$(document).on("click",".showcaseItem",function() {
-			$('.selectmenu').text($(this).children().text());
-		});	*/
-
-		/*New homepage js */
 		//loadGigya();
 });
 

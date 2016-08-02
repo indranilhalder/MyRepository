@@ -13,7 +13,9 @@
 			var="secondLevelDepartmentUrl" />
 		<li class="short words"><div class="toggle">
 				<a href="${secondLevelDepartmentUrl}">${catName[0]}</a>
-			</div></li>
+			</div>
+			<span id="mobile-menu-toggle"></span>
+			</li>
 
 
 		<!-- Iterating the third level of categories -->
