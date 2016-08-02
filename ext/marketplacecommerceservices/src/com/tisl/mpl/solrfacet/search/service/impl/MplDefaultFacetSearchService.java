@@ -37,6 +37,15 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 
 			return valueRangesList;
 		}
+		else if (property.getName().equalsIgnoreCase("discountFlag"))
+		{
+			valueRangeSet = property.getValueRangeSets().get("DISCOUNT");
+			if (valueRangeSet != null)
+			{
+				valueRangesList = valueRangeSet.getValueRanges();
+			}
+			return valueRangesList;
+		}
 		else
 		{
 
