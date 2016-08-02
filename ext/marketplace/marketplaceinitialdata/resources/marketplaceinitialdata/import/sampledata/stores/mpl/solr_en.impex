@@ -29,11 +29,11 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;size							   ;"Size"
  ;$solrIndexedType		   ;rating							   ;"Rating"
  ;$solrIndexedType		   ;Occasion						   ;"Occasion"
- ;$solrIndexedType		   ;gender							   ;"Gender"
- ;$solrIndexedType		   ;multipack						   ;"Multipack"
- ;$solrIndexedType		   ;materialType					   ;"Material Type"
- ;$solrIndexedType		   ;bagType							   ;"Bag Type"
- ;$solrIndexedType		   ;hairAccessoryType				   ;"Hair Accessory Type"
+ ;$solrIndexedType		   ;gender							   ;"Ideal For"
+ ;$solrIndexedType		   ;multipack						   ;"Show Multi-Packs Only"
+ ;$solrIndexedType		   ;materialType					   ;"Material"
+ #;$solrIndexedType		   ;bagType							   ;"Bag Type"
+ #;$solrIndexedType		   ;hairAccessoryType				   ;"Hair Accessory Type"
  ;$solrIndexedType		   ;typeofBelt						   ;"Type of Belt"
  ;$solrIndexedType		   ;lengthofBelt					   ;"Length of Belt"
  ;$solrIndexedType		   ;embellishment					   ;"Embellishment"
@@ -141,7 +141,7 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;warranty						   ;"Warranty"
  ;$solrIndexedType		   ;weight						       ;"Weight"
  ;$solrIndexedType		   ;wireless						   ;"Wireless"
-
+ ;$solrIndexedType		   ;hatcaptype						   ;"Hat/Cap Type"
  
  
  

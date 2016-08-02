@@ -16,7 +16,7 @@
 		<ul>
   			<input type="hidden" value="${productCategoryType}" id="productCategoryType"/>
   			<c:choose>
-  				<c:when test="${'Watches' eq product.rootCategory || 'Clothing' eq product.rootCategory || 'Footwear' eq product.rootCategory || 'Accessories' eq product.rootCategory}">
+  				<c:when test="${'Clothing' eq product.rootCategory || 'Footwear' eq product.rootCategory || 'Accessories' eq product.rootCategory}">
   					<c:forEach var="classification" items="${mapConfigurableAttributes}">
 				   		<c:choose>
    							<c:when test="${not empty classification.value }">

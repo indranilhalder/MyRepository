@@ -93,6 +93,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 
 					}
 
+
 					final FeatureContainer cont = FeatureContainer.loadTyped(product, classAttributeAssignmentList);
 
 					for (final ClassAttributeAssignment classAttributeAssignment : classAttributeAssignmentList)
@@ -120,8 +121,33 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 									}
 								}
 								//Added for Tata-24 END :::
+
+
+								//								List featureValues = feature.getValues();
+								//								for(Object value: featureValues){
+								//									if("multipack".equals(indexedProperty.getName())){
+								//										String featureValue=(String)value;
+								//										if(!"yes".equals(featureValue)){
+								//											break;
+								//										}
+								//									}
+								//								}
+
 								final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
+								if ("multipack".equals(indexedProperty.getName()))
+								{
+									for (final FieldValue fieldValue : temp)
+									{
+
+										final String value = (String) fieldValue.getValue();
+										if (StringUtils.isNotEmpty(value) && !"yes".equals(value.toLowerCase()))
+										{
+											temp.remove(fieldValue);
+										}
+									}
+								}
 								fieldValues.addAll(temp);
+
 							}
 						}
 					}
