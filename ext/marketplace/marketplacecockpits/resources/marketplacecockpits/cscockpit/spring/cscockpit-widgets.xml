@@ -710,7 +710,7 @@
 <!-- 	<alias alias="csChangeDeliveryAddressCreateWidgetRenderer" name="defaultCsChangeDeliveryAddressCreateWidgetRenderer" /> -->
 <!-- 	<bean id="defaultCsChangeDeliveryAddressCreateWidgetRenderer" -->
 <!-- 		parent="abstractWidgetRenderer" -->
-<!-- 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceChangeDeliveryAddressWidgetRenderer"> -->
+<!-- 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplChangeDeliveryAddressWidgetRenderer"> -->
 <!-- 		<property name="callContextController" ref="csCallContextController" /> -->
 
 <!-- 	</bean> -->
@@ -753,7 +753,7 @@
 	<alias alias="csChangeDeliveryOtpCreateWidgetRenderer" name="defaultCsChangeDeliveryOtpCreateWidgetRenderer"/>
 	<bean id="defaultCsChangeDeliveryOtpCreateWidgetRenderer"
 		parent="abstractWidgetRenderer"
-		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceChangeDeliveryOTPWidgetRenderer">
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplChangeDeliveryOTPWidgetRenderer">
 		<property name="callContextController" ref="csCallContextController" />
 
 	</bean>
@@ -762,7 +762,7 @@
  <!--  Change DeliveryAddress Controller  -->
  <alias alias="csChangeDeliveryAddressControler" name="marketPlaceChangeDeliveryAddressControler" />
 	<bean id="marketPlaceChangeDeliveryAddressControler" parent="csBaseWidgetController"
-		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketPlaceChangeDeliveryAddressControllerImpl"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MplDeliveryAddressControllerImpl"
 		scope="session">
 		<property name="callContextController" ref="csCallContextController"/>
 		<property name="orderCancelService" ref="orderCancelService"/>
