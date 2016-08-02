@@ -32442,10 +32442,10 @@ footer>div>ul>li h3 {
 nav {
     display: none;
 }
-.top.active .container > .right ul:first-child {
+.top.active .container > .right > ul:first-child {
     display: block;
 }
-.words > li:first-child, .top .container > .right ul:first-child, .top .container > .right ul:first-child > li > div > span:first-child, .top .container > .right ul:first-child ul.a-z{
+.words > li:first-child, .top .container > .right > ul:first-child, .top .container > .right > ul:first-child > li > div > span:first-child, .top .container > .right > ul:first-child ul.a-z{
 	display:none;
 }
 header > .content .top > div:not(.toggle) ul:first-child li, header > .content .top ul:first-child li {
@@ -32502,7 +32502,7 @@ ul li #mobile-menu-toggle + ul li ul.words li.long a{
 }
 }
 
-.top .container > .right ul:first-child, .top .container > .right ul:first-child > li > div > span:first-child, .top .container > .right ul:first-child ul.a-z {
+.top .container > .right > ul:first-child, .top .container > .right > ul:first-child > li > div > span:first-child, .top .container > .right > ul:first-child ul.a-z {
     display: none;
 }
 
