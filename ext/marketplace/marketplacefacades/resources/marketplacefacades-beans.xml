@@ -50,7 +50,7 @@
 		<property name="isPincodeServiceable" type="java.lang.Boolean" />
 		<property name="isCOD" type="java.lang.Boolean" />
 		<property name="deliveryDate" type="String" />
-		
+		<property name="fulfilmentType" type="String" />
 		<property name="serviceableSlaves" type="java.util.List&lt;ServiceableSlavesData>" />
 		<property name="cNCServiceableSlavesData" type="java.util.List&lt;CNCServiceableSlavesData>" />
 	</bean>
