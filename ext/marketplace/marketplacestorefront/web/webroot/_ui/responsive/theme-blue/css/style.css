@@ -31842,11 +31842,11 @@ background-color: transparent;
     padding: 0;
 }
 #newAndExclusive {
-    padding: 0 0 60px;
+    padding: 0 0 45px;
 }
 #newAndExclusive h1 {
     font-size: 28px;
-    padding: 0 0 40px;
+    padding: 0 0 50px;
         font-weight: bold;
 }
 #newAndExclusive #new_exclusive {
@@ -32221,7 +32221,7 @@ body.page-homepage .trending .button {
     line-height: 32px !important;
         margin: 0 auto;
 }
-select#enhancedSearchCategory {
+select#enhancedSearchCategory, select#micrositeSearchCategory {
     display: none;
 }
 header > .content .bottom .search form input {
@@ -32438,6 +32438,7 @@ footer>div>ul>li h3 {
 }
 .select-view select {
     padding: 8px 37px 8px 5px !important;
+    line-height: 1;
 }
 nav {
     display: none;
@@ -32593,7 +32594,12 @@ header .banner > span {
 .short-info, .latest-offer-info {
     margin-top: 10px;
 }
-	
+	#bestPicks .short-info span{
+	padding:5px;
+	}
+	#bestPicks .short-info p{
+	padding:0;
+	}
 	/*What to Buy Now*/
 	.home-product-you-care-carousel{ padding: 0px;}
 	#productYouCare .owl-item .short-info{ opacity:0;transition: all 0.3s ease-in-out 0s;}
@@ -32669,6 +32675,10 @@ header .banner > span {
 	.buy-banner p {
     margin: 30px 0 0 !important;
 }
+}
+
+header.brand-header {
+    margin: 0;
 }
 /*New homepage changes ends*/
 
@@ -38555,6 +38565,12 @@ span.mini-cart-close {
 	header .content .right>ul>li.transient-mini-bag {
 		display: none;
 	}
+	 header.brand-header .content .search form input#js-site-micrositesearch-input::-webkit-input-placeholder{
+color:#777; }
+ header.brand-header .content .search form input#js-site-micrositesearch-input::-moz-placeholder{
+ color:#777;}
+  header.brand-header .content .search form input#js-site-micrositesearch-input::-ms-input-placeholder{
+  color:#777;}
 }
 /*mini transient bag css changes ends*/
 
