@@ -32,6 +32,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -2860,6 +2861,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//			}
 		//		}
 
+		orderStatusSpecifier.setOrderStatus(orderToBeUpdated, OrderStatus.PAYMENT_SUCCESSFUL);
+
 		//Re-trigger submit order process from Payment_Pending to Payment_Successful
 		juspayEBSService.initiateProcess(orderToBeUpdated);
 
@@ -3506,7 +3509,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

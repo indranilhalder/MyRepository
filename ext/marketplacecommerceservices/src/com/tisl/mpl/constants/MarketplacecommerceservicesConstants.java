@@ -1621,6 +1621,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMIBANK = "emi_bank".intern();
 	public static final String EMITENURE = "emi_tenure".intern();
 
+	public static final String PAYMENTPENDINGORDERQUERY = "select {pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {os.code}=?status"
+			.intern();
+	public static final String PAYMENTPENDINGSTATUS = "status".intern();
+	public static final String PAYMENTPENDINGWEBHOOKUERY = "select {jw.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId"
+			.intern();
+	public static final String WEBHOOKREQSTATUS = "reqId".intern();
+	public static final String OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE = "orderDeallocate";
+	public static final String PINCODE = "000000";
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
