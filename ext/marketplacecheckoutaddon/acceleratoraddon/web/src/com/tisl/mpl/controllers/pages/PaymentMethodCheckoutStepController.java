@@ -32,7 +32,6 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
-import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -60,7 +59,6 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -72,15 +70,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -100,7 +92,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.tisl.mpl.bin.facade.BinFacade;
 import com.tisl.mpl.checkout.steps.validation.impl.ResponsivePaymentCheckoutStepValidator;
@@ -141,7 +132,6 @@ import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
 /**
@@ -216,9 +206,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	private Converter<OrderModel, OrderData> orderConverter;
 
 	@Autowired
-	private OrderStatusSpecifier orderStatusSpecifier;
-
-	@Autowired
 	private JuspayEBSService juspayEBSService;
 
 	@Autowired
@@ -271,6 +258,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//this is only when cart entry contains cnc delivery mode.
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+			Map<String, Boolean> paymentModeMap = null;
+			OrderData orderData = null;
 			if (null == orderModel)
 			{
 				final CartModel cartModel = getCartService().getSessionCart();
@@ -376,6 +365,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 				}
 
+				//Getting Payment modes
+				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, null);
+
+			}
+			else
+			{
+				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
+				//Getting Payment modes
+				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
 			}
 
 			//creating new Payment Form
@@ -385,9 +383,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//set up payment page
 			setupAddPaymentPage(model);
 
-			//Getting Payment modes
-			final Map<String, Boolean> paymentModeMap = getMplPaymentFacade().getPaymentModes(
-					MarketplacecheckoutaddonConstants.MPLSTORE, false, null);
 			//if (!paymentModeMap.isEmpty())
 			if (MapUtils.isNotEmpty(paymentModeMap)) // Code optimizaion fpr performance fix TISPT-169
 			{
@@ -397,7 +392,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				timeOutSet(model);
 
 				//setting silent orders
-				setupSilentOrderPostPage(paymentForm, model, orderModel);
+				setupSilentOrderPostPage(paymentForm, model, orderData);
 			}
 
 		}
@@ -1018,7 +1013,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param paymentForm
 	 * @param model
 	 */
-	private void setupSilentOrderPostPage(final PaymentForm paymentForm, final Model model, final OrderModel orderModel)
+	private void setupSilentOrderPostPage(final PaymentForm paymentForm, final Model model, final OrderData orderData)
 	{
 		try
 		{
@@ -1029,7 +1024,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			model.addAttribute(MarketplacecheckoutaddonConstants.NEWPAYMENTFORMMPLURL,
 					MarketplacecheckoutaddonConstants.NEWPAYMENTVIEWURL);
 
-			setupMplPaymentPage(model, orderModel);
+			setupMplPaymentPage(model, orderData);
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORM, paymentForm);
 
 		}
@@ -1053,10 +1048,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 *
 	 * @param model
 	 */
-	private void setupMplPaymentPage(final Model model, final OrderModel orderModel) throws Exception
+	private void setupMplPaymentPage(final Model model, final OrderData orderData) throws Exception
 	{
 		double totalDiscount = 0l;
-		if (null == orderModel)
+		if (null == orderData)
 		{
 			//getting cartdata
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
@@ -1129,8 +1124,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		else
 		{
-			final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
-			if (null != orderData && orderData.getAppliedOrderPromotions() != null)
+			if (orderData.getAppliedOrderPromotions() != null)
 			{
 				for (final PromotionResultData promotionResultData : orderData.getAppliedOrderPromotions())
 				{
@@ -2077,14 +2071,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 		//		}
 
-		//final String errorUrl = MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
-		//		+ "?value=" + guid;
-		//redirectAttributes.addAttribute("value", guid);
-		//redirectAttributes.addFlashAttribute("value", guid);
 		//Order Status from Juspay
 		try
 		{
-			final String orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay();
+			final String orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid);
 			//Redirection when transaction is successful i.e. CHARGED
 			if (null != orderStatusResponse)
 			{
@@ -2100,7 +2090,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 							MarketplacecheckoutaddonConstants.DECLINEDERRORMSG);
 					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-							+ MarketplacecheckoutaddonConstants.PAYVALUE + "?value=" + guid;
+							+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 				}
 				else if (MarketplacecheckoutaddonConstants.AUTHORIZATION_FAILED.equalsIgnoreCase(orderStatusResponse)
 						|| MarketplacecheckoutaddonConstants.AUTHENTICATION_FAILED.equalsIgnoreCase(orderStatusResponse)
@@ -2112,7 +2102,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//		+ MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
 					//		+ "  with redirect parameters::" + redirectAttributes.toString());
 					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-							+ MarketplacecheckoutaddonConstants.PAYVALUE + "?value=" + guid;
+							+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 					//return MarketplacecheckoutaddonConstants.REDIRECT + safeRedirect(errorUrl);
 					//httpResponse.sendRedirect(errorUrl);
 				}
@@ -2121,7 +2111,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 							MarketplacecheckoutaddonConstants.TRANERRORMSG);
 					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-							+ MarketplacecheckoutaddonConstants.PAYVALUE + "?value=" + guid;
+							+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 					//httpResponse.sendRedirect(errorUrl);
 				}
 			}
@@ -2131,7 +2121,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 						MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-						+ MarketplacecheckoutaddonConstants.PAYVALUE + "?value=" + guid;
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -2141,7 +2131,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-					+ MarketplacecheckoutaddonConstants.PAYVALUE + "?value=" + guid;
+					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -2150,7 +2140,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-					+ MarketplacecheckoutaddonConstants.PAYVALUE + "?value=" + guid;
+					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 		}
 		catch (final Exception e)
 		{
@@ -2159,7 +2149,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-					+ MarketplacecheckoutaddonConstants.PAYVALUE + "?value=" + guid;
+					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 		}
 	}
 
@@ -2571,9 +2561,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		//final Double cartTotals = cart.getTotalPriceWithConv();
 		boolean redirectFlag = false;
-		final String returnUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8))
-				+ request.getContextPath()
-				+ getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYRETURNMETHOD);
+		final StringBuilder returnUrlBuilder = new StringBuilder();
+		returnUrlBuilder.append(request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8)))
+				.append(request.getContextPath())
+				.append(getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYRETURNMETHOD));
+		//final String returnUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8))
+		//		+ request.getContextPath()
+		//		+ getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYRETURNMETHOD);
 		try
 		{
 			//TISPRD-3025 - LOG to handle address
@@ -2581,6 +2575,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (null != cart && StringUtils.isNotEmpty(cart.getGuid()))
 			{
 				cartGuid = cart.getGuid();
+				returnUrlBuilder.append("?value=").append(cartGuid);
 			}
 
 			final String paymentAddressLine1 = java.net.URLDecoder.decode(addressLine1, UTF);
@@ -2651,8 +2646,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				orderId = getMplPaymentFacade().createJuspayOrder(cart, firstName, lastName, paymentAddressLine1,
 						paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
-						cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrl, uid,
-						MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+						cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
+						uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
 
 				//create order here
 
@@ -2660,7 +2655,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
 				OrderData orderData;
 
-				getSessionService().setAttribute("guid", cart.getGuid());
+				//getSessionService().setAttribute("guid", cart.getGuid());
 				if (isValidCart)
 				{
 					//final String encryptedGuid = encryptKey(cart.getGuid());
@@ -2846,22 +2841,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final String orderGuid = getSessionService().getAttribute("guid");
 		final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(orderGuid);
 		final OrderData orderData = orderConverter.convert(orderToBeUpdated);
-		//
-		//		final MplPaymentAuditModel mplAudit = new MplPaymentAuditModel();
-		//		mplAudit.setCartGUID(orderGuid);
-		//		final MplPaymentAuditModel mplAuditModel = flexibleSearchService.getModelByExample(mplAudit);
-		//		if (null != mplAuditModel)
-		//		{
-		//			final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAuditModel.getAuditEntries();
-		//			if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
-		//			{
-		//
-		//				//orderStatusSpecifier.setOrderStatus(orderToBeUpdated, OrderStatus.PAYMENT_PENDING);
-		//				updateOrderStatus(mplAuditEntryList, orderToBeUpdated);
-		//			}
-		//		}
-
-		orderStatusSpecifier.setOrderStatus(orderToBeUpdated, OrderStatus.PAYMENT_SUCCESSFUL);
 
 		//Re-trigger submit order process from Payment_Pending to Payment_Successful
 		juspayEBSService.initiateProcess(orderToBeUpdated);
@@ -3048,77 +3027,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	}
 
 
-
-
-
-	/**
-	 * This method encrypts a key for any value passed
-	 *
-	 * @param value
-	 * @return String
-	 */
-	private String encryptKey(final String value)
-	{
-		String encrypted = null;
-		try
-		{
-			final String key = configurationService.getConfiguration().getString("payment.encrypt.secretKey");
-			final Key skeySpec = new SecretKeySpec(new Base64().decode(key), "AES");
-			final Cipher cipher = Cipher.getInstance("AES");
-			cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-
-			final byte[] encryptedValue = cipher.doFinal(value.getBytes());
-			encrypted = new Base64().encodeAsString(encryptedValue);
-		}
-		catch (final NoSuchAlgorithmException | NoSuchPaddingException e)
-		{
-			// should never happen
-			LOG.error("System was unable instantiate Cipher.", e);
-		}
-		catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException e)
-		{
-			final String msg = "Error occured during encryption." + e.getMessage();
-			LOG.error(msg);
-		}
-		return encrypted;
-	}
-
-
-
-
-	/**
-	 * This method decrypts a key
-	 *
-	 * @param value
-	 * @return String
-	 */
-	private String decryptKey(final String value)
-	{
-		String decrypted = null;
-
-		try
-		{
-			final String key = configurationService.getConfiguration().getString("payment.encrypt.secretKey");
-			final Key skeySpec = new SecretKeySpec(new Base64().decode(key), "AES");
-			final Cipher cipher = Cipher.getInstance("AES");
-			cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-
-			final byte[] decodedValue = new Base64().decode(value.getBytes());
-			final byte[] decryptedValue = cipher.doFinal(decodedValue);
-			decrypted = new String(decryptedValue);
-		}
-		catch (final NoSuchAlgorithmException | NoSuchPaddingException e)
-		{
-			// should never happen
-			LOG.error("System was unable instantiate Cipher.", e);
-		}
-		catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException e)
-		{
-			final String msg = "Error occured during decryption." + e.getMessage();
-			LOG.error(msg);
-		}
-		return decrypted;
-	}
 
 
 	//Getters and Setters
@@ -3519,15 +3427,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		// YTODO Auto-generated method stub
 		return null;
-	}
-
-
-
-	private RedirectView safeRedirect(final String url)
-	{
-		final RedirectView rv = new RedirectView(url);
-		rv.setExposeModelAttributes(false);
-		return rv;
 	}
 
 

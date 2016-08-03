@@ -4,6 +4,7 @@
 package com.tisl.mpl.facades.payment.impl;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.Registry;
@@ -806,7 +807,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//final CartModel cart = getCartService().getSessionCart();
 
 			//New Soln - Order before Payment
-			final String orderGuid = getSessionService().getAttribute("guid");
+			//final String orderGuid = getSessionService().getAttribute("guid");
 			final OrderModel orderModel = getOrderByGuid(orderGuid);
 
 			String orderStatus = null;
@@ -1981,6 +1982,208 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		return getMplPaymentService().fetchOrderOnGUID(guid);
 	}
+
+
+
+
+	/**
+	 * This method returns the map of all active Payment modes(eg. Credit Card, Debit Card, COD, etc.) and their
+	 * availability for the specific store and displays them on the payment page of the store. This is for orderModel,
+	 * ie.after payment has failed
+	 *
+	 * @param store
+	 * @return Map<String, Boolean>
+	 * @throws EtailNonBusinessExceptions
+	 *
+	 */
+	@Override
+	public Map<String, Boolean> getPaymentModes(final String store, final OrderData orderData) throws EtailNonBusinessExceptions
+	{
+
+		//Declare variable
+		final Map<String, Boolean> data = new HashMap<String, Boolean>();
+
+		try
+		{
+			//Get payment modes
+			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
+
+			boolean flag = false;
+
+			for (final OrderEntryData entry : orderData.getEntries())
+			{
+
+				if (entry.getMplDeliveryMode() != null && StringUtils.isNotEmpty(entry.getMplDeliveryMode().getCode()))
+				{
+					if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+					{
+						LOG.info("Any product Content CnC Then break loop and change flag value");
+						flag = true;
+						break;
+					}
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(paymentTypes))
+			{
+				//looping through the mode to get payment Types
+				for (final PaymentTypeModel mode : paymentTypes)
+				{
+					//retrieving the data
+					if (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
+					{
+						LOG.debug("Ignoring to add COD payment for CNC Product ");
+					}
+					else
+					{
+						LOG.info("****Print all Payment type ");
+						data.put(mode.getMode(), mode.getIsAvailable());
+					}
+				}
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B6001);
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+
+		//returning data
+		return data;
+	}
+
+
+
+
+
+	/**
+	 * This method sends request to JusPay to get the Order Status on completion of Payment for new Payment Solution
+	 *
+	 * @return String
+	 * @throws EtailNonBusinessExceptions
+	 *
+	 */
+	@Override
+	public String getOrderStatusFromJuspay(final String orderGuid) throws EtailBusinessExceptions, EtailNonBusinessExceptions
+	{
+		final PaymentService juspayService = new PaymentService();
+
+		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService.withKey(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+				.withMerchantId(
+						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+
+		try
+		{
+			final Map<String, Double> paymentMode = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.PAYMENTMODE);
+
+			final OrderModel orderModel = getOrderByGuid(orderGuid);
+
+			String orderStatus = null;
+			boolean updAuditErrStatus = false;
+
+			//creating OrderStatusRequest
+			final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
+
+			//TISPT-200 implementing fallback for null audit id
+			String juspayOrderId = null;
+			try
+			{
+				juspayOrderId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
+				if (null == juspayOrderId)
+				{
+					juspayOrderId = getMplPaymentService().getAuditId(orderGuid);
+				}
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Exception in picking up juspay order id from session...reverting to fallback mechanism with exception ", e);
+			}
+
+			if (StringUtils.isNotEmpty(juspayOrderId)) //TISPT-200
+			{
+				orderStatusRequest.withOrderId(juspayOrderId);
+
+				//getting the response by calling get Order Status service
+				final GetOrderStatusResponse orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
+				if (null != orderStatusResponse)
+				{
+					//Payment Changes - Order before Payment
+					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest, orderModel);
+
+
+					if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount()))
+					{
+						getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
+					}
+					else
+					{
+						throw new EtailBusinessExceptions();
+					}
+
+					//Logic when transaction is successful i.e. CHARGED
+					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
+					{
+						//TIS-3168
+						LOG.error("Payment successful with transaction ID::::" + juspayOrderId);
+						//saving card details
+						getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, orderModel);
+					}
+					//TIS-3168
+					else
+					{
+						LOG.error("Payment failure with transaction ID::::" + juspayOrderId);
+					}
+					getMplPaymentService().paymentModeApportion(orderModel);
+
+					if (updAuditErrStatus)
+					{
+						orderStatus = orderStatusResponse.getStatus();
+					}
+				}
+				//TIS-3168
+				else
+				{
+					LOG.error("Null orderStatusResponse for juspayOrderId::" + juspayOrderId);
+				}
+
+			}
+
+			//returning the statues of the order
+			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
+			return orderStatus;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error("Cart total and Juspay end total are not same!!!", e);
+			throw new EtailBusinessExceptions("Cart Total and Transaction total at Juspay Mismatch", e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Failed to save order status in payment transaction with error: ", e);
+			throw new EtailNonBusinessExceptions(e);
+		}
+
+	}
+
 
 
 

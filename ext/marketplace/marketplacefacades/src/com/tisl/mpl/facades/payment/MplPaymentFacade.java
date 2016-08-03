@@ -1,6 +1,7 @@
 package com.tisl.mpl.facades.payment;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -26,6 +27,7 @@ import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplNetbankingData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.SavedCardData;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 
@@ -345,5 +347,23 @@ public interface MplPaymentFacade
 	 * @return OrderModel
 	 */
 	OrderModel getOrderByGuid(String guid);
+
+
+	/**
+	 * @param store
+	 * @param orderData
+	 * @return Map<String, Boolean>
+	 * @throws EtailNonBusinessExceptions
+	 */
+	Map<String, Boolean> getPaymentModes(String store, OrderData orderData) throws EtailNonBusinessExceptions;
+
+
+	/**
+	 * @param orderGuid
+	 * @return String
+	 * @throws EtailBusinessExceptions
+	 * @throws EtailNonBusinessExceptions
+	 */
+	String getOrderStatusFromJuspay(String orderGuid) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 
 }
