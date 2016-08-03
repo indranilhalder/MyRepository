@@ -1561,9 +1561,11 @@ $("#otpMobileNUMField").focus(function(){
 						Juspay.startSecondFactor();
 
 				     } 		 
-					 setTimeout(function(){ 			 
-						  $("#order_id_new").val(response);
-						  submitCardForm();		 
+					 setTimeout(function(){ 
+						 var values=response.split("|"); 
+						 $("#order_id_saved").val(values[0]);
+						  //$("#order_id_new").val(response);
+						  submitCardForm(values[1]);		 
 					 }, 1000);
 			
 				}
@@ -1703,7 +1705,7 @@ $("#otpMobileNUMField").focus(function(){
  
 
 
- function submitCardForm(){
+ function submitCardForm(value){
 	 var baseUrl=window.location.origin;
 		var website = ACC.config.encodedContextPath;
 		 var thank_you_page = /*(website.indexOf("https") > -1 ? "" : "https://") +*/baseUrl+ website + "/checkout/multi/payment-method/cardPayment";
@@ -1715,17 +1717,17 @@ $("#otpMobileNUMField").focus(function(){
 				 var p = "order_id=" + statusObj.orderId
 				 p = p + "&status=" + statusObj.status 
 				 p = p + "&status_id=" + statusObj.statusId
-				 window.location.href = thank_you_page
+				 window.location.href = thank_you_page+"?value="+value
 			 },
 			 error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
 	         //redirect to failure page
 				 /*alert("Transaction not successful. Error: " + bank_error_message)*/
 
-				 window.location.href = error_page
+				 window.location.href = error_page+"?value="+value
 			 },
 			 second_factor_window_closed_handler: function() {
 				    // enable the pay button for the user
-					window.location.href = error_page
+					window.location.href = error_page+"?value="+value
 			 }
 		 });
  $("#payment_form").submit() ;   
