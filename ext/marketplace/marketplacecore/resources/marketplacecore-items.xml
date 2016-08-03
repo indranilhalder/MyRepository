@@ -1675,6 +1675,14 @@
 							optional="true" removable="false" initial="true" private="false"
 							partof="false" />
 					</attribute>
+					<attribute type="java.lang.Double" qualifier="maxDiscount"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+					</attribute>
 					<attribute qualifier="promotionIdentifier" type="java.lang.String">
 						<description>Stores the Promotion Code</description>
 						<persistence type="property" />
@@ -6845,16 +6853,16 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TISPRO-675 -->
-					<attribute qualifier="emiBank" type="java.lang.String"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true" />
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="emiTenure" type="java.lang.String"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true" />
-						<persistence type="property" />
-					</attribute>
+ 					<attribute qualifier="emiBank" type="java.lang.String"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<persistence type="property" />
+ 					</attribute>
+ 					<attribute qualifier="emiTenure" type="java.lang.String"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<persistence type="property" />
+ 					</attribute>
 				</attributes>
 			</itemtype>
 			<itemtype code="JuspayCardResponse" autocreate="true"

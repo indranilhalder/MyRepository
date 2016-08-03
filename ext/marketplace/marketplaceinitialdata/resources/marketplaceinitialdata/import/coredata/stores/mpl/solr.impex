@@ -24,6 +24,7 @@ UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.Conf
 $freebiePriceThreshold=$config-freebiePriceThreshold
 
 
+
 #
 # Setup the Solr server, indexer, and search configs
 #
@@ -59,6 +60,7 @@ INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type;solrValueRanges
 ;mplElectronicsPriceRangeINR;INR-ELECTRONICS;double;mplRangeRefElectronicsINR1,mplRangeRefElectronicsINR2,mplRangeRefElectronicsINR3,mplRangeRefElectronicsINR4,mplRangeRefElectronicsINR5,mplRangeRefElectronicsINR6,mplRangeRefElectronicsINR7,mplRangeRefElectronicsINR8,mplRangeRefElectronicsINR9
 ;mplApparelPriceRangeINR;INR-APPAREL;double;mplRangeRefApparelINR1,mplRangeRefApparelINR2,mplRangeRefApparelINR3,mplRangeRefApparelINR4,mplRangeRefApparelINR5,mplRangeRefApparelINR6,mplRangeRefApparelINR7
 ;mplFacetAvgRating;;double;avgRatingRef1,avgRatingRef2,avgRatingRef3,avgRatingRef4,avgRatingRef5
+;mplDiscountRange;DISCOUNT;double;discountRangeRef1,discountRangeRef2,discountRangeRef3,discountRangeRef4,discountRangeRef5
 
 
 # Define price ranges
@@ -86,6 +88,12 @@ INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=tru
 ;avgRatingRef3;mplFacetAvgRating;3;2.5;3.49
 ;avgRatingRef4;mplFacetAvgRating;4;3.5;4.49
 ;avgRatingRef5;mplFacetAvgRating;5;4.5;5
+
+;discountRangeRef1;mplDiscountRange;	Upto 10%;		0.01;	10
+;discountRangeRef2;mplDiscountRange;	10% - 30%;		10.01;	30
+;discountRangeRef3;mplDiscountRange;	30% - 50%;		30.01;	50
+;discountRangeRef4;mplDiscountRange;	50% - 70%;		50.01;	70
+;discountRangeRef5;mplDiscountRange;	70% and more;	70.01;	100
 
 # Non-facet properties
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
@@ -178,7 +186,8 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; capacity               ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplCapacityFacetValueProvider        ;                						;                           ;defaultTopValuesProvider
 ;$solrIndexedType; sellerId            	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSellerIdValueProvider             ;                						;                           ;defaultTopValuesProvider
 ;$solrIndexedType; deliveryMode           ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplDeliveryModeValueProvider         ;    									;                           ;
-;$solrIndexedType; collectionIds          ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplOccasionIDValueProvider           ;                						;                           ;defaultTopValuesProvider
+;$solrIndexedType; collectionIds          ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplOccasionIDValueProvider           ;                						;                           ;
+;$solrIndexedType; discountFlag			  ;double ;		;	 ;	   ;true ;	   ;true ;MultiSelectOr	;Alpha ; 2500;true;		; 	  ;mplDiscountFlagValueProvider			;										;							;							;mplDiscountRange
 # ;$solrIndexedType; vouchers		          ;string ;     ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplVoucherCodeValueProvider		    ;	;                         	;
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;facet[default=true];facetDisplayNameProvider
@@ -248,13 +257,11 @@ where tbl.code IN (
                                                              SELECT distinct{bbox.product} FROM{BuyBox AS bbox} 
 															 WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
 															 AND ({bbox.product}={p.code} 
-															 AND ({bbox.delisted} = 1 
-															 AND {bbox.price} > $freebiePriceThreshold 
+															 AND ({bbox.delisted} = 1 															 
 															 OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate}))) 
 															 AND {bbox.product} NOT IN ({{														
 															                             SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 
-																						 WHERE {bbox.delisted} != 1 
-																						 AND {bbox.price} > $freebiePriceThreshold 
+																						 WHERE {bbox.delisted} != 1 																						 
 																						 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
 																						 }})
 															}}) 
@@ -418,11 +425,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 #For Exclude OutofStock facet
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;
 				 ;$solrIndexedType				;inStockFlag		;boolean	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplProductInStockFlagValueProvider			;mplInStockFacetDisplayNameProvider ;						;				;							;
-				 
-#For Discount Facet Search
-INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;topValuesProvider;rangeSets(name);$classAttributeAssignment	;
-				 ;$solrIndexedType				;discountFlag		;string	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplDiscountFlagValueProvider			; ;						;defaultTopValuesProvider;				;							;
-				 
+			 
 #For All Discount Facet Search
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;topValuesProvider;rangeSets(name);$classAttributeAssignment	;
 				 ;$solrIndexedType				;discountAll		;string	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplAllDiscountValueProvider			; ;	;defaultTopValuesProvider					;				;							;				 
@@ -450,14 +453,23 @@ INSERT_UPDATE GlobalSolrSearchProfile;code;indexedType(identifier)[unique=true];
 INSERT_UPDATE Job;code[unique=true];nodeId
 ;solrIndexerJob;1
 
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;enableMplIndexingCompositeCronJob;enableMplIndexingCompositeJob;false;en
+;disableMplIndexingCompositeCronJob;disableMplIndexingCompositeJob;false;en
+
 # TISPRO-371 Start update and delete index solr cron job into single composite cronjob
 INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode);runningOnClusterNode
  ;mplIndexingCompositeCronjob;compositeJobPerformable;en;1
+ ;mplFullIndexingCompositeCronjob;compositeJobPerformable;en;1
  
 #Items to run from the Composite Cron Job
  INSERT_UPDATE CompositeEntry;code[unique=true];executablecronjob(code);compositecronjob(code);compositecronjobpos
  ;delete-mplIndex-cronJob;delete-mplIndex-cronJob;mplIndexingCompositeCronjob;1
  ;update-mplIndex-cronJob;update-mplIndex-cronJob;mplIndexingCompositeCronjob;2
+ 
+ ;disableMplIndexingCompositeCronJob;disableMplIndexingCompositeCronJob;mplFullIndexingCompositeCronjob;1
+ ;full-mplIndex-cronJob;full-mplIndex-cronJob;mplFullIndexingCompositeCronjob;2
+ ;enableMplIndexingCompositeCronJob;enableMplIndexingCompositeCronJob;mplFullIndexingCompositeCronjob;3
  
 INSERT_UPDATE CronJob;code[unique=true];runningOnClusterNode
 # Run the update-mplIndex-cronJob every 15 minutes
