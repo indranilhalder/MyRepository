@@ -1585,7 +1585,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String IMAGEURLMSG = "Image url is:::";
 	public final static String TICKET_TYPE_CDA = "DAC";
-	public final static String TICKET_SUB_TYPE_CDA="D";
+	public final static String TICKET_SUB_TYPE_CDA = "D";
+	public final static String ADDRESS_TYPE_HOME = "Home";
+	public final static String ADDRESS_TYPE_WORK = "Work";
 
 	private MarketplacecommerceservicesConstants()
 	{

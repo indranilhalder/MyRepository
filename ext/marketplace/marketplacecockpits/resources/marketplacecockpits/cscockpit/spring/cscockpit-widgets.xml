@@ -63,6 +63,10 @@
 	<bean id="marketplaceCsShippingAddressCreateWidgetRenderer"
 		parent="defaultCsAddressCreateWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceDeliveryAddressWidgetRenderer">
+		<property name="callContextController" ref="csCallContextController" />
+		<property name="isChangeDeliveryAddress">
+			<value type="java.lang.Boolean">false</value>
+		</property>
 	</bean>
 
 	<alias alias="csShippingAddressWidgetRenderer" name="mplCsShippingAddressWidgetRenderer" />
@@ -686,34 +690,49 @@
 
 
 
+<!-- 	<alias alias="csChangeDeliveryAddressWidgetConfig" name="defaultCsChangeDeliveryAddressWidgetConfig" /> -->
+<!-- 	<bean id="defaultCsChangeDeliveryAddressWidgetConfig" parent="csBaseWidgetConfig"> -->
+
+<!-- 		<property name="widgetTitle" -->
+<!-- 			value="cscockpit.widget.order.changeDeliveryAddress.create" /> -->
+<!-- 		<property name="widgetRenderer" ref="csChangeDeliveryAddressCreateWidgetRenderer" /> -->
+<!-- 		<property name="widgetController" ref="csCustomerController" /> -->
+<!-- 		<property name="widgetClass" -->
+<!-- 			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" /> -->
+<!-- 		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame" /> -->
+<!-- 		<property name="widgetModel"> -->
+<!-- 			<bean -->
+<!-- 				class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel" /> -->
+<!-- 		</property> -->
+
+<!-- 	</bean> -->
+
+<!-- 	<alias alias="csChangeDeliveryAddressCreateWidgetRenderer" name="defaultCsChangeDeliveryAddressCreateWidgetRenderer" /> -->
+<!-- 	<bean id="defaultCsChangeDeliveryAddressCreateWidgetRenderer" -->
+<!-- 		parent="abstractWidgetRenderer" -->
+<!-- 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplChangeDeliveryAddressWidgetRenderer"> -->
+<!-- 		<property name="callContextController" ref="csCallContextController" /> -->
+
+<!-- 	</bean> -->
+
+	<!-- Change Delivery Address -->
 	<alias alias="csChangeDeliveryAddressWidgetConfig" name="defaultCsChangeDeliveryAddressWidgetConfig" />
-	<bean id="defaultCsChangeDeliveryAddressWidgetConfig" parent="csBaseWidgetConfig">
-
-		<property name="widgetTitle"
-			value="cscockpit.widget.order.changeDeliveryAddress.create" />
+	<bean id="defaultCsChangeDeliveryAddressWidgetConfig" parent="defaultCsAddressCreateWidgetConfig">
 		<property name="widgetRenderer" ref="csChangeDeliveryAddressCreateWidgetRenderer" />
-		<property name="widgetController" ref="csCustomerController" />
-		<property name="widgetClass"
-			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
-		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame" />
-		<property name="widgetModel">
-			<bean
-				class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel" />
+	</bean>
+
+	<alias alias="csChangeDeliveryAddressCreateWidgetRenderer" name="DefaultCsChangeDeliveryAddressCreateWidgetRenderer" />
+	<bean id="DefaultCsChangeDeliveryAddressCreateWidgetRenderer"
+		parent="defaultCsAddressCreateWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceDeliveryAddressWidgetRenderer">
+        <property name="callContextController" ref="csCallContextController" />
+		<property name="isChangeDeliveryAddress">
+			<value type="java.lang.Boolean">true</value>
 		</property>
-
 	</bean>
 
-	<alias alias="csChangeDeliveryAddressCreateWidgetRenderer" name="defaultCsChangeDeliveryAddressCreateWidgetRenderer" />
-	<bean id="defaultCsChangeDeliveryAddressCreateWidgetRenderer"
-		parent="abstractWidgetRenderer"
-		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceChangeDeliveryAddressWidgetRenderer">
-		<property name="callContextController" ref="csCallContextController" />
 
-	</bean>
-	
-	
-	
-	
+
 	<alias alias="csChangeDeliveryAddressOtpWidgetConfig" name="defaultCsChangeDeliveryAddressOtpWidgetConfig" />
 	<bean id="defaultCsChangeDeliveryAddressOtpWidgetConfig" parent="csBaseWidgetConfig">
 
@@ -734,7 +753,7 @@
 	<alias alias="csChangeDeliveryOtpCreateWidgetRenderer" name="defaultCsChangeDeliveryOtpCreateWidgetRenderer"/>
 	<bean id="defaultCsChangeDeliveryOtpCreateWidgetRenderer"
 		parent="abstractWidgetRenderer"
-		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceChangeDeliveryOTPWidgetRenderer">
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplChangeDeliveryOTPWidgetRenderer">
 		<property name="callContextController" ref="csCallContextController" />
 
 	</bean>
@@ -743,7 +762,7 @@
  <!--  Change DeliveryAddress Controller  -->
  <alias alias="csChangeDeliveryAddressControler" name="marketPlaceChangeDeliveryAddressControler" />
 	<bean id="marketPlaceChangeDeliveryAddressControler" parent="csBaseWidgetController"
-		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketPlaceChangeDeliveryAddressControllerImpl"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MplDeliveryAddressControllerImpl"
 		scope="session">
 		<property name="callContextController" ref="csCallContextController"/>
 		<property name="orderCancelService" ref="orderCancelService"/>
@@ -777,18 +796,6 @@
 		<property name="listConfigurationType" value="Address"/>
 		<property name="callContextController" ref="csCallContextController"/>
 	</bean>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 </beans>

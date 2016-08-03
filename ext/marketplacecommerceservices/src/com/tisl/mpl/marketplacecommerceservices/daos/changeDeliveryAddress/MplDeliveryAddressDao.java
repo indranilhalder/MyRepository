@@ -3,9 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress;
 
-import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.AddressModel;
-
 import com.tisl.mpl.core.model.TemproryAddressModel;
 
 
@@ -14,14 +11,14 @@ import com.tisl.mpl.core.model.TemproryAddressModel;
  *
  */
 
-public interface MplChangeDeliveryAddressDao
+public interface MplDeliveryAddressDao
 {
 
 	/**
 	 * Based On OrderId We get TemAdresss
+	 * 
 	 * @param orderCode
 	 * @return temproryAddressModel
 	 */
 	public TemproryAddressModel getTemporaryAddressModel(String orderCode);
-	public void  saveDeliveryAddress(OrderModel order,AddressModel address);
 }

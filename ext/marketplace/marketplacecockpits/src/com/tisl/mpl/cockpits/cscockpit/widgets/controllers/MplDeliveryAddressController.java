@@ -11,7 +11,7 @@ import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 
-public interface MarketPlaceChangeDeliveryAddressController {
+public interface MplDeliveryAddressController {
 	/**
 	 * this method is used to check whether delivery Address is changable or not
 	 * if this method returns false ,then change delivery Address button is
@@ -63,7 +63,7 @@ public interface MarketPlaceChangeDeliveryAddressController {
 	 * @param address
 	 * @return void
 	 */
-	public void saveDeliveryAddress(OrderModel order, AddressModel address);
+	public void saveDeliveryAddress(String orderid);
 
 	/**
 	 * This method is used to get The PincodeData for a particular pincode

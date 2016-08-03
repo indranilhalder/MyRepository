@@ -1538,8 +1538,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultMplCommerceIndexedPropertyPopulator" alias="commerceIndexedPropertyPopulator" />
 	<bean id="defaultMplCommerceIndexedPropertyPopulator"
 		class="com.tisl.mpl.search.converters.populator.MplCommerceIndexedPropertyPopulator" />
-		<bean id="changeDeliveryAddressFacade"
-		class="com.tis.mpl.facade.changedelivery.Impl.MplChangeDeliveryAddressFacadeImpl"/>
+		<bean id="DeliveryAddressFacade"
+		class="com.tis.mpl.facade.changedelivery.Impl.MplDeliveryAddressFacadeImpl"/>
 		
 		<!-- 	R2.3 FL04 changes	 -->
 			

@@ -1734,10 +1734,10 @@
 		<property name="password" value="${jdbc.iastg.pass}" />
 	</bean>
 	
-<bean id="mplChangeDeliveryAddressServiceImpl"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplChangeDeliveryAddressServiceImpl"/>
-<bean id="mplChangeDeliveryAddressDaoImpl"
-		class="com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplChangeDeliveryAddressDaoImpl">
+<bean id="mplDeliveryAddressServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>
+<bean id="mplDeliveryAddressDaoImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplDeliveryAddressDaoImpl">
 </bean>
 
 </beans>
