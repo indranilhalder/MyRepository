@@ -784,11 +784,33 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				final SellerInformationData sellerData = entryData.getSelectedSellerInformation();
 				if (sellerData != null)
 				{
+					
+					if (StringUtils.isNotEmpty(sellerData.getDeliveryFulfillModebyP1()))
+					{
+						final String globalCodeFulfilmentTypeByp1 = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData.getDeliveryFulfillModebyP1().toUpperCase());
+						if (StringUtils.isNotEmpty(globalCodeFulfilmentTypeByp1))
+						{
+							pincodeServiceData.setDeliveryFulfillModeByP1(globalCodeFulfilmentTypeByp1.toUpperCase());
+						}
+						else
+						{
+							LOG.debug("getOMSPincodeResponseData : GLOBALCONSTANTSMAP DeliveryFulfillModebyP1 type not found");
+						}
+					}
+					
+					
+					if (StringUtils.isNotEmpty(sellerData.getIsFragile()))
+					{
+							pincodeServiceData.setIsFragile(sellerData.getIsFragile().toUpperCase());
+					}
+					if (StringUtils.isNotEmpty(sellerData.getIsPrecious()))
+					{
+							pincodeServiceData.setIsPrecious(sellerData.getIsPrecious().toUpperCase());
+					}
+					
 					if (StringUtils.isNotEmpty(sellerData.getFullfillment()))
 					{
-						final String globalCodeFulfilmentType = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData
-
-						.getFullfillment().toUpperCase());
+						final String globalCodeFulfilmentType = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData.getFullfillment().toUpperCase());
 						if (StringUtils.isNotEmpty(globalCodeFulfilmentType))
 						{
 							pincodeServiceData.setFullFillmentType(globalCodeFulfilmentType.toUpperCase());

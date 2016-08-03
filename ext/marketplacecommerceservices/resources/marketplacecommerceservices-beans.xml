@@ -243,6 +243,10 @@
 		<property name="fulfillmentType" type="String"/>
 		<property name="deliveryMode" type="String"/>
 		<property name="quantity" type="Integer"/>
+		<!-- Added new ServiceableSlavesData   -->
+		<property name="serviceableSlaves" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.ServiceableSlavesData>" />
+		<property name="cncServiceableSlaves" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData>" />
+		
 	</bean>
 	<!--END: Added for Cart Soft Reservation -->
 	

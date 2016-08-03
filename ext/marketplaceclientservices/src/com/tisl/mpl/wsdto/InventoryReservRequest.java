@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.wsdto;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -15,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "invReserve", propOrder =
-{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode" })
+{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode" ,"ServiceableSlaves"})
 public class InventoryReservRequest
 {
 	@XmlElement(name = "ussId")
@@ -32,6 +34,10 @@ public class InventoryReservRequest
 	private String deliveryMode;
 	@XmlElement(name = "quantity")
 	private String quantity;
+	
+	@XmlElement(name = "ServiceableSlaves")
+	private List<ServiceableSlavesDTO> ServiceableSlaves;
+	
 
 	/**
 	 * @return the uSSID
@@ -157,6 +163,22 @@ public class InventoryReservRequest
 	public void setQuantity(final String quantity)
 	{
 		this.quantity = quantity;
+	}
+
+	/**
+	 * @return the serviceableSlaves
+	 */
+	public List<ServiceableSlavesDTO> getServiceableSlaves()
+	{
+		return ServiceableSlaves;
+	}
+
+	/**
+	 * @param serviceableSlaves the serviceableSlaves to set
+	 */
+	public void setServiceableSlaves(List<ServiceableSlavesDTO> serviceableSlaves)
+	{
+		ServiceableSlaves = serviceableSlaves;
 	}
 
 

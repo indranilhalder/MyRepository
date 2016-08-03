@@ -15,6 +15,7 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
@@ -24,6 +25,7 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.commercefacades.product.data.ServiceableSlavesData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
@@ -53,6 +55,7 @@ import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.keygenerator.KeyGenerator;
 import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
@@ -135,6 +138,7 @@ import com.tisl.mpl.service.PinCodeDeliveryModeService;
 import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.CNCServiceableSlavesWsDTO;
 import com.tisl.mpl.wsdto.DeliveryModeResOMSWsDto;
 import com.tisl.mpl.wsdto.GetWishListDataWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
@@ -146,6 +150,7 @@ import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeResponse;
 import com.tisl.mpl.wsdto.ReservationItemWsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
+import com.tisl.mpl.wsdto.ServiceableSlavesDTO;
 import com.tisl.mpl.wsdto.StoreLocatorAtsResponse;
 import com.tisl.mpl.wsdto.StoreLocatorAtsResponseObject;
 import com.tisl.mpl.wsdto.StoreLocatorResponseItem;
@@ -186,6 +191,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	@Resource(name = "baseSiteService")
 	private BaseSiteService baseSiteService;
+	
+	@Autowired
+	private SessionService sessionService;
 
 	@Autowired
 	private BuyBoxDao buyBoxDao;
@@ -1961,6 +1969,29 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								{
 									data.setIsCOD(Boolean.FALSE);
 								}
+								
+								if (deliveryMode.getFulfillmentType() != null){
+									data.setFulfilmentType(deliveryMode.getFulfillmentType());
+								}
+								
+								if(null != deliveryMode.getServiceableSlaves() && deliveryMode.getServiceableSlaves().size()>0){
+								 data.setServiceableSlaves(populatePincodeServiceableData(deliveryMode.getServiceableSlaves()));
+								}
+								
+								if(null != deliveryMode.getCNCServiceableSlaves() && deliveryMode.getCNCServiceableSlaves().size()>0){
+									List<CNCServiceableSlavesData> cncServiceableSlavesDataList = new ArrayList<CNCServiceableSlavesData>();
+									CNCServiceableSlavesData cncServiceableSlavesData =null;
+								 for(CNCServiceableSlavesWsDTO dto:deliveryMode.getCNCServiceableSlaves()){
+									 cncServiceableSlavesData =new CNCServiceableSlavesData();
+									 cncServiceableSlavesData.setStoreId(dto.getStoreId());
+									 cncServiceableSlavesData.setQty(dto.getQty());
+									 cncServiceableSlavesData.setFulfillmentType(dto.getFulfillmentType());
+									 cncServiceableSlavesData.setServiceableSlaves(populatePincodeServiceableData(dto.getServiceableSlaves()));
+									 cncServiceableSlavesDataList.add(cncServiceableSlavesData);
+								 }
+								 data.setCNCServiceableSlavesData(cncServiceableSlavesDataList);
+								}
+								
 								deliveryDataList.add(data);
 								//	}
 								responseData.setValidDeliveryModes(deliveryDataList);
@@ -2014,6 +2045,21 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return responseList;
 	}
 
+	
+	private List<ServiceableSlavesData> populatePincodeServiceableData(List<ServiceableSlavesDTO> serviceableSlavesDTOList){
+		
+		List<ServiceableSlavesData> serviceableSlavesDataList = new ArrayList<ServiceableSlavesData>();
+		 ServiceableSlavesData serviceableSlavesData =null;
+	 for(ServiceableSlavesDTO dto:serviceableSlavesDTOList){
+		  serviceableSlavesData =new ServiceableSlavesData();
+		  serviceableSlavesData.setSlaveId(dto.getSlaveId());
+		  serviceableSlavesData.setLogisticsID(dto.getLogisticsID());
+		  serviceableSlavesData.setPriority(dto.getPriority());
+		  serviceableSlavesData.setCodEligible(dto.getCODEligible());
+		  serviceableSlavesDataList.add(serviceableSlavesData);
+	 }
+		return serviceableSlavesDataList;
+	}
 	/**
 	 * @desc Method used to invoke pincode serviceability check as part of OMS fallback PLAN C
 	 * @param pincode
@@ -3507,6 +3553,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			throws EtailNonBusinessExceptions
 	{
 
+		List<PinCodeResponseData> pincoderesponseDataList=getSessionService().getAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+		LOG.debug("******responceData******** "+pincoderesponseDataList);
 		CartSoftReservationData cartSoftReservationData = null;
 		final List<CartSoftReservationData> cartSoftReservationDataList = new ArrayList<CartSoftReservationData>();
 		try
@@ -3695,6 +3743,22 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									LOG.debug("populateDataForSoftReservation :  Fulfillment type not received for the "
 											+ entryModel.getSelectedUSSID());
 								}
+							}
+						}
+
+						for(PinCodeResponseData responseData:pincoderesponseDataList){
+							if(entryModel.getSelectedUSSID() .equals(responseData.getUssid())){
+							  for(DeliveryDetailsData detailsData:responseData.getValidDeliveryModes()){
+								  if(null != detailsData.getServiceableSlaves() && detailsData.getServiceableSlaves().size()>0){
+								  cartSoftReservationData.setServiceableSlaves(detailsData.getServiceableSlaves()); 
+								  }
+								  if(null != detailsData.getCNCServiceableSlavesData() && detailsData.getCNCServiceableSlavesData().size()>0){
+									  cartSoftReservationData.setCncServiceableSlaves(detailsData.getCNCServiceableSlavesData()); 
+								  }
+								  if(null != detailsData.getFulfilmentType() ){
+									  cartSoftReservationData.setFulfillmentType(detailsData.getFulfilmentType());
+								  }
+							  }	  
 							}
 						}
 						cartSoftReservationDataList.add(cartSoftReservationData);
@@ -4921,5 +4985,23 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	public void setBaseStoreService(final BaseStoreService baseStoreService)
 	{
 		this.baseStoreService = baseStoreService;
+	}
+
+
+	/**
+	 * @return the sessionService
+	 */
+	public SessionService getSessionService()
+	{
+		return sessionService;
+	}
+
+
+	/**
+	 * @param sessionService the sessionService to set
+	 */
+	public void setSessionService(SessionService sessionService)
+	{
+		this.sessionService = sessionService;
 	}
 }

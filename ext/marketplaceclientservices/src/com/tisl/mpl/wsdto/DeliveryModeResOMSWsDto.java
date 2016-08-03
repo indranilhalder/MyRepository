@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  * "isPrepaidEligible" })
  */
 @XmlType(propOrder =
-{ "Type", "Inventory", "DeliveryDate","isPincodeServiceable", "isCOD", "isCODLimitFailed", "isPrepaidEligible" ,"ServiceableSlaves","CNCServiceableSlaves"})
+{ "Type", "Inventory", "DeliveryDate","isPincodeServiceable", "isCOD", "isCODLimitFailed", "isPrepaidEligible","FulfillmentType" ,"ServiceableSlaves","CNCServiceableSlaves"})
 public class DeliveryModeResOMSWsDto
 {
 	@XmlElement(name = "Type")
@@ -37,6 +37,9 @@ public class DeliveryModeResOMSWsDto
 
 	@XmlElement(name = "DeliveryDate")
 	private String DeliveryDate;
+	
+	@XmlElement(name = "FulfillmentType")
+	private String FulfillmentType;
 	
 	@XmlElement(name = "ServiceableSlaves")
 	private List<ServiceableSlavesDTO> ServiceableSlaves;
@@ -196,4 +199,21 @@ public class DeliveryModeResOMSWsDto
 		CNCServiceableSlaves = cNCServiceableSlaves;
 	}
 
+	/**
+	 * @return the fulfillmentType
+	 */
+	public String getFulfillmentType()
+	{
+		return FulfillmentType;
+	}
+
+	/**
+	 * @param fulfillmentType the fulfillmentType to set
+	 */
+	public void setFulfillmentType(String fulfillmentType)
+	{
+		FulfillmentType = fulfillmentType;
+	}
+
+	
 }
