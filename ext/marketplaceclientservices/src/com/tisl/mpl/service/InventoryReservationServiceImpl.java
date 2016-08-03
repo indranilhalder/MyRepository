@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.service;
 
+import de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData;
+import de.hybris.platform.commercefacades.product.data.ServiceableSlavesData;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringReader;
@@ -32,6 +34,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.wsdto.InventoryReservListRequest;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
 import com.tisl.mpl.wsdto.InventoryReservRequest;
+import com.tisl.mpl.wsdto.ServiceableSlavesDTO;
 
 
 /**
@@ -116,7 +119,18 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				{
 					reqObj.setQuantity(cartObj.getQuantity().toString());
 				}
-
+				// Added code for Inventory Reservation Request change
+				if((null!= cartObj.getServiceableSlaves() && cartObj.getServiceableSlaves().size()>0) ){
+					reqObj.setServiceableSlaves(populateServiceableSlaves(cartObj.getServiceableSlaves()));
+				}
+			// Added code for Inventory Reservation Request change
+				if((null!= cartObj.getCncServiceableSlaves() && cartObj.getCncServiceableSlaves().size()>0) ){
+					List<ServiceableSlavesDTO> serviceableSlavesDTOList=new ArrayList<ServiceableSlavesDTO>();
+					for(CNCServiceableSlavesData data:cartObj.getCncServiceableSlaves()){
+						serviceableSlavesDTOList=populateServiceableSlaves(data.getServiceableSlaves());
+					} 
+					reqObj.setServiceableSlaves(serviceableSlavesDTOList);
+				}
 				if (reqObj.getIsAFreebie() != null && reqObj.getIsAFreebie().equals("Y"))
 				{
 					freebieItemslist.add(reqObj);
@@ -129,6 +143,13 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 
 			}
 			reqlist.addAll(freebieItemslist);
+			
+			if (freebieItemslist.size()>0)
+			{
+				reqdata.setIsFreebieCart(Boolean.TRUE);
+			}else{
+				reqdata.setIsFreebieCart(Boolean.FALSE);
+			}
 
 			if (StringUtils.isNotEmpty(cartId))
 			{
@@ -142,6 +163,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 			{
 				reqdata.setDuration(getDuration(requestType));
 			}
+			reqdata.setIsNewCart(Boolean.TRUE);
 			reqdata.setItem(reqlist);
 			response = reserveInventoryAtCheckout(reqdata);
 		}
@@ -160,6 +182,27 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 
 		}
 		return response;
+	}
+	
+	private List<ServiceableSlavesDTO> populateServiceableSlaves(List<ServiceableSlavesData> serviceableSlavesDataList ){
+		
+		List<ServiceableSlavesDTO> serviceableSlavesDTOList=new ArrayList<ServiceableSlavesDTO>();
+		ServiceableSlavesDTO dto=null;
+		for(ServiceableSlavesData data:serviceableSlavesDataList){
+			dto=new ServiceableSlavesDTO();
+			if (StringUtils.isNotEmpty(data.getSlaveId()))
+			dto.setSlaveId(data.getSlaveId());
+			if (StringUtils.isNotEmpty(data.getLogisticsID()))
+			dto.setLogisticsID(data.getLogisticsID());
+			if (StringUtils.isNotEmpty(data.getPriority()))
+			dto.setPriority(data.getPriority());
+			if (StringUtils.isNotEmpty(data.getCodEligible()))
+			dto.setCODEligible(data.getCodEligible());
+			if (StringUtils.isNotEmpty(data.getTransactionType()))
+			dto.setTransactionType(data.getTransactionType());
+			serviceableSlavesDTOList.add(dto);
+		}
+	return serviceableSlavesDTOList;		
 	}
 
 	/**

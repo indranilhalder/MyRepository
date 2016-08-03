@@ -62,6 +62,7 @@ public class MplGlobalCodeConstants
 		//Fulfilment type
 		GLOBALCONSTANTSMAP.put("TSHIP", "TSHIP");
 		GLOBALCONSTANTSMAP.put("SSHIP", "SSHIP");
+		GLOBALCONSTANTSMAP.put("BOTH", "BOTH");
 
 		//Delivery Mode
 		GLOBALCONSTANTSMAP.put("HOME-DELIVERY", "HD");
