@@ -94,7 +94,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	public void updatePromotionalPrice(final List<Product> products, final List<Category> categories, final Double value,
 			final Date startDate, final Date endtDate, final boolean percent, final Integer priority, final List<String> sellers,
 			final List<String> brands, final String promoCode, final List<String> rejectSellerList,
-			final List<String> rejectBrandList)
+			final List<String> rejectBrandList, final Double maxDiscount)
 	{
 
 		try
@@ -173,6 +173,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 							price.setIsPercentage(Boolean.valueOf(percent));
 							price.setPromotionValue(value);
 							price.setPromotionIdentifier(promoCode);
+							price.setMaxDiscount(maxDiscount);
 						}
 						else
 						{
@@ -181,6 +182,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 							price.setIsPercentage(Boolean.valueOf(percent));
 							price.setPromotionValue(value);
 							price.setPromotionIdentifier(promoCode);
+							price.setMaxDiscount(maxDiscount);
 						}
 						priceList.add(price);
 					}
@@ -192,6 +194,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						price.setIsPercentage(null);
 						price.setPromotionValue(null);
 						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
+						price.setMaxDiscount(null);
 
 						LOG.debug("Saving Price Row ");
 						priceList.add(price);
@@ -232,6 +235,8 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 					price.setIsPercentage(null);
 					price.setPromotionValue(null);
 					price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
+					price.setMaxDiscount(null);
+
 					finalList.add(price);
 				}
 
@@ -392,6 +397,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						price.setIsPercentage(null);
 						price.setPromotionValue(null);
 						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
+						price.setMaxDiscount(null);
 					}
 					else if (null != quantity && quantity.longValue() > 1) //For TISPRD-383 : If Validated remove Special Price Details
 					{
@@ -400,6 +406,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						price.setIsPercentage(null);
 						price.setPromotionValue(null);
 						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
+						price.setMaxDiscount(null);
 					}
 					priceList.add(price);
 				}

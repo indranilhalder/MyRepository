@@ -59,6 +59,7 @@
 
 <!-- TISPT-325 ENDS -->
 
+
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
 <link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
 <link rel="android-touch-icon" href="${themeResourcePath}/images/Appicon.png" />
@@ -124,6 +125,7 @@
 	    </c:when>
 	</c:choose> --%>
 	
+	
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.handle')" var="twitterHandle"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
@@ -146,7 +148,21 @@
 	<!-- FB Open Graph data -->
 	<meta property="og:title" content="${metaTitle}" />
 	<meta property="og:url" content="${canonical}" />
+	
+	
+	<!-- TPR-514-OG tag chnages on PDP pages-->
+	<c:choose>
+	<c:when test="${fn:contains(reqURI,'/p-')}">	
+	<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" end="0">
+	<meta property="og:image" content="${container.thumbnail.url}" />
+	</c:forEach>	
+	</c:when>
+	<c:otherwise>
 	<meta property="og:image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}" />
+	</c:otherwise>
+	</c:choose>
+	
+	
 	<meta property="og:description" content="${metaDescription}" />
 	<meta property="og:site_name" content="${siteName}" />
 	
