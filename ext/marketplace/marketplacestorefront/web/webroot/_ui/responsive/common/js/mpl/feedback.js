@@ -1818,3 +1818,21 @@ function callGigyaWhenNotMinified(){
 }
 
 /* Changes for TISPT-203 ends  */
+
+/*Filter scroll changes start*/
+$(window).on("scroll",function(){
+	if($(window).width() > 650 && $('.listing.wrapper .right-block').height() > $('.listing.wrapper .left-block').height()) {
+		if($(window).scrollTop() >  $('.listing.wrapper .left-block').height() - $('.listing.wrapper .left-block').offset().top ){
+			$('.listing.wrapper .left-block,.listing.wrapper .right-block').addClass("fixed");
+		} else {
+			$('.listing.wrapper .left-block,.listing.wrapper .right-block').removeClass("fixed");
+		}
+		
+		if ($(window).scrollTop() >  $('.listing.wrapper .right-block').height() - $('.listing.wrapper .right-block').offset().top - 100) {
+			$('.listing.wrapper .left-block').removeClass("fixed").addClass("bot");
+		} else {
+			$('.listing.wrapper .left-block').removeClass("bot");
+		}
+	}
+});
+/*Filter scroll changes end*/

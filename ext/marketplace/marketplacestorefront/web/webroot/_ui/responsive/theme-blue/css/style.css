@@ -41344,3 +41344,21 @@ bottom:35px;
 .home-best-pick-carousel.owl-theme .owl-controls,
 #ia_products_hot_list.owl-theme .owl-controls {top: 38%;margin: 0;}
 /*Upgraded Owl carousel CSS ends*/
+/*Filter scroll changes start*/
+.listing.wrapper .left-block.bot {
+position: absolute;
+bottom: 100px;
+} 
+.listing.wrapper .left-block.fixed {
+position: fixed;
+bottom: 5px;
+}
+.listing.wrapper .right-block.fixed {
+margin-left: 20%;
+}
+@media (max-width: 790px) {
+	.listing.wrapper .right-block.fixed {
+	margin-left: 30%;
+	}
+}
+/*Filter scroll changes end*/
