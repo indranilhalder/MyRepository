@@ -41347,7 +41347,7 @@ bottom:35px;
 #ia_products_hot_list.owl-theme .owl-controls {top: 38%;margin: 0;}
 /*Upgraded Owl carousel CSS ends*/
 /*Filter scroll changes start*/
-.listing.wrapper .left-block.bot {
+/*.listing.wrapper .left-block.bot {
 position: absolute;
 bottom: 100px;
 } 
@@ -41362,9 +41362,9 @@ margin-left: 20%;
 	.listing.wrapper .right-block.fixed {
 	margin-left: 30%;
 	}
-	header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 .words{
+	/* header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 .words{
 	display:none;}
 	header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 > ul.words .short a{
 	display:block;}
-}
+} */
 /*Filter scroll changes end*/
