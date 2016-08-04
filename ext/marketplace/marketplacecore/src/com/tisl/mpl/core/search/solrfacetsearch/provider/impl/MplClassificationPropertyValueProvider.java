@@ -4,6 +4,7 @@
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 import de.hybris.platform.catalog.jalo.classification.ClassAttributeAssignment;
+import de.hybris.platform.catalog.jalo.classification.ClassificationAttribute;
 import de.hybris.platform.catalog.jalo.classification.ClassificationAttributeValue;
 import de.hybris.platform.catalog.jalo.classification.util.Feature;
 import de.hybris.platform.catalog.jalo.classification.util.FeatureContainer;
@@ -122,19 +123,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 								}
 								//Added for Tata-24 END :::
 
-
-								//								List featureValues = feature.getValues();
-								//								for(Object value: featureValues){
-								//									if("multipack".equals(indexedProperty.getName())){
-								//										String featureValue=(String)value;
-								//										if(!"yes".equals(featureValue)){
-								//											break;
-								//										}
-								//									}
-								//								}
-
 								final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
-								if ("multipack".equals(indexedProperty.getName()))
+								if ("multipack".equalsIgnoreCase(indexedProperty.getName()))
 								{
 									for (final FieldValue fieldValue : temp)
 									{
@@ -145,6 +135,37 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 											temp.remove(fieldValue);
 										}
 									}
+								}
+								/*
+								 * MDD Requirement Here: Features ==> This facet will mainly use the attribute
+								 * specialfeatureswatches (PIM_WATCH_028) from the MDD and use all LOVs from this attribute on
+								 * the UI. In addition, if the attribute waterresistancewatches (PIM_WATCH_011) is present and
+								 * set to a value more than 50m then an additional LOV called “Water Resistant” must be added to
+								 * the LOV for this facet automatically.
+								 */
+								if ("features".equalsIgnoreCase(indexedProperty.getName()))
+								{
+									final ClassificationAttribute attribute = classAttributeAssignment.getClassificationAttribute();
+									final String classificationAttrCode = attribute != null && StringUtils.isNotEmpty(attribute.getCode()) ? attribute
+											.getCode() : "";
+
+									if ("waterresistancewatches".equalsIgnoreCase(classificationAttrCode))
+									{
+										FieldValue newValue = null;
+										for (final FieldValue fieldValue : temp)
+										{
+											final String valueStr = (String) fieldValue.getValue();
+											final long value = Long.parseLong(valueStr);
+											if (Long.compare(value, 50) > 0)
+											{
+												newValue = new FieldValue(fieldValue.getFieldName(), "Water Resistant");
+												temp.remove(fieldValue);
+												temp.add(newValue);
+												break;
+											}
+										}
+									}
+
 								}
 								fieldValues.addAll(temp);
 

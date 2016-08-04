@@ -142,8 +142,9 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;weight						       ;"Weight"
  ;$solrIndexedType		   ;wireless						   ;"Wireless"
  ;$solrIndexedType		   ;hatcaptype						   ;"Hat/Cap Type"
- 
- 
+ ;$solrIndexedType		   ;material						   ;"Strap Material"
+ ;$solrIndexedType		   ;straptype						   ;"Strap Type"
+ ;$solrIndexedType		   ;features						   ;"Features"
  
 # Define the available sorts
 #release2 changes for serp header
