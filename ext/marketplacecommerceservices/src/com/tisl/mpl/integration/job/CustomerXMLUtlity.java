@@ -278,14 +278,18 @@ public class CustomerXMLUtlity
 					//TISPRD-4370 fix .. creating MarketplacePreference for the customer who does't have
 					if (customer.getMarketplacepreference() == null)
 					{
-						final MarketplacePreferenceModel mplPreferenceModel = modelService.create(MarketplacePreferenceModel.class);
-						mplPreferenceModel.setIsInterestedInEmail(Boolean.TRUE);
-						customer.setMarketplacepreference(mplPreferenceModel);
-						modelService.save(customer);
+						try
+						{
+							final MarketplacePreferenceModel mplPreferenceModel = modelService.create(MarketplacePreferenceModel.class);
+							mplPreferenceModel.setIsInterestedInEmail(Boolean.TRUE);
+							customer.setMarketplacepreference(mplPreferenceModel);
+							modelService.save(customer);
+						}
+						catch (final Exception e)
+						{
+							LOG.info("MODEL CREATE OR SAVING EXCEPTION:  " + e);
+						}
 					}
-
-
-
 
 					//TISUAT-4755
 					if (customer.getMarketplacepreference() != null)
