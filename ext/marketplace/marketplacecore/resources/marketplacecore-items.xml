@@ -5627,7 +5627,13 @@
 
 			<itemtype code="SolrIndexedProperty" autocreate="false"
 				generate="true">
-				<attributes>
+				<attributes>				
+				   <attribute qualifier="boostDouble" type="java.lang.Double">
+						<description>Relevance of the property in search</description>
+						<persistence type="property" />
+						<modifiers initial="true" read="true" write="true"
+							search="true" optional="true" />
+					</attribute>				
 					<attribute qualifier="boost" type="java.lang.Integer">
 						<description>Relevance of the property in search</description>
 						<persistence type="property" />

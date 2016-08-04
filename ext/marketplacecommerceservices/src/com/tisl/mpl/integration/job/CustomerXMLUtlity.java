@@ -109,6 +109,9 @@ public class CustomerXMLUtlity
 					}
 					xmlString = stringWriter.toString();
 					LOG.debug(xmlString);
+					final SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmmss");
+					final Date curDate = new Date();
+					final String strDate = sdf.format(curDate);
 					final String folderPath = configurationService.getConfiguration().getString("customerMaster.batchJob.folder.path");
 					/** Create directory if not present */
 					createDirectoryIfNeeded(folderPath);
@@ -116,7 +119,8 @@ public class CustomerXMLUtlity
 					 * FileName is being fetched from local.properties file and changes might be required if we need to add
 					 * timestamp to file names.
 					 */
-					final String fileName = configurationService.getConfiguration().getString("customerMaster.batchJob.fileName");
+					String fileName = configurationService.getConfiguration().getString("customerMaster.batchJob.fileName");
+					fileName = strDate + fileName;
 					final File xmlfile = new File(folderPath + fileName);
 					xmlfile.setReadable(true);
 					//	xmlfile.setWritable(true);
@@ -445,7 +449,16 @@ public class CustomerXMLUtlity
 				}
 				if (StringUtils.isNotEmpty(addressModel.getPostalcode()))
 				{
-					customerAddress.setPincode(Long.valueOf(addressModel.getPostalcode()));
+					try
+					{
+						customerAddress.setPincode(Long.valueOf(addressModel.getPostalcode()));
+					}
+					catch (final Exception e)
+					{
+						LOG.debug("*****address state error skip pincode********");
+						//continue;
+					}
+
 				}
 
 				if (StringUtils.isNotEmpty(addressModel.getDistrict()))
