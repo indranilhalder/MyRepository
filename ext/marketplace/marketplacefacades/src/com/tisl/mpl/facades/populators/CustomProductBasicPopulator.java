@@ -72,7 +72,6 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 
 	private static int seoTitleLimit = 100;
 	private static int seoDescLimit = 200;
-	private static int seoKeywordLimit = 200;
 
 	/**
 	 * @param configurationService
@@ -274,6 +273,7 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 	private void populateSEOContent(final List<SeoContentModel> seoContents, final ProductModel productModel,
 			final ProductData productData)
 	{
+		// TISPRD-4335
 		seoTitleLimit = Integer.parseInt(configurationService.getConfiguration().getString("seo.title.limit",
 				String.valueOf(seoTitleLimit)));
 		seoDescLimit = Integer.parseInt(configurationService.getConfiguration().getString("seo.desc.limit",
