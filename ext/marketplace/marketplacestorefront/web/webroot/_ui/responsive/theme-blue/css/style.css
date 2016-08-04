@@ -41344,3 +41344,30 @@ bottom:35px;
 .home-best-pick-carousel.owl-theme .owl-controls,
 #ia_products_hot_list.owl-theme .owl-controls {top: 38%;margin: 0;}
 /*Upgraded Owl carousel CSS ends*/
+  
+  
+   #customPriceFilter{
+     margin-bottom: 5px;}
+
+   #customPriceFilter .minPriceSearchTxt{
+    width: 39%;
+    height: auto;
+    padding: 4px 5px;
+    }
+   #customPriceFilter .maxPriceSearchTxt{
+    width: 40%;
+    height: auto;
+    padding: 4px 3px;
+   }
+   #customPriceFilter #applyCustomPriceFilter{
+   padding: 5px 4px;
+    height: auto;
+    background: #a9143c;
+    color: #fff;
+    border: none;
+   }
+    #customPriceFilter span{
+  color:#dfd1d5;
+   }
+   .listing-leftmenu .Price h4:after{
+   content:none;}
