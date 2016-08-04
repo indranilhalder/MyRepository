@@ -278,13 +278,9 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 				String.valueOf(seoTitleLimit)));
 		seoDescLimit = Integer.parseInt(configurationService.getConfiguration().getString("seo.desc.limit",
 				String.valueOf(seoDescLimit)));
-		seoKeywordLimit = Integer.parseInt(configurationService.getConfiguration().getString("seo.keywrd.limit",
-				String.valueOf(seoKeywordLimit)));
-		final String seoKeywordEmpty = "";
 		final StringBuilder seoMetaTitle = new StringBuilder(200);
 		if (null != seoContents && !(seoContents.isEmpty()))
 		{
-			//TISPRD-4335
 			final SeoContentModel seoContentModel = seoContents.get(seoContents.size() - 1);
 			if (null != seoContentModel.getSeoMetaTitle())
 			{
@@ -299,8 +295,8 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 					seoMetaTitle.append((String) getProductAttribute(productModel, ProductModel.TITLE));
 				}
 			}
-			//seoMetaTitle.append(MarketplaceFacadesConstants.SPACE);
-			//seoMetaTitle.append((String) getProductAttribute(productModel, ProductModel.CODE));
+			//			seoMetaTitle.append(MarketplaceFacadesConstants.SPACE);
+			//			seoMetaTitle.append((String) getProductAttribute(productModel, ProductModel.CODE));
 			// Sonar Major This is an inefficient use of StringBuffer.toString; call StringBuffer.length instead.
 			//if (seoMetaTitle.toString().length() > seoTitleLimit)
 			if (seoMetaTitle.length() > seoTitleLimit)
@@ -343,23 +339,6 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 					}
 				}
 			}
-			if (null != seoContentModel.getSeoMetaKeyword())
-			{
-				//Populating keyword from SeoMetaDescription
-				final String seoKeyword = seoContentModel.getSeoMetaKeyword();
-				if (seoKeyword.length() > seoKeywordLimit)
-				{
-					productData.setSeoMetaKeyword(seoKeyword.substring(0, seoKeywordLimit - 1));
-				}
-				else
-				{
-					productData.setSeoMetaKeyword(seoKeywordEmpty);
-				}
-			}
-			else
-			{
-				productData.setSeoMetaKeyword(seoKeywordEmpty);
-			}
 		}
 		else
 		{
@@ -391,7 +370,7 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 					productData.setSeoMetaDescription((String) getProductAttribute(productModel, ProductModel.ARTICLEDESCRIPTION));
 				}
 			}
-			productData.setSeoMetaKeyword(seoKeywordEmpty);
 		}
+
 	}
 }
