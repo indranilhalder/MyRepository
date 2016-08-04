@@ -29331,7 +29331,7 @@ height:80px;
     background: #FBFBFB;
     overflow: hidden;
     clear:both;
-    margin:20px 0;
+    margin:20px 0 0;
 }
 .showcase h1 {
     text-align: center;
@@ -31917,7 +31917,7 @@ background-color: transparent;
     font-size: 12px;
     text-align: center;
     font-weight: bold;
-    margin: 3px 0 40px;
+    margin: 3px 0 50px;
 }
 p.showcase-para {
     width: 70%;
@@ -32410,7 +32410,7 @@ body.page-homepage .trending{
 	margin-bottom:30px;
 }
 #newAndExclusive a.new_exclusive_viewAll{
-	bottom:22px;
+	bottom:6px;
 }
 .showcase-heading {
     padding-bottom: 15px;
