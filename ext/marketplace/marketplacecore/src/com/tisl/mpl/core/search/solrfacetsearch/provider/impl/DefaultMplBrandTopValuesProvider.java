@@ -46,7 +46,11 @@ public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 
 		if (facets != null)
 		{
-			topFacetCount = Integer.parseInt(configurationService.getConfiguration().getString("search.Facet.topValue"));
+			//topFacetCount = Integer.parseInt(configurationService.getConfiguration().getString("search.Facet.topValue"));
+			if (indexedProperty != null && indexedProperty.getFacetTopValue() != null)
+			{
+				topFacetCount = indexedProperty.getFacetTopValue().intValue();
+			}
 
 			for (final FacetValue facetValue : facets)
 			{

@@ -57,5 +57,10 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 
 		}
 
+		if (source.getFacetTopValue() != null)
+		{
+			target.setFacetTopValue(source.getFacetTopValue());
+		}
+
 	}
 }
