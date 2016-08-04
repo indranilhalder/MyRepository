@@ -29,13 +29,16 @@ $(document).ready(function () {
 	            			class: 'toggle',
 	            		    text: 'Shop '+lastSegment
 	            		}).appendTo('#shopMicrositeSeller');
+	        			jQuery('<span/>', {
+	            		    id: 'mobile-menu-toggle'
+	            		}).appendTo('#shopMicrositeSeller');
 	            		jQuery('<ul/>', {
 	            		    id: 'topul'
 	            		}).appendTo('#shopMicrositeSeller');
 	            		$container = $('#topul');
 	            			if(secondLevelCategoryData.subCategories!=null){
 	            				$.each(secondLevelCategoryData.subCategories, function(i, v) {
-	            					$container.append('<li class="level1"><div class="toggle" ><a href= "'+siteName+'' + v.url + '">'+v.name+'</a></div><ul class="words words'+v.code+'"><li><a href="'+siteName+'' + v.url + '" class="view_dept">View '+v.name+' </a></li></ul>');
+	            					$container.append('<li class="level1"><div class="toggle" ><a href= "'+siteName+'' + v.url + '">'+v.name+'</a><span id="mobile-menu-toggle"></span></div><ul class="words words'+v.code+'"><li><a href="'+siteName+'' + v.url + '" class="view_dept">View '+v.name+' </a></li></ul>');
 	            					if(v.subCategories!=null){
 	    	        		 			$.each(v.subCategories, function(j, v1) {	
 	    	        		 				$( "ul.words"+v.code).append('<li class="short words"><div class="toggle"><a href="'+siteName+''+v1.url+'" style="">'+v1.name+'</a></div></li>');
@@ -63,19 +66,19 @@ $(document).ready(function () {
 			 
 			 });
 	        
-	        $("#shopMicrositeSeller").on("click",".toggle", function(e){
+	        /* $("#shopMicrositeSeller").on("click",".toggle", function(e){
 	        	  var p = $(e.currentTarget).parent();
 	        			    if(p.hasClass('active')) {
 	        			      p.removeClass('active');
 	        			    } else {
 	        			      p.addClass('active');
 	        			    }
-	        	});
+	        	}); */
 	    	if ('ontouchstart' in window) {
 		 		$("body").on("click","header.brand-header .content .bottom nav>ul>li>ul>li.level1>div.toggle>a", function(){
 		 			$(this).attr("href","#");
 		 		});
 				}
-	
+	    	
 	});
 	</script>	

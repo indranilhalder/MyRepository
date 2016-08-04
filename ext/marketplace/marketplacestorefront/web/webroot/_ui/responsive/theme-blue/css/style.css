@@ -31236,6 +31236,8 @@ img.r2-app-brand-img {
 	.r2-landing-banner:last-child h1, .r2-app-landing article li {
 		text-align: left;
 	}
+	.owl-carousel, .feature-categories .carousel{
+	padding: 0 40px;}
 }
 
 @media ( max-width : 790px) {
@@ -32014,7 +32016,7 @@ p.showcase-para {
     padding: 0;
 }
 #bestPicks .owl-controls,#productYouCare .owl-controls,#new_exclusive .owl-controls,#brandsYouLove .bulprev, #brandsYouLove .bulnext ,#brandsYouLove .owl-controls,
- .trending .owl-controls,.visuallySimilarItems .owl-controls {
+ .trending .owl-controls,.visuallySimilarItems .owl-controls, .owl-controls {
     display: none !important;
 }
 .slider.product .frame .overflow{
@@ -41360,5 +41362,9 @@ margin-left: 20%;
 	.listing.wrapper .right-block.fixed {
 	margin-left: 30%;
 	}
+	header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 .words{
+	display:none;}
+	header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 > ul.words .short a{
+	display:block;}
 }
 /*Filter scroll changes end*/
