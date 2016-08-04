@@ -1077,7 +1077,7 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 
 //END AJAX
 		
-	},
+	},	
 	
 	scrollForTransientCart: function ()
 	{
@@ -1090,3 +1090,12 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 		
 	}
 };
+
+
+
+	
+
+
+
+
+
