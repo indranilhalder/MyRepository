@@ -10,6 +10,7 @@ import de.hybris.platform.core.enums.Gender;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.FrequenciesModel;
+import com.tisl.mpl.core.model.MarketplacePreferenceModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.AccountAddressService;
@@ -55,6 +57,9 @@ public class CustomerXMLUtlity
 {
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(CustomerXMLUtlity.class.getName());
+
+	@Autowired
+	ModelService modelService;
 
 	@Autowired
 	private AccountAddressService accountAddressService;
@@ -269,6 +274,19 @@ public class CustomerXMLUtlity
 					}
 					/** get Customer address starts here **/
 					LOG.debug("Customer Preference started");
+
+					//TISPRD-4370 fix .. creating MarketplacePreference for the customer who does't have
+					if (customer.getMarketplacepreference() == null)
+					{
+						final MarketplacePreferenceModel mplPreferenceModel = modelService.create(MarketplacePreferenceModel.class);
+						mplPreferenceModel.setIsInterestedInEmail(Boolean.TRUE);
+						customer.setMarketplacepreference(mplPreferenceModel);
+						modelService.save(customer);
+					}
+
+
+
+
 					//TISUAT-4755
 					if (customer.getMarketplacepreference() != null)
 					{
@@ -322,6 +340,8 @@ public class CustomerXMLUtlity
 						customerCreateUpdate.setSubscription(subscription);
 
 					}
+
+
 
 					/** get Customer address starts here **/
 					//customerAddressList = customerCreateUpdate.getAddresses();
