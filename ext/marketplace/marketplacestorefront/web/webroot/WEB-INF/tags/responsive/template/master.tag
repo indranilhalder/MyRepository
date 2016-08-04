@@ -21,17 +21,7 @@
 <html lang="${currentLanguage.isocode}">
 <head>
 	<title>
-	<%--(TPR-243) SEO Meta Tags and Titles--%>
-	<c:choose>
-		<c:when test="${isCategoryPage}">
-		 ${metaPageTitle}
-		</c:when>
-		<c:otherwise>
-			 ${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
-		</c:otherwise>
-	</c:choose>	
-		
-	
+	${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
 	</title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">
