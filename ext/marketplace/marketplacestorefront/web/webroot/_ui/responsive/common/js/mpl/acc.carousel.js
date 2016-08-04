@@ -66,11 +66,20 @@ ACC.carousel = {
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
             				items:2,
             				stagePadding: 50,
-            			},			
-            			// breakpoint from 650 up
-            			650 : {
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
             				items:4,
             			}			
             		}	
@@ -199,11 +208,20 @@ ACC.carousel = {
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
             				items:2,
             				stagePadding: 50,
-            			},			
-            			// breakpoint from 650 up
-            			650 : {
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
             				items:4,
             			}			
             		}	
@@ -263,11 +281,20 @@ ACC.carousel = {
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
             				items:2,
             				stagePadding: 50,
-            			},			
-            			// breakpoint from 650 up
-            			650 : {
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
             				items:4,
             			}			
             		}	
@@ -293,11 +320,20 @@ ACC.carousel = {
     		responsive : {
     			// breakpoint from 0 up
     			0 : {
+    				items:1,
+    				stagePadding: 50,
+    			},
+    			// breakpoint from 480 up
+    			480 : {
     				items:2,
     				stagePadding: 50,
-    			},			
-    			// breakpoint from 650 up
-    			650 : {
+    			},
+    			// breakpoint from 768 up
+    			768 : {
+    				items:3,
+    			},
+    			// breakpoint from 768 up
+    			1280 : {
     				items:6,
     			}			
     		}	
@@ -323,11 +359,20 @@ ACC.carousel = {
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
             				items:2,
             				stagePadding: 50,
-            			},			
-            			// breakpoint from 650 up
-            			650 : {
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
             				items:4,
             			}			
             		}	
@@ -356,11 +401,20 @@ ACC.carousel = {
     		responsive : {
     			// breakpoint from 0 up
     			0 : {
+    				items:1,
+    				stagePadding: 50,
+    			},
+    			// breakpoint from 480 up
+    			480 : {
     				items:2,
     				stagePadding: 50,
-    			},			
-    			// breakpoint from 650 up
-    			650 : {
+    			},
+    			// breakpoint from 768 up
+    			768 : {
+    				items:3,
+    			},
+    			// breakpoint from 768 up
+    			1280 : {
     				items:5,
     			}			
     		}	
