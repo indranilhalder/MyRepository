@@ -331,23 +331,6 @@ function getBrandsYouLoveAjaxCall() {
                     }
                     count++;
                 });
-                $.each(response.subComponents, function(k, v) {
-                    //console.log(v.brandLogoUrl);
-                	
-                    if (!v.showByDefault) {
-                        renderHtml +=
-                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
-                            v.compId + "'><img src='" + v.brandLogoUrl +
-                            "'></img></div>";
-                    } else {
-                        renderHtml +=
-                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
-                            v.compId + "'><img src='" + v.brandLogoUrl +
-                            "'></img></div>";
-                        defaultComponentId = v.compId;
-                    }
-                    count++;
-                });
                 renderHtml += "</div>";
                 $('#brandsYouLove').html(renderHtml);
                 getBrandsYouLoveContentAjaxCall(defaultComponentId);
