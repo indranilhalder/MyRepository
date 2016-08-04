@@ -107,6 +107,7 @@ function navigateToPage(queryString,textString)
 			
 				</div>
 		</c:if>
+		
 		</div>
 
 		<div class="facet-values js-facet-values js-facet-form ">
@@ -495,22 +496,27 @@ function navigateToPage(queryString,textString)
 			<c:if test="${not empty facetData.topValues}">
 			
 			<c:set var="remainingFacetValues" value="${facetData.values}" />
-	
-		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-8}" />
+			
+	        <%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('search.Facet.topValue')" var="facetTopValue"/> --%>
+	        <c:set var="facetTopValues" value="${facetData.topValues}" />
+	        
+		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-fn:length(facetTopValues)}" />
 		    
 			<div class="more-lessFacetLinks active">
 				<div class="more js-more-facet-values checkbox-menu">
+				
 				<c:choose>
 				<c:when test="${facetData.code eq 'colour'}" >
 				<a href="#" class="js-more-facet-values-link more" >+&nbsp;${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
 				
 				</c:when>
 				<c:otherwise>
-					<a href="#" class="js-more-facet-values-link more" >${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
+					<a href="#" class="js-more-facet-values-link more" >+&nbsp;${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" text="more" /></a>
 				</c:otherwise>
 				</c:choose>
 				
 				</div>
+				
 				<div class="less js-less-facet-values checkbox-menu">
 				    	<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
@@ -540,6 +546,28 @@ function navigateToPage(queryString,textString)
 									<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 									<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 							</form>
+		</c:if>
+		<c:if test="${facetData.code eq 'price'}">	
+			<h4>Price Range</h4>
+							<input type="hidden" name="currentPriceQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentPriceQueryParams"/>					  
+							 <form action="" method="get" id="customPriceFilter">
+							    <input type="hidden" name="offer" value="${offer}"/>
+							    <input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="" class="qValueForCustomPrice"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>		
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>	
+								<input type="hidden" name="isFacet" value="true"/>							
+								<input type="hidden" id="facetValue" name="facetValue" value="${facetValue.code}"/>						
+								<spring:theme code="text.minPriceSearch.placeholder" var="minPriceSearchPlaceholder" />
+							    <input class="minPriceSearchTxt" type="text" id="customMinPrice" name="customMinPrice" width="30" height="20" placeholder="${minPriceSearchPlaceholder}" onkeypress="return isNumber(event)">							
+							    <spring:theme code="text.maxPriceSearch.placeholder" var="maxPriceSearchPlaceholder" />
+							    <span>-</span>
+							    <input class="maxPriceSearchTxt" type="text" id="customMaxPrice" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}" onkeypress="return isNumber(event)">
+							   
+								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>	
+										
+								
+							</form>							
 		</c:if>
 		
 		
