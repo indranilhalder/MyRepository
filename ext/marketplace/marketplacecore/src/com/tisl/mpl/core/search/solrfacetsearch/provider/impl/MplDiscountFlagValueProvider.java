@@ -26,7 +26,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.BuyBoxModel;
-import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.util.MplBuyBoxUtility;
 
@@ -84,10 +83,10 @@ public class MplDiscountFlagValueProvider extends AbstractPropertyFieldValueProv
 			final Object model) throws FieldValueProviderException, EtailNonBusinessExceptions
 	{
 
-		if (model instanceof PcmProductVariantModel)
+		if (model instanceof ProductModel)
 		{
 			//Model should be instance of PcmProductVariantModel
-			final PcmProductVariantModel product = (PcmProductVariantModel) model;
+			final ProductModel product = (ProductModel) model;
 			final Double value = getDiscountPrice(product);
 
 			if (null != value)
@@ -200,10 +199,10 @@ public class MplDiscountFlagValueProvider extends AbstractPropertyFieldValueProv
 	 * @param product
 	 * @return buyboxwinner price
 	 */
-	public BuyBoxModel getBuyBoxPrice(final ProductModel productModel)
-	{
-		final BuyBoxModel seller = mplBuyBoxUtility.getLeastPriceBuyBoxModel(productModel);
-		return seller;
-	}
+	//	public BuyBoxModel getBuyBoxPrice(final ProductModel productModel)
+	//	{
+	//		final BuyBoxModel seller = mplBuyBoxUtility.getLeastPriceBuyBoxModel(productModel);
+	//		return seller;
+	//	}
 
 }
