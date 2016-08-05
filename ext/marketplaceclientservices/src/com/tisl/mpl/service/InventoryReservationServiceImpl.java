@@ -120,16 +120,22 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 					reqObj.setQuantity(cartObj.getQuantity().toString());
 				}
 				// Added code for Inventory Reservation Request change
-				if((null!= cartObj.getServiceableSlaves() && cartObj.getServiceableSlaves().size()>0) ){
+				if ((null != cartObj.getServiceableSlaves() && cartObj.getServiceableSlaves().size() > 0))
+				{
 					reqObj.setServiceableSlaves(populateServiceableSlaves(cartObj.getServiceableSlaves()));
 				}
-			// Added code for Inventory Reservation Request change
-				if((null!= cartObj.getCncServiceableSlaves() && cartObj.getCncServiceableSlaves().size()>0) ){
-					List<ServiceableSlavesDTO> serviceableSlavesDTOList=new ArrayList<ServiceableSlavesDTO>();
-					for(CNCServiceableSlavesData data:cartObj.getCncServiceableSlaves()){
-						serviceableSlavesDTOList=populateServiceableSlaves(data.getServiceableSlaves());
-					} 
-					reqObj.setServiceableSlaves(serviceableSlavesDTOList);
+				// Added code for Inventory Reservation Request change
+				if (cartObj.getDeliveryMode().equalsIgnoreCase(MarketplacecclientservicesConstants.CNC))
+				{
+					if ((null != cartObj.getCncServiceableSlaves() && cartObj.getCncServiceableSlaves().size() > 0))
+					{
+						List<ServiceableSlavesDTO> serviceableSlavesDTOList = new ArrayList<ServiceableSlavesDTO>();
+						for (final CNCServiceableSlavesData data : cartObj.getCncServiceableSlaves())
+						{
+							serviceableSlavesDTOList = populateServiceableSlaves(data.getServiceableSlaves());
+						}
+						reqObj.setServiceableSlaves(serviceableSlavesDTOList);
+					}
 				}
 				if (reqObj.getIsAFreebie() != null && reqObj.getIsAFreebie().equals("Y"))
 				{
