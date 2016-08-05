@@ -151,9 +151,6 @@ import com.tisl.mpl.wsdto.PinCodeDeliveryModeResponse;
 import com.tisl.mpl.wsdto.ReservationItemWsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 import com.tisl.mpl.wsdto.ServiceableSlavesDTO;
-import com.tisl.mpl.wsdto.StoreLocatorAtsResponse;
-import com.tisl.mpl.wsdto.StoreLocatorAtsResponseObject;
-import com.tisl.mpl.wsdto.StoreLocatorResponseItem;
 
 
 
@@ -191,7 +188,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	@Resource(name = "baseSiteService")
 	private BaseSiteService baseSiteService;
-	
+
 	@Autowired
 	private SessionService sessionService;
 
@@ -788,15 +785,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc : used to fetch delivery mode description details TISEE-950
-	 * 
+	 *
 	 * @param ussId
-	 * 
+	 *
 	 * @param deliveryMode
-	 * 
+	 *
 	 * @param startTime
-	 * 
+	 *
 	 * @param endTime
-	 * 
+	 *
 	 * @return String
 	 */
 
@@ -1217,11 +1214,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc checking wishlist entry is valid or not , delisted , end date , online from TISEE-5185
-	 * 
+	 *
 	 * @param wishlistEntryModel
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1268,11 +1265,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 * 
+	 *
 	 * @param sortedWishListMap
-	 * 
+	 *
 	 * @return List<PincodeServiceData>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestData(
@@ -1381,11 +1378,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 * 
+	 *
 	 * @param sortedWishListMap
-	 * 
+	 *
 	 * @return List<PincodeServiceData>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestDataMobile(final Wishlist2EntryModel wishlist2EntryModel)
@@ -1969,29 +1966,34 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								{
 									data.setIsCOD(Boolean.FALSE);
 								}
-								
-								if (deliveryMode.getFulfillmentType() != null){
+
+								if (deliveryMode.getFulfillmentType() != null)
+								{
 									data.setFulfilmentType(deliveryMode.getFulfillmentType());
 								}
-								
-								if(null != deliveryMode.getServiceableSlaves() && deliveryMode.getServiceableSlaves().size()>0){
-								 data.setServiceableSlaves(populatePincodeServiceableData(deliveryMode.getServiceableSlaves()));
+
+								if (null != deliveryMode.getServiceableSlaves() && deliveryMode.getServiceableSlaves().size() > 0)
+								{
+									data.setServiceableSlaves(populatePincodeServiceableData(deliveryMode.getServiceableSlaves()));
 								}
-								
-								if(null != deliveryMode.getCNCServiceableSlaves() && deliveryMode.getCNCServiceableSlaves().size()>0){
-									List<CNCServiceableSlavesData> cncServiceableSlavesDataList = new ArrayList<CNCServiceableSlavesData>();
-									CNCServiceableSlavesData cncServiceableSlavesData =null;
-								 for(CNCServiceableSlavesWsDTO dto:deliveryMode.getCNCServiceableSlaves()){
-									 cncServiceableSlavesData =new CNCServiceableSlavesData();
-									 cncServiceableSlavesData.setStoreId(dto.getStoreId());
-									 cncServiceableSlavesData.setQty(dto.getQty());
-									 cncServiceableSlavesData.setFulfillmentType(dto.getFulfillmentType());
-									 cncServiceableSlavesData.setServiceableSlaves(populatePincodeServiceableData(dto.getServiceableSlaves()));
-									 cncServiceableSlavesDataList.add(cncServiceableSlavesData);
-								 }
-								 data.setCNCServiceableSlavesData(cncServiceableSlavesDataList);
+
+								if (null != deliveryMode.getCNCServiceableSlaves() && deliveryMode.getCNCServiceableSlaves().size() > 0)
+								{
+									final List<CNCServiceableSlavesData> cncServiceableSlavesDataList = new ArrayList<CNCServiceableSlavesData>();
+									CNCServiceableSlavesData cncServiceableSlavesData = null;
+									for (final CNCServiceableSlavesWsDTO dto : deliveryMode.getCNCServiceableSlaves())
+									{
+										cncServiceableSlavesData = new CNCServiceableSlavesData();
+										cncServiceableSlavesData.setStoreId(dto.getStoreId());
+										cncServiceableSlavesData.setQty(dto.getQty());
+										cncServiceableSlavesData.setFulfillmentType(dto.getFulfillmentType());
+										cncServiceableSlavesData.setServiceableSlaves(populatePincodeServiceableData(dto
+												.getServiceableSlaves()));
+										cncServiceableSlavesDataList.add(cncServiceableSlavesData);
+									}
+									data.setCNCServiceableSlavesData(cncServiceableSlavesDataList);
 								}
-								
+
 								deliveryDataList.add(data);
 								//	}
 								responseData.setValidDeliveryModes(deliveryDataList);
@@ -2045,21 +2047,24 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return responseList;
 	}
 
-	
-	private List<ServiceableSlavesData> populatePincodeServiceableData(List<ServiceableSlavesDTO> serviceableSlavesDTOList){
-		
-		List<ServiceableSlavesData> serviceableSlavesDataList = new ArrayList<ServiceableSlavesData>();
-		 ServiceableSlavesData serviceableSlavesData =null;
-	 for(ServiceableSlavesDTO dto:serviceableSlavesDTOList){
-		  serviceableSlavesData =new ServiceableSlavesData();
-		  serviceableSlavesData.setSlaveId(dto.getSlaveId());
-		  serviceableSlavesData.setLogisticsID(dto.getLogisticsID());
-		  serviceableSlavesData.setPriority(dto.getPriority());
-		  serviceableSlavesData.setCodEligible(dto.getCODEligible());
-		  serviceableSlavesDataList.add(serviceableSlavesData);
-	 }
+
+	private List<ServiceableSlavesData> populatePincodeServiceableData(final List<ServiceableSlavesDTO> serviceableSlavesDTOList)
+	{
+
+		final List<ServiceableSlavesData> serviceableSlavesDataList = new ArrayList<ServiceableSlavesData>();
+		ServiceableSlavesData serviceableSlavesData = null;
+		for (final ServiceableSlavesDTO dto : serviceableSlavesDTOList)
+		{
+			serviceableSlavesData = new ServiceableSlavesData();
+			serviceableSlavesData.setSlaveId(dto.getSlaveId());
+			serviceableSlavesData.setLogisticsID(dto.getLogisticsID());
+			serviceableSlavesData.setPriority(dto.getPriority());
+			serviceableSlavesData.setCodEligible(dto.getCODEligible());
+			serviceableSlavesDataList.add(serviceableSlavesData);
+		}
 		return serviceableSlavesDataList;
 	}
+
 	/**
 	 * @desc Method used to invoke pincode serviceability check as part of OMS fallback PLAN C
 	 * @param pincode
@@ -2303,13 +2308,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc fetching reservation details
-	 * 
+	 *
 	 * @param cartId
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @param pincode
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2403,11 +2408,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc converting response to dto
-	 * 
+	 *
 	 * @param inventoryReservListResponse
-	 * 
+	 *
 	 * @return List<ReservationItemWsDTO>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<ReservationItemWsDTO> converter(final InventoryReservListResponse inventoryReservListResponse)
@@ -2444,11 +2449,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc populating data for soft reservation
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return List<CartSoftReservationData>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public List<CartSoftReservationData> populateDataForSoftReservation(final CartData cartData) throws EtailNonBusinessExceptions
@@ -2521,13 +2526,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
-	 * 
+	 *
 	 * @param userModel
-	 * 
+	 *
 	 * @param pincode
-	 * 
+	 *
 	 * @return GetWishListWsDTO
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -2601,9 +2606,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @param sortedWishListMap
-	 * 
+	 *
 	 * @return GetWishListWsDTO
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private GetWishListWsDTO getWishListWebserviceDetails(final Map<String, List<Wishlist2EntryModel>> sortedWishListMap,
@@ -2841,13 +2846,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc For webservice
-	 * 
+	 *
 	 * @param buyBoxModelList
-	 * 
+	 *
 	 * @param getWishListProductWsObj
-	 * 
+	 *
 	 * @return GetWishListProductWsDTO
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -2876,11 +2881,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc For webservice
-	 * 
+	 *
 	 * @param wishlist2EntryModel
-	 * 
+	 *
 	 * @param getWishListProductWsObj
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private GetWishListProductWsDTO setWSWishlistEligibleDeliveryMode(final Wishlist2EntryModel wishlist2EntryModel,
@@ -3007,13 +3012,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 * 
+	 *
 	 * @param deliveryModeMap
-	 * 
+	 *
 	 * @param pincodeResponseData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3305,11 +3310,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc fetching state details for a state name
-	 * 
+	 *
 	 * @param stateName
-	 * 
+	 *
 	 * @return StateModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -3334,9 +3339,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Sub order id
-	 * 
+	 *
 	 * @return String
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3347,9 +3352,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Order Line id and transaction id
-	 * 
+	 *
 	 * @return String
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3361,9 +3366,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Order Id
-	 * 
+	 *
 	 * @return String
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3375,13 +3380,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
-	 * 
+	 *
 	 * @param requestType
-	 * 
+	 *
 	 * @param abstractOrderModel
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3543,9 +3548,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @description:Populate data to CartSoftReservationData
-	 * 
+	 *
 	 * @return:List<CartSoftReservationData>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -3553,8 +3558,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			throws EtailNonBusinessExceptions
 	{
 
-		List<PinCodeResponseData> pincoderesponseDataList=getSessionService().getAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
-		LOG.debug("******responceData******** "+pincoderesponseDataList);
+		final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
+				MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+		LOG.debug("******responceData******** " + pincoderesponseDataList);
 		CartSoftReservationData cartSoftReservationData = null;
 		final List<CartSoftReservationData> cartSoftReservationDataList = new ArrayList<CartSoftReservationData>();
 		try
@@ -3746,19 +3752,26 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							}
 						}
 
-						for(PinCodeResponseData responseData:pincoderesponseDataList){
-							if(entryModel.getSelectedUSSID() .equals(responseData.getUssid())){
-							  for(DeliveryDetailsData detailsData:responseData.getValidDeliveryModes()){
-								  if(null != detailsData.getServiceableSlaves() && detailsData.getServiceableSlaves().size()>0){
-								  cartSoftReservationData.setServiceableSlaves(detailsData.getServiceableSlaves()); 
-								  }
-								  if(null != detailsData.getCNCServiceableSlavesData() && detailsData.getCNCServiceableSlavesData().size()>0){
-									  cartSoftReservationData.setCncServiceableSlaves(detailsData.getCNCServiceableSlavesData()); 
-								  }
-								  if(null != detailsData.getFulfilmentType() ){
-									  cartSoftReservationData.setFulfillmentType(detailsData.getFulfilmentType());
-								  }
-							  }	  
+						for (final PinCodeResponseData responseData : pincoderesponseDataList)
+						{
+							if (entryModel.getSelectedUSSID().equals(responseData.getUssid()))
+							{
+								for (final DeliveryDetailsData detailsData : responseData.getValidDeliveryModes())
+								{
+									if (null != detailsData.getServiceableSlaves() && detailsData.getServiceableSlaves().size() > 0)
+									{
+										cartSoftReservationData.setServiceableSlaves(detailsData.getServiceableSlaves());
+									}
+									if (null != detailsData.getCNCServiceableSlavesData()
+											&& detailsData.getCNCServiceableSlavesData().size() > 0)
+									{
+										cartSoftReservationData.setCncServiceableSlaves(detailsData.getCNCServiceableSlavesData());
+									}
+									if (null != detailsData.getFulfilmentType())
+									{
+										cartSoftReservationData.setFulfillmentType(detailsData.getFulfilmentType());
+									}
+								}
 							}
 						}
 						cartSoftReservationDataList.add(cartSoftReservationData);
@@ -3911,11 +3924,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC : Inventory list to be generated for TISPRD-2758
-	 *
+	 * 
 	 * @param abstractOrderModel
-	 *
+	 * 
 	 * @param entryModel
-	 *
+	 * 
 	 * @return Tuple2<?, ?>
 	 */
 	private Tuple2<?, ?> getFreebieInventoryList(final AbstractOrderModel abstractOrderModel,
@@ -3958,13 +3971,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC : Inventory list to be generated for TISPRD-2758
-	 *
+	 * 
 	 * @param abstractOrderModel
-	 *
+	 * 
 	 * @param entryModel
-	 *
+	 * 
 	 * @param productPromoCode
-	 *
+	 * 
 	 * @return List<CartSoftReservationData>
 	 */
 	private List<CartSoftReservationData> populateFreebieInventoryData(final AbstractOrderModel abstractOrderModel,
@@ -4701,15 +4714,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param freebieModelMap
-	 * 
+	 *
 	 * @param freebieParentQtyMap
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -4847,34 +4860,44 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		final List<StoreLocationResponseData> responseList = new ArrayList<StoreLocationResponseData>();
 		try
 		{
-			//calls service with stores
-			final StoreLocatorAtsResponseObject responseObject = pinCodeDeliveryModeService
-					.prepStoreLocationsToOMS(storeLocationRequestDataList);
-			if (null != responseObject.getItem())
+			// Commented to stop Store ATS Call
+
+			//	calls service with stores
+			//			final StoreLocatorAtsResponseObject responseObject = pinCodeDeliveryModeService
+			//					.prepStoreLocationsToOMS(storeLocationRequestDataList);
+
+			final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+			LOG.debug("******responceData******** " + pincoderesponseDataList);
+			if (null != pincoderesponseDataList)
 			{
-				for (final StoreLocatorResponseItem storeLocatorResponse : responseObject.getItem())
+				for (final PinCodeResponseData pinCodeResponseData : pincoderesponseDataList)
 				{
 					final StoreLocationResponseData responseData = new StoreLocationResponseData();
 					List<ATSResponseData> atsResponseDataList = null;
-					if (null != storeLocatorResponse.getATS())
+					for (final DeliveryDetailsData deliveryDetailsData : pinCodeResponseData.getValidDeliveryModes())
 					{
-						atsResponseDataList = new ArrayList<ATSResponseData>();
-						for (final StoreLocatorAtsResponse storeLoctorMode : storeLocatorResponse.getATS())
+						if (deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
 						{
-							final ATSResponseData data = new ATSResponseData();
+							atsResponseDataList = new ArrayList<ATSResponseData>();
+							for (final CNCServiceableSlavesData cncServiceableSlavesData : deliveryDetailsData
+									.getCNCServiceableSlavesData())
+							{
+								final ATSResponseData data = new ATSResponseData();
 
-							data.setStoreId(storeLoctorMode.getStoreId());
-							data.setQuantity(storeLoctorMode.getQuantity().intValue());
+								data.setStoreId(cncServiceableSlavesData.getStoreId());
+								data.setQuantity(cncServiceableSlavesData.getQty().intValue());
 
-							atsResponseDataList.add(data);
+								atsResponseDataList.add(data);
+							}
 						}
 					}
-					responseData.setUssId(storeLocatorResponse.getUssId());
+					responseData.setUssId(pinCodeResponseData.getUssid());
 					responseData.setAts(atsResponseDataList);
 					responseList.add(responseData);
 				}
 			}
-			//return responseList;
+			return responseList;
 		}
 		catch (final ClientEtailNonBusinessExceptions ex)
 		{
@@ -4897,7 +4920,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 
 		}
-		return responseList;
+
 	}
 
 
@@ -4991,6 +5014,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/**
 	 * @return the sessionService
 	 */
+	@Override
 	public SessionService getSessionService()
 	{
 		return sessionService;
@@ -4998,9 +5022,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 
 	/**
-	 * @param sessionService the sessionService to set
+	 * @param sessionService
+	 *           the sessionService to set
 	 */
-	public void setSessionService(SessionService sessionService)
+	@Override
+	public void setSessionService(final SessionService sessionService)
 	{
 		this.sessionService = sessionService;
 	}

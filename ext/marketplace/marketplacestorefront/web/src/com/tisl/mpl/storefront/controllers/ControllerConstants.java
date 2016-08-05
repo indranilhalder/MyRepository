@@ -245,7 +245,10 @@ public interface ControllerConstants
 				String chatPage = "pages/clickToChatCall/clickToChat";
 				String callPage = "pages/clickToChatCall/clickToCall";
 			}
-
+			interface Order
+			{
+				String TrackOrderDetailsPage = "pages/order/trackOrderDetailsPage";
+			}
 		}
 
 		interface Fragments

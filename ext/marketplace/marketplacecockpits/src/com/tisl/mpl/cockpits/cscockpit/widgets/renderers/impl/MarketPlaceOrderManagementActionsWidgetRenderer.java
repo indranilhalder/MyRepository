@@ -103,7 +103,7 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 
 		if (isUserInRole(configurationService.getConfiguration().getString(
 				"cscockpit.user.group.refunddelcsagentgroup"))) {
-			     
+
 			createButton(widget, (Div) component, "refundDeliveryCharge",
 					"csRefundDeliveryChargeWidgetConfig",
 					"refundDeliveryCharge-popup", "refundDeliveryCharge",
@@ -319,15 +319,24 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 			Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			Event event, Div container, String springWidgetName,
 			String popupCode, String cssClass, String popupTitleLabelName) {
-
-		getPopupWidgetHelper()
-				.createPopupWidget(
-						container,
-						springWidgetName,
-						popupCode,
-						cssClass,
-						LabelUtils.getLabel(widget, popupTitleLabelName,
-								new Object[0]), 1300);
+		if (springWidgetName
+				.equalsIgnoreCase("csChangeDeliveryAddressWidgetConfig")) {
+			getPopupWidgetHelper().createPopupWidget(
+					container,
+					springWidgetName,
+					popupCode,
+					cssClass,
+					LabelUtils.getLabel(widget, popupTitleLabelName,
+							new Object[0]), 600);
+		} else {
+			getPopupWidgetHelper().createPopupWidget(
+					container,
+					springWidgetName,
+					popupCode,
+					cssClass,
+					LabelUtils.getLabel(widget, popupTitleLabelName,
+							new Object[0]), 1300);
+		}
 	}
 
 	@Override

@@ -231,4 +231,11 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 * @return OrderData
 	 */
 	OrderData getOrderDetailsForCode(OrderModel orderModel);
+
+	/**
+	 * @description: It is used for fetching ordermdel by order code
+	 * @param orderCode
+	 * @return OrderData
+	 */
+	OrderData getOrderDetailsForCodeWithoutUser(String orderCode);
 }

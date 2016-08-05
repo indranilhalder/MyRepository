@@ -445,6 +445,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				{
 					sellerData.setIsCod(MarketplaceFacadesConstants.N);
 				}
+				if (null != rich.getIsFragile())
+				{
+					sellerData.setIsFragile(rich.getIsFragile().getCode());
+				}
+				if (null != rich.getIsPrecious())
+				{
+					sellerData.setIsPrecious(rich.getIsPrecious().getCode());
+				}
 
 				sellerData.setReturnPolicy(rich.getReturnWindow());
 				sellerData.setReplacement(rich.getReplacementWindow());

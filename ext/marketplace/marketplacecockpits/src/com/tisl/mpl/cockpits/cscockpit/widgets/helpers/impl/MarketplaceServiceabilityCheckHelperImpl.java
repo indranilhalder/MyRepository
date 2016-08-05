@@ -466,7 +466,8 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 								data.setIsDeliveryDateRequired(isDeliveryDateRequired);
 								data.setPrice(buybox.getPrice());
 								data.setMopPrice(formPriceData(buybox.getPrice()));
-
+								data.setIsFragile(sd.getIsFragile());
+								data.setIsPrecious(sd.getIsPrecious());
 								// Added To get Near By Stores
 								final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
 										sd.getSellerID());

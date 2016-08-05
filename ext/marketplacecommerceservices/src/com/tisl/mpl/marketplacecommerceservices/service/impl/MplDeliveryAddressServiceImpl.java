@@ -61,7 +61,8 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	{
 		final List<String> ChangableOrdeStatus = Arrays.asList(OrderStatus.PAYMENT_SUCCESSFUL.getCode(),
 				OrderStatus.ORDER_ALLOCATED.getCode(), OrderStatus.PICK_LIST_GENERATED.getCode(),
-				OrderStatus.ORDER_REALLOCATED.getCode(), OrderStatus.PICK_CONFIRMED.getCode(), OrderStatus.ORDER_REJECTED.getCode());
+				OrderStatus.ORDER_REALLOCATED.getCode(), OrderStatus.PICK_CONFIRMED.getCode(), OrderStatus.ORDER_REJECTED.getCode(),
+				OrderStatus.PENDING_SELLER_ASSIGNMENT.getCode());
 		boolean changable = true;
 
 		try
@@ -205,6 +206,13 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 					orderModel.setDeliveryAddress(addrModel);
 					user.setAddresses(customerAddressesList);
 					orderModel.setDeliveryAddresses(deliveryAddressesList);
+					if (null != orderModel.getChildOrders())
+					{
+						for (final OrderModel childOrder : orderModel.getChildOrders())
+						{
+							childOrder.setDeliveryAddress(addrModel);
+						}
+					}
 					modelService.saveAll(orderModel);
 					modelService.saveAll(user);
 					modelService.remove(temproryAddressModel);
