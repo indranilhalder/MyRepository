@@ -1411,6 +1411,7 @@ $("#otpMobileNUMField").focus(function(){
 
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
+		var guid=$("#guid").val();
         //TISPRO-313	
 		//if($(".redirect").val()=="false"){
 			//Juspay.startSecondFactor();
@@ -1418,7 +1419,7 @@ $("#otpMobileNUMField").focus(function(){
 		//}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -2649,9 +2650,10 @@ function applyPromotion(bankName)
 	var paymentMode=$("#paymentMode").val();
 	$("#promotionApplied,#promotionMessage").css("display","none");
 	var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
+	var guid=$("#guid").val();
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
-		data: { 'paymentMode' : paymentMode , 'bankName' : bankName },
+		data: { 'paymentMode' : paymentMode , 'bankName' : bankName , 'guid' : guid},
 		type: "GET",
 		cache: false,
 		dataType:'json',

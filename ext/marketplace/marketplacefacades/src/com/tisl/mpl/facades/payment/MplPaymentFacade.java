@@ -145,7 +145,7 @@ public interface MplPaymentFacade
 	 * @return String
 	 *
 	 */
-	String getOrderStatusFromJuspay();
+	//String getOrderStatusFromJuspay();
 
 
 	/**
@@ -266,9 +266,10 @@ public interface MplPaymentFacade
 	 * @throws ModelSavingException
 	 */
 
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
-			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+	MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
+			final OrderModel orderModel) throws ModelSavingException, NumberFormatException, JaloInvalidParameterException,
+			VoucherOperationException, CalculationException, JaloSecurityException, JaloPriceFactoryException,
+			EtailNonBusinessExceptions;
 
 
 
@@ -365,5 +366,29 @@ public interface MplPaymentFacade
 	 * @throws EtailNonBusinessExceptions
 	 */
 	String getOrderStatusFromJuspay(String orderGuid) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+
+
+	/**
+	 * @param cart
+	 * @param order
+	 * @param firstName
+	 * @param lastName
+	 * @param addressLine1
+	 * @param addressLine2
+	 * @param addressLine3
+	 * @param country
+	 * @param state
+	 * @param city
+	 * @param pincode
+	 * @param checkValues
+	 * @param returnUrl
+	 * @param uid
+	 * @param channel
+	 * @return String
+	 * @throws EtailNonBusinessExceptions
+	 */
+	String createJuspayOrder(CartModel cart, OrderModel order, String firstName, String lastName, String addressLine1,
+			String addressLine2, String addressLine3, String country, String state, String city, String pincode, String checkValues,
+			String returnUrl, String uid, String channel) throws EtailNonBusinessExceptions;
 
 }

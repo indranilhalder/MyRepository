@@ -16,6 +16,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.InvalidCartException;
@@ -410,13 +411,14 @@ public interface MplCommerceCartService
 	public abstract SellerInformationModel getSellerDetailsData(String ussid);
 
 	/**
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @param freebieModelMap
 	 * @param freebieParentQtyMap
 	 * @throws EtailNonBusinessExceptions
 	 */
-	void saveDeliveryMethForFreebie(CartModel cartModel, Map<String, MplZoneDeliveryModeValueModel> freebieModelMap,
-			Map<String, Long> freebieParentQtyMap) throws EtailNonBusinessExceptions;
+	void saveDeliveryMethForFreebie(AbstractOrderModel abstractOrderModel,
+			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap)
+			throws EtailNonBusinessExceptions;
 
 	/**
 	 * @Desc Used as part of oms fallback
@@ -450,6 +452,13 @@ public interface MplCommerceCartService
 	 */
 	public abstract PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData)
 			throws EtailNonBusinessExceptions;
+
+	/**
+	 * @param source
+	 * @param prototype
+	 * @return PriceData
+	 */
+	PriceData setTotalWithConvCharge(OrderModel source, OrderData prototype);
 
 
 

@@ -55,11 +55,11 @@ public class OrderStatusSpecifier
 
 			}
 		}
-		if (flag) //flag == true
-		{
-			order.setStatus(orderStatus);
-			getModelService().save(order);
-		}
+		//if (flag || orderStatus.equals(OrderStatus.PAYMENT_PENDING)) //flag == true
+		//{
+		order.setStatus(orderStatus);
+		getModelService().save(order);
+		//}
 		if (null != order.getStatus())
 		{
 			LOG.debug("Status of the order is :::::::::::::::" + order.getStatus().toString());

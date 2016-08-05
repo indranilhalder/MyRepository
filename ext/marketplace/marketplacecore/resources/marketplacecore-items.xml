@@ -4857,6 +4857,10 @@
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="modeOfPayment" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 

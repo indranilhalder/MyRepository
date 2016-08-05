@@ -788,150 +788,150 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
-	@Override
-	public String getOrderStatusFromJuspay() throws EtailBusinessExceptions, EtailNonBusinessExceptions
-	{
-		final PaymentService juspayService = new PaymentService();
-
-		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService.withKey(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-				.withMerchantId(
-						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
-
-		try
-		{
-			final Map<String, Double> paymentMode = getSessionService().getAttribute(
-					MarketplacecommerceservicesConstants.PAYMENTMODE);
-			//final CartModel cart = getCartService().getSessionCart();
-
-			//New Soln - Order before Payment
-			//final String orderGuid = getSessionService().getAttribute("guid");
-			final OrderModel orderModel = getOrderByGuid(orderGuid);
-
-			String orderStatus = null;
-			boolean updAuditErrStatus = false;
-
-			//creating OrderStatusRequest
-			final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
-
-			//LOG.info(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID).toString());
-
-			//TISPT-200 implementing fallback for null audit id
-			String juspayOrderId = null;
-			try
-			{
-				juspayOrderId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
-				if (null == juspayOrderId)
-				{
-					//juspayOrderId = getMplPaymentService().getAuditId(cart.getGuid());
-					juspayOrderId = getMplPaymentService().getAuditId(orderGuid);
-				}
-			}
-			catch (final Exception e)
-			{
-				LOG.error("Exception in picking up juspay order id from session...reverting to fallback mechanism with exception ", e);
-				//				juspayOrderId = getMplPaymentService().getAuditId(cart.getGuid());
-			}
-			//			orderStatusRequest.withOrderId(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID)
-			//					.toString());
-
-			if (StringUtils.isNotEmpty(juspayOrderId)) //TISPT-200
-			{
-				orderStatusRequest.withOrderId(juspayOrderId);
-				//creating OrderStatusResponse
-				//GetOrderStatusResponse orderStatusResponse = new GetOrderStatusResponse();	//TISPT-200
-
-				//getting the response by calling get Order Status service
-				final GetOrderStatusResponse orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
-				if (null != orderStatusResponse)
-				{
-					//Update Audit Table after getting payment response
-					//updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse);
-					//TIS-3168
-					//updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest);
-
-					//Payment Changes - Order before Payment
-					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest, orderModel);
-
-
-					//TISPRD-2558
-					//if (cart.getTotalPrice().equals(orderStatusResponse.getAmount()))
-					if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount()))
-					{
-						//Update PaymentTransaction and PaymentTransactionEntry Models
-						//getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, cart);
-						getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
-					}
-					else
-					{
-						throw new EtailBusinessExceptions();
-					}
-
-
-					//Logic when transaction is successful i.e. CHARGED
-					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
-					{
-						//TIS-3168
-						LOG.error("Payment successful with transaction ID::::" + juspayOrderId);
-						//saving card details
-						getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, orderModel);
-					}
-					//TIS-3168
-					else
-					{
-						LOG.error("Payment failure with transaction ID::::" + juspayOrderId);
-					}
-					getMplPaymentService().paymentModeApportion(orderModel);
-
-					if (updAuditErrStatus)
-					{
-						orderStatus = orderStatusResponse.getStatus();
-					}
-				}
-				//TIS-3168
-				else
-				{
-					LOG.error("Null orderStatusResponse for juspayOrderId::" + juspayOrderId);
-				}
-
-				//Codemerge issue --- Commented for Payment Fallback
-				//Logic when transaction is successful i.e. CHARGED
-				//				if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
-				//				{
-				//					//setting Payment Info
-				//					getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
-				//				}
-				//				getMplPaymentService().paymentModeApportion(cart);
-				//
-				//				if (updAuditErrStatus)
-				//				{
-				//					orderStatus = orderStatusResponse.getStatus();
-				//				}
-
-			}
-
-			//returning the statues of the order
-			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
-			return orderStatus;
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			LOG.error("Cart total and Juspay end total are not same!!!", e);
-			throw new EtailBusinessExceptions("Cart Total and Transaction total at Juspay Mismatch", e);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw e;
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Failed to save order status in payment transaction with error: ", e);
-			throw new EtailNonBusinessExceptions(e);
-		}
-
-	}
+	//	@Override
+	//	public String getOrderStatusFromJuspay() throws EtailBusinessExceptions, EtailNonBusinessExceptions
+	//	{
+	//		final PaymentService juspayService = new PaymentService();
+	//
+	//		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+	//				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+	//		juspayService.withKey(
+	//				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+	//				.withMerchantId(
+	//						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+	//
+	//		try
+	//		{
+	//			final Map<String, Double> paymentMode = getSessionService().getAttribute(
+	//					MarketplacecommerceservicesConstants.PAYMENTMODE);
+	//			//final CartModel cart = getCartService().getSessionCart();
+	//
+	//			//New Soln - Order before Payment
+	//			//final String orderGuid = getSessionService().getAttribute("guid");
+	//			final OrderModel orderModel = getOrderByGuid(orderGuid);
+	//
+	//			String orderStatus = null;
+	//			boolean updAuditErrStatus = false;
+	//
+	//			//creating OrderStatusRequest
+	//			final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
+	//
+	//			//LOG.info(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID).toString());
+	//
+	//			//TISPT-200 implementing fallback for null audit id
+	//			String juspayOrderId = null;
+	//			try
+	//			{
+	//				juspayOrderId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
+	//				if (null == juspayOrderId)
+	//				{
+	//					//juspayOrderId = getMplPaymentService().getAuditId(cart.getGuid());
+	//					juspayOrderId = getMplPaymentService().getAuditId(orderGuid);
+	//				}
+	//			}
+	//			catch (final Exception e)
+	//			{
+	//				LOG.error("Exception in picking up juspay order id from session...reverting to fallback mechanism with exception ", e);
+	//				//				juspayOrderId = getMplPaymentService().getAuditId(cart.getGuid());
+	//			}
+	//			//			orderStatusRequest.withOrderId(getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID)
+	//			//					.toString());
+	//
+	//			if (StringUtils.isNotEmpty(juspayOrderId)) //TISPT-200
+	//			{
+	//				orderStatusRequest.withOrderId(juspayOrderId);
+	//				//creating OrderStatusResponse
+	//				//GetOrderStatusResponse orderStatusResponse = new GetOrderStatusResponse();	//TISPT-200
+	//
+	//				//getting the response by calling get Order Status service
+	//				final GetOrderStatusResponse orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
+	//				if (null != orderStatusResponse)
+	//				{
+	//					//Update Audit Table after getting payment response
+	//					//updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse);
+	//					//TIS-3168
+	//					//updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest);
+	//
+	//					//Payment Changes - Order before Payment
+	//					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest, orderModel);
+	//
+	//
+	//					//TISPRD-2558
+	//					//if (cart.getTotalPrice().equals(orderStatusResponse.getAmount()))
+	//					if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount()))
+	//					{
+	//						//Update PaymentTransaction and PaymentTransactionEntry Models
+	//						//getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, cart);
+	//						getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
+	//					}
+	//					else
+	//					{
+	//						throw new EtailBusinessExceptions();
+	//					}
+	//
+	//
+	//					//Logic when transaction is successful i.e. CHARGED
+	//					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
+	//					{
+	//						//TIS-3168
+	//						LOG.error("Payment successful with transaction ID::::" + juspayOrderId);
+	//						//saving card details
+	//						getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, orderModel);
+	//					}
+	//					//TIS-3168
+	//					else
+	//					{
+	//						LOG.error("Payment failure with transaction ID::::" + juspayOrderId);
+	//					}
+	//					getMplPaymentService().paymentModeApportion(orderModel);
+	//
+	//					if (updAuditErrStatus)
+	//					{
+	//						orderStatus = orderStatusResponse.getStatus();
+	//					}
+	//				}
+	//				//TIS-3168
+	//				else
+	//				{
+	//					LOG.error("Null orderStatusResponse for juspayOrderId::" + juspayOrderId);
+	//				}
+	//
+	//				//Codemerge issue --- Commented for Payment Fallback
+	//				//Logic when transaction is successful i.e. CHARGED
+	//				//				if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
+	//				//				{
+	//				//					//setting Payment Info
+	//				//					getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, cart);
+	//				//				}
+	//				//				getMplPaymentService().paymentModeApportion(cart);
+	//				//
+	//				//				if (updAuditErrStatus)
+	//				//				{
+	//				//					orderStatus = orderStatusResponse.getStatus();
+	//				//				}
+	//
+	//			}
+	//
+	//			//returning the statues of the order
+	//			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
+	//			return orderStatus;
+	//		}
+	//		catch (final EtailBusinessExceptions e)
+	//		{
+	//			LOG.error("Cart total and Juspay end total are not same!!!", e);
+	//			throw new EtailBusinessExceptions("Cart Total and Transaction total at Juspay Mismatch", e);
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			throw e;
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error("Failed to save order status in payment transaction with error: ", e);
+	//			throw new EtailNonBusinessExceptions(e);
+	//		}
+	//
+	//	}
 
 
 	/**
@@ -1539,12 +1539,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 
 	@Override
-	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
-			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions
+	public MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
+			final OrderModel orderModel) throws ModelSavingException, NumberFormatException, JaloInvalidParameterException,
+			VoucherOperationException, CalculationException, JaloSecurityException, JaloPriceFactoryException,
+			EtailNonBusinessExceptions
 
 	{
-		return getMplPaymentService().applyPromotions(cartData, cart);
+		return getMplPaymentService().applyPromotions(cartData, orderData, cartModel, orderModel);
 	}
 
 
@@ -2183,6 +2184,210 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 
 	}
+
+
+
+
+
+	/**
+	 * This method creates an order in Juspay against which Payment will be processed. This is for new payment soln
+	 *
+	 * @return String
+	 * @throws EtailNonBusinessExceptions
+	 *
+	 */
+	@Override
+	public String createJuspayOrder(final CartModel cart, final OrderModel order, final String firstName, final String lastName,
+			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
+			final String state, final String city, final String pincode, final String checkValues, final String returnUrl,
+			final String uid, final String channel) throws EtailNonBusinessExceptions
+	{
+		try
+		{
+			//creating PaymentService of Juspay
+			final PaymentService juspayService = new PaymentService();
+
+			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService
+					.withKey(
+							getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
+							getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+
+			//getting the current customer to fetch customer Id and customer email
+			//CustomerModel customer = getModelService().create(CustomerModel.class);	//TISPT-200
+			CustomerModel customer = null;
+			if (null != uid)
+			{
+				customer = getMplPaymentService().getCustomer(uid);
+			}
+
+			//TISCR-421
+			String customerPhone = MarketplacecommerceservicesConstants.EMPTYSTRING;
+			AddressModel deliveryAddress = null;
+
+			if (null != cart)
+			{
+				//Code fix to send phone number to EBS
+				deliveryAddress = cart.getDeliveryAddress();
+			}
+			else if (null != order)
+			{
+				deliveryAddress = order.getDeliveryAddress();
+			}
+			final AddressModel defaultAddress = null != customer ? customer.getDefaultShipmentAddress() : null; //TISPT-200
+			if (null != deliveryAddress)
+			{
+				if (StringUtils.isNotEmpty(deliveryAddress.getPhone1()))
+				{
+					customerPhone = deliveryAddress.getPhone1();
+				}
+				else if (StringUtils.isNotEmpty(deliveryAddress.getPhone2()))
+				{
+					customerPhone = deliveryAddress.getPhone2();
+				}
+			}
+			else if (null != defaultAddress)
+			{
+				if (StringUtils.isNotEmpty(defaultAddress.getPhone1()))
+				{
+					customerPhone = defaultAddress.getPhone1();
+				}
+				else if (StringUtils.isNotEmpty(defaultAddress.getPhone2()))
+				{
+					customerPhone = defaultAddress.getPhone2();
+				}
+			}
+			//Code fix ends
+
+
+			final String customerEmail = null != customer ? customer.getOriginalUid() : ""; //TISPT-200
+			//			String juspayOrderStatus = "";
+			String juspayOrderId = "";
+			boolean flag = false;
+			String resJusOrderId = null;
+
+			juspayOrderId = getMplPaymentService().createPaymentId();
+			LOG.debug("Order Id created by key generator is " + juspayOrderId);
+
+			//Create entry in Audit table
+			if (null != cart)
+			{
+				flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
+			}
+			else if (null != order)
+			{
+				flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, order.getGuid());
+			}
+
+			InitOrderRequest request = null;
+			if (flag)
+			{
+				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
+				{
+					//getting the sessionID from session set during payment page loading
+					final String sessionId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
+					//removing from session
+					getSessionService().removeAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
+
+					//creating InitOrderRequest of Juspay
+					// For netbanking firstname will be set as Bank Code
+					//TISCR-421:With sessionID for WEB orders
+					//Create entry in Audit table
+					if (null != cart)
+					{
+						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice())
+								.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
+								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3)
+								.withUdf6(country).withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues)
+								.withReturnUrl(returnUrl).withsessionId(sessionId);
+					}
+					else if (null != order)
+					{
+						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(order.getTotalPrice())
+								.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
+								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3)
+								.withUdf6(country).withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues)
+								.withReturnUrl(returnUrl).withsessionId(sessionId);
+					}
+
+
+				}
+				else
+				{
+					//TISCR-421:Without sessionTD for MOBILE or other orders
+					if (null != cart)
+					{
+						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice())
+								.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
+								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3)
+								.withUdf6(country).withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues)
+								.withReturnUrl(returnUrl);
+					}
+					else if (null != order)
+					{
+						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(order.getTotalPrice())
+								.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
+								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3)
+								.withUdf6(country).withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues)
+								.withReturnUrl(returnUrl);
+					}
+
+				}
+
+				LOG.error("Juspay Request Structure " + request);
+
+				//creating InitOrderResponse
+				final InitOrderResponse initOrderResponse = juspayService.initOrder(request);
+				if (null != initOrderResponse && StringUtils.isNotEmpty(initOrderResponse.getOrderId()))
+				{
+					resJusOrderId = initOrderResponse.getOrderId();
+					final String orderStatus = initOrderResponse.getStatus();
+					if (StringUtils.isNotEmpty(orderStatus))
+					{
+						LOG.info(MarketplacecommerceservicesConstants.JUSPAY_ORDER_RESP + resJusOrderId + " " + orderStatus);
+					}
+				}
+
+				//Adding orderID to session for later use to get Order status
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID, resJusOrderId);
+
+				//Update the Audit table before proceeding with payment
+				if (null != cart)
+				{
+					getMplPaymentService().createEntryInAudit(resJusOrderId, channel, cart.getGuid());
+				}
+				else if (null != order)
+				{
+					getMplPaymentService().createEntryInAudit(resJusOrderId, channel, order.getGuid());
+				}
+
+			}
+
+			//returning order ID from initOrderResponse
+			return resJusOrderId;
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, "E0007");
+		}
+		catch (final AdapterException e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("Something went wrong ", e);
+			throw new EtailNonBusinessExceptions(e, "E0007");
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, "E0007");
+		}
+	}
+
 
 
 

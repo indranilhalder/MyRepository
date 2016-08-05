@@ -86,6 +86,7 @@ import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -159,6 +160,10 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	@Resource(name = "mplCustomAddressFacade")
 	private MplCustomAddressFacade mplCustomAddressFacade;
+
+	@Autowired
+	private MplCommerceCheckoutService mplCommerceCheckoutService;
+
 
 
 	/**
@@ -837,12 +842,12 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public boolean isPromotionValid(final CartModel cart) throws EtailNonBusinessExceptions
+	public boolean isPromotionValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions
 	{
 		boolean result = true;
-		if (cart != null)
+		if (abstractOrderModel != null)
 		{
-			final Set<PromotionResultModel> promotion = cart.getAllPromotionResults();
+			final Set<PromotionResultModel> promotion = abstractOrderModel.getAllPromotionResults();
 			if (null != promotion && !promotion.isEmpty())
 			{
 				for (final PromotionResultModel promo : promotion)
@@ -1197,11 +1202,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public void saveDeliveryMethForFreebie(final CartModel cartModel,
+	public void saveDeliveryMethForFreebie(final AbstractOrderModel abstractOrderModel,
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
 			throws EtailNonBusinessExceptions
 	{
-		getMplCommerceCartService().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
+		getMplCommerceCartService().saveDeliveryMethForFreebie(abstractOrderModel, freebieModelMap, freebieParentQtyMap);
 	}
 
 	/*
@@ -1329,6 +1334,22 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+
+
+
+
+	@Override
+	public void beforeSubmitOrder(final OrderModel orderModel) throws InvalidCartException
+	{
+		final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+		parameter.setEnableHooks(true);
+		parameter.setSalesApplication(SalesApplication.WEB);
+
+		final CommerceOrderResult result = new CommerceOrderResult();
+		result.setOrder(orderModel);
+
+		mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
 	}
 
 

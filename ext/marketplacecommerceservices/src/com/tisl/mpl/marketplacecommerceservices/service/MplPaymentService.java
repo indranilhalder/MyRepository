@@ -1,6 +1,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -165,7 +166,9 @@ public interface MplPaymentService
 	/**
 	 *
 	 * @param cartData
-	 * @param cart
+	 * @param orderData
+	 * @param cartModel
+	 * @param orderModel
 	 * @return MplPromoPriceData
 	 * @throws VoucherOperationException
 	 * @throws JaloInvalidParameterException
@@ -173,9 +176,10 @@ public interface MplPaymentService
 	 * @throws ModelSavingException
 	 * @throws EtailNonBusinessExceptions
 	 */
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
-			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+	MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
+			final OrderModel orderModel) throws ModelSavingException, NumberFormatException, JaloInvalidParameterException,
+			VoucherOperationException, CalculationException, JaloSecurityException, JaloPriceFactoryException,
+			EtailNonBusinessExceptions;
 
 
 	/**
@@ -255,20 +259,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;

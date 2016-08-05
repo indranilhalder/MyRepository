@@ -665,4 +665,10 @@
 		<property name="pageTypeFacets" type="java.util.Set&lt;String>" />
 	</bean>
 	
+	<bean class="de.hybris.platform.commerceservices.service.data.CommerceCartParameter">
+		<property name="order" type="de.hybris.platform.core.model.order.OrderModel">
+			<description>The OrderModel</description>
+		</property>
+	</bean>
+	
 </beans>

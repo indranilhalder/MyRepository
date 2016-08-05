@@ -12,6 +12,7 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.order.InvalidCartException;
 
 import java.util.Collection;
 import java.util.List;
@@ -143,13 +144,13 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	/*
 	 * @ to check promotion expired or not for Pay now : TIS 414
 	 *
-	 * @param cartData
+	 * @param abstractOrderModel
 	 *
 	 * @return boolean
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isPromotionValid(final CartModel cart) throws EtailNonBusinessExceptions;
+	boolean isPromotionValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @ Override TSHIP : TIS 397
@@ -166,7 +167,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 */
 	Map<String, List<MarketplaceDeliveryModeData>> repopulateTshipDeliveryCost(
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final CartData cartData)
-					throws EtailNonBusinessExceptions;
+			throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is used for fetching order details for code
@@ -208,8 +209,9 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	void saveDeliveryMethForFreebie(CartModel cartModel, Map<String, MplZoneDeliveryModeValueModel> freebieModelMap,
-			Map<String, Long> freebieParentQtyMap) throws EtailNonBusinessExceptions;
+	void saveDeliveryMethForFreebie(AbstractOrderModel abstractOrderModel,
+			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap)
+			throws EtailNonBusinessExceptions;
 
 	public PriceData createPrice(final AbstractOrderModel source, final Double val);
 
@@ -231,4 +233,10 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 * @return OrderData
 	 */
 	OrderData getOrderDetailsForCode(OrderModel orderModel);
+
+	/**
+	 * @param orderModel
+	 * @throws InvalidCartException
+	 */
+	void beforeSubmitOrder(OrderModel orderModel) throws InvalidCartException;
 }

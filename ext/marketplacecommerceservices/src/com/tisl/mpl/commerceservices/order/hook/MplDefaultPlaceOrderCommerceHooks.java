@@ -177,7 +177,35 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					getModelService().save(voucherInvalidationModel);
 				}
 
+				//Set order-id
+				final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
+						.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
+				//private method for seting Sub-order Total-TISEE-3986
+				if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
+						&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
+				{
+					final String orderIdSequence = getMplCommerceCartService().generateOrderId();
+					orderModel.setCode(orderIdSequence);
+				}
+				else
+				{
+					final Random rand = new Random();
+					orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
+				}
+				orderModel.setType("Parent");
+				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+				{
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				}
+				else
+				{
 
+					final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
+					if (realEbs.equalsIgnoreCase("Y"))
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+					}
+				}
 			}
 		}
 
@@ -240,7 +268,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final CommerceOrderResult paramCommerceOrderResult) throws InvalidCartException
 	{
 		final OrderModel orderModel = paramCommerceOrderResult.getOrder();
-		orderModel.setType("Parent");
+		//orderModel.setType("Parent");
 		final List<OrderModel> orderList = getSubOrders(orderModel);
 
 		//TISPRO-249
@@ -248,64 +276,64 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//TISUTO-128
 		setFreebieParentTransactionId(orderList);
 		setBOGOParentTransactionId(orderList);
-		final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
-				.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
-		//private method for seting Sub-order Total-TISEE-3986
-
-
-
-		if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
-				&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
-		{
-			final String orderIdSequence = getMplCommerceCartService().generateOrderId();
-			orderModel.setCode(orderIdSequence);
-		}
-		else
-		{
-			final Random rand = new Random();
-			orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
-		}
+		//		final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
+		//				.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
+		//		//private method for seting Sub-order Total-TISEE-3986
+		//
+		//
+		//
+		//		if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
+		//				&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
+		//		{
+		//			final String orderIdSequence = getMplCommerceCartService().generateOrderId();
+		//			orderModel.setCode(orderIdSequence);
+		//		}
+		//		else
+		//		{
+		//			final Random rand = new Random();
+		//			orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
+		//		}
 		setSuborderTotalAfterOrderSplitting(orderList);
 
 		orderModel.setChildOrders(orderList);
 		getModelService().save(orderModel);
-		if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
-		{
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-		}
-		else
-		{
-
-			final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
-			if (realEbs.equalsIgnoreCase("Y"))
-			{
-				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
-				//Commented for new Payment Soln -- order before payment
-
-				//			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
-				//			{
-				//				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-				//			}
-				//			else
-				//			{
-
-				//				if (StringUtils.isNotEmpty(orderModel.getGuid()))
-				//				{
-				//					final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
-				//					if (null != mplAudit)
-				//					{
-				//						final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAudit.getAuditEntries();
-				//						if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
-				//						{
-				//							//In all the cases, order is created before payment --- so payment pending
-				//							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
-				//							//updateOrderStatus(mplAuditEntryList, orderModel);
-				//						}
-				//					}
-				//				}
-				//			}
-			}
-		}
+		//		if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+		//		{
+		//			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+		//		}
+		//		else
+		//		{
+		//
+		//			final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
+		//			if (realEbs.equalsIgnoreCase("Y"))
+		//			{
+		//				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+		//				//Commented for new Payment Soln -- order before payment
+		//
+		//				//			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+		//				//			{
+		//				//				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+		//				//			}
+		//				//			else
+		//				//			{
+		//
+		//				//				if (StringUtils.isNotEmpty(orderModel.getGuid()))
+		//				//				{
+		//				//					final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
+		//				//					if (null != mplAudit)
+		//				//					{
+		//				//						final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAudit.getAuditEntries();
+		//				//						if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
+		//				//						{
+		//				//							//In all the cases, order is created before payment --- so payment pending
+		//				//							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+		//				//							//updateOrderStatus(mplAuditEntryList, orderModel);
+		//				//						}
+		//				//					}
+		//				//				}
+		//				//			}
+		//			}
+		//		}
 	}
 
 	/*

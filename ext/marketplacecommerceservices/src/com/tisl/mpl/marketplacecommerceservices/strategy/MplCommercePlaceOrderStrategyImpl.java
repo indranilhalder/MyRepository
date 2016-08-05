@@ -4,7 +4,6 @@ package com.tisl.mpl.marketplacecommerceservices.strategy;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commerceservices.delivery.DeliveryService;
 import de.hybris.platform.commerceservices.externaltax.ExternalTaxesService;
-import de.hybris.platform.commerceservices.order.CommercePlaceOrderStrategy;
 import de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
@@ -50,7 +49,7 @@ import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
 
 
-public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStrategy
+public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderStrategy
 {
 	private static final Logger LOG = Logger.getLogger(MplCommercePlaceOrderStrategyImpl.class);
 	private ModelService modelService;
@@ -175,9 +174,9 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 
 				result.setOrder(orderModel);
 
-				beforeSubmitOrder(parameter, result);
+				//beforeSubmitOrder(parameter, result);
 
-				getOrderService().submitOrder(orderModel);
+				//getOrderService().submitOrder(orderModel);
 				getExternalTaxesService().clearSessionTaxDocument();
 
 				afterPlaceOrder(parameter, result);
@@ -281,9 +280,9 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -328,9 +327,17 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 		return isShippingPromoApplied;
 	}
 
-	protected void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
-			throws InvalidCartException
+	/**
+	 * This method calls before submit order of hooks
+	 * 
+	 * @throws CalculationException
+	 */
+	@Override
+	public void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
+			throws InvalidCartException, CalculationException
 	{
+		getCalculationService().calculateTotals(result.getOrder(), false);
+
 		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
 
 		.getConfiguration().getBoolean("commerceservices.commerceplaceordermethodhook.enabled", true))))
@@ -342,6 +349,8 @@ public class MplCommercePlaceOrderStrategyImpl implements CommercePlaceOrderStra
 		{
 			commercePlaceOrderMethodHook.beforeSubmitOrder(parameter, result);
 		}
+
+		getOrderService().submitOrder(result.getOrder());
 	}
 
 	protected void afterPlaceOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)

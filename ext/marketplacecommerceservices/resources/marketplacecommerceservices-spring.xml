@@ -612,9 +612,11 @@
 
 	</bean>
 
-	<!-- <alias name="mplCommerceCheckoutService" alias="commerceCheckoutService" 
-		/> <bean id="mplCommerceCheckoutService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDefaultCommerceCheckoutService" 
-		parent="defaultCommerceCheckoutService"> </bean> -->
+	<alias name="mplCommerceCheckoutService" alias="commerceCheckoutService" /> 
+	<bean id="mplCommerceCheckoutService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDefaultCommerceCheckoutService" 
+		parent="defaultCommerceCheckoutService">
+	</bean>
+	
 	<bean id="userLoginService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.UserLoginServiceImpl">
 		<property name="userDetailsService" ref="extendedUserDetailsService" />
@@ -1758,6 +1760,12 @@
 			<property name="modelService" ref="modelService" />
 			</bean>
 	<!-- New Buy Box Implementation End -->
+	
+<!-- 	<alias alias="commercePlaceOrderStrategy" name="mplDefaultCommercePlaceOrderStrategy"/>
+	<bean id="mplDefaultCommercePlaceOrderStrategy"
+			class="com.tisl.mpl.marketplacecommerceservices.strategy.MplCommercePlaceOrderStrategyImpl" 
+			parent="defaultCommercePlaceOrderStrategy">
+	</bean> -->
 
 
 </beans>

@@ -368,12 +368,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, null);
 
+				model.addAttribute("guid", cartModel.getGuid());
+
 			}
 			else
 			{
 				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
+
+				model.addAttribute("guid", orderModel.getGuid());
 			}
 
 			//creating new Payment Form
@@ -2083,7 +2087,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
 					setCheckoutStepLinksForModel(model, getCheckoutStep());
 					//return placeOrder(model, redirectAttributes);
-					return updateOrder();
+					return updateOrder(guid);
 				}
 				else if (MarketplacecheckoutaddonConstants.JUSPAY_DECLINED.equalsIgnoreCase(orderStatusResponse))
 				{
@@ -2234,7 +2238,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.APPLYPROMOTIONS, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody MplPromoPriceData applyPromotions(final String paymentMode, final String bankName)
+	public @ResponseBody MplPromoPriceData applyPromotions(final String paymentMode, final String bankName, final String guid)
 			throws CMSItemNotFoundException, InvalidCartException, CalculationException, ModelSavingException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, JaloSecurityException,
 			JaloPriceFactoryException
@@ -2243,195 +2247,365 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		LOG.debug("Entering Controller applyPromotions()=====" + System.currentTimeMillis());
 
 
-		final CartModel cart = getCartService().getSessionCart();
-		//TISEE-510 ,TISEE-5555
-
-		if (null != bankName && !bankName.equalsIgnoreCase("null"))
-		{
-			getMplPaymentFacade().setBankForSavedCard(bankName);
-		}
-
+		//Payment Soln changes
+		OrderModel orderModel = null;
 		MplPromoPriceData responseData = new MplPromoPriceData();
-
-		//TISPT-29
-		if (null != cart
-				&& StringUtils.isNotEmpty(paymentMode)
-				&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
-						|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
-						|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE) || paymentMode
-							.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)))
+		String jsonResponse = MarketplacecommerceservicesConstants.EMPTY;
+		try
 		{
-			//setting in cartmodel
-			cart.setConvenienceCharges(Double.valueOf(0));
-			//saving cartmodel
-			getMplPaymentFacade().saveCart(cart);
-		}
-
-		if (!mplCheckoutFacade.isPromotionValid(cart))
-		{
-			getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
-			responseData.setErrorMsgForEMI("redirect");
-		}
-		else
-		{
-
-			String jsonResponse = MarketplacecommerceservicesConstants.EMPTY;
-			try
+			if (StringUtils.isNotEmpty(guid))
 			{
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+				//final String orderGuid = decryptKey(guid);
+				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+			}
 
-				final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
-				final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
-				if (cart != null && cart.getEntries() != null)
+			if (null == orderModel)
+			{
+				final CartModel cart = getCartService().getSessionCart();
+				//TISEE-510 ,TISEE-5555
+
+				//				if (null != bankName && !bankName.equalsIgnoreCase("null"))
+				//				{
+				//					getMplPaymentFacade().setBankForSavedCard(bankName);
+				//				}
+
+				//TISPT-29
+				if (null != cart
+						&& StringUtils.isNotEmpty(paymentMode)
+						&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE) || paymentMode
+									.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)))
 				{
-					for (final AbstractOrderEntryModel cartEntryModel : cart.getEntries())
-					{
-						if (cartEntryModel != null && cartEntryModel.getGiveAway() != null
-								& !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getSelectedUSSID() != null)
-						{
-							freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
-							freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
-						}
-					}
+					//setting in cartmodel
+					cart.setConvenienceCharges(Double.valueOf(0));
+					//saving cartmodel
+					getMplPaymentFacade().saveCart(cart);
 				}
 
-				final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-				responseData = getMplPaymentFacade().applyPromotions(cartData, cart);
-				if (cart != null && cart.getEntries() != null && MapUtils.isNotEmpty(freebieModelMap))
+				if (!mplCheckoutFacade.isPromotionValid(cart))
 				{
-					for (final AbstractOrderEntryModel cartEntryModel : cart.getEntries())
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+					responseData.setErrorMsgForEMI("redirect");
+				}
+				else
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+
+					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+					if (cart != null && cart.getEntries() != null)
 					{
-						if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
-								&& CollectionUtils.isNotEmpty(cartEntryModel.getAssociatedItems()))
+						for (final AbstractOrderEntryModel cartEntryModel : cart.getEntries())
 						{
-							mplCheckoutFacade.saveDeliveryMethForFreebie(cart, freebieModelMap, freebieParentQtyMap);
-							//start populate deliveryPointOfService for freebie
-							if (LOG.isDebugEnabled())
+							if (cartEntryModel != null && cartEntryModel.getGiveAway() != null
+									& !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getSelectedUSSID() != null)
 							{
-								LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
-										+ cartEntryModel.getSelectedUSSID());
+								freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+								freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
 							}
-							PointOfServiceModel posModel = null;
-							for (final AbstractOrderEntryModel cEntry : cart.getEntries())
+						}
+					}
+
+					final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+					responseData = getMplPaymentFacade().applyPromotions(cartData, null, cart, null);
+					if (cart != null && cart.getEntries() != null && MapUtils.isNotEmpty(freebieModelMap))
+					{
+						for (final AbstractOrderEntryModel cartEntryModel : cart.getEntries())
+						{
+							if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
+									&& CollectionUtils.isNotEmpty(cartEntryModel.getAssociatedItems()))
 							{
-								if (cartEntryModel.getAssociatedItems().size() == 1)
+								mplCheckoutFacade.saveDeliveryMethForFreebie(cart, freebieModelMap, freebieParentQtyMap);
+								//start populate deliveryPointOfService for freebie
+								if (LOG.isDebugEnabled())
 								{
-									if (cEntry.getSelectedUSSID().equalsIgnoreCase(cartEntryModel.getAssociatedItems().get(0)))
+									LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
+											+ cartEntryModel.getSelectedUSSID());
+								}
+								PointOfServiceModel posModel = null;
+								for (final AbstractOrderEntryModel cEntry : cart.getEntries())
+								{
+									if (cartEntryModel.getAssociatedItems().size() == 1)
 									{
-										if (null != cEntry.getDeliveryPointOfService())
+										if (cEntry.getSelectedUSSID().equalsIgnoreCase(cartEntryModel.getAssociatedItems().get(0)))
 										{
-											if (LOG.isDebugEnabled())
+											if (null != cEntry.getDeliveryPointOfService())
 											{
-												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
-														+ cartEntryModel.getAssociatedItems().get(0));
+												if (LOG.isDebugEnabled())
+												{
+													LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+															+ cartEntryModel.getAssociatedItems().get(0));
+												}
+												posModel = cEntry.getDeliveryPointOfService();
 											}
-											posModel = cEntry.getDeliveryPointOfService();
+										}
+									}
+									else
+									{
+										final String parentUssId = findParentUssId(cartEntryModel, cart);
+										if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+										{
+											if (null != cEntry.getDeliveryPointOfService())
+											{
+												if (LOG.isDebugEnabled())
+												{
+													LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+															+ parentUssId);
+												}
+												posModel = cEntry.getDeliveryPointOfService();
+											}
 										}
 									}
 								}
-								else
+								if (null != posModel)
 								{
-									final String parentUssId = findParentUssId(cartEntryModel, cart);
-									if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
-									{
-										if (null != cEntry.getDeliveryPointOfService())
-										{
-											if (LOG.isDebugEnabled())
-											{
-												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
-														+ parentUssId);
-											}
-											posModel = cEntry.getDeliveryPointOfService();
-										}
-									}
+									cartEntryModel.setDeliveryPointOfService(posModel);
+									modelService.save(cartEntryModel);
 								}
+								if (LOG.isDebugEnabled())
+								{
+									LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
+											+ cartEntryModel.getSelectedUSSID());
+								}
+								//end populate deliveryPointOfService for freebie
 							}
-							if (null != posModel)
-							{
-								cartEntryModel.setDeliveryPointOfService(posModel);
-								modelService.save(cartEntryModel);
-							}
-							if (LOG.isDebugEnabled())
-							{
-								LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
-										+ cartEntryModel.getSelectedUSSID());
-							}
-							//end populate deliveryPointOfService for freebie
 						}
 					}
+
+					//Wallet amount assigned. Will be changed after release1
+					final double walletAmount = MarketplacecheckoutaddonConstants.WALLETAMOUNT;
+
+					//setting the payment modes and the amount against it in session to be used later
+					final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+					paymentInfo.put(paymentMode, Double.valueOf(cart.getTotalPriceWithConv().doubleValue() - walletAmount));
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, paymentInfo);
+
+					//TISPRO-540 - Setting Payment mode in Cart
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE))
+					{
+						cart.setModeOfPayment(MarketplacecheckoutaddonConstants.CREDITCARDMODE);
+						getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE))
+					{
+						cart.setModeOfPayment(MarketplacecheckoutaddonConstants.DEBITCARDMODE);
+						getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
+					{
+						cart.setModeOfPayment(MarketplacecheckoutaddonConstants.NETBANKINGMODE);
+						getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
+					{
+						cart.setModeOfPayment(MarketplacecheckoutaddonConstants.EMIMODE);
+						getModelService().save(cart);
+					}
+
+					//TISST-7955
+					final CartData promotedCartData = getMplCustomAddressFacade().getCheckoutCart();
+					final Map<String, String> ussidPricemap = new HashMap<String, String>();
+					if (promotedCartData != null)
+					{
+						for (final OrderEntryData entryData : promotedCartData.getEntries())
+						{
+							ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
+									.getFormattedValue());
+						}
+					}
+					final ObjectMapper objectMapper = new ObjectMapper();
+					jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
 				}
 
-				//Wallet amount assigned. Will be changed after release1
-				final double walletAmount = MarketplacecheckoutaddonConstants.WALLETAMOUNT;
+			}
+			else
+			{
+				if (null != bankName && !bankName.equalsIgnoreCase("null"))
+				{
+					getMplPaymentFacade().setBankForSavedCard(bankName);
+				}
 
-				//setting the payment modes and the amount against it in session to be used later
-				final Map<String, Double> paymentInfo = new HashMap<String, Double>();
-				paymentInfo.put(paymentMode, Double.valueOf(cart.getTotalPriceWithConv().doubleValue() - walletAmount));
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, paymentInfo);
-
-				//TISPRO-540 - Setting Payment mode in Cart
+				//TISPT-29
 				if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE))
+						&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE) || paymentMode
+									.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)))
 				{
-					cart.setModeOfPayment(MarketplacecheckoutaddonConstants.CREDITCARDMODE);
-					getModelService().save(cart);
-				}
-				else if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE))
-				{
-					cart.setModeOfPayment(MarketplacecheckoutaddonConstants.DEBITCARDMODE);
-					getModelService().save(cart);
-				}
-				else if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
-				{
-					cart.setModeOfPayment(MarketplacecheckoutaddonConstants.NETBANKINGMODE);
-					getModelService().save(cart);
-				}
-				else if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
-				{
-					cart.setModeOfPayment(MarketplacecheckoutaddonConstants.EMIMODE);
-					getModelService().save(cart);
+					//setting in cartmodel
+					orderModel.setConvenienceCharges(Double.valueOf(0));
+					//saving cartmodel
+					getModelService().save(orderModel);
 				}
 
-				//TISST-7955
-				final CartData promotedCartData = getMplCustomAddressFacade().getCheckoutCart();
-				final Map<String, String> ussidPricemap = new HashMap<String, String>();
-				if (promotedCartData != null)
+				if (!mplCheckoutFacade.isPromotionValid(orderModel))
 				{
-					for (final OrderEntryData entryData : promotedCartData.getEntries())
-					{
-						ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
-								.getFormattedValue());
-					}
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+					responseData.setErrorMsgForEMI("redirect");
 				}
-				final ObjectMapper objectMapper = new ObjectMapper();
-				jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
+				else
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+
+					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+					if (orderModel.getEntries() != null)
+					{
+						for (final AbstractOrderEntryModel cartEntryModel : orderModel.getEntries())
+						{
+							if (cartEntryModel != null && cartEntryModel.getGiveAway() != null
+									& !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getSelectedUSSID() != null)
+							{
+								freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+								freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+							}
+						}
+					}
+
+					final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
+					responseData = getMplPaymentFacade().applyPromotions(null, orderData, null, orderModel);
+					if (orderModel.getEntries() != null && MapUtils.isNotEmpty(freebieModelMap))
+					{
+						for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
+						{
+							if (orderEntryModel != null && orderEntryModel.getGiveAway().booleanValue()
+									&& CollectionUtils.isNotEmpty(orderEntryModel.getAssociatedItems()))
+							{
+								mplCheckoutFacade.saveDeliveryMethForFreebie(orderModel, freebieModelMap, freebieParentQtyMap);
+								//start populate deliveryPointOfService for freebie
+								if (LOG.isDebugEnabled())
+								{
+									LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
+											+ orderEntryModel.getSelectedUSSID());
+								}
+								PointOfServiceModel posModel = null;
+								for (final AbstractOrderEntryModel cEntry : orderModel.getEntries())
+								{
+									if (orderEntryModel.getAssociatedItems().size() == 1)
+									{
+										if (cEntry.getSelectedUSSID().equalsIgnoreCase(orderEntryModel.getAssociatedItems().get(0)))
+										{
+											if (null != cEntry.getDeliveryPointOfService())
+											{
+												if (LOG.isDebugEnabled())
+												{
+													LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+															+ orderEntryModel.getAssociatedItems().get(0));
+												}
+												posModel = cEntry.getDeliveryPointOfService();
+											}
+										}
+									}
+									else
+									{
+										final String parentUssId = findParentUssId(orderEntryModel, orderModel);
+										if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+										{
+											if (null != cEntry.getDeliveryPointOfService())
+											{
+												if (LOG.isDebugEnabled())
+												{
+													LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+															+ parentUssId);
+												}
+												posModel = cEntry.getDeliveryPointOfService();
+											}
+										}
+									}
+								}
+								if (null != posModel)
+								{
+									orderEntryModel.setDeliveryPointOfService(posModel);
+									modelService.save(orderEntryModel);
+								}
+								if (LOG.isDebugEnabled())
+								{
+									LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
+											+ orderEntryModel.getSelectedUSSID());
+								}
+								//end populate deliveryPointOfService for freebie
+							}
+						}
+					}
+
+					//Wallet amount assigned. Will be changed after release1
+					final double walletAmount = MarketplacecheckoutaddonConstants.WALLETAMOUNT;
+
+					//setting the payment modes and the amount against it in session to be used later
+					final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+					paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue() - walletAmount));
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, paymentInfo);
+
+					//TISPRO-540 - Setting Payment mode in Cart
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE))
+					{
+						orderModel.setModeOfPayment(MarketplacecheckoutaddonConstants.CREDITCARDMODE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE))
+					{
+						orderModel.setModeOfPayment(MarketplacecheckoutaddonConstants.DEBITCARDMODE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
+					{
+						orderModel.setModeOfPayment(MarketplacecheckoutaddonConstants.NETBANKINGMODE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
+					{
+						orderModel.setModeOfPayment(MarketplacecheckoutaddonConstants.EMIMODE);
+						getModelService().save(orderModel);
+					}
+
+					//TISST-7955
+					final CartData promotedCartData = getMplCustomAddressFacade().getCheckoutCart();
+					final Map<String, String> ussidPricemap = new HashMap<String, String>();
+					if (promotedCartData != null)
+					{
+						for (final OrderEntryData entryData : promotedCartData.getEntries())
+						{
+							ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
+									.getFormattedValue());
+						}
+					}
+					final ObjectMapper objectMapper = new ObjectMapper();
+					jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
+				}
 			}
-			catch (final JsonGenerationException e)
-			{
-				LOG.error("Error while generating JSON ", e);
-			}
-			catch (final JsonMappingException e)
-			{
-				LOG.error("Error while generating JSON ", e);
-			}
-			catch (final IOException e)
-			{
-				LOG.error("Error while generating JSON ", e);
-			}
-			catch (final EtailNonBusinessExceptions e)
-			{
-				LOG.error("Error while generating JSON ", e);
-				ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			}
-			catch (final Exception e)
-			{
-				LOG.error("Error while generating JSON ", e);
-			}
-			responseData.setUssidPriceDetails(jsonResponse);
 		}
+		catch (final JsonGenerationException e)
+		{
+			LOG.error("Error while generating JSON ", e);
+		}
+		catch (final JsonMappingException e)
+		{
+			LOG.error("Error while generating JSON ", e);
+		}
+		catch (final IOException e)
+		{
+			LOG.error("Error while generating JSON ", e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("Error while generating JSON ", e);
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while generating JSON ", e);
+		}
+		responseData.setUssidPriceDetails(jsonResponse);
+
 
 		final long endTime = System.currentTimeMillis();
 		LOG.debug("Time taken within Controller applyPromotions()=====" + (endTime - startTime));
@@ -2549,129 +2723,178 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@RequireHardLogIn
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String addressLine1,
 			final String addressLine2, final String addressLine3, final String country, final String state, final String city,
-			final String pincode, final String cardSaved, final String sameAsShipping) throws EtailNonBusinessExceptions
+			final String pincode, final String cardSaved, final String sameAsShipping, final String guid)
+			throws EtailNonBusinessExceptions
 	{
 		String orderId = null;
-		final CartModel cart = getCartService().getSessionCart();
-		final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
-		String uid = "";
-		if (null != customer)
-		{
-			uid = customer.getUid();
-		}
-		//final Double cartTotals = cart.getTotalPriceWithConv();
-		boolean redirectFlag = false;
-		final StringBuilder returnUrlBuilder = new StringBuilder();
-		returnUrlBuilder.append(request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8)))
-				.append(request.getContextPath())
-				.append(getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYRETURNMETHOD));
-		//final String returnUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8))
-		//		+ request.getContextPath()
-		//		+ getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYRETURNMETHOD);
 		try
 		{
-			//TISPRD-3025 - LOG to handle address
-			String cartGuid = "";
-			if (null != cart && StringUtils.isNotEmpty(cart.getGuid()))
+			final StringBuilder returnUrlBuilder = new StringBuilder();
+			returnUrlBuilder
+					.append(request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8)))
+					.append(request.getContextPath())
+					.append(
+							getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYRETURNMETHOD));
+			final String cartGuid = "";
+			if (StringUtils.isNotEmpty(guid))
 			{
-				cartGuid = cart.getGuid();
-				returnUrlBuilder.append("?value=").append(cartGuid);
+				returnUrlBuilder.append("?value=").append(guid);
 			}
-
 			final String paymentAddressLine1 = java.net.URLDecoder.decode(addressLine1, UTF);
 			final String paymentAddressLine2 = java.net.URLDecoder.decode(addressLine2, UTF);
 			final String paymentAddressLine3 = java.net.URLDecoder.decode(addressLine3, UTF);
-			final StringBuilder sb = new StringBuilder();
-			sb.append("firstName:::").append(firstName).append("|lastName:::").append(lastName).append("|addressLine1:::")
-					.append(paymentAddressLine1).append("|addressLine2:::").append(paymentAddressLine2).append("|addressLine3:::")
-					.append(paymentAddressLine3).append("|country:::").append(country).append("|state:::").append(state)
-					.append("|city:::").append(city).append("|pincode:::").append(pincode).append("|cardSaved:::").append(cardSaved)
-					.append("|sameAsShipping:::").append(sameAsShipping).append("|cartGUID:::").append(cartGuid);
 
-			LOG.error("Address details entered >>>" + sb.toString());
-
-			LOG.debug(" TIS-414  : Checking - onclick of pay now button pincode servicabilty and promotion");
-			if (!redirectFlag && !mplCheckoutFacade.isPromotionValid(cart))
+			final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
+			String uid = "";
+			if (null != customer)
 			{
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
-				redirectFlag = true;
-			}
-			//TISST-13012
-			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
-			if (!redirectFlag && cartItemDelistedStatus)
-			{
-				redirectFlag = true;
+				uid = customer.getUid();
 			}
 
-			//TISUTO-12 , TISUTO-11
-			if (!redirectFlag)
+
+			//Payment Soln changes
+			OrderModel orderModel = null;
+			if (StringUtils.isNotEmpty(guid))
 			{
-				final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT);
-				if (!inventoryReservationStatus)
+				//final String orderGuid = decryptKey(guid);
+				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+			}
+
+			if (orderModel == null)
+			{
+				final CartModel cart = getCartService().getSessionCart();
+
+				//final Double cartTotals = cart.getTotalPriceWithConv();
+				boolean redirectFlag = false;
+				//final String returnUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8))
+				//		+ request.getContextPath()
+				//		+ getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYRETURNMETHOD);
+				//try
+				//{
+				//TISPRD-3025 - LOG to handle address
+
+				final StringBuilder sb = new StringBuilder();
+				sb.append("firstName:::").append(firstName).append("|lastName:::").append(lastName).append("|addressLine1:::")
+						.append(paymentAddressLine1).append("|addressLine2:::").append(paymentAddressLine2).append("|addressLine3:::")
+						.append(paymentAddressLine3).append("|country:::").append(country).append("|state:::").append(state)
+						.append("|city:::").append(city).append("|pincode:::").append(pincode).append("|cardSaved:::")
+						.append(cardSaved).append("|sameAsShipping:::").append(sameAsShipping).append("|cartGUID:::").append(cartGuid);
+
+				LOG.error("Address details entered >>>" + sb.toString());
+
+				LOG.debug(" TIS-414  : Checking - onclick of pay now button pincode servicabilty and promotion");
+				if (!redirectFlag && !mplCheckoutFacade.isPromotionValid(cart))
 				{
-					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
 					redirectFlag = true;
 				}
-			}
+				//TISST-13012
+				//				final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
+				//				if (!redirectFlag && cartItemDelistedStatus)
+				//				{
+				//					redirectFlag = true;
+				//				}
 
-			if (!redirectFlag && !mplCheckoutFacade.isCouponValid(cart))
-			{
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
-				redirectFlag = true;
-			}
+				if (!redirectFlag)
+				{
+					final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
+					if (cartItemDelistedStatus)
+					{
+						redirectFlag = true;
+					}
+				}
 
-			//TISPRO-497
-			final Double cartTotal = cart.getTotalPrice();
-			final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
 
-			if (!redirectFlag && cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
-			{
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
-				redirectFlag = true;
-			}
+				//TISUTO-12 , TISUTO-11
+				if (!redirectFlag)
+				{
+					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT);
+					if (!inventoryReservationStatus)
+					{
+						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+						redirectFlag = true;
+					}
+				}
 
-			//TISPRO-578
-			if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
-			{
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
-				redirectFlag = true;
-			}
+				if (!redirectFlag && !mplCheckoutFacade.isCouponValid(cart))
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+					redirectFlag = true;
+				}
 
-			if (redirectFlag)
-			{
-				return "redirect";
+				//TISPRO-497
+				//				final Double cartTotal = cart.getTotalPrice();
+				//				final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+				//
+				//				if (!redirectFlag && cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+				//				{
+				//					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+				//					redirectFlag = true;
+				//				}
+				if (!redirectFlag)
+				{
+					final Double cartTotal = cart.getTotalPrice();
+					final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+
+					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+					{
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+						redirectFlag = true;
+					}
+				}
+
+				//TISPRO-578
+				if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
+					redirectFlag = true;
+				}
+
+				if (redirectFlag)
+				{
+					return "redirect";
+				}
+				else
+				{
+					orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
+							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
+							cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
+							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+
+					//create order here
+
+					//Mandatory checks agains cart
+					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
+					OrderData orderData;
+
+					//getSessionService().setAttribute("guid", cart.getGuid());
+					if (isValidCart)
+					{
+						//final String encryptedGuid = encryptKey(cart.getGuid());
+						orderData = mplCheckoutFacade.placeOrder();
+
+
+					}
+					else
+					{
+						throw new InvalidCartException("************PaymentMethodCheckoutStepController : placeOrder : Invalid Cart!!!"
+								+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
+					}
+
+				}
+
 			}
 			else
 			{
-				orderId = getMplPaymentFacade().createJuspayOrder(cart, firstName, lastName, paymentAddressLine1,
+				orderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName, paymentAddressLine1,
 						paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 						cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
 						uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
 
-				//create order here
-
-				//Mandatory checks agains cart
-				final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
-				OrderData orderData;
-
-				//getSessionService().setAttribute("guid", cart.getGuid());
-				if (isValidCart)
-				{
-					//final String encryptedGuid = encryptKey(cart.getGuid());
-					orderData = mplCheckoutFacade.placeOrder();
-					orderId = orderId + "|" + cart.getGuid();
-
-				}
-				else
-				{
-					throw new InvalidCartException("************PaymentMethodCheckoutStepController : placeOrder : Invalid Cart!!!"
-							+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
-				}
-
 			}
 
-
+			orderId = orderId + "|" + guid;
 		}
 		catch (final NullPointerException e)
 		{
@@ -2834,16 +3057,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * This method updates already created order as per new Payment Soln - Order before Payment
 	 *
 	 * @return String
+	 * @throws InvalidCartException
 	 */
-	private String updateOrder()
+	private String updateOrder(final String guid) throws InvalidCartException
 	{
 		LOG.info("========================Inside Update Order============================");
-		final String orderGuid = getSessionService().getAttribute("guid");
-		final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(orderGuid);
+		final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
+		mplCheckoutFacade.beforeSubmitOrder(orderToBeUpdated);
+
 		final OrderData orderData = orderConverter.convert(orderToBeUpdated);
 
 		//Re-trigger submit order process from Payment_Pending to Payment_Successful
-		juspayEBSService.initiateProcess(orderToBeUpdated);
+		//juspayEBSService.initiateProcess(orderToBeUpdated);
 
 		return redirectToOrderConfirmationPage(orderData);
 	}
@@ -2914,7 +3139,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param abstractOrderModel
 	 * @return delivery mode
 	 */
-	private String findParentUssId(final AbstractOrderEntryModel entryModel, final CartModel abstractOrderModel)
+	private String findParentUssId(final AbstractOrderEntryModel entryModel, final AbstractOrderModel abstractOrderModel)
 	{
 		final Long ussIdA = getQuantity(entryModel.getAssociatedItems().get(0), abstractOrderModel);
 		final Long ussIdB = getQuantity(entryModel.getAssociatedItems().get(1), abstractOrderModel);
@@ -2969,7 +3194,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param abstractOrderModel
 	 * @return delivery mode
 	 */
-	private String getDeliverModeForABgetC(final String ussid, final CartModel abstractOrderModel)
+	private String getDeliverModeForABgetC(final String ussid, final AbstractOrderModel abstractOrderModel)
 	{
 		String deliveryMode = null;
 		for (final AbstractOrderEntryModel cartEntry : abstractOrderModel.getEntries())
@@ -3417,7 +3642,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

@@ -5,7 +5,9 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.util.DiscountValue;
@@ -28,14 +30,14 @@ public interface MplVoucherService
 	 * @param cartModel
 	 *
 	 */
-	void recalculateCartForCoupon(CartModel cartModel) throws EtailNonBusinessExceptions;
+	void recalculateCartForCoupon(CartModel cartModel, OrderModel orderModel) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param voucherModel
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @return List<AbstractOrderEntry>
 	 */
-	List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(VoucherModel voucherModel, CartModel cartModel);
+	List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(VoucherModel voucherModel, AbstractOrderModel abstractOrderModel);
 
 	/**
 	 * @param discountList
@@ -51,19 +53,19 @@ public interface MplVoucherService
 
 	/**
 	 * @param voucherModel
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @return List<AbstractOrderEntryModel>
 	 */
-	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel, CartModel cartModel);
+	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel, AbstractOrderModel abstractOrderModel);
 
 	/**
 	 * @param voucher
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @param voucherCode
 	 * @param applicableOrderEntryList
 	 * @throws EtailNonBusinessExceptions
 	 */
-	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode,
+	void setApportionedValueForVoucher(VoucherModel voucher, AbstractOrderModel abstractOrderModel, String voucherCode,
 			List<AbstractOrderEntryModel> applicableOrderEntryList) throws EtailNonBusinessExceptions;
 
 	/**
@@ -73,7 +75,7 @@ public interface MplVoucherService
 	 * @return VoucherDiscountData
 	 * @throws VoucherOperationException
 	 */
-	VoucherDiscountData checkCartAfterApply(VoucherModel lastVoucher, CartModel cartModel,
+	VoucherDiscountData checkCartAfterApply(VoucherModel lastVoucher, CartModel cartModel, OrderModel orderModel,
 			List<AbstractOrderEntryModel> applicableOrderEntryList) throws VoucherOperationException, EtailNonBusinessExceptions;
 
 	/**
@@ -81,7 +83,7 @@ public interface MplVoucherService
 	 * @param cartModel
 	 * @throws VoucherOperationException
 	 */
-	void releaseVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException;
+	void releaseVoucher(String voucherCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException;
 
 	/**
 	 * @param cartModel
@@ -89,4 +91,5 @@ public interface MplVoucherService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	void checkCartWithVoucher(CartModel cartModel) throws VoucherOperationException, EtailNonBusinessExceptions;
+
 }
