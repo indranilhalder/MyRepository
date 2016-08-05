@@ -13,13 +13,13 @@
 <h2 class="company author">
           </h2>
 <div class="price">
-	<p class="old" id="mrpPriceId" style="display:none">
+	<p class="old" id="mrpPriceId">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
-	<p class="sale" id="mopPriceId" style="display:none">
+	<p class="sale" id="mopPriceId">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
-	<p class="sale" id="spPriceId" style="display:none">
+	<p class="sale" id="spPriceId">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
 	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															

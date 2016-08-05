@@ -1548,11 +1548,9 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 			$("#mrpPriceId").show();
 		}
 	}
-	if (mrp.value == "") {
-		$("#mrpPriceId").hide();
-	} else {
+	if (mrp.value != "") {
 		$("#mrpPriceId").show();
-	}
+	} 
 
 	// EMI change starts
 	if (spPrice != undefined || null!=spPrice) {
