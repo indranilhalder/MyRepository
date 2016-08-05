@@ -82,7 +82,7 @@ public class TrackOrderPageController extends AbstractPageController
 	private static final Logger LOG = Logger.getLogger(TrackOrderPageController.class);
 	private static final String ORDER_DETAIL_CMS_PAGE = "order";
 	public static final String PAGE_ROOT = "pages/";
-	public static final String NON_LOGIN_TRACKING_PAGE_URL = "/trackOrder/trackDetails/?orderCode=";
+	public static final String NON_LOGIN_TRACKING_PAGE_URL = "/trackOrder/shortDetails/?orderCode=";
 	public static final String LOGIN_TRACKING_PAGE_URL = "/my-account/order/?orderCode=";
 
 	@Autowired
