@@ -301,7 +301,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				/* (TPR-243) SEO Meta Tags and Titles for Landing Page *: ends */
 
-
+				setUpMetaDataForContentPage(model, categoryLandingPage);
 				//model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 				//Collections.singletonList(new Breadcrumb("#", categoryName, LAST_LINK_CLASS)));
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
@@ -336,7 +336,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				/*
 				 * final List<ProductData> commonNormalProducts = new ArrayList<ProductData>(); final List<ProductData>
 				 * normalProductDatas = searchPageData.getResults();
-				 * 
+				 *
 				 * if (null != normalProductDatas) { for (final ProductData normalProduct : normalProductDatas) { for (final
 				 * ProductModel heroProduct : heroProducts) { if
 				 * (normalProduct.getCode().equalsIgnoreCase(heroProduct.getCode())) {
