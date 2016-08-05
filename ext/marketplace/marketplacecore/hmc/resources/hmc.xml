@@ -2276,7 +2276,7 @@
 										<attribute name="useForAutocomplete" />
 
 										<attribute name="boost" width="50" />
-										<attribute name="facetTopValue" width="50" />
+										<!-- <attribute name="facetTopValue" width="50" /> -->
 
 										<attribute name="boostDouble" width="50" />
 
@@ -2310,7 +2310,7 @@
 										<attribute name="useForAutocomplete" />
 
 										<attribute name="boost" width="50" />
-										<attribute name="facetTopValue" width="50" />
+										<!-- <attribute name="facetTopValue" width="50" /> -->
 
 										<attribute name="boostDouble" width="50" />
 

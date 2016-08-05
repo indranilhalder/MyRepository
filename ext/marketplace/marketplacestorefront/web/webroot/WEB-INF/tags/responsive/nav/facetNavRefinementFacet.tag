@@ -497,10 +497,12 @@ function navigateToPage(queryString,textString)
 			
 			<c:set var="remainingFacetValues" value="${facetData.values}" />
 			
-	        <%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('search.Facet.topValue')" var="facetTopValue"/> --%>
-	        <c:set var="facetTopValues" value="${facetData.topValues}" />
+	        <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('search.Facet.topValue')" var="facetTopValue"/>
+	        <%-- <c:set var="facetTopValues" value="${facetData.topValues}" />
 	        
-		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-fn:length(facetTopValues)}" />
+		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-fn:length(facetTopValues)}" /> --%>
+		    
+		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-facetTopValue}" />
 		    
 			<div class="more-lessFacetLinks active">
 				<div class="more js-more-facet-values checkbox-menu">
@@ -526,7 +528,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
 								<input type="hidden" name="isFacet" value="true"/>
-								<input type="submit" value="<spring:theme code="search.nav.facetShowLess_${facetData.code}" />" class="js-less-facet-values-link"  />
+								<input type="submit" value="<spring:theme code="search.nav.facetShowLess_${facetData.code}" text="less..."/>" class="js-less-facet-values-link"  />
 								</form>
 				
 					<%-- <a href="#" class="js-less-facet-values-link"><spring:theme code="search.nav.facetShowLess_${facetData.code}" /></a> --%>

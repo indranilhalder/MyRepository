@@ -703,11 +703,6 @@ function showUrlInDialog(url) {
 function setValidPrice(sellersArray, index) {
 
 	var roundedSpPrice = Math.round(sellersArray[index].spPrice * 100) / 100;
-	if (mrp == "") {
-		$("#mrpPriceId").hide();
-	} else {
-//		$("#mrpPriceId").show();
-//	}
 	if (sellersArray[index].spPrice != null && sellersArray[index].spPrice != 0) {
 		if (sellersArray[index].mopPrice == mrp) {
 			$("#mrpPriceId").append("<strike>" + mrp + "</strike>");
@@ -722,7 +717,7 @@ function setValidPrice(sellersArray, index) {
 
 	} else {
 		if (sellersArray[index].mopPrice != null
-				&& sellersArray[index].mopPrice != 0 && sellersArray[index].mopPrice > 1) {
+				&& sellersArray[index].mopPrice != 0) {
 			if (sellersArray[index].mopPrice == mrp) {
 				$("#mrpPriceId").append(mrp);
 				$("#mopPriceId").html("");
@@ -732,31 +727,19 @@ function setValidPrice(sellersArray, index) {
 				$("#mopPriceId").append(sellersArray[index].mopPrice);
 				$("#spPriceId").html("");
 			}
-		} else if(sellersArray[index].mopPrice != 0 && sellersArray[index].mopPrice <= 1){
-			 $(".size").hide(); 	
-			 $(".color-swatch").hide();
-			 $(".reviews").hide(); 	
-			 $('#addToCartButton-wrong').attr("disable",true);
-			 $('#addToCartButton-wrong').show();
-			 $('#addToCartButton').hide();
-			 $("#otherSellerInfoId").hide();
-			 $(".wish-share").hide();
-			 $(".fullfilled-by").hide();
-			 $("#dListedErrorMsg").show();			 
-			 $("#pdpPincodeCheck").hide();
-			 $("#pin").attr("disabled",true);
-			 $("#pdpPincodeCheckDList").show();
-			 $("#buyNowButton").attr("disabled",true);
-			 $("#mopPriceId").show();
-			 $("#mrpPriceId").hide();
-			 $("#savingsOnProductId").hide();
-		}else {
+		} else {
 			$("#mrpPriceId").append(mrp);
 			$("#mopPriceId").html("");
 			$("#spPriceId").html("");
-		 }
+		}
 	}
-  }
+	
+	if (mrp == "") {
+		$("#mrpPriceId").hide();
+	} else {
+		$("#mrpPriceId").show();
+	}
+
 }
 
 // pricedetails display at the time of changing the seller in pdp
@@ -1515,6 +1498,7 @@ function displayDeliveryDetails(sellerName) {
 		}
 	});
 }
+
 function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	//alert("mrp "+ mrp.formattedValue +"mop "+mop.formattedValue +"spPrice "+spPrice.formattedValue +"savingsOnProduct "+ savingsOnProduct.formattedValue);
 	if(null!= mrp){
@@ -1535,11 +1519,6 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 		$("#savingsOnProductId").show();
 	} 
 	
-	if (mrp.value == "") {
-		$("#mrpPriceId").hide();
-	} else {
-		//$("#mrpPriceId").show();
-	//}	
 	//TISPRM-33
 	if (null!=spPrice && spPrice != 0) {
 
@@ -1556,7 +1535,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 		}
 
 	} else {
-		if (null!=mop && mop.value != 0 && mop.value > 1) {
+		if (null!=mop && mop.value != 0) {
 			if (mop.value == mrp.value) {
 				$("#mrpPriceId").removeClass("old").addClass("sale");
 				$("#mrpPriceId").show();
@@ -1565,29 +1544,16 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				$("#mrpPriceId").show();
 				$("#mopPriceId").show();
 			}
-		} else if(mop.value != 0 && mop.value <= 1){
-			 $(".size").hide(); 	
-			 $(".color-swatch").hide();
-			 $(".reviews").hide(); 	
-			 $('#addToCartButton-wrong').attr("disable",true);
-			 $('#addToCartButton-wrong').show();
-			 $('#addToCartButton').hide();
-			 $("#otherSellerInfoId").hide();
-			 $(".wish-share").hide();
-			 $(".fullfilled-by").hide();
-			 $("#dListedErrorMsg").show();			 
-			 $("#pdpPincodeCheck").hide();
-			 $("#pin").attr("disabled",true);
-			 $("#pdpPincodeCheckDList").show();
-			 $("#buyNowButton").attr("disabled",true);
-			 $("#mopPriceId").show();
-			 $("#mrpPriceId").hide();
-			 $("#savingsOnProductId").hide();			 
-		}else{
+		} else {
 			$("#mrpPriceId").show();
-		 }
+		}
 	}
-  }
+	if (mrp.value = "") {
+		$("#mrpPriceId").hide();
+	} else {
+		$("#mrpPriceId").show();
+	}
+
 	// EMI change starts
 	if (spPrice != undefined || null!=spPrice) {
 		$("#prodPrice").val(spPrice.value);

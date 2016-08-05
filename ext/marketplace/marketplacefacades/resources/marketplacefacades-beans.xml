@@ -512,7 +512,7 @@
 			type="java.util.List&lt;de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel>" />
 		<property name="genericFacet" type="boolean" />
 		<property name="classificationProductType" type="java.lang.String" />
-		<property name="facetTopValue" type="Integer" />
+		<!-- <property name="facetTopValue" type="Integer" /> -->
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.AddressRadioTypeData">
