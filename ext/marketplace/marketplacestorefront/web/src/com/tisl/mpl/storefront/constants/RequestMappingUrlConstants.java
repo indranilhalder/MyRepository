@@ -152,4 +152,10 @@ public final class RequestMappingUrlConstants
 
 	public static final String SHOP_BY_BRAND_AJAX = "/shopbybrand";
 
+	//order tracking page
+	public static final String NON_LOGIN_TRACK_ORDER_URL = "/trackOrder";
+	public static final String BEFORE_NON_LOGIN_TRACK_URL = "/beforeTrack/{orderId}";
+	public static final String TRACK_ORDER_DETAILS_PAGE_URL = "/shortDetails";
+	public static final String NON_LOGIN_TRACK_VALIDATE_URL = "/nonlogintrack";
+
 }

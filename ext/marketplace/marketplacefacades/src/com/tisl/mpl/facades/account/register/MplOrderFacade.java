@@ -166,5 +166,11 @@ public interface MplOrderFacade
 	 */
 	OrderModel getOrder(String orderCode);
 
+	/**
+	 * @param orderCode
+	 * @return OrderModel
+	 */
+	OrderModel getOrderWithoutUser(String orderCode);
+
 
 }
