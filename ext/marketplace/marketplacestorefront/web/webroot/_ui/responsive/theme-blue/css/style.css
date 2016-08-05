@@ -32513,6 +32513,10 @@ ul li #mobile-menu-toggle + ul li ul.words li.long a{
 body.page-homepage .feature-collections h1, body.page-homepage .trending h1>span {
     font-size: 15px;
 }
+.qued .qued-content h5, .qued .qued-content h2, .qued .qued-content h3{font-size: 14px; line-height: 20px;}
+	.feature-collections .qued .qued-content h1{  margin: 0 0 20px;}
+	.qued-content p{ margin: 20px 0;}
+	#newAndExclusive h1{padding: 25px 0;}
 }
 .shop-promos .promos li:last-child {
     border-right: 0;
