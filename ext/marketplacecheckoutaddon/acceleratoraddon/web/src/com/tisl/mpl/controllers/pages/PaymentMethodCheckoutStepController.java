@@ -97,6 +97,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.enums.CodCheckMessage;
+import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -197,6 +198,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	private final String checkoutPageName = "Payment Options";
 	private final String RECEIVED_INR = "Received INR ";
 	private final String DISCOUNT_MSSG = " discount on purchase of Promoted Product";
+	private static final String UTF = "UTF-8";
 
 	/**
 	 * This is the GET method which renders the Payment Page
@@ -399,9 +401,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//return values
 		model.addAttribute("checkoutPageName", checkoutPageName);
+		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, getMplCustomAddressFacade().getCheckoutCart());
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddPaymentMethodPage;
 	}
-
 
 	/**
 	 * This method sets timeout
@@ -1464,135 +1466,78 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//adding blacklist status to model
 				model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_BLACKLISTED.toString());
 
+				//Commented for TISPT-400
 				//to check items are seller fulfilled or not
-				final List<String> fulfillmentDataList = new ArrayList<String>();
-				final List<String> paymentTypeList = new ArrayList<String>(); //TISPT-204
+				//final List<String> fulfillmentDataList = new ArrayList<String>();
+				//final List<String> paymentTypeList = new ArrayList<String>(); //TISPT-204
 				for (final AbstractOrderEntryModel entry : cart.getEntries())
 				{
 					if (entry != null && entry.getSelectedUSSID() != null)
 					{
 						final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 								entry.getSelectedUSSID());
-						List<RichAttributeModel> richAttributeModel = null;
+						//List<RichAttributeModel> richAttributeModel = null;
+						//TISPT-400
 						if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 						{
-							richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-							if (richAttributeModel != null && richAttributeModel.get(0).getDeliveryFulfillModes() != null)
+							final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) sellerInfoModel
+									.getRichAttribute();
+							if (richAttributeModel != null && richAttributeModel.get(0) != null
+									&& richAttributeModel.get(0).getDeliveryFulfillModes() != null)
 							{
 								final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
-								fulfillmentDataList.add(fulfillmentType.toUpperCase());
-							}
-
-							//Start TISPT-204 Point No 1
-							if (richAttributeModel != null && richAttributeModel.get(0) != null
-									&& richAttributeModel.get(0).getPaymentModes() != null)
-							{
-								final String paymentMode = richAttributeModel.get(0).getPaymentModes().toString();
-								if (StringUtils.isNotEmpty(paymentMode))
+								if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
 								{
-									//setting the payment mode in a list
-									paymentTypeList.add(paymentMode);
+									//Start TISPT-204 Point No 1
+									if (richAttributeModel.get(0).getPaymentModes() != null)
+									{
+										final PaymentModesEnum paymentMode = richAttributeModel.get(0).getPaymentModes();
+										if (null != paymentMode)
+										{
+											if (PaymentModesEnum.COD.equals(paymentMode) || PaymentModesEnum.BOTH.equals(paymentMode))
+											{
+												if (null != cart.getIsCODEligible() && cart.getIsCODEligible().equals(Boolean.FALSE))
+												{
+													//Adding to model true if the pincode is serviceable
+													model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
+															CodCheckMessage.NOT_PINCODE_SERVICEABLE.toString());
+													break;
+												}
+											}
+											else
+											{
+												//Adding to model true if the flag value is true
+												model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
+														CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+												break;
+											}
+										}
+										//End TISPT-204 Point No 1
+										else
+										{
+											//Adding to model true if the flag value is true
+											model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
+													CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+											break;
+										}
+									}
+									else
+									{
+										//Adding to model true if the flag value is true
+										model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
+												CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+										break;
+									}
 								}
-								//End TISPT-204 Point No 1
+								else
+								{
+									//error message for Fulfillment will go here
+									model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_TSHIP.toString());
+									break;
+								}
 							}
 						}
 					}
-				}
-
-				int flagForfulfillment = 0;
-				//iterating through the fulfillment data list
-				for (final String fulfillment : fulfillmentDataList)
-				{
-					if (!(com.tisl.mpl.core.enums.DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillment)))
-					{
-						flagForfulfillment = 0;
-						break;
-					}
-					else
-					{
-						flagForfulfillment = 1;
-					}
-				}
-
-				if (flagForfulfillment == 1)
-				{
-					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.TSHIP.toString());
-
-					//item eligible for COD or not
-					//final List<String> paymentTypeList = new ArrayList<String>(); TISPT-204
-					// Code commented as part of TISPT-204 Point No 1 , paymentTypeList is populated in earlier for loop
-					//iterating over all the cart entries
-					//TISBOX-883
-					//					for (final OrderEntryData entry : cartData.getEntries())
-					//					{
-					//						if (entry != null && entry.getSelectedUssid() != null)
-					//						{
-					//							final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
-					//									.getSelectedUssid());
-					//							List<RichAttributeModel> richAttributeModel = null;
-					//							if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
-					//							{
-					//								richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-					//								if (richAttributeModel != null && richAttributeModel.get(0).getPaymentModes() != null)
-					//								{
-					//									final String paymentMode = richAttributeModel.get(0).getPaymentModes().toString();
-					//									if (StringUtils.isNotEmpty(paymentMode))
-					//									{
-					//										//setting the payment mode in a list
-					//										paymentTypeList.add(paymentMode);
-					//									}
-					//								}
-					//							}
-					//						}
-					//
-					//					}
-
-					//declaring a flag
-					boolean codEligibilityFlag = false;
-
-					//iterating over the list of Payment types for all the cart entries
-					for (final String paymentType : paymentTypeList)
-					{
-						if (PaymentModesEnum.COD.toString().equalsIgnoreCase(paymentType)
-								|| PaymentModesEnum.BOTH.toString().equalsIgnoreCase(paymentType))
-						{
-							//flag set to true if the item's payment type is either COD or Both
-							codEligibilityFlag = true;
-						}
-						else
-						{ //flag set to false if the item's payment type is Prepaid
-							codEligibilityFlag = false;
-						}
-					}
-					if (codEligibilityFlag)
-					{
-						//Adding to model true if the flag value is true
-						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_ELIGIBLE.toString());
-
-						//pincode serviceability check
-						if (null != cart.getIsCODEligible() && cart.getIsCODEligible().booleanValue())
-						{
-							//Adding to model true if the pincode is serviceable
-							model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-									CodCheckMessage.PINCODE_SERVICEABLE.toString());
-						}
-						else
-						{
-							//Adding to model true if the pincode is serviceable
-							model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
-									CodCheckMessage.NOT_PINCODE_SERVICEABLE.toString());
-						}
-					}
-					else
-					{
-						//Adding to model true if the flag value is true
-						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
-					}
-				}
-				else
-				{
-					//error message for Fulfillment will go here
-					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_TSHIP.toString());
 				}
 			}
 			else
@@ -1600,6 +1545,128 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//error message for Blacklisted users will go here
 				model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.BLACKLISTED.toString());
 			}
+
+			//Commented as code modulated above as part of TISPT-400
+
+			//								fulfillmentDataList.add(fulfillmentType.toUpperCase());
+			//							}
+			//
+			//							//Start TISPT-204 Point No 1
+			//							if (richAttributeModel != null && richAttributeModel.get(0) != null
+			//									&& richAttributeModel.get(0).getPaymentModes() != null)
+			//							{
+			//								final String paymentMode = richAttributeModel.get(0).getPaymentModes().toString();
+			//								if (StringUtils.isNotEmpty(paymentMode))
+			//								{
+			//									//setting the payment mode in a list
+			//									paymentTypeList.add(paymentMode);
+			//								}
+			//								//End TISPT-204 Point No 1
+			//							}
+			//						}
+			//					}
+			//				}
+			//
+			//				int flagForfulfillment = 0;
+			//				//iterating through the fulfillment data list
+			//				for (final String fulfillment : fulfillmentDataList)
+			//				{
+			//					if (!(com.tisl.mpl.core.enums.DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillment)))
+			//					{
+			//						flagForfulfillment = 0;
+			//						break;
+			//					}
+			//					else
+			//					{
+			//						flagForfulfillment = 1;
+			//					}
+			//				}
+			//
+			//				if (flagForfulfillment == 1)
+			//				{
+			//					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.TSHIP.toString());
+			//
+			//					//item eligible for COD or not
+			//					//final List<String> paymentTypeList = new ArrayList<String>(); TISPT-204
+			//					// Code commented as part of TISPT-204 Point No 1 , paymentTypeList is populated in earlier for loop
+			//					//iterating over all the cart entries
+			//					//TISBOX-883
+			//					//					for (final OrderEntryData entry : cartData.getEntries())
+			//					//					{
+			//					//						if (entry != null && entry.getSelectedUssid() != null)
+			//					//						{
+			//					//							final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
+			//					//									.getSelectedUssid());
+			//					//							List<RichAttributeModel> richAttributeModel = null;
+			//					//							if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+			//					//							{
+			//					//								richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+			//					//								if (richAttributeModel != null && richAttributeModel.get(0).getPaymentModes() != null)
+			//					//								{
+			//					//									final String paymentMode = richAttributeModel.get(0).getPaymentModes().toString();
+			//					//									if (StringUtils.isNotEmpty(paymentMode))
+			//					//									{
+			//					//										//setting the payment mode in a list
+			//					//										paymentTypeList.add(paymentMode);
+			//					//									}
+			//					//								}
+			//					//							}
+			//					//						}
+			//					//
+			//					//					}
+			//
+			//					//declaring a flag
+			//					boolean codEligibilityFlag = false;
+			//
+			//					//iterating over the list of Payment types for all the cart entries
+			//					for (final String paymentType : paymentTypeList)
+			//					{
+			//						if (PaymentModesEnum.COD.toString().equalsIgnoreCase(paymentType)
+			//								|| PaymentModesEnum.BOTH.toString().equalsIgnoreCase(paymentType))
+			//						{
+			//							//flag set to true if the item's payment type is either COD or Both
+			//							codEligibilityFlag = true;
+			//						}
+			//						else
+			//						{ //flag set to false if the item's payment type is Prepaid
+			//							codEligibilityFlag = false;
+			//						}
+			//					}
+			//					if (codEligibilityFlag)
+			//					{
+			//						//Adding to model true if the flag value is true
+			//						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_ELIGIBLE.toString());
+			//
+			//						//pincode serviceability check
+			//						if (null != cart.getIsCODEligible() && cart.getIsCODEligible().booleanValue())
+			//						{
+			//							//Adding to model true if the pincode is serviceable
+			//							model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
+			//									CodCheckMessage.PINCODE_SERVICEABLE.toString());
+			//						}
+			//						else
+			//						{
+			//							//Adding to model true if the pincode is serviceable
+			//							model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
+			//									CodCheckMessage.NOT_PINCODE_SERVICEABLE.toString());
+			//						}
+			//					}
+			//					else
+			//					{
+			//						//Adding to model true if the flag value is true
+			//						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+			//					}
+			//				}
+			//				else
+			//				{
+			//					//error message for Fulfillment will go here
+			//					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_TSHIP.toString());
+			//				}
+			//			else
+			//			{
+			//				//error message for Blacklisted users will go here
+			//				model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.BLACKLISTED.toString());
+			//			}
 		}
 		catch (final NullPointerException e)
 		{
@@ -2415,11 +2482,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				cartGuid = cart.getGuid();
 			}
 
+			final String paymentAddressLine1 = java.net.URLDecoder.decode(addressLine1, UTF);
+			final String paymentAddressLine2 = java.net.URLDecoder.decode(addressLine2, UTF);
+			final String paymentAddressLine3 = java.net.URLDecoder.decode(addressLine3, UTF);
 			final StringBuilder sb = new StringBuilder();
 			sb.append("firstName:::").append(firstName).append("|lastName:::").append(lastName).append("|addressLine1:::")
-					.append(addressLine1).append("|addressLine2:::").append(addressLine2).append("|addressLine3:::")
-					.append(addressLine3).append("|country:::").append(country).append("|state:::").append(state).append("|city:::")
-					.append(city).append("|pincode:::").append(pincode).append("|cardSaved:::").append(cardSaved)
+					.append(paymentAddressLine1).append("|addressLine2:::").append(paymentAddressLine2).append("|addressLine3:::")
+					.append(paymentAddressLine3).append("|country:::").append(country).append("|state:::").append(state)
+					.append("|city:::").append(city).append("|pincode:::").append(pincode).append("|cardSaved:::").append(cardSaved)
 					.append("|sameAsShipping:::").append(sameAsShipping).append("|cartGUID:::").append(cartGuid);
 
 			LOG.error("Address details entered >>>" + sb.toString());
@@ -2478,8 +2548,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				orderId = getMplPaymentFacade().createJuspayOrder(cart, firstName, lastName, addressLine1, addressLine2,
-						addressLine3, country, state, city, pincode,
+				orderId = getMplPaymentFacade().createJuspayOrder(cart, firstName, lastName, paymentAddressLine1,
+						paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 						cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrl, uid,
 						MarketplacecheckoutaddonConstants.CHANNEL_WEB);
 			}

@@ -905,6 +905,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			LOG.error("Cart total and Juspay end total are not same!!!", e);
 			throw new EtailBusinessExceptions("Cart Total and Transaction total at Juspay Mismatch", e);
 		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
 		catch (final Exception e)
 		{
 			LOG.error("Failed to save order status in payment transaction with error: ", e);

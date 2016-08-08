@@ -1,33 +1,41 @@
-	function constructDepartmentHierarchy(inputArray) {
+function constructDepartmentHierarchy(inputArray) {		
 		var output = [];
+		//var count = 0;
 		if(inputArray!=""){
-		for (var i = 0; i < inputArray.length; i++) {
-			var categoryArray = inputArray[i].split("|");
+		for (var i = 0; i < inputArray.length; i++) {				
+			var categoryArray = inputArray[i].split("|");			
 			var currentNode = output;
 			//Construct 'All' tree node initially for search page
 			if(i==0 && $('#isCategoryPage').val() == '') {
 				output[0] = {label: "All", children: [], categoryCode: "", categoryType: "All", categoryName: ""};
 			}
 			//Other tree nodes are constructed here
-			for (var j = 0; j < categoryArray.length; j++) {
+			for (var j = 0; j < categoryArray.length; j++) {				
 				if(categoryArray[j] != null && categoryArray[j].length > 0){
 					var categoryDetails = categoryArray[j].split(":");
 					var categoryCode = categoryDetails[0];
 					var categoryName = categoryDetails[1];
+					
+					if(categoryDetails[2] == "L3")
+					{					
+						categoryName += "  (" +categoryDetails[5] + ")";
+						//count++;						
+					}
+					var count = categoryDetails[6];
 					var categoryType = "category";
 					if(categoryDetails[3] == 'true') {
 						categoryType = "department"
 					}
 					var lastNode = currentNode;
 					for (var k = 0; k < currentNode.length; k++) {
-						if (currentNode[k].categoryName == categoryName) {
-							currentNode = currentNode[k].children;
+						if (currentNode[k].categoryName == categoryName) {							
+							currentNode = currentNode[k].children;								
 							break;
-						}
+						}						
 					}
 					if (lastNode == currentNode) {
-						var newNode = currentNode[k] = {label: categoryName, children: [], categoryCode: categoryCode, categoryType: categoryType, categoryName: categoryName};
-						currentNode = newNode.children;
+						var newNode = currentNode[k] = {label: categoryName, children: [], categoryCode: categoryCode, categoryType: categoryType, categoryName: categoryName, count: count};
+						currentNode = newNode.children;						
 					}
 				}
 			}
@@ -41,6 +49,34 @@
 //		expandTree = true;
 //	}
 	//TISCF-4 End
+	
+	//TISPT-304 starts
+	
+	$( ".serpProduct" ).each(function( index ) {
+		  var product=$(this).closest('span').find('#productCode').val();
+		 // console.log("prod"+product);
+		  var categoryTypeValue=$(this).closest('span').find('#categoryType').val()
+		 //  console.log("categoryTypeValue"+categoryTypeValue);
+		  var productUrl=$(this).closest('span').find('#productUrl').val();
+		 // console.log("productUrl"+productUrl);
+		  var productPrice=$(this).closest('span').find('#productPrice').val();
+		//  console.log("productPrice"+productPrice);
+		  var list=$(this).closest('span').find('#list').val();
+		//  console.log("list"+list);
+		  var mrpPriceValue=$(this).closest('span').find('#mrpPriceValue').val();
+		//  console.log("mrpPriceValue"+mrpPriceValue);
+		  var sizeStockLevel=$(this).closest('span').find('#sizeStockLevel').val();
+		 // console.log("sizeStockLevel"+sizeStockLevel);
+		  var productPromotion=$(this).closest('span').find('#productPromotion').val();
+		 // console.log("productPromotion"+productPromotion);
+		 
+		  if(typeof(serpSizeList)!= "undefined"){
+			modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
+		 } 
+		});
+	
+	//TISPT-304 ends
+	
 	
 	if($('#isCategoryPage').val() == 'true'){	
 		// Assign tree object to category page

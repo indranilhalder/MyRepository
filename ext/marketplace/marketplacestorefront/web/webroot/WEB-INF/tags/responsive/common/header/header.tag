@@ -144,7 +144,7 @@
 						<div class="mobile-bag bag">
 						<!-- TISPRD-32-fix -->
 							<!-- <a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a> -->
-							<a href="/cart">(<span class="responsive-bag-count"></span>)</a>
+							<a href="/cart"><span class="responsive-bag-count"></span></a>
 						</div>
 					</div>
 				</c:when>

@@ -140,7 +140,7 @@ public class MplDiscountedPriceValueProvider extends AbstractPropertyFieldValueP
 			{
 				//	offerExists = true;
 				// TISPRM-133
-				discountedPercent = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getPrice().doubleValue()) * 100)
+				discountedPercent = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getSpecialPrice().doubleValue()) * 100)
 						/ buyboxWinner.getMrp().doubleValue();
 			}
 			else if (null != buyboxWinner.getPrice() && buyboxWinner.getPrice().intValue() > 0

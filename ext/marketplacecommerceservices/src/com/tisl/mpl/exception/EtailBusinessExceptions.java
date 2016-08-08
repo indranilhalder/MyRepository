@@ -1,11 +1,8 @@
 package com.tisl.mpl.exception;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import de.hybris.platform.util.localization.Localization;
 
-import org.apache.log4j.Logger;
+
 
 
 public class EtailBusinessExceptions extends RuntimeException
@@ -21,8 +18,8 @@ public class EtailBusinessExceptions extends RuntimeException
 	private String stackTraceMessage;
 	private String externalMessage;
 
-	private final Properties prop = new Properties();
-	private static final Logger LOG = Logger.getLogger(EtailBusinessExceptions.class);
+	//private final Properties prop = new Properties();
+	//private static final Logger LOG = Logger.getLogger(EtailBusinessExceptions.class);
 
 	public EtailBusinessExceptions()
 	{
@@ -81,34 +78,37 @@ public class EtailBusinessExceptions extends RuntimeException
 	public String getErrorMessage()
 	{
 		//Will change
-		final String propFileName = "errorcodemessage.properties";
-		//In J2EE, getClassLoader() might not work as expected. Use Thread.currentThread().getContextClassLoader() instead.
-		//final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
-		final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(propFileName);
+		//		final String propFileName = "errorcodemessage.properties";
+		//		//In J2EE, getClassLoader() might not work as expected. Use Thread.currentThread().getContextClassLoader() instead.
+		//		//final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+		//		final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(propFileName);
+		//
+		//
+		//		if (inputStream == null)
+		//		{
+		//			try
+		//			{
+		//				throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+		//			}
+		//			catch (final Exception e)
+		//			{
+		//				LOG.info(e);
+		//			}
+		//		}
+		//
+		//		//Will change
+		//		try
+		//		{
+		//			prop.load(inputStream);
+		//		}
+		//		catch (final IOException e)
+		//		{
+		//			LOG.info(e);
+		//		}
+		//		return prop.getProperty(errorCode);
 
-
-		if (inputStream == null)
-		{
-			try
-			{
-				throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-			}
-			catch (final Exception e)
-			{
-				LOG.info(e);
-			}
-		}
-
-		//Will change
-		try
-		{
-			prop.load(inputStream);
-		}
-		catch (final IOException e)
-		{
-			LOG.info(e);
-		}
-		return prop.getProperty(errorCode);
+		final String errorMessage = Localization.getLocalizedString(errorCode);
+		return errorMessage == null ? "" : errorMessage;
 	}
 
 

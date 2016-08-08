@@ -7,17 +7,25 @@
 
           
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 http://www.springframework.org/schema/beans/spring-beans.xsd
 http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd
 http://www.springframework.org/schema/aop
-http://www.springframework.org/schema/aop/spring-aop.xsd">
+http://www.springframework.org/schema/aop/spring-aop.xsd
+http://www.springframework.org/schema/util
+http://www.springframework.org/schema/util/spring-util.xsd" >
 
-	<context:annotation-config />
 
+
+
+
+	<context:annotation-config />	
+	
 	<!-- Spring Integration -->
 	
 	
@@ -30,7 +38,8 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_import-spring.xml" />
 		
 		
-
+<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_buybox-spring.xml" />
 
 		<!-- TISPRD-207 Changes Start-->
 		<import
@@ -872,15 +881,29 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="categoryService" ref="categoryService" />
 		<property name="categorySource" ref="allCategoriesSource" />
 	</bean>
-
+<!-- TISPRM-134 START -->
+	<bean id="mplDiscountFlagValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDiscountFlagValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+	</bean>
+<!-- TISPRM-134 END -->
+<!-- TISPRM-92 START -->
+	<bean id="mplAllDiscountValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplAllDiscountValueProdiver"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+	</bean>
+<!-- TISPRM-92 END -->
 	<bean id="mplProductInStockFlagValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplProductInStockFlagValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="commerceStockService" ref="commerceStockService" />
 		<property name="buyBoxService" ref="buyBoxService" />
-	</bean>
-
+	</bean> 
 	<bean id="mplStockLevelStatusValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplStockLevelStatusValueProvider"
 		parent="abstractPropertyFieldValueProvider">
@@ -1619,5 +1642,9 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
 	
+	<bean id="enableMplIndexingCompositeJob" class="com.tisl.mpl.core.cronjob.search.indexing.jobs.EnableMplIndexingCompositeJob" autowire="byName"/>
+	<bean id="disableMplIndexingCompositeJob" class="com.tisl.mpl.core.cronjob.search.indexing.jobs.DisableMplIndexingCompositeJob" autowire="byName"/>
+	
+		
 	
 </beans>

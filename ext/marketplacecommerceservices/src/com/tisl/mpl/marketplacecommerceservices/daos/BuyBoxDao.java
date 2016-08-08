@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
+import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,5 +51,7 @@ public interface BuyBoxDao
 	 * @return
 	 */
 	BuyBoxModel priceForUssid(String ussid);
+
+	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code) throws EtailNonBusinessExceptions;
 
 }

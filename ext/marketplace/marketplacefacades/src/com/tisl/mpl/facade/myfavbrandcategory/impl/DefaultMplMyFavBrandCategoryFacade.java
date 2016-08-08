@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryData;
@@ -155,6 +156,7 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 
 
 	@Override
+	@Deprecated
 	public boolean addFavCategories(final String emailId, final List<String> codeList)
 	{
 		try
@@ -162,25 +164,10 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 			final boolean result = mplMyFavBrandCategoryService.addFavCategories(emailId, codeList);
 			return result;
 		}
-		catch (final IllegalArgumentException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final NullPointerException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final UnknownIdentifierException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9325);
 		}
 	}
 
@@ -193,29 +180,15 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 			final boolean result = mplMyFavBrandCategoryService.addFavCategories(emailId, deviceId, codeList);
 			return result;
 		}
-		catch (final IllegalArgumentException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final NullPointerException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final UnknownIdentifierException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9325);
 		}
 	}
 
 	@Override
+	@Deprecated
 	public boolean addFavBrands(final String emailId, final List<String> codeList)
 	{
 		try
@@ -223,25 +196,10 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 			final boolean result = mplMyFavBrandCategoryService.addFavBrands(emailId, codeList);
 			return result;
 		}
-		catch (final IllegalArgumentException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final NullPointerException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final UnknownIdentifierException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9325);
 		}
 	}
 
@@ -254,25 +212,10 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 			final boolean result = mplMyFavBrandCategoryService.addFavBrands(emailId, deviceId, codeList);
 			return result;
 		}
-		catch (final IllegalArgumentException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final NullPointerException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final UnknownIdentifierException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9325);
 		}
 	}
 
@@ -285,25 +228,10 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 			final boolean result = mplMyFavBrandCategoryService.deleteFavCategories(emailId, deviceId, code);
 			return result;
 		}
-		catch (final IllegalArgumentException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final NullPointerException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final UnknownIdentifierException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9326);
 		}
 	}
 
@@ -316,31 +244,16 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 			final boolean result = mplMyFavBrandCategoryService.deleteFavBrands(emailId, deviceId, code);
 			return result;
 		}
-		catch (final IllegalArgumentException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final NullPointerException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final UnknownIdentifierException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9326);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade#fetchFavCategories(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -352,31 +265,16 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 			final List<CategoryModel> categories = mplMyFavBrandCategoryService.fetchFavCategories(emailId, deviceId);
 			return categories;
 		}
-		catch (final IllegalArgumentException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final NullPointerException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final UnknownIdentifierException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9327);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade#fetchFavBrands(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -388,25 +286,10 @@ public class DefaultMplMyFavBrandCategoryFacade implements MplMyFavBrandCategory
 			final List<CategoryModel> brands = mplMyFavBrandCategoryService.fetchFavBrands(emailId, deviceId);
 			return brands;
 		}
-		catch (final IllegalArgumentException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final NullPointerException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
-		catch (final UnknownIdentifierException ex)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
-		}
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9327);
 		}
 	}
 

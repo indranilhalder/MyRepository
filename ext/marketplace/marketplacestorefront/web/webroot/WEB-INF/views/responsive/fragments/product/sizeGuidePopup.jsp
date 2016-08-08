@@ -284,6 +284,9 @@ var productCodeSG = '${product.code}';
 	</p>
 	<p class="sale" id="sizespPriceId" style="display:none">
 	</p>
+	<p class="savings pdp-savings" id="savingsOnProductIdSG" style="display:none">															
+		  <span></span>
+	</p>
 	<br>
     </div>
         <div class="attributes">
@@ -454,7 +457,8 @@ var productCodeSG = '${product.code}';
 		
 	<c:if test="${product.purchasable}">
 	
-	<input type="hidden" maxlength="3" size="1" id="sizeQty" name="qty" class="qty js-qty-selector-input" value="2" />
+	<!-- <input type="hidden" maxlength="3" size="1" id="sizeQty" name="qty" class="qty js-qty-selector-input" value="2" /> -->
+	<input type="hidden" maxlength="3" size="1" name="qty" class="qty js-qty-selector-input" value="1" />
   	<!-- <input type="hidden" maxlength="3" size="1" id="pinCodeChecked"
 		name="pinCodeChecked" value="false"> -->
 	</c:if>

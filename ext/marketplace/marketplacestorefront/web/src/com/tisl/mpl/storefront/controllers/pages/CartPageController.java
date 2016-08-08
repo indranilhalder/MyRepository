@@ -105,6 +105,7 @@ import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /*@author TCS*/
@@ -776,13 +777,14 @@ public class CartPageController extends AbstractPageController
 								{
 									ussidMap.put(productData.getCode(), entryModel.getUssid());
 									model.addAttribute("ussidMap", ussidMap);
-									model.addAttribute("sellerName", sellerName);
+									//model.addAttribute("sellerName", sellerName);
+									productData.setSellerName(sellerName); //Added for TISPRD-3799
 									LOG.info("Category of the product selected >>>>>>>>>>>>>>>>>>" + productData.getRootCategory());
 								}
 								if (StringUtils.isNotEmpty(fulfillmentType))
 								{
-									model.addAttribute("fulfillmentType", fulfillmentType);
-
+									//model.addAttribute("fulfillmentType", fulfillmentType); //Added for TISPRD-3799
+									productData.setFulfillmentType(fulfillmentType);
 								}
 							}
 
@@ -955,8 +957,12 @@ public class CartPageController extends AbstractPageController
 			}
 
 		}
+		//TISPT-174
+		//populateTealiumData(model, cartData);
+		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 
 	}
+
 
 	/**
 	 * Remove the session data of the cart restoration.

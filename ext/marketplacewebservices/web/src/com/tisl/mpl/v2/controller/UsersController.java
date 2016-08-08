@@ -431,7 +431,6 @@ public class UsersController extends BaseCommerceController
 	 * @param emailId
 	 * @param password
 	 * @return MplUserResultWsDto
-	 * @throws DuplicateUidException
 	 * @throws RequestParameterException
 	 * @throws WebserviceValidationException
 	 */
@@ -3018,20 +3017,12 @@ public class UsersController extends BaseCommerceController
 		final List<GetWishListDataWsDTO> wldDTOList = new ArrayList<GetWishListDataWsDTO>();
 		GetWishListProductWsDTO wldpDTO = new GetWishListProductWsDTO();
 		List<GetWishListProductWsDTO> wldpDTOList = new ArrayList<GetWishListProductWsDTO>();
+		List<Wishlist2Model> allWishlists;
 		String selectedSize = null;
 		try
 		{
-			List<Wishlist2Model> allWishlists;
-			final UserModel user = userService.getCurrentUser();
-			if (null == user)
-			{
-				wlDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-				wlDTO.setError(MarketplacecommerceservicesConstants.EMAIL_NOT_FOUND);
-				return wlDTO;
-			}
-
-			allWishlists = wishlistService.getWishlists(user);
-			if (null != allWishlists)
+			allWishlists = wishlistService.getWishlists();
+			if (CollectionUtils.isNotEmpty(allWishlists))
 			{
 				for (final Wishlist2Model requiredWl : allWishlists)
 				{
@@ -3058,11 +3049,13 @@ public class UsersController extends BaseCommerceController
 							ProductData productData1 = null;
 							if (null != entryModel.getProduct())
 							{
+								//								productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
+								//										ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+								//										ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
+								//										ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
 								productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
-										Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY,
-												ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.PROMOTIONS,
-												ProductOption.STOCK, ProductOption.REVIEW, ProductOption.DELIVERY_MODE_AVAILABILITY,
-												ProductOption.SELLER));
+										Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+												ProductOption.CATEGORIES, ProductOption.STOCK, ProductOption.SELLER));
 
 							}
 							if (StringUtils.isNotEmpty(entryModel.getProduct().getCode()))
@@ -3078,10 +3071,17 @@ public class UsersController extends BaseCommerceController
 							{
 								wldpDTO.setRootCategory(productData1.getRootCategory());
 							}
-							if (null != productData1 && null != mplProductWebService.getCategoryCodeOfProduct(productData1)
-									&& !mplProductWebService.getCategoryCodeOfProduct(productData1).isEmpty())
+							//							if (null != productData1 && null != mplProductWebService.getCategoryCodeOfProduct(productData1)
+							//									&& !mplProductWebService.getCategoryCodeOfProduct(productData1).isEmpty())
+							//							{
+							//								wldpDTO.setProductCategoryId(mplProductWebService.getCategoryCodeOfProduct(productData1));
+							//							}
+
+							final String prodCategory = mplProductWebService.getCategoryCodeOfProduct(productData1);
+
+							if (null != productData1 && StringUtils.isNotEmpty(prodCategory))
 							{
-								wldpDTO.setProductCategoryId(mplProductWebService.getCategoryCodeOfProduct(productData1));
+								wldpDTO.setProductCategoryId(prodCategory);
 							}
 							if (null != productData1 && null != productData1.getBrand()
 									&& StringUtils.isNotEmpty(productData1.getBrand().getBrandname()))
@@ -3430,18 +3430,20 @@ public class UsersController extends BaseCommerceController
 
 	/**
 	 * @description method is called to logout from account
-	 * @param userId
 	 * @return MplUserResultWsDto
 	 */
 	@Secured(
-	{ TRUSTED_CLIENT, CUSTOMERMANAGER, CUSTOMER })
-	@RequestMapping(value = "/{userId}/logout", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/logout", method =
+	{ RequestMethod.POST }, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplUserResultWsDto logoutUser(@PathVariable final String userId, final String fields,
-			final HttpServletRequest httpRequest)
+	public MplUserResultWsDto logoutUser(@RequestParam final String userId, final String fields,
+			final HttpServletRequest httpRequest, @RequestParam(required = false) final String invalid_access_token,
+			@RequestParam(required = false) final String invalid_refresh_token)
 	{
 		final MplUserResultWsDto mplUserResultWsDto = new MplUserResultWsDto();
 		CustomerModel currentUser = null;
+		List<OAuthAccessTokenModel> accessTokenModelList = null;
 		try
 		{
 			currentUser = mplPaymentWebFacade.getCustomer(userId);
@@ -3456,26 +3458,24 @@ public class UsersController extends BaseCommerceController
 				final String[] values = credentials.split(":", 2);
 				username = values[0];
 			}
-
-			List<OAuthAccessTokenModel> accessTokenModelList = null;
 			if (StringUtils.isNotEmpty(username))
 			{
 				accessTokenModelList = oauthTokenService.getAccessTokensForClientAndUser(username, userId);
 			}
-			if (CollectionUtils.isEmpty(accessTokenModelList))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9012);
-			}
-			else
+
+			if (CollectionUtils.isNotEmpty(accessTokenModelList))
 			{
 				for (final OAuthAccessTokenModel accessTokenModel : accessTokenModelList)
 				{
-
 					oauthTokenService.removeAccessToken(accessTokenModel.getTokenId());
 					gigyaFacade.ratingLogoutHelper(currentUser);
 					mplUserResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
 				}
+			}
+			else
+			{
+				gigyaFacade.ratingLogoutHelper(currentUser);
+				mplUserResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -6042,6 +6042,14 @@ public class UsersController extends BaseCommerceController
 			}
 			resultDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+		catch (final Exception ce)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ce);
+			resultDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			resultDto.setError(MarketplacecommerceservicesConstants.EXCEPTION_ERROR);
+			resultDto.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			return resultDto;
+		}
 		return resultDto;
 
 	}
@@ -6101,6 +6109,14 @@ public class UsersController extends BaseCommerceController
 				resultDto.setErrorCode(e.getErrorCode());
 			}
 			resultDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception ce)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ce);
+			resultDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			resultDto.setError(MarketplacecommerceservicesConstants.EXCEPTION_ERROR);
+			resultDto.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			return resultDto;
 		}
 		return resultDto;
 	}

@@ -444,7 +444,8 @@ tr.d0 td {
 		<p id='wishlistErrorId' style="display: none ; color:red ;"> </p>
 		<input type="hidden" id="proUssid" value=""/>
 		<input type="hidden" id="selectedProductCode" value=""/>
-		<button type='button' onclick="addToWishlistForCart($('#proUssid').val() , $('#selectedProductCode').val() )" name='saveToWishlist' id='saveToWishlist_${entry.entryNumber}' class="savetowishlistbutton" >
+		<input type="hidden" name="alreadyAddedWlName_cart" id="alreadyAddedWlName_cart">
+		<button type='button' onclick="addToWishlistForCart($('#proUssid').val() , $('#selectedProductCode').val(),$('#alreadyAddedWlName_cart').val() )" name='saveToWishlist' id='saveToWishlist_${entry.entryNumber}' class="savetowishlistbutton" >
 			<spring:theme code="product.wishlistBt"/>
 		</button>
 	</div>

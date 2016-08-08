@@ -59,9 +59,10 @@ $( document ).ready(function() {
 				addToBagButton.prop("disabled",true);
 				addToBagButton.css("opacity","0.5");
 				//ACC.product.showTransientCart(ussid);
-				setTimeout(function(){
+				//TISPT-398
+				//setTimeout(function(){
 					window.location.reload();
-				},"3000");
+				//},"3000");
 				ACC.product.addToBagFromWl(ussid,true);
 				
 			},
@@ -101,12 +102,12 @@ $( document ).ready(function() {
 								
 								<!--TISPRO-165  -->			
 								<c:choose>
-								
-									<c:when test="${fn:toLowerCase(fulfillmentType) eq 'tship'}">
+							
+									<c:when test="${fn:toLowerCase(product.fulfillmentType) eq 'tship'}">
 										<p class="size"><spring:theme code="mpl.myBag.fulfillment"/> <spring:theme code="product.default.fulfillmentType"></spring:theme></p>
 									</c:when>
 									<c:otherwise>
-										<p class="size"><spring:theme code="mpl.myBag.fulfillment"/> ${sellerName}</p>
+										<p class="size"><spring:theme code="mpl.myBag.fulfillment"/> ${product.sellerName}</p>
 									</c:otherwise>
 								</c:choose>
 						</div> <form:form method="post" id="addToCartForm"

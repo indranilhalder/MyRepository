@@ -996,7 +996,9 @@ function editAddress(addressId) {
         var flagCity = true;
         var flagState = true;
         var flagMob = true;
-        
+        var addLine1=encodeURIComponent(addressForm.line1.value);
+        var addLine2=encodeURIComponent(addressForm.line2.value);
+        var addLine3=encodeURIComponent(addressForm.line3.value);        
         if ((addressForm.addressRadioType[0].checked == false) && (addressForm.addressRadioType[1].checked == false )){
         	document.getElementById("errtype").innerHTML = "<font color='#ff1c47' size='2'>Please select an address type</font>";
         	flagFn = false;
@@ -1028,7 +1030,7 @@ function editAddress(addressId) {
         	document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 1</font>";
         	flagAd1 = false;
         }
-        if (addressForm.line2.value == null || addressForm.line2.value == "") {
+       /* if (addressForm.line2.value == null || addressForm.line2.value == "") {
         	$("#errddressline2").css({"display":"block"});
         	document.getElementById("erraddressline2").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 2</font>";
         	flagAd2 = false;
@@ -1037,7 +1039,7 @@ function editAddress(addressId) {
         	$("#errddressline3").css({"display":"block"});
         	document.getElementById("erraddressline3").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 3</font>";
         	flagAd3 = false;
-        }
+        }*/
         if (addressForm.postcode.value == null || addressForm.postcode.value == "") {
         	$("#errddressPost").css({"display":"block"});
         	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter post code</font>";
@@ -1093,8 +1095,12 @@ function editAddress(addressId) {
         	flagMob = false;
         }
         
-        if(flagFn && flagLn && flagAd1 && flagAd2 && flagAd3 && flagPost && flagCity && flagState && flagMob)
+       // if(flagFn && flagLn && flagAd1 && flagAd2 && flagAd3 && flagPost && flagCity && flagState && flagMob)
+        if(flagFn && flagLn && flagAd1 && flagPost && flagCity && flagState && flagMob)	
         {
+        	addressForm.line1.value=addLine1;
+            addressForm.line2.value=addLine2;
+            addressForm.line3.value=addLine3;
         	 return true;
         }
         else{

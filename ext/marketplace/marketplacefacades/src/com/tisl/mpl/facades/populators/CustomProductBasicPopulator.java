@@ -70,8 +70,8 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 		return configurationService;
 	}
 
-	private static int seoTitleLimit = 65;
-	private static int seoDescLimit = 165;
+	private static int seoTitleLimit = 100;
+	private static int seoDescLimit = 200;
 
 	/**
 	 * @param configurationService
@@ -273,10 +273,15 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 	private void populateSEOContent(final List<SeoContentModel> seoContents, final ProductModel productModel,
 			final ProductData productData)
 	{
+		// TISPRD-4335
+		seoTitleLimit = Integer.parseInt(configurationService.getConfiguration().getString("seo.title.limit",
+				String.valueOf(seoTitleLimit)));
+		seoDescLimit = Integer.parseInt(configurationService.getConfiguration().getString("seo.desc.limit",
+				String.valueOf(seoDescLimit)));
 		final StringBuilder seoMetaTitle = new StringBuilder(200);
 		if (null != seoContents && !(seoContents.isEmpty()))
 		{
-			final SeoContentModel seoContentModel = seoContents.get(0);
+			final SeoContentModel seoContentModel = seoContents.get(seoContents.size() - 1);
 			if (null != seoContentModel.getSeoMetaTitle())
 			{
 				//Populating title from SeoMetaTitle
@@ -290,8 +295,8 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 					seoMetaTitle.append((String) getProductAttribute(productModel, ProductModel.TITLE));
 				}
 			}
-			seoMetaTitle.append(MarketplaceFacadesConstants.SPACE);
-			seoMetaTitle.append((String) getProductAttribute(productModel, ProductModel.CODE));
+			//			seoMetaTitle.append(MarketplaceFacadesConstants.SPACE);
+			//			seoMetaTitle.append((String) getProductAttribute(productModel, ProductModel.CODE));
 			// Sonar Major This is an inefficient use of StringBuffer.toString; call StringBuffer.length instead.
 			//if (seoMetaTitle.toString().length() > seoTitleLimit)
 			if (seoMetaTitle.length() > seoTitleLimit)
@@ -341,8 +346,8 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 			{
 				seoMetaTitle.append((String) getProductAttribute(productModel, ProductModel.TITLE));
 			}
-			seoMetaTitle.append(MarketplaceFacadesConstants.SPACE);
-			seoMetaTitle.append((String) getProductAttribute(productModel, ProductModel.CODE));
+			//			seoMetaTitle.append(MarketplaceFacadesConstants.SPACE);
+			//			seoMetaTitle.append((String) getProductAttribute(productModel, ProductModel.CODE));
 			if (seoMetaTitle.toString().length() > seoTitleLimit)
 			{
 				productData.setSeoMetaTitle(seoMetaTitle.toString().substring(0, seoTitleLimit - 1));
@@ -366,5 +371,6 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 				}
 			}
 		}
+
 	}
 }
