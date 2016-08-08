@@ -13,6 +13,7 @@ import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -98,9 +99,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 */
 	@Override
-	public void recalculateCartForCoupon(final CartModel cartModel) throws EtailNonBusinessExceptions
+	public void recalculateCartForCoupon(final CartModel cartModel, final OrderModel orderModel) throws EtailNonBusinessExceptions
 	{
-		getMplVoucherService().recalculateCartForCoupon(cartModel);
+		getMplVoucherService().recalculateCartForCoupon(cartModel, orderModel);
 	}
 
 
@@ -347,7 +348,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						throw new VoucherOperationException(MarketplacecommerceservicesConstants.ERRORAPPLYVOUCHER + voucherCode);
 					}
 
-					recalculateCartForCoupon(cartModel); //Recalculates cart after applying voucher
+					recalculateCartForCoupon(cartModel, null); //Recalculates cart after applying voucher
 
 					final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher, cartModel); //Finds applicable order entries
 
@@ -388,7 +389,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			final List<AbstractOrderEntryModel> applicableOrderEntryList) throws VoucherOperationException,
 			EtailNonBusinessExceptions
 	{
-		final VoucherDiscountData data = getMplVoucherService().checkCartAfterApply(lastVoucher, cartModel,
+		final VoucherDiscountData data = getMplVoucherService().checkCartAfterApply(lastVoucher, cartModel, null,
 				applicableOrderEntryList);
 		if (null != data && StringUtils.isNotEmpty(data.getRedeemErrorMsg()))
 		{
@@ -644,7 +645,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	@Override
 	public void releaseVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException
 	{
-		getMplVoucherService().releaseVoucher(voucherCode, cartModel);
+		getMplVoucherService().releaseVoucher(voucherCode, cartModel, null);
 	}
 
 

@@ -5,6 +5,7 @@ package com.tisl.mpl.facade.checkout.impl;
 
 import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.impl.DefaultCheckoutFacade;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
@@ -14,6 +15,7 @@ import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
@@ -367,12 +369,26 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		return prototype.getTotalPriceWithConvCharge();
 	}
 
+	@Override
+	public PriceData addConvCharge(final OrderModel source, final OrderData prototype)
+	{
+		prototype.setConvenienceChargeForCOD(createPrice(source, source.getConvenienceCharges()));
+		return prototype.getConvenienceChargeForCOD();
+	}
+
+	@Override
+	public PriceData setTotalWithConvCharge(final OrderModel source, final OrderData prototype)
+	{
+		prototype.setTotalPriceWithConvCharge(createPrice(source, source.getTotalPriceWithConv()));
+		return prototype.getTotalPriceWithConvCharge();
+	}
+
 
 
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.checkout.MplCustomAddressFacade#populateDeliveryMethodData(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -463,9 +479,9 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * Set delivery mode using USSID
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param sellerArticleSKUID
 	 */
 	@Override

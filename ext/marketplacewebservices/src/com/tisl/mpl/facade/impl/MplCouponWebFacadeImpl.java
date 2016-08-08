@@ -65,9 +65,9 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 
 	@Override
-	public ApplyCouponsDTO applyVoucher(final String couponCode, final CartModel cartModel)
-			throws VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
-			JaloSecurityException, EtailBusinessExceptions, EtailNonBusinessExceptions
+	public ApplyCouponsDTO applyVoucher(final String couponCode, final CartModel cartModel) throws VoucherOperationException,
+			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException,
+			EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
 		final ApplyCouponsDTO applycouponDto = new ApplyCouponsDTO();
 		boolean applycouponDtoflag = false;
@@ -83,8 +83,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				if (null != data.getCouponDiscount() && null != data.getCouponDiscount().getValue())
 				{
 					//Price data new calculation for 2 decimal values
-					applycouponDto.setCouponDiscount(
-							String.valueOf(data.getCouponDiscount().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					applycouponDto.setCouponDiscount(String.valueOf(data.getCouponDiscount().getValue()
+							.setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 				if (null != data.getTotalPrice() && null != data.getTotalPrice().getValue())
 				{
@@ -150,10 +150,10 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 	}
 
 	@Override
-	public ReleaseCouponsDTO releaseVoucher(final String couponCode, final CartModel cartModel)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
-			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
-			JaloPriceFactoryException, EtailBusinessExceptions
+	public ReleaseCouponsDTO releaseVoucher(final String couponCode, final CartModel cartModel) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException, NumberFormatException, JaloInvalidParameterException,
+			VoucherOperationException, CalculationException, JaloSecurityException, JaloPriceFactoryException,
+			EtailBusinessExceptions
 	{
 		boolean couponRelStatus = false;
 		final boolean redeem = false;
@@ -162,7 +162,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		{
 			mplCouponFacade.releaseVoucher(couponCode, cartModel);
 			couponRelStatus = true;
-			mplCouponFacade.recalculateCartForCoupon(cartModel);
+			mplCouponFacade.recalculateCartForCoupon(cartModel, null);
 			LOG.debug("Coupon Release Status is:::" + couponRelStatus);
 			VoucherDiscountData data = new VoucherDiscountData();
 			if (couponRelStatus)

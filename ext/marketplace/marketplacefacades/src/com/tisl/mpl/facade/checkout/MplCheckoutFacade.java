@@ -10,9 +10,9 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
-import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.exceptions.CalculationException;
 
 import java.util.Collection;
 import java.util.List;
@@ -224,7 +224,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isCouponValid(final CartModel cart) throws EtailNonBusinessExceptions;
+	boolean isCouponValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/**
 	 * TISPT-175
@@ -237,6 +237,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	/**
 	 * @param orderModel
 	 * @throws InvalidCartException
+	 * @throws CalculationException
 	 */
-	void beforeSubmitOrder(OrderModel orderModel) throws InvalidCartException;
+	void beforeSubmitOrder(OrderModel orderModel) throws InvalidCartException, CalculationException;
 }

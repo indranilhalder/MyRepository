@@ -6,9 +6,11 @@ package com.tisl.mpl.facades.payment.impl;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -28,6 +30,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -44,6 +47,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +82,7 @@ import com.tisl.mpl.juspay.response.InitOrderResponse;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.juspay.response.StoredCard;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -118,6 +123,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
+
+	@Autowired
+	private MplCommerceCartService mplCommerceCartService;
 
 
 
@@ -521,19 +529,20 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * blacklisted or not.
 	 *
 	 * @param ipAddress
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return boolean
 	 */
 	@Override
-	public boolean isBlackListed(final String ipAddress, final CartModel cart) throws EtailNonBusinessExceptions
+	public boolean isBlackListed(final String ipAddress, final AbstractOrderModel abstractOrderModel)
+			throws EtailNonBusinessExceptions
 	{
 		//getting current customer details
 		//final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser(); TISPT-204 Point no 3
-		final CustomerModel customer = (CustomerModel) cart.getUser();
+		final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
 
 		final String customerPk = customer.getPk().toString();
 		final String customerEmail = customer.getOriginalUid();
-		final String customerPhoneNo = fetchPhoneNumber(cart);
+		final String customerPhoneNo = fetchPhoneNumber(abstractOrderModel);
 
 		boolean mplCustomerIsBlackListed = false;
 		try
@@ -1323,27 +1332,32 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @return String
 	 */
 	@Override
-	public String fetchPhoneNumber(final CartModel cart)
+	public String fetchPhoneNumber(final AbstractOrderModel abstractOrderModel)
 	{
-		if (null != cart)
+		String phoneNo = "";
+		if (null != abstractOrderModel)
 		{
-			if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getPhone1())
+			if (null != abstractOrderModel.getDeliveryAddress() && null != abstractOrderModel.getDeliveryAddress().getPhone1())
 			{
-				return cart.getDeliveryAddress().getPhone1();
+				//return abstractOrderModel.getDeliveryAddress().getPhone1();
+				phoneNo = abstractOrderModel.getDeliveryAddress().getPhone1();
 			}
-			else if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getCellphone())
+			else if (null != abstractOrderModel.getDeliveryAddress()
+					&& null != abstractOrderModel.getDeliveryAddress().getCellphone())
 			{
-				return cart.getDeliveryAddress().getCellphone();
+				//return abstractOrderModel.getDeliveryAddress().getCellphone();
+				phoneNo = abstractOrderModel.getDeliveryAddress().getCellphone();
 			}
-			else
-			{
-				return MarketplacecommerceservicesConstants.EMPTYSTRING;
-			}
+			//			else
+			//			{
+			//				return MarketplacecommerceservicesConstants.EMPTYSTRING;
+			//			}
 		}
-		else
-		{
-			return MarketplacecommerceservicesConstants.EMPTYSTRING;
-		}
+		//		else
+		//		{
+		//			return MarketplacecommerceservicesConstants.EMPTYSTRING;
+		//		}
+		return phoneNo;
 
 	}
 
@@ -2391,6 +2405,324 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 
+	/**
+	 *
+	 *
+	 * @param abstractOrderModel
+	 */
+	@Override
+	public void populateDeliveryPointOfServ(final AbstractOrderModel abstractOrderModel)
+	{
+		if (null != abstractOrderModel)
+		{
+			for (final AbstractOrderEntryModel abstractOrderEntryModel : abstractOrderModel.getEntries())
+			{
+				if (abstractOrderEntryModel != null && abstractOrderEntryModel.getGiveAway().booleanValue()
+						&& CollectionUtils.isNotEmpty(abstractOrderEntryModel.getAssociatedItems()))
+				{
+					//start populate deliveryPointOfService for freebie
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
+								+ abstractOrderEntryModel.getSelectedUSSID());
+					}
+					PointOfServiceModel posModel = null;
+					for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
+					{
+						if (abstractOrderEntryModel.getAssociatedItems().size() == 1)
+						{
+							if (cEntry.getSelectedUSSID().equalsIgnoreCase(abstractOrderEntryModel.getAssociatedItems().get(0)))
+							{
+								if (null != cEntry.getDeliveryPointOfService())
+								{
+									if (LOG.isDebugEnabled())
+									{
+										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+												+ abstractOrderEntryModel.getAssociatedItems().get(0));
+									}
+									posModel = cEntry.getDeliveryPointOfService();
+								}
+							}
+						}
+						else
+						{
+							final String parentUssId = findParentUssId(abstractOrderEntryModel, abstractOrderModel);
+							if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+							{
+								if (null != cEntry.getDeliveryPointOfService())
+								{
+									if (LOG.isDebugEnabled())
+									{
+										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + parentUssId);
+									}
+									posModel = cEntry.getDeliveryPointOfService();
+								}
+							}
+						}
+					}
+					if (null != posModel)
+					{
+						abstractOrderEntryModel.setDeliveryPointOfService(posModel);
+						modelService.save(abstractOrderEntryModel);
+					}
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
+								+ abstractOrderEntryModel.getSelectedUSSID());
+					}
+					//end populate deliveryPointOfService for freebie
+				}
+			}
+		}
+
+	}
+
+
+
+	/**
+	 * This method populates delivery point of service for freebie
+	 *
+	 * @param abstractOrderModel
+	 * @param freebieModelMap
+	 * @param freebieParentQtyMap
+	 */
+	@Override
+	public void populateDelvPOSForFreebie(final AbstractOrderModel abstractOrderModel,
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
+	{
+		if (abstractOrderModel != null && abstractOrderModel.getEntries() != null && MapUtils.isNotEmpty(freebieModelMap))
+		{
+			for (final AbstractOrderEntryModel cartEntryModel : abstractOrderModel.getEntries())
+			{
+				if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
+						&& CollectionUtils.isNotEmpty(cartEntryModel.getAssociatedItems()))
+				{
+					getMplCommerceCartService().saveDeliveryMethForFreebie(abstractOrderModel, freebieModelMap, freebieParentQtyMap);
+					//start populate deliveryPointOfService for freebie
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
+								+ cartEntryModel.getSelectedUSSID());
+					}
+					PointOfServiceModel posModel = null;
+					for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
+					{
+						if (cartEntryModel.getAssociatedItems().size() == 1)
+						{
+							if (cEntry.getSelectedUSSID().equalsIgnoreCase(cartEntryModel.getAssociatedItems().get(0)))
+							{
+								if (null != cEntry.getDeliveryPointOfService())
+								{
+									if (LOG.isDebugEnabled())
+									{
+										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+												+ cartEntryModel.getAssociatedItems().get(0));
+									}
+									posModel = cEntry.getDeliveryPointOfService();
+								}
+							}
+						}
+						else
+						{
+							final String parentUssId = findParentUssId(cartEntryModel, abstractOrderModel);
+							if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+							{
+								if (null != cEntry.getDeliveryPointOfService())
+								{
+									if (LOG.isDebugEnabled())
+									{
+										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + parentUssId);
+									}
+									posModel = cEntry.getDeliveryPointOfService();
+								}
+							}
+						}
+					}
+					if (null != posModel)
+					{
+						cartEntryModel.setDeliveryPointOfService(posModel);
+						modelService.save(cartEntryModel);
+					}
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
+								+ cartEntryModel.getSelectedUSSID());
+					}
+					//end populate deliveryPointOfService for freebie
+				}
+			}
+		}
+	}
+
+
+
+	/**
+	 * This methods find delivery mode for freebie if it has more than one parents.
+	 *
+	 * @param entryModel
+	 * @param abstractOrderModel
+	 * @return delivery mode
+	 */
+	private String findParentUssId(final AbstractOrderEntryModel entryModel, final AbstractOrderModel abstractOrderModel)
+	{
+		final Long ussIdA = getQuantity(entryModel.getAssociatedItems().get(0), abstractOrderModel);
+		final Long ussIdB = getQuantity(entryModel.getAssociatedItems().get(1), abstractOrderModel);
+		final String ussIdADelMod = getDeliverModeForABgetC(entryModel.getAssociatedItems().get(0), abstractOrderModel);
+		final String ussIdBDelMod = getDeliverModeForABgetC(entryModel.getAssociatedItems().get(1), abstractOrderModel);
+		String deliveryMode = null;
+		if (ussIdA.doubleValue() < ussIdB.doubleValue())
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(0);
+		}
+		else
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(1);
+		}
+		if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(0);
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(0);
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(1);
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(0);
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(1);
+		}
+		return deliveryMode;
+	}
+
+
+
+	/**
+	 * Finds delivery mode for freebie.
+	 *
+	 * @param ussid
+	 * @param abstractOrderModel
+	 * @return delivery mode
+	 */
+	private String getDeliverModeForABgetC(final String ussid, final AbstractOrderModel abstractOrderModel)
+	{
+		String deliveryMode = null;
+		try
+		{
+			for (final AbstractOrderEntryModel cartEntry : abstractOrderModel.getEntries())
+			{
+				if (cartEntry.getSelectedUSSID().equalsIgnoreCase(ussid) && !cartEntry.getGiveAway().booleanValue())
+				{
+					deliveryMode = cartEntry.getMplDeliveryMode().getDeliveryMode().getCode();
+				}
+
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		return deliveryMode;
+	}
+
+	/**
+	 * @param ussid
+	 * @param abstractOrderModel
+	 * @return Long
+	 */
+	private Long getQuantity(final String ussid, final AbstractOrderModel abstractOrderModel)
+	{
+		Long qty = null;
+		try
+		{
+			for (final AbstractOrderEntryModel cartEntry : abstractOrderModel.getEntries())
+			{
+				if (cartEntry.getSelectedUSSID().equalsIgnoreCase(ussid) && !cartEntry.getGiveAway().booleanValue())
+				{
+					qty = cartEntry.getQuantity();
+					cartEntry.getMplDeliveryMode().getDeliveryMode().getCode();
+				}
+
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return qty;
+	}
+
+
+
+	/**
+	 *
+	 * @return double
+	 * @throws Exception
+	 */
+	@Override
+	public double calculateTotalDiscount(final List<PromotionResultData> promoResultList) throws Exception
+	{
+		double totalDiscount = 0l;
+		for (final PromotionResultData promotionResultData : promoResultList)
+		{
+			final String st = promotionResultData.getDescription();
+			final String result = stripNonDigits(st);
+
+			try
+			{
+				totalDiscount = totalDiscount + Double.parseDouble(result);
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Exception during double parsing ", e);
+				totalDiscount = totalDiscount + 0;
+			}
+		}
+		return totalDiscount;
+
+	}
+
+
+
+	/**
+	 *
+	 * @param input
+	 * @return String
+	 */
+	private static String stripNonDigits(final CharSequence input) throws Exception
+	{
+		final StringBuilder sb = new StringBuilder(input.length());
+		for (int i = 0; i < input.length(); i++)
+		{
+			final char c = input.charAt(i);
+			if ((c > 47 && c < 58) || (c == 46))
+			{
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
+
+
+
+
 
 
 
@@ -2618,5 +2950,29 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		this.mplCustomAddressFacade = mplCustomAddressFacade;
 	}
+
+
+
+	/**
+	 * @return the mplCommerceCartService
+	 */
+	public MplCommerceCartService getMplCommerceCartService()
+	{
+		return mplCommerceCartService;
+	}
+
+
+
+	/**
+	 * @param mplCommerceCartService
+	 *           the mplCommerceCartService to set
+	 */
+	public void setMplCommerceCartService(final MplCommerceCartService mplCommerceCartService)
+	{
+		this.mplCommerceCartService = mplCommerceCartService;
+	}
+
+
+
 
 }

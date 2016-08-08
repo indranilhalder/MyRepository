@@ -2,7 +2,9 @@ package com.tisl.mpl.facades.payment;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -23,6 +25,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.tisl.mpl.core.model.BankforNetbankingModel;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplNetbankingData;
 import com.tisl.mpl.data.MplPromoPriceData;
@@ -128,7 +131,7 @@ public interface MplPaymentFacade
 	 * @param mplCustomerID
 	 * @return boolean
 	 */
-	boolean isBlackListed(String mplCustomerID, final CartModel cart) throws EtailNonBusinessExceptions;
+	boolean isBlackListed(String mplCustomerID, final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -171,10 +174,10 @@ public interface MplPaymentFacade
 	/**
 	 * This method fetches the customer's phone number from Delivery address
 	 *
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @return String
 	 */
-	String fetchPhoneNumber(final CartModel cart);
+	String fetchPhoneNumber(final AbstractOrderModel abstractOrderModel);
 
 
 	/**
@@ -390,5 +393,28 @@ public interface MplPaymentFacade
 	String createJuspayOrder(CartModel cart, OrderModel order, String firstName, String lastName, String addressLine1,
 			String addressLine2, String addressLine3, String country, String state, String city, String pincode, String checkValues,
 			String returnUrl, String uid, String channel) throws EtailNonBusinessExceptions;
+
+
+	/**
+	 * @param abstractOrderModel
+	 */
+	void populateDeliveryPointOfServ(AbstractOrderModel abstractOrderModel);
+
+
+	/**
+	 * @param promoResultList
+	 * @return double
+	 * @throws Exception
+	 */
+	double calculateTotalDiscount(List<PromotionResultData> promoResultList) throws Exception;
+
+
+	/**
+	 * @param abstractOrderModel
+	 * @param freebieModelMap
+	 * @param freebieParentQtyMap
+	 */
+	void populateDelvPOSForFreebie(AbstractOrderModel abstractOrderModel,
+			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap);
 
 }

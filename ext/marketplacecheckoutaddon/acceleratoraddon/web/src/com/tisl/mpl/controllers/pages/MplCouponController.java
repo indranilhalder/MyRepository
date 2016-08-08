@@ -201,7 +201,7 @@ public class MplCouponController
 			getMplCouponFacade().releaseVoucher(couponCode, cartModel);
 
 			//Recalculate cart after releasing coupon
-			getMplCouponFacade().recalculateCartForCoupon(cartModel);
+			getMplCouponFacade().recalculateCartForCoupon(cartModel, null);
 
 			data = getMplCouponFacade().calculateValues(cartModel, true, redeem);
 

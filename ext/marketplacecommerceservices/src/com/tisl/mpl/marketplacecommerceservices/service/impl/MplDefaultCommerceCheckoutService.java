@@ -7,6 +7,7 @@ import de.hybris.platform.commerceservices.order.impl.DefaultCommerceCheckoutSer
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
 import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.exceptions.CalculationException;
 
 import javax.annotation.Resource;
 
@@ -25,11 +26,12 @@ public class MplDefaultCommerceCheckoutService extends DefaultCommerceCheckoutSe
 	private MplCommercePlaceOrderStrategy mplCommercePlaceOrderStrategy;
 
 	/**
+	 * @throws CalculationException
 	 *
 	 */
 	@Override
 	public void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
-			throws InvalidCartException
+			throws InvalidCartException, CalculationException
 	{
 		mplCommercePlaceOrderStrategy.beforeSubmitOrder(parameter, result);
 	}

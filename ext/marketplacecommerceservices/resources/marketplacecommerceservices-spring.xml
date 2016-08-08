@@ -660,7 +660,7 @@
 	<bean id="CartSaveInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="CartSaveInterceptor" />
-		<property name="typeCode" value="Cart" />
+		<property name="typeCode" value="AbstractOrder" />
 	</bean>
 	<!-- CartModelSave Interceptor ends -->
 
