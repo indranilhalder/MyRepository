@@ -89,14 +89,14 @@ var productSizeVar = '${productSize}';
 						<li><c:url value="${variantOption.defaultUrl}"
 								var="variantUrl" />
 								
-								
-								<c:choose><c:when test="${empty selectedSize}">
+								 <a href="${variantUrl}">
+								<%-- <c:choose><c:when test="${empty selectedSize}">
 													 <a href="${variantUrl}">
 												</c:when>
 												<c:otherwise>
 													<a href="${variantUrl}?selectedSize=true">
 												</c:otherwise>
-											</c:choose>
+											</c:choose> --%>
 								
 								 <%-- <a href="${variantUrl}?selectedSize=true">
 								<a href="${variantUrl}?selectedSize=true"> --%>
