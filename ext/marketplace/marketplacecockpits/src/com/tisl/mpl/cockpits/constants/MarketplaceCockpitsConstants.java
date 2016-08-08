@@ -154,7 +154,8 @@ public final class MarketplaceCockpitsConstants extends
 	public static Map<String, String> delNameMap = ImmutableMap.of(
 		    "HD", "Home Delivery",
 		    "ED", "Express Delivery",
-		    "CnC", "Click and Collect"
+		    "CnC", "Click and Collect",
+		    "CNC", "Click and Collect"
 		);
 	
 	public static Map<String, String> delOmsCodeMap = ImmutableMap.of(
@@ -189,4 +190,6 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String SUCCESS="success";
 
 	public static final String NONE_OF_ABOVE = "None of Above";
+	public static final String OTHERS = "Others";
+	public static final String SELECT_LANDMARK = "Select LandMark";
 }

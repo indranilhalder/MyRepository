@@ -184,6 +184,20 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		lastNameField.setSclass("addressForLN");
 		lastNameField.setMaxlength(40);
 
+		// Creates Postal Code field
+		final Br br6 = new Br();
+		br6.setParent(customerAddressContent);
+		final Div postalCodeDiv = new Div();
+		postalCodeDiv.setParent(customerAddressContent);
+		postalCodeDiv.setSclass("createNewAddress");
+		final Label postalCodelabel = new Label(LabelUtils.getLabel(widget,
+				"postalCode"));
+		postalCodelabel.setParent(postalCodeDiv);
+		final Textbox postalCodeField = createTextbox(postalCodeDiv);
+		postalCodeField.setMaxlength(6);
+		postalCodeField.setSclass("addressForPostalCodeField");
+		postalCodeField.setMaxlength(6);
+
 		// Creates Address Line1 field
 		final Br br3 = new Br();
 		br3.setParent(customerAddressContent);
@@ -223,19 +237,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		address3Field.setSclass("address2ForAddressField");
 		address3Field.setMaxlength(30);
 
-		// Creates Postal Code field
-		final Br br6 = new Br();
-		br6.setParent(customerAddressContent);
-		final Div postalCodeDiv = new Div();
-		postalCodeDiv.setParent(customerAddressContent);
-		postalCodeDiv.setSclass("createNewAddress");
-		final Label postalCodelabel = new Label(LabelUtils.getLabel(widget,
-				"postalCode"));
-		postalCodelabel.setParent(postalCodeDiv);
-		final Textbox postalCodeField = createTextbox(postalCodeDiv);
-		postalCodeField.setMaxlength(6);
-		postalCodeField.setSclass("addressForPostalCodeField");
-		postalCodeField.setMaxlength(6);
+		
 		// Creates City/District field
 		final Br br7 = new Br();
 		br7.setParent(customerAddressContent);
@@ -437,7 +439,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			}
 			if (null != selectedLandmark
 					&& selectedLandmark
-							.equalsIgnoreCase(MarketplaceCockpitsConstants.NONE_OF_ABOVE)) {
+							.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS)) {
 				landMarkField.setDisabled(false);
 			} else {
 				landMarkField.setDisabled(true);
@@ -456,18 +458,23 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		}
 		landMarkListbox.setMultiple(false);
 		landMarkListbox.setMold("select");
+		Listitem listItem = new Listitem(
+				MarketplaceCockpitsConstants.SELECT_LANDMARK);
+		listItem.setValue(MarketplaceCockpitsConstants.SELECT_LANDMARK);
+		listItem.setParent(landMarkListbox);
+		landMarkListbox.addItemToSelection(listItem);
 		for (final LandMarksData landMark : landMarks) {
-			final Listitem listItem = new Listitem(landMark.getLandmark());
+			 listItem = new Listitem(landMark.getLandmark());
 			listItem.setValue(landMark.getLandmark());
 			listItem.setParent(landMarkListbox);
 			landMarkListbox.addItemToSelection(listItem);
 		}
-		Listitem listItem = new Listitem(
-				MarketplaceCockpitsConstants.NONE_OF_ABOVE);
-		listItem.setValue(MarketplaceCockpitsConstants.NONE_OF_ABOVE);
+		 listItem = new Listitem(
+				MarketplaceCockpitsConstants.OTHERS);
+		listItem.setValue(MarketplaceCockpitsConstants.OTHERS);
 		listItem.setParent(landMarkListbox);
 		landMarkListbox.addItemToSelection(listItem);
-		landMarkListbox.setSelectedIndex(landMarkListbox.getItemCount() - 1);
+		landMarkListbox.setSelectedIndex(0);
 	}
 
 	private EventListener createAddPinCodeListener(

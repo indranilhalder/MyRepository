@@ -221,7 +221,7 @@
 				</widget>
 				
 				<!-- lp override -->
-				<widget id="lpoverride" widgetDefinitionId="com.hybris.oms.widgets.lpoverride"
+				<widget id="lpoverride" widgetDefinitionId="com.techouts.widgets.lpoverride"
 					slotId="perspectives" template="true">
 				</widget>
 				 
