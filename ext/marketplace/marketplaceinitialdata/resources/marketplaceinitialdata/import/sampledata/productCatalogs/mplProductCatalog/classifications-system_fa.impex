@@ -4,13 +4,14 @@
 $productCatalog=mplProductCatalog
 $productCatalogName=Marketplace Product Catalog
 $classificationCatalog=pcmClassification
+$productCatalog=mplProductCatalog
 $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
-$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true,default='$classificationCatalog:1.0']
-$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true]
-$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
-$supercategories=source(code, $classCatalogVersion)[unique=true]
-$categories=target(code, $catalogVersion)[unique=true]
-$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]
+$classCatalogVersion=catalogversion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true,default='pcmClassification:1']
+$classSystemVersion=systemVersion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true]	
+$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]	
+$supercategories=source(code,$classCatalogVersion)[unique=true]	
+$categories=target(code,$catalogVersion)[unique=true]	
+$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]	
 $unit=unit(code,$classSystemVersion)
 
 
