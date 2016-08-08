@@ -16788,6 +16788,9 @@ font-weight:normal;
 .content-block-slider {		
     margin: 40px;		
 }		
+.content-block-slider.electronic-brand-slider {		
+    margin: 40px 0px;		
+}		
 .content-block-slider .slide div button {		
     height: auto;		
     min-height: 50px;		
@@ -17950,9 +17953,6 @@ body .account .right-account form .half.account-profileEmail,body .account .righ
     }
     .feature-categories .content-block {
   margin: 0 40px;
-}
-.electronic-brand-slider .carousel{
-	padding:0px 10px;
 }
 .content-block.black>div {
   background-color: #000;
@@ -35667,7 +35667,7 @@ main {
 	width: 100%;
 	margin: 10px 0px;
 	text-align: center;
-	  padding: 0 10px;
+	 /*  padding: 0 10px; */
 }
 
 .carousel .item {
