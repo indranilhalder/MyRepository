@@ -10688,6 +10688,7 @@ body .account .right-account .order-history .pagination li{
 .product-info .product-detail .other-sellers {
     font-size: 14px;
     letter-spacing: 0;
+    margin-top: 15px;
 }
 .product-info .product-detail .other-sellers a,
 .other-sellers-link {
@@ -41597,11 +41598,12 @@ margin-left: 20%;
 
 .product-info .product-detail .Cta {
 	margin: 30px 0 0;
+	display: flex;
 }
 
 .product-info .product-detail .Cta #buyNow, .product-info .product-detail .Cta .addtocart-component
 	{
-	float: left;
+/* 	float: left; */
 	width: 50%;
 }
 
@@ -41786,6 +41788,7 @@ margin-left: 20%;
 /*Products tabs*/
 .product-info>div.tabs-block {
 	width: 58%;
+	float: right;
 }
 
 .tabs-block {
@@ -42521,6 +42524,7 @@ margin-left: 20%;
 	.product-info>div.tabs-block {
 		margin: 30px 15px 0;
 		width: auto;
+		float: none;
 	}
 	.tabs-block .nav>li, .tabs-block .nav>li:hover, .tabs-block .nav>li.active,
 		.tabs-block .nav>.wrapper>li:hover, .tabs-block .nav>.wrapper>li.active
