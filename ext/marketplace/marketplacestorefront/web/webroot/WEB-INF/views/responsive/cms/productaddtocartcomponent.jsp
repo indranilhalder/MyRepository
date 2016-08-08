@@ -37,7 +37,6 @@
 			</c:choose>  --%>
 			</ul>
 </c:if>
-<div class="Cta">
 	<div id="buyNow">
 	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart">
 				<spring:theme code="buyNow.button.pdp" />
@@ -80,5 +79,4 @@
 		<div class="row addtocart-button">
 			<action:actions element="div"  parentComponent="${component}"/>
 		</div>
-</div>
 </div>

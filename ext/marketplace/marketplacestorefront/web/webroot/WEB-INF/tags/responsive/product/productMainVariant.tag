@@ -30,7 +30,6 @@
 <style>
 #variant, .productCount select {
 	border-radius: 0;
-	width: 50%;
 }
 </style>
 <%-- <script type="text/javascript"
@@ -193,14 +192,9 @@ var productSizeVar = '${productSize}';
 <div class="size" style="font-size: 12px;">
 
 	<c:if test="${noVariant!=true&&notApparel!=true}">
-		<span>
+		<p>
 			<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-		</span>
-		<!-- Size guide Pop-up -->
-		<a class="size-guide" href="${sizeGuideUrl}" role="button"
-			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
-				code="product.variants.size.guide" />
-		</a>
+		</p>
 		<select id="variant" class="variant-select">
 			<c:choose>
 				<c:when test="${selectedSize eq null}">
@@ -272,7 +266,11 @@ var productSizeVar = '${productSize}';
 			</c:forEach>
 		</select>
 		
-		
+		<!-- Size guide Pop-up -->
+		<a class="size-guide" href="${sizeGuideUrl}" role="button"
+			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
+				code="product.variants.size.guide" />
+		</a>
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->
 		<!-- End Size guide Pop-up -->
 	</c:if>
