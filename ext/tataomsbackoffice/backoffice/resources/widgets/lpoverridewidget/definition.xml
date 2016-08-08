@@ -13,13 +13,12 @@
 
 <widget-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd"
-	id="com.hybris.oms.widgets.lpoverride">
-	<name>Awbedit Widget</name>
-	
-	<view src="LpoverrideWidget.zul" />
-	
+	id="com.techouts.widgets.lpoverride">
+	<name>Lp override widget</name>
+	<view src="LpoverrideWidget.zul" />	
 <keywords>
        
-        <keyword>awb edit </keyword>
+        <keyword>lp override widget </keyword>
     </keywords>
+  
 </widget-definition>
