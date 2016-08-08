@@ -23,6 +23,7 @@ import com.tisl.mpl.cockpits.cscockpit.services.MarketplaceCsCheckoutService;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.VoucherDiscountData;
@@ -120,16 +121,16 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 	@Autowired
 	private BuyBoxFacade buyBoxFacade;
-	
+
 	@Autowired
 	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;
-	
+
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
-	
+
 	@Resource(name = "voucherModelService")
 	private VoucherModelService voucherModelService;
-		
+
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
 
@@ -154,8 +155,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		final CartModel cart = getCartModel();
 		ImpersonationContext context = createImpersonationContext(cart);
 		getImpersonationService()
-				.executeInContext(
-						context,
+		.executeInContext(
+				context,
 						new ImpersonationService.Executor<CartModel, ImpersonationService.Nothing>() {
 							@Override
 							public CartModel execute() {
@@ -364,6 +365,48 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 						// refer TIS-276 for details
 						
 						cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
+						//cartSoftReservationRequestData.setServiceableSlaves(cartEntry.getv\);
+						//	final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
+						//		MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+						List<PinCodeResponseData> pincoderesponseDataList = marketplaceServiceabilityCheckHelper
+								.getResponseForPinCode(
+										cartEntry.getProduct(),
+										String.valueOf(cartEntry.getOrder()
+												.getDeliveryAddress()
+												.getPostalcode()), "Y",
+												cartEntry.getSelectedUSSID());
+
+						if(null != pincoderesponseDataList && pincoderesponseDataList.size()>0)
+						{
+							for (final PinCodeResponseData responseData : pincoderesponseDataList)
+							{
+								if (cartEntry.getSelectedUSSID().equals(responseData.getUssid()) && responseData.getValidDeliveryModes().size()>0)
+								{
+									for (final DeliveryDetailsData DeliveryData : responseData.getValidDeliveryModes())
+									{
+										if(MarketplaceCockpitsConstants.delCodeMap
+												.get(DeliveryData.getType()).equalsIgnoreCase(cartEntry.getMplDeliveryMode().getDeliveryMode().getCode())) {
+											if(!DeliveryData.getType().equalsIgnoreCase(MarketplacecclientservicesConstants.CNC)) {
+												if (null != DeliveryData.getServiceableSlaves() && DeliveryData.getServiceableSlaves().size() > 0)
+												{
+													cartSoftReservationRequestData.setServiceableSlaves(DeliveryData.getServiceableSlaves());
+												}
+											}
+											else if (null != DeliveryData.getCNCServiceableSlavesData()
+													&& DeliveryData.getCNCServiceableSlavesData().size() > 0)
+											{
+												cartSoftReservationRequestData.setCncServiceableSlaves(DeliveryData.getCNCServiceableSlavesData());
+											}
+											if (null != DeliveryData.getFulfilmentType())
+											{
+												cartSoftReservationRequestData.setFulfillmentType(DeliveryData.getFulfilmentType());
+
+											}
+										}
+									}
+								}
+							}
+						}
 						cartdatalist.add(cartSoftReservationRequestData);
 					}
 					
