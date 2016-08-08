@@ -132,24 +132,28 @@ tr.d0 td {
 			
 			</c:if>
 			<!-- TISPRM-97 ends -->
-			<ycommerce:testId
-				code="productDetails_productNamePrice_label_${product.code}">
-				<h3 class="seller">Sold by <span id="sellerNameId"></span></h3>
-			</ycommerce:testId>
-			<div class="fullfilled-by">
-			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
-			<span id="fulFilledBySship"  style="display:none;"></span>
+			<product:productMainVariant /> 
+			<div class="SoldWrap">
+				<ycommerce:testId
+					code="productDetails_productNamePrice_label_${product.code}">
+					<div class="seller">Sold by <span id="sellerNameId"></span></div>
+				</ycommerce:testId>
+				<div class="fullfilled-by">
+				<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+				<span id="fulFilledBySship"  style="display:none;"></span>
+				</div>
 			</div>
 			
+			<cms:pageSlot position="AddToCart" var="component">
+					<cms:component component="${component}" />
+				</cms:pageSlot>
 			<%-- <div class="description">${product.summary}</div> --%>
-
+	
 		
-			<div class="tabs-block">
-				<product:productPageTabs />
-			</div>
+			
 			<!-- seller information section  -->
 			<div class="seller-details">
-			<product:sellerInfoDetailsSection/>
+				<product:sellerInfoDetailsSection/>
 			</div>
 
 			
@@ -162,10 +166,8 @@ tr.d0 td {
 					<cms:component component="${component}" />
 				</cms:pageSlot> --%>
 				
-				<product:productMainVariant /> 
-				<cms:pageSlot position="AddToCart" var="component">
-					<cms:component component="${component}" />
-				</cms:pageSlot>
+				
+				
         
 			</div>
 			
@@ -200,10 +202,11 @@ tr.d0 td {
 
 
 			<div id="fb-root"></div>
+			<div class="Wrap">
 			<cms:pageSlot position="PinCodeService" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
-          
+          </div>
           <ul class="wish-share">
 				<li><!-- <span id="addedMessage" style="display:none"></span> -->
 				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
@@ -213,8 +216,10 @@ tr.d0 td {
 				</li>
 			</ul>
 		</div>
-
-
+			
+<div class="tabs-block">
+				<product:productPageTabs />
+			</div>
 	</div>
 	
 	<c:set var="electronics"><spring:theme code='product.electronics'/></c:set>
