@@ -497,12 +497,12 @@ function navigateToPage(queryString,textString)
 			
 			<c:set var="remainingFacetValues" value="${facetData.values}" />
 			
-	        <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('search.Facet.topValue')" var="facetTopValue"/>
-	        <%-- <c:set var="facetTopValues" value="${facetData.topValues}" />
+	        <%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('search.Facet.topValue')" var="facetTopValue"/> 
+	        <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-facetTopValue}" />--%>
 	        
-		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-fn:length(facetTopValues)}" /> --%>
-		    
-		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-facetTopValue}" />
+	        <c:set var="facetTopValues" value="${facetData.topValues}" />
+	        
+		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-fn:length(facetTopValues)}" />	    
 		    
 			<div class="more-lessFacetLinks active">
 				<div class="more js-more-facet-values checkbox-menu">
