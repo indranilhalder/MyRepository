@@ -169,6 +169,8 @@ public class TrackOrderPageController extends AbstractPageController
 	{
 		try
 		{
+			LOG.debug("In track order -orderCode ***"+orderCode);
+			//if the user is logged in redirect to exsiting account order detail page
 			if (!userFacade.isAnonymousUser())
 			{
 				return REDIRECT_PREFIX + LOGIN_TRACKING_PAGE_URL + orderCode;
@@ -343,7 +345,8 @@ public class TrackOrderPageController extends AbstractPageController
 		trackOrderForm.setOrderCode(orderCode);
 		trackOrderForm.setEmailId(emailId);
 		trackOrderForm.setCaptcha(captchaCode);
-		//validate the input form fields
+		LOG.debug("Track Order Form Field values***** "+trackOrderForm);
+		//validate the input form fields using validator class
 		final String result = trackOrderFormValidator.validate(trackOrderForm);
 
 		if (!StringUtils.isEmpty(result) && !result.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
@@ -352,7 +355,7 @@ public class TrackOrderPageController extends AbstractPageController
 					localeResolver.resolveLocale(request));
 			return message;
 		}
-
+		//if the result is success ,check for order id and email comibination
 		try
 		{
 			final OrderModel orderModel = mplOrderFacade.getOrderWithoutUser(orderCode);
