@@ -257,6 +257,7 @@
 								<input type="hidden" name="orderPage_declineResponseURL" value="${silentOrderPageData.parameters['orderPage_declineResponseURL']}"/>
 								<input type="hidden" name="orderPage_cancelResponseURL" value="${silentOrderPageData.parameters['orderPage_cancelResponseURL']}"/>
 								<input type="hidden" id="guid" value="${guid}">
+								<form:hidden path="guid" value="${guid}"/>
 								<input type="hidden" id="promoAvailable" value="${promoAvailable}"/>
 								<input type="hidden" id="bankAvailable" value="${bankAvailable}"/>
 								<c:forEach items="${sopPaymentDetailsForm.signatureParams}" var="entry" varStatus="status">

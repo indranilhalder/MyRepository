@@ -547,13 +547,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *            , Exception
 	 */
 	@Override
-	public void setPaymentTransactionForCOD(final Map<String, Double> paymentMode, final CartModel cart)
+	public void setPaymentTransactionForCOD(final Map<String, Double> paymentMode, final AbstractOrderModel abstractOrderModel)
 			throws EtailNonBusinessExceptions, Exception
 	{
 		try
 		{
 			// TISPRD-361
-			Collection<PaymentTransactionModel> collection = cart.getPaymentTransactions();
+			Collection<PaymentTransactionModel> collection = abstractOrderModel.getPaymentTransactions();
 			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
 			//if (null == collection || collection.isEmpty())
 			if (CollectionUtils.isEmpty(collection))
@@ -573,9 +573,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
 					.create(PaymentTransactionEntryModel.class);
 			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
-			paymentTransactionEntry.setAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
+			paymentTransactionEntry.setAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
 			paymentTransactionEntry.setTime(date);
-			paymentTransactionEntry.setCurrency(cart.getCurrency());
+			paymentTransactionEntry.setCurrency(abstractOrderModel.getCurrency());
 			paymentTransactionEntry.setType(PaymentTransactionType.COD_PAYMENT);
 			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
 
@@ -587,19 +587,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			getModelService().save(paymentTransactionEntry);
 			paymentTransactionEntryList.add(paymentTransactionEntry);
 
-			if (null != cart.getPaymentInfo())
+			if (null != abstractOrderModel.getPaymentInfo())
 			{
-				paymentTransactionModel.setInfo(cart.getPaymentInfo());
+				paymentTransactionModel.setInfo(abstractOrderModel.getPaymentInfo());
 			}
 
 			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
 
 			paymentTransactionModel.setCreationtime(date);
-			paymentTransactionModel.setCurrency(cart.getCurrency());
+			paymentTransactionModel.setCurrency(abstractOrderModel.getCurrency());
 			paymentTransactionModel.setEntries(paymentTransactionEntryList);
 			paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.cod"));
-			paymentTransactionModel.setOrder(cart);
-			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
+			paymentTransactionModel.setOrder(abstractOrderModel);
+			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
 			//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
 
 			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
@@ -614,8 +614,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			getModelService().save(paymentTransactionModel);
 			paymentTransactionList.add(paymentTransactionModel);
-			cart.setPaymentTransactions(paymentTransactionList);
-			getModelService().save(cart);
+			abstractOrderModel.setPaymentTransactions(paymentTransactionList);
+			getModelService().save(abstractOrderModel);
 		}
 		catch (final ModelSavingException e)
 		{
@@ -1267,7 +1267,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void saveCODPaymentInfo(final String custName, final Double cartValue, final Double totalCODCharge,
-			final List<AbstractOrderEntryModel> entries, final CartModel cartModel) throws EtailNonBusinessExceptions, Exception
+			final List<AbstractOrderEntryModel> entries, final AbstractOrderModel abstractOrderModel)
+			throws EtailNonBusinessExceptions, Exception
 	{
 		if (null != entries)
 		{
@@ -1358,25 +1359,25 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 
 		//setting CODPaymentInfoModel in cartmodel
-		cartModel.setPaymentInfo(cODPaymentInfoModel);
-		cartModel.setPaymentAddress(cartModel.getDeliveryAddress());
+		abstractOrderModel.setPaymentInfo(cODPaymentInfoModel);
+		abstractOrderModel.setPaymentAddress(abstractOrderModel.getDeliveryAddress());
 		try
 		{
 			//saving the cartmodel
-			getModelService().save(cartModel);
+			getModelService().save(abstractOrderModel);
 			//TIS-3168
-			if (null != cartModel.getGuid())
+			if (null != abstractOrderModel.getGuid())
 			{
-				LOG.error("COD Payment Info set for cart with GUID" + cartModel.getGuid());
+				LOG.error("COD Payment Info set for cart with GUID" + abstractOrderModel.getGuid());
 			}
 
 		}
 		catch (final ModelSavingException e)
 		{
 			//TIS-3168
-			if (null != cartModel.getGuid())
+			if (null != abstractOrderModel.getGuid())
 			{
-				LOG.error("Exception while saving cart for" + cartModel.getGuid());
+				LOG.error("Exception while saving cart for" + abstractOrderModel.getGuid());
 			}
 
 			LOG.error("Exception while saving cart with ", e);
@@ -1489,14 +1490,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	/**
 	 * This method helps to save apportion for the PaymentModes which were successful
 	 *
-	 * @param cart
+	 * @param abstractOrderModel
 	 *
 	 */
 	@Override
-	public void paymentModeApportion(final AbstractOrderModel cart)
+	public void paymentModeApportion(final AbstractOrderModel abstractOrderModel)
 	{
-		final List<AbstractOrderEntryModel> entries = cart.getEntries();
-		final List<PaymentTransactionModel> paymentTransactionList = cart.getPaymentTransactions();
+		final List<AbstractOrderEntryModel> entries = abstractOrderModel.getEntries();
+		final List<PaymentTransactionModel> paymentTransactionList = abstractOrderModel.getPaymentTransactions();
 		final List<PaymentModeApportionModel> paymentModeApportion = new ArrayList<PaymentModeApportionModel>();
 		final PaymentModeApportionModel paymentModeApportionModel = getModelService().create(PaymentModeApportionModel.class);
 		if (null != entries)
@@ -1523,7 +1524,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							//Checking if entrysize is greater than 1. If so, then normal percentage process will be applied. Else the remaining percent will be calculated by subtracting from 100
 							if (entrysize > 1)
 							{
-								final Double totalAmount = cart.getTotalPriceWithConv();
+								final Double totalAmount = abstractOrderModel.getTotalPriceWithConv();
 								final Double modeAmount = Double.valueOf(tranasctionEntry.getAmount().doubleValue());
 								final Double percentApportion = Double.valueOf((modeAmount.doubleValue() / totalAmount.doubleValue())
 										* MarketplacecommerceservicesConstants.PERCENTVALUE);

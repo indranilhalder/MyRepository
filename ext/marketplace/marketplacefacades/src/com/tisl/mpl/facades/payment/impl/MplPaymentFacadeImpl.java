@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -88,6 +89,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
 /**
@@ -126,6 +128,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
+
+	@Autowired
+	private OrderStatusSpecifier orderStatusSpecifier;
 
 
 
@@ -419,42 +424,59 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	@Override
 	public String generateOTPforCODWeb(final String customerID, final String mobileNumber, final String mplCustomerName,
-			final String cartId) throws InvalidKeyException, NoSuchAlgorithmException
+			final String cartId, final OrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException
 	{
-		//calling service to generate OTP
-		boolean isMobile = false;
-		if (null != cartId && !cartId.isEmpty())
-		{
-			isMobile = true;
-		}
 		String otp = getOtpGenericService().generateOTP(customerID, OTPTypeEnum.COD.getCode(), mobileNumber);
 		if (null == otp)
 		{
 			otp = "".intern();
 		}
-		CartModel cart = new CartModel();
-		if (isMobile)
+		if (null == orderModel)
 		{
-			final FlexibleSearchService flexibleSearchService = Registry.getApplicationContext()
-					.getBean(FlexibleSearchService.class);
+			boolean isMobile = false;
+			if (null != cartId && !cartId.isEmpty())
+			{
+				isMobile = true;
+			}
+			//calling service to generate OTP
+			CartModel cart = new CartModel();
+			if (isMobile)
+			{
+				final FlexibleSearchService flexibleSearchService = Registry.getApplicationContext().getBean(
+						FlexibleSearchService.class);
 
-			cart.setCode(cartId);
-			cart = flexibleSearchService.getModelByExample(cart);
+				cart.setCode(cartId);
+				cart = flexibleSearchService.getModelByExample(cart);
+			}
+			else
+			{
+				cart = getCartService().getSessionCart();
+			}
+			if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getPhone1())
+			{
+				cart.getDeliveryAddress().setPhone1(mobileNumber);
+			}
+			if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getCellphone())
+			{
+				cart.getDeliveryAddress().setCellphone(mobileNumber);
+			}
+			getModelService().save(cart.getDeliveryAddress());
+			saveCart(cart);
 		}
 		else
 		{
-			cart = getCartService().getSessionCart();
+			if (null != orderModel.getDeliveryAddress() && null != orderModel.getDeliveryAddress().getPhone1())
+			{
+				orderModel.getDeliveryAddress().setPhone1(mobileNumber);
+			}
+			if (null != orderModel.getDeliveryAddress() && null != orderModel.getDeliveryAddress().getCellphone())
+			{
+				orderModel.getDeliveryAddress().setCellphone(mobileNumber);
+			}
+			getModelService().save(orderModel.getDeliveryAddress());
+			getModelService().save(orderModel);
 		}
-		if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getPhone1())
-		{
-			cart.getDeliveryAddress().setPhone1(mobileNumber);
-		}
-		if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getCellphone())
-		{
-			cart.getDeliveryAddress().setCellphone(mobileNumber);
-		}
-		getModelService().save(cart.getDeliveryAddress());
-		saveCart(cart);
+
 
 		//sending sms to verify COD Payment before order confirmation
 		final String contactNumber = getConfigurationService().getConfiguration().getString(
@@ -1293,36 +1315,69 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	//TISPRD-361 method signature changes
 	@Override
-	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge) throws EtailNonBusinessExceptions,
-			Exception
+	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final OrderModel orderModel)
+			throws EtailNonBusinessExceptions, Exception
 	{
 		//getting the current user
 		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
 		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-		final CartModel cart = getCartService().getSessionCart();
-		final List<AbstractOrderEntryModel> entries = cart.getEntries();
 
-		//setting payment transaction for COD
-		getMplPaymentService().setPaymentTransactionForCOD(paymentMode, cart);
-
-		if (null != mplCustomer)
+		if (null == orderModel)
 		{
-			if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
-			{
-				final String custName = mplCustomer.getName();
+			final CartModel cart = getCartService().getSessionCart();
+			final List<AbstractOrderEntryModel> entries = cart.getEntries();
 
-				//saving COD PaymentInfo
-				getMplPaymentService().saveCODPaymentInfo(custName, cartValue, totalCODCharge, entries, cart);
-			}
-			else
-			{
-				final String custEmail = mplCustomer.getOriginalUid();
+			//setting payment transaction for COD
+			getMplPaymentService().setPaymentTransactionForCOD(paymentMode, cart);
 
-				//saving COD PaymentInfo
-				getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, cart);
+			if (null != mplCustomer)
+			{
+				if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
+				{
+					final String custName = mplCustomer.getName();
+
+					//saving COD PaymentInfo
+					getMplPaymentService().saveCODPaymentInfo(custName, cartValue, totalCODCharge, entries, cart);
+				}
+				else
+				{
+					final String custEmail = mplCustomer.getOriginalUid();
+
+					//saving COD PaymentInfo
+					getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, cart);
+				}
 			}
+			getMplPaymentService().paymentModeApportion(cart);
 		}
-		getMplPaymentService().paymentModeApportion(cart);
+		else
+		{
+			final List<AbstractOrderEntryModel> entries = orderModel.getEntries();
+
+			//setting payment transaction for COD
+			getMplPaymentService().setPaymentTransactionForCOD(paymentMode, orderModel);
+
+			if (null != mplCustomer)
+			{
+				if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
+				{
+					final String custName = mplCustomer.getName();
+
+					//saving COD PaymentInfo
+					getMplPaymentService().saveCODPaymentInfo(custName, cartValue, totalCODCharge, entries, orderModel);
+				}
+				else
+				{
+					final String custEmail = mplCustomer.getOriginalUid();
+
+					//saving COD PaymentInfo
+					getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, orderModel);
+				}
+			}
+			getMplPaymentService().paymentModeApportion(orderModel);
+
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+		}
+
 
 	}
 
@@ -1565,11 +1620,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1620,9 +1675,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -2970,6 +3025,27 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void setMplCommerceCartService(final MplCommerceCartService mplCommerceCartService)
 	{
 		this.mplCommerceCartService = mplCommerceCartService;
+	}
+
+
+
+	/**
+	 * @return the orderStatusSpecifier
+	 */
+	public OrderStatusSpecifier getOrderStatusSpecifier()
+	{
+		return orderStatusSpecifier;
+	}
+
+
+
+	/**
+	 * @param orderStatusSpecifier
+	 *           the orderStatusSpecifier to set
+	 */
+	public void setOrderStatusSpecifier(final OrderStatusSpecifier orderStatusSpecifier)
+	{
+		this.orderStatusSpecifier = orderStatusSpecifier;
 	}
 
 

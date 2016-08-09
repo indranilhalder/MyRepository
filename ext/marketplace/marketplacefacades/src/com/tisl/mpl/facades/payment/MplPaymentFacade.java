@@ -109,8 +109,8 @@ public interface MplPaymentFacade
 	 * @throws InvalidKeyException
 	 * @throws NoSuchAlgorithmException
 	 */
-	String generateOTPforCODWeb(String customerID, String mobileNumber, String mplCustomerName, String cartId)
-			throws InvalidKeyException, NoSuchAlgorithmException;
+	String generateOTPforCODWeb(String customerID, String mobileNumber, String mplCustomerName, String cartId,
+			OrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException;
 
 
 	/**
@@ -168,7 +168,8 @@ public interface MplPaymentFacade
 	 * @param totalCODCharge
 	 */
 	//TISPRD-361
-	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge) throws EtailNonBusinessExceptions, Exception;
+	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge, OrderModel orderModel) throws EtailNonBusinessExceptions,
+			Exception;
 
 
 	/**

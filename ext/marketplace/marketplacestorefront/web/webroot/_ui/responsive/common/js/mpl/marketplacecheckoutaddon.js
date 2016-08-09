@@ -539,9 +539,11 @@ function submitForm(){
 			$("#otpNUM, #sendOTPNumber, #paymentFormButton, #sendOTPButton, #otpSentMessage").css("display","block");
 			$("#emptyOTPMessage").css("display","none");
 			$('#paymentButtonId').prop('disabled', true); //TISPRD-958
+			var guid=$("#guid").val();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/validateOTP/"+otpNUMField,
 			type: "POST",
+			data: {'guid' : guid},
 			cache: false,		
 			success : function(response) {
 				if(response=='redirect'){
@@ -1126,11 +1128,12 @@ function generateOTP(){
 		$("#mobileNoError").css("display","block");
 	}
 	else{
+		var guid=$("#guid").val();
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/generateOTP",
 		//data: { 'mobileNumber' : mobileNumber, 'prefix' : prefix },
 
-		data: { 'mobileNumber' : mobileNumber },
+		data: { 'mobileNumber' : mobileNumber , 'guid' : guid},
 		type: "POST",
 		cache: false,	
 		success : function(response) {
@@ -2806,7 +2809,7 @@ function applyPromotion(bankName)
 				    	}
 						$.ajax({
 							url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/getTerms",
-							data: { 'selectedEMIBank' : selectedBank },
+							data: { 'selectedEMIBank' : selectedBank , 'cartTotal' : cartTotal},
 							type: "GET",
 							cache: false,
 							success : function(data) {	

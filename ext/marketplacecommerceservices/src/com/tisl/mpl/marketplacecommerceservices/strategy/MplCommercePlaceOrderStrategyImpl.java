@@ -174,9 +174,20 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				result.setOrder(orderModel);
 
-				//beforeSubmitOrder(parameter, result);
+				if (StringUtils.isNotEmpty(orderModel.getModeOfPayment()) && orderModel.getModeOfPayment().equalsIgnoreCase("COD"))
+				{
+					try
+					{
+						beforeSubmitOrder(parameter, result);
+					}
+					catch (final CalculationException e)
+					{
+						LOG.error("Error while submit order", e);
+					}
 
-				//getOrderService().submitOrder(orderModel);
+					getOrderService().submitOrder(orderModel);
+				}
+
 				getExternalTaxesService().clearSessionTaxDocument();
 
 				afterPlaceOrder(parameter, result);
@@ -280,9 +291,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -329,7 +340,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/**
 	 * This method calls before submit order of hooks
-	 * 
+	 *
 	 * @throws CalculationException
 	 */
 	@Override
