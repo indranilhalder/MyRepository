@@ -1105,49 +1105,61 @@ $(button_my_button)
 
 					var queryParamsAry = currentQryParam.split(':');
 					var nonPriceQueryParams = "";
-					facetValue = "₹" + minPriceSearchTxt + "-" + "₹"
-							+ maxPriceSearchTxt;
-					$('#facetValue').val(facetValue);
-
-					// Iterate and get all checked brand values
-					var Price = "₹" + minPriceSearchTxt + "-" + "₹"
-							+ maxPriceSearchTxt;
-
-					$('li.Price').find('input[type="text"]').each(
-							function() {
-								if ($(this).parents('.facet-list').css(
-										'display') != 'none') {
-									var facetValue = $(this).parents(
-											'.filter-Price').find(
-											'input[name="facetValue"]').val();
-									Price = Price;
+					
+					if(minPriceSearchTxt == 0 && maxPriceSearchTxt == 0 || minPriceSearchTxt > 99999999 || maxPriceSearchTxt > 99999999){	
+						//alert("HIIIIIIIIIIIII");
+						return false;
+					}				
+					else{
+						facetValue = "₹" + minPriceSearchTxt + "-" + "₹"
+								+ maxPriceSearchTxt;
+						$('#facetValue').val(facetValue);
+		
+						// Iterate and get all checked brand values
+						var Price = "₹" + minPriceSearchTxt + "-" + "₹"
+								+ maxPriceSearchTxt;
+						
+						$('li.Price').find('input[type="text"]').each(
+								function() {
+									if ($(this).parents('.facet-list').css(
+											'display') != 'none') {
+										var facetValue = $(this).parents(
+												'.filter-Price').find(
+												'input[name="facetValue"]').val();
+										Price = Price;
+									}
+								});
+		
+				
+						
+						for (var i = 0; i < queryParamsAry.length; i = i + 2) {					
+							if (queryParamsAry[i].indexOf('price') == -1) {								
+								if (nonPriceQueryParams != "") {
+									nonPriceQueryParams = nonPriceQueryParams + ':'
+											+ queryParamsAry[i] + ':'
+											+ queryParamsAry[i + 1];									
+								} else {								
+									nonPriceQueryParams = queryParamsAry[i] + ':'
+											+ queryParamsAry[i + 1];
+								
 								}
-							});
-
-					for (var i = 0; i < queryParamsAry.length; i = i + 2) {
-						if (queryParamsAry[i].indexOf('price') == -1) {
-							if (nonPriceQueryParams != "") {
-								nonPriceQueryParams = nonPriceQueryParams + ':'
-										+ queryParamsAry[i] + ':'
-										+ queryParamsAry[i + 1];
-							} else {
-								nonPriceQueryParams = queryParamsAry[i] + ':'
-										+ queryParamsAry[i + 1];
 							}
 						}
+					
+						$('.qValueForCustomPrice').val(
+								nonPriceQueryParams + ":priceValue:" + Price);
+		
+						// submit brand apply form
+						$('form#customPriceFilter').submit();
 					}
-					$('.qValueForCustomPrice').val(
-							nonPriceQueryParams + ":priceValue:" + Price);
-
-					// submit brand apply form
-					$('form#customPriceFilter').submit();
+					
 				});
 //End of Custom Price Filter
 
 function isNumber(evt) {
 	evt = (evt) ? evt : window.event;
 	var charCode = (evt.which) ? evt.which : evt.keyCode;
-	if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+	if (charCode > 31 && (charCode < 48 || charCode > 57 )) {
 		return false;
 	}
 	return true;
