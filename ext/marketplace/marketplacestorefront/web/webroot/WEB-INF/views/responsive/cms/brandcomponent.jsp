@@ -19,6 +19,7 @@
 		<c:url var="masterBrandUrl" value="${component.masterBrandURL}" />
 		<a class="${cssClass}" href="${masterBrandUrl}" id="${component.uid}">${component.masterBrandName}</a>
 	</div>
+	<span id="mobile-menu-toggle" class="mainli"></span>
 
 	<!-- Rendering the sub-brand images if the layout is FiveBrandImages  -->
 	<c:if test="${component.layout eq 'FiveBrandImages'}">

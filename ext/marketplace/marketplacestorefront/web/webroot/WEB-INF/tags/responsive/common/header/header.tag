@@ -125,7 +125,7 @@
 		<!-- Using this tag for placing the site logo in header navigation pane -->
 
 		<div class="bottom">
-
+		<div class="bottom-header-wrapper">
 			<c:choose>
 				<c:when test="${empty showOnlySiteLogo }">
 					<div class="marketplace" data-logo="marketplace">
@@ -204,6 +204,7 @@
 						style="position: static;"><spring:theme code="minicart.mybag" />&nbsp;(<span
 						class="js-mini-cart-count-hover"></span>) </a>
 				</c:if>
+			</div>
 			</div>
 		</div>
 		<div class="compact-toggle mobile"></div>
