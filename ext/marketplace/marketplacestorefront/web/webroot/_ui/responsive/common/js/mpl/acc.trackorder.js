@@ -326,12 +326,6 @@ function viewOrderStatus(event) {
 					success : function(result) {
 						if (result == "true") {
 							$("#showTrackOrder").hide();
-							$("wrapBG1").hide();
-							$("#showOTP").show();
-							$(".wrapBG").show();
-							var height = $(window).height();
-							$(".wrapBG1").css("height", height);
-							$("#showOTP").css("z-index", "999999");
 							window.location.href = ACC.config.encodedContextPath
 									+ "/trackOrder/shortDetails/?orderCode="
 									+ orderCode;
