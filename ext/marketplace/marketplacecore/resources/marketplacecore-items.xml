@@ -112,6 +112,13 @@
 
 
 	<enumtypes>
+	
+	<!-- 	TPR-628-Make changes to Banners rendering in MObile Viewports -->
+		
+		<enumtype generate="true" code="BannerViewType" autocreate="true">
+			<value code="mobileView" />
+			<value code="desktopView" />
+		</enumtype>
 
 		<enumtype code="sizeEnum" autocreate="true" generate="true"
 			dynamic="false">
@@ -1047,7 +1054,25 @@
 		</relation>
 	</relations>
 
-	<itemtypes>
+	<itemtypes> 
+	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
+	
+			<itemtype code="BannerComponent" autocreate="false"
+				generate="false"
+				jaloclass="com.tisl.mpl.jalo.cms.components.BannerComponent">
+				<description>This component is made to show random banner</description>
+				<attributes>
+					<attribute qualifier="bannerView" type="BannerViewType"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+						<description>It stores list of banners that are to be randomly shown</description>
+							<defaultvalue>
+						em().getEnumerationValue("bannerView","desktopView")
+					</defaultvalue>
+					</attribute>
+				</attributes>
+			</itemtype>			
 
 		<!-- Add your item definitions here -->
 		<!-- Order OrderRefundConfig -->
@@ -1140,6 +1165,8 @@
 				</attributes>
 
 			</itemtype>
+			
+			
 
 			<itemtype code="ApparelSizeVariantProduct" extends="ApparelStyleVariantProduct"
 				autocreate="true" generate="true"
