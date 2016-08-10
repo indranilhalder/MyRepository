@@ -447,6 +447,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		for (final OrderModel sellerOrderList : orderList)
 		{
 			BigDecimal totalPrice = BigDecimal.valueOf(0);
+			BigDecimal totalPriceWithConv = BigDecimal.valueOf(0);
 			double totalDeliveryPrice = 0D;
 			double totalCartLevelDiscount = 0D;
 			double totalDeliveryDiscount = 0D;
@@ -520,19 +521,29 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			sellerOrderList.setDeliveryCost(Double.valueOf(totalDeliveryPrice));
 			//totalPrice = totalPriceForSubTotal + totalConvChargeForCOD + totalDeliveryPrice
 			//		- (totalDeliveryDiscount + totalCartLevelDiscount + totalProductDiscount + totalCouponDiscount);
-			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal).add(BigDecimal.valueOf(totalConvChargeForCOD))
-					.add(BigDecimal.valueOf(totalDeliveryPrice)).subtract(BigDecimal.valueOf(totalDeliveryDiscount))
-					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
-					.subtract(BigDecimal.valueOf(totalCouponDiscount));
+			//			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal).add(BigDecimal.valueOf(totalConvChargeForCOD))
+			//					.add(BigDecimal.valueOf(totalDeliveryPrice)).subtract(BigDecimal.valueOf(totalDeliveryDiscount))
+			//					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
+			//					.subtract(BigDecimal.valueOf(totalCouponDiscount));
+
+
+			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal).add(BigDecimal.valueOf(totalDeliveryPrice))
+					.subtract(BigDecimal.valueOf(totalDeliveryDiscount)).subtract(BigDecimal.valueOf(totalCartLevelDiscount))
+					.subtract(BigDecimal.valueOf(totalProductDiscount)).subtract(BigDecimal.valueOf(totalCouponDiscount));
+			totalPriceWithConv = totalPrice.add(BigDecimal.valueOf(totalConvChargeForCOD));
 			final DecimalFormat decimalFormat = new DecimalFormat("#.00");
 			totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			totalPriceWithConv = totalPriceWithConv.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
 			//				totalPrice = Double.valueOf(decimalFormat.format(totalPrice)).doubleValue();
 			//				totalConvChargeForCOD = Double.valueOf(decimalFormat.format(totalConvChargeForCOD)).doubleValue();
 			//changed for SONAR fix
 			//totalPrice = Double.parseDouble(decimalFormat.format(totalPrice));
 			totalConvChargeForCOD = Double.parseDouble(decimalFormat.format(totalConvChargeForCOD));
 			sellerOrderList.setTotalPrice(Double.valueOf(totalPrice.doubleValue()));
-			sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPrice.doubleValue()));
+			//			sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPrice.doubleValue()));
+
+			sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPriceWithConv.doubleValue()));
 			sellerOrderList.setConvenienceCharges(Double.valueOf(totalConvChargeForCOD));
 			modelService.save(sellerOrderList);
 		}

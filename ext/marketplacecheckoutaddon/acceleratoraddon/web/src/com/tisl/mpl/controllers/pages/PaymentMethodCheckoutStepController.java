@@ -2554,7 +2554,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (!mplCheckoutFacade.isPromotionValid(orderModel))
 				{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
-					responseData.setErrorMsgForEMI("redirect");
+					responseData.setErrorMsgForEMI("redirect_to_payment");
 				}
 				else
 				{
@@ -3704,7 +3704,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
