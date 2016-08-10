@@ -132,6 +132,11 @@ tr.d0 td {
 			
 			</c:if>
 			<!-- TISPRM-97 ends -->
+			<!-- TPR-275 starts  -->
+			<div id="freebieProductMsgId" style="display:none">
+			 <spring:theme code="freebie.product.message" text="Freebie: This product is not on sale" ></spring:theme>				
+			</div>			
+			<!-- TPR-275 ends -->
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
 				<h3 class="seller">Sold by <span id="sellerNameId"></span></h3>

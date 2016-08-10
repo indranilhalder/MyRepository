@@ -41117,7 +41117,7 @@ p.savings.pdp-savings span{
         margin: 0px;
     padding: 0px;
 }
-.pdp-promo-title{
+.pdp-promo-title,#freebieProductMsgId{
     padding: 10px;
     word-break: break-word;
     font-size: 12px;
