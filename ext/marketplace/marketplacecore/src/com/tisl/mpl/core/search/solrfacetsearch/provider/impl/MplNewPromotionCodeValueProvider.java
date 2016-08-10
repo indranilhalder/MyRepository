@@ -438,7 +438,7 @@ public class MplNewPromotionCodeValueProvider extends AbstractPropertyFieldValue
 						}
 
 					}
-
+					boolean checkSellerRestrictionForFreeBee = false;
 					///brand restriction check
 					for (final AbstractPromotionRestrictionModel restriction : productPromotion.getRestrictions())
 					{
@@ -446,13 +446,18 @@ public class MplNewPromotionCodeValueProvider extends AbstractPropertyFieldValue
 						boolean excluseBrandRestrictionPresent = false;
 
 						//checking if BOGO promotion present or not and removing the promotion if seller restriction not present
-						if (!(restriction instanceof EtailSellerSpecificRestrictionModel) && isFreeBee)
+						//						if (!(restriction instanceof EtailSellerSpecificRestrictionModel) && isFreeBee)
+						//						{
+						//							toRemovePromotionList.add(productPromotion);
+						//							excludePromotion = true;
+						//							break;
+						//						}
+						//checking if valid seller restriction exists against free bee promotion
+						if (restriction instanceof EtailSellerSpecificRestrictionModel
+								&& isPromoEligibleForproduct(restriction, productModel))
 						{
-							toRemovePromotionList.add(productPromotion);
-							excludePromotion = true;
-							break;
+							checkSellerRestrictionForFreeBee = true;
 						}
-
 						//Seller restriction check for non free bee promotion
 						if (restriction instanceof EtailSellerSpecificRestrictionModel
 								&& !isPromoEligibleForproduct(restriction, productModel))
@@ -513,6 +518,11 @@ public class MplNewPromotionCodeValueProvider extends AbstractPropertyFieldValue
 						}
 
 
+					}
+					if (!checkSellerRestrictionForFreeBee && isFreeBee)
+					{
+						toRemovePromotionList.add(productPromotion);
+						excludePromotion = true;
 					}
 
 

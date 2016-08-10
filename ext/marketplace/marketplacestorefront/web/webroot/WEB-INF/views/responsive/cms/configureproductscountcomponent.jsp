@@ -14,13 +14,15 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <!-- Displaying product quantity to be added to the bag in PDP -->
-		<p style="font-size:12px;">
+		<%-- <p style="font-size:12px;">
+		
+		TISPRM-131
 			<spring:theme code="product.configureproductscount.qty"></spring:theme>
-		</p>
+		</p> --%>
 
-			<select class=" " id="pdpQty">
+			<%-- <select class=" " id="pdpQty">
 				<c:forEach  var="i" varStatus="varStatus" begin="1" end="${qtycount}">
 					<option value="${i}">${i}</option>
 				</c:forEach>
-			</select> 
+			</select>  --%>
 

@@ -1,4 +1,4 @@
-	function constructDepartmentHierarchy(inputArray) {
+	function constructDepartmentHierarchy(inputArray) {		
 		var output = [];
 		if(inputArray!=""){
 		for (var i = 0; i < inputArray.length; i++) {
@@ -14,6 +14,12 @@
 					var categoryDetails = categoryArray[j].split(":");
 					var categoryCode = categoryDetails[0];
 					var categoryName = categoryDetails[1];
+					
+					if(categoryDetails[2] == "L3")
+					{
+						categoryName += "  (" +categoryDetails[5] + ")";
+					}
+					
 					var categoryType = "category";
 					if(categoryDetails[3] == 'true') {
 						categoryType = "department"
@@ -46,10 +52,12 @@
 		// Assign tree object to category page
 		$("#categoryPageDeptHierTree").tree({
 			data: output,
+			 openedIcon:'',
+			 openedIcon: '',
 			//TISCF-4 Start
 			//autoOpen: true
 			//The Department Hierarchy Tree should always remain Closed for Both PLP and SERP
-			autoOpen: false
+			autoOpen: true
 			//TISCF-4 End
 	
 		});
@@ -57,7 +65,9 @@
 		// Assign tree object to search page
 		$("#searchPageDeptHierTree").tree({
 			data: output,
-			autoOpen: expandTree
+			 closedIcon:'',
+			 openedIcon:'',
+			autoOpen: true
 	
 		});
 		

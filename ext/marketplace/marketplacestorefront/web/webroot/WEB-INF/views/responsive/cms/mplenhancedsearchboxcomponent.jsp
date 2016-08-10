@@ -5,51 +5,6 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<script language='javascript'>
-	$(document).ready(function() {
-		 var selectedItemText = $("#searchCategory").find('option:selected').text();
-		 $("#searchBoxSpan").html(selectedItemText);
-		 
-		 $('.select-view .select-list').hover(function(){
-			 $(this).find('ul').slideDown();
-		 });
-		$(document).on('click',".select-list .dropdown li",function(e) {
-			$("#searchCategory").val(this.id);
-			//sessionStorage.setItem("selectedItemValue",$("#searchCategory").val());
-			//sessionStorage.setItem("selectedItemText",$(this).html());
-			$(".select-list .dropdown li").removeClass("selected");
-			$(this).addClass("selected");
-			$("#searchBoxSpan").html($(this).text());
-			$(this).parents('.select-list').find('ul').slideUp();
-			$("#js-site-search-input").focus(); 
-		}); 
-		
-		
-		$("#search_form").submit(function(event) {
-			if($("#js-site-search-input").val().trim()=="") {
-				var actionText = ACC.config.contextPath;
-				var dropdownValue = $("#searchCategory").val();
-				var dropdownName = $("#searchCategory").find('option:selected').text();
-
-				if (!String.prototype.startsWith) {
-					  String.prototype.startsWith = function(searchString, position) {
-					    position = position || 0;
-					    return this.indexOf(searchString, position) === position;
-					  };
-					}
-				
-				if (dropdownValue.startsWith("MSH") || dropdownValue.startsWith("MBH")) {
-					actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue);
-				} else if (!dropdownValue.startsWith("all")) {
-					actionText = (actionText + '/s/' + dropdownValue);
-				}
-				$("#search_form :input").prop("disabled", true);
-				$('#search_form').attr('action',actionText);
-			} 
-		});
-	});
-</script>
-
 <c:url value="/search/autocomplete/${component.uid}"
 	var="autocompleteUrl" />
 <c:url value="/search/" var="searchUrl" />
@@ -91,7 +46,7 @@
 		</span>
 		<!-- search category List -->
 		<div class="select-view">
-			<select id="searchCategory" name="searchCategory">
+			<select id="enhancedSearchCategory" name="searchCategory">
 				<optgroup label="All">
 					<option selected="selected" value="all"><spring:theme code="text.all" /></option>
 				</optgroup>

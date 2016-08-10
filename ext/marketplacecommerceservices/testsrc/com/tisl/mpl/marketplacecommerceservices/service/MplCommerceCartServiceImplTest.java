@@ -17,6 +17,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.keygenerator.KeyGenerator;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -284,16 +285,17 @@ public class MplCommerceCartServiceImplTest
 	{
 		final CartModel cartModelMock = Mockito.mock(CartModel.class);
 		final CartData cartDataMock = Mockito.mock(CartData.class);
+		final ProductModel productMock = Mockito.mock(ProductModel.class);
 		final Boolean success = Boolean.TRUE;
 		final String cartId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter cart id
-		final String productCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter product code
 		final long quantity = 2;
 		final String ussid = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
 		cartDataMock.setName("");//TODO :Please enter name
 		cartDataMock.setSite("");//TODO :Please enter site
 		Mockito.when(mplCommerceCartDao.getCart(cartId)).thenReturn(cartModelMock);
-		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addItemToCart(cartId, productCode, quantity, ussid))).thenReturn(
-				(success));
+		Mockito
+				.when(Boolean.valueOf(mplCommerceCartServiceImpl.addItemToCart(cartId, cartModelMock, productMock, quantity, ussid)))
+				.thenReturn((success));
 	}
 
 	@Test

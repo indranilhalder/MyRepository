@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -434,11 +435,11 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		{
 			final SolrSearchQueryTermData solrSearchQueryTermData1 = new SolrSearchQueryTermData();
 
-			if (categoryCode.startsWith("MSH"))
+			if (categoryCode.startsWith(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
 			{
 				solrSearchQueryTermData1.setKey(MarketplaceCoreConstants.CATEGORY);
 			}
-			else if (categoryCode.startsWith("MBH"))
+			else if (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX))
 			{
 				solrSearchQueryTermData1.setKey(MarketplaceCoreConstants.BRAND);
 			}
@@ -476,7 +477,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 			final SolrSearchQueryTermData solrSearchQueryTermDataCategory = new SolrSearchQueryTermData();
 
-			if (categoryCode.startsWith("MBH"))
+			if (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX))
 			{
 
 				solrSearchQueryTermDataCategory.setKey(MarketplaceCoreConstants.BRAND);
@@ -737,11 +738,11 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		if (categoryCode != null)
 		{
 
-			if (categoryCode.startsWith("MSH"))
+			if (categoryCode.startsWith(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
 			{
 				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
 			}
-			else if (categoryCode.startsWith("MBH"))
+			else if (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX))
 			{
 				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.BRAND);
 			}
@@ -794,6 +795,21 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		{
 			searchQueryData.setCategoryCode(categoryCode);
 		}
+
+		final SolrSearchQueryTermData solrSearchQueryTermDataCategory = new SolrSearchQueryTermData();
+
+		//TISPRD-3816 starts
+		if (StringUtils.isNotEmpty(categoryCode)
+				&& !searchState.isSns()
+				&& (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX) || categoryCode
+						.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX_LOWER)))
+		{
+			solrSearchQueryTermDataCategory.setKey("brand");
+			solrSearchQueryTermDataCategory.setValue(categoryCode);
+			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermDataCategory));
+
+		}
+		//TISPRD-3816 ends
 		searchQueryData.setSns(searchState.isSns());
 		return searchQueryData;
 	}
@@ -948,7 +964,13 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 		}
-
+		if (checkIfDepartmentFilterSelected(searchQueryData.getFilterTerms()))
+		{
+			final SolrSearchQueryTermData solrSearchQueryTerm = new SolrSearchQueryTermData();
+			solrSearchQueryTerm.setKey(PROMOTED_PRODUCT);
+			solrSearchQueryTerm.setValue(Boolean.TRUE.toString());
+			searchQueryData.getFilterTerms().add(solrSearchQueryTerm);
+		}
 		return searchQueryData;
 	}
 
@@ -985,7 +1007,44 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 
 		}
+		if (checkIfDepartmentFilterSelected(searchQueryData.getFilterTerms()))
+		{
+			final SolrSearchQueryTermData solrSearchQueryTerm = new SolrSearchQueryTermData();
+			solrSearchQueryTerm.setKey(IS_OFFER_EXISTING);
+			solrSearchQueryTerm.setValue(Boolean.TRUE.toString());
+			searchQueryData.getFilterTerms().add(solrSearchQueryTerm);
+		}
 		return searchQueryData;
+	}
+
+	/**
+	 * chcek whether a department hierarchy is selected or not
+	 *
+	 * @param filterTerms
+	 * @return isOnlyDeptFacet
+	 */
+	private boolean checkIfDepartmentFilterSelected(final List<SolrSearchQueryTermData> filterTerms)
+	{
+		// YTODO Auto-generated method stub
+		boolean isOnlyDeptFacet = false;
+
+		for (final SolrSearchQueryTermData termData : filterTerms)
+		{
+			if (termData.getKey().equals("category"))
+			{
+				isOnlyDeptFacet = true;
+				break;
+			}
+		}
+		if (isOnlyDeptFacet && filterTerms.size() == 1)
+		{
+			isOnlyDeptFacet = true;
+		}
+		else
+		{
+			isOnlyDeptFacet = false;
+		}
+		return isOnlyDeptFacet;
 	}
 
 	/**

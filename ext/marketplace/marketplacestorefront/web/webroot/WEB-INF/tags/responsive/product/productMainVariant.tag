@@ -20,9 +20,13 @@
 	tagdir="/WEB-INF/tags/responsive/storepickup"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
+<c:set var="selectedSizeForSizeGuide" value="${selectedSize}"/>
+<c:if test="${empty selectedSize}">
+<c:set var="selectedSizeForSizeGuide" value="false"/>
+</c:if>
 
 <c:url var="sizeGuideUrl"
-	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
+	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSizeForSizeGuide}" scope="request"></c:url>
 <style>
 #variant, .productCount select {
 	border-radius: 0;
@@ -98,7 +102,7 @@ var productSizeVar = '${productSize}';
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
 									<c:choose>
-								<c:when test="${color=='multi'}">
+								<c:when test="${fn:startsWith(color, 'multi')}">
 						     	<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
 								</c:when>
 								<c:otherwise>
@@ -224,7 +228,7 @@ var productSizeVar = '${productSize}';
 											</c:choose>
 										</c:when>
 										<c:otherwise>
-											<option value="${link}?selectedSize=true">${entry.value}</option>
+											<option data-vcode="${link}" value="${link}?selectedSize=true">${entry.value}</option>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>

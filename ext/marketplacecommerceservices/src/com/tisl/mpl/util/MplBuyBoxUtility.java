@@ -3,7 +3,10 @@
  */
 package com.tisl.mpl.util;
 
-import de.hybris.platform.catalog.model.ProductFeatureModel;
+import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
+import de.hybris.platform.classification.ClassificationService;
+import de.hybris.platform.classification.features.Feature;
+import de.hybris.platform.classification.features.FeatureList;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -51,6 +54,8 @@ public class MplBuyBoxUtility
 
 
 	private BuyBoxService buyBoxService;
+
+	private ClassificationService classificationService;
 
 	@Autowired
 	private MplVariantComparator variantComparator;
@@ -244,12 +249,12 @@ public class MplBuyBoxUtility
 		boolean isCapacityVariantPresent = false;
 		// String variantColor = "";
 		final List<PcmProductVariantModel> pcmProductVariantModelList = new ArrayList<PcmProductVariantModel>();
-		final String selectedColor = getVariantColour(selectedVariantModel, selectedVariantModel.getFeatures());
+		final String selectedColor = getVariantColour(selectedVariantModel);
 		for (final VariantProductModel variantProductModel : baseProduct.getVariants())
 		{
 
 			final PcmProductVariantModel pcmVariantProductModel = (PcmProductVariantModel) variantProductModel;
-			final String variantColor = getVariantColour(pcmVariantProductModel, pcmVariantProductModel.getFeatures());
+			final String variantColor = getVariantColour(pcmVariantProductModel);
 			if (selectedColor.equalsIgnoreCase(variantColor))
 			{
 				if (null != pcmVariantProductModel.getSize())
@@ -340,58 +345,38 @@ public class MplBuyBoxUtility
 
 
 
-	public String getVariantColour(final PcmProductVariantModel variantProductModel, final List<ProductFeatureModel> features)
+	public String getVariantColour(final PcmProductVariantModel variantProductModel)
 	{
+
 		String variantColor = "";
-		for (final ProductFeatureModel productFeature : features)
+		String code = "";
+
+		if (CLOTHING.equals(variantProductModel.getProductCategoryType()))
 		{
+			code = COLORAPPAREL;
+		}
+		if (ELECTRONICS.equals(variantProductModel.getProductCategoryType()))
+		{
+			code = COLORELECTRONICS;
+		}
+		else if (FOOTWEAR.equals(variantProductModel.getProductCategoryType()))
+		{
+			code = COLORFAMILYFOOTWEAR;
+		}
 
-			if (CLOTHING.equals(variantProductModel.getProductCategoryType()))
+		if (StringUtils.isNotEmpty(code))
+		{
+			final List<ClassAttributeAssignmentModel> classAttrAssgnList = buyBoxService.getClassAttrAssignmentsForCode(code);
+
+			final FeatureList featureList = classificationService.getFeatures(variantProductModel, classAttrAssgnList);
+			final Iterator itr = featureList.iterator();
+			while (itr.hasNext())
 			{
-				if (null != productFeature.getClassificationAttributeAssignment()
-						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
-						&& productFeature.getClassificationAttributeAssignment().getClassificationAttribute().getCode()
-								.equalsIgnoreCase(COLORAPPAREL))
-
+				final Feature feature = (Feature) itr.next();
+				if (null != feature.getValue())
 				{
-					if (null != productFeature.getValue())
-					{
-						variantColor = productFeature.getValue().toString();
-						break;
-					}
-				}
-
-			}
-			if (ELECTRONICS.equals(variantProductModel.getProductCategoryType()))
-			{
-				if (null != productFeature.getClassificationAttributeAssignment()
-						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
-						&& productFeature.getClassificationAttributeAssignment().getClassificationAttribute().getCode()
-								.equalsIgnoreCase(COLORELECTRONICS))
-
-				{
-					if (null != productFeature.getValue())
-					{
-						variantColor = productFeature.getValue().toString();
-						break;
-					}
-				}
-
-			}
-			else if (FOOTWEAR.equals(variantProductModel.getProductCategoryType()))
-			{
-				if (null != productFeature.getClassificationAttributeAssignment()
-						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
-						&& productFeature.getClassificationAttributeAssignment().getClassificationAttribute().getCode()
-								.equalsIgnoreCase(COLORFAMILYFOOTWEAR))
-
-				{
-					if (null != productFeature.getValue())
-					{
-						variantColor = productFeature.getValue().toString();
-						break;
-					}
-
+					variantColor = (String) feature.getValue().getValue();
+					break;
 				}
 			}
 
@@ -419,7 +404,7 @@ public class MplBuyBoxUtility
 			for (final BuyBoxModel buyBox : buyBoxModelList)
 
 			{
-				if (buyBox.getAvailable() > 0)
+				if (buyBox.getAvailable().intValue() > 0)
 				{
 					if (null != buyBox.getSpecialPrice() && buyBox.getSpecialPrice().doubleValue() > 0.0)
 					{
@@ -494,7 +479,7 @@ public class MplBuyBoxUtility
 		{
 			for (final BuyBoxModel buyBox : buyBoxModelList)
 			{
-				if (buyBox.getAvailable() > 0)
+				if (buyBox.getAvailable().intValue() > 0)
 				{
 					isOutOfStock = false;
 					break;
@@ -507,4 +492,29 @@ public class MplBuyBoxUtility
 		return isOutOfStock;
 
 	}
+
+	public BuyBoxModel getLeastPriceBuyBoxModel(final ProductModel productModel)
+	{
+		// YTODO Auto-generated method stub
+		final BuyBoxModel buyBoxWinnerModel = getBuyBoxPrice(productModel);
+		return buyBoxWinnerModel;
+	}
+
+	/**
+	 * @return the classificationService
+	 */
+	public ClassificationService getClassificationService()
+	{
+		return classificationService;
+	}
+
+	/**
+	 * @param classificationService
+	 *           the classificationService to set
+	 */
+	public void setClassificationService(final ClassificationService classificationService)
+	{
+		this.classificationService = classificationService;
+	}
+
 }

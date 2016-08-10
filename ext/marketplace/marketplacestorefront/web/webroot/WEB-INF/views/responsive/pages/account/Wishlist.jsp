@@ -769,8 +769,8 @@
 
 
 </template:page>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/acc.accountaddress.js"></script>
+<%-- <script type="text/javascript"
+	src="${commonResourcePath}/js/acc.accountaddress.js"></script> --%>
 <script type="text/javascript">
 	function readyFunction() {
 		$("#wishlistDetailItemNo").css("display", "none");
