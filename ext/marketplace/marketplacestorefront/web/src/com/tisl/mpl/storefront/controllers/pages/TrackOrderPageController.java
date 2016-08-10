@@ -53,7 +53,6 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.data.AWBResponseData;
-import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -67,7 +66,6 @@ import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.TrackOrderForm;
 import com.tisl.mpl.storefront.web.forms.validator.TrackOrderFormValidator;
 import com.tisl.mpl.util.ExceptionUtil;
-
 
 /**
  * @author Techouts
@@ -84,6 +82,7 @@ public class TrackOrderPageController extends AbstractPageController
 	public static final String PAGE_ROOT = "pages/";
 	public static final String NON_LOGIN_TRACKING_PAGE_URL = "/trackOrder/shortDetails/?orderCode=";
 	public static final String LOGIN_TRACKING_PAGE_URL = "/my-account/order/?orderCode=";
+	public static final String ORDERID_EMAILID_MISMATCH_MESSAGE_KEY = "trackorder.orderid.email.mismatch.message";
 
 	@Autowired
 	private UserFacade userFacade;
@@ -123,6 +122,7 @@ public class TrackOrderPageController extends AbstractPageController
 			throws CMSItemNotFoundException
 	{
 
+		LOG.debug("In Before showing the track order:"+orderCode);
 		if (null == orderCode)
 		{
 			return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_404;
@@ -132,12 +132,13 @@ public class TrackOrderPageController extends AbstractPageController
 		final boolean isAnonymous = userFacade.isAnonymousUser();
 		if (null != shortUrlReport)
 		{
+			LOG.debug("Short url report model is not NUll .So update it");
 			int clicks = shortUrlReport.getClicks().intValue();
 			clicks += 1;
 			LOG.debug("No of clicks===" + clicks);
 			shortUrlReport.setClicks(clicks);
 
-			//if the user is logged in redirect user to existing order detail page
+			//if the user is logged in redirect the user to existing order detail page
 			//else redirect to new non login short order details page
 			if (!isAnonymous)
 			{
@@ -341,42 +342,45 @@ public class TrackOrderPageController extends AbstractPageController
 			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
 
-		final TrackOrderForm trackOrderForm = new TrackOrderForm();
-		trackOrderForm.setOrderCode(orderCode);
-		trackOrderForm.setEmailId(emailId);
-		trackOrderForm.setCaptcha(captchaCode);
-		LOG.debug("Track Order Form Field values***** "+trackOrderForm);
-		//validate the input form fields using validator class
-		final String result = trackOrderFormValidator.validate(trackOrderForm);
-
-		if (!StringUtils.isEmpty(result) && !result.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
-		{
-			final String message = messageSource.getMessage(new DefaultMessageSourceResolvable(result),
-					localeResolver.resolveLocale(request));
-			return message;
-		}
-		//if the result is success ,check for order id and email comibination
 		try
 		{
+			final TrackOrderForm trackOrderForm = new TrackOrderForm();
+			trackOrderForm.setOrderCode(orderCode);
+			trackOrderForm.setEmailId(emailId);
+			trackOrderForm.setCaptcha(captchaCode);
+			LOG.debug("Track Order Form Field values***** " + trackOrderForm);
+			//validate the input form fields using validator class
+			final String result = trackOrderFormValidator.validate(trackOrderForm);
+
+			if (!StringUtils.isEmpty(result) && !result.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
+			{
+				final String message = messageSource.getMessage(new DefaultMessageSourceResolvable(result),
+						localeResolver.resolveLocale(request));
+				return message;
+			}
+			//if the result is success ,check for order id and email combination
 			final OrderModel orderModel = mplOrderFacade.getOrderWithoutUser(orderCode);
 			final UserModel userModel = orderModel.getUser();
 			final CustomerModel custModel = (CustomerModel) userModel;
 			if (null != custModel && null != custModel.getOriginalUid() && custModel.getOriginalUid().equals(emailId))
 			{
-				return "true";
+				return ModelAttributetConstants.TRUE;
 			}
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("Order Code Searched:" + orderCode);
-			LOG.debug("Error while tracking order for " + orderCode + " and " + emailId + " " + e.getMessage());
-			return "No order found with given OrderCode:" + orderCode + " and emailId:" + emailId;
+			LOG.debug("Exception in Track order :" + orderCode);
+			LOG.error("Error while tracking order for " + orderCode + " and " + emailId + " " + e.getMessage());
+			
+			return messageSource.getMessage(new DefaultMessageSourceResolvable(
+					ORDERID_EMAILID_MISMATCH_MESSAGE_KEY), localeResolver.resolveLocale(request));
 		}
-		return "No order found with given OrderCode:" + orderCode + " and emailId:" + emailId;
+	return messageSource.getMessage(new DefaultMessageSourceResolvable(
+			ORDERID_EMAILID_MISMATCH_MESSAGE_KEY), localeResolver.resolveLocale(request));
 	}
 
 	/**
-	 * @param date
+	 * @param fmtDate
 	 * @return String
 	 */
 	private String getFormattedDate(final Date fmtDate)
@@ -440,18 +444,5 @@ public class TrackOrderPageController extends AbstractPageController
 		return strMonth;
 	}
 
-	/**
-	 * @description adding a value at zeroth index of state list
-	 * @param stateDataList
-	 * @return List<StateData>
-	 */
-	private List<StateData> getFinalStateList(final List<StateData> stateDataList)
-	{
-		final StateData newdata = new StateData();
-		newdata.setCode("00");
-		newdata.setCountryKey("IN");
-		newdata.setName("Select");
-		stateDataList.add(0, newdata);
-		return stateDataList;
-	}
+	
 }

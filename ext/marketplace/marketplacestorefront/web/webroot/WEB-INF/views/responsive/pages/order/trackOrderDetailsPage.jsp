@@ -28,9 +28,9 @@
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">
-		<h1 class="account-header">
+		<div class="account-header-track">
 			<spring:theme code="text.account.headerTitle" text="My Marketplace" />
-		</h1>
+		</div>
 		<div class="wrapper">
 
 
@@ -949,16 +949,5 @@
 	</div>
 		
 </template:page>
-
-
-
-<style>
-	body .account .right-account .order-history.order-details li.item .status>ul>li {
-    width: 25%;
-    }
-    body .account .right-account .order-history.order-details li.item .status .message {
-    width: 400%;
-    }
-</style>
 
 
