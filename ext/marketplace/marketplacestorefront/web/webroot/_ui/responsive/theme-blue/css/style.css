@@ -40524,7 +40524,7 @@ ul.jqtree-tree .jqtree-element {
     display:inline-block; */
 }
  .jqtree-tree .jqtree-title:hover {
-      color: #A9143C;
+      color: #A9143C !important;
 }
 
 
