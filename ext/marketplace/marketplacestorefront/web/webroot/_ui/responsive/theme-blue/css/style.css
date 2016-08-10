@@ -32512,7 +32512,6 @@ ul li #mobile-menu-toggle + ul li.lazy-brands ul.images li.short.images .multibr
 }
 header > .content .top ul:first-child li.short.images div#groups{
 	border-bottom: 3px solid !important;
-	height: 33px;
 }
 header > .content .top ul:first-child li.short.images div#group{
 	margin-right:0px !important;

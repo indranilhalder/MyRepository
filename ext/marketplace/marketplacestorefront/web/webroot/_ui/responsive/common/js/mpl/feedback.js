@@ -1611,20 +1611,22 @@ $(document).ready(function(){
 			if($(this).prev().hasClass('bgred')){
 				$(' header > .content .top ul:first-child li > div').removeClass("bgred");
 				}else{
-				$(' header > .content .top ul:first-child li > div').removeClass("bgred");	
+				$(' header > .content .top ul:first-child li > div').removeClass("bgred");
 				$(this).prev().addClass("bgred");			
 			}		
 		});
-		$(document).on('click','header > .content .top ul:first-child li#shopMicrositeSeller > span#mobile-menu-toggle',function() {
+	/*	$(document).on('click','header > .content .top ul:first-child li#shopMicrositeSeller > span#mobile-menu-toggle',function() {
+			setTimeout(function () {
 			if($(this).prev().hasClass('bgred')){
-				console.log("inside if");
+				console.log("inside if microsite");
 				$(' header > .content .top ul:first-child li#shopMicrositeSeller > div').removeClass("bgred");
 			}else{
 				$(' header > .content .top ul:first-child li#shopMicrositeSeller > div').removeClass("bgred");	
-				console.log("inside else");
+				console.log("inside else microsite");
 				$(this).prev().addClass("bgred");			
-			}	
-		});
+			}
+			 }, 190);
+		});*/
 
 		//loadGigya();
 		var sort_top=parseInt($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top"));
