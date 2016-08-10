@@ -201,8 +201,10 @@ var productSizeVar = '${productSize}';
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
 		</a>
-		<select id="variant" class="variant-select">
-			<c:choose>
+		
+		<!-- Added for PDP Size ChartChange -->
+		<ul id="variant" class="variant-select">
+			<%-- <c:choose>
 				<c:when test="${selectedSize eq null}">
 					<option value="#" selected="selected"><spring:theme
 							code="text.select.size" /></option>
@@ -210,7 +212,7 @@ var productSizeVar = '${productSize}';
 				<c:otherwise>
 					<option value="#"><spring:theme code="text.select.size" /></option>
 				</c:otherwise>
-			</c:choose>
+			</c:choose> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:forEach items="${variantOption.colourCode}" var="color">
 
@@ -221,20 +223,20 @@ var productSizeVar = '${productSize}';
 
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="${entry.key}" var="link" />
-									<a href="${link}?selectedSize=true">${entry.value}</a>
+									<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
 									<c:choose>
 										<c:when test="${(variantOption.code eq product.code)}">
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
-													<option value="${link}?selectedSize=true">${entry.value}</option>
+													<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
-													<option value="${link}?selectedSize=true" selected>${entry.value}</option>
+														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
 										<c:otherwise>
-											<option data-vcode="${link}" value="${link}?selectedSize=true">${entry.value}</option>
+											<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -255,10 +257,10 @@ var productSizeVar = '${productSize}';
 												<c:url value="${entry.key}" var="link" />
 												<c:choose>
 													<c:when test="${(variantOption.code eq product.code)}">
-														<option value="${link}?selectedSize=true" selected>${entry.value}</option>
+														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 													</c:when>
 													<c:otherwise>
-														<option value="${link}?selectedSize=true">${entry.value}</option>
+														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 													</c:otherwise>
 												</c:choose>
 											</c:forEach>
@@ -270,7 +272,7 @@ var productSizeVar = '${productSize}';
 					</c:choose>
 				</c:forEach>
 			</c:forEach>
-		</select>
+		</ul>
 		
 		
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->
