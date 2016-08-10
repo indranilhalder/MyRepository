@@ -24,11 +24,7 @@
 	</p>
 	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															
 		  <span></span>
-	</p>
-	<!-- Added for TPR-275 -->
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>
-	<input type="hidden" id="freebiePriceThreshId" value="${freebiePriceThreshVal}">	
-	<!-- Added for TPR-275 -->
+	</p>	
 	<br>
 	<!--- START: INSERTED for MSD --->
 	<input type="hidden" id="price-for-mad" value=""/>		

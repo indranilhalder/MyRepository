@@ -133,6 +133,9 @@ tr.d0 td {
 			</c:if>
 			<!-- TISPRM-97 ends -->
 			<!-- TPR-275 starts  -->
+			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>
+	        <input type="hidden" id="freebiePriceThreshId" value="${freebiePriceThreshVal}">
+	
 			<div id="freebieProductMsgId" style="display:none">
 			 <spring:theme code="freebie.product.message" text="Freebie: This product is not on sale" ></spring:theme>				
 			</div>			
