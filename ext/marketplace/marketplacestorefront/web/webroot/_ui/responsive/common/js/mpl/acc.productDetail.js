@@ -1247,7 +1247,8 @@ $( document ).ready(function() {
 				
 				$("#variant li a").each(function(){
 					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
-					
+						
+					$(this).removeAttr("href");
 					$(this).css({
 						"color": "gray"
 				});
