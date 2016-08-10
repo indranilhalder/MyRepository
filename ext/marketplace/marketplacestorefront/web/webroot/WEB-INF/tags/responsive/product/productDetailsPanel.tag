@@ -95,6 +95,7 @@ tr.d0 td {
 			<product:productPromotionSection product="${product}" />
 
 		</div>
+		<!-- Added for carousel in mobile view -->
 		<div class="product-image-container device">
 		<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
 			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 

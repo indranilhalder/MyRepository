@@ -28,7 +28,7 @@
 <c:url var="sizeGuideUrl"
 	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSizeForSizeGuide}" scope="request"></c:url>
 <style>
-#variant, .productCount select {
+.productCount select {
 	border-radius: 0;
 	width: 50%;
 }
@@ -231,7 +231,7 @@ var productSizeVar = '${productSize}';
 													<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
-														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
+														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
 												</c:otherwise>
 											</c:choose>
 										</c:when>

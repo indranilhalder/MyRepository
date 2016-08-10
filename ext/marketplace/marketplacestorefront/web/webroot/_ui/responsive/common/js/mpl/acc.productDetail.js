@@ -1249,10 +1249,8 @@ $( document ).ready(function() {
 					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
 						
 					$(this).removeAttr("href");
-					$(this).css({
-						"color": "gray"
-				});
-				$(this).parent().css("border-color","gray");
+					$(this).parent().addClass('strike');
+				//$(this).parent().css("border-color","gray");
 				$("#outOfStockId").hide();
 				
 					}
