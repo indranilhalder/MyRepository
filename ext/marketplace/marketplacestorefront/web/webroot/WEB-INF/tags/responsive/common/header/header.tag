@@ -100,7 +100,9 @@
 									<cms:component component="${component}" />
 								</cms:pageSlot>
 								<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-									<trackOrder:trackOrder/>
+									<li class="track_order_header"><a href="#" onclick="openTrackOrder()">
+										<spring:theme code="trackorder.header.text" text="Track Order"/></a>
+									</li>
 								</sec:authorize>
 								<li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li>
 							</c:if>
@@ -209,6 +211,10 @@
 		<div class="compact-toggle mobile"></div>
 	</div>
 
+	<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+		<trackOrder:trackOrder />
+	</sec:authorize>
+
 	<a id="skiptonavigation"></a>
 	<nav:topNavigation />
 </header>
@@ -236,8 +242,7 @@
 	right: 20px !important;
 }
 </style>
-<script>
-</script>
+
 <!--  Commented for TISPRD-1440  -->
 <!-- <script>
 /*$(document).ready(function(){
