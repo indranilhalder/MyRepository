@@ -18810,7 +18810,7 @@ header.brand-header .content .bottom nav>ul>li:hover {
 
 header.brand-header .content .bottom nav>ul>li>ul {
 	background-color: #b9b9b9;
-	top: 80px;
+	top: 70px;
 	left: 280px;
 }
 
@@ -32723,11 +32723,11 @@ header > .content .bottom .search form input {
 }
 }
 /*New homepage changes ends*/
-header .content, header .bottom-header-wrapper,footer > div#footerByAjaxId,footer .footer-text{
+header .content, header .bottom-header-wrapper,.microsite_bottom_wrapper, footer > div#footerByAjaxId,footer .footer-text{
 max-width:1400px;
 margin:0px auto;
 }
-header .bottom-header-wrapper{
+header .bottom-header-wrapper, header.brand-header .microsite_bottom_wrapper{
 position:relative;
 }
 .sort-refine-bar.wrapped-form.sort.mobile {
