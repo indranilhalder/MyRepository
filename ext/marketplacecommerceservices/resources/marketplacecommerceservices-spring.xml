@@ -1761,11 +1761,23 @@
 			</bean>
 	<!-- New Buy Box Implementation End -->
 	
+
 <!-- 	<alias alias="commercePlaceOrderStrategy" name="mplDefaultCommercePlaceOrderStrategy"/>
 	<bean id="mplDefaultCommercePlaceOrderStrategy"
 			class="com.tisl.mpl.marketplacecommerceservices.strategy.MplCommercePlaceOrderStrategyImpl" 
 			parent="defaultCommercePlaceOrderStrategy">
 	</bean> -->
+
+	<!-- New Payment Solution Starts -->	
+	<bean id="mplProcessOrderService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProcessOrderServiceImpl">
+		<property name="modelService" ref="modelService" />
+		<property name="mplProcessOrderDao" ref="mplProcessOrderDao" />
+	</bean>
+	
+	<bean id="mplProcessOrderDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplProcessOrderDaoImpl" />
+
 
 
 </beans>

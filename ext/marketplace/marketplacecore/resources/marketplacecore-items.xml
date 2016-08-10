@@ -2046,6 +2046,13 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- End OMS Fallback code -->
+					<!-- TAT for New Payment Solution Process Order Job -->
+					<attribute type="java.lang.Double" qualifier="juspayWebhookRetryTAT">
+						<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+						<description>Time for which webhook posting is expected</description>
+						<modifiers read="true" write="true" initial="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 

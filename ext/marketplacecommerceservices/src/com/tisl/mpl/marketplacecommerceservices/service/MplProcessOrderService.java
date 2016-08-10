@@ -3,9 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
-import de.hybris.platform.core.model.order.OrderModel;
-
-import java.util.List;
 
 
 /**
@@ -14,6 +11,6 @@ import java.util.List;
  */
 public interface MplProcessOrderService
 {
-	List<OrderModel> getPaymentPedingOrders();
+	void getPaymentPedingOrders();
 
 }

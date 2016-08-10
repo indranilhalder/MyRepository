@@ -1313,7 +1313,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<!-- For Payment  -->
 	<bean id="juspayWebHookJob"
 		class="com.tisl.mpl.core.payment.cronjob.JuspayWebHookJob"
-		autowire="byName" >
+		autowire="byName" > 
 	</bean>
 	
 

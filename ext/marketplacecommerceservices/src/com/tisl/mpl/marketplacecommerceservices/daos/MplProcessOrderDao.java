@@ -19,4 +19,6 @@ public interface MplProcessOrderDao
 	List<OrderModel> getPaymentPedingOrders(String statusCode);
 
 	List<JuspayWebhookModel> getEventsForPendingOrders(String redId);
+
+	Double getJuspayWebhookRetryTAT();
 }

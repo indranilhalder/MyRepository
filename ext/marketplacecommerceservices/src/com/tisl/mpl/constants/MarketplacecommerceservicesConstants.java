@@ -1629,6 +1629,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String WEBHOOKREQSTATUS = "reqId".intern();
 	public static final String OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE = "orderDeallocate";
 	public static final String PINCODE = "000000";
+	public static final String JUSPAYWEBHOOKRETRYTATQUERY = "select {b.juspayWebhookRetryTAT} from {BaseStore AS b} WHERE {b.uid}=?store";
 
 	private MarketplacecommerceservicesConstants()
 	{
