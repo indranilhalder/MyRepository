@@ -38,9 +38,9 @@ import com.techouts.backoffice.exception.InvalidLpOverrideSearchParams;
  *
  * @author prabhakar
  */
-public class LpoverrideWidgetController
+public class AwbEditWidgetController
 {
-	private static final Logger LOG = Logger.getLogger(LpoverrideWidgetController.class);
+	private static final Logger LOG = Logger.getLogger(AwbEditWidgetController.class);
 	private String txtOrderId;
 	private String txtTransactionId;
 	private String txtSlaveId;
@@ -48,9 +48,9 @@ public class LpoverrideWidgetController
 	private String selectionOrderStatus;
 	private String selectionLpName;
 	private Boolean isReturn = Boolean.FALSE;
-	private final String transactionType = "LP";
+	private final String transactionType = "AWB";
 	private List<TransactionInfo> listOfTransactions; //incoming transactions
-	private Set<String> lpList = new HashSet<String>(); //active logistcs Partners
+	private Set<String> lpList; //active logistcs Partners
 
 	private List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>(); //outgoing transactions
 	private final Map<String, TransactionInfo> map = new HashMap<String, TransactionInfo>();//modifed transaction
@@ -97,7 +97,6 @@ public class LpoverrideWidgetController
 		return lpList;
 
 	}
-
 	/*
 	 * this method is used for when order statuses changed to return order statuses when he checked is return checkbox
 	 */
@@ -255,10 +254,8 @@ public class LpoverrideWidgetController
 		{
 			listOfOrderLineInfo = new ArrayList<OrderLineInfo>();
 		}
-
 		for (final TransactionInfo transaction : listOfTransactions)
 		{
-
 			final OrderLineInfo orderLineInfo = new OrderLineInfo();
 			orderLineInfo.setOrderId(transaction.getOrderId());
 			orderLineInfo.setTransactionId(transaction.getTransactionId());
@@ -268,14 +265,12 @@ public class LpoverrideWidgetController
 			orderLineInfo.setNextLP(Boolean.FALSE);//this will get from checkbox button
 			listOfOrderLineInfo.add(orderLineInfo);
 		}
-
 		final LPOverrideAWBEdit lpOverrideEdit = new LPOverrideAWBEdit();
 		lpOverrideEdit.setOrderLineInfo(listOfOrderLineInfo);
 		lpOverrideEdit.setIsReturn(isReturn);
 		lpOverrideEdit.setUserId(userService.getCurrentUser().getUid());
 		lpOverrideEdit.setRoleId(userService.getCurrentUser().getUid()); //logic has to be get used role hear
 		lpOverrideEdit.setTransactionType(transactionType);
-
 		final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
 				.updateOrderLogisticOrAwbNumber(lpOverrideEdit);
 		final List<OrderLineResponse> orderLineResponse = lpOverrideAwbEditResponse.getOrderLineResponse();
