@@ -1867,6 +1867,7 @@
 		<property name="inStockFlag" type="Boolean" />
 		<property name="leastSizeProduct" type="String"/>
 		<property name="isOfferExisting" type="Boolean"/>
+		<property name="savingsOnProduct" type="String"/>
 	</bean>
 <bean class="com.tisl.mpl.wsdto.VariantOptionsWsDto">
 <property name="code" type="String" />

@@ -170,7 +170,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -628,23 +628,27 @@ public class SearchSuggestUtilityMethods
 				/*
 				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
 				 * productData.getCode());
-				 * 
+				 *
 				 * ProductData productData1 = null; if (null != productModel) { productData1 =
 				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
 				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
-				 * 
-				 * 
+				 *
+				 *
 				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
 				 * mplProductWebService.getGalleryImages(productData1);
-				 * 
+				 *
 				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
-				 * 
+				 *
 				 * }
 				 */
 				productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 						Arrays.asList(ProductOption.GALLERY));
 
 				galleryImages = productDetailsHelper.getGalleryImagesMobile(productDataImage);
+				if (null != (productData.getSavingsOnProduct()))
+				{
+					sellingItemDetail.setSavingsOnProduct(productData.getSavingsOnProduct().toString());
+				}
 				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
 					sellingItemDetail.setGalleryImagesList(galleryImages);
@@ -965,21 +969,21 @@ public class SearchSuggestUtilityMethods
 					{
 						for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
 						{
-							if (oldL1Filter.getCategoryCode().equals(
-									foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
+							if (oldL1Filter.getCategoryCode()
+									.equals(foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
 							{
 								for (final DepartmentFilterWsDto oldL2DepartFilter : oldL1Filter.getChildFilters())
 								{
-									if (oldL2DepartFilter.getCategoryCode().equals(
-											foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
+									if (oldL2DepartFilter.getCategoryCode()
+											.equals(foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
 									{
 										for (final DepartmentFilterWsDto oldL3DepartFilter : oldL2DepartFilter.getChildFilters())
 										{
-											if (oldL3DepartFilter.getCategoryCode().equals(
-													foundDeparts[3].split(MarketplacecommerceservicesConstants.COLON)[0]))
+											if (oldL3DepartFilter.getCategoryCode()
+													.equals(foundDeparts[3].split(MarketplacecommerceservicesConstants.COLON)[0]))
 											{
-												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(foundDeparts[4]
-														.split(":"));
+												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(
+														foundDeparts[4].split(":"));
 												if (oldL3DepartFilter.getChildFilters() != null
 														&& !oldL3DepartFilter.getChildFilters().isEmpty())
 												{
@@ -1005,9 +1009,8 @@ public class SearchSuggestUtilityMethods
 					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
 					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
 					{
-						if (null != oldL1Filter.getCategoryCode()
-								&& oldL1Filter.getCategoryCode().equals(
-										foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
+						if (null != oldL1Filter.getCategoryCode() && oldL1Filter.getCategoryCode()
+								.equals(foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
 						{
 							final DepartmentFilterWsDto l2DepartFilter = new DepartmentFilterWsDto();
 							final DepartmentFilterWsDto l3DepartFilter = new DepartmentFilterWsDto();
@@ -1078,8 +1081,8 @@ public class SearchSuggestUtilityMethods
 								l2List.add(l2DepartFilter);
 								oldL1Filter.setChildFilters(l2List);
 							}
-							traversedDepartments.addAll(concateDepartmentString(departmentFil,
-									MarketplacecommerceservicesConstants.DEPT_L1));
+							traversedDepartments
+									.addAll(concateDepartmentString(departmentFil, MarketplacecommerceservicesConstants.DEPT_L1));
 						}
 					}
 
@@ -1093,8 +1096,8 @@ public class SearchSuggestUtilityMethods
 						{
 							for (final DepartmentFilterWsDto oldL2DepartFilter : oldL1Filter.getChildFilters())
 							{
-								if (oldL2DepartFilter.getCategoryCode().equals(
-										foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
+								if (oldL2DepartFilter.getCategoryCode()
+										.equals(foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
 								{
 									final DepartmentFilterWsDto l3DepartFilter = new DepartmentFilterWsDto();
 									List<DepartmentFilterWsDto> l4List = new ArrayList<DepartmentFilterWsDto>();
@@ -1142,8 +1145,8 @@ public class SearchSuggestUtilityMethods
 											l3List.add(l3DepartFilter);
 											oldL2DepartFilter.setChildFilters(l3List);
 										}
-										traversedDepartments.addAll(concateDepartmentString(departmentFil,
-												MarketplacecommerceservicesConstants.DEPT_L2));
+										traversedDepartments
+												.addAll(concateDepartmentString(departmentFil, MarketplacecommerceservicesConstants.DEPT_L2));
 
 									}
 								}
