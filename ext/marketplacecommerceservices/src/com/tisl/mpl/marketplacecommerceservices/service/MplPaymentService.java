@@ -178,9 +178,9 @@ public interface MplPaymentService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
-			final OrderModel orderModel) throws ModelSavingException, NumberFormatException, JaloInvalidParameterException,
-			VoucherOperationException, CalculationException, JaloSecurityException, JaloPriceFactoryException,
-			EtailNonBusinessExceptions;
+			final OrderModel orderModel, final MplPromoPriceData promoPriceData) throws ModelSavingException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
+			JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 	/**

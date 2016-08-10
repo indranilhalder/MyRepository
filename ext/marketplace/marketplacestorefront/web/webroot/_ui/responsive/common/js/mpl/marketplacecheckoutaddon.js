@@ -4,7 +4,6 @@ var isNewCard = false; //this is variable to fix paynow blackout issue
 
 var couponApplied=false;
 var bankNameSelected;
-var promoExpired=false;
 //var promoAvailable=$("#promoAvailable").val();
 //var bankAvailable=$("#bankAvailable").val();
 
@@ -128,13 +127,6 @@ function refresh(){
 	//TISEE-5555
 	$('.security_code_hide').prop('disabled', true);
 	$('.security_code').prop('disabled', false); 
-	if(promoExpired==true)
-	{
-		document.getElementById("juspayErrorMsg").innerHTML="Promotion has expired";
-		$("#juspayconnErrorDiv").css("display","block");
-	}
-	promoExpired=false;
-
 }
 
 
@@ -2669,17 +2661,21 @@ function applyPromotion(bankName)
 		cache: false,
 		dataType:'json',
 		success : function(response) {
-			if(null!=response.errorMsgForEMI && response.errorMsgForEMI=="redirect")
+			if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect")
 			{
 				$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TISEE-510
 			}
-			else if(null!=response.errorMsgForEMI && response.errorMsgForEMI=="redirect")
-			{
-				$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay");
-				promoExpired=true;
-			}
+//			else if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect_to_payment")
+//			{
+//				$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid);
+//			}
 			else
 			{
+				if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect_to_payment")
+				{
+					document.getElementById("juspayErrorMsg").innerHTML="Existing Promotion has expired";
+					$("#juspayconnErrorDiv").css("display","block");
+				}
 				var totalDiscount=0;
 				var productDiscount="";
 				var orderDiscount="";

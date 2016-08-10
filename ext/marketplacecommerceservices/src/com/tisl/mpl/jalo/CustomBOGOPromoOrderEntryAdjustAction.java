@@ -6,7 +6,6 @@ import de.hybris.platform.jalo.JaloBusinessException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.jalo.order.CartEntry;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.promotions.util.Pair;
 import de.hybris.platform.util.DiscountValue;
@@ -44,7 +43,7 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
@@ -98,7 +97,7 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 						while (iter.hasNext())
 						{
 							final Map.Entry mapEntry = (Map.Entry) iter.next();
-							final CartEntry cartEntry = (CartEntry) mapEntry.getValue();
+							final AbstractOrderEntry cartEntry = (AbstractOrderEntry) mapEntry.getValue();
 							final String validProductUSSID = (String) mapEntry.getKey();
 
 							double amtTobeDeductedAtlineItemLevel = 0.00D;

@@ -1660,12 +1660,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
-			final OrderModel orderModel) throws ModelSavingException, NumberFormatException, JaloInvalidParameterException,
-			VoucherOperationException, CalculationException, JaloSecurityException, JaloPriceFactoryException,
-			EtailNonBusinessExceptions
+			final OrderModel orderModel, final MplPromoPriceData promoPriceData) throws ModelSavingException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
+			JaloPriceFactoryException, EtailNonBusinessExceptions
 	{
 		final long startTime = System.currentTimeMillis();
-		final MplPromoPriceData promoPriceData = new MplPromoPriceData();
+		//final MplPromoPriceData promoPriceData = new MplPromoPriceData();
 		VoucherDiscountData discData = new VoucherDiscountData();
 		if (null != cartModel)
 		{
