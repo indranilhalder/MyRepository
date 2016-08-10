@@ -1545,7 +1545,14 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	
 	<!-- Added Bean defination for Custom Price Filter values -->		
 	
-
+	<alias name="defaultSolrQueryPostProcessors" alias="solrQueryPostProcessors"/>
+			<util:list id="defaultSolrQueryPostProcessors">
+    			<ref bean="customPriceSolrQueryPostProcessor"/>
+		</util:list>
+ 
+    <bean id="customPriceSolrQueryPostProcessor" class="com.tisl.mpl.solrfacet.search.impl.MplCustomPriceSolrQueryPostProcessor">
+    	<property name="solrFieldNameProvider" ref="solrFieldNameProvider" />
+    </bean>
 	
 	
 	<!-- Solr Authentication  -->
