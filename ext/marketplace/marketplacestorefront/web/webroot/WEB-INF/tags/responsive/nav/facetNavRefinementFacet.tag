@@ -408,6 +408,8 @@ function navigateToPage(queryString,textString)
 								</label>
 								</c:if>
 							</form>
+								
+								
 								</c:when>								
 								<c:when test="${facetData.code eq 'price'}">
 								<form action="${url}" method="get"> 

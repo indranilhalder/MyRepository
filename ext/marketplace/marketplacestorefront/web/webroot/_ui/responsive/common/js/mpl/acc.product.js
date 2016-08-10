@@ -1092,7 +1092,7 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 };
 
 //Code changes start for TPR -168//
-//Added for custom Price Filter 
+
 var button_my_button = "#applyCustomPriceFilter";
 $(button_my_button)
 		.click(

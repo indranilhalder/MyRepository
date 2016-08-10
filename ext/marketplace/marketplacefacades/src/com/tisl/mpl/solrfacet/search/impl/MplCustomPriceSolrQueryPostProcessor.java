@@ -62,7 +62,7 @@ public class MplCustomPriceSolrQueryPostProcessor implements SolrQueryPostProces
 			// No breadcrumbs.
 			return paramSolrQuery;
 		}
-
+		//checking breadcrumb value
 		Breadcrumb priceBreadCrumb = null;
 		for (final Breadcrumb bc : paramSearchQuery.getBreadcrumbs())
 		{

@@ -1542,7 +1542,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="solrQueryOperatorTranslator" ref="solrQueryOperatorTranslator"/>
 	</bean> 
 	
-	<!-- Added Bean defination for Custom Price Filter values -->		
+	<!-- TPR-168 -->	
 	
 		<alias name="defaultSolrQueryPostProcessors" alias="solrQueryPostProcessors"/>
 			<util:list id="defaultSolrQueryPostProcessors">
