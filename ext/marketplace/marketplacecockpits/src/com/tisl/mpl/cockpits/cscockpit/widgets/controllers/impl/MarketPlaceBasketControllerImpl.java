@@ -369,12 +369,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 						//	final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
 						//		MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
 						List<PinCodeResponseData> pincoderesponseDataList = marketplaceServiceabilityCheckHelper
-								.getResponseForPinCode(
-										cartEntry.getProduct(),
-										String.valueOf(cartEntry.getOrder()
-												.getDeliveryAddress()
-												.getPostalcode()), "Y",
-												cartEntry.getSelectedUSSID());
+								.getResponseForPinCode(cartEntry.getProduct(),String.valueOf(cartEntry.getOrder().getDeliveryAddress().getPostalcode()),
+										"Y",cartEntry.getSelectedUSSID());
 
 						if(null != pincoderesponseDataList && pincoderesponseDataList.size()>0)
 						{

@@ -523,6 +523,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 							data.setIsCOD(sd.getIsCod());
 							data.setDeliveryModes(sd.getDeliveryModes());
 							data.setTransportMode(sd.getShippingMode());
+							data.setDeliveryFulfillModeByP1(sd.getDeliveryFulfillModebyP1());
 							data.setFullFillmentType(sd.getFullfillment());
 							data.setSellerId(buybox.getSellerId());
 							data.setUssid(buybox.getSellerArticleSKU());

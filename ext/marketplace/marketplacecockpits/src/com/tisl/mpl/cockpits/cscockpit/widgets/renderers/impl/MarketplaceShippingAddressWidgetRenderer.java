@@ -146,14 +146,12 @@ public class MarketplaceShippingAddressWidgetRenderer extends ShippingAddressWid
 			}catch (NumberFormatException ex){
 				LOG.info("Not a valid phone Number ");
 			}
-
-			phoneNumber.setConstraint("/{10,10}/");
-			phoneNumber.addEventListener(Events.ON_CHANGE,createAddCellPhoneToAddress(widget,phoneNumber));
 		} else {
 			LOG.info("The default delivery address is not set by the customer, go to the customer tab to set the same");
 			//popupMessage(widget, "deliveryAddressMissing");
 		}
-		
+		phoneNumber.setConstraint("/{10,10}/");
+		phoneNumber.addEventListener(Events.ON_CHANGE,createAddCellPhoneToAddress(widget,phoneNumber));
 		return container;
 	}
 

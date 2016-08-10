@@ -422,7 +422,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					sellerData.setShippingMode(rich.getShippingModes().getCode());
 				}
 
+				if (null != rich.getDeliveryFulfillModeByP1())
+				{
 
+					sellerData.setDeliveryFulfillModebyP1(rich.getDeliveryFulfillModeByP1().getCode());
+				}
 				if (null != rich.getDeliveryFulfillModes() && rich.getDeliveryFulfillModes().equals(DeliveryFulfillModesEnum.TSHIP))
 				{
 

@@ -4862,7 +4862,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			// Commented to stop Store ATS Call
 
-			//	calls service with stores
+			//calls service with stores
+
 			//			final StoreLocatorAtsResponseObject responseObject = pinCodeDeliveryModeService
 			//					.prepStoreLocationsToOMS(storeLocationRequestDataList);
 
@@ -4871,32 +4872,40 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			LOG.debug("******responceData******** " + pincoderesponseDataList);
 			if (null != pincoderesponseDataList)
 			{
-				for (final PinCodeResponseData pinCodeResponseData : pincoderesponseDataList)
+				for (final StoreLocationRequestData storeLocationResponseData : storeLocationRequestDataList)
 				{
-					final StoreLocationResponseData responseData = new StoreLocationResponseData();
-					List<ATSResponseData> atsResponseDataList = null;
-					for (final DeliveryDetailsData deliveryDetailsData : pinCodeResponseData.getValidDeliveryModes())
+
+					for (final PinCodeResponseData pinCodeResponseData : pincoderesponseDataList)
 					{
-						if (deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+						if (pinCodeResponseData.getUssid().equalsIgnoreCase(storeLocationResponseData.getUssId()))
 						{
-							atsResponseDataList = new ArrayList<ATSResponseData>();
-							for (final CNCServiceableSlavesData cncServiceableSlavesData : deliveryDetailsData
-									.getCNCServiceableSlavesData())
+							final StoreLocationResponseData responseData = new StoreLocationResponseData();
+							List<ATSResponseData> atsResponseDataList = null;
+							for (final DeliveryDetailsData deliveryDetailsData : pinCodeResponseData.getValidDeliveryModes())
 							{
-								final ATSResponseData data = new ATSResponseData();
+								if (deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+								{
+									atsResponseDataList = new ArrayList<ATSResponseData>();
+									for (final CNCServiceableSlavesData cncServiceableSlavesData : deliveryDetailsData
+											.getCNCServiceableSlavesData())
+									{
+										final ATSResponseData data = new ATSResponseData();
 
-								data.setStoreId(cncServiceableSlavesData.getStoreId());
-								data.setQuantity(cncServiceableSlavesData.getQty().intValue());
+										data.setStoreId(cncServiceableSlavesData.getStoreId());
+										data.setQuantity(cncServiceableSlavesData.getQty().intValue());
 
-								atsResponseDataList.add(data);
+										atsResponseDataList.add(data);
+									}
+								}
 							}
+							responseData.setUssId(pinCodeResponseData.getUssid());
+							responseData.setAts(atsResponseDataList);
+							responseList.add(responseData);
 						}
 					}
-					responseData.setUssId(pinCodeResponseData.getUssid());
-					responseData.setAts(atsResponseDataList);
-					responseList.add(responseData);
 				}
 			}
+
 			return responseList;
 		}
 		catch (final ClientEtailNonBusinessExceptions ex)
