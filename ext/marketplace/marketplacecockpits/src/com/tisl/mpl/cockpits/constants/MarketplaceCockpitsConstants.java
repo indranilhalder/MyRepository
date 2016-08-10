@@ -148,14 +148,14 @@ public final class MarketplaceCockpitsConstants extends
 	public static Map<String, String> delCodeMap = ImmutableMap.of(
 		    "HD", "home-delivery",
 		    "ED", "express-delivery",
-		    "CnC", "click-and-collect"
+		    "CnC", "click-and-collect",
+		    "CNC", "click-and-collect"
 		);
 	
 	public static Map<String, String> delNameMap = ImmutableMap.of(
 		    "HD", "Home Delivery",
 		    "ED", "Express Delivery",
-		    "CnC", "Click and Collect",
-		    "CNC", "Click and Collect"
+		    "CnC", "Click and Collect"
 		);
 	
 	public static Map<String, String> delOmsCodeMap = ImmutableMap.of(

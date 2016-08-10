@@ -100,7 +100,7 @@
 
 
 			<panel
-				style="max-height:70%;height:70%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
+				style="max-height:50%;height:50%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
 				<panelchildren>
 
 					<listbox model="@load(vm.listOfTransactions)"
@@ -132,11 +132,11 @@
 						</listhead>
 						<template name="model" var="item">
 							<listitem>
-								<listcell label="${item.orderId}" />
-								<listcell label="${item.orderStatus}" />
-								<listcell label="${item.transactionId}" />
-								<listcell label="${item.slaveId}" />
-								<listcell label="${item.sellerId}" />
+								<listcell label="@bind(item.orderId)" />
+								<listcell label="@bind(item.orderStatus)" />
+								<listcell label="@bind(item.transactionId)" />
+								<listcell label="@bind(item.slaveId)" />
+								<listcell label="@bind(item.sellerId)" />
 								<listcell>
 									<label
 										value="@bind(item.logisticName)"
