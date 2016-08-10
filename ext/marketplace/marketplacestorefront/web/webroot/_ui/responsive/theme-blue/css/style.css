@@ -12038,12 +12038,14 @@ button.otherSellersFont {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 100;
+    font-size: 17px;
     content: "\f005"
 }
 .star-review .half:before {
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: 17px;
     font-weight: 100;
     content: "\f123"
 }
@@ -12051,6 +12053,7 @@ button.otherSellersFont {
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: 17px;
     font-weight: 100;
     content: "\f006"
 }
@@ -41403,6 +41406,7 @@ margin-left: 20%;
 
 .product-info .product-content {
 	min-height: 460px;
+	    clear: right;
 }
 
 .product-info .product-image-container .image-list {
@@ -41737,50 +41741,50 @@ margin-left: 20%;
 }
 
 /*Products Right Share*/
-.product-info .wish-share {
+.product-info .product-content .wish-share {
 	margin-bottom: 0;
 	margin-top: 0;
 }
 
-.product-info .wish-share>li {
+.product-info .product-content .wish-share>li {
 	padding: 30px 0 0;
 }
 
-.product-info .wish-share>li:last-child {
+.product-info .product-content .wish-share>li:last-child {
 	float: right;
 	margin-right: 0;
 	width: inherit;
 }
 
-.product-info .wish-share>li .share span {
+.product-info .product-content .wish-share>li .share span {
 	font-size: 14px;
 	padding: 0 25px 0 0;
 	float: left;
 	line-height: 20px;
 }
 
-.product-info .wish-share>li .share span:before {
+.product-info .product-content .wish-share>li .share span:before {
 	display: none;
 }
 
-.product-info .wish-share>li .share ul {
+.product-info .product-content .wish-share>li .share ul {
 	display: block !important;
 	max-height: 200px;
 	margin: 0;
 	float: left;
 }
 
-.product-info .wish-share>li .share>ul li {
+.product-info .product-content .wish-share>li .share>ul li {
 	padding: 0;
 	width: 30px;
 	float: left;
 }
 
-.product-info .wish-share>li .share>ul li:last-child {
+.product-info .product-content .wish-share>li .share>ul li:last-child {
 	width: 15px;
 }
 
-.product-info .wish-share>li .share>ul li a:before {
+.product-info .product-content .wish-share>li .share>ul li a:before {
 	line-height: 20px;
 	color: #b2b2b2;
 }
@@ -42270,27 +42274,27 @@ margin-left: 20%;
 		float: left;
 		width: 50%;
 	}
-	.product-info .wish-share.desktop {
+	.product-info .product-content .wish-share.desktop {
 		display: none;
 	}
-	.product-info .wish-share.mobile {
+	.product-info .product-content .wish-share.mobile {
 		clear: none;
 		display: block;
 		float: right;
 		width: 40%;
 	}
-	.product-info .wish-share.mobile li {
+	.product-info .product-content .wish-share.mobile li {
 		padding: 0;
 		width: 100%;
 	}
-	.product-info .wish-share.mobile li .share span {
+	.product-info .product-content .wish-share.mobile li .share span {
 		float: right;
 		padding: 0 0 10px;
 	}
-	.product-info .wish-share.mobile>li .share span {
+	.product-info .product-content .wish-share.mobile>li .share span {
 		position: relative;
 	}
-	.product-info .wish-share.mobile>li .share span:after {
+	.product-info .product-content .wish-share.mobile>li .share span:after {
 		background: url("images/sprite.svg") no-repeat scroll -45px -130px;
 		bottom: -22px;
 		content: "";
@@ -42300,14 +42304,14 @@ margin-left: 20%;
 		right: 0;
 		width: 32px;
 	}
-	.product-info .wish-share.mobile>li .share ul {
+	.product-info .product-content .wish-share.mobile>li .share ul {
 		display: none !important;
 		float: right;
 	}
-	.product-info .wish-share.mobile>li .share span.active+ul {
+	.product-info .product-content .wish-share.mobile>li .share span.active+ul {
 		display: block !important;
 	}
-	.product-info .wish-share.mobile>li .share span.active:after {
+	.product-info .product-content .wish-share.mobile>li .share span.active:after {
 		display: none;
 	}
 

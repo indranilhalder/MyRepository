@@ -95,6 +95,27 @@ tr.d0 td {
 			<product:productPromotionSection product="${product}" />
 
 		</div>
+		<div class="product-image-container device">
+		<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
+			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 
+				<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">	
+	
+	
+					<div id="addiImageTab${varStatus.index}">
+						<span>
+						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+							<img src="${container.product.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
+						</c:if>
+						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+						<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
+						<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
+						</c:if>
+	
+						</span>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
 		<div class="product-detail">
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">

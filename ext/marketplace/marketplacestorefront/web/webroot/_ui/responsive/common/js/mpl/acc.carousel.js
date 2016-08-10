@@ -10,6 +10,7 @@ ACC.carousel = {
 	     "springflingCarousel",
 	     "myReviewCarousel",
 	     "advancedCategoryCarousel",
+	     "pdpProductCarousel",
 		["bindCarousel", $(".js-owl-carousel").length >0]
 	],
 
@@ -427,6 +428,26 @@ ACC.carousel = {
 			itemsMobile : [480,2], 
 			rewindNav: false,
 			afterInit: function() {$("#my-review-carousel").show();}*/
+		});
+	},
+	
+	pdpProductCarousel: function(){
+		$("#pdpProductCarousel").owlCarousel({
+			items:1,
+    		loop: true,
+    		navText:[],
+    		responsive : {
+    			// breakpoint from 0 up
+    			0 : {
+    				nav:false,
+    	    		dots:false,
+    			},
+    			// breakpoint from 768 up
+    			768 : {
+    				nav:true,
+    	    		dots:true,
+    			}			
+    		}	
 		});
 	}
 	
