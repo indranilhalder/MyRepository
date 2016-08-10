@@ -1571,6 +1571,9 @@ $(document).ready(function(){
 		});
 		$(window).on("load resize", function() {
 			var filter_height=$(".facet-list.filter-opt").height() + 55;
+			if($(".searchSpellingSuggestionPrompt").height() > 0){
+				filter_height= $(".facet-list.filter-opt").height() + 55 + $(".searchSpellingSuggestionPrompt").height() + 40;
+			}
 			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");
 		});
 		
@@ -1624,6 +1627,34 @@ $(document).ready(function(){
 		});
 
 		//loadGigya();
+		var sort_top=parseInt($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top"));
+		$(window).on("load resize", function() {
+			if($(window).width() <= 633){
+				$('.listing.wrapper .left-block').css('margin-top','20px');
+				var search_text_height = $(".listing.wrapper .search-result h2").height();
+				var search_spelling_height = $(".searchSpellingSuggestionPrompt").height();
+				
+				if((search_text_height > 14) && (search_spelling_height <= 0)){
+					var sort_top1 = sort_top + (search_text_height - 14);
+					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top1+"px");
+				}
+				else if((search_text_height <= 14) && (search_spelling_height > 0)){
+					var sort_top_2=$(".searchSpellingSuggestionPrompt").height() + sort_top + 20;
+					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top_2+"px");
+				}
+				else if((search_text_height > 14) && (search_spelling_height > 0)){
+					var sort_top3 = (search_text_height - 14) + $(".searchSpellingSuggestionPrompt").height() + sort_top + 20;
+					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top3+"px");
+				}
+				else{
+					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px");
+				}
+				if($(".searchSpellingSuggestionPrompt").height()>0){
+					var left_block_top_margin= $(".searchSpellingSuggestionPrompt").height() + 40;
+					$('.listing.wrapper .left-block').css('margin-top',left_block_top_margin+'px');
+				}
+			}
+		});
 });
 
         var screenXs="480px";
