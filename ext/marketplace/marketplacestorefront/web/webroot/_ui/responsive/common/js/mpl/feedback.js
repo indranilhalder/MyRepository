@@ -1585,7 +1585,7 @@ $(document).ready(function(){
 		$('header .content .container > .right ul:first-child > li div').removeClass('toggle');
 		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
 		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li').removeClass('toggle');
-		/*setTimeout(function () {
+		setTimeout(function () {
   		  navhtmlMicrosite = $(".brand-header nav ul li").html();
   		 $('header .content .container > .right > ul:first-child').prepend('<li id="shopMicrositeSeller"></li>');
   		  $('header .content .container > .right > ul:first-child > li#shopMicrositeSeller').html(navhtmlMicrosite);
@@ -1601,10 +1601,10 @@ $(document).ready(function(){
 			
 			
 			
-		});*/
+		});
 		
 		//Mobile level 1 active
-		$(document).on('click','header > .content .top ul:first-child li > span.mainli',function() {
+		$(document).on('click','header > .content .top ul:first-child > li > span.mainli',function() {
 			if($(this).prev().hasClass('bgred')){
 				$(' header > .content .top ul:first-child li > div').removeClass("bgred");
 				}else{
@@ -1612,14 +1612,16 @@ $(document).ready(function(){
 				$(this).prev().addClass("bgred");			
 			}		
 		});
-		/*$(document).on('click','header > .content .top ul:first-child li#shopMicrositeSeller > span#mobile-menu-toggle',function() {
+		$(document).on('click','header > .content .top ul:first-child li#shopMicrositeSeller > span#mobile-menu-toggle',function() {
 			if($(this).prev().hasClass('bgred')){
+				console.log("inside if");
 				$(' header > .content .top ul:first-child li#shopMicrositeSeller > div').removeClass("bgred");
 			}else{
 				$(' header > .content .top ul:first-child li#shopMicrositeSeller > div').removeClass("bgred");	
+				console.log("inside else");
 				$(this).prev().addClass("bgred");			
 			}	
-		});*/
+		});
 
 		//loadGigya();
 });
@@ -1845,7 +1847,7 @@ function callGigyaWhenNotMinified(){
 /* Changes for TISPT-203 ends  */
 
 /*Filter scroll changes start*/
-/*$(window).on("scroll",function(){
+$(window).on("scroll",function(){
 	if($(window).width() > 650 && $('.listing.wrapper .right-block').height() > $('.listing.wrapper .left-block').height()) {
 		if($(window).scrollTop() >  $('.listing.wrapper .left-block').height() - $('.listing.wrapper .left-block').offset().top ){
 			$('.listing.wrapper .left-block,.listing.wrapper .right-block').addClass("fixed");
@@ -1859,5 +1861,5 @@ function callGigyaWhenNotMinified(){
 			$('.listing.wrapper .left-block').removeClass("bot");
 		}
 	}
-});*/
+});
 /*Filter scroll changes end*/

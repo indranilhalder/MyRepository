@@ -22170,7 +22170,6 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 @media (max-width:790px) {
 		.azWrapper{
 	  height:320px;
-	  padding:20px 0px;
 	      width: 100%;
     overflow: auto;
 	  -webkit-transition: width 0.3s, opacity 0.3s 0.3s;
@@ -32455,9 +32454,12 @@ header > .content .top > div:not(.toggle) ul:first-child li, header > .content .
     padding: 0;
     position: relative;
 }
-header > .content .top ul:first-child li > div {
+header > .content .top ul:first-child li > div, header > .content .top ul:first-child li.short.images div {
     padding-left: 15px;
 }
+ header > .content .top ul:first-child li.short.images div.view_brands{
+ display:none;
+ }
 #mobile-menu-toggle {
     position: absolute;
     right: 0;
@@ -32500,6 +32502,29 @@ ul li #mobile-menu-toggle + ul li ul.words li.long {
 ul li #mobile-menu-toggle + ul li ul.words li.long a{
     display:block;
 }
+ul li #mobile-menu-toggle + ul li.lazy-brands ul.images li.short.images img.multibrand-logo, ul li #mobile-menu-toggle + ul li.lazy-brands ul.images li.short.images img.logo{
+	display:none;}
+ul li #mobile-menu-toggle + ul li.lazy-brands ul.images li.short.images .multibrand-wrapper{
+	    border-bottom: 1px solid #e6e6e6;
+}
+header > .content .top ul:first-child li.short.images div#groups{
+	border-bottom: 3px solid !important;
+	height: 33px;
+}
+header > .content .top ul:first-child li.short.images div#group{
+	margin-right:0px !important;
+	padding-left:0px;
+}
+.a-z-ul h3{
+	float:none;
+	height:40px;
+}
+ul li #mobile-menu-toggle + ul li ul li.a-z-li{
+	border-bottom:none;
+	    height: 30px;
+    line-height: 30px;
+}
+
 .showcaseItem > a {
     font-weight: bold;
 }
@@ -41354,7 +41379,7 @@ bottom:35px;
 
 /*Upgraded Owl carousel CSS ends*/
 /*Filter scroll changes start*/
-/*.listing.wrapper .left-block.bot {
+.listing.wrapper .left-block.bot {
 position: absolute;
 bottom: 100px;
 } 
@@ -41369,9 +41394,9 @@ margin-left: 20%;
 	.listing.wrapper .right-block.fixed {
 	margin-left: 30%;
 	}
-	/* header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 .words{
+/*  header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 .words{
 	display:none;}
 	header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 > ul.words .short a{
-	display:block;}
-} */
+	display:block;} */
+} 
 /*Filter scroll changes end*/
