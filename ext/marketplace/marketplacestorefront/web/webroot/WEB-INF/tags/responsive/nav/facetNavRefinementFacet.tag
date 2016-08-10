@@ -409,6 +409,33 @@ function navigateToPage(queryString,textString)
 								</c:if>
 							</form>
 								</c:when>
+								
+								<c:when test="${facetData.code eq 'price'}">
+								<form action="${url}" method="get"> 
+									<input type="hidden" name="offer" value="${offer}"/>
+									<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+									<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+									<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+									<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
+									<input type="hidden" name="isFacet" value="true"/>
+									<input type="hidden" name="facetValue" value="${facetValue.code}"/>
+									<label>
+										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox-price sr-only" />
+										<span class="facet-label">
+											<span class="facet-mark"></span>
+											<div class="facet-text">
+											<span class="facet-text">
+												${facetValue.name}												 
+											</span>
+											 <ycommerce:testId code="facetNav_count">
+													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+												</ycommerce:testId>
+											</div>
+										</span>
+									</label>
+								</form>
+								</c:when>
+								
 								<c:otherwise>
 								<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
@@ -548,6 +575,27 @@ function navigateToPage(queryString,textString)
 									<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 									<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 							</form>
+		</c:if>
+		
+		<c:if test="${facetData.code eq 'price'}">	
+			<h4 class="customPriceRange">Price Range</h4>
+							<input type="hidden" name="currentPriceQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentPriceQueryParams"/>					  
+							 <form action="" method="get" id="customPriceFilter">
+							    <input type="hidden" name="offer" value="${offer}"/>
+							    <input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="" class="qValueForCustomPrice"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>		
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>	
+								<input type="hidden" name="isFacet" value="true"/>							
+								<input type="hidden" id="facetValue" name="facetValue" value="${facetValue.code}"/>						
+								<spring:theme code="text.minPriceSearch.placeholder" var="minPriceSearchPlaceholder" />
+							    <input class="minPriceSearchTxt" type="text" id="customMinPrice" name="customMinPrice" width="30" height="20" placeholder="${minPriceSearchPlaceholder}" onkeypress="return isNumber(event)">							
+							    <spring:theme code="text.maxPriceSearch.placeholder" var="maxPriceSearchPlaceholder" />
+							    <span>-</span>
+							    <input class="maxPriceSearchTxt" type="text" id="customMaxPrice" name="customMaxPrice" width="30" height="20" placeholder="${maxPriceSearchPlaceholder}" onkeypress="return isNumber(event)">
+							   
+								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>
+						</form>							
 		</c:if>
 		
 		
