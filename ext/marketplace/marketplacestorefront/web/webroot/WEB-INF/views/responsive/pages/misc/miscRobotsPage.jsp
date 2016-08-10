@@ -5,11 +5,10 @@
 <c:set var="host" value="${header.host}"/>
 <c:set var="baseURL" value="${req.scheme}://${host}"/>
 User-agent: *
-
 <%--# Block access to specific groups of pages
 Disallow: <c:url value="/cart" />
 Disallow: <c:url value="/checkout" />
-Disallow: <c:url value="/my-account" /> --%>
+Disallow: <c:url value="/my-account" /> 
 Disallow: <c:url value="/search/" />
 Disallow: <c:url value="*req=*"/>
 Disallow: <c:url value="*icid=*"/>
@@ -26,20 +25,27 @@ Disallow: <c:url value="*/quickView"/>
 Disallow: <c:url value="*/quickview"/>
 Disallow: <c:url value="*/page-1$"/>
 Disallow: <c:url value="/p-sizeGuide"/>
-Disallow: <c:url value="*msdclick=*"/>
+Disallow: <c:url value="*msdclick=*"/>--%>
 
-
+Disallow: <c:url value="*/quickView"/>
+Disallow: <c:url value="*/page-1$"/>
+<%--TISPRD-3981 --%>
+Disallow: <c:url value="/search/"/>
+Disallow: <c:url value="/p-sizeGuide"/>
 
 <%-- Request-rate: 1/10              # maximum rate is one page every 10 seconds
 Crawl-delay: 10                 # 10 seconds between page requests
 Visit-time: 0400-0845           # only visit between 04:00 and 08:45 UTC
 
 # Allow search crawlers to discover the sitemap --%>
-Sitemap: <c:url value="https://www.tatacliq.com/que/Sitemap_Cliq.xml" />
-Sitemap: <c:url value="https://www.tatacliq.com/que/sitemap_index.xml" />
-
-
-# Block CazoodleBot as it does not present correct accept content headers
+<%--Sitemap: <c:url value="https://www.tatacliq.com/que/Sitemap_Cliq.xml" />
+Sitemap: <c:url value="https://www.tatacliq.com/que/sitemap_index.xml" />--%>
+Sitemap: <c:url value="https://www.tatacliq.com/sitemap.xml" />
+Sitemap: <c:url value="https://www.tatacliq.com/que/sitemap.xml" />
+<%--TISPRD-3981 --%>
+User-agent: Test Certificate Info
+Disallow: /
+<%--# Block CazoodleBot as it does not present correct accept content headers
 User-agent: CazoodleBot
 Disallow: /
 
@@ -53,4 +59,4 @@ Disallow: /
 
 # Block Gigabot
 User-agent: Gigabot
-Disallow: /
+Disallow: /--%>

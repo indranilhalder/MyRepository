@@ -84,11 +84,11 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 #CMSMediaParagraphComponent changes starts
 INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture;url
-;;AuthenticExclusiveMediaParagraphComponent;Authentic And Exclusive Media Paragraph Component;AuthenticExclusiveMediaParagraphComponent;"<span>Authentic & Exclusive</span>";AuthenticExclusive.png;"/store/mpl/en/authenticAndExclusive";
-;;BestCollectionMediaParagraphComponent;Best Collection Media Paragraph Component;BestCollectionMediaParagraphComponent;"<span>Best Collections</span>";BestCollection.png;"#";
-;;CustomerFirstMediaParagraphComponent;Customer First Media Paragraph Component;CustomerFirstMediaParagraphComponent;"<span>Customer First</span>";CustomerFirst.png;"/store/mpl/en/contact";
-;;DeliveryOnTimeMediaParagraphComponent;Delivery On Time Media Paragraph Component;DeliveryOnTimeMediaParagraphComponent;"<span>Delivery On-time</span>";DeliveryOnTime.png;"/store/mpl/en/trackorders";
-;;EveryWhereMediaParagraphComponent;EveryWhere Media Paragraph Component;EveryWhereMediaParagraphComponent;"<span>Everywhere</span>";Everywhere.png;"#";
+;;AuthenticExclusiveMediaParagraphComponent;Authentic And Exclusive Media Paragraph Component;AuthenticExclusiveMediaParagraphComponent;"<span class='spriteImg hotBrands'></span><span>Hot Brands</span>";;"/authenticAndExclusive";
+;;BestCollectionMediaParagraphComponent;Best Collection Media Paragraph Component;BestCollectionMediaParagraphComponent;"<span class='spriteImg coolDeals'></span><span>Cool Deals</span>";;"#";
+;;CustomerFirstMediaParagraphComponent;Customer First Media Paragraph Component;CustomerFirstMediaParagraphComponent;"<span class='spriteImg realStories'></span><span>Real Stories</span>";;"/contact";
+;;DeliveryOnTimeMediaParagraphComponent;Delivery On Time Media Paragraph Component;DeliveryOnTimeMediaParagraphComponent;"<span class='spriteImg trackOrders'></span><span>Track Orders</span>";;"/trackorders";
+;;EveryWhereMediaParagraphComponent;EveryWhere Media Paragraph Component;EveryWhereMediaParagraphComponent;"<span class='spriteImg storePickup'></span><span>Store PiQ ups</span>";;"#";
 ;;CallUsMediaParagraphComponent;Call Us Media Paragraph Component;CallUsMediaParagraphComponent;"<div>Call Us,24/7</div><div><a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'>1-800-123-4567</a></div>";callus.png
 ;;ChatWithUsMediaParagraphComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphComponent;"<div>Chat with us</div><a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'>Available Now</a>";chatwidus.png
 
@@ -469,6 +469,10 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;c
 ;;Section2B-Women;true;Beinspired Row 1 Slot;BeInspiredParagraphComponent,LatestLookBanner1,WomenCategoryVideoComponent
 ;;Section2C-Women;true;Background Image Slot;BackgroundImages1,BackgroundImages2
 ;;Section3-Women;true;Beinspired Row 2 Slot;LatestLookBanner2,LatestLookBanner3
+;;Section4A-Women;true;Section4A;RefinementFacetComponent;
+;;Section4B-Women;true;Section4B;ProductGridComponent;
+
+
 # ContentSlotForPage 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='Women'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section1-Women;Section1;;Section1-Women;;;
@@ -476,6 +480,8 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;Section2B-Women;Section2B;;Section2B-Women;;;
 ;;Section2C-Women;Section2C;;Section2C-Women;;;
 ;;Section3-Women;Section3;;Section3-Women;;;
+;;Section4A-Women;Section4A;;Section4A-Women;;;
+;;Section4B-Women;Section4B;;Section4B-Women;;;
 
 #############################################################
 
@@ -521,6 +527,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;c
 ;;Section4A1-footwear;true;Mens Carousel slot 4A1;MenSingleImgComponent
 ;;Section5A1-footwear;true;Kids footwear slot 5A1 ;KidsFirstImgComponent,KidsSecondImgComponent
 ;;Section6A-footwear;true;Occasion Footwear Carousel Slot 6A;TMPOccasionFootwearMainCategoriesCarouselComponent
+;;Section7A-footwear;true;Refinement Facet Component slot;RefinementFacetComponent
+;;Section7B-footwear;true;Product Grid Component slot;ProductGridComponent
 
 
 # ContentSlotForPage 
@@ -535,6 +543,11 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;Section4A1-footwear;Section4A1;;Section4A1-footwear;;;
 ;;Section5A1-footwear;Section5A1;;Section5A1-footwear;;;
 ;;Section6A-footwear;Section6A;;Section6A-footwear;;;
+;;Section7A-footwear;Section7A;;Section7A-footwear;;;
+;;Section7B-footwear;Section7B;;Section7B-footwear;;;
+
+
+
 #############################################################
 
 
@@ -568,6 +581,9 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;c
 ;;Section2B-Electronics;true;Techtrendsetters Row 1 Slot;TechTrendsettersParagraphComponent,TechTrendSettersBanner1,ElectroncsCategoryVideoComponent
 ;;Section2C-Electronics;true;Background Image Slot;BackgroundImages1,BackgroundImages2
 ;;Section3-Electronics;true;Techtrendsetters Row 2 Slot;TechTrendSettersBanner2,TechTrendSettersBanner3
+;;Section4A-Electronics;true;Product Refinement Component slot;RefinementFacetComponent;
+;;Section4B-Electronics;true;Product Grid Component slot;ProductGridComponent;
+
 # ContentSlotForPage 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='Electronics'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section1-Electronics;Section1;;Section1-Electronics;;;
@@ -575,6 +591,8 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;Section2B-Electronics;Section2B;;Section2B-Electronics;;;
 ;;Section2C-Electronics;Section2C;;Section2C-Electronics;;;
 ;;Section3-Electronics;Section3;;Section3-Electronics;;;
+;;Section4A-Electronics;Section4A;;Section4A-Electronics;;;
+;;Section4B-Electronics;Section4B;;Section4B-Electronics;;;
 
 #############################################################
 

@@ -24,6 +24,19 @@
 		${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
 	</title>
 	<%-- Meta Content --%>
+	<meta name="apple-itunes-app" content="app-id=1101619385">
+<meta name="google-play-app" content="app-id=com.tul.tatacliq">
+
+<!-- <meta name="msApplication-ID" content="microsoft.build.App"/>
+<meta name="msApplication-PackageFamilyName" content="microsoft.build_8wekyb3d8bbwe"/> -->
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
+<%-- <link rel="icon" href="//${favHost}/_ui/responsive/common/images/preload.png" type="image/png"> --%>
+
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/>
+<link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
+<link rel="android-touch-icon" href="${themeResourcePath}/images/Appicon.png" />
+<!-- <link rel="windows-touch-icon" href="icon.png" /> -->
+	
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta charset="utf-8">
@@ -42,8 +55,13 @@
 	<c:set var="pageURL" value="${emailURL}"/>
 	<c:set var="protocolString" value="${fn:split(pageURL, '://')}"/>
 	<c:set var="baseURL" value="${protocolString[0]}://${host}"/>
-	
 	<c:set var="reqURI" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+	
+	<!--Start:<TISPRD-2939-hrefLang tag added> -->
+	<c:set var="hrefLang" value="${baseURL}${reqURI}"></c:set>
+    <link rel="alternate" href="${hrefLang}" hreflang="en-in" />
+    <!--End:<TISPRD-2939-hrefLang tag added> -->
+    
 	<c:choose>
 		<c:when test="${fn:contains(reqURI,'search')}">
 		</c:when>
@@ -106,20 +124,25 @@
 	<meta property="og:site_name" content="${siteName}" />
 	
 	<%-- Favourite Icon --%>
-	<spring:theme code="img.favIcon" text="/" var="favIconPath"/>
-    <link rel="shortcut icon" type="image/x-icon" media="all" href="${themeResourcePath}/${favIconPath}" />
+	<%-- <spring:theme code="img.favIcon" text="/" var="favIconPath"/> --%>
+    <%-- <link rel="shortcut icon" type="image/x-icon" media="all" href="${themeResourcePath}/${favIconPath}" /> --%>
+    <!-- fix for defect TISPT-320 -->
+     <link rel="shortcut icon" type="image/x-icon" media="all" href="${baseURL}/favicon.ico" />
     
 	<!-- DNS prefetching starts -->
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>	
 
 	<link rel="dns-prefetch" href="//${mediaHost}">
-	<link rel="dns-prefetch" href="//${staticResourceHost}"> 
-	<c:choose>
-	    <c:when test="${not empty productMediadnsHost}">
-	       <link rel="dns-prefetch" href="//${productMediadnsHost}">
-	    </c:when>
-	</c:choose>	
+	<link rel="dns-prefetch" href="//${staticResourceHost}"> 	
+	<c:if test="${not empty productMediadnsHost}">
+	<link rel="dns-prefetch" href="//${productMediadnsHost}">
+	</c:if>
+	<c:if test="${not empty productMediadnsHost1}">
+	<link rel="dns-prefetch" href="//${productMediadnsHost1}">
+	</c:if>
+	
 	<!-- DNS prefetching ends --> 
 	
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
@@ -137,24 +160,65 @@
 
 <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi" /> 
 <meta name="viewport" content="width=640, initial-scale=1" />-->
-<script>
-if($(window).width() < 650) {
-	$('head').append('<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />');
-}
-</script>
 </head>
-
+<c:if test="${empty buildNumber}">
+<c:set var="buildNumber" value= "100000"/>
+</c:if>
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
+
+<!-- 
+<div>
+		<a href="#" onclick="run('android')">android</a>
+		<a href="#" onclick="run('ios')">ios</a>
+		<a href="#" onclick="run('windows')">windows</a>
+	</div> -->
+
+
+
+
 <!-- For Gigya Social Login --><!-- TISPT-261 -->
 	<c:if test="${isGigyaEnabled=='Y'}">
 		<c:choose>
 			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/') or 
 					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/payment-method/')}"></c:when>
 		<c:otherwise>
-			<script type="text/javascript" lang="javascript" src="${gigyasocialloginurl}?apikey=${gigyaAPIKey}"></script>
+		<c:choose>
+ 		<c:when test="${isMinificationEnabled}">
+ 		<script type="text/javascript">
+ 		var gigyasocialloginurl='${gigyasocialloginurl}';
+ 		var gigyaApiKey='${gigyaAPIKey}';
+ 		var commonResource='${commonResourcePath}';
+ 		var buildNumber='${buildNumber}'; 
+ 		/* done for TISPT-203 */
+ 		$(window).on('load',function(){
+ 			/* $.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
+ 				$.getScript('${commonResourcePath}/js/minified/acc.gigya.min.js?v=${buildNumber}').done(function(){
+ 					loadGigya();
+ 				});
+ 			}); */
+ 			callGigya();
+ 		});
+ 		</script>
+ 	</c:when>
+ 		<c:otherwise>
+ 		<script type="text/javascript">
+ 		/* done for TISPT-203 */
+ 		$(window).on('load',function(){
+ 		/* 	$.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
+ 				$.getScript('${commonResourcePath}/js/gigya/acc.gigya.js').done(function(){
+ 					loadGigya();
+ 				});
+ 			}); */
+ 			callGigyaWhenNotMinified();
+ 		});
+ 		</script>
+ 		</c:otherwise>
+ 		</c:choose>
 		</c:otherwise>
 		</c:choose>
 	</c:if>
+
+
 	<tealium:sync/> 
 <!-- <script type="text/javascript">
     (function(a,b,c,d){
@@ -183,6 +247,5 @@ if($(window).width() < 650) {
 </body>
 
 <debug:debugFooter/>
-
 </html>
 <%-- </compress:html> --%>

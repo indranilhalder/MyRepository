@@ -83,7 +83,7 @@ public class CommonAsciiValidator
 		boolean upperAlpha = false;
 		boolean lowerAlpha = false;
 		boolean numeric = false;
-		boolean spChar = false;
+		//boolean spChar = false;
 		char s;
 		if (Str.length() > 0)
 		{
@@ -103,12 +103,13 @@ public class CommonAsciiValidator
 				{
 					numeric = true;
 				}
-				else if ((ch >= 33 && ch <= 47) || (ch >= 58 && ch <= 64) || (ch >= 91 && ch <= 96) || (ch == 126))
-				{
-					spChar = true;
-				}
+				/*
+				 * else if ((ch >= 33 && ch <= 47) || (ch >= 58 && ch <= 64) || (ch >= 91 && ch <= 96) || (ch == 126)) {
+				 * spChar = true; }
+				 */
 			}
-			if (upperAlpha && lowerAlpha && numeric && spChar)
+			//if (upperAlpha && lowerAlpha && numeric && spChar) // spChar constraint check removed
+			if (upperAlpha && lowerAlpha && numeric)
 			{
 				flag = true;
 			}

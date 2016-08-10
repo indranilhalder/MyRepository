@@ -612,10 +612,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INTERESTED_IN_EMAIL = "I am interested in receiving e-mails";
 	public static final String NOT_INTERESTED_IN_EMAIL = "I am not interested in receiving e-mails";
 	public static final String BRAND_NAME_PREFIX = "MBH";
+
 	public static final String CUSTOMERNOTFOUND = "Customer not found";
 	public static final String NOBANKLIST = "bank list is not available";
 
 	public static final String SSHIPCODE = "SSHIP";
+	public static final String TSHIPCODE = "TSHIP";
 	public static final String SET_EMPTY_ORDER_NOTIFICATIONS = "Notifications are not available";
 	public static final String EMAIL_ID_IS_EMPTY = "Email ID for the current user is empty";
 
@@ -694,8 +696,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0018 = "E0018";
 	public static final String E0019 = "E0019";
 	public static final String E0020 = "E0020";
+	//TISPRO-607
 	public static final String E0021 = "E0021";
 	public static final String E0022 = "E0022";
+
+
 	//System/Non Business constants
 
 	//pdp error constants
@@ -849,6 +854,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9103 = "B9103";
 
 	public static final String B9320 = "B9320";
+	public static final String B9321 = "B9321";
+	public static final String B9322 = "B9322";
+	public static final String B9323 = "B9323";
+	public static final String B9324 = "B9324";
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -908,6 +917,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9216 = "B9216";
 	public static final String B9217 = "B9217";
 	public static final String B9218 = "B9218";
+	public static final String B9219 = "B9219";
 
 
 	//Search error codes ends
@@ -1538,17 +1548,20 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String IA_CATEGORY_PRODUCT = "categoryproduct";
 	public static final String IA_BRAND_PRODUCT = "brandproduct";
 	public static final String IA_PRICE_INVENTORY = "priceinventory";
+	public static final String IA_PRICEINVENTORY_CONTROL = "priceinventorycontrol";
 	public static final String DOT = ".";
 	public static final String IA_FILE_EXTENSION = "csv";
 	public static final String IA_FILENAME_PRODUCTCATEGORY = "ia.filename.productcategory";
 	public static final String IA_FILENAME_BRANDPRODUCT = "ia.filename.brandproduct";
 	public static final String IA_FILENAME_PRICEINVENTORY = "ia.filename.priceinventory";
 	public static final String IA_FILENAME_SELLERPRICEDETAILS = "ia.filename.sellerpricedetails";
+	public static final String IA_FILENAME_PRICEINVENTORYCONTROL = "ia.filename.priceinventorycontrol";
 	public static final String IA_EXPORT_FOLDER = "ia.path.export";
 	public static final String IA_CATEGORYEXPORT_FOLDER = "ia.path.catexport";
 	public static final String IA_BRANDEXPORT_FOLDER = "ia.path.brandexport";
 	public static final String IA_PRICE_INVENTORYEXPORT_FOLDER = "ia.path.priceinventoryexport";
 	public static final String IA_SELLERPRICEDETAILSEXPORT_FOLDER = "ia.path.sellerpricedetails";
+	public static final String IA_PRICEINVENTORYCONTROL_FOLDER = "ia.path.priceinventorycontrol";
 	public static final String ENCODING = "UTF-8";
 	public static final String IA_BATCHVALUE = "mpl.ia.batchvalue";
 	public static final String IA_SPDETAILSHEADER = "mpl.ia.spdetailsheader";
@@ -1561,8 +1574,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISCR-421
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
 	public static final String JUSPAY_ENCODING_TYPE = "payment.juspay.encoding.type";
-
 	public static final String EBS_SESSION_ID = "session_id";
+	public static final String WISHLIST_BY_USSID = "SELECT {wishentry.pk} FROM {Wishlist2entry as wishentry}, {Wishlist2 as wish}  WHERE {wish.user} = ?user AND {wishentry.wishlist}={wish.pk} AND {wishentry.ussid}= ?ussid ORDER BY {creationtime} desc";
 
 	//TISPRO-497
 	public static final String CARTAMOUNTINVALID = "cartAmountInvalid";
@@ -1578,13 +1591,35 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISPT-200
 	public static final String GETAUDITID = "select {a.pk} from {mplpaymentaudit as a} where {a.cartGUID}=?cartGUID ORDER BY {a.requestDate} DESC"
 			.intern();
+	public static final String MOBILE_SOURCE = "&source=App".intern();
 
 	public final static String PROXYENABLED = "proxy.enabled";
 	public final static String GENPROXY = "proxy.address";
 	public final static String GENPROXYPORT = "proxy.port";
 
 	public final static String IMAGEURLMSG = "Image url is:::";
+	public final static String IMAGEDIMENSION = "257Wx257H";
 
+	public final static String DEFAULT_RISK = "-1.0";
+
+	//New BuyBox Implementation
+
+	public final static String BUYBOX = "buybox.";
+	public final static String QUERY = "DataExtract";
+	public final static String LASTRUNTIME = "lastruntime";
+	public final static String HOTFOLDERLOCATION = "hotFolderLocation";
+	public static final String BUYBOX_FILE_NAME = "filename";
+	public static final String BUYBOX_FILE_EXTENSION = "csv";
+
+
+	public static final String CURRENT = "current".intern();
+	public static final String INVERTED_COMMA = "'".intern();
+	public static final String BRAND_NAME_PREFIX_LOWER = "mbh";
+	public static final String SELLER_NAME_PREFIX = "MSH";
+
+	//TISPRO-675
+	public static final String EMIBANK = "emi_bank".intern();
+	public static final String EMITENURE = "emi_tenure".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

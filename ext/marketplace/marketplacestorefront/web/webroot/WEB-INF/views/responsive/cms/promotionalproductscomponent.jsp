@@ -7,6 +7,8 @@
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
+
 <c:choose>
 
 	<c:when test="${not empty productData}">
@@ -14,7 +16,7 @@
 
 		<div class="shop-sale wrapper">
 			<h1>
-				<span>${component.title}</span> <span>${component.promotion.description}</span>
+				<span>${component.title}</span> <span><span class="span-border"></span><span class="shop-sale-text">${component.promotion.description}</span></span>
 			</h1>
 			<div class="carousel-component">
 				<div
@@ -30,9 +32,10 @@
 									<div class="image">
 
 										<c:if test="${product.isProductNew eq true}">
-											<img class="new brush-strokes-sprite sprite-New"
-												style="z-index: 1; display: block;"
-												src="/_ui/responsive/common/images/transparent.png">
+										<div style="z-index: 1;display: block;" class="new">
+										<img class="brush-strokes-sprite sprite-New"
+									src="//${staticHost}/_ui/responsive/common/images/transparent.png"><span>New</span>
+										</div>
 										</c:if>
 										<a class="thumb" href="${productUrl}" title="${product.name}">
 											 <product:productPrimaryImage
@@ -43,7 +46,7 @@
 										<c:if test="${product.isOnlineExclusive}">
 											<div style="z-index: 1;" class="online-exclusive">
 												<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-													src="/_ui/responsive/common/images/transparent.png">
+													src="//${staticHost}/_ui/responsive/common/images/transparent.png">
 												<span>online exclusive</span>
 											</div>
 										</c:if>
@@ -70,7 +73,7 @@
 															value="${fn:split(swatchColor, '_')}" />
 														<c:choose>
 															<c:when
-																test="${swatchColorAry[0]=='Multi' || swatchColorAry[0]=='multi'}">
+																test="${fn:startsWith(swatchColorAry[0],'Multi') || fn:startsWith(swatchColorAry[0],'multi')}">
 																<li><img class="multicolor-serp"
 																	src="${commonResourcePath}/images/multi.jpg"
 																	height="12" width="12" title="Multicolor" /></li>
@@ -91,7 +94,7 @@
 															value="${fn:split(swatchColor, '_')}" />
 														<c:choose>
 															<c:when
-																test="${swatchColorAry[0]=='Multi' || swatchColorAry[0]=='multi'}">
+																test="${fn:startsWith(swatchColorAry[0],'Multi') || fn:startsWith(swatchColorAry[0],'multi')}">
 																<li><img class="multicolor-serp"
 																	src="${commonResourcePath}/images/multi.jpg"
 																	height="12" width="12" title="Multicolor" /></li>

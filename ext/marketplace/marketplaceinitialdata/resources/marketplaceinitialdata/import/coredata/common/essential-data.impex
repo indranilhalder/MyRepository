@@ -185,23 +185,23 @@ INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];qu
 ;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true
 
 #Changes for TISPT-345 Start
-INSERT_UPDATE CatalogVersionSyncCronJob;code[unique=true];job(code);singleExecutable;sessionLanguage(isocode);nodeid;
-;mplProductCatalogSync;sync mplProductCatalog\:Staged->Online;false;en;0;
-;mplContentCatalogSync;sync mplContentCatalog\:Staged->Online;false;en;0;
+#INSERT_UPDATE CatalogVersionSyncCronJob;code[unique=true];job(code);singleExecutable;sessionLanguage(isocode);nodeid;
+#;mplProductCatalogSync;sync mplProductCatalog\:Staged->Online;false;en;0;
+#;mplContentCatalogSync;sync mplContentCatalog\:Staged->Online;false;en;0;
 
 
-INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression;
+#INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression;
 #Product Catalog Sync Scheduled Every 5 hours
-;mplProductCatalogSync;0 0 0/5 * * ?;
+#;mplProductCatalogSync;0 0 0/5 * * ?;
 #Content Catalog Sync Runs on Demand Basis
-;mplContentCatalogSync;;
+#;mplContentCatalogSync;
 
 #Changes for TISPT-345 End
 
 INSERT_UPDATE Trigger;job(code)[unique=true];cronExpression;maxAcceptableDelay;
 #;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
 #Change for TISPT-215
-#;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
+;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
 #Commented as per Changes for TISPT-345                                         
 
 
@@ -234,6 +234,7 @@ INSERT_UPDATE BuyboxUpdateLog;last_run_time[dateformat=yyyy-MM-dd HH:mm];proc_na
 ;2015-06-01 10:00:01;ia_category
 ;2015-06-01 10:00:01;ia_catprdrel
 ;2015-06-01 10:00:01;ia_price_inventory
+;2015-06-01 10:00:01;ia_price_inventory_control
 
 #buybox insert the weightage values
 INSERT_UPDATE BBWeightage;weigtagetype[unique=true];weightagevalue

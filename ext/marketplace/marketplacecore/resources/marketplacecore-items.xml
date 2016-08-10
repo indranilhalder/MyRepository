@@ -5408,7 +5408,86 @@
 
 				</attributes>
 			</itemtype>
+			<!-- New BuyBoxCommerce Table For Procedure -->
+			<itemtype code="BuyBoxProcTable" extends="GenericItem" generate="true"
+				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.BuyBoxProcTable">
+				<deployment table="MplBuyBoxProcTable" typecode="16000" />
+				
+				<attributes>
+					<attribute qualifier="product" type="java.lang.String">
+						<description>Product</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="price" type="java.lang.Double">
+						<description>Price</description>
+						<persistence type="property" />
+					</attribute>
 
+					<!-- mrp at ussid level -->
+					<attribute qualifier="mrp" type="java.lang.Double">
+						<description>Price</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="sellerArticleSKU" type="java.lang.String">
+						<description>SellerArticleSKU</description>
+						<persistence type="property" />
+						<modifiers unique="true" />
+					</attribute>
+
+					<attribute qualifier="specialPrice" type="java.lang.Double">
+						<description>SpecialPrice</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="available" type="java.lang.Integer">
+						<description>Available</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="weightage" type="java.lang.Double">
+						<description>Weightage</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="sellerId" type="java.lang.String">
+						<description>sellerId</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="sellerName" type="java.lang.String">
+						<description>SellerName</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="sellerType" type="java.lang.String">
+						<description>SellerType</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="delisted" type="java.lang.Boolean">
+						<description>flag to check whether a seller is delisted or not</description>
+						<persistence type="property" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+					</attribute>
+
+					<attribute qualifier="sellerStartDate" type="java.util.Date">
+						<description>for seller start date</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="sellerEndDate" type="java.util.Date">
+						<description>for seller end date</description>
+						<persistence type="property" />
+					</attribute>
+											
+				</attributes>
+				<indexes>
+					<index name="BuyBoxCommerce_IDX">
+						<key attribute="product" />
+					</index>
+				</indexes>
+			</itemtype>
+		
 			<itemtype code="ContactUsTabComponent" generate="true"
 				autocreate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.ContactUsTabComponent">
@@ -5607,6 +5686,15 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- End TISPRO-318 -->
+					<!-- TISPRD- 2511 -->
+					<attribute qualifier="isSentToFico" autocreate="true"
+						type="java.lang.Boolean">
+						<description>Sent to FICO attribute</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>						
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -6028,6 +6116,11 @@
 						<defaultvalue>Boolean.FALSE</defaultvalue>
 						<persistence type="property" />
 						<modifiers read="true" write="true" optional="false" />
+					</attribute>
+					<attribute qualifier="deviceId" type="java.lang.String">
+						<description>Stores the Device ID</description>
+						<modifiers optional="true" read="true" write="true" unique="true"/>
+						<persistence type="property" />
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -6833,6 +6926,17 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- TISPRO-675 -->
+ 					<attribute qualifier="emiBank" type="java.lang.String"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<persistence type="property" />
+ 					</attribute>
+ 					<attribute qualifier="emiTenure" type="java.lang.String"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<persistence type="property" />
+ 					</attribute>
 				</attributes>
 			</itemtype>
 			<itemtype code="JuspayCardResponse" autocreate="true"
@@ -7726,6 +7830,7 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					
 				</attributes>
 			</itemtype>
 
@@ -8311,13 +8416,13 @@
 				<description>Extending the SolrFacetSearchKeywordRedirect type from core with additional attributes.</description>
 			<attributes>
 				<attribute type="SolrAbstractKeywordRedirect" qualifier="redirectMobile">
-						<modifiers read="true" write="true" optional="false" search="true" />
+						<modifiers read="true" write="true" optional="true" search="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
-	
-		
+
 	</itemtypes>
+	
 </items>

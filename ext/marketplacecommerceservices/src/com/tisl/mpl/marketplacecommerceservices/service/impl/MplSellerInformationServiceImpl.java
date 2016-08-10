@@ -5,12 +5,16 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.catalog.CatalogService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -23,7 +27,7 @@ import com.tisl.mpl.model.SellerSalesCategoryModel;
  */
 public class MplSellerInformationServiceImpl implements MplSellerInformationService
 {
-
+	private static final Logger LOG = Logger.getLogger(MplSellerInformationServiceImpl.class);
 	@Autowired
 	private MplSellerInformationDAO mplSellerInformationDAO;
 
@@ -119,5 +123,39 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 	public void setMplSellerInformationDAO(final MplSellerInformationDAO mplSellerInformationDAO)
 	{
 		this.mplSellerInformationDAO = mplSellerInformationDAO;
+	}
+
+	/**
+	 * get Fulfillment type for FreeBie Parent Transaction   
+	 * @author TECHOUTS
+	 * @param orderEntry
+	 * @return String 
+	 */
+	@Override
+	public String getFullfillmentTypeOfParent(OrderEntryModel orderEntry) throws EtailBusinessExceptions
+	{
+		LOG.info("Inside getFullfillmentTypeOfParent method");
+		String parentFulfillmentType = StringUtils.EMPTY;
+		try
+		{
+			if (null != orderEntry && null != orderEntry.getParentTransactionID())
+			{
+				LOG.debug("parent transaction Id for"+orderEntry.getTransactionID()+" is : " + orderEntry.getParentTransactionID());
+
+				parentFulfillmentType = mplSellerInformationDAO.getparentFulfillmenttype(orderEntry.getParentTransactionID());
+				
+				LOG.debug(" Parent Fulfillment Type for "+orderEntry.getTransactionID()+" is :"+parentFulfillmentType);
+			}
+			return parentFulfillmentType;
+		}
+		catch (EtailBusinessExceptions e)
+		{
+			throw new EtailBusinessExceptions(e.getErrorCode(),e);
+		}
+		catch (Exception e)
+		{
+			LOG.error("Exception occured " + e.getMessage());
+			throw new EtailBusinessExceptions(e.getMessage(),e);
+		}
 	}
 }

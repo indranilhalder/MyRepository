@@ -24,7 +24,7 @@ var homePageBannerTimeout='${timeout}';
 					<!-- START: code for adding  3 sided and  4 sided banner component-->
 					<c:choose>
 						<c:when test="${ banner.type eq 'Big 3 Sided Banner Component'}">
-							<div class="hero">
+							<div class="hero icid">
 								<div class="image">
 									<img src="${banner.bannerImage.url}">
 								</div>
@@ -40,7 +40,7 @@ var homePageBannerTimeout='${timeout}';
 
 
 						<c:when test="${ banner.type eq 'Big 4 Sided Banner Component'}">
-							<div class="hero fourPromoBanner">
+							<div class="hero icid fourPromoBanner">
 								<div class="image">
 									<img src="${banner.bannerImage.url}">
 								</div>
@@ -102,7 +102,7 @@ var homePageBannerTimeout='${timeout}';
 					<!-- START: code for adding  3 sided and  4 sided banner component-->
 					<c:choose>
 						<c:when test="${ banner.type eq 'Big 3 Sided Banner Component'}">
-							<div class="hero">
+							<div class="hero icid">
 								<div class="image">
 									<img src="${banner.bannerImage.url}">
 								</div>
@@ -118,7 +118,7 @@ var homePageBannerTimeout='${timeout}';
 
 
 						<c:when test="${ banner.type eq 'Big 4 Sided Banner Component'}">
-							<div class="hero fourPromoBanner">
+							<div class="hero icid fourPromoBanner">
 								<div class="image">
 									Hello<img src="${banner.bannerImage.url}">
 								</div>
@@ -169,15 +169,3 @@ var homePageBannerTimeout='${timeout}';
 	</c:otherwise>
 	</c:choose>
 	
-	<script>
-$(document).ready(function(){
-		$(".hero li").each(function() {
-			if($(this).has("href")){
-				var icid = $(this).attr("data-bannerid");
-				var link = $(this).find("a").attr("href");
-				link = link + "?icid="+icid;
-				$(this).find("a").attr("href",link);
-			}
-		});
-	});
-</script>

@@ -81,11 +81,11 @@ public class ExceptionUtil
 		if (null != e.getRootCause())
 		{
 			LOG.error("***********ETAIL Non Business Exception is :: " + e.getErrorCode() + "- " + e.getErrorMessage());
-			if (null != e.getRootCause().getClass())
-			{
-				LOG.error("*********ETAIL Non Business Exception is :: " + e.getRootCause().getClass().getCanonicalName());
-				LOG.error("*********ETAIL Non Business Exception is :: " + e.getRootCause().getClass().getSimpleName());
-			}
+			//			if (null != e.getRootCause().getClass())
+			//			{
+			//				LOG.error("*********ETAIL Non Business Exception is :: " + e.getRootCause().getClass().getCanonicalName());
+			//				LOG.error("*********ETAIL Non Business Exception is :: " + e.getRootCause().getClass().getSimpleName());
+			//			}
 			LOG.error(getCustomizedExceptionTrace(e.getRootCause()));
 		}
 		if (null != e.toString())

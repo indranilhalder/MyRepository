@@ -16,15 +16,20 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
+import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
-import de.hybris.platform.servicelayer.i18n.I18NService;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType;
+import de.hybris.platform.solrfacetsearch.handler.KeywordRedirectHandler;
 import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
+import de.hybris.platform.solrfacetsearch.model.redirect.SolrURIRedirectModel;
+import de.hybris.platform.solrfacetsearch.search.KeywordRedirectSorter;
 import de.hybris.platform.solrfacetsearch.search.SolrFacetSearchKeywordDao;
 import de.hybris.platform.util.localization.Localization;
 
@@ -45,7 +50,6 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -61,6 +65,7 @@ import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplProductWebService;
+import com.tisl.mpl.solr.search.KeywordRedirectValue;
 import com.tisl.mpl.wsdto.CapacityLinkData;
 import com.tisl.mpl.wsdto.ClassificationMobileWsData;
 import com.tisl.mpl.wsdto.ColorLinkData;
@@ -93,33 +98,15 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private ConfigurationService configurationService;
 	@Resource
 	private SolrFacetSearchKeywordDao solrFacetSearchKeywordDao;
-
-	@Resource(name = "i18nService")
-	private I18NService i18nService;
-	/*
-	 * @Autowired private MplDeliveryInformationService mplDeliveryInformationService;
-	 */
-	@Autowired
+	@Resource
+	private CommonI18NService commonI18NService;
+	@Resource
+	private KeywordRedirectSorter keywordRedirectSorter;
+	@Resource
 	private ModelService modelService;
-	@Autowired
+	@Resource
 	private ProductDetailsHelper productDetailsHelper;
-
-	/**
-	 * @return the modelService
-	 */
-	public ModelService getModelService()
-	{
-		return modelService;
-	}
-
-	/**
-	 * @param modelService
-	 *           the modelService to set
-	 */
-	public void setModelService(final ModelService modelService)
-	{
-		this.modelService = modelService;
-	}
+	private Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers;
 
 	private static final String Y = "Y";
 	private static final String N = "N";
@@ -140,14 +127,17 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	{
 		final ProductDetailMobileWsData productDetailMobile = new ProductDetailMobileWsData();
 		ProductDetailMobileWsData isNewOrOnlineExclusive = new ProductDetailMobileWsData();
+		String isEMIeligible = null;
+		BuyBoxData buyBoxData = null;
+		String ussid = null;
+		String isProductCOD = null;
+		ProductData productData = null;
+		ProductModel productModel = null;
 		try
 		{
-			String isEMIeligible = null;
-			final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
-			BuyBoxData buyBoxData = null;
-			String ussid = null;
-			String isProductCOD = null;
-			ProductData productData = null;
+
+			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
+			productModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
 			if (null != productModel)
 			{
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
@@ -200,297 +190,305 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				productDetailMobile.setIsProductNew(isNewOrOnlineExclusive.getIsProductNew());
 			}
 			SellerInformationData buyboxdataCheck = null;
-			if (null != productData && null != ussid)
-			{
-				buyboxdataCheck = buyboxdata(productData, ussid);
-			}
-			if (null != buyboxdataCheck && null != buyboxdataCheck.getIsCod())
-			{
-				isProductCOD = buyboxdataCheck.getIsCod();
-			}
-			if (null != buyboxdataCheck && null != getEligibleDeliveryModes(buyboxdataCheck))
-			{
-				productDetailMobile.setEligibleDeliveryModes(getEligibleDeliveryModes(buyboxdataCheck));
-			}
-			List<SellerInformationMobileData> framedOtherSellerDataList = null;
-			List<SellerInformationData> otherSellerDataList = null;
-			if (null != productData && null != ussid)
-			{
-				otherSellerDataList = getOtherSellerDetails(productCode, ussid);
-			}
-			if (null != otherSellerDataList && !otherSellerDataList.isEmpty()
-					&& null != frameOtherSellerDetails(otherSellerDataList, productModel))
-			{
-				framedOtherSellerDataList = frameOtherSellerDetails(otherSellerDataList, productModel);
-			}
-			if (null != productData && null != productData.getListingId())
-			{
-				productDetailMobile.setProductListingId(productData.getListingId());
-			}
-			if (null != productData && null != productData.getProductTitle())
-			{
-				productDetailMobile.setProductName(productData.getProductTitle());
-			}
-			if (null != productData && null != productData.getArticleDescription())
-			{
-				productDetailMobile.setProductDescription(productData.getArticleDescription());
-			}
-			if (null != productData && null != productData.getRootCategory())
-			{
-				productDetailMobile.setRootCategory(productData.getRootCategory());
-
-				LOG.debug("*************** Mobile web service product root category ****************" + productData.getRootCategory());
-			}
-			if (null != productData && null != getGalleryImages(productData))
-			{
-				productDetailMobile.setGalleryImagesList(getGalleryImages(productData));
-			}
-
-			if (null != isProductCOD)
-			{
-				productDetailMobile.setIsCOD(isProductCOD);
-
-			}
-
-			if (null != framedOtherSellerDataList && !framedOtherSellerDataList.isEmpty())
-			{
-				productDetailMobile.setOtherSellers(framedOtherSellerDataList);
-			}
-			if (null != buyBoxData && null != buyBoxData.getSellerName())
-			{
-				productDetailMobile.setWinningSellerName(buyBoxData.getSellerName());
-			}
-
-			if (null != buyBoxData && null != buyBoxData.getSpecialPrice()
-					&& null != buyBoxData.getSpecialPrice().getFormattedValue() && null != buyBoxData.getSpecialPrice().getValue()
-					&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
-			{
-				productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPrice().getFormattedValue());
-			}
-
-			if (null != buyBoxData && null != buyBoxData.getPrice() && null != buyBoxData.getPrice().getFormattedValue()
-					&& null != buyBoxData.getPrice().getValue() && buyBoxData.getPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
-			{
-				productDetailMobile.setWinningSellerMOP(buyBoxData.getPrice().getFormattedValue().toString());
-			}
-			if (null != buyBoxData && null != buyBoxData.getSpecialPrice() && null != buyBoxData.getSpecialPrice().getValue()
-					&& null != buyBoxData.getSpecialPrice().getValue()
-					&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
-			{
-				isEMIeligible = getEMIforProduct(buyBoxData.getSpecialPrice().getValue());
-			}
-			else if (null != buyBoxData && null != buyBoxData.getPrice() && null != buyBoxData.getPrice().getValue()
-					&& null != buyBoxData.getPrice().getValue() && buyBoxData.getPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
-			{
-				isEMIeligible = getEMIforProduct(buyBoxData.getPrice().getValue());
-			}
-			else if (null != buyBoxData && null != buyBoxData.getMrp() && null != buyBoxData.getMrp().getValue()
-					&& null != buyBoxData.getMrp().getValue() && buyBoxData.getMrp().getValue().compareTo(BigDecimal.ZERO) > 0)
-			{
-				isEMIeligible = getEMIforProduct(buyBoxData.getMrp().getValue());
-			}
-			if (null != isEMIeligible)
-			{
-				productDetailMobile.setIsEMIEligible(isEMIeligible);
-			}
-
-			if (null != buyBoxData && null != buyBoxData.getAvailable())
-			{
-				productDetailMobile.setWinningSellerAvailableStock(buyBoxData.getAvailable().toString());
-			}
-
-			if (null != buyBoxData && null != buyBoxData.getMrp() && null != buyBoxData.getMrp().getFormattedValue())
-			{
-				productDetailMobile.setMrp(buyBoxData.getMrp().getFormattedValue());
-			}
-			if (null != buyboxdataCheck && null != buyboxdataCheck.getFullfillment())
-			{
-				productDetailMobile.setFulfillmentType(buyboxdataCheck.getFullfillment());
-			}
-			//	Promotion Dto changed
-
-			PromotionMobileData potenitalPromo = null;
 			if (null != productData)
 			{
-				potenitalPromo = getPromotionsForProduct(productData, buyBoxData, framedOtherSellerDataList);
-			}
-			if (null != potenitalPromo)
-			{
-				productDetailMobile.setPotentialPromotions(potenitalPromo);
-			}
-
-			if (null != productData && null != productData.getRatingCount())
-			{
-				productDetailMobile.setTotalreviewComments(productData.getRatingCount().toString());
-			}
-			else
-			{
-				productDetailMobile.setTotalreviewComments(productData.getNumberOfReviews().toString());
-			}
-			/* Details section of a product */
-			if (null != productData.getClassifications())
-			{
-				final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
-				final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
-						productData.getClassifications());
-				for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
+				if (null != ussid)
 				{
-					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
-
-					for (final FeatureData featureData : featureDataList)
 					{
-
-						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
-						if (null != productData.getRootCategory())
-						{
-							final String properitsValue = configurationService.getConfiguration().getString(
-									MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
-							//apparel
-							final FeatureValueData featureValueData = featureValueList.get(0);
-
-							if (productData.getRootCategory().equalsIgnoreCase(MarketplacewebservicesConstants.CLOTHING))
-							{
-
-								if (null != properitsValue && featureValueData.getValue() != null
-										&& properitsValue.toLowerCase().contains(featureData.getName().toLowerCase()))
-								{
-									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
-								}
-
-							} //end apparel
-							  //electronics
-							else
-							{
-								if (properitsValue.contains(configurableAttributData.getName()))
-								{
-									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
-								}
-							}
-						}
+						buyboxdataCheck = buyboxdata(productData, ussid);
 					}
-				}
-				if (!mapConfigurableAttribute.isEmpty())
-				{
-					if (productData.getRootCategory().equalsIgnoreCase(MarketplacewebservicesConstants.CLOTHING))
+					if (null != buyboxdataCheck && null != buyboxdataCheck.getIsCod())
 					{
-						productDetailMobile.setDetails(mapConfigurableAttribute);
+						isProductCOD = buyboxdataCheck.getIsCod();
+					}
+					if (null != buyboxdataCheck && null != getEligibleDeliveryModes(buyboxdataCheck))
+					{
+						productDetailMobile.setEligibleDeliveryModes(getEligibleDeliveryModes(buyboxdataCheck));
+					}
+					List<SellerInformationMobileData> framedOtherSellerDataList = null;
+					List<SellerInformationData> otherSellerDataList = null;
+
+					otherSellerDataList = getOtherSellerDetails(productCode, ussid);
+					if (null != otherSellerDataList && !otherSellerDataList.isEmpty()
+							&& null != frameOtherSellerDetails(otherSellerDataList, productModel))
+					{
+						framedOtherSellerDataList = frameOtherSellerDetails(otherSellerDataList, productModel);
+					}
+					if (null != productData.getListingId())
+					{
+						productDetailMobile.setProductListingId(productData.getListingId());
+					}
+					if (null != productData.getProductTitle())
+					{
+						productDetailMobile.setProductName(productData.getProductTitle());
+					}
+					if (null != productData.getArticleDescription())
+					{
+						productDetailMobile.setProductDescription(productData.getArticleDescription());
+					}
+					if (null != productData.getRootCategory())
+					{
+						productDetailMobile.setRootCategory(productData.getRootCategory());
+
+						LOG.debug("*************** Mobile web service product root category ****************"
+								+ productData.getRootCategory());
+					}
+					if (null != getGalleryImages(productData))
+					{
+						productDetailMobile.setGalleryImagesList(getGalleryImages(productData));
+					}
+
+					if (null != isProductCOD)
+					{
+						productDetailMobile.setIsCOD(isProductCOD);
+
+					}
+
+					if (null != framedOtherSellerDataList && !framedOtherSellerDataList.isEmpty())
+					{
+						productDetailMobile.setOtherSellers(framedOtherSellerDataList);
+					}
+					if (null != buyBoxData && null != buyBoxData.getSellerName())
+					{
+						productDetailMobile.setWinningSellerName(buyBoxData.getSellerName());
+					}
+
+					if (null != buyBoxData && null != buyBoxData.getSpecialPrice()
+							&& null != buyBoxData.getSpecialPrice().getFormattedValue()
+							&& null != buyBoxData.getSpecialPrice().getValue()
+							&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+					{
+						productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPrice().getFormattedValue());
+					}
+
+					if (null != buyBoxData && null != buyBoxData.getPrice() && null != buyBoxData.getPrice().getFormattedValue()
+							&& null != buyBoxData.getPrice().getValue()
+							&& buyBoxData.getPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+					{
+						productDetailMobile.setWinningSellerMOP(buyBoxData.getPrice().getFormattedValue().toString());
+					}
+					if (null != buyBoxData && null != buyBoxData.getSpecialPrice() && null != buyBoxData.getSpecialPrice().getValue()
+							&& null != buyBoxData.getSpecialPrice().getValue()
+							&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+					{
+						isEMIeligible = getEMIforProduct(buyBoxData.getSpecialPrice().getValue());
+					}
+					else if (null != buyBoxData && null != buyBoxData.getPrice() && null != buyBoxData.getPrice().getValue()
+							&& null != buyBoxData.getPrice().getValue()
+							&& buyBoxData.getPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+					{
+						isEMIeligible = getEMIforProduct(buyBoxData.getPrice().getValue());
+					}
+					else if (null != buyBoxData && null != buyBoxData.getMrp() && null != buyBoxData.getMrp().getValue()
+							&& null != buyBoxData.getMrp().getValue() && buyBoxData.getMrp().getValue().compareTo(BigDecimal.ZERO) > 0)
+					{
+						isEMIeligible = getEMIforProduct(buyBoxData.getMrp().getValue());
+					}
+					if (null != isEMIeligible)
+					{
+						productDetailMobile.setIsEMIEligible(isEMIeligible);
+					}
+
+					if (null != buyBoxData && null != buyBoxData.getAvailable())
+					{
+						productDetailMobile.setWinningSellerAvailableStock(buyBoxData.getAvailable().toString());
+					}
+
+					if (null != buyBoxData && null != buyBoxData.getMrp() && null != buyBoxData.getMrp().getFormattedValue())
+					{
+						productDetailMobile.setMrp(buyBoxData.getMrp().getFormattedValue());
+					}
+					if (null != buyboxdataCheck && null != buyboxdataCheck.getFullfillment())
+					{
+						productDetailMobile.setFulfillmentType(buyboxdataCheck.getFullfillment());
+					}
+					//	Promotion Dto changed
+
+					PromotionMobileData potenitalPromo = null;
+
+					potenitalPromo = getPromotionsForProduct(productData, buyBoxData, framedOtherSellerDataList);
+
+					if (null != potenitalPromo)
+					{
+						productDetailMobile.setPotentialPromotions(potenitalPromo);
+					}
+
+					if (null != productData.getRatingCount())
+					{
+						productDetailMobile.setTotalreviewComments(productData.getRatingCount().toString());
 					}
 					else
 					{
-						final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(mapConfigurableAttribute);
-						productDetailMobile.setDetails(treeMapConfigurableAttribute);
+						productDetailMobile.setTotalreviewComments(productData.getNumberOfReviews().toString());
+					}
+					/* Details section of a product */
+					if (null != productData.getClassifications())
+					{
+						final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
+						final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
+								productData.getClassifications());
+						for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
+						{
+							final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
+
+							for (final FeatureData featureData : featureDataList)
+							{
+
+								final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(
+										featureData.getFeatureValues());
+								if (null != productData.getRootCategory())
+								{
+									final String properitsValue = configurationService.getConfiguration().getString(
+											MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+									//apparel
+									final FeatureValueData featureValueData = featureValueList.get(0);
+
+									if (productData.getRootCategory().equalsIgnoreCase(MarketplacewebservicesConstants.CLOTHING))
+									{
+
+										if (null != properitsValue && featureValueData.getValue() != null
+												&& properitsValue.toLowerCase().contains(featureData.getName().toLowerCase()))
+										{
+											mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+										}
+
+									} //end apparel
+									  //electronics
+									else
+									{
+										if (properitsValue.contains(configurableAttributData.getName()))
+										{
+											mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+										}
+									}
+								}
+							}
+						}
+						if (!mapConfigurableAttribute.isEmpty())
+						{
+							if (productData.getRootCategory().equalsIgnoreCase(MarketplacewebservicesConstants.CLOTHING))
+							{
+								productDetailMobile.setDetails(mapConfigurableAttribute);
+							}
+							else
+							{
+								final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(
+										mapConfigurableAttribute);
+								productDetailMobile.setDetails(treeMapConfigurableAttribute);
+							}
+						}
+					}
+					/* Specifications of a product */
+					if (null != productData.getClassifications())
+
+					{
+						List<ClassificationMobileWsData> specificationsList = null;
+						specificationsList = getSpecificationsOfProductByGroup(productData);
+
+						if (null != specificationsList && !specificationsList.isEmpty())
+						{
+							productDetailMobile.setClassifications(specificationsList);
+						}
+						//Warranty
+						Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
+						mapConfigurableAttribute = getSpecificationsOfProduct(productData);
+						if (null != mapConfigurableAttribute && null != getWarrantyOfProduct(mapConfigurableAttribute, productData)
+								&& !getWarrantyOfProduct(mapConfigurableAttribute, productData).isEmpty())
+						{
+							productDetailMobile.setWarranty(getWarrantyOfProduct(mapConfigurableAttribute, productData));
+						}
+
+					}
+
+					if (null != productData.getArticleDescription())
+					{
+						productDetailMobile.setStyleNote(productData.getArticleDescription());
+					}
+					//	productDetailMobile.setTataPromise("Tata Promise");
+					//Know more section changes
+					if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.number")))
+					{
+						productDetailMobile.setKnowMorePhoneNo(configurationService.getConfiguration().getString("cliq.care.number"));
+					}
+
+					if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.mail")))
+					{
+						productDetailMobile.setKnowMoreEmail(configurationService.getConfiguration().getString("cliq.care.mail"));
+					}
+
+
+					List<KnowMoreDTO> knowMoreList = null;
+					if (null != buyBoxData)
+					{
+						knowMoreList = getknowMoreDetails(productModel, buyBoxData);
+					}
+					if (CollectionUtils.isNotEmpty(knowMoreList))
+					{
+						productDetailMobile.setKnowMore(knowMoreList);
+					}
+
+
+					if (null != productData.getBrand() && null != productData.getBrand().getBrandname())
+					{
+						productDetailMobile.setBrandName(productData.getBrand().getBrandname());
+					}
+					List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
+
+					variantDataList = getVariantDetailsForProduct(productData);
+
+					if (null != variantDataList && !variantDataList.isEmpty())
+					{
+						productDetailMobile.setVariantOptions(variantDataList);
+					}
+					if (null != buyBoxData && null != buyBoxData.getSellerArticleSKU())
+					{
+						productDetailMobile.setWinningUssID(buyBoxData.getSellerArticleSKU());
+					}
+
+					Map<String, String> deliveryModesForProduct = new HashMap<String, String>();
+					Map<String, Map<String, Integer>> deliveryModesATPForProduct = new HashMap<String, Map<String, Integer>>();
+
+					final List<String> deliveryInfoList = new ArrayList<String>();
+					deliveryInfoList.add(MarketplacewebservicesConstants.EXPRESS_DELIVERY);
+					deliveryInfoList.add(MarketplacewebservicesConstants.HOME_DELIVERY);
+
+
+					//deliveryModesForProduct = getDeliveryModesAtPPrep(productData);
+					deliveryModesATPForProduct = productDetailsHelper.getDeliveryModeATMap(deliveryInfoList);
+
+					if (null != deliveryModesATPForProduct && !deliveryModesATPForProduct.isEmpty() && null != buyBoxData
+							&& StringUtils.isNotEmpty(buyBoxData.getSellerArticleSKU()))
+					{
+						deliveryModesForProduct = getDeliveryModes(productModel, deliveryModesATPForProduct,
+								buyBoxData.getSellerArticleSKU());
+					}
+					if (null != deliveryModesForProduct && !deliveryModesForProduct.isEmpty())
+					{
+						productDetailMobile.setDeliveryModesATP(deliveryModesForProduct);
+					}
+					if (null != getCategoryOfProduct(productData))
+					{
+						productDetailMobile.setProductCategory(getCategoryOfProduct(productData));
+					}
+					if (null != getCategoryCodeOfProduct(productData))
+					{
+						productDetailMobile.setProductCategoryId(getCategoryCodeOfProduct(productData));
+					}
+
+
+
+					if (null != productData.getUrl()
+							&& (!(productData.getUrl().toLowerCase().contains(HTTP) || productData.getUrl().toLowerCase()
+									.contains(HTTPS))))
+					{
+						//sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + "" + productData.getUrl(); Do not add empty strings
+						sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + productData.getUrl();
+					}
+					else if (null != productData.getUrl())
+					{
+						sharedText += productData.getUrl();
 					}
 				}
-			}
-			/* Specifications of a product */
-			if (null != productData && null != productData.getClassifications())
-
-			{
-				List<ClassificationMobileWsData> specificationsList = null;
-				specificationsList = getSpecificationsOfProductByGroup(productData);
-
-				if (null != specificationsList && !specificationsList.isEmpty())
-				{
-					productDetailMobile.setClassifications(specificationsList);
-				}
-				//Warranty
-				Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
-				mapConfigurableAttribute = getSpecificationsOfProduct(productData);
-				if (null != mapConfigurableAttribute && null != productData
-						&& null != getWarrantyOfProduct(mapConfigurableAttribute, productData)
-						&& !getWarrantyOfProduct(mapConfigurableAttribute, productData).isEmpty())
-				{
-					productDetailMobile.setWarranty(getWarrantyOfProduct(mapConfigurableAttribute, productData));
-				}
-
-			}
-
-			if (null != productData && null != productData.getArticleDescription())
-			{
-				productDetailMobile.setStyleNote(productData.getArticleDescription());
-			}
-			//	productDetailMobile.setTataPromise("Tata Promise");
-			//Know more section changes
-			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.number")))
-			{
-				productDetailMobile.setKnowMorePhoneNo(configurationService.getConfiguration().getString("cliq.care.number"));
-			}
-
-			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.mail")))
-			{
-				productDetailMobile.setKnowMoreEmail(configurationService.getConfiguration().getString("cliq.care.mail"));
-			}
-
-
-			List<KnowMoreDTO> knowMoreList = null;
-			if (null != productModel && null != buyBoxData)
-			{
-				knowMoreList = getknowMoreDetails(productModel, buyBoxData);
-			}
-			if (CollectionUtils.isNotEmpty(knowMoreList))
-			{
-				productDetailMobile.setKnowMore(knowMoreList);
-			}
-
-
-			if (null != productData && null != productData.getBrand() && null != productData.getBrand().getBrandname())
-			{
-				productDetailMobile.setBrandName(productData.getBrand().getBrandname());
-			}
-			List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
-			if (null != productData)
-			{
-				variantDataList = getVariantDetailsForProduct(productData);
-			}
-			if (null != variantDataList && !variantDataList.isEmpty())
-			{
-				productDetailMobile.setVariantOptions(variantDataList);
-			}
-			if (null != buyBoxData && null != buyBoxData.getSellerArticleSKU())
-			{
-				productDetailMobile.setWinningUssID(buyBoxData.getSellerArticleSKU());
-			}
-
-			Map<String, String> deliveryModesForProduct = new HashMap<String, String>();
-			Map<String, Map<String, Integer>> deliveryModesATPForProduct = new HashMap<String, Map<String, Integer>>();
-
-			final List<String> deliveryInfoList = new ArrayList<String>();
-			deliveryInfoList.add(MarketplacewebservicesConstants.EXPRESS_DELIVERY);
-			deliveryInfoList.add(MarketplacewebservicesConstants.HOME_DELIVERY);
-
-
-			//deliveryModesForProduct = getDeliveryModesAtPPrep(productData);
-			deliveryModesATPForProduct = productDetailsHelper.getDeliveryModeATMap(deliveryInfoList);
-
-			if (null != deliveryModesATPForProduct && !deliveryModesATPForProduct.isEmpty() && null != buyBoxData
-					&& StringUtils.isNotEmpty(buyBoxData.getSellerArticleSKU()))
-			{
-				deliveryModesForProduct = getDeliveryModes(productModel, deliveryModesATPForProduct, buyBoxData.getSellerArticleSKU());
-			}
-			if (null != deliveryModesForProduct && !deliveryModesForProduct.isEmpty())
-			{
-				productDetailMobile.setDeliveryModesATP(deliveryModesForProduct);
-			}
-			if (null != productData && null != getCategoryOfProduct(productData))
-			{
-				productDetailMobile.setProductCategory(getCategoryOfProduct(productData));
-			}
-			if (null != productData && null != getCategoryCodeOfProduct(productData))
-			{
-				productDetailMobile.setProductCategoryId(getCategoryCodeOfProduct(productData));
-			}
-
-			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
-
-			if (null != productData && null != productData.getUrl()
-					&& (!(productData.getUrl().toLowerCase().contains(HTTP) || productData.getUrl().toLowerCase().contains(HTTPS))))
-			{
-				//sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + "" + productData.getUrl(); Do not add empty strings
-				sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + productData.getUrl();
-			}
-			else if (null != productData && null != productData.getUrl())
-			{
-				sharedText += productData.getUrl();
 			}
 			sharedText += MarketplacecommerceservicesConstants.SPACE
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
@@ -1109,11 +1107,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return List<Map<String, ImageData>>
 	 */
-	private List<GalleryImageData> getGalleryImages(final ProductData productData)
+	@Override
+	public List<GalleryImageData> getGalleryImages(final ProductData productData)
 	{
 		List<GalleryImageData> galleryImageList = new ArrayList<GalleryImageData>();
-		if (null != productDetailsHelper.getGalleryImagesMobile(productData)
-				&& !productDetailsHelper.getGalleryImagesMobile(productData).isEmpty())
+		if (null != productData.getCode())
 		{
 			galleryImageList = productDetailsHelper.getGalleryImagesMobile(productData);
 		}
@@ -1740,20 +1738,23 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @return keywordRedirect
 	 */
 	@Override
-	public SolrFacetSearchKeywordRedirectModel getKeywordSearch(final String searchText)
+	public String getKeywordSearch(final ProductSearchPageData<SearchStateData, ProductData> searchPageData,
+			final String searchText)
 	{
 		//suggestion to remove new Arraylist
-		List<SolrFacetSearchKeywordRedirectModel> keywords = null;
-		SolrFacetSearchKeywordRedirectModel keywordRedirect = null;
+		KeywordRedirectValue result = null;
+		String url = null;
 		try
 		{
-			final String isoLang = i18nService.getCurrentLocale().getLanguage();
-			keywords = solrFacetSearchKeywordDao.findKeywords(searchText, KeywordRedirectMatchType.EXACT, configurationService
-					.getConfiguration().getString(MarketplacewebservicesConstants.SEARCH_FACET_CONFIG), isoLang);
-			//suggestion to check CollectionUtils
-			if (CollectionUtils.isNotEmpty(keywords) && keywords.size() > 0)
+			//searching the keyword in solr search config
+			if (StringUtils.isNotBlank(searchText))
 			{
-				keywordRedirect = keywords.get(0);
+				result = getSingleKeywordRedirect(searchText);
+			}
+			//FOR Direct URL redirection only
+			if (null != result && null != result.getRedirectMobile())
+			{
+				url = ((SolrURIRedirectModel) result.getRedirectMobile()).getUrl();
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -1762,11 +1763,58 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("keywordRedirectSearch------" + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
+		return url;
+	}
 
-		return keywordRedirect;
+	private List<SolrFacetSearchKeywordRedirectModel> findKeywordRedirects(final String searchQuery)
+	{
+		final String langIso = commonI18NService.getCurrentLanguage().getIsocode();
+		final List result = solrFacetSearchKeywordDao.findKeywords(
+				configurationService.getConfiguration().getString(MarketplacewebservicesConstants.SEARCH_FACET_CONFIG), langIso);
+		return keywordRedirectSorter.sort(result);
+	}
+
+	private void handleKeywordMatch(final List<KeywordRedirectValue> result, final String theQuery,
+			final SolrFacetSearchKeywordRedirectModel redirect)
+	{
+		final KeywordRedirectHandler handler = redirectHandlers.get(redirect.getMatchType());
+		if ((handler == null)
+				|| (!(handler.keywordMatches(theQuery, redirect.getKeyword(), redirect.getIgnoreCase().booleanValue()))))
+		{
+			return;
+		}
+		result.add(new KeywordRedirectValue(redirect.getKeyword(), redirect.getMatchType(), redirect.getRedirect(), redirect
+				.getRedirectMobile()));
+	}
+
+	public List<KeywordRedirectValue> getKeywordRedirect(final String query)
+	{
+		final List result = new ArrayList();
+
+		if (StringUtils.isNotBlank(query))
+		{
+			final Collection<SolrFacetSearchKeywordRedirectModel> redirects = findKeywordRedirects(query);
+
+			for (final SolrFacetSearchKeywordRedirectModel redirect : redirects)
+			{
+				handleKeywordMatch(result, query, redirect);
+			}
+		}
+
+		return result;
+	}
+
+	private KeywordRedirectValue getSingleKeywordRedirect(final String query)
+	{
+		final List<KeywordRedirectValue> keywordRedirects = getKeywordRedirect(query);
+		KeywordRedirectValue keywordRedirectValue = null;
+		if (!(keywordRedirects.isEmpty()))
+		{
+			keywordRedirectValue = keywordRedirects.get(0);
+		}
+		return keywordRedirectValue;
 	}
 
 	/**
@@ -1784,5 +1832,175 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public void setBuyBoxFacade(final BuyBoxFacade buyBoxFacade)
 	{
 		this.buyBoxFacade = buyBoxFacade;
+	}
+
+	/**
+	 * @return the productService
+	 */
+	public ProductService getProductService()
+	{
+		return productService;
+	}
+
+	/**
+	 * @param productService
+	 *           the productService to set
+	 */
+	public void setProductService(final ProductService productService)
+	{
+		this.productService = productService;
+	}
+
+	/**
+	 * @return the productFacade
+	 */
+	public ProductFacade getProductFacade()
+	{
+		return productFacade;
+	}
+
+	/**
+	 * @param productFacade
+	 *           the productFacade to set
+	 */
+	public void setProductFacade(final ProductFacade productFacade)
+	{
+		this.productFacade = productFacade;
+	}
+
+	/**
+	 * @return the defaultPromotionManager
+	 */
+	public DefaultPromotionManager getDefaultPromotionManager()
+	{
+		return defaultPromotionManager;
+	}
+
+	/**
+	 * @param defaultPromotionManager
+	 *           the defaultPromotionManager to set
+	 */
+	public void setDefaultPromotionManager(final DefaultPromotionManager defaultPromotionManager)
+	{
+		this.defaultPromotionManager = defaultPromotionManager;
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+	/**
+	 * @return the solrFacetSearchKeywordDao
+	 */
+	public SolrFacetSearchKeywordDao getSolrFacetSearchKeywordDao()
+	{
+		return solrFacetSearchKeywordDao;
+	}
+
+	/**
+	 * @param solrFacetSearchKeywordDao
+	 *           the solrFacetSearchKeywordDao to set
+	 */
+	public void setSolrFacetSearchKeywordDao(final SolrFacetSearchKeywordDao solrFacetSearchKeywordDao)
+	{
+		this.solrFacetSearchKeywordDao = solrFacetSearchKeywordDao;
+	}
+
+	/**
+	 * @return the commonI18NService
+	 */
+	public CommonI18NService getCommonI18NService()
+	{
+		return commonI18NService;
+	}
+
+	/**
+	 * @param commonI18NService
+	 *           the commonI18NService to set
+	 */
+	public void setCommonI18NService(final CommonI18NService commonI18NService)
+	{
+		this.commonI18NService = commonI18NService;
+	}
+
+	/**
+	 * @return the keywordRedirectSorter
+	 */
+	public KeywordRedirectSorter getKeywordRedirectSorter()
+	{
+		return keywordRedirectSorter;
+	}
+
+	/**
+	 * @param keywordRedirectSorter
+	 *           the keywordRedirectSorter to set
+	 */
+	public void setKeywordRedirectSorter(final KeywordRedirectSorter keywordRedirectSorter)
+	{
+		this.keywordRedirectSorter = keywordRedirectSorter;
+	}
+
+	/**
+	 * @return the productDetailsHelper
+	 */
+	public ProductDetailsHelper getProductDetailsHelper()
+	{
+		return productDetailsHelper;
+	}
+
+	/**
+	 * @param productDetailsHelper
+	 *           the productDetailsHelper to set
+	 */
+	public void setProductDetailsHelper(final ProductDetailsHelper productDetailsHelper)
+	{
+		this.productDetailsHelper = productDetailsHelper;
+	}
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
+
+	/**
+	 * @return the redirectHandlers
+	 */
+	public Map<KeywordRedirectMatchType, KeywordRedirectHandler> getRedirectHandlers()
+	{
+		return redirectHandlers;
+	}
+
+	/**
+	 * @param redirectHandlers
+	 *           the redirectHandlers to set
+	 */
+	public void setRedirectHandlers(final Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers)
+	{
+		this.redirectHandlers = redirectHandlers;
 	}
 }

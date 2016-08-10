@@ -24,8 +24,6 @@
 		
 	<context:annotation-config/> 
 		
-
-
 	<!-- tenant scoped filter -->
 
 	<bean id="storefrontTenantFilterChain" class="com.tisl.mpl.storefront.filters.UrlPathFilter" >
@@ -37,8 +35,33 @@
 			<map>
 				<entry key="/integration/" value-ref="integrationTenantFilterChain"/>
 				<entry key="/fetchToken" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for fetchToken -->
-				<entry key="/setheader" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for setHeader -->
+				<!-- <entry key="/setheader" value-ref="ajaxUrlFilterChain"/> -->	<!-- TISPT-207 Custom filter chain for setHeader -->
 				<entry key="/getTealiumData" value-ref="ajaxUrlFilterChain"/>	<!-- TISPT-207 Custom filter chain for TealiumData -->
+				
+			
+			<!-- TISPT-348 Custom filter chain for the following methods Start-->
+		     	<entry key="/search" value-ref="withoutCartRestorationFilterChain"/>	
+				<entry key="/m" value-ref="withoutCartRestorationFilterChain"/>	
+			
+				<entry key="/headerTrackOrder" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/departmentCollection" value-ref="withoutCartRestorationFilterChain"/>	
+				
+				<entry key="/getCollectionShowcase" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getStayQuedHomepage" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getPromoBannerHomepage" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getNewAndExclusive" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getProductsYouCare" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getBestPicks" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getBrandsYouLove" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getShowcaseContent" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/getBrandsYouLoveContent" value-ref="withoutCartRestorationFilterChain"/>
+				
+				<entry key="/headerloginhi" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/sociallogin" value-ref="withoutCartRestorationFilterChain"/>
+				<entry key="/headerWishlist" value-ref="withoutCartRestorationFilterChain"/>
+				
+		 <!-- TISPT-348 Custom filter chain for the following methods End-->		
+								
 			</map>
 		</property>
 	</bean>
@@ -240,12 +263,34 @@
 		<ref bean="springSecurityFilterChain"/>
 	</util:list>
 	
-	
 	<bean id="ajaxUrlFilterChain" class="de.hybris.platform.servicelayer.web.PlatformFilterChain">
 	   <constructor-arg>
 	   		<ref bean="ajaxUrlTenantFilterChainList"/>
 	   </constructor-arg>
 	</bean>
 	<!-- TISPT-207 Custom filter chain for fetchToken and setHeader ends -->
+	
+	<alias name="defaultWithoutCartRestorationFilterChainList" alias="withoutCartRestorationFilterChainList" />
+	<util:list id="defaultWithoutCartRestorationFilterChainList">
+		<ref bean="log4jFilter"/>
+		<ref bean="storefrontSessionFilter"/>
+		<ref bean="requestLoggerFilter"/>	
+		<ref bean="cmsSiteFilter"/>
+		<ref bean="storefrontFilter"/>
+		<ref bean="urlEncoderFilter"/>
+		<ref bean="springSecurityFilterChain"/>
+		<ref bean="anonymousCheckoutFilter"/>
+		<ref bean="customerLocationRestorationFilter"/>
+		<!-- needs to be added for making calls to IA on search page,brand page -->
+		<ref bean="userDetailsRestorationFilter"/>
+	</util:list>
+	
+	<bean id="withoutCartRestorationFilterChain" class="de.hybris.platform.servicelayer.web.PlatformFilterChain">
+	   <constructor-arg>
+	   		<ref bean="withoutCartRestorationFilterChainList"/>
+	   </constructor-arg>
+	</bean>
+	
+	<!-- TISPT-348 Custom filter chain for search,PDP,category and MicroSite ends -->
 	
 </beans>

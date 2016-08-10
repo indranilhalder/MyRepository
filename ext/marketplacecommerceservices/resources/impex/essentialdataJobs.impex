@@ -4,11 +4,13 @@ INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLangu
 ;CategoryProductExtractJob;catProdExportJob;false;en
 ;BrandProductExtractJob;brandProductExportJob;false;en
 ;PriceInventoryExtractJob;priceInventoryExportJob;false;en
+;PriceInventoryControlJob;priceInventoryControlJob;false;en
 ;salesOrderCanRetInfoPopulateJob;salesOrderCancelPaymentInfoJob;false;de
 ;merchantMasterPopulateCronJob;merchantmaster;false;de
 ###For COD Blacklist Report Job####
 #;blacklistReportCreationJob;blacklistReportJob;false;de
-
+#New BuyBox Implementation
+;BuyBoxDataImportJob;buyBoxDataImportJob;false;en
 
 
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
@@ -41,7 +43,8 @@ INSERT_UPDATE IntExtCampaignAutomationJob;code[unique=true];job(code);sessionLan
 ;campaignReportCronJob;CampaignAutomationJob;en;
 
 
-
+INSERT_UPDATE mplconfiguration;MPLCONFIGCODE[unique=true];MPLCONFIGDATE[dateformat=yyyyMMddHHmmss]
+;BuyBoxDataImportJob;20160627113840
 
 
 

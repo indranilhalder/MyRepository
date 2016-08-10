@@ -21,6 +21,7 @@ import com.tisl.mpl.core.model.JuspayEBSResponseModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -169,9 +170,9 @@ public interface MplPaymentService
 	 * @throws ModelSavingException
 	 * @throws EtailNonBusinessExceptions
 	 */
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart)
-			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
-			CalculationException, JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -251,20 +252,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
@@ -278,5 +279,14 @@ public interface MplPaymentService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	String getAuditId(String cartGuid) throws EtailNonBusinessExceptions, Exception;
+
+	/**
+	 * TIS-3168
+	 *
+	 * @param orderStatusResponse
+	 * @param orderStatusRequest
+	 * @return boolean
+	 */
+	boolean updateAuditEntry(GetOrderStatusResponse orderStatusResponse, GetOrderStatusRequest orderStatusRequest);
 
 }

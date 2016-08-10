@@ -284,6 +284,9 @@ var productCodeSG = '${product.code}';
 	</p>
 	<p class="sale" id="sizespPriceId" style="display:none">
 	</p>
+	<p class="savings pdp-savings" id="savingsOnProductIdSG" style="display:none">															
+		  <span></span>
+	</p>
 	<br>
     </div>
         <div class="attributes">
@@ -312,7 +315,7 @@ var productCodeSG = '${product.code}';
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
 								<c:choose> 
-								<c:when test="${color=='multi'}"> 
+								<c:when test="${fn:startsWith(color, 'multi')}"> 
 						     	<img src="${commonResourcePath}/images/multi.jpg" style="width:100%;height:100%;cursor: pointer;" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"/>
 								</c:when>
 								<%-- <span style="background-color: ${color};border: 1px solid rgb(204, 211, 217);" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span> --%>
@@ -361,7 +364,7 @@ var productCodeSG = '${product.code}';
  <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
 		<select id="variant" class="variant-select size-g variant-select-sizeGuidePopUp">            <!--changes for TISPRO-338 (variant-select-sizeGuidePopUp class added) -->
 			<c:choose>
-				<c:when test="${empty sizeSelectedSizeGuide}">
+				<c:when test="${empty sizeSelectedSizeGuide || sizeSelectedSizeGuide ne 'true'}">
 					<option value="#" data-target="#popUpModal" selected="selected"><spring:theme code="text.select.size" /></option>
 				</c:when>
 				<c:otherwise>
@@ -382,7 +385,7 @@ var productCodeSG = '${product.code}';
 										<c:when test="${(variantOption.code eq product.code)}">
 										
 											<c:choose>
-											    <c:when test="${empty sizeSelectedSizeGuide}">
+											   <c:when test="${empty sizeSelectedSizeGuide || sizeSelectedSizeGuide ne 'true'}">
 													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
 												</c:when>
 												<c:otherwise>
@@ -441,19 +444,21 @@ var productCodeSG = '${product.code}';
 			</div>
 			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantCount"/>
 			<div class="qty" id="">
-				<label>Qty:</label>
+			<!-- TISPRM-131 -->
+			<%-- 	<label>Qty:</label>
 				<select id="sizeGuideQty">
 				<c:forEach var="qtyCount" begin="1" end="${maxQuantCount}">
 		   		<option value="${qtyCount}">${qtyCount}</option>
 				</c:forEach>
-				</select>
+				</select> --%>
 			</div>
 
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
 		
 	<c:if test="${product.purchasable}">
 	
-	<input type="hidden" maxlength="3" size="1" id="sizeQty" name="qty" class="qty js-qty-selector-input" value="2" />
+	<!-- <input type="hidden" maxlength="3" size="1" id="sizeQty" name="qty" class="qty js-qty-selector-input" value="2" /> -->
+	<input type="hidden" maxlength="3" size="1" name="qty" class="qty js-qty-selector-input" value="1" />
   	<!-- <input type="hidden" maxlength="3" size="1" id="pinCodeChecked"
 		name="pinCodeChecked" value="false"> -->
 	</c:if>
