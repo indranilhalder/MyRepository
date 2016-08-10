@@ -32733,6 +32733,19 @@ position:relative;
 .sort-refine-bar.wrapped-form.sort.mobile {
     top: 33px;
 }
+span.jqtree-facetCount.jqtree_common {
+    color: #a9143c;
+    margin-left: 8px;
+}
+ul.jqtree_common > li.jqtree_common:not(.jqtree-folder) > div.jqtree-element.jqtree_common {
+    margin-left: 1.5em;
+}
+ul.jqtree_common > li.jqtree_common:not(.jqtree-folder) > div.jqtree-element.jqtree_common > span.jqtree-title.jqtree_common{
+	color: #000;
+}
+#searchPageDeptHierTree ul.jqtree_common.jqtree-tree>li.jqtree_common:first-child>div.jqtree-element.jqtree_common>span.jqtree-title.jqtree_common + span.jqtree-facetCount.jqtree_common{
+display:none;
+}
 /*--------------maincss-----------*/
 .row
 {
@@ -40507,8 +40520,8 @@ ul.jqtree-tree .jqtree-element {
       color: #000;
       opacity:0.9;
     vertical-align: middle;
-    margin-left: 1.5em;
-    display:inline-block;
+   /*  margin-left: 1.5em;
+    display:inline-block; */
 }
  .jqtree-tree .jqtree-title:hover {
       color: #A9143C;
@@ -40517,6 +40530,7 @@ ul.jqtree-tree .jqtree-element {
 
 .jqtree-tree .jqtree-title.jqtree-title-folder {
     margin-left: 0;
+    color: #857d7b;
 }
 
 ul.jqtree-tree li.jqtree-folder {
