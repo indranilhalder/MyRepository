@@ -166,7 +166,7 @@ tr.d0 td {
 			<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
-					<h3 class="seller">Sold by <span id="sellerNameId"></span></h3>
+					<div class="seller">Sold by <span id="sellerNameId"></span></div>
 				</ycommerce:testId>
 				<div class="fullfilled-by">
 				<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
