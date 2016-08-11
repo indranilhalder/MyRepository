@@ -42,7 +42,7 @@
 			<!----- RIGHT Navigation STARTS --------->
 
 
-			<div class="right-account">
+			<div class="right-account track">
 				<%-- <p class="nav-orderHistory">
 					<a href="<c:url value="/my-account/orders"/>" class="order-history"><spring:theme
 							code="text.account.orderHistorylink" text="Back to Order History" />

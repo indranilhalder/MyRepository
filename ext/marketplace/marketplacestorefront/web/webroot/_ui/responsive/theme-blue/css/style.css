@@ -40047,15 +40047,13 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 	background-color: rgba(0,0,0,.1);
 }
 
+
 @media (min-width: 791px){
-body .account .right-account {
+body .account .track{
     width: 75%;
      float: none;
     padding: 0px;  
-    margin: 0 0 150px;
-    text-align: left;
-    clear: both;
-    margin: 0px auto;
+      margin: 0px auto;
 }
 }
 
