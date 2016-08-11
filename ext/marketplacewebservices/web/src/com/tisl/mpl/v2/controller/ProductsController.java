@@ -212,7 +212,8 @@ public class ProductsController extends BaseController
 	 * Returns a list of products and additional data such as: available facets, available sorting and pagination
 	 * options. It can include spelling suggestions.To make spelling suggestions work you need to:
 	 * <ul>
-	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.</li>
+	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.
+	 * </li>
 	 * <li>Have indexed properties configured to be used for spellchecking.</li>
 	 * </ul>
 	 *
@@ -528,8 +529,8 @@ public class ProductsController extends BaseController
 	@RequestMapping(value = "/{productCode}/references", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductReferenceListWsDTO exportProductReferences(@PathVariable final String productCode,
-			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize,
-			@RequestParam final String referenceType, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize, @RequestParam final String referenceType,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final List<ProductOption> opts = Lists.newArrayList(OPTIONS);
 		final ProductReferenceTypeEnum referenceTypeEnum = ProductReferenceTypeEnum.valueOf(referenceType);
@@ -837,7 +838,8 @@ public class ProductsController extends BaseController
 		return productSearchPage;
 	}
 
-	@RequestMapping(value = "/serpsearch", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/serpsearch", method =
+	{ RequestMethod.POST, RequestMethod.GET }, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ProductSearchPageWsDto searchProductDto(@RequestParam(required = false) String searchText,
 			@RequestParam(required = false) String typeID, @RequestParam(required = false) int page,
@@ -1335,8 +1337,8 @@ public class ProductsController extends BaseController
 				else
 				{
 
-					searchPageData = searchFacade
-							.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID, pageableData);
+					searchPageData = searchFacade.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID,
+							pageableData);
 				}
 			}
 			//final List<String> filter = new ArrayList<String>();
