@@ -28,7 +28,7 @@
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">
-		<div class="account-header-track">
+		<div class="account-header" style="clear: both;">
 			<spring:theme code="text.account.headerTitle" text="My Marketplace" />
 		</div>
 		<div class="wrapper">

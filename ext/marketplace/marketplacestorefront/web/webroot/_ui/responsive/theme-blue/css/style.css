@@ -14459,17 +14459,7 @@ body .account .account-header {
     font-size: 28px;
     font-weight: 400
 }
-.account-header-track {
-    width: 100%;
-    text-align: center;
-    padding: 20px 20px 20px 20px;
-    margin-bottom: 20px;
-    background-color: #fafafa;
-    color: #A9143C;
-    font-size: 28px;
-    font-weight: 400;
-    clear: both;
-}
+
 @media (min-width: 791px) {
     body .account .account-header select.menu-select{
         display: none
