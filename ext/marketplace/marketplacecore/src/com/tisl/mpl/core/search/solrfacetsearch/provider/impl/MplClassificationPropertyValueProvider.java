@@ -104,10 +104,11 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 							final Feature feature = cont.getFeature(classAttributeAssignment);
 							if ((feature != null) && (!feature.isEmpty()))
 							{
+
+								final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
 								//Added for Tata-24 Start :::
 								final String dynCategory = configurationService.getConfiguration().getString(
 										"classification.attirbutes.dynamic." + productModel.getProductCategoryType());
-
 								if (StringUtils.isNotEmpty(dynCategory))
 								{
 									final String[] dynProperties = dynCategory.split(",");
@@ -116,14 +117,14 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 										final String property = dynproperty.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 										if (property.equals(indexedProperty.getExportId().toLowerCase()))
 										{
-											dynGroupFeaturesValues(property, feature);
+											System.out.println("----------------Current Product Code: " + product.getCode()
+													+ " ========exportid: " + indexedProperty.getExportId().toLowerCase());
+											dynGroupFeaturesValues(property, temp);
 											break;
 										}
 									}
 								}
 								//Added for Tata-24 END :::
-
-								final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
 								if ("multipack".equalsIgnoreCase(indexedProperty.getName()))
 								{
 									for (final FieldValue fieldValue : temp)
@@ -226,6 +227,67 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 	/**
 	 * Method used to get local.properties configuration display for the indexed property
 	 */
+
+	public void dynGroupFeaturesValues(final String property, final List<FieldValue> list)
+	{
+
+		final String dynGroup = configurationService.getConfiguration().getString("classification.attirbutes.dynamic." + property);
+		if (StringUtils.isNotEmpty(dynGroup))
+		{
+			boolean flag = false;
+			final String[] dynGroups = dynGroup.split(",");
+			if (dynGroups != null && dynGroups.length > 0)
+			{
+				//groupName=Canvas
+				for (final String groupName : dynGroups)
+				{
+					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
+					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
+					final String dynAttribute = configurationService.getConfiguration().getString(
+							"classification.attirbutes.dynamic." + property + "." + name);
+					if (StringUtils.isNotEmpty(dynAttribute))
+					{
+						//dynAttributes=[Metal,Alloys,Titanium,Aluminium,Stainless Steel]
+						final String[] dynAttributes = dynAttribute.split(",");
+						if (dynAttributes != null && dynAttributes.length > 0)
+						{
+							for (final String attribute : dynAttributes)
+							{
+								//att= metal || alloys || titanium || aluminium || stainlesssteel
+								final String att = attribute.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
+								FieldValue newValue = null;
+								for (final FieldValue fieldValue : list)
+								{
+									final String valueStr = (String) fieldValue.getValue();
+									if (StringUtils.isNotEmpty(valueStr))
+									{
+										final String formattedValueStr = valueStr.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
+										if (att.equals(formattedValueStr))
+										{
+											newValue = new FieldValue(fieldValue.getFieldName(), groupName);
+											list.remove(fieldValue);
+											list.add(newValue);
+											flag = true;
+											break;
+										}
+									}
+								}
+								if (flag)
+								{
+									break;
+								}
+							}
+						}
+					}
+					if (flag)
+					{
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	public void dynGroupFeaturesValues(final String property, final Feature feature)
 	{
 		final List<FeatureValue> featureValues = feature.getValues();
@@ -262,16 +324,23 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 									if (value instanceof ClassificationAttributeValue)
 									{
 										final String valueName = ((ClassificationAttributeValue) value).getName();
-										if (valueName != null && att.equals(valueName.toLowerCase()))
+										System.out.println("loggggggg========valueName=" + valueName);
+										if (valueName != null && StringUtils.isNotEmpty(valueName))
 										{
-
-											System.out.println("loggggggg========groupName=" + groupName);
-											((ClassificationAttributeValue) value).setName(groupName);
-											featureValue.setValue(value);
-											flag = true;
-											newFeatures.add(featureValue);
-											feature.getValues().remove(featureValue);
-											break;
+											final String formattedValueName = valueName.replaceAll(" ", "").replaceAll("-", "")
+													.toLowerCase();
+											System.out.println("loggggggg========att=" + att);
+											if (att.equals(formattedValueName))
+											{
+												System.out.println("loggggggg========formattedValueName=" + formattedValueName);
+												System.out.println("loggggggg========groupName=" + groupName);
+												((ClassificationAttributeValue) value).setName(groupName);
+												featureValue.setValue(value);
+												flag = true;
+												newFeatures.add(featureValue);
+												feature.getValues().remove(featureValue);
+												break;
+											}
 										}
 
 									}
