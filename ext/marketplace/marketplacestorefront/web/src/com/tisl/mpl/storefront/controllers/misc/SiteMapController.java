@@ -166,18 +166,6 @@ public class SiteMapController extends AbstractPageController
 							innerLevelMap.put(secondLevelCategory, thirdLevelCategory);
 						}
 
-						/* code for TISPRD-3183 */
-
-						/*
-						 * String categoryPathChildlevel2 = GenericUtilityMethods.buildPathString(homepageComponentService
-						 * .getCategoryPath(categoryModel)); if (StringUtils.isNotEmpty(categoryPathChildlevel2)) {
-						 * categoryPathChildlevel2 = URLDecoder.decode(categoryPathChildlevel2, "UTF-8");
-						 * categoryPathChildlevel2 = categoryPathChildlevel2.toLowerCase(); categoryPathChildlevel2 =
-						 * GenericUtilityMethods.changeUrl(categoryPathChildlevel2); }
-						 * categoryModel.setName(categoryModel.getName() + "||" + categoryPathChildlevel2);
-						 */
-						/* code end for TISPRD-3183 */
-
 						// Storing the second level categories in a map
 						//secondLevelCategoryMap.put(department.getCode(), secondLevelCategories);
 						megaMap.put(categoryModel, innerLevelMap);
