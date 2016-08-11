@@ -7,7 +7,12 @@
     <span id="deliveryPretext" style="display:none;"><spring:theme code="mpl.pdp.delivery.pretext"/></span>
     <span id="deliveryPosttext" style="display:none;"><spring:theme code="mpl.pdp.delivery.posttext"/></span>
 	<ul class="delivery-block">
-	<li><p><spring:theme code="product.pincode"/></p>
+	<li><p id="availableStockPinCodeMsg"><spring:theme code="product.pincode"/></p>
+	
+		<!-- TPR-805 -->
+		<p id="outOfStockPinCodeMsg"><spring:theme code="pincode.message.productOutOfStock"/></p>
+		<!-- TPR-805 -->
+	
 		<div class="inline-form">
 		 <c:choose>
 		 <c:when test="${not empty pincode}">
@@ -28,6 +33,7 @@
 		<span id="unsevisablePin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
 		<span id="serviceablePin" style="display:none;color:#00994d"><spring:theme code="pincode.serviceable"/></span> <!-- Changes for TISPRM-20,65 -->
 		<span id="unableprocessPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unableprocess"/></span>
+
 		</span>
 	   <c:forEach var="entry" items="${deliveryModeMap}">
 		<%-- Key: <c:out value="${entry.key}"/> --%>
