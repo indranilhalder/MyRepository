@@ -19281,6 +19281,11 @@ header .content .right > ul > li {
  }
 
 }
+@media (min-width:856px) and (max-width:960px){
+	header .content .right > ul > li {
+  padding: 0 15px;
+	}
+}
 @media (max-width: 1080px)
 {
 header .content .marketplace.compact {
@@ -29731,6 +29736,17 @@ width: 90px !important;
     font-weight: normal;
     margin-top: 20px;
 }
+li.download-app a:before{
+	font-family: FontAwesome;
+    font-weight: lighter;
+    color: #A9143C;
+    content: "\f10b";
+    font-size: 18px;
+    line-height: 18px;
+    margin-right: 5px;
+    top: 2px;
+    position: relative;
+} 
 li.store-locator-header a:before{
 	font-family: FontAwesome;
     font-weight: lighter;
@@ -31370,6 +31386,8 @@ display:inline-block;}
           top: 3px;
           position: relative;
           font-weight: bold; }
+li.download-app a:before{
+		margin-right:9px;}
 li.store-locator-header a:before{
 		margin-right:9px;}
 .bell-icon:after{
