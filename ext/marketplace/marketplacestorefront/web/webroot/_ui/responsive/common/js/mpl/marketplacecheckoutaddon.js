@@ -3673,12 +3673,14 @@ function checkSignUpValidation(path){
 	
 	return validationResult;	
 }
+//TODO
 
 function checkExpressCheckoutPincodeService(buttonType){
 	//TISPRM-33
 	
 	//TISBOX-1631
-	var selectedAddressId= $("#addressListSelectId").val();
+	//var selectedAddressId= $("#addressListSelectId").val();
+	var selectedAddressId= $("#popUpExpAddress input[type='radio']:checked").val();
 	selectedAddressId =$.trim(selectedAddressId);
 	$("#expressCheckoutAddressSelector").val(selectedAddressId);
 	//$("#defaultPinCodeIds").val($("#defaultPinCodeIds").val());
@@ -4051,9 +4053,11 @@ function updateCart(formId){
 
 function expressbutton()
 {
+	//alert(selectedAddress);
 	//TISPRM-33
 
-	var addressList= $("#addressListSelectId").val();
+	//var addressList= $("#addressListSelectId").val();
+	var addressList= $("#popUpExpAddress input[type='radio']:checked").val();
 	var selectedAddressId =$.trim(addressList);
 	$("#expressCheckoutAddressSelector").val(selectedAddressId);
  	
@@ -4078,7 +4082,7 @@ function expressbutton()
 	 			$$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			
 		 		//$("#changePinDiv").hide();
-		 		//$("#defaultPinDiv").show();	 		
+		 		//$("#defaultPinDiv").show();	
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
@@ -4678,3 +4682,14 @@ function pinCodeDiv(){
 		//$(".less-stock").text("");	
 		//$("#successPin").text("");	
 	}
+
+// MY BAG Changes
+$(document).mouseup(function (e)
+		{
+		    var container = $(".modal-content.content");
+
+		    if (!container.is(e.target)  && container.has(e.target).length === 0 && container.css("opacity") === "1") 
+		    {
+		    	checkExpressCheckoutPincodeService('typeExpressCheckoutDD');
+		    }
+		});

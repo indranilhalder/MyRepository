@@ -41,31 +41,44 @@
                    <%--  <span><spring:theme code="text.or"/></span>  --%>
                     
                   <%-- TISBOX-1631   <form action="${request.contextPath }/checkout/multi/express"> --%> 
-                    <button   id="expressCheckoutButtonId" class="express-checkout-button" onclick="return expressbutton();"><spring:theme code="express.checkout"/></button>
+                    <button   id="expressCheckoutButtonId" class="express-checkout-button" data-toggle="modal" data-target="#popUpExpAddress"><spring:theme code="express.checkout"/></button>
                     <input  type="hidden" name="expressCheckoutAddressSelector"  id="expressCheckoutAddressSelector" value="demo"/>
                     <input  type="hidden" name="isPincodeServicableId"  id="isPincodeServicableId" value="N"/>
                     
                     <p class="exp_checkout_msg"><spring:theme code="cart.checkout.shipment"/></p>
                    <!--  TISBOX-882 -->
-                    <p id="expresscheckoutErrorDiv" style="display: none ; color: red;"><spring:theme code="cart.express.checkout.validation"/>  </p>
+                  	  <p id="expresscheckoutErrorDiv" style="display: none ; color: red;"><spring:theme code="cart.express.checkout.validation"/>  </p>
                     
                     
-				     <select id="addressListSelectId" onclick="checkExpressCheckoutPincodeService('typeExpressCheckoutDD')">
-				              <%--  <option value="" disabled><spring:theme code="cart.express.checkout.address"/></option> --%>
+				    <%--  <select id="addressListSelectId" onclick="checkExpressCheckoutPincodeService('typeExpressCheckoutDD')">
+				               <option value="" disabled><spring:theme code="cart.express.checkout.address"/></option>
 				               <c:forEach items="${Addresses}"  var="Address">
 					                  <option value="${Address.key}" id="${Address.key}">
 					                  ${Address.value}
 					                  </option>
 					                  </c:forEach>
-				     </select>
+				     </select> --%>
+				     <div id="popUpExpAddress" class="modal fade" role="dialog">
+						<div class="overlay" data-dismiss="modal"></div>
+    					<!-- Modal content-->
+   					 	<div class="modal-content content">
+				          <c:forEach items="${Addresses}"  var="Address">
+				          <label><input type="radio" value="${Address.key}" name="expaddress" style="display:block;-webkit-appearance: radio;">
+				          ${Address.value}</label>
+					      </c:forEach>
+					      <button  id="expressCheckoutButtonId" class="express-checkout-button" onclick="return expressbutton()"><spring:theme code="express.checkout"/></button>
+				     	 </div>
+          			</div>
 				 	
                  <%--    </form> --%>
+                 <%-- onclick="return expressbutton();" --%>
 	         </c:if>     
             
             </li>
             
           </ul>
-    
+        
+          </div>
 		<!-- <a href="/store" class="continue-shopping"> Continue Shopping</a> --><!-- store url change -->
 		<!-- <a href="/" class="continue-shopping"> Continue Shopping</a> -->
 	</div>
