@@ -647,7 +647,7 @@ public class SearchSuggestUtilityMethods
 				galleryImages = productDetailsHelper.getGalleryImagesMobile(productDataImage);
 				if (null != (productData.getSavingsOnProduct()))
 				{
-					sellingItemDetail.setSavingsOnProduct(productData.getSavingsOnProduct().toString());
+					sellingItemDetail.setDiscountPercent(productData.getSavingsOnProduct().toString());
 				}
 				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
