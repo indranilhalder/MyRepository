@@ -41462,8 +41462,15 @@ margin-left: 20%;
    content:none;}
 
 
+/* TPR-814 min-height responsive*/
 
+	@media(max-width:790px){
+		#atozbrandsdiplay #groups{
+			min-height: 36px !important;
+		}
+	}
 
+ 
 
 
 
