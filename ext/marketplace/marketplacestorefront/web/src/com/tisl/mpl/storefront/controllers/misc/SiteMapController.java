@@ -24,6 +24,7 @@ import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
 import de.hybris.platform.core.model.media.MediaModel;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -45,10 +47,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.tisl.mpl.core.model.DepartmentCollectionComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 @Controller
@@ -68,6 +72,9 @@ public class SiteMapController extends AbstractPageController
 
 	@Autowired
 	private DefaultCMSContentSlotService contentSlotService;
+
+	@Autowired
+	private HomepageComponentService homepageComponentService;
 
 	@RequestMapping(value = "/sitemap.xml", method = RequestMethod.GET, produces = "application/xml")
 	public String getSitemapXml(final Model model, final HttpServletResponse response)
@@ -118,16 +125,59 @@ public class SiteMapController extends AbstractPageController
 						final CategoryModel department = categoryService.getCategoryForCode(categoryModel.getCode());
 						final Collection<CategoryModel> secondLevelCategories = department.getCategories();
 
+
+
 						// Iterating through the second level categories
 						for (final CategoryModel secondLevelCategory : secondLevelCategories)
 						{
+							/* code for TISPRD-3183 */
+							String categoryPathChildlevel2 = GenericUtilityMethods.buildPathString(homepageComponentService
+									.getCategoryPath(secondLevelCategory));
+							if (StringUtils.isNotEmpty(categoryPathChildlevel2))
+							{
+								categoryPathChildlevel2 = URLDecoder.decode(categoryPathChildlevel2, "UTF-8");
+								categoryPathChildlevel2 = categoryPathChildlevel2.toLowerCase();
+								categoryPathChildlevel2 = GenericUtilityMethods.changeUrl(categoryPathChildlevel2);
+							}
+							secondLevelCategory.setName(secondLevelCategory.getName() + "||" + categoryPathChildlevel2);
+
+
 							// Fetching the third level category against a second
 							// level category
 							final Collection<CategoryModel> thirdLevelCategory = secondLevelCategory.getCategories();
+
+							for (final CategoryModel thirdLevelCategories : thirdLevelCategory)
+							{
+
+								String categoryPathChildlevel3 = GenericUtilityMethods.buildPathString(homepageComponentService
+										.getCategoryPath(thirdLevelCategories));
+								if (StringUtils.isNotEmpty(categoryPathChildlevel3))
+								{
+									categoryPathChildlevel3 = URLDecoder.decode(categoryPathChildlevel3, "UTF-8");
+									categoryPathChildlevel3 = categoryPathChildlevel3.toLowerCase();
+									categoryPathChildlevel3 = GenericUtilityMethods.changeUrl(categoryPathChildlevel3);
+								}
+
+								thirdLevelCategories.setName(thirdLevelCategories.getName() + "||" + categoryPathChildlevel3);
+							}
+							/* code end for TISPRD-3183 */
 							// Storing the third level categories in a map
 							//thirdLevelCategoryMap.put(secondLevelCategory.getCode(), thirdLevelCategory);
 							innerLevelMap.put(secondLevelCategory, thirdLevelCategory);
 						}
+
+						/* code for TISPRD-3183 */
+
+						/*
+						 * String categoryPathChildlevel2 = GenericUtilityMethods.buildPathString(homepageComponentService
+						 * .getCategoryPath(categoryModel)); if (StringUtils.isNotEmpty(categoryPathChildlevel2)) {
+						 * categoryPathChildlevel2 = URLDecoder.decode(categoryPathChildlevel2, "UTF-8");
+						 * categoryPathChildlevel2 = categoryPathChildlevel2.toLowerCase(); categoryPathChildlevel2 =
+						 * GenericUtilityMethods.changeUrl(categoryPathChildlevel2); }
+						 * categoryModel.setName(categoryModel.getName() + "||" + categoryPathChildlevel2);
+						 */
+						/* code end for TISPRD-3183 */
+
 						// Storing the second level categories in a map
 						//secondLevelCategoryMap.put(department.getCode(), secondLevelCategories);
 						megaMap.put(categoryModel, innerLevelMap);
