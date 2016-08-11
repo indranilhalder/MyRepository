@@ -1771,8 +1771,6 @@
 	<!-- New Payment Solution Starts -->	
 	<bean id="mplProcessOrderService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProcessOrderServiceImpl">
-		<property name="modelService" ref="modelService" />
-		<property name="mplProcessOrderDao" ref="mplProcessOrderDao" />
 	</bean>
 	
 	<bean id="mplProcessOrderDao"

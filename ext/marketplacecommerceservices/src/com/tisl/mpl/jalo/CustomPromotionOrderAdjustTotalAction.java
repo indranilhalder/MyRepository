@@ -6,7 +6,6 @@ import de.hybris.platform.jalo.JaloBusinessException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.jalo.order.CartEntry;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.promotions.util.Helper;
 import de.hybris.platform.util.DiscountValue;
@@ -78,7 +77,7 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 		for (final AbstractOrderEntry entry : order.getEntries())
 		{
 			double amtTobeDeductedAtlineItemLevel = 0.00D;
-			final CartEntry cartEntry = (CartEntry) entry;
+			final AbstractOrderEntry cartEntry = entry;
 			final double lineItemLevelPrice = cartEntry.getBasePriceAsPrimitive() * cartEntry.getQuantityAsPrimitive();
 			double productLevelDiscount = 0.00D;
 			if (null != cartEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)
@@ -152,7 +151,7 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 
 	/**
 	 * Added for TISPRO-318
-	 * 
+	 *
 	 * @param ctx
 	 * @param entry
 	 * @return freeItemPrice

@@ -1953,9 +1953,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			getCalculationStrategy().recalculateCart(parameter);
 
 			final Double subTotal = orderModel.getSubtotal();
-			final Double cartDiscount = populateCartDiscountPrice(null, orderModel);
+			final Double orderDiscount = populateCartDiscountPrice(null, orderModel);
 			final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue()
-					- cartDiscount.doubleValue());
+					- orderDiscount.doubleValue());
 
 			orderModel.setDeliveryCost(deliveryCost);
 
@@ -2042,8 +2042,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			if (orderData.getTotalDiscounts() != null && orderData.getTotalDiscounts().getValue() != null)
 			{
-				value = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
+				value = Double.valueOf(value.doubleValue() + orderData.getTotalDiscounts().getValue().doubleValue());
 
+			}
+
+			if (null != orderData.getCouponDiscount() && null != orderData.getCouponDiscount().getValue())
+			{
+				value = Double.valueOf(value.doubleValue() + orderData.getCouponDiscount().getValue().doubleValue());
 			}
 		}
 

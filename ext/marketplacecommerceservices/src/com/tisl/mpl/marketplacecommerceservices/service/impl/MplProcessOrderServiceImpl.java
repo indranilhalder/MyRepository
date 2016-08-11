@@ -13,9 +13,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -34,9 +35,9 @@ import com.tisl.mpl.util.OrderStatusSpecifier;
  */
 public class MplProcessOrderServiceImpl implements MplProcessOrderService
 {
-	private static final Logger LOG = Logger.getLogger(MplProcessOrderServiceImpl.class);
+	//private static final Logger LOG = Logger.getLogger(MplProcessOrderServiceImpl.class);
 
-	@Autowired
+	@Resource(name = "mplProcessOrderDao")
 	private MplProcessOrderDao mplProcessOrderDao;
 	@Autowired
 	private JuspayEBSService juspayEBSService;
@@ -48,12 +49,12 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private MplCancelOrderTicketImpl mplCancelOrderTicketImpl;
 	@Autowired
 	private OrderStatusSpecifier orderStatusSpecifier;
-	@Autowired
+	@Resource(name = "modelService")
 	private ModelService modelService;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService#getPaymentPedingOrders()
 	 */
 	@Override

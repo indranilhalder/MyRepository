@@ -316,7 +316,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 								LOG.debug("binValidation : cartData : " + cartData);
 
 								//Note : Response will Have DTO within which will be a list of DTO with Promo Details
-								data = getMplPaymentFacade().applyPromotions(cartData, null, cart, null);
+								data = getMplPaymentFacade().applyPromotions(cartData, null, cart, null, data);
 
 								LOG.debug("binValidation : promotionData : " + data);
 
@@ -481,7 +481,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override

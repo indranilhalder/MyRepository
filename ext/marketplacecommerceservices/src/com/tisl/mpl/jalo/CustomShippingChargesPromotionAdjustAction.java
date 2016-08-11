@@ -6,7 +6,6 @@ import de.hybris.platform.jalo.JaloBusinessException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.jalo.order.CartEntry;
 import de.hybris.platform.jalo.type.ComposedType;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
@@ -90,7 +89,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 				while (iter.hasNext())
 				{
 					final Map.Entry mapEntry = (Map.Entry) iter.next();
-					final CartEntry cartEntry = (CartEntry) mapEntry.getValue();
+					final AbstractOrderEntry cartEntry = (AbstractOrderEntry) mapEntry.getValue();
 					final String validProdUSSID = (String) mapEntry.getKey();
 
 					List<String> associatedItemsList = new ArrayList<String>();
