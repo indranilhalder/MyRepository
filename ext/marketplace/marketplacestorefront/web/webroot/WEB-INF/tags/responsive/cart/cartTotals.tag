@@ -80,7 +80,7 @@ function isNumber(evt) {
 <%-- <form:form id="cartFormId" action="${request.contextPath}/cart/setPincode" method="GET">   --%>
 
   
-	<div class="top block" id="pinCodeDispalyDiv">
+	<%-- <div class="top block" id="pinCodeDispalyDiv">
 		<h2><spring:theme code="cart.delivery.options" /></h2>
 		<input type="hidden"  name = "defaultPinCodeIdsDefault" id= "defaultPinCodeIdsDefault"  value="${defaultPinCode}"/>
 			<div id="defaultPinDiv">
@@ -101,7 +101,7 @@ function isNumber(evt) {
 		<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 		
 		
-	</div>
+	</div> --%>
 <%-- </form:form> --%>
 <div class="middle block">
 	<%-- <h2><spring:theme code="mpl.orderDetails" /></h2>

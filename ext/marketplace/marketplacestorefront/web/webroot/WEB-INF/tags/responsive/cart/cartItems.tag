@@ -86,7 +86,7 @@ tr.d0 td {
    <li class="item">
    <ul class="desktop">
    
-   <li>
+   <li class="productItemInfo">
    
    <div class="product-img">
    
@@ -139,7 +139,7 @@ tr.d0 td {
 										</ycommerce:testId>
 										</p>
 						</c:if>
-		              </div>
+		             
 		              
 		                
 		              <ul class="item-edit-details">
@@ -157,7 +157,7 @@ tr.d0 td {
                     		</li>
 			           	</c:if>
                       </ul>
-   
+   				 </div>
    </li>
    <!-- TISUTO-124 -->
     <c:choose>
@@ -863,7 +863,8 @@ tr.d0 td {
         </li>
 
  --%>
-
+<div class="cart-bottom-block">
+<div class="cart-total-block">
      <h2><spring:theme code="mpl.orderDetails" /></h2>
 	<ul class="totals">
             <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li>
@@ -892,6 +893,7 @@ tr.d0 td {
                 </c:choose>
             </ycommerce:testId></span></li>
           </ul>
-
+          </div>
+</div>
 <storepickup:pickupStorePopup />
 
