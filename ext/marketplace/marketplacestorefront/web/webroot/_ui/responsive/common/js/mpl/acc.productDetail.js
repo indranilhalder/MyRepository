@@ -183,9 +183,28 @@
 			  
 		});
 		//End
+		//added for Size guide Variant select
+		$(document).on("click", '.variant-select li span',
+				function() {
+				  var target = $(this).attr('data-producturl');
+				//   console.log(target);
+				  var productcode= $(this).attr('data-productcode');
+				//   console.log(productcode);
+				   $('body').on('hidden.bs.modal', '#popUpModal', function () {
+						  $(this).removeData('bs.modal');
+						});
+
+				   // load the url and show modal on success
+				   $("#popUpModal .modal-content").load(target, function() { 
+					   	   $("#popUpModal").modal("show");
+						  // buyboxDetailsForSizeGuide(productcode);
+				    });
+				  
+			});
+		
 		
 		// Sise Guide Select Size
-		$(document).on("change", '.variant-select',function(){
+		/*$(document).on("change", '.variant-select',function(){
 		//	console.log($(this).find('option:selected').data('productcode1'));
 //			var value = $("#variant .dsa").attr("value");
 			var value = $(this).find('option:selected').data('producturl');
@@ -199,7 +218,7 @@
 		         $("#popUpModal").modal("show");
 		     	//buyboxDetailsForSizeGuide(productcode);
 		    });
-		});
+		});*/
 		
 		//TISPRO-333
 		/*$(document).on("click", 'a[data-target=#popUpModal] ',
@@ -1291,15 +1310,15 @@ $( document ).ready(function() {
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
 				
-				$("#variant option").each(function(){
-				if($(this).val().toUpperCase().indexOf(key)!= -1 && value == 0){
-					$(this).attr("disabled","disabled");
-					$(this).css({
-						"color": "gray"
-				});
-					$(this).parent().css("border-color","gray");
+				$("#variant li a").each(function(){
+					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
+						
+					$(this).removeAttr("href");
+					$(this).parent().addClass('strike');
+				//$(this).parent().css("border-color","gray");
+				$("#outOfStockId").hide();
+				
 					}
-					$("#outOfStockId").hide();
 				});
 				
 				
@@ -1436,9 +1455,15 @@ $( document ).ready(function() {
 		if(null!= availibility){
 			setTimeout(function(){
 			$.each(availibility,function(key,value){
-				$(".variant-select-sizeGuidePopUp option").each(function(){
+				$(".variant-select-sizeGuidePopUp li span").each(function(){
 					if(typeof($(this).attr("data-producturl"))!= 'undefined' && $(this).attr("data-producturl").indexOf(key)!= -1 && value == 0){
+						
 						$(this).attr("disabled","disabled");
+						$(this).css({
+							"color": "gray"
+					});
+						$(this).removeAttr("data-producturl");
+						
 						}
 				});
 			});	

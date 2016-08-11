@@ -1896,3 +1896,14 @@ $(window).on("scroll",function(){
 	}
 });
 /*Filter scroll changes end*/
+
+$(document).ready(function() {
+	$('.wish-share.mobile .share span').click(function(){
+		if($(this).hasClass('active')) {
+			$(this).removeClass('active')
+		} else {
+			$(this).addClass('active')
+		}
+	});
+	$(document).on('click','.zoomContainer',function(){hit();})
+});

@@ -95,6 +95,28 @@ tr.d0 td {
 			<product:productPromotionSection product="${product}" />
 
 		</div>
+		<!-- Added for carousel in mobile view -->
+		<div class="product-image-container device">
+		<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
+			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 
+				<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">	
+	
+	
+					<div id="addiImageTab${varStatus.index}">
+						<span>
+						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+							<img src="${container.product.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
+						</c:if>
+						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+						<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
+						<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
+						</c:if>
+	
+						</span>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
 		<div class="product-detail">
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
@@ -140,21 +162,24 @@ tr.d0 td {
 			 <spring:theme code="freebie.product.message" text="Freebie: This product is not on sale" ></spring:theme>				
 			</div>			
 			<!-- TPR-275 ends -->
-			<ycommerce:testId
-				code="productDetails_productNamePrice_label_${product.code}">
-				<h3 class="seller">Sold by <span id="sellerNameId"></span></h3>
-			</ycommerce:testId>
-			<div class="fullfilled-by">
-			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
-			<span id="fulFilledBySship"  style="display:none;"></span>
+			<product:productMainVariant /> 
+			<div class="SoldWrap">
+				<ycommerce:testId
+					code="productDetails_productNamePrice_label_${product.code}">
+					<h3 class="seller">Sold by <span id="sellerNameId"></span></h3>
+				</ycommerce:testId>
+				<div class="fullfilled-by">
+				<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+				<span id="fulFilledBySship"  style="display:none;"></span>
+				</div>
 			</div>
-			
+			<cms:pageSlot position="AddToCart" var="component">
+					<cms:component component="${component}" />
+				</cms:pageSlot>
 			<%-- <div class="description">${product.summary}</div> --%>
 
 		
-			<div class="tabs-block">
-				<product:productPageTabs />
-			</div>
+			
 			<!-- seller information section  -->
 			<div class="seller-details">
 			<product:sellerInfoDetailsSection/>
@@ -170,10 +195,8 @@ tr.d0 td {
 					<cms:component component="${component}" />
 				</cms:pageSlot> --%>
 				
-				<product:productMainVariant /> 
-				<cms:pageSlot position="AddToCart" var="component">
-					<cms:component component="${component}" />
-				</cms:pageSlot>
+				
+				
         
 			</div>
 			
@@ -208,11 +231,13 @@ tr.d0 td {
 
 
 			<div id="fb-root"></div>
+			<div class="Wrap">
 			<cms:pageSlot position="PinCodeService" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
-          
-          <ul class="wish-share">
+          </div>
+          <ul class="wish-share desktop">
+
 				<li><!-- <span id="addedMessage" style="display:none"></span> -->
 				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
 				<li>
@@ -222,7 +247,9 @@ tr.d0 td {
 			</ul>
 		</div>
 
-
+<div class="tabs-block">
+				<product:productPageTabs />
+			</div>
 	</div>
 	
 	<c:set var="electronics"><spring:theme code='product.electronics'/></c:set>

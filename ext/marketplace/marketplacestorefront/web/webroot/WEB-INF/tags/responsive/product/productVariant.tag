@@ -171,9 +171,9 @@ function loadVariant(x){
 			<p>
 				<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 			</p>
-			<select id="sizevariant" class="form-control variant-select"
+			<ul id="sizevariant" class="form-control variant-select"
 				onchange="selectProductSize()">
-				<c:choose>
+				<%-- <c:choose>
 					<c:when test="${defaultSelectedSize==''}">
 						<option value="#" selected="selected"><spring:theme
 								code="text.select.size" /></option>
@@ -181,7 +181,7 @@ function loadVariant(x){
 					<c:otherwise>
 						<option value="#"><spring:theme code="text.select.size" /></option>
 					</c:otherwise>
-				</c:choose>
+				</c:choose> --%>
 
 				<!-- <option value="#">select size</option> -->
 				<c:forEach items="${product.variantOptions}" var="variantOption">
@@ -195,23 +195,23 @@ function loadVariant(x){
 									<c:set var="currentColor" value="${color}" />
 									<c:forEach var="entry" items="${variantOption.sizeLink}">
 										<c:url value="${entry.key}" var="link" />
-										<a href="${link}">${entry.value}</a>
+										<%-- <a href="${link}">${entry.value}</a> --%>
 
 										<c:choose>
 											<c:when test="${defaultSelectedSize eq variantOption.code}">
-												<option value="${variantUrl}?selectedSize=true" selected>${entry.value}</option>
+												<li><a href="${variantUrl}?selectedSize=true">${entry.value}</a></li>
 
 											</c:when>
 											<c:when
 												test="${(product.code eq variantOption.code)&&(selectedSize!=null)}">
-												<option value="${variantUrl}?selectedSize=true" selected>${entry.value}</option>
+												<li><a href="${variantUrl}?selectedSize=true">${entry.value}</a></li>
 
 											</c:when>
 											<c:otherwise>
 												<c:url value="/p/${variantOption.code}/viewSellers"
 													var="variantUrl" />
-												<option value="${variantUrl}?selectedSize=true">
-													${entry.value}</option>
+												<li><a href="${variantUrl}?selectedSize=true">
+													${entry.value}</a></li>
 											</c:otherwise>
 										</c:choose>
 									</c:forEach>
@@ -240,11 +240,11 @@ function loadVariant(x){
 
 															<c:url value="${variantOption.defaultUrl}"
 																var="variantUrl" />
-															<option value="${variantUrl}" selected>
-																${entry.value}</option>
+															<li><a value="${variantUrl}">
+																${entry.value}</a></li>
 														</c:when>
 														<c:otherwise>
-															<option value="${variantUrl}">${entry.value}</option>
+															<li><a href="${variantUrl}">${entry.value}</a></li>
 
 														</c:otherwise>
 													</c:choose>
@@ -257,7 +257,7 @@ function loadVariant(x){
 						</c:choose>
 					</c:forEach>
 				</c:forEach>
-			</select>
+			</ul>
 			
 		</div>
 	</form:form>

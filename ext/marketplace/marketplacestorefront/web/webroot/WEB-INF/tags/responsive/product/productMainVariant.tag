@@ -28,7 +28,7 @@
 <c:url var="sizeGuideUrl"
 	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSizeForSizeGuide}" scope="request"></c:url>
 <style>
-#variant, .productCount select {
+.productCount select {
 	border-radius: 0;
 }
 </style>
@@ -185,16 +185,53 @@ var productSizeVar = '${productSize}';
 </c:if>
 
 
+<!-- share mobile -->
+<ul class="wish-share mobile">
 
+				<li>
+<div class="share">
+<span>Share</span>
+	<ul>
+
+		<li>
+			<a onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/')" class="fb"></a> 
+			<!-- <a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=145634995501895&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=https://developers.facebook.com/tools/explorer')"></a>  -->				
+		</li>
+				<li>
+			<a onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text())" class="tw"></a>
+		</li>
+		<li>
+			<button data-calltoactionurl="" data-calltoactionlabel="OPEN" data-prefilltext="Wow!Check out this amazing find. Like or  comment to tell me what you think, or share for warm fuzzies." data-cookiepolicy="single_host_origin" data-clientid="742445068598-2t1f67127eqan2jjt4t7kagofp8rbchl.apps.googleusercontent.com" data-contenturl="" class="g-interactivepost" data-gapiscan="true" data-onload="true" data-gapiattached="true">
+	        <a class="gp"></a>
+	        </button>
+			<!-- <a class="gp" onclick="return openPopup('https://plusone.google.com/_/+1/confirm?url=https://www.dev.tataunistore.com&amp;clientid=888304528479-qdh1rp8r9o5fvh3dlabr7ebdbr02se6e.apps.googleusercontent.com&amp;prefilltext=helooo&amp;calltoactionurl=https://www.google.com')"></a>  -->
+			<!-- <a href="" class="gp" onclick="return openPopup('https://plusone.google.com/_/+1/confirm?url=' + window.location)"></a> -->
+		</li>	
+		<li><a data-placement="bottom" data-toggle="popover" role="button" class="mail mailproduct" data-original-title="" title=""></a>
+		</li>
+	</ul>
+</div>
+</li>
+</ul>
+<!-- share mobile -->
 <!-- displaying sizes based on color selected -->
 <!-- currentcolor refers to the variable where the current color of the selected variant is stored -->
 <!-- currentcolor is populated on selecting color swatch -->
 <div class="size" style="font-size: 12px;">
 
 	<c:if test="${noVariant!=true&&notApparel!=true}">
-		<p>
+		<span>
 			<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-		</p>
+		</span>
+		<!-- Size guide Pop-up -->
+		<a class="size-guide" href="${sizeGuideUrl}" role="button"
+			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
+				code="product.variants.size.guide" />
+		</a>
+		
+		<!-- Added for PDP Size ChartChange -->
+		<ul id="variant" class="variant-select">
+			<%-- <c:choose>
 		<select id="variant" class="variant-select">
 			<c:choose>
 				<c:when test="${selectedSize eq null}">
@@ -204,7 +241,7 @@ var productSizeVar = '${productSize}';
 				<c:otherwise>
 					<option value="#"><spring:theme code="text.select.size" /></option>
 				</c:otherwise>
-			</c:choose>
+			</c:choose> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:forEach items="${variantOption.colourCode}" var="color">
 
@@ -215,20 +252,20 @@ var productSizeVar = '${productSize}';
 
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="${entry.key}" var="link" />
-									<a href="${link}?selectedSize=true">${entry.value}</a>
+									<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
 									<c:choose>
 										<c:when test="${(variantOption.code eq product.code)}">
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
-													<option value="${link}?selectedSize=true">${entry.value}</option>
+													<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
-													<option value="${link}?selectedSize=true" selected>${entry.value}</option>
+														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
 										<c:otherwise>
-											<option data-vcode="${link}" value="${link}?selectedSize=true">${entry.value}</option>
+											<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -249,10 +286,10 @@ var productSizeVar = '${productSize}';
 												<c:url value="${entry.key}" var="link" />
 												<c:choose>
 													<c:when test="${(variantOption.code eq product.code)}">
-														<option value="${link}?selectedSize=true" selected>${entry.value}</option>
+														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 													</c:when>
 													<c:otherwise>
-														<option value="${link}?selectedSize=true">${entry.value}</option>
+														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
 													</c:otherwise>
 												</c:choose>
 											</c:forEach>
@@ -264,13 +301,9 @@ var productSizeVar = '${productSize}';
 					</c:choose>
 				</c:forEach>
 			</c:forEach>
-		</select>
+		</ul>
 		
-		<!-- Size guide Pop-up -->
-		<a class="size-guide" href="${sizeGuideUrl}" role="button"
-			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
-				code="product.variants.size.guide" />
-		</a>
+		
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->
 		<!-- End Size guide Pop-up -->
 	</c:if>
