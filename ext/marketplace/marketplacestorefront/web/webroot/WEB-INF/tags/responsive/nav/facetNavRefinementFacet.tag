@@ -409,6 +409,9 @@ function navigateToPage(queryString,textString)
 								</c:if>
 							</form>
 								</c:when>
+								
+							
+								
 								<c:otherwise>
 								<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
@@ -549,6 +552,8 @@ function navigateToPage(queryString,textString)
 									<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 							</form>
 		</c:if>
+		
+	
 		
 		
 		

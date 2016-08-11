@@ -1543,9 +1543,6 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean> 
 	
 	
-	<!-- Added Bean defination for Custom Price Filter values -->		
-	
-
 	
 	
 	<!-- Solr Authentication  -->
