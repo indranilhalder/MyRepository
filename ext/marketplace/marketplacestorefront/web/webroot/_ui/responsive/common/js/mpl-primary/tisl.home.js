@@ -98,7 +98,8 @@ $(document).on("mouseover touchend", "div.departmenthover", function() {
 });
 
 
-$(".A-ZBrands").on("mouseover touchend", function(e) {
+//$(".A-ZBrands").on("mouseover touchend", function(e) {
+	$(document).on("mouseover touchend", ".A-ZBrands", function(e) {
 	var componentUid = $("#componentUid").val();
     if ($("li#atozbrandsdiplay").length) {
         // console.log("Dipslaying A-Z Brands..");
@@ -182,14 +183,23 @@ $("span.latestOffersBanner").on("click touchend", function() {
 	    		slideBy:'page',
 	    		responsive : {
 	    			// breakpoint from 0 up
-	    			0 : {
-	    				items:1,
-	    				stagePadding: 50,
-	    			},			
-	    			// breakpoint from 650 up
-	    			650 : {
-	    				items:5,
-	    			}			
+        			0 : {
+        				items:1,
+        				stagePadding: 50,
+        			},
+        			// breakpoint from 480 up
+        			480 : {
+        				items:2,
+        				stagePadding: 50,
+        			},
+        			// breakpoint from 768 up
+        			768 : {
+        				items:3,
+        			},
+        			// breakpoint from 768 up
+        			1280 : {
+        				items:5,
+        			}			
 	    		}	
 				/*navigation:true,
 				navigationText : [],
@@ -305,23 +315,6 @@ function getBrandsYouLoveAjaxCall() {
                 defaultComponentId = "";
                 renderHtml = "<h1>" + response.title + "</h1>" +
                     "<div class='home-brands-you-love-carousel'>";
-                $.each(response.subComponents, function(k, v) {
-                    //console.log(v.brandLogoUrl);
-                	
-                    if (!v.showByDefault) {
-                        renderHtml +=
-                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
-                            v.compId + "'><img src='" + v.brandLogoUrl +
-                            "'></img></div>";
-                    } else {
-                        renderHtml +=
-                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
-                            v.compId + "'><img src='" + v.brandLogoUrl +
-                            "'></img></div>";
-                        defaultComponentId = v.compId;
-                    }
-                    count++;
-                });
                 $.each(response.subComponents, function(k, v) {
                     //console.log(v.brandLogoUrl);
                 	
@@ -1423,7 +1416,8 @@ function populateEnhancedSearch(enhancedSearchData)
 	
 	//Added
 	
-	$("div.toggle.brandClass").on("mouseover touchend", function() {
+//	$("div.toggle.brandClass").on("mouseover touchend", function() {
+		$(document).on("mouseover touchend", "div.brandClass", function() {
 		var componentUid = $(this).find('a').attr('id');
 		 if (!$.cookie("dept-list") && window.localStorage) {
 		        for (var key in localStorage) {
@@ -1955,6 +1949,20 @@ $(document).ready(function(){
 	$(document).on("click","div.departmenthover + span#mobile-menu-toggle",function(){
 		if($(this).siblings("ul.words").children().length == 0){
 			$(this).siblings("div.departmenthover").mouseover();
+		}
+		
+		
+	});
+	$(document).on("click","div.brandClass + span#mobile-menu-toggle",function(){
+		if($(this).siblings("ul.images").children().length == 0){
+			$(this).siblings("div.brandClass").mouseover();
+		}
+		
+		
+	});
+	$(document).on("click","div.A-ZBrands + span#mobile-menu-toggle",function(){
+		if($(this).siblings("ul.a-z div.view_brands").siblings().length == 0){
+			$(this).siblings("div.A-ZBrands").mouseover();
 		}
 		
 		

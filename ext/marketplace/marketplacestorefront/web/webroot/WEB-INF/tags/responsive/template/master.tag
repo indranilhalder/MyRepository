@@ -21,17 +21,7 @@
 <html lang="${currentLanguage.isocode}">
 <head>
 	<title>
-	<%--(TPR-243) SEO Meta Tags and Titles--%>
-	<c:choose>
-		<c:when test="${isCategoryPage}">
-		 ${metaPageTitle}
-		</c:when>
-		<c:otherwise>
-			 ${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
-		</c:otherwise>
-	</c:choose>	
-		
-	
+	${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
 	</title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">
@@ -136,14 +126,40 @@
 	<!-- Markup for Google+ -->
 	<meta itemprop="name" content="${metaTitle}">
 	<meta itemprop="description" content="${metaDescription}">
-	<meta itemprop="image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}">
+	<%-- <meta itemprop="image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}"> --%>
+	
+	<!-- TPR-514-itemprop tag chnages on PDP pages-->
+	<c:choose>
+	<c:when test="${fn:contains(reqURI,'/p-')}">	
+	<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" end="0">
+	<meta itemprop="image" content="${container.thumbnail.url}" />
+	</c:forEach>	
+	</c:when>
+	<c:otherwise>
+	<meta itemprop="image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}" />
+	</c:otherwise>
+	</c:choose>
+	
 	
 	<!-- Twitter Card data -->
 	<meta name="twitter:card" content="${baseURL}/">
 	<meta name="twitter:site" content="${twitterHandle}">
 	<meta name="twitter:title" content="${metaTitle}">
 	<meta name="twitter:description" content="${metaDescription}">
-	<meta name="twitter:image:src" content="${protocolString[0]}://${mediaHost}${seoMediaURL}">
+	<%-- <meta name="twitter:image:src" content="${protocolString[0]}://${mediaHost}${seoMediaURL}">
+	 --%>
+	 
+	 <!-- TPR-514-twitter tag chnages on PDP pages-->
+	<c:choose>
+	<c:when test="${fn:contains(reqURI,'/p-')}">	
+	<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" end="0">
+	<meta name="twitter:image:src" content="${container.thumbnail.url}" />
+	</c:forEach>	
+	</c:when>
+	<c:otherwise>
+	<meta name="twitter:image:src" content="${protocolString[0]}://${mediaHost}${seoMediaURL}" />
+	</c:otherwise>
+	</c:choose>
 	
 	<!-- FB Open Graph data -->
 	<meta property="og:title" content="${metaTitle}" />

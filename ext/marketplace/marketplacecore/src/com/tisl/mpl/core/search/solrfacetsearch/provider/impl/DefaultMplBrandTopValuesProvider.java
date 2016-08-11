@@ -15,13 +15,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
+
 /**
  * @author TCS
  *
  */
 public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 {
-
 	@Autowired
 	private ConfigurationService configurationService;
 
@@ -46,7 +46,11 @@ public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 
 		if (facets != null)
 		{
-			topFacetCount = Integer.parseInt(configurationService.getConfiguration().getString("search.Facet.topValue"));
+			//topFacetCount = Integer.parseInt(configurationService.getConfiguration().getString("search.Facet.topValue"));
+			if (indexedProperty != null && indexedProperty.getFacetTopValue() != null)
+			{
+				topFacetCount = indexedProperty.getFacetTopValue().intValue();
+			}
 
 			for (final FacetValue facetValue : facets)
 			{

@@ -27,15 +27,14 @@
 			<h2>
 				<c:choose>
 					<c:when test="${not empty searchPageData.spellingSuggestion.suggestion && not empty searchPageData.results}">
+					<c:set var="resultCount" value="${fn:length(searchPageData.results)}" />	
 						0 Result for '<span class="searchString"><spring:theme code="search.page.searchTextValue"
 							arguments="${spellingSearchterm}" /></span>', <spring:theme code="search.page.searchTextForDYMShow"/>&nbsp;
-						results in 
-						<span class="searchString"><i>
-						
-						<c:set value="${fn:split(searchPageData.freeTextSearch, ' ')}" var="searchTextAry" />
+						${resultCount} results for
+						<span class="searchString">"<i><c:set value="${fn:split(searchPageData.freeTextSearch, ' ')}" var="searchTextAry" />
 						<c:set value="${fn:split(searchPageData.spellingSuggestion.suggestion, ' ')}" var="suggestionAry" />
 						<c:choose>
-							<c:when test="${fn:length(suggestionAry) > 1}">
+							<c:when test="${fn:length(suggestionAry) > 1}">							  
 								<c:forEach begin="0" end="${fn:length(suggestionAry)}" var="current">
 									<c:choose>
 										<c:when test="${suggestionAry[current] ne searchTextAry[current]}">
@@ -55,7 +54,7 @@
 						
 							
 							
-							</i></span>
+							</i>&nbsp;"</span>
 					</c:when>
 					<c:otherwise>
 					 <spring:theme code="search.page.searchText"/>	

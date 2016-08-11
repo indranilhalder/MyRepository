@@ -5627,7 +5627,13 @@
 
 			<itemtype code="SolrIndexedProperty" autocreate="false"
 				generate="true">
-				<attributes>
+				<attributes>				
+				   <attribute qualifier="boostDouble" type="java.lang.Double">
+						<description>Relevance of the property in search</description>
+						<persistence type="property" />
+						<modifiers initial="true" read="true" write="true"
+							search="true" optional="true" />
+					</attribute>				
 					<attribute qualifier="boost" type="java.lang.Integer">
 						<description>Relevance of the property in search</description>
 						<persistence type="property" />
@@ -5691,6 +5697,20 @@
 					<!-- End TISPRO-326 -->
 				</attributes>
 			</itemtype>
+			
+			<itemtype code="SolrIndexedProperty" autocreate="false" generate="true">
+				<description>Extending the SolrIndexedType type from core with additional attribute for top values.</description>
+				<attributes>					
+					<attribute qualifier="facetTopValue" type="java.lang.Integer">
+						<description>Facet Top Value Count</description>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+						<persistence type="property" />
+						<modifiers initial="true" read="true" write="true"
+							search="true" optional="true" />
+					</attribute>
+				</attributes>
+	      </itemtype>
+	      
 		</typegroup>
 
 

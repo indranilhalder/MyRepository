@@ -1571,6 +1571,9 @@ $(document).ready(function(){
 		});
 		$(window).on("load resize", function() {
 			var filter_height=$(".facet-list.filter-opt").height() + 55;
+			if($(".searchSpellingSuggestionPrompt").height() > 0){
+				filter_height= $(".facet-list.filter-opt").height() + 55 + $(".searchSpellingSuggestionPrompt").height() + 40;
+			}
 			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");
 		});
 		
@@ -1580,23 +1583,80 @@ $(document).ready(function(){
 		
 		//Mobile menu
 		navhtml = $("nav").html();	
+		
 		$('header .content .container > .right').prepend(navhtml);
 		$('header .content .container > .right ul:first-child > li div').removeClass('toggle');
 		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
 		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li').removeClass('toggle');
+		setTimeout(function () {
+  		  navhtmlMicrosite = $(".brand-header nav ul li").html();
+  		 $('header .content .container > .right > ul:first-child').prepend('<li id="shopMicrositeSeller"></li>');
+  		  $('header .content .container > .right > ul:first-child > li#shopMicrositeSeller').html(navhtmlMicrosite);
+  		$('header .content .container > .right ul:first-child > li#shopMicrositeSeller div').removeClass('toggle');
+		$('header .content .container > .right ul li#shopMicrositeSeller #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+		$('header .content .container > .right ul li#shopMicrositeSeller #mobile-menu-toggle + ul li ul li').removeClass('toggle');
+	        }, 50);
+		
+		$(document).off("click","header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 > div > span#mobile-menu-toggle").on("click", "header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 > div > span#mobile-menu-toggle",function(){
+			$(this).parents(".level1").siblings().find("span#mobile-menu-toggle").removeClass("menu-dropdown-arrow");
+			$(this).parents(".level1").siblings().find(".words").hide();
+			$(this).parents(".level1").find(".words").toggle();
+			
+			
+			
+		});
 		
 		//Mobile level 1 active
-		$(document).on('click','header > .content .top ul:first-child li > span.mainli',function() {
-			console.log("clicked");
+		$(document).on('click','header > .content .top ul:first-child > li > span.mainli',function() {
 			if($(this).prev().hasClass('bgred')){
 				$(' header > .content .top ul:first-child li > div').removeClass("bgred");
 				}else{
-				$(' header > .content .top ul:first-child li > div').removeClass("bgred");	
+				$(' header > .content .top ul:first-child li > div').removeClass("bgred");
 				$(this).prev().addClass("bgred");			
 			}		
 		});
+	/*	$(document).on('click','header > .content .top ul:first-child li#shopMicrositeSeller > span#mobile-menu-toggle',function() {
+			setTimeout(function () {
+			if($(this).prev().hasClass('bgred')){
+				console.log("inside if microsite");
+				$(' header > .content .top ul:first-child li#shopMicrositeSeller > div').removeClass("bgred");
+			}else{
+				$(' header > .content .top ul:first-child li#shopMicrositeSeller > div').removeClass("bgred");	
+				console.log("inside else microsite");
+				$(this).prev().addClass("bgred");			
+			}
+			 }, 190);
+		});*/
 
 		//loadGigya();
+		var sort_top=parseInt($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top"));
+		$(window).on("load resize", function() {
+			if($(window).width() <= 633){
+				$('.listing.wrapper .left-block').css('margin-top','20px');
+				var search_text_height = $(".listing.wrapper .search-result h2").height();
+				var search_spelling_height = $(".searchSpellingSuggestionPrompt").height();
+				
+				if((search_text_height > 14) && (search_spelling_height <= 0)){
+					var sort_top1 = sort_top + (search_text_height - 14);
+					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top1+"px");
+				}
+				else if((search_text_height <= 14) && (search_spelling_height > 0)){
+					var sort_top_2=$(".searchSpellingSuggestionPrompt").height() + sort_top + 20;
+					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top_2+"px");
+				}
+				else if((search_text_height > 14) && (search_spelling_height > 0)){
+					var sort_top3 = (search_text_height - 14) + $(".searchSpellingSuggestionPrompt").height() + sort_top + 20;
+					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top3+"px");
+				}
+				else{
+					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px");
+				}
+				if($(".searchSpellingSuggestionPrompt").height()>0){
+					var left_block_top_margin= $(".searchSpellingSuggestionPrompt").height() + 40;
+					$('.listing.wrapper .left-block').css('margin-top',left_block_top_margin+'px');
+				}
+			}
+		});
 });
 
         var screenXs="480px";
@@ -1818,3 +1878,21 @@ function callGigyaWhenNotMinified(){
 }
 
 /* Changes for TISPT-203 ends  */
+
+/*Filter scroll changes start*/
+$(window).on("scroll",function(){
+	if($(window).width() > 650 && $('.listing.wrapper .right-block').height() > $('.listing.wrapper .left-block').height()) {
+		if($(window).scrollTop() >  $('.listing.wrapper .left-block').height() - $('.listing.wrapper .left-block').offset().top ){
+			$('.listing.wrapper .left-block,.listing.wrapper .right-block').addClass("fixed");
+		} else {
+			$('.listing.wrapper .left-block,.listing.wrapper .right-block').removeClass("fixed");
+		}
+		
+		if ($(window).scrollTop() >  $('.listing.wrapper .right-block').height() - $('.listing.wrapper .right-block').offset().top - 100) {
+			$('.listing.wrapper .left-block').removeClass("fixed").addClass("bot");
+		} else {
+			$('.listing.wrapper .left-block').removeClass("bot");
+		}
+	}
+});
+/*Filter scroll changes end*/

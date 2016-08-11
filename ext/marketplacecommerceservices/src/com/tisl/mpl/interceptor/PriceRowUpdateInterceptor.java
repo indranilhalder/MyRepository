@@ -50,6 +50,7 @@ public class PriceRowUpdateInterceptor implements PrepareInterceptor
 		{
 			final PriceRowModel priceRow = (PriceRowModel) object;
 			double specialPrice = 0.0D;
+			double discount = 0.0D;
 
 			//final Date sysdate = new Date();
 			if (priceRow.getPromotionStartDate() != null && priceRow.getPromotionEndDate() != null
@@ -63,10 +64,10 @@ public class PriceRowUpdateInterceptor implements PrepareInterceptor
 				}
 				else
 				{
-					specialPrice = priceRow.getPrice().doubleValue()
-							- ((priceRow.getPrice().doubleValue() * priceRow.getPromotionValue().doubleValue()) / 100);
+					discount = (priceRow.getPrice().doubleValue() * priceRow.getPromotionValue().doubleValue()) / 100;
+
 					if (null != priceRow.getMaxDiscount() && priceRow.getMaxDiscount().doubleValue() > 0.0
-							&& specialPrice > priceRow.getMaxDiscount().doubleValue())
+							&& discount > priceRow.getMaxDiscount().doubleValue())
 					{
 						specialPrice = priceRow.getPrice().doubleValue() - priceRow.getMaxDiscount().doubleValue();
 						LOG.debug("Special Price > Max Discount : Special Price:" + specialPrice);
@@ -74,6 +75,8 @@ public class PriceRowUpdateInterceptor implements PrepareInterceptor
 					}
 					else
 					{
+						specialPrice = priceRow.getPrice().doubleValue()
+								- ((priceRow.getPrice().doubleValue() * priceRow.getPromotionValue().doubleValue()) / 100);
 						LOG.debug("Special Price < Max Discount : Special Price: " + specialPrice);
 						priceRow.setSpecialPrice(Double.valueOf(specialPrice));
 					}
