@@ -1091,6 +1091,134 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 	}
 };
 
+//Code changes start for TPR -168//
+
+var button_my_button = "#applyCustomPriceFilter";
+$(button_my_button)
+		.click(
+				function() {
+					// construct custom price query params
+					var minPriceSearchTxt = $('.minPriceSearchTxt').val();
+					var maxPriceSearchTxt = $('.maxPriceSearchTxt').val();
+					var currentQryParam = $('.currentQueryParamsApply').val();
+					var facetValue = $('.facetValue').val();
+
+					var queryParamsAry = currentQryParam.split(':');
+					var nonPriceQueryParams = "";
+					
+					if(minPriceSearchTxt == 0 && maxPriceSearchTxt == 0 || minPriceSearchTxt > 99999999 || maxPriceSearchTxt > 99999999){	
+						//alert("HIIIIIIIIIIIII");
+						return false;
+					}				
+					else{
+						facetValue = "₹" + minPriceSearchTxt + "-" + "₹"
+								+ maxPriceSearchTxt;
+						$('#facetValue').val(facetValue);
+		
+						// Iterate and get all checked brand values
+						var Price = "₹" + minPriceSearchTxt + "-" + "₹"
+								+ maxPriceSearchTxt;
+						
+						$('li.Price').find('input[type="text"]').each(
+								function() {
+									if ($(this).parents('.facet-list').css(
+											'display') != 'none') {
+										var facetValue = $(this).parents(
+												'.filter-Price').find(
+												'input[name="facetValue"]').val();
+										Price = Price;
+									}
+								});
+		
+				
+						
+						for (var i = 0; i < queryParamsAry.length; i = i + 2) {					
+							if (queryParamsAry[i].indexOf('price') == -1) {								
+								if (nonPriceQueryParams != "") {
+									nonPriceQueryParams = nonPriceQueryParams + ':'
+											+ queryParamsAry[i] + ':'
+											+ queryParamsAry[i + 1];									
+								} else {								
+									nonPriceQueryParams = queryParamsAry[i] + ':'
+											+ queryParamsAry[i + 1];
+								
+								}
+							}
+						}
+					
+						$('.qValueForCustomPrice').val(
+								nonPriceQueryParams + ":priceValue:" + Price);
+		
+						// submit brand apply form
+						$('form#customPriceFilter').submit();
+					}
+					
+				});
+//End of Custom Price Filter
+
+function isNumber(evt) {
+	evt = (evt) ? evt : window.event;
+	var charCode = (evt.which) ? evt.which : evt.keyCode;
+	if (charCode > 31 && (charCode < 48 || charCode > 57 )) {
+		return false;
+	}
+	return true;
+}
+
+$(".filter-price").click(
+		function() {
+			var prices = splitPrice($(this).find('form').find(
+					'input[name=facetValue]').val());
+			$('#customMinPrice').val(prices[0]);
+			$('#customMaxPrice').val(prices[1]);
+			$('#applyCustomPriceFilter').click();
+			return false;
+
+		});
+
+//Splits priceValue:Rsxxx-Rsyyy to [xxx, yyy]
+function splitPrice(value) {
+	var priceRange = value.split('-');
+	var minPrice = priceRange[0].substring(1);
+	var maxPrice = priceRange[1].substring(1);
+	return [ minPrice, maxPrice ];
+}
+
+
+//Gets the value of a query string parameter.
+function queryParam(name) {
+	var reges = '[\\?&]' + name + '=([^&#]*)';
+	rex = new RegExp(reges);
+	results = rex.exec(window.location.search);
+	if (results === null) {
+		return '';
+	} else {
+		return decodeURIComponent(results[1].replace(/\+/g, ' '));
+	}
+}
+
+//Loads the price range textboxes with previously
+//selected ranges.
+$(document).ready(function() {
+	var q = queryParam('q');
+	var priceRange = '';
+	var pvStr = ':priceValue:';
+	if (q.indexOf(pvStr) > -1) {
+		priceRange = q.substring(q.indexOf(pvStr) + pvStr.length);
+		if (priceRange.indexOf(':') > -1) {
+			priceRange = priceRange.substring(0, priceRange.indexOf(':'));
+		}
+		var prices = splitPrice(priceRange);
+		$('#customMinPrice').val(prices[0]);
+		$('#customMaxPrice').val(prices[1]);
+		$('li.price').find('div.facet-name').remove();
+		$('li.price').find('div.facet-values').remove();
+	}
+});
+
+//Code changes end for TPR -168//
+
+
 
 
 	

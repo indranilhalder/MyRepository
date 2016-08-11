@@ -30,7 +30,6 @@
 <style>
 .productCount select {
 	border-radius: 0;
-	width: 50%;
 }
 </style>
 <%-- <script type="text/javascript"
@@ -233,6 +232,8 @@ var productSizeVar = '${productSize}';
 		<!-- Added for PDP Size ChartChange -->
 		<ul id="variant" class="variant-select">
 			<%-- <c:choose>
+		<select id="variant" class="variant-select">
+			<c:choose>
 				<c:when test="${selectedSize eq null}">
 					<option value="#" selected="selected"><spring:theme
 							code="text.select.size" /></option>

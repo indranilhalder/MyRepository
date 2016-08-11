@@ -81,6 +81,6 @@
 		<div class="stock-status">
 			${productStockLevel}
 		</div>
-		
+
 </div>
 </div>

@@ -154,28 +154,35 @@ tr.d0 td {
 			
 			</c:if>
 			<!-- TISPRM-97 ends -->
+			<!-- TPR-275 starts  -->
+			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>
+	        <input type="hidden" id="freebiePriceThreshId" value="${freebiePriceThreshVal}">
+	
+			<div id="freebieProductMsgId" style="display:none">
+			 <spring:theme code="freebie.product.message" text="Freebie: This product is not on sale" ></spring:theme>				
+			</div>			
+			<!-- TPR-275 ends -->
 			<product:productMainVariant /> 
 			<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
-					<div class="seller">Sold by <span id="sellerNameId"></span></div>
+					<h3 class="seller">Sold by <span id="sellerNameId"></span></h3>
 				</ycommerce:testId>
 				<div class="fullfilled-by">
 				<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
 				<span id="fulFilledBySship"  style="display:none;"></span>
 				</div>
 			</div>
-			
 			<cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot>
 			<%-- <div class="description">${product.summary}</div> --%>
-	
+
 		
 			
 			<!-- seller information section  -->
 			<div class="seller-details">
-				<product:sellerInfoDetailsSection/>
+			<product:sellerInfoDetailsSection/>
 			</div>
 
 			
@@ -230,6 +237,7 @@ tr.d0 td {
 			</cms:pageSlot>
           </div>
           <ul class="wish-share desktop">
+
 				<li><!-- <span id="addedMessage" style="display:none"></span> -->
 				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
 				<li>
@@ -238,7 +246,7 @@ tr.d0 td {
 				</li>
 			</ul>
 		</div>
-			
+
 <div class="tabs-block">
 				<product:productPageTabs />
 			</div>
