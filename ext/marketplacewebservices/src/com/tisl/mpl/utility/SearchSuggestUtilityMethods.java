@@ -647,7 +647,8 @@ public class SearchSuggestUtilityMethods
 				galleryImages = productDetailsHelper.getGalleryImagesMobile(productDataImage);
 				if (null != (productData.getSavingsOnProduct()))
 				{
-					sellingItemDetail.setDiscountPercent(productData.getSavingsOnProduct().toString());
+					sellingItemDetail.setDiscountPercent(
+							Integer.valueOf(String.valueOf(productData.getSavingsOnProduct().getValue().toString())).toString());
 				}
 				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
@@ -1326,6 +1327,7 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
 						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
+
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
@@ -1333,7 +1335,7 @@ public class SearchSuggestUtilityMethods
 					facetWsDTO.setMultiSelect(Boolean.valueOf((facate.isCategory())));
 					if (null != facate.getName())
 					{
-						facetWsDTO.setName(facate.getName());
+						facetWsDTO.setName(StringUtils.capitalize(facate.getName()));
 					}
 					facetWsDTO.setCategory(Boolean.valueOf((facate.isCategory())));
 					facetWsDTO.setPriority(Integer.valueOf((facate.getPriority())));
@@ -1412,7 +1414,7 @@ public class SearchSuggestUtilityMethods
 					categoryHierarchy.setMultiSelect(Boolean.valueOf((facate.isCategory())));
 					if (null != facate.getName())
 					{
-						categoryHierarchy.setName(facate.getName());
+						categoryHierarchy.setName(StringUtils.capitalize(facate.getName()));
 					}
 					categoryHierarchy.setCategory(Boolean.valueOf((facate.isCategory())));
 					categoryHierarchy.setPriority(Integer.valueOf((facate.getPriority())));
