@@ -41487,6 +41487,11 @@ margin-left: 20%;
 			min-height: 36px !important;
 		}
 	}
+	
+	
+	.searchString{
+	text-transform: capitalize;
+	}
 
  
 
