@@ -1870,4 +1870,5 @@ $(document).ready(function() {
 			$(this).addClass('active')
 		}
 	});
+	$(document).on('click','.zoomContainer',function(){hit();})
 });
