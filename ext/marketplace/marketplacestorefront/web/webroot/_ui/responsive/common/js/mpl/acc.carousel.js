@@ -445,7 +445,7 @@ ACC.carousel = {
     			// breakpoint from 768 up
     			768 : {
     				nav:true,
-    	    		dots:true,
+    	    		dots:false,
     			}			
     		}	
 		});

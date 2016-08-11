@@ -229,7 +229,7 @@ tr.d0 td {
 				<cms:component component="${component}" />
 			</cms:pageSlot>
           </div>
-          <ul class="wish-share">
+          <ul class="wish-share desktop">
 				<li><!-- <span id="addedMessage" style="display:none"></span> -->
 				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
 				<li>
