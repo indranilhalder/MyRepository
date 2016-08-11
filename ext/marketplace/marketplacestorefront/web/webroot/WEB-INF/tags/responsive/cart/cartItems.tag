@@ -864,6 +864,34 @@ tr.d0 td {
 
  --%>
 
+     <h2><spring:theme code="mpl.orderDetails" /></h2>
+	<ul class="totals">
+            <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li>
+            
+            
+         <c:if test="${cartData.totalDiscounts.value > 0}">
+        <li id="discount"><spring:theme code="basket.page.totals.savings"/> <span class="amt">
+        
+       
+        
+        
+        
+        -<ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
+        
+         </c:if> 
+        </span></li>
+            
+            <li id="total"><spring:theme code="basket.page.totals.total"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">
+                <c:choose>
+                    <c:when test="${showTax}">
+                        <format:price priceData="${cartData.totalPriceWithTax}"/>
+                    </c:when>
+                    <c:otherwise>
+                        <format:price priceData="${cartData.totalPrice}"/>
+                    </c:otherwise>
+                </c:choose>
+            </ycommerce:testId></span></li>
+          </ul>
 
 <storepickup:pickupStorePopup />
 
