@@ -42977,6 +42977,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 /* TPR-628 */
 #rotatingImage .owl-prev,#rotatingImage .owl-next{
 	z-index: 1;
+	visibility: hidden;
 }
 #rotatingImageMobile{
 	display: none;
@@ -43177,5 +43178,126 @@ body.page-productDetails .breadcrumbs.wrapper {
 	content: "\e603";
 	opacity:1;
 }
+
+
+/* TPR-628 starts*/
+
+.pageLabel-homepage .content-block-slider{
+	margin:0;
+}
+
+.pageLabel-homepage .major-promo-header-italic{
+	 font-size: 18px;
+    margin: 0 0 20px;
+    text-transform: uppercase;
+}
+.pageLabel-homepage span.major-promo-description{
+	font-size: 38px;
+    margin: 0 0 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.pageLabel-homepage span.major-promo-description + a{
+	background: #a7183e none repeat scroll 0 0;
+    border: 1px solid #a7183e;
+    color: #fff;
+    width: 180px;
+    font-size: 12px;
+    font-weight: 500;
+    height: 35px;
+    padding: 5px 0;
+    letter-spacing: 1px;
+    line-height: 12px;
+    text-align: center;
+    margin-top: 0px;
+    -webkit-transition:color 0.3s ease 0s, border-color 0.3s ease 0s, background 0.3s ease 0s;
+    transition: color 0.3s ease 0s, border-color 0.3s ease 0s, background 0.3s ease 0s;
+}
+.pageLabel-homepage span.major-promo-description+a:hover{
+	background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+}
+.pageLabel-homepage .hero.icid ul.major-promos{
+	top:35%;
+	left: 5%;
+}
+
+
+/* dots */
+
+.pageLabel-homepage .owl-controls{
+	bottom: 10px;
+    margin: 0;
+    position: absolute;
+    width: 100%;
+    top: inherit;
+    z-index: 1;
+    left: 0;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+}
+.pageLabel-homepage .owl-dots .owl-dot{
+	display: inline-block;
+    zoom: 1;
+    cursor: hand;
+    -webkit-user-select: none;
+}
+.pageLabel-homepage .owl-dots .owl-dot span{
+	width: 10px;
+    height: 10px;
+    margin: 5px 6px;
+    /* background: #fff; */
+    display: block;
+    border: 2px solid #fff;
+    -webkit-backface-visibility: visible;
+    -webkit-transition: opacity 200ms ease;
+    -moz-transition: opacity 200ms ease;
+    -ms-transition: opacity 200ms ease;
+    -o-transition: opacity 200ms ease;
+    transition: opacity 200ms ease;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    opacity: 0.4;
+}
+.pageLabel-homepage .owl-dots .owl-dot.active span{
+	opacity: 1;
+    background: #fff;
+}
+
+
+
+@media (min-width: 791px){
+	.pageLabel-homepage .hero .major-promos{
+		width:500px;
+	}
+}
+
+@media (max-width: 600px) and (min-width: 315px){
+	.pageLabel-homepage .major-promo-header-italic{
+		font-size: 12px;
+   		margin: 0 0 10px;
+	}
+	.pageLabel-homepage span.major-promo-description{
+		font-size: 22px;
+	}
+	.pageLabel-homepage span.major-promo-description+a{
+		font-size: 10px;
+    	height: 30px;
+    	letter-spacing: 2px;
+    	line-height: 28px;
+   	 	width: 110px;
+	}
+	.pageLabel-homepage .content-block-slider{
+		margin:0;
+	}
+}
+
+
+/* TPR-628 ends*/
+
+
 
 
