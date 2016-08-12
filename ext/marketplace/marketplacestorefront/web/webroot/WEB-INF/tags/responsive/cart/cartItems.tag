@@ -865,7 +865,7 @@ tr.d0 td {
  --%>
 <div class="cart-bottom-block">
 <div class="cart-total-block">
-     <h2><spring:theme code="mpl.orderDetails" /></h2>
+    <%--  <h2><spring:theme code="mpl.orderDetails" /></h2> --%>
 	<ul class="totals">
             <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li>
             

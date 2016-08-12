@@ -32984,9 +32984,42 @@ padding-left:0;
     border-top: 1px solid #eaeaeb;
     border-bottom: 1px solid #eaeaeb;
     padding: 30px 50px;
+    overflow: hidden;
 }
 .cart-bottom-block .cart-total-block{
-
+	width: 45%;
+    float: right;
+}
+.cart-bottom-block .cart-total-block ul.totals li{
+	    font-size: 14px;
+    text-transform: uppercase;
+    padding: 10px 0px;
+    overflow:hidden;
+}
+.cart-bottom-block .cart-total-block ul.totals li span.amt{
+	text-align:right;
+	float:right;
+}
+.cart-bottom-block .cart-total-block ul.totals li#total{
+	   font-size: 30px;
+    padding: 20px 0px;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+}
+.cart-bottom-block .cart-total-block ul.totals li#total span.amt{
+	font-size: 18px;
+}
+.cart-bottom-block .cart-total-block ul.totals li#discount span.amt{
+	color: #a7183e;
+}
+.cart.wrapper .product-block li.item > ul > li:first-child div.product-img{
+width:120px;
+margin-right:20px;
+}
+.cart.wrapper .product-block li.item > ul > li:first-child div.product{
+	float: none;
+    display: inline-block;
+    width: calc(100% - 155px);
 }
 @media only screen and (max-width: 1400px) and (min-width: 1025px){
 .MyBag-pincode input#defaultPinCodeIds {
