@@ -1631,7 +1631,8 @@ public class ProductPageController extends AbstractPageController
 		boolean add = false;
 		try
 		{
-			add = productDetailsHelper.addToWishListInPopup(productCode, ussid, wishName, Boolean.valueOf(sizeSelected));
+			//add = productDetailsHelper.addToWishListInPopup(productCode, ussid, wishName, Boolean.valueOf(sizeSelected));
+			add = productDetailsHelper.addSingleToWishList(productCode, ussid, Boolean.valueOf(sizeSelected));
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -2153,5 +2154,33 @@ public class ProductPageController extends AbstractPageController
 		{
 			throw new UnsupportedEncodingException();
 		}
+	}
+
+	/**
+	 * This is the GET method which fetches the bank last modified wishlist
+	 *
+	 *
+	 * @return Wishlist2Model
+	 */
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getLastModifiedWishlistByUssid", method = RequestMethod.GET)
+	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam("ussid") final String ussid)
+	{
+		boolean existUssid = false;
+
+		try
+		{
+			existUssid = productDetailsHelper.getLastModifiedWishlistByUssid(ussid);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+
+		return existUssid;
+
 	}
 }

@@ -247,7 +247,8 @@ tr.d0 td {
           <ul class="wish-share desktop">
 
 				<li><!-- <span id="addedMessage" style="display:none"></span> -->
-				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
+				<!-- Commented as per PDP CR Change -->
+				<%-- <a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
 				<li>
 				<product:socialSharing product="${product}" />
 					
