@@ -421,44 +421,83 @@ var allSellers='${allsellers}';
 	<product:productImagePanel galleryImages="${galleryImages}"
 		product="${product}" />
 
-	<input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
-				<!-- EMI section -->
-				<product:emiDetail product="${product}" />
+	
 </div>
-
-
+<!-- Added for carousel in mobile view -->
+		<div class="product-image-container device">
+		<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
+			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 
+				<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">	
+	
+	
+					<div id="addiImageTab${varStatus.index}">
+						<span>
+						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+							<img src="${container.product.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
+						</c:if>
+						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+						<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
+						<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
+						</c:if>
+	
+						</span>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+		
 		<div class="product-detail">
-			<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
-			<h2 class="company">${product.brand.brandname}</h2>
+			<ycommerce:testId
+				code="productDetails_productNamePrice_label_${product.code}">
+				<h2 class="company">${product.brand.brandname}</h2>
 				<h3 class="product-name">${product.productTitle}</h3>
 			</ycommerce:testId>
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
-				<product:productPricePanel product="${product}" /> <!-- Displaying buybox price -->
+				<product:productPricePanel product="${product}" />
+				<!-- Displaying buybox price -->
 			</ycommerce:testId>
-			<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
-				<h3 class="seller">Sold by <span id="sellerNameId"></span></h3>
-			</ycommerce:testId>
-			<div class="fullfilled-by">
-			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
-			<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
-			<span id="fulFilledBySship"  style="display:none;"></span>
+			<input id="emiCuttOffAmount" type="hidden"
+				value="${emiCuttOffAmount}" />
+			<!-- EMI section -->
+			<product:emiDetail product="${product}" />
+			<product:productMainVariant />
+			<div class="SoldWrap">
+				<ycommerce:testId
+					code="productDetails_productNamePrice_label_${product.code}">
+					<div class="seller">
+						Sold by <span id="sellerNameId"></span>
+					</div>
+				</ycommerce:testId>
+				<div class="fullfilled-by">
+					<spring:theme code="mpl.pdp.fulfillment"></spring:theme>
+					&nbsp; <span id="fulFilledByTship" style="display: none;"><spring:theme
+							code="product.default.fulfillmentType"></spring:theme></span> <span
+						id="fulFilledBySship" style="display: none;"></span>
+				</div>
 			</div>
+
 			<!-- Returning to the PDP page -->
 			<p class="other-sellers back">
-			<c:url var="productUrl" value="${product.url}"/>
-			<a href="${productUrl}"><spring:theme code="product.returnpdp"></spring:theme></a></p>
-</div>
+				<c:url var="productUrl" value="${product.url}" />
+				<a href="${productUrl}"><spring:theme code="product.returnpdp"></spring:theme></a>
+			</p>
+
+
+
+			<cms:pageSlot position="AddToCart" var="component">
+				<cms:component component="${component}" />
+			</cms:pageSlot>
+			
+		</div>
+		</div>
 <div class="product-content">
 	<!-- Displaying product variants -->
 <!-- 	<div class="swatch"> -->
 				<%-- <cms:pageSlot position="VariantSelector" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot> --%>
-				<product:productMainVariant /> 
-				<cms:pageSlot position="AddToCart" var="component">
-					<cms:component component="${component}" />
-				</cms:pageSlot>
+				
 <!-- 
 			</div> -->
 		<%-- <product:productVariant/>
@@ -493,10 +532,12 @@ var allSellers='${allsellers}';
   </script>
 				
 <input type="hidden" id="productCode" value="${product.code}" />
+<div class="Wrap">
 <cms:pageSlot position="PinCodeService" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
-    <ul class="wish-share">
+			</div>
+    <ul class="wish-share desktop">
 				<li>
 				<span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
 				<!-- <span id="addedMessage" style="display:none"></span> -->
@@ -507,7 +548,10 @@ var allSellers='${allsellers}';
 				</li>
 			</ul>
 	</div>
- </div>
+
+	
+
+	</div>
 </div>
 <div class="other-sellers" id="other-sellers-id">
 		<div class="header "><h2><spring:theme code="product.othersellers"></spring:theme></h2>
