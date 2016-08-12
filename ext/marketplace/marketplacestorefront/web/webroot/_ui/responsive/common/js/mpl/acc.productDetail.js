@@ -576,12 +576,18 @@ function selectWishlist(i) {
 }
 
 function addToWishlist(alreadyAddedWlName_pdp) {
+	
+	var loggedIn=$("#loggedIn").val();
 
 	var productCodePost = $("#productCodePost").val();
 
 	var wishName = "";
+	
+	var ussidValue=$("#ussid").val();
+	
+	var existsUssid = getLastModifiedWishlist(ussidValue);
   
-	if (wishListList == "") {
+	/*if (wishListList == "") {
 		wishName = $("#defaultWishName").val();
 	} else {
 		wishName = wishListList[$("#hidWishlist").val()];
@@ -605,7 +611,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
     		$("#wishlistErrorId_pdp").css("display","block");
     	}
     	return false;
-    }
+    }*/
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "-addToWishListInPDP";
     var sizeSelected=true;
@@ -615,72 +621,80 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
-	$.ajax({
-		contentType : "application/json; charset=utf-8",
-		url : requiredUrl,
-		data : dataString,
-		dataType : "json",
-		success : function(data) {
-			if (data == true) {
-				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
-				var msg=$('#wishlistSuccess').text();
-				$('#addedMessage').show();
-				$('#addedMessage').html(msg);
-				/*setTimeout(function() {
-					  $("#addedMessage").fadeOut().empty();
-					}, 1500);*/
-				$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
-				populateMyWishlistFlyOut(wishName);
-				
-				//For MSD
-				var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
-				if(isMSDEnabled === 'true')
-				{
-				//console.log(isMSDEnabled);
-				var isApparelExist  = $("input[name=isApparelExist]").val();
-				//console.log(isApparelExist);				
-				var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-				//console.log(salesHierarchyCategoryMSD);
-				var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-				//console.log(rootCategoryMSD);				
-				var productCodeMSD =  $("input[name=productCodeMSD]").val();
-				//console.log(productCodeMSD);				
-				var priceformad =  $("input[id=price-for-mad]").val();
-				//console.log(priceformad);				
-				
-				if(typeof isMSDEnabled === 'undefined')
-				{
-					isMSDEnabled = false;						
-				}
-				
-				if(typeof isApparelExist === 'undefined')
-				{
-					isApparelExist = false;						
-				}	
-				
-				if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
-					{					
-					ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
+	if(loggedIn == 'false') {
+		$("#wishListNonLoggedInId").show();
+		//The items have been added to your wishlist
+		//globalErrorPopup("Please sign in to add item into wishlist!")
+	}
+	else {
+	
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			dataType : "json",
+			success : function(data) {
+				if (data == true) {
+					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
+					var msg=$('#wishlistSuccess').text();
+					$('#addedMessage').show();
+					$('#addedMessage').html(msg);
+					/*setTimeout(function() {
+						  $("#addedMessage").fadeOut().empty();
+						}, 1500);*/
+					$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
+					populateMyWishlistFlyOut(wishName);
+					
+					//For MSD
+					var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
+					if(isMSDEnabled === 'true')
+					{
+					
+					var isApparelExist  = $("input[name=isApparelExist]").val();
+							
+					var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
+					
+					var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
+						
+					var productCodeMSD =  $("input[name=productCodeMSD]").val();
+							
+					var priceformad =  $("input[id=price-for-mad]").val();
+								
+					
+					if(typeof isMSDEnabled === 'undefined')
+					{
+						isMSDEnabled = false;						
+					}
+					
+					if(typeof isApparelExist === 'undefined')
+					{
+						isApparelExist = false;						
 					}	
+					
+					if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
+						{					
+						ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
+						}	
+					}
+					//End MSD
+					
+					
+					
+					//openPop(ussidValue);
+				//	$('#myModal').modal('hide');
+				//	
 				}
-				//End MSD
-				
-				
-				
-				//openPop(ussidValue);
-			//	$('#myModal').modal('hide');
-			//	
-			}
-		},
-	});
+			},
+		});
 	
 	//$('a.wishlist#wishlist').popover('hide');
 	//$('input.wishlist#add_to_wishlist').popover('hide');
 	
-	setTimeout(function() {
-		$('a.wishlist#wishlist').popover('hide');
-		$('input.wishlist#add_to_wishlist').popover('hide');
-		}, 1500);
+		setTimeout(function() {
+			$('a.wishlist#wishlist').popover('hide');
+			$('input.wishlist#add_to_wishlist').popover('hide');
+			}, 1500);
+	}
 }
 
 
@@ -2600,3 +2614,30 @@ function loadDefaultWishListName_SizeGuide() {
 		});
 		
 	})
+	/*Wishlist In PDP changes*/
+	function getLastModifiedWishlist(ussidValue) {
+		
+		var requiredUrl = ACC.config.encodedContextPath + "/p"
+				+ "-getLastModifiedWishlistByUssid";
+		var dataString = 'ussid=' + ussidValue;
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			dataType : "json",
+			success : function(data) {
+			if (data == true) {
+				$('.product-info .picZoomer-pic-wp .zoom a').addClass("added");
+			}
+			
+			},
+			error : function(xhr, status, error) {
+				$("#wishlistErrorId_pdp").html("Could not add the product in your wishlist");
+			}
+		});
+	}
+	
+	$(document).ajaxComplete(function(){
+		ussidValue = $("#ussid").val();
+		getLastModifiedWishlist(ussidValue);
+	});
