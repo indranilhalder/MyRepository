@@ -1909,6 +1909,7 @@ $(document).ready(function() {
 });
 
 $(document).ajaxComplete(function(){
-	$("body:not(.timeout-slider)").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
-	$(".pageLabel-homepage .content-block-slider.electronic-brand-slider").addClass("timeout-slider");
+	if(!$("body").hasClass("pageLabel-homepage")){
+		$("body").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
+	}
 });

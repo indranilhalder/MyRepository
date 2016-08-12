@@ -487,6 +487,3 @@ ACC.carousel = {
 };
 
 
-$(document).ajaxComplete(function(){
-	$(".pageLabel-homepage .content-block-slider.electronic-brand-slider").addClass("timeout-slider");
-});
