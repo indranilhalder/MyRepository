@@ -134,6 +134,9 @@ tr.d0 td {
 			<product:emiDetail product="${product}" />
 			
 			<!-- TISPRM-97 starts -->
+				<!-- TPR-772 starts -->
+			<div class="pdp-promo-block promo-block" style="display:none">
+			<!-- TPR-772 ends -->
 			<c:if test="${not empty product.potentialPromotions}">
 			
 			<c:choose>
@@ -157,6 +160,7 @@ tr.d0 td {
 			</c:choose>
 			
 			</c:if>
+			</div>
 			<!-- TISPRM-97 ends -->
 			<!-- TPR-275 starts  -->
 			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>

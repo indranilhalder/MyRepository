@@ -32769,6 +32769,16 @@ ul.jqtree_common > li.jqtree_common:not(.jqtree-folder) > div.jqtree-element.jqt
 #searchPageDeptHierTree ul.jqtree_common.jqtree-tree>li.jqtree_common:first-child>div.jqtree-element.jqtree_common>span.jqtree-title.jqtree_common + span.jqtree-facetCount.jqtree_common{
 display:none;
 }
+/*TPR-772 changes*/
+.pdp-promo-block.promo-block{
+	background:transparent;
+	padding:0;
+	border:none;
+}
+.pdp-promo-block.promo-block>div{
+	width:100%;
+	text-align:center;
+}
 /*--------------maincss-----------*/
 .row
 {
