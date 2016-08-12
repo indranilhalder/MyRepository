@@ -1362,12 +1362,14 @@ $( document ).ready(function() {
 					if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
-						$("#promotionDetailsId").show();
+						//TPR-772
+						$(".promo-block").show();
 					} else {
 						if (promorestrictedSellers.length > 0
 								&& !(promorestrictedSellers
 										.indexOf(data['sellerId']) == -1))
-							$("#promotionDetailsId").show();
+							//TPR-772
+							$(".promo-block").show();
 					}
 					var allStockZero = data['allOOStock'];
 					// var codEnabled = data['isCod'];
