@@ -13,9 +13,17 @@
     <c:url value="${continueUrl}" var="continueShoppingUrl" scope="session"/>
     <%-- <input type="hidden" id="isServicableId" value="${isServicable}"> Not required --%>
     <c:set var="showTax" value="false"/>
+    <c:set var="userName" value="${user.firstName}"/>
     <div class="MyBag-buttons">
-	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /></h1>
-	<p class="desk-view"><spring:theme code="mpl.myBag.customer.cart.desc" /></p>
+	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1>
+	<c:choose>
+	<c:when test="${not empty userName}">
+	<p class="desk-view"><spring:theme code="mpl.myBag.hi" /> ${userName}, <spring:theme code="mpl.myBag.customer.desc" /></p>
+	</c:when>
+	<c:otherwise>
+	<p class="desk-view"><spring:theme code="mpl.myBag.customer.fulldesc" /></p>
+	</c:otherwise>
+	</c:choose>
 	<a href="/" class="continue-shopping"> Continue Shopping</a>
 	<ul class="checkout-types">
 			
@@ -45,7 +53,7 @@
                     <input  type="hidden" name="expressCheckoutAddressSelector"  id="expressCheckoutAddressSelector" value="demo"/>
                     <input  type="hidden" name="isPincodeServicableId"  id="isPincodeServicableId" value="N"/>
                     
-                    <p class="exp_checkout_msg"><spring:theme code="cart.checkout.shipment"/></p>
+                   <%--  <p class="exp_checkout_msg"><spring:theme code="cart.checkout.shipment"/></p> --%>
                    <!--  TISBOX-882 -->
                   	  <p id="expresscheckoutErrorDiv" style="display: none ; color: red;"><spring:theme code="cart.express.checkout.validation"/>  </p>
                     
@@ -62,9 +70,11 @@
 						<div class="overlay" data-dismiss="modal"></div>
     					<!-- Modal content-->
    					 	<div class="modal-content content">
+   					 	<p class="ship-to">Ship To</p>
+   					 	<span class="close-modal" data-dismiss="modal">X</span>
 				          <c:forEach items="${Addresses}"  var="Address">
-				          <label><input type="radio" value="${Address.key}" name="expaddress" style="display:block;-webkit-appearance: radio;">
-				          ${Address.value}</label>
+				          <input type="radio" value="${Address.key}" id="${Address.key}" name="expaddress">
+				          <label class="express_address_label" for="${Address.key}">${Address.value}</label>
 					      </c:forEach>
 					      <button  id="expressCheckoutButtonId" class="express-checkout-button" onclick="return expressbutton()"><spring:theme code="express.checkout"/></button>
 				     	 </div>
@@ -108,6 +118,8 @@
 	<script>
    				window.onload =	function(){
    						checkIsServicable();
+   						var mincnt=	$('.js-mini-cart-count').text();
+   						$('#mybagcnt').html(mincnt);
    				}
 	</script>
 <!-- TISCR-320 -->

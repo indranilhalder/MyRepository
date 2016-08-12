@@ -6281,7 +6281,9 @@ text-transform: uppercase;
         padding: 15px 0;
         font-size: 14px; }
         .cart.wrapper .product-block li.item > ul > li del + span{		
-         color:red;		
+         color: red;
+    font-size: 12px;
+    line-height: 14px;	
          }
         @media (min-width: 651px) {
           .cart.wrapper .product-block li.item > ul > li, .confirmation .product-block li.item > ul > li {
@@ -17840,7 +17842,7 @@ width: 12px;
 .cartPromotions .promotions{
 	font-size:25px;
 	color:#A9143C;
-	margin:20px auto;
+	margin:20px auto 8px;
 	font-weight:500;
 }
 .cartPromotions .promotionDesc{
@@ -26851,7 +26853,9 @@ div.other-sellers .other-sellers-table tbody tr td>div.sellerAddToBagTitle:after
 }
 .off-bag span:last-child {
 	color:#000;
-	margin-left:4px;
+	font-size: 18px;
+    margin-top: 7px;
+    display: inline-block;
 }
 body .account .right-account .order-history.order-details li.item .status .message.processing-stage-arrow1 {
 	left:-100%;
@@ -32742,6 +32746,7 @@ max-width:1400px;
     display: block;
     height: auto;
     line-height: normal;
+    width:100%;
 }
 .cart.wrapper .product-block li.header ul{
 display:block;
@@ -33028,6 +33033,72 @@ margin-right:20px;
 .cart.wrapper .product-block li.item>ul.desktop>li.productItemInfo {
     width: 45%;
 }
+}
+#popUpExpAddress .modal-content{
+	padding: 20px;
+    border: 0px;
+    width: 300px;
+    min-width: auto;
+    overflow: initial;
+}
+.express_address_label{
+	    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    color: #000;
+    text-align: left;
+    padding: 15px 30px 15px 20px !important;
+    position:relative;
+    border-bottom: 1px solid #ccc;
+}
+#popUpExpAddress .modal-content p.ship-to {
+    color: #000;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 15px 0;
+}
+#popUpExpAddress .modal-content #expressCheckoutButtonId{
+	width: 100%;
+    margin: 20px 0 0 0;
+    background: #a9143c;
+    color: #fff;
+    letter-spacing: 1px;
+}
+#popUpExpAddress .modal-content span.close-modal {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #a9143c;
+    cursor:pointer;
+}
+input[type="radio"] + label.express_address_label:before{
+	border: 2px solid #fff;
+	position: absolute;
+    left: 0px;
+    top: 18px;
+    height: 12px;
+    width: 12px;
+}
+input[type="radio"]:checked + label.express_address_label:before{
+	background-color: #555;
+}
+.MyBagHeadingDesktop span#mybagcnt {
+    font-size: 14px;
+    background: url('../images/sprite.svg') no-repeat -2px -126px;
+    width: 25px;
+    height: 32px;
+    position: absolute;
+    margin: -7px 0px 0px 5px;
+    padding: 13px 1px 8px 1px;
+    text-align: center;
+    font-weight: normal;
+    color: #fff;
+}
+.cart.wrapper .product-block li.item > ul > li.delivery ul{
+margin-bottom:0;
 }
 /*Mybag css changes ends*/
 
@@ -39448,6 +39519,8 @@ max-width:100%;
 }
 .cartPromotions .cartpotproline_desc{
 	padding-bottom:25px;
+	font-size: 14px;
+    letter-spacing: 0.5px;
 }
 select#micrositeSearchCategory, select#searchCategory{
 	background-image: url('../images/select-arrow-new.png');
