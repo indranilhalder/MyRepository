@@ -42968,10 +42968,10 @@ body.page-productDetails .breadcrumbs.wrapper {
 }
 
 @media (max-width:650px){
-	#rotatingImageMobile{
+	.pageLabel-homepage #rotatingImageMobile{
 		display: block;
 	}
-	#rotatingImage{
+	.pageLabel-homepage #rotatingImage{
 		display: none;
 	}
 }
