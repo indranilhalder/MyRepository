@@ -17,7 +17,7 @@
     <div class="MyBag-buttons">
 	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1>
 	<c:choose>
-	<c:when test="${not empty userName && userName ne 'Anonymous'}">
+	<c:when test="${isLoggedIn eq true}">
 	<p class="desk-view"><spring:theme code="mpl.myBag.hi" /> ${userName}, <spring:theme code="mpl.myBag.customer.desc" /></p>
 	</c:when>
 	<c:otherwise>
