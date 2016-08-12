@@ -102,7 +102,7 @@ ACC.carousel = {
 			items:1,
     		loop: true,
     		nav:true,
-    		dots:false,
+    		dots:true,
     		navText:[]
 		});
 		/*TPR-268*/
@@ -110,7 +110,7 @@ ACC.carousel = {
 			items:1,
     		loop: true,
     		nav:true,
-    		dots:false,
+    		dots:true,
     		navText:[]
 		});
 		/*if(typeof homePageBannerTimeout!== "undefined"){
@@ -485,3 +485,8 @@ ACC.carousel = {
 	
 
 };
+
+
+$(document).ajaxComplete(function(){
+	$(".pageLabel-homepage .content-block-slider.electronic-brand-slider").addClass("timeout-slider");
+});
