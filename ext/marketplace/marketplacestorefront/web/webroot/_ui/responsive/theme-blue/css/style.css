@@ -43089,3 +43089,27 @@ body.page-productDetails .breadcrumbs.wrapper {
 
 /*New pdp end*/
 
+/*Wishlist icon*/
+.product-info .picZoomer-pic-wp .zoom a:before {
+    font-family: 'icomoon';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\e602";
+    font-size:16px;
+    color: #A9143C;
+  margin-right: 5px;
+   position: relative;
+   font-weight: bold;
+}
+
+.product-info .picZoomer-pic-wp .zoom a:hover:before {
+	content: "\e603";
+	opacity: 0.7;
+}
+.product-info .picZoomer-pic-wp .zoom a.added:before,.product-info .picZoomer-pic-wp .zoom a.added:hover:before {
+	content: "\e603";
+	opacity:1;
+}
+
+

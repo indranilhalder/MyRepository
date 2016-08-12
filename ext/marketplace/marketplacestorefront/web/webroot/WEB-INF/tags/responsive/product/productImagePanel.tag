@@ -71,7 +71,7 @@
 		 
 		 
 		<%-- <img  id ="newProduct" class="new brush-strokes-sprite sprite-New" style="z-index:1; display:none;" src="${commonResourcePath}/images/transparent.png"> --%>
-		<div class="productImagePrimaryLink" id="imageLink" data-href="${productZoomImagesUrl}" target="_blank" data-toggle="modal" title="<spring:theme code="general.zoom"/>">
+		<div class="productImagePrimaryLink" id="imageLink" data-href="${productZoomImagesUrl}" target="_blank" data-toggle="modal" title="<spring:theme code="text.add.to.wishlist"/>">
 			<product:productPrimaryImage product="${product}" format="zoom"/>
 		</div>			
 	</div>	
