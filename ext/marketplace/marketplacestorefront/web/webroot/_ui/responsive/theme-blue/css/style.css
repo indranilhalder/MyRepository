@@ -42955,3 +42955,20 @@ body.page-productDetails .breadcrumbs.wrapper {
  	}
  }
 /*New pdp end*/
+
+/* TPR-628 */
+#rotatingImage .owl-prev,#rotatingImage .owl-next{
+	z-index: 1;
+}
+#rotatingImageMobile{
+	display: none;
+}
+
+@media (max-width:650px){
+	#rotatingImageMobile{
+		display: block;
+	}
+	#rotatingImage{
+		display: none;
+	}
+}
