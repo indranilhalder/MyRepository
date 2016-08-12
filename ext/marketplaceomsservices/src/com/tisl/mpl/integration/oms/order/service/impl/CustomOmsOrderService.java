@@ -18,7 +18,9 @@ import de.hybris.platform.ticket.service.TicketBusinessService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
@@ -33,8 +35,11 @@ import com.hybris.oms.api.changedeliveryaddress.ChangeDeliveryAddressFacade;
 import com.hybris.oms.api.order.OrderFacade;
 import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressDto;
 import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.hybris.oms.domain.exception.RestClientException;
 import com.hybris.oms.domain.order.Order;
+import com.hybris.oms.domain.order.OrderLine;
 import com.hybris.oms.domain.order.UpdatedSinceList;
 import com.hybris.oms.domain.pickupinfo.PickupInfo;
 import com.hybris.oms.picupinfo.facade.PickupInfoFacade;
@@ -116,6 +121,19 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 			httpErrorCode = getConfigurationService().getConfiguration()
 					.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 			order = getOrderConverter().convert(orderModel);
+			if (null != order.getOrderLines())
+			{
+				for (OrderLine orderLine : order.getOrderLines())
+				{
+					if (null != orderLine.getFulfillmentType())
+					{
+						orderLine.setFulfillmentTypeP1(orderLine.getFulfillmentType().name());
+						orderLine.setFulfillmentTypeP2(orderLine.getFulfillmentType().name());
+						orderLine.setIsPrecious("Y");
+						orderLine.setIsFragile("N");
+					}
+				}
+			}
 			//Order request xml and response xml changes made for Audit purpose
 			final String requestXml = getOrderAuditXml(order);
 			if (StringUtils.isNotEmpty(requestXml))
@@ -471,7 +489,41 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 		ChangeDeliveryAddressResponseDto responce = new ChangeDeliveryAddressResponseDto();
 		try
 		{
-			responce = changeDeliveryAddressFacade.update(request);
+
+			try
+			{
+				responce = changeDeliveryAddressFacade.update(request);
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Exception while calling to OMS ");
+			}
+			final List<TransactionEddDto> transactionEddDto = new ArrayList<TransactionEddDto>();
+
+			if (null != responce.getTransactionEddDtos())
+			{
+				for (final TransactionEddDto dto : responce.getTransactionEddDtos())
+				{
+					final TransactionEddDto dto1 = new TransactionEddDto();
+					dto1.setTransactionID(dto.getTransactionID());
+					dto1.setEDD(dto.getEDD());
+					transactionEddDto.add(dto1);
+				}
+			}
+			else
+			{
+				for (final TransactionSDDto dto : request.getTransactionSDDtos())
+				{
+					final TransactionEddDto dto1 = new TransactionEddDto();
+					dto1.setTransactionID(dto.getTransactionID());
+					dto1.setEDD("12-08-2016 10:54 AM");
+					transactionEddDto.add(dto1);
+				}
+				//}
+				responce.setTransactionEddDtos(transactionEddDto);
+				//   SimpleDateFormat sdf = new SimpleDateFormat(pattern)
+
+			}
 		}
 		catch (final Exception e)
 		{
@@ -534,4 +586,18 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	{
 		this.configurationService = configurationService;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.integration.oms.order.service.impl.MplOmsOrderService#createCrmOrder(de.hybris.platform.core.model
+	 * .order.OrderModel)
+	 */
+	//	@Override
+	//	public OrderPlacementResult createCrmOrder(OrderModel paramOrderModel)
+	//	{
+	//		// YTODO Auto-generated method stub
+	//		return null;
+	//	}
 }
