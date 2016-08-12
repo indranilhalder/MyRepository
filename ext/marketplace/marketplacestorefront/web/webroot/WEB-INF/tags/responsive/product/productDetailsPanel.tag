@@ -87,9 +87,9 @@ tr.d0 td {
 			<product:productImagePanel galleryImages="${galleryImages}"
 				product="${product}" />
 
-			<input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
+				<%-- <input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
 				<!-- EMI section -->
-				<product:emiDetail product="${product}" />
+				<product:emiDetail product="${product}" /> --%>
 			
 			<!-- promotion  section -->
 			<product:productPromotionSection product="${product}" />
@@ -128,6 +128,10 @@ tr.d0 td {
 				code="productDetails_productNamePrice_label_${product.code}">
 				<product:productPricePanel product="${product}" />
 			</ycommerce:testId>
+			
+			<input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
+				<!-- EMI section -->
+			<product:emiDetail product="${product}" />
 			
 			<!-- TISPRM-97 starts -->
 			<c:if test="${not empty product.potentialPromotions}">

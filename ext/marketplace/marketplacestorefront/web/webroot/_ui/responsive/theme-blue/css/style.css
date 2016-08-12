@@ -19320,7 +19320,7 @@ div.pdp.other-sellers {
     padding: 0
 }
 div.other-sellers {
-    background-color: #fafafa;
+    background-color: #fff;
 }
 div.other-sellers .header {
     width: 100%
@@ -19368,7 +19368,7 @@ div.other-sellers .other-sellers-table tbody tr {
 div.other-sellers .other-sellers-table tbody tr td {
     padding: 20px 20px 20px 0;
     vertical-align: top;
-    border-bottom: 10px solid #fafafa
+/*     border-bottom: 10px solid #fafafa */
 }
 div.other-sellers .other-sellers-table tbody tr td h3 {
     font-size: 16px;
@@ -20116,8 +20116,9 @@ border:1px solid #cdcdcd;
 width:100%;
 font-size:14px;
  margin-top: 10px;
- margin-bottom: 10px;
+/*  margin-bottom: 10px; */
  font-weight: 500;
+ background: #fff;
 }
 #EMITermTable th{
     font-weight: 500;
@@ -37874,8 +37875,9 @@ border: 2px solid #000 !important;
 }
 
 #emiTableDiv {
-	max-height: 200px;
+	max-height: 250px;
 	overflow-y: auto;
+	margin-bottom: 10px;
 }
 .product-info .modal-header .close {
 	float: right;
@@ -42954,6 +42956,7 @@ body.page-productDetails .breadcrumbs.wrapper {
  		margin-top: 25px;
  	}
  }
+
 /*New pdp end*/
 
 /* TPR-628 */
@@ -42972,3 +42975,112 @@ body.page-productDetails .breadcrumbs.wrapper {
 		display: none;
 	}
 }
+
+ 
+ /*EMI*/
+ .Emi .SelectWrap,
+.Emi p:after,
+.select-wrapper:after,
+.Star .overall .Bottom > ul > li.active:after{font-family: "FontAwesome";}
+ 
+.Emi {
+	position: relative;
+	margin: -15px 0 0;
+}
+
+.Emi p {
+	font-size: 14px;
+	letter-spacing: 1px;
+	left: -10px;
+	color: #a9143c;
+	position: relative;
+	display: inline-block;
+	text-decoration: underline;
+	cursor: pointer;
+	padding: 12px 25px 12px 12px;
+}
+
+.Emi p:before {
+	background: #fff;
+	bottom: 0;
+	content: "";
+	height: 12px;
+	position: absolute;
+	right: 0;
+	width: 145px;
+	z-index: 9999;
+}
+
+.Emi p.active {
+	-webkit-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
+	-moz-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
+	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
+}
+
+.Emi p:after {
+	color: #a9183c;
+	content: "\f107";
+	display: inline-block;
+	font-size: 18px;
+	position: absolute;
+	right: 8px;
+	top: 10px;
+}
+
+.Emi p+.modal-content {
+	display: none;
+	position: absolute;
+	left: -10px;
+	top: 38px;
+	width: 575px;
+	background: #fff;
+	z-index: 1;
+	text-align: center;
+	-webkit-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
+	-moz-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
+	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
+}
+
+.Emi p.active+.modal-content {
+	display: block;
+}
+
+.Emi-tableTitle {
+	font-size: 18px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.Emi-subTitle {
+	font-size: 13px;
+	letter-spacing: 0.5px;
+	margin: 0;
+}
+
+.modal-header {
+	padding: 15px 15px 5px;
+}
+
+.Emi .SelectWrap {
+	display: inline-block;
+	position: relative;
+}
+
+/* .Emi .SelectWrap:after {
+	color: #000;
+	content: "\f107";
+	display: inline-block;
+	font-size: 25px;
+	position: absolute;
+	right: 8px;
+	top: 3px;
+}
+ */
+#bankNameForEMI {
+	width: 280px;
+	border: 2px solid #f5f5f5;
+}
+
+
+/*New pdp end*/
+

@@ -2581,3 +2581,22 @@ function loadDefaultWishListName_SizeGuide() {
 				   $("#popUpModal").modal("show");
 				   buyboxDetailsForSizeGuide(productcode);	
 	} 
+/*TPR-630*/
+	$(document).ready(function(){
+		$(".Emi > p").on("mouseenter",function(){
+			if(!$(this).hasClass("active")){
+				$(this).addClass("active");
+				openPopForBankEMI();
+			};
+		});
+		$(".Emi > p").on("mouseleave",function(){
+			$(this).removeClass("active");
+		});
+		$(".Emi > #EMImodal-content").on("mouseenter",function(){
+			$(".Emi > p").addClass("active")
+		});
+		$(".Emi > #EMImodal-content").on("mouseleave",function(){
+			$(".Emi > p").removeClass("active")
+		});
+		
+	})
