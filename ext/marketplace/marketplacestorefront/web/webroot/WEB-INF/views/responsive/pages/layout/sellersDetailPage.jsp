@@ -553,17 +553,18 @@ var allSellers='${allsellers}';
 
 	</div>
 </div>
-<div class="other-sellers" id="other-sellers-id">
-		<div class="header "><h2><spring:theme code="product.othersellers"></spring:theme></h2>
-		<p><span id="otherSellersCount"></span>&nbsp;<span class="other-sellers-info"><spring:theme code="product.othersellers"></spring:theme></span>&nbsp;<spring:theme code="product.available"></spring:theme>&nbsp;<span id="minPrice" ></span></p>
-		</div>
-		<div id="sort" class="sort-by" style="display:none"><label><spring:theme code="seller.sort"/></label>
+<div class="OtherSellers other-sellers" id="other-sellers-id">
+<div class="Padd">
+		<h2><spring:theme code="product.othersellers"></spring:theme></h2>
+		<h3><span id="otherSellersCount"></span>&nbsp;<span class="other-sellers-info"><spring:theme code="product.othersellers"></spring:theme></span>&nbsp;<spring:theme code="product.available"></spring:theme>&nbsp;<span id="minPrice" ></span></h3>
+		
+		<div id="sort" class="sort-by SelectWrap" style="display:none"><%-- <label><spring:theme code="seller.sort"/></label> --%>
 		<select id="sellerSort" onchange="sortSellers(this.value);">
 				<%-- <option><spring:theme code="product.select"/></option> --%>
 				<option value="1"><spring:theme code="seller.sort.priceasc"/></option>
 				<option value="2"><spring:theme code="seller.sort.pricedesc"/></option>
    		</select>
-	</div>
+		</div>
 	
 		 <table id ="sellerTable" class="other-sellers-table">
 			<thead>
@@ -658,6 +659,7 @@ var allSellers='${allsellers}';
 			</div>
 			</div>
 	</div>
+</div>
 </div>
 
 <!-- For Infinite Analytics Start -->
