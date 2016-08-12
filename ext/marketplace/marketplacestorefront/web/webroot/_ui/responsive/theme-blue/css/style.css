@@ -27171,7 +27171,7 @@ border: 2px solid #fff;
 .cartPromotions .promotions {
     font-size: 25px;
     color: #A9143C;
-    margin: 20px auto;
+    margin: 20px auto 8px;
     font-weight: 500;
 }
 .cartPromotions .promotionDesc{
@@ -39554,11 +39554,13 @@ max-width:100%;
 }
 }
 .cartPromotions .promotions{
-	padding-top:15px;
+	padding-top:20px;
 
 }
 .cartPromotions .cartpotproline_desc{
-	padding-bottom:15px;
+	padding-bottom:25px;
+	font-size: 14px;
+    letter-spacing: 0.5px;
 }
 select#micrositeSearchCategory, select#searchCategory{
 	background-image: url('../images/select-arrow-new.png');
