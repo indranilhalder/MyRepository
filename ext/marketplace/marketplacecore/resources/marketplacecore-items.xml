@@ -265,7 +265,7 @@
 			<value code="PARTIALLY_ORDER_UNCOLLECTED" />
 			<value code="PARTIALLY_RETURNINITIATED_BY_RTO" />
 			<value code="PAYMENT_PENDING" />
-
+			<value code="PAYMENT_TIMEOUT" />
 		</enumtype>
 
 		<!-- pcm changes! -->

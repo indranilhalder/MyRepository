@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+
 
 
 /**
@@ -11,6 +13,6 @@ package com.tisl.mpl.marketplacecommerceservices.service;
  */
 public interface MplProcessOrderService
 {
-	void getPaymentPedingOrders();
+	void processPaymentPedingOrders() throws EtailNonBusinessExceptions;
 
 }
