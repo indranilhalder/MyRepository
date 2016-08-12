@@ -12,6 +12,7 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -286,11 +287,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -298,9 +299,9 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return Map<String, List<MplNetbankingData>>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
@@ -390,10 +391,12 @@ public interface MplPaymentFacade
 	 * @param channel
 	 * @return String
 	 * @throws EtailNonBusinessExceptions
+	 * @throws AdapterException
+	 *
 	 */
 	String createJuspayOrder(CartModel cart, OrderModel order, String firstName, String lastName, String addressLine1,
 			String addressLine2, String addressLine3, String country, String state, String city, String pincode, String checkValues,
-			String returnUrl, String uid, String channel) throws EtailNonBusinessExceptions;
+			String returnUrl, String uid, String channel) throws EtailNonBusinessExceptions, AdapterException;
 
 
 	/**

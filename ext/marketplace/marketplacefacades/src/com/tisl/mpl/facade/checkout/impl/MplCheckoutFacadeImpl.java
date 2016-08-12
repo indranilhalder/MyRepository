@@ -32,6 +32,7 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.user.User;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
@@ -164,6 +165,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	@Autowired
 	private MplCommerceCheckoutService mplCommerceCheckoutService;
+
+	@Resource(name = "defaultOrderService")
+	private OrderService orderService;
 
 
 
@@ -1355,6 +1359,19 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 
 
+	/**
+	 * This method submits the order - ie. initiates the order fulfilment process
+	 *
+	 * @param orderModel
+	 */
+	@Override
+	public void submitOrder(final OrderModel orderModel)
+	{
+		getOrderService().submitOrder(orderModel);
+	}
+
+
+
 
 
 
@@ -1665,6 +1682,27 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	public void setMplCustomAddressFacade(final MplCustomAddressFacade mplCustomAddressFacade)
 	{
 		this.mplCustomAddressFacade = mplCustomAddressFacade;
+	}
+
+
+
+	/**
+	 * @return the orderService
+	 */
+	public OrderService getOrderService()
+	{
+		return orderService;
+	}
+
+
+
+	/**
+	 * @param orderService
+	 *           the orderService to set
+	 */
+	public void setOrderService(final OrderService orderService)
+	{
+		this.orderService = orderService;
 	}
 
 

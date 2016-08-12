@@ -280,6 +280,9 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CART_DELIVERYMODE_ADDRESS_INVALID_MSG = "Either delivery mode or delivery address is not present";
 	public static final String CART_EXPRESS_CHECKOUT_SELECTED = "isExpressCheckoutSelected";
 
+	//TPR-629
+	public static final String GUID = "guid";
+
 	private MarketplacecheckoutaddonConstants()
 	{
 		//empty to avoid instantiating this constant class

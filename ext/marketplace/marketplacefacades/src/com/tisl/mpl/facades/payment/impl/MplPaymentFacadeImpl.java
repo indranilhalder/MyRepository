@@ -2119,20 +2119,17 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		catch (final EtailBusinessExceptions e)
 		{
 			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+			throw e;
 		}
 		catch (final Exception e)
 		{
 			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
 		//returning data
 		return data;
 	}
-
 
 
 
@@ -2269,7 +2266,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public String createJuspayOrder(final CartModel cart, final OrderModel order, final String firstName, final String lastName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String checkValues, final String returnUrl,
-			final String uid, final String channel) throws EtailNonBusinessExceptions
+			final String uid, final String channel) throws EtailNonBusinessExceptions, AdapterException
 	{
 		try
 		{
@@ -2440,20 +2437,16 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(e, "E0007");
-		}
-		catch (final AdapterException e)
-		{
-			throw e;
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			LOG.error("Something went wrong ", e);
-			throw new EtailNonBusinessExceptions(e, "E0007");
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, "E0007");
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
@@ -2461,77 +2454,84 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 	/**
-	 *
+	 * This method populates delivery point of service based on both cart and order
 	 *
 	 * @param abstractOrderModel
 	 */
 	@Override
 	public void populateDeliveryPointOfServ(final AbstractOrderModel abstractOrderModel)
 	{
-		if (null != abstractOrderModel)
+		try
 		{
-			for (final AbstractOrderEntryModel abstractOrderEntryModel : abstractOrderModel.getEntries())
+			if (null != abstractOrderModel)
 			{
-				if (abstractOrderEntryModel != null && abstractOrderEntryModel.getGiveAway().booleanValue()
-						&& CollectionUtils.isNotEmpty(abstractOrderEntryModel.getAssociatedItems()))
+				for (final AbstractOrderEntryModel abstractOrderEntryModel : abstractOrderModel.getEntries())
 				{
-					//start populate deliveryPointOfService for freebie
-					if (LOG.isDebugEnabled())
+					if (abstractOrderEntryModel != null && abstractOrderEntryModel.getGiveAway().booleanValue()
+							&& CollectionUtils.isNotEmpty(abstractOrderEntryModel.getAssociatedItems()))
 					{
-						LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
-								+ abstractOrderEntryModel.getSelectedUSSID());
-					}
-					PointOfServiceModel posModel = null;
-					for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
-					{
-						if (abstractOrderEntryModel.getAssociatedItems().size() == 1)
+						//start populate deliveryPointOfService for freebie
+						if (LOG.isDebugEnabled())
 						{
-							if (cEntry.getSelectedUSSID().equalsIgnoreCase(abstractOrderEntryModel.getAssociatedItems().get(0)))
+							LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
+									+ abstractOrderEntryModel.getSelectedUSSID());
+						}
+						PointOfServiceModel posModel = null;
+						for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
+						{
+							if (abstractOrderEntryModel.getAssociatedItems().size() == 1)
 							{
-								if (null != cEntry.getDeliveryPointOfService())
+								if (cEntry.getSelectedUSSID().equalsIgnoreCase(abstractOrderEntryModel.getAssociatedItems().get(0)))
 								{
-									if (LOG.isDebugEnabled())
+									if (null != cEntry.getDeliveryPointOfService())
 									{
-										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
-												+ abstractOrderEntryModel.getAssociatedItems().get(0));
+										if (LOG.isDebugEnabled())
+										{
+											LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+													+ abstractOrderEntryModel.getAssociatedItems().get(0));
+										}
+										posModel = cEntry.getDeliveryPointOfService();
 									}
-									posModel = cEntry.getDeliveryPointOfService();
+								}
+							}
+							else
+							{
+								final String parentUssId = findParentUssId(abstractOrderEntryModel, abstractOrderModel);
+								if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+								{
+									if (null != cEntry.getDeliveryPointOfService())
+									{
+										if (LOG.isDebugEnabled())
+										{
+											LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid "
+													+ parentUssId);
+										}
+										posModel = cEntry.getDeliveryPointOfService();
+									}
 								}
 							}
 						}
-						else
+						if (null != posModel)
 						{
-							final String parentUssId = findParentUssId(abstractOrderEntryModel, abstractOrderModel);
-							if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
-							{
-								if (null != cEntry.getDeliveryPointOfService())
-								{
-									if (LOG.isDebugEnabled())
-									{
-										LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + parentUssId);
-									}
-									posModel = cEntry.getDeliveryPointOfService();
-								}
-							}
+							abstractOrderEntryModel.setDeliveryPointOfService(posModel);
+							getModelService().save(abstractOrderEntryModel);
 						}
+						if (LOG.isDebugEnabled())
+						{
+							LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
+									+ abstractOrderEntryModel.getSelectedUSSID());
+						}
+						//end populate deliveryPointOfService for freebie
 					}
-					if (null != posModel)
-					{
-						abstractOrderEntryModel.setDeliveryPointOfService(posModel);
-						modelService.save(abstractOrderEntryModel);
-					}
-					if (LOG.isDebugEnabled())
-					{
-						LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
-								+ abstractOrderEntryModel.getSelectedUSSID());
-					}
-					//end populate deliveryPointOfService for freebie
 				}
 			}
 		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
 
 	}
-
 
 
 	/**

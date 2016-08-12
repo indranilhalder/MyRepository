@@ -36,6 +36,7 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -1466,9 +1467,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public boolean isInventoryReserved(final String requestType) throws EtailNonBusinessExceptions
+	public boolean isInventoryReserved(final String requestType, AbstractOrderModel abstractOrderModel)
+			throws EtailNonBusinessExceptions
 	{
-		final AbstractOrderModel abstractOrderModel = cartService.getSessionCart();
+		if (null == abstractOrderModel)
+		{
+			abstractOrderModel = cartService.getSessionCart();
+		}
+		//final AbstractOrderModel abstractOrderModel = cartService.getSessionCart();
 		final String defaultPinCodeId = sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 		return mplCommerceCartService.isInventoryReserved(abstractOrderModel, requestType, defaultPinCodeId);
 	}
@@ -1787,7 +1793,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			if (isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
 			{
 
-				final boolean inventoryReservationStatus = isInventoryReserved(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
+				final boolean inventoryReservationStatus = isInventoryReserved(
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, null);
 				if (!inventoryReservationStatus)
 				{
 					sessionService.setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,
@@ -1813,7 +1820,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean isCartEntryDelisted(final CartModel cartModel) throws CommerceCartModificationException,
 			EtailNonBusinessExceptions
 	{
@@ -1823,63 +1829,70 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		//	MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
 		//MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
 
-		final CatalogVersionModel onlineCatalog = getSessionService().getAttribute("currentCatalogVersion");
-
-		if (cartModel != null)
+		try
 		{
-			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+			final CatalogVersionModel onlineCatalog = getSessionService().getAttribute("currentCatalogVersion");
+
+			if (cartModel != null)
 			{
-
-				if (cartEntryModel != null && cartEntryModel.getProduct() == null)
+				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 				{
-					final CartModificationData cartModification = updateCartEntry(cartEntryModel.getEntryNumber().longValue(), 0);
 
-					if (cartModification.getQuantity() == 0)
+					if (cartEntryModel != null && cartEntryModel.getProduct() == null)
 					{
-						LOG.debug(">> Removed product for cart dut to product unavailablity");
-					}
-					delistedStatus = true;
-				}
-				else if (cartEntryModel != null && StringUtils.isNotEmpty(cartEntryModel.getSelectedUSSID())
-						&& !cartEntryModel.getGiveAway().booleanValue())
-				{
-					final Date sysDate = new Date();
-					final String ussid = cartEntryModel.getSelectedUSSID();
-					//TISEE-5143
-					final List<SellerInformationModel> sellerInformationModelList = getMplDelistingService().getModelforUSSID(ussid,
-							onlineCatalog);
-					if (CollectionUtils.isNotEmpty(sellerInformationModelList)
-							&& sellerInformationModelList.get(0) != null
-							&& ((sellerInformationModelList.get(0).getSellerAssociationStatus() != null && sellerInformationModelList
-									.get(0).getSellerAssociationStatus().getCode()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)) || (sellerInformationModelList.get(0)
-
-							.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
-					{
-						LOG.debug(">> Removing Cart entry for delisted ussid for " + cartEntryModel.getSelectedUSSID());
 						final CartModificationData cartModification = updateCartEntry(cartEntryModel.getEntryNumber().longValue(), 0);
 
 						if (cartModification.getQuantity() == 0)
 						{
-							LOG.debug(">> Delisted Item has been Removed From the cart for " + ussid);
-						}
-						else
-						{
-
-							LOG.debug(">> Delisted item Could not removed item from cart for " + ussid
-									+ " trying for hard reset ...... ");
-							getModelService().remove(cartEntryModel);
-							getModelService().refresh(cartModel);
+							LOG.debug(">> Removed product for cart dut to product unavailablity");
 						}
 						delistedStatus = true;
 					}
+					else if (cartEntryModel != null && StringUtils.isNotEmpty(cartEntryModel.getSelectedUSSID())
+							&& !cartEntryModel.getGiveAway().booleanValue())
+					{
+						final Date sysDate = new Date();
+						final String ussid = cartEntryModel.getSelectedUSSID();
+						//TISEE-5143
+						final List<SellerInformationModel> sellerInformationModelList = getMplDelistingService().getModelforUSSID(
+								ussid, onlineCatalog);
+						if (CollectionUtils.isNotEmpty(sellerInformationModelList)
+								&& sellerInformationModelList.get(0) != null
+								&& ((sellerInformationModelList.get(0).getSellerAssociationStatus() != null && sellerInformationModelList
+										.get(0).getSellerAssociationStatus().getCode()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)) || (sellerInformationModelList.get(0)
+
+								.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
+						{
+							LOG.debug(">> Removing Cart entry for delisted ussid for " + cartEntryModel.getSelectedUSSID());
+							final CartModificationData cartModification = updateCartEntry(cartEntryModel.getEntryNumber().longValue(), 0);
+
+							if (cartModification.getQuantity() == 0)
+							{
+								LOG.debug(">> Delisted Item has been Removed From the cart for " + ussid);
+							}
+							else
+							{
+
+								LOG.debug(">> Delisted item Could not removed item from cart for " + ussid
+										+ " trying for hard reset ...... ");
+								getModelService().remove(cartEntryModel);
+								getModelService().refresh(cartModel);
+							}
+							delistedStatus = true;
+						}
+					}
 				}
 			}
+			if (delistedStatus)
+			{
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+						MarketplacecommerceservicesConstants.TRUE_UPPER);
+			}
 		}
-		if (delistedStatus)
+		catch (final ModelSavingException e)
 		{
-			getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
-					MarketplacecommerceservicesConstants.TRUE_UPPER);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
 		return delistedStatus;
 	}

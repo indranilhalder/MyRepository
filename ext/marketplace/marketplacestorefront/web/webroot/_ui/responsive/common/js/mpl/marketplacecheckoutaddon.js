@@ -1432,7 +1432,11 @@ $("#otpMobileNUMField").focus(function(){
 //						Juspay.stopSecondFactor();
 //					}
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
-				}else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+				}
+				else if(response=='redirect_to_payment'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TIS 404
+				}
+				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
@@ -1532,13 +1536,14 @@ $("#otpMobileNUMField").focus(function(){
 		else {
 			var sameAsShipping = false;
 		}
+		var guid=$("#guid").val();
 	    //TISPRO-313
 		//if($(".redirect").val()=="false"){
 			//Juspay.startSecondFactor();
 		//}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -1548,7 +1553,10 @@ $("#otpMobileNUMField").focus(function(){
 //						Juspay.stopSecondFactor();
 //					}
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
-				}else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){	
+				}else if(response=='redirect_to_payment'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TIS 404
+				}
+				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){	
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
@@ -1816,34 +1824,39 @@ $("#otpMobileNUMField").focus(function(){
 
  function populateBillingAddress(){ 
 	 $("#firstNameError, #lastNameError, #address1Error, #address2Error, #address3Error, #cityError, #stateError, #pinError").text(""); 
+	 var guid=$("#guid").val();
+	 var dataString = 'guid=' + guid;
 	 $.ajax({ 
-	 url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setShippingAddress", 
-	 type: "GET", 
-	 cache: false, 
-	 success : function(response) { 
-	 if(response!="") 
-	 { 
-	 var values=response.split("|"); 
-	 $("#firstName").val(values[0]); 
-	 $("#lastName").val(values[1]); 
-	 $("#address1").val(values[2]); 
-	 $("#address2").val(values[3]); 
-	 $("#address3").val(values[4]); 
-	 $("#country").val(values[5]); 
-	 $("#state").val(values[6]); 
-	 $("#city").val(values[7]); 
-	 $("#pincode").val(values[8]); 
-	 $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", true); 
-	 $("#country").attr("disabled", true); 
-	 } 
-	 else 
-	 { 
-	 $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", false); 
-	 $("#country").attr("disabled", false); 
-	 $("#country").val("India"); 
-	 } 
-	 }, 
-	 error : function(resp) { 
+		 contentType : "application/json; charset=utf-8",
+		 url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setShippingAddress", 
+		 data : dataString,
+		 dataType : "json",
+		 type: "GET", 
+		 cache: false, 
+		 success : function(response) { 
+		 if(response!="") 
+		 { 
+		 var values=response.split("|"); 
+		 $("#firstName").val(values[0]); 
+		 $("#lastName").val(values[1]); 
+		 $("#address1").val(values[2]); 
+		 $("#address2").val(values[3]); 
+		 $("#address3").val(values[4]); 
+		 $("#country").val(values[5]); 
+		 $("#state").val(values[6]); 
+		 $("#city").val(values[7]); 
+		 $("#pincode").val(values[8]); 
+		 $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", true); 
+		 $("#country").attr("disabled", true); 
+		 } 
+		 else 
+		 { 
+		 $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", false); 
+		 $("#country").attr("disabled", false); 
+		 $("#country").val("India"); 
+		 } 
+		 }, 
+		 error : function(resp) { 
 
 
 	 } 
@@ -2898,14 +2911,18 @@ function submitNBForm(){
 		var firstName=selectedValue;
 		var lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=false;
+		var guid=$("#guid").val();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			success : function(response) {
 				if(response=='redirect'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
+				}
+				else if(response=='redirect_to_payment'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TIS 404
 				}
 				//else if(response=="" || response==null){
 				//	$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add"); 
