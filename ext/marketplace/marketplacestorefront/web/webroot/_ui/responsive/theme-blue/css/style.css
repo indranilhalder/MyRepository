@@ -19320,7 +19320,7 @@ div.pdp.other-sellers {
     padding: 0
 }
 div.other-sellers {
-    background-color: #fafafa;
+    background-color: #fff;
 }
 div.other-sellers .header {
     width: 100%
@@ -19368,7 +19368,7 @@ div.other-sellers .other-sellers-table tbody tr {
 div.other-sellers .other-sellers-table tbody tr td {
     padding: 20px 20px 20px 0;
     vertical-align: top;
-    border-bottom: 10px solid #fafafa
+/*     border-bottom: 10px solid #fafafa */
 }
 div.other-sellers .other-sellers-table tbody tr td h3 {
     font-size: 16px;
@@ -20116,8 +20116,9 @@ border:1px solid #cdcdcd;
 width:100%;
 font-size:14px;
  margin-top: 10px;
- margin-bottom: 10px;
+/*  margin-bottom: 10px; */
  font-weight: 500;
+ background: #fff;
 }
 #EMITermTable th{
     font-weight: 500;
@@ -37874,8 +37875,9 @@ border: 2px solid #000 !important;
 }
 
 #emiTableDiv {
-	max-height: 200px;
+	max-height: 250px;
 	overflow-y: auto;
+	margin-bottom: 10px;
 }
 .product-info .modal-header .close {
 	float: right;
