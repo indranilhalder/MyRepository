@@ -126,11 +126,12 @@ public class InitialDataSystemSetup extends AbstractSystemSetup
 		importImpexFile(context, String.format(
 				"/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-system_watches.impex", new Object[]
 				{ "marketplaceinitialdata", MARKETPLACE }), false);
-
-		System.out.println("-------------path: "
-				+ String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-units_watches_fa.impex",
-						new Object[]
-						{ "marketplaceinitialdata", MARKETPLACE }));
+		importImpexFile(context,
+				String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/sales-hierarchy_watches.impex", new Object[]
+				{ "marketplaceinitialdata", MARKETPLACE }), false);
+		importImpexFile(context,
+				String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/sales-hierarchy_fa.impex", new Object[]
+				{ "marketplaceinitialdata", MARKETPLACE }), false);
 	}
 
 	public CoreDataImportService getCoreDataImportService()
