@@ -5,7 +5,7 @@ ACC.cartitem = {
 	bindCartItem : function() {
 
 		$(".remove-entry-button").on("click",function() {
-			 localStorage.setItem("removeFromCart_msgFromCart", "Y");								
+			 localStorage.setItem("removeFromCart_msgFromCart", "Y");
 					// var entryNumberMSD = $(this).attr('id').split("_");
 					
 					 /* $('#updateCartForm' + entryNumber[1]);
@@ -105,6 +105,12 @@ ACC.cartitem = {
 								{								
 								trackMAD(productCodeMSD,salesHierarchyCategoryMSD,subPriceForMSD,"INR");
 								}						
+							//window.location.reload();
+							var divId='#entry-'+entryNumber;
+							//$(divId).css("opacity","0.5");
+							//var undoButtonHtml="<form:form id='addToCartForm' action='/cart/add' method='post'><input type='hidden' maxlength='3' size='1' id='qty' name='qty' value='1'/><input type='hidden' maxlength='3' id='ussid' name='ussid' value='1234567889' /><button type='submit' class='undoRemove'>Undo</button>";
+							localStorage.setItem("deletedEntry", $(divId).html());
+							localStorage.setItem("showDeletedEntry", "true");
 							window.location.reload();
 						},
 						error : function(resp) {
@@ -149,3 +155,38 @@ var trackMAD = function(ProductId,CategoryId,Price,Currency) {
 		}
 	}
 }
+$(document).on("click", ".undo-add-to-cart", function(e) {
+	e.preventDefault();
+	$(this).closest("form").find("input[name='CSRFToken']").val(ACC.config.CSRFToken);
+	var dataString=$(this).closest("form").serialize();
+	$.ajax({
+		url : ACC.config.encodedContextPath + "/cart/add",
+		data : dataString,
+		type : "POST",
+		cache : false,
+		beforeSend : function() {
+			$('#ajax-loader').show();
+		},
+		success : function(data) {
+			window.localStorage.removeItem("deletedEntry");
+			window.location.reload();
+		},
+		error: function(err){
+			console.log("Error occured while performing undo operation");
+		}
+	});
+});
+
+$(document).ready(function(){
+	if(window.localStorage) {
+		var showDeletedItem=localStorage.getItem("showDeletedEntry");
+    for (var key in localStorage) {
+        if (key.indexOf("deletedEntry") >= 0 && showDeletedItem=="true") {
+        	$('.product-block').append("<li class='item deleted' style='opacity:0.5'>"+window.localStorage.getItem("deletedEntry")+"</li>");
+        	$('.item.deleted').find(".undo-add-to-cart").show();
+        	window.localStorage.setItem("showDeletedEntry","false");
+        }
+       
+    }
+	}
+});

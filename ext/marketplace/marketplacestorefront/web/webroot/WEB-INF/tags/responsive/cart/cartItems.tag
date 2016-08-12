@@ -36,6 +36,10 @@ tr.d0 td {
   background-color:#E0E0E0 ;
   color: black;
 }
+
+.undo-add-to-cart{
+display:none;
+}
 </style>
 
 
@@ -84,7 +88,7 @@ tr.d0 td {
 	<input type="hidden" name="subPriceForMSD"  class="cartMSD" value="${entry.basePrice.value}" />
 	</div>										<!-- End MSD -->  
    <!-- End MSD -->
-   <li class="item">
+   <li class="item" id="entry-${entry.entryNumber}">
    <ul class="desktop">
    
    <li class="productItemInfo">
@@ -150,6 +154,15 @@ tr.d0 td {
 		                  		<li> 
 			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}"><span><spring:theme code="cart.remove"/></span></a>
 			              		</li>
+			              		<li><form:form name="addToCartForm" method="post" action="#">
+								<input type="hidden" name="qty" value="${entry.quantity}" />
+								<input type="hidden" name=pinCodeChecked value="true" />
+								<input type="hidden" name="productCodePost" value="${entry.product.code}" />
+								<input type="hidden" name="wishlistNamePost" value="N" />
+								<input type="hidden" name="ussid" value="${entry.selectedSellerInformation.ussid}" />
+								<button class="undo-add-to-cart">Undo</button>
+								</form:form>
+								</li>
 			              </ycommerce:testId>
 			          	</c:if>
 			           	<c:if test="${!entry.giveAway}">
