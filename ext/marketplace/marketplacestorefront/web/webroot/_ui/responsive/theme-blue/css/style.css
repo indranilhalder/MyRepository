@@ -32992,6 +32992,7 @@ body.page-cartPage .continue-shopping{
 }
 body.page-cartPage .cart-top-block{
 margin:0 25px;
+padding-top:10px;
 }
 body.page-cartPage #addressListSelectId{
 max-width:90%;
@@ -33137,6 +33138,9 @@ body.page-cartPage .MyBagHeadingDesktop span#mybagcnt {
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery ul{
 margin-bottom:0;
+}
+.MyBag-pincode #changePinDiv>p{
+margin: 0 0 45px 0;
 }
 /*Mybag css changes ends*/
 
