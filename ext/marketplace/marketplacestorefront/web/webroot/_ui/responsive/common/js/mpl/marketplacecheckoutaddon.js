@@ -3139,6 +3139,8 @@ $(document).ready(function(){
 	        $("#pinCodeButtonIds").click();
 	    }
 	});
+	
+	$("#popUpExpAddress input.address_radio[data-index='0']").attr("checked","checked");	
 
 });
 
@@ -4683,13 +4685,15 @@ function pinCodeDiv(){
 		//$("#successPin").text("");	
 	}
 
-// MY BAG Changes
+// MY BAG Changes TPR-634
 $(document).mouseup(function (e)
-		{
-		    var container = $(".modal-content.content");
+{
+  var container = $(".modal-content.content");
 
-		    if (!container.is(e.target)  && container.has(e.target).length === 0 && container.css("opacity") === "1") 
-		    {
-		    	checkExpressCheckoutPincodeService('typeExpressCheckoutDD');
-		    }
-		});
+  if (!container.is(e.target)  && container.has(e.target).length === 0 && container.css("opacity") === "1") 
+  {
+	 checkExpressCheckoutPincodeService('typeExpressCheckoutDD');
+		//$("#defaultPinDiv").show();
+		//$("#changePinDiv").hide();
+  }
+});

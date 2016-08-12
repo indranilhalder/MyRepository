@@ -1005,6 +1005,34 @@ tr.d0 td {
 
  --%>
 <div class="cart-bottom-block">
+<%-- <div class="coupon block" style="width: 40%;display: inline-block;">
+<h2>Have a promo code?</h2>
+		<input type="text" id="couponFieldId" placeholder="Enter coupon code" style="width:calc(100% - 65px);display:inline-block;"/>
+		<button type="submit" id="couponSubmitButton" class="button btn-block" style="width:60px;background:#a9143c;color:#fff;display:inline-block;">Submit</button>
+		<span class="error-message" id="invalidCouponError"><spring:theme code="checkout.multi.coupons.invalid"/></span>
+		<span class="error-message" id="expiredCouponError"><spring:theme code="checkout.multi.coupons.expired"/></span>
+		<span class="error-message" id="issueCouponError"><spring:theme code="checkout.multi.coupons.issue"/></span>
+		<span class="error-message" id="priceCouponError"><spring:theme code="checkout.multi.coupons.priceExceeded"/></span>
+		<span class="error-message" id="appliedCouponError"><spring:theme code="checkout.multi.coupons.alreadyApplied"/></span>
+		<span class="error-message" id="emptyCouponError"><spring:theme code="checkout.multi.coupons.notApplied"/></span>
+		<span class="error-message" id="notApplicableCouponError"><spring:theme code="checkout.multi.coupons.notApplicable"/></span>
+		<span class="error-message" id="notReservableCouponError"><spring:theme code="checkout.multi.coupons.notReservable"/></span>
+		<span class="error-message" id="freebieCouponError"><spring:theme code="checkout.multi.coupons.freebie"/></span>
+		<span class="error-message" id="userInvalidCouponError"><spring:theme code="checkout.multi.coupons.userInvalid"/></span>
+
+	<!-- Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope -->
+	<div id="voucherDisplay">
+		<c:if test="${not empty voucherDataList}">
+			<h2>Top 5 Coupons</h2>
+			<select name="voucherDisplaySelection" id="voucherDisplaySelection">
+				<c:forEach var="voucherList" items="${voucherDataList}">
+					<option value="${voucherList.voucherCode}">${voucherList.voucherCode} ${voucherList.voucherDescription}</option>	
+				</c:forEach>
+			</select>
+		</c:if>
+	</div>
+		
+</div> --%>
 <div class="cart-total-block">
     <%--  <h2><spring:theme code="mpl.orderDetails" /></h2> --%>
 	<ul class="totals">

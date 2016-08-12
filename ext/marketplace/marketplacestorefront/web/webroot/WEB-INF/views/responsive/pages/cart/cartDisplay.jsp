@@ -72,8 +72,8 @@
    					 	<div class="modal-content content">
    					 	<p class="ship-to">Ship To</p>
    					 	<span class="close-modal" data-dismiss="modal">X</span>
-				          <c:forEach items="${Addresses}"  var="Address">
-				          <input type="radio" value="${Address.key}" id="${Address.key}" name="expaddress">
+				          <c:forEach items="${Addresses}"  var="Address" varStatus="status">
+				          <input type="radio" class="address_radio" value="${Address.key}" id="${Address.key}" name="expaddress" data-index="${status.index}">
 				          <label class="express_address_label" for="${Address.key}">${Address.value}</label>
 					      </c:forEach>
 					      <button  id="expressCheckoutButtonId" class="express-checkout-button" onclick="return expressbutton()"><spring:theme code="express.checkout"/></button>

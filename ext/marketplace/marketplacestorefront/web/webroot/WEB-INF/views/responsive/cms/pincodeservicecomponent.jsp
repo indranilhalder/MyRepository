@@ -7,11 +7,11 @@
     <span id="deliveryPretext" style="display:none;"><spring:theme code="mpl.pdp.delivery.pretext"/></span>
     <span id="deliveryPosttext" style="display:none;"><spring:theme code="mpl.pdp.delivery.posttext"/></span>
 	<ul class="delivery-block">
-	<li><p id="availableStockPinCodeMsg"><spring:theme code="product.pincode"/></p>
+	<li><p><spring:theme code="product.pincode"/></p> <!-- id="availableStockPinCodeMsg" -->
 	
-		<!-- TPR-805 -->
+		<%-- <!-- TPR-805 -->
 		<p id="outOfStockPinCodeMsg"><spring:theme code="pincode.message.productOutOfStock"/></p>
-		<!-- TPR-805 -->
+		<!-- TPR-805 --> --%>
 	
 		<div class="inline-form">
 		 <c:choose>

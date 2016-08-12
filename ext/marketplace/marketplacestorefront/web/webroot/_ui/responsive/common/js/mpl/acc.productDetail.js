@@ -1250,7 +1250,7 @@ function isOOS(){
  var availibility = null;
 $( document ).ready(function() {
 //function fetchPrice() {
-	$("#outOfStockPinCodeMsg").hide();
+	//$("#outOfStockPinCodeMsg").hide();
 	var categoryType = $("#categoryType").val();
 	var selectedSize = "";
 	if ($("#variant,#sizevariant option:selected").val() != "#") {
@@ -1353,8 +1353,8 @@ $( document ).ready(function() {
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
 						//TPR-805
-						$("#outOfStockPinCodeMsg").show();
-						$("#availableStockPinCodeMsg").hide();
+						//$("#outOfStockPinCodeMsg").show();
+						//$("#availableStockPinCodeMsg").hide();
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1371,8 +1371,8 @@ $( document ).ready(function() {
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
 						//TPR-805
-						 $("#outOfStockPinCodeMsg").show();
-						 $("#availableStockPinCodeMsg").hide();
+						// $("#outOfStockPinCodeMsg").show();
+						// $("#availableStockPinCodeMsg").hide();
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1388,8 +1388,8 @@ $( document ).ready(function() {
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
 						//TPR-805
-						 $("#outOfStockPinCodeMsg").show();
-						 $("#availableStockPinCodeMsg").hide();
+						// $("#outOfStockPinCodeMsg").show();
+						// $("#availableStockPinCodeMsg").hide();
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1405,8 +1405,8 @@ $( document ).ready(function() {
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
 						//TPR-805
-						 $("#outOfStockPinCodeMsg").show();
-						 $("#availableStockPinCodeMsg").hide();
+						// $("#outOfStockPinCodeMsg").show();
+						// $("#availableStockPinCodeMsg").hide();
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
