@@ -43184,6 +43184,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 
 .pageLabel-homepage .content-block-slider{
 	margin:0;
+	cursor: pointer;
 }
 
 .pageLabel-homepage .major-promo-header-italic{
