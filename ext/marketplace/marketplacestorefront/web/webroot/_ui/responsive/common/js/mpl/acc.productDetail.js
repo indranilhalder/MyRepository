@@ -2639,7 +2639,7 @@ function loadDefaultWishListName_SizeGuide() {
 		});
 	}
 	
-	$(document).ajaxComplete(function(){
+	$(document).ready(function(){
 		ussidValue = $("#ussid").val();
 		getLastModifiedWishlist(ussidValue);
 	});

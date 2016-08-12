@@ -187,8 +187,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 *
-	 *
+	 * 
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -852,15 +852,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -1053,13 +1053,15 @@ public class ProductDetailsHelper
 		{
 			final UserModel user = userService.getCurrentUser();
 			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
-
-			for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
+			if (null != lastCreatedWishlist)
 			{
-				if (null != entry.getUssid() && ussid.equalsIgnoreCase(entry.getUssid()))
+				for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
 				{
-					existUssid = true;
-					break;
+					if (null != (entry) && null != entry.getUssid() && (entry.getUssid()).equalsIgnoreCase(ussid))
+					{
+						existUssid = true;
+						break;
+					}
 				}
 			}
 
