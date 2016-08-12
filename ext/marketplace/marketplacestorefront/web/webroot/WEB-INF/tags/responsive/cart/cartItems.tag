@@ -98,6 +98,7 @@ tr.d0 td {
    <span id="defaultWishId" style="display:none"><spring:theme code="wishlist.defaultname"/></span>
    
    <div class="product">
+   <div class="cart-product-info">
 		                <p class="company"> </p>
 		                <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
 		                <h3 class="product-name">
@@ -140,14 +141,14 @@ tr.d0 td {
 										</ycommerce:testId>
 										</p>
 						</c:if>
-		             
+		             </div>
 		              
 		                
 		              <ul class="item-edit-details">
 		              	<c:if test="${entry.updateable}">
 							<ycommerce:testId code="cart_product_removeProduct">
 		                  		<li> 
-			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}"><spring:theme code="cart.remove"/></a>
+			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}"><span><spring:theme code="cart.remove"/></span></a>
 			              		</li>
 			              </ycommerce:testId>
 			          	</c:if>

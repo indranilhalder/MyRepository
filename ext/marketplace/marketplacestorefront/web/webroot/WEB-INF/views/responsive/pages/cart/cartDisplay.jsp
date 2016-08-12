@@ -91,7 +91,7 @@
           </div>
 		<!-- <a href="/store" class="continue-shopping"> Continue Shopping</a> --><!-- store url change -->
 		<!-- <a href="/" class="continue-shopping"> Continue Shopping</a> -->
-	</div>
+
 	<div class="top block MyBag-pincode" id="pinCodeDispalyDiv">
 		<h2><spring:theme code="cart.delivery.options" /></h2>
 		<input type="hidden"  name = "defaultPinCodeIdsDefault" id= "defaultPinCodeIdsDefault"  value="${defaultPinCode}"/>
