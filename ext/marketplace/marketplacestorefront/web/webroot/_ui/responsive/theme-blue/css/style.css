@@ -11260,23 +11260,23 @@ button.otherSellersFont {
         display: none
     }
 }
-.pdp.other-sellers .product-info .product-detail .fullfilled-by {
+/* .pdp.other-sellers .product-info .product-detail .fullfilled-by {
     margin: 5px 0 30px
-}
+} */
 .pdp.other-sellers ul.wish-share>li {
     margin-right: 0
 }
-.pdp.other-sellers ul.wish-share>li a,
+/* .pdp.other-sellers ul.wish-share>li a,
 .pdp.other-sellers ul.wish-share>li .share span {
     font-size: 10px
-}
+} */
 .pdp.other-sellers ul.wish-share>li a.wishlist:before,
 .pdp.other-sellers ul.wish-share>li .share span:before {
     margin-right: 8px
 }
-.pdp.other-sellers ul.wish-share>li:last-child {
+/* .pdp.other-sellers ul.wish-share>li:last-child {
     width: 50%
-}
+} */
 .company-product {
     clear: both;
     padding: 30px 0
@@ -19320,7 +19320,7 @@ div.pdp.other-sellers {
     padding: 0
 }
 div.other-sellers {
-    background-color: #fafafa;
+    background-color: #fff;
 }
 div.other-sellers .header {
     width: 100%
@@ -19368,7 +19368,7 @@ div.other-sellers .other-sellers-table tbody tr {
 div.other-sellers .other-sellers-table tbody tr td {
     padding: 20px 20px 20px 0;
     vertical-align: top;
-    border-bottom: 10px solid #fafafa
+/*     border-bottom: 10px solid #fafafa */
 }
 div.other-sellers .other-sellers-table tbody tr td h3 {
     font-size: 16px;
@@ -20116,8 +20116,9 @@ border:1px solid #cdcdcd;
 width:100%;
 font-size:14px;
  margin-top: 10px;
- margin-bottom: 10px;
+/*  margin-bottom: 10px; */
  font-weight: 500;
+ background: #fff;
 }
 #EMITermTable th{
     font-weight: 500;
@@ -37596,7 +37597,7 @@ ul li a:hover .dropdown-menu {
 
 .selectSize, .selectQty {
 	width: 50%;
-	margin-bottom: 10px;
+/* 	margin-bottom: 10px; */
 	float: left;
 	position: relative;
 	z-index: 2;
@@ -37874,8 +37875,9 @@ border: 2px solid #000 !important;
 }
 
 #emiTableDiv {
-	max-height: 200px;
+	max-height: 250px;
 	overflow-y: auto;
+	margin-bottom: 10px;
 }
 .product-info .modal-header .close {
 	float: right;
@@ -42597,6 +42599,11 @@ margin-left: 20%;
 	.TabWrap .tabs-block .nav-wrapper {
 		width: 100%;
 	}
+	
+	#variantForm {
+		width: 50%;
+		display: inline-block;
+	}
 }
 /*Mobile
 ---------------------------------------------*/
@@ -42954,6 +42961,26 @@ body.page-productDetails .breadcrumbs.wrapper {
  		margin-top: 25px;
  	}
  }
+
+/*New pdp end*/
+
+/* TPR-628 */
+#rotatingImage .owl-prev,#rotatingImage .owl-next{
+	z-index: 1;
+}
+#rotatingImageMobile{
+	display: none;
+}
+
+@media (max-width:650px){
+	.pageLabel-homepage #rotatingImageMobile{
+		display: block;
+	}
+	.pageLabel-homepage #rotatingImage{
+		display: none;
+	}
+}
+
  
  /*EMI*/
  .Emi .SelectWrap,
@@ -43012,7 +43039,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	top: 38px;
 	width: 575px;
 	background: #fff;
-	z-index: 1;
+	z-index: 10;
 	text-align: center;
 	-webkit-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
 	-moz-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
@@ -43084,3 +43111,5 @@ body.page-productDetails .breadcrumbs.wrapper {
 	content: "\e603";
 	opacity:1;
 }
+
+

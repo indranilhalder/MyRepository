@@ -105,6 +105,14 @@ ACC.carousel = {
     		dots:false,
     		navText:[]
 		});
+		/*TPR-268*/
+		$("#rotatingImageMobile").owlCarousel({
+			items:1,
+    		loop: true,
+    		nav:true,
+    		dots:false,
+    		navText:[]
+		});
 		/*if(typeof homePageBannerTimeout!== "undefined"){
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
 			//alert(timeout);
@@ -123,6 +131,15 @@ ACC.carousel = {
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
 			//alert(timeout);
 			$("#rotatingImageTimeout").owlCarousel({
+				items:1,
+				dots:true,
+				loop: true,
+		        autoplay: true,
+		        autoHeight : true,
+		        autoplayTimeout: timeout
+		    });
+			/*TPR-268*/
+			$("#rotatingImageTimeoutMobile").owlCarousel({
 				items:1,
 				dots:true,
 				loop: true,
