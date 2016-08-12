@@ -416,7 +416,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			{
 
 
-				if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.STATUS_SUCESS))
+				if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
 				{
 					//if Serviceable Pincode then Save in Order and remove to temporaryAddressModel
 					LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
