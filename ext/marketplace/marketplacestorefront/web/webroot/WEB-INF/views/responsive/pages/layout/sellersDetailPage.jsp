@@ -184,7 +184,7 @@ var hdIndx=-1;
 var edIndx=-1;
 $(document).ready(function() {
 	
-   	getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
+   	//getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 var stockMap="${skuIdsWithNoStock}"; 
 	
 	 //fetchPrice();
@@ -429,12 +429,15 @@ var allSellers='${allsellers}';
 
 		<div class="product-detail">
 			<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
-			<h2 class="company">${product.brand.brandname} by <span id="sellerNameId"></span></h2>
+			<h2 class="company">${product.brand.brandname}</h2>
 				<h3 class="product-name">${product.productTitle}</h3>
 			</ycommerce:testId>
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
 				<product:productPricePanel product="${product}" /> <!-- Displaying buybox price -->
+			</ycommerce:testId>
+			<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
+				<h3 class="seller">Sold by <span id="sellerNameId"></span></h3>
 			</ycommerce:testId>
 			<div class="fullfilled-by">
 			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
@@ -472,16 +475,7 @@ var allSellers='${allsellers}';
 		<input type="hidden" id="loggedIn" value="true"/> 
 		</sec:authorize>   
 				       
-		   <ul class="wish-share">
-				<li>
-				<span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
-				<!-- <span id="addedMessage" style="display:none"></span> -->
-				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'>Add to Wishlist</a></li>
-				<li>
-				<product:socialSharing product="${product}" />
-					
-				</li>
-			</ul>
+		   
                 
     <script>
 			$(".g-interactivepost").attr("data-contenturl",window.location.host+$('#productUrl').text());
@@ -502,7 +496,16 @@ var allSellers='${allsellers}';
 <cms:pageSlot position="PinCodeService" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
-
+    <ul class="wish-share">
+				<li>
+				<span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
+				<!-- <span id="addedMessage" style="display:none"></span> -->
+				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'>Add to Wishlist</a></li>
+				<li>
+				<product:socialSharing product="${product}" />
+					
+				</li>
+			</ul>
 	</div>
  </div>
 </div>

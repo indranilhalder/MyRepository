@@ -119,6 +119,24 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//Added For TISPRD-1243
 	private static final String DROPDOWN_BRAND = "MBH";
 	private static final String DROPDOWN_CATEGORY = "MSH";
+	private int pageSiseCount;
+
+	/**
+	 * @return the pageSiseCount
+	 */
+	public int getPageSiseCount()
+	{
+		return pageSiseCount;
+	}
+
+	/**
+	 * @param pageSiseCount
+	 *           the pageSiseCount to set
+	 */
+	public void setPageSiseCount(final int pageSiseCount)
+	{
+		this.pageSiseCount = pageSiseCount;
+	}
 
 	/**
 	 * @desc Main method for category landing pages SEO : Changed to accept new pattern and new pagination changes TISCR
@@ -164,6 +182,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 		{
 			searchQuery = ":relevance";
 		}
+
+		// Get page facets to include in facet field exclude tag
+		final String pageFacets = request.getParameter("pageFacetData");
 
 		//Storing the user preferred search results count
 		updateUserPreferences(pageSize);
@@ -240,7 +261,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
 
 				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-						categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll);
+						categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
 
 				final List<ProductData> normalProductDatas = searchPageData.getResults();
 				//Set department hierarchy
@@ -281,6 +302,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				if (preferencesData != null && preferencesData.getPageSize() != null)
 				{
 					count = preferencesData.getPageSize().intValue();
+					setPageSiseCount(count);
 				}
 
 				/*
@@ -289,7 +311,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				 * searchQuery, page, showMode, sortCode, count, resetAll);
 				 */
 				final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, pageNo, showMode, sortCode,
-						model, request, response);
+						model, request, response, pageFacets);
 				//Commented out for TISPT-225
 				/*
 				 * final List<ProductData> commonNormalProducts = new ArrayList<ProductData>(); final List<ProductData>
@@ -508,10 +530,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 */
 	protected ProductSearchPageData<SearchStateData, ProductData> performSearch(final String categoryCode,
 			final String searchQuery, final int pgNo, final ShowMode showMode, final String sortCode, final int pageSize,
-			final boolean resetAll)
+			final boolean resetAll, final String pageFacets)
 	{
 		final PageableData pageableData = createPageableData(pgNo, pageSize, sortCode, showMode);
-
+		pageableData.setPageFacets(pageFacets);
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
 		searchQueryData.setValue(searchQuery);
@@ -639,10 +661,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 
-	@Override
 	protected String performSearchAndGetResultsPage(final String categoryCode, final String searchQuery, final int pgNumbers,
 			final ShowMode showMode, final String sortCode, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws UnsupportedEncodingException
+			final HttpServletResponse response, final String pageFacets) throws UnsupportedEncodingException
 	{
 		final CategoryModel category = getCommerceCategoryService().getCategoryForCode(categoryCode);
 
@@ -655,7 +676,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		final CategoryPageModel categoryPage = getCategoryPage(category);
 
 		final CategorySearchEvaluator categorySearch = new CategorySearchEvaluator(categoryCode, XSSFilterUtil.filter(searchQuery),
-				pgNumbers, showMode, sortCode, categoryPage);
+				pgNumbers, showMode, sortCode, categoryPage, pageFacets);
 		categorySearch.doSearch();
 
 		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = categorySearch
@@ -687,10 +708,14 @@ public class CategoryPageController extends AbstractCategoryPageController
 		final RequestContextData requestContextData = getRequestContextData(request);
 		requestContextData.setCategory(category);
 		requestContextData.setSearch(searchPageData);
-
+		/* TISPRD-2987 */
+		// if (searchQuery != null && checkIfPagination(request) && sortCode == null)
+		// {
+		// 	model.addAttribute("metaRobots", "index,follow");
+		// }
 		if (searchQuery != null)
 		{
-			model.addAttribute("metaRobots", "noindex,follow");
+			model.addAttribute("metaRobots", "index,follow");
 		}
 
 		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(category.getKeywords());
@@ -719,5 +744,95 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 		return pagination;
 	}
+
+	//TISPRO-623
+	@Override
+	protected int getSearchPageSize()
+	{
+		int count = getSiteConfigService().getInt("storefront.search.pageSize", 0);
+		if (getPageSiseCount() > 0)
+		{
+			count = getPageSiseCount();
+		}
+
+		return count;
+	}
+
+	protected class CategorySearchEvaluator
+	{
+		private final String categoryCode;
+		private final SearchQueryData searchQueryData = new SearchQueryData();
+		private final int page;
+		private final ShowMode showMode;
+		private final String sortCode;
+		private CategoryPageModel categoryPage;
+		private boolean showCategoriesOnly;
+		private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData;
+		private final String pageFacets;
+
+		public CategorySearchEvaluator(final String categoryCode, final String searchQuery, final int page,
+				final ShowMode showMode, final String sortCode, final CategoryPageModel categoryPage, final String pageFacets)
+		{
+			this.categoryCode = categoryCode;
+			this.searchQueryData.setValue(searchQuery);
+			this.page = page;
+			this.showMode = showMode;
+			this.sortCode = sortCode;
+			this.categoryPage = categoryPage;
+			this.pageFacets = pageFacets;
+		}
+
+		public void doSearch()
+		{
+			showCategoriesOnly = false;
+			if (searchQueryData.getValue() == null)
+			{
+				// Direct category link without filtering
+				searchPageData = getProductSearchFacade().categorySearch(categoryCode);
+				if (categoryPage != null)
+				{
+					showCategoriesOnly = !categoryHasDefaultPage(categoryPage)
+							&& CollectionUtils.isNotEmpty(searchPageData.getSubCategories());
+				}
+			}
+			else
+			{
+				// We have some search filtering
+				if (categoryPage == null || !categoryHasDefaultPage(categoryPage))
+				{
+					// Load the default category page
+					categoryPage = getDefaultCategoryPage();
+				}
+
+				final SearchStateData searchState = new SearchStateData();
+				searchState.setQuery(searchQueryData);
+
+				final PageableData pageableData = createPageableData(page, getSearchPageSize(), sortCode, showMode);
+				pageableData.setPageFacets(pageFacets);
+				searchPageData = getProductSearchFacade().categorySearch(categoryCode, searchState, pageableData);
+			}
+		}
+
+		public int getPage()
+		{
+			return page;
+		}
+
+		public CategoryPageModel getCategoryPage()
+		{
+			return categoryPage;
+		}
+
+		public boolean isShowCategoriesOnly()
+		{
+			return showCategoriesOnly;
+		}
+
+		public ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> getSearchPageData()
+		{
+			return searchPageData;
+		}
+	}
+
 
 }

@@ -135,6 +135,17 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 #########View other sellers page
 ;;ViewSellerPageTemplate      ;$jarResourceCms/structure-view/structure_viewSellerPageTemplate.vm
 
+
+
+
+
+
+
+
+
+
+
+
 # Create ContentSlotNames
 # Each PageTemplate has a number of ContentSlotNames, with a list of valid components for the slot.
 # There are a standard set of slots and a number of specific slots for each template.
@@ -537,6 +548,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section2B;;SimpleBannerComponent,CMSParagraphComponent,VideoComponent;
 ;Section2C;;SimpleBannerComponent
 ;Section3;;SimpleBannerComponent,VideoComponent;
+;Section4A;;RefinementFacetComponent;
+;Section4B;;ProductGridComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
@@ -561,6 +574,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section5;;CMSParagraphComponent;
 ;Section5A1;;MplFootwearComponent,SimpleBannerComponent;
 ;Section6A;;MplCategoryCarouselComponent,MplAdvancedCategoryCarouselComponent;
+;Section7A;;RefinementFacetComponent;
+;Section7B;;ProductGridComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
@@ -579,6 +594,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section2B;;CMSParagraphComponent,SimpleBannerComponent,VideoComponent;
 ;Section2C;;SimpleBannerComponent
 ;Section3;;SimpleBannerComponent,VideoComponent;
+;Section4A;;RefinementFacetComponent
+;Section4B;;ProductGridComponent
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent

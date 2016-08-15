@@ -431,7 +431,6 @@ public class UsersController extends BaseCommerceController
 	 * @param emailId
 	 * @param password
 	 * @return MplUserResultWsDto
-	 * @throws DuplicateUidException
 	 * @throws RequestParameterException
 	 * @throws WebserviceValidationException
 	 */
@@ -447,9 +446,21 @@ public class UsersController extends BaseCommerceController
 	{
 		LOG.debug("****************** User Registration mobile web service ***********" + emailId);
 		MplUserResultWsDto userResult = new MplUserResultWsDto();
+		GigyaWsDTO gigyaWsDto = new GigyaWsDTO();
+		final boolean isNewusers = true;
 		try
 		{
 			userResult = mobileUserService.registerNewMplUser(emailId, password);
+			final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailId);
+			gigyaWsDto = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
+			if (StringUtils.isNotEmpty(gigyaWsDto.getSessionSecret()))
+			{
+				userResult.setSessionSecret(gigyaWsDto.getSessionSecret());
+			}
+			if (StringUtils.isNotEmpty(gigyaWsDto.getSessionToken()))
+			{
+				userResult.setSessionToken(gigyaWsDto.getSessionToken());
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3010,20 +3021,12 @@ public class UsersController extends BaseCommerceController
 		final List<GetWishListDataWsDTO> wldDTOList = new ArrayList<GetWishListDataWsDTO>();
 		GetWishListProductWsDTO wldpDTO = new GetWishListProductWsDTO();
 		List<GetWishListProductWsDTO> wldpDTOList = new ArrayList<GetWishListProductWsDTO>();
+		List<Wishlist2Model> allWishlists;
 		String selectedSize = null;
 		try
 		{
-			List<Wishlist2Model> allWishlists;
-			final UserModel user = userService.getCurrentUser();
-			if (null == user)
-			{
-				wlDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-				wlDTO.setError(MarketplacecommerceservicesConstants.EMAIL_NOT_FOUND);
-				return wlDTO;
-			}
-
-			allWishlists = wishlistService.getWishlists(user);
-			if (null != allWishlists)
+			allWishlists = wishlistService.getWishlists();
+			if (CollectionUtils.isNotEmpty(allWishlists))
 			{
 				for (final Wishlist2Model requiredWl : allWishlists)
 				{
@@ -3421,18 +3424,20 @@ public class UsersController extends BaseCommerceController
 
 	/**
 	 * @description method is called to logout from account
-	 * @param userId
 	 * @return MplUserResultWsDto
 	 */
 	@Secured(
-	{ TRUSTED_CLIENT, CUSTOMERMANAGER, CUSTOMER })
-	@RequestMapping(value = "/{userId}/logout", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/logout", method =
+	{ RequestMethod.POST }, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplUserResultWsDto logoutUser(@PathVariable final String userId, final String fields,
-			final HttpServletRequest httpRequest)
+	public MplUserResultWsDto logoutUser(@RequestParam final String userId, final String fields,
+			final HttpServletRequest httpRequest, @RequestParam(required = false) final String invalid_access_token,
+			@RequestParam(required = false) final String invalid_refresh_token)
 	{
 		final MplUserResultWsDto mplUserResultWsDto = new MplUserResultWsDto();
 		CustomerModel currentUser = null;
+		List<OAuthAccessTokenModel> accessTokenModelList = null;
 		try
 		{
 			currentUser = mplPaymentWebFacade.getCustomer(userId);
@@ -3447,26 +3452,24 @@ public class UsersController extends BaseCommerceController
 				final String[] values = credentials.split(":", 2);
 				username = values[0];
 			}
-
-			List<OAuthAccessTokenModel> accessTokenModelList = null;
 			if (StringUtils.isNotEmpty(username))
 			{
 				accessTokenModelList = oauthTokenService.getAccessTokensForClientAndUser(username, userId);
 			}
-			if (CollectionUtils.isEmpty(accessTokenModelList))
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9012);
-			}
-			else
+
+			if (CollectionUtils.isNotEmpty(accessTokenModelList))
 			{
 				for (final OAuthAccessTokenModel accessTokenModel : accessTokenModelList)
 				{
-
 					oauthTokenService.removeAccessToken(accessTokenModel.getTokenId());
 					gigyaFacade.ratingLogoutHelper(currentUser);
 					mplUserResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
 				}
+			}
+			else
+			{
+				gigyaFacade.ratingLogoutHelper(currentUser);
+				mplUserResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -5803,12 +5806,14 @@ public class UsersController extends BaseCommerceController
 	 * @throws WebserviceValidationException
 	 * @throws MalformedURLException
 	 */
-	@Secured(
-	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	/*
+	 * @Secured( { CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	 */
 	@RequestMapping(value = "{emailId}/getFavCategoriesBrands", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplAllFavouritePreferenceWsDTO getFavCategoriesBrands(@PathVariable final String emailId, final String fields)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	public MplAllFavouritePreferenceWsDTO getFavCategoriesBrands(@PathVariable final String emailId, final String fields,
+			@RequestParam(required = false) final String deviceId) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException
 	{
 		final MplAllFavouritePreferenceWsDTO mplAllFavouritePreferenceWsDTO = new MplAllFavouritePreferenceWsDTO();
 		final List<MplFavBrandCategoryWsDTO> favBrandCategoryDtoForCategory = new ArrayList<MplFavBrandCategoryWsDTO>();
@@ -5817,7 +5822,7 @@ public class UsersController extends BaseCommerceController
 		{
 			brandCategoryDataForCategory = mplMyFavBrandCategoryFacade.fetchAllCategories();
 
-			final List<CategoryModel> selectedCategoryList = mplMyFavBrandCategoryFacade.fetchFavCategories(emailId);
+			final List<CategoryModel> selectedCategoryList = mplMyFavBrandCategoryFacade.fetchFavCategories(emailId, deviceId);
 			boolean flag = false;
 			if (null != brandCategoryDataForCategory)
 			{
@@ -5858,7 +5863,8 @@ public class UsersController extends BaseCommerceController
 			Map<String, MplFavBrandCategoryData> brandCategoryDataForBrand = new HashMap<String, MplFavBrandCategoryData>();
 			brandCategoryDataForBrand = mplMyFavBrandCategoryFacade.fetchAllBrands();
 
-			final List<CategoryModel> selectedBrandList = mplMyFavBrandCategoryFacade.fetchFavBrands(emailId);
+			//final List<CategoryModel> selectedBrandList = mplMyFavBrandCategoryFacade.fetchFavBrands(emailId);
+			final List<CategoryModel> selectedBrandList = mplMyFavBrandCategoryFacade.fetchFavBrands(emailId, deviceId);
 			boolean result = false;
 			if (null != brandCategoryDataForBrand)
 			{
@@ -5973,12 +5979,14 @@ public class UsersController extends BaseCommerceController
 		return mplFavBrandCategoryWsDTO;
 	}
 
-	@Secured(
-	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	/*
+	 * @Secured( { CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	 */
 	@RequestMapping(value = "{emailId}/addFavCategoriesBrands", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto addFavCategoriesBrand(@PathVariable final String emailId, @RequestParam final List codeList,
-			@RequestParam final String type) throws RequestParameterException, WebserviceValidationException, MalformedURLException
+			@RequestParam final String type, @RequestParam(required = false) final String deviceId)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		final UserResultWsDto resultDto = new UserResultWsDto();
 		boolean result = false;
@@ -5986,11 +5994,11 @@ public class UsersController extends BaseCommerceController
 		{
 			if (!StringUtils.isEmpty(type) && type.equalsIgnoreCase(MarketplacecommerceservicesConstants.TYPE_CATEGORY))
 			{
-				result = mplMyFavBrandCategoryFacade.addFavCategories(emailId, codeList);
+				result = mplMyFavBrandCategoryFacade.addFavCategories(emailId, deviceId, codeList);
 			}
 			else if (!StringUtils.isEmpty(type) && type.equalsIgnoreCase(MarketplacecommerceservicesConstants.TYPE_BRAND))
 			{
-				result = mplMyFavBrandCategoryFacade.addFavBrands(emailId, codeList);
+				result = mplMyFavBrandCategoryFacade.addFavBrands(emailId, deviceId, codeList);
 			}
 			if (result)
 			{
@@ -6031,12 +6039,14 @@ public class UsersController extends BaseCommerceController
 
 	}
 
-	@Secured(
-	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	/*
+	 * @Secured( { CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	 */
 	@RequestMapping(value = "{emailId}/deleteFavCategoriesBrands", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto deleteFavCategoriesBrands(@PathVariable final String emailId, @RequestParam final String code,
-			@RequestParam final String type) throws RequestParameterException, WebserviceValidationException, MalformedURLException
+			@RequestParam final String type, @RequestParam(required = false) final String deviceId)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		final UserResultWsDto resultDto = new UserResultWsDto();
 		boolean result = false;
@@ -6044,11 +6054,11 @@ public class UsersController extends BaseCommerceController
 		{
 			if (!StringUtils.isEmpty(type) && type.equalsIgnoreCase(MarketplacecommerceservicesConstants.TYPE_CATEGORY))
 			{
-				result = mplMyFavBrandCategoryFacade.deleteFavCategories(emailId, code);
+				result = mplMyFavBrandCategoryFacade.deleteFavCategories(emailId, deviceId, code);
 			}
 			else if (!StringUtils.isEmpty(type) && type.equalsIgnoreCase(MarketplacecommerceservicesConstants.TYPE_BRAND))
 			{
-				result = mplMyFavBrandCategoryFacade.deleteFavBrands(emailId, code);
+				result = mplMyFavBrandCategoryFacade.deleteFavBrands(emailId, deviceId, code);
 			}
 			if (result)
 			{

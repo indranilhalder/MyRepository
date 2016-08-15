@@ -9,7 +9,8 @@ ACC.product = {
 		"resetAllPLP",
 		"departmentRemoveJsHack",
 		"brandFilter",
-		"brandFilterCheckAll"
+		"brandFilterCheckAll",
+		"applyBrandFilter"
 	],
 
 
@@ -375,8 +376,11 @@ addToBagFromWl: function(ussid, addedToCart) {
 		data : {"ussid": ussid, "addedToCart":addedToCart},
 		dataType : "json",
 		success : function(response) {
-			alert("success_yipee");
+			//alert("success_yipee");
 		},
+		complete:function(){
+			forceUpdateHeader();
+		}
 	})
 },
 
@@ -527,6 +531,7 @@ sendAddToBag : function(formId, isBuyNow) {
 					},
 					complete : function() {
 						$('#ajax-loader').hide();
+						forceUpdateHeader();
 					},
 					error : function(resp) {
 						// alert("Add to Bag unsuccessful");
@@ -889,6 +894,40 @@ sendAddToBag : function(formId, isBuyNow) {
 		    }
 		});
 	},
+	
+applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("span.facet-label");
+	
+	$(document).on("click",".applyBrandFilters",function(){
+		
+		//Iterate and get all checked brand values
+		   var allBrands = "";
+		  $('li.Brand').find('input[type="checkbox"]:checked').each(function(){	
+				if ( $(this).parents('.facet-list').css('display') != 'none' ){
+				var facetValue = $(this).parents('.filter-brand').find('input[name="facetValue"]').val();
+				allBrands = allBrands + ':brand:' + facetValue;
+				}		   					
+		   });
+		  
+		//construct non brand query params
+		  var currentQryParam = $('.currentQueryParamsApply').val();
+		  var queryParamsAry = currentQryParam.split(':');
+		  var nonBrandQueryParams = "";
+			for (var i = 0; i <  queryParamsAry.length; i = i + 2) { 
+				if(queryParamsAry[i].indexOf('brand') == -1) {
+					if(nonBrandQueryParams != ""){
+						nonBrandQueryParams = nonBrandQueryParams +':'+ queryParamsAry[i] +':'+queryParamsAry[i+1];
+					}else{
+						nonBrandQueryParams = queryParamsAry[i] +':'+queryParamsAry[i+1];
+					}
+				}
+			}
+		   //append non brand query and checked brands
+		   $('.qValueForApply').val(nonBrandQueryParams+allBrands);
+		   // submit brand apply form
+		   $('form#brandApply').submit();
+	});
+	},
+	
 	brandFilterCheckAll: function(){$allListElements = $('ul > li.filter-brand').find("span.facet-label");
 	var url = "";
 	var i = 0;

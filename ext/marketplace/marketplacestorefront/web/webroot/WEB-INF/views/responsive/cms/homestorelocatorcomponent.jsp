@@ -2,16 +2,18 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <!-- Fix for defect TISPT-202 -->
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script> -->
- 
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+ <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3"></script> -->
 <script>
+$(window).on('load',function(){
+	$.getScript('https://maps.googleapis.com/maps/api/js?v=3');
+});
 var isLoaded = false;
 $(document).scroll(function(){
 	if($(this).scrollTop()>=$('#home-googleMap').position().top-1000){
-		 //Default Value fro latitue and longitude.
-		 //lazyload maps 
 		 if(!isLoaded){
+    		//Default Value fro latitue and longitude.
+		 	//lazyload maps 
 			 var lat='${latitude}';
 			 var lot='${longitude}';
 			 

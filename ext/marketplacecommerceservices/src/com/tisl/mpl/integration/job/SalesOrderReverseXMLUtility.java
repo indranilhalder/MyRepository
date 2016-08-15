@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
@@ -63,6 +65,8 @@ public class SalesOrderReverseXMLUtility
 	private final static Logger LOG = Logger.getLogger(SalesOrderReverseXMLUtility.class.getName());
 	@Autowired
 	private PaymentInfoCancelReversalImpl paymentInfoCancelService;
+	@Resource
+	private ModelService modelService;
 	/*
 	 * @Autowired private MplSellerInformationService mplSellerInformationService;
 	 */
@@ -171,7 +175,10 @@ public class SalesOrderReverseXMLUtility
 				final String retRef = MarketplacecommerceservicesConstants.RETURN_COMPLETED;
 				final String orderCancel = MarketplacecommerceservicesConstants.ORDER_CANCELLED;
 				LOG.debug("Inside order history entry model");
+				LOG.warn("Inside order history entry model" + orderHistoryEntryModel.getOrder());
 				//	if (checkOrderHistoryEntryDate(orderHistoryEntryModel.getCreationtime().toString()))
+				//	final Calendar calendar = Calendar.getInstance();
+				//calendar.add(Calendar.HOUR_OF_DAY, -24);
 
 				if ((orderHistoryEntryModel.getDescription().equals(orderCancel)))
 
@@ -414,10 +421,11 @@ public class SalesOrderReverseXMLUtility
 				{
 					LOG.debug("before child order list set");
 					xmlData.setTransactionInfoList(childOrderDataList);
+					subOrderDataList.add(xmlData);
 					LOG.debug("child order list set");
 				}
 
-				subOrderDataList.add(xmlData);
+				//	subOrderDataList.add(xmlData);
 			}
 
 		}
@@ -454,7 +462,8 @@ public class SalesOrderReverseXMLUtility
 					boolean canOrRetflag = false; //flag for checking if order line is cancelled or returned. If flag is false the order line will not be set in the XML
 					boolean returnFlag = false;
 					boolean cancelFlag = false;
-					if (null != entry && null != entry.getProduct())
+					if (null != entry && null != entry.getProduct()
+							&& (null == entry.getIsSentToFico() || !(entry.getIsSentToFico().booleanValue()))) // null ==  entry.getIsSentToFico() is added for n/a scenarios for previous placed orders
 					{
 						final ProductModel product = entry.getProduct();
 						LOG.debug("inside AbstractOrderEntryModel");
@@ -742,8 +751,11 @@ public class SalesOrderReverseXMLUtility
 						if (canOrRetflag)
 						{
 							childOrderDataList.add(xmlData);
+							entry.setIsSentToFico(Boolean.TRUE);
+							modelService.save(entry);
 						}
 					}
+
 				}
 			}
 		}

@@ -25,7 +25,7 @@ public class URLParamUtil
 	/**
 	 * @Description : For Filtering Product Promotions
 	 * @param url
-	 * @return responseData
+	 * @return params
 	 */
 	public static Map<String, List<String>> getQueryParams(final String url)
 	{
@@ -64,6 +64,53 @@ public class URLParamUtil
 		{
 			throw new AssertionError(ex);
 		}
+	}
+
+	/**
+	 * @Description : For Filtering Product Promotions
+	 * @param paramValue
+	 * @return paramParsed
+	 */
+	public static String getQueryParamParsed(final String paramValue)
+	{
+		try
+		{
+			String param = null;
+			String paramParse[] = null;
+			String paramParsed = null;
+			if (StringUtils.isNotEmpty(paramValue))
+			{
+				param = URLDecoder.decode(paramValue, "UTF-8");
+				paramParse = param.split(":");
+				paramParsed = paramParse[0];
+			}
+			return paramParsed;
+		}
+		catch (final UnsupportedEncodingException ex)
+		{
+			throw new AssertionError(ex);
+		}
+	}
+
+	/**
+	 *
+	 * @param value
+	 *           to be sanitized
+	 * @return sanitized content
+	 */
+	public static String filter(final String value)
+	{
+		if (value == null)
+		{
+			return null;
+		}
+		String sanitized = value;
+		sanitized = sanitized.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+		sanitized = sanitized.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
+		sanitized = sanitized.replaceAll("'", "&#39;");
+		sanitized = sanitized.replaceAll("eval\\((.*)\\)", "");
+		sanitized = sanitized.replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"");
+		return sanitized;
 	}
 
 

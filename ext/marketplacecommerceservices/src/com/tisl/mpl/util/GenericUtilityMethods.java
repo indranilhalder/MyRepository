@@ -15,6 +15,7 @@ import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
 import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.promotions.result.PromotionEvaluationContext;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -51,6 +54,8 @@ import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 public class GenericUtilityMethods
 {
 	private static final Logger LOG = Logger.getLogger(GenericUtilityMethods.class);
+	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
+	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 
 	/**
@@ -705,11 +710,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -954,4 +959,46 @@ public class GenericUtilityMethods
 		return cleanedText;
 	}
 
+	/**
+	 * @param request
+	 * @return boolean This method checks if the current session is active
+	 */
+	public static boolean checkSessionActive(final HttpServletRequest request)
+	{
+		boolean isSessionActive = true;
+		if (null != request && null != request.getSession())
+		{
+			final String guid = (String) request.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
+			if (null == guid)
+			{
+				LOG.debug("::::::::Session is not active:::::::");
+				isSessionActive = false;
+			}
+
+		}
+		return isSessionActive;
+	}
+
+
+	/**
+	 * @return String This method returns the missing image url
+	 */
+	public static String getMissingImageUrl()
+
+	{
+		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext().getBean(
+				"configurationService");
+		String missingImageUrl = MISSING_IMAGE_URL;
+		String staticHost = null;
+		if (null != configService)
+		{
+			staticHost = configService.getConfiguration().getString("marketplace.static.resource.host");
+		}
+		if (StringUtils.isNotEmpty(staticHost))
+		{
+			missingImageUrl = "//" + staticHost + MISSING_IMAGE_URL;
+		}
+		return missingImageUrl;
+
+	}
 }

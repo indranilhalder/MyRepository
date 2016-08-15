@@ -48,7 +48,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	private CommerceCategoryService commerceCategoryService;
 
 	//store url change
-	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+	//private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 	//private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
 
@@ -117,7 +117,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							else
 							{
 								LOG.info("No Media for this item");
-								imageURL = MISSING_IMAGE_URL;
+								//imageURL = MISSING_IMAGE_URL;
+								imageURL = GenericUtilityMethods.getMissingImageUrl();
 							}
 
 							bestPickItemJson.put("imageUrl", imageURL);
@@ -306,7 +307,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	private String getCategoryMediaUrl(final CategoryModel category)
 	{
 
-		String mediaUrl = MISSING_IMAGE_URL;
+		//String mediaUrl = MISSING_IMAGE_URL;
+		String mediaUrl = GenericUtilityMethods.getMissingImageUrl();
 		if (null != category.getMedias())
 		{
 			for (final MediaModel categoryMedia : category.getMedias())
@@ -319,7 +321,6 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 				}
 			}
-
 
 		}
 		return mediaUrl;

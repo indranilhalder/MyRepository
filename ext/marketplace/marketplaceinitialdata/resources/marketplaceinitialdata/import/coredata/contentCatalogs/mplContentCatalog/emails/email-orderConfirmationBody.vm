@@ -108,6 +108,8 @@ Confirmed!<br>
 									<td style="padding-left: 18px;">Price</td>
                         			<td style="padding-left: 23px;text-align: center;">COD Charges<br>
                           			(if any) </td>
+                          			<td style="padding-left: 23px;text-align: center;">Delivery Charges<br>
+                          			</td>
                         			<td style="padding-left: 20px;text-align: center;width: 120px;"> Delivery<br>
                           			Mode</td>
                       				</tr>
@@ -119,7 +121,9 @@ Confirmed!<br>
 		                			<td style="color: #504B49;text-align:center">$entry.product.name</td>
 		                			<td align="center" style="padding-left: 10px;color: #504B49;" >$entry.quantity</td>
 		                			<td width="80" align="center"style="color: #504B49;">$entry.netAmountAfterAllDisc</td>
+		                			<td width="120" align="center" style="padding-left: 20px;color: #504B49;">$entry.convenienceChargeApportion</td>
 		                			<td width="120" align="center" style="padding-left: 20px;color: #504B49;">$entry.currDelCharge</td>
+		                			
 		                  			<td style="color: #504B49;padding-left: 24px;text-align: center;">$entry.mplDeliveryMode.deliveryMode.name</td>
 		              			</tr>
 

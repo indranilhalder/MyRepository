@@ -26,5 +26,4 @@ public interface HomepageComponentService
 	JSONObject getJsonBanner(ContentSlotModel contentSlot, String compType) throws EtailNonBusinessExceptions;
 
 	List<CategoryModel> getCategoryPath(CategoryModel categoryModel);
-
 }

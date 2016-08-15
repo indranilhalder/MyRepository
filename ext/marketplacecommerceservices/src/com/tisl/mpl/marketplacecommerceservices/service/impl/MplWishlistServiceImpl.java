@@ -136,6 +136,17 @@ public class MplWishlistServiceImpl implements MplWishlistService
 		return getMplWishlistDao().findAllWishlists(user);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
+	 */
+	@Override
+	public List<Wishlist2EntryModel> getWishlistByUserAndUssid(final UserModel user, final String ussid)
+	{
+		return getMplWishlistDao().findWishlistByUserAndUssid(user, ussid);
+	}
+
 
 	/**
 	 * @return the saveAnonymousWishlists

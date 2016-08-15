@@ -10,7 +10,28 @@
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement"%>
 <script type="text/javascript">		
 $(document).ready(function() {
+	//TISPRM-65
+	if($("#defaultPinCodeIdsDefault").val() == null || $("#defaultPinCodeIdsDefault").val() == "")
+	{
+		$("#defaultPinDiv").hide();
+		$("#changePinDiv").show();
+	}
+	else
+	{
+		$("#defaultPinDiv").show();
+		$("#changePinDiv").hide();
+		$("#defaultPinCodeIds").val($("#defaultPinCodeIdsq").val());
+	}
+	//TISPRM-65
     $("#pinCodeButtonIds").click(function() {
+    	/* if($("#defaultPinCodeIdsDefault").val() !=null)
+    	{
+    		$("#defaultPinCodeIds").val($("#defaultPinCodeIdsDefault").val());
+    	}
+    	else
+    	{
+    		$("#defaultPinCodeIds").val($("#defaultPinCodeIdsInput").val());
+    	} */
         var zipcode = $("#defaultPinCodeIds").val();
         var regPostcode = /^([1-9])([0-9]){5}$/;
         if(regPostcode.test(zipcode) == true){
@@ -40,6 +61,17 @@ function isNumber(evt) {
     }
     return true;
 }
+/* function pinCodeDiv(){
+//TISPRM-65
+	$("#changePinDiv").show();
+	$("#defaultPinDiv").hide();
+	$("#defaultPinCodeIds").val("");
+	//$(".pincodeServiceError").text("");	
+	//$(".less-stock").text("");	
+	//$("#successPin").text("");	
+} */
+
+//TISPRM-65
 
 </script>
 <c:if test= "${empty defaultPinCode}">
@@ -48,15 +80,23 @@ function isNumber(evt) {
 <%-- <form:form id="cartFormId" action="${request.contextPath}/cart/setPincode" method="GET">   --%>
 
   
-	<div class="top block">
+	<div class="top block" id="pinCodeDispalyDiv">
 		<h2><spring:theme code="cart.delivery.options" /></h2>
-		<p><spring:theme code="product.pincode" /></p>
+		<input type="hidden"  name = "defaultPinCodeIdsDefault" id= "defaultPinCodeIdsDefault"  value="${defaultPinCode}"/>
+			<div id="defaultPinDiv">
+				<p><spring:theme code="product.pincode" /> 
+				<input id= "defaultPinCodeIdsq" name = "defaultPinCodeIdsq" style="font-weight: bold;" value="${defaultPinCode}"/></p> 
+				<a id="changePinAnchor" onClick="pinCodeDiv()">Change </a>
+			</div>
+			
+			<div id="changePinDiv">
+				<p><spring:theme code="product.pincode.input" /></p>
+				<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit');"><spring:theme code="product.submit"/></button>
+			</div>
 		
-		<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeId" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" /> 
-
-		<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit');"><spring:theme code="product.submit"/></button>
 		
-		<div id="unsevisablePin" style="display:none;color:#ff1c47;padding-top: 45px;line-height:15px;"><spring:theme code="pincode.unsevisable"/></div>
+		
 		<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
 		<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 		
