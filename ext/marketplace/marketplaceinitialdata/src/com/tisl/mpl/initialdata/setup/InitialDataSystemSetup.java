@@ -108,15 +108,17 @@ public class InitialDataSystemSetup extends AbstractSystemSetup
 		getCoreDataImportService().execute(this, context, importData);
 		getEventService().publishEvent(new CoreDataImportedEvent(context, importData));
 
-		getSampleDataImportService().execute(this, context, importData);
-		getEventService().publishEvent(new SampleDataImportedEvent(context, importData));
-
 		importImpexFile(context,
 				String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/categories_fa.impex", new Object[]
 				{ "marketplaceinitialdata", MARKETPLACE }), false);
 		importImpexFile(context,
 				String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/categories_watches.impex", new Object[]
 				{ "marketplaceinitialdata", MARKETPLACE }), false);
+
+		getSampleDataImportService().execute(this, context, importData);
+		getEventService().publishEvent(new SampleDataImportedEvent(context, importData));
+
+
 		importImpexFile(context, String.format(
 				"/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-hierarchy_watches_fa.impex", new Object[]
 				{ "marketplaceinitialdata", MARKETPLACE }), false);
