@@ -584,8 +584,6 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 	var wishName = "";
 	
 	var ussidValue=$("#ussid").val();
-	
-	var existsUssid = getLastModifiedWishlist(ussidValue);
   
 	/*if (wishListList == "") {
 		wishName = $("#defaultWishName").val();
@@ -624,7 +622,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 	if(loggedIn == 'false') {
 		$("#wishListNonLoggedInId").show();
 		//The items have been added to your wishlist
-		//globalErrorPopup("Please sign in to add item into wishlist!")
+		globalErrorPopup("Please sign in to add item into wishlist!")
 	}
 	else {
 	
@@ -639,6 +637,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					var msg=$('#wishlistSuccess').text();
 					$('#addedMessage').show();
 					$('#addedMessage').html(msg);
+					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 					/*setTimeout(function() {
 						  $("#addedMessage").fadeOut().empty();
 						}, 1500);*/
@@ -1441,6 +1440,12 @@ $( document ).ready(function() {
 					displayDeliveryDetails(sellerName);
 					//TISPRM-33 savingsOnProduct added
 					dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
+					
+					//Add to Wishlist PDP CR
+					var ussIdWishlist = data['sellerArticleSKU'];
+					getLastModifiedWishlist(ussIdWishlist);
+					//Ended here//
+					
 					if (isproductPage == 'false') {
 						fetchAllSellers();
 						$("#minPrice").html(data['minPrice'].formattedValue);
@@ -2686,10 +2691,6 @@ function loadDefaultWishListName_SizeGuide() {
 		});
 	}
 	
-	$(document).ready(function(){
-		ussidValue = $("#ussid").val();
-		getLastModifiedWishlist(ussidValue);
-	});
 	/*Offer popup*/
 	function offerPopup(comp) {
 		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
