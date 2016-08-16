@@ -1751,6 +1751,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 function openPopForBankEMI() {
 	var productVal = $("#prodPrice").val();
 	var optionData = "<option value='select' disabled selected>Select</option>";
+	$("#EMITermTable").hide();
 	$("#emiTableTHead").hide();
 	$("#emiTableTbody").hide();
 	var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
@@ -1778,6 +1779,7 @@ function openPopForBankEMI() {
 //TISPRO-533
 function populateEMIDetailsForPDP(){
 //$( "#bankNameForEMI" ).change(function() {
+	
 	var productVal = $("#prodPrice").val();
 		
 		var selectedBank = $('#bankNameForEMI :selected').text();
@@ -1810,6 +1812,7 @@ function populateEMIDetailsForPDP(){
 						}
 
 						$("#emiTableTbody").html(contentData);
+						$("#EMITermTable").show();
 					} else {
 						$('#emiNoData').show();
 					}
@@ -2600,22 +2603,66 @@ function loadDefaultWishListName_SizeGuide() {
 /*TPR-630*/
 	$(document).ready(function(){
 		$(".Emi > p").on("mouseenter",function(){
-			if(!$(this).hasClass("active")){
+			if(!$(this).hasClass("active") && $(window).width() > 790){
 				$(this).addClass("active");
 				openPopForBankEMI();
-			};
+			}
 		});
 		$(".Emi > p").on("mouseleave",function(){
-			$(this).removeClass("active");
+			if($(window).width() > 790){
+				$(this).removeClass("active");
+			}
 		});
 		$(".Emi > #EMImodal-content").on("mouseenter",function(){
-			$(".Emi > p").addClass("active")
+			if($(window).width() > 790){
+				$(".Emi > p").addClass("active")
+			}
 		});
 		$(".Emi > #EMImodal-content").on("mouseleave",function(){
-			$(".Emi > p").removeClass("active")
+			if($(window).width() > 790){
+				$(".Emi > p").removeClass("active")
+			}
 		});
 		
-	})
+		$(".Emi > p").on("click",function(){
+			if($(window).width() <= 790){
+				$(this).addClass("active mobile");
+				$("body").append("<div class='emi-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+				openPopForBankEMI();
+				
+			}
+		});
+		$(document).on("click",".emi-overlay,.Emi .modal-content .Close",function(){
+			$(".Emi > p").removeClass("active mobile");
+			$(".emi-overlay").remove();
+		});
+		
+		$(window).resize(function(){
+			if($(window).width() > 790){
+				$(".Emi > p").removeClass("active mobile");
+				$(".emi-overlay").remove();
+			}
+		})
+		
+		$(document).on("click",".product-detail .promo-block .details",function(e){
+			e.preventDefault();
+			offerPopup($("#promotionDetailsId").html());
+		});
+		$(document).on('hide.bs.modal', function () {
+		    $("#offerPopup").remove();
+		}); 
+		
+		$("#pin").focus(function(){
+			$("#pdpPincodeCheck").text("Check Availability")
+		});
+		$("#pin").blur(function() {
+			if ($(this).val() == "") {
+				$("#pdpPincodeCheck").text("Check Availability")
+			} else {
+				$("#pdpPincodeCheck").text("Change Pincode")
+			}
+		});
+	});
 	/*Wishlist In PDP changes*/
 	function getLastModifiedWishlist(ussidValue) {
 		
@@ -2629,7 +2676,7 @@ function loadDefaultWishListName_SizeGuide() {
 			dataType : "json",
 			success : function(data) {
 			if (data == true) {
-				$('.product-info .picZoomer-pic-wp .zoom a').addClass("added");
+				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 			}
 			
 			},
@@ -2639,7 +2686,12 @@ function loadDefaultWishListName_SizeGuide() {
 		});
 	}
 	
-	$(document).ajaxComplete(function(){
+	$(document).ready(function(){
 		ussidValue = $("#ussid").val();
 		getLastModifiedWishlist(ussidValue);
 	});
+	/*Offer popup*/
+	function offerPopup(comp) {
+		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+		$("#offerPopup").modal('show');
+	} 

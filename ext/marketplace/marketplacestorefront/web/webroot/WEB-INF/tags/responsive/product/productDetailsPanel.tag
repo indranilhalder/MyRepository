@@ -97,6 +97,7 @@ tr.d0 td {
 		</div>
 		<!-- Added for carousel in mobile view -->
 		<div class="product-image-container device">
+		<a class="wishlist-icon" onclick="addToWishlist()"></a>
 		<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
 			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 
 				<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">	
@@ -147,6 +148,8 @@ tr.d0 td {
 				<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">	
 			<div class="pdp-promo-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
+				<br>
+				<a class="details">View more</a>
 			</div>
 			</c:if> <!-- end if check for channel web -->
 			</c:forEach>
@@ -155,6 +158,8 @@ tr.d0 td {
 			<c:otherwise>
 			<div class="pdp-promo-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
+				<br>
+				<a class="details">View more</a>
 			</div>
 			</c:otherwise>
 			</c:choose>

@@ -1907,3 +1907,9 @@ $(document).ready(function() {
 	});
 	$(document).on('click','.zoomLens',function(){hit();})
 });
+
+$(document).ajaxComplete(function(){
+	if(!$("body").hasClass("pageLabel-homepage")){
+		$("body").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
+	}
+});
