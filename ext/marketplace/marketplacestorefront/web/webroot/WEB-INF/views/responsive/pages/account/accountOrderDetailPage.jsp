@@ -1713,7 +1713,6 @@ $(function() {
 
 		}	 
 	 }
-	 
 	$(document).ready(function(){
 		 $("#changeAddressLink").click(function(){
 			  $("#changeAddressPopup").show();
