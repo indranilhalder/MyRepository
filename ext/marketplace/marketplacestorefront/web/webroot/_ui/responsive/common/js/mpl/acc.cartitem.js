@@ -182,8 +182,8 @@ $(document).ready(function(){
 		var showDeletedItem=localStorage.getItem("showDeletedEntry");
     for (var key in localStorage) {
         if (key.indexOf("deletedEntry") >= 0 && showDeletedItem=="true") {
-        	$('.product-block').append("<li class='item deleted' style='opacity:0.5'>"+window.localStorage.getItem("deletedEntry")+"</li>");
-        	$('.item.deleted').find(".undo-add-to-cart").show();
+        	$('.product-block').append("<li class='item deleted'>"+window.localStorage.getItem("deletedEntry")+"</li>");
+        	$('.item.deleted').find(".mybag-undo-form").show();
         	window.localStorage.setItem("showDeletedEntry","false");
         }
        

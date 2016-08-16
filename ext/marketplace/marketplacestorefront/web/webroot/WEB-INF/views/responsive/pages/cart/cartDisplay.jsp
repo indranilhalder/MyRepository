@@ -24,7 +24,7 @@
 	<p class="desk-view"><spring:theme code="mpl.myBag.customer.fulldesc" /></p>
 	</c:otherwise>
 	</c:choose>
-	<a href="/" class="continue-shopping"> Continue Shopping</a>
+	<a href="/" class="continue-shopping mob-tab-view-shopping"> Continue Shopping</a>
 	<ul class="checkout-types">
 			
 			<!-- TISBOX-879 -->
@@ -87,7 +87,7 @@
             </li>
             
           </ul>
-        
+        <a href="/store" class="continue-shopping desk-view-shopping"> Continue Shopping</a>
           </div>
 		<!-- <a href="/store" class="continue-shopping"> Continue Shopping</a> --><!-- store url change -->
 		<!-- <a href="/" class="continue-shopping"> Continue Shopping</a> -->

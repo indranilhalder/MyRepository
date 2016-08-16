@@ -37,9 +37,6 @@ tr.d0 td {
   color: black;
 }
 
-.undo-add-to-cart{
-display:none;
-}
 </style>
 
 
@@ -154,12 +151,14 @@ display:none;
 		                  		<li> 
 			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}"><span><spring:theme code="cart.remove"/></span></a>
 			              		</li>
-			              		<li><form:form name="addToCartForm" method="post" action="#">
+			              		<li><form:form name="addToCartForm" method="post" action="#" class="mybag-undo-form">
 								<input type="hidden" name="qty" value="${entry.quantity}" />
 								<input type="hidden" name=pinCodeChecked value="true" />
 								<input type="hidden" name="productCodePost" value="${entry.product.code}" />
 								<input type="hidden" name="wishlistNamePost" value="N" />
 								<input type="hidden" name="ussid" value="${entry.selectedSellerInformation.ussid}" />
+								<p>THIS PRODUCT HAS BEEN</p>
+								<h4>REMOVED</h4>
 								<button class="undo-add-to-cart">Undo</button>
 								</form:form>
 								</li>
