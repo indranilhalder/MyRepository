@@ -539,10 +539,10 @@ var allSellers='${allsellers}';
 			</cms:pageSlot>
 			</div>
     <ul class="wish-share desktop">
-				<li>
-				<span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
+				<%--<li>
+				 <span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
 				<!-- <span id="addedMessage" style="display:none"></span> -->
-				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'>Add to Wishlist</a></li>
+				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'>Add to Wishlist</a></li> --%>
 				<li>
 				<product:socialSharing product="${product}" />
 					
