@@ -193,4 +193,5 @@ public final class MessageConstants
 	//feebback survey
 	public static final String FEEDBACK_SURVEY_URL = "mpl.feedback.survey";
 	public static final String SUCCESS = "success";
+	public static final String PINCODE_NOT_SERVICEABLE = "Pincode not Serviceable";
 }
