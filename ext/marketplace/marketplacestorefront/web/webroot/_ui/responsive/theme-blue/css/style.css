@@ -43810,7 +43810,12 @@ body.page-productDetails .breadcrumbs.wrapper {
 /*New pdp end*/
 
 /* TPR-628 */
-#rotatingImage .owl-prev,#rotatingImage .owl-next{
+.pageLabel-homepage #rotatingImage .owl-prev, .pageLabel-homepage #rotatingImage .owl-next,
+	.pageLabel-homepage #rotatingImageMobile .owl-prev, .pageLabel-homepage #rotatingImageMobile .owl-next,
+	.template-pages-layout-micrositePage1 #rotatingImage .owl-prev,
+	.template-pages-layout-micrositePage1 #rotatingImage .owl-next,
+	.template-pages-layout-micrositePage1 #rotatingImageMobile .owl-prev,
+	.template-pages-layout-micrositePage1 #rotatingImageMobile .owl-next {
 	z-index: 1;
 	visibility: hidden;
 }
@@ -43818,11 +43823,11 @@ body.page-productDetails .breadcrumbs.wrapper {
 	display: none;
 }
 
-@media (max-width:650px){
-	.pageLabel-homepage #rotatingImageMobile{
+@media (max-width:791px){
+	.pageLabel-homepage #rotatingImageMobile,.template-pages-layout-micrositePage1 #rotatingImageMobile{
 		display: block;
 	}
-	.pageLabel-homepage #rotatingImage{
+	.pageLabel-homepage #rotatingImage,.template-pages-layout-micrositePage1 #rotatingImage{
 		display: none;
 	}
 }
@@ -44166,52 +44171,67 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 /*wishlist icon end*/
 /* TPR-628 starts*/
 
-.pageLabel-homepage .content-block-slider{
+.pageLabel-homepage div.content-block-slider.electronic-brand-slider,.template-pages-layout-micrositePage1 div.content-block-slider.electronic-brand-slider{
 	margin:0;
 	cursor: pointer;
 }
 
-.pageLabel-homepage .major-promo-header-italic{
+.pageLabel-homepage .major-promo-header-italic,.template-pages-layout-micrositePage1 .major-promo-header-italic{
 	 font-size: 18px;
     margin: 0 0 20px;
-    text-transform: uppercase;
 }
-.pageLabel-homepage span.major-promo-description{
+.pageLabel-homepage .hero .major-promos span.major-promo-description,.template-pages-layout-micrositePage1 .hero .major-promos span.major-promo-description{
+	padding: 0;
+    margin-top: 0;
 	font-size: 38px;
     margin: 0 0 20px;
     font-weight: 600;
     text-transform: uppercase;
 }
-.pageLabel-homepage span.major-promo-description + a{
+.pageLabel-homepage .timeout-slider .carousel .item span.major-promo-description+a,.template-pages-layout-micrositePage1 .timeout-slider .carousel .item span.major-promo-description+a{
 	background: #a7183e none repeat scroll 0 0;
     border: 1px solid #a7183e;
     color: #fff;
     width: 180px;
     font-size: 12px;
+    /* top: 0; */
     font-weight: 500;
-    height: 35px;
+    height: 40px;
     padding: 5px 0;
     letter-spacing: 1px;
-    line-height: 12px;
+    line-height: 14px;
     text-align: center;
-    margin-top: 0px;
-    -webkit-transition:color 0.3s ease 0s, border-color 0.3s ease 0s, background 0.3s ease 0s;
-    transition: color 0.3s ease 0s, border-color 0.3s ease 0s, background 0.3s ease 0s;
+    left: 0;
+    position: absolute;
+    align: left;
+    margin-top: 0;
+    -webkit-transition: color .3s ease 0,border-color .3s ease 0,background .3s ease 0;
+    transition: color .3s ease 0,border-color .3s ease 0,background .3s ease 0;
 }
-.pageLabel-homepage span.major-promo-description+a:hover{
+.pageLabel-homepage span.major-promo-description+a:hover,.template-pages-layout-micrositePage1 span.major-promo-description+a:hover{
 	background: transparent;
     border: 1px solid #fff;
     color: #fff;
 }
-.pageLabel-homepage .hero.icid ul.major-promos{
-	top:35%;
-	left: 5%;
+.pageLabel-homepage .hero.icid ul.major-promos,.template-pages-layout-micrositePage1 .hero.icid ul.major-promos{
+	top: 33%;
+    left: 5%;
+    position: absolute;
+    color: #fff;
+    text-align: left;
+    z-index: 1;
+    text-transform: uppercase;
+    width: 500px;
+}
+.pageLabel-homepage .hero .major-promos li,.template-pages-layout-micrositePage1 .hero .major-promos li{
+	padding: 0;
 }
 
 
 /* dots */
 
-.pageLabel-homepage .owl-controls{
+.pageLabel-homepage .owl-controls,.template-pages-layout-micrositePage1 .owl-controls{
+	display:block !important;
 	bottom: 10px;
     margin: 0;
     position: absolute;
@@ -44223,19 +44243,19 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
 }
-.pageLabel-homepage .owl-dots .owl-dot{
+.pageLabel-homepage .owl-dots .owl-dot,.template-pages-layout-micrositePage1 .owl-dots .owl-dot{
 	display: inline-block;
     zoom: 1;
     cursor: hand;
     -webkit-user-select: none;
 }
-.pageLabel-homepage .owl-dots .owl-dot span{
+.pageLabel-homepage .owl-dots .owl-dot span,.template-pages-layout-micrositePage1 .owl-dots .owl-dot span{
 	width: 10px;
     height: 10px;
     margin: 5px 6px;
     /* background: #fff; */
     display: block;
-    border: 2px solid #fff;
+    border: 2px solid red;
     -webkit-backface-visibility: visible;
     -webkit-transition: opacity 200ms ease;
     -moz-transition: opacity 200ms ease;
@@ -44247,7 +44267,7 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     border-radius: 30px;
     opacity: 0.4;
 }
-.pageLabel-homepage .owl-dots .owl-dot.active span{
+.pageLabel-homepage .owl-dots .owl-dot.active span,.template-pages-layout-micrositePage1 .owl-dots .owl-dot.active span{
 	opacity: 1;
     background: #fff;
 }
@@ -44255,28 +44275,55 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 
 
 @media (min-width: 791px){
-	.pageLabel-homepage .hero .major-promos{
+	.pageLabel-homepage .hero .major-promos,.template-pages-layout-micrositePage1 .hero .major-promos{
 		width:500px;
 	}
 }
 
 @media (max-width: 600px) and (min-width: 315px){
-	.pageLabel-homepage .major-promo-header-italic{
+	.pageLabel-homepage .major-promo-header-italic,.template-pages-layout-micrositePage1 .major-promo-header-italic{
 		font-size: 12px;
    		margin: 0 0 10px;
 	}
-	.pageLabel-homepage span.major-promo-description{
+	.pageLabel-homepage span.major-promo-description,.template-pages-layout-micrositePage1 span.major-promo-description{
 		font-size: 22px;
 	}
-	.pageLabel-homepage span.major-promo-description+a{
+	.pageLabel-homepage span.major-promo-description+a,.template-pages-layout-micrositePage1 span.major-promo-description+a{
 		font-size: 10px;
     	height: 30px;
     	letter-spacing: 2px;
     	line-height: 28px;
    	 	width: 110px;
 	}
-	.pageLabel-homepage div.content-block-slider.electronic-brand-slider{
+	.pageLabel-homepage div.content-block-slider.electronic-brand-slider,.template-pages-layout-micrositePage1 div.content-block-slider.electronic-brand-slider{
 		margin:0;
+	}
+	.pageLabel-homepage .hero.icid ul.major-promos,.template-pages-layout-micrositePage1 .hero.icid ul.major-promos{
+		position: absolute;
+		color: #fff;
+	}
+}
+@media (max-width:767px){
+	.pageLabel-homepage .hero.icid ul.major-promos,.template-pages-layout-micrositePage1 .hero.icid ul.major-promos{
+		position: absolute;
+		color: #fff;
+		bottom: 15%;
+    	left: 20px;
+    	width: 70%;
+	}
+	.pageLabel-homepage .major-promo-header-italic, .template-pages-layout-micrositePage1 .major-promo-header-italic{
+		font-size: 18px;
+    	margin: 0 0 20px;
+	}
+	.pageLabel-homepage .hero .major-promos span.major-promo-description, .template-pages-layout-micrositePage1 .hero .major-promos span.major-promo-description{
+		font-size: 22px;
+	}
+	.pageLabel-homepage .timeout-slider .carousel .item span.major-promo-description+a, .template-pages-layout-micrositePage1 .timeout-slider .carousel .item span.major-promo-description+a{
+		font-size: 10px;
+    	height: 30px;
+    	letter-spacing: 2px;
+    	line-height: 12px;
+    	width: 110px;
 	}
 }
 

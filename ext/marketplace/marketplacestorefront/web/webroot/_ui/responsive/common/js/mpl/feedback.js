@@ -1928,7 +1928,7 @@ $(document).ready(function() {
 });
 
 $(document).ajaxComplete(function(){
-	if(!$("body").hasClass("pageLabel-homepage")){
+	if(!$("body").hasClass("pageLabel-homepage") && !$("body").hasClass("template-pages-layout-micrositePage1")){
 		$("body").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
 	}
 });
