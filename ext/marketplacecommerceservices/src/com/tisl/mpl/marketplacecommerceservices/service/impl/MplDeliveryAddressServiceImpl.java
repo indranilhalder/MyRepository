@@ -12,19 +12,30 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressDto;
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 //import com.sap.security.core.server.csi.util.StringUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.TemproryAddressModel;
+import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplDeliveryAddressDao;
 //import com.tis.mpl.facade.changedelivery.Impl.ChangeDeliveryAddressFacadeImpl;
@@ -51,6 +62,9 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 	@Autowired
 	OrderModelDao orderModelDao;
+
+	@Autowired
+	private CustomOmsOrderService customOmsOrderService;
 
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressServiceImpl.class);
 
@@ -143,19 +157,19 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		return changable;
 	}
 
-
 	@Override
-	public boolean saveTemporaryAddress(final String orderCode, final TemproryAddressModel temproryAddressModel)
+	public boolean saveTemporaryAddress(OrderModel orderModel, TemproryAddressModel temproryAddressModel)
 	{
-		boolean flag = false;
+		boolean isTempAddressSave = false;
 		try
 		{
-			if (StringUtils.isNotEmpty(orderCode) && temproryAddressModel != null)
+			if (temproryAddressModel != null)
 			{
-				temproryAddressModel.setOrderId(orderCode);
-				temproryAddressModel.setOwner(orderModelDao.getOrderModel(orderCode));
-				modelService.save(temproryAddressModel);
-				flag = true;
+				temproryAddressModel.setOrderId(orderModel.getCode());
+				temproryAddressModel.setOwner(orderModel);
+				temproryAddressModel.setIsApproval(true);
+				modelService.saveAll(temproryAddressModel);
+				isTempAddressSave = true;
 			}
 		}
 		catch (final ModelSavingException expection)
@@ -166,57 +180,54 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		{
 			LOG.error("TemproryAddressModel" + expection.getMessage());
 		}
-		return flag;
+		return isTempAddressSave;
 	}
 
 
 
+
 	@Override
-	public boolean saveDeliveryAddress(final String orderCode)
+	public boolean saveDeliveryAddress(String orderCode)
 	{
-		boolean flag = false;
+		boolean isDeliveryAddressChange = false;
 		try
 		{
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-				OrderModel orderModel;
-				final TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
-				orderModel = orderModelDao.getOrderModel(orderCode);
-				if (orderModel != null)
-				{
-					final UserModel user = orderModel.getUser();
-					final List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
-					final Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
-					final Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
-					if (null != deliveryAddresses)
-					{
-						deliveryAddressesList.addAll(deliveryAddresses);
-					}
-					if (null != user.getAddresses())
-					{
-						customerAddressesList.addAll(user.getAddresses());
-					}
 
-					AddressModel addrModel = new AddressModel();
-					addrModel = setNewDeliveryAddress(temproryAddressModel);
-					addrModel.setOwner(temproryAddressModel.getOwner());
-					modelService.save(addrModel);
-					deliveryAddressesList.add(addrModel);
-					customerAddressesList.add(addrModel);
-					orderModel.setDeliveryAddress(addrModel);
-					user.setAddresses(customerAddressesList);
-					orderModel.setDeliveryAddresses(deliveryAddressesList);
-					if (null != orderModel.getChildOrders())
+				TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
+
+				if (temproryAddressModel != null)
+				{
+					if (temproryAddressModel.isIsApproval())
 					{
-						for (final OrderModel childOrder : orderModel.getChildOrders())
+						OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+						if (orderModel != null)
 						{
-							childOrder.setDeliveryAddress(addrModel);
+							UserModel user = orderModel.getUser();
+							List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
+							Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
+							Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
+							if (null != deliveryAddresses)
+							{
+								deliveryAddressesList.addAll(deliveryAddresses);
+							}
+							if (null != user.getAddresses())
+							{
+								customerAddressesList.addAll(user.getAddresses());
+							}
+							deliveryAddressesList.add(temproryAddressModel);
+							customerAddressesList.add(temproryAddressModel);
+							orderModel.setDeliveryAddress(temproryAddressModel);
+							user.setAddresses(customerAddressesList);
+							orderModel.setDeliveryAddresses(deliveryAddressesList);
+							temproryAddressModel.setIsProcessed(Boolean.TRUE);
+							temproryAddressModel.setIsApproval(false);
+							modelService.saveAll(orderModel);
+							modelService.saveAll(user);
+							isDeliveryAddressChange = true;
 						}
 					}
-					modelService.saveAll(orderModel);
-					modelService.saveAll(user);
-					modelService.remove(temproryAddressModel);
-					flag = true;
 				}
 			}
 		}
@@ -224,7 +235,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		{
 			LOG.error("OrderModel chnage deliveryAddress" + expection.getMessage());
 		}
-		return flag;
+		return isDeliveryAddressChange;
 	}
 
 
@@ -247,7 +258,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		{
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-				final TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
+				 TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
 				if (temproryAddressModel != null && StringUtils.isNotEmpty(temproryAddressModel.getPostalcode()))
 				{
 					modelService.remove(temproryAddressModel);
@@ -261,59 +272,184 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 	}
 
-	private AddressModel setNewDeliveryAddress(final TemproryAddressModel newDeliveryAddress)
+	
+
+	@Override
+	public boolean setStatusForTemporaryAddress(String orderId, boolean isApproval)
 	{
-		final AddressModel deliveryAddress = new AddressModel();
-		if (null != newDeliveryAddress.getFirstname())
+		boolean flag = false;
+		TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderId);
+		try
 		{
-			deliveryAddress.setFirstname(newDeliveryAddress.getFirstname());
+			if (temproryAddressModel != null)
+			{
+				temproryAddressModel.setIsApproval(false);
+				modelService.saveAll(temproryAddressModel);
+				flag = true;
+			}
 		}
-		if (null != newDeliveryAddress.getLastname())
+		catch (final ModelSavingException expection)
 		{
-			deliveryAddress.setLastname(newDeliveryAddress.getLastname());
+			LOG.error("OrderModel chnage deliveryAddress" + expection.getMessage());
 		}
-		if (null != newDeliveryAddress.getStreetname())
+		return flag;
+	}
+
+	@Override
+	public boolean updateContactDetails(TemproryAddressModel temproryAddressModel, OrderModel orderModel)
+	{
+		boolean flag = false;
+		try
 		{
-			deliveryAddress.setStreetname(newDeliveryAddress.getStreetname());
+			AddressModel addressModel = orderModel.getDeliveryAddress();
+			if (temproryAddressModel != null && addressModel != null)
+			{
+				addressModel.setFirstname(temproryAddressModel.getFirstname());
+				addressModel.setLastname(temproryAddressModel.getLastname());
+				addressModel.setPhone1(temproryAddressModel.getPhone1());
+				orderModel.setDeliveryAddress(addressModel);
+				modelService.saveAll(orderModel);
+				flag = true;
+			}
 		}
-		if (null != newDeliveryAddress.getStreetnumber())
+		catch (final ModelSavingException expection)
 		{
-			deliveryAddress.setStreetnumber(newDeliveryAddress.getStreetnumber());
+			LOG.error("In OrderModel Update" + expection.getMessage());
 		}
-		if (null != newDeliveryAddress.getAddressLine3())
-		{
-			deliveryAddress.setAddressLine3(newDeliveryAddress.getAddressLine3());
-		}
-		if (null != newDeliveryAddress.getEmail())
-		{
-			deliveryAddress.setEmail(newDeliveryAddress.getEmail());
-		}
-		if (null != newDeliveryAddress.getPostalcode())
-		{
-			deliveryAddress.setPostalcode(newDeliveryAddress.getPostalcode());
-		}
-		if (null != newDeliveryAddress.getCountry())
-		{
-			deliveryAddress.setCountry(newDeliveryAddress.getCountry());
-		}
-		if (null != newDeliveryAddress.getCity())
-		{
-			deliveryAddress.setCity(newDeliveryAddress.getCity());
-		}
-		if (null != newDeliveryAddress.getState())
-		{
-			deliveryAddress.setState(newDeliveryAddress.getState());
-		}
-		if (null != newDeliveryAddress.getLandmark())
-		{
-			deliveryAddress.setLandmark(newDeliveryAddress.getLandmark());
-		}
-		if (null != newDeliveryAddress.getPhone1())
-		{
-			deliveryAddress.setPhone1(newDeliveryAddress.getPhone1());
-		}
-		return deliveryAddress;
+		return flag;
 	}
 
 
+
+
+	/**
+	 * OMS Request Sending For ScheduledDeliveryDate
+	 * Argument- OrderModel
+	 * return List of Transaction Id and date 
+	 */
+	@Override
+	public List<TransactionEddDto> getScheduledDeliveryDate(OrderModel orderModel, String newPincode)
+	{
+		List<TransactionEddDto> transactionEddDtosList =new ArrayList<TransactionEddDto>();
+		try
+		{
+			ChangeDeliveryAddressResponseDto changeDeliveryAddressResponseDto = new ChangeDeliveryAddressResponseDto();
+			
+			changeDeliveryAddressResponseDto = scheduledDeliveryDateRequestToOMS(orderModel, newPincode);
+			if (changeDeliveryAddressResponseDto.getResponse().equalsIgnoreCase("Success"))
+			{
+				 transactionEddDtosList=changeDeliveryAddressResponseDto.getTransactionEddDtos();
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch (Exception exception)
+		{
+			LOG.error("Sending Oms request to OMS for scheduledDelivery "+exception.getMessage());
+		}
+		return transactionEddDtosList;
+	}
+
+
+	
+	public ChangeDeliveryAddressResponseDto scheduledDeliveryDateRequestToOMS(OrderModel orderModel, String newPincode)
+	{
+		ChangeDeliveryAddressResponseDto omsResponse = new ChangeDeliveryAddressResponseDto();
+		try
+		{
+		   LOG.info("get scheduled DeliveryDate to Oms" + orderModel.getCode() + newPincode);
+		   ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
+			List<TransactionSDDto> transactionSDDtoList = setTransactionSDDto(orderModel);
+			requestData.setInterfaceType(MarketplacecommerceservicesConstants.INTERFACE_TYPE_SD);
+			if (StringUtils.isNotEmpty(orderModel.getCode()))
+			{
+				requestData.setOrderID(orderModel.getCode());
+			}
+			if (StringUtils.isNotEmpty(newPincode))
+			{
+				requestData.setPincode(newPincode);
+			}
+			if (CollectionUtils.isNotEmpty(transactionSDDtoList))
+			{
+				requestData.setTransactionSDDtos(transactionSDDtoList);
+			}
+	
+	   	/*omsResponse = customOmsOrderService.changeDeliveryRequestCallToOMS(requestData);
+	   	*/
+		}
+		catch (Exception exception)
+		{
+			LOG.error("Sending Oms request to OMS for scheduledDelivery "+exception.getMessage());
+		}
+		return omsResponse;
+	}
+
+
+
+	/**
+	 * Preparing eligible Transaction Data for scheduledDelivery
+	 * @param orderModel
+	 * @return List<TransactionSDDto>
+	 */
+	List<TransactionSDDto> setTransactionSDDto(OrderModel orderModel)
+	{
+		List<TransactionSDDto> transactionSDDtoList = new ArrayList<TransactionSDDto>();
+		TransactionSDDto transactionSDDto = new TransactionSDDto();
+		for (OrderModel subOrder : orderModel.getChildOrders())
+		{
+			for (AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
+			{
+				if (abstractOrderEntry.getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+				{
+					if (abstractOrderEntry.getEdScheduledDate() != null)
+					{
+						if (StringUtils.isNotEmpty(abstractOrderEntry.getTransactionID()))
+						{
+							transactionSDDto.setTransactionID(abstractOrderEntry.getTransactionID());
+							transactionSDDtoList.add(transactionSDDto);
+						}
+					}
+				}
+			}
+		}
+		return transactionSDDtoList;
+	}
+
+
+
+	@Override
+	public Map<String,Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList)
+	{
+		Map<String, Object> scheduledDeliveryDate = new HashMap<String,Object>();
+		SimpleDateFormat to = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+		SimpleDateFormat newFormat = new SimpleDateFormat("MMM-dd");
+		ArrayList<String> datesList = new ArrayList<String>();
+		try
+		{
+			for (TransactionEddDto transactionEddDto : transactionEddDtoList)
+			{
+				if (StringUtils.isNotEmpty(transactionEddDto.getEDD()))
+				{
+					Map<String, ArrayList<String>> scheduledDeliveryTime = new HashMap<String,ArrayList<String>>();
+					String stringDate = transactionEddDto.getEDD();
+					Date date = to.parse(stringDate);
+					String  newdate=to.format(newFormat.parse(stringDate));
+					datesList.add(newdate);
+					DateTime dateTime = new DateTime(date);
+					dateTime=dateTime.plusDays(1);
+					datesList.add(dateTime.toString());
+					dateTime=dateTime.plusDays(1);
+					datesList.add(dateTime.toString());
+					scheduledDeliveryDate.put(transactionEddDto.getTransactionID(), datesList);
+				}
+			}
+		}
+		catch (ParseException parseException)
+		{
+			LOG.info("parseException raing converrting time" + parseException.getMessage());
+		}
+		return scheduledDeliveryDate;
+	}
 }
