@@ -20119,6 +20119,8 @@ font-size:14px;
 /*  margin-bottom: 10px; */
  font-weight: 500;
  background: #fff;
+ display: none;
+ border-collapse: separate;
 }
 #EMITermTable th{
     font-weight: 500;
@@ -43097,7 +43099,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 } */
 
 #bankNameForEMI {
-	width: 280px;
+	width: 250px;
 	border: 2px solid #f5f5f5;
 }
 
@@ -43157,6 +43159,53 @@ body.page-productDetails .breadcrumbs.wrapper {
 .OtherSellers .Padd .InfoWrap .Content > div.Buying button{ width:49%; padding: 0; margin:0; letter-spacing:0; height:45px;}
 .OtherSellers .Padd .InfoWrap .Content > div.Buying button:first-child{ float:left; border:1px solid #a9143c; color:#a9143c; background:none;}
 .OtherSellers .Padd .InfoWrap .Content > div.Buying button:last-child{ float:right;}
+
+
+
+/*Offer Popup*/
+#OfferWrap{ position:relative;}
+span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; color:#a6153f; font-size:13px; cursor:pointer; font-weight:bold;}
+#OfferWrap .Inner{ max-width:600px; width:600px;}
+#OfferWrap .Inner h2{ font-size:24px; color:#000; text-transform:uppercase; font-weight:bold; margin: 0 0 15px; text-align: left;}
+#OfferWrap .Inner h3{ color:#a7183e;font-size:14px;text-transform:uppercase; margin: 0 0 15px; text-align: left;}
+#OfferWrap .Inner li {    border-bottom: 1px solid #ccc;    display: inline-block;    margin: 0 0 20px;    padding: 0 0 20px;    width: 100%;}
+#OfferWrap .Inner li:last-child{ border:0; margin:0; padding:0;}
+#OfferWrap .Inner .Left {    float: left;    width: 26%;}
+#OfferWrap .Inner .right {    float: right !important;    width: 74%;}
+#OfferWrap .Inner p{ font-size:16px; color:#000; text-transform:uppercase;font-weight:bold; letter-spacing:1px; margin:0 0 5px;  }
+#OfferWrap .Inner p + p{ font-size:14px; text-transform:none; font-weight:normal; line-height:25px;width: 80%;}
+#OfferWrap .Inner a{ font-size:10px; color:#a7183e; text-decoration:underline;}
+#OfferWrap .show-date {text-align: left;}
+
+/*Mobile portrait
+---------------------------------------------*/
+@media(max-width:400px){
+	/*Offer Popup*/
+	#OfferWrap .Inner h2{ font-size: 18px;}
+	#OfferWrap .Inner p + p,
+	#OfferWrap .Inner{width: 100%;}
+	#OfferWrap .Inner .right{width: 60%;}
+	#OfferWrap .Inner .Left{width: 35%;}
+	#OfferWrap .Inner p{font-size: 14px;}
+	#OfferWrap .Inner p + p{ line-height: 20px;font-size: 12px;}
+}
+
+@media(max-width:767px){
+/*Offer Popup*/
+	#OfferWrap .Inner{width: 100%;}
+	#OfferWrap .Inner .right{width: 60%;}
+	#OfferWrap .Inner .Left{width: 40%;}
+	span.Close{right: 10px;top: 5px;}
+	
+	.offer-content {
+		padding: 20px !important;
+	}
+}
+
+#promotionDetailsId {
+	display: none !important;
+}
+
 
 /*New pdp end*/
 

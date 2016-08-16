@@ -1751,6 +1751,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 function openPopForBankEMI() {
 	var productVal = $("#prodPrice").val();
 	var optionData = "<option value='select' disabled selected>Select</option>";
+	$("#EMITermTable").hide();
 	$("#emiTableTHead").hide();
 	$("#emiTableTbody").hide();
 	var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
@@ -1778,6 +1779,7 @@ function openPopForBankEMI() {
 //TISPRO-533
 function populateEMIDetailsForPDP(){
 //$( "#bankNameForEMI" ).change(function() {
+	
 	var productVal = $("#prodPrice").val();
 		
 		var selectedBank = $('#bankNameForEMI :selected').text();
@@ -1810,6 +1812,7 @@ function populateEMIDetailsForPDP(){
 						}
 
 						$("#emiTableTbody").html(contentData);
+						$("#EMITermTable").show();
 					} else {
 						$('#emiNoData').show();
 					}
@@ -2624,7 +2627,7 @@ function loadDefaultWishListName_SizeGuide() {
 		$(".Emi > p").on("click",function(){
 			if($(window).width() <= 790){
 				$(this).addClass("active mobile");
-				$("body").append("<div class='emi-overlay' style='opacity:0.50; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+				$("body").append("<div class='emi-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 				openPopForBankEMI();
 				
 			}
@@ -2634,6 +2637,13 @@ function loadDefaultWishListName_SizeGuide() {
 			$(".emi-overlay").remove();
 		});
 		
+		$(document).on("click",".product-detail .promo-block .details",function(e){
+			e.preventDefault();
+			offerPopup($("#promotionDetailsId").html());
+		});
+		$(document).on('hide.bs.modal', function () {
+		    $("#offerPopup").remove();
+		}); 
 	});
 	/*Wishlist In PDP changes*/
 	function getLastModifiedWishlist(ussidValue) {
@@ -2662,3 +2672,8 @@ function loadDefaultWishListName_SizeGuide() {
 		ussidValue = $("#ussid").val();
 		getLastModifiedWishlist(ussidValue);
 	});
+	/*Offer popup*/
+	function offerPopup(comp) {
+		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+		$("#offerPopup").modal('show');
+	} 
