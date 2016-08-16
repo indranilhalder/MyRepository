@@ -125,7 +125,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
 	 */
 	@Override
@@ -138,7 +138,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
 	 */
 	@Override
@@ -197,5 +197,16 @@ public class MplWishlistServiceImpl implements MplWishlistService
 	public void setModelService(final ModelService modelService)
 	{
 		this.modelService = modelService;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
+	 */
+	@Override
+	public List<Wishlist2Model> getWishListAgainstUser(final UserModel user)
+	{
+		return getMplWishlistDao().getWishListAgainstUser(user);
 	}
 }

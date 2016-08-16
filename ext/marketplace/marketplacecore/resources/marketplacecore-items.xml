@@ -113,7 +113,7 @@
 
 	<enumtypes>
 	
-	<!-- 	TPR-628-Make changes to Banners rendering in MObile Viewports -->
+		<!-- 	TPR-628-Make changes to Banners rendering in MObile Viewports -->
 		
 		<enumtype generate="true" code="BannerViewType" autocreate="true">
 			<value code="mobileView" />
@@ -1053,8 +1053,7 @@
 				qualifier="collectionProducts"></targetElement>
 		</relation>
 	</relations>
-
-	<itemtypes> 
+	<itemtypes>
 	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
 	
 			<itemtype code="BannerComponent" autocreate="false"

@@ -183,9 +183,28 @@
 			  
 		});
 		//End
+		//added for Size guide Variant select
+		$(document).on("click", '.variant-select li span',
+				function() {
+				  var target = $(this).attr('data-producturl');
+				//   console.log(target);
+				  var productcode= $(this).attr('data-productcode');
+				//   console.log(productcode);
+				   $('body').on('hidden.bs.modal', '#popUpModal', function () {
+						  $(this).removeData('bs.modal');
+						});
+
+				   // load the url and show modal on success
+				   $("#popUpModal .modal-content").load(target, function() { 
+					   	   $("#popUpModal").modal("show");
+						  // buyboxDetailsForSizeGuide(productcode);
+				    });
+				  
+			});
+		
 		
 		// Sise Guide Select Size
-		$(document).on("change", '.variant-select',function(){
+		/*$(document).on("change", '.variant-select',function(){
 		//	console.log($(this).find('option:selected').data('productcode1'));
 //			var value = $("#variant .dsa").attr("value");
 			var value = $(this).find('option:selected').data('producturl');
@@ -199,7 +218,7 @@
 		         $("#popUpModal").modal("show");
 		     	//buyboxDetailsForSizeGuide(productcode);
 		    });
-		});
+		});*/
 		
 		//TISPRO-333
 		/*$(document).on("click", 'a[data-target=#popUpModal] ',
@@ -557,12 +576,18 @@ function selectWishlist(i) {
 }
 
 function addToWishlist(alreadyAddedWlName_pdp) {
+	
+	var loggedIn=$("#loggedIn").val();
 
 	var productCodePost = $("#productCodePost").val();
 
 	var wishName = "";
+	
+	var ussidValue=$("#ussid").val();
+	
+	var existsUssid = getLastModifiedWishlist(ussidValue);
   
-	if (wishListList == "") {
+	/*if (wishListList == "") {
 		wishName = $("#defaultWishName").val();
 	} else {
 		wishName = wishListList[$("#hidWishlist").val()];
@@ -586,7 +611,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
     		$("#wishlistErrorId_pdp").css("display","block");
     	}
     	return false;
-    }
+    }*/
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "-addToWishListInPDP";
     var sizeSelected=true;
@@ -596,72 +621,80 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
-	$.ajax({
-		contentType : "application/json; charset=utf-8",
-		url : requiredUrl,
-		data : dataString,
-		dataType : "json",
-		success : function(data) {
-			if (data == true) {
-				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
-				var msg=$('#wishlistSuccess').text();
-				$('#addedMessage').show();
-				$('#addedMessage').html(msg);
-				/*setTimeout(function() {
-					  $("#addedMessage").fadeOut().empty();
-					}, 1500);*/
-				$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
-				populateMyWishlistFlyOut(wishName);
-				
-				//For MSD
-				var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
-				if(isMSDEnabled === 'true')
-				{
-				//console.log(isMSDEnabled);
-				var isApparelExist  = $("input[name=isApparelExist]").val();
-				//console.log(isApparelExist);				
-				var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-				//console.log(salesHierarchyCategoryMSD);
-				var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-				//console.log(rootCategoryMSD);				
-				var productCodeMSD =  $("input[name=productCodeMSD]").val();
-				//console.log(productCodeMSD);				
-				var priceformad =  $("input[id=price-for-mad]").val();
-				//console.log(priceformad);				
-				
-				if(typeof isMSDEnabled === 'undefined')
-				{
-					isMSDEnabled = false;						
-				}
-				
-				if(typeof isApparelExist === 'undefined')
-				{
-					isApparelExist = false;						
-				}	
-				
-				if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
-					{					
-					ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
+	if(loggedIn == 'false') {
+		$("#wishListNonLoggedInId").show();
+		//The items have been added to your wishlist
+		//globalErrorPopup("Please sign in to add item into wishlist!")
+	}
+	else {
+	
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			dataType : "json",
+			success : function(data) {
+				if (data == true) {
+					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
+					var msg=$('#wishlistSuccess').text();
+					$('#addedMessage').show();
+					$('#addedMessage').html(msg);
+					/*setTimeout(function() {
+						  $("#addedMessage").fadeOut().empty();
+						}, 1500);*/
+					$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
+					populateMyWishlistFlyOut(wishName);
+					
+					//For MSD
+					var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
+					if(isMSDEnabled === 'true')
+					{
+					
+					var isApparelExist  = $("input[name=isApparelExist]").val();
+							
+					var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
+					
+					var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
+						
+					var productCodeMSD =  $("input[name=productCodeMSD]").val();
+							
+					var priceformad =  $("input[id=price-for-mad]").val();
+								
+					
+					if(typeof isMSDEnabled === 'undefined')
+					{
+						isMSDEnabled = false;						
+					}
+					
+					if(typeof isApparelExist === 'undefined')
+					{
+						isApparelExist = false;						
 					}	
+					
+					if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
+						{					
+						ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
+						}	
+					}
+					//End MSD
+					
+					
+					
+					//openPop(ussidValue);
+				//	$('#myModal').modal('hide');
+				//	
 				}
-				//End MSD
-				
-				
-				
-				//openPop(ussidValue);
-			//	$('#myModal').modal('hide');
-			//	
-			}
-		},
-	});
+			},
+		});
 	
 	//$('a.wishlist#wishlist').popover('hide');
 	//$('input.wishlist#add_to_wishlist').popover('hide');
 	
-	setTimeout(function() {
-		$('a.wishlist#wishlist').popover('hide');
-		$('input.wishlist#add_to_wishlist').popover('hide');
-		}, 1500);
+		setTimeout(function() {
+			$('a.wishlist#wishlist').popover('hide');
+			$('input.wishlist#add_to_wishlist').popover('hide');
+			}, 1500);
+	}
 }
 
 
@@ -1291,15 +1324,15 @@ $( document ).ready(function() {
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
 				
-				$("#variant option").each(function(){
-				if($(this).val().toUpperCase().indexOf(key)!= -1 && value == 0){
-					$(this).attr("disabled","disabled");
-					$(this).css({
-						"color": "gray"
-				});
-					$(this).parent().css("border-color","gray");
+				$("#variant li a").each(function(){
+					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
+						
+					$(this).removeAttr("href");
+					$(this).parent().addClass('strike');
+				//$(this).parent().css("border-color","gray");
+				$("#outOfStockId").hide();
+				
 					}
-					$("#outOfStockId").hide();
 				});
 				
 				
@@ -1329,12 +1362,14 @@ $( document ).ready(function() {
 					if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
-						$("#promotionDetailsId").show();
+						//TPR-772
+						$(".promo-block").show();
 					} else {
 						if (promorestrictedSellers.length > 0
 								&& !(promorestrictedSellers
 										.indexOf(data['sellerId']) == -1))
-							$("#promotionDetailsId").show();
+							//TPR-772
+							$(".promo-block").show();
 					}
 					var allStockZero = data['allOOStock'];
 					// var codEnabled = data['isCod'];
@@ -1472,9 +1507,15 @@ $( document ).ready(function() {
 		if(null!= availibility){
 			setTimeout(function(){
 			$.each(availibility,function(key,value){
-				$(".variant-select-sizeGuidePopUp option").each(function(){
+				$(".variant-select-sizeGuidePopUp li span").each(function(){
 					if(typeof($(this).attr("data-producturl"))!= 'undefined' && $(this).attr("data-producturl").indexOf(key)!= -1 && value == 0){
+						
 						$(this).attr("disabled","disabled");
+						$(this).css({
+							"color": "gray"
+					});
+						$(this).removeAttr("data-producturl");
+						
 						}
 				});
 			});	
@@ -1746,6 +1787,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 function openPopForBankEMI() {
 	var productVal = $("#prodPrice").val();
 	var optionData = "<option value='select' disabled selected>Select</option>";
+	$("#EMITermTable").hide();
 	$("#emiTableTHead").hide();
 	$("#emiTableTbody").hide();
 	var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
@@ -1773,6 +1815,7 @@ function openPopForBankEMI() {
 //TISPRO-533
 function populateEMIDetailsForPDP(){
 //$( "#bankNameForEMI" ).change(function() {
+	
 	var productVal = $("#prodPrice").val();
 		
 		var selectedBank = $('#bankNameForEMI :selected').text();
@@ -1805,6 +1848,7 @@ function populateEMIDetailsForPDP(){
 						}
 
 						$("#emiTableTbody").html(contentData);
+						$("#EMITermTable").show();
 					} else {
 						$('#emiNoData').show();
 					}
@@ -2591,4 +2635,99 @@ function loadDefaultWishListName_SizeGuide() {
 						});
 				   $("#popUpModal").modal("show");
 				   buyboxDetailsForSizeGuide(productcode);	
+	} 
+/*TPR-630*/
+	$(document).ready(function(){
+		$(".Emi > p").on("mouseenter",function(){
+			if(!$(this).hasClass("active") && $(window).width() > 790){
+				$(this).addClass("active");
+				openPopForBankEMI();
+			}
+		});
+		$(".Emi > p").on("mouseleave",function(){
+			if($(window).width() > 790){
+				$(this).removeClass("active");
+			}
+		});
+		$(".Emi > #EMImodal-content").on("mouseenter",function(){
+			if($(window).width() > 790){
+				$(".Emi > p").addClass("active")
+			}
+		});
+		$(".Emi > #EMImodal-content").on("mouseleave",function(){
+			if($(window).width() > 790){
+				$(".Emi > p").removeClass("active")
+			}
+		});
+		
+		$(".Emi > p").on("click",function(){
+			if($(window).width() <= 790){
+				$(this).addClass("active mobile");
+				$("body").append("<div class='emi-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+				openPopForBankEMI();
+				
+			}
+		});
+		$(document).on("click",".emi-overlay,.Emi .modal-content .Close",function(){
+			$(".Emi > p").removeClass("active mobile");
+			$(".emi-overlay").remove();
+		});
+		
+		$(window).resize(function(){
+			if($(window).width() > 790){
+				$(".Emi > p").removeClass("active mobile");
+				$(".emi-overlay").remove();
+			}
+		})
+		
+		$(document).on("click",".product-detail .promo-block .details",function(e){
+			e.preventDefault();
+			offerPopup($("#promotionDetailsId").html());
+		});
+		$(document).on('hide.bs.modal', function () {
+		    $("#offerPopup").remove();
+		}); 
+		
+		$("#pin").focus(function(){
+			$("#pdpPincodeCheck").text("Check Availability")
+		});
+		$("#pin").blur(function() {
+			if ($(this).val() == "") {
+				$("#pdpPincodeCheck").text("Check Availability")
+			} else {
+				$("#pdpPincodeCheck").text("Change Pincode")
+			}
+		});
+	});
+	/*Wishlist In PDP changes*/
+	function getLastModifiedWishlist(ussidValue) {
+		
+		var requiredUrl = ACC.config.encodedContextPath + "/p"
+				+ "-getLastModifiedWishlistByUssid";
+		var dataString = 'ussid=' + ussidValue;
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			dataType : "json",
+			success : function(data) {
+			if (data == true) {
+				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
+			}
+			
+			},
+			error : function(xhr, status, error) {
+				$("#wishlistErrorId_pdp").html("Could not add the product in your wishlist");
+			}
+		});
+	}
+	
+	$(document).ready(function(){
+		ussidValue = $("#ussid").val();
+		getLastModifiedWishlist(ussidValue);
+	});
+	/*Offer popup*/
+	function offerPopup(comp) {
+		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+		$("#offerPopup").modal('show');
 	} 

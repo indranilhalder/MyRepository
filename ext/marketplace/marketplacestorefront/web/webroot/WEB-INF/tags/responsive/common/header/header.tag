@@ -103,6 +103,7 @@
 									<cms:component component="${component}" />
 								</cms:pageSlot>
 								<li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li>
+								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
 							</c:if>
 						</c:if>
 						<!--Using this tag for Track Order Link in header navigation pane and it will navigate to 'My Order page'  -->

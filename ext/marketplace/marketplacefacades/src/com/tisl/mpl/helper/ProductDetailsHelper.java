@@ -187,8 +187,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 *
-	 *
+	 * 
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -852,15 +852,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -985,5 +985,99 @@ public class ProductDetailsHelper
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return sizeGuideCode;
+	}
+
+
+	/**
+	 * @param productCode
+	 * @param ussid
+	 * @param user
+	 * @param valueOf
+	 * @return
+	 */
+	public boolean addSingleToWishList(final String productCode, final String ussid, final Boolean sizeSelected)
+	{
+		boolean add = false;
+		final String wishName = "MyWishlist";
+		Wishlist2Model lastCreatedWishlist = null;
+		final UserModel user = userService.getCurrentUser();
+		try
+		{
+			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
+			if (null != lastCreatedWishlist)
+			{
+				add = wishlistFacade.addProductToWishlist(lastCreatedWishlist, productCode, ussid, sizeSelected.booleanValue());
+
+				LOG.debug("addToWishListInPopup: ***** getLastCreatedWishlist: add" + add);
+			}
+			else
+			{
+				LOG.debug("addToWishListInPopup: ***** New Create");
+				final Wishlist2Model createdWishlist = wishlistFacade.createNewWishlist(user, wishName, productCode);
+				add = wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, sizeSelected.booleanValue());
+				final WishlistData wishData = new WishlistData();
+				wishData.setParticularWishlistName(createdWishlist.getName());
+				//existingWishlist = wishlistFacade.getWishlistForName(wishName);
+				wishData.setProductCode(productCode);
+			}
+			if (!add) //add == false
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3002);
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+
+			throw e;
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return add;
+	}
+
+	/**
+	 * @param ussid
+	 * @return
+	 */
+	public boolean getLastModifiedWishlistByUssid(final String ussid)
+	{
+		Wishlist2Model lastCreatedWishlist = null;
+		boolean existUssid = false;
+		try
+		{
+			final UserModel user = userService.getCurrentUser();
+			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
+			if (null != lastCreatedWishlist)
+			{
+				for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
+				{
+					if (null != (entry) && null != entry.getUssid() && (entry.getUssid()).equalsIgnoreCase(ussid))
+					{
+						existUssid = true;
+						break;
+					}
+				}
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return existUssid;
 	}
 }

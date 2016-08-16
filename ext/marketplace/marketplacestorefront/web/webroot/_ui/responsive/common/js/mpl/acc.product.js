@@ -1100,7 +1100,8 @@ $(button_my_button)
 					// construct custom price query params
 					var minPriceSearchTxt = $('.minPriceSearchTxt').val();
 					var maxPriceSearchTxt = $('.maxPriceSearchTxt').val();
-					var currentQryParam = $('.currentQueryParamsApply').val();
+					//var currentQryParam = $('.currentQueryParamsApply').val();
+					var currentQryParam = $('.currentPriceQueryParams').val();
 					var facetValue = $('.facetValue').val();
 
 					var queryParamsAry = currentQryParam.split(':');
