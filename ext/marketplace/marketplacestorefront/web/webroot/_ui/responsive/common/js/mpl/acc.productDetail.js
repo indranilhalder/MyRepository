@@ -2648,7 +2648,7 @@ function loadDefaultWishListName_SizeGuide() {
 			dataType : "json",
 			success : function(data) {
 			if (data == true) {
-				$('.product-info .picZoomer-pic-wp .zoom a').addClass("added");
+				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 			}
 			
 			},

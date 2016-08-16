@@ -19624,7 +19624,7 @@ div.other-sellers .navigation button.next:after {
         padding-bottom: 10px
     }
     div.other-sellers .other-sellers-table tbody tr td:last-child {
-        border-bottom: 20px solid #fafafa
+/*         border-bottom: 20px solid #fafafa */
     }
 
     div.other-sellers .manage-wishlist thead th{
@@ -42672,7 +42672,7 @@ margin-left: 20%;
 		margin: 0;		
 		position: fixed;		
 		width: 100%;		
-		z-index: 99;		
+		z-index: 10000;		
 	}		
 	/*Products Right*/		
 	.product-info .product-content {		
@@ -43157,7 +43157,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 /*New pdp end*/
 
 /*Wishlist icon*/
-.product-info .picZoomer-pic-wp .zoom a:before {
+.product-info .picZoomer-pic-wp .zoom a:before, .product-image-container.device a.wishlist-icon:before {
     font-family: 'icomoon';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -43170,16 +43170,24 @@ body.page-productDetails .breadcrumbs.wrapper {
    font-weight: bold;
 }
 
-.product-info .picZoomer-pic-wp .zoom a:hover:before {
+.product-info .picZoomer-pic-wp .zoom a:hover:before,  .product-image-container.device a.wishlist-icon:hover:before {
 	content: "\e603";
 	opacity: 0.7;
 }
-.product-info .picZoomer-pic-wp .zoom a.added:before,.product-info .picZoomer-pic-wp .zoom a.added:hover:before {
+.product-info .picZoomer-pic-wp .zoom a.added:before,.product-info .picZoomer-pic-wp .zoom a.added:hover:before,
+.product-image-container.device a.wishlist-icon.added:before, .product-image-container.device a.wishlist-icon.added:hover:before  {
 	content: "\e603";
 	opacity:1;
 }
 
 
+.product-image-container.device a.wishlist-icon {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    z-index: 4;
+ }
+/*wishlist icon end*/
 /* TPR-628 starts*/
 
 .pageLabel-homepage .content-block-slider{

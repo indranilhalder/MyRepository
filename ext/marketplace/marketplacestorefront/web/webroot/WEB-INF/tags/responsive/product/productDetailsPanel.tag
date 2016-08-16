@@ -97,6 +97,7 @@ tr.d0 td {
 		</div>
 		<!-- Added for carousel in mobile view -->
 		<div class="product-image-container device">
+		<a class="wishlist-icon" onclick="addToWishlist()"></a>
 		<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
 			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 
 				<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">	
