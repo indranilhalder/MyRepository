@@ -43,7 +43,7 @@ public interface MplDeliveryAddressController {
 	 * @return boolean
 	 */
 	public abstract String changeDeliveryAddressCallToOMS(String code,
-			AddressModel newDeliveryAddress);
+			AddressModel newDeliveryAddress,String interfaceType);
 
 	/**
 	 * This Method is used to Get the temprory Address
