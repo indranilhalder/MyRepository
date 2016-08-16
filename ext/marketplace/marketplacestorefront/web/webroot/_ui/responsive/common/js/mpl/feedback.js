@@ -1671,6 +1671,9 @@ $(document).ready(function(){
 				$(this).find("ul.desktop>li.qty").css("top","auto");
 			}
 		});
+		if($("body.page-cartPage .cart.wrapper .checkout-types li.express-checkout").children().length == 0){
+			$("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").addClass("onlyCheckout");
+		}
 		});
 		
 });
