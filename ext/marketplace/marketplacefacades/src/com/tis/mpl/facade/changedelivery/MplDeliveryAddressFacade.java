@@ -73,9 +73,9 @@ public interface MplDeliveryAddressFacade
 
 	public void reScheduleddeliveryDate(RescheduleDataList rescheduleDataList);
 
-	public Map<String, Object> getDeliveryDate(final List<TransactionEddDto> transactionEddDtoList);
+	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList);
 
-	public List<TransactionEddDto> getScheduledDeliveryDate(final OrderModel orderModel, final String newPincode);
+	public List<TransactionEddDto> getScheduledDeliveryDate(OrderModel orderModel,String newPincode);
 	
 	public ChangeDeliveryAddressResponseDto scheduledDeliveryDateRequestToOMS(OrderModel orderModel,String newPincode);
 
