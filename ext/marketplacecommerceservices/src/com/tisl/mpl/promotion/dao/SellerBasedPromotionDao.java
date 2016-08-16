@@ -26,4 +26,10 @@ public interface SellerBasedPromotionDao
 
 	List<AbstractPromotionModel> getPromoDetails();
 
+	/**
+	 * @param promoCode
+	 * @return boolean
+	 */
+	boolean getPromoDetails(String promoCode);
+
 }

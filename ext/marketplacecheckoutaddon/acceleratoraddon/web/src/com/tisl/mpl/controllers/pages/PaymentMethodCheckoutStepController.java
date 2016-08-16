@@ -2616,7 +2616,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
 				{
-					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
 					//getMplCartFacade().recalculateOrder(orderModel);
 					responseData.setPromoExpiryMsg("redirect_to_payment");
 				}
@@ -2857,9 +2857,25 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				returnUrlBuilder.append("?value=").append(guid);
 			}
-			final String paymentAddressLine1 = java.net.URLDecoder.decode(addressLine1, UTF);
-			final String paymentAddressLine2 = java.net.URLDecoder.decode(addressLine2, UTF);
-			final String paymentAddressLine3 = java.net.URLDecoder.decode(addressLine3, UTF);
+			String paymentAddressLine1 = "";
+			String paymentAddressLine2 = "";
+			String paymentAddressLine3 = "";
+
+			if (StringUtils.isNotEmpty(addressLine1))
+			{
+				paymentAddressLine1 = java.net.URLDecoder.decode(addressLine1, UTF);
+			}
+			if (StringUtils.isNotEmpty(addressLine2))
+			{
+				paymentAddressLine2 = java.net.URLDecoder.decode(addressLine2, UTF);
+			}
+			if (StringUtils.isNotEmpty(addressLine3))
+			{
+				paymentAddressLine3 = java.net.URLDecoder.decode(addressLine3, UTF);
+			}
+			//final String paymentAddressLine1 = java.net.URLDecoder.decode(addressLine1, UTF);
+			//final String paymentAddressLine2 = java.net.URLDecoder.decode(addressLine2, UTF);
+			//final String paymentAddressLine3 = java.net.URLDecoder.decode(addressLine3, UTF);
 
 			final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
 			String uid = "";
@@ -3008,7 +3024,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
 				{
 
-					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
 					getMplCartFacade().recalculateOrder(orderModel);
 					redirectFlag = true;
 				}
@@ -3875,7 +3891,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

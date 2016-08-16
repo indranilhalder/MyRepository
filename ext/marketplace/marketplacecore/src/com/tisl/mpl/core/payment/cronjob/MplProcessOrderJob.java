@@ -9,8 +9,9 @@ import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
@@ -23,10 +24,9 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 public class MplProcessOrderJob extends AbstractJobPerformable<CronJobModel>
 {
-	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(MplProcessOrderJob.class.getName());
 
-	@Autowired
+	@Resource(name = "mplProcessOrderService")
 	MplProcessOrderService mplProcessOrderService;
 
 	/**
@@ -39,13 +39,8 @@ public class MplProcessOrderJob extends AbstractJobPerformable<CronJobModel>
 		try
 		{
 			//calling process Pending order method
-			mplProcessOrderService.processPaymentPedingOrders();
+			getMplProcessOrderService().processPaymentPedingOrders();
 
-		}
-		catch (final NullPointerException exception)
-		{
-			LOG.error("Null Pointer exception======================", exception);
-			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 		catch (final EtailNonBusinessExceptions exception)
 		{
@@ -53,7 +48,32 @@ public class MplProcessOrderJob extends AbstractJobPerformable<CronJobModel>
 			ExceptionUtil.etailNonBusinessExceptionHandler(exception);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
+		catch (final Exception exception)
+		{
+			LOG.error("Exception======================", exception);
+			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
+		}
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
+
+	/**
+	 * @return the mplProcessOrderService
+	 */
+	public MplProcessOrderService getMplProcessOrderService()
+	{
+		return mplProcessOrderService;
+	}
+
+	/**
+	 * @param mplProcessOrderService
+	 *           the mplProcessOrderService to set
+	 */
+	public void setMplProcessOrderService(final MplProcessOrderService mplProcessOrderService)
+	{
+		this.mplProcessOrderService = mplProcessOrderService;
+	}
+
+
+
 
 }

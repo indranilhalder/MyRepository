@@ -11,7 +11,6 @@ import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -26,14 +25,12 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
  */
 public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 {
-	private static final Logger LOG = Logger.getLogger(MplProcessOrderDaoImpl.class);
-
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao#getPaymentPedingOrders()
 	 */
 	@Override
@@ -48,7 +45,7 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTPENDINGSTATUS, statusCode);
 
 			//fetching PAYMENT PENDING order list from DB using flexible search query
-			final List<OrderModel> orderList = flexibleSearchService.<OrderModel> search(orderListQuery).getResult();
+			final List<OrderModel> orderList = getFlexibleSearchService().<OrderModel> search(orderListQuery).getResult();
 
 			return orderList;
 		}
@@ -117,7 +114,7 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 					MarketplacecommerceservicesConstants.BASESTORE_UID);
 
 			//fetching Webhook entries for Payment Pending orders
-			final Double juspayWebhookRetryTAT = flexibleSearchService.<Double> searchUnique(baseStoreQuery);
+			final Double juspayWebhookRetryTAT = getFlexibleSearchService().<Double> searchUnique(baseStoreQuery);
 
 			return juspayWebhookRetryTAT;
 		}
@@ -138,5 +135,27 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
+
+	/**
+	 * @return the flexibleSearchService
+	 */
+	public FlexibleSearchService getFlexibleSearchService()
+	{
+		return flexibleSearchService;
+	}
+
+	/**
+	 * @param flexibleSearchService
+	 *           the flexibleSearchService to set
+	 */
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
+	}
+
+
+
+
+
 
 }

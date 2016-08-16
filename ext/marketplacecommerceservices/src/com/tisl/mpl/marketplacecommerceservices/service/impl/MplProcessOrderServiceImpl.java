@@ -65,7 +65,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		try
 		{
 			//DAO call to fetch PAYMENT PENDING orders
-			final List<OrderModel> orders = mplProcessOrderDao.getPaymentPedingOrders(OrderStatus.PAYMENT_PENDING.toString());
+			final List<OrderModel> orders = getMplProcessOrderDao().getPaymentPedingOrders(OrderStatus.PAYMENT_PENDING.toString());
 			List<PaymentTransactionModel> paymentTransactions = new ArrayList<PaymentTransactionModel>();
 			String juspayOrder = "";
 
@@ -245,11 +245,17 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		}
 	}
 
+
+	/**
+	 * This method returns the tat for processing the order in the job
+	 * 
+	 * @return Double
+	 */
 	private Double getJuspayWebhookRetryTAT()
 	{
 		Double juspayWebhookRetryTAT = Double.valueOf(0);
 
-		juspayWebhookRetryTAT = mplProcessOrderDao.getJuspayWebhookRetryTAT();
+		juspayWebhookRetryTAT = getMplProcessOrderDao().getJuspayWebhookRetryTAT();
 		if (null != juspayWebhookRetryTAT && juspayWebhookRetryTAT.doubleValue() > 0)
 		{
 			return juspayWebhookRetryTAT;
@@ -259,4 +265,129 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			return juspayWebhookRetryTAT;
 		}
 	}
+
+	/**
+	 * @return the mplProcessOrderDao
+	 */
+	public MplProcessOrderDao getMplProcessOrderDao()
+	{
+		return mplProcessOrderDao;
+	}
+
+	/**
+	 * @param mplProcessOrderDao
+	 *           the mplProcessOrderDao to set
+	 */
+	public void setMplProcessOrderDao(final MplProcessOrderDao mplProcessOrderDao)
+	{
+		this.mplProcessOrderDao = mplProcessOrderDao;
+	}
+
+	/**
+	 * @return the juspayEBSService
+	 */
+	public JuspayEBSService getJuspayEBSService()
+	{
+		return juspayEBSService;
+	}
+
+	/**
+	 * @param juspayEBSService
+	 *           the juspayEBSService to set
+	 */
+	public void setJuspayEBSService(final JuspayEBSService juspayEBSService)
+	{
+		this.juspayEBSService = juspayEBSService;
+	}
+
+	/**
+	 * @return the mplJusPayRefundService
+	 */
+	public MplJusPayRefundService getMplJusPayRefundService()
+	{
+		return mplJusPayRefundService;
+	}
+
+	/**
+	 * @param mplJusPayRefundService
+	 *           the mplJusPayRefundService to set
+	 */
+	public void setMplJusPayRefundService(final MplJusPayRefundService mplJusPayRefundService)
+	{
+		this.mplJusPayRefundService = mplJusPayRefundService;
+	}
+
+	/**
+	 * @return the mplCommerceCartService
+	 */
+	public MplCommerceCartService getMplCommerceCartService()
+	{
+		return mplCommerceCartService;
+	}
+
+	/**
+	 * @param mplCommerceCartService
+	 *           the mplCommerceCartService to set
+	 */
+	public void setMplCommerceCartService(final MplCommerceCartService mplCommerceCartService)
+	{
+		this.mplCommerceCartService = mplCommerceCartService;
+	}
+
+	/**
+	 * @return the mplCancelOrderTicketImpl
+	 */
+	public MplCancelOrderTicketImpl getMplCancelOrderTicketImpl()
+	{
+		return mplCancelOrderTicketImpl;
+	}
+
+	/**
+	 * @param mplCancelOrderTicketImpl
+	 *           the mplCancelOrderTicketImpl to set
+	 */
+	public void setMplCancelOrderTicketImpl(final MplCancelOrderTicketImpl mplCancelOrderTicketImpl)
+	{
+		this.mplCancelOrderTicketImpl = mplCancelOrderTicketImpl;
+	}
+
+	/**
+	 * @return the orderStatusSpecifier
+	 */
+	public OrderStatusSpecifier getOrderStatusSpecifier()
+	{
+		return orderStatusSpecifier;
+	}
+
+	/**
+	 * @param orderStatusSpecifier
+	 *           the orderStatusSpecifier to set
+	 */
+	public void setOrderStatusSpecifier(final OrderStatusSpecifier orderStatusSpecifier)
+	{
+		this.orderStatusSpecifier = orderStatusSpecifier;
+	}
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
+
+
+
+
+
+
 }
