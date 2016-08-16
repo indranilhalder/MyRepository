@@ -10715,9 +10715,9 @@ button.otherSellersFont {
         font-weight: 500;
     text-transform: none;
     }
-    .product-info .product-detail .other-sellers.back {
+    /* .product-info .product-detail .other-sellers.back {
         text-align: center
-    }
+    } */
     .product-info .product-content .swatch .color-swatch{
     margin-top:10px;
     }
@@ -43163,6 +43163,97 @@ body.page-productDetails .breadcrumbs.wrapper {
 .OtherSellers .Padd .InfoWrap .Content > div.Buying button:last-child{ float:right;}
 
 
+/*Tablet Portrait: 
+---------------------------------------------*/
+@media(max-width:1024px){
+/*OtherSellers*/
+.OtherSellers{margin: 55px 25px 35px;}
+.OtherSellers .Padd{padding: 45px 35px 0;}
+.OtherSellers .Padd .Title{ display:none;}
+.OtherSellers .Padd .InfoWrap > li{margin: 15px 0;    padding: 0;}
+.OtherSellers .Padd .InfoWrap .Content > div::before {    content: attr(data);    display: block;    margin: 0 0 15px;    text-transform: uppercase;}
+.OtherSellers .Padd .InfoWrap .Content > div{ margin:0 0 30px;}
+.OtherSellers .Padd .InfoWrap .Content > div.Seller,
+.OtherSellers .Padd .InfoWrap .Content > div.Price {    width: 49%; clear:left; float:left;}
+.OtherSellers .Padd .InfoWrap .Content > div.Buying,
+.OtherSellers .Padd .InfoWrap .Content > div.Delivery{ width:49%;clear:right; float:right; }
+.OtherSellers .Padd .InfoWrap .Content > div.Buying {    padding: 20px 0 0;    position: relative;    top: -78px; margin: 0 0 -45px;}
+.OtherSellers .Padd .InfoWrap .Content > div.Delivery {    margin: 0;    position: relative;    top: -72px;}
+}
+
+/*Mobile
+---------------------------------------------*/
+@media(max-width:767px){
+/*OtherSellers*/
+	.OtherSellers {    margin: 20px 15px 10px;}
+	.OtherSellers .Padd {    padding: 20px 15px;}
+	.OtherSellers .Padd h2{font-size: 14px; margin: 0 0 5px;}
+	.OtherSellers .Padd h3{ font-size: 12px;    line-height: 18px;}
+	.OtherSellers .Padd .InfoWrap .Content > div.Seller, 
+	.OtherSellers .Padd .InfoWrap .Content > div.Price,
+	.OtherSellers .Padd .InfoWrap .Content > div.Buying, 
+	.OtherSellers .Padd .InfoWrap .Content > div.Delivery{ width:100%; top:0;}
+	.OtherSellers .Padd .InfoWrap .Content > div.Buying{ margin:0;}	
+	.OtherSellers .Padd .InfoWrap > li {    margin: 0 0 15px;    padding: 0 0 15px 20px;}
+	.OtherSellers .Padd .InfoWrap .Content > div {    margin: 0 0 25px;}
+	.OtherSellers .Padd .SelectWrap {    margin: 0 0 25px;}
+	.OtherSellers .Padd .InfoWrap {    font-size: 12px;}
+	.OtherSellers .Padd .InfoWrap .Content > div.Delivery ul li{font-size: 11px;line-height: 20px;}
+	.OtherSellers .Padd .InfoWrap .Content > div::before{margin: 0 0 10px;}
+	.OtherSellers .Padd .InfoWrap > li:last-child{ padding:0 0 0 15px;}
+	.OtherSellers .Padd .InfoWrap .Content > div.Buying{ padding: 10px 0 0;}
+}
+
+.InfoWrap .product-info .product-content {
+	min-height: 0;
+	    padding: 0;
+    margin: 0;
+}
+
+.OtherSellers .Padd .InfoWrap .Content > div.Buying form {
+	display: inline-block;
+	width: 49%;
+	float: right;
+	vertical-align: top;
+}
+.OtherSellers .Padd .InfoWrap .Content > div.Buying form#wish {
+	    float: left;
+}
+
+.OtherSellers .Padd .InfoWrap .Content > div.Buying form#wish .add-to-wishlist {
+    font-size: 12px;
+    font-weight: 500;
+    background-color: #a9143c;
+    color: #fff;
+    clear: none;
+    float: left;
+    border: 1px solid #a9143c;
+    color: #a9143c;
+    background: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    letter-spacing: 0;
+    min-height: 45px;
+    text-align: center;
+    line-height: normal;
+    padding: 14px 0;
+    text-transform: uppercase;
+}
+.OtherSellers .Padd .InfoWrap .Content > div.Buying form button.add-to-bag {
+ 	line-height: 12px;
+    min-height: 45px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: #a9143c;
+    color: #fff;
+    clear: none;
+    margin: 0;
+    display: inline-block;
+    width: 100%;
+    padding: 14px 0;
+    height: auto;
+ }
 
 /*Offer Popup*/
 #OfferWrap{ position:relative;}
@@ -43208,6 +43299,9 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 	display: none !important;
 }
 
+.pdp.other-sellers {
+	margin-bottom: 30px;
+}
 
 /*New pdp end*/
 
