@@ -44255,7 +44255,7 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     margin: 5px 6px;
     /* background: #fff; */
     display: block;
-    border: 2px solid red;
+    border: 2px solid #fff;
     -webkit-backface-visibility: visible;
     -webkit-transition: opacity 200ms ease;
     -moz-transition: opacity 200ms ease;
@@ -44272,7 +44272,12 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     background: #fff;
 }
 
-
+@media (max-width: 790px){
+	.pageLabel-homepage .hero.icid ul.major-promos, .template-pages-layout-micrositePage1 .hero.icid ul.major-promos{
+		bottom: 15%;
+    	left: 5%;
+	}
+}
 
 @media (min-width: 791px){
 	.pageLabel-homepage .hero .major-promos,.template-pages-layout-micrositePage1 .hero .major-promos{
@@ -44281,6 +44286,11 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 }
 
 @media (max-width: 600px) and (min-width: 315px){
+	.pageLabel-homepage .hero.icid ul.major-promos, .template-pages-layout-micrositePage1 .hero.icid ul.major-promos{
+		bottom: 60px;
+    	left: 20px;
+    	width: 70%;
+	}
 	.pageLabel-homepage .major-promo-header-italic,.template-pages-layout-micrositePage1 .major-promo-header-italic{
 		font-size: 12px;
    		margin: 0 0 10px;
@@ -44312,8 +44322,8 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     	width: 70%;
 	}
 	.pageLabel-homepage .major-promo-header-italic, .template-pages-layout-micrositePage1 .major-promo-header-italic{
-		font-size: 18px;
-    	margin: 0 0 20px;
+		font-size: 12px;
+    	margin: 0 0 10px;
 	}
 	.pageLabel-homepage .hero .major-promos span.major-promo-description, .template-pages-layout-micrositePage1 .hero .major-promos span.major-promo-description{
 		font-size: 22px;
@@ -44322,11 +44332,10 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 		font-size: 10px;
     	height: 30px;
     	letter-spacing: 2px;
-    	line-height: 12px;
+    	line-height: 10px;
     	width: 110px;
 	}
 }
-
 
 /* TPR-628 ends*/
 
