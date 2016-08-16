@@ -279,9 +279,14 @@ var homePageBannerTimeout='${timeout}';
 					<c:choose>
 						<c:when test="${ banner.type eq 'Big 3 Sided Banner Component'}">
 							<div class="hero icid">
-								<div class="image">
+								<%-- <div class="image">
 									<img src="${banner.bannerImage.url}">
-								</div>
+								</div> --%>
+								<!-- TPR-628----for mobile and desktop banner view -->
+							 <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/>
+								<!-- TPR-628----for mobile and desktop banner view -->
+								
+								
 								<ul class="major-promos">
 									<li data-bannerid="${banner.pk}">${banner.majorPromoText}</li>
 								</ul>
@@ -295,9 +300,12 @@ var homePageBannerTimeout='${timeout}';
 
 						<c:when test="${ banner.type eq 'Big 4 Sided Banner Component'}">
 							<div class="hero icid fourPromoBanner">
-								<div class="image">
+								<%-- <div class="image">
 									Hello<img src="${banner.bannerImage.url}">
-								</div>
+								</div> --%>
+								<!-- TPR-628----for mobile and desktop banner view -->
+							 <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/>
+								<!-- TPR-628----for mobile and desktop banner view -->
 								<ul class="major-promos">
 									<li data-bannerid="${banner.pk}">${banner.promoText4}</li>
 								</ul>

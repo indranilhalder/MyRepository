@@ -733,7 +733,7 @@ function showUrlInDialog(url) {
 
 /* Determining strike out price and product actual price */
 function setValidPrice(sellersArray, index) {
-
+	//alert(sellersArray[index].stock);
 	var roundedSpPrice = Math.round(sellersArray[index].spPrice * 100) / 100;
 	
 	////TPR-275 starts
@@ -1281,8 +1281,8 @@ function isOOS(){
  */
  var availibility = null;
 $( document ).ready(function() {
-	
 //function fetchPrice() {
+	//$("#outOfStockPinCodeMsg").hide();
 	var categoryType = $("#categoryType").val();
 	var selectedSize = "";
 	if ($("#variant,#sizevariant option:selected").val() != "#") {
@@ -1375,6 +1375,7 @@ $( document ).ready(function() {
 					var sellerName = data['sellerName'];
 					var sellerID = data['sellerId'];
 					
+					
 					$("#sellerNameId").html(sellerName);
 					$("#sellerSelId").val(sellerID);
 					if (isOOS() && data['othersSellersCount']>0) {
@@ -1385,6 +1386,15 @@ $( document ).ready(function() {
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
+						//TPR-805
+						//$("#outOfStockPinCodeMsg").show();
+						//$("#availableStockPinCodeMsg").hide();
+						 $("#pdpPincodeCheck").hide();
+						 $("#pin").attr("disabled",true);
+						 $("#pdpPincodeCheckDList").show();
+						 $("#buyNowButton").attr("disabled",true);
+						
+						
 					}
 					else if (isOOS() && data['othersSellersCount']==0){
 						//if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173 TPR-465
@@ -1394,6 +1404,15 @@ $( document ).ready(function() {
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
+						//TPR-805
+						// $("#outOfStockPinCodeMsg").show();
+						// $("#availableStockPinCodeMsg").hide();
+						 $("#pdpPincodeCheck").hide();
+						 $("#pin").attr("disabled",true);
+						 $("#pdpPincodeCheckDList").show();
+						 $("#buyNowButton").attr("disabled",true);
+						
+						
 					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("#variant option").length == 0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
@@ -1402,6 +1421,14 @@ $( document ).ready(function() {
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
+						//TPR-805
+						// $("#outOfStockPinCodeMsg").show();
+						// $("#availableStockPinCodeMsg").hide();
+						 $("#pdpPincodeCheck").hide();
+						 $("#pin").attr("disabled",true);
+						 $("#pdpPincodeCheckDList").show();
+						 $("#buyNowButton").attr("disabled",true);
+						
 					}
 					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("#variant option").length == 0){
 						//if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173 TPR-465
@@ -1411,6 +1438,15 @@ $( document ).ready(function() {
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
+						//TPR-805
+						// $("#outOfStockPinCodeMsg").show();
+						// $("#availableStockPinCodeMsg").hide();
+						 $("#pdpPincodeCheck").hide();
+						 $("#pin").attr("disabled",true);
+						 $("#pdpPincodeCheckDList").show();
+						 $("#buyNowButton").attr("disabled",true);
+						
+						
 					}
 					else if (data['othersSellersCount'] == 0) {
 						$("#otherSellerInfoId").hide();
@@ -1621,7 +1657,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	if(null!= spPrice){
 		$("#spPriceId").append(spPrice.formattedValue);
 	} 
-	////TISPRM-33
+	////TISPRM-33 , TPR-140
 	if(null!= savingsOnProduct){
 		$("#savingsOnProductId").append("(-"+savingsOnProduct+" %)");
 	} 
