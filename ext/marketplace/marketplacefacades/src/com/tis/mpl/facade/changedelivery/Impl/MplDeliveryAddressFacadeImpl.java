@@ -95,8 +95,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 
 	@Override
-	public String changeDeliveryRequestCallToOMS(final String orderId, final AddressModel newDeliveryAddress,
-			final String interfaceType)
+	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress, String interfaceType)
 	{
 		LOG.info("Inside  changeDeliveryRequestCallToOMS Method");
 		ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
@@ -126,8 +125,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @param newDeliveryAddress
 	 * @return
 	 */
-	private ChangeDeliveryAddressDto getChangeDeliveryRequestData(final String orderId, final AddressModel newDeliveryAddress,
-			final String interfaceType)
+	private ChangeDeliveryAddressDto getChangeDeliveryRequestData(String orderId,AddressModel newDeliveryAddress,
+			 String interfaceType)
 	{
 		final ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
 		if (null != orderId)
@@ -136,6 +135,50 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		}
 		if (null != newDeliveryAddress)
 		{
+			if (StringUtils.isNotEmpty(interfaceType))
+			{
+				if (interfaceType.equalsIgnoreCase(MarketplacecommerceservicesConstants.INTERFACE_TYPE_CA))
+				{
+					if (null != newDeliveryAddress.getEmail())
+					{
+						requestData.setEmailID(newDeliveryAddress.getEmail());
+					}
+
+					if (StringUtils.isNotEmpty(interfaceType))
+					{
+						requestData.setInterfaceType(interfaceType);
+					}
+					if (null != newDeliveryAddress.getLine2())
+					{
+						requestData.setAddress2(newDeliveryAddress.getLine2());
+					}
+					if (null != newDeliveryAddress.getAddressLine3())
+					{
+						requestData.setAddress3(newDeliveryAddress.getAddressLine3());
+					}
+					if (null != newDeliveryAddress.getLandmark())
+					{
+						requestData.setLandmark(newDeliveryAddress.getLandmark());
+					}
+					if (null != newDeliveryAddress.getCountry() && null != newDeliveryAddress.getCountry().getName())
+					{
+						requestData.setCountry(newDeliveryAddress.getCountry().getName());
+					}
+					if (null != newDeliveryAddress.getCity())
+					{
+						requestData.setCity(newDeliveryAddress.getCity());
+					}
+					if (null != newDeliveryAddress.getState())
+					{
+						requestData.setState(newDeliveryAddress.getState());
+					}
+					if (null != newDeliveryAddress.getPostalcode())
+					{
+						requestData.setPincode(newDeliveryAddress.getPostalcode());
+					}
+				}
+			}
+			
 			if (null != newDeliveryAddress.getFirstname())
 			{
 				requestData.setFName(newDeliveryAddress.getFirstname());
@@ -144,45 +187,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			{
 				requestData.setLName(newDeliveryAddress.getLastname());
 			}
-			if (null != newDeliveryAddress.getEmail())
-			{
-				requestData.setEmailID(newDeliveryAddress.getEmail());
-			}
 			if (null != newDeliveryAddress.getPhone1())
 			{
 				requestData.setPhoneNo(newDeliveryAddress.getPhone1());
-			}
-			if (StringUtils.isNotEmpty(interfaceType))
-			{
-				requestData.setInterfaceType(interfaceType);
-			}
-			if (null != newDeliveryAddress.getLine2())
-			{
-				requestData.setAddress2(newDeliveryAddress.getLine2());
-			}
-			if (null != newDeliveryAddress.getAddressLine3())
-			{
-				requestData.setAddress3(newDeliveryAddress.getAddressLine3());
-			}
-			if (null != newDeliveryAddress.getLandmark())
-			{
-				requestData.setLandmark(newDeliveryAddress.getLandmark());
-			}
-			if (null != newDeliveryAddress.getCountry() && null != newDeliveryAddress.getCountry().getName())
-			{
-				requestData.setCountry(newDeliveryAddress.getCountry().getName());
-			}
-			if (null != newDeliveryAddress.getCity())
-			{
-				requestData.setCity(newDeliveryAddress.getCity());
-			}
-			if (null != newDeliveryAddress.getState())
-			{
-				requestData.setState(newDeliveryAddress.getState());
-			}
-			if (null != newDeliveryAddress.getPostalcode())
-			{
-				requestData.setPincode(newDeliveryAddress.getPostalcode());
 			}
 		}
 		return requestData;
@@ -691,9 +698,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 
-	
+
 	@Override
-	public ChangeDeliveryAddressResponseDto scheduledDeliveryDateRequestToOMS(OrderModel orderModel,String newPincode)
+	public ChangeDeliveryAddressResponseDto scheduledDeliveryDateRequestToOMS(OrderModel orderModel, String newPincode)
 	{
 		ChangeDeliveryAddressResponseDto omsResponse = new ChangeDeliveryAddressResponseDto();
 		try
@@ -795,6 +802,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 
-	
+
 
 }
