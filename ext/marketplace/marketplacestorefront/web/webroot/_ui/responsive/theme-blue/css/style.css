@@ -11047,7 +11047,7 @@ button.otherSellersFont {
     line-height: 40px
 }
 .product-info .product-content .delivery-block li .inline-form input {
-    width: 65%;
+    width: 45%;
     max-width: -webkit-calc(100% - 60px);
     max-width: calc(100% - 60px)
 }
@@ -11068,11 +11068,12 @@ button.otherSellersFont {
     color: #000
 }
 .product-info .product-content .delivery-block li .inline-form button {
-    width: 35%;
+    width: 55%;
     padding: 0;
     font-size: 12px;
     letter-spacing: 1px;
-    min-width: 60px
+    min-width: 60px;
+    text-transform: capitalize;
 }
 .product-info .product-content .delivery-block li .home,
 .product-info .product-content .delivery-block li .express,
@@ -20119,6 +20120,8 @@ font-size:14px;
 /*  margin-bottom: 10px; */
  font-weight: 500;
  background: #fff;
+ display: none;
+ border-collapse: separate;
 }
 #EMITermTable th{
     font-weight: 500;
@@ -24747,9 +24750,9 @@ input.brandSearchTxt {
     font-size: 12px;
     letter-spacing: 1px;
     line-height: 40px;
-    height: 40px;
+    height: 42px;
     padding: 0;
-    margin-bottom: 20px;
+    margin: 0;
     font-weight: 500;
     clear: both;
     color: #a9143c;
@@ -41520,6 +41523,7 @@ margin-left: 20%;
 }
 .product-image-container {
 	display: block;
+	position: relative;
 }
 
 .thumb {
@@ -43097,7 +43101,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 } */
 
 #bankNameForEMI {
-	width: 280px;
+	width: 250px;
 	border: 2px solid #f5f5f5;
 }
 
@@ -43158,6 +43162,53 @@ body.page-productDetails .breadcrumbs.wrapper {
 .OtherSellers .Padd .InfoWrap .Content > div.Buying button:first-child{ float:left; border:1px solid #a9143c; color:#a9143c; background:none;}
 .OtherSellers .Padd .InfoWrap .Content > div.Buying button:last-child{ float:right;}
 
+
+
+/*Offer Popup*/
+#OfferWrap{ position:relative;}
+span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; color:#a6153f; font-size:13px; cursor:pointer; font-weight:bold;}
+#OfferWrap .Inner{ max-width:600px; width:600px;}
+#OfferWrap .Inner h2{ font-size:24px; color:#000; text-transform:uppercase; font-weight:bold; margin: 0 0 15px; text-align: left;}
+#OfferWrap .Inner h3{ color:#a7183e;font-size:14px;text-transform:uppercase; margin: 0 0 15px; text-align: left;}
+#OfferWrap .Inner li {    border-bottom: 1px solid #ccc;    display: inline-block;    margin: 0 0 20px;    padding: 0 0 20px;    width: 100%;}
+#OfferWrap .Inner li:last-child{ border:0; margin:0; padding:0;}
+#OfferWrap .Inner .Left {    float: left;    width: 26%;}
+#OfferWrap .Inner .right {    float: right !important;    width: 74%;}
+#OfferWrap .Inner p{ font-size:16px; color:#000; text-transform:uppercase;font-weight:bold; letter-spacing:1px; margin:0 0 5px;  }
+#OfferWrap .Inner p + p{ font-size:14px; text-transform:none; font-weight:normal; line-height:25px;width: 80%;}
+#OfferWrap .Inner a{ font-size:10px; color:#a7183e; text-decoration:underline;}
+#OfferWrap .show-date {text-align: left;}
+
+/*Mobile portrait
+---------------------------------------------*/
+@media(max-width:400px){
+	/*Offer Popup*/
+	#OfferWrap .Inner h2{ font-size: 18px;}
+	#OfferWrap .Inner p + p,
+	#OfferWrap .Inner{width: 100%;}
+	#OfferWrap .Inner .right{width: 60%;}
+	#OfferWrap .Inner .Left{width: 35%;}
+	#OfferWrap .Inner p{font-size: 14px;}
+	#OfferWrap .Inner p + p{ line-height: 20px;font-size: 12px;}
+}
+
+@media(max-width:767px){
+/*Offer Popup*/
+	#OfferWrap .Inner{width: 100%;}
+	#OfferWrap .Inner .right{width: 60%;}
+	#OfferWrap .Inner .Left{width: 40%;}
+	span.Close{right: 10px;top: 5px;}
+	
+	.offer-content {
+		padding: 20px !important;
+	}
+}
+
+#promotionDetailsId {
+	display: none !important;
+}
+
+
 /*New pdp end*/
 
 /*Wishlist icon*/
@@ -43167,7 +43218,7 @@ body.page-productDetails .breadcrumbs.wrapper {
     -moz-osx-font-smoothing: grayscale;
     font-weight: 100;
     content: "\e602";
-    font-size:16px;
+    font-size: 18px;
     color: #A9143C;
   margin-right: 5px;
    position: relative;
