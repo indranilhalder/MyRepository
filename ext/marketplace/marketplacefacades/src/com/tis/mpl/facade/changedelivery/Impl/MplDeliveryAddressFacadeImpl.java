@@ -128,7 +128,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	private ChangeDeliveryAddressDto getChangeDeliveryRequestData(String orderId,AddressModel newDeliveryAddress,
 			 String interfaceType)
 	{
-		final ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
+		 ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
 		if (null != orderId)
 		{
 			requestData.setOrderID(orderId);
@@ -207,19 +207,19 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @return void
 	 */
 	@Override
-	public void createcrmTicketForChangeDeliveryAddress(final OrderModel Order, final String costomerId, final String source)
+	public void createcrmTicketForChangeDeliveryAddress(OrderModel Order, String costomerId,String source)
 	{
-		final List<SendTicketLineItemData> lineItemDataList = new ArrayList<SendTicketLineItemData>();
-		final SendTicketRequestData sendTicketRequestData = new SendTicketRequestData();
+		 List<SendTicketLineItemData> lineItemDataList = new ArrayList<SendTicketLineItemData>();
+		 SendTicketRequestData sendTicketRequestData = new SendTicketRequestData();
 		if (null != Order.getChildOrders() && !Order.getChildOrders().isEmpty())
 		{
-			for (final OrderModel sellerOrder : Order.getChildOrders())
+			for (OrderModel sellerOrder : Order.getChildOrders())
 			{
 				if (null != sellerOrder.getEntries() && !sellerOrder.getEntries().isEmpty())
 				{
-					for (final AbstractOrderEntryModel entry : sellerOrder.getEntries())
+					for (AbstractOrderEntryModel entry : sellerOrder.getEntries())
 					{
-						final SendTicketLineItemData sendTicketLineItemData = new SendTicketLineItemData();
+						 SendTicketLineItemData sendTicketLineItemData = new SendTicketLineItemData();
 
 						if (entry.getQuantity().longValue() >= 1
 								&& !entry.getMplDeliveryMode().getDeliveryMode().getCode()
@@ -236,8 +236,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				}
 			}
 		}
-		final ReturnAddressInfo addressinfo = new ReturnAddressInfo();
-		final AddressModel changeDeliveryAddress = Order.getDeliveryAddress();
+		 ReturnAddressInfo addressinfo = new ReturnAddressInfo();
+		 AddressModel changeDeliveryAddress = Order.getDeliveryAddress();
 		if (null != changeDeliveryAddress.getFirstname())
 		{
 			addressinfo.setShippingFirstName(changeDeliveryAddress.getFirstname());
@@ -313,7 +313,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 	@Override
-	public boolean isDeliveryAddressChangable(final String orderId) throws EtailNonBusinessExceptions
+	public boolean isDeliveryAddressChangable(String orderId) throws EtailNonBusinessExceptions
 	{
 		boolean changable = false;
 		try
@@ -340,20 +340,20 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 	@Override
-	public ScheduledDeliveryData saveAsTemporaryAddressForCustomer(final String orderCode, final AddressData addressData)
+	public ScheduledDeliveryData saveAsTemporaryAddressForCustomer(String orderCode,AddressData addressData)
 	{
-		final ScheduledDeliveryData scheduledDeliveryData = new ScheduledDeliveryData();
+		 ScheduledDeliveryData scheduledDeliveryData = new ScheduledDeliveryData();
 		try
 		{
 			if (addressData != null)
 			{
 
-				final TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
-				final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-				final CustomerModel customer = (CustomerModel) orderModel.getUser();
-				temproryAddressModel.setEmail(customer.getOriginalUid());
-				final String customerId = customer.getUid();
-				final AddressModel deliveryAddressModel = orderModel.getDeliveryAddress();
+				 TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
+				 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+				 CustomerModel customer = (CustomerModel) orderModel.getUser();
+				 temproryAddressModel.setEmail(customer.getOriginalUid());
+				 String customerId = customer.getUid();
+				 AddressModel deliveryAddressModel = orderModel.getDeliveryAddress();
 				boolean isDifferentAddress = false;
 				boolean isDiffrentContact = false;
 
@@ -438,9 +438,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @throws InvalidKeyException
 	 * @throws NoSuchAlgorithmException
 	 */
-	String generateOTP(final String customerId, final String mobileNumber) throws InvalidKeyException, NoSuchAlgorithmException
+	String generateOTP(String customerId,String mobileNumber) throws InvalidKeyException, NoSuchAlgorithmException
 	{
-		final String otp = otpGenericService.generateOTP(customerId, OTPTypeEnum.COD.getCode(), mobileNumber);
+		 String otp = otpGenericService.generateOTP(customerId, OTPTypeEnum.COD.getCode(), mobileNumber);
 		return otp;
 	}
 
@@ -456,18 +456,18 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public String validateOTP(final String customerID, final String enteredOTPNumber, final String orderCode)
+	public String validateOTP(String customerID,String enteredOTPNumber, String orderCode)
 	{
 		String valditionMsg = null;
 
-		final OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.COD,
+		 OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.COD,
 				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
 
 		//If OTP Valid then call to OMS for Pincode ServiceableCheck
 		if (otpResponse.getOTPValid().booleanValue())
 		{
-			final TemproryAddressModel temproryAddressModel = mplDeliveryAddressService.getTemporaryAddressModel(orderCode);
-			final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+			 TemproryAddressModel temproryAddressModel = mplDeliveryAddressService.getTemporaryAddressModel(orderCode);
+			 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 
 			LOG.debug("pincode serviceable Checking::MplChangeDeliveryAddressFacadeImpl");
 			try
@@ -549,11 +549,11 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 	@Override
-	public boolean generateNewOTP(final String orderCode)
+	public boolean generateNewOTP(String orderCode)
 	{
 		boolean falg = false;
-		final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-		final CustomerModel customer = (CustomerModel) orderModel.getUser();
+		 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+		 CustomerModel customer = (CustomerModel) orderModel.getUser();
 
 		try
 		{
@@ -583,12 +583,12 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 	@Override
-	public String getPartialEncryptValue(final String encryptSymbol, final int encryptLength, final String source)
+	public String getPartialEncryptValue(String encryptSymbol,int encryptLength,String source)
 	{
 		String result = "";
 		if (StringUtils.isNotEmpty(source) && source.length() >= encryptLength)
 		{
-			final char charValue[] = source.toCharArray();
+			 char charValue[] = source.toCharArray();
 			for (int count = 0; count < charValue.length; count++)
 			{
 				if (count <= encryptLength)
@@ -614,13 +614,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 
-	public boolean checkScheduledDeliveryForOrder(final OrderModel orderModel)
+	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel)
 	{
 		boolean isEligibleScheduledDelivery = false;
-		final List<OrderModel> chaidOrderList = orderModel.getChildOrders();
-		for (final OrderModel subOrder : chaidOrderList)
+		 List<OrderModel> chaidOrderList = orderModel.getChildOrders();
+		for (OrderModel subOrder : chaidOrderList)
 		{
-			for (final AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
+			for (AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
 			{
 				if (!abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase("home-delivery"))
 				{
@@ -647,13 +647,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 
 	@Override
-	public void reScheduleddeliveryDate(final RescheduleDataList reschList)
+	public void reScheduleddeliveryDate(RescheduleDataList reschList)
 	{
 		if (CollectionUtils.isNotEmpty(reschList.getRescheduleDataList()))
 		{
-			final List<TransactionSDDto> transactionEddDtoList = new ArrayList<TransactionSDDto>();
-			final TransactionSDDto transactionEddDto = new TransactionSDDto();
-			for (final RescheduleData rescheduleData : reschList.getRescheduleDataList())
+			 List<TransactionSDDto> transactionEddDtoList = new ArrayList<TransactionSDDto>();
+			 TransactionSDDto transactionEddDto = new TransactionSDDto();
+			for (RescheduleData rescheduleData : reschList.getRescheduleDataList())
 			{
 				if (StringUtils.isNotEmpty(rescheduleData.getTransactionId()))
 				{
@@ -673,7 +673,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 
 	@Override
-	public List<TransactionEddDto> getScheduledDeliveryDate(final OrderModel orderModel, final String newPincode)
+	public List<TransactionEddDto> getScheduledDeliveryDate(OrderModel orderModel,String newPincode)
 	{
 		List<TransactionEddDto> transactionEddDtosList = new ArrayList<TransactionEddDto>();
 		try
@@ -706,8 +706,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		try
 		{
 			LOG.info("get scheduled DeliveryDate to Oms" + orderModel.getCode() + newPincode);
-			final ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
-			final List<TransactionSDDto> transactionSDDtoList = setTransactionSDDto(orderModel);
+			 ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
+			 List<TransactionSDDto> transactionSDDtoList = setTransactionSDDto(orderModel);
 			requestData.setInterfaceType(MarketplacecommerceservicesConstants.INTERFACE_TYPE_SD);
 			if (StringUtils.isNotEmpty(orderModel.getCode()))
 			{
@@ -740,13 +740,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @param orderModel
 	 * @return List<TransactionSDDto>
 	 */
-	List<TransactionSDDto> setTransactionSDDto(final OrderModel orderModel)
+	List<TransactionSDDto> setTransactionSDDto(OrderModel orderModel)
 	{
-		final List<TransactionSDDto> transactionSDDtoList = new ArrayList<TransactionSDDto>();
-		final TransactionSDDto transactionSDDto = new TransactionSDDto();
-		for (final OrderModel subOrder : orderModel.getChildOrders())
+		 List<TransactionSDDto> transactionSDDtoList = new ArrayList<TransactionSDDto>();
+		 TransactionSDDto transactionSDDto = new TransactionSDDto();
+		for (OrderModel subOrder : orderModel.getChildOrders())
 		{
-			for (final AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
+			for (AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
 			{
 				if (abstractOrderEntry.getDeliveryMode().getCode()
 						.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
@@ -768,22 +768,22 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 	@Override
-	public Map<String, Object> getDeliveryDate(final List<TransactionEddDto> transactionEddDtoList)
+	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList)
 	{
-		final Map<String, Object> scheduledDeliveryDate = new HashMap<String, Object>();
-		final SimpleDateFormat to = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
-		final SimpleDateFormat newFormat = new SimpleDateFormat("MMM-dd");
-		final ArrayList<String> datesList = new ArrayList<String>();
+		 Map<String, Object> scheduledDeliveryDate = new HashMap<String, Object>();
+		 SimpleDateFormat to = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+		 SimpleDateFormat newFormat = new SimpleDateFormat("MMM-dd");
+		 ArrayList<String> datesList = new ArrayList<String>();
 		try
 		{
-			for (final TransactionEddDto transactionEddDto : transactionEddDtoList)
+			for (TransactionEddDto transactionEddDto : transactionEddDtoList)
 			{
 				if (StringUtils.isNotEmpty(transactionEddDto.getEDD()))
 				{
-					final Map<String, ArrayList<String>> scheduledDeliveryTime = new HashMap<String, ArrayList<String>>();
-					final String stringDate = transactionEddDto.getEDD();
-					final Date date = to.parse(stringDate);
-					final String newdate = to.format(newFormat.parse(stringDate));
+					 Map<String, ArrayList<String>> scheduledDeliveryTime = new HashMap<String, ArrayList<String>>();
+					 String stringDate = transactionEddDto.getEDD();
+					 Date date = to.parse(stringDate);
+					 String newdate = to.format(newFormat.parse(stringDate));
 					datesList.add(newdate);
 					DateTime dateTime = new DateTime(date);
 					dateTime = dateTime.plusDays(1);
