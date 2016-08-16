@@ -32688,6 +32688,16 @@ header.brand-header {
 }
 /*New homepage changes ends*/
 
+/* TISPRD-4861 */
+.pdp-promo-block.promo-block{
+	background:transparent;
+	padding:0;
+	border:none;
+}
+.pdp-promo-block.promo-block>div{
+	width:100%;
+	text-align:center;
+}
 
 /*--------------maincss-----------*/
 .row
