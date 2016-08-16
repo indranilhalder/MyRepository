@@ -135,6 +135,9 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String SAVE_STORE_TOPORUDCT_SUCCESS_MSG = "yes";
 	public static final String SAVE_STORE_TOPORUDCT_FAIL_MSG = "no";
 	public static final String UNKNOWN = "unknown".intern();
+	public static final String CA ="CA";
+	public static final String CU ="CU";
+	public static final String SUCCESS="success";
 
 	private MarketplaceFacadesConstants()
 	{
