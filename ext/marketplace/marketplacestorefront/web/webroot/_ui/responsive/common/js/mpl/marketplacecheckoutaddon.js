@@ -1575,7 +1575,7 @@ $("#otpMobileNUMField").focus(function(){
 				     } 		 
 					 setTimeout(function(){ 
 						 var values=response.split("|"); 
-						 $("#order_id_saved").val(values[0]);
+						 $("#order_id_new").val(values[0]);
 						  //$("#order_id_new").val(response);
 						  submitCardForm(values[1]);		 
 					 }, 1000);
