@@ -108,8 +108,9 @@ public class MplDeliveryAddressControllerImpl extends
 			AddressModel newDeliveryAddress) throws EtailNonBusinessExceptions {
 		String omsResponce = null;
 		try {
+			String interfaceType="CA";
 			omsResponce = mplDeliveryAddressFacade
-					.changeDeliveryRequestCallToOMS(orderId, newDeliveryAddress);
+					.changeDeliveryRequestCallToOMS(orderId, newDeliveryAddress,interfaceType);
 		} catch (EtailNonBusinessExceptions e) {
 			throw new EtailNonBusinessExceptions(e.getRootCause(),
 					e.getErrorCode());
