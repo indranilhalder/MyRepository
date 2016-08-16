@@ -10,6 +10,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="formElement"
+	tagdir="/WEB-INF/tags/responsive/formElement"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
@@ -23,6 +25,7 @@
 			<div class="modal-body">
 				<div class="row">
 					<div class="col-md-6">
+					<div class="error_text serverError"></div>
 						<h4>Edit Shipping Address</h4>
 					</div>
 					<div class="col-md-1">
@@ -132,10 +135,18 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6 form-group">
-								<label for="state">State*</label>
-								<form:input path="state"
-									class="form-control textInputChangeAddress address_states" id="state"
-									value="${orderDetails.deliveryAddress.state}" placeholder="State" />
+<!-- 								<label for="state">State*</label> -->
+								<%-- <form:input path="state"
+									class="form-control textInputChangeAddress address_states"
+									id="state" value="${orderDetails.deliveryAddress.state}"
+									placeholder="State" /> --%>
+								<formElement:formSelectBox idKey="state"
+									selectCSSClass="l textInputChangeAddress address_states" 
+									labelKey="address.states"
+									path="state" mandatory="true" skipBlank="false"
+									skipBlankMessageKey="address.state.pleaseSelect"
+									items="${stateDataList}" selectedValue="${addressForm.state}"
+									itemValue="name" />
 								<div class="error_text stateError"></div>
 							</div>
 							<div class="col-md-6 form-group">
@@ -167,49 +178,50 @@
 					<div class="col-md-5 addressListPop">
 
 						<!-- varStatus="i" -->
-					<c:if test="${not empty orderDetails.deliveryAddressList}">
+						<c:if test="${not empty orderDetails.deliveryAddressList}">
 							<c:forEach items="${orderDetails.deliveryAddressList}"
 								var="orderDeliveryAddressList" varStatus="status">
-								<c:set var="addressCount" value="${addressCount+1}"/>
+								<c:set var="addressCount" value="${addressCount+1}" />
 								<div class="row">
 									<div class="col-md-2">
 										<input type="radio" class="addAddressToForm"
-											data-item="changeAddress${status.count}" name="select_address"
+											data-item="changeAddress${status.count}"
+											name="select_address"
 											style="width: 15px; height: 15px; display: block; cursor: pointer;" />
 									</div>
-									<div class="col-md-9 addressTextChange changeAddress${status.count}">
+									<div
+										class="col-md-9 addressTextChange changeAddress${status.count}">
 										<b>Residential Address ${addressCount} - Default</b> <br /> <span
 											class="firstName">${orderDeliveryAddressList.firstName}</span><br />
 										<span class="lastName">${orderDeliveryAddressList.lastName}</span><br>
 										<c:if test="${not empty orderDeliveryAddressList.line2}">
-										  <span class="addressLine1">${orderDeliveryAddressList.line1}</span>,&nbsp;
+											<span class="addressLine1">${orderDeliveryAddressList.line1}</span>,&nbsp;
 									    </c:if>
-									    
 										<c:if test="${not empty orderDeliveryAddressList.line2}">
-											<span class="addressLine2">${orderDeliveryAddressList.line2},</span>
-									    </c:if>
+											<span class="addressLine2">${orderDeliveryAddressList.line2}</span>,
+										</c:if>
 										<c:if test="${not empty orderDeliveryAddressList.line3}">
 											<span class="addressLine3">${orderDeliveryAddressList.line3}</span>
-										</c:if> 
+										</c:if>
 										<c:if test="${not empty orderDeliveryAddressList.landmark}">
-												&nbsp;  <span class="landmark">,${orderDeliveryAddressList.landmark},</span>
-									    </c:if> 
-										<br> 
+												&nbsp;  <span class="landmark">,${orderDeliveryAddressList.landmark}</span>,
+										</c:if>
+										<br>
 										<c:if test="${not empty orderDeliveryAddressList.town}">
-												  <span class="town">${orderDeliveryAddresssList.town},</span>&nbsp;
-									    </c:if> 
-									  
+											<span class="town">${orderDeliveryAddresssList.town}</span>&nbsp;,
+									    </c:if>
+
 										<c:if test="${not empty orderDeliveryAddressList.state}">
-											<span class="state">${orderDeliveryAddressList.state},</span>&nbsp;
+											<span class="state">${orderDeliveryAddressList.state}</span>,&nbsp;
 								        </c:if>
-										<span class="postalCode">${orderDeliveryAddressList.postalCode}&nbsp;</span>
+										<span class="postalCode">${orderDeliveryAddressList.postalCode}</span>&nbsp;
 										<span class="isocode">${orderDeliveryAddressList.country.isocode}</span>
 										<br>
 										<c:if test="${not empty orderDeliveryAddressList.phone}">
-									     	91&nbsp;<span class="phone">${orderDeliveryAddressList.phone}</span> 
-								        </c:if>
-									    <br>
-										
+									     	91&nbsp;<span class="phone">${orderDeliveryAddressList.phone}</span>
+										</c:if>
+										<br>
+
 									</div>
 								</div>
 								<p style="clear: both;"></p>
