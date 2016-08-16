@@ -28,7 +28,7 @@
 							<vlayout width="200px">
 								<textbox hflex="1"
 									value="@bind(vm.txtTransactionId)"
-									style="width:200px;height:10px">
+									style="width:200px;height:10px" >
 								</textbox>
 							</vlayout>
 
@@ -57,25 +57,16 @@
 								<label value="Order Status" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox model="@load(vm.ordersStatus)"
+								<listbox model="@bind(vm.ordersStatus)" itemRenderer="com.techouts.backoffice.render.OrderStatusListRenderer"
 									mold="select" selectedItem="@bind(vm.selectionOrderStatus)" style="width:200px;">
-
-									<template name="model">
-										<listitem label="${each}" />
-									</template>
-
 								</listbox>
 							</vlayout>
 							<vlayout width="100px">
 								<label value="LP Name" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox   model="@load(vm.lpList)" mold="select"  selectedItem="@save(vm.selectionLpName)"
+								<listbox   model="@bind(vm.lpList)" mold="select"  itemRenderer="com.techouts.backoffice.render.LogistcsPartenerListRenderer"  selectedItem="@save(vm.selectionLpName)"
 									style="width:200px">
-								  <template name="model">
-										<listitem label="${each}" />
-									</template>
-								
 								</listbox>
 							</vlayout>
 							<vlayout width="100px">

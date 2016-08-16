@@ -58,6 +58,8 @@
 		<!-- for pincodes upload -->
 		<property name="pincodesUploadPath" value="${tata.oms.pincodes.upload.path:#{null}}" />
 		<property name="landmarkUploadPath" value="${tata.oms.landmark.upload.path:#{null}}" />
+		<property name="returnOrderFileUploadPath" value="${com.techouts.order.return.upload.path:#{null}}" />
+		<property name="fragileOrderFileUploadPath" value="${com.techouts.order.frigile.upload.path:#{null}}" />
 	</bean>
 	<bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
 

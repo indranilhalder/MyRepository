@@ -57,25 +57,20 @@
 								<label value="Order Status" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox model="@load(vm.ordersStatus)"
-									mold="select" selectedItem="@bind(vm.selectionOrderStatus)" style="width:200px;">
-
-									<template name="model">
-										<listitem label="${each}" />
-									</template>
-
+								<listbox model="@bind(vm.ordersStatus)"
+									itemRenderer="com.techouts.backoffice.render.OrderStatusListRenderer"
+									mold="select" selectedItem="@save(vm.selectionOrderStatus)"
+									style="width:200px;">
 								</listbox>
 							</vlayout>
 							<vlayout width="100px">
 								<label value="LP Name" hflex="1" />
 							</vlayout>
 							<vlayout width="200px">
-								<listbox   model="@load(vm.lpList)" mold="select"  selectedItem="@save(vm.selectionLpName)"
+								<listbox model="@bind(vm.lpList)"
+									itemRenderer="com.techouts.backoffice.render.LogistcsPartenerListRenderer"
+									mold="select" selectedItem="@save(vm.selectionLpName)"
 									style="width:200px">
-								  <template name="model">
-										<listitem label="${each}" />
-									</template>
-								
 								</listbox>
 							</vlayout>
 							<vlayout width="100px">
@@ -132,14 +127,16 @@
 						</listhead>
 						<template name="model" var="item">
 							<listitem>
-								<listcell label="@bind(item.orderId)" />
-								<listcell label="@bind(item.orderStatus)" />
-								<listcell label="@bind(item.transactionId)" />
-								<listcell label="@bind(item.slaveId)" />
-								<listcell label="@bind(item.sellerId)" />
+								<listcell label="@load(item.orderId)" />
+								<listcell
+									label="@load(item.orderStatus)" />
+								<listcell
+									label="@load(item.transactionId)" />
+								<listcell label="@load(item.slaveId)" />
+								<listcell label="@load(item.sellerId)" />
 								<listcell>
 									<label
-										value="@bind(item.logisticName)"
+										value="@load(item.logisticName)"  
 										onChange="@command('onChangeTransactionInfo',transaction=item)" />
 									<listbox
 										selectedItem="@save(item.logisticName)" mold="select"

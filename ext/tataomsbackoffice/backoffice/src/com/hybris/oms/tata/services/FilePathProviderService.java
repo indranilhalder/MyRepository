@@ -21,6 +21,44 @@ public class FilePathProviderService
 	private String statesPropFilePath;
 	private String pincodesUploadPath;
 	private String landmarkUploadPath;
+	private String returnOrderFileUploadPath;
+	private String fragileOrderFileUploadPath;
+
+	/**
+	 * @author prabhakar
+	 * @return the returnOrderFileUploadPath
+	 */
+	public String getReturnOrderFileUploadPath()
+	{
+		return returnOrderFileUploadPath;
+	}
+
+	/**
+	 * @param returnOrderFileUploadPath
+	 *           the returnOrderFileUploadPath to set
+	 */
+	public void setReturnOrderFileUploadPath(final String returnOrderFileUploadPath)
+	{
+		this.returnOrderFileUploadPath = returnOrderFileUploadPath;
+	}
+
+	/**
+	 * @author prabhakar
+	 * @return the fragileOrderFileUploadPath
+	 */
+	public String getFragileOrderFileUploadPath()
+	{
+		return fragileOrderFileUploadPath;
+	}
+
+	/**
+	 * @param fragileOrderFileUploadPath
+	 *           the fragileOrderFileUploadPath to set
+	 */
+	public void setFragileOrderFileUploadPath(final String fragileOrderFileUploadPath)
+	{
+		this.fragileOrderFileUploadPath = fragileOrderFileUploadPath;
+	}
 
 	/**
 	 * @author prabhakar
@@ -180,8 +218,5 @@ public class FilePathProviderService
 	{
 		this.validationErrFilePath = validationErrFilePath;
 	}
-
-
-
 
 }

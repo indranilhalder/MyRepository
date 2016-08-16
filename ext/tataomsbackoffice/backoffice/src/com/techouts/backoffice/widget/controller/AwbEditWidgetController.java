@@ -55,7 +55,7 @@ public class AwbEditWidgetController
 	private List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>(); //outgoing transactions
 	private final Map<String, TransactionInfo> map = new HashMap<String, TransactionInfo>();//modifed transaction
 
-	private List<String> ordersStatus = new ArrayList<String>();// orders statuses
+	private List<String> ordersStatus;// orders statuses
 
 
 

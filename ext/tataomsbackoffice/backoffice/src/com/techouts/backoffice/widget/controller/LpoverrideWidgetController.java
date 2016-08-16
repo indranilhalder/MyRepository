@@ -50,12 +50,12 @@ public class LpoverrideWidgetController
 	private Boolean isReturn = Boolean.FALSE;
 	private final String transactionType = "LP";
 	private List<TransactionInfo> listOfTransactions; //incoming transactions
-	private Set<String> lpList = new HashSet<String>(); //active logistcs Partners
+	private Set<String> lpList; //active logistcs Partners
 
 	private List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>(); //outgoing transactions
 	private final Map<String, TransactionInfo> map = new HashMap<String, TransactionInfo>();//modifed transaction
 
-	private List<String> ordersStatus = new ArrayList<String>();// orders statuses
+	private List<String> ordersStatus;// orders statuses
 
 
 
@@ -236,6 +236,7 @@ public class LpoverrideWidgetController
 	@Command("onChangeTransactionInfo")
 	public void onChangeTransactionInfo(@BindingParam("transaction") final TransactionInfo selectedTransaction)
 	{
+		LOG.info("inside onchange");
 		map.put(selectedTransaction.getTransactionId(), selectedTransaction); //if required lp flag then send as bind prarm attribute
 		LOG.info("the final map " + map.toString());
 	}
@@ -244,8 +245,6 @@ public class LpoverrideWidgetController
 	 * this method is used to persist the modified transactions
 	 */
 	@Command("saveAllTransactions")
-	@NotifyChange(
-	{ "listOfTransactions" })
 	public void saveAllTransactions()
 	{
 		LOG.info("inside save all transaction");
@@ -269,6 +268,7 @@ public class LpoverrideWidgetController
 			listOfOrderLineInfo.add(orderLineInfo);
 		}
 
+		LOG.info("list of orders" + listOfOrderLineInfo.toString());
 		final LPOverrideAWBEdit lpOverrideEdit = new LPOverrideAWBEdit();
 		lpOverrideEdit.setOrderLineInfo(listOfOrderLineInfo);
 		lpOverrideEdit.setIsReturn(isReturn);
