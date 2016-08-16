@@ -44214,7 +44214,7 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     color: #fff;
 }
 .pageLabel-homepage .hero.icid ul.major-promos,.template-pages-layout-micrositePage1 .hero.icid ul.major-promos{
-	top: 33%;
+	top: calc(33% + 124px);
     left: 5%;
     position: absolute;
     color: #fff;
