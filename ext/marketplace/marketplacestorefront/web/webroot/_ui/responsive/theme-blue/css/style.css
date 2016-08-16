@@ -32715,6 +32715,7 @@ header .banner > span {
 	#showcase a.button.trending-button{margin: 0 auto}
 	#showcase a.button.trending-button{
 	min-height:35px;
+	height: auto;
 }
 	body.page-homepage .trending h1 {
     margin-bottom: 30px;
