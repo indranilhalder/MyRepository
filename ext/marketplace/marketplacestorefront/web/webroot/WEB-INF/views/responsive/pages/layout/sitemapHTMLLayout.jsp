@@ -15,6 +15,7 @@
 <template:page pageTitle="${pageTitle}">
 	<div class="container r2-sitemap" style="color:#4a4a4a;">
 		<h1 class="r2-center">Site Map</h1>
+		<!-- code changes for TISPRD-3183 --> 
 		<c:forEach var="megamap" items="${megaMap}">
 			<section>
 				<c:set var="catName" value="${fn:split(megamap.key.name, '||')}" />

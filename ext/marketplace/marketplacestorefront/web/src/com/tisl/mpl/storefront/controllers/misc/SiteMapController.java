@@ -73,7 +73,7 @@ public class SiteMapController extends AbstractPageController
 	@Autowired
 	private DefaultCMSContentSlotService contentSlotService;
 
-	@Autowired
+	@Resource
 	private HomepageComponentService homepageComponentService;
 
 	@RequestMapping(value = "/sitemap.xml", method = RequestMethod.GET, produces = "application/xml")
@@ -130,18 +130,7 @@ public class SiteMapController extends AbstractPageController
 						// Iterating through the second level categories
 						for (final CategoryModel secondLevelCategory : secondLevelCategories)
 						{
-							/* code for TISPRD-3183 */
-							String categoryPathChildlevel2 = GenericUtilityMethods.buildPathString(homepageComponentService
-									.getCategoryPath(secondLevelCategory));
-							if (StringUtils.isNotEmpty(categoryPathChildlevel2))
-							{
-								categoryPathChildlevel2 = URLDecoder.decode(categoryPathChildlevel2, "UTF-8");
-								categoryPathChildlevel2 = categoryPathChildlevel2.toLowerCase();
-								categoryPathChildlevel2 = GenericUtilityMethods.changeUrl(categoryPathChildlevel2);
-							}
-							secondLevelCategory.setName(secondLevelCategory.getName() + "||" + categoryPathChildlevel2);
-
-
+							/* code changes for TISPRD-3183 */
 							// Fetching the third level category against a second
 							// level category
 							final Collection<CategoryModel> thirdLevelCategory = secondLevelCategory.getCategories();
@@ -149,18 +138,19 @@ public class SiteMapController extends AbstractPageController
 							for (final CategoryModel thirdLevelCategories : thirdLevelCategory)
 							{
 
-								String categoryPathChildlevel3 = GenericUtilityMethods.buildPathString(homepageComponentService
-										.getCategoryPath(thirdLevelCategories));
-								if (StringUtils.isNotEmpty(categoryPathChildlevel3))
-								{
-									categoryPathChildlevel3 = URLDecoder.decode(categoryPathChildlevel3, "UTF-8");
-									categoryPathChildlevel3 = categoryPathChildlevel3.toLowerCase();
-									categoryPathChildlevel3 = GenericUtilityMethods.changeUrl(categoryPathChildlevel3);
-								}
+								final String categoryPathChildlevel3 = getCategoryPath(thirdLevelCategories);
 
-								thirdLevelCategories.setName(thirdLevelCategories.getName() + "||" + categoryPathChildlevel3);
+								final StringBuilder catName3 = new StringBuilder();
+								catName3.append(thirdLevelCategories.getName()).append("||").append(categoryPathChildlevel3);
+								thirdLevelCategories.setName(catName3.toString());
 							}
-							/* code end for TISPRD-3183 */
+							final String categoryPathChildlevel2 = getCategoryPath(secondLevelCategory);
+
+							final StringBuilder catName2 = new StringBuilder();
+							catName2.append(secondLevelCategory.getName()).append("||").append(categoryPathChildlevel2);
+							secondLevelCategory.setName(catName2.toString());
+
+							/* code changes end for TISPRD-3183 */
 							// Storing the third level categories in a map
 							//thirdLevelCategoryMap.put(secondLevelCategory.getCode(), thirdLevelCategory);
 							innerLevelMap.put(secondLevelCategory, thirdLevelCategory);
@@ -191,6 +181,36 @@ public class SiteMapController extends AbstractPageController
 		storeCmsPageInModel(modelSpring, getContentPageForLabelOrId(SITEMAP_CMS_PAGE));
 		setUpMetaDataForContentPage(modelSpring, getContentPageForLabelOrId(SITEMAP_CMS_PAGE));
 		return getViewForPage(modelSpring);
+	}
+
+	private String getCategoryPath(final CategoryModel Category)
+	{
+		String categoryPathChildlevel = null;
+		try
+		{
+			categoryPathChildlevel = GenericUtilityMethods.buildPathString(homepageComponentService.getCategoryPath(Category));
+			if (StringUtils.isNotEmpty(categoryPathChildlevel))
+			{
+				categoryPathChildlevel = URLDecoder.decode(categoryPathChildlevel, ModelAttributetConstants.UTF8);
+				categoryPathChildlevel = categoryPathChildlevel.toLowerCase();
+				categoryPathChildlevel = GenericUtilityMethods.changeUrl(categoryPathChildlevel);
+			}
+		}
+		catch (final EtailBusinessExceptions businessException)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(businessException, null);
+		}
+		catch (final EtailNonBusinessExceptions nonBusinessException)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(nonBusinessException);
+		}
+		catch (final Exception exception)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
+		}
+
+
+		return categoryPathChildlevel;
 	}
 
 }
