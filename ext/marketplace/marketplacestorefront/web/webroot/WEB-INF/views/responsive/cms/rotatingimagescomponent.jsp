@@ -14,7 +14,7 @@ var homePageBannerTimeout='${timeout}';
 		
 <c:choose>
 <c:when test="${empty timeout || timeout == 0}">
-<div class="content-block-slider electronic-brand-slider">
+<div class="content-block-slider electronic-brand-slider timeout-slider">
 	<div
 		class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference"
 		id="rotatingImage">
@@ -98,7 +98,7 @@ var homePageBannerTimeout='${timeout}';
 	</div>
 	
 	<!-- g -->
-	<div class="content-block-slider electronic-brand-slider">
+	<div class="content-block-slider electronic-brand-slider timeout-slider">
 	<div
 		class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference"
 		id="rotatingImageMobile">
