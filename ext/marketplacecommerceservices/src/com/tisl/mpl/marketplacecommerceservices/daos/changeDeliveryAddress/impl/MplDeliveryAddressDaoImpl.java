@@ -5,7 +5,11 @@ package com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl
 
 import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.SearchResult;
+
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,13 +87,21 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 	 * @return TemproryAddressModel
 	 */
 	@Override
-	public TemproryAddressModel getTemporaryAddressModel(final String orderId)
+	public TemproryAddressModel getTemporaryAddressModel(String orderId)
 	{
-		TemproryAddressModel tempAddress = new TemproryAddressModel();
+
 		try
 		{
-			tempAddress.setOrderId(orderId);
-			tempAddress = flexibleSearchService.getModelByExample(tempAddress);
+			final String queryString = "SELECT {o:" + TemproryAddressModel.PK
+					+ "} "+ "FROM {" + TemproryAddressModel._TYPECODE + " AS o} " + "WHERE {o." + TemproryAddressModel.ORDERID
+					+ "}=?orderId" + " AND {o." + TemproryAddressModel.ISAPPROVAL + "}=true";
+
+			FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+			fQuery.addQueryParameter("orderId", orderId);			
+			SearchResult<TemproryAddressModel> searchResult = flexibleSearchService.search(fQuery);
+			List<TemproryAddressModel> tempAddrlist = searchResult.getResult();
+			return !tempAddrlist.isEmpty() ? tempAddrlist.get(0) : null;
+
 		}
 		catch (final FlexibleSearchException e)
 		{
@@ -99,8 +111,9 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 		{
 			LOG.error("Exception occurree getting the temparory address " + e.getMessage());
 		}
-		return tempAddress;
+		return null;
 	}
+
 
 
 }
