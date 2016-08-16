@@ -1053,11 +1053,7 @@
 				qualifier="collectionProducts"></targetElement>
 		</relation>
 	</relations>
-
 	<itemtypes>
-	
-	
-	
 	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
 	
 			<itemtype code="BannerComponent" autocreate="false"
@@ -1168,6 +1164,8 @@
 				</attributes>
 
 			</itemtype>
+			
+			
 
 			<itemtype code="ApparelSizeVariantProduct" extends="ApparelStyleVariantProduct"
 				autocreate="true" generate="true"
