@@ -25,7 +25,6 @@
 						   <spring:theme code="text.accountOrderDetails.otpPopup.newOTPMsg" />
 						</span>
 					</div>
-
 				</div>
 			</div>
 			<p style="clear: both"></p>
