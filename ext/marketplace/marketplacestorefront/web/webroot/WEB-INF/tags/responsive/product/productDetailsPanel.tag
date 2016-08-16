@@ -148,6 +148,8 @@ tr.d0 td {
 				<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">	
 			<div class="pdp-promo-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
+				<br>
+				<a class="details">View more</a>
 			</div>
 			</c:if> <!-- end if check for channel web -->
 			</c:forEach>
@@ -156,6 +158,8 @@ tr.d0 td {
 			<c:otherwise>
 			<div class="pdp-promo-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
+				<br>
+				<a class="details">View more</a>
 			</div>
 			</c:otherwise>
 			</c:choose>

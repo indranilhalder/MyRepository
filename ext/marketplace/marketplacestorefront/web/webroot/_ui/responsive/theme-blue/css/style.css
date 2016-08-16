@@ -32779,6 +32779,10 @@ display:none;
 	width:100%;
 	text-align:center;
 }
+.pdp-promo-block.promo-block a.details {
+	margin-top: 10px;
+    display: block;
+}
 /*--------------maincss-----------*/
 .row
 {
