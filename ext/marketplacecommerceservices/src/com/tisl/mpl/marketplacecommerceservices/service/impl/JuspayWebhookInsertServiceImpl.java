@@ -366,7 +366,6 @@ public class JuspayWebhookInsertServiceImpl implements JuspayWebhookInsertServic
 		{
 			cardResponse.setCardIssuer((String) jobjectCard.get(MarketplacecommerceservicesConstants.CARDISSUER));
 		}
-
 		//saving card response
 		getModelService().save(cardResponse);
 

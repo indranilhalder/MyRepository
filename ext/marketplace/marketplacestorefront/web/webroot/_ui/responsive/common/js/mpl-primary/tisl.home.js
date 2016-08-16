@@ -182,14 +182,23 @@ $("span.latestOffersBanner").on("click touchend", function() {
 	    		slideBy:'page',
 	    		responsive : {
 	    			// breakpoint from 0 up
-	    			0 : {
-	    				items:1,
-	    				stagePadding: 50,
-	    			},			
-	    			// breakpoint from 650 up
-	    			650 : {
-	    				items:5,
-	    			}			
+        			0 : {
+        				items:1,
+        				stagePadding: 50,
+        			},
+        			// breakpoint from 480 up
+        			480 : {
+        				items:2,
+        				stagePadding: 50,
+        			},
+        			// breakpoint from 768 up
+        			768 : {
+        				items:3,
+        			},
+        			// breakpoint from 768 up
+        			1280 : {
+        				items:5,
+        			}			
 	    		}	
 				/*navigation:true,
 				navigationText : [],
@@ -305,23 +314,6 @@ function getBrandsYouLoveAjaxCall() {
                 defaultComponentId = "";
                 renderHtml = "<h1>" + response.title + "</h1>" +
                     "<div class='home-brands-you-love-carousel'>";
-                $.each(response.subComponents, function(k, v) {
-                    //console.log(v.brandLogoUrl);
-                	
-                    if (!v.showByDefault) {
-                        renderHtml +=
-                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
-                            v.compId + "'><img src='" + v.brandLogoUrl +
-                            "'></img></div>";
-                    } else {
-                        renderHtml +=
-                            "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
-                            v.compId + "'><img src='" + v.brandLogoUrl +
-                            "'></img></div>";
-                        defaultComponentId = v.compId;
-                    }
-                    count++;
-                });
                 $.each(response.subComponents, function(k, v) {
                     //console.log(v.brandLogoUrl);
                 	

@@ -66,11 +66,20 @@ ACC.carousel = {
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
             				items:2,
             				stagePadding: 50,
-            			},			
-            			// breakpoint from 650 up
-            			650 : {
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
             				items:4,
             			}			
             		}	
@@ -88,7 +97,7 @@ ACC.carousel = {
 	},
 	
 	myFun: function(){
-		$("#rotatingImage").owlCarousel({
+		$(".electronic-rotatingImage").owlCarousel({
 			items:1,
     		loop: true,
     		nav:true,
@@ -199,11 +208,20 @@ ACC.carousel = {
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
             				items:2,
             				stagePadding: 50,
-            			},			
-            			// breakpoint from 650 up
-            			650 : {
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
             				items:4,
             			}			
             		}	
@@ -263,11 +281,20 @@ ACC.carousel = {
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
             				items:2,
             				stagePadding: 50,
-            			},			
-            			// breakpoint from 650 up
-            			650 : {
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
             				items:4,
             			}			
             		}	
@@ -293,11 +320,20 @@ ACC.carousel = {
     		responsive : {
     			// breakpoint from 0 up
     			0 : {
+    				items:1,
+    				stagePadding: 50,
+    			},
+    			// breakpoint from 480 up
+    			480 : {
     				items:2,
     				stagePadding: 50,
-    			},			
-    			// breakpoint from 650 up
-    			650 : {
+    			},
+    			// breakpoint from 768 up
+    			768 : {
+    				items:3,
+    			},
+    			// breakpoint from 768 up
+    			1280 : {
     				items:6,
     			}			
     		}	
@@ -314,7 +350,7 @@ ACC.carousel = {
 	
 	advancedCategoryCarousel: function(){
 		
-		$("#mplAdvancedCategoryCarousel").owlCarousel({
+		/*$("#mplAdvancedCategoryCarousel").owlCarousel({
 					items:4,
             		loop: true,
             		nav:true,
@@ -323,15 +359,24 @@ ACC.carousel = {
             		responsive : {
             			// breakpoint from 0 up
             			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
             				items:2,
             				stagePadding: 50,
-            			},			
-            			// breakpoint from 650 up
-            			650 : {
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
             				items:4,
             			}			
             		}	
-			/*navigation:true,
+			navigation:true,
 			navigationText : [],
 			pagination:false,
 			itemsDesktop : [5000,4], 
@@ -339,8 +384,8 @@ ACC.carousel = {
 			itemsTablet: [650,2], 
 			itemsMobile : [480,2], 
 			rewindNav: false,
-			lazyLoad:true*/
-		});
+			lazyLoad:true
+		});*/
 	},
 	
 	myReviewCarousel: function(){
@@ -356,11 +401,20 @@ ACC.carousel = {
     		responsive : {
     			// breakpoint from 0 up
     			0 : {
+    				items:1,
+    				stagePadding: 50,
+    			},
+    			// breakpoint from 480 up
+    			480 : {
     				items:2,
     				stagePadding: 50,
-    			},			
-    			// breakpoint from 650 up
-    			650 : {
+    			},
+    			// breakpoint from 768 up
+    			768 : {
+    				items:3,
+    			},
+    			// breakpoint from 768 up
+    			1280 : {
     				items:5,
     			}			
     		}	

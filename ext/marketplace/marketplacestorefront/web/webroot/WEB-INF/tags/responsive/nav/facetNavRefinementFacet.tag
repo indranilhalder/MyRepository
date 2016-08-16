@@ -107,6 +107,7 @@ function navigateToPage(queryString,textString)
 			
 				</div>
 		</c:if>
+		
 		</div>
 
 		<div class="facet-values js-facet-values js-facet-form ">
@@ -408,6 +409,9 @@ function navigateToPage(queryString,textString)
 								</c:if>
 							</form>
 								</c:when>
+								
+							
+								
 								<c:otherwise>
 								<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
@@ -495,22 +499,29 @@ function navigateToPage(queryString,textString)
 			<c:if test="${not empty facetData.topValues}">
 			
 			<c:set var="remainingFacetValues" value="${facetData.values}" />
-	
-		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-8}" />
+			
+	        <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('search.Facet.topValue')" var="facetTopValue"/>
+	        <%-- <c:set var="facetTopValues" value="${facetData.topValues}" />
+	        
+		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-fn:length(facetTopValues)}" /> --%>
+		    
+		    <c:set var="remainingFacetValuesSize" value="${fn:length(remainingFacetValues)-facetTopValue}" />
 		    
 			<div class="more-lessFacetLinks active">
 				<div class="more js-more-facet-values checkbox-menu">
+				
 				<c:choose>
 				<c:when test="${facetData.code eq 'colour'}" >
 				<a href="#" class="js-more-facet-values-link more" >+&nbsp;${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
 				
 				</c:when>
 				<c:otherwise>
-					<a href="#" class="js-more-facet-values-link more" >${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
+					<a href="#" class="js-more-facet-values-link more" >+&nbsp;${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" text="more" /></a>
 				</c:otherwise>
 				</c:choose>
 				
 				</div>
+				
 				<div class="less js-less-facet-values checkbox-menu">
 				    	<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
@@ -520,7 +531,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
 								<input type="hidden" name="isFacet" value="true"/>
-								<input type="submit" value="<spring:theme code="search.nav.facetShowLess_${facetData.code}" />" class="js-less-facet-values-link"  />
+								<input type="submit" value="<spring:theme code="search.nav.facetShowLess_${facetData.code}" text="less..."/>" class="js-less-facet-values-link"  />
 								</form>
 				
 					<%-- <a href="#" class="js-less-facet-values-link"><spring:theme code="search.nav.facetShowLess_${facetData.code}" /></a> --%>
@@ -541,6 +552,9 @@ function navigateToPage(queryString,textString)
 									<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 							</form>
 		</c:if>
+		
+	
+		
 		
 		
 	</li> </c:if> 

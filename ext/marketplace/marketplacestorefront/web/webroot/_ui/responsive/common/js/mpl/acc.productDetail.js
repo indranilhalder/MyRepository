@@ -1498,6 +1498,7 @@ function displayDeliveryDetails(sellerName) {
 		}
 	});
 }
+
 function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	//alert("mrp "+ mrp.formattedValue +"mop "+mop.formattedValue +"spPrice "+spPrice.formattedValue +"savingsOnProduct "+ savingsOnProduct.formattedValue);
 	if(null!= mrp){
@@ -1547,7 +1548,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 			$("#mrpPriceId").show();
 		}
 	}
-	if (mrp.value == "") {
+	if (mrp.value = "") {
 		$("#mrpPriceId").hide();
 	} else {
 		$("#mrpPriceId").show();
