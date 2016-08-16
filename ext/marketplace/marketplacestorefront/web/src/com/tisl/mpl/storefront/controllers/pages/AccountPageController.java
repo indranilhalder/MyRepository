@@ -173,7 +173,9 @@ import com.tisl.mpl.facades.account.reviews.impl.DefaultMplReviewFacade;
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.MplPreferencePopulationData;
+import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
+import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
@@ -853,7 +855,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String order(@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode,
+	public String order(@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode,@RequestParam(value="isServiceable", required = false,defaultValue="false") final boolean isServiceable,
 			final Model model) throws CMSItemNotFoundException
 	{
 		if (null == orderCode)
@@ -885,7 +887,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			final String finalOrderDate = getFormattedDate(orderDetail.getCreated());
 			final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
-			boolean changeDeliveryAddressStatus = false;
+			boolean addressChangeEligible = false;
 			for (final OrderData subOrder : subOrderList)
 			{
 				for (final OrderEntryData orderEntry : subOrder.getEntries())
@@ -1073,32 +1075,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 							orderEntry.getOrderLineId());
 					currentProductMap.put(orderEntry.getOrderLineId(), cancelProduct);
 
-
-					if (!orderEntry.getMplDeliveryMode().getCode().equalsIgnoreCase("click-and-collect")
-							&& changeDeliveryAddressStatus == false)
-					{
-						changeDeliveryAddressStatus = true;
-					}
 				}
 
 			}
 
 
-			changeDeliveryAddressStatus = changeDeliveryAddressStatus ? mplDeliveryAddressFacade
-					.isDeliveryAddressChangable(orderDetail.getCode()) : false;
-			model.addAttribute(ModelAttributetConstants.EDIT_SHIPPING_ADDRESS_STATUS, changeDeliveryAddressStatus);
-			if (changeDeliveryAddressStatus)
+			addressChangeEligible = mplDeliveryAddressFacade.isDeliveryAddressChangable(orderDetail.getCode());
+			if (addressChangeEligible)
 			{
 				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
 				phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
 				model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
 			}
-			final AccountAddressForm accountAddressForm = new AccountAddressForm();
+			AccountAddressForm accountAddressForm = new AccountAddressForm();
 			model.addAttribute("addressForm", accountAddressForm);
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
 			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
 			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataListNew);
-
+			model.addAttribute(ModelAttributetConstants.ADDRESS_CHANGE_ELIGIBLE, addressChangeEligible);
 			////TISEE-6290
 			fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
 			model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
@@ -1181,6 +1175,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 		storeCmsPageInModel(model, getContentPageForLabelOrId(ORDER_DETAIL_CMS_PAGE));
 		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ORDER_DETAIL_CMS_PAGE));
+		
+		if(isServiceable){
+			
+			GlobalMessages.addMessage(model,GlobalMessages.CONF_MESSAGES_HOLDER,"mpl.change.delivery.address.success.message",new Object[]{} );
+		}
 		return getViewForPage(model);
 	}
 
@@ -7005,22 +7004,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method = RequestMethod.GET)
-	@ResponseBody
 	public String changeDeliveryAddress(@PathVariable final String orderCode,
-			@ModelAttribute("addressForm") final AccountAddressForm addressForm)
+			@ModelAttribute("addressForm") final AccountAddressForm addressForm, Model model) throws CMSItemNotFoundException
 	{
-
-		String validatetionCheckMsg = null;
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("AddressForm validation ");
-		}
-		final String errorMsg = mplAddressValidator.validate(addressForm);
+		String errorMsg = mplAddressValidator.validate(addressForm);
 
 		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCCESS))
 		{
-			boolean flag = false;
-			final AddressData addressData = new AddressData();
+			AddressData addressData = new AddressData();
 			addressData.setAddressType(addressForm.getAddressType());
 			addressData.setId(addressForm.getAddressId());
 			addressData.setPhone(addressForm.getMobileNo());
@@ -7029,7 +7020,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			addressData.setLine1(addressForm.getLine1());
 			addressData.setLine2(addressForm.getLine2());
 			addressData.setLine3(addressForm.getLine3());
-			addressData.setTown(addressForm.getTownCity());
+			addressData.setCity(addressForm.getTownCity());
 			addressData.setPostalCode(addressForm.getPostcode());
 			addressData.setState(addressForm.getState());
 			addressData.setBillingAddress(false);
@@ -7044,39 +7035,81 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
 			{
-				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
+				CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
 				addressData.setCountry(countryData);
 			}
 			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
 			{
 				addressData.setRegion(getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso()));
 			}
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("Save TemproryAddressModel and OTP genarate");
-			}
-			flag = mplDeliveryAddressFacade.saveAsTemporaryAddressForCustomer(orderCode, addressData);
+			LOG.debug("Save TemproryAddressModel and OTP genarate");
 
-			if (flag)
-			{
-				validatetionCheckMsg = "success";
-			}
-		}
-		else
-		{
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("AddrressData is incorent then send erorr Msg");
-			}
-			validatetionCheckMsg = errorMsg;
-		}
+			ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.saveAsTemporaryAddressForCustomer(
+					orderCode, addressData);
 
-		return validatetionCheckMsg;
+			if (scheduledDeliveryData.getIsActive().booleanValue())
+			{
+				if (scheduledDeliveryData.getIsPincodeServiceable().booleanValue())
+				{
+					final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+					final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
+					Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
+					for (final OrderData subOrder : subOrderList)
+					{
+						for (final OrderEntryData orderEntry : subOrder.getEntries())
+						{
+							//getting the product code
+							ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+							if (CollectionUtils.isNotEmpty(productModel.getBrands()))
+							{
+								for (final BrandModel brand : productModel.getBrands())
+								{
+									orderEntry.setBrandName(brand.getName());
+									break;
+								}
+							}
+
+							List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+									.getSellerInformationRelator();
+							for (final SellerInformationModel sellerInformationModel : sellerInfo)
+							{
+								if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+								{
+									final SellerInformationData sellerInfoData = new SellerInformationData();
+									sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+									sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+									sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+									orderEntry.setSelectedSellerInformation(sellerInfoData);
+								}
+							}
+						}
+						fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
+						model.addAttribute("orderDetail", orderDetail);
+						model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
+						model.addAttribute("txnScheduleData", scheduledDeliveryData);
+						return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
+					}
+				}else{
+					
+					return MessageConstants.PINCODE_NOT_SERVICEABLE;
+				}
+			}
+			else
+			{
+				final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
+				phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
+				model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
+				model.addAttribute("orderCode", orderCode);
+				return ControllerConstants.Views.Pages.Account.OTPPopup;
+			}
+
+		}
+		return errorMsg;
 	}
 
 
 	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.GET)
-	@ResponseBody
 	public String validateOTP(@RequestParam(value = "orderId") final String orderId,
 			@RequestParam(value = "otpNumber") final String enteredOTPNumber)
 	{
@@ -7085,12 +7118,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final String customerId = customerData.getUid();
 		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
 		{
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("OTP Validation And Oms Calling status");
-				validateOTPMesg = mplDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber, orderId);
-
-			}
+			LOG.debug("OTP Validation And Oms Calling status");
+			validateOTPMesg = mplDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber, orderId);
 		}
 		return validateOTPMesg;
 
@@ -7100,16 +7129,40 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@ResponseBody
 	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
 	{
-		boolean flag;
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("Generate new OTP For changing Shapping Address ");
-		}
-		flag = mplDeliveryAddressFacade.generateNewOTP(orderCode);
-		return flag;
+		boolean isNewOTPCreated;
+		LOG.debug("Generate new OTP For changing Shapping Address ");
+		isNewOTPCreated = mplDeliveryAddressFacade.generateNewOTP(orderCode);
+		return isNewOTPCreated;
 	}
 
 
+	@RequestMapping(value = RequestMappingUrlConstants.RESCHEDULEDDELIVERYDATE, method = RequestMethod.GET)
+	public String scheduledDeliveryDate(@PathVariable final String orderCode,
+			@RequestParam(value = "entryData") final String entryData)
+	{
+		try
+		{
+			if (StringUtils.isNotEmpty(entryData))
+			{
+				RescheduleDataList reschList = (RescheduleDataList) GenericUtilityMethods.jsonToObject(RescheduleDataList.class,
+						entryData);
+				if (reschList != null)
+				{
+					mplDeliveryAddressFacade.reScheduleddeliveryDate(reschList);
+				}
+			}
+			
+		mplDeliveryAddressFacade.generateNewOTP(orderCode);
+	   LOG.info("OTP Generate  AfterSchduleddliveyDate");
+		}
+		catch (Exception e)
+		{
+			LOG.error("Mapper Coppprer");
+		}
+		return ControllerConstants.Views.Pages.Account.OTPPopup;
+	}
+	
+ 	
 
 	/**
 	 * @return the configurationService
