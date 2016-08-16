@@ -24749,9 +24749,9 @@ input.brandSearchTxt {
     font-size: 12px;
     letter-spacing: 1px;
     line-height: 40px;
-    height: 40px;
+    height: 42px;
     padding: 0;
-    margin-bottom: 20px;
+    margin: 0;
     font-weight: 500;
     clear: both;
     color: #a9143c;
@@ -43216,7 +43216,7 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     -moz-osx-font-smoothing: grayscale;
     font-weight: 100;
     content: "\e602";
-    font-size:16px;
+    font-size: 18px;
     color: #A9143C;
   margin-right: 5px;
    position: relative;
