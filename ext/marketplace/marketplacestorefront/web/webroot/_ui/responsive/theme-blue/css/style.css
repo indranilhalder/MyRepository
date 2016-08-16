@@ -41522,6 +41522,7 @@ margin-left: 20%;
 }
 .product-image-container {
 	display: block;
+	position: relative;
 }
 
 .thumb {
