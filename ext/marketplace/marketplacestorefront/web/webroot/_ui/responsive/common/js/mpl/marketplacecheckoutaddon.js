@@ -3133,12 +3133,14 @@ function showPromotionTag()
 $(document).ready(function(){
 	$("#ussid").addClass("ussid");
 	var elementId = $(".desktop li:nth-child(4) ul");
-	elementId.after("<span data-similar='yes' class='pincodeServiceError'></span>");	
+	elementId.after("<span class='pincodeServiceError'></span>");	
 	$("#defaultPinCodeIds").keyup(function(event){
 	    if(event.keyCode == 13){
 	        $("#pinCodeButtonIds").click();
 	    }
 	});
+	
+	$("#popUpExpAddress input.address_radio[data-index='0']").attr("checked","checked");	
 
 });
 
@@ -3322,10 +3324,8 @@ function populatePincodeDeliveryMode(response,buttonType){
 	}
 	else{
 		$("#"+ussId).remove();
-
 		var newUi = document.createElement("ul");
 		newUi.setAttribute("id", ussId);
-		newUi.setAttribute("data-similar", "yes");
 		
 		var jsonObj=deliveryModeJsonObj[key].validDeliveryModes;
 		
@@ -3389,7 +3389,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 			cartMessage.appendChild(message);
 			newUi.appendChild(cartMessage);
 			$("#"+ussId+"_li").append(newUi);
-			$("*[data-similar=yes]").wrapAll("<div>");
+			
 		}
 	}
 	
@@ -4685,13 +4685,15 @@ function pinCodeDiv(){
 		//$("#successPin").text("");	
 	}
 
-// MY BAG Changes
+// MY BAG Changes TPR-634
 $(document).mouseup(function (e)
-		{
-		    var container = $(".modal-content.content");
+{
+  var container = $(".modal-content.content");
 
-		    if (!container.is(e.target)  && container.has(e.target).length === 0 && container.css("opacity") === "1") 
-		    {
-		    	checkExpressCheckoutPincodeService('typeExpressCheckoutDD');
-		    }
-		});
+  if (!container.is(e.target)  && container.has(e.target).length === 0 && container.css("opacity") === "1") 
+  {
+	 checkExpressCheckoutPincodeService('typeExpressCheckoutDD');
+		//$("#defaultPinDiv").show();
+		//$("#changePinDiv").hide();
+  }
+});
