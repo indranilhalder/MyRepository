@@ -182,7 +182,7 @@ $(document).ready(function(){
 		var showDeletedItem=localStorage.getItem("showDeletedEntry");
     for (var key in localStorage) {
         if (key.indexOf("deletedEntry") >= 0 && showDeletedItem=="true") {
-        	$('.product-block').append("<li class='item deleted'>"+window.localStorage.getItem("deletedEntry")+"</li>");
+        	$('.product-block:not(.wishlist)').append("<li class='item deleted'>"+window.localStorage.getItem("deletedEntry")+"</li>");
         	$('.item.deleted').find(".mybag-undo-form").show();
         	window.localStorage.setItem("showDeletedEntry","false");
         }
