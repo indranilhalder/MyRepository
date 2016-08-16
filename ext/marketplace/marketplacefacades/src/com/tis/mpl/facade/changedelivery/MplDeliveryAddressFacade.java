@@ -7,6 +7,11 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 
+import java.util.List;
+import java.util.Map;
+
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 
@@ -25,7 +30,7 @@ public interface MplDeliveryAddressFacade
 	 * @param newDeliveryAddress
 	 * @return boolean
 	 */
-	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress,String interfaceType);
+	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress, String interfaceType);
 
 
 	/**
@@ -40,7 +45,7 @@ public interface MplDeliveryAddressFacade
 
 	/**
 	 * @*@param orderid
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean isDeliveryAddressChangable(String orderid);
@@ -63,9 +68,15 @@ public interface MplDeliveryAddressFacade
 
 	//Generate new OTP
 	public boolean generateNewOTP(String orderCode);
+
+	public String getPartialEncryptValue(String encryptSymbol, int encryptLength, String source);
+
+	public void reScheduleddeliveryDate(RescheduleDataList rescheduleDataList);
+
+	public Map<String, Object> getDeliveryDate(final List<TransactionEddDto> transactionEddDtoList);
+
+	public List<TransactionEddDto> getScheduledDeliveryDate(final OrderModel orderModel, final String newPincode);
 	
-	public String getPartialEncryptValue(String encryptSymbol,int encryptLength,String source);
-		
-   public  void reScheduleddeliveryDate(RescheduleDataList rescheduleDataList);
-   	
+	public ChangeDeliveryAddressResponseDto scheduledDeliveryDateRequestToOMS(OrderModel orderModel,String newPincode);
+
 }
