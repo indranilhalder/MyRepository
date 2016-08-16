@@ -14,7 +14,7 @@ var homePageBannerTimeout='${timeout}';
 <c:when test="${empty timeout || timeout == 0}">
 <div class="content-block-slider electronic-brand-slider">
 	<div
-		class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference"
+		class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference electronic-rotatingImage"
 		id="rotatingImage">
 		<c:forEach items="${banners}" var="banner" varStatus="status">
 			<c:if test="${ycommerce:evaluateRestrictions(banner)}">
@@ -90,7 +90,7 @@ var homePageBannerTimeout='${timeout}';
 	</div>
 	</c:when>
 	<c:otherwise>
-	<div class="timeout-slider" style="height:575px;">
+	<div class="timeout-slider">
 	<div
 		class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference"
 		id="rotatingImageTimeout">
