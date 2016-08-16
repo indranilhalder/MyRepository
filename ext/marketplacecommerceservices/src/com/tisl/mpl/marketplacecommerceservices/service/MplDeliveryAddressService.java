@@ -6,12 +6,6 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.core.model.order.OrderModel;
 
-import java.util.List;
-import java.util.Map;
-
-import bsh.ParseException;
-
-import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.tisl.mpl.core.model.TemproryAddressModel;
 
 
@@ -56,8 +50,5 @@ public interface MplDeliveryAddressService
    public boolean setStatusForTemporaryAddress(String orderId,boolean flag);
    
    public boolean updateContactDetails(TemproryAddressModel temproryAddressModel,OrderModel orderModel);
-   
-   public List<TransactionEddDto>  getScheduledDeliveryDate(OrderModel orderModel, String newPincode);
-   
-   public Map<String,Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList);
+  
 }
