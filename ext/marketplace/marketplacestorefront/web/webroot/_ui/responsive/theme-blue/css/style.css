@@ -11047,7 +11047,7 @@ button.otherSellersFont {
     line-height: 40px
 }
 .product-info .product-content .delivery-block li .inline-form input {
-    width: 65%;
+    width: 45%;
     max-width: -webkit-calc(100% - 60px);
     max-width: calc(100% - 60px)
 }
@@ -11068,11 +11068,12 @@ button.otherSellersFont {
     color: #000
 }
 .product-info .product-content .delivery-block li .inline-form button {
-    width: 35%;
+    width: 55%;
     padding: 0;
     font-size: 12px;
     letter-spacing: 1px;
-    min-width: 60px
+    min-width: 60px;
+    text-transform: capitalize;
 }
 .product-info .product-content .delivery-block li .home,
 .product-info .product-content .delivery-block li .express,

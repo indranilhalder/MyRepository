@@ -2637,6 +2637,13 @@ function loadDefaultWishListName_SizeGuide() {
 			$(".emi-overlay").remove();
 		});
 		
+		$(window).resize(function(){
+			if($(window).width() > 790){
+				$(".Emi > p").removeClass("active mobile");
+				$(".emi-overlay").remove();
+			}
+		})
+		
 		$(document).on("click",".product-detail .promo-block .details",function(e){
 			e.preventDefault();
 			offerPopup($("#promotionDetailsId").html());
@@ -2644,6 +2651,17 @@ function loadDefaultWishListName_SizeGuide() {
 		$(document).on('hide.bs.modal', function () {
 		    $("#offerPopup").remove();
 		}); 
+		
+		$("#pin").focus(function(){
+			$("#pdpPincodeCheck").text("Check Availability")
+		});
+		$("#pin").blur(function() {
+			if ($(this).val() == "") {
+				$("#pdpPincodeCheck").text("Check Availability")
+			} else {
+				$("#pdpPincodeCheck").text("Change Pincode")
+			}
+		});
 	});
 	/*Wishlist In PDP changes*/
 	function getLastModifiedWishlist(ussidValue) {
