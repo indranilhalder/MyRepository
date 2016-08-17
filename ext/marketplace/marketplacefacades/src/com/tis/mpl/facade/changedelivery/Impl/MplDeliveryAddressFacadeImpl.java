@@ -524,10 +524,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						isContactUpdated = mplDeliveryAddressService.updateContactDetails(temproryAddressModel, orderModel);
 						if (isContactUpdated)
 						{
-							System.out.println("call to CRM");
-
 							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
-
 						}
 					}
 					else
