@@ -119,9 +119,10 @@
 						data-mylist="<spring:theme code="text.help"  />"><spring:theme code="wishlist.manage" /></a></li>
 
 					<!-- CREATE NEW LIST STATIC COMPONENT -->
-					<li><a class="js-new-wishlist  create-newlist-link" href="#nogo"
+					<!-- Commented as for TPR-895 -->
+					<%-- <li><a class="js-new-wishlist  create-newlist-link" href="#nogo"
 						data-toggle="modal" data-target="#createNewList"
-						data-head="<spring:theme code="text.help" />"><spring:theme	code="wishlist.create" /></a></li>
+						data-head="<spring:theme code="text.help" />"><spring:theme	code="wishlist.create" /></a></li> --%>
 				</ul>
 				<!-- END OF STATIC COMPONENT -->
 			</div>
