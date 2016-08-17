@@ -115,13 +115,21 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 									for (final String dynproperty : dynProperties)
 									{
 										final String property = dynproperty.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
-										if (property.equals(indexedProperty.getExportId().toLowerCase()))
+
+										if (StringUtils.isNotEmpty(indexedProperty.getName()))
 										{
-											System.out.println("----------------Current Product Code: " + product.getCode()
-													+ " ========exportid: " + indexedProperty.getExportId().toLowerCase());
-											dynGroupFeaturesValues(property, temp);
-											break;
+											final String name = indexedProperty.getName().replaceAll(" ", "").replaceAll("-", "")
+													.toLowerCase();
+											if (StringUtils.isNotEmpty(name) && property.equals(name))
+											{
+												System.out.println("----------------Current Product Code: " + product.getCode()
+														+ " ========exportid: " + indexedProperty.getExportId().toLowerCase() + "& name : "
+														+ name);
+												dynGroupFeaturesValues(property, temp);
+												break;
+											}
 										}
+
 									}
 								}
 								//Added for Tata-24 END :::
