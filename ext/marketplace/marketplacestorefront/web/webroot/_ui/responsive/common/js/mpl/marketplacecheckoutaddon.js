@@ -4686,7 +4686,7 @@ function pinCodeDiv(){
 	}
 
 // MY BAG Changes TPR-634
-$(document).mouseup(function (e)
+/*$(document).mouseup(function (e)
 {
   var container = $(".modal-content.content");
 
@@ -4696,4 +4696,7 @@ $(document).mouseup(function (e)
 		//$("#defaultPinDiv").show();
 		//$("#changePinDiv").hide();
   }
+});*/
+$('#popUpExpAddress').on('hidden.bs.modal', function () {
+	 checkExpressCheckoutPincodeService('typeExpressCheckoutDD');
 });
