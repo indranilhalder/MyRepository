@@ -1038,7 +1038,8 @@ $(function() {
 							
 							$('#addToCartButton').show();
 							$('#buyNowButton').attr("disabled",false);
-
+							//TPR-794
+							$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
 
 							return false;
 						} else if (!regExp.test(pin)) {
@@ -1047,7 +1048,8 @@ $(function() {
 							$("#wrongPin").show();
 							$('#addToCartButton').show();
 							$('#buyNowButton').attr("disabled",false);
-
+							//TPR-794
+							$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
 							return false;
 						}
 						var dataString = "pin=" + pin + "&productCode="
@@ -1080,6 +1082,8 @@ $(function() {
 											$('#unsevisablePin').show();
 											
 											$('#buyNowButton').attr("disabled",true);
+											//TPR-794
+											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 											return false;
 										}
 										// check if oms service is down
@@ -1091,7 +1095,8 @@ $(function() {
 											$("#collect").show();
 											$("#collectli").show();
 											$("#codId").show();
-
+											//TPR-794
+											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 											return false;
 										} else {
 											// refreshing seller list after
@@ -1253,11 +1258,15 @@ $(function() {
 										}
 										$("#pinCodeChecked")
 												.val(pinCodeChecked);
+										//TPR-794
+										$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 									},
 									error : function(xhr, status, error) {
 										$('#wrongPin,#unsevisablePin,#emptyPin')
 												.hide();
 										$('#unableprocessPin').show();
+										//TPR-794
+										$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 
 									}
 								});
@@ -1389,6 +1398,7 @@ $( document ).ready(function() {
 						//TPR-805
 						//$("#outOfStockPinCodeMsg").show();
 						//$("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1407,6 +1417,7 @@ $( document ).ready(function() {
 						//TPR-805
 						// $("#outOfStockPinCodeMsg").show();
 						// $("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1424,6 +1435,7 @@ $( document ).ready(function() {
 						//TPR-805
 						// $("#outOfStockPinCodeMsg").show();
 						// $("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1441,6 +1453,7 @@ $( document ).ready(function() {
 						//TPR-805
 						// $("#outOfStockPinCodeMsg").show();
 						// $("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -2643,27 +2656,23 @@ function loadDefaultWishListName_SizeGuide() {
 	} 
 /*TPR-630*/
 	$(document).ready(function(){
-		$(".Emi > p").on("mouseenter",function(){
+		$(".Emi > p").on("click",function(){
 			if(!$(this).hasClass("active") && $(window).width() > 790){
 				$(this).addClass("active");
 				openPopForBankEMI();
 			}
 		});
-		$(".Emi > p").on("mouseleave",function(){
-			if($(window).width() > 790){
-				$(this).removeClass("active");
-			}
-		});
-		$(".Emi > #EMImodal-content").on("mouseenter",function(){
+		$(".Emi > p").on("click",".Emi .modal-content .Close",function(){
+			$(".Emi > p").removeClass("active");
+			});
+		$(".Emi > #EMImodal-content").on("click",function(){
 			if($(window).width() > 790){
 				$(".Emi > p").addClass("active")
 			}
 		});
-		$(".Emi > #EMImodal-content").on("mouseleave",function(){
-			if($(window).width() > 790){
-				$(".Emi > p").removeClass("active")
-			}
-		});
+		$(".Emi > #EMImodal-content").on("click",".Emi .modal-content .Close",function(){
+			$(".Emi > p").removeClass("active")
+			});
 		
 		$(".Emi > p").on("click",function(){
 			if($(window).width() <= 790){
