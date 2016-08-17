@@ -195,11 +195,27 @@ $(document).ready(function() {
 									+ "/changeDeliveryAddress/",
 							type : 'GET',
 							data : data,
-							contentType: "html/text",
+							contentType: "text/application/html",
 							success : function(result){
+								if(result=='Pincode not Serviceable'){
+									$("#changeAddressPopup").show();
+								/*	$("wrapBG1").show();*/
+									$("#showOTP").hide();
+									$(".wrapBG").show();
+									var height = $(window).height();
+									$(".wrapBG").css("height", height);
+									$("#changeAddressPopup").css("z-index", "999999");
+									$(".pincodeNoError").show();
+									$(".pincodeNoError").text(result);
+								}else if(result =='Updated'){
+									window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode+"&isServiceable="+true;
+		
+								}else{
 								$("#changeAddressPopup").empty().html(result).show();
+								}
 							},
 							error : function(result) {
+								console.log(result);
 								alert("error")
 							}
 
@@ -207,6 +223,8 @@ $(document).ready(function() {
 					}
 						event.preventDefault();
 					});
+
+
 
 
 	$("#geneateOTP").click(function() {
