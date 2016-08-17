@@ -639,6 +639,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					$(".wishAddSucess").css("display","inline-block");
 					$(".wishAddSucess").fadeOut(3000);
 					$("#add_to_wishlist").attr("disabled",true);
+					$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
 					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 					/*setTimeout(function() {
 						  $("#addedMessage").fadeOut().empty();
@@ -2739,7 +2740,7 @@ function loadDefaultWishListName_SizeGuide() {
 			if (data == true) {
 				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 				$("#add_to_wishlist").attr("disabled",true);
-				$('#add_to_wishlist').addClass("wishDisabled");
+				$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
 			}
 			
 			},
