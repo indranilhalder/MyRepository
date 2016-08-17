@@ -177,7 +177,7 @@
 	<!-- Size guide Pop-up -->
 	<input type="hidden" value="${selectedSize}" name="isSizeSelectedQV" id="isSizeSelectedQV">
 	<a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
-		<spring:theme code="product.variants.size.guide"/>
+		<spring:theme code="product.variants.quickview.size.guide"/>
 	</a>
 	<!-- End Size guide Pop-up -->
 	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm" >
