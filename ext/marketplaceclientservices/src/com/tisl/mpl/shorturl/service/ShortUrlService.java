@@ -3,19 +3,37 @@
  */
 package com.tisl.mpl.shorturl.service;
 
+import java.util.Date;
+import java.util.List;
+
 import com.tisl.mpl.core.model.TULShortUrlReportModel;
 
 
 /**
- * @author techouts
+ * @author Techouts
  *
- *         Interface for short url service
+ *         Interface for short URL service
  */
 public interface ShortUrlService
 {
 
-	public abstract String genearateShorterURL(final String orderCode);
+	/**
+	 * @param orderCode
+	 * @return String
+	 */
+	String genearateShorterURL(final String orderCode);
 
-	public abstract TULShortUrlReportModel getShortUrlReportModelByOrderId(String orderid);
+	/**
+	 * @param orderid
+	 * @return TULShortUrlReportModel
+	 */
+	TULShortUrlReportModel getShortUrlReportModelByOrderId(String orderid);
+
+	/**
+	 * @param fromDate
+	 * @param toDate
+	 * @return List<TULShortUrlReportModel>
+	 */
+	List<TULShortUrlReportModel> getShortUrlReportModels(Date fromDate, Date toDate);
 
 }

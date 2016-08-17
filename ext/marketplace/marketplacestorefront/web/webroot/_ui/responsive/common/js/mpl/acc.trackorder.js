@@ -1,11 +1,101 @@
 
+
+function openTrackOrder() {
+	// console.log("Open Track Order");
+	$("#TrackemailId").val(''); 
+	$("#TrackOrderdId").val('');
+	$("#recaptchaChallangeAnswered").val('');
+	var height = $(window).height();
+	$(".wrapBG").css("height", height);
+	$(".wrapBG").fadeIn(100);
+	$("#showTrackOrder").fadeIn(300);
+	$("#showTrackOrder").css("z-index", "999999");
+	
+	
+	$.ajax({
+		url: ACC.config.encodedContextPath + "/login/captcha/widget/recaptchaForOrderTrack",
+		type: 'GET',
+		cache: false,
+		success: function (html)
+		{
+			
+			if ($(html) != [])
+			{
+					$("#recaptchaWidgetForTracking").append(html);
+					$(".trackCaptchaError").empty();
+			}
+		}
+		});
+}
+
+function closeTrackOrder() {
+	
+	$("#showTrackOrder").fadeOut(200);
+	$(".wrapBG").fadeOut(100);
+	$("#recaptchaWidgetForTracking").html('');
+	$(".main_error").hide();
+}
+
+function viewOrderStatus(event) {
+	
+	event.preventDefault();
+	$(".error_text").hide();
+	if ($(".trackEmail").val().length <= "2") {
+		$(".emailError").fadeIn(100).text("Please enter correct email address");
+		return false;
+	} else if ($(".orderEmail").val().length <= "2") {
+		$(".orderError").fadeIn(100).text("Please enter correct order ID.");
+		return false;
+	} else if(!$("#g-recaptcha-response").val()){
+		$('.trackCaptchaError').fadeIn(100).text("Please verify that you are not a robot!")
+		return false;
+	
+	} else {
+		// alert("Move to Order Tracking Page");
+
+		var orderCode = $('.orderEmail').val();
+		var emailId = $('.trackEmail').val();
+		var captchaCode= $("#g-recaptcha-response").val();
+		$.ajax({
+			url : ACC.config.encodedContextPath
+					+ "/trackOrder/nonlogintrack",
+			type : 'GET',
+			data : {
+				orderCode : orderCode,
+				emailId : emailId,
+				captchaCode : captchaCode
+			},
+			contentType : "application/json",
+			dataType : 'json',
+			success : function(result) {
+				if (result == "true") {
+					$("#showTrackOrder").hide();
+					window.location.href = ACC.config.encodedContextPath
+							+ "/trackOrder/shortDetails/?orderCode="
+							+ orderCode;
+				} else {
+					// alert("else");
+					$(".main_error").show();
+					$("#showTrackOrder .main_error").text(result);
+				}
+
+			},
+			error : function(result) {
+				alert("Error while tracking the order. Kindly try after some time")
+			}
+
+		});
+
+	}
+}
+
 var trackLocation=window.location.href;
 
-if(trackLocation.indexOf('/trackOrder') !=-1){
+if(trackLocation.indexOf('/trackOrder')!=-1){
 
-$(function() {
+	$(function() {
 
-	$('body .right-account .order-details .deliveryTrack ul.nav')
+		$('body .right-account .order-details .deliveryTrack ul.nav')
 			.each(
 					function() {
 						var track_order_length = $(this).find('li').length;
@@ -276,71 +366,4 @@ if (length >= 3) {
 	$(".returnStatus .dot").css("width", percent + "%");
 }
 
-}
-
-function openTrackOrder() {
-	// console.log("Open Track Order");
-	var height = $(window).height();
-	$(".wrapBG").css("height", height);
-	$(".wrapBG").fadeIn(100);
-	$("#showTrackOrder").fadeIn(300);
-	$("#showTrackOrder").css("z-index", "999999");
-}
-
-function closeTrackOrder() {
-	$("#showTrackOrder").fadeOut(200);
-	$(".wrapBG").fadeOut(100);
-}
-
-function viewOrderStatus(event) {
-	event.preventDefault();
-	$(".error_text").hide();
-	if ($(".trackEmail").val().length <= "2") {
-		$(".emailError").fadeIn(100).text("Please enter correct email address");
-		return false;
-	} else if ($(".orderEmail").val().length <= "2") {
-		$(".orderError").fadeIn(100).text("Please enter correct order ID.");
-		return false;
-	} else if ($("#TrackCaptcha").val().length <= "2") {
-		$(".captchaError").fadeIn(100).text("Please re-verify captcha.");
-		return false;
-	} else {
-		// alert("Move to Order Tracking Page");
-
-		var orderCode = $('.orderEmail').val();
-		var emailId = $('.trackEmail').val();
-		var captchaCode = $("#TrackCaptcha").val();
-		// alert(emailId)
-		$
-				.ajax({
-					url : ACC.config.encodedContextPath
-							+ "/trackOrder/nonlogintrack",
-					type : 'GET',
-					data : {
-						orderCode : orderCode,
-						emailId : emailId,
-						captchaCode : captchaCode
-					},
-					contentType : "application/json",
-					dataType : 'json',
-					success : function(result) {
-						if (result == "true") {
-							$("#showTrackOrder").hide();
-							window.location.href = ACC.config.encodedContextPath
-									+ "/trackOrder/shortDetails/?orderCode="
-									+ orderCode;
-						} else {
-							// alert("else");
-							$(".main_error").show();
-							$("#showTrackOrder .main_error").text(result);
-						}
-
-					},
-					error : function(result) {
-						alert("Error while tracking the order. Kindly try after some time")
-					}
-
-				});
-
-	}
-}
+}//if track order page url

@@ -6,6 +6,7 @@ package com.tisl.mpl.shorturl.report.dao;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -22,8 +23,11 @@ import com.tisl.mpl.core.model.TULShortUrlReportModel;
 public class ShortUrlReportDaoImpl implements ShortUrlReportDao
 {
 	private static final Logger LOG = Logger.getLogger(ShortUrlReportDaoImpl.class);
-	private static final String SHORT_URL_REPORT_QUERY = "SELECT {srm:" + TULShortUrlReportModel.PK + "}" + "FROM {"
+	private static final String SHORT_URL_REPORT_QUERY_BY_ORDERID = "SELECT {srm:" + TULShortUrlReportModel.PK + "}" + " FROM {"
 			+ TULShortUrlReportModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + TULShortUrlReportModel.ORDERID + "}=?code ";
+
+	private static final String SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES= "SELECT {srm:" + TULShortUrlReportModel.PK + "}" + " FROM {"
+			+ TULShortUrlReportModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + TULShortUrlReportModel.CREATIONTIME + "} between ?fromDate and ?toDate ";
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
@@ -39,15 +43,40 @@ public class ShortUrlReportDaoImpl implements ShortUrlReportDao
 	{
 		try
 		{
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(SHORT_URL_REPORT_QUERY);
-			query.addQueryParameter("code", orderCode);
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(SHORT_URL_REPORT_QUERY_BY_ORDERID);
+			fQuery.addQueryParameter("code", orderCode);
 
-			final List<TULShortUrlReportModel> listOfData = flexibleSearchService.<TULShortUrlReportModel> search(query).getResult();
+			final List<TULShortUrlReportModel> listOfData = flexibleSearchService.<TULShortUrlReportModel> search(fQuery).getResult();
 			return !listOfData.isEmpty() ? listOfData.get(0) : null;
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Ërror while searching for Short Report model for order  id" + orderCode);
+		}
+		return null;
+	}
+	
+
+	/**
+	 * @Description Get the report models between two dates
+	 * @param fromDate
+	 * @param toDate
+	 * @return TULShortUrlReportModel
+	 */
+	@Override
+	public List<TULShortUrlReportModel> getShortUrlReportModels(Date fromDate,Date toDate)
+	{
+		try
+		{
+			
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES);
+			fQuery.addQueryParameter("fromDate", fromDate);
+			fQuery.addQueryParameter("toDate", toDate);
+			return  flexibleSearchService.<TULShortUrlReportModel> search(fQuery).getResult();
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Ërror while searching for Short Report models between From Date:"+fromDate +"toDate:"+toDate);
 		}
 		return null;
 	}
