@@ -1303,13 +1303,13 @@ $( document ).ready(function() {
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
-	alert(variantCodes);
+	//alert(variantCodes);
 	var variantCodesJson = "";
 	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
 		variantCodes = variantCodes.split(",");
 		variantCodesJson = JSON.stringify(variantCodes);
 	}
-	alert(variantCodesJson);
+	//alert(variantCodesJson);
 	//var code = productCode+","+variantCodes;
 	//alert("----"+productCode);
 	
