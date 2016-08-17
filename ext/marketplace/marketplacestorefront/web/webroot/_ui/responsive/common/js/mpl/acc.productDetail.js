@@ -633,16 +633,17 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 			success : function(data) {
 				if (data == true) {
 					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
-					var msg=$('#wishlistSuccess').text();
-					$('#addedMessage').show();
-					$('#addedMessage').html(msg);
+					//var msg=$('#wishlistSuccess').text();
+					//$('#addedMessage').show();
+					//$('#addedMessage').html(msg);
 					$(".wishAddSucess").css("display","inline-block");
 					$(".wishAddSucess").fadeOut(3000);
+					$("#add_to_wishlist").attr("disabled",true);
 					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 					/*setTimeout(function() {
 						  $("#addedMessage").fadeOut().empty();
 						}, 1500);*/
-					$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
+					//$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
 					populateMyWishlistFlyOut(wishName);
 					
 					//For MSD
@@ -693,7 +694,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 		setTimeout(function() {
 			$('a.wishlist#wishlist').popover('hide');
 			$('input.wishlist#add_to_wishlist').popover('hide');
-			}, 1500);
+			}, 0);
 	}
 }
 
@@ -1303,11 +1304,13 @@ $( document ).ready(function() {
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
+	//alert(variantCodes);
 	var variantCodesJson = "";
 	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
 		variantCodes = variantCodes.split(",");
 		variantCodesJson = JSON.stringify(variantCodes);
 	}
+	//alert(variantCodesJson);
 	//var code = productCode+","+variantCodes;
 	//alert("----"+productCode);
 	
@@ -1332,10 +1335,8 @@ $( document ).ready(function() {
 			var stockInfo = data['availibility'];
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
-				
 				$("#variant li a").each(function(){
 					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
-						
 					$(this).removeAttr("href");
 					$(this).parent().addClass('strike');
 				//$(this).parent().css("border-color","gray");
@@ -1427,8 +1428,10 @@ $( document ).ready(function() {
 						
 					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("#variant option").length == 0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
+						
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
+						$("#allVariantOutOfStock").show();
 						$("#buyNowButton").hide();
 						//}
 						$("#otherSellerInfoId").hide();
@@ -1448,6 +1451,8 @@ $( document ).ready(function() {
 							$("#addToCartButton").hide();
 							$("#buyNowButton").hide();
 							$("#outOfStockId").show();
+							$("#allVariantOutOfStock").show();
+							
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
@@ -2728,6 +2733,8 @@ function loadDefaultWishListName_SizeGuide() {
 			success : function(data) {
 			if (data == true) {
 				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
+				$("#add_to_wishlist").attr("disabled",true);
+				$('#add_to_wishlist').addClass("wishDisabled");
 			}
 			
 			},
