@@ -886,7 +886,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			boolean redirectFlag = false;
 
 			final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, null);
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
 			if (!inventoryReservationStatus)
 			{
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -987,7 +987,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (!redirectFlag)
 				{
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, null);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
 					if (!inventoryReservationStatus)
 					{
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -2657,30 +2657,30 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (StringUtils.isNotEmpty(paymentMode)
 						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE))
 				{
-					orderModel.setModeOfPayment(MarketplacecheckoutaddonConstants.CREDITCARDMODE);
+					orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.CREDITCARDMODE);
 					getModelService().save(orderModel);
 				}
 				else if (StringUtils.isNotEmpty(paymentMode)
 						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE))
 				{
-					orderModel.setModeOfPayment(MarketplacecheckoutaddonConstants.DEBITCARDMODE);
+					orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.DEBITCARDMODE);
 					getModelService().save(orderModel);
 				}
 				else if (StringUtils.isNotEmpty(paymentMode)
 						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
 				{
-					orderModel.setModeOfPayment(MarketplacecheckoutaddonConstants.NETBANKINGMODE);
+					orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.NETBANKINGMODE);
 					getModelService().save(orderModel);
 				}
 				else if (StringUtils.isNotEmpty(paymentMode)
 						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
 				{
-					orderModel.setModeOfPayment(MarketplacecheckoutaddonConstants.EMIMODE);
+					orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.EMIMODE);
 					getModelService().save(orderModel);
 				}
 				else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("COD"))
 				{
-					orderModel.setModeOfPayment("COD");
+					orderModel.setModeOfOrderPayment("COD");
 					getModelService().save(orderModel);
 				}
 
@@ -2942,7 +2942,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (!redirectFlag)
 				{
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, null);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
 					if (!inventoryReservationStatus)
 					{
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -3032,7 +3032,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (!redirectFlag)
 				{
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, orderModel);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
 					if (!inventoryReservationStatus)
 					{
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -3891,7 +3891,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

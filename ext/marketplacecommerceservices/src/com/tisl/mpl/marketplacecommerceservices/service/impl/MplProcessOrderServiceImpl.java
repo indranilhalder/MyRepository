@@ -5,7 +5,6 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
@@ -22,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
+import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayEBSService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
@@ -53,6 +54,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private OrderStatusSpecifier orderStatusSpecifier;
 	@Resource(name = "modelService")
 	private ModelService modelService;
+	@Resource(name = "mplPaymentAuditDao")
+	private MplOrderDao mplOrderDao;
 
 	/*
 	 * (non-Javadoc)
@@ -64,112 +67,119 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	{
 		try
 		{
+
 			//DAO call to fetch PAYMENT PENDING orders
 			final List<OrderModel> orders = getMplProcessOrderDao().getPaymentPedingOrders(OrderStatus.PAYMENT_PENDING.toString());
-			List<PaymentTransactionModel> paymentTransactions = new ArrayList<PaymentTransactionModel>();
-			String juspayOrder = "";
 
-			//getting the TAT for 25mins
-			final Double juspayWebhookRetryTAT = getJuspayWebhookRetryTAT();
-			Date orderTATForTimeout = new Date();
-
-			//getting list of Juspay req ids for Payment Pending orders
-			for (final OrderModel orderModel : orders)
+			if (CollectionUtils.isNotEmpty(orders))
 			{
-				if (null != juspayWebhookRetryTAT && juspayWebhookRetryTAT.doubleValue() > 0)
+				//getting list of Juspay req ids for Payment Pending orders
+				for (final OrderModel orderModel : orders)
 				{
-					final Calendar cal = Calendar.getInstance();
-					cal.setTime(orderModel.getModifiedtime());
-					//adding the TAT to order modified time to get the time upto which the Payment Pending Orders will be checked for Processing
-					cal.add(Calendar.MINUTE, +juspayWebhookRetryTAT.intValue());
-					orderTATForTimeout = cal.getTime();
-				}
-				//Check if time-out is exceeded or not
-				if (orderTATForTimeout.before(new Date()))
-				{
-					paymentTransactions = orderModel.getPaymentTransactions();
+					orderModel.setIsOrderUnderProcess(Boolean.TRUE);
+					getModelService().save(orderModel);
+					//final List<PaymentTransactionModel> paymentTransactions = new ArrayList<PaymentTransactionModel>();
+					final String juspayOrder = "";
 
-					if (CollectionUtils.isNotEmpty(paymentTransactions)
-							&& paymentTransactions.get(paymentTransactions.size() - 1).getStatus().equalsIgnoreCase("success"))
+					Date orderTATForTimeout = new Date();
+					//getting the TAT for 25mins
+					final Double juspayWebhookRetryTAT = getJuspayWebhookRetryTAT();
+					if (null != juspayWebhookRetryTAT && juspayWebhookRetryTAT.doubleValue() > 0)
 					{
-						//getting the juspay order against order
-						juspayOrder = paymentTransactions.get(paymentTransactions.size() - 1).getRequestId();
+						final Calendar cal = Calendar.getInstance();
+						cal.setTime(orderModel.getCreationtime());
+						//adding the TAT to order modified time to get the time upto which the Payment Pending Orders will be checked for Processing
+						cal.add(Calendar.MINUTE, +juspayWebhookRetryTAT.intValue());
+						orderTATForTimeout = cal.getTime();
 					}
-
-					if (StringUtils.isNotEmpty(juspayOrder))
+					//Check if time-out is exceeded or not
+					if (orderTATForTimeout.before(new Date()))
 					{
-						//to check webhook entry status at Juspay corresponding to Payment Pending orders
-						final List<JuspayWebhookModel> hooks = checkstatusAtJuspay(juspayOrder);
+						//						paymentTransactions = orderModel.getPaymentTransactions();
+						//
+						//						if (CollectionUtils.isNotEmpty(paymentTransactions)
+						//								&& paymentTransactions.get(paymentTransactions.size() - 1).getStatus().equalsIgnoreCase("success"))
+						//						{
+						//							//getting the juspay order against order
+						//							juspayOrder = paymentTransactions.get(paymentTransactions.size() - 1).getRequestId();
+						//						}
 
-						final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
-						for (final JuspayWebhookModel oModel : hooks)
-						{
-							if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
-							{
-								//getting all the webhook data where isExpired is Y and adding into a list
-								uniqueList.add(oModel);
-							}
-						}
+						final String cartGuid = orderModel.getGuid();
 
-						for (final JuspayWebhookModel juspayWebhookModel : hooks)
+						final MplPaymentAuditModel auditModel = getMplOrderDao().getAuditList(cartGuid);
+
+						if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
 						{
-							if (CollectionUtils.isNotEmpty(uniqueList))
+							//to check webhook entry status at Juspay corresponding to Payment Pending orders
+							final List<JuspayWebhookModel> hooks = checkstatusAtJuspay(juspayOrder);
+
+							final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
+							if (CollectionUtils.isNotEmpty(hooks))
 							{
-								//iterating through the new list against the whole webhook data list
-								boolean duplicateFound = false;
-								for (final JuspayWebhookModel unique : uniqueList)
+								for (final JuspayWebhookModel oModel : hooks)
 								{
-									//if there is duplicate order id which is not expired(N) then setting it to Y
-									if (unique != null
-											&& unique.getOrderStatus() != null
-											&& juspayWebhookModel.getOrderStatus() != null
-											&& StringUtils.equalsIgnoreCase(unique.getOrderStatus().getOrderId(), juspayWebhookModel
-													.getOrderStatus().getOrderId())
-											&& ((StringUtils.equalsIgnoreCase(juspayWebhookModel.getEventName(), "ORDER_SUCCEEDED") || (StringUtils
-													.equalsIgnoreCase(juspayWebhookModel.getEventName(), "ORDER_FAILED")))))
-
+									if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
 									{
-										duplicateFound = true;
-										break;
+										//getting all the webhook data where isExpired is Y and adding into a list
+										uniqueList.add(oModel);
 									}
 								}
-								if (duplicateFound)
-								{
-									juspayWebhookModel.setIsExpired(Boolean.TRUE);
-									modelService.save(juspayWebhookModel);
-								}
-								else
-								{
-									//Change order status & process order based on Webhook status
-									takeActionAgainstOrder(juspayWebhookModel, orderModel);
 
-									uniqueList.add(juspayWebhookModel);
+								for (final JuspayWebhookModel juspayWebhookModel : hooks)
+								{
+									if (CollectionUtils.isNotEmpty(uniqueList))
+									{
+										//iterating through the new list against the whole webhook data list
+										boolean duplicateFound = false;
+										for (final JuspayWebhookModel unique : uniqueList)
+										{
+											//if there is duplicate order id which is not expired(N) then setting it to Y
+											if (unique != null
+													&& unique.getOrderStatus() != null
+													&& juspayWebhookModel.getOrderStatus() != null
+													&& StringUtils.equalsIgnoreCase(unique.getOrderStatus().getOrderId(), juspayWebhookModel
+															.getOrderStatus().getOrderId())
+													&& ((StringUtils.equalsIgnoreCase(juspayWebhookModel.getEventName(), "ORDER_SUCCEEDED") || (StringUtils
+															.equalsIgnoreCase(juspayWebhookModel.getEventName(), "ORDER_FAILED")))))
+
+											{
+												duplicateFound = true;
+												break;
+											}
+										}
+										if (duplicateFound)
+										{
+											juspayWebhookModel.setIsExpired(Boolean.TRUE);
+											modelService.save(juspayWebhookModel);
+										}
+										else
+										{
+											//Change order status & process order based on Webhook status
+											takeActionAgainstOrder(juspayWebhookModel, orderModel);
+
+											uniqueList.add(juspayWebhookModel);
+										}
+									}
+									else
+									{
+										//Change order status & process order based on Webhook status
+										takeActionAgainstOrder(juspayWebhookModel, orderModel);
+										uniqueList.add(juspayWebhookModel);
+									}
 								}
-							}
-							else
-							{
-								//Change order status & process order based on Webhook status
-								takeActionAgainstOrder(juspayWebhookModel, orderModel);
-								uniqueList.add(juspayWebhookModel);
 							}
 						}
 					}
-				}
-				else
-				{
-					//getting PinCode against Order
-					final String defaultPinCode = getPinCodeForOrder(orderModel);
-
-					//OMS Deallocation call for failed order
-					mplCommerceCartService.isInventoryReserved(orderModel,
-							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
-
-					//Creating cancel order ticket
-					final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
-					if (ticketstatus)
+					else
 					{
-						//change status to Payment Timeout
-						orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+						//getting PinCode against Order
+						final String defaultPinCode = getPinCodeForOrder(orderModel);
+
+						//OMS Deallocation call for failed order
+						getMplCommerceCartService().isInventoryReserved(orderModel,
+								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 					}
 				}
 			}
@@ -185,14 +195,27 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		}
 	}
 
+
+
+	/**
+	 * This method returns list of JuspayWebhookModel against juspayOrderId
+	 *
+	 * @param juspayOrder
+	 * @return List<JuspayWebhookModel>
+	 */
 	private List<JuspayWebhookModel> checkstatusAtJuspay(final String juspayOrder)
 	{
-		List<JuspayWebhookModel> hookList = new ArrayList<JuspayWebhookModel>();
-		hookList = mplProcessOrderDao.getEventsForPendingOrders(juspayOrder);
-
-		return hookList;
+		return getMplProcessOrderDao().getEventsForPendingOrders(juspayOrder);
 	}
 
+
+
+	/**
+	 * This method returns pincode for the orderModel
+	 *
+	 * @param orderModel
+	 * @return String
+	 */
 	private String getPinCodeForOrder(final OrderModel orderModel)
 	{
 		String defaultPinCode = "".intern();
@@ -212,57 +235,63 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		return defaultPinCode;
 	}
 
+
+
+	/**
+	 * This method takes action against successful orders
+	 *
+	 * @param juspayWebhookModel
+	 * @param orderModel
+	 */
 	private void takeActionAgainstOrder(final JuspayWebhookModel juspayWebhookModel, final OrderModel orderModel)
 	{
 		if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_SUCCEEDED")
 				&& !juspayWebhookModel.getIsExpired().booleanValue())
 		{
-			orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 
 			//Re-trigger submit order process from Payment_Pending to Payment_Successful
-			juspayEBSService.initiateProcess(orderModel);
+			getJuspayEBSService().initiateProcess(orderModel);
 
 			juspayWebhookModel.setIsExpired(Boolean.TRUE);
 		}
-		else if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_FAILED")
-				&& !juspayWebhookModel.getIsExpired().booleanValue())
-		{
-			//getting PinCode against Order
-			final String defaultPinCode = getPinCodeForOrder(orderModel);
-
-			//OMS Deallocation call for failed order
-			mplCommerceCartService.isInventoryReserved(orderModel,
-					MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
-
-			//Creating cancel order ticket
-			final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
-			if (ticketstatus)
-			{
-				//change status to Payment Failed
-				orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
-			}
-			juspayWebhookModel.setIsExpired(Boolean.TRUE);
-		}
+		//		else if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_FAILED")
+		//				&& !juspayWebhookModel.getIsExpired().booleanValue())
+		//		{
+		//			//getting PinCode against Order
+		//			final String defaultPinCode = getPinCodeForOrder(orderModel);
+		//
+		//			//OMS Deallocation call for failed order
+		//			mplCommerceCartService.isInventoryReserved(orderModel,
+		//					MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+		//
+		//			//Creating cancel order ticket
+		//			final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
+		//			if (ticketstatus)
+		//			{
+		//				//change status to Payment Failed
+		//				orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+		//			}
+		//			juspayWebhookModel.setIsExpired(Boolean.TRUE);
+		//		}
 	}
 
 
 	/**
 	 * This method returns the tat for processing the order in the job
-	 * 
+	 *
 	 * @return Double
 	 */
 	private Double getJuspayWebhookRetryTAT()
 	{
-		Double juspayWebhookRetryTAT = Double.valueOf(0);
-
-		juspayWebhookRetryTAT = getMplProcessOrderDao().getJuspayWebhookRetryTAT();
+		final Double juspayWebhookRetryTAT = getMplProcessOrderDao().getJuspayWebhookRetryTAT();
 		if (null != juspayWebhookRetryTAT && juspayWebhookRetryTAT.doubleValue() > 0)
 		{
 			return juspayWebhookRetryTAT;
 		}
 		else
 		{
-			return juspayWebhookRetryTAT;
+			return Double.valueOf(0.0);
 		}
 	}
 
@@ -383,6 +412,23 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	public void setModelService(final ModelService modelService)
 	{
 		this.modelService = modelService;
+	}
+
+	/**
+	 * @return the mplOrderDao
+	 */
+	public MplOrderDao getMplOrderDao()
+	{
+		return mplOrderDao;
+	}
+
+	/**
+	 * @param mplOrderDao
+	 *           the mplOrderDao to set
+	 */
+	public void setMplOrderDao(final MplOrderDao mplOrderDao)
+	{
+		this.mplOrderDao = mplOrderDao;
 	}
 
 

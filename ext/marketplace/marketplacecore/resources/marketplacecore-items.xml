@@ -2249,7 +2249,16 @@
 					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
-
+						
+					<!-- Attribute to handle manual locking -->
+					<attribute autocreate="true" qualifier="isOrderUnderProcess"
+						type="java.lang.Boolean">
+						<persistence type="property">
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<defaultvalue>false</defaultvalue>
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -4864,7 +4873,7 @@
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="modeOfPayment" type="java.lang.String">
+					<attribute qualifier="modeOfOrderPayment" type="java.lang.String">
 						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>

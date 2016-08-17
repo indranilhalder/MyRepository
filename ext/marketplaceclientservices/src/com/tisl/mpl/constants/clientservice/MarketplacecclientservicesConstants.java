@@ -125,10 +125,12 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_INVENTORY_RESV_TYPE_PAYMENT = "payment";
 	public static final String OMS_INVENTORY_RESV_TYPE_ORDERHELD = "orderheld";
 	public static final String OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE = "orderDeallocate";
+	public static final String OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING = "paymentPending";
 	public static final String OMS_INVENTORY_RESV_DURATION_CART = "oms.inventory.reservation.cart.duration";
 	public static final String OMS_INVENTORY_RESV_DURATION_PAYMENT = "oms.inventory.reservation.payment.duration";
 	public static final String OMS_INVENTORY_RESV_DURATION_ORDERHELD = "oms.inventory.reservation.order.held.duration";
 	public static final String OMS_INVENTORY_RESV_DURATION_ORDERDEALLOCATE = "oms.inventory.reservation.order.deallocate.duration";
+	public static final String OMS_INVENTORY_RESV_DURATION_PAYMENTPENDING = "oms.inventory.reservation.payment.pending.duration";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL = "oms.inventory.reservation.realtimecall";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLFIRSTPHASE = "oms.inventory.reservation.mock.urlfirstxmlphase";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLSECONDPHASE = "oms.inventory.reservation.mock.urlsecondxmlphase";
