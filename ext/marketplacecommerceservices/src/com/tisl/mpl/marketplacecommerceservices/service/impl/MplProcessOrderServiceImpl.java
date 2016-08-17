@@ -59,113 +59,125 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService#getPaymentPedingOrders()
 	 */
 	@Override
 	public void processPaymentPedingOrders() throws EtailNonBusinessExceptions
 	{
+		List<OrderModel> orders = new ArrayList<OrderModel>();
 		try
 		{
 			//DAO call to fetch PAYMENT PENDING orders
-			final List<OrderModel> orders = getMplProcessOrderDao().getPaymentPedingOrders(OrderStatus.PAYMENT_PENDING.toString());
-
-			if (CollectionUtils.isNotEmpty(orders))
-			{
-				//getting list of Juspay req ids for Payment Pending orders
-				for (final OrderModel orderModel : orders)
-				{
-					orderModel.setIsOrderUnderProcess(Boolean.TRUE);
-					getModelService().save(orderModel);
-
-					final String cartGuid = orderModel.getGuid();
-					final MplPaymentAuditModel auditModel = getMplOrderDao().getAuditList(cartGuid);
-
-					if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
-					{
-						//to check webhook entry status at Juspay corresponding to Payment Pending orders
-						final List<JuspayWebhookModel> hooks = checkstatusAtJuspay(auditModel.getAuditId());
-
-						if (CollectionUtils.isNotEmpty(hooks))
-						{
-							final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
-							for (final JuspayWebhookModel oModel : hooks)
-							{
-								if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
-								{
-									//getting all the webhook data where isExpired is Y and adding into a list
-									uniqueList.add(oModel);
-								}
-							}
-
-							for (final JuspayWebhookModel juspayWebhookModel : hooks)
-							{
-								if (CollectionUtils.isNotEmpty(uniqueList))
-								{
-									//iterating through the new list against the whole webhook data list
-									boolean duplicateFound = false;
-									for (final JuspayWebhookModel unique : uniqueList)
-									{
-										//if there is duplicate order id which is not expired(N) then setting it to Y
-										if (unique != null
-												&& unique.getOrderStatus() != null
-												&& juspayWebhookModel.getOrderStatus() != null
-												&& StringUtils.equalsIgnoreCase(unique.getOrderStatus().getOrderId(), juspayWebhookModel
-														.getOrderStatus().getOrderId())
-												&& ((StringUtils.equalsIgnoreCase(juspayWebhookModel.getEventName(), "ORDER_SUCCEEDED") || (StringUtils
-														.equalsIgnoreCase(juspayWebhookModel.getEventName(), "ORDER_FAILED")))))
-
-										{
-											duplicateFound = true;
-											break;
-										}
-									}
-									if (duplicateFound)
-									{
-										juspayWebhookModel.setIsExpired(Boolean.TRUE);
-										getModelService().save(juspayWebhookModel);
-									}
-									else
-									{
-										//Change order status & process order based on Webhook status
-										takeActionAgainstOrder(juspayWebhookModel, orderModel);
-
-										uniqueList.add(juspayWebhookModel);
-									}
-								}
-								else
-								{
-									//Change order status & process order based on Webhook status
-									takeActionAgainstOrder(juspayWebhookModel, orderModel);
-									uniqueList.add(juspayWebhookModel);
-								}
-							}
-						}
-						else
-						{
-							//getting PinCode against Order
-							final String defaultPinCode = getPinCodeForOrder(orderModel);
-
-							//OMS Deallocation call for failed order
-							getMplCommerceCartService().isInventoryReserved(orderModel,
-									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
-
-							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
-						}
-					}
-
-					orderModel.setIsOrderUnderProcess(Boolean.FALSE);
-					getModelService().save(orderModel);
-				}
-			}
+			orders = getMplProcessOrderDao().getPaymentPedingOrders(OrderStatus.PAYMENT_PENDING.toString());
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Error in getPaymentPedingOrders================================", e);
 		}
+
+		if (CollectionUtils.isNotEmpty(orders))
+		{
+			//getting list of Juspay req ids for Payment Pending orders
+			for (final OrderModel orderModel : orders)
+			{
+				if (null != orderModel.getIsOrderUnderProcess() && !orderModel.getIsOrderUnderProcess().booleanValue())
+				{
+					try
+					{
+						orderModel.setIsOrderUnderProcess(Boolean.TRUE);
+						getModelService().save(orderModel);
+
+						final String cartGuid = orderModel.getGuid();
+						final MplPaymentAuditModel auditModel = getMplOrderDao().getAuditList(cartGuid);
+
+						if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
+						{
+							//to check webhook entry status at Juspay corresponding to Payment Pending orders
+							final List<JuspayWebhookModel> hooks = checkstatusAtJuspay(auditModel.getAuditId());
+
+							if (CollectionUtils.isNotEmpty(hooks))
+							{
+								final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
+								for (final JuspayWebhookModel oModel : hooks)
+								{
+									if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
+									{
+										//getting all the webhook data where isExpired is Y and adding into a list
+										uniqueList.add(oModel);
+									}
+								}
+
+								for (final JuspayWebhookModel juspayWebhookModel : hooks)
+								{
+									if (CollectionUtils.isNotEmpty(uniqueList))
+									{
+										//iterating through the new list against the whole webhook data list
+										boolean duplicateFound = false;
+										for (final JuspayWebhookModel unique : uniqueList)
+										{
+											//if there is duplicate order id which is not expired(N) then setting it to Y
+											if (unique != null
+													&& unique.getOrderStatus() != null
+													&& juspayWebhookModel.getOrderStatus() != null
+													&& StringUtils.equalsIgnoreCase(unique.getOrderStatus().getOrderId(), juspayWebhookModel
+															.getOrderStatus().getOrderId())
+													&& ((StringUtils.equalsIgnoreCase(juspayWebhookModel.getEventName(), "ORDER_SUCCEEDED") || (StringUtils
+															.equalsIgnoreCase(juspayWebhookModel.getEventName(), "ORDER_FAILED")))))
+
+											{
+												duplicateFound = true;
+												break;
+											}
+										}
+										if (duplicateFound)
+										{
+											juspayWebhookModel.setIsExpired(Boolean.TRUE);
+											getModelService().save(juspayWebhookModel);
+										}
+										else
+										{
+											//Change order status & process order based on Webhook status
+											takeActionAgainstOrder(juspayWebhookModel, orderModel);
+
+											uniqueList.add(juspayWebhookModel);
+										}
+									}
+									else
+									{
+										//Change order status & process order based on Webhook status
+										takeActionAgainstOrder(juspayWebhookModel, orderModel);
+										uniqueList.add(juspayWebhookModel);
+									}
+								}
+							}
+							else
+							{
+								//getting PinCode against Order
+								final String defaultPinCode = getPinCodeForOrder(orderModel);
+
+								//OMS Deallocation call for failed order
+								getMplCommerceCartService().isInventoryReserved(orderModel,
+										MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+
+								getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+							}
+						}
+
+						orderModel.setIsOrderUnderProcess(Boolean.FALSE);
+						getModelService().save(orderModel);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Error in getPaymentPedingOrders================================", e);
+						orderModel.setIsOrderUnderProcess(Boolean.FALSE);
+						getModelService().save(orderModel);
+					}
+				}
+			}
+		}
+
 	}
-
-
 
 	/**
 	 * This method returns list of JuspayWebhookModel against juspayOrderId

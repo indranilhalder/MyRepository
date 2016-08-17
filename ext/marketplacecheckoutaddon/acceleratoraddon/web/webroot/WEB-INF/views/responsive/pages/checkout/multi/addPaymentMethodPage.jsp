@@ -45,7 +45,7 @@
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
 	<div class="checkout-content checkout-payment cart checkout wrapper">
-		<multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}">
+		<multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
 			<jsp:body>
 				<script>
     				$(document).ready(function(){
@@ -125,6 +125,10 @@
 						});
 					});
 					
+				</script>
+				<c:if test="${isCart eq true}">
+				<script>
+					
 					var timeoutID;
     				function setup() {
     				    this.addEventListener("mousemove", resetTimer, false);
@@ -157,6 +161,7 @@
     				      startTimer();
     				}
 				</script>
+				</c:if>
 				
 				<!-- TISCR-305 starts -->					
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard" id="make_saved_cc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
