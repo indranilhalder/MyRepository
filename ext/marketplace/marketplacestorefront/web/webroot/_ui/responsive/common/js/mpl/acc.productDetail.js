@@ -1038,7 +1038,8 @@ $(function() {
 							
 							$('#addToCartButton').show();
 							$('#buyNowButton').attr("disabled",false);
-
+							//TPR-794
+							$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
 
 							return false;
 						} else if (!regExp.test(pin)) {
@@ -1047,7 +1048,8 @@ $(function() {
 							$("#wrongPin").show();
 							$('#addToCartButton').show();
 							$('#buyNowButton').attr("disabled",false);
-
+							//TPR-794
+							$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
 							return false;
 						}
 						var dataString = "pin=" + pin + "&productCode="
@@ -1080,6 +1082,8 @@ $(function() {
 											$('#unsevisablePin').show();
 											
 											$('#buyNowButton').attr("disabled",true);
+											//TPR-794
+											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 											return false;
 										}
 										// check if oms service is down
@@ -1091,7 +1095,8 @@ $(function() {
 											$("#collect").show();
 											$("#collectli").show();
 											$("#codId").show();
-
+											//TPR-794
+											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 											return false;
 										} else {
 											// refreshing seller list after
@@ -1253,11 +1258,15 @@ $(function() {
 										}
 										$("#pinCodeChecked")
 												.val(pinCodeChecked);
+										//TPR-794
+										$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 									},
 									error : function(xhr, status, error) {
 										$('#wrongPin,#unsevisablePin,#emptyPin')
 												.hide();
 										$('#unableprocessPin').show();
+										//TPR-794
+										$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 
 									}
 								});
