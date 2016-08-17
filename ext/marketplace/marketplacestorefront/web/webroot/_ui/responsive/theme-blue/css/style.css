@@ -32699,6 +32699,10 @@ header.brand-header {
 	text-align:center;
 }
 
+.showAZBrandsImportant{
+	display: block !important;
+}
+
 /*--------------maincss-----------*/
 .row
 {
@@ -41359,6 +41363,7 @@ bottom:35px;
 .home-product-you-care-carousel .owl-theme .owl-controls,
 .home-best-pick-carousel.owl-theme .owl-controls,
 #ia_products_hot_list.owl-theme .owl-controls {top: 38%;margin: 0;}
+
 
 
 
