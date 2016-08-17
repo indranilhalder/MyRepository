@@ -236,7 +236,7 @@ function loadVariant(x){
 											</c:when>
 											<c:when
 												test="${(product.code eq variantOption.code)&&(selectedSize!=null)}">
-												<li><a href="${variantUrl}?selectedSize=true">${entry.value}</a></li>
+												<li class="selected"><a href="${variantUrl}?selectedSize=true">${entry.value}</a></li>
 
 											</c:when>
 											<c:otherwise>
@@ -298,4 +298,7 @@ function loadVariant(x){
 				code="product.variants.size.guide" />
 		</a> --%>
 </c:if>
+</div>
+<div id="allVariantOutOfStock" style="display: none;">
+	<spring:theme code="product.product.outOfStock" />
 </div>
