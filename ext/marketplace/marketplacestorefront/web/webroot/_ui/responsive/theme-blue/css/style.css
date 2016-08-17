@@ -44492,7 +44492,12 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     left: 8px;
 }
 
-
+.add_to_cart_form .out_of_stock #add_to_wishlist.wishDisabled {
+	color: #b2b2b2;
+    cursor: not-allowed;
+    background: #f2f2f2;
+    border-color: #ccc;
+}
 
 /*TPR-873 ends*/
 
