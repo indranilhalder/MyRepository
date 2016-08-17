@@ -5,6 +5,7 @@ package com.techouts.backoffice.widget.controller;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -90,11 +91,14 @@ public class TshipVsShipAssignmentReportWidgetController extends DefaultWidgetCo
 		final String[] startEndArray = startendDates.trim().split(",");
 		startDate = startEndArray[0];
 		endDate = startEndArray[1];
-		final DateFormat dateFormat = DateFormat.getDateInstance();
+		final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+
 		LOG.info(" inside sockent Start Date " + startDate + "******* End Date " + endDate);
 		final ReportRequest reportRequest = new ReportRequest();
 		try
 		{
+
 			reportRequest.setFromDate(dateFormat.parse(startDate));
 			reportRequest.setToDate(dateFormat.parse(endDate));
 		}
@@ -103,7 +107,6 @@ public class TshipVsShipAssignmentReportWidgetController extends DefaultWidgetCo
 
 			e.printStackTrace();
 		}
-		reportRequest.setToDate(new Date(endDate));
 		getTshipVsSshipReport(reportRequest);
 
 	}
