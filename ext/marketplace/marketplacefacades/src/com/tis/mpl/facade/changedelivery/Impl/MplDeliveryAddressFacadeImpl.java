@@ -177,8 +177,10 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						requestData.setPincode(newDeliveryAddress.getPostalcode());
 					}
 				}
+				requestData.setInterfaceType(interfaceType);
 			}
 			
+		
 			if (null != newDeliveryAddress.getFirstname())
 			{
 				requestData.setFName(newDeliveryAddress.getFirstname());
