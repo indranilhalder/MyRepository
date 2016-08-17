@@ -187,8 +187,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
+	 *
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -852,15 +852,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -998,7 +998,7 @@ public class ProductDetailsHelper
 	public boolean addSingleToWishList(final String productCode, final String ussid, final Boolean sizeSelected)
 	{
 		boolean add = false;
-		final String wishName = "MyWishlist";
+		final String wishName = MarketplaceFacadesConstants.DEFAULT_WISHLIST_NAME;
 		Wishlist2Model lastCreatedWishlist = null;
 		final UserModel user = userService.getCurrentUser();
 		try
