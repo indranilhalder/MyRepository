@@ -347,12 +347,13 @@ function focusOnElement() {
 	    
 	  	tbodycontent+=formEnd;
 	  	
-	  	tbodycontent+=formStartForWishList;
+	  	//commented as part of TPR-903
+	  	/*tbodycontent+=formStartForWishList;
 		tbodycontent+=$("#hiddenWishListId").html();
 		    
 
 		tbodycontent+="<a onClick='openPop(\""+ussid+"\");' id='wishlist' class='wishlist add-to-wishlist' data-toggle='popover' data-placement='bottom'>Add to Wishlist</a>";
-		tbodycontent+=formEnd;
+		tbodycontent+=formEnd;*/
 		
 	  	tbodycontent+="</div>";  	  	
 	  	tbodycontent+="</div></li>";

@@ -620,9 +620,8 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
 	if(loggedIn == 'false') {
-		$("#wishListNonLoggedInId").show();
-		//The items have been added to your wishlist
-		globalErrorPopup("Please sign in to add item into wishlist!")
+		$(".wishAddLogin").css("display","inline-block");
+		$(".wishAddLogin").fadeOut(3000);
 	}
 	else {
 	
@@ -637,6 +636,8 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					var msg=$('#wishlistSuccess').text();
 					$('#addedMessage').show();
 					$('#addedMessage').html(msg);
+					$(".wishAddSucess").css("display","inline-block");
+					$(".wishAddSucess").fadeOut(3000);
 					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 					/*setTimeout(function() {
 						  $("#addedMessage").fadeOut().empty();
@@ -1302,11 +1303,13 @@ $( document ).ready(function() {
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
+	//alert(variantCodes);
 	var variantCodesJson = "";
 	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
 		variantCodes = variantCodes.split(",");
 		variantCodesJson = JSON.stringify(variantCodes);
 	}
+	//alert(variantCodesJson);
 	//var code = productCode+","+variantCodes;
 	//alert("----"+productCode);
 	
@@ -1331,10 +1334,8 @@ $( document ).ready(function() {
 			var stockInfo = data['availibility'];
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
-				
 				$("#variant li a").each(function(){
 					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
-						
 					$(this).removeAttr("href");
 					$(this).parent().addClass('strike');
 				//$(this).parent().css("border-color","gray");
@@ -1398,6 +1399,7 @@ $( document ).ready(function() {
 						//TPR-805
 						//$("#outOfStockPinCodeMsg").show();
 						//$("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1416,6 +1418,7 @@ $( document ).ready(function() {
 						//TPR-805
 						// $("#outOfStockPinCodeMsg").show();
 						// $("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1424,8 +1427,10 @@ $( document ).ready(function() {
 						
 					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("#variant option").length == 0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
+						
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
+						$("#allVariantOutOfStock").show();
 						$("#buyNowButton").hide();
 						//}
 						$("#otherSellerInfoId").hide();
@@ -1433,6 +1438,7 @@ $( document ).ready(function() {
 						//TPR-805
 						// $("#outOfStockPinCodeMsg").show();
 						// $("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1444,12 +1450,15 @@ $( document ).ready(function() {
 							$("#addToCartButton").hide();
 							$("#buyNowButton").hide();
 							$("#outOfStockId").show();
+							$("#allVariantOutOfStock").show();
+							
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
 						//TPR-805
 						// $("#outOfStockPinCodeMsg").show();
 						// $("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -2652,27 +2661,23 @@ function loadDefaultWishListName_SizeGuide() {
 	} 
 /*TPR-630*/
 	$(document).ready(function(){
-		$(".Emi > p").on("mouseenter",function(){
+		$(".Emi > p").on("click",function(){
 			if(!$(this).hasClass("active") && $(window).width() > 790){
 				$(this).addClass("active");
 				openPopForBankEMI();
 			}
 		});
-		$(".Emi > p").on("mouseleave",function(){
-			if($(window).width() > 790){
-				$(this).removeClass("active");
-			}
-		});
-		$(".Emi > #EMImodal-content").on("mouseenter",function(){
+		$(".Emi > p").on("click",".Emi .modal-content .Close",function(){
+			$(".Emi > p").removeClass("active");
+			});
+		$(".Emi > #EMImodal-content").on("click",function(){
 			if($(window).width() > 790){
 				$(".Emi > p").addClass("active")
 			}
 		});
-		$(".Emi > #EMImodal-content").on("mouseleave",function(){
-			if($(window).width() > 790){
-				$(".Emi > p").removeClass("active")
-			}
-		});
+		$(".Emi > #EMImodal-content").on("click",".Emi .modal-content .Close",function(){
+			$(".Emi > p").removeClass("active")
+			});
 		
 		$(".Emi > p").on("click",function(){
 			if($(window).width() <= 790){

@@ -28,8 +28,10 @@
 									items="${product.potentialPromotions[0].channels}">
 									<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">
 									 <li>
-									 <h3 class="product-name highlight">
-												<b>OFFER:</b> ${product.potentialPromotions[0].title}
+									 <div class="offer-modal-heading">OFFER</div>
+									 <div class="offer-outer-wrapper">
+									 <h3 class="product-name highlight mob-promo">
+												${product.potentialPromotions[0].title}
 											</h3>
 										<div class="Left"><c:forEach
 												items="${product.potentialPromotions[0].giftProduct}"
@@ -41,7 +43,9 @@
 											</c:forEach>
 										</div>
 										<div class="pdp-promoDesc right">
-											
+											<h3 class="product-name highlight desk-promo">
+												${product.potentialPromotions[0].title}
+											</h3>
 											<h3 class="promo-price"></h3>
 											<%-- <p>${product.potentialPromotions[0].description}</p> --%>
 											<input type="hidden" id="promotedSellerId"
@@ -53,19 +57,29 @@
 												<%-- <a href="${request.contextPath}${promotionProduct.url}">View Details</a>  --%>
 											</c:forEach>
 
-											<br />
-											<p></p>
-											<!-- <a class="showDate">View Details</a> --><br> <br>
+											<!-- <br />
+											<p></p> -->
+											<!-- <a class="showDate">View Details</a> <br> <br>-->
 											<div class="show-date">
 												<p>${product.potentialPromotions[0].description}</p>
-
-												From:
-												<fmt:formatDate pattern="dd/MM/yyyy h:mm:ss a"
-													value="${product.potentialPromotions[0].startDate}" />
-												To:
-												<fmt:formatDate pattern="dd/MM/yyyy h:mm:ss a"
-													value="${product.potentialPromotions[0].endDate}" />
+												<div class="offer-date">
+												<div class="from-date">
+												<span class="from">From:</span>
+												<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
+													value="${product.potentialPromotions[0].startDate}" /></span>
+												<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
+													value="${product.potentialPromotions[0].startDate}" /></span>
+													</div>
+												<div class="to-date">
+												<span class="to">To:</span>
+												<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
+													value="${product.potentialPromotions[0].endDate}" /></span>
+												<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
+													value="${product.potentialPromotions[0].endDate}" /></span>
+												</div>
+												</div>
 											</div>
+										</div>
 										</div>
 									 </li>
 									</c:if>
@@ -75,8 +89,10 @@
 							<c:otherwise>
 								<c:if test="${not empty product.potentialPromotions[0]}">
 								 <li>
-								 <h3 class="product-name highlight">
-											<b>OFFER:</b> ${product.potentialPromotions[0].title}
+								 <div class="offer-modal-heading">OFFER</div>
+								 <div class="offer-outer-wrapper">
+								 <h3 class="product-name highlight mob-promo">
+											${product.potentialPromotions[0].title}
 										</h3>
 									<div class="Left"> <c:forEach
 											items="${product.potentialPromotions[0].giftProduct}"
@@ -88,7 +104,9 @@
 										</c:forEach>
 									</div>
 									<div class="pdp-promoDesc right">
-										
+										<h3 class="product-name highlight desk-promo">
+											${product.potentialPromotions[0].title}
+										</h3>
 										<h3 class="promo-price"></h3>
 										<%-- <p>${product.potentialPromotions[0].description}</p> --%>
 										<input type="hidden" id="promotedSellerId"
@@ -100,20 +118,30 @@
 											<%-- <a href="${request.contextPath}${promotionProduct.url}">View Details</a>  --%>
 										</c:forEach>
 
-										<br />
-										<p></p>
-										<!-- <a class="showDate">View Details</a><br> -->
-										<br>
+										<!-- <br />
+										<p></p> -->
+										<!-- <a class="showDate">View Details</a><br> 
+										<br>-->
 										<div class="show-date">
 											<p>${product.potentialPromotions[0].description}</p>
-
-											From:
-											<fmt:formatDate pattern="dd/MM/yyyy h:mm:ss a"
-												value="${product.potentialPromotions[0].startDate}" />
-											To:
-											<fmt:formatDate pattern="dd/MM/yyyy h:mm:ss a"
-												value="${product.potentialPromotions[0].endDate}" />
+											<div class="offer-date">
+											<div class="from-date">
+											<span class="from">From:</span>
+											<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
+												value="${product.potentialPromotions[0].startDate}" /></span>
+												<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
+												value="${product.potentialPromotions[0].startDate}" /></span>
+												</div>
+												<div class="to-date">
+											<span class="to">To:</span>
+											<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
+												value="${product.potentialPromotions[0].endDate}" /></span>
+											<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
+												value="${product.potentialPromotions[0].endDate}" /></span>
+												</div>
 										</div>
+										</div>
+									</div>
 									</div>
 									</li>
 								</c:if>
