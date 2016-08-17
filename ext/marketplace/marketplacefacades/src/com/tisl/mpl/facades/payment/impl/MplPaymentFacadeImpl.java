@@ -424,7 +424,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	@Override
 	public String generateOTPforCODWeb(final String customerID, final String mobileNumber, final String mplCustomerName,
-			final String cartId, final OrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException
+			final String cartId, final OrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException //Parameter OrderModel added extra for TPR-629
 	{
 		String otp = getOtpGenericService().generateOTP(customerID, OTPTypeEnum.COD.getCode(), mobileNumber);
 		if (null == otp)
@@ -1315,7 +1315,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	//TISPRD-361 method signature changes
 	@Override
-	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final OrderModel orderModel)
+	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final OrderModel orderModel) //Parameter OrderModel added extra for TPR-629
 			throws EtailNonBusinessExceptions, Exception
 	{
 		//getting the current user
@@ -1387,7 +1387,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @return String
 	 */
 	@Override
-	public String fetchPhoneNumber(final AbstractOrderModel abstractOrderModel)
+	public String fetchPhoneNumber(final AbstractOrderModel abstractOrderModel) //Parameter AbstractOrderModel added extra for TPR-629
 	{
 		String phoneNo = "";
 		if (null != abstractOrderModel)
@@ -2059,7 +2059,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	/**
 	 * This method returns the map of all active Payment modes(eg. Credit Card, Debit Card, COD, etc.) and their
 	 * availability for the specific store and displays them on the payment page of the store. This is for orderModel,
-	 * ie.after payment has failed
+	 * ie.after payment has failed TPR-629
 	 *
 	 * @param store
 	 * @return Map<String, Boolean>
@@ -2459,7 +2459,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @param abstractOrderModel
 	 */
 	@Override
-	public void populateDeliveryPointOfServ(final AbstractOrderModel abstractOrderModel)
+	public void populateDeliveryPointOfServ(final AbstractOrderModel abstractOrderModel) //Parameter changed to AbstractOrderModel from CartModel as per TPR-629
 	{
 		try
 		{
@@ -2727,6 +2727,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 	/**
+	 * TPR-629
 	 *
 	 * @return double
 	 * @throws Exception

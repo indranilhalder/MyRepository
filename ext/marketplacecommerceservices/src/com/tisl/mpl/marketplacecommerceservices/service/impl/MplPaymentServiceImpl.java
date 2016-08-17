@@ -1267,7 +1267,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void saveCODPaymentInfo(final String custName, final Double cartValue, final Double totalCODCharge,
-			final List<AbstractOrderEntryModel> entries, final AbstractOrderModel abstractOrderModel)
+			final List<AbstractOrderEntryModel> entries, final AbstractOrderModel abstractOrderModel) //Parameter AbstractOrderModel added extra for TPR-629
 			throws EtailNonBusinessExceptions, Exception
 	{
 		if (null != entries)

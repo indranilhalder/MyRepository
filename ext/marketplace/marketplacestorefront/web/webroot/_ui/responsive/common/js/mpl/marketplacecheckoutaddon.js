@@ -1139,6 +1139,9 @@ function generateOTP(){
 			if(response=='redirect'){
 				$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
 			}
+			else if(response=='redirect_to_payment'){
+				$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
+			}
 			else if(response=="fail")
 			{
 				$("#OTPGenerationErrorMessage").css("display","block");

@@ -830,10 +830,11 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 							LOG.debug(MarketplacecommerceservicesConstants.WEBHOOKUPDATEMSG);
 							updateWebHookExpired(oModel);
 						}
-						else
-						{
-							updateWebHookExpired(oModel);
-						}
+						//Blocked for TPR-629
+						//						else
+						//						{
+						//							updateWebHookExpired(oModel);
+						//						}
 					}
 				}
 			}
@@ -841,11 +842,11 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		}
 		catch (final ModelNotFoundException exception)
 		{
-			LOG.error(exception.getMessage());
+			LOG.error("Model not found while processing forward flow", exception);
 		}
 		catch (final Exception exception)
 		{
-			LOG.error(exception.getMessage());
+			LOG.error("Exception while processing forward flow", exception);
 		}
 	}
 

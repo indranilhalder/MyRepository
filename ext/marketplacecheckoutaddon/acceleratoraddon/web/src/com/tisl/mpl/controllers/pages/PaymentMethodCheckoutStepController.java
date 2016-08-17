@@ -347,13 +347,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 
 		}
-		catch (final NullPointerException e)
-		{
-			//LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
-			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-					MarketplacecheckoutaddonConstants.ERRORMSG);
-			return getCheckoutStep().previousStep();
-		}
+		//		catch (final NullPointerException e)
+		//		{
+		//			//LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		//			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+		//					MarketplacecheckoutaddonConstants.ERRORMSG);
+		//			return getCheckoutStep().previousStep();
+		//		}
 		catch (final BindingException e)
 		{
 			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
@@ -524,10 +524,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			emiTermRate = getMplPaymentFacade().getBankTerms(selectedEMIBank, cartTotal);
 		}
-		catch (final NullPointerException e)
-		{
-			LOG.error(MarketplacecheckoutaddonConstants.B6008, e);
-		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			LOG.error(MarketplacecheckoutaddonConstants.B6008, e);
@@ -536,10 +532,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		catch (final EtailBusinessExceptions e)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.B6008, e);
-
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 		}
-
 		catch (final Exception e)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.B6008, e);
@@ -919,7 +913,31 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		else
 		{
-			if (null != mplCustomerID)
+			boolean redirectFlag = false;
+			if (!getMplCheckoutFacade().isPromotionValid(orderModel))
+			{
+
+				//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+				getMplCartFacade().recalculateOrder(orderModel);
+				redirectFlag = true;
+			}
+
+			if (!redirectFlag)
+			{
+				final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+				if (!inventoryReservationStatus)
+				{
+					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+					getMplCartFacade().recalculateOrder(orderModel);
+					redirectFlag = true;
+				}
+			}
+			if (redirectFlag)
+			{
+				return "redirect_to_payment";
+			}
+			else if (null != mplCustomerID)
 			{
 				//calling generate OTP with customerID
 				final String otp = getMplPaymentFacade().generateOTPforCODWeb(mplCustomerID, mobileNumber, mplCustomerName, null,
@@ -1049,10 +1067,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 
 		}
-		catch (final NullPointerException e)
-		{
-			LOG.error("Error in validating OTP", e);
-		}
+		//		catch (final NullPointerException e)
+		//		{
+		//			LOG.error("Error in validating OTP", e);
+		//		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
@@ -1859,11 +1877,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 
 		}
-		catch (final NullPointerException e)
-		{
-			//logging error message
-			LOG.error(MarketplacecheckoutaddonConstants.B6004, e);
-		}
+		//		catch (final NullPointerException e)
+		//		{
+		//			//logging error message
+		//			LOG.error(MarketplacecheckoutaddonConstants.B6004, e);
+		//		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
@@ -2840,7 +2858,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@RequireHardLogIn
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String addressLine1,
 			final String addressLine2, final String addressLine3, final String country, final String state, final String city,
-			final String pincode, final String cardSaved, final String sameAsShipping, final String guid)
+			final String pincode, final String cardSaved, final String sameAsShipping, final String guid) //Parameter guid added for TPR-629
 			throws EtailNonBusinessExceptions
 	{
 		String orderId = null;
