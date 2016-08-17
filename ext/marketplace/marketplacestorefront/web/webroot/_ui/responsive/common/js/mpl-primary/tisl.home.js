@@ -1951,3 +1951,24 @@ $(document).ready(function(){
 		
 		
 	});
+
+	//TISPRD-4587
+	$(document).ajaxComplete(function(){
+		$("div#appendedAtoZBrands").eq(1).children("div#A-E").show();
+		$(".lazy-brands>div.toggle.A-ZBrands,div#appendedAtoZBrands>div#A-E").mouseenter(function(){
+			$("div#appendedAtoZBrands").eq(1).children("div#A-E").show();
+		});
+		$("div.toggle").mouseenter(function(){
+			if($("div#appendedAtoZBrands").parents("li.lazy-brands").index() === 0){
+			$("div#appendedAtoZBrands").eq(1).children("div#A-E").show();
+			}
+		});
+		$("div#appendedAtoZBrands").eq(1).siblings("div#groups").children("div#group").mouseenter(function(){
+			var index = $(this).index();
+			$("div#appendedAtoZBrands").eq(1).children("div").removeClass("showAZBrandsImportant");
+			$("div#appendedAtoZBrands").eq(1).children("div").hide();
+			$("div#appendedAtoZBrands").eq(1).children("div").eq(index).addClass("showAZBrandsImportant");
+			$("div#appendedAtoZBrands").eq(1).siblings("div#groups").children("div#group").children("a.brandGroupLink").css({"border-bottom-style": "none","font-weight": "400"});
+			$(this).children("a.brandGroupLink").css({"border-bottom-width": "3px","border-bottom-style": "solid","font-weight":"bold"}); 
+		});
+	}); 

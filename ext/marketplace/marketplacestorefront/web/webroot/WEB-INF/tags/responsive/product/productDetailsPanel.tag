@@ -108,6 +108,8 @@ tr.d0 td {
 			</ycommerce:testId>
 			
 			<!-- TISPRM-97 starts -->
+<!-- 			TISPRD-4861 -->
+			<div class="pdp-promo-block promo-block" style="display:none">
 			<c:if test="${not empty product.potentialPromotions}">
 			
 			<c:choose>
@@ -131,6 +133,7 @@ tr.d0 td {
 			</c:choose>
 			
 			</c:if>
+			</div>
 			<!-- TISPRM-97 ends -->
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
