@@ -44410,6 +44410,59 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 
 /* TPR-628 ends*/
 
+/*TPR-873*/
+.product-info>div.wishAddSucess,.product-info>div.wishAddLogin{
+	display:none;
+	width:auto;
+	padding:12px;
+	position: absolute;
+    top: 4px;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 600;
+    background: #ccc;
+    left: 36%;
+}
+.product-info>div.wishAddSucess>span{
+	margin-left: 30px;
+}
+.product-info>div.wishAddSucess{
+	color:green;
+	
+}
+.product-info>div.wishAddLogin{
+	color: #a91f3d;
+}
+
+
+.wishAddSucess:before{
+	content: "";
+    width: 9px;
+    height: 13px;
+    position: absolute;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
+    border-color: #fff;
+    background: transparent;
+    top: 12px;
+    transform: rotate(45deg);
+    z-index: 1;
+    left: 16px;
+}
+.wishAddSucess:after{
+	width: 25px;
+    height: 25px;
+    content: "";
+    border-radius: 100%;
+    background: green;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}
+
+
+/*TPR-873 ends*/
+
 
 
 
