@@ -44580,3 +44580,147 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 	color: #FE2E2E;
 	margin-top: 5px;
 }
+
+/*offer popup styling starts*/
+#OfferWrap .Inner{
+	max-width:100%;
+	width:100%;
+}
+.offer-content{
+	padding:0 !important;
+	border:0px !important;
+	width: auto !important;
+}
+.offer-modal-heading {
+	height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    text-align: left;
+    background: #a9143c;
+    color: #fff;
+    padding-left: 10px;
+	}
+	.modal .content.offer-content > .close:before{
+	color:#fff;
+	position: relative;
+    top: -3px;
+    right: -3px;
+    content: "X";
+    font-size: 16px;
+    font-weight: 100;
+	}
+#OfferWrap .mob-promo{
+	display:none;
+}
+.offer-outer-wrapper{
+	padding: 15px 30px;
+	overflow:hidden;
+}
+#OfferWrap {
+    padding-bottom: 1px;
+}
+#OfferWrap .Inner .right {
+    padding: 30px 5px 30px 20px;
+}
+#OfferWrap .Inner h3 {
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+    margin:0;
+}
+#OfferWrap .Inner h3.product-name.highlight {
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+    margin:0 0 15px 0;
+}
+#OfferWrap .Inner p {
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0px;
+    margin: 0 0 15px;
+    text-transform: none;
+}
+#OfferWrap .offer-date {
+    background: #f2f2f2;
+    padding: 15px;
+    color: #777;
+}
+#OfferWrap span.from,#OfferWrap span.to {
+    display: block;
+    color: #000;
+    font-weight: bold;
+}
+#OfferWrap .from-date {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+#OfferWrap .to-date{
+	padding-top:10px;
+}
+#OfferWrap .date-time{
+	display:block;
+}
+#OfferWrap span.from, #OfferWrap span.to, #OfferWrap .date-time{
+	margin-bottom:3px;
+}
+#OfferWrap .Inner .Left {
+    width: 40%;
+}
+#OfferWrap .Inner .right {
+    width: 60%;
+}
+#offerPopup:before{
+	margin-right:0;
+}
+@media(max-width:767px){
+	#OfferWrap .mob-promo{
+	display:block;
+	}
+	#OfferWrap .desk-promo{
+	display: none;
+	}
+	#OfferWrap .Inner h3.product-name.highlight.mob-promo{
+	text-align:center;
+	font-size: 16px;
+	}
+	#OfferWrap .Inner .Left, #OfferWrap .Inner .right {
+    width: 100%;
+}
+#OfferWrap .Inner .Left .picZoomer-pic{
+	max-width: 100%;
+    width: auto;
+}
+#OfferWrap .Inner p{
+	text-align:center;
+}
+.offer-outer-wrapper {
+    padding: 25px 15px 15px 15px;
+}
+#OfferWrap .Inner .right {
+    padding: 15px 0 0 0;
+}
+.modal .content.offer-content {
+    max-width: 95% !important;
+    min-width: 285px;
+}
+#OfferWrap .from-date,#OfferWrap .to-date{
+	width:50%;
+	float:left;
+	padding-top:0;
+	padding-bottom:0;
+}
+#OfferWrap .offer-date {
+    overflow: hidden;
+    padding: 15px 25px;
+}
+#OfferWrap .from-date {
+    border-bottom: none;
+    border-right: 2px solid #ddd;
+    padding-right: 10px;
+}
+#OfferWrap .to-date {
+    padding-left: 10px;
+}
+}
+/*offer popup styling ends*/
