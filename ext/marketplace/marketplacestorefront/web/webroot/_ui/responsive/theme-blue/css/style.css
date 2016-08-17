@@ -10691,7 +10691,7 @@ body .account .right-account .order-history .pagination li{
 .product-info .product-detail div.tabs-block ul.tabs a {
     color: #000;
 }
-.product-info .product-detail .other-sellers {
+.product-info .product-detail .other-sellers,.product-info .product-detail #otherSellerLinkId {
     font-size: 14px;
     letter-spacing: 0;
     margin-top: 15px;
@@ -32784,11 +32784,12 @@ display:none;
 }
 .pdp-promo-block.promo-block>div{
 	width:100%;
-	text-align:center;
+	text-align:left;
 }
 .pdp-promo-block.promo-block a.details {
 	margin-top: 10px;
     display: block;
+    color:#a9143c;
 }
 
 
@@ -33679,7 +33680,10 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.qty select{
 	}
 }
 /*Mybag css changes ends*/
-
+.cart.wrapper .right-block .block.bottom.order-details address, .checkout.wrapper .product-block.addresses li.item address,
+.confirmation .left-block .address address{
+	word-break: break-word;
+}
 
 
 
@@ -42501,7 +42505,7 @@ margin-left: 20%;
 }
 
 .product-info .color-swatch li {
-	margin: 0 10px 0 0;
+	margin: 0 10px 5px 0;
 }
 
 .product-info .color-swatch li span {
@@ -42564,6 +42568,7 @@ margin-left: 20%;
 	text-align: center;
 	min-width: 33px;
 	border-right:none;
+	    margin-bottom: 5px;
 }
 
 .product-info .size ul#variant li a {
@@ -43809,6 +43814,9 @@ margin-left: 20%;
     top: 10px;
     display: block;
 }
+.product-info .product-detail .Cta .addtocart-component span#outOfStockId {
+	top: 0px;
+	}
 .product-info .product-detail .Cta .addtocart-component #addToCartButtonId {
 	width: 100%;
 	position: static;
