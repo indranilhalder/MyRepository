@@ -12829,9 +12829,9 @@ div.pdp .reviews .toolbar select.white {
 .modal.size-guide .sizes .details .color-swatch li {		
     display: inline-block;		
     float: left;		
-    width: 28px;		
-    height: 28px;		
-    margin: 2px;		
+    width: 20px;		
+    height: 20px;		
+    margin: 2px 5px;		
     border: 1px solid transparent;		
     -webkit-transition: border-color 0.15s;		
     -moz-transition: border-color 0.15s;		
@@ -44495,6 +44495,88 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 
 /*TPR-873 ends*/
 
+/*style guide*/
+ .modal.size-guide .sizes .details .size > label{
+	    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    height: 14px;
+    margin: 0 10px 10px 0;
+    padding: 0 10px 0 0;
+    text-transform: uppercase;
+ }
+.modal.size-guide .sizes .details .size ul#variant {
+	/* border: 1px solid #ccc;
+	border-right: 0; */
+	display: inline-block;
+	    width: 100%;
+}
+
+.modal.size-guide .sizes .details .size ul#variant li {
+	border: 1px solid #ccc;
+	float: left;
+	text-align: center;
+	min-width: 33px;
+	border-right:none;
+}
+
+.modal.size-guide .sizes .details .size ul#variant li span {
+	display: block;
+	padding: 9px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.modal.size-guide .sizes .details .size ul#variant li:last-child {
+	border-right: 1px solid #ccc;
+}
+
+.modal.size-guide .sizes .details .size ul#variant li.strike {
+	background: #f2f2f2;
+	text-decoration: line-through;
+}
+
+.modal.size-guide .sizes .details .size ul#variant li.strike span {
+		color: #b2b2b2;
+		cursor: not-allowed;
+}
+
+.size-guide .sizes .details .color-swatch label {
+	font-size: 14px;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin: 0 0 15px;
+}
+
+/*swatch highlight*/
+.product-info .size ul#variant li.selected, .modal.size-guide .sizes .details .size ul#variant li.selected {
+    border-color: #a9143c;
+}
+
+.product-info .size ul#variant li.selected + li, .modal.size-guide .sizes .details .size ul#variant li.selected + li {
+    border-left-color: #a9143c;
+}
 
 
+.product-info .size ul#variant li:hover:not(.strike), .modal.size-guide .sizes .details .size ul#variant li:hover:not(.strike) {
+    border-color: #000;
+    transition: all 0.3s;
+}
 
+.product-info .size ul#variant li:hover:not(.strike) + li, .modal.size-guide .sizes .details .size ul#variant li:hover:not(.strike) + li {
+    border-left-color: #000;
+    transition: all 0.3s;
+}
+
+.product-info .color-swatch li:hover {
+	box-shadow: 0 0 0px 1px #000;
+	transition: all 0.3s;
+}
+.product-info .color-swatch li.active{
+	box-shadow: 0 0 0px 1px #a9143c;
+}
+
+#allVariantOutOfStock {
+	color: #FE2E2E;
+	margin-top: 5px;
+}

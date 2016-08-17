@@ -1303,11 +1303,13 @@ $( document ).ready(function() {
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
+	alert(variantCodes);
 	var variantCodesJson = "";
 	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
 		variantCodes = variantCodes.split(",");
 		variantCodesJson = JSON.stringify(variantCodes);
 	}
+	alert(variantCodesJson);
 	//var code = productCode+","+variantCodes;
 	//alert("----"+productCode);
 	
@@ -1332,10 +1334,8 @@ $( document ).ready(function() {
 			var stockInfo = data['availibility'];
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
-				
 				$("#variant li a").each(function(){
 					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
-						
 					$(this).removeAttr("href");
 					$(this).parent().addClass('strike');
 				//$(this).parent().css("border-color","gray");
@@ -1427,8 +1427,10 @@ $( document ).ready(function() {
 						
 					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("#variant option").length == 0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
+						
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
+						$("#allVariantOutOfStock").show();
 						$("#buyNowButton").hide();
 						//}
 						$("#otherSellerInfoId").hide();
@@ -1448,6 +1450,8 @@ $( document ).ready(function() {
 							$("#addToCartButton").hide();
 							$("#buyNowButton").hide();
 							$("#outOfStockId").show();
+							$("#allVariantOutOfStock").show();
+							
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
