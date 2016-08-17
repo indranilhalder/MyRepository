@@ -1931,6 +1931,11 @@ $(document).ready(function() {
 		}
 	});
 	$(document).on('click','.zoomLens',function(){hit();})
+	$(document).on('click','.product-image-container.device img',function(){
+		hit({
+			windowWidth : $(window).width()
+		});
+	})
 });
 
 $(document).ajaxComplete(function(){
