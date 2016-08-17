@@ -147,6 +147,9 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;strapmaterial					   ;"Strap Material"
  ;$solrIndexedType		   ;straptype						   ;"Strap Type"
  ;$solrIndexedType		   ;features						   ;"Features"
+ ;$solrIndexedType		   ;dailshape						   ;"Dial Shape"
+ ;$solrIndexedType		   ;strapcolor						   ;"Strap Colour"
+ ;$solrIndexedType		   ;beltSize						   ;"Belt Size"
  
 # Define the available sorts
 #release2 changes for serp header
