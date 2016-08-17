@@ -37,12 +37,20 @@ $(document).ready(function(){
      $("#selectSizeId").hide();
    	 var stock=$("#stock").val();
    	 var quantity= $("#qty").val();
-   	if( $("#variant,#sizevariant option:selected").val()=="#")
+   	
+   	 //Changes for pdp CR
+   	if(!$("#variant li ").hasClass("selected")){
+  		 
+   		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+		$("#addToCartFormTitle").show();
+ 	    return false;
+   	 }
+   	/* if( $("#variant,#sizevariant option:selected").val()=="#")
  	  {
  		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormTitle").show();
  	 return false;
- 	  }	 
+ 	  }	 */ 
    	 /* var pincodecheked=$("#pinCodeChecked").val();
    	
    	 if(pincodecheked=="true"){ 
