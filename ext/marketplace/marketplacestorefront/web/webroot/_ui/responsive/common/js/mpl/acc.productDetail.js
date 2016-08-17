@@ -620,9 +620,8 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
 	if(loggedIn == 'false') {
-		$("#wishListNonLoggedInId").show();
-		//The items have been added to your wishlist
-		globalErrorPopup("Please sign in to add item into wishlist!")
+		$(".wishAddLogin").css("display","inline-block");
+		$(".wishAddLogin").fadeOut(3000);
 	}
 	else {
 	
@@ -637,6 +636,8 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					var msg=$('#wishlistSuccess').text();
 					$('#addedMessage').show();
 					$('#addedMessage').html(msg);
+					$(".wishAddSucess").css("display","inline-block");
+					$(".wishAddSucess").fadeOut(3000);
 					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 					/*setTimeout(function() {
 						  $("#addedMessage").fadeOut().empty();
