@@ -15,16 +15,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
-<spring:url value="/my-account/profile" var="profileUrl" />
-<spring:url value="/my-account/update-profile" var="updateProfileUrl" />
-<spring:url value="/my-account/update-password" var="updatePasswordUrl" />
-<spring:url value="/my-account/update-email" var="updateEmailUrl" />
-<spring:url value="/my-account/address-book" var="addressBookUrl" />
-<spring:url value="/my-account/payment-details" var="paymentDetailsUrl" />
-<spring:url value="/my-account/orders" var="ordersUrl" />
-<spring:url value="/my-account/default/wishList" var="wishlistUrl" />
-<spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
-
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">
@@ -949,5 +939,4 @@
 	</div>
 		
 </template:page>
-
 

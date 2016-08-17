@@ -6,6 +6,9 @@ package com.tisl.mpl.shorturl.service;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.ws.rs.core.MediaType;
 
@@ -131,6 +134,18 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 		final String longURLFormat = (String) getConfigurationService().getConfiguration().getProperty(
 				MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
 		return longURLFormat + "/" + orderCode;
+	}
+	
+	/**
+	 * @Description This method will give the Short Url reports generated between two dates
+	 * @param fromDate
+	 *  @param toDate
+	 * @return List<TULShortUrlReportModel>
+	 */
+	@Override
+	public List<TULShortUrlReportModel> getShortUrlReportModels(Date fromDate,Date toDate)
+	{
+		return  getShortUrlReportDaoImpl().getShortUrlReportModels(fromDate, toDate);
 	}
 
 	/**

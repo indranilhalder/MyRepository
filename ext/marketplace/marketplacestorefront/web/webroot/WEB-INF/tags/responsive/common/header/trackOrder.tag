@@ -1,10 +1,12 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme" %>
+<%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 
  <div class="removeModalAfterLoad" id="showTrackOrder">
            <div class="modal-dialog">
                <div class="modal-content">
-                <form class="form-horizontal">
+                <form class="form-horizontal" id="trackOrderForm">
                     <div class="modal-body">
                     	<button type="button" onclick="closeTrackOrder()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     	<h4><spring:theme code="trackorder.track.text" text="Track Your Order"/></h4>                    	
@@ -18,12 +20,13 @@
                     		</div>
                     		<div class="col-md-6 col-sm-6">
                     			<label for="email"><spring:theme code="trackorder.track.provenotrobo.text" text="Prove you're not a robot*"/></label>
-   								<div class="captcha">
-   									<img src="http://oi64.tinypic.com/23w1kdz.jpg">
-   								</div>
-   								<input type="text" class="form-control captcha" id="TrackCaptcha" placeholder="Please enter above text">
+   								
+   								<div id="recaptchaWidgetForTracking">
+									<%--  <div class="g-recaptcha" data-sitekey="${recaptchaKey}"></div>  --%>
+								</div>
+								
                     		</div>
-                    	</div><!-- http://oi64.tinypic.com/23w1kdz.jpg -->
+                    	</div>
                     	<div class="row">
                     		<div class="col-md-12 col-sm-12">
                     			<div class="trackPopupText"><spring:theme code="trackorder.track.check.order.text" text="To know your Order ID, Please check your order confirmation mail or sms."/></div>
@@ -43,7 +46,7 @@
                     		<div class="col-md-12 col-sm-12" style="padding-left: 15px;">
 			                     <span class="error_text emailError"></span>
 			                     <span class="error_text orderError"></span>
-			                     <span class="error_text captchaError"></span>
+			                     <span class="error_text trackCaptchaError"></span>
 			                     <span class="error_text main_error"></span>
 			                </div>
 			         </div>
