@@ -2652,27 +2652,23 @@ function loadDefaultWishListName_SizeGuide() {
 	} 
 /*TPR-630*/
 	$(document).ready(function(){
-		$(".Emi > p").on("mouseenter",function(){
+		$(".Emi > p").on("click",function(){
 			if(!$(this).hasClass("active") && $(window).width() > 790){
 				$(this).addClass("active");
 				openPopForBankEMI();
 			}
 		});
-		$(".Emi > p").on("mouseleave",function(){
-			if($(window).width() > 790){
-				$(this).removeClass("active");
-			}
-		});
-		$(".Emi > #EMImodal-content").on("mouseenter",function(){
+		$(".Emi > p").on("click",".Emi .modal-content .Close",function(){
+			$(".Emi > p").removeClass("active");
+			});
+		$(".Emi > #EMImodal-content").on("click",function(){
 			if($(window).width() > 790){
 				$(".Emi > p").addClass("active")
 			}
 		});
-		$(".Emi > #EMImodal-content").on("mouseleave",function(){
-			if($(window).width() > 790){
-				$(".Emi > p").removeClass("active")
-			}
-		});
+		$(".Emi > #EMImodal-content").on("click",".Emi .modal-content .Close",function(){
+			$(".Emi > p").removeClass("active")
+			});
 		
 		$(".Emi > p").on("click",function(){
 			if($(window).width() <= 790){

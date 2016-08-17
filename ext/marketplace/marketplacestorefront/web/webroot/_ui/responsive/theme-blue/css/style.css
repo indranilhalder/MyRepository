@@ -44022,9 +44022,9 @@ body.page-productDetails .breadcrumbs.wrapper {
 }
 
 @media (min-width:791px){
-	.Emi .modal-content .Close {
+	/* .Emi .modal-content .Close {
 		display: none;
-	}
+	} */
 }
 /*OtherSellers*/
 .OtherSellers{ background:#fbfbfb; margin:0 0 70px;-webkit-box-shadow: 0px 0px 10px 0px rgba(138,134,138,0.2);-moz-box-shadow: 0px 0px 10px 0px rgba(138,134,138,0.2);box-shadow: 0px 0px 10px 0px rgba(138,134,138,0.2);}
