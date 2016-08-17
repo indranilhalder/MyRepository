@@ -27,10 +27,13 @@
 			<h2>
 				<c:choose>
 					<c:when test="${not empty searchPageData.spellingSuggestion.suggestion && not empty searchPageData.results}">
-					<c:set var="resultCount" value="${fn:length(searchPageData.results)}" />	
+					<!-- Added for TPR-812 -->
+					<c:set var="resultCount" value="${fn:length(searchPageData.results)}" />					
+					<c:set var="resultStr" value="${resultCount > 1 ? 'results' : 'result'}" />
+					<!-- Added for TPR-812 -->
 						0 Result for '<span class="searchString"><spring:theme code="search.page.searchTextValue"
 							arguments="${spellingSearchterm}" /></span>', <spring:theme code="search.page.searchTextForDYMShow"/>&nbsp;
-						${resultCount} results for
+						${resultCount}&nbsp;${resultStr} for
 						<span class="searchString">"<i><c:set value="${fn:split(searchPageData.freeTextSearch, ' ')}" var="searchTextAry" />
 						<c:set value="${fn:split(searchPageData.spellingSuggestion.suggestion, ' ')}" var="suggestionAry" />
 						<c:choose>

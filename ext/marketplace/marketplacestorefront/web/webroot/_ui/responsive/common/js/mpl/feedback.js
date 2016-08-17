@@ -1657,6 +1657,31 @@ $(document).ready(function(){
 				}
 			}
 		});
+		setTimeout(function () {
+		$("body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery").addClass("collapsed");
+				$(".mobile-delivery").click(function(){
+					$(this).parents("li.delivery").toggleClass("collapsed");
+				});
+		}, 100);
+		$(window).on("load resize", function() {
+		$("body.page-cartPage .cart.wrapper .product-block li.item").each(function(){
+			if($(this).find("ul.desktop>li.price").css("position")=="absolute"){
+				//console.log("price absolute");
+				var price_top = $(this).find(".cart-product-info").height() + 20;
+				$(this).find("ul.desktop>li.price").css("top",price_top+"px");
+				var qty_top = price_top + 29;
+				$(this).find("ul.desktop>li.qty").css("top",qty_top+"px");
+			}
+			else{
+				$(this).find("ul.desktop>li.price").css("top","auto");
+				$(this).find("ul.desktop>li.qty").css("top","auto");
+			}
+		});
+		if($("body.page-cartPage .cart.wrapper .checkout-types li.express-checkout").children().length == 0){
+			$("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").addClass("onlyCheckout");
+		}
+		});
+		
 });
 
         var screenXs="480px";
@@ -1888,7 +1913,7 @@ $(window).on("scroll",function(){
 			$('.listing.wrapper .left-block,.listing.wrapper .right-block').removeClass("fixed");
 		}
 		
-		if ($(window).scrollTop() >  $('.listing.wrapper .right-block').height() - $('.listing.wrapper .right-block').offset().top - 100) {
+		if ($(window).scrollTop() >  $('.listing.wrapper .right-block').height() - $('.listing.wrapper .right-block').offset().top - $(".bottom-pagination").outerHeight() - 180) {
 			$('.listing.wrapper .left-block').removeClass("fixed").addClass("bot");
 		} else {
 			$('.listing.wrapper .left-block').removeClass("bot");
@@ -1909,7 +1934,7 @@ $(document).ready(function() {
 });
 
 $(document).ajaxComplete(function(){
-	if(!$("body").hasClass("pageLabel-homepage")){
+	if(!$("body").hasClass("pageLabel-homepage") && !$("body").hasClass("template-pages-layout-micrositePage1")){
 		$("body").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
 	}
 });

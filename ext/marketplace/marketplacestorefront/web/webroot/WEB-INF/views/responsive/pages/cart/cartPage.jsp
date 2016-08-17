@@ -37,7 +37,7 @@
 		<%-- <cms:pageSlot position="CenterRightContentSlot" var="feature" element="div" class="right-block">
 				<cms:component component="${feature}"/>
 			</cms:pageSlot> --%>
-		<cms:pageSlot position="TopContent" var="feature" element="div" class="left-block" >
+		<cms:pageSlot position="TopContent" var="feature" element="div" class="cart-top-block" >
 			<cms:component component="${feature}"/>
 		</cms:pageSlot> 
 		 

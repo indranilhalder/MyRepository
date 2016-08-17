@@ -142,17 +142,17 @@ function focusOnElement() {
 		
 		if(sellerskuidList.indexOf(sellersArray[i]['ussid'])==-1){
 		sellerDetailsArray[++index]	=sellersArray[i];
-	  	tbodycontent+="<tr id='tr"+index+"Id'>";  	
+	  	tbodycontent+="<li id='tr"+index+"Id'><div class='Content'>";  	
 	 	stock = sellersArray[i]['availableStock'];
 	 	ussid = sellersArray[i]['ussid'];
 	 	var formStart = "<div id='addToCartFormId"+index+"Title' name='addToCartFormId"+index+"Title' class='addToCartTitle'>"+$('#addtocartid').text()+"</div>" + "<div id='addToCartFormId"+index+"Title' class='addToCartTitle sellerAddToBagTitle'>"+$('#addtocartid').text()+"</div>" +
 		"<form method='post'  name='addToCartFormId"+index+"' id='addToCartFormId"+index+"' class='add_to_cart_form' action='#'>";
 	  	//setting seller name
-	  	tbodycontent+="<td width='278px'><h3>"; 
+	  	tbodycontent+="<div data='Seller Information' class='Seller'>"; 
 	  	tbodycontent+=sellersArray[i]['sellername'];
-	  	tbodycontent+="</h3></td>"; 
+	  	tbodycontent+="</div>"; 
 		//setting price //TODO : price logic
-	  	tbodycontent+="<td width='153px'>"; 
+	  	tbodycontent+="<div data='Price' class='Price'>"; 
 	  
 		if((null!=sellersArray[i]['spPrice'])&&(sellersArray[i]['spPrice']!='')&&(sellersArray[i]['spPrice'].value!=0))
 	  	{  	  		
@@ -181,17 +181,15 @@ function focusOnElement() {
 	    skuPriceMap.key=sellersArray[i]['ussid'];
 		skuPriceMap.value=sellerPriceValue;
 		skuPriceArray[++indx]=skuPriceMap;
-		tbodycontent+="<div class='price price-line-height'>";
 		if(originalPriceValue > 0 && originalPriceValue!=sellerPriceValue){
-		tbodycontent+="<del>";	
+		tbodycontent+='<span class="sale strike" id="mrpPriceId">';	
 		tbodycontent+=originalPrice.formattedValue;
-		tbodycontent+="</del>";
+		tbodycontent+="</span>";
 		tbodycontent+=" ";
 		}
-		tbodycontent+="<font color=#ff1c47>"
+		tbodycontent+='<span class="sale" id="mopPriceId">'
 		tbodycontent+=sellerPrice.formattedValue;
-		tbodycontent+="</font>"
-		tbodycontent+="</div>"
+		tbodycontent+="</span>"
 		if(promorestrictedSellers!=undefined){
 			   if(promorestrictedSellers.indexOf(sellersArray[i]['sellerID'])!=-1){
 				   tbodycontent+="<div class='tooltip_wrapper offer-tooltip-wrapper'><a name='yes' id='offer"+index+"' >Offer Available</a><span class='tooltip_pop offer-popover'>"+promoData.promoDescription+"<br><br>From&nbsp;"+promoStartDate+"<br>To&nbsp;"+promoEndDate+"<br>'</span></div>";
@@ -199,11 +197,11 @@ function focusOnElement() {
 		}
 		
 	  	if (parseFloat(sellerPriceValue) > emiCuttOffAmount.value) {
-	  		tbodycontent+="<div class='emi'>";
+	  		tbodycontent+="<p>";
 	  		tbodycontent+=$('#emiavailableid').text();
-	  		tbodycontent+="</div>";
+	  		tbodycontent+="</p>";
 		}
-	  	tbodycontent+="</td>"; 
+	  	tbodycontent+="</div>"; 
 	       var modes = sellersArray[i]['deliveryModes'];
 	        var deliveryMap="";
 	        var isHomeDelivery=false;
@@ -286,7 +284,7 @@ function focusOnElement() {
 					  		}
 			  		}
 			     	}  */
-	  	tbodycontent+="<td width='669px'><ul>";
+	  	tbodycontent+='<div data="Delivery Information" class="Delivery"><ul>';
 	  		  
 	    tbodycontent+="<li>";
 	    tbodycontent+=deliveryModeMap;
@@ -310,8 +308,8 @@ function focusOnElement() {
 	    tbodycontent+="<li><span class='tooltip_wrapper'><a>"+$('#deliveryratesid').text()+"</a>"+"<span class='tooltip_pop'>"+ deliveryMap+"</span></span>"+" & ";
 	 
 	    tbodycontent+="<span class='tooltip_wrapper'><a>"+$('#returnpolicyid').text()+"</a>"+"<span class='tooltip_pop'>"+sellersArray[i]['returnPolicy']+"&nbsp;days</span></span></li>";
-	  	tbodycontent+="</ul></td>";
-	  	tbodycontent+="<td width='219px'>";
+	  	tbodycontent+="</ul></div>";
+	  	tbodycontent+='<div class="Buying">';
 	  	
 	  	tbodycontent+=formStart;
 	  	if(($("#stockDataArray").val()!="")&&($("#stockDataArray").val()!=[])){
@@ -356,8 +354,8 @@ function focusOnElement() {
 		tbodycontent+="<a onClick='openPop(\""+ussid+"\");' id='wishlist' class='wishlist add-to-wishlist' data-toggle='popover' data-placement='bottom'>Add to Wishlist</a>";
 		tbodycontent+=formEnd;
 		
-	  	tbodycontent+="</td>";  	  	
-	  	tbodycontent+="</tr>";
+	  	tbodycontent+="</div>";  	  	
+	  	tbodycontent+="</div></li>";
 	  	
 	  	if($("#pinCodeChecked").val()=="false")//do not attach the click event for Add to Bag in next time seller refresh
   		{
