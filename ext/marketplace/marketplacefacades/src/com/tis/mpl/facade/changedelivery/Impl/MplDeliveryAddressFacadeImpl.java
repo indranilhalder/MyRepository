@@ -479,7 +479,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					valditionMsg = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel, MarketplaceFacadesConstants.CA);
 					if (valditionMsg != null)
 					{
-						if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.STATUS_SUCESS))
+						if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
 						{
 							boolean isAddressSaved = false;
 							//if Serviceable Pincode then Save in Order and set
