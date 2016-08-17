@@ -43907,7 +43907,9 @@ body.page-productDetails .breadcrumbs.wrapper {
  		margin-top: 25px;
  	}
  }
-
+.product-info .product-image-container.device .owl-carousel{
+	padding:0px;
+}
 /*New pdp end*/
 
 /* TPR-628 */
