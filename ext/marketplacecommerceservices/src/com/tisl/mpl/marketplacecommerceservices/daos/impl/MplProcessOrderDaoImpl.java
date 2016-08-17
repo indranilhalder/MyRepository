@@ -30,7 +30,7 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao#getPaymentPedingOrders()
 	 */
 	@Override
@@ -38,8 +38,8 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 	{
 		try
 		{
-			//final String queryString = MarketplacecommerceservicesConstants.PAYMENTPENDINGORDERQUERY;
-			final String queryString = MarketplacecommerceservicesConstants.PAYMENTPENDINGQUERY;
+			final String queryString = MarketplacecommerceservicesConstants.PAYMENTPENDINGORDERQUERY;
+			//final String queryString = MarketplacecommerceservicesConstants.PAYMENTPENDINGQUERY;
 
 			//forming the flexible search query
 			final FlexibleSearchQuery orderListQuery = new FlexibleSearchQuery(queryString);

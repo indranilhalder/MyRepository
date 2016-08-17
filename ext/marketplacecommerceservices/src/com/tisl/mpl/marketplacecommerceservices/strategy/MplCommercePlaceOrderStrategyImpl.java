@@ -174,7 +174,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				result.setOrder(orderModel);
 
-				if (StringUtils.isNotEmpty(orderModel.getModeOfPayment()) && orderModel.getModeOfPayment().equalsIgnoreCase("COD"))
+				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
+						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
 				{
 					try
 					{
@@ -291,9 +292,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
