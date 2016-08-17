@@ -7,7 +7,7 @@
     <span id="deliveryPretext" style="display:none;"><spring:theme code="mpl.pdp.delivery.pretext"/></span>
     <span id="deliveryPosttext" style="display:none;"><spring:theme code="mpl.pdp.delivery.posttext"/></span>
 	<ul class="delivery-block">
-	<li><h3><spring:theme code="pdp.delivery.options"/></h3><p><spring:theme code="product.pincode"/></p>
+	<li><h3><spring:theme code="pdp.delivery.options"/></h3><p id="pdpPinCodeAvailable"><spring:theme code="product.pincode"/></p>
 		<div class="inline-form">
 		 <c:choose>
 		 <c:when test="${not empty pincode}">
@@ -18,7 +18,7 @@
 		    </c:otherwise>
 		 </c:choose>
 		   <!-- TISEE-6552 fix  -->
-			<button class="orange submit" id="pdpPincodeCheck"><%-- <spring:theme code="text.submit"/> --%>Check Availability</button>
+			<button class="orange submit" id="pdpPincodeCheck"><spring:theme code="text.submit"/></button>
 			<button class="gray submitDList" id="pdpPincodeCheckDList" style="display:none;"><spring:theme code="text.submit"/></button>
 		</div></li>
 		 

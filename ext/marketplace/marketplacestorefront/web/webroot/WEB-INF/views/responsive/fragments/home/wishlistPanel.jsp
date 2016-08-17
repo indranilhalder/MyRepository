@@ -41,9 +41,11 @@
 	</ul>
 	<div class="foot">
 		<a href="<c:url value="/my-account/wishList"/>"><spring:theme
-				code="header.link.myWishList.viewall" /></a> <a href="#"
+				code="header.link.myWishList.viewall" /></a> 
+				<!-- Commented as for TPR-895 -->
+				<%-- <a href="#"
 			data-toggle="modal" data-target="#createNewList"
 			class="create-newlist-link"><spring:theme
-				code="header.link.myWishList.createnew" /></a>
+				code="header.link.myWishList.createnew" /></a> --%>
 	</div>
 </c:if>

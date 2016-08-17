@@ -1657,11 +1657,17 @@ $(document).ready(function(){
 				}
 			}
 		});
+		setTimeout(function () {
+		$("body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery").addClass("collapsed");
+				$(".mobile-delivery").click(function(){
+					$(this).parents("li.delivery").toggleClass("collapsed");
+				});
+		}, 100);
 		$(window).on("load resize", function() {
 		$("body.page-cartPage .cart.wrapper .product-block li.item").each(function(){
 			if($(this).find("ul.desktop>li.price").css("position")=="absolute"){
 				//console.log("price absolute");
-				var price_top = $(this).find(".cart-product-info").height() + 10;
+				var price_top = $(this).find(".cart-product-info").height() + 20;
 				$(this).find("ul.desktop>li.price").css("top",price_top+"px");
 				var qty_top = price_top + 29;
 				$(this).find("ul.desktop>li.qty").css("top",qty_top+"px");
