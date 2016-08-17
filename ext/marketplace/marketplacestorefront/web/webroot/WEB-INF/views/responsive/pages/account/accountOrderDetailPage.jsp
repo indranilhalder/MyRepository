@@ -1327,10 +1327,7 @@
 			<div class="removeModalAfterLoad" id="changeAddressPopup">
 			  <order:changeDeliveryAddress orderDetails="${subOrder}" />
             </div><!-- /.modal -->
-            
-            <div class="removeModalAfterLoad" id="showOTP">
-            	   <order:otpPopup/>	
-            </div>
+ 
         <div class="wrapBG" style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; z-index: 99999; display: none;"></div>
         
 </template:page>
@@ -1636,83 +1633,7 @@ $(function() {
 				});
 		      } 
 	}	 
-	 function newOTPGenerate(orderCode){
-		 $.ajax({
-				type : "GET",
-				url : ACC.config.encodedContextPath + "/my-account/newOTP",
-				data :"orderCode="+orderCode,
-				success : function(response) {
-					if(response==true){
-						$(".otpError").show();
-						$(".otpError").text("OTP has been sent");
-					}else{
-						$(".otpError").show();
-						$(".otpError").text("OTP sending fail try again ");
-					}
-				}
-			}); 
-	 }
-
-	 function generateOTP(orderId){	
-    	 $(".otpError").hide();
-	     $(".serverError").hide();
-		 var numberOTP=$("#OTP").val();
-		 var isString = isNaN(numberOTP);
-	     var numberOTP=numberOTP.trim();
-	     if(isString==true || numberOTP.trim()==''){
-	    	 $(".otpError").show();
-		     $(".otpError").text("Invalid OTP, Please Re-enter.");
-	     }else if(numberOTP < 5 && numberOTP > 6){
-	    	 $(".otpError").show();
-		     $(".otpError").text("Invalid OTP, Please Re-enter.");
-	     } else{
-			$.ajax({
-				type : "GET",
-				url : ACC.config.encodedContextPath + "/my-account/validationOTP",
-				data : "orderId=" + orderId + "&otpNumber="+$("#OTP").val(),
-				success : function(response) {
-					if(response=="Pincode not Serviceable"){
-						$("#changeAddressPopup").show();
-						$("wrapBG1").show();
-						$("#showOTP").hide();
-						$(".wrapBG").hide();
-						var height = $(window).height();
-						$(".wrapBG").css("height", height);
-						$("#changeAddressPopup").css("z-index", "999999");
-						$(".pincodeNoError").show();
-						$(".pincodeNoError").text(response);
-					}
-					else if(response=="INVALID"){	
-						$(".otpError").show();
-						$(".otpError").text("Invalid OTP, Please Re-enter.");
-						
-					}if(response=="ErrorOccurredPleaseTryAfterSomeTime"){
-						$("#changeAddressPopup").show();
-						$("wrapBG1").show();
-						$("#showOTP").hide();
-						$(".wrapBG").hide();
-						var height = $(window).height();
-						$(".wrapBG").css("height", height);
-						$("#changeAddressPopup").css("z-index", "999999");
-						$(".serverError").show();
-						$(".serverError").text(response);
-						/* window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderId&pageAnchor=viewOrder&isServiceable=true;  */
-					}else{
-						console.log(response);
-					    /* location.reload(); */
-					  /*   window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderId&pageAnchor=viewOrder&isServiceable=true; */
-					} 
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-				  console.log(textStatus, errorThrown);
-				  $("#showOTP .error_text").text("Internal Server Error, Please try again later.");
-				  alert("Internal Server Error, Please try again later.");
-				  location.reload();
-				}
-			}); 
-
-		}	 
-	 }
+	 
 	$(document).ready(function(){
 		 $("#changeAddressLink").click(function(){
 			  $("#changeAddressPopup").show();
