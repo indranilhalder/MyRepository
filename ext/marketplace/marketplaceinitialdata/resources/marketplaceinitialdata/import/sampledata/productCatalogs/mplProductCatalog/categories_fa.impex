@@ -4,7 +4,7 @@ $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[
 ;;;;;;;;;
 
 INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid);
-
+;MSH1;Sales;;mplProductCatalog:Staged;$uidGroup
 # L1
 ;MSH16;Accessories;MSH1;mplProductCatalog:Staged;$uidGroup
 ;MSH17;Kids & Baby;MSH1;mplProductCatalog:Staged;$uidGroup
