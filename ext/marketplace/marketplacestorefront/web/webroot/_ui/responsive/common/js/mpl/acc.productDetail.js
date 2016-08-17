@@ -1398,6 +1398,7 @@ $( document ).ready(function() {
 						//TPR-805
 						//$("#outOfStockPinCodeMsg").show();
 						//$("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1416,6 +1417,7 @@ $( document ).ready(function() {
 						//TPR-805
 						// $("#outOfStockPinCodeMsg").show();
 						// $("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1433,6 +1435,7 @@ $( document ).ready(function() {
 						//TPR-805
 						// $("#outOfStockPinCodeMsg").show();
 						// $("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
@@ -1450,6 +1453,7 @@ $( document ).ready(function() {
 						//TPR-805
 						// $("#outOfStockPinCodeMsg").show();
 						// $("#availableStockPinCodeMsg").hide();
+						//TPR-805
 						 $("#pdpPincodeCheck").hide();
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();

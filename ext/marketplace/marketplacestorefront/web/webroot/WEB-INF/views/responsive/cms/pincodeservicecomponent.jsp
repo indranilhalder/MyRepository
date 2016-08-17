@@ -18,7 +18,7 @@
 		    </c:otherwise>
 		 </c:choose>
 		   <!-- TISEE-6552 fix  -->
-			<button class="orange submit" id="pdpPincodeCheck"><%-- <spring:theme code="text.submit"/> --%>Check Availability</button>
+			<button class="orange submit" id="pdpPincodeCheck"><spring:theme code="text.submit"/></button>
 			<button class="gray submitDList" id="pdpPincodeCheckDList" style="display:none;"><spring:theme code="text.submit"/></button>
 		</div></li>
 		 
