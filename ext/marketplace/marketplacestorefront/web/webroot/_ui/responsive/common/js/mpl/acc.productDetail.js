@@ -633,16 +633,17 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 			success : function(data) {
 				if (data == true) {
 					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
-					var msg=$('#wishlistSuccess').text();
-					$('#addedMessage').show();
-					$('#addedMessage').html(msg);
+					//var msg=$('#wishlistSuccess').text();
+					//$('#addedMessage').show();
+					//$('#addedMessage').html(msg);
 					$(".wishAddSucess").css("display","inline-block");
 					$(".wishAddSucess").fadeOut(3000);
+					$("#add_to_wishlist").attr("disabled",true);
 					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 					/*setTimeout(function() {
 						  $("#addedMessage").fadeOut().empty();
 						}, 1500);*/
-					$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
+					//$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
 					populateMyWishlistFlyOut(wishName);
 					
 					//For MSD
@@ -693,7 +694,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 		setTimeout(function() {
 			$('a.wishlist#wishlist').popover('hide');
 			$('input.wishlist#add_to_wishlist').popover('hide');
-			}, 1500);
+			}, 0);
 	}
 }
 
@@ -2732,6 +2733,8 @@ function loadDefaultWishListName_SizeGuide() {
 			success : function(data) {
 			if (data == true) {
 				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
+				$("#add_to_wishlist").attr("disabled",true);
+				$('#add_to_wishlist').addClass("wishDisabled");
 			}
 			
 			},
