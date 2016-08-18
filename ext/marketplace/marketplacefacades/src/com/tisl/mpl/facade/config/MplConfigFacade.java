@@ -3,6 +3,11 @@
  */
 package com.tisl.mpl.facade.config;
 
+import java.util.List;
+
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
+import com.hybris.oms.tata.model.MplTimeSlotsModel;
+
 /**
  * @author Techouts
  *
@@ -10,4 +15,9 @@ package com.tisl.mpl.facade.config;
 public interface MplConfigFacade
 {
 String getCongigValue(final String configKey);
+
+List<MplTimeSlotsModel> getDeliveryTimeSlotByKey(String configKey);
+
+MplBUCConfigurationsModel getDeliveryCharges();
+
 }

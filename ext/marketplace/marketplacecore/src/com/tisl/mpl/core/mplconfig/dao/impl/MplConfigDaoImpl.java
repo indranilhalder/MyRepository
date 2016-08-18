@@ -14,6 +14,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
+import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tisl.mpl.core.model.MplConfigModel;
 import com.tisl.mpl.core.mplconfig.dao.MplConfigDao;
 
@@ -31,6 +33,11 @@ public class MplConfigDaoImpl implements MplConfigDao
 	private static final Logger LOGGER = Logger.getLogger(MplConfigDaoImpl.class);
 	public static final String CONFIG_QUERY = "select {pk} from {MplConfig} where {ID}=?id";
 	public static final String ID_STRING = "id";
+	
+	public static final String TIMESLOT_CONFIG_QUERY = "select {pk} from {MplTimeSlots} where {timeslotType}=?configKey";
+	
+	public static final String DELIVERYCHARG_CONFIG_QUERY = "select {pk} from {MplBUCConfigurations} ";
+	public static final String TIMESLOT_CONFIG_KEY = "configKey";
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
@@ -59,6 +66,62 @@ public class MplConfigDaoImpl implements MplConfigDao
 		if (!mplConfigModelList.isEmpty())
 		{
 			return mplConfigModelList.get(0);
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.core.mplconfig.dao.MplConfigDao#getDeliveryTimeSlotByKey(java.lang.String)
+	 */
+	@Override
+	public List<MplTimeSlotsModel> getDeliveryTimeSlotByKey(String configKey)
+	{
+
+				ServicesUtil.validateParameterNotNull(configKey, "Id must not be null");
+				final Map queryParams = new HashMap();
+				final String query = TIMESLOT_CONFIG_QUERY;
+				queryParams.put(TIMESLOT_CONFIG_KEY, configKey);
+				final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query);
+				fQuery.addQueryParameters(queryParams);
+				if (LOGGER.isDebugEnabled())
+				{
+					LOGGER.debug("getDeliveryTimeSlotByKey() - MplTimeSlots Query " + fQuery);
+				}
+
+				final List<MplTimeSlotsModel> mplConfigModelList = flexibleSearchService.<MplTimeSlotsModel> search(fQuery).getResult();
+
+				if (!mplConfigModelList.isEmpty())
+				{
+					return mplConfigModelList;
+				}
+				else
+				{
+					return null;
+				}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.core.mplconfig.dao.MplConfigDao#getDeliveryCharges()
+	 */
+	@Override
+	public MplBUCConfigurationsModel getDeliveryCharges()
+	{
+	
+		final String query = DELIVERYCHARG_CONFIG_QUERY;
+		final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query);
+		if (LOGGER.isDebugEnabled())
+		{
+			LOGGER.debug("getDeliveryTimeSlotByKey() - MplTimeSlots Query " + fQuery);
+		}
+
+		final MplBUCConfigurationsModel mplConfigModel = flexibleSearchService.<MplBUCConfigurationsModel> search(fQuery).getResult().get(0);
+
+		if (null != mplConfigModel)
+		{
+			return mplConfigModel;
 		}
 		else
 		{

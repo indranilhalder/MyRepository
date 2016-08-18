@@ -7751,6 +7751,35 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- Added Attributes for Delivery Slots -->
+					
+					
+					<attribute autocreate="true" qualifier="edScheduledDate" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="timeSlotFrom" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="timeSlotTo" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					
+					
+			
+					<!-- Added Attributes for Delivery Slots -->
+					
 				</attributes>
 			</itemtype>
 

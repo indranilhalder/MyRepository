@@ -523,6 +523,16 @@
 			type="de.hybris.platform.commercefacades.order.data.ImeiDetailData"></property>
 			<property name="productPromoCode"
 			type="String"></property>
+			
+				<!--Newly Added Fields for DeliverySlots  -->
+			<property name="deliverySlotsDates" type="java.util.List&lt;java.lang.String>"></property>
+			
+			<property name="deliverySlotsTime" type="java.util.Map&lt;String,java.util.List&lt;String>>"></property>
+			<property name="selectedDeliveryModeForUssId" type="String"></property>
+			<property name="selectedDeliverySlotDate" type="String"></property>
+			<property name="selectedDeliverySlotTimeFrom" type="String"></property>
+			<property name="selectedDeliverySlotTimeTo" type="String"></property>
+			
 	</bean>
 	
 	<bean class="de.hybris.platform.commercefacades.order.data.ImeiDetailData">

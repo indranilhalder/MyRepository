@@ -1614,4 +1614,6 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="configurationService" ref="configurationService" />
 	</bean>
 	
+	<bean id="dateUtilHelper" class="com.tisl.mpl.core.util.DateUtilHelper"/>
+	
 </beans>

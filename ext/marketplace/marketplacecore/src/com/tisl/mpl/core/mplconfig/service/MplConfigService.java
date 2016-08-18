@@ -5,6 +5,10 @@ package com.tisl.mpl.core.mplconfig.service;
 
 import java.util.List;
 
+import com.hybris.oms.tata.data.MplTimeSlotsData;
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
+import com.hybris.oms.tata.model.MplTimeSlotsModel;
+
 
 
 /**
@@ -43,5 +47,16 @@ public interface MplConfigService
 	 * @param value
 	 */
 	void saveConfigValues(String key, String value);
+	/**
+	 * This method is used to save values to the config. entries w.r.t the key.
+	 *
+	 * @param id
+	 * @param value
+	 */
+	List<MplTimeSlotsModel> getDeliveryTimeSlotByKey(String configKey);
+	/**
+	 * @return
+	 */
+	public MplBUCConfigurationsModel getDeliveryCharges();
 
 }
