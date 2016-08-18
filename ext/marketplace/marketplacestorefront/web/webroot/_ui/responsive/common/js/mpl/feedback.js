@@ -883,6 +883,13 @@ $(document).ready(function(){
 	  if($('body').find('input.wishlist#add_to_wishlist').length > 0){
 		$('input.wishlist#add_to_wishlist').popover({ 
 			html : true,
+			placement: function (){
+				if(($(window).width() < 768)) {
+				return 'top';
+				}
+				else
+					return 'bottom';
+			},
 			content: function() {
 				return $(this).parents().find('.add-to-wishlist-container').html();
 			}
@@ -1937,7 +1944,16 @@ $(document).ready(function() {
 		hit({
 			windowWidth : $(window).width()
 		});
-	})
+	});
+	 $(window).on('load resize',function(){	
+	if(($(window).width() > 767) && ($(window).width() < 1025)) {
+		var img_height = $(".product-info .product-image-container.device").height();
+		var detail_height = $(".product-info .product-detail").height();
+		var diff = Math.abs(detail_height - img_height - 40);
+		$(".product-info>div.tabs-block").css("margin-top","-"+diff+"px");
+		
+	}
+	 });
 });
 
 $(document).ajaxComplete(function(){
