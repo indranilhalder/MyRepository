@@ -148,6 +148,7 @@ $(document).ready(function() {
 				      var state=$("#state").val();
 				      var name=$("#firstName").val();
 				      var lname=$("#lastName").val()
+				      debugger;
 						if (name.length < 1){
 							$(".firstNameError").show();
 							$(".firstNameError").text("First Name cannot be Blank");
@@ -186,7 +187,7 @@ $(document).ready(function() {
 					          $(".stateError").text("State cannot be Blank");
 					      }
 						else{
-		
+		                       debugger;
 						var data = $("#deliveryAddressForm").serialize();
 						var orderCode = $('#deliveryAddorderCode').val();
 						$.ajax({
@@ -211,6 +212,8 @@ $(document).ready(function() {
 									window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode+"&isServiceable="+true;
 		
 								}else{
+								
+									/*alert(result);*/
 								$("#changeAddressPopup").empty().html(result).show();
 								}
 							},
@@ -258,3 +261,25 @@ $(document).ready(function() {
 	});
 	
 });
+
+
+
+function newOTPGenerate(orderCode){
+	alert(orderCode);
+	 $.ajax({
+			type : "GET",
+			url : ACC.config.encodedContextPath + "/my-account/newOTP",
+			data :"orderCode="+orderCode,
+			success : function(response) {
+				if(response==true){
+					$(".otpError").show();
+					$(".otpError").text("OTP has been sent");
+				}else{
+					$(".otpError").show();
+					$(".otpError").text("OTP sending fail try again ");
+				}
+			}
+		}); 
+} 
+
+
