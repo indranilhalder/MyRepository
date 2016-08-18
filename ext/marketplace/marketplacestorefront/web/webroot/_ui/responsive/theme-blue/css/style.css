@@ -32818,7 +32818,7 @@ body.page-cartPage .cart.wrapper .product-block li.header{
     font-size: 14px;
     text-transform: uppercase;
     margin-bottom: 15px;
-    margin-top: 50px;
+    margin-top: 40px;
     border-spacing: 0;
     margin-left: 0;
     display: block;
@@ -33257,7 +33257,7 @@ body.page-cartPage .cart.wrapper .product-block li.header{
 display:none;
 }
 body.page-cartPage .cart.wrapper .product-block{
-margin-top:30px;
+margin-top:33px;
 }
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo p.size{
 margin: 5px 0px 10px 0px;
@@ -33362,7 +33362,7 @@ body.page-cartPage .cart-bottom-block .cart-total-block{
 	margin-bottom: 20px;
 }
 div#defaultPinDiv p,.MyBag-pincode #changePinDiv>p{
-	margin: 0 0 27px;
+	margin: 0 0 17px;
     letter-spacing: 0;
     font-size: 12px;
     line-height: 20px;
