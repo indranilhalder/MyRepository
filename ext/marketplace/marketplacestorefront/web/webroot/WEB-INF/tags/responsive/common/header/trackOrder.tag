@@ -14,7 +14,7 @@
                     		<div class="col-md-6 col-sm-6">
 	                    	<div><label for="email"><spring:theme code="trackorder.track.email.text" text="Enter Your Email ID*"/></label>
    							</div>
-	                    		<input type="text" class="form-control trackEmail" id="TrackemailId" placeholder="Enter your email Id">
+	                    		<input type="text" class="form-control trackEmail" id="TrackEmailId" placeholder="Enter your email Id">
    								<label for="email"><spring:theme code="trackorder.track.order.text" text="Enter Your Order ID*"/></label>
    								<input type="text" class="form-control orderEmail" id="TrackOrderdId" placeholder="Enter your order Id">
                     		</div>
