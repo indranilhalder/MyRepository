@@ -539,10 +539,10 @@ var allSellers='${allsellers}';
 			</cms:pageSlot>
 			</div>
     <ul class="wish-share desktop">
-				<li>
-				<span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
+				<%--<li>
+				 <span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
 				<!-- <span id="addedMessage" style="display:none"></span> -->
-				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'>Add to Wishlist</a></li>
+				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'>Add to Wishlist</a></li> --%>
 				<li>
 				<product:socialSharing product="${product}" />
 					
@@ -566,8 +566,14 @@ var allSellers='${allsellers}';
 				<option value="2"><spring:theme code="seller.sort.pricedesc"/></option>
    		</select>
 		</div>
-	
-		 <table id ="sellerTable" class="other-sellers-table">
+		<div class="Title">
+	      <p>Seller Information </p>
+	      <p>Price</p>
+	      <p>Delivery Information </p>
+	      <p>Buying Option </p>
+	    </div>
+	    <ul class="InfoWrap" id="sellerDetailTbdy"></ul>
+		<%--  <table id ="sellerTable" class="other-sellers-table">
 			<thead>
 				<tr >
 					<th><spring:theme code="product.sellersinfo"></spring:theme></th>
@@ -577,9 +583,9 @@ var allSellers='${allsellers}';
 				</tr>
 			</thead>
 
-			<tbody id="sellerDetailTbdy">
+			<tbody >
 			</tbody>
-		</table>
+		</table> --%>
     <span id="addtocartid" style="display:none"><spring:theme code="product.addtocart.success"/></span>
     <span id="addtocartaboutfullid"  style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
     <span id="addtocartfullid"  style="display:none"><spring:theme code="product.bag"/></span>

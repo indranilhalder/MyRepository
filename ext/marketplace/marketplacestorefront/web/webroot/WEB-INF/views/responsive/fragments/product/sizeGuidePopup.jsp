@@ -392,7 +392,7 @@ var productCodeSG = '${product.code}';
 													<li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:when>
 												<c:otherwise>
-													<li><span data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
+													<li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:otherwise>
 											</c:choose>
 										
@@ -425,7 +425,7 @@ var productCodeSG = '${product.code}';
 													<li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</span></li>
 												</c:when>
 												<c:otherwise>
-													<li><span data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
+													<li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:otherwise>
 												</c:choose>
 													</c:when>
