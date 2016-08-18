@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 
@@ -30,7 +31,7 @@ public interface MplDeliveryAddressFacade
 	 * @param newDeliveryAddress
 	 * @return boolean
 	 */
-	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress, String interfaceType);
+	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress, String interfaceType,List<TransactionSDDto> transactionSDDtos);
 
 
 	/**
@@ -71,7 +72,7 @@ public interface MplDeliveryAddressFacade
 
 	public String getPartialEncryptValue(String encryptSymbol, int encryptLength, String source);
 
-	public void reScheduleddeliveryDate(RescheduleDataList rescheduleDataList);
+	public void reScheduleddeliveryDate(RescheduleDataList rescheduleDataList,String orderID);
 
 	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList);
 
