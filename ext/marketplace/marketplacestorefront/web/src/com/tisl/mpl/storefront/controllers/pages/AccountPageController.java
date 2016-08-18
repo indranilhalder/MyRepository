@@ -7047,61 +7047,73 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.saveAsTemporaryAddressForCustomer(
 					orderCode, addressData);
 
-			if (scheduledDeliveryData.getIsActive().booleanValue())
+			if (scheduledDeliveryData != null)
 			{
-				if (scheduledDeliveryData.getIsPincodeServiceable().booleanValue())
+				if (scheduledDeliveryData.getIsActive().booleanValue())
 				{
-					final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
-					final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
-					Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
-					for (final OrderData subOrder : subOrderList)
+					if (scheduledDeliveryData.getIsPincodeServiceable().booleanValue())
 					{
-						for (final OrderEntryData orderEntry : subOrder.getEntries())
+						final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+						final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
+						Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
+						for (final OrderData subOrder : subOrderList)
 						{
-							//getting the product code
-							ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
-							if (CollectionUtils.isNotEmpty(productModel.getBrands()))
+							for (final OrderEntryData orderEntry : subOrder.getEntries())
 							{
-								for (final BrandModel brand : productModel.getBrands())
+								//getting the product code
+								ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+								if (CollectionUtils.isNotEmpty(productModel.getBrands()))
 								{
-									orderEntry.setBrandName(brand.getName());
-									break;
+									for (final BrandModel brand : productModel.getBrands())
+									{
+										orderEntry.setBrandName(brand.getName());
+										break;
+									}
 								}
-							}
 
-							List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
-									.getSellerInformationRelator();
-							for (final SellerInformationModel sellerInformationModel : sellerInfo)
-							{
-								if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+								List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+										.getSellerInformationRelator();
+								for (final SellerInformationModel sellerInformationModel : sellerInfo)
 								{
-									final SellerInformationData sellerInfoData = new SellerInformationData();
-									sellerInfoData.setSellername(sellerInformationModel.getSellerName());
-									sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
-									sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
-									orderEntry.setSelectedSellerInformation(sellerInfoData);
+									if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+									{
+										final SellerInformationData sellerInfoData = new SellerInformationData();
+										sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+										sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+										sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+										orderEntry.setSelectedSellerInformation(sellerInfoData);
+									}
 								}
 							}
+							fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
+							model.addAttribute("orderDetail", orderDetail);
+							model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
+							model.addAttribute("txnScheduleData", scheduledDeliveryData);
+							return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 						}
-						fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
-						model.addAttribute("orderDetail", orderDetail);
-						model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
-						model.addAttribute("txnScheduleData", scheduledDeliveryData);
+					}
+					else
+					{
+						model.addAttribute("stringMessage",MessageConstants.PINCODE_NOT_SERVICEABLE);
 						return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 					}
-				}else{
-					
-					return MessageConstants.PINCODE_NOT_SERVICEABLE;
 				}
+				else
+				{
+					final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+					String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
+					phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
+					model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
+					model.addAttribute("orderCode", orderCode);
+					return ControllerConstants.Views.Pages.Account.OTPPopup;
+				}
+
 			}
 			else
 			{
-				final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
-				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
-				phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
-				model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
-				model.addAttribute("orderCode", orderCode);
-				return ControllerConstants.Views.Pages.Account.OTPPopup;
+			  	 model.addAttribute("stringMessage",MessageConstants.UPDATED);
+				 return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
+				
 			}
 
 		}
@@ -7111,7 +7123,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.GET)
 	public String validateOTP(@RequestParam(value = "orderId") final String orderId,
-			@RequestParam(value = "otpNumber") final String enteredOTPNumber)
+			@RequestParam(value = "otpNumber") final String enteredOTPNumber,Model model)
 	{
 		String validateOTPMesg = null;
 		final CustomerData customerData = customerFacade.getCurrentCustomer();
@@ -7121,8 +7133,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			LOG.debug("OTP Validation And Oms Calling status");
 			validateOTPMesg = mplDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber, orderId);
 		}
-		return validateOTPMesg;
 
+	   model.addAttribute("stringMessage", validateOTPMesg);
+		return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 	}
 
 	@RequestMapping(value = RequestMappingUrlConstants.NEW_OTP_GENERATE, method = RequestMethod.GET)
