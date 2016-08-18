@@ -42,3 +42,54 @@
 		</c:otherwise>
 	</c:choose>
 </c:forEach>
+
+<li class="facet js-facet AvailabilitySize" style="display: none">
+
+		<div class="facet-name js-facet-name">
+		
+		<h4 class="true">AvailabilitySize</h4>
+			</div>
+        
+		<div class="facet-values js-facet-values js-facet-form ">
+			<ul class="facet-list js-facet-list  ">
+
+
+
+
+
+
+				<li class="filter-inStockFlag">
+
+					<form action="#" method="get"> 
+								<input type="hidden" name="offer" value=""/>
+								<input type="hidden" name="searchCategory" value="all"/>
+								<input type="hidden" name="q" value="shirt:relevance:inStockFlag:true"/>
+								<input type="hidden" name="text" value="shirt"/>
+								<label>
+									<input type="checkbox"   class="facet-checkbox js-facet-checkbox sr-only" />
+									<span class="facet-label">
+										<span class="facet-mark"></span>
+										<span class="facet-text">
+											Exclude out of stock &nbsp;
+											</span>
+									</span>
+									</label>
+							</form>
+							</li>
+				<li class="filter-inStockFlag">
+
+					<form action="#" method="get"> 
+								<input type="hidden" name="offer" value=""/>
+								<input type="hidden" name="searchCategory" value="all"/>
+								<input type="hidden" name="q" value="shirt:relevance:inStockFlag:false"/>
+								<input type="hidden" name="text" value="shirt"/>
+								<label>
+									<input type="checkbox"   class="facet-checkbox js-facet-checkbox sr-only" />
+									</label>
+							</form>
+							</li>
+				</ul>
+
+			</div>
+		
+	</li>
