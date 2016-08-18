@@ -686,6 +686,10 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 				//	$('#myModal').modal('hide');
 				//	
 				}
+				else{
+					$(".wishAlreadyAdded").show();
+					$(".wishAlreadyAdded").fadeOut(3000);
+				}
 			},
 		});
 	

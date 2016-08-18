@@ -125,6 +125,9 @@ tr.d0 td {
 		<div class="wishAddLogin">
 			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 		</div>
+		<div class="wishAlreadyAdded">
+			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+		</div>
 		
 		<div class="product-detail">
 			<ycommerce:testId
@@ -140,6 +143,7 @@ tr.d0 td {
 			
 			<input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
 				<!-- EMI section -->
+			
 			<product:emiDetail product="${product}" />
 			
 			<!-- TISPRM-97 starts -->
