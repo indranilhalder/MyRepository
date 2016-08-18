@@ -1096,14 +1096,10 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 var button_my_button = "#applyCustomPriceFilter";
 $(button_my_button)
 		.click(
-				function() {
-					//var allPrices = "";
-					//var fullQuery = "";
+				function() {					
 					// construct custom price query params					
-//					var minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
-//					var maxPriceSearchTxt = ($('.maxPriceSearchTxt').val() == null || $('.maxPriceSearchTxt').val() == "") ? 99999999 : $('.maxPriceSearchTxt').val() ;	
-					var minPriceSearchTxt = $('.minPriceSearchTxt').val() ;
-					var maxPriceSearchTxt = $('.maxPriceSearchTxt').val() ;	
+					var minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
+					var maxPriceSearchTxt = ($('.maxPriceSearchTxt').val() == null || $('.maxPriceSearchTxt').val() == "") ? 99999999 : $('.maxPriceSearchTxt').val() ;	
 					//var currentQryParam = $('.currentQueryParamsApply').val();
 					var currentQryParam = $('.currentPriceQueryParams').val();
 					var facetValue = $('.facetValue').val();
@@ -1200,8 +1196,7 @@ $(".filter-price").click(
 
 //Splits priceValue:Rsxxx-Rsyyy to [xxx, yyy]
 function splitPrice(value) {
-	var priceRange = null;
-	
+	var priceRange = null;	
 	if(value.includes("-"))
 	{
 		priceRange = value.split("-");		
