@@ -415,7 +415,11 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					}
 
 				}
-				return null;
+				else
+				{
+					return null;
+				}
+
 			}
 
 		}
