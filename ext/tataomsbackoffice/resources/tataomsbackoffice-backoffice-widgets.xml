@@ -235,11 +235,12 @@
 					slotId="perspectives" template="true">
 				</widget>
 				<!-- added for delivery tat -->
-				<widget widgetDefinitionId="com.techouts.widgets.deliverytat"  title="delivery Tat widget"
-					id="deliverytat" slotId="perspectives" template="true">
+				<widget widgetDefinitionId="com.techouts.widgets.deliverytat"
+					title="delivery Tat widget" id="deliverytat" slotId="perspectives"
+					template="true">
 
 				</widget>
-				
+
 				<!-- Tship vs SShip Assignment Report -->
 
 				<widget id="tship_sship_assignment_collapseble" title="Tship SSHIP Assignemnet collapseble Container"
@@ -249,9 +250,9 @@
 					<widget id="tship_ship_assignment_datepic" title="Tship SSHIP Assignment Date pickup"
 						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
 						slotId="center" template="false">
-						         
+
 					</widget>
-					<widget id="tship_sship_assignment_widget"
+					<widget id="tship_sship_assignment_widget_report"
 						widgetDefinitionId="com.techouts.widgets.tshipvssshipassignment"
 						slotId="bottom" title="tship vs ship Assignment report" template="false">
 						<virtual-sockets />
@@ -280,15 +281,49 @@
 					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
 					<virtual-sockets />
 				</widget>
-				<!-- Tship vs sship performance report -->
-					<widget id="tship_sship_perfomance_widget" title="Tship SSHIP Performance widget"
-						widgetDefinitionId="com.techouts.widgets.tshipvsshipperformancereport"
-						slotId="perspectives" template="false">
+				<!-- add for short url tracking info -->
+				<widget id="short_url_tracking_collapseble" title="Short url Tracking Report"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+
+					<widget id="shorturl_tracking_datepic" title="Short url tracking Date pickup"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
+						slotId="center" template="false">
+
 					</widget>
-					
-				
+					<widget id="shorturl_tracking_widget_report" widgetDefinitionId="com.techouts.widgets.shorturltrakingreport"
+						slotId="bottom" title="Short url tracking widget" template="false">
+						<virtual-sockets />
+
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Short Url Tracking Report
+
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+
+
+
 				<!-- Delivery addresses Request Report -->
-				<widget id="delivery_address_request_collapseble"  title="Delivery Addresses Request collapsable Container"
+				<widget id="delivery_address_request_collapseble" title="Delivery Addresses Request collapsable Container"
 					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
 					slotId="perspectives" template="true">
 
@@ -296,7 +331,7 @@
 						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
 						slotId="center" template="false">
 					</widget>
-					<widget id="delivery_address_request_widget" 
+					<widget id="delivery_address_request_widget_report"
 						widgetDefinitionId="com.techouts.widgets.deliveryaddressrequestsreport"
 						slotId="bottom" title="Delivery Address Request report" template="false">
 						<virtual-sockets />
@@ -325,8 +360,8 @@
 					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
 					<virtual-sockets />
 				</widget>
-				  <!-- Lp Override and Awb Edit Report -->
-          <widget id="lp_and_awbedit_collapseble" title="Lp override and Awb Edit Collapsible Container"
+				<!-- Lp Override and Awb Edit Report -->
+				<widget id="lp_and_awbedit_collapseble" title="Lp override and Awb Edit Collapsible Container"
 					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
 					slotId="perspectives" template="true">
 
@@ -334,7 +369,7 @@
 						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
 						slotId="center" template="false">
 					</widget>
-					<widget id="lp_and_awbedit_widget" 
+					<widget id="lp_and_awbedit_widget_report"
 						widgetDefinitionId="com.techouts.widgets.lpoverrideandawbeditreport"
 						slotId="bottom" title="Lp and Awb Edit  report" template="false">
 						<virtual-sockets />
@@ -362,9 +397,10 @@
 					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
 					<virtual-sockets />
 				</widget>
-				
+
 				<!-- Scheduled Delivery Tracking Report -->
-            <widget id="schdeuled_delivery_tracking_collapseble" title="Scheduled Delivery tracking Collapsible Container"
+				<widget id="schdeuled_delivery_tracking_collapseble"
+					title="Scheduled Delivery tracking Collapsible Container"
 					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
 					slotId="perspectives" template="true">
 
@@ -372,9 +408,10 @@
 						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
 						slotId="center" template="false">
 					</widget>
-					<widget id="schdeuled_delivery_tracking_widget"
+					<widget id="schdeuled_delivery_tracking_widget_report"
 						widgetDefinitionId="com.techouts.widgets.scheduleddeliverytrackingreport"
-						slotId="bottom" title="Scheduled Delivery tracking Report" template="false">
+						slotId="bottom" title="Scheduled Delivery tracking Report"
+						template="false">
 						<virtual-sockets />
 
 					</widget>
@@ -392,7 +429,8 @@
 					<setting key="bottomCaption" type="String"></setting>
 					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
 					<setting key="widgetStyleClass" type="String"></setting>
-					<setting key="topCaption" type="String">Scheduled Delivery Tracking  Report
+					<setting key="topCaption" type="String">Scheduled Delivery Tracking
+						Report
 					</setting>
 					<setting key="centerPanelInitiallyLocked" type="Boolean">false
 					</setting>
@@ -400,8 +438,8 @@
 					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
 					<virtual-sockets />
 				</widget>
-           <!-- Express Delivery Tracking Report -->
-            <widget id="express_delivery_tracking_collapseble" title="Express Delivery tracking Collapseble Container"
+				<!-- Express Delivery Tracking Report -->
+				<widget id="express_delivery_tracking_collapseble" title="Express Delivery tracking Collapseble Container"
 					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
 					slotId="perspectives" template="true">
 
@@ -409,9 +447,9 @@
 						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
 						slotId="center" template="false">
 					</widget>
-					<widget id="express_delivery_tracking_widget" 
-						widgetDefinitionId="com.techouts.widgets.edtrackingreport"
-						slotId="bottom" title="Express Delivery tracking Report" template="false">
+					<widget id="express_delivery_tracking_widget_report"
+						widgetDefinitionId="com.techouts.widgets.edtrackingreport" slotId="bottom"
+						title="Express Delivery tracking Report" template="false">
 						<virtual-sockets />
 
 					</widget>
@@ -429,7 +467,8 @@
 					<setting key="bottomCaption" type="String"></setting>
 					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
 					<setting key="widgetStyleClass" type="String"></setting>
-					<setting key="topCaption" type="String">Express Delivery Tracking  Report
+					<setting key="topCaption" type="String">Express Delivery Tracking
+						Report
 					</setting>
 					<setting key="centerPanelInitiallyLocked" type="Boolean">false
 					</setting>
@@ -437,7 +476,7 @@
 					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
 					<virtual-sockets />
 				</widget>
-				
+
 				<!-- add for SShip Delivery Breach -->
 
 				<widget widgetDefinitionId="com.techouts.widgets.sshipdeliverybreach"
@@ -452,7 +491,7 @@
 					<widget id="pincode_logistics_report_datepic"
 						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
 						slotId="center" template="false">
-
+						<setting key="shipmentType" type="Boolean">true</setting>
 					</widget>
 					<widget id="pincode_logistics_report_listview"
 						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.listwidget"
@@ -582,6 +621,9 @@
 	<widget-connection sourceWidgetId="pincode_logistics_report_datepic"
 		outputId="startendDates" targetWidgetId="pincode_logistics_report_listview"
 		inputId="startendDates" />
+	<widget-connection sourceWidgetId="pincode_logistics_report_datepic"
+		outputId="shipmentType" targetWidgetId="pincode_logistics_report_listview"
+		inputId="shipmentType" />
 
 	<widget-connection sourceWidgetId="tataBUCperspective"
 		outputId="possiblePerspectives" targetWidgetId="backofficePerspectiveChooser"
@@ -590,9 +632,21 @@
 		outputId="selectPerspective" targetWidgetId="tataBUCperspective"
 		inputId="selectPerspective" />
 
-	<!-- socket connection for reports -->
-	<widget-connection sourceWidgetId="pincode_logistics_report_datepic"
-		outputId="startendDates" targetWidgetId="tship_sship_assignment_widget"
+	<!-- socket connections for buc reports -->
+	<widget-connection sourceWidgetId="tship_ship_assignment_datepic"
+		outputId="startendDates" targetWidgetId="tship_sship_assignment_widget_report"
 		inputId="startendDates" />
+	<widget-connection targetWidgetId="lp_and_awbedit_widget_report"
+		outputId="startendDates" inputId="startendDates" sourceWidgetId="lp_and_awbedit_datepic" />
+	<widget-connection targetWidgetId="delivery_address_request_widget_report"
+		outputId="startendDates" inputId="startendDates" sourceWidgetId="delivery_address_request_datepic" />
+	<widget-connection targetWidgetId="schdeuled_delivery_tracking_widget_report"
+		outputId="startendDates" inputId="startendDates" sourceWidgetId="schdeuled_delivery_tracking_datepic" />
+	<widget-connection targetWidgetId="express_delivery_tracking_widget_report"
+		outputId="startendDates" inputId="startendDates" sourceWidgetId="express_delivery_tracking_datepic" />
+<widget-connection targetWidgetId="shorturl_tracking_widget_report"
+		outputId="startendDates" inputId="startendDates" sourceWidgetId="shorturl_tracking_datepic" />
+
+
 </widgets>
  

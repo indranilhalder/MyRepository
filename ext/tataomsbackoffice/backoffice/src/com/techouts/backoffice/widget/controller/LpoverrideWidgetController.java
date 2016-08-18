@@ -22,7 +22,7 @@ import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Messagebox;
 
 import com.hybris.oms.api.logistics.LogisticsFacade;
-import com.hybris.oms.api.orderlogistics.OrderLogisticsUpdateFacade;
+import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
 import com.hybris.oms.domain.logistics.dto.Logistics;
 import com.hybris.oms.domain.lpawb.dto.LPAWBSearch;
 import com.hybris.oms.domain.lpawb.dto.LPOverrideAWBEdit;
@@ -59,8 +59,8 @@ public class LpoverrideWidgetController
 
 
 
-	@WireVariable("orderLogisticsUpdateRestClient")
-	private OrderLogisticsUpdateFacade orderLogisticsUpdateFacade;
+	@WireVariable("orderLogisticsRestClient")
+	private OrderLogisticsFacade orderLogisticsUpdateFacade;
 
 	@WireVariable("logisticsRestClient")
 	private LogisticsFacade logisticsFacade;
@@ -130,7 +130,7 @@ public class LpoverrideWidgetController
 
 	/*
 	 * this method is used for active order statuses
-	 *
+	 * 
 	 * @return active order staueses
 	 */
 	private List<String> getOrderStatuses()

@@ -22,7 +22,7 @@ import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Messagebox;
 
 import com.hybris.oms.api.logistics.LogisticsFacade;
-import com.hybris.oms.api.orderlogistics.OrderLogisticsUpdateFacade;
+import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
 import com.hybris.oms.domain.logistics.dto.Logistics;
 import com.hybris.oms.domain.lpawb.dto.LPAWBSearch;
 import com.hybris.oms.domain.lpawb.dto.LPOverrideAWBEdit;
@@ -59,8 +59,8 @@ public class AwbEditWidgetController
 
 
 
-	@WireVariable("orderLogisticsUpdateRestClient")
-	private OrderLogisticsUpdateFacade orderLogisticsUpdateFacade;
+	@WireVariable("orderLogisticsRestClient")
+	private OrderLogisticsFacade orderLogisticsUpdateFacade;
 
 	@WireVariable("logisticsRestClient")
 	private LogisticsFacade logisticsFacade;
@@ -97,6 +97,7 @@ public class AwbEditWidgetController
 		return lpList;
 
 	}
+
 	/*
 	 * this method is used for when order statuses changed to return order statuses when he checked is return checkbox
 	 */
@@ -129,7 +130,7 @@ public class AwbEditWidgetController
 
 	/*
 	 * this method is used for active order statuses
-	 *
+	 * 
 	 * @return active order staueses
 	 */
 	private List<String> getOrderStatuses()
@@ -219,7 +220,7 @@ public class AwbEditWidgetController
 			lpAwbSearch.setTransactionType(transactionType);
 			lpAwbSearch.setIsReturn(isReturn);
 
-			//before doing next line get the response and check if response equals 50 then say the message user user search params records exceeds to more
+
 			listOfTransactions = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch).getTransactionInfo(); //if response
 
 		}
@@ -269,7 +270,7 @@ public class AwbEditWidgetController
 		lpOverrideEdit.setOrderLineInfo(listOfOrderLineInfo);
 		lpOverrideEdit.setIsReturn(isReturn);
 		lpOverrideEdit.setUserId(userService.getCurrentUser().getUid());
-		lpOverrideEdit.setRoleId(userService.getCurrentUser().getUid()); //logic has to be get used role hear
+		lpOverrideEdit.setRoleId(userService.getCurrentUser().getUid());
 		lpOverrideEdit.setTransactionType(transactionType);
 		final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
 				.updateOrderLogisticOrAwbNumber(lpOverrideEdit);

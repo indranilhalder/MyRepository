@@ -201,13 +201,13 @@
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="container_pincode_logistics_report">
      </explorer-tree:navigation-node>
-     <explorer-tree:navigation-node id="tship_sship_perfomance_widget"></explorer-tree:navigation-node>
-     <explorer-tree:navigation-node id="tship_sship_assignment_collapseble"></explorer-tree:navigation-node>
-     <explorer-tree:navigation-node id="sellerwise_nop_slavemapping"> </explorer-tree:navigation-node>
+         <explorer-tree:navigation-node id="tship_sship_assignment_collapseble"></explorer-tree:navigation-node>
+    
       <explorer-tree:navigation-node id="delivery_address_request_collapseble"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="lp_and_awbedit_collapseble"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="schdeuled_delivery_tracking_collapseble"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="express_delivery_tracking_collapseble"></explorer-tree:navigation-node>
+     <explorer-tree:navigation-node id="short_url_tracking_collapseble"></explorer-tree:navigation-node>
 	</explorer-tree:explorer-tree>
 </context>
 
