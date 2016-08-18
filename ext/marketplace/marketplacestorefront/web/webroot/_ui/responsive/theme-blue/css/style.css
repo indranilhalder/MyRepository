@@ -33323,6 +33323,12 @@ padding:10px;
 background:#fff;
 border: 1px solid #e6e6e6;
 }
+.cart.wrapper .product-block li.item > ul > li.freebie-delivery {
+    background: transparent !important;
+    border: none !important;
+    height: 10px !important;
+    margin: 0 !important;
+}
 body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery.collapsed{
 	height:35px;
 	overflow:hidden;
@@ -33424,7 +33430,7 @@ body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery {
     width: 100%;
     bottom: 0;
     background: #fff;
-    z-index: 5;
+    z-index: 11;
     left: 0;
 	}
 	body.page-cartPage .cart.wrapper .checkout-types li {

@@ -380,7 +380,7 @@ tr.d0 td {
 		            
 	            	<c:choose>
 	            		<c:when test="${entry.giveAway}"> <!-- For Freebie item delivery mode will no tbe displayed -->
-	            			<li id ="${entry.selectedSellerInformation.ussid}_li_${entry.giveAway}" class="delivery">
+	            			<li id ="${entry.selectedSellerInformation.ussid}_li_${entry.giveAway}" class="delivery freebie-delivery">
 	            				<ul id="${entry.selectedSellerInformation.ussid}_${entry.giveAway}">	
 						</c:when>
 						<c:otherwise>
