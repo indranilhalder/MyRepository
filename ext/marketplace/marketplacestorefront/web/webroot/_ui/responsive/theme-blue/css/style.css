@@ -33274,6 +33274,7 @@ top:134px;
 left:160px;
 padding:0;
 font-size:24px !important;
+width: 70% !important;
 }
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo ul.item-edit-details a.remove-entry-button>span{
 display:none;
@@ -33395,6 +33396,10 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery li{
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery ul {
     padding-left: 20px;
+}
+.off-bag span:last-child {
+    font-size: 24px !important;
+    display:block;
 }
 }
 body.page-cartPage .cart.wrapper .product-block.wishlist {
@@ -33623,6 +33628,10 @@ top:111px;
 body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.qty{
 top:140px;
 }
+.off-bag span:last-child {
+    font-size: 14px !important;
+    display: block;
+}
 }
 @media (max-width: 332px){
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo ul.item-edit-details a.move-to-wishlist-button.cart_move_wishlist{
@@ -33683,6 +33692,7 @@ body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.productIte
     margin: 0px auto;
     border: none;
     text-decoration: underline;
+    background: transparent;
 }
 .mybag-undo-form .undo-add-to-cart:before{
 background: rgba(0, 0, 0, 0) url("../images/sprite.png") no-repeat scroll -43px -52px;
@@ -33701,6 +33711,18 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.qty select{
 	body.page-cartPage header > .content{
 	padding-bottom:0px;
 	}
+}
+.off-bag {
+    font-size: 12px !important;
+    line-height: 14px;
+}
+.undo-text-wrapper{
+	position: absolute;
+    bottom: 0;
+    top: 0;
+    display: table;
+    margin: auto;
+    width: 100%;
 }
 /*Mybag css changes ends*/
 .cart.wrapper .right-block .block.bottom.order-details address, .checkout.wrapper .product-block.addresses li.item address,

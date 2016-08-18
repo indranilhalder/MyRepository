@@ -157,9 +157,11 @@ tr.d0 td {
 								<input type="hidden" name="productCodePost" value="${entry.product.code}" />
 								<input type="hidden" name="wishlistNamePost" value="N" />
 								<input type="hidden" name="ussid" value="${entry.selectedSellerInformation.ussid}" />
+								<div class="undo-text-wrapper">
 								<p>THIS PRODUCT HAS BEEN</p>
 								<h4>REMOVED</h4>
 								<button class="undo-add-to-cart">Undo</button>
+								</div>
 								</form:form>
 								</li>
 			              </ycommerce:testId>
