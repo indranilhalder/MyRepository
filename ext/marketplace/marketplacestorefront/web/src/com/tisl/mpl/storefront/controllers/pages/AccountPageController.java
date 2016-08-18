@@ -7143,7 +7143,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
 	{
 		boolean isNewOTPCreated;
-		LOG.debug("Generate new OTP For changing Shapping Address ");
+		LOG.debug("Generate new OTP For changing Delivery Address ");
 		isNewOTPCreated = mplDeliveryAddressFacade.generateNewOTP(orderCode);
 		return isNewOTPCreated;
 	}
@@ -7166,11 +7166,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			
 		mplDeliveryAddressFacade.generateNewOTP(orderCode);
-	   LOG.info("OTP Generate  AfterSchduleddliveyDate");
+	   LOG.info("OTP generate  after ReSchduledDliveryDate");
 		}
 		catch (Exception e)
 		{
-			LOG.error("Mapper Coppprer");
+			LOG.error("OTP Generate time exception raising ");
 		}
 		return ControllerConstants.Views.Pages.Account.OTPPopup;
 	}
