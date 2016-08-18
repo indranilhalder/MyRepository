@@ -44800,3 +44800,83 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 }
 }
 /*offer popup styling ends*/
+/*quickview swatch*/
+.quickview .product-content #variantForm > p {
+	    margin-top: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    height: 14px;
+    margin: 0 10px 10px 0;
+    padding: 0 10px 0 0;
+    text-transform: uppercase;
+}
+.quickview .product-content #variantForm .select-size {
+	padding: 0;
+    border: none;
+    height: auto;
+}
+.quickview .product-content #variantForm .select-size > span {
+	display: none;
+}
+.quickview .product-content #variantForm .select-size ul{
+	display: inline-block;
+    width: 100%;
+    max-height: none;
+}
+.quickview .product-content #variantForm .select-size ul > li{
+	    border: 1px solid #ccc;
+    float: left;
+    text-align: center;
+    min-width: 33px;
+    border-right: none;
+    width: auto;
+    padding: 0;
+    margin: 0;
+}
+.quickview .product-content #variantForm .select-size ul > li:last-child {
+	border-right: 1px solid #ccc;
+}
+.quickview .product-content #variantForm .select-size ul > li.strike {
+	background: #f2f2f2;
+	text-decoration: line-through;
+}
+.quickview .product-content #variantForm .select-size ul > li.strike a {
+		color: #b2b2b2;
+		cursor: not-allowed;
+}
+.quickview .product-content #variantForm .select-size ul > li a {
+	    height: auto;
+    line-height: normal;
+    display: block;
+    padding: 9px;
+    text-align: center;
+    cursor: pointer;
+}
+.quickview .product-content #variantForm .select-size.active ul {
+	border: none;
+}
+.quickview .product-content #variantForm .select-size li:hover {
+    background: #fff;
+    color: #000;
+}
+.quickview .product-content #variantForm .select-size li:hover a {
+	color: #000;
+}
+.quickview .product-content #variantForm .select-size ul > li.selected {
+    border-color: #a9143c;
+}
+
+.quickview .product-content #variantForm .select-size ul > li.selected + li {
+    border-left-color: #a9143c;
+}
+
+
+.quickview .product-content #variantForm .select-size ul > li:hover:not(.strike) {
+    border-color: #000;
+    transition: all 0.3s;
+}
+
+.quickview .product-content #variantForm .select-size ul > li:hover:not(.strike) + li {
+    border-left-color: #000;
+    transition: all 0.3s;
+}
