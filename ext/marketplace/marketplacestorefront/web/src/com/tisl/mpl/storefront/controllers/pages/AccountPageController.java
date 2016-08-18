@@ -7161,7 +7161,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						entryData);
 				if (reschList != null)
 				{
-					mplDeliveryAddressFacade.reScheduleddeliveryDate(reschList,orderCode);
+					mplDeliveryAddressFacade.reScheduleddeliveryDate(reschList);
 				}
 			}
 			if (StringUtils.isNotEmpty(orderCode))
