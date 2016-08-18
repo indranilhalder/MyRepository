@@ -1,29 +1,32 @@
 
 
 function openTrackOrder() {
-	// console.log("Open Track Order");
-	$("#TrackemailId").val(''); 
+	console.log("Open Track Order");
+	$("#TrackEmailId").val(''); 
 	$("#TrackOrderdId").val('');
-	$("#recaptchaChallangeAnswered").val('');
 	var height = $(window).height();
 	$(".wrapBG").css("height", height);
 	$(".wrapBG").fadeIn(100);
 	$("#showTrackOrder").fadeIn(300);
 	$("#showTrackOrder").css("z-index", "999999");
-	
-	
+		
 	$.ajax({
+		
 		url: ACC.config.encodedContextPath + "/login/captcha/widget/recaptchaForOrderTrack",
 		type: 'GET',
 		cache: false,
 		success: function (html)
 		{
-			
+			console.log("success Open Track Order");
 			if ($(html) != [])
 			{
 					$("#recaptchaWidgetForTracking").append(html);
 					$(".trackCaptchaError").empty();
 			}
+		},
+		error : function(result) {
+			console.log("error Open Track Order");
+			alert("Error while connecting to server .Please try after some time "+result);
 		}
 		});
 }
@@ -33,18 +36,28 @@ function closeTrackOrder() {
 	$("#showTrackOrder").fadeOut(200);
 	$(".wrapBG").fadeOut(100);
 	$("#recaptchaWidgetForTracking").html('');
-	$(".main_error").hide();
+	$(".error_text").hide();
+}
+
+function validateTrackOrderFormEmail()
+{ 	 var x =$("#TrackEmailId").val(); 
+	 if (/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(x))  
+	  {  
+		return true;
+	  } 
+	return false;
 }
 
 function viewOrderStatus(event) {
 	
 	event.preventDefault();
 	$(".error_text").hide();
-	if ($(".trackEmail").val().length <= "2") {
-		$(".emailError").fadeIn(100).text("Please enter correct email address");
+
+	if (!$("#TrackEmailId").val() || !validateTrackOrderFormEmail()) {
+		$(".emailError").fadeIn(100).text("Please enter correct email id");
 		return false;
-	} else if ($(".orderEmail").val().length <= "2") {
-		$(".orderError").fadeIn(100).text("Please enter correct order ID.");
+	} else if (!$("#TrackOrderdId").val() || $("#TrackOrderdId").val().length < "9") {
+		$(".orderError").fadeIn(100).text("Please enter correct order id.");
 		return false;
 	} else if(!$("#g-recaptcha-response").val()){
 		$('.trackCaptchaError').fadeIn(100).text("Please verify that you are not a robot!")
@@ -52,16 +65,15 @@ function viewOrderStatus(event) {
 	
 	} else {
 		// alert("Move to Order Tracking Page");
-
-		var orderCode = $('.orderEmail').val();
-		var emailId = $('.trackEmail').val();
+		var orderId =$("#TrackOrderdId").val();
+		var emailId = $("#TrackEmailId").val();
 		var captchaCode= $("#g-recaptcha-response").val();
 		$.ajax({
 			url : ACC.config.encodedContextPath
 					+ "/trackOrder/nonlogintrack",
 			type : 'GET',
 			data : {
-				orderCode : orderCode,
+				orderCode : orderId,
 				emailId : emailId,
 				captchaCode : captchaCode
 			},
@@ -72,16 +84,16 @@ function viewOrderStatus(event) {
 					$("#showTrackOrder").hide();
 					window.location.href = ACC.config.encodedContextPath
 							+ "/trackOrder/shortDetails/?orderCode="
-							+ orderCode;
+							+ orderId;
 				} else {
-					// alert("else");
+					
 					$(".main_error").show();
 					$("#showTrackOrder .main_error").text(result);
 				}
 
 			},
 			error : function(result) {
-				alert("Error while tracking the order. Kindly try after some time")
+				alert("Error while tracking the order. Kindly try after some time"+result)
 			}
 
 		});
