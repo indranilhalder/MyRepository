@@ -7164,8 +7164,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 					mplDeliveryAddressFacade.reScheduleddeliveryDate(reschList);
 				}
 			}
-			
-		mplDeliveryAddressFacade.generateNewOTP(orderCode);
+			if (StringUtils.isNotEmpty(orderCode))
+			{
+				mplDeliveryAddressFacade.generateNewOTP(orderCode);
+			}
 	   LOG.info("OTP generate  after ReSchduledDliveryDate");
 		}
 		catch (Exception e)
