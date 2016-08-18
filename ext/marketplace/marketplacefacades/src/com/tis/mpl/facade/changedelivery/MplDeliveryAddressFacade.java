@@ -72,7 +72,7 @@ public interface MplDeliveryAddressFacade
 
 	public String getPartialEncryptValue(String encryptSymbol, int encryptLength, String source);
 
-	public void reScheduleddeliveryDate(RescheduleDataList rescheduleDataList,String orderID);
+	public void reScheduleddeliveryDate(RescheduleDataList rescheduleDataList);
 
 	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList);
 
