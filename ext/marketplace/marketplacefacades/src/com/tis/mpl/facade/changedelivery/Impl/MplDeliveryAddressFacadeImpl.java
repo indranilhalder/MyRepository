@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -83,6 +84,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 	@Autowired
 	MplAddressValidator mplAddressValidator;
+	
+	@Autowired
+	SessionService sessionService;
 
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressFacadeImpl.class);
 
@@ -94,12 +98,12 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 
 	@Override
-	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress, String interfaceType)
+	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress, String interfaceType,List<TransactionSDDto> transactionSDDtos)
 	{
 		LOG.info("Inside  changeDeliveryRequestCallToOMS Method");
 		ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
 		ChangeDeliveryAddressResponseDto omsResponse = new ChangeDeliveryAddressResponseDto();
-		requestData = getChangeDeliveryRequestData(orderId, newDeliveryAddress, interfaceType);
+		requestData = getChangeDeliveryRequestData(orderId, newDeliveryAddress, interfaceType,transactionSDDtos);
 		try
 		{
 			omsResponse = customOmsOrderService.changeDeliveryRequestCallToOMS(requestData);
@@ -125,7 +129,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @return
 	 */
 	private ChangeDeliveryAddressDto getChangeDeliveryRequestData(String orderId,AddressModel newDeliveryAddress,
-			 String interfaceType)
+			 String interfaceType,List<TransactionSDDto> transactionSDDtos)
 	{
 		 ChangeDeliveryAddressDto requestData = new ChangeDeliveryAddressDto();
 		if (null != orderId)
@@ -175,6 +179,11 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					{
 						requestData.setPincode(newDeliveryAddress.getPostalcode());
 					}
+					if (null != newDeliveryAddress.getPostalcode())
+					{
+						requestData.setTransactionSDDtos(transactionSDDtos);
+					}
+					
 				}
 				requestData.setInterfaceType(interfaceType);
 			}
@@ -476,7 +485,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				isDiffrentAddress = mplAddressValidator.compareAddress(orderModel.getDeliveryAddress(), temproryAddressModel);
 				if (isDiffrentAddress)
 				{
-					valditionMsg = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel, MarketplaceFacadesConstants.CA);
+					List<TransactionSDDto> transactionEddDtoList=sessionService.getAttribute("transactionEddDtoList");
+					valditionMsg = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel, MarketplaceFacadesConstants.CA,transactionEddDtoList);
 					if (valditionMsg != null)
 					{
 						if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
@@ -514,7 +524,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				}
 				else
 				{
-					valditionMsg = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel, MarketplaceFacadesConstants.CU);
+					valditionMsg = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel, MarketplaceFacadesConstants.CU,null);
 					if (valditionMsg != null)
 					{
 						boolean isContactUpdated = false;
@@ -650,6 +660,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		{
 			 List<TransactionSDDto> transactionEddDtoList = new ArrayList<TransactionSDDto>();
 			 TransactionSDDto transactionEddDto = new TransactionSDDto();
+			 String timeSlotTo;
+			 String timeSlotFrom;
 			for (RescheduleData rescheduleData : reschList.getRescheduleDataList())
 			{
 				if (StringUtils.isNotEmpty(rescheduleData.getTransactionId()))
@@ -657,10 +669,14 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					LOG.info("PopulateData" + rescheduleData.getTransactionId());
 					transactionEddDto.setPickupDate(rescheduleData.getDate());
 					transactionEddDto.setTransactionID(rescheduleData.getTransactionId());
-					transactionEddDto.setTimeSlotTo(rescheduleData.getTime());
+					timeSlotTo=rescheduleData.getTime().split("-")[0];
+					timeSlotFrom=rescheduleData.getTime().split("-")[1];
+					transactionEddDto.setTimeSlotTo(timeSlotTo);
+					transactionEddDto.setTimeSlotFrom(timeSlotFrom);
 					transactionEddDtoList.add(transactionEddDto);
 				}
 			}
+			sessionService.setAttribute("transactionEddDtoList",transactionEddDtoList);
 
 		}
 	}
