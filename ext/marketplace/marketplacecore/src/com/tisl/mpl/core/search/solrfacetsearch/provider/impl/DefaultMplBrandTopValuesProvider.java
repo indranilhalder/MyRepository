@@ -22,8 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 {
-	@Autowired
-	private ConfigurationService configurationService;
+//	@Autowired
+//	private ConfigurationService configurationService;
 
 	//private int topFacetCount = 8;
 	private int topFacetCount = 0;
