@@ -367,8 +367,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					String mobileNumber = null;
 					if (!temproryAddressModel.getPostalcode().equalsIgnoreCase(deliveryAddressModel.getPostalcode()))
 					{
-						boolean isEligibleScheduledDelivery = false;
-						isEligibleScheduledDelivery = checkScheduledDeliveryForOrder(orderModel);
+						boolean isEligibleScheduledDelivery=checkScheduledDeliveryForOrder(orderModel);
 						if (isEligibleScheduledDelivery)
 						{
 
