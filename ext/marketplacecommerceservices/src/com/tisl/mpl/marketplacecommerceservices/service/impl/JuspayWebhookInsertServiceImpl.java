@@ -318,7 +318,7 @@ public class JuspayWebhookInsertServiceImpl implements JuspayWebhookInsertServic
 		}
 
 		//TISPRO-675
-		orderResponse.setEmiBank((String) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.EMIBANK) == null ? ""
+		orderResponse.setEmiBank(jobjectOrdrRes.get(MarketplacecommerceservicesConstants.EMIBANK) == null ? ""
 				: (String) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.EMIBANK));
 
 		orderResponse.setEmiTenure(jobjectOrdrRes.get(MarketplacecommerceservicesConstants.EMITENURE) == null ? "" : String

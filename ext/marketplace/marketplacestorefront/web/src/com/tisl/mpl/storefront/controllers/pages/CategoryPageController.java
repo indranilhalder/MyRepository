@@ -166,6 +166,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
 	{
+
 		categoryCode = categoryCode.toUpperCase();
 		String searchCode = new String(categoryCode);
 		//SEO: New pagination detection TISCR 340
@@ -281,7 +282,26 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				final String categoryName = category.getName();
 
+				/* (TPR-243) SEO Meta Tags and Titles for Landing Page *: starts */
 
+				//				final SeoContentModel seoContent = category.getSeoContent();
+				//				String metaKeywords = null;
+				//				String metaDescription = null;
+				//				String metaTitle = null;
+				//				if (null != seoContent)
+				//				{
+				//
+				//					metaKeywords = seoContent.getSeoMetaKeyword();
+				//					metaDescription = seoContent.getSeoMetaDescription();
+				//					metaTitle = seoContent.getSeoMetaTitle();
+				//				}
+				//				//metaKeywords = MetaSanitizerUtil.sanitizeKeywords(metaKeywords);
+				//				setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
+				//				updatePageTitle(model, metaTitle);
+
+				/* (TPR-243) SEO Meta Tags and Titles for Landing Page *: ends */
+
+				setUpMetaDataForContentPage(model, categoryLandingPage);
 				//model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 				//Collections.singletonList(new Breadcrumb("#", categoryName, LAST_LINK_CLASS)));
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
@@ -718,14 +738,58 @@ public class CategoryPageController extends AbstractCategoryPageController
 			model.addAttribute("metaRobots", "index,follow");
 		}
 
+		/* (TPR-243) SEO Meta Tags and Titles for Listing Page */
+
+		//		final SeoContentModel seoContent = category.getSeoContent();
+		//		String metaKeywords = null;
+		//		String metaDescription = null;
+		//		String metaTitle = null;
+		//		if (null != seoContent)
+		//		{
+		//
+		//			metaKeywords = seoContent.getSeoMetaKeyword();
+		//			metaDescription = seoContent.getSeoMetaDescription();
+		//			metaTitle = seoContent.getSeoMetaTitle();
+		//		}
+		//		//metaKeywords = MetaSanitizerUtil.sanitizeKeywords(metaKeywords);
+		//		//	metaDescription = MetaSanitizerUtil.sanitizeDescription(metaDescription);
+		//		setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
+		//		updatePageTitle(model, metaTitle);
+		//		final List<Breadcrumb> breadcrumbs = getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, searchPageData);
+		//		populateTealiumData(breadcrumbs, model);
+		//		return getViewPage(categorySearch.getCategoryPage());
 		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(category.getKeywords());
 		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(category.getDescription());
 		setUpMetaData(model, metaKeywords, metaDescription);
 		final List<Breadcrumb> breadcrumbs = getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, searchPageData);
 		populateTealiumData(breadcrumbs, model);
 		return getViewPage(categorySearch.getCategoryPage());
-
 	}
+
+	//	/* changes for metaData content - (TPR-243) SEO Meta Tags and Titles */
+	//	/**
+	//	 * @param model
+	//	 * @param metaKeywords
+	//	 * @param metaDescription
+	//	 * @param metaTitle
+	//	 */
+	//	private void setUpMetaDataForSeo(final Model model, final String metaKeywords, final String metaDescription,
+	//			final String metaTitle)
+	//	{
+	//		final List<MetaElementData> metadata = new LinkedList<>();
+	//		metadata.add(createMetaElement("keywords", metaKeywords));
+	//		metadata.add(createMetaElement("description", metaDescription));
+	//		metadata.add(createMetaElement("title", metaTitle));
+	//		model.addAttribute("metatags", metadata);
+	//
+	//	}
+	//
+	//	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
+	//	private void updatePageTitle(final Model model, final String metaTitle)
+	//	{
+	//		model.addAttribute("metaPageTitle", metaTitle);
+	//	}
+
 
 	/**
 	 * check if the request contains paging information
@@ -812,6 +876,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				searchPageData = getProductSearchFacade().categorySearch(categoryCode, searchState, pageableData);
 			}
 		}
+
 
 		public int getPage()
 		{

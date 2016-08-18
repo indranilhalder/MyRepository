@@ -16,7 +16,9 @@ import de.hybris.platform.solrfacetsearch.search.SearchResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Required;
@@ -74,6 +76,15 @@ public class MplSearchResponseSubCategoriesPopulator<FACET_SEARCH_CONFIG_TYPE, I
 			final String categorySelected = getCategoryFilter(solrSearchQueryData);
 
 			boolean sortByRanking = false;
+			//final Map<String, Long> categoryCounterMap = new HashMap<String, Long>();
+			//long counter = 0;
+			final Map<String, Long> catL1CounterMap = new HashMap<String, Long>();
+			final Map<String, Long> catL2CounterMap = new HashMap<String, Long>();
+			final Map<String, Long> catL3CounterMap = new HashMap<String, Long>();
+			long counterL1 = 0;
+			long counterL2 = 0;
+			long counterL3 = 0;
+
 			for (final FacetValue facetValue : salesHierarchyFacets)
 			{
 				final String currentFacetName = facetValue.getName();
@@ -86,6 +97,29 @@ public class MplSearchResponseSubCategoriesPopulator<FACET_SEARCH_CONFIG_TYPE, I
 					{
 						constructDeptHierarchy = false;
 					}
+				}
+
+				for (final String facetForCount : currentFacetName.split("\\|"))
+				{
+					if (!facetForCount.isEmpty() && facetForCount.contains(MplConstants.LEVEL_ONE)
+							&& !catL1CounterMap.containsKey(facetForCount))
+					{
+						catL1CounterMap.put(facetForCount, Long.valueOf(counterL1++));
+					}
+					else if (!facetForCount.isEmpty() && facetForCount.contains(":L2:") && !catL2CounterMap.containsKey(facetForCount))
+					{
+						catL2CounterMap.put(facetForCount, Long.valueOf(counterL2++));
+					}
+					else if (!facetForCount.isEmpty() && facetForCount.contains(MplConstants.LEVEL_THREE)
+							&& !catL3CounterMap.containsKey(facetForCount))
+					{
+						catL3CounterMap.put(facetForCount, Long.valueOf(counterL3++));
+					}
+					//					if (!facetForCount.isEmpty() && !categoryCounterMap.containsKey(facetForCount))
+					//					{
+					//						categoryCounterMap.put(facetForCount, Long.valueOf(counter++));
+					//					}
+
 				}
 
 				if (currentFacetName.contains(MplConstants.LEVEL_THREE) && currentFacetName.contains(MplConstants.PIPE)
@@ -101,6 +135,24 @@ public class MplSearchResponseSubCategoriesPopulator<FACET_SEARCH_CONFIG_TYPE, I
 						{
 							final StringBuffer facetWithCount = new StringBuffer(MplConstants.EMPTY_STRING);
 							facetWithCount.append(facet).append(MplConstants.COLON).append(String.valueOf(facetValue.getCount()));
+
+							if (facet.contains(MplConstants.LEVEL_ONE) && catL1CounterMap.get(facet) != null)
+							{
+								facetWithCount.append(MplConstants.COLON).append(catL1CounterMap.get(facet));
+							}
+							else if (facet.contains(":L2:") && catL2CounterMap.get(facet) != null)
+							{
+								facetWithCount.append(MplConstants.COLON).append(catL2CounterMap.get(facet));
+							}
+							else if (facet.contains(MplConstants.LEVEL_THREE) && catL3CounterMap.get(facet) != null)
+							{
+								facetWithCount.append(MplConstants.COLON).append(catL3CounterMap.get(facet));
+							}
+
+							//							if (categoryCounterMap.get(facet) != null)
+							//							{
+							//								facetWithCount.append(MplConstants.COLON).append(categoryCounterMap.get(facet));
+							//							}
 							departmentHierarchyWithCount.append(MplConstants.PIPE).append(facetWithCount);
 							if (facet.contains(MplConstants.LEVEL_ONE))
 							{

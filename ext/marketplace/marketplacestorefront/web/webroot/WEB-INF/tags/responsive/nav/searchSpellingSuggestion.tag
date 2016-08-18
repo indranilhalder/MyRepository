@@ -6,9 +6,9 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme" %>
 
-<c:if test="${not empty spellingSuggestion}">
-	<div class="searchSpellingSuggestionPrompt">
-		<c:url value="${spellingSuggestion.query.url}" var="spellingSuggestionQueryUrl"/>
-		<spring:theme code="search.spellingSuggestion.prompt" />&nbsp;<span class="quote">"</span><a href="${spellingSuggestionQueryUrl}">${spellingSuggestion.suggestion}</a><span class="quote">"</span>
-	</div>
-</c:if>
+<c:if test="${not empty spellingSuggestion && not empty searchPageData.results && searchPageData.spellingSuggestion ne searchPageData.freeTextSearch}">
+  	<div class="searchSpellingSuggestionPrompt">
+  		<c:url value="${spellingSuggestion.query.url}" var="spellingSuggestionQueryUrl"/>		
+ 	<spring:theme code="search.spellingSuggestion.prompt" />&nbsp;<span class="quote">"</span><a href="${spellingSuggestionQueryUrl}">${spellingSearchterm}</a><span class="quote">"</span>
+  	</div>
+  </c:if>

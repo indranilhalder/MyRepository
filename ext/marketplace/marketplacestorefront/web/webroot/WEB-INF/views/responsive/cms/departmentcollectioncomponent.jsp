@@ -6,6 +6,7 @@
 
 	<div class="toggle"><span><spring:theme code="navigation.department.shopBy"/></span>
 	<span><spring:theme code="navigation.department.shopByDepartment"/></span></div>
+	<span id="mobile-menu-toggle" class="mainli"></span>
 
 			<ul>
 				
@@ -23,6 +24,7 @@
 					<input type="hidden" id="for_ia_hot_dropdown_name" value="${department.name}">
 					<input type="hidden" id="for_ia_hot_dropdown_code" value="${department.code}">  
 					</div>
+					<span id="mobile-menu-toggle" class=""></span>
 
 					
 					<ul class="words dept${department.code}">

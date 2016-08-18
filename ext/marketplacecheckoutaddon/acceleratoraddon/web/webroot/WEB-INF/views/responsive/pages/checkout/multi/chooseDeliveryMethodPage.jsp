@@ -17,13 +17,13 @@
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/desktop/nav" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address"%>
-
+<%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%--  <c:set var = "addressFlag" scope="session" value = "${addressFlag}" />  --%>
 
 
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
-
+<cart:tealiumCartParameters/>
 	<%-- <div class="checkout-headline">
 		<spring:theme code="checkout.multi.secure.checkout" text="Secure Checkout"></spring:theme>
 	</div> --%>
