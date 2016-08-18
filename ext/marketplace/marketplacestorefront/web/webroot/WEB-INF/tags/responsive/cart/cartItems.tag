@@ -138,7 +138,7 @@ tr.d0 td {
 		                
 		                <c:if test="${not empty entry.product.size}">
 		                 <p class="size"><ycommerce:testId code="cart_product_size">
-											<spring:theme code="product.variant.size"/>&nbsp;${entry.product.size}
+											<spring:theme code="product.variant.size"/>:&nbsp;${entry.product.size}
 										</ycommerce:testId>
 										</p>
 						</c:if>

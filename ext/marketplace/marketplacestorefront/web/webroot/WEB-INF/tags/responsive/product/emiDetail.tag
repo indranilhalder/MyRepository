@@ -6,7 +6,7 @@
 
 
 <!-- -EMI changes -->
-<div class="Emi">
+<div class="Emi Emi_wrapper">
 <p onclick="" ><!-- id="emiStickerId" class="emi" style="display:none; width: 80%;" -->
 	<spring:theme code="marketplace.emiavailable" />
 	<%--  <a type="button" name="yes" id="prodEMI"
