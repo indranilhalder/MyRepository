@@ -33588,10 +33588,15 @@ body.page-cartPage .MyBagHeadingDesktop span#mybagcnt:after{
 	content:")";
 }
 .cartPromotions{
-	margin:5px auto;
+	margin:7px auto;
+	position: relative;
+    top: 5px;
+}
+.cartPromotions div {
+    margin: 5px 0 10px;
 }
 .cartPromotions .promotions{
-	margin: 15px auto 8px;
+	margin: 8px auto 8px;
 }
 body.page-cartPage .cart-top-block{
 	padding-top:0;
