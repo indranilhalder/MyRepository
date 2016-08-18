@@ -7085,12 +7085,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 									}
 								}
 							}
-							fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
-							model.addAttribute("orderDetail", orderDetail);
-							model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
-							model.addAttribute("txnScheduleData", scheduledDeliveryData);
-							return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 						}
+						fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
+						model.addAttribute("orderDetail", orderDetail);
+						model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
+						model.addAttribute("txnScheduleData", scheduledDeliveryData);
+						return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 					}
 					else
 					{
