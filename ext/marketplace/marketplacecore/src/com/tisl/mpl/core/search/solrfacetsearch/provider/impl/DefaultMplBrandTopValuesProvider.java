@@ -4,7 +4,7 @@
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 import de.hybris.platform.commerceservices.search.solrfacetsearch.provider.TopValuesProvider;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
+//import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.search.FacetValue;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 
 
 
