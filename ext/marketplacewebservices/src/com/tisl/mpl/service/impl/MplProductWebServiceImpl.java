@@ -1585,17 +1585,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						}
 					}
 					//TPR-797
-					if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
+					if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()) && productData.getAllVariantsId().size() > 1)
 					{
-						if (productData.getAllVariantsId().size() > 1)
+						productData.getAllVariantsId().remove(productData.getCode());
+						for (final String variants : productData.getAllVariantsId())
 						{
-							productData.getAllVariantsId().remove(productData.getCode());
-							for (final String variants : productData.getAllVariantsId())
+							if (variants.equalsIgnoreCase(variantData.getCode()))
 							{
-								if (variants.equalsIgnoreCase(variantData.getCode()))
-								{
-									sizeLinkData.setIsAvailable(true);
-								}
+								sizeLinkData.setIsAvailable(true);
 							}
 						}
 					}
