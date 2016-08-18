@@ -1945,17 +1945,21 @@ $(document).ready(function() {
 			windowWidth : $(window).width()
 		});
 	});
-	 $(window).on('load resize',function(){	
-	if(($(window).width() > 767) && ($(window).width() < 1025)) {
-		var img_height = $(".product-info .product-image-container.device").height();
-		var detail_height = $(".product-info .product-detail").height();
-		if (img_height < detail_height ){
-		var diff = detail_height - img_height;
-		$(".product-info>div.tabs-block").css("margin-top","-"+diff+"px");
-		}
-		
-	}
-	 });
+	var pdpStyle;
+		 $(window).on('load resize',function(){	
+			clearTimeout(pdpStyle);
+			 pdpStyle = setTimeout(function(){
+				if(($(window).width() > 767) && ($(window).width() < 1025)) {
+					var img_height = $(".product-info .product-image-container.device").height();
+					var detail_height = $(".product-info .product-detail").height();
+					if (img_height < detail_height ){
+					var diff = detail_height - img_height;
+					$(".product-info>div.tabs-block").css("margin-top","-"+diff+"px");
+					}
+					
+				}
+			},250)
+		 });
 });
 
 $(document).ajaxComplete(function(){

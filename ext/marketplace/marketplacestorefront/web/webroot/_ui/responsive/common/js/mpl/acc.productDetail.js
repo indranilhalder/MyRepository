@@ -2668,23 +2668,35 @@ function loadDefaultWishListName_SizeGuide() {
 	} 
 /*TPR-630*/
 	$(document).ready(function(){
-		$(".Emi > p").on("click",function(){
+		$(".Emi > p").on("click",function(e){
+			e.stopPropagation();
 			if(!$(this).hasClass("active") && $(window).width() > 790){
 				$(this).addClass("active");
 				openPopForBankEMI();
 			}
 		});
-		$(".Emi > p").on("click",".Emi .modal-content .Close",function(){
-			$(".Emi > p").removeClass("active");
+		$(".Emi .modal-content .Close").on("click",function(e){
+			e.stopPropagation();
+			$(".Emi > p").removeClass("active mobile");
+			$(".emi-overlay").remove();
 			});
-		$(".Emi > #EMImodal-content").on("click",function(){
+		$(".Emi > #EMImodal-content").on("click",function(e){
+			e.stopPropagation();
 			if($(window).width() > 790){
 				$(".Emi > p").addClass("active")
 			}
 		});
-		$(".Emi > #EMImodal-content").on("click",".Emi .modal-content .Close",function(){
+		/*$(".Emi > #EMImodal-content").on("click",".Emi .modal-content .Close",function(){
 			$(".Emi > p").removeClass("active")
-			});
+			});*/
+		$(document).on("click", function(e){
+			//console.log($(e.currentTarget).attr('class'))
+			if(!$(e.currentTarget).parents(".Emi").hasClass("Emi_wrapper")) {
+				$(".Emi > p").removeClass("active")
+			} else {
+				$(".Emi > p").addClass("active")
+			}
+		});
 		
 		$(".Emi > p").on("click",function(){
 			if($(window).width() <= 790){

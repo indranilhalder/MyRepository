@@ -15,6 +15,11 @@
 	<c:set var="pageFacets" value="${pageFacets}&departmentHierarchy" />
 </c:if> 
 
+<c:forEach items="${pageData.breadcrumbs}" var="breadcrumb">
+   <c:if test="${breadcrumb.facetName == 'priceValue'}">    
+		<c:set var="removeQueryUrlForPriceValue" value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}" scope="page" />
+   </c:if>
+</c:forEach>
 
 <c:forEach items="${pageData.facets}" var="facet">
 	<c:choose>
@@ -24,13 +29,13 @@
 		
 		<c:otherwise>
 			<c:choose>
-				<c:when test="${(fn:length(searchCategory) > 5 || fn:length(categoryCode) > 5 && !fn:contains(categoryCode, 'mbh'))}">
-
-					<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData=""/>
+				<c:when test="${(fn:length(searchCategory) > 5 || fn:length(categoryCode) > 5 && !fn:contains(categoryCode, 'mbh'))}">		   			     
+					<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 			   	</c:when>
 		   		<c:otherwise>
 		   			<c:if test="${facet.genericFilter}">
-				 		<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData=""/>
+		   			    <%-- <input type="hidden" name="removeQueryUrlForPriceValue" value="${removeQueryUrlForPriceValue}" /> --%>		   			     
+				 		<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 					</c:if> 
 		   		</c:otherwise>
 			 </c:choose>  
