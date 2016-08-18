@@ -44209,7 +44209,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 .OtherSellers .Padd .InfoWrap .Content > div.Buying form {
 	display: inline-block;
 	width: 49%;
-	float: right;
+	float: left;
 	vertical-align: top;
 }
 .OtherSellers .Padd .InfoWrap .Content > div.Buying form#wish {
@@ -44310,7 +44310,7 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     content: "\e602";
     font-size: 18px;
     color: #A9143C;
-  margin-right: 5px;
+  margin-right: 50px;
    position: relative;
    font-weight: bold;
 }
