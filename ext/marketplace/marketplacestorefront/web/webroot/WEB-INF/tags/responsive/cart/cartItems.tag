@@ -138,7 +138,7 @@ tr.d0 td {
 		                
 		                <c:if test="${not empty entry.product.size}">
 		                 <p class="size"><ycommerce:testId code="cart_product_size">
-											<spring:theme code="product.variant.size"/>&nbsp;${entry.product.size}
+											<spring:theme code="product.variant.size"/>:&nbsp;${entry.product.size}
 										</ycommerce:testId>
 										</p>
 						</c:if>
@@ -157,9 +157,11 @@ tr.d0 td {
 								<input type="hidden" name="productCodePost" value="${entry.product.code}" />
 								<input type="hidden" name="wishlistNamePost" value="N" />
 								<input type="hidden" name="ussid" value="${entry.selectedSellerInformation.ussid}" />
+								<div class="undo-text-wrapper">
 								<p>THIS PRODUCT HAS BEEN</p>
 								<h4>REMOVED</h4>
 								<button class="undo-add-to-cart">Undo</button>
+								</div>
 								</form:form>
 								</li>
 			              </ycommerce:testId>
@@ -378,7 +380,7 @@ tr.d0 td {
 		            
 	            	<c:choose>
 	            		<c:when test="${entry.giveAway}"> <!-- For Freebie item delivery mode will no tbe displayed -->
-	            			<li id ="${entry.selectedSellerInformation.ussid}_li_${entry.giveAway}" class="delivery">
+	            			<li id ="${entry.selectedSellerInformation.ussid}_li_${entry.giveAway}" class="delivery freebie-delivery">
 	            				<ul id="${entry.selectedSellerInformation.ussid}_${entry.giveAway}">	
 						</c:when>
 						<c:otherwise>

@@ -1,6 +1,7 @@
 <%@ tag body-content="empty" trimDirectiveWhitespaces="true" %>
 <%@ attribute name="facetData" required="true" type="de.hybris.platform.commerceservices.search.facetdata.FacetData" %>
 <%@ attribute name="pageFacetData" required="true" type="String" %>
+<%@ attribute name="removeQueryUrlForPriceValue" required="true" type="String" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -577,7 +578,11 @@ function navigateToPage(queryString,textString)
 							</form>
 		</c:if>
 		
-		<c:if test="${facetData.code eq 'price'}">	
+		<c:if test="${facetData.code eq 'price'}">
+		    <div class="priceBucketExpand" style="display:none">		    				
+				<c:url value="${removeQueryUrlForPriceValue}" var="removeQueryUrl"/>
+				<a href="${removeQueryUrl}" ><span>Any Price</span></a>
+			</div>		  
 			<h4 class="customPriceRange">Price Range</h4>
 							<input type="hidden" name="currentPriceQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentPriceQueryParams"/>					  
 							 <form action="" method="get" id="customPriceFilter">

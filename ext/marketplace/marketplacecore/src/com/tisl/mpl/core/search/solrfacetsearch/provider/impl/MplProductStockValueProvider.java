@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Required;
@@ -107,10 +108,13 @@ public class MplProductStockValueProvider extends AbstractPropertyFieldValueProv
 				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
 						&& pcmSizeVariantModel.getSize() != null)
 				{
+					int stockValue = -1;
+					if (CollectionUtils.isNotEmpty(buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode())))
+					{
 
-					final int stockValue = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getAvailable()
-							.intValue();
-
+						stockValue = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getAvailable()
+								.intValue();
+					}
 					final JSONObject sizeStockJson = new JSONObject();
 					//	final StockLevelStatus stockLevelStatus = StockLevelStatus.OUTOFSTOCK;
 					String stockStatus = "";

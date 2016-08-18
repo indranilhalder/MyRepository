@@ -620,8 +620,10 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
 	if(loggedIn == 'false') {
-		$(".wishAddLogin").css("display","inline-block");
-		$(".wishAddLogin").fadeOut(3000);
+		$(".wishAddLogin").addClass("active");
+		setTimeout(function(){
+			$(".wishAddLogin").removeClass("active")
+		},3000)
 	}
 	else {
 	
@@ -633,16 +635,20 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 			success : function(data) {
 				if (data == true) {
 					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
-					var msg=$('#wishlistSuccess').text();
-					$('#addedMessage').show();
-					$('#addedMessage').html(msg);
-					$(".wishAddSucess").css("display","inline-block");
-					$(".wishAddSucess").fadeOut(3000);
+					//var msg=$('#wishlistSuccess').text();
+					//$('#addedMessage').show();
+					//$('#addedMessage').html(msg);
+					$(".wishAddSucess").addClass("active");
+					setTimeout(function(){
+						$(".wishAddSucess").removeClass("active")
+					},3000)
+					$("#add_to_wishlist").attr("disabled",true);
+					$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
 					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
 					/*setTimeout(function() {
 						  $("#addedMessage").fadeOut().empty();
 						}, 1500);*/
-					$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
+					//$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
 					populateMyWishlistFlyOut(wishName);
 					
 					//For MSD
@@ -684,6 +690,12 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 				//	$('#myModal').modal('hide');
 				//	
 				}
+				else{
+					$(".wishAlreadyAdded").addClass("active");
+					setTimeout(function(){
+						$(".wishAlreadyAdded").removeClass("active")
+					},3000)
+				}
 			},
 		});
 	
@@ -693,7 +705,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 		setTimeout(function() {
 			$('a.wishlist#wishlist').popover('hide');
 			$('input.wishlist#add_to_wishlist').popover('hide');
-			}, 1500);
+			}, 0);
 	}
 }
 
@@ -1303,11 +1315,13 @@ $( document ).ready(function() {
 	$("#outOfStockId").hide();
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
+	//alert(variantCodes);
 	var variantCodesJson = "";
 	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
 		variantCodes = variantCodes.split(",");
 		variantCodesJson = JSON.stringify(variantCodes);
 	}
+	//alert(variantCodesJson);
 	//var code = productCode+","+variantCodes;
 	//alert("----"+productCode);
 	
@@ -1332,10 +1346,8 @@ $( document ).ready(function() {
 			var stockInfo = data['availibility'];
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
-				
 				$("#variant li a").each(function(){
 					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
-						
 					$(this).removeAttr("href");
 					$(this).parent().addClass('strike');
 				//$(this).parent().css("border-color","gray");
@@ -1427,8 +1439,10 @@ $( document ).ready(function() {
 						
 					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("#variant option").length == 0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
+						
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
+						$("#allVariantOutOfStock").show();
 						$("#buyNowButton").hide();
 						//}
 						$("#otherSellerInfoId").hide();
@@ -1448,6 +1462,8 @@ $( document ).ready(function() {
 							$("#addToCartButton").hide();
 							$("#buyNowButton").hide();
 							$("#outOfStockId").show();
+							$("#allVariantOutOfStock").show();
+							
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
@@ -1534,7 +1550,7 @@ $( document ).ready(function() {
 							"color": "gray"
 					});
 						$(this).removeAttr("data-producturl");
-						
+						$(this).parent().addClass('strike');
 						}
 				});
 			});	
@@ -2610,6 +2626,11 @@ function loadDefaultWishListName_SizeGuide() {
 	}
 	$(document).on('click','#buyNow .js-add-to-cart',function(event){
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
+		if(!$("#variant li ").hasClass("selected")){
+			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+			$("#addToCartFormTitle").show();
+	 	    return false;
+	 }
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
 
@@ -2657,23 +2678,35 @@ function loadDefaultWishListName_SizeGuide() {
 	} 
 /*TPR-630*/
 	$(document).ready(function(){
-		$(".Emi > p").on("click",function(){
+		$(".Emi > p").on("click",function(e){
+			e.stopPropagation();
 			if(!$(this).hasClass("active") && $(window).width() > 790){
 				$(this).addClass("active");
 				openPopForBankEMI();
 			}
 		});
-		$(".Emi > p").on("click",".Emi .modal-content .Close",function(){
-			$(".Emi > p").removeClass("active");
+		$(".Emi .modal-content .Close").on("click",function(e){
+			e.stopPropagation();
+			$(".Emi > p").removeClass("active mobile");
+			$(".emi-overlay").remove();
 			});
-		$(".Emi > #EMImodal-content").on("click",function(){
+		$(".Emi > #EMImodal-content").on("click",function(e){
+			e.stopPropagation();
 			if($(window).width() > 790){
 				$(".Emi > p").addClass("active")
 			}
 		});
-		$(".Emi > #EMImodal-content").on("click",".Emi .modal-content .Close",function(){
+		/*$(".Emi > #EMImodal-content").on("click",".Emi .modal-content .Close",function(){
 			$(".Emi > p").removeClass("active")
-			});
+			});*/
+		$(document).on("click", function(e){
+			//console.log($(e.currentTarget).attr('class'))
+			if(!$(e.currentTarget).parents(".Emi").hasClass("Emi_wrapper")) {
+				$(".Emi > p").removeClass("active")
+			} else {
+				$(".Emi > p").addClass("active")
+			}
+		});
 		
 		$(".Emi > p").on("click",function(){
 			if($(window).width() <= 790){
@@ -2728,6 +2761,8 @@ function loadDefaultWishListName_SizeGuide() {
 			success : function(data) {
 			if (data == true) {
 				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
+				$("#add_to_wishlist").attr("disabled",true);
+				$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
 			}
 			
 			},

@@ -183,7 +183,7 @@
 	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm" >
     <p style="margin-top:15px;"><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
 		<div class="select-size">
-		<c:choose>
+		 <c:choose>
 		    <c:when test="${selectedSize!=null}"> 
 			<span class="selected quickViewSelect">${product.size}</span>
 			</c:when>
@@ -191,11 +191,11 @@
 			<span class="selected quickViewSelect"><spring:theme
 							code="text.select.size" /></span>
 			</c:otherwise>
-			</c:choose>
+			</c:choose> 
 				<ul label="sizes">
-				 <!-- <li><a href="#" class="js-reference-item cboxElement">select size</a></li> -->
-				 <li><spring:theme
-							code="text.select.size" /></li>
+				 <li style="display:none;"><a href="#" class="js-reference-item cboxElement">select size</a></li>
+				 <%-- <li><spring:theme
+							code="text.select.size" /></li> --%>
 				<c:forEach items="${product.variantOptions}" var="variantOption">
 
 					<c:url value="${variantOption.url}/quickView" var="variantUrl" />
@@ -209,7 +209,7 @@
 							            
 										<c:choose>
 											<c:when test="${(product.code eq variantOption.code && selectedSize !=null)}">
-											<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+											<li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
 											</c:when>
 											<c:otherwise>   
 												<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
