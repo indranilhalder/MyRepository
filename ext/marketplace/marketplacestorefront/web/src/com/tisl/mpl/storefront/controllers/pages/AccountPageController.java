@@ -7113,11 +7113,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 			  	 model.addAttribute("stringMessage",MessageConstants.UPDATED);
 				 return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
-				
 			}
 
 		}
-		return errorMsg;
+ 		 model.addAttribute("stringMessage",errorMsg);
+		 return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 	}
 
 
@@ -7135,7 +7135,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 
 	   model.addAttribute("stringMessage", validateOTPMesg);
-		return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
+		return ControllerConstants.Views.Pages.Account.OTPPopup;
 	}
 
 	@RequestMapping(value = RequestMappingUrlConstants.NEW_OTP_GENERATE, method = RequestMethod.GET)
