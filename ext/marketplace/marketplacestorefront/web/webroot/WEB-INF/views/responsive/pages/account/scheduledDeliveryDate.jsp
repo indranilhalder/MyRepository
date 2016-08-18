@@ -1,4 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<c:if test="${not empty stringMessage}">
+${stringMessage}
+</c:if>
+
+<c:if test="${empty stringMessage}">
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ page trimDirectiveWhitespaces="true"%>
@@ -131,6 +137,8 @@
 																					<input type="radio" name="timeRadio"
 																						class="scheduleTimeRadio" disabled="disabled"
 																						id="${dateSlotId}${timeSlotId}time"
+																						data-date="${txnDateData.key}"
+																						data-txnId="${txnScheduleData.key}"
 																						value="${txnTimeData}"> ${txnTimeData}
 																				</div>
 
@@ -183,17 +191,28 @@
 	position: absolute;
 }
 </style>
-
 <script>
+
+
+	
+	
+
+
+
  $(document).ready(function() {
+	 
+	 $(".close,.wrapBG").click(function() {
+			$("#changeAddressPopup").hide();
+			$(".wrapBG").hide();
+		});
+	 
+	 
       $(".scheduleDateRadio").click(function(){
       
        
-       //alert("hi");
        $(".scheduleDateRadio").next().next().addClass("display");
        
        var elem = $(this).next().next();
-        //alert(elem.attr('class'));
        if(elem.attr('id') == 1){
     	   $("#"+elem.attr('id')+" .scheduleTimeRadio").prop('disabled',false);
 
@@ -205,7 +224,6 @@
          
         else if(elem.attr('id') == 2){
         	$("#"+elem.attr('id')+" .scheduleTimeRadio").prop('disabled',false);
-        	//alert("#"+elem.children().next().next().attr('id')+"time");
         	$("#"+elem.children().next().attr('id')+"time").prop('checked','checked');
           elem.css({'left':'-76px','position':'relative'});
          
@@ -219,6 +237,7 @@
         
        
       });
+      
       $("#reschedule").click(function(){ 
     	  var rescheduleData = {};
     	  var json='{"rescheduleDataList" : [';
@@ -230,8 +249,6 @@
     	   				var selectedDate = $(this).attr('data-date');
     	   				var selectedTxnId = $(this).attr('data-txnId');
     	   				var selectedTime = $(this).val();
-
-   						alert(selectedTime+"date is "+selectedDate+" txn id is "+ selectedTxnId);
    						
    						rescheduleData['transactionId'] = selectedTxnId;
    						
@@ -249,7 +266,6 @@
     	  json = json.substring(0, json.length-1);
     	                        }
     	  json=json.concat(']}');
-  			console.log(rescheduleData);
   			var orderCode = $('#scheduledDeliveryOrderCode').val();
   			var orderId=orderCode;
   			debugger;
@@ -259,12 +275,14 @@
  				data : "entryData=" + json,
  				contentType: "html/text",
  				success : function(response) {
- 					$("#changeAddressPopup").empty().html(result).show();
+ 					$("#changeAddressPopup").empty().html(response).show();
  				},
-  			 failure:function(data){
+  			 failure:function(data){  				 
   			 }
  			}); 
   			});
  });
  
  </script>
+ 
+ </c:if>
