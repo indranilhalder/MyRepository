@@ -346,59 +346,42 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		 ScheduledDeliveryData scheduledDeliveryData = new ScheduledDeliveryData();
 		try
 		{
-			if (addressData != null)
+			TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
+			OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+			CustomerModel customer = (CustomerModel) orderModel.getUser();
+			temproryAddressModel.setEmail(customer.getOriginalUid());
+			String customerId = customer.getUid();
+			AddressModel deliveryAddressModel = orderModel.getDeliveryAddress();
+
+			boolean isDifferentAddress = mplAddressValidator.compareAddress(deliveryAddressModel, temproryAddressModel);
+			boolean isDiffrentContact = mplAddressValidator.compareContactDetails(deliveryAddressModel, temproryAddressModel);
+
+			if (isDifferentAddress || isDiffrentContact)
 			{
-
-				 TemproryAddressModel temproryAddressModel = tempAddressReverseConverter.convert(addressData);
-				 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-				 CustomerModel customer = (CustomerModel) orderModel.getUser();
-				 temproryAddressModel.setEmail(customer.getOriginalUid());
-				 String customerId = customer.getUid();
-				 AddressModel deliveryAddressModel = orderModel.getDeliveryAddress();
-				 
-				boolean isDifferentAddress = mplAddressValidator.compareAddress(deliveryAddressModel, temproryAddressModel);
-				boolean isDiffrentContact= mplAddressValidator.compareContactDetails(deliveryAddressModel, temproryAddressModel);
-			
-				if (isDifferentAddress || isDiffrentContact)
+				mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
+				mplDeliveryAddressService.saveTemporaryAddress(orderModel, temproryAddressModel);
+				String mobileNumber = null;
+				if (!temproryAddressModel.getPostalcode().equalsIgnoreCase(deliveryAddressModel.getPostalcode()))
 				{
-					mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
-					mplDeliveryAddressService.saveTemporaryAddress(orderModel, temproryAddressModel);
-					String mobileNumber = null;
-					if (!temproryAddressModel.getPostalcode().equalsIgnoreCase(deliveryAddressModel.getPostalcode()))
+					boolean isEligibleScheduledDelivery = checkScheduledDeliveryForOrder(orderModel);
+					if (isEligibleScheduledDelivery)
 					{
-						boolean isEligibleScheduledDelivery=checkScheduledDeliveryForOrder(orderModel);
-						if (isEligibleScheduledDelivery)
+
+						List<TransactionEddDto> transactionEddDtoList;
+						transactionEddDtoList = getScheduledDeliveryDate(orderModel, temproryAddressModel.getPostalcode());
+						if (CollectionUtils.isNotEmpty(transactionEddDtoList))
 						{
-
-							List<TransactionEddDto> transactionEddDtoList;
-							transactionEddDtoList = getScheduledDeliveryDate(orderModel, temproryAddressModel.getPostalcode());
-							if (CollectionUtils.isNotEmpty(transactionEddDtoList))
-							{
-								Map<String, Object> scheduledDeliveryDate = null;
-								scheduledDeliveryDate = getDeliveryDate(transactionEddDtoList);
-								scheduledDeliveryData.setEntries(scheduledDeliveryDate);
-								scheduledDeliveryData.setIsActive(Boolean.TRUE);
-								scheduledDeliveryData.setIsPincodeServiceable(Boolean.TRUE);
-							}
-							else
-							{
-								scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
-							}
-
+							Map<String, Object> scheduledDeliveryDate = null;
+							scheduledDeliveryDate = getDeliveryDate(transactionEddDtoList);
+							scheduledDeliveryData.setEntries(scheduledDeliveryDate);
+							scheduledDeliveryData.setIsActive(Boolean.TRUE);
+							scheduledDeliveryData.setIsPincodeServiceable(Boolean.TRUE);
 						}
 						else
 						{
-							if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
-							{
-								mobileNumber = orderModel.getDeliveryAddress().getPhone1();
-							}
-							else
-							{
-								mobileNumber = addressData.getPhone();
-							}
-							generateOTP(customerId, mobileNumber);
-							scheduledDeliveryData.setIsActive(Boolean.FALSE);
+							scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
 						}
+
 					}
 					else
 					{
@@ -413,15 +396,26 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						generateOTP(customerId, mobileNumber);
 						scheduledDeliveryData.setIsActive(Boolean.FALSE);
 					}
-
 				}
 				else
 				{
-					return null;
+					if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
+					{
+						mobileNumber = orderModel.getDeliveryAddress().getPhone1();
+					}
+					else
+					{
+						mobileNumber = addressData.getPhone();
+					}
+					generateOTP(customerId, mobileNumber);
+					scheduledDeliveryData.setIsActive(Boolean.FALSE);
 				}
 
 			}
-
+			else
+			{
+				return null;
+			}
 		}
 		catch (final NullPointerException e)
 		{
