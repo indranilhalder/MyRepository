@@ -35,7 +35,7 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;multipack						   ;"Show Multi-Packs Only"
  ;$solrIndexedType		   ;materialType					   ;"Material"
  #;$solrIndexedType		   ;bagType							   ;"Bag Type"
- #;$solrIndexedType		   ;hairAccessoryType				   ;"Hair Accessory Type"
+ #;$solrIndexedType		   ;hairAccessoryType				   ;"Type"
  ;$solrIndexedType		   ;typeofBelt						   ;"Type of Belt"
  ;$solrIndexedType		   ;lengthofBelt					   ;"Length of Belt"
  ;$solrIndexedType		   ;embellishment					   ;"Embellishment"
