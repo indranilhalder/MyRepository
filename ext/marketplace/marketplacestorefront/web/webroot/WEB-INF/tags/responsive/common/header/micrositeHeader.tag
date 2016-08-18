@@ -20,7 +20,7 @@
 <header class="brand-header">
 <div class="content">
 <div class="bottom">
-
+<div class="microsite_bottom_wrapper">
 <div class="marketplace">
         <div class="mobile-bag bag">
            <a href="${cartUrl}"><span class="responsive-bag-count">0</span></a>
@@ -70,6 +70,7 @@
 							code="minicart.mybag" />&nbsp;(<span
 					class="js-mini-cart-count-hover"></span>)
 				</a>
+    		    </div>
     		    </div>
 				</div>
 		</div>						

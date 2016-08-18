@@ -19,7 +19,7 @@
 
 
 <%-- <c:if test="${fn:length(ProductDatas)>0}"> --%>
-	<div class="wishlist-banner" id="wishlistBanner" style="display:none">
+	<%-- <div class="wishlist-banner" id="wishlistBanner" style="display:none">
 		<h2>
 			<spring:theme code="Treat Yourself" />
 			<span><spring:theme code="mpl.gift.Yourself" /></span>
@@ -27,7 +27,7 @@
 	</div>
 	<ul class="product-block wishlist" id="giftYourselfProducts">
 		
-	</ul>
+	</ul> --%>
 <%-- </c:if> --%>
 <div class="modal fade in" id="addedToBag">
 <div class="content">

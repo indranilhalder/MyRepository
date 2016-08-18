@@ -80,7 +80,7 @@ function isNumber(evt) {
 <%-- <form:form id="cartFormId" action="${request.contextPath}/cart/setPincode" method="GET">   --%>
 
   
-	<div class="top block" id="pinCodeDispalyDiv">
+	<%-- <div class="top block" id="pinCodeDispalyDiv">
 		<h2><spring:theme code="cart.delivery.options" /></h2>
 		<input type="hidden"  name = "defaultPinCodeIdsDefault" id= "defaultPinCodeIdsDefault"  value="${defaultPinCode}"/>
 			<div id="defaultPinDiv">
@@ -101,10 +101,10 @@ function isNumber(evt) {
 		<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 		
 		
-	</div>
+	</div> --%>
 <%-- </form:form> --%>
 <div class="middle block">
-	<h2><spring:theme code="mpl.orderDetails" /></h2>
+	<%-- <h2><spring:theme code="mpl.orderDetails" /></h2>
 	<ul class="totals">
             <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li>
             
@@ -131,9 +131,9 @@ function isNumber(evt) {
                     </c:otherwise>
                 </c:choose>
             </ycommerce:testId></span></li>
-          </ul>
+          </ul> --%>
 
-          <ul class="checkout-types">
+          <%-- <ul class="checkout-types">
 			
 			<!-- TISBOX-879 -->
 			<li id="checkout-id" class="checkout-button">
@@ -156,7 +156,7 @@ function isNumber(evt) {
              <c:if test="${ not empty Addresses && isLoggedIn eq true}">
                     <span><spring:theme code="text.or"/></span> 
                     
-                  <%-- TISBOX-1631   <form action="${request.contextPath }/checkout/multi/express"> --%> 
+                  TISBOX-1631   <form action="${request.contextPath }/checkout/multi/express"> 
                     <button   id="expressCheckoutButtonId" class="express-checkout-button" onclick="return expressbutton();"><spring:theme code="express.checkout"/></button>
                     <input  type="hidden" name="expressCheckoutAddressSelector"  id="expressCheckoutAddressSelector" value="demo"/>
                     <input  type="hidden" name="isPincodeServicableId"  id="isPincodeServicableId" value="N"/>
@@ -167,7 +167,7 @@ function isNumber(evt) {
                     
                     
 				     <select id="addressListSelectId" onclick="checkExpressCheckoutPincodeService('typeExpressCheckoutDD')">
-				              <%--  <option value="" disabled><spring:theme code="cart.express.checkout.address"/></option> --%>
+				               <option value="" disabled><spring:theme code="cart.express.checkout.address"/></option>
 				               <c:forEach items="${Addresses}"  var="Address">
 					                  <option value="${Address.key}" id="${Address.key}">
 					                  ${Address.value}
@@ -175,7 +175,7 @@ function isNumber(evt) {
 					                  </c:forEach>
 				     </select>
 				 	
-                 <%--    </form> --%>
+                    </form>
 	         </c:if>     
             
             </li>
@@ -183,4 +183,4 @@ function isNumber(evt) {
           </ul>
           </div>
 		<!-- <a href="/store" class="continue-shopping"> Continue Shopping</a> --><!-- store url change -->
-		<a href="/" class="continue-shopping"> Continue Shopping</a>
+		<a href="/" class="continue-shopping"> Continue Shopping</a> --%>

@@ -1,6 +1,6 @@
 function constructDepartmentHierarchy(inputArray) {		
 		var output = [];
-		//var count = 0;
+		
 		if(inputArray!=""){
 		for (var i = 0; i < inputArray.length; i++) {				
 			var categoryArray = inputArray[i].split("|");			
@@ -15,13 +15,15 @@ function constructDepartmentHierarchy(inputArray) {
 					var categoryDetails = categoryArray[j].split(":");
 					var categoryCode = categoryDetails[0];
 					var categoryName = categoryDetails[1];
+					var facetCount = 0;
 					
 					if(categoryDetails[2] == "L3")
-					{					
-						categoryName += "  (" +categoryDetails[5] + ")";
-						//count++;						
+					{
+						//categoryName += "  (" +categoryDetails[5] + ")";
+						facetCount = "  (" +categoryDetails[5] + ")";
+												
 					}
-					var count = categoryDetails[6];
+					
 					var categoryType = "category";
 					if(categoryDetails[3] == 'true') {
 						categoryType = "department"
@@ -34,7 +36,7 @@ function constructDepartmentHierarchy(inputArray) {
 						}						
 					}
 					if (lastNode == currentNode) {
-						var newNode = currentNode[k] = {label: categoryName, children: [], categoryCode: categoryCode, categoryType: categoryType, categoryName: categoryName, count: count};
+						var newNode = currentNode[k] = {label: categoryName, children: [], categoryCode: categoryCode, categoryType: categoryType, categoryName: categoryName, facetCount: facetCount};
 						currentNode = newNode.children;						
 					}
 				}
@@ -346,17 +348,62 @@ function constructDepartmentHierarchy(inputArray) {
 	//update product stock
 
 
+//	function updateProductStock(sizeStockLevel,sizeMatched, serpSizeList,minPriceSize,product) {
+//		var stock1 = sizeStockLevel.replace("[[", "");
+//		var stock2 = stock1.replace("]]", "");
+//		var stockArray = new Array();
+//		stockArray = stock2.split(',');
+//		for (i = 0; i < stockArray.length; i++) {
+//			if(stockArray[i]!=""){
+//			var stckData = JSON.parse(stockArray[i]);
+//			if (sizeMatched != "") {
+//				if (stckData[sizeMatched] != undefined) {
+//					$("#stockIdFiltered_" + product).val(stckData[sizeMatched]);
+//				}
+//
+//			} else {
+//				for (j = 0; j < serpSizeList.length; j++) {
+//					var sizeUrl = serpSizeList[j];
+//					if (stckData[sizeUrl] != undefined) {
+//						if (minPriceSize == serpSizeList[j]) {
+//							$("#stockIdFiltered_" + product).val(
+//									stckData[sizeMatched]);
+//						}
+//					}
+//				}
+//			}
+//		}
+//		}
+//	}
+	
+	//update product stock
+
+
 	function updateProductStock(sizeStockLevel,sizeMatched, serpSizeList,minPriceSize,product) {
+		var query="";
 		var stock1 = sizeStockLevel.replace("[[", "");
 		var stock2 = stock1.replace("]]", "");
 		var stockArray = new Array();
 		stockArray = stock2.split(',');
+		/*$( ".facet-values js-facet-values js-facet-form  active" ).each(function( index ) {
+	    var query=query+$(this).closest('li').find('#q').val();
+		});	  
+		console.log("logg"+query);*/
 		for (i = 0; i < stockArray.length; i++) {
 			if(stockArray[i]!=""){
 			var stckData = JSON.parse(stockArray[i]);
 			if (sizeMatched != "") {
+				
 				if (stckData[sizeMatched] != undefined) {
-					$("#stockIdFiltered_" + product).val(stckData[sizeMatched]);
+					
+					if(stckData[sizeMatched]=='outOfStock'){
+						
+					  $(".AvailabilitySize").show();
+								//}
+						
+					$("#stockIdFilteredVariant_" + product).show();
+					$("#stockIdFilteredVariant_" + product).html("OUT OF STOCK");
+					}
 				}
 
 			} else {
@@ -364,8 +411,16 @@ function constructDepartmentHierarchy(inputArray) {
 					var sizeUrl = serpSizeList[j];
 					if (stckData[sizeUrl] != undefined) {
 						if (minPriceSize == serpSizeList[j]) {
-							$("#stockIdFiltered_" + product).val(
-									stckData[sizeMatched]);
+							
+							if(stckData[sizeMatched]=='outOfStock'){
+								 $(".AvailabilitySize").show();
+								$("#stockIdFilteredVariant_" + product).show();
+								$("#stockIdFilteredVariant_" + product).html(
+										"OUT OF STOCK");
+								
+							}
+							/*$("#stockIdFiltered_" + product).val(
+									stckData[sizeMatched]);*/
 						}
 					}
 				}

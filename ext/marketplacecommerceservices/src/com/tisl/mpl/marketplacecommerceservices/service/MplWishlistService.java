@@ -33,4 +33,10 @@ public interface MplWishlistService
 	public abstract List<Wishlist2Model> getWishlists(UserModel user);
 
 	public List<Wishlist2EntryModel> getWishlistByUserAndUssid(final UserModel user, final String ussid);
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	List<Wishlist2Model> getWishListAgainstUser(UserModel user);
 }

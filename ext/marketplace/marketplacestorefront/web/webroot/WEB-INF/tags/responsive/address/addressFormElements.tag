@@ -174,35 +174,35 @@
 			</div>
 			</div>
 			<div class='full'>
-			<!-- TISUAT-4696 -->
+			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line1"
 			labelKey="address.line1" path="line1"
-			mandatory="true" maxLength="30"/>
+			mandatory="true" maxLength="40"/>
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
-			<!-- TISUAT-4696 -->
+			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line2"
 			labelKey="address.line2" path="line2" 
-			mandatory="true" maxLength="30"/>
+			mandatory="true" maxLength="40"/>
 			 <div class="help-block has-error" id="address2Error" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
-			<!-- TISUAT-4696 -->
+			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line3"
 			labelKey="address.line3" path="line3" 
-			mandatory="true" maxLength="30" />
+			mandatory="true" maxLength="40" />
 			 <div class="help-block has-error" id="address3Error" style="display: none;">
 			</div>
 			</div>
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
 		<div class='full'>
-		<!-- TISUAT-4696 -->
+		<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.townCity"
 			labelKey="address.townCity" path="townCity" 
-			mandatory="true" maxLength="30"/>
+			mandatory="true" maxLength="40"/>
 			<div class="help-block has-error" id="cityError" style="display: none;">
 			</div>
 			</div>

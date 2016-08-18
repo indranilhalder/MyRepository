@@ -5,7 +5,8 @@
 
 			$this = this,
 //			$picBD = $('<div class="picZoomer-pic-wp"></div>').css({'width':opts.picWidth+'px', 'height':opts.picHeight+'px'}).appendTo($this),   demo
-			$picBD = $('<div class="picZoomer-pic-wp"><div id="codId" style="display: none;" class="cod"><span>COD</span></div><div class="zoom" style="z-index:10000;"><a onClick="hit()"></a></div></div>').appendTo($this),
+			/*$picBD = $('<div class="picZoomer-pic-wp"><div id="codId" style="display: none;" class="cod"><span>COD</span></div><div class="zoom" style="z-index:10000;"><a onClick="hit()"></a></div></div>').appendTo($this),*/
+			$picBD = $('<div class="picZoomer-pic-wp"><div id="codId" style="display: none;" class="cod"><span>COD</span></div><div class="zoom" style="z-index:10000;"><a onClick="addToWishlist()"></a></div></div>').appendTo($this),
 			$pic = $this.children('img').addClass('picZoomer-pic').appendTo($picBD),
 			//$cursor = $('<div class="picZoomer-cursor"></div>').appendTo($picBD),
 			//cursorSizeHalf = {w:$cursor.width()/2 ,h:$cursor.height()/2},

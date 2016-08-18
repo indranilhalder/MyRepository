@@ -98,7 +98,8 @@ $(document).on("mouseover touchend", "div.departmenthover", function() {
 });
 
 
-$(".A-ZBrands").on("mouseover touchend", function(e) {
+//$(".A-ZBrands").on("mouseover touchend", function(e) {
+	$(document).on("mouseover touchend", ".A-ZBrands", function(e) {
 	var componentUid = $("#componentUid").val();
     if ($("li#atozbrandsdiplay").length) {
         // console.log("Dipslaying A-Z Brands..");
@@ -1415,7 +1416,8 @@ function populateEnhancedSearch(enhancedSearchData)
 	
 	//Added
 	
-	$("div.toggle.brandClass").on("mouseover touchend", function() {
+//	$("div.toggle.brandClass").on("mouseover touchend", function() {
+		$(document).on("mouseover touchend", "div.brandClass", function() {
 		var componentUid = $(this).find('a').attr('id');
 		 if (!$.cookie("dept-list") && window.localStorage) {
 		        for (var key in localStorage) {
@@ -1972,3 +1974,17 @@ $(document).ready(function(){
 			$(this).children("a.brandGroupLink").css({"border-bottom-width": "3px","border-bottom-style": "solid","font-weight":"bold"}); 
 		});
 	}); 
+	$(document).on("click","div.brandClass + span#mobile-menu-toggle",function(){
+		if($(this).siblings("ul.images").children().length == 0){
+			$(this).siblings("div.brandClass").mouseover();
+		}
+		
+		
+	});
+	$(document).on("click","div.A-ZBrands + span#mobile-menu-toggle",function(){
+		if($(this).siblings("ul.a-z div.view_brands").siblings().length == 0){
+			$(this).siblings("div.A-ZBrands").mouseover();
+		}
+		
+		
+	});

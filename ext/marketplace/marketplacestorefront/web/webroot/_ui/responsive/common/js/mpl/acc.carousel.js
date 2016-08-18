@@ -10,6 +10,7 @@ ACC.carousel = {
 	     "springflingCarousel",
 	     "myReviewCarousel",
 	     "advancedCategoryCarousel",
+	     "pdpProductCarousel",
 		["bindCarousel", $(".js-owl-carousel").length >0]
 	],
 
@@ -101,7 +102,15 @@ ACC.carousel = {
 			items:1,
     		loop: true,
     		nav:true,
-    		dots:false,
+    		dots:true,
+    		navText:[]
+		});
+		/*TPR-268*/
+		$("#rotatingImageMobile").owlCarousel({
+			items:1,
+    		loop: true,
+    		nav:true,
+    		dots:true,
     		navText:[]
 		});
 		/*if(typeof homePageBannerTimeout!== "undefined"){
@@ -122,6 +131,15 @@ ACC.carousel = {
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
 			//alert(timeout);
 			$("#rotatingImageTimeout").owlCarousel({
+				items:1,
+				dots:true,
+				loop: true,
+		        autoplay: true,
+		        autoHeight : true,
+		        autoplayTimeout: timeout
+		    });
+			/*TPR-268*/
+			$("#rotatingImageTimeoutMobile").owlCarousel({
 				items:1,
 				dots:true,
 				loop: true,
@@ -428,6 +446,26 @@ ACC.carousel = {
 			rewindNav: false,
 			afterInit: function() {$("#my-review-carousel").show();}*/
 		});
+	},
+	
+	pdpProductCarousel: function(){
+		$("#pdpProductCarousel").owlCarousel({
+			items:1,
+    		loop: true,
+    		navText:[],
+    		responsive : {
+    			// breakpoint from 0 up
+    			0 : {
+    				nav:false,
+    	    		dots:true,
+    			},
+    			// breakpoint from 768 up
+    			768 : {
+    				nav:true,
+    	    		dots:false,
+    			}			
+    		}	
+		});
 	}
 	
 	/*New Homepage change*/
@@ -447,3 +485,5 @@ ACC.carousel = {
 	
 
 };
+
+
