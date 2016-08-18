@@ -1540,7 +1540,7 @@ $( document ).ready(function() {
 							"color": "gray"
 					});
 						$(this).removeAttr("data-producturl");
-						
+						$(this).parent().addClass('strike');
 						}
 				});
 			});	
