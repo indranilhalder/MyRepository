@@ -43448,6 +43448,7 @@ margin-left: 20%;
 		float: left;
 		margin: 40px 0 0 40px;
 		width: 46%;
+		padding-top:40px;
 	}
 	.tabs-block .nav>li#tabs_details {
 		width: 33%;

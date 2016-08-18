@@ -1949,8 +1949,10 @@ $(document).ready(function() {
 	if(($(window).width() > 767) && ($(window).width() < 1025)) {
 		var img_height = $(".product-info .product-image-container.device").height();
 		var detail_height = $(".product-info .product-detail").height();
-		var diff = Math.abs(detail_height - img_height - 40);
+		if (img_height < detail_height ){
+		var diff = detail_height - img_height;
 		$(".product-info>div.tabs-block").css("margin-top","-"+diff+"px");
+		}
 		
 	}
 	 });
