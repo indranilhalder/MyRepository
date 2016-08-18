@@ -39,7 +39,6 @@ import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplAddressValidator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.enums.DeliveryAddressEnum;
 import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.data.ReturnAddressInfo;
@@ -341,7 +340,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 
-	@Override
+    @Override
 	public ScheduledDeliveryData saveAsTemporaryAddressForCustomer(String orderCode,AddressData addressData)
 	{
 		 ScheduledDeliveryData scheduledDeliveryData = new ScheduledDeliveryData();
@@ -418,6 +417,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					}
 
 				}
+				return null;
 			}
 
 		}
@@ -429,8 +429,10 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		{
 			exp.printStackTrace();
 		}
+		
 		return scheduledDeliveryData;
 	}
+
 
 	/**
 	 *
@@ -487,6 +489,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 							//if Serviceable Pincode then Save in Order and set
 							LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
 							isAddressSaved = mplDeliveryAddressService.saveDeliveryAddress(orderCode);
+							valditionMsg = MarketplaceFacadesConstants.SUCCESS;
 							try
 							{
 								if (isAddressSaved)
@@ -494,24 +497,22 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 									LOG.debug("Change Delivery Address updated into commerce then Call to CRM");
 									createcrmTicketForChangeDeliveryAddress(orderModel, customerID,
 											MarketplacecommerceservicesConstants.SOURCE);
-
 								}
 							}
 							catch (final Exception e)
 							{
 								LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e.getMessage());
-								valditionMsg = DeliveryAddressEnum.SUCCESS.toString();
 							}
 						}
 						else
 						{
 							mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
-							valditionMsg = DeliveryAddressEnum.PINCODE_NOT_SERVICEABLE.toString();
+							valditionMsg =MarketplaceFacadesConstants.FAILURE;
 						}
 					}
 					else
 					{
-						valditionMsg = "Internal Server Error, Please try again later";
+						valditionMsg = MarketplaceFacadesConstants.SERVER_EXCEPTION;
 					}
 
 				}
@@ -522,6 +523,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					{
 						boolean isContactUpdated = false;
 						isContactUpdated = mplDeliveryAddressService.updateContactDetails(temproryAddressModel, orderModel);
+						valditionMsg = MarketplaceFacadesConstants.SUCCESS;
 						if (isContactUpdated)
 						{
 							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE);
@@ -529,7 +531,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					}
 					else
 					{
-						valditionMsg = "Internal Server Error, Please try again later";
+						valditionMsg = MarketplaceFacadesConstants.SERVER_EXCEPTION;
 					}
 				}
 
@@ -550,7 +552,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	@Override
 	public boolean generateNewOTP(String orderCode)
 	{
-		boolean falg = false;
+		boolean isGenerated = false;
 		 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 		 CustomerModel customer = (CustomerModel) orderModel.getUser();
 
@@ -566,7 +568,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				mobileNumber = orderModel.getDeliveryAddress().getPhone1();
 			}
 			generateOTP(customer.getUid(), mobileNumber);
-			falg = true;
+			isGenerated = true;
 		}
 		catch (final InvalidKeyException excption)
 		{
@@ -576,7 +578,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		{
 			LOG.error(excption.getMessage());
 		}
-		return falg;
+		return isGenerated;
 	}
 
 
@@ -621,7 +623,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		{
 			for (AbstractOrderEntryModel abstractOrderEntry : subOrder.getEntries())
 			{
-				if (!abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase("home-delivery"))
+				if (!abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
 				{
 					if (abstractOrderEntry.getEdScheduledDate() != null)
 					{
@@ -680,7 +682,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			ChangeDeliveryAddressResponseDto changeDeliveryAddressResponseDto = new ChangeDeliveryAddressResponseDto();
 
 			changeDeliveryAddressResponseDto = scheduledDeliveryDateRequestToOMS(orderModel, newPincode);
-			if (changeDeliveryAddressResponseDto.getResponse().equalsIgnoreCase("Success"))
+			if (changeDeliveryAddressResponseDto.getResponse().equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
 			{
 				transactionEddDtosList = changeDeliveryAddressResponseDto.getTransactionEddDtos();
 			}
