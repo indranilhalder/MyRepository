@@ -138,6 +138,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String CA ="CA";
 	public static final String CU ="CU";
 	public static final String SUCCESS="success";
+	public static final String SERVER_EXCEPTION="Internal Server Error, Please try again later";
 
 	private MarketplaceFacadesConstants()
 	{
