@@ -44744,6 +44744,7 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 }
 #OfferWrap .Inner .Left {
     width: 40%;
+     margin-top: 65px;
 }
 #OfferWrap .Inner .right {
     width: 60%;
@@ -44764,6 +44765,7 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 	}
 	#OfferWrap .Inner .Left, #OfferWrap .Inner .right {
     width: 100%;
+    margin-top:0px;
 }
 #OfferWrap .Inner .Left .picZoomer-pic{
 	max-width: 100%;
