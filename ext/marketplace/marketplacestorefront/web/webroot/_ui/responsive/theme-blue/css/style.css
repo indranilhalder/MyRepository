@@ -44516,8 +44516,17 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     background: #ccc;
     left: 36%;
 }
+@media (max-width:767px){
+	.product-info>div.wishAddSucess,.product-info>div.wishAddLogin{
+	    left: auto;
+    z-index: 2;
+    right: 45px;
+    top:0px;
+	}
+}
 .product-info>div.wishAddSucess>span{
 	margin-left: 30px;
+	    line-height: 20px;
 }
 .product-info>div.wishAddSucess{
 	color:green;
