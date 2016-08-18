@@ -12057,7 +12057,7 @@ button.otherSellersFont {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 100;
-    font-size: 17px;
+   /*  font-size: 17px; */
     content: "\f005"
 }
 .star-review .half:before {
@@ -42666,7 +42666,7 @@ margin-left: 20%;
 	border: 0;
 }
 
-.star-review {
+/* .star-review {
 	margin: 15px 0 0;
 	color: #fbb928;
 }
@@ -42688,7 +42688,7 @@ margin-left: 20%;
 	font-size: 12px;
 	margin-left: 3px;
 	text-transform: inherit;
-}
+} */
 
 .product-info .product-detail .Cta {
 	margin: 30px 0 0;
@@ -42908,9 +42908,9 @@ margin-left: 20%;
 	margin: 45px 25px 0 !important;
 }}
 
-.tabs-block .tabs {
+/* .tabs-block .tabs {
 	margin: 0 0 40px;
-}
+} */
 
 .tabs-block .nav>li, .tabs-block .nav>li:hover, .tabs-block .nav>li.active,
 	.tabs-block .nav>.wrapper>li:hover, .tabs-block .nav>.wrapper>li.active
@@ -42966,9 +42966,26 @@ margin-left: 20%;
 .visuallySimilarItems.owl-theme .owl-controls {
 	top: 40%;
 }
-
+@media (max-width: 900px){
+.tabs-block .tabs>li ul.star-review {
+    padding-left: 10px;
+    padding-right:10px;
+}
+}
+@media (max-width: 400px){
+.tabs-block .tabs>li ul.star-review {
+    padding-left: 8px;
+    padding-right:8px;
+}
+.reviews .overview div.half {
+    padding: 5px;
+}
+.tabs-block .tabs>li ul, .tabs-block .tabs>.wrapper>li ul {
+    padding-left: 0px; 
+}
+}
 /*More Stuff Like This slider*/
-#ReviewSecion {
+/* #ReviewSecion {
 	background-color: inherit;
 	margin: 0 40px;
 }
@@ -42981,7 +42998,7 @@ margin-left: 20%;
 	font-size: 16px;
 	text-transform: uppercase;
 	margin: 0 0 50px;
-}
+} */
 
 /*overall */
 .overall, .Hello, .form {
@@ -43465,11 +43482,11 @@ margin-left: 20%;
 	.tabs.pdp p, .tabs.pdp ul li {
 		font-size: 12px;
 	}
-	.tabs-block .tabs>li.active, .tabs-block .tabs>.wrapper>li.active {
+	/* .tabs-block .tabs>li.active, .tabs-block .tabs>.wrapper>li.active {
 		display: block;
 		margin: 0 auto;
 		width: 92%;
-	}
+	} */
 
 	/*More Stuff Like This slider*/
 	.page-productDetails .trending:nth-child(2n+1) {
@@ -43491,11 +43508,11 @@ margin-left: 20%;
 	}
 
 	/*overall */
-	#ReviewSecion {
+	/* #ReviewSecion {
 		margin: 0 25px 40px;
 		display: flex;
 		flex-wrap: wrap;
-	}
+	} 
 	.overall {
 		float: none;
 		width: 100%;
@@ -43523,7 +43540,7 @@ margin-left: 20%;
 	.Star .Right {
 		width: 55%;
 	}
-
+*/
 	/*TopReview */
 	.TopReview {
 		padding: 0;
@@ -43680,9 +43697,9 @@ margin-left: 20%;
 		padding: 0;		
 	}		
 	/*overall */		
-	#ReviewSecion {		
+	/* #ReviewSecion {		
 		margin: 0 15px;		
-	}		
+	} */		
 	.Star .overall .Left h4 {		
 		display: none;		
 	}		
