@@ -355,11 +355,10 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				 temproryAddressModel.setEmail(customer.getOriginalUid());
 				 String customerId = customer.getUid();
 				 AddressModel deliveryAddressModel = orderModel.getDeliveryAddress();
-				boolean isDifferentAddress = false;
-				boolean isDiffrentContact = false;
-
-				isDifferentAddress = mplAddressValidator.compareAddress(deliveryAddressModel, temproryAddressModel);
-				isDiffrentContact = mplAddressValidator.compareContactDetails(deliveryAddressModel, temproryAddressModel);
+				 
+				boolean isDifferentAddress = mplAddressValidator.compareAddress(deliveryAddressModel, temproryAddressModel);
+				boolean isDiffrentContact= mplAddressValidator.compareContactDetails(deliveryAddressModel, temproryAddressModel);
+			
 				if (isDifferentAddress || isDiffrentContact)
 				{
 					mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
