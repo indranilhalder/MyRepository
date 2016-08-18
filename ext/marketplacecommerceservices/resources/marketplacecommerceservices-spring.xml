@@ -1767,11 +1767,27 @@
 			class="com.tisl.mpl.marketplacecommerceservices.strategy.MplCommercePlaceOrderStrategyImpl" 
 			parent="defaultCommercePlaceOrderStrategy">
 	</bean> -->
+	
+	
+	<bean id="juspayOrderResponseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.juspay.response.GetOrderStatusResponse"/>
+        <property name="populators">
+            <list merge="true">
+				<ref bean="juspayOrderResponsePopulator"/>
+            </list>
+        </property>
+    </bean>
+    
+	<bean id="juspayOrderResponsePopulator"
+			class="com.tisl.mpl.converter.populator.JuspayOrderResponsePopulator" >
+	</bean>
+	
 
 	<!-- New Payment Solution Starts -->	
 	<bean id="mplProcessOrderService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProcessOrderServiceImpl">
 		<property name="orderService" ref="orderService" />
+		<property name="juspayOrderResponseConverter" ref="juspayOrderResponseConverter" />
 	</bean>
 	
 	<bean id="mplProcessOrderDao"

@@ -10,13 +10,17 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -27,9 +31,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
@@ -37,6 +44,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.JuspayEBSService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
@@ -70,6 +78,11 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private MplCommerceCheckoutService mplCommerceCheckoutService;
 	@Resource(name = "juspayWebHookDao")
 	private JuspayWebHookDao juspayWebHookDao;
+	private Converter<JuspayOrderStatusModel, GetOrderStatusResponse> juspayOrderResponseConverter;
+	@Resource(name = "mplPaymentService")
+	private MplPaymentService mplPaymentService;
+	@Resource
+	private SessionService sessionService;
 
 	/*
 	 * (non-Javadoc)
@@ -274,7 +287,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_SUCCEEDED")
 				&& !juspayWebhookModel.getIsExpired().booleanValue())
 		{
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+			updateOrder(orderModel, juspayWebhookModel);
 
 			//Re-trigger submit order process from Payment_Pending to Payment_Successful
 			final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
@@ -321,6 +334,57 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		{
 			return Double.valueOf(0.0);
 		}
+	}
+
+
+
+
+
+
+	/**
+	 * This method updates Order after successfully executed in job
+	 *
+	 * @param orderModel
+	 * @param juspayWebhookModel
+	 */
+	private void updateOrder(final OrderModel orderModel, final JuspayWebhookModel juspayWebhookModel)
+	{
+		if (null != juspayWebhookModel)
+		{
+			final JuspayOrderStatusModel juspayOrderStatusModel = juspayWebhookModel.getOrderStatus();
+
+			final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(juspayOrderStatusModel);
+
+			final Map<String, Double> paymentMode = new HashMap<String, Double>();
+			paymentMode.put(orderModel.getModeOfOrderPayment(), orderModel.getTotalPriceWithConv());
+
+			getSessionService().setAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE, paymentMode);
+			//Payment Changes - Order before Payment
+			getMplPaymentService().updateAuditEntry(orderStatusResponse, null, orderModel);
+
+			if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount()))
+			{
+				getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions();
+			}
+
+			//Logic when transaction is successful i.e. CHARGED
+			if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
+			{
+				LOG.error("Payment successful with transaction ID::::" + juspayWebhookModel.getOrderStatus().getOrderId());
+				//saving card details
+				getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, orderModel);
+			}
+			else
+			{
+				LOG.error("Payment failure with transaction ID::::" + juspayWebhookModel.getOrderStatus().getOrderId());
+			}
+			getMplPaymentService().paymentModeApportion(orderModel);
+		}
+
 	}
 
 	/**
@@ -492,6 +556,59 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	public void setJuspayWebHookDao(final JuspayWebHookDao juspayWebHookDao)
 	{
 		this.juspayWebHookDao = juspayWebHookDao;
+	}
+
+	/**
+	 * @return the mplPaymentService
+	 */
+	public MplPaymentService getMplPaymentService()
+	{
+		return mplPaymentService;
+	}
+
+	/**
+	 * @param mplPaymentService
+	 *           the mplPaymentService to set
+	 */
+	public void setMplPaymentService(final MplPaymentService mplPaymentService)
+	{
+		this.mplPaymentService = mplPaymentService;
+	}
+
+	/**
+	 * @return the sessionService
+	 */
+	public SessionService getSessionService()
+	{
+		return sessionService;
+	}
+
+	/**
+	 * @param sessionService
+	 *           the sessionService to set
+	 */
+	public void setSessionService(final SessionService sessionService)
+	{
+		this.sessionService = sessionService;
+	}
+
+	/**
+	 * @return the juspayOrderResponseConverter
+	 */
+	public Converter<JuspayOrderStatusModel, GetOrderStatusResponse> getJuspayOrderResponseConverter()
+	{
+		return juspayOrderResponseConverter;
+	}
+
+	/**
+	 * @param juspayOrderResponseConverter
+	 *           the juspayOrderResponseConverter to set
+	 */
+	@Required
+	public void setJuspayOrderResponseConverter(
+			final Converter<JuspayOrderStatusModel, GetOrderStatusResponse> juspayOrderResponseConverter)
+	{
+		this.juspayOrderResponseConverter = juspayOrderResponseConverter;
 	}
 
 
