@@ -80,6 +80,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		final CommerceOrderResult result = new CommerceOrderResult();
 		try
 		{
+			final String modeOfPayment = cartModel.getModeOfPayment();
 			beforePlaceOrder(parameter);
 			if (this.calculationService.requiresCalculation(cartModel))
 			{
@@ -169,6 +170,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				{
 					orderModel.setTotalPrice(totalPrice);
 				}
+				orderModel.setModeOfOrderPayment(modeOfPayment);
 
 				getModelService().save(orderModel);
 

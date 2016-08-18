@@ -11,6 +11,7 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,11 +24,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayEBSService;
@@ -62,14 +65,15 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private ModelService modelService;
 	@Resource(name = "mplOrderDao")
 	private MplOrderDao mplOrderDao;
-	@Resource(name = "defaultOrderService")
 	private OrderService orderService;
 	@Autowired
 	private MplCommerceCheckoutService mplCommerceCheckoutService;
+	@Resource(name = "juspayWebHookDao")
+	private JuspayWebHookDao juspayWebHookDao;
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService#getPaymentPedingOrders()
 	 */
 	@Override
@@ -118,7 +122,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 								orderTATForTimeout = cal.getTime();
 							}
 
-							if (orderTATForTimeout.before(new Date()) && CollectionUtils.isNotEmpty(hooks))
+							if ((new Date()).before(orderTATForTimeout) && CollectionUtils.isNotEmpty(hooks))
 							{
 								final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
 								for (final JuspayWebhookModel oModel : hooks)
@@ -172,7 +176,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									}
 								}
 							}
-							else if (orderTATForTimeout.after(new Date()) && CollectionUtils.isEmpty(hooks))
+							else if ((new Date()).after(orderTATForTimeout) && CollectionUtils.isEmpty(hooks))
 							{
 								//getting PinCode against Order
 								final String defaultPinCode = getPinCodeForOrder(orderModel);
@@ -183,7 +187,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 								getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 							}
-							else if (orderTATForTimeout.after(new Date()) && CollectionUtils.isNotEmpty(hooks))
+							else if ((new Date()).after(orderTATForTimeout) && CollectionUtils.isNotEmpty(hooks))
 							{
 								for (final JuspayWebhookModel juspayWebhookModel : hooks)
 								{
@@ -307,10 +311,11 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	 */
 	private Double getJuspayWebhookRetryTAT()
 	{
-		final Double juspayWebhookRetryTAT = getMplProcessOrderDao().getJuspayWebhookRetryTAT();
-		if (null != juspayWebhookRetryTAT && juspayWebhookRetryTAT.doubleValue() > 0)
+		final BaseStoreModel baseStore = getJuspayWebHookDao().getJobTAT();
+		if (null != baseStore && null != baseStore.getJuspayWebhookRetryTAT()
+				&& baseStore.getJuspayWebhookRetryTAT().doubleValue() > 0)
 		{
-			return juspayWebhookRetryTAT;
+			return baseStore.getJuspayWebhookRetryTAT();
 		}
 		else
 		{
@@ -466,9 +471,27 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	 * @param orderService
 	 *           the orderService to set
 	 */
+	@Required
 	public void setOrderService(final OrderService orderService)
 	{
 		this.orderService = orderService;
+	}
+
+	/**
+	 * @return the juspayWebHookDao
+	 */
+	public JuspayWebHookDao getJuspayWebHookDao()
+	{
+		return juspayWebHookDao;
+	}
+
+	/**
+	 * @param juspayWebHookDao
+	 *           the juspayWebHookDao to set
+	 */
+	public void setJuspayWebHookDao(final JuspayWebHookDao juspayWebHookDao)
+	{
+		this.juspayWebHookDao = juspayWebHookDao;
 	}
 
 

@@ -30,7 +30,7 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao#getPaymentPedingOrders()
 	 */
 	@Override
@@ -102,40 +102,6 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 		}
 	}
 
-	@Override
-	public Double getJuspayWebhookRetryTAT()
-	{
-		try
-		{
-			final String queryString = MarketplacecommerceservicesConstants.JUSPAYWEBHOOKRETRYTATQUERY;
-
-			//forming the flexible search query
-			final FlexibleSearchQuery baseStoreQuery = new FlexibleSearchQuery(queryString);
-			baseStoreQuery.addQueryParameter(MarketplacecommerceservicesConstants.MPLSTORE,
-					MarketplacecommerceservicesConstants.BASESTORE_UID);
-
-			//fetching Webhook entries for Payment Pending orders
-			final Double juspayWebhookRetryTAT = getFlexibleSearchService().<Double> searchUnique(baseStoreQuery);
-
-			return juspayWebhookRetryTAT;
-		}
-		catch (final FlexibleSearchException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
-		}
-		catch (final UnknownIdentifierException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
-		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-	}
 
 	/**
 	 * @return the flexibleSearchService

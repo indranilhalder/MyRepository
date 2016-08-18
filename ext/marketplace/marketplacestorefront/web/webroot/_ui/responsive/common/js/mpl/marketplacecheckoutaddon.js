@@ -1584,7 +1584,7 @@ $("#otpMobileNUMField").focus(function(){
 					 }, 1000);
 			
 				}
-				$("#no-click").remove();
+				//$("#no-click").remove();
 			},
 			error : function(resp) {
 				if($(".redirect").val()=="false"){
