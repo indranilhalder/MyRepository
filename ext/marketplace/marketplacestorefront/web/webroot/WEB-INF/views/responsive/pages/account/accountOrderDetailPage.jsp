@@ -1681,7 +1681,7 @@ $(function() {
 			$("#changeAddressPopup, #showOrderDetails").hide();
 			$("#showOTP").show();
 			$("#showOTP").css("z-index","999999");
-		})
+		});
 		 
 		 $(".close").click(function(){
 			 $("#changeAddressPopup").hide();
@@ -1689,5 +1689,8 @@ $(function() {
 			 $("#showOTP").hide();
 		 });
 		 //$(".pickupeditbtn").hide(); 
+		 
+ 	
+
 	 });	 
 </script>
