@@ -872,7 +872,7 @@ $(document).ready(function(){
 	
 		});
 		
-		if($('body').find('a.wishlist#wishlist').length > 0){
+		/*if($('body').find('a.wishlist#wishlist').length > 0){
 		$('a.wishlist#wishlist').popover({ 
 	    html : true,
 	    content: function() {
@@ -894,7 +894,7 @@ $(document).ready(function(){
 				return $(this).parents().find('.add-to-wishlist-container').html();
 			}
 		});
-	  }
+	  }*/
 	  if($('body').find('a.cart_move_wishlist').length > 0){
 		$('a.cart_move_wishlist').popover({ 
 			html : true,
