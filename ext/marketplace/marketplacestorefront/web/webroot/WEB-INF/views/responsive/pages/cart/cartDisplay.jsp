@@ -16,6 +16,8 @@
     <c:set var="userName" value="${user.firstName}"/>
     <div class="MyBag-buttons">
 	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1>
+	
+	
 	<c:choose>
 	<c:when test="${isLoggedIn eq true}">
 	<p class="desk-view"><spring:theme code="mpl.myBag.hi" /> ${userName}, <spring:theme code="mpl.myBag.customer.desc" /></p>
@@ -24,6 +26,7 @@
 	<p class="desk-view"><spring:theme code="mpl.myBag.customer.fulldesc" /></p>
 	</c:otherwise>
 	</c:choose>
+	
 	<a href="/" class="continue-shopping mob-tab-view-shopping"> Continue Shopping</a>
 	<ul class="checkout-types">
 			
@@ -87,7 +90,7 @@
             </li>
             
           </ul>
-        <a href="/store" class="continue-shopping desk-view-shopping"> Continue Shopping</a>
+        <a href="/" class="continue-shopping desk-view-shopping"> Continue Shopping</a>
           </div>
 		<!-- <a href="/store" class="continue-shopping"> Continue Shopping</a> --><!-- store url change -->
 		<!-- <a href="/" class="continue-shopping"> Continue Shopping</a> -->
