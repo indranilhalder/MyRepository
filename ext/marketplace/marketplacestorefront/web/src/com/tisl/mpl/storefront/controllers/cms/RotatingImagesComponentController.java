@@ -45,7 +45,7 @@ public class RotatingImagesComponentController extends AbstractCMSComponentContr
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.storefront.controllers.cms.AbstractCMSComponentController#fillModel(javax.servlet.http.HttpServletRequest
 	 * , org.springframework.ui.Model, de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel)
@@ -69,5 +69,6 @@ public class RotatingImagesComponentController extends AbstractCMSComponentContr
 		model.addAttribute("mobileView", moblileBanners);
 		model.addAttribute("desktopView", desktopBanners);
 		model.addAttribute("banners", component.getBanners());
+		model.addAttribute("timeout", component.getTimeout());
 	}
 }
