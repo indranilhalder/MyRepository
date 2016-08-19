@@ -102,17 +102,17 @@ ACC.carousel = {
 			items:1,
     		loop: true,
     		nav:true,
-    		dots:true,
+    		dots:false,
     		navText:[]
 		});
 		/*TPR-268*/
-		$("#rotatingImageMobile").owlCarousel({
+		/*$("#rotatingImageMobile").owlCarousel({
 			items:1,
     		loop: true,
     		nav:true,
-    		dots:true,
+    		dots:false,
     		navText:[]
-		});
+		});*/
 		/*if(typeof homePageBannerTimeout!== "undefined"){
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
 			//alert(timeout);
@@ -130,8 +130,9 @@ ACC.carousel = {
 		if(typeof homePageBannerTimeout!== "undefined"){
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
 			//alert(timeout);
-			$("#rotatingImageTimeout").owlCarousel({
+			$(".home-rotatingImage").owlCarousel({
 				items:1,
+				nav:false,
 				dots:true,
 				loop: true,
 		        autoplay: true,
@@ -139,14 +140,14 @@ ACC.carousel = {
 		        autoplayTimeout: timeout
 		    });
 			/*TPR-268*/
-			$("#rotatingImageTimeoutMobile").owlCarousel({
+			/*$("#rotatingImageTimeoutMobile").owlCarousel({
 				items:1,
 				dots:true,
-				loop: true,
+				loop: false,
 		        autoplay: true,
 		        autoHeight : true,
 		        autoplayTimeout: timeout
-		    });
+		    });*/
 		/*	$("#rotatingImageTimeout").append('<div class="hbpagination"></div>');
 			var bannerLength = $('#rotatingImageTimeout .owl-item').length;
 			for (var i = 0 ; i<bannerLength; i++ ) {
