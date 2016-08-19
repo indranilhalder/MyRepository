@@ -42652,8 +42652,8 @@ margin-left: 20%;
 	float: left;
 	text-align: center;
 	min-width: 33px;
-	border-right:none;
 	    margin-bottom: 5px;
+	    margin-left: -1px;
 }
 
 .product-info .size ul#variant li a {
@@ -42793,7 +42793,7 @@ margin-left: 20%;
 	cursor: pointer;
 }
 
-.product-info .product-content .delivery-block li.do#homeli {
+.product-info .product-content .delivery-block li:nth-of-type(2){
 	border: none;
 }
 
