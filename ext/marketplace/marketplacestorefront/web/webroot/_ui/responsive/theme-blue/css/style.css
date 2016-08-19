@@ -14459,6 +14459,7 @@ body .account .account-header {
     font-size: 28px;
     font-weight: 400
 }
+
 @media (min-width: 791px) {
     body .account .account-header select.menu-select{
         display: none
@@ -40363,5 +40364,89 @@ ordermargingalignment {
 hr {
 	border-color: #ccc;
 }
+
+
+@media (min-width: 791px){
+body .account .track{
+    width: 75%;
+     float: none;
+    padding: 0px;  
+      margin: 0px auto;
+}
+}
+
+/* Track Order PopUp start */
+
+#showTrackOrder {	
+	display: none;
+	margin: 0px auto;
+	width: 100%;
+	position: fixed;
+	top: 100px;
+	left: 0px;
+}
+
+.error_text {
+	font-color: #a9143c;
+	display: none;
+	width: 100%;
+	text-align: center;
+}
+
+#showTrackOrder .modal-dialog {	
+	background: #fff;
+	border-radius: 5px;
+	padding: 10px 10px 50px 10px;
+}
+
+#showTrackOrder .modal-dialog .trackPopupText {
+	color: #333;
+	font-size: 10px;
+	margin-top: 10px;
+}
+
+#showTrackOrder .modal-dialog .viewOrderButton {
+	font-size: 12px;
+	background: #a9143c;
+	color: #fff;
+	margin-top: 10px;
+	float: right;
+}
+
+#showTrackOrder .modal-dialog .col-md-6, #showTrackOrder .modal-dialog .col-md-12, #showTrackOrder .modal-dialog .col-md-5 {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 10px 0px 0px;
+}
+
+#showTrackOrder .modal-dialog label {
+	font-weight: bold;
+	padding-bottom: 5px;
+	margin-top: 14px;
+}
+
+#showTrackOrder .modal-dialog .captcha img {
+	border: 1px solid #ccc;
+	margin: 5px 0px 5px 0px;
+}
+
+#showTrackOrder .modal-dialog input[type="text"] {
+	width: 100%;
+}
+
+#showTrackOrder .modal-dialog h4 {
+	width: 95%;
+	font-size: 24px;
+	padding-bottom: 30px;
+}
+
+#showTrackOrder .modal-dialog .close {
+	float: right;
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	border: 1px solid #ccc;
+}
+
+/* Track Order PopUp end */
 
 /* piczoomer css end */

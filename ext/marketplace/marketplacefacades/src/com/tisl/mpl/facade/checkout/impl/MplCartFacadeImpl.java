@@ -85,6 +85,8 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 
@@ -2330,6 +2332,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return requiredCartEntry;
 
 
+	}
+
+	
+	@Override
+	public InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(final InvReserForDeliverySlotsRequestData cartdata)
+	{
+		LOG.debug("from convertDeliverySlotsDatatoWsdto");
+		return mplCommerceCartService.convertDeliverySlotsDatatoWsdto(cartdata);
 	}
 
 

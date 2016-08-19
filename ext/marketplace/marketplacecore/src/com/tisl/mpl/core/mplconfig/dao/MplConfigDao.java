@@ -3,6 +3,11 @@
  */
 package com.tisl.mpl.core.mplconfig.dao;
 
+import java.util.List;
+
+import com.hybris.oms.tata.data.MplTimeSlotsData;
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
+import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tisl.mpl.core.model.MplConfigModel;
 
 
@@ -23,6 +28,18 @@ public interface MplConfigDao
 	 * @return MplConfigModel
 	 */
 	public MplConfigModel getConfigValueById(final String id);
+	
+	/**
+	 * This method is used to save values to the config. entries w.r.t the key.
+	 *
+	 * @param id
+	 * @param value
+	 */
+	List<MplTimeSlotsModel> getDeliveryTimeSlotByKey(String configKey);
 
+	/**
+	 * @return
+	 */
+	public MplBUCConfigurationsModel getDeliveryCharges();
 
 }

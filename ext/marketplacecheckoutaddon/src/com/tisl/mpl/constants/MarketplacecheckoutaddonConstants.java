@@ -287,4 +287,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	/* Gigya Social Login */
 	public final static String SOCIALLOGIN = "/socialLogin";
+	
+	public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
+	
+	public static final String UPDATE_DELIVERY_SLOTCOST_FOR_ED = "updateDeliverySlotCostForEd";
 }

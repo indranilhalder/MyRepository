@@ -8,6 +8,9 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
+import com.tisl.mpl.wsdto.EDDRequestWsDTO;
+import com.tisl.mpl.wsdto.EDDResponseWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListRequest;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
 
@@ -37,4 +40,17 @@ public interface InventoryReservationService
 	 * @throws JAXBException
 	 */
 	public InventoryReservListResponse reserveInventoryAtCheckout(final InventoryReservListRequest request) throws JAXBException;
+	
+	/**
+	 * @param cartdata
+	 * @return
+	 */
+	public EDDResponseWsDTO convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata);
+
+	/**
+	 * @param request
+	 * @return
+	 * @throws JAXBException
+	 */
+	public EDDResponseWsDTO getInventoryReservationForDeliverySlots(EDDRequestWsDTO request) throws JAXBException;
 }

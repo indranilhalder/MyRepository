@@ -7772,6 +7772,35 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- Added Attributes for Delivery Slots -->
+					
+					
+					<attribute autocreate="true" qualifier="edScheduledDate" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="timeSlotFrom" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="timeSlotTo" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					
+					
+			
+					<!-- Added Attributes for Delivery Slots -->
+					
 				</attributes>
 			</itemtype>
 
@@ -8441,6 +8470,36 @@
 			</itemtype>
 	 </typegroup>
 	<!-- END  -->
+	
+	<typegroup>
+		<itemtype code="TULShortUrlReport" autocreate="true"  generate="true">
+				<deployment table="TULShortUrlReport" typecode="15011" />
+				<attributes>
+					<attribute qualifier="orderId" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="false" unique="true" />
+					</attribute>
+					<attribute  qualifier="longURL" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true"  unique="true" />
+					</attribute>
+					<attribute  qualifier="shortURL" type="java.lang.String"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+					<attribute  qualifier="clicks" type="java.lang.Integer"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true"/>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+					</attribute>
+					<attribute  qualifier="login" type="java.lang.Integer"  autocreate="true" generate="true">
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true"/>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+					</attribute>					
+				</attributes>
+			</itemtype>
+		 </typegroup>
 		
 	</itemtypes>
 </items>

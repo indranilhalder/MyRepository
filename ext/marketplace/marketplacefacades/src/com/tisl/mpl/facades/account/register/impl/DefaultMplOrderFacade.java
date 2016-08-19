@@ -1122,6 +1122,25 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	}
 
+	/**
+	 * This method returns the order model based on order code, without customer check
+	 *
+	 * @param orderCode
+	 * @return OrderModel
+	 */
+	@Override
+	public OrderModel getOrderWithoutUser(final String orderCode)
+	{
+		final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
+		final OrderModel orderModel = getCustomerAccountService().getOrderForCode(orderCode, baseStoreModel);
+		if (orderModel == null)
+		{
+			throw new UnknownIdentifierException(
+					"Order with orderGUID " + orderCode + " not found for current user in current BaseStore");
+		}
+		return orderModel;
+	}
+
 
 	/**
 	 * @return the customerAccountService

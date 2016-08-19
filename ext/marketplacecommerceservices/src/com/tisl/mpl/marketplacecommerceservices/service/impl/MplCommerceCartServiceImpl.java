@@ -133,6 +133,9 @@ import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.StateModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.service.InventoryReservationService;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
@@ -140,6 +143,8 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.CNCServiceableSlavesWsDTO;
 import com.tisl.mpl.wsdto.DeliveryModeResOMSWsDto;
+import com.tisl.mpl.wsdto.EDDInfoWsDTO;
+import com.tisl.mpl.wsdto.EDDResponseWsDTO;
 import com.tisl.mpl.wsdto.GetWishListDataWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
@@ -151,6 +156,9 @@ import com.tisl.mpl.wsdto.PinCodeDeliveryModeResponse;
 import com.tisl.mpl.wsdto.ReservationItemWsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 import com.tisl.mpl.wsdto.ServiceableSlavesDTO;
+import com.tisl.mpl.wsdto.StoreLocatorAtsResponse;
+import com.tisl.mpl.wsdto.StoreLocatorAtsResponseObject;
+import com.tisl.mpl.wsdto.StoreLocatorResponseItem;
 
 
 
@@ -4999,6 +5007,60 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		}
 		return pinCodeResponseData;
 
+	}
+	
+	/**
+	 * @param cartdata
+	 * @return
+	 */
+	
+	@Override
+	public InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata){
+		LOG.debug("from convertDeliverySlotsDatatoWsdto method in serice");
+		InvReserForDeliverySlotsResponseData response=new InvReserForDeliverySlotsResponseData();
+		try
+		{
+			final EDDResponseWsDTO responseObject = getInventoryReservationService().convertDeliverySlotsDatatoWsdto(cartdata);
+			if (null != responseObject.getCartId())
+			{
+				response.setCartId(responseObject.getCartId());
+			}
+			if (null != responseObject.getItemEDDInfo())
+			{
+				List<InvReserForDeliverySlotsItemEDDInfoData> deliverySlotsItemEddInfoDTOList=new ArrayList<InvReserForDeliverySlotsItemEDDInfoData>();
+				InvReserForDeliverySlotsItemEDDInfoData invReserForDeliverySlotsItemEDDInfoData=null;
+				for (final EDDInfoWsDTO eddInfoResponse : responseObject.getItemEDDInfo())
+				{
+					invReserForDeliverySlotsItemEDDInfoData = new InvReserForDeliverySlotsItemEDDInfoData();
+					invReserForDeliverySlotsItemEDDInfoData.setUssId(eddInfoResponse.getUssId());
+					invReserForDeliverySlotsItemEDDInfoData.setEDD(eddInfoResponse.getEDD());
+					invReserForDeliverySlotsItemEDDInfoData.setNextEDD(eddInfoResponse.getNextEDD());
+					invReserForDeliverySlotsItemEDDInfoData.setIsScheduled(eddInfoResponse.getIsScheduled());
+					invReserForDeliverySlotsItemEDDInfoData.setCodEligible(eddInfoResponse.getCODEligible());
+					deliverySlotsItemEddInfoDTOList.add(invReserForDeliverySlotsItemEDDInfoData);
+			   }
+				response.setInvReserForDeliverySlotsItemEDDInfoData(deliverySlotsItemEddInfoDTOList);
+			}
+			return response;
+		}
+		catch (final ClientEtailNonBusinessExceptions ex)
+		{
+			LOG.error("********* convertDeliverySlotsDatatoWsdto :");
+			if (null != ex.getErrorCode() && ex.getErrorCode().equalsIgnoreCase("O0001"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0001", ex);
+			}
+			else if (null != ex.getErrorCode() && ex.getErrorCode().equalsIgnoreCase("O0002"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0002", ex);
+			}
+			else
+			{
+				throw new ClientEtailNonBusinessExceptions(ex);
+			}
+
+
+		}
 	}
 
 	/**

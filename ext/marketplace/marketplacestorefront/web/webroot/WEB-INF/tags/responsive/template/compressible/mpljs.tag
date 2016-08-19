@@ -285,3 +285,6 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/store-finder') || (requestScope['javax.servlet.forward.request_uri']=='/') || fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/check')}">
 	<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script>
 </c:if> 
+
+<!--Track order PopUp and Detail page   -->
+<script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.trackorder.js"></script>

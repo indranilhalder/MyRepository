@@ -13,6 +13,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hybris.oms.tata.data.MplTimeSlotsData;
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
+import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tisl.mpl.core.model.MplConfigModel;
 import com.tisl.mpl.core.mplconfig.dao.MplConfigDao;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
@@ -108,6 +111,60 @@ public class MplConfigServiceImpl implements MplConfigService
 		}
 
 
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<MplTimeSlotsModel> getDeliveryTimeSlotByKey(String configKey)
+	{
+		List<MplTimeSlotsModel> configValueList = null;
+		
+		try
+		{
+		if (StringUtils.isNotEmpty(configKey))
+		{
+			configValueList = mplConfigDao.getDeliveryTimeSlotByKey(configKey);
+		}
+		}
+		catch(Exception e)
+		{
+			LOGGER.error("Congiguration Not foud for the Key:"+configKey);
+		}
+
+		if (LOGGER.isDebugEnabled())
+		{
+			LOGGER.debug("getConfigValueById() - config value for key:" + configKey + " is :" + configValueList);
+		}
+		return configValueList;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.core.mplconfig.service.MplConfigService#getDeliveryCharges()
+	 */
+	@Override
+	public MplBUCConfigurationsModel getDeliveryCharges()
+	{
+		MplBUCConfigurationsModel configValue = null;
+		
+		try
+		{
+		
+			configValue = mplConfigDao.getDeliveryCharges();
+
+		}
+		catch(Exception e)
+		{
+			LOGGER.error("Congiguration Not foud for the class MplBUCConfigurationsModel :");
+		}
+
+		if (LOGGER.isDebugEnabled())
+		{
+			LOGGER.debug("getConfigValueById() - config value for  is :" + configValue);
+		}
+		return configValue;
 	}
 
 }

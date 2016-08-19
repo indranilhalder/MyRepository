@@ -35,6 +35,7 @@
 			</ycommerce:testId>
 		</span>
 	</li>
+	
 	<c:if test="${not empty cartData.deliveryCost}">
 		<li class="shipping">
 			<spring:theme code="basket.page.totals.delivery"/>
@@ -72,6 +73,13 @@
 		<spring:theme code="basket.page.totals.coupons"/>
 		<span id="couponValue" style="float: right"> </span>
 <input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
+	</li>
+    
+    <li class="total" id="edtotal">
+		<div id="edtotalPriceConvChargeId">
+			ED Delivery Charge
+			<span id="edtotalWithConvField" style="float: right">${mplconfigModel }</span>
+		</div>
 	</li>
     
     
