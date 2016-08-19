@@ -3252,7 +3252,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				else
 				{
 					LOG.error("Order already has payment info >>>" + orderModel.getPaymentInfo().getCode());
-					return updateOrder(orderModel, redirectAttributes);
+					return "redirect_with_details";
 				}
 			}
 

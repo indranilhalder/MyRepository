@@ -1450,7 +1450,11 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay .spinner").remove();
 					$("#no-click").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
-				}else{
+				}
+				else if(response=='redirect_with_details'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment?value="+guid); //TIS 404
+				}
+				else{
 
 					 //TISPRO-313
 					if($(".redirect").val()=="false"){
@@ -1558,6 +1562,9 @@ $("#otpMobileNUMField").focus(function(){
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
 				}else if(response=='redirect_to_payment'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TIS 404
+				}
+				else if(response=='redirect_with_details'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment?value="+guid); //TIS 404
 				}
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){	
 //					if($(".redirect").val()=="false"){
@@ -2937,6 +2944,9 @@ function submitNBForm(){
 					$(".pay button, .make_payment_top_nb").css("opacity","1");
 					$(".pay .spinner").remove();
 					$("#no-click").remove();
+				}
+				else if(response=='redirect_with_details'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment?value="+guid); //TIS 404
 				}
 				else{
 					//TISPRO-153
