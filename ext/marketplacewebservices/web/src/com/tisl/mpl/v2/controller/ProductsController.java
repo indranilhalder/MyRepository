@@ -894,7 +894,6 @@ public class ProductsController extends BaseController
 							url = params.get("keywordUrl").get(0);
 						}
 					}
-					LOG.debug("params" + params);
 				}
 				//End For Keyword Redirection
 
@@ -906,18 +905,15 @@ public class ProductsController extends BaseController
 
 				if (typeID != null)
 				{
-					if (typeID.equalsIgnoreCase("all") && null != pageableData)
+					if (typeID.equalsIgnoreCase("all"))
 					{
-
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
 								.textSearch(searchState, pageableData);
 					}
 					else if (typeID.startsWith(DROPDOWN_CATEGORY) || typeID.startsWith(DROPDOWN_BRAND))
 					{
-
 						//searchPageData = productSearchFacade.categorySearch(typeID, searchState, pageableData);
 						searchPageData = searchFacade.searchCategorySearch(typeID, searchState, pageableData);
-
 					}
 					else
 					{

@@ -9,6 +9,7 @@
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address" %>
+<%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <script>
 	//Refresh the page if compare page is already visted
 	if (sessionStorage.getItem("confirmationPageVisited") != null) {
@@ -18,6 +19,7 @@
 </script>
 <c:url value="${currentStepUrl}" var="choosePaymentMethodUrl" />
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
+<cart:tealiumCartParameters/>
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
 				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">
 					<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>

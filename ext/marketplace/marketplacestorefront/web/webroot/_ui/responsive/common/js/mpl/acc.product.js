@@ -897,35 +897,78 @@ sendAddToBag : function(formId, isBuyNow) {
 	
 applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("span.facet-label");
 	
-	$(document).on("click",".applyBrandFilters",function(){
-		
-		//Iterate and get all checked brand values
-		   var allBrands = "";
-		  $('li.Brand').find('input[type="checkbox"]:checked').each(function(){	
-				if ( $(this).parents('.facet-list').css('display') != 'none' ){
-				var facetValue = $(this).parents('.filter-brand').find('input[name="facetValue"]').val();
-				allBrands = allBrands + ':brand:' + facetValue;
-				}		   					
-		   });
-		  
-		//construct non brand query params
-		  var currentQryParam = $('.currentQueryParamsApply').val();
-		  var queryParamsAry = currentQryParam.split(':');
-		  var nonBrandQueryParams = "";
-			for (var i = 0; i <  queryParamsAry.length; i = i + 2) { 
-				if(queryParamsAry[i].indexOf('brand') == -1) {
-					if(nonBrandQueryParams != ""){
-						nonBrandQueryParams = nonBrandQueryParams +':'+ queryParamsAry[i] +':'+queryParamsAry[i+1];
-					}else{
-						nonBrandQueryParams = queryParamsAry[i] +':'+queryParamsAry[i+1];
-					}
-				}
-			}
-		   //append non brand query and checked brands
-		   $('.qValueForApply').val(nonBrandQueryParams+allBrands);
-		   // submit brand apply form
-		   $('form#brandApply').submit();
-	});
+//	$(document).on("click",".applyBrandFilters",function(){
+//		
+//		//Iterate and get all checked brand values
+//		   var allBrands = "";
+//		  $('li.Brand').find('input[type="checkbox"]:checked').each(function(){	
+//				if ( $(this).parents('.facet-list').css('display') != 'none' ){
+//				var facetValue = $(this).parents('.filter-brand').find('input[name="facetValue"]').val();
+//				allBrands = allBrands + ':brand:' + facetValue;
+//				}		   					
+//		   });
+//		  
+//		//construct non brand query params
+//		  var currentQryParam = $('.currentQueryParamsApply').val();
+//		  var queryParamsAry = currentQryParam.split(':');
+//		  var nonBrandQueryParams = "";
+//			for (var i = 0; i <  queryParamsAry.length; i = i + 2) { 
+//				if(queryParamsAry[i].indexOf('brand') == -1) {
+//					if(nonBrandQueryParams != ""){
+//						nonBrandQueryParams = nonBrandQueryParams +':'+ queryParamsAry[i] +':'+queryParamsAry[i+1];
+//					}else{
+//						nonBrandQueryParams = queryParamsAry[i] +':'+queryParamsAry[i+1];
+//					}
+//				}
+//			}
+//		   //append non brand query and checked brands
+//		   $('.qValueForApply').val(nonBrandQueryParams+allBrands);
+//		   // submit brand apply form
+//		   $('form#brandApply').submit();
+//	});
+
+  //Code changes done for TPR-432
+  $(document).on("click",".applyBrandFilters",function() {	
+	  var allBrands = "";
+	  var fullQuery = "";
+	  var brandQueryParams = "";
+	  var finalQuery = "";
+	  $('li.Brand').find('input[type="checkbox"]:checked').each(function(){	
+			if ( $(this).parents('.facet-list').css('display') != 'none' ){
+			var facetValue = $(this).parents('.filter-brand').find('input[name="facetValue"]').val();			
+			fullQuery = $(this).parents('.filter-brand').find('input[name="q"]').val();
+			allBrands = allBrands + ':brand:' + facetValue;	
+			}		   					
+	   });	  
+	   //construct non brand query params
+	    var currentQryParam = $('.currentQueryParamsApply').val();
+	    var qryParamSplits = currentQryParam.split(':');
+	    var newQryParam = '';
+	    // take it as a key:value pair
+	    for (var i = 0 ; i < qryParamSplits.length ; i = i + 2) {
+	    	var paramKey = qryParamSplits[i];
+	    	var paramValue = '';
+	    	if (qryParamSplits.length > i + 1) {
+	    		paramValue = qryParamSplits[i+1];
+	    	}
+	    	if (i == 0) {
+	    		newQryParam += paramKey + ':' + paramValue + ':';
+	    	} else if (paramKey !== 'brand') {
+	    		newQryParam += paramKey + ':' + paramValue + ':';
+	    	}
+	    }
+	    
+	    if (newQryParam.endsWith(':')) {
+	    	newQryParam = newQryParam.substring(0, newQryParam.length - 1);
+	    }
+	    
+	    var finalQuery = newQryParam + allBrands;
+	    //append non brand query and checked brands
+	    $('.qValueForApply').val(finalQuery);
+	   
+	    // submit brand apply form
+	    $('form#brandApply').submit();
+     });
 	},
 	
 	brandFilterCheckAll: function(){$allListElements = $('ul > li.filter-brand').find("span.facet-label");
@@ -1034,7 +1077,7 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 
 //END AJAX
 		
-	},
+	},	
 	
 	scrollForTransientCart: function ()
 	{
@@ -1047,3 +1090,12 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 		
 	}
 };
+
+
+
+	
+
+
+
+
+

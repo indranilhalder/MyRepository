@@ -2274,7 +2274,12 @@
 										<attribute name="multiValue" />
 										<attribute name="useForSpellchecking" />
 										<attribute name="useForAutocomplete" />
+
 										<attribute name="boost" width="50" />
+										<!-- <attribute name="facetTopValue" width="50" /> -->
+
+										<attribute name="boostDouble" width="50" />
+
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
@@ -2303,7 +2308,12 @@
 										<attribute name="multiValue" />
 										<attribute name="useForSpellchecking" />
 										<attribute name="useForAutocomplete" />
+
 										<attribute name="boost" width="50" />
+										<!-- <attribute name="facetTopValue" width="50" /> -->
+
+										<attribute name="boostDouble" width="50" />
+
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>

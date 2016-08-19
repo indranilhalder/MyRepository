@@ -106,7 +106,12 @@ function registerUserGigya(eventObject)
     		}
     		gigya.comments.showCommentsUI(params);	
     		
+    		//TISPRD-3152 FIX
+    		$(document).ready(function(){
+    			getRating($('input[name=gigya_api_key]').val(),$('input[name=gigya_product_code]').val(),$('input[name=gigya_product_root_category]').val());		
+     		});
     		
+    		//TISPRD-3152 FIX ends
     	function commentBox(response)
     	{		
     		$('#commentsDiv .gig-comments-subscribe').hide();

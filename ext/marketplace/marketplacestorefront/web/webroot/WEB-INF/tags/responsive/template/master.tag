@@ -21,7 +21,7 @@
 <html lang="${currentLanguage.isocode}">
 <head>
 	<title>
-		${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
+	${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
 	</title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">
@@ -32,14 +32,32 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
 <%-- <link rel="icon" href="//${favHost}/_ui/responsive/common/images/preload.png" type="image/png"> --%>
 
-<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/>
+<!-- TISPT-325 -->
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('media.dammedia.host')" var="mediaHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>
+
+<link rel="stylesheet" type="text/css" media="all" href="//${mediaHost}/preload.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="//${staticResourceHost}/preload.css"/>
+<c:if test="${not empty productMediadnsHost}">
+<link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost}/preload.css"/>
+</c:if>
+<c:if test="${not empty productMediadnsHost1}">
+<link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css"/>
+</c:if>
+
+<!-- TISPT-325 ENDS -->
+
+
+<%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
 <link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
 <link rel="android-touch-icon" href="${themeResourcePath}/images/Appicon.png" />
 <!-- <link rel="windows-touch-icon" href="icon.png" /> -->
 	
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta charset="utf-8">
+	<!-- <meta charset="utf-8"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	
@@ -97,11 +115,12 @@
 	    </c:when>
 	</c:choose> --%>
 	
+	
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.handle')" var="twitterHandle"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
 	<!-- Changes for TISPT-113 -->
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('media.dammedia.host')" var="mediaHost"/>
+	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('media.dammedia.host')" var="mediaHost"/> --%>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('seo.media.url')" var="seoMediaURL"/>
 	
 	<!-- Markup for Google+ -->
@@ -119,7 +138,21 @@
 	<!-- FB Open Graph data -->
 	<meta property="og:title" content="${metaTitle}" />
 	<meta property="og:url" content="${canonical}" />
+	
+	
+	<!-- TPR-514-OG tag chnages on PDP pages-->
+	<c:choose>
+	<c:when test="${fn:contains(reqURI,'/p-')}">	
+	<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" end="0">
+	<meta property="og:image" content="${container.thumbnail.url}" />
+	</c:forEach>	
+	</c:when>
+	<c:otherwise>
 	<meta property="og:image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}" />
+	</c:otherwise>
+	</c:choose>
+	
+	
 	<meta property="og:description" content="${metaDescription}" />
 	<meta property="og:site_name" content="${siteName}" />
 	
@@ -130,9 +163,9 @@
      <link rel="shortcut icon" type="image/x-icon" media="all" href="${baseURL}/favicon.ico" />
     
 	<!-- DNS prefetching starts -->
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>	
+	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/> --%>
+	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/> --%>	
 
 	<link rel="dns-prefetch" href="//${mediaHost}">
 	<link rel="dns-prefetch" href="//${staticResourceHost}"> 	

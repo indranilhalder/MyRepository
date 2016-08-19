@@ -6,6 +6,7 @@ package com.tisl.mpl.order.facade;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.core.model.order.OrderModel;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public interface GetOrderDetailsFacade
 	public OrderDataWsDTO getOrderdetails(String orderCode);
 
 	public Map<String, List<AWBResponseData>> getOrderStatusTrack(OrderEntryData orderEntryDetail, OrderData subOrder,
-			OrderData parentOrder);
+			OrderModel subOrderModel);
 
 	public boolean isPickUpButtonEditable(OrderData parentOrder);
 

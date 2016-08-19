@@ -1264,12 +1264,12 @@ $( document ).ready(function() {
 					if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
-						$("#promotionDetailsId").show();
+						$(".promo-block").show(); //TISPRD-4861
 					} else {
 						if (promorestrictedSellers.length > 0
 								&& !(promorestrictedSellers
 										.indexOf(data['sellerId']) == -1))
-							$("#promotionDetailsId").show();
+							$(".promo-block").show(); //TISPRD-4861
 					}
 					var allStockZero = data['allOOStock'];
 					// var codEnabled = data['isCod'];
@@ -1498,6 +1498,7 @@ function displayDeliveryDetails(sellerName) {
 		}
 	});
 }
+
 function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	//alert("mrp "+ mrp.formattedValue +"mop "+mop.formattedValue +"spPrice "+spPrice.formattedValue +"savingsOnProduct "+ savingsOnProduct.formattedValue);
 	if(null!= mrp){
@@ -1547,7 +1548,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 			$("#mrpPriceId").show();
 		}
 	}
-	if (mrp.value == "") {
+	if (mrp.value = "") {
 		$("#mrpPriceId").hide();
 	} else {
 		$("#mrpPriceId").show();

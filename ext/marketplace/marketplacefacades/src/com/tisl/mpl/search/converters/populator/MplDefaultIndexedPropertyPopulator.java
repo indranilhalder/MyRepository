@@ -24,9 +24,9 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 	{
 		super.populate(source, target);
 
-		if (source.getBoost() != null)
+		if (source.getBoostDouble() != null)
 		{
-			target.setBoost(source.getBoost());
+			target.setBoostDouble(source.getBoostDouble());
 
 		}
 
@@ -56,6 +56,11 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 
 
 		}
+
+		//		if (source.getFacetTopValue() != null)
+		//		{
+		//			target.setFacetTopValue(source.getFacetTopValue());
+		//		}
 
 	}
 }
