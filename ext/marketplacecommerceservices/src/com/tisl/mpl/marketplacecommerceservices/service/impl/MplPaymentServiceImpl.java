@@ -471,8 +471,18 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 						try
 						{
-							getModelService().save(paymentTransactionEntry);
-							paymentTransactionEntryList.add(paymentTransactionEntry);
+							//Check handled to remove concurrent scenario - TPR-629
+							if (null == order.getPaymentInfo())
+							{
+								getModelService().save(paymentTransactionEntry);
+								paymentTransactionEntryList.add(paymentTransactionEntry);
+							}
+							else
+							{
+								LOG.error("Order already has payment info -- not saving paymentTransactionEntry>>>"
+										+ order.getPaymentInfo().getCode());
+							}
+
 						}
 						catch (final ModelSavingException e)
 						{
@@ -494,16 +504,26 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						paymentTransactionEntryList);
 				paymentTransactionList.add(payTranModel);
 			}
-			order.setPaymentTransactions(paymentTransactionList);
 
-			getModelService().save(order);
-			if (saveCard.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE)
-					&& null != orderStatusResponse.getCardResponse()
-					&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardReference()))
+			if (null != order.getPaymentInfo())
 			{
-				//setting as saved card
-				saveCards(orderStatusResponse, paymentMode, order, sameAsShipping);
+				order.setPaymentTransactions(paymentTransactionList);
+
+				//Check handled to remove concurrent scenario - TPR-629
+				getModelService().save(order);
+				if (saveCard.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE)
+						&& null != orderStatusResponse.getCardResponse()
+						&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardReference()))
+				{
+					//setting as saved card
+					saveCards(orderStatusResponse, paymentMode, order, sameAsShipping);
+				}
 			}
+			else
+			{
+				LOG.error("Order already has payment info -- not saving order or card models>>>" + order.getPaymentInfo().getCode());
+			}
+
 		}
 		catch (final ModelSavingException e)
 		{
@@ -522,7 +542,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * wallet
 	 *
 	 * @param paymentMode
-	 * @param cart
+	 * @param abstractOrderModel
 	 * @throws EtailNonBusinessExceptions
 	 *            , Exception
 	 */
@@ -564,8 +584,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
 			paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
 
-			getModelService().save(paymentTransactionEntry);
-			paymentTransactionEntryList.add(paymentTransactionEntry);
+			if (null == abstractOrderModel.getPaymentInfo())
+			{
+				getModelService().save(paymentTransactionEntry);
+				paymentTransactionEntryList.add(paymentTransactionEntry);
+			}
+			else
+			{
+				LOG.error("PaymentInfo already available.....not saving any more paymentTransactionEntry model");
+			}
 
 			if (null != abstractOrderModel.getPaymentInfo())
 			{
@@ -592,10 +619,21 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
 			}
-			getModelService().save(paymentTransactionModel);
-			paymentTransactionList.add(paymentTransactionModel);
-			abstractOrderModel.setPaymentTransactions(paymentTransactionList);
-			getModelService().save(abstractOrderModel);
+
+
+			if (null == abstractOrderModel.getPaymentInfo())
+			{
+				getModelService().save(paymentTransactionModel);
+				paymentTransactionList.add(paymentTransactionModel);
+				abstractOrderModel.setPaymentTransactions(paymentTransactionList);
+				getModelService().save(abstractOrderModel);
+			}
+			else
+			{
+				LOG.error("PaymentInfo already available.....not saving any more paymentTransactionModel and not setting against the abstractOrderModel>>>"
+						+ abstractOrderModel.getPaymentInfo().getCode());
+			}
+
 		}
 		catch (final ModelSavingException e)
 		{
@@ -608,7 +646,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			throw new EtailNonBusinessExceptions(ex);
 		}
 	}
-
 
 	/**
 	 * This private method is used to set the values in DebitCardPaymentInfoModel after getting successful response from
@@ -714,7 +751,18 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//saving the debitcardpaymentinfomodel
 			//try
 			//{
-			getModelService().save(debitCardPaymentInfoModel);
+			if (null == cart.getPaymentInfo())
+			{
+				getModelService().save(debitCardPaymentInfoModel);
+				//setting paymentinfo in cart
+				cart.setPaymentInfo(debitCardPaymentInfoModel);
+				cart.setPaymentAddress(cart.getDeliveryAddress());
+			}
+			else
+			{
+				LOG.error("Order already has payment info -- not saving debitCardPaymentInfoModel>>>"
+						+ cart.getPaymentInfo().getCode());
+			}
 
 			//}
 			//catch (final ModelSavingException e)
@@ -722,9 +770,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//	LOG.error("Exception while saving debit card payment info with " + e);
 			//}
 
-			//setting paymentinfo in cart
-			cart.setPaymentInfo(debitCardPaymentInfoModel);
-			cart.setPaymentAddress(cart.getDeliveryAddress());
+
 
 		}
 		catch (final ModelSavingException e)
@@ -922,16 +968,24 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 
 			//saving the creditCardPaymentInfoModel
-			getModelService().save(creditCardPaymentInfoModel);
-
 			//}
 			//catch (final ModelSavingException e)
 			//{
 			//	LOG.error("Exception while saving credit card payment info with " + e);
 			//}
-			//setting paymentinfo in cart
-			cart.setPaymentInfo(creditCardPaymentInfoModel);
-			cart.setPaymentAddress(address);
+
+			if (null == cart.getPaymentInfo())
+			{
+				getModelService().save(creditCardPaymentInfoModel);
+				//setting paymentinfo in cart
+				cart.setPaymentInfo(creditCardPaymentInfoModel);
+				cart.setPaymentAddress(address);
+			}
+			else
+			{
+				LOG.error("Order already has payment info -- not saving creditCardPaymentInfoModel>>>"
+						+ cart.getPaymentInfo().getCode());
+			}
 		}
 		catch (final ModelSavingException e)
 		{
@@ -1141,16 +1195,24 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//setting the billing address against emiPaymentInfoModel
 				emiPaymentInfoModel.setBillingAddress(address);
 			}
-			//saving the creditCardPaymentInfoModel
-			getModelService().save(emiPaymentInfoModel);
-			//}
-			//catch (final ModelSavingException e)
-			//{
-			//	LOG.error("Exception while saving emi payment info with " + e);
-			//}
-			//setting paymentinfo in cart
-			cart.setPaymentInfo(emiPaymentInfoModel);
-			cart.setPaymentAddress(address);
+
+			if (null == cart.getPaymentInfo())
+			{
+				//saving the creditCardPaymentInfoModel
+				getModelService().save(emiPaymentInfoModel);
+				//}
+				//catch (final ModelSavingException e)
+				//{
+				//	LOG.error("Exception while saving emi payment info with " + e);
+				//}
+				//setting paymentinfo in cart
+				cart.setPaymentInfo(emiPaymentInfoModel);
+				cart.setPaymentAddress(address);
+			}
+			else
+			{
+				LOG.error("Order already has payment info -- not saving emiPaymentInfoModel>>>" + cart.getPaymentInfo().getCode());
+			}
 
 		}
 		catch (final ModelNotFoundException e)
@@ -1231,12 +1293,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				nbPaymentInfoModel.setBank(nbBankModel);
 			}
 
-			//saving the nbPaymentInfoModel
-			getModelService().save(nbPaymentInfoModel);
+			if (null == cart.getPaymentInfo())
+			{
+				//saving the nbPaymentInfoModel
+				getModelService().save(nbPaymentInfoModel);
 
-			//setting paymentinfo in cart
-			cart.setPaymentInfo(nbPaymentInfoModel);
-			cart.setPaymentAddress(cart.getDeliveryAddress());
+				//setting paymentinfo in cart
+				cart.setPaymentInfo(nbPaymentInfoModel);
+				cart.setPaymentAddress(cart.getDeliveryAddress());
+			}
+			else
+			{
+				LOG.error("Order already has payment info -- not saving nbPaymentInfoModel>>>" + cart.getPaymentInfo().getCode());
+			}
 
 		}
 		//		catch (final ModelSavingException e)
@@ -1349,41 +1418,49 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		cODPaymentInfoModel.setCashOwner(custName);
 		cODPaymentInfoModel.setCode(MarketplacecommerceservicesConstants.COD + "_" + entries.get(0).getOrder().getCode());
 		cODPaymentInfoModel.setUser(getUserService().getCurrentUser());
-		try
+		if (null != abstractOrderModel.getPaymentInfo())
 		{
-			//saving CODPaymentInfoModel
-			getModelService().save(cODPaymentInfoModel);
-		}
-		catch (final ModelSavingException e)
-		{
-			LOG.error("Exception while saving cod payment info with " + e);
-			throw new EtailNonBusinessExceptions(e, "Exception while saving cod payment info with");
-		}
-
-		//setting CODPaymentInfoModel in cartmodel
-		abstractOrderModel.setPaymentInfo(cODPaymentInfoModel);
-		abstractOrderModel.setPaymentAddress(abstractOrderModel.getDeliveryAddress());
-		try
-		{
-			//saving the cartmodel
-			getModelService().save(abstractOrderModel);
-			//TIS-3168
-			if (null != abstractOrderModel.getGuid())
+			try
 			{
-				LOG.error("COD Payment Info set for cart with GUID" + abstractOrderModel.getGuid());
+				//saving CODPaymentInfoModel
+				getModelService().save(cODPaymentInfoModel);
+			}
+			catch (final ModelSavingException e)
+			{
+				LOG.error("Exception while saving cod payment info with " + e);
+				throw new EtailNonBusinessExceptions(e, "Exception while saving cod payment info with");
 			}
 
-		}
-		catch (final ModelSavingException e)
-		{
-			//TIS-3168
-			if (null != abstractOrderModel.getGuid())
+			//setting CODPaymentInfoModel in cartmodel
+			abstractOrderModel.setPaymentInfo(cODPaymentInfoModel);
+			abstractOrderModel.setPaymentAddress(abstractOrderModel.getDeliveryAddress());
+			try
 			{
-				LOG.error("Exception while saving cart for" + abstractOrderModel.getGuid());
-			}
+				//saving the cartmodel
+				getModelService().save(abstractOrderModel);
+				//TIS-3168
+				if (null != abstractOrderModel.getGuid())
+				{
+					LOG.error("COD Payment Info set for cart with GUID" + abstractOrderModel.getGuid());
+				}
 
-			LOG.error("Exception while saving cart with ", e);
-			throw new EtailNonBusinessExceptions(e, "Exception while saving cart with");
+			}
+			catch (final ModelSavingException e)
+			{
+				//TIS-3168
+				if (null != abstractOrderModel.getGuid())
+				{
+					LOG.error("Exception while saving cart for" + abstractOrderModel.getGuid());
+				}
+
+				LOG.error("Exception while saving cart with ", e);
+				throw new EtailNonBusinessExceptions(e, "Exception while saving cart with");
+			}
+		}
+		else
+		{
+			LOG.error("Order already has payment info -- not saving cODPaymentInfoModel and not attaching to abstractOrderModel>>>"
+					+ abstractOrderModel.getPaymentInfo().getCode());
 		}
 	}
 

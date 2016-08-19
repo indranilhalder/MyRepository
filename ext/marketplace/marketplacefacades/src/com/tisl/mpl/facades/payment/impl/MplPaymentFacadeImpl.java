@@ -1456,7 +1456,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	@Override
 	public String getNetbankingOrderStatus(final String juspayOrderId, final String paymentMethodType, final String paymentMethod,
-			final String redirectAfterPayment, final String format) throws EtailNonBusinessExceptions
+			final String redirectAfterPayment, final String format) throws EtailNonBusinessExceptions, AdapterException
 	{
 		final PaymentService juspayService = new PaymentService();
 
@@ -1486,7 +1486,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		catch (final Exception e)
 		{
 			LOG.error("Failed to save order status in payment transaction with error: " + e);
-			throw new EtailNonBusinessExceptions(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
@@ -2142,7 +2142,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public String getOrderStatusFromJuspay(final String orderGuid) throws EtailBusinessExceptions, EtailNonBusinessExceptions
+	public String getOrderStatusFromJuspay(final String orderGuid, final OrderModel orderModel) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions
 	{
 		final PaymentService juspayService = new PaymentService();
 
@@ -2157,8 +2158,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			final Map<String, Double> paymentMode = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.PAYMENTMODE);
-
-			final OrderModel orderModel = getOrderByGuid(orderGuid);
 
 			String orderStatus = null;
 			boolean updAuditErrStatus = false;
@@ -2282,6 +2281,23 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
 							getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+
+			//LOG to check address details submitted by customer TISPRD-3025
+			final StringBuilder sb = new StringBuilder();
+			sb.append("firstName:::").append(firstName).append("|lastName:::").append(lastName).append("|addressLine1:::")
+					.append(addressLine1).append("|addressLine2:::").append(addressLine2).append("|addressLine3:::")
+					.append(addressLine3).append("|country:::").append(country).append("|state:::").append(state).append("|city:::")
+					.append(city).append("|pincode:::").append(pincode).append("|cardSaved-sameAsShipping:::").append(checkValues);
+			if (null != cart && StringUtils.isNotEmpty(cart.getGuid()))
+			{
+				sb.append("|cartGUID:::").append(cart.getGuid());
+			}
+			else if (null != order && StringUtils.isNotEmpty(order.getGuid()))
+			{
+				sb.append("|orderGUID:::").append(order.getGuid());
+			}
+
+			LOG.error("Address details entered >>>" + sb.toString());
 
 			//getting the current customer to fetch customer Id and customer email
 			//CustomerModel customer = getModelService().create(CustomerModel.class);	//TISPT-200

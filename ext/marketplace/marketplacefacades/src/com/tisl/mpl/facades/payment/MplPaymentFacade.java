@@ -287,11 +287,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -299,9 +299,9 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return Map<String, List<MplNetbankingData>>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
@@ -366,11 +366,13 @@ public interface MplPaymentFacade
 
 	/**
 	 * @param orderGuid
+	 * @param orderModel
 	 * @return String
 	 * @throws EtailBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	String getOrderStatusFromJuspay(String orderGuid) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+	String getOrderStatusFromJuspay(String orderGuid, OrderModel orderModel) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions;
 
 
 	/**

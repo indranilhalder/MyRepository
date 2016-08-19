@@ -135,9 +135,16 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 				}
 			}
 
-
-			getModelService().save(paymentTransactionEntry);
-			paymentTransactionEntryList.add(paymentTransactionEntry);
+			//Check handled to remove concurrent scenario - TPR-629
+			if (null == cart.getPaymentInfo())
+			{
+				getModelService().save(paymentTransactionEntry);
+				paymentTransactionEntryList.add(paymentTransactionEntry);
+			}
+			else
+			{
+				LOG.error("Order already has payment info -- not saving paymentTransactionEntry>>>" + cart.getPaymentInfo().getCode());
+			}
 		}
 		catch (final ModelSavingException e)
 		{
@@ -353,8 +360,17 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
 			}
 
-			getModelService().save(paymentTransactionModel);
-			//paymentTransactionList.add(paymentTransactionModel);
+			//Check handled to remove concurrent scenario - TPR-629
+			if (null == cart.getPaymentInfo())
+			{
+				getModelService().save(paymentTransactionModel);
+				//paymentTransactionList.add(paymentTransactionModel);
+			}
+			else
+			{
+				LOG.error("Order already has payment info -- not saving paymentTransaction>>>" + cart.getPaymentInfo().getCode());
+			}
+
 		}
 		catch (final ModelSavingException e)
 		{

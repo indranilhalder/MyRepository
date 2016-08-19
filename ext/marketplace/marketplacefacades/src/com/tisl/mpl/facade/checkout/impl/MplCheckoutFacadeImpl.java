@@ -851,7 +851,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public boolean isPromotionValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions
+	public boolean isPromotionValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions //Parameter changed to abstractOrderModel for TPR-629
 	{
 		boolean result = true;
 		if (abstractOrderModel != null)
@@ -863,6 +863,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					if (promo.getCertainty().floatValue() == 1.0F)
 					{
+						//Changed to handle promotion for both cart and order
 						if (promo.getPromotion() != null && (promo.getPromotion().getEnabled().booleanValue())
 								|| getSellerBasedPromotionService().getPromoDetails(promo.getPromotion().getCode()))
 						{
@@ -1332,10 +1333,10 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
-		catch (final NullPointerException ex)
-		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
-		}
+		//		catch (final NullPointerException ex)
+		//		{
+		//			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);		//Nullpointer exception not to be handled
+		//		}
 		catch (final UnknownIdentifierException ex)
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);

@@ -2250,15 +2250,6 @@
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
 						
-					<!-- Attribute to handle manual locking -->
-					<attribute autocreate="true" qualifier="isOrderUnderProcess"
-						type="java.lang.Boolean">
-						<persistence type="property">
-						</persistence>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-						<defaultvalue>false</defaultvalue>
-					</attribute>
 				</attributes>
 			</itemtype>
 
