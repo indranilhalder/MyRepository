@@ -399,6 +399,7 @@ function constructDepartmentHierarchy(inputArray) {
 					if(stckData[sizeMatched]=='outOfStock'){
 						
 					  $(".AvailabilitySize").show();
+					  $(".Availability").hide();
 								//}
 						
 					$("#stockIdFilteredVariant_" + product).show();
@@ -414,6 +415,7 @@ function constructDepartmentHierarchy(inputArray) {
 							
 							if(stckData[sizeMatched]=='outOfStock'){
 								 $(".AvailabilitySize").show();
+								 $(".Availability").hide();
 								$("#stockIdFilteredVariant_" + product).show();
 								$("#stockIdFilteredVariant_" + product).html(
 										"OUT OF STOCK");
@@ -428,6 +430,7 @@ function constructDepartmentHierarchy(inputArray) {
 		}
 		}
 	}
+
 
 	//update product minimum price and mrp
 	function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,minPriceValue,product) {

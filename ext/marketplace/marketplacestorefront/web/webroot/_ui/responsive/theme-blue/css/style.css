@@ -42543,7 +42543,9 @@ margin-left: 20%;
 }
 
 .product-info .product-image-container .image-list li span.thumb:hover,
-	.product-info .product-image-container .image-list li .active {
+	.product-info .product-image-container .image-list li .active,
+	.productImageGallery .imageList li span.thumb:hover,
+	.productImageGallery .imageList li .active{
 	border-color: #ad2046;
 }
 

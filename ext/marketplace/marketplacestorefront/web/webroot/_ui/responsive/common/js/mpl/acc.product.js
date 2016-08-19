@@ -961,7 +961,7 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 	    if (newQryParam.endsWith(':')) {
 	    	newQryParam = newQryParam.substring(0, newQryParam.length - 1);
 	    }
-	    alert("allBrands: "+allBrands);
+	    
 	    var finalQuery = newQryParam + allBrands;
 	    //append non brand query and checked brands
 	    $('.qValueForApply').val(finalQuery);
