@@ -103,7 +103,7 @@ var productSizeVar = '${productSize}';
 									items="${variantOption.colourCode}" var="color">
 									<c:choose>
 								<c:when test="${fn:startsWith(color, 'multi')}">
-						     	<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
+						     	<img src="${commonResourcePath}/images/multi.jpg" height="20" width="20" title="${variantOption.colour}" />
 								</c:when>
 								<c:otherwise>
 									<span

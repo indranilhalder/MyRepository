@@ -84,7 +84,7 @@
 								code="pickup.out.of.stock" text="Out Of Stock" /></span>
 					</a>
 				</c:if>
-				<c:choose>
+				<%-- <c:choose>
 				 <c:when test="${product.stock.stockLevelStatus eq 'outOfStock'}">
 					<a id="stockIdDefault_${product.name}" class="stockLevelStatus"
 						href="${productUrl}" title="${product.name}"> <spring:theme
@@ -108,7 +108,7 @@
 						id="stockIdFiltered_${product.code}"></span>
 					</a>
 					</c:otherwise>
-				</c:choose>
+				</c:choose> --%>
 				<div class="item quickview">
 					<%-- <c:if test="${product.isVariant eq true}"> --%>
 
