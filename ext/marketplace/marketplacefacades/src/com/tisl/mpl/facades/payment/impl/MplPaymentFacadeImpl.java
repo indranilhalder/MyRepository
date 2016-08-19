@@ -8,7 +8,6 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -423,60 +422,24 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @throws NoSuchAlgorithmException
 	 */
 	@Override
-	public String generateOTPforCODWeb(final String customerID, final String mobileNumber, final String mplCustomerName,
-			final String cartId, final OrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException //Parameter OrderModel added extra for TPR-629
+	public String generateOTPforCOD(final String customerID, final String mobileNumber, final String mplCustomerName,
+			final AbstractOrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException
 	{
 		String otp = getOtpGenericService().generateOTP(customerID, OTPTypeEnum.COD.getCode(), mobileNumber);
 		if (null == otp)
 		{
 			otp = "".intern();
 		}
-		if (null == orderModel)
+		if (null != orderModel && null != orderModel.getDeliveryAddress() && null != orderModel.getDeliveryAddress().getPhone1())
 		{
-			boolean isMobile = false;
-			if (null != cartId && !cartId.isEmpty())
-			{
-				isMobile = true;
-			}
-			//calling service to generate OTP
-			CartModel cart = new CartModel();
-			if (isMobile)
-			{
-				final FlexibleSearchService flexibleSearchService = Registry.getApplicationContext().getBean(
-						FlexibleSearchService.class);
-
-				cart.setCode(cartId);
-				cart = flexibleSearchService.getModelByExample(cart);
-			}
-			else
-			{
-				cart = getCartService().getSessionCart();
-			}
-			if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getPhone1())
-			{
-				cart.getDeliveryAddress().setPhone1(mobileNumber);
-			}
-			if (null != cart.getDeliveryAddress() && null != cart.getDeliveryAddress().getCellphone())
-			{
-				cart.getDeliveryAddress().setCellphone(mobileNumber);
-			}
-			getModelService().save(cart.getDeliveryAddress());
-			saveCart(cart);
+			orderModel.getDeliveryAddress().setPhone1(mobileNumber);
 		}
-		else
+		if (null != orderModel && null != orderModel.getDeliveryAddress() && null != orderModel.getDeliveryAddress().getCellphone())
 		{
-			if (null != orderModel.getDeliveryAddress() && null != orderModel.getDeliveryAddress().getPhone1())
-			{
-				orderModel.getDeliveryAddress().setPhone1(mobileNumber);
-			}
-			if (null != orderModel.getDeliveryAddress() && null != orderModel.getDeliveryAddress().getCellphone())
-			{
-				orderModel.getDeliveryAddress().setCellphone(mobileNumber);
-			}
-			getModelService().save(orderModel.getDeliveryAddress());
-			getModelService().save(orderModel);
+			orderModel.getDeliveryAddress().setCellphone(mobileNumber);
 		}
-
+		getModelService().save(orderModel.getDeliveryAddress());
+		getModelService().save(orderModel);
 
 		//sending sms to verify COD Payment before order confirmation
 		final String contactNumber = getConfigurationService().getConfiguration().getString(
@@ -1620,11 +1583,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1675,9 +1638,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -2142,8 +2105,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public String getOrderStatusFromJuspay(final String orderGuid, final OrderModel orderModel) throws EtailBusinessExceptions,
-			EtailNonBusinessExceptions
+	public String getOrderStatusFromJuspay(final String orderGuid, Map<String, Double> paymentMode, final OrderModel orderModel,
+			String juspayOrderId) throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
 		final PaymentService juspayService = new PaymentService();
 
@@ -2156,8 +2119,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 		try
 		{
-			final Map<String, Double> paymentMode = getSessionService().getAttribute(
-					MarketplacecommerceservicesConstants.PAYMENTMODE);
+			//For Mobile
+			if (MapUtils.isEmpty(paymentMode))
+			{
+				paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
+			}
 
 			String orderStatus = null;
 			boolean updAuditErrStatus = false;
@@ -2166,13 +2132,16 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
 
 			//TISPT-200 implementing fallback for null audit id
-			String juspayOrderId = null;
 			try
 			{
-				juspayOrderId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
-				if (null == juspayOrderId)
+				//For Mobile
+				if (StringUtils.isEmpty(juspayOrderId))
 				{
-					juspayOrderId = getMplPaymentService().getAuditId(orderGuid);
+					juspayOrderId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
+					if (StringUtils.isEmpty(juspayOrderId))
+					{
+						juspayOrderId = getMplPaymentService().getAuditId(orderGuid);
+					}
 				}
 			}
 			catch (final Exception e)

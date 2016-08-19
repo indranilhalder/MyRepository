@@ -284,16 +284,25 @@ public interface MplCartFacade extends CartFacade
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
 	 *
-	 *
 	 * @param requestType
 	 *
-	 *
 	 * @return boolean
-	 *
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean isInventoryReserved(String requestType, AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
+
+	/*
+	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment For Mobile
+	 *
+	 * @param requestType
+	 *
+	 * @return boolean
+	 *
+	 * @throws EtailNonBusinessExceptions
+	 */
+	public boolean isInventoryReservedMobile(final String requestType, final AbstractOrderModel abstractOrderModel,
+			final String defaultPinCodeId) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param cart
@@ -302,7 +311,7 @@ public interface MplCartFacade extends CartFacade
 
 	CartModel removeDeliveryMode(CartModel cart);
 
-	boolean removeDeliveryMode2(CartModel cart);
+	boolean removeDeliveryMode2(final AbstractOrderModel cart);
 
 	void setDeliveryDate(final CartData cartData, final List<PinCodeResponseData> omsDeliveryResponse)
 			throws CMSItemNotFoundException, ParseException;
@@ -414,18 +423,17 @@ public interface MplCartFacade extends CartFacade
 	 * @return PinCodeResponseData
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData)
+	PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData)
 			throws EtailNonBusinessExceptions;
 
 	/**
 	 * This Method is used to get Ordered Cart entry in Mobile
 	 *
-	 * @param data
 	 * @param recentlyAddedFirst
 	 * @return CartData
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst)
+	CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst)
 			throws EtailNonBusinessExceptions;
 
 	/**

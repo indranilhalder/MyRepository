@@ -106,12 +106,15 @@ public interface MplPaymentFacade
 	 * This method takes the customerID as parameter and calls the service to generate OTP
 	 *
 	 * @param customerID
+	 * @param mobileNumber
+	 * @param mplCustomerName
+	 * @param orderModel
 	 * @return otp
 	 * @throws InvalidKeyException
 	 * @throws NoSuchAlgorithmException
 	 */
-	String generateOTPforCODWeb(String customerID, String mobileNumber, String mplCustomerName, String cartId,
-			OrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException;
+	String generateOTPforCOD(final String customerID, final String mobileNumber, final String mplCustomerName,
+			final AbstractOrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException;
 
 
 	/**
@@ -371,8 +374,8 @@ public interface MplPaymentFacade
 	 * @throws EtailBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	String getOrderStatusFromJuspay(String orderGuid, OrderModel orderModel) throws EtailBusinessExceptions,
-			EtailNonBusinessExceptions;
+	public String getOrderStatusFromJuspay(final String orderGuid, Map<String, Double> paymentMode, final OrderModel orderModel,
+			String juspayOrderId) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 
 
 	/**

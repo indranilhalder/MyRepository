@@ -28,7 +28,6 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.user.User;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
@@ -43,6 +42,7 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.jalo.PromotionVoucher;
@@ -173,6 +173,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Resource(name = "sellerBasedPromotionService")
 	private SellerBasedPromotionService sellerBasedPromotionService;
 
+	@Autowired
+	private BaseSiteService baseService;
+
 
 
 	/**
@@ -293,15 +296,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -337,13 +340,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description modified from DefaultAcceleratorCheckoutFacade performExpressCheckout : TIS 391
-	 * 
+	 *
 	 * @ Selected Address set for express checkout
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return ExpressCheckoutResult
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	@Override
@@ -373,7 +376,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc if express checkout is enabled for the store
-	 * 
+	 *
 	 * @return boolean
 	 */
 
@@ -391,11 +394,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description setting address for express checkout : TIS 391
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	private boolean setDefaultDeliveryAddressForCheckout(final String addressId) throws EtailNonBusinessExceptions
@@ -426,11 +429,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Re calculating cart delivery cost: TIS 400
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -553,13 +556,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Storing delivery cost while navigating from Delivery mode to address selection : TIS 400 TISEE-581
-	 * 
+	 *
 	 * @param finalDeliveryCost
-	 * 
+	 *
 	 * @param deliveryCostPromotionMap
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -770,11 +773,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc to check pincode inventory for Pay now TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -843,11 +846,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @ Desc to check promotion expired or not for Pay now : TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -957,63 +960,55 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#placeOrder(java.lang.String)
 	 */
 	@Override
-	public OrderData placeOrderByCartId(final String cartID, final String userId) throws EtailNonBusinessExceptions
+	public OrderData placeOrderByCartId(final String cartID) throws EtailNonBusinessExceptions
 	{
-		final UserModel user = getExtendedUserService().getUserForOriginalUid(userId);
-
-		if (null != user)
+		OrderData orderData = null;
+		try
 		{
-			try
+			//final CartModel cartModel = getCommerceCartService().getCartForCodeAndUser(cartID, user);
+			//now guid
+			final CartModel cartModel = getCommerceCartService().getCartForGuidAndSite(cartID, baseService.getCurrentBaseSite());
+			/*
+			 * CartModel cartModel = modelService.create(CartModel.class); cartModel.setCode(cartCode); cartModel =
+			 * flexibleSearchService.getModelByExample(cartModel);
+			 */
+			if (null != cartModel && !getUserService().isAnonymousUser(cartModel.getUser()))
 			{
+				//For mobile
+				cartModel.setChannel(SalesApplication.MOBILE);
+				getModelService().save(cartModel);
+				beforePlaceOrder(cartModel);
 
-				final CartModel cartModel = getCommerceCartService().getCartForCodeAndUser(cartID, user);
-				/*
-				 * CartModel cartModel = modelService.create(CartModel.class); cartModel.setCode(cartCode); cartModel =
-				 * flexibleSearchService.getModelByExample(cartModel);
-				 */
+				final OrderModel orderModel = placeOrderWS(cartModel);
 
+				//TISUT-1810
+				afterPlaceOrderWS(cartModel, orderModel);
 
-				if (null != cartModel && !getUserService().isAnonymousUser(cartModel.getUser()))
+				// Convert the order to an order data
+				if (orderModel != null)
 				{
-					//For mobile
-					cartModel.setChannel(SalesApplication.MOBILE);
-					getModelService().save(cartModel);
-					beforePlaceOrder(cartModel);
-
-					final OrderModel orderModel = placeOrderWS(cartModel);
-
-					//TISUT-1810
-					afterPlaceOrderWS(cartModel, orderModel);
-
-
-					// Convert the order to an order data
-					if (orderModel != null)
-					{
-						return getOrderConverter().convert(orderModel);
-					}
+					orderData = getOrderConverter().convert(orderModel);
 				}
 			}
-			catch (final InvalidCartException e)
-			{
-				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-			}
-			catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
-			{
-				throw e;
-			}
-			catch (final Exception ex)
-			{
-				// Error message for All Exceptions
-				throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
-			}
-
 		}
-		return null;
-
+		catch (final InvalidCartException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception ex)
+		{
+			// Error message for All Exceptions
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		return orderData;
 	}
 
 	//TISUT-1810
@@ -1148,7 +1143,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCheckoutFacade#triggerEmailAndSmsOnOrderConfirmation(de.hybris.platform.core.model
 	 * .order.OrderModel)
@@ -1201,15 +1196,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param freebieModelMap
-	 * 
+	 *
 	 * @param freebieParentQtyMap
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1222,11 +1217,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Description to check coupon expired or not for Pay now
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override

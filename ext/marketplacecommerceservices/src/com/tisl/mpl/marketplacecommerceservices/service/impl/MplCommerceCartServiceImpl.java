@@ -788,15 +788,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc : used to fetch delivery mode description details TISEE-950
-	 * 
+	 *
 	 * @param ussId
-	 * 
+	 *
 	 * @param deliveryMode
-	 * 
+	 *
 	 * @param startTime
-	 * 
+	 *
 	 * @param endTime
-	 * 
+	 *
 	 * @return String
 	 */
 
@@ -1210,11 +1210,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc checking wishlist entry is valid or not , delisted , end date , online from TISEE-5185
-	 * 
+	 *
 	 * @param wishlistEntryModel
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1261,11 +1261,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 * 
+	 *
 	 * @param sortedWishListMap
-	 * 
+	 *
 	 * @return List<PincodeServiceData>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestData(
@@ -1395,11 +1395,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 * 
+	 *
 	 * @param sortedWishListMap
-	 * 
+	 *
 	 * @return List<PincodeServiceData>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestDataMobile(final Wishlist2EntryModel wishlist2EntryModel)
@@ -2261,42 +2261,35 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc fetching reservation details
-	 * 
+	 *
 	 * @param cartId
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @param pincode
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public ReservationListWsDTO getReservation(final String cartId, final CartData cartData, final String pincode,
-			final String type) throws EtailNonBusinessExceptions
+	public ReservationListWsDTO getReservation(final AbstractOrderModel cartModel, final String pincode, final String type)
+			throws EtailNonBusinessExceptions
 	{
 
 		final ReservationListWsDTO wsDto = new ReservationListWsDTO();
 		InventoryReservListResponse inventoryReservListResponse = null;
 		List<CartSoftReservationData> cartdatalist = null;
+		List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
+		final String cartGuid = "";
 		try
 		{
-			if (cartId != null && cartData != null && pincode != null)
+			if (cartModel != null && pincode != null)
 			{
-				List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
-				final FlexibleSearchService flexibleSearchService = Registry.getApplicationContext().getBean(
-						FlexibleSearchService.class);
-
-				AbstractOrderModel cartModel = new AbstractOrderModel();
-				cartModel.setCode(cartId);
-
-				cartModel = flexibleSearchService.getModelByExample(cartModel);
-				final String cartGuid = cartModel.getGuid();
-
+				//cartGuid = cartModel.getGuid();
 				try
 				{
 					cartdatalist = populateDataForSoftReservation(cartModel);
-					inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartdatalist, cartGuid, pincode,
-							type);
+					inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartdatalist,
+							cartModel.getCode(), pincode, type);
 					LOG.debug("inventoryReservListResponse Mobile###############################" + inventoryReservListResponse);
 				}
 				catch (final ClientEtailNonBusinessExceptions e)
@@ -2313,7 +2306,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				}
 				catch (final Exception e)
 				{
-					LOG.debug("inventoryReservListResponse Mobile OMS fail for cart###############################" + cartId);
+					LOG.debug("inventoryReservListResponse Mobile OMS fail for cart###############################" + cartGuid);
 					throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9201);
 				}
 
@@ -2334,22 +2327,26 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							}
 							else
 							{
-								LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" + cartId);
+								LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" + cartGuid);
 								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 							}
 						}
 					}
 					else
 					{
-						LOG.debug("Inventory reservationData for Mobile from OMS is empty###### =" + cartId);
+						LOG.debug("Inventory reservationData for Mobile from OMS is empty###### =" + cartGuid);
 						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 					}
 				}
 				else
 				{
-					LOG.debug("InventoryReservListResponse for mobile is null ##### =" + cartId);
+					LOG.debug("InventoryReservListResponse for mobile is null ##### =" + cartGuid);
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 				}
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
 		}
 		catch (final Exception e)
@@ -2361,11 +2358,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc converting response to dto
-	 * 
+	 *
 	 * @param inventoryReservListResponse
-	 * 
+	 *
 	 * @return List<ReservationItemWsDTO>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<ReservationItemWsDTO> converter(final InventoryReservListResponse inventoryReservListResponse)
@@ -2402,11 +2399,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc populating data for soft reservation
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return List<CartSoftReservationData>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public List<CartSoftReservationData> populateDataForSoftReservation(final CartData cartData) throws EtailNonBusinessExceptions
@@ -2479,13 +2476,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
-	 * 
+	 *
 	 * @param userModel
-	 * 
+	 *
 	 * @param pincode
-	 * 
+	 *
 	 * @return GetWishListWsDTO
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -2558,9 +2555,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @param sortedWishListMap
-	 * 
+	 *
 	 * @return GetWishListWsDTO
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private GetWishListWsDTO getWishListWebserviceDetails(final Map<String, List<Wishlist2EntryModel>> sortedWishListMap,
@@ -2798,13 +2795,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc For webservice
-	 * 
+	 *
 	 * @param buyBoxModelList
-	 * 
+	 *
 	 * @param getWishListProductWsObj
-	 * 
+	 *
 	 * @return GetWishListProductWsDTO
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -2833,11 +2830,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc For webservice
-	 * 
+	 *
 	 * @param wishlist2EntryModel
-	 * 
+	 *
 	 * @param getWishListProductWsObj
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private GetWishListProductWsDTO setWSWishlistEligibleDeliveryMode(final Wishlist2EntryModel wishlist2EntryModel,
@@ -2964,13 +2961,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 * 
+	 *
 	 * @param deliveryModeMap
-	 * 
+	 *
 	 * @param pincodeResponseData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3270,11 +3267,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc fetching state details for a state name
-	 * 
+	 *
 	 * @param stateName
-	 * 
+	 *
 	 * @return StateModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -3299,9 +3296,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Sub order id
-	 * 
+	 *
 	 * @return String
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3312,9 +3309,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Order Line id and transaction id
-	 * 
+	 *
 	 * @return String
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3326,9 +3323,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Order Id
-	 * 
+	 *
 	 * @return String
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3340,13 +3337,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
-	 * 
+	 *
 	 * @param requestType
-	 * 
+	 *
 	 * @param abstractOrderModel
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3508,9 +3505,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @description:Populate data to CartSoftReservationData
-	 * 
+	 *
 	 * @return:List<CartSoftReservationData>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -3928,11 +3925,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC : Inventory list to be generated for TISPRD-2758
-	 *
+	 * 
 	 * @param abstractOrderModel
-	 *
+	 * 
 	 * @param entryModel
-	 *
+	 * 
 	 * @return Tuple2<?, ?>
 	 */
 	private Tuple2<?, ?> getFreebieInventoryList(final AbstractOrderModel abstractOrderModel,
@@ -3975,13 +3972,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC : Inventory list to be generated for TISPRD-2758
-	 *
+	 * 
 	 * @param abstractOrderModel
-	 *
+	 * 
 	 * @param entryModel
-	 *
+	 * 
 	 * @param productPromoCode
-	 *
+	 * 
 	 * @return List<CartSoftReservationData>
 	 */
 	private List<CartSoftReservationData> populateFreebieInventoryData(final AbstractOrderModel abstractOrderModel,
@@ -4718,15 +4715,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param freebieModelMap
-	 * 
+	 *
 	 * @param freebieParentQtyMap
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override

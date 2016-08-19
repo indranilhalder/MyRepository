@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.service;
 
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 
@@ -109,9 +110,9 @@ public interface MplPaymentWebService
 	public CartModel findCartAnonymousValues(final String guid);
 
 	/**
-	 * @param cartId
+	 * @param cartModel
 	 * @return PaymentServiceWsData
 	 */
-	public PaymentServiceWsData potentialPromotionOnPaymentMode(final String userId, final String cartId);
+	public PaymentServiceWsData potentialPromotionOnPaymentMode(final AbstractOrderModel cartModel);
 
 }

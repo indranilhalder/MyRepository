@@ -957,6 +957,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					.getCurrentUser().getName();
 			if (null == orderModel)
 			{
+				final CartModel cart = getCartService().getSessionCart();
 				//Existing code for cart
 				boolean redirectFlag = false;
 
@@ -976,8 +977,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				else if (null != mplCustomerID)
 				{
 					//calling generate OTP with customerID
-					final String otp = getMplPaymentFacade().generateOTPforCODWeb(mplCustomerID, mobileNumber, mplCustomerName, null,
-							null);
+					final String otp = getMplPaymentFacade().generateOTPforCOD(mplCustomerID, mobileNumber, mplCustomerName, cart);
 
 					//Code refracted to MplPaymentFacadeImpl.java
 					if (otp == null)
@@ -1022,7 +1022,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				else if (null != mplCustomerID)
 				{
 					//calling generate OTP with customerID
-					final String otp = getMplPaymentFacade().generateOTPforCODWeb(mplCustomerID, mobileNumber, mplCustomerName, null,
+					final String otp = getMplPaymentFacade().generateOTPforCOD(mplCustomerID, mobileNumber, mplCustomerName,
 							orderModel);
 
 					//Code refracted to MplPaymentFacadeImpl.java
@@ -1051,8 +1051,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 
 	}
-
-
 
 
 	/**
@@ -2343,7 +2341,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
 			if (null == orderToBeUpdated.getPaymentInfo())
 			{
-				final String orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, orderToBeUpdated);
+				final String orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
 				//Redirection when transaction is successful i.e. CHARGED
 				if (null != orderStatusResponse)
 				{
@@ -4132,7 +4130,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

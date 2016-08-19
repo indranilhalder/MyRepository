@@ -3,6 +3,7 @@ package com.tisl.mpl.service;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -995,47 +996,26 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	/**
 	 * This method returns potential promotion on paymeny mode
 	 *
-	 * @param cartId
 	 * @return PaymentServiceWsData
 	 *
 	 */
 	@Override
-	public PaymentServiceWsData potentialPromotionOnPaymentMode(final String userId, final String cartId)
+	public PaymentServiceWsData potentialPromotionOnPaymentMode(final AbstractOrderModel cartModel)
 	{
 		PaymentServiceWsData promoData = new PaymentServiceWsData();
 		try
 		{
-			//fetch usermodel against customer
-			final UserModel user = getExtendedUserService().getUserForOriginalUid(userId);
-			// Check userModel null
-			if (null != user)
+			// Validate Cart Model is not null
+			if (null != cartModel)
 			{
-				// Type Cast User Model to Address Model
-
-				LOG.debug(String.format("potentialPromotionOnPaymentMode: | userId: %s | cartId : %s  ", userId, cartId));
-
-				//getting cartmodel using cart id and user
-				final CartModel cartModel = getCommerceCartService().getCartForCodeAndUser(cartId, user);
-				// Validate Cart Model is not null
-				if (null != cartModel)
-				{
-					LOG.debug(String.format("potentialPromotionOnPaymentMode: | cartModel.getCode().: %s  ", cartModel.getCode()));
-
-					promoData = promotionsInPaymentMode(cartModel);
-
-				}
-				else
-				{
-					//If  Cart Model is null display error message
-					promoData.setError(MarketplacewebservicesConstants.CARTMODELEMPTY);
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
-				}
+				LOG.debug(String.format("potentialPromotionOnPaymentMode: | cartModel.getCode().: %s  ", cartModel.getCode()));
+				promoData = promotionsInPaymentMode(cartModel);
 			}
 			else
 			{
-				//If  User Model is null display error message
-				promoData.setError(MarketplacewebservicesConstants.USEREMPTY);
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9055);
+				//If  Cart Model is null display error message
+				promoData.setError(MarketplacewebservicesConstants.CARTMODELEMPTY);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
 		}
 		catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
@@ -1056,7 +1036,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * @return PaymentServiceWsData
 	 */
 
-	private PaymentServiceWsData promotionsInPaymentMode(final CartModel cartModel)
+	private PaymentServiceWsData promotionsInPaymentMode(final AbstractOrderModel cartModel)
 	{
 		final PaymentServiceWsData promoData = new PaymentServiceWsData();
 		final List<PotentialRestrictionData> potentialRestrictionDataList = new ArrayList<PotentialRestrictionData>();
