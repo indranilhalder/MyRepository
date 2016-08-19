@@ -124,9 +124,9 @@
 		<bean id="tokenServices" class="com.tisl.mpl.oauth2.token.provider.HybrisOAuthTokenServices">
 			<property name="tokenStore" ref="tokenStore" />
 			<property name="supportRefreshToken" value="true" />
-			<property name="refreshTokenValiditySeconds" value="2592000" />
+			<property name="refreshTokenValiditySeconds" value="600" />
 			<!-- 60*60*24*30 = 30d -->
-			<property name="accessTokenValiditySeconds" value="43200" />
+			<property name="accessTokenValiditySeconds" value="300" />
 			<!-- 60*60*12 = 12h -->
 		</bean>
 

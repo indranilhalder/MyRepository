@@ -1951,3 +1951,10 @@ $(document).ready(function(){
 		
 		
 	});
+	// Tealium Changes
+	$("span.latestOffersBanner").on("click touchend",function banner(){
+		alet("inside banner");
+		utag.link(
+				{link_obj: this, link_text: 'concierge_view_details' , event_type : 'concierge_view_details' }
+				);
+	});
