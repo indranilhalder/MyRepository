@@ -401,9 +401,10 @@ function constructDepartmentHierarchy(inputArray) {
 					  $(".AvailabilitySize").show();
 					  $(".Availability").hide();
 								//}
-						
-					$("#stockIdFilteredVariant_" + product).show();
-					$("#stockIdFilteredVariant_" + product).html("OUT OF STOCK");
+					$("#stockIdDefault_" + product).html("OUT OF STOCK");
+					$("#stockIdDefault_" + product).show();					
+//					$("#stockIdFilteredVariant_" + product).show();
+//					$("#stockIdFilteredVariant_" + product).html("OUT OF STOCK");
 					}
 				}
 
@@ -415,10 +416,12 @@ function constructDepartmentHierarchy(inputArray) {
 							
 							if(stckData[sizeMatched]=='outOfStock'){
 								 $(".AvailabilitySize").show();
-								 $(".Availability").hide();
-								$("#stockIdFilteredVariant_" + product).show();
-								$("#stockIdFilteredVariant_" + product).html(
-										"OUT OF STOCK");
+								 $(".Availability").hide();								
+								 
+								$("#stockIdDefault_" + product).html("OUT OF STOCK");
+								$("#stockIdDefault_" + product).show();								
+//								$("#stockIdFilteredVariant_" + product).show();
+//								$("#stockIdFilteredVariant_" + product).html("OUT OF STOCK");
 								
 							}
 							/*$("#stockIdFiltered_" + product).val(
@@ -516,6 +519,11 @@ function constructDepartmentHierarchy(inputArray) {
 	});
 	
 	 $(".facet-name.js-facet-name h4").each(function(){
+		 
+		 if($("#stockStatusId").val()!= "true"){
+			 $(".Availability").hide();
+		 }
+		 
 		if($(this).hasClass("true")){
 			$(this).addClass("active");
 			$(this).parent().siblings('.facet-values.js-facet-values.js-facet-form').addClass("active");
