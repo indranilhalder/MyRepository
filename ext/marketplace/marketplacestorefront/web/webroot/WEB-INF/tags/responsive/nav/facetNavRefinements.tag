@@ -47,7 +47,7 @@
 
 		<div class="facet-name js-facet-name">
 		
-		<h4 class="true">AvailabilitySize</h4>
+		<h4 class="true">Availability</h4>
 			</div>
         
 		<div class="facet-values js-facet-values js-facet-form ">
@@ -63,7 +63,7 @@
 					<form action="#" method="get"> 
 								<input type="hidden" name="offer" value=""/>
 								<input type="hidden" name="searchCategory" value="all"/>
-								<input type="hidden" name="q" value="shirt:relevance:inStockFlag:true"/>
+								<input type="hidden" name="q" value="${currentQuery}:inStockFlag:true"/>
 								<input type="hidden" name="text" value="shirt"/>
 								<label>
 									<input type="checkbox"   class="facet-checkbox js-facet-checkbox sr-only" />

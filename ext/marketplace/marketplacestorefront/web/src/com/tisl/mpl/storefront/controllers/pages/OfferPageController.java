@@ -106,7 +106,10 @@ public class OfferPageController extends AbstractSearchPageController
 			offerSearch.doSearch();
 
 			populateModel(model, offerSearch.getSearchPageData(), showMode);
-
+			if (null != offerSearch.getSearchPageData())
+			{
+				model.addAttribute("currentQuery", offerSearch.getSearchPageData().getCurrentQuery().getQuery().getValue());
+			}
 			model.addAttribute("hideDepartments", Boolean.TRUE);
 			model.addAttribute("otherProducts", true);
 
@@ -276,6 +279,7 @@ public class OfferPageController extends AbstractSearchPageController
 				searchState.setQuery(searchQueryData);
 				final PageableData pageableData = createPageableData(page, getSearchPageSize(), sortCode, showMode);
 				searchPageData = searchFacade.dropDownSearchForOfferListing(searchState, offerID, pageableData, categoryID);
+
 			}
 		}
 

@@ -373,6 +373,7 @@ public class SearchPageController extends AbstractSearchPageController
 					populateTealiumData(breadcrumbs, model);
 
 					model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
+					model.addAttribute("currentQuery", searchPageData.getCurrentQuery().getQuery().getValue());
 				}
 				else
 				{
@@ -522,6 +523,7 @@ public class SearchPageController extends AbstractSearchPageController
 		final String pageFacets = request.getParameter("pageFacetData");
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
 				searchQuery, page, showMode, sortCode, count, pageFacets);
+		model.addAttribute("currentQuery", searchPageData.getCurrentQuery().getQuery().getValue());
 		searchPageData = updatePageData(searchPageData, null, searchQuery);
 		/* Storing the user preferred search results count - END */
 		final String searchCategory = request.getParameter(ModelAttributetConstants.SEARCH_CATEGORY);
@@ -836,6 +838,8 @@ public class SearchPageController extends AbstractSearchPageController
 			if (searchPageData != null)
 			{
 				model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+				model.addAttribute("currentQuery", searchPageData.getCurrentQuery().getQuery().getValue());
+
 			}
 
 			//model.addAttribute("hideDepartments", Boolean.TRUE);
