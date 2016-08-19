@@ -44981,4 +44981,11 @@ padding:0;
 	content: "";
 	display: block;
 	clear: both;
+<<<<<<< HEAD
 }
+=======
+}
+#mplAdvancedCategoryCarousel.owl-carousel .owl-stage-outer {
+	z-index: 2;
+}
+>>>>>>> stash

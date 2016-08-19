@@ -369,7 +369,7 @@ ACC.carousel = {
 	
 	advancedCategoryCarousel: function(){
 		
-		/*$("#mplAdvancedCategoryCarousel").owlCarousel({
+		$("#mplAdvancedCategoryCarousel").owlCarousel({
 					items:4,
             		loop: true,
             		nav:true,
@@ -395,7 +395,7 @@ ACC.carousel = {
             				items:4,
             			}			
             		}	
-			navigation:true,
+		/*navigation:true,
 			navigationText : [],
 			pagination:false,
 			itemsDesktop : [5000,4], 
@@ -403,8 +403,8 @@ ACC.carousel = {
 			itemsTablet: [650,2], 
 			itemsMobile : [480,2], 
 			rewindNav: false,
-			lazyLoad:true
-		});*/
+			lazyLoad:true*/
+		});
 	},
 	
 	myReviewCarousel: function(){
