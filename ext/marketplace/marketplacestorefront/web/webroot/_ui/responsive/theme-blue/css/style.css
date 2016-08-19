@@ -33201,7 +33201,7 @@ line-height: 22px;
 color: #777777;
 }
 .MyBag-pincode #changePinDiv>p{
-margin: 0 0 45px 0;
+margin: 0 0 20px 0;
 }
 body.page-cartPage .cart.wrapper .right-block .block{
 	padding:0;
@@ -33733,6 +33733,16 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.qty select{
     display: table;
     margin: auto;
     width: 100%;
+}
+@media(min-width:1025px){
+body.page-cartPage .MyBagHeadingDesktop{
+margin-bottom:52px;
+}
+}
+.exp-address-container{
+	max-height: 195px;
+    overflow: auto;
+    padding-left: 5px;
 }
 /*Mybag css changes ends*/
 .cart.wrapper .right-block .block.bottom.order-details address, .checkout.wrapper .product-block.addresses li.item address,
@@ -42656,6 +42666,7 @@ margin-left: 20%;
 .product-info .SoldWrap {
 	margin: 30px 0 0;
 	width: 100%;
+	overflow: hidden;
 }
 
 .product-info .SoldWrap:after {
