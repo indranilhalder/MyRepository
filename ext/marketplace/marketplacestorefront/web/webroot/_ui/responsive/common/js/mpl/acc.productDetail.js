@@ -2637,7 +2637,7 @@ function loadDefaultWishListName_SizeGuide() {
 	}
 	$(document).on('click','#buyNow .js-add-to-cart',function(event){
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
-		if(!$("#variant li ").hasClass("selected")){
+		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 	 	    return false;
