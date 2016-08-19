@@ -22470,10 +22470,10 @@ div.productInfo ul li.product-size-list {
 .productInfo li {
     margin-bottom: 5px;
 }
-ul.color-swatch{
+/* ul.color-swatch{
 	float: left;
     width: 50%;
-}
+} */
 ul.color-swatch li span{
     padding: 0px !important;
     border: 1px solid rgb(204, 211, 217);
@@ -44978,6 +44978,22 @@ padding:0;
 	padding-top: 25px;
 }
 .product-content .color-swatch-container:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.product-detail .variantFormContainer {
+	clear: both;
+}
+.product-detail .variantFormContainer .variantFormLabel {
+	padding-top: 20px;
+	margin-bottom: 15px;
+}
+.product-detail .variantFormContainer span.capacity-box {
+	    display: inline-block;
+    margin-top: 5px;
+}
+.product-detail .color-swatch:after, .product-detail .variantFormContainer:after {
 	content: "";
 	display: block;
 	clear: both;
