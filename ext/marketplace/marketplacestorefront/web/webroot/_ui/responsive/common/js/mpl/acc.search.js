@@ -380,17 +380,28 @@ function constructDepartmentHierarchy(inputArray) {
 
 
 	function updateProductStock(sizeStockLevel,sizeMatched, serpSizeList,minPriceSize,product) {
+		var query="";
 		var stock1 = sizeStockLevel.replace("[[", "");
 		var stock2 = stock1.replace("]]", "");
 		var stockArray = new Array();
 		stockArray = stock2.split(',');
+		/*$( ".facet-values js-facet-values js-facet-form  active" ).each(function( index ) {
+	    var query=query+$(this).closest('li').find('#q').val();
+		});	  
+		console.log("logg"+query);*/
 		for (i = 0; i < stockArray.length; i++) {
 			if(stockArray[i]!=""){
 			var stckData = JSON.parse(stockArray[i]);
 			if (sizeMatched != "") {
+				
 				if (stckData[sizeMatched] != undefined) {
-					console.log("product_code"+product+"stockdata"+stckData[sizeMatched]);
+					
 					if(stckData[sizeMatched]=='outOfStock'){
+						
+					  $(".AvailabilitySize").show();
+					  $(".Availability").hide();
+								//}
+						
 					$("#stockIdFilteredVariant_" + product).show();
 					$("#stockIdFilteredVariant_" + product).html("OUT OF STOCK");
 					}
@@ -401,11 +412,14 @@ function constructDepartmentHierarchy(inputArray) {
 					var sizeUrl = serpSizeList[j];
 					if (stckData[sizeUrl] != undefined) {
 						if (minPriceSize == serpSizeList[j]) {
-							console.log("product_codes"+product+"stockdata"+stckData[sizeMatched]);
+							
 							if(stckData[sizeMatched]=='outOfStock'){
+								 $(".AvailabilitySize").show();
+								 $(".Availability").hide();
 								$("#stockIdFilteredVariant_" + product).show();
 								$("#stockIdFilteredVariant_" + product).html(
 										"OUT OF STOCK");
+								
 							}
 							/*$("#stockIdFiltered_" + product).val(
 									stckData[sizeMatched]);*/
@@ -416,6 +430,7 @@ function constructDepartmentHierarchy(inputArray) {
 		}
 		}
 	}
+
 
 	//update product minimum price and mrp
 	function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,minPriceValue,product) {

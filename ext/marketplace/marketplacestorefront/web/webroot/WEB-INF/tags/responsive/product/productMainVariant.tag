@@ -103,7 +103,7 @@ var productSizeVar = '${productSize}';
 									items="${variantOption.colourCode}" var="color">
 									<c:choose>
 								<c:when test="${fn:startsWith(color, 'multi')}">
-						     	<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
+						     	<img src="${commonResourcePath}/images/multi.jpg" height="20" width="20" title="${variantOption.colour}" />
 								</c:when>
 								<c:otherwise>
 									<span
@@ -217,9 +217,10 @@ var productSizeVar = '${productSize}';
 <!-- displaying sizes based on color selected -->
 <!-- currentcolor refers to the variable where the current color of the selected variant is stored -->
 <!-- currentcolor is populated on selecting color swatch -->
+<c:if test="${noVariant!=true&&notApparel!=true}">
 <div class="size" style="font-size: 12px;">
 
-	<c:if test="${noVariant!=true&&notApparel!=true}">
+
 		<span>
 			<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 		</span>
@@ -306,8 +307,9 @@ var productSizeVar = '${productSize}';
 		
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->
 		<!-- End Size guide Pop-up -->
+	</div>
 	</c:if>
-</div>
+
 <div id="allVariantOutOfStock" style="display: none;">
 	<spring:theme code="product.product.outOfStock" />
 </div>

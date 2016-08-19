@@ -620,8 +620,10 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
 	if(loggedIn == 'false') {
-		$(".wishAddLogin").css("display","inline-block");
-		$(".wishAddLogin").fadeOut(3000);
+		$(".wishAddLogin").addClass("active");
+		setTimeout(function(){
+			$(".wishAddLogin").removeClass("active")
+		},3000)
 	}
 	else {
 	
@@ -636,8 +638,10 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					//var msg=$('#wishlistSuccess').text();
 					//$('#addedMessage').show();
 					//$('#addedMessage').html(msg);
-					$(".wishAddSucess").css("display","inline-block");
-					$(".wishAddSucess").fadeOut(3000);
+					$(".wishAddSucess").addClass("active");
+					setTimeout(function(){
+						$(".wishAddSucess").removeClass("active")
+					},3000)
 					$("#add_to_wishlist").attr("disabled",true);
 					$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
 					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
@@ -686,6 +690,12 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 				//	$('#myModal').modal('hide');
 				//	
 				}
+				else{
+					$(".wishAlreadyAdded").addClass("active");
+					setTimeout(function(){
+						$(".wishAlreadyAdded").removeClass("active")
+					},3000)
+				}
 			},
 		});
 	
@@ -695,6 +705,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 		setTimeout(function() {
 			$('a.wishlist#wishlist').popover('hide');
 			$('input.wishlist#add_to_wishlist').popover('hide');
+
 			}, 0);
 	}
 }
@@ -1010,269 +1021,276 @@ $(function() {
 
 	$(".submit")
 			.click(
+
 					function() {
-					
-						pinCodeChecked = true;
-						$("#home").hide();
-						$("#homeli").hide();
-						$("#express").hide();
-						$("#expressli").hide();
-						$("#collect").hide();
-						$("#collectli").hide();
-						$("#codId").hide();
-						$(
-								'#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin')
-								.hide();
-						$('#addToCartButton-wrong').attr("disable", true);
-						$('#addToCartButton-wrong').hide();
-						$("#outOfStockId").hide();
+						//TPR900
+						if($("#pdpPincodeCheck").text() == 'Check Availability')
+						{
+							//alert($("#pdpPincodeCheck").text());
+							pinCodeChecked = true;
+							$("#home").hide();
+							$("#homeli").hide();
+							$("#express").hide();
+							$("#expressli").hide();
+							$("#collect").hide();
+							$("#collectli").hide();
+							$("#codId").hide();
+							$(
+								'#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin').hide();
+							$('#addToCartButton-wrong').attr("disable", true);
+							$('#addToCartButton-wrong').hide();
+							$("#outOfStockId").hide();
 
-						// $('#addToCartButton').show();
-						var checkBuyBoxIdPresent = false;
-						var buyboxSeller = $("#ussid").val();
-						var pin = $("#pin").val();
-						var requiredUrl = ACC.config.encodedContextPath + "/p"
-								+ "-checkPincode";
+							// $('#addToCartButton').show();
+							var checkBuyBoxIdPresent = false;
+							var buyboxSeller = $("#ussid").val();
+							var pin = $("#pin").val();
+							var requiredUrl = ACC.config.encodedContextPath + "/p"
+									+ "-checkPincode";
 
-						if (pin == "") {
-							$('#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin')
-									.hide();
-							$("#emptyPin").show();
-							
-							$('#addToCartButton').show();
-							$('#buyNowButton').attr("disabled",false);
-							//TPR-794
-							$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
+							if (pin == "") {
+								$('#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin')
+										.hide();
+								$("#emptyPin").show();
+								
+								$('#addToCartButton').show();
+								$('#buyNowButton').attr("disabled",false);
+								//TPR-794
+								$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
+								$("#pdpPinCodeAvailable").show();
+								return false;
+							} else if (!regExp.test(pin)) {
+								$('#unsevisablePin,#unableprocessPin,#emptyPin').hide();
+								$("#wrongPin").show();
+								$("#serviceablePin").hide();
+							//	$("#pdpPinCodeAvailable").hide();
+								$('#addToCartButton').show();
+								$('#buyNowButton').attr("disabled",false);
+								//TPR-794
+								$("#pdpPinCodeAvailable").show();
+								$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
+								return false;
+							}
+							var dataString = "pin=" + pin + "&productCode="
+									+ productCode;
+							jQuery
+									.ajax({
+										// type: 'POST',
+										contentType : "application/json; charset=utf-8",
+										url : requiredUrl,
+										data : dataString,
+										success : function(data) {
 
-							return false;
-						} else if (!regExp.test(pin)) {
-							$('#unsevisablePin,#unableprocessPin,#emptyPin')
-									.hide();
-							$("#wrongPin").show();
-							$('#addToCartButton').show();
-							$('#buyNowButton').attr("disabled",false);
-							//TPR-794
-							$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
-							return false;
-						}
-						var dataString = "pin=" + pin + "&productCode="
-								+ productCode;
-						jQuery
-								.ajax({
-									// type: 'POST',
-									contentType : "application/json; charset=utf-8",
-									url : requiredUrl,
-									data : dataString,
-									success : function(data) {
+											if (data == "" || data == []
+													|| data == null) {
+												refreshSellers(data, buyboxSeller);
+												$("#home").hide();
+												$("#homeli").hide();
+												$("#express").hide();
+												$("#expressli").hide();
+												$("#collect").hide();
+												$("#collectli").hide();
 
-										if (data == "" || data == []
-												|| data == null) {
-											refreshSellers(data, buyboxSeller);
-											$("#home").hide();
-											$("#homeli").hide();
-											$("#express").hide();
+												$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin').hide();
+												$('#addToCartFormTitle').hide();
+												$('#addToCartButton-wrong').show();
+												$('#addToCartButton').hide();
+												$('#unsevisablePin').show();
+												$("#pdpPinCodeAvailable").hide();
+												
+												$('#buyNowButton').attr("disabled",true);
+												//TPR-794
+												$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+												return false;
+											}
+											// check if oms service is down
+											else if (data[0]['isServicable'] == 'NA') {
+												$("#home").show();
+												$("#homeli").show();
+												$("#express").show();
+												$("#expressli").show();
+												$("#collect").show();
+												$("#collectli").show();
+												$("#codId").show();
+												//TPR-794
+												$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+												return false;
+											} else {
+												// refreshing seller list after
+												// getting pincode response
+												refreshSellers(data, buyboxSeller);
+												for ( var i in data) {
+													var pincodedata = data[i];
+													ussid = pincodedata['ussid'];
 
-											$("#expressli").hide();
-											$("#collect").hide();
-											$("#collectli").hide();
-
-											$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin').hide();
-
-
-											$('#addToCartFormTitle').hide();
-											$('#addToCartButton-wrong').show();
-											$('#addToCartButton').hide();
-											$('#unsevisablePin').show();
-											
-											$('#buyNowButton').attr("disabled",true);
-											//TPR-794
-											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
-											return false;
-										}
-										// check if oms service is down
-										else if (data[0]['isServicable'] == 'NA') {
-											$("#home").show();
-											$("#homeli").show();
-											$("#express").show();
-											$("#expressli").show();
-											$("#collect").show();
-											$("#collectli").show();
-											$("#codId").show();
-											//TPR-794
-											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
-											return false;
-										} else {
-											// refreshing seller list after
-											// getting pincode response
-											refreshSellers(data, buyboxSeller);
-											for ( var i in data) {
-												var pincodedata = data[i];
-												ussid = pincodedata['ussid'];
-
-												if (ussid == buyboxSeller) {
-
-													if (pincodedata['isServicable'] == 'Y') {
-														
-														 $('#serviceablePin').show();  //TISPRM-20::PDP show pincode serviceability msg  
-														checkBuyBoxIdPresent = true;
-														deliveryModes = pincodedata['validDeliveryModes'];
-														var home = false;
-														var exp = false;
-														var click = false;
-
-														/*
-														 * if (deliveryModes == "" ||
-														 * deliveryModes ==
-														 * null||pincodedata['stockCount']==0) {
-														 */
-														if (pincodedata['stockCount'] == 0) {
-															$("#addToCartButton").hide();
-															$("#outOfStockId").show();
-															$("#buyNowButton").hide();
-															$("#stock").val(0);
-
-														} else {
-															$("#addToCartButton").show();
-															$('#buyNowButton').attr("disabled",false);
-															$("#buyNowButton").show();
-														}
-														if (pincodedata['cod'] == 'Y') {
-
-															$("#codId").show();
-														}
-
-														for ( var j in deliveryModes) {
-															var mode = deliveryModes[j];
-
-															deliveryModeName = mode['type'];
-
-															$("#stock")
-																	.val(
-																			pincodedata['stockCount']);
-															// checking
-															// home-delivery(HD)
-															// mode
-															if (deliveryModeName == 'HD') {
-																home = true;
-
+													if (ussid == buyboxSeller) {
+														if (pincodedata['isServicable'] == 'Y') {
+															
+															 $('#serviceablePin').show();  //TISPRM-20::PDP show pincode serviceability msg  
+															checkBuyBoxIdPresent = true;
+															deliveryModes = pincodedata['validDeliveryModes'];
+															var home = false;
+															var exp = false;
+															var click = false;
+															/*
+															 * if (deliveryModes == "" ||
+															 * deliveryModes ==
+															 * null||pincodedata['stockCount']==0) {
+															 */
+															if (pincodedata['stockCount'] == 0) {
+																$("#addToCartButton").hide();
+																$("#outOfStockId").show();
+																$("#buyNowButton").hide();
+																$("#stock").val(0);
+															} else {
+																$("#addToCartButton").show();
+																$('#buyNowButton').attr("disabled",false);
+																$("#buyNowButton").show();
 															}
-															// checking
-															// click&collect(CnC)
-															// mode
-															else if (deliveryModeName == 'CNC') {
-
-																click = true;
-																/*
-																 * $(".Click")
-																 * .show();
-																 */
-
+															if (pincodedata['cod'] == 'Y') {
+																$("#codId").show();
 															}
-															// checking
-															// express(express)
-															// mode
-															else {
-																exp = true;
 
+															for ( var j in deliveryModes) {
+																var mode = deliveryModes[j];
+																deliveryModeName = mode['type'];
+																$("#stock")
+																		.val(
+																				pincodedata['stockCount']);
+																// checking
+																// home-delivery(HD)
+																// mode
+																if (deliveryModeName == 'HD') {
+																	home = true;
+
+																}
+																// checking
+																// click&collect(CnC)
+																// mode
+
+
+																else if (deliveryModeName == 'CNC') {
+
+
+																	click = true;
+																	/*
+																	 * $(".Click")
+																	 * .show();
+																	 */
+																}
+																// checking
+																// express(express)
+																// mode
+																else {
+																	exp = true;
+																}
 															}
-														}
-														if (home == true) {
-															$("#home").show();
-															$("#homeli").show();
+															if (home == true) {
+																$("#home").show();
+																$("#homeli").show();
+															} else {
+																$("#home").hide();
+																$("#homeli").hide();
+															}
+
+															if (exp == true) {
+																$("#express").show();
+
+																$("#expressli").show();
+															} else {
+																$("#express").hide();
+																$("#expressli").hide();
+
+															}if (click == true) {
+																$("#collect").show();
+																$("#collectli").show();
+															} else {
+
+																$("#collect").hide();
+																$("#collectli").hide();
+															}
+															// }
+
+
 														} else {
 															$("#home").hide();
 															$("#homeli").hide();
-														}
-														if (exp == true) {
-															$("#express").show();
-
-															$("#expressli").show();
-														} else {
-															$("#express").hide();
-
+															$("#click").hide();
 															$("#expressli").hide();
-														}if (click == true) {
-															$("#collect").show();
-															$("#collectli").show();
-
-
-														} else {
-															$("#collect").hide();
+															$("#express").hide();
 															$("#collectli").hide();
-
-
-														}
-
-														// }
-
-													} else {
-														$("#home").hide();
-														$("#homeli").hide();
-														$("#click").hide();
-														$("#expressli").hide();
-														$("#express").hide();
-														$("#collectli").hide();
-														$(
-																'#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin')
-																.hide();
-														$('#addToCartFormTitle')
-																.hide();
-														if ($("#stock").val() > 0) {
 															$(
-																	'#addToCartButton-wrong')
-																	.show();
-															$('#buyNowButton').attr("disabled",true);
-														} else {
-															$("#outOfStockId")
-																	.show();
-															$("#buyNowButton").hide();
+																	'#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin')
+																	.hide();
+															$('#addToCartFormTitle')
+																	.hide();
+															if ($("#stock").val() > 0) {
+																$('#addToCartButton-wrong').show();
+																$('#buyNowButton').attr("disabled",true);
+															} else {
+																$("#outOfStockId").show();
+																$("#buyNowButton").hide();
+															}
+															$('#addToCartButton').hide();
+															$('#unsevisablePin').show();
 														}
-														$('#addToCartButton')
-																.hide();
-														$('#unsevisablePin')
-																.show();
-
 													}
 												}
+												if (!checkBuyBoxIdPresent) {
+													$("#home").hide();
+													$("#homeli").hide();
+													$("#click").hide();
+													$("#express").hide();
+													$("#expressli").hide();
+													$(
+															'#wrongPin,#unableprocessPin,#emptyPin')
+															.hide();
+													$('#addToCartFormTitle').hide();
+													if ($("#stock").val() > 0) {
+														$('#addToCartButton-wrong').show();
+													} else {
+														$("#outOfStockId").show();
+														$("#buyNowButton").hide();
 
-											}
-											if (!checkBuyBoxIdPresent) {
-												$("#home").hide();
-												$("#homeli").hide();
-												$("#click").hide();
-												$("#express").hide();
-												$("#expressli").hide();
-												$(
-														'#wrongPin,#unableprocessPin,#emptyPin')
-														.hide();
-												$('#addToCartFormTitle').hide();
-												if ($("#stock").val() > 0) {
-													$('#addToCartButton-wrong')
-															.show();
-												} else {
-													$("#outOfStockId").show();
-													$("#buyNowButton").hide();
+													}
+													// $('#addToCartButton-wrong').show();
+													$('#addToCartButton').hide();
+													$('#unsevisablePin').show();
+													$('#pdpPinCodeAvailable').hide();
 												}
-												// $('#addToCartButton-wrong').show();
-												$('#addToCartButton').hide();
-												$('#unsevisablePin').show();
-
 											}
-										}
-										$("#pinCodeChecked")
-												.val(pinCodeChecked);
-										//TPR-794
-										$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
-									},
-									error : function(xhr, status, error) {
-										$('#wrongPin,#unsevisablePin,#emptyPin')
-												.hide();
-										$('#unableprocessPin').show();
-										//TPR-794
-										$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+											$("#pinCodeChecked")
+													.val(pinCodeChecked);
+											//TPR-794
+											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+										},
+										error : function(xhr, status, error) {
 
-									}
-								});
+											$('#wrongPin,#unsevisablePin,#emptyPin')
+													.hide();
+											$('#unableprocessPin').show();
+											//TPR-794
+											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+
+										}
+									});
+
+							//TPR-900
+							$('#pin').blur();
+							
+							if ( $('#pin').val() == "") {
+								$("#pdpPincodeCheck").text("Check Availability")
+							} else {
+							
+								$("#pdpPincodeCheck").text("Change Pincode")
+							}
+							//TPR-900
+						}
+						else
+						{
+							 $('#pin').focus();
+							 $('#emptyPin').hide();
+						}
 					});
 
 });
@@ -1336,8 +1354,10 @@ $( document ).ready(function() {
 			var stockInfo = data['availibility'];
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
+
 				$("#variant li a").each(function(){
 					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
+
 					$(this).removeAttr("href");
 					$(this).parent().addClass('strike');
 				//$(this).parent().css("border-color","gray");
@@ -1373,12 +1393,15 @@ $( document ).ready(function() {
 					if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
+
 						//TPR-772
 						$(".promo-block").show();
+
 					} else {
 						if (promorestrictedSellers.length > 0
 								&& !(promorestrictedSellers
 										.indexOf(data['sellerId']) == -1))
+
 							//TPR-772
 							$(".promo-block").show();
 					}
@@ -1540,6 +1563,7 @@ $( document ).ready(function() {
 							"color": "gray"
 					});
 						$(this).removeAttr("data-producturl");
+
 						$(this).parent().addClass('strike');
 						}
 				});
@@ -2511,9 +2535,6 @@ function loadDefaultWishListName_SizeGuide() {
 	//alert(wishListContent+" wishListContent");
 
 	}
-
-
-
 	function selectWishlist_SizeGuide(i) {
 		//alert(i+" : sizeguide");
 	$("#hidWishlist_sizeGuide").val(i);
@@ -2630,7 +2651,7 @@ function loadDefaultWishListName_SizeGuide() {
 		var url = window.location.href;		
 		
 		if (url.indexOf("selectedSize=true")>=0 && typeof productSizeVar !== "undefined")//>= 0  ==-1
-			{
+		{
 			/*$("#variant option:contains("+productSizeVar+")").attr('selected', true); 
 			$("#sizevariant option:contains("+productSizeVar+")").attr('selected', true); */
 			$("#variant option").each(function() {
@@ -2647,12 +2668,7 @@ function loadDefaultWishListName_SizeGuide() {
 			  }                        
 			});
 		}
-		
-		
-		
-		
-		
-		});
+	});
 	//fix for TISPT-332
 	function openSizeGuidePopuponLoad()
 	{
@@ -2729,13 +2745,14 @@ function loadDefaultWishListName_SizeGuide() {
 		$("#pin").focus(function(){
 			$("#pdpPincodeCheck").text("Check Availability")
 		});
-		$("#pin").blur(function() {
+/*		$("#pin").blur(function() {
 			if ($(this).val() == "") {
 				$("#pdpPincodeCheck").text("Check Availability")
 			} else {
 				$("#pdpPincodeCheck").text("Change Pincode")
 			}
-		});
+
+		});*/
 	});
 	/*Wishlist In PDP changes*/
 	function getLastModifiedWishlist(ussidValue) {
