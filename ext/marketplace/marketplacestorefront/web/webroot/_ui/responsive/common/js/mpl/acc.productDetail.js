@@ -1063,7 +1063,7 @@ $(function() {
 								$('#unsevisablePin,#unableprocessPin,#emptyPin').hide();
 								$("#wrongPin").show();
 								$("#serviceablePin").hide();
-								$("#pdpPinCodeAvailable").hide();
+							//	$("#pdpPinCodeAvailable").hide();
 								$('#addToCartButton').show();
 								$('#buyNowButton').attr("disabled",false);
 								//TPR-794
