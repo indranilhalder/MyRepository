@@ -37,8 +37,8 @@ public interface MplPaymentTransactionService
 	 * @param paymentTransactionList
 	 * @return List<PaymentTransactionModel>
 	 */
-	List<PaymentTransactionModel> createPaymentTransaction(AbstractOrderModel cart, GetOrderStatusResponse orderStatusResponse,
-			List<PaymentTransactionEntryModel> paymentTransactionEntryList, List<PaymentTransactionModel> paymentTransactionList);
+	//List<PaymentTransactionModel> createPaymentTransaction(AbstractOrderModel cart, GetOrderStatusResponse orderStatusResponse,
+	//		List<PaymentTransactionEntryModel> paymentTransactionEntryList, List<PaymentTransactionModel> paymentTransactionList);
 
 	/**
 	 * @param cart

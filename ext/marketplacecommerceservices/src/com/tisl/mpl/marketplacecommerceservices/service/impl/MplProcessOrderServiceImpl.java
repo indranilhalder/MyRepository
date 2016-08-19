@@ -34,7 +34,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
-import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
@@ -86,7 +85,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService#getPaymentPedingOrders()
 	 */
 	@Override
@@ -215,7 +214,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						orderModel.setIsOrderUnderProcess(Boolean.FALSE);
 						getModelService().save(orderModel);
 					}
-					catch (final InvalidCartException | CalculationException e)
+					catch (final InvalidCartException | CalculationException | EtailNonBusinessExceptions e)
 					{
 						LOG.error("Error in getPaymentPedingOrders================================", e);
 						orderModel.setIsOrderUnderProcess(Boolean.FALSE);
@@ -282,7 +281,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	 * @throws InvalidCartException
 	 */
 	private void takeActionAgainstOrder(final JuspayWebhookModel juspayWebhookModel, final OrderModel orderModel)
-			throws InvalidCartException, CalculationException
+			throws InvalidCartException, CalculationException, EtailNonBusinessExceptions
 	{
 		if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_SUCCEEDED")
 				&& !juspayWebhookModel.getIsExpired().booleanValue())
@@ -348,6 +347,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	 * @param juspayWebhookModel
 	 */
 	private void updateOrder(final OrderModel orderModel, final JuspayWebhookModel juspayWebhookModel)
+			throws EtailNonBusinessExceptions
 	{
 		if (null != juspayWebhookModel)
 		{
@@ -358,21 +358,16 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			final Map<String, Double> paymentMode = new HashMap<String, Double>();
 			paymentMode.put(orderModel.getModeOfOrderPayment(), orderModel.getTotalPriceWithConv());
 
-			getSessionService().setAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE, paymentMode);
 			//Payment Changes - Order before Payment
-			getMplPaymentService().updateAuditEntry(orderStatusResponse, null, orderModel);
+			getMplPaymentService().updateAuditEntry(orderStatusResponse, null, orderModel, paymentMode);
 
 			if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount()))
 			{
 				getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
 			}
-			else
-			{
-				throw new EtailBusinessExceptions();
-			}
 
 			//Logic when transaction is successful i.e. CHARGED
-			if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
+			if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(juspayOrderStatusModel.getStatus()))
 			{
 				LOG.error("Payment successful with transaction ID::::" + juspayWebhookModel.getOrderStatus().getOrderId());
 				//saving card details

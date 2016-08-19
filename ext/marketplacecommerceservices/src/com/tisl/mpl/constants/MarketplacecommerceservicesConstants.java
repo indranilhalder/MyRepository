@@ -1261,6 +1261,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENT_EXC_LOG = "Exception while saving payment info model with ".intern();
 	public static final String PAYMENT_EXC_LOG_END = " : Exception while saving payment info model with ".intern();
 	public static final String PAYMENT_TRAN_EXC_LOG = "Exception while saving payment transaction entry with ".intern();
+	public static final String PAYMENT_TRAN_ERR_LOG = "Exception while saving payment transaction with ".intern();
 
 	//Webhook Report Path
 	public static final String WEBHOOKREPORTPATH = "webhook.report.path".intern();
