@@ -16816,6 +16816,9 @@ font-weight:normal;
 .content-block-slider {		
     margin: 40px;		
 }		
+.content-block-slider.electronic-brand-slider {		
+    margin: 40px 0px;		
+}		
 .content-block-slider .slide div button {		
     height: auto;		
     min-height: 50px;		
@@ -17978,9 +17981,6 @@ body .account .right-account form .half.account-profileEmail,body .account .righ
     }
     .feature-categories .content-block {
   margin: 0 40px;
-}
-.electronic-brand-slider .carousel{
-	padding:0px 10px;
 }
 .content-block.black>div {
   background-color: #000;
@@ -33762,6 +33762,20 @@ margin-bottom:52px;
 }
 
 
+/* TISPRD-4861 */
+.pdp-promo-block.promo-block{
+	background:transparent;
+	padding:0;
+	border:none;
+}
+.pdp-promo-block.promo-block>div{
+	width:100%;
+	text-align:center;
+}
+
+.showAZBrandsImportant{
+	display: block !important;
+}
 
 /*--------------maincss-----------*/
 .row
@@ -36741,7 +36755,7 @@ main {
 	width: 100%;
 	margin: 10px 0px;
 	text-align: center;
-	  padding: 0 10px;
+	 /*  padding: 0 10px; */
 }
 
 .carousel .item {
@@ -42427,6 +42441,7 @@ bottom:35px;
 .home-product-you-care-carousel .owl-theme .owl-controls,
 .home-best-pick-carousel.owl-theme .owl-controls,
 #ia_products_hot_list.owl-theme .owl-controls {top: 38%;margin: 0;}
+
 
 
 

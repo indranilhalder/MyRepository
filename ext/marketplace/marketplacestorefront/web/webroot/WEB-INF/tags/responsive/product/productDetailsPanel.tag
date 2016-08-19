@@ -147,6 +147,7 @@ tr.d0 td {
 			<product:emiDetail product="${product}" />
 			
 			<!-- TISPRM-97 starts -->
+
 				<!-- TPR-772 starts -->
 			<div class="pdp-promo-block promo-block" style="display:none">
 			<!-- TPR-772 ends -->
