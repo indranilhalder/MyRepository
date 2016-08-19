@@ -523,8 +523,12 @@
 			type="de.hybris.platform.commercefacades.order.data.ImeiDetailData"></property>
 			<property name="productPromoCode"
 			type="String"></property>
-			
-				<!--Newly Added Fields for DeliverySlots  -->
+			<property name="edScheduledDate"
+			type="java.util.Date"></property>
+			<property name="timeSlotFrom" type="java.lang.Integer"/>
+			<property name="timeSlotTo" type="java.lang.Integer"/>
+
+			<!--Newly Added Fields for DeliverySlots  -->
 			<property name="deliverySlotsDates" type="java.util.List&lt;java.lang.String>"></property>
 			
 			<property name="deliverySlotsTime" type="java.util.Map&lt;String,java.util.List&lt;String>>"></property>
@@ -532,7 +536,6 @@
 			<property name="selectedDeliverySlotDate" type="String"></property>
 			<property name="selectedDeliverySlotTimeFrom" type="String"></property>
 			<property name="selectedDeliverySlotTimeTo" type="String"></property>
-			
 	</bean>
 	
 	<bean class="de.hybris.platform.commercefacades.order.data.ImeiDetailData">
@@ -932,7 +935,23 @@
 		<property name="country" type="String"></property>
 		<property name="countryCode" type="String"></property>
 	</bean>
-	
 	<!-- FL04 Close -->
+
+	<bean class="com.tisl.mpl.facades.data.ScheduledDeliveryData">
+    	<property name="isActive" type="java.lang.Boolean"></property>
+		<property name="isPincodeServiceable" type="java.lang.Boolean"></property>	
+	    <property name="entries" type="java.lang.Object"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.RescheduleData">
+		<property name="date" type="String"></property>
+		<property name="time" type="String"></property>
+		<property name="transactionId" type="String"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.RescheduleDataList">
+			<property name="rescheduleDataList" type="java.util.List&lt;com.tisl.mpl.facades.data.RescheduleData>"></property>
+	</bean>
+	
 	
 </beans>

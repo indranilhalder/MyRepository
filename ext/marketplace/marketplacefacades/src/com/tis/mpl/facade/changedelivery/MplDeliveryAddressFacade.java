@@ -7,6 +7,15 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 
+import java.util.List;
+import java.util.Map;
+
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+import com.tisl.mpl.facades.data.RescheduleDataList;
+import com.tisl.mpl.facades.data.ScheduledDeliveryData;
+
 
 /**
  * @author Techouts
@@ -22,7 +31,7 @@ public interface MplDeliveryAddressFacade
 	 * @param newDeliveryAddress
 	 * @return boolean
 	 */
-	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress);
+	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress, String interfaceType,List<TransactionSDDto> transactionSDDtos);
 
 
 	/**
@@ -32,25 +41,23 @@ public interface MplDeliveryAddressFacade
 	 * @param Order
 	 * @param customerId
 	 * @param source
-	 * @return void
 	 */
 	public void createcrmTicketForChangeDeliveryAddress(OrderModel order, String customerId, String source);
 
 	/**
-	 * @ * @param orderid
-	 * 
-	 * @return
+	 * @*@param orderid
+	 *
+	 * @return boolean
 	 */
 	public boolean isDeliveryAddressChangable(String orderid);
 
 	/**
 	 *
-	 * @param customerId
 	 * @param orderCode
 	 * @param addressData
 	 * @return String Status Msg Failure, success
 	 */
-	public boolean saveAsTemporaryAddressForCustomer(String orderCode, AddressData addressData);
+	public ScheduledDeliveryData saveAsTemporaryAddressForCustomer(String orderCode, AddressData addressData);
 
 	/**
 	 *
@@ -62,6 +69,15 @@ public interface MplDeliveryAddressFacade
 
 	//Generate new OTP
 	public boolean generateNewOTP(String orderCode);
+
+	public String getPartialEncryptValue(String encryptSymbol, int encryptLength, String source);
+
+	public void reScheduleddeliveryDate(RescheduleDataList rescheduleDataList);
+
+	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList);
+
+	public List<TransactionEddDto> getScheduledDeliveryDate(OrderModel orderModel,String newPincode);
 	
-	public String getPartialEncryptValue(String encryptSymbol,int encryptLength,String source);
+	public ChangeDeliveryAddressResponseDto scheduledDeliveryDateRequestToOMS(OrderModel orderModel,String newPincode);
+
 }

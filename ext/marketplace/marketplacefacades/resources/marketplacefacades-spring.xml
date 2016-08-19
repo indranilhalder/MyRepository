@@ -1594,6 +1594,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="commonI18NService" ref="commonI18NService"/> 
 	</bean>
 	
+	<bean id="mplAddressValidatorImpl"
+		class="com.tis.mpl.facade.address.validator.MplAddressValidatorImpl">
+    </bean>
+	
 	<!-- close R2.3 Changes -->
 	
 </beans>

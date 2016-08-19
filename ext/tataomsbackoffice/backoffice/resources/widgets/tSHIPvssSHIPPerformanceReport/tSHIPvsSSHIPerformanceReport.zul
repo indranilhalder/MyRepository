@@ -1,0 +1,97 @@
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+
+	<columnlayout width="100%" height="100%">
+		<columnchildren width="100%">
+			<panel
+				style="height:20%;font-size:14px;border-bottom:4px solid #27394f">
+				<panelchildren>
+					<vlayout style="width:100%;height:200px">
+						<hlayout>
+
+							<vlayout width="300px" height="40px">
+								 <label  class="z-label" value="TSHIP vs SSHIP Perforamance Report"></label>
+							</vlayout>
+							
+                             
+						</hlayout>
+						<hlayout>
+							<vlayout width="100px">
+								<label value="Start Date"></label>
+							</vlayout>
+							<vlayout width="200px">
+								<datebox id="startdpic" cols="12"
+									constraint="no future: NO FUTURE" format="dd/MM/yyyy" />
+							</vlayout>
+							<vlayout width="100px">
+								<label value="End Date"></label>
+							</vlayout>
+							<vlayout width="200px">
+								<datebox id="enddpic" cols="12"
+									constraint="no future: NO FUTURE" format="dd/MM/yyyy" />
+							</vlayout>
+							<vlayout width="100px">
+								<label value="Shipment Type"></label>
+							</vlayout>
+							<vlayout width="200px">
+								<listbox mold="select" rows="1"
+									width="100px" id="shipmentType">
+									<listitem label="ALL"
+										selected="true" />
+									<listitem label="TSHIP" />
+									<listitem label="SSHIP" />
+								</listbox>
+							</vlayout>
+						</hlayout>
+					</vlayout>
+				</panelchildren>
+			</panel>
+			<panel
+				style="height:60%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
+				<panelchildren>
+
+					<listbox id="listBoxData" multiple="true" rows="10"
+						checkmark="false" emptyMessage="No result found in the result">
+
+						<listhead sizable="true">
+							<listheader style="text-align:left"
+								label="Total TSHIP">
+							</listheader>
+							<listheader style="text-align:left"
+								label="Total TSHIP on time">
+							</listheader>
+							<listheader style="text-align:left"
+								label="Total SSHIP">
+							</listheader>
+							<listheader style="text-align:left"
+								label="Total SSHIP on time">
+							</listheader>
+						</listhead>
+						<!-- <template name="model">
+							<listitem>
+							<listcell label="${each.orderId}" />
+							<listcell label="${each.orderStatus}" />
+							<listcell label="${each.transactionId}" />
+							<listcell label="${each.slaveId}" />
+							<listcell label="${each.sellerId}" />
+							<listcell label="${each.logisticName}" />
+							<listcell>
+							<textbox inplace="true"
+							value="${each.awbNumber}">
+							</textbox>
+							</listcell>
+							</listitem>
+							</template> -->
+					</listbox>
+				</panelchildren>
+			</panel>
+
+		</columnchildren>
+	</columnlayout>
+
+</widget>

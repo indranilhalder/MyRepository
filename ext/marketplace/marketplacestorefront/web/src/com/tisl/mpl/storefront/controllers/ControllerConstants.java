@@ -181,6 +181,8 @@ public interface ControllerConstants
 				String AccountInviteFriendPage = "pages/account/inviteFriends";
 				String AccountCouponsPage = "pages/account/accountCouponDetailsPage";
 				String AccountOrderReturnPincodeServiceCheck = "pages/account/returnPincodeAvailabilityCheck";
+				String ScheduledDeliveryDate= "pages/account/scheduledDeliveryDate";
+				String OTPPopup= "pages/account/otpPopup";
 			}
 
 

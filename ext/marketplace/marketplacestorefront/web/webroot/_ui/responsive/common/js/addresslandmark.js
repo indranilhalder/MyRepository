@@ -140,17 +140,28 @@ $(document).ready(function() {
 						$(".mobileNumberError").hide();
 						$(".cityError").hide();
 						$(".pincodeNoError").hide();
+						$(".stateError").hide();
 				      var mobile=$("#mobileNo").val();
 				      var mobile=mobile.trim();
 				      var isString = isNaN(mobile);
 				      var pincode=$("#pincode").val();
-						if ($("#firstName").val().length < 1) {
+				      var state=$("#state").val();
+				      var name=$("#firstName").val();
+				      var lname=$("#lastName").val()
+				      debugger;
+						if (name.length < 1){
 							$(".firstNameError").show();
 							$(".firstNameError").text("First Name cannot be Blank");
-						} else if ($("#lastName").val().length < 1) {
+						}else if(checkWhiteSpace(name) == false){
+							 $(".firstNameError").show();
+				    	     $(".firstNameError").text("Enter only Alphabet");
+				       }else if (lname.length < 1) {
 							$(".lastNameError").show();
 							$(".lastNameError").text("Last Name cannot be Blank ");
-						} else if ($("#addressLine1").val().length < 1) {
+					   }else if(checkWhiteSpace(lname) == false){
+							 $(".lastNameError").show();
+				    	     $(".lastNameError").text("Enter only Alphabet");
+                      }else if ($("#addressLine1").val().length < 1) {
 							$(".address1Error").show();
 							$(".address1Error").text("Address Line 1 cannot be blank");
 						} else if ($("#addressLine2").val().length < 1) {
@@ -171,9 +182,12 @@ $(document).ready(function() {
 					      }else if(pincode.length < 1 && pincode.length > 6){
 					    	  $(".pincodeNoError").show();
 					          $(".pincodeNoError").text("Enter correct pincode");
+					      } else  if(state==null || state=="Select"){
+					    	  $(".stateError").show();
+					          $(".stateError").text("State cannot be Blank");
 					      }
 						else{
-						
+		                       debugger;
 						var data = $("#deliveryAddressForm").serialize();
 						var orderCode = $('#deliveryAddorderCode').val();
 						$.ajax({
@@ -182,31 +196,38 @@ $(document).ready(function() {
 									+ "/changeDeliveryAddress/",
 							type : 'GET',
 							data : data,
-							  contentType: "application/json",
-							  dataType: 'json',
-							success : function(result) {
-								if(result=="success"){
-									$("#changeAddressPopup").hide();
-									$("wrapBG1").hide();
-									$("#showOTP").show();
+							contentType: "text/application/html",
+							success : function(result){
+								if(result=='Pincode not Serviceable'){
+									$("#changeAddressPopup").show();
+								/*	$("wrapBG1").show();*/
+									$("#showOTP").hide();
 									$(".wrapBG").show();
 									var height = $(window).height();
-									$(".wrapBG1").css("height", height);
-									$("#showOTP").css("z-index", "999999");
+									$(".wrapBG").css("height", height);
+									$("#changeAddressPopup").css("z-index", "999999");
+									$(".pincodeNoError").show();
+									$(".pincodeNoError").text(result);
+								}else if(result =='Updated'){
+									window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode+"&isServiceable="+true;
+		
 								}else{
-									$(".main_error").show();
-									 $("#changeAddressPopup .main_error").text("Please Re-Check the data, there is some error.");
+								
+									/*alert(result);*/
+								$("#changeAddressPopup").empty().html(result).show();
 								}
-
 							},
 							error : function(result) {
+								console.log(result);
 								alert("error")
 							}
 
 						});
-						}
+					}
 						event.preventDefault();
 					});
+
+
 
 
 	$("#geneateOTP").click(function() {
@@ -226,7 +247,6 @@ $(document).ready(function() {
 	});
 	
 	$(".addAddressToForm").click(function(){
-		//console.log($(this).attr("data-item"));
 		var className = $(this).attr("data-item");
 	
 		$("#firstName").val($("."+className+" .firstName").text());
@@ -241,3 +261,25 @@ $(document).ready(function() {
 	});
 	
 });
+
+
+
+function newOTPGenerate(orderCode){
+	alert(orderCode);
+	 $.ajax({
+			type : "GET",
+			url : ACC.config.encodedContextPath + "/my-account/newOTP",
+			data :"orderCode="+orderCode,
+			success : function(response) {
+				if(response==true){
+					$(".otpError").show();
+					$(".otpError").text("OTP has been sent");
+				}else{
+					$(".otpError").show();
+					$(".otpError").text("OTP sending fail try again ");
+				}
+			}
+		}); 
+} 
+
+

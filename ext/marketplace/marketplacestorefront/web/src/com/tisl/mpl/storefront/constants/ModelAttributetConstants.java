@@ -738,6 +738,6 @@ public final class ModelAttributetConstants
 	public static final String BUILD_NUMBER = "buildNumber";
 	
 	public static final String PHONE_NUMBER = "phoneNumber";
-	public static final String EDIT_SHIPPING_ADDRESS_STATUS = "editShippingAddressStatus";
+	public static final String ADDRESS_CHANGE_ELIGIBLE = "addressChangeEligible";
 
 }

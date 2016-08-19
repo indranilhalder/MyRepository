@@ -1590,6 +1590,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String ADDRESS_TYPE_WORK = "Work";
     public final static String DELIVERY_MODE_SD="SD";
 	public final static String PINCODE_RESPONSE_DATA_TO_SESSION = "PincodeResponseDataForCart";
+    public final static String INTERFACE_TYPE_CA="CA";
+	public final static String INTERFACE_TYPE_CU="CU";
+	public final static String INTERFACE_TYPE_SD="SD";
 
 	private MarketplacecommerceservicesConstants()
 	{

@@ -25,262 +25,7 @@
 <spring:url value="/my-account/orders" var="ordersUrl" />
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
-<style>
-.ordermargingalignment {
-	height: 41px;
-	padding-top: 7px;
-	font-size: 12px;
-	font-weight: 300;
-}
 
-.orderheadingalignment {
-	font-size: 12px;
-}
-
-.orderbodyalignment {
-	font-size: 12px;
-}
-
-.attributes {
-	font-size: 12px;
-}
-
-.actions {
-	font-size: 12px;
-}
-
-.editIconCSS {
-	font-size: 12px;
-	padding-top: 17px;
-}
-
-.editIconCSS a:link, .editIconCSS a:visited {
-	text-decoration: none;
-}
-
-.editIconCSS a:hover {
-	text-decoration: underline;
-}
-
-.pickupeditbtn:after, .editIconCSS a:before{
-
-     font-family: 'FontAwesome';
-    content:"\f040";
-    padding:0 5px 0 5px; 
-}
-.deliverymode {
-	font-size: 12px;
-	font-weight: 600;
-	min-height: 17px;
-}
-
-.error_text {
-	color: red;
-}
-
-#pickName {
-	height: 25px !important;
-	white-space: nowrap;
-}
-.order {
-	margin-top: 8px !important;
-}
-
-.itemBorder {
-	border-top: 1px solid #DFD1D5;
-	width: 100%;
-	margin-top: -7px;
-	padding: 15px;
-}
-
-#changeAddressPopup {
-	margin: 0px auto;
-	width: 100%;
-	height: 700px;
-}
-
-#showOTP {
-	display: none;
-	margin: 0px auto;
-	width: 100%;
-	position: fixed;
-	top: 100px;
-	left: 0px;
-}
-
-#showOTP .row {
-	margin-top: 20px;
-	margin-bottom: 20px;
-}
-
-#showOTP .row label {
-	margin-bottom: 10px;
-}
-
-#showOTP  .otpMessage {
-	margin-top: 25px;
-}
-
-#changeAddressPopup .close {
-	float: right;
-}
-#showOTP .modal-footer { 
-    margin-top: 20px;
-    text-align: left;
-}
-
-#showOTP .modal-footer button {
-	background: rgb(201, 201, 35) none repeat scroll 0% 0%;
-	color: #fff;
-	font-weight: bold;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-.modal-title {
-	font-size: 18px;
-	font-weight: bold;
-}
-
-.modal-header {
-	border: none !important;
-}
-
-.NOP {
-	padding: 0px !important;
-}
-
-.modal-footer {
-	text-align: center !important;
-}
-
-.textInputChangeAddress, #showOTP input {
-	width: 100% !important;
-}
-
-.input-group-addon {
-	position: absolute;
-	top: 12px;
-	left: 13px;
-	z-index: 9;
-	height: 40px;
-	border-right: 1px solid rgb(204, 204, 204);
-	padding: 13px;
-}
-
-#landmark {
-	/* padding-left: 47px; */
-}
-
-.address_townCity, .otherLandMark {
-	width: 100%;
-}
-
-.addressTextChange {
-	line-height: 15px;
-}
-
-#deliveryAddressForm input, #deliveryAddressForm option, #deliveryAddressForm select {
-	color: #000;
-}
-
-.modal-dialog {
-	background: #fff;
-	border: 1px solid rgb(204, 204, 204);
-	border-radius: 8px;
-	background: rgb(255, 255, 255) none repeat scroll 0% 0%;
-	padding-top: 20px;
-}
-
-#changeAddressPopup {
-	display: none;
-	position: fixed;
-	top: 50px;
-	left: 0px;
-}
-
-.modal-body h4 {
-	font-size: 13px;
-	font-weight: bold;
-}
-
-.close {
-	border-radius: 50%;
-	border: 1px solid #ccc !important;
-	width: 30px;
-	height: 30px;
-    margin-top: -10px !important;
-    margin-right: -14px !important;
-    position: absolute;
-    right: 17px;
-    top: -6px;
-}
-
-#saveBlockData {
-	background: rgb(201, 201, 35) none repeat scroll 0% 0%;
-	color: #fff;
-	font-weight: bold;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-.radioButton:checked {
-	background-color: #000;
-	border: 2px solid #ccc !important;
-}
-
-.radioButton {
-	display: block !important;
-	height: 15px !important;
-	width: 15px !important;
-	color: #fff;
-	padding: 0px !important;
-	margin-right: 5px;
-	border: 1px solid #000 !important;
-	cursor: pointer;
-	margin-top: 5px;
-	border-radius: 50%;
-	z-index: 9999999999;
-}
-
-.addressListPop {
-	height: 456px;
-	overflow-y: scroll;
-}
-
-
-.changeAdddd {
-	height: auto;
-	overflow-y: scroll;
-}
-
-.address_postcode {
-	width: 100%;
-}
-
-@media (max-width: 1365px) {
-	.changeAdddd {
-		height: 550px;
-		overflow-y: scroll;
-	}
-	.addressListPop {
-		height: 356px;
-		overflow-y: scroll;
-	}
-}
-
-@media (max-width: 720px) {
-	.changeAdddd {
-		height: 400px;
-		overflow-y: scroll;
-	}
-	.addressListPop {
-		height: 300px;
-		overflow-y: scroll;
-	}
-}
-
-</style>
 <template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">
 		<h1 class="account-header">
@@ -578,7 +323,7 @@
 									</div>
 									<div class="col-md-4 col-sm-6">
 										<div class="editIconCSS">
-										<c:if test="${editShippingAddressStatus eq true}">
+										<c:if test="${addressChangeEligible eq true}">
 									       <a href="#" id="changeAddressLink">Edit / Change Address </a>
 									   </c:if>
 										</div>
@@ -1582,10 +1327,7 @@
 			<div class="removeModalAfterLoad" id="changeAddressPopup">
 			  <order:changeDeliveryAddress orderDetails="${subOrder}" />
             </div><!-- /.modal -->
-            
-            <div class="removeModalAfterLoad" id="showOTP">
-            	   <order:otpPopup/>	
-            </div>
+ 
         <div class="wrapBG" style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; z-index: 99999; display: none;"></div>
         
 </template:page>
@@ -1891,77 +1633,6 @@ $(function() {
 				});
 		      } 
 	}	 
-	 function newOTPGenerate(orderCode){
-		 $.ajax({
-				type : "GET",
-				url : ACC.config.encodedContextPath + "/my-account/newOTP",
-				data :"orderCode="+orderCode,
-				success : function(response) {
-					if(response==true){
-						$(".otpError").show();
-						$(".otpError").text("OTP has been sent");
-					}else{
-						$(".otpError").show();
-						$(".otpError").text("OTP sending fail try again ");
-					}
-				}
-			}); 
-	 }
-
-	 function generateOTP(orderId){	
-	     $(".otpError").hide();
-		 var numberOTP=$("#OTP").val();
-		 var isString = isNaN(numberOTP);
-	     var numberOTP=numberOTP.trim();
-	     if(isString==true || numberOTP.trim()==''){
-	    	 $(".otpError").show();
-		     $(".otpError").text("Invalid OTP, Please Re-enter.");
-	     }else if(numberOTP < 5 && numberOTP > 6){
-	    	 $(".otpError").show();
-		     $(".otpError").text("Invalid OTP, Please Re-enter.");
-	     } else{
-			$.ajax({
-				type : "GET",
-				url : ACC.config.encodedContextPath + "/my-account/validationOTP",
-				data : "orderId=" + orderId + "&otpNumber="+$("#OTP").val(),
-				success : function(response) {
-					if(response=="pincodeNotServiceable"){
-						$("#changeAddressPopup").show();
-						$("wrapBG1").show();
-						$("#showOTP").hide();
-						$(".wrapBG").hide();
-						var height = $(window).height();
-						$(".wrapBG").css("height", height);
-						$("#changeAddressPopup").css("z-index", "999999");
-						$(".pincodeNoError").show();
-						$(".pincodeNoError").text(response);
-					}
-					else if(response=="INVALID"){
-						$("#changeAddressPopup").hide();
-						$("wrapBG1").hide();
-						$("#showOTP").show();
-						$(".wrapBG").show();
-						var height = $(window).height();
-						$(".wrapBG1").css("height", height);
-						$("#showOTP").css("z-index", "999999");	
-						$(".otpError").show();
-						$(".otpError").text("Invalid OTP, Please Re-enter.");
-						
-					}else{
-						console.log(response);
-					    location.reload();
-					} 
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-				  console.log(textStatus, errorThrown);
-				  $("#showOTP .error_text").text("Internal Server Error, Please try again later.");
-				  alert("Internal Server Error, Please try again later.");
-				  location.reload();
-				}
-			}); 
-
-		}	 
-	 }
 	 
 	$(document).ready(function(){
 		 $("#changeAddressLink").click(function(){
@@ -1986,12 +1657,40 @@ $(function() {
 			$(".pickup_Edit").css("display","block");
 			$(".pickupeditbtn").css("display","none");		
 		});
+		 $(".savebtn").click(function(){	
 		
+			// $(".pickupeditbtn").css("display","block");
+			 
+		 });
+		 
+		 $("#changeAddressLink").click(function(){
+			  $("#changeAddressPopup").show();
+			  $(".wrapBG").show();
+			  var height = $(window).height();
+			  $(".wrapBG").css("height",height);
+			  $("#changeAddressPopup").css("z-index","999999");
+		});
+		 
+	 	$("#saveBlockData").click(function(){
+				$("#changeAddressPopup").hide();
+				$("#showOrderDetails").show();
+				$("#showOrderDetails").css("z-index","999999");
+		});
+		
+ 	$(".submitSchedule").click(function(){
+			$("#changeAddressPopup, #showOrderDetails").hide();
+			$("#showOTP").show();
+			$("#showOTP").css("z-index","999999");
+		});
 		 
 		 $(".close").click(function(){
 			 $("#changeAddressPopup").hide();
-			 $(".wrapBG").hide();
+			 $(".wrapBG, #showOrderDetails").hide();
+			 $("#showOTP").hide();
 		 });
 		 //$(".pickupeditbtn").hide(); 
+		 
+ 	
+
 	 });	 
 </script>
