@@ -42434,18 +42434,22 @@ margin-left: 20%;
 } 
 /*Filter scroll changes end*/
 /* TPR-168 */  
-   #customPriceFilter{
-     margin-bottom: 5px;}
-
    #customPriceFilter .minPriceSearchTxt{
     width: 39%;
     height: auto;
     padding: 4px 5px;
+    margin-bottom:5px;
     }
    #customPriceFilter .maxPriceSearchTxt{
     width: 40%;
     height: auto;
     padding: 4px 3px;
+    margin-bottom:5px;
+   }
+   .priceBucketExpand a{
+    color: #a9143c;
+    font-size: 14px;
+    text-decoration: underline;
    }
    #customPriceFilter #applyCustomPriceFilter{
    padding: 5px 4px;
@@ -42453,6 +42457,7 @@ margin-left: 20%;
     background: #a9143c;
     color: #fff;
     border: none;
+    margin-bottom: 5px;
    }
     #customPriceFilter span{
   color:#dfd1d5;
@@ -44321,7 +44326,7 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     content: "\e602";
     font-size: 18px;
     color: #A9143C;
-  margin-right: 50px;
+  margin-right: 5px;
    position: relative;
    font-weight: bold;
 }
@@ -44911,4 +44916,22 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 .quickview .product-content #variantForm .select-size ul > li:hover:not(.strike) + li {
     border-left-color: #000;
     transition: all 0.3s;
+}
+@media(max-width:1024px){
+.product-info .picZoomer-pic-wp .zoom a:before, .product-image-container.device a.wishlist-icon:before {
+    margin-right: 50px;
+}
+.product-image-container.device .owl-carousel .owl-item img{
+padding:0;
+}
+}
+@media(max-width:1024px) and (min-width:768px){
+.product-info .product-image-container.device .owl-carousel {
+    padding: 0 10%;
+}
+}
+@media(max-width:767px){
+.product-info .product-image-container.device .owl-carousel {
+    padding: 0 8%;
+}
 }
