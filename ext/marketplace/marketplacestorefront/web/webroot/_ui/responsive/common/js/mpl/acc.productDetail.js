@@ -620,8 +620,10 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
 	if(loggedIn == 'false') {
-		$(".wishAddLogin").css("display","inline-block");
-		$(".wishAddLogin").fadeOut(3000);
+		$(".wishAddLogin").addClass("active");
+		setTimeout(function(){
+			$(".wishAddLogin").removeClass("active")
+		},3000)
 	}
 	else {
 	
@@ -636,8 +638,10 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					//var msg=$('#wishlistSuccess').text();
 					//$('#addedMessage').show();
 					//$('#addedMessage').html(msg);
-					$(".wishAddSucess").css("display","inline-block");
-					$(".wishAddSucess").fadeOut(3000);
+					$(".wishAddSucess").addClass("active");
+					setTimeout(function(){
+						$(".wishAddSucess").removeClass("active")
+					},3000)
 					$("#add_to_wishlist").attr("disabled",true);
 					$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
 					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
@@ -685,6 +689,12 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					//openPop(ussidValue);
 				//	$('#myModal').modal('hide');
 				//	
+				}
+				else{
+					$(".wishAlreadyAdded").addClass("active");
+					setTimeout(function(){
+						$(".wishAlreadyAdded").removeClass("active")
+					},3000)
 				}
 			},
 		});
