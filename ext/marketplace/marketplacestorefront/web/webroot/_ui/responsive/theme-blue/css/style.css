@@ -22465,7 +22465,10 @@ div.productInfo ul li.product-size-list {
 .productInfo li {
     margin-bottom: 5px;
 }
-
+ul.color-swatch{
+	float: left;
+    width: 50%;
+}
 ul.color-swatch li span{
     padding: 0px !important;
     border: 1px solid rgb(204, 211, 217);
@@ -24624,8 +24627,11 @@ header .banner.active span.toggle.mobile::before,header .banner.active span.togg
 }
 
 span.variantFormLabel{
-	font-weight:500;
-	margin-bottom:14px;
+	font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+	/* font-weight:500; */
+	margin-bottom:20px;
 	display:block;
 }
 span.capacity-box{
