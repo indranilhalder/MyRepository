@@ -621,7 +621,7 @@ public class ProductPageController extends AbstractPageController
 
 				final int length = allVariants.length();
 				final String allVariantsString = allVariants.substring(0, length - 1);
-				model.addAttribute("allVariantsString", allVariantsString);
+				model.addAttribute(ModelAttributetConstants.ALLVARIANTSSTRING, allVariantsString);
 			}
 
 		}
@@ -1038,7 +1038,7 @@ public class ProductPageController extends AbstractPageController
 
 				final int length = allVariants.length();
 				final String allVariantsString = allVariants.substring(0, length - 1);
-				model.addAttribute("allVariantsString", allVariantsString);
+				model.addAttribute(ModelAttributetConstants.ALLVARIANTSSTRING, allVariantsString);
 			}
 			returnStatement = getViewForPage(model);
 		}
@@ -1175,7 +1175,7 @@ public class ProductPageController extends AbstractPageController
 
 				final int length = allVariants.length();
 				final String allVariantsString = allVariants.substring(0, length - 1);
-				model.addAttribute("allVariantsString", allVariantsString);
+				model.addAttribute(ModelAttributetConstants.ALLVARIANTSSTRING, allVariantsString);
 			}
 			//returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
 		}
@@ -1461,7 +1461,7 @@ public class ProductPageController extends AbstractPageController
 
 					final int length = allVariants.length();
 					final String allVariantsString = allVariants.substring(0, length - 1);
-					model.addAttribute("allVariantsString", allVariantsString);
+					model.addAttribute(ModelAttributetConstants.ALLVARIANTSSTRING, allVariantsString);
 				}
 			}
 		}
