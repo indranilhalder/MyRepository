@@ -158,9 +158,9 @@ tr.d0 td {
 								<input type="hidden" name="wishlistNamePost" value="N" />
 								<input type="hidden" name="ussid" value="${entry.selectedSellerInformation.ussid}" />
 								<div class="undo-text-wrapper">
-								<p>THIS PRODUCT HAS BEEN</p>
-								<h4>REMOVED</h4>
-								<button class="undo-add-to-cart">Undo</button>
+								<p><spring:theme code="mpl.myBag.product.remove.text"/></p>
+								<h4><spring:theme code="mpl.myBag.product.remove.removed"/></h4>
+								<button class="undo-add-to-cart"><spring:theme code="mpl.myBag.product.remove.undo"/></button>
 								</div>
 								</form:form>
 								</li>
