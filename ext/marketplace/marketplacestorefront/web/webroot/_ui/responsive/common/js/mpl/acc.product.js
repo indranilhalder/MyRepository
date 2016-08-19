@@ -1089,7 +1089,20 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 		} 
 		
 	}
+	
+	
+
 };
+
+/*TPR-655 START*/
+$(document).on('click','.go-to-bag.mini-cart-checkout-button',function(){
+	utag.link({
+		link_obj: this,
+		link_text: 'hover_goto_mybag',
+		event_type : 'hover_mybag'
+	});
+})	
+/*TPR-655 END*/
 
 //Code changes start for TPR -168//
 
