@@ -44427,7 +44427,6 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     margin: 0;
     position: absolute;
     width: 100%;
-    top: inherit;
     z-index: 1;
     left: 0;
     text-align: center;
