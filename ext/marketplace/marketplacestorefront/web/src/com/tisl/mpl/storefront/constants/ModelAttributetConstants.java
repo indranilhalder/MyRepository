@@ -758,10 +758,4 @@ public final class ModelAttributetConstants
 	public static final String Homepage_Title = "Online Shopping Site in India for Mobiles, Electronics & Fashion at TataCLiQ";
 	public static final String Homepage_Description = "Online Shopping in India for Mobiles, Electronics, Men & Women Clothing, Shoes at TataCLiQ. Get 100% Genuine products!";
 	public static final String Homepage_Keyword = "Online Shopping sites, online shopping store, online shopping, Online mobile shopping, shopping online, TataCLiQ";
-
-	// Sonar Fix
-
-	public static final String ALLVARIANTSSTRING = "allVariantsString";
-
-
 }
