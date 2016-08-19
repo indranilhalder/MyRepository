@@ -39,7 +39,7 @@ $(document).ready(function(){
    	 var quantity= $("#qty").val();
    	
    	 //Changes for pdp CR
-   	if(!$("#variant li ").hasClass("selected")){
+   	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined'){
   		 
    		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormTitle").show();

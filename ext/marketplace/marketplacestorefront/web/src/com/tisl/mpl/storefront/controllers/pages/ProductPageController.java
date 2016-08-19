@@ -932,6 +932,7 @@ public class ProductPageController extends AbstractPageController
 			final Model model, @Valid final SellerInformationDetailsForm form, final HttpServletRequest request)
 			throws CMSItemNotFoundException
 	{
+		final StringBuilder allVariants = new StringBuilder();
 		String returnStatement = null;
 		try
 		{
@@ -1021,6 +1022,23 @@ public class ProductPageController extends AbstractPageController
 			{
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
 				model.addAttribute("productSize", variantProductModel.getSize());
+			}
+
+			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
+			{
+				//get left over variants
+				if (productData.getAllVariantsId().size() > 1)
+				{
+					productData.getAllVariantsId().remove(productData.getCode());
+				}
+				for (final String variants : productData.getAllVariantsId())
+				{
+					allVariants.append(variants).append(',');
+				}
+
+				final int length = allVariants.length();
+				final String allVariantsString = allVariants.substring(0, length - 1);
+				model.addAttribute("allVariantsString", allVariantsString);
 			}
 			returnStatement = getViewForPage(model);
 		}
