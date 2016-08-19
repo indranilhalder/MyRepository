@@ -1063,7 +1063,7 @@ $(function() {
 								$('#unsevisablePin,#unableprocessPin,#emptyPin').hide();
 								$("#wrongPin").show();
 								$("#serviceablePin").hide();
-								$("#pdpPinCodeAvailable").hide();
+							//	$("#pdpPinCodeAvailable").hide();
 								$('#addToCartButton').show();
 								$('#buyNowButton').attr("disabled",false);
 								//TPR-794
@@ -1393,12 +1393,15 @@ $( document ).ready(function() {
 					if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
+
 						//TPR-772
 						$(".promo-block").show();
+
 					} else {
 						if (promorestrictedSellers.length > 0
 								&& !(promorestrictedSellers
 										.indexOf(data['sellerId']) == -1))
+
 							//TPR-772
 							$(".promo-block").show();
 					}
@@ -2634,7 +2637,7 @@ function loadDefaultWishListName_SizeGuide() {
 	}
 	$(document).on('click','#buyNow .js-add-to-cart',function(event){
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
-		if(!$("#variant li ").hasClass("selected")){
+		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 	 	    return false;
