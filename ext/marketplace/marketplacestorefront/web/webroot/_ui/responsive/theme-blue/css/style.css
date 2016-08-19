@@ -12060,6 +12060,11 @@ button.otherSellersFont {
    /*  font-size: 17px; */
     content: "\f005"
 }
+.star-review#pdp_rating .full:before, .star-review#pdp_rating .half:before,  .star-review#pdp_rating .empty:before{
+    font-size: 17px;
+    color: #fbb928;
+        margin: 15px 0 0;
+}
 .star-review .half:before {
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
@@ -22465,7 +22470,10 @@ div.productInfo ul li.product-size-list {
 .productInfo li {
     margin-bottom: 5px;
 }
-
+ul.color-swatch{
+	float: left;
+    width: 50%;
+}
 ul.color-swatch li span{
     padding: 0px !important;
     border: 1px solid rgb(204, 211, 217);
@@ -24624,8 +24632,11 @@ header .banner.active span.toggle.mobile::before,header .banner.active span.togg
 }
 
 span.variantFormLabel{
-	font-weight:500;
-	margin-bottom:14px;
+	font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+	/* font-weight:500; */
+	margin-bottom:20px;
 	display:block;
 }
 span.capacity-box{
@@ -42547,7 +42558,9 @@ margin-left: 20%;
 }
 
 .product-info .product-image-container .image-list li span.thumb:hover,
-	.product-info .product-image-container .image-list li .active {
+	.product-info .product-image-container .image-list li .active,
+	.productImageGallery .imageList li span.thumb:hover,
+	.productImageGallery .imageList li .active{
 	border-color: #ad2046;
 }
 
@@ -42654,8 +42667,8 @@ margin-left: 20%;
 	float: left;
 	text-align: center;
 	min-width: 33px;
-	border-right:none;
 	    margin-bottom: 5px;
+	    margin-left: -1px;
 }
 
 .product-info .size ul#variant li a {
@@ -42795,7 +42808,7 @@ margin-left: 20%;
 	cursor: pointer;
 }
 
-.product-info .product-content .delivery-block li.do#homeli {
+.product-info .product-content .delivery-block li:nth-of-type(2){
 	border: none;
 }
 
