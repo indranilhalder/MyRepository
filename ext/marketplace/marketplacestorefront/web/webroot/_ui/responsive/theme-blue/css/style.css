@@ -12060,6 +12060,11 @@ button.otherSellersFont {
    /*  font-size: 17px; */
     content: "\f005"
 }
+.star-review#pdp_rating .full:before, .star-review#pdp_rating .half:before,  .star-review#pdp_rating .empty:before{
+    font-size: 17px;
+    color: #fbb928;
+        margin: 15px 0 0;
+}
 .star-review .half:before {
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
