@@ -17,12 +17,20 @@
 		}); */
 	}); 
 
-	function hit() {
+	function hit(options) {
+		
+		var defaults = {
+				windowWidth : 1025
+			};
+		var opts = $.extend({},defaults, options)
+		
 		// initialized with no keyboard
+		$("body").append($("#zoomModal"))
 		$("#zoomModal").modal({
 			backdrop : 'static',
 			keyboard : false
 		});
+		
 		//$("#zoomModal").addClass("active");
 		$("div#zoom_gallery img").each(function() {
 
@@ -30,6 +38,16 @@
 				$(this).hide();
 			}
 		});
+		
+		if(opts.windowWidth < 1025) {
+			console.log(opts.windowWidth)
+			setTimeout(function(){
+				var mainImageHeight = $("#zoomId > img").height();
+				var thumbnailImageHeight = (mainImageHeight / 5);
+				$("#zoomModal .imageList ul li img").css("height", thumbnailImageHeight);
+			},1000)
+		}
+		
 	}
 
 	function closing() {
@@ -71,7 +89,7 @@
 		 
 		 
 		<%-- <img  id ="newProduct" class="new brush-strokes-sprite sprite-New" style="z-index:1; display:none;" src="${commonResourcePath}/images/transparent.png"> --%>
-		<div class="productImagePrimaryLink" id="imageLink" data-href="${productZoomImagesUrl}" target="_blank" data-toggle="modal" title="<spring:theme code="general.zoom"/>">
+		<div class="productImagePrimaryLink" id="imageLink" data-href="${productZoomImagesUrl}" target="_blank" data-toggle="modal" title="<spring:theme code="text.add.to.wishlist"/>">
 			<product:productPrimaryImage product="${product}" format="zoom"/>
 		</div>			
 	</div>	

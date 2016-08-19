@@ -13,11 +13,118 @@
     <c:url value="${continueUrl}" var="continueShoppingUrl" scope="session"/>
     <%-- <input type="hidden" id="isServicableId" value="${isServicable}"> Not required --%>
     <c:set var="showTax" value="false"/>
-	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /></h1>
+    <c:set var="userName" value="${user.firstName}"/>
+    <div class="MyBag-buttons">
+	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1>
+	
+	
+	<%-- <c:choose>
+	<c:when test="${isLoggedIn eq true}">
+	<p class="desk-view"><spring:theme code="mpl.myBag.hi" /> ${userName}, <spring:theme code="mpl.myBag.customer.desc" /></p>
+	</c:when>
+	<c:otherwise>
+	<p class="desk-view"><spring:theme code="mpl.myBag.customer.fulldesc" /></p>
+	</c:otherwise>
+	</c:choose> --%>
+	
+	<a href="/" class="continue-shopping mob-tab-view-shopping"> Continue Shopping</a>
+	<ul class="checkout-types">
+			
+			<!-- TISBOX-879 -->
+			<li id="checkout-id" class="checkout-button">
+				<!-- TISEE-6257 -->
+				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout');"><spring:theme code="checkout.checkout" /></a>
+				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
+			</li>
+
+			<!-- TISBOX-879
+			 <li id="checkoutBtnIdButton" class="checkout-button">
+				<button class="btn btn-primary checkoutButton"
+					data-checkout-url="${checkoutUrl}" >
+					<spring:theme code="checkout.checkout" />
+				</button>
+			</li>
+			 -->
+		 
+		<li id="expresscheckoutid" class="express-checkout">
+            
+             <c:if test="${ not empty Addresses && isLoggedIn eq true}">
+                   <%--  <span><spring:theme code="text.or"/></span>  --%>
+                    
+                  <%-- TISBOX-1631   <form action="${request.contextPath }/checkout/multi/express"> --%> 
+                    <button   id="expressCheckoutButtonId" class="express-checkout-button" data-toggle="modal" data-target="#popUpExpAddress"><spring:theme code="express.checkout"/></button>
+                    <input  type="hidden" name="expressCheckoutAddressSelector"  id="expressCheckoutAddressSelector" value="demo"/>
+                    <input  type="hidden" name="isPincodeServicableId"  id="isPincodeServicableId" value="N"/>
+                    
+                   <%--  <p class="exp_checkout_msg"><spring:theme code="cart.checkout.shipment"/></p> --%>
+                   <!--  TISBOX-882 -->
+                  	  <p id="expresscheckoutErrorDiv" style="display: none ; color: red;"><spring:theme code="cart.express.checkout.validation"/>  </p>
+                    
+                    
+				    <%--  <select id="addressListSelectId" onclick="checkExpressCheckoutPincodeService('typeExpressCheckoutDD')">
+				               <option value="" disabled><spring:theme code="cart.express.checkout.address"/></option>
+				               <c:forEach items="${Addresses}"  var="Address">
+					                  <option value="${Address.key}" id="${Address.key}">
+					                  ${Address.value}
+					                  </option>
+					                  </c:forEach>
+				     </select> --%>
+				     <div id="popUpExpAddress" class="modal fade" role="dialog">
+						<div class="overlay" data-dismiss="modal"></div>
+    					<!-- Modal content-->
+   					 	<div class="modal-content content">
+   					 	<p class="ship-to">Ship To</p>
+   					 	<span class="close-modal" data-dismiss="modal">X</span>
+   					 	<div class="exp-address-container">
+				          <c:forEach items="${Addresses}"  var="Address" varStatus="status">
+				          <input type="radio" class="address_radio" value="${Address.key}" id="${Address.key}" name="expaddress" data-index="${status.index}">
+				          <label class="express_address_label" for="${Address.key}">${Address.value}</label>
+					      </c:forEach>
+					      </div>
+					      <button  id="expressCheckoutButtonId" class="express-checkout-button" onclick="return expressbutton()"><spring:theme code="express.checkout"/></button>
+				     	 </div>
+          			</div>
+				 	
+                 <%--    </form> --%>
+                 <%-- onclick="return expressbutton();" --%>
+	         </c:if>     
+            
+            </li>
+            
+          </ul>
+        <a href="/" class="continue-shopping desk-view-shopping"> Continue Shopping</a>
+          </div>
+		<!-- <a href="/store" class="continue-shopping"> Continue Shopping</a> --><!-- store url change -->
+		<!-- <a href="/" class="continue-shopping"> Continue Shopping</a> -->
+
+	<div class="top block MyBag-pincode" id="pinCodeDispalyDiv">
+		<h2><spring:theme code="cart.delivery.options" /></h2>
+		<input type="hidden"  name = "defaultPinCodeIdsDefault" id= "defaultPinCodeIdsDefault"  value="${defaultPinCode}"/>
+			<div id="defaultPinDiv">
+				<p><spring:theme code="product.pincode" /> 
+				<input id= "defaultPinCodeIdsq" name = "defaultPinCodeIdsq" style="font-weight: bold;" value="${defaultPinCode}"/></p> 
+				<a id="changePinAnchor" onClick="pinCodeDiv()">Change </a>
+			</div>
+			
+			<div id="changePinDiv">
+				<p><spring:theme code="product.pincode.input" /></p>
+				<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit');"><spring:theme code="product.submit"/></button>
+			</div>
+		
+		
+		
+		<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
+		<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
+		
+		
+	</div>
 	
 	<script>
    				window.onload =	function(){
    						checkIsServicable();
+   						var mincnt=	$('.js-mini-cart-count').text();
+   						$('#mybagcnt').html(mincnt);
    				}
 	</script>
 <!-- TISCR-320 -->

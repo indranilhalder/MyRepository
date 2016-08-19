@@ -316,13 +316,13 @@ var productCodeSG = '${product.code}';
 									items="${variantOption.colourCode}" var="color">
 								<c:choose> 
 								<c:when test="${fn:startsWith(color, 'multi')}"> 
-						     	<img src="${commonResourcePath}/images/multi.jpg" style="width:100%;height:100%;cursor: pointer;" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"/>
+						     	<img src="${commonResourcePath}/images/multi.jpg" style="width:100%;height:100%;cursor: pointer;" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=" data-productcode="${variantOption.code}"/>
 								</c:when>
 								<%-- <span style="background-color: ${color};border: 1px solid rgb(204, 211, 217);" title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span> --%>
 								<c:otherwise>
 									<span
 										style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"
-										title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=${sizeSelectedSizeGuide}" data-productcode="${variantOption.code}"></span>
+										title="${variantOption.colour}" class="colorBox"  data-producturl="${variantUrl}&sizeSelected=" data-productcode="${variantOption.code}"></span>
                                </c:otherwise> 
                                </c:choose> 
 
@@ -362,15 +362,18 @@ var productCodeSG = '${product.code}';
 
 <c:if test="${noVariant!=true&&notApparel!=true}">
  <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
-		<select id="variant" class="variant-select size-g variant-select-sizeGuidePopUp">            <!--changes for TISPRO-338 (variant-select-sizeGuidePopUp class added) -->
-			<c:choose>
+ 
+ <!-- Added for Size Guide Size Chart Change -->
+ 
+		<ul id="variant" class="variant-select size-g variant-select-sizeGuidePopUp">            <!--changes for TISPRO-338 (variant-select-sizeGuidePopUp class added) -->
+			<%-- <c:choose>
 				<c:when test="${empty sizeSelectedSizeGuide || sizeSelectedSizeGuide ne 'true'}">
 					<option value="#" data-target="#popUpModal" selected="selected"><spring:theme code="text.select.size" /></option>
 				</c:when>
 				<c:otherwise>
 					<option value="#"><spring:theme code="text.select.size" /></option>
 				</c:otherwise>
-			</c:choose>
+			</c:choose> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:forEach items="${variantOption.colourCode}" var="color">
 					<c:choose>
@@ -386,16 +389,16 @@ var productCodeSG = '${product.code}';
 										
 											<c:choose>
 											   <c:when test="${empty sizeSelectedSizeGuide || sizeSelectedSizeGuide ne 'true'}">
-													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
+													<li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:when>
 												<c:otherwise>
-													<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
+													<li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:otherwise>
 											</c:choose>
 										
 										</c:when>
 										<c:otherwise>
-											<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
+											<li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -419,15 +422,15 @@ var productCodeSG = '${product.code}';
 													<%-- 	<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option> --%>
 																								<c:choose>
 											    <c:when test="${empty sizeSelectedSizeGuide}">
-													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</option>
+													<li><span data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</span></li>
 												</c:when>
 												<c:otherwise>
-													<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
+													<li class="selected"><span data-target="#popUpModal"  data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 												</c:otherwise>
 												</c:choose>
 													</c:when>
 													<c:otherwise>
-														<option data-productcode1="${variantOption.code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
+														<li><span data-productcode1="${variantOption.code}" data-producturl="${link}&sizeSelected=true">${entry.value}</span></li>
 													</c:otherwise>
 												</c:choose>
 											</c:forEach>
@@ -439,7 +442,7 @@ var productCodeSG = '${product.code}';
 					</c:choose>
 				</c:forEach>
 			</c:forEach>
-		</select>
+		</ul>
 	</c:if>
 			</div>
 			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantCount"/>

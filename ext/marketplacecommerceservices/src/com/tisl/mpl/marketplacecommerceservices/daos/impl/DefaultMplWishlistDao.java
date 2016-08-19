@@ -45,6 +45,24 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 		return flexibleSearchService.<Wishlist2EntryModel> search(query).getResult();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.daos.MplWishlistDao#getWishListAgainstUser(de.hybris.platform.core.model
+	 * .user.UserModel)
+	 */
+	@Override
+	public List<Wishlist2Model> getWishListAgainstUser(final UserModel user)
+	{
+
+		final String queryString = //
+		"SELECT {pk} FROM {Wishlist2} WHERE {user} = ?user ORDER BY {modifiedtime} desc";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("user", user);
+		return flexibleSearchService.<Wishlist2Model> search(query).getResult();
+	}
+
 
 
 }

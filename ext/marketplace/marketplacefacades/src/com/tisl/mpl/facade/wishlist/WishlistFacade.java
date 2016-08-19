@@ -29,8 +29,7 @@ public interface WishlistFacade
 
 	Wishlist2Model createNewWishlist(final UserModel user, final String name, final String description);
 
-	boolean addProductToWishlist(final Wishlist2Model wishlist, final String productCode, final String ussid,
-			boolean sizeSelected);
+	boolean addProductToWishlist(final Wishlist2Model wishlist, final String productCode, final String ussid, boolean sizeSelected);
 
 	Wishlist2Model getWishlistForName(final String wishlistName);
 
@@ -51,7 +50,7 @@ public interface WishlistFacade
 	 * @return
 	 */
 	public List<Wishlist2EntryModel> getAllWishlistByUssid(final String ussid);
-	
+
 	/**
 	 * @param orderDetails
 	 */
@@ -65,4 +64,10 @@ public interface WishlistFacade
 	 * @return List<Wishlist2Model>
 	 */
 	List<Wishlist2Model> getAllWishlistsForCustomer(UserModel userModel);
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	Wishlist2Model getSingleWishlist(UserModel user);
 }
