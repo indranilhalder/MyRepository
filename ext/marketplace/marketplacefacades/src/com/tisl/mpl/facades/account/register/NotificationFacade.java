@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.facades.account.register;
 
+import de.hybris.platform.core.model.order.OrderModel;
+
 import java.util.List;
 
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
@@ -36,6 +38,13 @@ public interface NotificationFacade
 			throws EtailNonBusinessExceptions;
 
 	Integer getUnReadNotificationCount(List<NotificationData> notificationDatas);
+
+	/**
+	 * TPR-629
+	 * 
+	 * @param orderModel
+	 */
+	void sendOrderConfirmationNotification(OrderModel orderModel);
 
 
 }

@@ -92,7 +92,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService#getPaymentPedingOrders()
 	 */
 	@Override
@@ -200,6 +200,24 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+
+							//Email and sms for Payment_Timeout
+							final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+									+ orderModel.getCode();
+							try
+							{
+								getNotificationService().triggerEmailAndSmsOnPaymentTimeout(orderModel, trackOrderUrl);
+							}
+							catch (final JAXBException e)
+							{
+								LOG.error("Error while sending notifications>>>>>>", e);
+							}
+							catch (final Exception ex)
+							{
+								LOG.error("Error while sending notifications>>>>>>", ex);
+							}
+
 						}
 						else if ((new Date()).after(orderTATForTimeout) && CollectionUtils.isNotEmpty(hooks))
 						{
@@ -215,9 +233,25 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						{
 							if (null != orderModel.getIsPendingNotSent() && !orderModel.getIsPendingNotSent().booleanValue())
 							{
-								//TODO: trigger payment pending email and sms
-								final Boolean flag = Boolean.TRUE; //Change to trigger boolean state return
-								orderModel.setIsPendingNotSent(flag);
+								//Email and sms for Payment_Pending
+								boolean flag = false;
+								final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+										MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+										+ orderModel.getCode();
+								try
+								{
+									flag = getNotificationService().triggerEmailAndSmsOnPaymentPending(orderModel, trackOrderUrl);
+								}
+								catch (final JAXBException e)
+								{
+									LOG.error("Error while sending notifications>>>>>>", e);
+								}
+								catch (final Exception ex)
+								{
+									LOG.error("Error while sending notifications>>>>>>", ex);
+								}
+
+								orderModel.setIsPendingNotSent(Boolean.valueOf(flag));
 								getModelService().save(orderModel);
 							}
 
@@ -289,6 +323,9 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private void takeActionAgainstOrder(final JuspayWebhookModel juspayWebhookModel, final OrderModel orderModel)
 			throws InvalidCartException, CalculationException, EtailNonBusinessExceptions
 	{
+		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				+ orderModel.getCode();
 		if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_SUCCEEDED")
 				&& !juspayWebhookModel.getIsExpired().booleanValue())
 		{
@@ -308,10 +345,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
 			getOrderService().submitOrder(orderModel);
 
-			//Added to trigger notification
-			final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-					+ orderModel.getCode();
+			//Email and sms for Payment_Successful
 			try
 			{
 				getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
@@ -337,7 +371,20 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			getMplCommerceCartService().isInventoryReserved(orderModel,
 					MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 
-			//TODO : trigger for payment failed email and sms
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+			//Email and sms for Payment_Failed
+			try
+			{
+				getNotificationService().triggerEmailAndSmsOnPaymentFailed(orderModel, trackOrderUrl);
+			}
+			catch (final JAXBException e)
+			{
+				LOG.error("Error while sending notifications from job>>>>>>", e);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Error while sending notifications>>>>>>", ex);
+			}
 
 			juspayWebhookModel.setIsExpired(Boolean.TRUE);
 		}

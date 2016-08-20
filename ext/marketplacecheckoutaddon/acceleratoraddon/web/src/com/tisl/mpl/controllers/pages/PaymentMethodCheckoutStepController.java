@@ -118,6 +118,7 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
+import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
@@ -212,6 +213,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	@Resource(name = "mplDefaultCommerceCartCalculationStrategy")
 	private MplCommerceCartCalculationStrategy calculationStrategy;
+
+	@Resource(name = "notificationFacade")
+	private NotificationFacade notificationFacade;
 
 	private final String checkoutPageName = "Payment Options";
 	private final String RECEIVED_INR = "Received INR ";
@@ -3452,7 +3456,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
 				getMplCheckoutFacade().submitOrder(orderToBeUpdated);
 
-				//TODO: order confirmation email
+				//order confirmation email and sms
+				getNotificationFacade().sendOrderConfirmationNotification(orderToBeUpdated);
 
 				final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
 
@@ -4127,6 +4132,31 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		this.mplSellerInformationService = mplSellerInformationService;
 	}
 
+
+
+
+
+
+	/**
+	 * @return the notificationFacade
+	 */
+	public NotificationFacade getNotificationFacade()
+	{
+		return notificationFacade;
+	}
+
+
+
+
+
+	/**
+	 * @param notificationFacade
+	 *           the notificationFacade to set
+	 */
+	public void setNotificationFacade(final NotificationFacade notificationFacade)
+	{
+		this.notificationFacade = notificationFacade;
+	}
 
 
 
