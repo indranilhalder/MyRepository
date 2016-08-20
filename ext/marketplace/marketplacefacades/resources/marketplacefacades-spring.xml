@@ -656,6 +656,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<property name="accountAddressFacade" ref="accountAddressFacade"/>
 				<property name="acceleratorCheckoutFacade" ref="acceleratorCheckoutFacade"/>
 				<property name="mplEnumerationHelper" ref="mplEnumerationHelper"/>
+				<property name="orderService" ref="orderService" />
 	
 	</bean>
 	

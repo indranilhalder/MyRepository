@@ -69,6 +69,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
@@ -167,7 +168,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Autowired
 	private MplCommerceCheckoutService mplCommerceCheckoutService;
 
-	@Resource(name = "defaultOrderService")
 	private OrderService orderService;
 
 	@Resource(name = "sellerBasedPromotionService")
@@ -1701,6 +1701,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @param orderService
 	 *           the orderService to set
 	 */
+	@Required
 	public void setOrderService(final OrderService orderService)
 	{
 		this.orderService = orderService;
