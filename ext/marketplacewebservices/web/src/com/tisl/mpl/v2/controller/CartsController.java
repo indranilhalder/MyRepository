@@ -121,6 +121,7 @@ import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -2607,8 +2608,7 @@ public class CartsController extends BaseCommerceController
 	@RequestMapping(value = "/softReservationForPayment", method = RequestMethod.POST)
 	@ResponseBody
 	public ReservationListWsDTO getCartReservationForPayment(@RequestParam final String cartGuid,
-			@RequestParam final String pincode, @RequestParam final String type,
-			@RequestParam(required = false) final String bankName, @RequestParam(required = false) final String binNo)
+			@RequestParam final String pincode)
 	{
 		ReservationListWsDTO reservationList = new ReservationListWsDTO();
 		CartModel cart = null;
@@ -2627,7 +2627,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2667,7 +2667,8 @@ public class CartsController extends BaseCommerceController
 				}
 				if (delvieryModeset)
 				{
-					reservationList = mplCommerceCartService.getReservation(cart, pincode, type);
+					reservationList = mplCommerceCartService.getReservation(cart, pincode,
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING);
 				}
 				else
 				{
@@ -2705,7 +2706,8 @@ public class CartsController extends BaseCommerceController
 				}
 				if (delvieryModeset)
 				{
-					reservationList = mplCommerceCartService.getReservation(orderModel, pincode, type);
+					reservationList = mplCommerceCartService.getReservation(orderModel, pincode,
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING);
 				}
 				else
 				{

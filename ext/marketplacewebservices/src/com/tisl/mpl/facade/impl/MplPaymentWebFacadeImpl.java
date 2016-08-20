@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -779,10 +780,17 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	public boolean updateOrder(final OrderModel order) throws EtailBusinessExceptions, Exception
 	{
 		boolean updated = false;
-
-		mplCheckoutFacade.beforeSubmitOrder(order);
-		mplCheckoutFacade.submitOrder(order);
-		final OrderData orderData = orderConverter.convert(order);
+		OrderData orderData = null;
+		if (null != order.getPaymentInfo() && CollectionUtils.isEmpty(order.getChildOrders()))
+		{
+			mplCheckoutFacade.beforeSubmitOrder(order);
+			mplCheckoutFacade.submitOrder(order);
+			orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
+		}
+		else if (null != order.getPaymentInfo() && CollectionUtils.isNotEmpty(order.getChildOrders()))
+		{
+			orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
+		}
 		if (orderData != null)
 		{
 			updated = true;

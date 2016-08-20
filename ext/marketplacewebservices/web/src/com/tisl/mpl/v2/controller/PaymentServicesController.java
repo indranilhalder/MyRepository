@@ -654,8 +654,7 @@ public class PaymentServicesController extends BaseController
 	@RequestMapping(value = MarketplacewebservicesConstants.UPDATETRANSACTIONFORCARDURL, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
 	@ResponseBody
 	public PaymentServiceWsData updateTransactionDetailsforCard(@RequestParam final String juspayOrderID,
-			@RequestParam final String paymentMode, @PathVariable final String userId, @RequestParam final String cartGuid,
-			@RequestParam(required = false) final String selectedNBBank)
+			@RequestParam final String paymentMode, @PathVariable final String userId, @RequestParam final String cartGuid)
 	{
 		final PaymentServiceWsData updateTransactionDetail = new PaymentServiceWsData();
 		if (LOG.isDebugEnabled())
@@ -663,40 +662,27 @@ public class PaymentServicesController extends BaseController
 			LOG.debug(String.format("PaymentMode: %s | cartGuid: %s | UserId : %s | juspayOrderID : %s", paymentMode, cartGuid,
 					userId, juspayOrderID));
 		}
-		OrderModel orderModel = null;
+		OrderModel orderToBeUpdated = null;
 		String statusResponse = "";
-		final String paymentMethodType = MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB;
-		final String redirectAfterPayment = MarketplacecommerceservicesConstants.TRUE;
-		final String format = MarketplacecommerceservicesConstants.JSON;
 		try
 		{
 			//final String orderGuid = decryptKey(guid);
-			orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-			if (orderModel != null)
+			orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
+			if (null == orderToBeUpdated.getPaymentInfo())
 			{
 				//Wallet amount assigned. Will be changed after release1
 				final double walletAmount = MarketplacewebservicesConstants.WALLETAMOUNT;
 				//setting the payment modes and the amount against it in session to be used later
 				final Map<String, Double> paymentInfo = new HashMap<String, Double>();
-				paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue() - walletAmount));
+				paymentInfo.put(paymentMode, Double.valueOf(orderToBeUpdated.getTotalPriceWithConv().doubleValue() - walletAmount));
 
-				if (paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING))
-				{
-					statusResponse = mplPaymentFacade.getNetbankingOrderStatus(juspayOrderID, paymentMethodType, selectedNBBank,
-							redirectAfterPayment, format);
-				}
-				else
-				{
-					statusResponse = mplPaymentFacade.getOrderStatusFromJuspay(cartGuid, paymentInfo, orderModel, juspayOrderID);
-				}
-
+				statusResponse = mplPaymentFacade.getOrderStatusFromJuspay(cartGuid, paymentInfo, orderToBeUpdated, juspayOrderID);
 				//Redirection when transaction is successful i.e. CHARGED
 				if (null != statusResponse)
 				{
 					if (MarketplacewebservicesConstants.CHARGED.equalsIgnoreCase(statusResponse))
 					{
 						//return placeOrder(model, redirectAttributes);
-						final OrderModel orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
 						if (mplPaymentWebFacade.updateOrder(orderToBeUpdated))
 						{
 							updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
@@ -732,7 +718,16 @@ public class PaymentServicesController extends BaseController
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9328);
+				if (mplPaymentWebFacade.updateOrder(orderToBeUpdated))
+				{
+					updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+					updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+				}
+				else
+				{
+					updateTransactionDetail.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+				}
 
 			}
 			//updateTransactionDtls = getMplPaymentWebFacade().updateCardTransactionDetails(juspayOrderID, paymentMode, cartId,
