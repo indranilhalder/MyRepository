@@ -505,7 +505,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				paymentTransactionList.add(payTranModel);
 			}
 
-			if (null != order.getPaymentInfo())
+			if (null == order.getPaymentInfo())
 			{
 				order.setPaymentTransactions(paymentTransactionList);
 
@@ -1418,7 +1418,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		cODPaymentInfoModel.setCashOwner(custName);
 		cODPaymentInfoModel.setCode(MarketplacecommerceservicesConstants.COD + "_" + entries.get(0).getOrder().getCode());
 		cODPaymentInfoModel.setUser(getUserService().getCurrentUser());
-		if (null != abstractOrderModel.getPaymentInfo())
+		if (null == abstractOrderModel.getPaymentInfo())
 		{
 			try
 			{
