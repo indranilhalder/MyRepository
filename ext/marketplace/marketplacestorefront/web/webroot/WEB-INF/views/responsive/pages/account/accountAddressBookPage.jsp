@@ -384,38 +384,38 @@
 									</div>
 									
 
-									<!-- TISUAT-4696 -->
+									<!-- TISUAT-4696 /TPR-215-->
 									<div class="half" style="clear:both;">
 									<label><spring:theme code="text.addressBook.addressline1" text="Address Line 1 *" /></label>
 										<form:input path="line1" id="line1" onkeyup="kpressaddressln1()"
-											maxlength="30" />
+											maxlength="40" />
 											<div class="errorMessage"><div id="erraddressline1"></div></div>
 									</div>
 									
 
-									<!-- TISUAT-4696 -->
+									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half">
 									<label><spring:theme code="text.addressBook.addressline2" text="Address Line 2 *" /></label>
 										<form:input path="line2" id="line2" onkeyup="kpressaddressln2()"
-											maxlength="30" />
+											maxlength="40" />
 											<div class="errorMessage"><div id="erraddressline2">   </div></div>
 									</div>
 							
 
-									<!-- TISUAT-4696 -->
+									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half">
 									<label><spring:theme code="text.addressBook.landmark" text="Landmark *" /></label>
 										<form:input path="line3" id="line3" onkeyup="kpressaddressln3()"
-											maxlength="30" />
+											maxlength="40" />
 											 <div class="errorMessage"><div id="erraddressline3">   </div></div> 
 									</div>
 								
 									
-									<!-- TISUAT-4696 -->
+									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half">
 									<label><spring:theme code="text.addressBook.City" text="City *" /></label>
 										<form:input path="townCity" id="townCity"
-											onkeyup="kpressaddresscity()" maxlength="30" />
+											onkeyup="kpressaddresscity()" maxlength="40" />
 											<div class="errorMessage"><div id="erraddressCity">  </div></div>
 									</div>
 									

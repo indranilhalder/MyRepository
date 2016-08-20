@@ -329,6 +329,8 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 		entry.setEntryNumber(orderEntry.getEntryNumber());
 		entry.setQuantity(orderEntry.getQuantity());
 		entry.setSelectedUssid(orderEntry.getSelectedUSSID());
+		//TISPT-385
+		entry.setParentTransactionID(orderEntry.getParentTransactionID());
 		adjustUpdateable(entry, orderEntry);
 	}
 

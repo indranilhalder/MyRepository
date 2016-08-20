@@ -11,6 +11,7 @@
 	<div class="toggle"><span><spring:theme code="navigation.department.shopBy" /></span>
 	
 	<span><span><spring:theme code="navigation.brand.shopByBrand" /></span></div>
+	<span id="mobile-menu-toggle" class="mainli"></span>
 	</c:if>
 	
 		

@@ -112,6 +112,13 @@
 
 
 	<enumtypes>
+	
+		<!-- 	TPR-628-Make changes to Banners rendering in MObile Viewports -->
+		
+		<enumtype generate="true" code="BannerViewType" autocreate="true">
+			<value code="mobileView" />
+			<value code="desktopView" />
+		</enumtype>
 
 		<enumtype code="sizeEnum" autocreate="true" generate="true"
 			dynamic="false">
@@ -1047,8 +1054,25 @@
 				qualifier="collectionProducts"></targetElement>
 		</relation>
 	</relations>
-
 	<itemtypes>
+	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
+	
+			<itemtype code="BannerComponent" autocreate="false"
+				generate="false"
+				jaloclass="com.tisl.mpl.jalo.cms.components.BannerComponent">
+				<description>This component is made to show random banner</description>
+				<attributes>
+					<attribute qualifier="bannerView" type="BannerViewType"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+						<description>It stores list of banners that are to be randomly shown</description>
+							<defaultvalue>
+						em().getEnumerationValue("bannerView","desktopView")
+					</defaultvalue>
+					</attribute>
+				</attributes>
+			</itemtype>			
 
 		<!-- Add your item definitions here -->
 		<!-- Order OrderRefundConfig -->
@@ -1141,6 +1165,8 @@
 				</attributes>
 
 			</itemtype>
+			
+			
 
 			<itemtype code="ApparelSizeVariantProduct" extends="ApparelStyleVariantProduct"
 				autocreate="true" generate="true"
@@ -1669,6 +1695,14 @@
 					</attribute>
 					<!-- PDP changes end -->
 					<attribute type="java.lang.Double" qualifier="mrp"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+					</attribute>
+					<attribute type="java.lang.Double" qualifier="maxDiscount"
 						autocreate="true" generate="true">
 						<persistence type='property' />
 						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
@@ -2249,7 +2283,6 @@
 					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
-						
 				</attributes>
 			</itemtype>
 
@@ -5631,7 +5664,13 @@
 
 			<itemtype code="SolrIndexedProperty" autocreate="false"
 				generate="true">
-				<attributes>
+				<attributes>				
+				   <attribute qualifier="boostDouble" type="java.lang.Double">
+						<description>Relevance of the property in search</description>
+						<persistence type="property" />
+						<modifiers initial="true" read="true" write="true"
+							search="true" optional="true" />
+					</attribute>				
 					<attribute qualifier="boost" type="java.lang.Integer">
 						<description>Relevance of the property in search</description>
 						<persistence type="property" />
@@ -5695,6 +5734,20 @@
 					<!-- End TISPRO-326 -->
 				</attributes>
 			</itemtype>
+			
+			<itemtype code="SolrIndexedProperty" autocreate="false" generate="true">
+				<description>Extending the SolrIndexedType type from core with additional attribute for top values.</description>
+				<attributes>					
+					<attribute qualifier="facetTopValue" type="java.lang.Integer">
+						<description>Facet Top Value Count</description>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+						<persistence type="property" />
+						<modifiers initial="true" read="true" write="true"
+							search="true" optional="true" />
+					</attribute>
+				</attributes>
+	      </itemtype>
+	      
 		</typegroup>
 
 
@@ -6048,7 +6101,8 @@
 					</attribute>
 					<attribute qualifier="deviceId" type="java.lang.String">
 						<description>Stores the Device ID</description>
-						<modifiers optional="true" read="true" write="true" unique="true"/>
+						<!-- <modifiers optional="true" read="true" write="true" unique="true"/> -->
+						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
@@ -6856,16 +6910,16 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TISPRO-675 -->
-					<attribute qualifier="emiBank" type="java.lang.String"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true" />
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="emiTenure" type="java.lang.String"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true" />
-						<persistence type="property" />
-					</attribute>
+ 					<attribute qualifier="emiBank" type="java.lang.String"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<persistence type="property" />
+ 					</attribute>
+ 					<attribute qualifier="emiTenure" type="java.lang.String"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<persistence type="property" />
+ 					</attribute>
 				</attributes>
 			</itemtype>
 			<itemtype code="JuspayCardResponse" autocreate="true"

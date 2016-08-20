@@ -4,8 +4,6 @@
 package com.tisl.mpl.service;
 
 import de.hybris.platform.commercefacades.product.data.ProductData;
-import de.hybris.platform.commercefacades.search.data.SearchStateData;
-import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 
 import java.util.List;
 
@@ -25,6 +23,6 @@ public interface MplProductWebService
 
 	public List<GalleryImageData> getGalleryImages(final ProductData productData);
 
-	public String getKeywordSearch(ProductSearchPageData<SearchStateData, ProductData> searchPageData, String searchText);
+	public String getKeywordSearch(String searchText);
 
 }

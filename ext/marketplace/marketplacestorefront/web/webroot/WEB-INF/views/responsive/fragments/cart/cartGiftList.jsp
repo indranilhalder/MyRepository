@@ -83,34 +83,38 @@ $( document ).ready(function() {
 		<c:forEach items="${ProductDatas}" var="product">
 			<li class="item" id="${product.code}">
 				<ul class="desktop">
-					<li>
+					<li class="productItemInfo">
 						<div class="product-img">
 						<c:url value="${product.url}" var="productUrl" />
 							<a href="${productUrl}"><product:productPrimaryImage
 									product="${product}" format="thumbnail" /></a>
 						</div>
 						<div class="product">
-						
+						<div class="cart-product-info">
 							<p class="company"></p>
 							
 							<!-- TISSIT-1916 -->
 							<h3 class="product-brand-name"><a href="${productUrl}">${product.brand.brandname}</a></h3>
 							<a href="${productUrl}"><h3 class="product-name">${product.name}</h3></a>
-								<c:if test="${not empty product.size}">
+								<%-- <c:if test="${not empty product.size}">
 								<p class="size">Size: ${product.size}</p>
-								</c:if>
+								</c:if> --%>
 								
 								<!--TISPRO-165  -->			
 								<c:choose>
 							
 									<c:when test="${fn:toLowerCase(product.fulfillmentType) eq 'tship'}">
-										<p class="size"><spring:theme code="mpl.myBag.fulfillment"/> <spring:theme code="product.default.fulfillmentType"></spring:theme></p>
+										<p class="name"><spring:theme code="mpl.myBag.fulfillment"/> <spring:theme code="product.default.fulfillmentType"></spring:theme></p>
 									</c:when>
 									<c:otherwise>
-										<p class="size"><spring:theme code="mpl.myBag.fulfillment"/> ${product.sellerName}</p>
+										<p class="name"><spring:theme code="mpl.myBag.fulfillment"/> ${product.sellerName}</p>
 									</c:otherwise>
 								</c:choose>
-						</div> <form:form method="post" id="addToCartForm"
+								<c:if test="${not empty product.size}">
+								<p class="size">Size: ${product.size}</p>
+								</c:if>
+								</div>
+						 <form:form method="post" id="addToCartForm"
 							class="add_to_cart_form"
 							action="${request.contextPath }/cart/add">
 							<c:if test="${product.purchasable}">
@@ -130,7 +134,7 @@ $( document ).ready(function() {
 								<c:when test="${product.buyBoxSellers[0].availableStock==0}">
 									<ul class="">
 										<li><button id="addToCartButton" type="button"
-												class="addToBagButton" style="display: block !important; width: 41%; margin-left: 32.5%;">
+												class="addToBagButton treat-urself-button" style="display: block !important; width: 120px;">
 												<spring:theme code="basket.add.to.basket" />
 											</button></li>
 									</ul>
@@ -141,7 +145,7 @@ $( document ).ready(function() {
 								<c:if test="${(not empty product.size && product.rootCategory eq 'Clothing')||(not empty product.size && product.rootCategory eq 'Footwear')}">
 														<ul class="">
 											<li><button id="addToCartButton" type="button"
-													class="addToBagButton" style="display: block !important; width: 41%;margin-left: 32.5%;">
+													class="addToBagButton treat-urself-button" style="display: block !important; width: 120px;">
 													<spring:theme code="basket.add.to.basket" />
 													
 												</button></li>
@@ -152,7 +156,7 @@ $( document ).ready(function() {
 														
 															<ul class="">
 											<li><button id="addToCartButton" type="button"
-													class="addToBagButton" style="display: block !important; width: 41%;margin-left: 32.5%;">
+													class="addToBagButton treat-urself-button" style="display: block !important; width: 120px;">
 													<spring:theme code="basket.add.to.basket" />
 													
 												</button></li>
@@ -160,7 +164,7 @@ $( document ).ready(function() {
 										
 														</c:if>
 														<c:if test="${(empty product.size && product.rootCategory eq 'Clothing')||(empty product.size && product.rootCategory eq 'Footwear')}">
-														<span id="addToCartButtonId" style="display: none; width: 41%;margin-left: 32.5%;">
+														<span id="addToCartButtonId treat-urself-button" style="display: none; width: 120px;">
 															<button type="button" id="addToCartButton" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal"
 															data-target="#redirectsToPDP">
@@ -182,14 +186,20 @@ $( document ).ready(function() {
 							 <input type="hidden" class="redirectsToPdp_Wl" value="${product.url}" />
 							 <input type="hidden" id="redirectsToPdp_Wl" value="" />
 						</form:form>
-
+						</div>
 					</li>
+					
+					<li class="price"><format:fromPrice
+							priceData="${product.productMOP}" /></li>
+					
 					<li class="qty"><ycommerce:testId code="cart_product_quantity">
+					<div class="wishlist-select-wrapper">
 							<select id="hiddenPickupQty" name="hiddenPickupQty">
 								<c:forEach items="${configuredQuantityList}" var="quantity">
 									<option value="${quantity}">${quantity}</option>
 								</c:forEach>
 							</select>
+							</div>
 						</ycommerce:testId></li>
 					<li class="delivery">
 					<p class="mobile-delivery"><spring:theme code="basket.delivery.options"/></p>
@@ -213,8 +223,8 @@ $( document ).ready(function() {
 						</ul>
 					</li>
 					
-					<li class="price"><format:fromPrice
-							priceData="${product.productMOP}" /></li>
+					<%-- <li class="price"><format:fromPrice
+							priceData="${product.productMOP}" /></li> --%>
 				</ul>
 				
 			</li>

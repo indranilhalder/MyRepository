@@ -1755,19 +1755,12 @@
 
 	<bean id="buyBoxImportUtil" class="com.tisl.mpl.buyboxdataimport.BuyBoxImportUtility">
 	</bean>
+	
 	<bean id="buyBoxDataImportJob" class="com.tisl.mpl.buyboxdataimportjob.BuyBoxDataExtractJob"
 		parent="abstractJobPerformable">
 			<property name="modelService" ref="modelService" />
 			</bean>
 	<!-- New Buy Box Implementation End -->
-	
-
-<!-- 	<alias alias="commercePlaceOrderStrategy" name="mplDefaultCommercePlaceOrderStrategy"/>
-	<bean id="mplDefaultCommercePlaceOrderStrategy"
-			class="com.tisl.mpl.marketplacecommerceservices.strategy.MplCommercePlaceOrderStrategyImpl" 
-			parent="defaultCommercePlaceOrderStrategy">
-	</bean> -->
-	
 	
 	<bean id="juspayOrderResponseConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.juspay.response.GetOrderStatusResponse"/>
@@ -1782,6 +1775,9 @@
 			class="com.tisl.mpl.converter.populator.JuspayOrderResponsePopulator" >
 	</bean>
 	
+	<!-- New Keyword Redirection Implementation End -->
+	<bean id="mplKeywordRedirectDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplKeywordRedirectDaoImpl">
+	</bean>
 
 	<!-- New Payment Solution Starts -->	
 	<bean id="mplProcessOrderService"

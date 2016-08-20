@@ -892,7 +892,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	{
 		CartModel finalCart = null;
 		final List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
-		ProductData productData1 = null;
+		ProductData productData = null;
 		final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<>();
 		try
 		{
@@ -918,12 +918,30 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				promotionResult = new ArrayList(cartModel.getAllPromotionResults());
 			}
 
-			for (final AbstractOrderEntryModel abstractOrderEntry : cartModel.getEntries())
+			//Removed checkedPincode
+			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
+			/*
+			 * TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
+			 *
+			 * {
+			 */
+			for (final AbstractOrderEntryModel abstractOrderEntry : finalCart.getEntries())
 			{
 
-				productData1 = productFacade.getProductForOptions(abstractOrderEntry.getProduct(), Arrays.asList(ProductOption.BASIC,
-						ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-						ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.DELIVERY_MODE_AVAILABILITY));
+				//if (null != abstractOrderEntry && null != abstractOrderEntry.getProduct())
+				/*
+				 * review comments incorporated TISPT- 96
+				 */
+				//{
+				productData = productFacade.getProductForOptions(abstractOrderEntry.getProduct(),
+						Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES));
+
+				/*
+				 * productData = productFacade.getProductForOptions(abstractOrderEntry.getProduct(),
+				 * Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+				 * ProductOption.CATEGORIES ProductOption.PROMOTIONS, ProductOption.STOCK,
+				 * ProductOption.DELIVERY_MODE_AVAILABILITY ));
+				 */
 
 				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 				if (null != abstractOrderEntry.getDeliveryPointOfService())
@@ -944,42 +962,41 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					gwlp.setProductName(abstractOrderEntry.getProduct().getName());
 				}
-				if (null != productData1.getBrand() && StringUtils.isNotEmpty(productData1.getBrand().getBrandname()))
+				if (null != productData.getBrand() && StringUtils.isNotEmpty(productData.getBrand().getBrandname()))
 				{
-					gwlp.setProductBrand(productData1.getBrand().getBrandname());
+					gwlp.setProductBrand(productData.getBrand().getBrandname());
 				}
 
 				if (null != abstractOrderEntry.getGiveAway() && abstractOrderEntry.getGiveAway().booleanValue())
 				{
-					gwlp.setIsGiveAway("Y");
+					gwlp.setIsGiveAway(MarketplacecommerceservicesConstants.Y);
 				}
 				else
 				{
-					gwlp.setIsGiveAway("N");
+					gwlp.setIsGiveAway(MarketplacecommerceservicesConstants.N);
 				}
 				if (CollectionUtils.isNotEmpty(abstractOrderEntry.getAssociatedItems()))
 				{
 					gwlp.setAssociatedBaseProducts(abstractOrderEntry.getAssociatedItems());
 				}
-				if (StringUtils.isNotEmpty(productData1.getRootCategory()))
+				if (StringUtils.isNotEmpty(productData.getRootCategory()))
 				{
-					gwlp.setRootCategory(productData1.getRootCategory());
+					gwlp.setRootCategory(productData.getRootCategory());
 				}
 				else
 				{
 					LOG.info("*************** Mobile webservice root category is empty ********************");
-
 				}
 
-				final String catId = mplProductWebService.getCategoryCodeOfProduct(productData1);
+				final String catId = mplProductWebService.getCategoryCodeOfProduct(productData);
 				if (null != catId && !catId.isEmpty())
 				{
 					gwlp.setProductCategoryId(catId);
 				}
-				if (CollectionUtils.isNotEmpty(productData1.getImages()))
+				if (CollectionUtils.isNotEmpty(productData.getImages()))
 				{
 					//Set product image(thumbnail) url
-					for (final ImageData img : productData1.getImages())
+					for (final ImageData img : productData.getImages())
 					{
 						if (null != img && null != img.getUrl() && StringUtils.isNotEmpty(img.getFormat())
 						//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
@@ -995,17 +1012,17 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					LOG.info("*************** Mobile webservice images are empty ********************");
 				}
 
-				if (StringUtils.isNotEmpty(productData1.getColour()))
+				if (StringUtils.isNotEmpty(productData.getColour()))
 				{
-					gwlp.setColor(productData1.getColour());
+					gwlp.setColor(productData.getColour());
 				}
 				else
 				{
 					LOG.info("*************** Mobile webservice color is empty ********************");
 				}
-				if (StringUtils.isNotEmpty(productData1.getSize()))
+				if (StringUtils.isNotEmpty(productData.getSize()))
 				{
-					gwlp.setSize(productData1.getSize());
+					gwlp.setSize(productData.getSize());
 				}
 				else
 				{
@@ -1051,9 +1068,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				final Predicate<SellerInformationData> pred1 = o -> o != null;
 				final Predicate<SellerInformationData> pred2 = o -> o.getUssid().equals(abstractOrderEntry.getSelectedUSSID());
 
-				if (null != productData1.getSeller() && productData1.getSeller().size() > 0)
+				if (null != productData.getSeller() && productData.getSeller().size() > 0)
 				{
-					productData1.getSeller().stream().filter(pred1.and(pred2)).findFirst().ifPresent(c -> {
+					productData.getSeller().stream().filter(pred1.and(pred2)).findFirst().ifPresent(c -> {
 						gwlp.setSellerId(c.getSellerID());
 						gwlp.setSellerName(c.getSellername());
 						gwlp.setFullfillmentType(c.getFullfillment());
@@ -1539,9 +1556,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (null != abstractOrderEntry)
 				{
 					productData1 = productFacade.getProductForOptions(abstractOrderEntry.getProduct(), Arrays.asList(
-							ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-							ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK,
-							ProductOption.DELIVERY_MODE_AVAILABILITY));
+							ProductOption.BASIC, /* ProductOption.PRICE, */ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+							ProductOption.CATEGORIES/*
+															 * , ProductOption.PROMOTIONS, ProductOption.STOCK,
+															 * ProductOption.DELIVERY_MODE_AVAILABILITY
+															 */));
 					/*** Free Items ***/
 					if (abstractOrderEntry.getGiveAway().booleanValue())
 					{

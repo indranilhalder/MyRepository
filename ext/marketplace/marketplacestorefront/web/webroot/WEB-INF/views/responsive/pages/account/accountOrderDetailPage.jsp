@@ -219,15 +219,20 @@
 									orderWsDTO.setPaymentCardExpire("NA");
 								} -->
 							</div>
+							<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
+							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
 							<div class="delivery-address">
 								<c:if test="${not empty creditCardBillingAddress.firstName}">
 									<h3>Billing Address:</h3>
+									
 									<address>
 										${fn:escapeXml(creditCardBillingAddress.firstName)}&nbsp;
 										${fn:escapeXml(creditCardBillingAddress.lastName)}<br>
 										${fn:escapeXml(creditCardBillingAddress.line1)},&nbsp;
+										<c:if test="${not empty creditCardLine2}">
 										${fn:escapeXml(creditCardBillingAddress.line2)},&nbsp;
-										<c:if test="${not empty creditCardBillingAddress.line3}">
+										</c:if>
+										<c:if test="${not empty creditCardLine3}">
 														${fn:escapeXml(creditCardBillingAddress.line3)},
 													</c:if>
 										<br>
@@ -295,12 +300,16 @@
 										Shipping Address:
 									</h3>
 								</c:if>
+								<c:set var="subOrderLine2" value="${fn:trim(subOrder.deliveryAddress.line2)}"/>
+								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
 								<address>
 									${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
 									${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
 									${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
+									<c:if test="${not empty subOrderLine2}">
 									${fn:escapeXml(subOrder.deliveryAddress.line2)},
-									<c:if test="${not empty subOrder.deliveryAddress.line3}">
+									</c:if>
+									<c:if test="${not empty subOrderLine3}">
 												&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
 											</c:if>
 									<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;

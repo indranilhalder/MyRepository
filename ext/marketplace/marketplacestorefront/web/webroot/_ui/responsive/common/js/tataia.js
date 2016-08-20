@@ -2212,9 +2212,35 @@ if (searchCategory_id){
 
 			    	      $("#" + widgetElement + "_list").owlCarousel({
 
-			    	    	  
+			    	    	items:4,
+            		loop: true,
+            		nav:true,
+            		dots:false,
+            		navText:[],
+            		slideBy:'page',
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},	
+            			480 : {
+            				items:2,
+            				stagePadding: 50,
+            			},
+            			768 : {
+            				items:2,
+            			},
+            			980 : {
+            				items:3,
+            			},		
+            			// breakpoint from 650 up
+            			1200 : {
+            				items:4,
+            			}			
+            		}	
 
-			    	    	  items : 4,
+			    	    	  /*items : 4,
 
 			    	          scrollPerPage: true,
 
@@ -2233,7 +2259,7 @@ if (searchCategory_id){
 			    	          pagination:false,
 
 			    	          rewindNav : false
-
+								*/
 
 
 			    	        });
@@ -2244,9 +2270,35 @@ if (searchCategory_id){
 
 			      $("#" + widgetElement + "_list").owlCarousel({
 
-			    	  
+			    	  items:5,
+	            		loop: true,
+	            		nav:true,
+	            		dots:false,
+	            		navText:[],
+	            		slideBy:'page',
+	            		responsive : {
+	            			// breakpoint from 0 up
+	            			0 : {
+	            				items:1,
+	            				stagePadding: 50,
+	            			},	
+	            			480 : {
+	            				items:2,
+	            				stagePadding: 50,
+	            			},
+	            			768 : {
+	            				items:3,
+	            			},
+	            			980 : {
+	            				items:4,
+	            			},		
+	            			// breakpoint from 650 up
+	            			1200 : {
+	            				items:5,
+	            			}			
+	            		}	
 
-			        items : 5,
+			        /*items : 5,
 
 			        scrollPerPage: true,
 
@@ -2264,7 +2316,7 @@ if (searchCategory_id){
 
 			        pagination:false,
 
-			        rewindNav : false
+			        rewindNav : false*/
 
 			      });
 
@@ -2654,7 +2706,34 @@ if (searchCategory_id){
 
 				    carousel.owlCarousel({
 
-				    	items : 4,
+					items:4,
+            		loop: true,
+            		nav:true,
+            		dots:false,
+            		navText:[],
+            		slideBy:'page',
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},	
+            			480 : {
+            				items:2,
+            				stagePadding: 50,
+            			},
+            			768 : {
+            				items:2,
+            			},
+            			980 : {
+            				items:3,
+            			},		
+            			// breakpoint from 650 up
+            			1200 : {
+            				items:4,
+            			}			
+            		}	
+				    	/*items : 4,
 
 						navigation:true,
 
@@ -2678,7 +2757,7 @@ if (searchCategory_id){
 
 	        rewindNav : false,
 
-	        scrollPerPage : true
+	        scrollPerPage : true*/
 
 	    });
 

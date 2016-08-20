@@ -10,6 +10,7 @@ ACC.carousel = {
 	     "springflingCarousel",
 	     "myReviewCarousel",
 	     "advancedCategoryCarousel",
+	     "pdpProductCarousel",
 		["bindCarousel", $(".js-owl-carousel").length >0]
 	],
 
@@ -57,7 +58,34 @@ ACC.carousel = {
 	categoryCarousel: function(){
 		
 		$("#mplCategoryCarousel").owlCarousel({
-			navigation:true,
+		
+					items:4,
+            		loop: true,
+            		nav:true,
+            		dots:false,
+            		navText:[],
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:2,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
+            				items:4,
+            			}			
+            		}	
+		
+			/*navigation:true,
 			navigationText : [],
 			pagination:false,
 			itemsDesktop : [5000,4], 
@@ -65,18 +93,26 @@ ACC.carousel = {
 			itemsTablet: [650,2], 
 			itemsMobile : [480,2], 
 			rewindNav: false,
-			lazyLoad:true
+			lazyLoad:true*/
 		});
 	},
 	
 	myFun: function(){
-		$("#rotatingImage").owlCarousel({
-			navigation:true,
-			rewindNav: false,
-			navigationText : [],
-			pagination:false,
-			singleItem:true
+		$(".electronic-rotatingImage").owlCarousel({
+			items:1,
+    		loop: true,
+    		nav:true,
+    		dots:false,
+    		navText:[]
 		});
+		/*TPR-268*/
+		/*$("#rotatingImageMobile").owlCarousel({
+			items:1,
+    		loop: true,
+    		nav:true,
+    		dots:false,
+    		navText:[]
+		});*/
 		/*if(typeof homePageBannerTimeout!== "undefined"){
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
 			//alert(timeout);
@@ -94,23 +130,32 @@ ACC.carousel = {
 		if(typeof homePageBannerTimeout!== "undefined"){
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
 			//alert(timeout);
-			$("#rotatingImageTimeout").owlCarousel({
-				navigation:false,
-				navigationText : [],
-				singleItem:true,
-				pagination:false,
-				autoHeight : true,
-				mouseDrag: false,
-				touchDrag: false
-			});
-			$("#rotatingImageTimeout").append('<div class="hbpagination"></div>');
+			$(".home-rotatingImage").owlCarousel({
+				items:1,
+				nav:false,
+				dots:true,
+				loop: true,
+		        autoplay: true,
+		        autoHeight : true,
+		        autoplayTimeout: timeout
+		    });
+			/*TPR-268*/
+			/*$("#rotatingImageTimeoutMobile").owlCarousel({
+				items:1,
+				dots:true,
+				loop: false,
+		        autoplay: true,
+		        autoHeight : true,
+		        autoplayTimeout: timeout
+		    });*/
+		/*	$("#rotatingImageTimeout").append('<div class="hbpagination"></div>');
 			var bannerLength = $('#rotatingImageTimeout .owl-item').length;
 			for (var i = 0 ; i<bannerLength; i++ ) {
 				$("#rotatingImageTimeout .hbpagination").append('<span class="hb-page"></span>');
 			}
-			$("#rotatingImageTimeout .hb-page").first().addClass('active');
+			$("#rotatingImageTimeout .hb-page").first().addClass('active');*/
 			
-			$(document).on("click",".hb-page",function(){
+			/*$(document).on("click",".hb-page",function(){
 				var req_pos = $(this).index(),cur_pos = $('.hb-page.active').index() ;
 				
 				if(req_pos < cur_pos) {
@@ -120,9 +165,9 @@ ACC.carousel = {
 				}
 				$('.hb-page').removeClass('active');
 				$(this).addClass('active');
-			});
+			});*/
 			
-			setInterval(function(){
+		/*	setInterval(function(){
 				var ind = $('.hb-page.active').index();
 				if(ind == bannerLength-1) {
 					$('.hb-page').removeClass('active');
@@ -132,11 +177,11 @@ ACC.carousel = {
 					$('.hb-page').eq(ind+1).addClass('active');
 				}
 				ACC.carousel.homePageBannerCarousel(1);
-			},timeout);
+			},timeout);*/
 		}
 	},
 	
-	homePageBannerCarousel: function(count){
+	/*homePageBannerCarousel: function(count){
 		
 			var iw = $('#rotatingImageTimeout .owl-item').outerWidth(), ih = $("#rotatingImageTimeout .owl-item").first().next().find('.hero').height();
 			$("#rotatingImageTimeout .owl-wrapper").css('transition','all 0.5s linear');
@@ -152,11 +197,16 @@ ACC.carousel = {
 			}
 		
 		},500);
-	},
+	},*/
 	
 	shopByLookCarousel: function(){
 		$(".shopByLookCarousel").owlCarousel({
-			navigation:true,
+			items:2,
+    		loop: true,
+    		nav:true,
+    		dots:false,
+    		navText:[]
+			/*navigation:true,
 			rewindNav: false,
 			navigationText :[],
 			pagination:false,
@@ -164,29 +214,70 @@ ACC.carousel = {
 			itemsDesktop : false, 
 			itemsDesktopSmall : false, 
 			itemsTablet: false, 
-			itemsMobile : false
+			itemsMobile : false*/
 		});
 	},
 	offersCarousel: function(){
 		$(".offersCarousel").owlCarousel({
-			navigation:true,
+					items:4,
+            		loop: true,
+            		nav:true,
+            		dots:false,
+            		navText:[],
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:2,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
+            				items:4,
+            			}			
+            		}	
+			/*navigation:true,
 			rewindNav: false,
 			navigationText :[],
 			pagination:false,
 			items:4,
-		/*	itemsDesktop : false, 
+			itemsDesktop : false, 
 			itemsDesktopSmall : false, 
 			itemsTablet: false, 
 			itemsMobile : true
-		*/itemsDesktop : [5000,4], 
+		itemsDesktop : [5000,4], 
 		itemsDesktopSmall : [1400,4], 
 		itemsTablet: [650,2], 
-		itemsMobile : [480,2],
+		itemsMobile : [480,2],*/
 			});
 	},
 	myStyleCarousel: function(){
 		$(".mystyle-carousel").owlCarousel({
-			navigation:true,
+			items:5,
+    		loop: true,
+    		nav:true,
+    		dots:false,
+    		navText:[],
+    		responsive : {
+    			// breakpoint from 0 up
+    			0 : {
+    				items:3,
+    			},			
+    			// breakpoint from 807 up
+    			807 : {
+    				items:5,
+    			}			
+    		}	
+			
+			/*navigation:true,
 			rewindNav: false,
 			navigationText :[],
 			pagination:false,
@@ -194,14 +285,39 @@ ACC.carousel = {
 			itemsDesktop : false, 
 			itemsDesktopSmall : false, 
 			itemsTablet: [807,3],
-			itemsMobile : false
+			itemsMobile : false*/
 		});
 		
 	},
 	
 	heroProductCarousel: function() {
 		$(".product-listing.product-grid.hero_carousel").owlCarousel({
-			navigation:true,
+					items:4,
+            		loop: true,
+            		nav:true,
+            		dots:false,
+            		navText:[],
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:2,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
+            				items:4,
+            			}			
+            		}	
+			/*navigation:true,
 			rewindNav: false,
 			navigationText : [],
 			pagination:false,
@@ -209,27 +325,77 @@ ACC.carousel = {
 			itemsDesktopSmall : [1400,4], 
 			itemsTablet: [650,2], 
 			itemsMobile : [480,2], 
-			lazyLoad:true
+			lazyLoad:true*/
 		});
 	},
 	
 	springflingCarousel: function() {
 		$("div.shop-sale.wrapper #defaultNowTrending").owlCarousel({
-			navigation:true,
+			items:6,
+    		loop: true,
+    		nav:true,
+    		dots:false,
+    		navText:[],
+    		responsive : {
+    			// breakpoint from 0 up
+    			0 : {
+    				items:1,
+    				stagePadding: 50,
+    			},
+    			// breakpoint from 480 up
+    			480 : {
+    				items:2,
+    				stagePadding: 50,
+    			},
+    			// breakpoint from 768 up
+    			768 : {
+    				items:3,
+    			},
+    			// breakpoint from 768 up
+    			1280 : {
+    				items:6,
+    			}			
+    		}	
+			/*navigation:true,
 			rewindNav: false,
 			navigationText : [],
 			pagination:false,
 			itemsDesktop : [5000,6], 
 			itemsDesktopSmall : [1400,6], 
 			itemsTablet: [650,2], 
-			itemsMobile : [480,2]
+			itemsMobile : [480,2]*/
 		});
 	},
 	
 	advancedCategoryCarousel: function(){
 		
 		$("#mplAdvancedCategoryCarousel").owlCarousel({
-			navigation:true,
+					items:4,
+            		loop: true,
+            		nav:true,
+            		dots:false,
+            		navText:[],
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:2,
+            				stagePadding: 50,
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:3,
+            			},
+            			// breakpoint from 768 up
+            			1280 : {
+            				items:4,
+            			}			
+            		}	
+		/*navigation:true,
 			navigationText : [],
 			pagination:false,
 			itemsDesktop : [5000,4], 
@@ -237,13 +403,41 @@ ACC.carousel = {
 			itemsTablet: [650,2], 
 			itemsMobile : [480,2], 
 			rewindNav: false,
-			lazyLoad:true
+			lazyLoad:true*/
 		});
 	},
 	
 	myReviewCarousel: function(){
+		$("#my-review-carousel").on('initialize.owl.carousel initialized.owl.carousel', function() {
+			$("#my-review-carousel").show();
+                });
 		$("#my-review-carousel").owlCarousel({
-			navigation:true,
+			items:5,
+    		loop: true,
+    		nav:true,
+    		dots:false,
+    		navText:[],
+    		responsive : {
+    			// breakpoint from 0 up
+    			0 : {
+    				items:1,
+    				stagePadding: 50,
+    			},
+    			// breakpoint from 480 up
+    			480 : {
+    				items:2,
+    				stagePadding: 50,
+    			},
+    			// breakpoint from 768 up
+    			768 : {
+    				items:3,
+    			},
+    			// breakpoint from 768 up
+    			1280 : {
+    				items:5,
+    			}			
+    		}	
+			/*navigation:true,
 			navigationText : [],
 			pagination:false,
 			itemsDesktop : [5000,5], 
@@ -251,7 +445,27 @@ ACC.carousel = {
 			itemsTablet: [650,2], 
 			itemsMobile : [480,2], 
 			rewindNav: false,
-			afterInit: function() {$("#my-review-carousel").show();}
+			afterInit: function() {$("#my-review-carousel").show();}*/
+		});
+	},
+	
+	pdpProductCarousel: function(){
+		$("#pdpProductCarousel").owlCarousel({
+			items:1,
+    		loop: true,
+    		navText:[],
+    		responsive : {
+    			// breakpoint from 0 up
+    			0 : {
+    				nav:false,
+    	    		dots:true,
+    			},
+    			// breakpoint from 768 up
+    			768 : {
+    				nav:true,
+    	    		dots:false,
+    			}			
+    		}	
 		});
 	}
 	
@@ -272,3 +486,5 @@ ACC.carousel = {
 	
 
 };
+
+

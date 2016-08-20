@@ -52,7 +52,7 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 
@@ -124,11 +124,11 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 		int maxBoostValue = 0;
 		for (final Map.Entry<String, IndexedProperty> entry : originalProps.entrySet())
 		{
-			if (entry.getValue().getBoost() != null)
+			if (entry.getValue().getBoostDouble() != null)
 			{
 				props.put(entry.getKey(), entry.getValue());
-				maxBoostValue = maxBoostValue > entry.getValue().getBoost().intValue() ? maxBoostValue : entry.getValue().getBoost()
-						.intValue();
+				maxBoostValue = maxBoostValue > entry.getValue().getBoostDouble().intValue() ? maxBoostValue : entry.getValue()
+						.getBoostDouble().intValue();
 			}
 		}
 
@@ -155,7 +155,7 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 		// phrase slop for getting better relevance
 		searchQuery.addSolrParams("ps", "5");
 		// minimum match
-		searchQuery.addSolrParams("mm", "50%");
+		searchQuery.addSolrParams("mm", "2");
 	}
 
 
@@ -177,7 +177,7 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 			sp.append(String.format(
 					"%s^%.2f ",
 					getSolrFieldNameProvider().getFieldName(value, value.isLocalized() ? lang : value.isCurrency() ? currency : null,
-							FieldType.INDEX), Double.valueOf(value.getBoost().intValue() + maxBoostValue)));
+							FieldType.INDEX), Double.valueOf(value.getBoostDouble().intValue() + maxBoostValue)));
 
 
 		}

@@ -2441,14 +2441,14 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
     var mob = /^[1-9]{1}[0-9]{9}$/;
     var letters = /^[a-zA-Z]+$/; 
     var cityPattern = /^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/;
-    var firstName = document.getElementById("address.firstName").value.trim();
-	var lastName = document.getElementById("address.surname").value.trim();
-	var address1 = document.getElementById("address.line1").value.trim();
+    var firstName = document.getElementById("address.firstName");
+	var lastName = document.getElementById("address.surname");
+	var address1 = document.getElementById("address.line1");
 	var regAddress = /^[0-9a-zA-Z\-\/\,\s]+$/;
-	var address2 = document.getElementById("address.line2").value.trim();
-	var address3 = document.getElementById("address.line3").value.trim();
-	var city= document.getElementById("address.townCity").value.trim();
-	var stateValue = document.getElementById("address.states").value.trim();
+	var address2 = document.getElementById("address.line2");
+	var address3 = document.getElementById("address.line3");
+	var city= document.getElementById("address.townCity");
+	var stateValue = document.getElementById("address.states");
 	var zipcode = document.getElementsByName("postcode")[0].value;
 	var txtMobile = document.getElementsByName("MobileNo")[0].value;
 	var result=firstName.value;
@@ -2613,10 +2613,19 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	}
 	else
 	{
-		
+		if(address1.value.indexOf('#')!=-1)
+    	{
 		address1.value=encodeURIComponent(address1.value);
+    	}
+		
+		if(address2.value.indexOf('#')!=-1)
+    	{
 		address2.value=encodeURIComponent(address2.value);
+    	}
+		if(address3.value.indexOf('#')!=-1)
+    	{
 		address3.value=encodeURIComponent(address3.value);
+    	}
 		$('#addressForm').submit();	
 		
 //		$.ajax({
@@ -3172,13 +3181,15 @@ function showPromotionTag()
 
 $(document).ready(function(){
 	$("#ussid").addClass("ussid");
-	var elementId = $(".desktop li:nth-child(3) ul");
+	var elementId = $(".desktop li:nth-child(4) ul");
 	elementId.after("<span class='pincodeServiceError'></span>");	
 	$("#defaultPinCodeIds").keyup(function(event){
 	    if(event.keyCode == 13){
 	        $("#pinCodeButtonIds").click();
 	    }
 	});
+	
+	$("#popUpExpAddress input.address_radio[data-index='0']").attr("checked","checked");	
 
 });
 
@@ -3324,7 +3335,9 @@ function populatePincodeDeliveryMode(response,buttonType){
 		//console.log(pincodeServiceError);
 		var elementId = $(".desktop li:nth-child(3) ul");
 		elementId.hide();
-		$(".pincodeServiceError").text(pincodeServiceError);		
+		$(".pincodeServiceError").text(pincodeServiceError);
+		//TPR-933
+		$('.success_msg').hide();
 	}else{
 		$('#unsevisablePin').hide();
 		$(".pincodeServiceError").hide();
@@ -3364,7 +3377,8 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#"+ussId).remove();
 		var newUi = document.createElement("ul");
 		newUi.setAttribute("id", ussId);
-		
+		//TPR-933 class added
+		newUi.setAttribute("class", "success_msg");
 		var jsonObj=deliveryModeJsonObj[key].validDeliveryModes;
 		
 		var inventory=deliveryModeJsonObj[key].stockCount;
@@ -3713,12 +3727,14 @@ function checkSignUpValidation(path){
 	
 	return validationResult;	
 }
+//TODO
 
 function checkExpressCheckoutPincodeService(buttonType){
 	//TISPRM-33
 	
 	//TISBOX-1631
-	var selectedAddressId= $("#addressListSelectId").val();
+	//var selectedAddressId= $("#addressListSelectId").val();
+	var selectedAddressId= $("#popUpExpAddress input[type='radio']:checked").val();
 	selectedAddressId =$.trim(selectedAddressId);
 	$("#expressCheckoutAddressSelector").val(selectedAddressId);
 	//$("#defaultPinCodeIds").val($("#defaultPinCodeIds").val());
@@ -4091,9 +4107,11 @@ function updateCart(formId){
 
 function expressbutton()
 {
+	//alert(selectedAddress);
 	//TISPRM-33
 
-	var addressList= $("#addressListSelectId").val();
+	//var addressList= $("#addressListSelectId").val();
+	var addressList= $("#popUpExpAddress input[type='radio']:checked").val();
 	var selectedAddressId =$.trim(addressList);
 	$("#expressCheckoutAddressSelector").val(selectedAddressId);
  	
@@ -4118,7 +4136,7 @@ function expressbutton()
 	 			$$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			
 		 		//$("#changePinDiv").hide();
-		 		//$("#defaultPinDiv").show();	 		
+		 		//$("#defaultPinDiv").show();	
 	 		},
 	 		error : function(resp) {
 	 			//TISTI-255
@@ -4718,3 +4736,19 @@ function pinCodeDiv(){
 		//$(".less-stock").text("");	
 		//$("#successPin").text("");	
 	}
+
+// MY BAG Changes TPR-634
+/*$(document).mouseup(function (e)
+{
+  var container = $(".modal-content.content");
+
+  if (!container.is(e.target)  && container.has(e.target).length === 0 && container.css("opacity") === "1") 
+  {
+	 checkExpressCheckoutPincodeService('typeExpressCheckoutDD');
+		//$("#defaultPinDiv").show();
+		//$("#changePinDiv").hide();
+  }
+});*/
+$('#popUpExpAddress').on('hidden.bs.modal', function () {
+	 checkExpressCheckoutPincodeService('typeExpressCheckoutDD');
+});

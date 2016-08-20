@@ -103,6 +103,7 @@
 									<cms:component component="${component}" />
 								</cms:pageSlot>
 								<li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li>
+								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
 							</c:if>
 						</c:if>
 						<!--Using this tag for Track Order Link in header navigation pane and it will navigate to 'My Order page'  -->
@@ -125,7 +126,7 @@
 		<!-- Using this tag for placing the site logo in header navigation pane -->
 
 		<div class="bottom">
-
+		<div class="bottom-header-wrapper">
 			<c:choose>
 				<c:when test="${empty showOnlySiteLogo }">
 					<div class="marketplace" data-logo="marketplace">
@@ -144,7 +145,7 @@
 						<div class="mobile-bag bag">
 						<!-- TISPRD-32-fix -->
 							<!-- <a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a> -->
-							<a href="/cart">(<span class="responsive-bag-count"></span>)</a>
+							<a href="/cart"><span class="responsive-bag-count"></span></a>
 						</div>
 					</div>
 				</c:when>
@@ -204,6 +205,7 @@
 						style="position: static;"><spring:theme code="minicart.mybag" />&nbsp;(<span
 						class="js-mini-cart-count-hover"></span>) </a>
 				</c:if>
+			</div>
 			</div>
 		</div>
 		<div class="compact-toggle mobile"></div>

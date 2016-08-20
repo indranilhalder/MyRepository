@@ -12,13 +12,18 @@ import java.util.Collections;
 import java.util.List;
 
 
+
+
 /**
  * @author TCS
  *
  */
 public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 {
-	private int topFacetCount = 8;
+
+
+	//private int topFacetCount = 8;
+	private int topFacetCount = 0;
 
 	protected int getTopFacetCount()
 	{
@@ -38,6 +43,12 @@ public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 
 		if (facets != null)
 		{
+			//topFacetCount = Integer.parseInt(configurationService.getConfiguration().getString("search.Facet.topValue"));
+			if (indexedProperty != null && indexedProperty.getFacetTopValue() != null)
+			{
+				topFacetCount = indexedProperty.getFacetTopValue().intValue();
+			}
+
 			for (final FacetValue facetValue : facets)
 			{
 				if ((facetValue == null) || ((topFacetValues.size() >= getTopFacetCount()) && (!(facetValue.isSelected()))))
@@ -54,6 +65,7 @@ public class DefaultMplBrandTopValuesProvider implements TopValuesProvider
 		}
 
 		return topFacetValues;
+
 	}
 
 

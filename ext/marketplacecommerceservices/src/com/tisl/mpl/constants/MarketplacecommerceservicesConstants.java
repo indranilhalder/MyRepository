@@ -859,6 +859,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9323 = "B9323";
 	public static final String B9324 = "B9324";
 	public static final String B9325 = "B9325";
+	public static final String B9326 = "B9326";
 	public static final String B9327 = "B9327";
 	public static final String B9328 = "B9328";
 	//Mobile web service error codes ends
@@ -1644,4 +1645,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	}
 
 	// implement here constants used by this extension
+
+	// Sonar Fix
+	public static final String ALLVARIANTSSTRING = "allVariantsString";
 }

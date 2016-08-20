@@ -24,7 +24,7 @@
 	</p>
 	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															
 		  <span></span>
-	</p>
+	</p>	
 	<br>
 	<!--- START: INSERTED for MSD --->
 	<input type="hidden" id="price-for-mad" value=""/>		

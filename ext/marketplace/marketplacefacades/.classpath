@@ -17,5 +17,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/commercesearch"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/marketplaceBinDb"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/commercefacades"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commercewebservicescommons"/>
 	<classpathentry kind="output" path="eclipsebin/notused"/>
 </classpath>

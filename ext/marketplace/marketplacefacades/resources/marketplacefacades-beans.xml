@@ -495,6 +495,8 @@
 			type="de.hybris.platform.commercefacades.order.data.ImeiDetailData"></property>
 			<property name="productPromoCode"
 			type="String"></property>
+		<!-- TISPT-385-->	
+ 		<property name="parentTransactionID" type="String"></property>	
 	</bean>
 	
 	<bean class="de.hybris.platform.commercefacades.order.data.ImeiDetailData">
@@ -505,10 +507,12 @@
 
 	<bean class="de.hybris.platform.solrfacetsearch.config.IndexedProperty">
 		<property name="boost" type="Integer" />
+		<property name="boostDouble" type="Double" />
 		<property name="classificationAttributeAssignments"
 			type="java.util.List&lt;de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel>" />
 		<property name="genericFacet" type="boolean" />
 		<property name="classificationProductType" type="java.lang.String" />
+		<property name="facetTopValue" type="Integer" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.AddressRadioTypeData">
