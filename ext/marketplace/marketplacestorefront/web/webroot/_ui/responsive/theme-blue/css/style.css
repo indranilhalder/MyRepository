@@ -44554,7 +44554,7 @@ padding:0 40px;	}
    	z-index: 100000;
     left: 0;
     right: 0;
-	top: -80px;
+	top: -100px;
     margin: auto;
     max-width: 300px;
     text-align: center;
@@ -44565,7 +44565,7 @@ padding:0 40px;	}
     background: #f3f3f3;
     box-shadow: 0 1px 6px 0 rgba(0,0,0,.1);
   	border: 1px solid rgba(0,0,0,.1);
-  	transition: opacity 0.1s, top 0.4s;
+  	transition: opacity 0.25s, top 0.45s;
 }
 
 .product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active, .product-info>div.wishAlreadyAdded.active{
