@@ -18325,7 +18325,7 @@ font-weight: 600;
 .appliedFacets{
 	padding-bottom:10px;
 }	
-.stockLevelStatus{
+.stockLevelStatus,.stockLevelStatusinStock {
   top: 40%;
     left: 0;
     right:0;
@@ -18341,7 +18341,7 @@ font-weight: 600;
     max-width: 105px;
     width: 100%;
 }
-.stockLevelStatus:hover{
+.stockLevelStatus:hover,.stockLevelStatusinStock:hover{
     color: #ff1c47;
 }
 .out-of-stock-product{
@@ -27119,6 +27119,15 @@ content: "";
     color: #000;
     max-width: 100%;
 } 
+
+.listing-leftmenu > li.facet.stockLevelStatusinStock{
+	font-weight: normal;
+    position: static;
+    border: none;
+    color: #000;
+    max-width: 100%;
+} 
+
 .offer-tooltip-wrapper span.offer-popover{
 	width:120%;
 }
