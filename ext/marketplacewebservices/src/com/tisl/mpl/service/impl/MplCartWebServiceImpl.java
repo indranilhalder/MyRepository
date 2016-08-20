@@ -886,7 +886,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public List<GetWishListProductWsDTO> productDetails(AbstractOrderModel cartModel,
+	public List<GetWishListProductWsDTO> productDetails(AbstractOrderModel abstractOrderModel,
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
 			final boolean resetReqd) throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
@@ -896,11 +896,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<>();
 		try
 		{
-			if (cartModel instanceof CartModel)
+			if (abstractOrderModel instanceof CartModel)
 			{
-				finalCart = (CartModel) cartModel;
+				finalCart = (CartModel) abstractOrderModel;
 				finalCart.setChannel(SalesApplication.MOBILE);
-				getModelService().save(cartModel);
+				getModelService().save(abstractOrderModel);
 				if (resetReqd)
 				{
 					finalCart = mplCartFacade.removeDeliveryMode(finalCart);
@@ -909,23 +909,23 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					commerceCartService.recalculateCart(finalCart);
 				}
-				cartModel = finalCart;
+				abstractOrderModel = finalCart;
 			}
 
 			List<PromotionResultModel> promotionResult = null;
-			if (null != cartModel.getAllPromotionResults() && !cartModel.getAllPromotionResults().isEmpty())
+			if (null != abstractOrderModel.getAllPromotionResults() && !abstractOrderModel.getAllPromotionResults().isEmpty())
 			{
-				promotionResult = new ArrayList(cartModel.getAllPromotionResults());
+				promotionResult = new ArrayList(abstractOrderModel.getAllPromotionResults());
 			}
 
 			//Removed checkedPincode
 			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
 			/*
 			 * TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
-			 *
+			 * 
 			 * {
 			 */
-			for (final AbstractOrderEntryModel abstractOrderEntry : finalCart.getEntries())
+			for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderModel.getEntries())
 			{
 
 				//if (null != abstractOrderEntry && null != abstractOrderEntry.getProduct())
@@ -1393,7 +1393,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (null != abstractOrderEntry.getNetAmountAfterAllDisc()
 						&& abstractOrderEntry.getNetAmountAfterAllDisc().doubleValue() > 0.0D)
 				{
-					final PriceData cartLevelDisc = discountUtility.createPrice(cartModel,
+					final PriceData cartLevelDisc = discountUtility.createPrice(abstractOrderModel,
 							Double.valueOf(abstractOrderEntry.getNetAmountAfterAllDisc().doubleValue()));
 					if (null != cartLevelDisc && null != cartLevelDisc.getValue())
 					{
@@ -1445,10 +1445,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 											if (null != promo.getCertainty() && promo.getCertainty().floatValue() == 1.0F)
 											{
-												if (cartModel instanceof CartModel)
+												if (abstractOrderModel instanceof CartModel)
 												{
-													appliedResponseData = mplDiscountUtil
-															.populateData(productPromotion, (CartModel) cartModel);
+													appliedResponseData = mplDiscountUtil.populateData(productPromotion,
+															(CartModel) abstractOrderModel);
 												}
 
 												if (null != appliedResponseData && null != appliedResponseData.getDiscountPrice())
@@ -1482,10 +1482,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									/////////////////////////
 									if (null != promo.getCertainty() && promo.getCertainty().floatValue() == 1.0F)
 									{
-										if (cartModel instanceof CartModel)
+										if (abstractOrderModel instanceof CartModel)
 										{
 											appliedResponseData = mplDiscountUtil.populateCartPromoData(orderPromotionModel,
-													(CartModel) cartModel);
+													(CartModel) abstractOrderModel);
 										}
 										if (null != appliedResponseData && null != appliedResponseData.getDiscountPrice())
 										{
