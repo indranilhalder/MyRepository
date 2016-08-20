@@ -30245,10 +30245,10 @@ body.page-checkout-login .top.checkout-top{
 line-height: normal;
     color: #ff1c47;
 }
-.addToCartTitle{
+/* .addToCartTitle{
 	margin-top: 15px;
 }
-  .compare label{
+ */  .compare label{
  float:left;
  padding-left: 0px !important;
  margin-top:-3px;
@@ -33736,6 +33736,8 @@ background: rgba(0, 0, 0, 0) url("../images/sprite.png") no-repeat scroll -43px 
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li.qty select{
 	background-image: url('../images/select-arrow.png');
+	padding-right: 20px;
+    background-position-x: 85%;
 }
 @media(max-width:790px) and (min-width:768px){
 	body.page-cartPage header > .content{
@@ -39453,7 +39455,7 @@ color:#fff; }
   color:#fff;}
 /*mini transient bag css changes starts*/
 header .content .right>ul>li.transient-mini-bag {
-	z-index: 500;
+	z-index: 10000;
 }
 header .content .right>ul>li.transient-mini-bag .mini-transient-bag {
 	position: absolute;
@@ -42763,6 +42765,7 @@ margin-left: 20%;
 .product-info .product-detail .Cta {
 	margin: 30px 0 0;
 	display: flex;
+	align-items: flex-end;
 }
 
 .product-info .product-detail .Cta #buyNow, .product-info .product-detail .Cta .addtocart-component
@@ -43956,13 +43959,14 @@ margin-left: 20%;
     width: 200%;
     left: -100%;
     text-align: center;
+    padding-bottom: 10px;
 }
 .product-info .product-detail .Cta .addtocart-component span {
 	position: relative;
     width: 200%;
     left: -100%;
     text-align: center;
-    top: 10px;
+    padding-bottom: 10px;
     display: block;
 }
 .product-info .product-detail .Cta .addtocart-component span#outOfStockId {
@@ -43971,6 +43975,7 @@ margin-left: 20%;
 .product-info .product-detail .Cta .addtocart-component #addToCartButtonId {
 	width: 100%;
 	position: static;
+	padding: 0;
 }
 /*mobile share*/
 .product-info .product-detail .wish-share>li .share>ul li {
@@ -44029,6 +44034,12 @@ body.page-productDetails .breadcrumbs.wrapper {
  @media (max-width: 767px) {
  	.zoomContainer {
  		display: none;
+ 	}
+ 	.product-info .product-detail .Cta .addtocart-component span,.product-info .product-detail .Cta .addtocart-component #addToCartFormTitle {
+ 		padding-top: 10px;
+ 	}
+ 	.product-info .product-detail .Cta .addtocart-component #addToCartButtonId {
+ 		padding: 0;
  	}
  }
   @media (min-width: 1025px) {
