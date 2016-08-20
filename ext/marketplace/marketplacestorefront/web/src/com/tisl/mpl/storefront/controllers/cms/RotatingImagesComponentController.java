@@ -45,7 +45,7 @@ public class RotatingImagesComponentController extends AbstractCMSComponentContr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.storefront.controllers.cms.AbstractCMSComponentController#fillModel(javax.servlet.http.HttpServletRequest
 	 * , org.springframework.ui.Model, de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel)
@@ -57,7 +57,8 @@ public class RotatingImagesComponentController extends AbstractCMSComponentContr
 		final LinkedHashSet<BannerComponentModel> moblileBanners = new LinkedHashSet<BannerComponentModel>();
 		for (final BannerComponentModel banner : component.getBanners())
 		{
-			if (banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
+
+			if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
 			{
 				moblileBanners.add(banner);
 			}

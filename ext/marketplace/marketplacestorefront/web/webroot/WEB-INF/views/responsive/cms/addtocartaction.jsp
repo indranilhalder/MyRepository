@@ -37,10 +37,10 @@ $(document).ready(function(){
      $("#selectSizeId").hide();
    	 var stock=$("#stock").val();
    	 var quantity= $("#qty").val();
-   	
+  
    	 //Changes for pdp CR
-   	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined'){
-  		 
+   	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+  		
    		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormTitle").show();
  	    return false;

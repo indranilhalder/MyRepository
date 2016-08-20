@@ -2637,7 +2637,7 @@ function loadDefaultWishListName_SizeGuide() {
 	}
 	$(document).on('click','#buyNow .js-add-to-cart',function(event){
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
-		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined'){
+		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 	 	    return false;
@@ -2686,7 +2686,7 @@ function loadDefaultWishListName_SizeGuide() {
 	$(document).ready(function(){
 		$(".Emi > p").on("click",function(e){
 			e.stopPropagation();
-			if(!$(this).hasClass("active") && $(window).width() > 790){
+			if(!$(this).hasClass("active") && $(window).width() > 1024){
 				$(this).addClass("active");
 				openPopForBankEMI();
 			}
@@ -2698,7 +2698,7 @@ function loadDefaultWishListName_SizeGuide() {
 			});
 		$(".Emi > #EMImodal-content").on("click",function(e){
 			e.stopPropagation();
-			if($(window).width() > 790){
+			if($(window).width() > 1024){
 				$(".Emi > p").addClass("active")
 			}
 		});
@@ -2715,7 +2715,7 @@ function loadDefaultWishListName_SizeGuide() {
 		});
 		
 		$(".Emi > p").on("click",function(){
-			if($(window).width() <= 790){
+			if($(window).width() <= 1024){
 				$(this).addClass("active mobile");
 				$("body").append("<div class='emi-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 				openPopForBankEMI();
@@ -2728,7 +2728,7 @@ function loadDefaultWishListName_SizeGuide() {
 		});
 		
 		$(window).resize(function(){
-			if($(window).width() > 790){
+			if($(window).width() > 1024){
 				$(".Emi > p").removeClass("active mobile");
 				$(".emi-overlay").remove();
 			}
