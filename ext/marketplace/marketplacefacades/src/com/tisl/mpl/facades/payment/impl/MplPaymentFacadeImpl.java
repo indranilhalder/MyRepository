@@ -8,7 +8,6 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -88,7 +87,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
 /**
@@ -127,9 +125,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
-
-	@Autowired
-	private OrderStatusSpecifier orderStatusSpecifier;
 
 
 
@@ -1338,7 +1333,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			}
 			getMplPaymentService().paymentModeApportion(orderModel);
 
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 		}
 
 
@@ -3013,28 +3007,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		this.mplCommerceCartService = mplCommerceCartService;
 	}
-
-
-
-	/**
-	 * @return the orderStatusSpecifier
-	 */
-	public OrderStatusSpecifier getOrderStatusSpecifier()
-	{
-		return orderStatusSpecifier;
-	}
-
-
-
-	/**
-	 * @param orderStatusSpecifier
-	 *           the orderStatusSpecifier to set
-	 */
-	public void setOrderStatusSpecifier(final OrderStatusSpecifier orderStatusSpecifier)
-	{
-		this.orderStatusSpecifier = orderStatusSpecifier;
-	}
-
 
 
 

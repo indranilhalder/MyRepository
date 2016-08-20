@@ -59,11 +59,16 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
+import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
+import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.util.OrderStatusSpecifier;
@@ -91,10 +96,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private OrderService orderService;
 	@Autowired
 	private ModelService modelService;
-	//	@Autowired
-	//	private EventService eventService;
-	//	@Autowired
-	//	private MplOrderDao mplOrderDao;
+	//@Autowired
+	//private EventService eventService;
+	@Autowired
+	private MplOrderDao mplOrderDao;
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -113,11 +118,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Autowired
 	private OrderStatusSpecifier orderStatusSpecifier;
 
-	//	@Autowired
-	//	private NotifyPaymentGroupMailService notifyPaymentGroupMailService;
+	@Autowired
+	private NotifyPaymentGroupMailService notifyPaymentGroupMailService;
 
-	//	@Autowired
-	//	private RMSVerificationNotificationService rMSVerificationNotificationService;
+	@Autowired
+	private RMSVerificationNotificationService rMSVerificationNotificationService;
 
 	@Resource(name = "voucherModelService")
 	private VoucherModelService voucherModelService;
@@ -297,43 +302,37 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		orderModel.setChildOrders(orderList);
 		getModelService().save(orderModel);
-		//		if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
-		//		{
-		//			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-		//		}
-		//		else
-		//		{
-		//
-		//			final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
-		//			if (realEbs.equalsIgnoreCase("Y"))
-		//			{
-		//				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
-		//				//Commented for new Payment Soln -- order before payment
-		//
-		//				//			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
-		//				//			{
-		//				//				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-		//				//			}
-		//				//			else
-		//				//			{
-		//
-		//				//				if (StringUtils.isNotEmpty(orderModel.getGuid()))
-		//				//				{
-		//				//					final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
-		//				//					if (null != mplAudit)
-		//				//					{
-		//				//						final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAudit.getAuditEntries();
-		//				//						if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
-		//				//						{
-		//				//							//In all the cases, order is created before payment --- so payment pending
-		//				//							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
-		//				//							//updateOrderStatus(mplAuditEntryList, orderModel);
-		//				//						}
-		//				//					}
-		//				//				}
-		//				//			}
-		//			}
-		//		}
+		if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+		{
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+		}
+		else
+		{
+
+			final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
+			if (realEbs.equalsIgnoreCase("Y"))
+			{
+				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+				{
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				}
+				else
+				{
+					if (StringUtils.isNotEmpty(orderModel.getGuid()))
+					{
+						final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
+						if (null != mplAudit)
+						{
+							final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAudit.getAuditEntries();
+							if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
+							{
+								updateOrderStatus(mplAuditEntryList, orderModel);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/*
@@ -558,44 +557,43 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @param mplAuditEntryList
 	 * @param orderModel
 	 */
-	//Commented as this is not needed as per new soln -- Order before payment
-	//	private void updateOrderStatus(final List<MplPaymentAuditEntryModel> mplAuditEntryList, final OrderModel orderModel)
-	//	{
-	//		for (final MplPaymentAuditEntryModel mplAuditEntry : mplAuditEntryList)
-	//		{
-	//			if (null != mplAuditEntry.getResponseDate())
-	//			{
-	//				if (mplAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.COMPLETED))
-	//				{
-	//					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-	//				}
-	//				else if (mplAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
-	//				{
-	//					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
-	//
-	//					try
-	//					{
-	//						//Alert to Payment User Group when order is put on HOLD
-	//						getNotifyPaymentGroupMailService().sendMail(mplAuditEntry.getAuditId());
-	//					}
-	//					catch (final Exception e1)
-	//					{
-	//						LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
-	//					}
-	//					try
-	//					{
-	//						//send Notification
-	//						getRMSVerificationNotificationService().sendRMSNotification(orderModel);
-	//					}
-	//					catch (final Exception e1)
-	//					{
-	//						LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
-	//					}
-	//
-	//				}
-	//			}
-	//		}
-	//	}
+	private void updateOrderStatus(final List<MplPaymentAuditEntryModel> mplAuditEntryList, final OrderModel orderModel)
+	{
+		for (final MplPaymentAuditEntryModel mplAuditEntry : mplAuditEntryList)
+		{
+			if (null != mplAuditEntry.getResponseDate())
+			{
+				if (mplAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.COMPLETED))
+				{
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				}
+				else if (mplAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
+				{
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+
+					try
+					{
+						//Alert to Payment User Group when order is put on HOLD
+						getNotifyPaymentGroupMailService().sendMail(mplAuditEntry.getAuditId());
+					}
+					catch (final Exception e1)
+					{
+						LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
+					}
+					try
+					{
+						//send Notification
+						getrMSVerificationNotificationService().sendRMSNotification(orderModel);
+					}
+					catch (final Exception e1)
+					{
+						LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
+					}
+
+				}
+			}
+		}
+	}
 
 
 	private void setBOGOParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions
@@ -1931,6 +1929,69 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	public void setVoucherService(final VoucherService voucherService)
 	{
 		this.voucherService = voucherService;
+	}
+
+
+
+	/**
+	 * @return the mplOrderDao
+	 */
+	public MplOrderDao getMplOrderDao()
+	{
+		return mplOrderDao;
+	}
+
+
+
+	/**
+	 * @param mplOrderDao
+	 *           the mplOrderDao to set
+	 */
+	public void setMplOrderDao(final MplOrderDao mplOrderDao)
+	{
+		this.mplOrderDao = mplOrderDao;
+	}
+
+
+
+	/**
+	 * @return the notifyPaymentGroupMailService
+	 */
+	public NotifyPaymentGroupMailService getNotifyPaymentGroupMailService()
+	{
+		return notifyPaymentGroupMailService;
+	}
+
+
+
+	/**
+	 * @param notifyPaymentGroupMailService
+	 *           the notifyPaymentGroupMailService to set
+	 */
+	public void setNotifyPaymentGroupMailService(final NotifyPaymentGroupMailService notifyPaymentGroupMailService)
+	{
+		this.notifyPaymentGroupMailService = notifyPaymentGroupMailService;
+	}
+
+
+
+	/**
+	 * @return the rMSVerificationNotificationService
+	 */
+	public RMSVerificationNotificationService getrMSVerificationNotificationService()
+	{
+		return rMSVerificationNotificationService;
+	}
+
+
+
+	/**
+	 * @param rMSVerificationNotificationService
+	 *           the rMSVerificationNotificationService to set
+	 */
+	public void setrMSVerificationNotificationService(final RMSVerificationNotificationService rMSVerificationNotificationService)
+	{
+		this.rMSVerificationNotificationService = rMSVerificationNotificationService;
 	}
 
 

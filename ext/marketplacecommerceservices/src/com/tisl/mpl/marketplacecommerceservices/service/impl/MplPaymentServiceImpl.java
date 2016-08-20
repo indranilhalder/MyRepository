@@ -12,7 +12,6 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.enums.CreditCardType;
-import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -2945,11 +2944,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2961,9 +2960,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -3253,7 +3252,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				auditModel.setRisk(juspayEBSResponseList);
 				getModelService().save(auditModel);
 
-				updateOrderStatus(orderModel, auditEntry);
 				updateFraudModel(orderModel, juspayEBSResponseModel, auditModel);
 			}
 		}
@@ -3303,48 +3301,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		return getMplPaymentDao().fetchOrderOnGUID(guid);
 	}
 
-
-
-
-
-
-	/**
-	 * This method updates order status for new Payment Soln - Order before Payment
-	 *
-	 * @param orderModel
-	 * @param auditEntryModel
-	 */
-	private void updateOrderStatus(final OrderModel orderModel, final MplPaymentAuditEntryModel auditEntryModel)
-	{
-		if (auditEntryModel.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.COMPLETED))
-		{
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-		}
-		else if (auditEntryModel.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
-		{
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
-
-			//			try
-			//			{
-			//				//Alert to Payment User Group when order is put on HOLD
-			//				getNotifyPaymentGroupMailService().sendMail(auditEntryModel.getAuditId());
-			//			}
-			//			catch (final Exception e1)
-			//			{
-			//				LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
-			//			}
-			//			try
-			//			{
-			//				//send Notification
-			//				getRMSVerificationNotificationService().sendRMSNotification(orderModel);
-			//			}
-			//			catch (final Exception e1)
-			//			{
-			//				LOG.error("Exception during sending Notification for RMS_VERIFICATION_PENDING>>> ", e1);
-			//			}
-
-		}
-	}
 
 
 
