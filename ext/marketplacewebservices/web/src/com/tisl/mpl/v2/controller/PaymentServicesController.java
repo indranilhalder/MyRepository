@@ -275,7 +275,7 @@ public class PaymentServicesController extends BaseController
 				if (getMplCheckoutFacade().isPromotionValid(orderModel))
 				{
 					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
-					promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, cart, userId, bankName);
+					promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, orderModel, userId, bankName);
 				}
 				else
 				{

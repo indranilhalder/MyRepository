@@ -45,6 +45,7 @@ import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.variants.model.VariantProductModel;
@@ -58,12 +59,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
@@ -161,9 +162,9 @@ public class OrdersController extends BaseCommerceController
 	private RegisterCustomerFacade registerCustomerFacade;
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
-	@Autowired
+	@Resource
 	private WishlistFacade wishlistFacade;
-	@Autowired
+	@Resource
 	private MplCheckoutFacade mplCheckoutFacade;
 	//	@Resource(name = "productFacade")
 	//	private ProductFacade productFacade;
@@ -182,11 +183,11 @@ public class OrdersController extends BaseCommerceController
 
 	//	@Resource(name = "eventService")
 	//	private EventService eventService;
-	@Autowired
+	@Resource
 	private MplOrderService mplOrderService;
 	@Resource
 	private MplOrderFacade mplOrderFacade;
-	@Autowired
+	@Resource
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
@@ -197,14 +198,14 @@ public class OrdersController extends BaseCommerceController
 	 */
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
-	@Autowired
+	@Resource
+	private ModelService modelService;
+	@Resource
 	private MplProductWebService productWebService;
-	@Autowired
+	@Resource
 	private DefaultMplOrderFacade defaultMplOrderFacade;
-
-	@Autowired
+	@Resource
 	private MplSellerInformationService mplSellerInformationService;
-
 	@Resource(name = "mplDataMapper")
 	protected DataMapper mplDataMapper;
 
@@ -550,16 +551,19 @@ public class OrdersController extends BaseCommerceController
 	@RequestMapping(value = "/users/{userId}/orderConfirmation/{orderCode}", method = RequestMethod.GET)
 	//@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
 	@ResponseBody
-	public OrderConfirmationWsDTO orderConfirmation(@PathVariable final String orderCode)
+	public OrderConfirmationWsDTO orderConfirmation(@PathVariable final String orderCode, final HttpServletRequest request)
 	{
 		OrderConfirmationWsDTO response = new OrderConfirmationWsDTO();
+		OrderModel orderModel = null;
+		OrderData orderDetail = null;
 		try
 		{
 			//removeProductFromWL(orderCode);
-			LOG.debug("*********** Order confirmation mobile web service for ********** : " + orderCode);
-			wishlistFacade.removeProductFromWL(orderCode);
+			orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
+			orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel); //TISPT-175 --- order details : reduce same call from two places
+			wishlistFacade.remProdFromWLForConf(orderDetail, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
-			response = processOrderCode(orderCode);
+			response = processOrderCode(orderCode, orderModel, orderDetail, request);
 		}
 
 		catch (final EtailNonBusinessExceptions e)
@@ -639,10 +643,10 @@ public class OrdersController extends BaseCommerceController
 	 * 47 && c < 58) || (c == 46)) { sb.append(c); } } return sb.toString(); }
 	 */
 	//TODO It was added in respect of CheckoutController.java
-	protected OrderConfirmationWsDTO processOrderCode(final String orderCode) throws EtailNonBusinessExceptions
+	protected OrderConfirmationWsDTO processOrderCode(final String orderCode, final OrderModel orderModel,
+			final OrderData orderDetail, final HttpServletRequest request) throws EtailNonBusinessExceptions
 	{
 		final OrderConfirmationWsDTO orderWsDTO = new OrderConfirmationWsDTO();
-		OrderData orderDetail = null;
 		OrderProductWsDTO orderProductDTO = null;
 		ProductData product = null;
 		//final String paymentMethod = "";
@@ -653,7 +657,6 @@ public class OrdersController extends BaseCommerceController
 		double totalDiscount = 0.0d;
 		try
 		{
-			orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			//final Commented for Delivery cost fix final in order final confirmation page
 			//orderDetail = orderFacade.getOrderDetailsForCode(orderCode);
 			//orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
@@ -899,6 +902,17 @@ public class OrdersController extends BaseCommerceController
 
 				orderWsDTO.setProducts(orderProductDTOList);
 				orderWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				//saving IP of the Customer
+				try
+				{
+					final String userIpAddress = request.getHeader("X-Forwarded-For");
+					orderModel.setIpAddress(userIpAddress);
+					modelService.save(orderModel);
+				}
+				catch (final Exception e)
+				{
+					LOG.debug("Exception during IP save", e);
+				}
 
 			}
 			else
