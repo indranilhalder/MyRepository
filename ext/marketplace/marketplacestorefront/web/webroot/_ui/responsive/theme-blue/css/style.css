@@ -33776,7 +33776,7 @@ margin-bottom:52px;
 }
 .pdp-promo-block.promo-block>div{
 	width:100%;
-	text-align:center;
+/* 	text-align:center; */
 }
 
 .showAZBrandsImportant{
@@ -44987,11 +44987,7 @@ padding:0;
 	content: "";
 	display: block;
 	clear: both;
-<<<<<<< HEAD
-}
-=======
 }
 #mplAdvancedCategoryCarousel.owl-carousel .owl-stage-outer {
 	z-index: 2;
 }
->>>>>>> stash
