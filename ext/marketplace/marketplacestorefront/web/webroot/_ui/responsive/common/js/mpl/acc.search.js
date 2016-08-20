@@ -413,9 +413,7 @@ function constructDepartmentHierarchy(inputArray) {
 
 			} else {
 				for (j = 0; j < serpSizeList.length; j++) {
-					var sizeUrl = serpSizeList[j];
-					alert("Product in else: "+product);	
-					alert(stckData[sizeUrl]);
+					var sizeUrl = serpSizeList[j];					
 					if (stckData[sizeUrl] != undefined) {						
 						if (minPriceSize == serpSizeList[j]) {							
 							if(stckData[sizeMatched]=='outOfStock'){
