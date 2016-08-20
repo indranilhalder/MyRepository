@@ -204,6 +204,17 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 								}
 							}
 						}
+						else if ((new Date()).before(orderTATForTimeout) && CollectionUtils.isEmpty(hooks))
+						{
+							if (null != orderModel.getIsPendingNotSent() && !orderModel.getIsPendingNotSent().booleanValue())
+							{
+								//TODO: trigger payment pending
+								final Boolean flag = Boolean.TRUE; //Change to trigger boolean state return
+								orderModel.setIsPendingNotSent(flag);
+								getModelService().save(orderModel);
+							}
+
+						}
 					}
 
 				}

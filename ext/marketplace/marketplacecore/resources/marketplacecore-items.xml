@@ -2283,6 +2283,14 @@
 					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
+					<!-- TRP-629 Attribute for pending payment mail -->
+					<attribute autocreate="true" qualifier="isPendingNotSent"
+						type="java.lang.Boolean">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+					</attribute>
 				</attributes>
 			</itemtype>
 
