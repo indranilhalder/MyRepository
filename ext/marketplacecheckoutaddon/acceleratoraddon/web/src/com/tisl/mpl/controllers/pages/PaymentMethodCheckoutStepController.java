@@ -3452,6 +3452,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
 				getMplCheckoutFacade().submitOrder(orderToBeUpdated);
 
+				//TODO: order confirmation email
+
 				final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
 
 				return redirectToOrderConfirmationPage(orderData);
@@ -4132,7 +4134,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

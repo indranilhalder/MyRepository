@@ -194,22 +194,27 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				getExternalTaxesService().clearSessionTaxDocument();
 
 				afterPlaceOrder(parameter, result);
-				//Added to trigger notification
-				final String trackOrderUrl = configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-						+ orderModel.getCode();
-				try
+
+				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
+						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
 				{
-					notificationService.triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
-					//notificationService.sendMobileNotifications(orderModel);
-				}
-				catch (final JAXBException e)
-				{
-					LOG.error("Error while sending notifications>>>>>>", e);
-				}
-				catch (final Exception ex)
-				{
-					LOG.error("Error while sending notifications>>>>>>", ex);
+					//Added to trigger notification
+					final String trackOrderUrl = configurationService.getConfiguration().getString(
+							MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+							+ orderModel.getCode();
+					try
+					{
+						notificationService.triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
+						//notificationService.sendMobileNotifications(orderModel);
+					}
+					catch (final JAXBException e)
+					{
+						LOG.error("Error while sending notifications>>>>>>", e);
+					}
+					catch (final Exception ex)
+					{
+						LOG.error("Error while sending notifications>>>>>>", ex);
+					}
 				}
 
 				return result;
@@ -294,9 +299,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)

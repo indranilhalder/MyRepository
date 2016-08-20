@@ -10,6 +10,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -45,6 +47,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutServi
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
+import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
@@ -82,6 +85,10 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private MplPaymentService mplPaymentService;
 	@Resource
 	private SessionService sessionService;
+	@Autowired
+	private ConfigurationService configurationService;
+	@Autowired
+	private NotificationService notificationService;
 
 	/*
 	 * (non-Javadoc)
@@ -208,7 +215,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						{
 							if (null != orderModel.getIsPendingNotSent() && !orderModel.getIsPendingNotSent().booleanValue())
 							{
-								//TODO: trigger payment pending
+								//TODO: trigger payment pending email and sms
 								final Boolean flag = Boolean.TRUE; //Change to trigger boolean state return
 								orderModel.setIsPendingNotSent(flag);
 								getModelService().save(orderModel);
@@ -301,6 +308,23 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
 			getOrderService().submitOrder(orderModel);
 
+			//Added to trigger notification
+			final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+					+ orderModel.getCode();
+			try
+			{
+				getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
+			}
+			catch (final JAXBException e)
+			{
+				LOG.error("Error while sending notifications from job>>>>>>", e);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Error while sending notifications>>>>>>", ex);
+			}
+
 			juspayWebhookModel.setIsExpired(Boolean.TRUE);
 		}
 		else if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_FAILED")
@@ -312,6 +336,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			//OMS Deallocation call for failed order
 			getMplCommerceCartService().isInventoryReserved(orderModel,
 					MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+
+			//TODO : trigger for payment failed email and sms
 
 			juspayWebhookModel.setIsExpired(Boolean.TRUE);
 		}
@@ -606,6 +632,40 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			final Converter<JuspayOrderStatusModel, GetOrderStatusResponse> juspayOrderResponseConverter)
 	{
 		this.juspayOrderResponseConverter = juspayOrderResponseConverter;
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+	/**
+	 * @return the notificationService
+	 */
+	public NotificationService getNotificationService()
+	{
+		return notificationService;
+	}
+
+	/**
+	 * @param notificationService
+	 *           the notificationService to set
+	 */
+	public void setNotificationService(final NotificationService notificationService)
+	{
+		this.notificationService = notificationService;
 	}
 
 
