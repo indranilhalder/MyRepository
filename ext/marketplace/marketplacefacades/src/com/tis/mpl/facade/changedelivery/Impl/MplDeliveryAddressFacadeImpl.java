@@ -19,10 +19,13 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
@@ -48,6 +51,7 @@ import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.data.MplDeliveryAddressReportData;
 import com.tisl.mpl.facades.data.RescheduleData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
@@ -443,7 +447,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 *
 	 * @param customerId
 	 * @param mobileNumber
-	 * @return
+	 * @return String
 	 * @throws InvalidKeyException
 	 * @throws NoSuchAlgorithmException
 	 */
@@ -816,5 +820,43 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 
+	@Override
+	public Collection<MplDeliveryAddressReportData> getDeliveryAddressRepot(String dateFrom,String dateTo)
+	{
+		
+		Map<String,MplDeliveryAddressReportData> orderId=new HashMap<>();
+		List<String> listEmpl=new ArrayList<>();
+		MplDeliveryAddressReportData mplData;
+		List<TemproryAddressModel> temproryAddressModelList = mplDeliveryAddressService.getTemporaryAddressModelList(dateFrom,
+				dateTo);
+		for (TemproryAddressModel temproryAddressModel : temproryAddressModelList)
+		{
+			listEmpl.add(temproryAddressModel.getOrderId());
+			mplData = new MplDeliveryAddressReportData();
+			mplData.setOrderId(temproryAddressModel.getOrderId());
+			if (!temproryAddressModel.getIsProcessed().booleanValue())
+			{
+				mplData.setFailureRequsetCount(1);
 
+				if (orderId.containsKey(temproryAddressModel.getOrderId()))
+				{
+					MplDeliveryAddressReportData tempEpl = orderId.remove(temproryAddressModel.getOrderId());
+					tempEpl.setFailureRequsetCount(tempEpl.getFailureRequsetCount() + 1);
+					orderId.put(temproryAddressModel.getOrderId(), tempEpl);
+				}
+				else
+				{
+					orderId.put(temproryAddressModel.getOrderId(), mplData);
+				}
+			}
+
+		}
+		for(Entry<String, MplDeliveryAddressReportData> orIdsSet:orderId.entrySet()){
+			int count=Collections.frequency(listEmpl,orIdsSet.getKey());
+			MplDeliveryAddressReportData tempEpl = orderId.remove(orIdsSet.getKey());
+			tempEpl.setTotalRequestCount(count);
+			orderId.put(orIdsSet.getKey(), tempEpl);
+		}
+		return orderId.values();
+	}
 }
