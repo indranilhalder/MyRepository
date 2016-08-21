@@ -3,6 +3,9 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress;
 
+
+import java.util.List;
+
 import com.tisl.mpl.core.model.TemproryAddressModel;
 
 
@@ -21,4 +24,7 @@ public interface MplDeliveryAddressDao
 	 * @return temproryAddressModel
 	 */
 	public TemproryAddressModel getTemporaryAddressModel(String orderCode);
+	
+	
+	public List<TemproryAddressModel> getTemporaryAddressModelList(String dateFrom,String toDate);
 }
