@@ -952,6 +952,13 @@
 	<bean class="com.tisl.mpl.facades.data.RescheduleDataList">
 			<property name="rescheduleDataList" type="java.util.List&lt;com.tisl.mpl.facades.data.RescheduleData>"></property>
 	</bean>
+    
+    <bean class="com.tisl.mpl.facades.data.MplDeliveryAddressReportData">
+	    <property name="orderId" type="String"></property>
+		<property name="totalRequestCount" type="int"></property>
+		<property name="failureRequsetCount" type="int"></property>
+	</bean>
+	
 	
 	
 </beans>
