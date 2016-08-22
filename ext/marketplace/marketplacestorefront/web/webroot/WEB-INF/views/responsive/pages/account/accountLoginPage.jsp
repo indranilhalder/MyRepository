@@ -29,7 +29,7 @@
 					<cms:component component="${feature}" />
 				</cms:pageSlot>
 			</li>
-			<li class="or"><spring:theme code="text.or" /></li>
+			<li class="or"><span class="vr-line"></span><span class="or-rounded"><spring:theme code="text.or" /></span><span class="vrt-line"></span></li>
 			<li id="sign_up_content" class="active">
 				<cms:pageSlot position="LeftContentSlot" var="feature">
 					<cms:component component="${feature}" />

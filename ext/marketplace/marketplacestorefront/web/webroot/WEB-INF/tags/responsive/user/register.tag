@@ -67,6 +67,7 @@
 			<button type="submit" onclick="return checkSignUpValidation('login');" ><spring:theme code='${actionNameKey}' /></button>
 		</ycommerce:testId>
 	</div>
+	<label class="accept-cond">By signing up, you agree to our <a href="" class="spec-notes">T&amp;C </a></label>
 	<!-- <div class="exist-account">
 	<span>Already have a Tata CLiQ account?  </span>
 	<span><a href="/store/mpl/en/login"> &nbsp;  Sign in here</a></span>

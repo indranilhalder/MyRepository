@@ -8665,7 +8665,8 @@ footer .banner {
   border: 1px solid #DFD1D5;
   margin-top: 0;
   float: left;
-  width: 100%; }
+  width: 100%;
+      position: relative; }
   .sign-in.tab-view .tabs::after {
     clear: both;
     content: "";
@@ -8675,7 +8676,7 @@ footer .banner {
     padding: 20px 20px 20px 20px;
     padding-bottom: 0;
     display: none;
-    position: relative; }
+   /*  position: relative; */ }
     .sign-in.tab-view .tabs > li.active {
       display: inline-block; }
     @media (min-width: 791px) {
@@ -8707,9 +8708,8 @@ footer .banner {
         .sign-in.tab-view .tabs > li .left form label {
           letter-spacing: 1.2px; } }
           .sign-in.tab-view .tabs > li .left form div#checkBox label,.sign-in.tab-view .tabs > li .left form div#checkBox label a{
-          	font-size: 11px;
+          	font-size: 14px;
 		    font-weight: 500;
-		    text-align: justify;
 		    letter-spacing: normal;
 		    text-transform: none;
 		    display: inline;
@@ -23834,9 +23834,6 @@ h5.questions a:hover {
     color: initial;
 }
 }
-
-#checkBox label:before{
-	top:-1px;}
 	
 	ul.wish-share {
 		margin-top:20px;
@@ -39688,7 +39685,7 @@ color:#777; }
 
 /*tata rewards css starts*/
 
- .sign-in.tab-view .tabs > li .left form div#checkBox label a.tata-rewards{
+ /* .sign-in.tab-view .tabs > li .left form div#checkBox label a.tata-rewards{
 		        border-bottom: 1px dashed #a9143c;
     			padding: 0;
     			display: inline-block;
@@ -39763,7 +39760,7 @@ color:#777; }
 #checkBox .popover.top{
         width: 300px !important;
 }
-}
+} */
 .exist-account{
 padding: 20px;
 margin-bottom: 10px;
@@ -39788,7 +39785,7 @@ display:inline;}
     left: 66px !important;
 }
 } */
-@media(max-width:790px) and (min-width:651px){
+/* @media(max-width:790px) and (min-width:651px){
 	#checkBox .popover.top{
     left: 174px !important;
 }
@@ -39823,7 +39820,7 @@ display:inline;}
     right: 100px !important;
 }
 
-}
+} */
 .error-message.payment-notification{
 	color: #60A119;
 }
@@ -45073,13 +45070,80 @@ padding:0;
     letter-spacing: 1px;}
     .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
     padding-top:28px;}
-    .sign-in.tab-view .tabs > li .left form div#checkBox:checked label:before{
+        .sign-in.tab-view .tabs > li .left form div#checkBox label{
+    color: #7a7a7a;
+    float: left;
+    width: 80%;
+    line-height: 20px;
+        font-size: 14px;
+}
+        .sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+    height: 25px !important;
+    margin: 0;
+    width: 25px !important;
+    position: relative;
+    float: left;
+    border: 1px solid #fff !important;
+    box-shadow: 0 0 0 1px #666;
+    padding-left: 2px;
+    padding-top: 2px;
+    margin-right: 10px;
+    }
+    .sign-in.tab-view .tabs > li .left form div#checkBox input[type="checkbox"]:checked + label:before{
         content: "";
     font-size: 20px;
-    background: rgba(0, 0, 0, 0) url("../images/sprite.svg") no-repeat scroll -253px -3px;
+    background: rgba(0, 0, 0, 0) url("../images/sprite.svg") no-repeat scroll -251px -1px;
     width: 20px;
     height: 20px;
     display: inline-block;}
+    .sign-in.tab-view .tabs > li .left form#extRegisterForm button{
+       margin: 35px 0 10px; }
+   .sign-in.tab-view .tabs > li .left form label.accept-cond {
+    clear: left;
+    display: block;
+    font-size: 14px;
+    color: #7a7a7a;
+    letter-spacing: 0;
+}
+.sign-in.tab-view .tabs > li .left form a.spec-notes {
+    color: #a7183e;
+    display: inline-block;
+    width:auto;
+    font-size:14px;
+}
+          .sign-in.tab-view .tabs > li .left form button:hover {		
+        background-color: #fff;
+    border: 1px solid #a9143c;
+    color: #a9143c;	
+}
+.vr-line {
+    background: #eaeaeb;
+    width: 1px;
+    height: 110px;
+    display: inline-block;
+}
+.or-rounded {
+    display: inline-block;
+    top: 158px;
+    float: left;
+    border: 1px solid #eaeaeb;
+    padding: 7px 9px 10px;
+    position: absolute;
+    left: 44.4%;
+    color: #7f7f7f;
+    font-size: 14px;
+    border-radius: 24px;
+    margin-left: 1px;
+    background: #ffffff;
+    letter-spacing: 1;
+}
+.vrt-line {
+    margin-top: 55px;
+    background: #eaeaeb;
+    width: 1px;
+    height: 110px;
+    display: inline-block;
+}
 @media (min-width: 980px){
 	.sign-in.tab-view{
 	margin:0px;}
@@ -45127,25 +45191,8 @@ padding:0;
     .sign-in.tab-view .tabs > li .left form a#newToTata{
     font-size: 14px;
     text-decoration: underline;  }
-    .sign-in.tab-view .tabs > li .left form div#checkBox label{
-    color: #7a7a7a;
-    float: left;
-    padding-left: 10px;
-    width: 80%;
-    line-height: 20px;
-        font-size: 14px;
-    margin-bottom: 25px;}
-    .sign-in.tab-view .tabs > li .left form div#checkBox label:before {
-    height: 25px !important;
-    margin: 0;
-    width: 25px !important;
-    position: relative;
-    float: left;
-    border: 1px solid #fff !important;
-    box-shadow: 0 0 0 1px #666;
-    padding-left: 2px;
-    padding-top: 2px;
-    }
+
+
 }
 @media (max-width: 980px){
 
