@@ -1539,7 +1539,7 @@ public class SearchSuggestUtilityMethods
 								{
 									l4Depart.setSelected(Boolean.valueOf(value.isSelected()));
 									//TPR-796
-									l4Depart.setQuauntity((int) (value.getCount()));
+									l4Depart.setQuantity((int) (value.getCount()));
 									if (value.isSelected())
 									{
 										flag = true;
@@ -1572,7 +1572,7 @@ public class SearchSuggestUtilityMethods
 							{
 								l3Depart.setSelected(Boolean.valueOf(value.isSelected()));
 								//TPR-796
-								l3Depart.setQuauntity((int) (value.getCount()));
+								l3Depart.setQuantity((int) (value.getCount()));
 								if (value.isSelected())
 								{
 									flag = true;
@@ -1608,7 +1608,7 @@ public class SearchSuggestUtilityMethods
 						{
 							l2Depart.setSelected(Boolean.valueOf(value.isSelected()));
 							//TPR-796
-							l2Depart.setQuauntity((int) (value.getCount()));
+							l2Depart.setQuantity((int) (value.getCount()));
 							if (value.isSelected())
 							{
 								flag = true;
@@ -1639,7 +1639,7 @@ public class SearchSuggestUtilityMethods
 					{
 						l1Depart.setSelected(Boolean.valueOf(value.isSelected()));
 						//TPR-796
-						l1Depart.setQuauntity((int) (value.getCount()));
+						l1Depart.setQuantity((int) (value.getCount()));
 						if (value.isSelected())
 						{
 							flag = true;

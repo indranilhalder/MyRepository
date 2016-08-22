@@ -2123,7 +2123,7 @@
  		<property name="ranking" type="String" />
  		<property name="selected" type="Boolean" />
  		<property name="childFilters" type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>" />
- 		<property name="quauntity" type="int" />
+ 		<property name="quantity" type="int" />
  		
     </bean>
     
@@ -2135,7 +2135,7 @@
  		<property name="categoryType" type="String" />
  		<property name="ranking" type="String" />
     	<property name="childFilters" type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>" />
-    	 		<property name="quauntity" type="int" />
+    	 		<property name="quantity" type="int" />
     	
     </bean>
     
@@ -2146,7 +2146,7 @@
  		<property name="categoryType" type="String" />
  		<property name="ranking" type="String" />
     <property name="childFilters" type="java.util.List&lt;com.tisl.mpl.wsdto.L3DepartmentFilterWsDto>" />
-     		<property name="quauntity" type="int" />
+     		<property name="quantity" type="int" />
     
     </bean>
     
@@ -2157,7 +2157,7 @@
  		<property name="categoryType" type="String" />
  		<property name="ranking" type="String" />
     <property name="childFilters" type="java.util.List&lt;com.tisl.mpl.wsdto.L2DepartmentFilterWsDto>" />
-     		<property name="quauntity" type="int" />
+     		<property name="quantity" type="int" />
     
     </bean>
     
