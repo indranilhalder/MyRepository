@@ -1499,7 +1499,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								{
 									//TPR-627
 									final Boolean IsSshipCodEligble = richAttributeModel.get(0).getIsSshipCodEligble();
-									if (IsSshipCodEligble.booleanValue())
+									if (null != IsSshipCodEligble && IsSshipCodEligble.booleanValue())
 									{
 										final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, cart, model);
 										if (!returnFlag)
