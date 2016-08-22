@@ -4891,27 +4891,6 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="edScheduledDate" autocreate="true"
-						type="java.util.Date">
-						<description>ED Scheduled Date</description>
-						<modifiers read="true" write="true" removable="true"
-							optional="true" initial="true" unique="true" />
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="timeSlotFrom" autocreate="true"
-						type="java.lang.Integer">
-						<description>Time Slot From</description>
-						<modifiers read="true" write="true" removable="true"
-							optional="true" initial="true" unique="true" />
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="timeSlotTo" autocreate="true"
-						type="java.lang.Integer">
-						<description>Time Slot To</description>
-						<modifiers read="true" write="true" removable="true"
-							optional="true" initial="true" unique="true" />
-						<persistence type="property" />
-					</attribute>
 				</attributes>
 			</itemtype>
 			<!-- Tata Etail change - Apportioned value capturing ends -->
@@ -7774,8 +7753,6 @@
 					</attribute>
 					
 					<!-- Added Attributes for Delivery Slots -->
-					
-					
 					<attribute autocreate="true" qualifier="edScheduledDate" type="java.lang.String"
 						generate="true">
 						<persistence type="property" />
