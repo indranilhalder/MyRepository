@@ -4,10 +4,10 @@
 	xmlns:w="http://www.zkoss.org/2005/zk/client"
 	xmlns:zk="http://www.zkoss.org/2005/zk"
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
-	height="100%" >
+	height="100%">
 	<columnlayout width="100%" height="100%">
 		<columnchildren width="100%">
-			<panel 
+			<panel
 				style="height:20%;font-size:14px;border-bottom:none solid #27394f">
 				<panelchildren style="border:none">
 					<vlayout style="width:100%;height:200px">
@@ -22,8 +22,8 @@
 							<vlayout width="100px">
 								<label value="End Date"></label>
 							</vlayout>
-						
-								<vlayout width="200px">
+
+							<vlayout width="200px">
 								<datebox id="enddpic" cols="12"
 									constraint="no future: NO FUTURE" format="dd/MM/yyyy" />
 							</vlayout>
@@ -97,6 +97,15 @@
 							</listheader>
 						</listhead>
 					</listbox>
+					<template name="model">
+						<listitem>						
+							<listcell label="${each.orderId}"></listcell>
+							<listcell label="${each.orderLineId}"></listcell>
+							<listcell label="${each.sellerId}"></listcell>
+                           <listcell label="${each.slaveId}"></listcell>
+                           <listcell label="${each.sellerPromisedTime}"> </listcell>
+						</listitem>
+					</template>
 				</panelchildren>
 			</panel>
 			<panel id="olpanel" style="height:40%;padding:0px">
@@ -105,13 +114,13 @@
 					<vlayout style="width:100%;height:100px">
 						<hlayout>
 							<vlayout>
-								<button id="sshipOrderCancel"  style="float:left" 
-									label="Order Cancel" />
+								<button id="sshipOrderCancel"
+									style="float:left" label="Order Cancel" />
 							</vlayout>
 						</hlayout>
 					</vlayout>
 					<vlayout>
-					<label id="msg" value=""></label>
+						<label id="msg" value=""></label>
 					</vlayout>
 				</panelchildren>
 			</panel>
