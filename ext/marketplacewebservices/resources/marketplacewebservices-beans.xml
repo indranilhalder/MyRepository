@@ -2123,6 +2123,8 @@
  		<property name="ranking" type="String" />
  		<property name="selected" type="Boolean" />
  		<property name="childFilters" type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>" />
+ 		<property name="count" type="int" />
+ 		
     </bean>
     
     <bean class="com.tisl.mpl.wsdto.L3DepartmentFilterWsDto">
@@ -2133,6 +2135,8 @@
  		<property name="categoryType" type="String" />
  		<property name="ranking" type="String" />
     	<property name="childFilters" type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentFilterWsDto>" />
+    	 		<property name="count" type="int" />
+    	
     </bean>
     
      <bean class="com.tisl.mpl.wsdto.L2DepartmentFilterWsDto">
@@ -2142,6 +2146,8 @@
  		<property name="categoryType" type="String" />
  		<property name="ranking" type="String" />
     <property name="childFilters" type="java.util.List&lt;com.tisl.mpl.wsdto.L3DepartmentFilterWsDto>" />
+     		<property name="count" type="int" />
+    
     </bean>
     
      <bean class="com.tisl.mpl.wsdto.L1DepartmentFilterWsDto">
@@ -2151,6 +2157,8 @@
  		<property name="categoryType" type="String" />
  		<property name="ranking" type="String" />
     <property name="childFilters" type="java.util.List&lt;com.tisl.mpl.wsdto.L2DepartmentFilterWsDto>" />
+     		<property name="count" type="int" />
+    
     </bean>
     
      <bean class="com.tisl.mpl.wsdto.DepartmentHierarchy">

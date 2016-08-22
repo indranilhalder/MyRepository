@@ -1538,6 +1538,8 @@ public class SearchSuggestUtilityMethods
 								if (value != null && value.getCode().equalsIgnoreCase(l4Depart.getCategoryCode()))
 								{
 									l4Depart.setSelected(Boolean.valueOf(value.isSelected()));
+									//TPR-796
+									l4Depart.setCount((int) (value.getCount()));
 									if (value.isSelected())
 									{
 										flag = true;
@@ -1569,6 +1571,8 @@ public class SearchSuggestUtilityMethods
 							if (value != null && value.getCode().equalsIgnoreCase(l3Depart.getCategoryCode()))
 							{
 								l3Depart.setSelected(Boolean.valueOf(value.isSelected()));
+								//TPR-796
+								l3Depart.setCount((int) (value.getCount()));
 								if (value.isSelected())
 								{
 									flag = true;
@@ -1603,6 +1607,8 @@ public class SearchSuggestUtilityMethods
 						if (value != null && value.getCode().equalsIgnoreCase(l2Depart.getCategoryCode()))
 						{
 							l2Depart.setSelected(Boolean.valueOf(value.isSelected()));
+							//TPR-796
+							l2Depart.setCount((int) (value.getCount()));
 							if (value.isSelected())
 							{
 								flag = true;
@@ -1632,6 +1638,8 @@ public class SearchSuggestUtilityMethods
 					if (value != null && value.getCode().equalsIgnoreCase(l1Depart.getCategoryCode()))
 					{
 						l1Depart.setSelected(Boolean.valueOf(value.isSelected()));
+						//TPR-796
+						l1Depart.setCount((int) (value.getCount()));
 						if (value.isSelected())
 						{
 							flag = true;
