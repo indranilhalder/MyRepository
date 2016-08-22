@@ -1645,6 +1645,8 @@ http://www.springframework.org/schema/util/spring-util.xsd" >
 	<bean id="enableMplIndexingCompositeJob" class="com.tisl.mpl.core.cronjob.search.indexing.jobs.EnableMplIndexingCompositeJob" autowire="byName"/>
 	<bean id="disableMplIndexingCompositeJob" class="com.tisl.mpl.core.cronjob.search.indexing.jobs.DisableMplIndexingCompositeJob" autowire="byName"/>
 	
+	<!-- TISPRD-4666 -->
+	<bean id="facetDisplayNameComparator" class="com.tisl.mpl.core.comparator.DisplayFacetNameComparator" />	
 		
 	
 </beans>
