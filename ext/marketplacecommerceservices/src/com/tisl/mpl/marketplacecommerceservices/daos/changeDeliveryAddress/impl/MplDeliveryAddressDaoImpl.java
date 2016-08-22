@@ -115,5 +115,36 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 	}
 
 
+	@Override
+	public List<TemproryAddressModel> getTemporaryAddressModelList(String fromDate ,String toDate)
+	{
+		List<TemproryAddressModel> tempAddrlist=null;
+		try
+		{	
+			 String SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES= "SELECT {cdrm:" + TemproryAddressModel.PK + "}"
+					+ " FROM {" + TemproryAddressModel._TYPECODE + " AS cdrm} " + "WHERE " + "{cdrm:"
+					+ TemproryAddressModel.CREATIONTIME + "} between ?fromDate and ?toDate and"+ "{cdrm:"
+					+ TemproryAddressModel.ISPROCESSED + "}  IS NOT NULL";
+
+			FlexibleSearchQuery fQuery = new FlexibleSearchQuery(SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES);
+			fQuery.addQueryParameter("fromDate", fromDate);
+			fQuery.addQueryParameter("toDate", toDate);
+			SearchResult<TemproryAddressModel> searchResult = flexibleSearchService.search(fQuery);
+			tempAddrlist = searchResult.getResult();
+			return !tempAddrlist.isEmpty() ? tempAddrlist : null;
+
+		}
+		catch (final FlexibleSearchException e)
+		{
+			LOG.error(" FlSearchException exception " + e.getMessage());
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occurree getting the temparory address " + e.getMessage());
+		}
+		return null;
+	}
+
+
 
 }

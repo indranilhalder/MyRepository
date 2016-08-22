@@ -294,7 +294,10 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 				addressModel.setLastname(temproryAddressModel.getLastname());
 				addressModel.setPhone1(temproryAddressModel.getPhone1());
 				orderModel.setDeliveryAddress(addressModel);
+			   temproryAddressModel.setIsApproval(false);
+			   temproryAddressModel.setIsProcessed(Boolean.TRUE);
 				modelService.saveAll(orderModel);
+				modelService.saveAll(temproryAddressModel);
 				isUpdatedDetails = true;
 			}
 		}
@@ -305,4 +308,8 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		return isUpdatedDetails;
 	}
 
+	@Override
+	public List<TemproryAddressModel> getTemporaryAddressModelList(String dateFrom,String toDate){
+		return mplDeliveryAddressDao.getTemporaryAddressModelList(dateFrom,toDate);
+	}
 }

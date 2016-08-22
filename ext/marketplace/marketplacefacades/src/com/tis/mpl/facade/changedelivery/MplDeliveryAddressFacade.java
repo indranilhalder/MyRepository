@@ -7,12 +7,14 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+import com.tisl.mpl.facades.data.MplDeliveryAddressReportData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 
@@ -79,5 +81,6 @@ public interface MplDeliveryAddressFacade
 	public List<TransactionEddDto> getScheduledDeliveryDate(OrderModel orderModel,String newPincode);
 	
 	public ChangeDeliveryAddressResponseDto scheduledDeliveryDateRequestToOMS(OrderModel orderModel,String newPincode);
-
+	
+	public Collection<MplDeliveryAddressReportData> getDeliveryAddressRepot(String dateFrom,String toDate);
 }
