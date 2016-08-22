@@ -282,6 +282,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	//TPR-629
 	public static final String GUID = "guid";
+	public static final String REDIRECTSTRING = "redirect";
+	public static final String REDIRECTTOPAYMENT = "redirect_to_payment";
 
 	private MarketplacecheckoutaddonConstants()
 	{

@@ -574,11 +574,23 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	@Override
 	public void saveCart(final CartModel cart)
 	{
-		//saving cartmodel
-		final Double deliveryCost = cart.getDeliveryCost();
-		getModelService().save(cart);
-		cart.setDeliveryCost(deliveryCost);
-		getModelService().save(cart);
+		//Try/catch added as IQA for TPR-629
+		try
+		{
+			//saving cartmodel
+			final Double deliveryCost = cart.getDeliveryCost();
+			getModelService().save(cart);
+			cart.setDeliveryCost(deliveryCost);
+			getModelService().save(cart);
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 
@@ -2716,19 +2728,22 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public double calculateTotalDiscount(final List<PromotionResultData> promoResultList) throws Exception
 	{
 		double totalDiscount = 0l;
-		for (final PromotionResultData promotionResultData : promoResultList)
+		if (CollectionUtils.isNotEmpty(promoResultList)) //IQA for TPR-629
 		{
-			final String st = promotionResultData.getDescription();
-			final String result = stripNonDigits(st);
+			for (final PromotionResultData promotionResultData : promoResultList)
+			{
+				final String st = promotionResultData.getDescription();
+				final String result = stripNonDigits(st);
 
-			try
-			{
-				totalDiscount = totalDiscount + Double.parseDouble(result);
-			}
-			catch (final Exception e)
-			{
-				LOG.error("Exception during double parsing ", e);
-				totalDiscount = totalDiscount + 0;
+				try
+				{
+					totalDiscount = totalDiscount + Double.parseDouble(result);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Exception during double parsing ", e);
+					totalDiscount = totalDiscount + 0;
+				}
 			}
 		}
 		return totalDiscount;

@@ -301,14 +301,14 @@ function displayCODForm()
 	//applyPromotion(null);
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
-	var cartValue=$("#cartValue").val();
+	//var cartValue=$("#cartValue").val();
 	var httpRequest=$("#httpRequest").val();
 	var guid=$("#guid").val();
 
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplCODForm",
 		type: "GET",
-		data: { 'cartValue' : cartValue , 'request' : httpRequest , 'guid' : guid},
+		data: { /*'cartValue' : cartValue , */'request' : httpRequest , 'guid' : guid},		//Commented as not used - TPR-629
 		cache: false,
 		success : function(response) {
 			$("#otpNUM").html(response);

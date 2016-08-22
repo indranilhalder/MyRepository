@@ -109,7 +109,7 @@ public interface MplPaymentService
 	 *            ,Exception
 	 */
 	void saveCODPaymentInfo(String custName, Double cartValue, Double totalCODCharge, List<AbstractOrderEntryModel> entries,
-			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions, Exception;
+			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -136,7 +136,7 @@ public interface MplPaymentService
 	 */
 	//TISPRD-361 method signature changes
 	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, AbstractOrderModel abstractOrderModel)
-			throws EtailNonBusinessExceptions, Exception;
+			throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -260,33 +260,32 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
+	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
 
 	/**
 	 * TISPT-200
 	 *
 	 * @param cartGuid
 	 * @return String
-	 * @throws Exception
 	 * @throws EtailNonBusinessExceptions
 	 */
-	String getAuditId(String cartGuid) throws EtailNonBusinessExceptions, Exception;
+	String getAuditId(String cartGuid) throws EtailNonBusinessExceptions;
 
 	/**
 	 * TIS-3168

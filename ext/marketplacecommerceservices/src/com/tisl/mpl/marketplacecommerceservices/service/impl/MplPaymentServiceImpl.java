@@ -543,11 +543,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param paymentMode
 	 * @param abstractOrderModel
 	 * @throws EtailNonBusinessExceptions
-	 *            , Exception
 	 */
 	@Override
 	public void setPaymentTransactionForCOD(final Map<String, Double> paymentMode, final AbstractOrderModel abstractOrderModel)
-			throws EtailNonBusinessExceptions, Exception
+			throws EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -1332,13 +1331,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param totalCODCharge
 	 * @param entries
 	 * @throws EtailNonBusinessExceptions
-	 *            ,Exception
 	 *
 	 */
 	@Override
 	public void saveCODPaymentInfo(final String custName, final Double cartValue, final Double totalCODCharge,
 			final List<AbstractOrderEntryModel> entries, final AbstractOrderModel abstractOrderModel) //Parameter AbstractOrderModel added extra for TPR-629
-			throws EtailNonBusinessExceptions, Exception
+			throws EtailNonBusinessExceptions
 	{
 		if (null != entries)
 		{
@@ -1783,20 +1781,23 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		if (null != cartModel)
 		{
 			//Reset Voucher Apportion
-			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
+			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()) && null != cartModel.getDiscounts().get(0)) //IQA for TPR-629
 			{
 				final List<AbstractOrderEntryModel> entryList = getMplVoucherService().getOrderEntryModelFromVouEntries(
 						(VoucherModel) cartModel.getDiscounts().get(0), cartModel); //Since only 1 voucher is applied to the cart and
 				//before promotion calculation only 1 discount will be present
 
-				for (final AbstractOrderEntryModel entry : entryList)
-
+				if (CollectionUtils.isNotEmpty(entryList)) //IQA for TPR-629
 				{
-					entry.setCouponCode("");
-					entry.setCouponValue(Double.valueOf(0.00D));
-					//getModelService().save(entry);
+					for (final AbstractOrderEntryModel entry : entryList)
+
+					{
+						entry.setCouponCode("");
+						entry.setCouponValue(Double.valueOf(0.00D));
+						//getModelService().save(entry);
+					}
+					getModelService().saveAll(entryList);
 				}
-				getModelService().saveAll(entryList);
 			}
 
 
@@ -1868,20 +1869,23 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		else if (null != orderModel)
 		{
 			//Reset Voucher Apportion
-			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) && null != orderModel.getDiscounts().get(0)) //IQA for TPR-629
 			{
 				final List<AbstractOrderEntryModel> entryList = getMplVoucherService().getOrderEntryModelFromVouEntries(
 						(VoucherModel) orderModel.getDiscounts().get(0), orderModel); //Since only 1 voucher is applied to the cart and
 				//before promotion calculation only 1 discount will be present
 
-				for (final AbstractOrderEntryModel entry : entryList)
-
+				if (CollectionUtils.isNotEmpty(entryList)) //IQA for TPR-629
 				{
-					entry.setCouponCode("");
-					entry.setCouponValue(Double.valueOf(0.00D));
-					//getModelService().save(entry);
+					for (final AbstractOrderEntryModel entry : entryList)
+
+					{
+						entry.setCouponCode("");
+						entry.setCouponValue(Double.valueOf(0.00D));
+						//getModelService().save(entry);
+					}
+					getModelService().saveAll(entryList);
 				}
-				getModelService().saveAll(entryList);
 			}
 
 
@@ -1951,7 +1955,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			promoPriceData.setVoucherDiscount(discData);
 		}
-
 
 
 		final long endTime = System.currentTimeMillis();
@@ -2330,7 +2333,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *
 	 */
 	@Override
-	public boolean updateAuditEntry(final GetOrderStatusResponse orderStatusResponse)
+	public boolean updateAuditEntry(final GetOrderStatusResponse orderStatusResponse) throws EtailNonBusinessExceptions
 	{
 		boolean flag = false;
 		try
@@ -2542,18 +2545,23 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				getModelService().save(auditModel);
 			}
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
-		}
+		//PMD Fixes
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
+		//		}
 		catch (final ModelSavingException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
-		catch (final EtailNonBusinessExceptions e)
+		catch (final Exception e)
 		{
-			throw e;
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+		//		catch (final EtailNonBusinessExceptions e)
+		//		{
+		//			throw e;
+		//		}
 		return flag;
 	}
 
@@ -2565,6 +2573,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void setEBSRiskStatus(final String riskStatus, final JuspayEBSResponseModel juspayEBSResponseModel)
+			throws EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -2581,13 +2590,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				juspayEBSResponseModel.setEbsRiskStatus(EBSResponseStatus.REJECTED);
 			}
 		}
-		catch (final NullPointerException e)
+		//PMD Fix
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
+		//		}
+		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw e;
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
@@ -2599,6 +2609,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void setEBSRiskLevel(final String riskLevel, final JuspayEBSResponseModel juspayEBSResponseModel)
+			throws EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -2615,13 +2626,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				juspayEBSResponseModel.setEbsRiskLevel(EBSRiskLevelEnum.GREEN);
 			}
 		}
-		catch (final NullPointerException e)
+		//PMD Fix
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
+		//		}
+		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw e;
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
@@ -2944,11 +2956,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2960,13 +2972,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
-	 * @throws Exception
+	 * 
+	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception
+	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions
 	{
 		return getMplPaymentDao().getNetBankingBanks();
 	}
@@ -2979,11 +2991,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *
 	 * @param cartGuid
 	 * @return String
-	 * @throws Exception
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public String getAuditId(final String cartGuid) throws EtailNonBusinessExceptions, Exception
+	public String getAuditId(final String cartGuid) throws EtailNonBusinessExceptions
 	{
 		final List<MplPaymentAuditModel> auditList = getMplPaymentDao().getAuditId(cartGuid);
 		String auditId = null;
@@ -3012,6 +3023,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	@Override
 	public boolean updateAuditEntry(final GetOrderStatusResponse orderStatusResponse,
 			final GetOrderStatusRequest orderStatusRequest, final OrderModel orderModel, final Map<String, Double> paymentMode)
+			throws EtailNonBusinessExceptions
 	{
 		boolean flag = false;
 		try
@@ -3278,10 +3290,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.error("Exception in parsing into json ", e);
 			throw new EtailNonBusinessExceptions(e);
 		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw e;
-		}
+		//PMD Fix
+		//		catch (final EtailNonBusinessExceptions e)
+		//		{
+		//			throw e;
+		//		}
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
