@@ -49,6 +49,7 @@ function loadVariant(x){
 </script>
 <c:url var="sizeGuideUrl"
 	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
+<input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
 <div class="swatch">
 
 	<form:form action="/" id="variantForm" method="post">
@@ -86,7 +87,7 @@ function loadVariant(x){
 												<c:choose>
 													<c:when test="${fn:startsWith(color, 'multi')}">
 														<img src="${commonResourcePath}/images/multi.jpg"
-															height="36" width="36" title="${variantOption.colour}" />
+															height="20" width="20" title="${variantOption.colour}" />
 													</c:when>
 													<c:otherwise>
 														<span

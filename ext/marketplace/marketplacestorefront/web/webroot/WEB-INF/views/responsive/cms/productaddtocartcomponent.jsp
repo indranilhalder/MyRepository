@@ -48,9 +48,9 @@
 	<!-- <div class="size-guide">Size Guide</div> -->
 <div class="addtocart-component">
 
-		<div class="row addtocart-button">
+		<%-- <div class="row addtocart-button">
 			<action:actions element="div"  parentComponent="${component}"/>
-		</div>
+		</div> --%>
 		<c:if test="${empty showAddToCart ? true : showAddToCart}">
 		<%-- <div class="qty-selector input-group js-qty-selector">
 			<span class="input-group-btn">
@@ -81,6 +81,8 @@
 		<div class="stock-status">
 			${productStockLevel}
 		</div>
-
+		<div class="row addtocart-button">
+			<action:actions element="div"  parentComponent="${component}"/>
+		</div>
 </div>
 </div>

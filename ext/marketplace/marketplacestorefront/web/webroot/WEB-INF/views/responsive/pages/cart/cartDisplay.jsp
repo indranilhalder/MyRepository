@@ -16,14 +16,17 @@
     <c:set var="userName" value="${user.firstName}"/>
     <div class="MyBag-buttons">
 	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1>
-	<c:choose>
+	
+	
+	<%-- <c:choose>
 	<c:when test="${isLoggedIn eq true}">
 	<p class="desk-view"><spring:theme code="mpl.myBag.hi" /> ${userName}, <spring:theme code="mpl.myBag.customer.desc" /></p>
 	</c:when>
 	<c:otherwise>
 	<p class="desk-view"><spring:theme code="mpl.myBag.customer.fulldesc" /></p>
 	</c:otherwise>
-	</c:choose>
+	</c:choose> --%>
+	
 	<a href="/" class="continue-shopping mob-tab-view-shopping"> Continue Shopping</a>
 	<ul class="checkout-types">
 			
@@ -72,10 +75,12 @@
    					 	<div class="modal-content content">
    					 	<p class="ship-to">Ship To</p>
    					 	<span class="close-modal" data-dismiss="modal">X</span>
+   					 	<div class="exp-address-container">
 				          <c:forEach items="${Addresses}"  var="Address" varStatus="status">
 				          <input type="radio" class="address_radio" value="${Address.key}" id="${Address.key}" name="expaddress" data-index="${status.index}">
 				          <label class="express_address_label" for="${Address.key}">${Address.value}</label>
 					      </c:forEach>
+					      </div>
 					      <button  id="expressCheckoutButtonId" class="express-checkout-button" onclick="return expressbutton()"><spring:theme code="express.checkout"/></button>
 				     	 </div>
           			</div>
@@ -87,7 +92,7 @@
             </li>
             
           </ul>
-        <a href="/store" class="continue-shopping desk-view-shopping"> Continue Shopping</a>
+        <a href="/" class="continue-shopping desk-view-shopping"> Continue Shopping</a>
           </div>
 		<!-- <a href="/store" class="continue-shopping"> Continue Shopping</a> --><!-- store url change -->
 		<!-- <a href="/" class="continue-shopping"> Continue Shopping</a> -->

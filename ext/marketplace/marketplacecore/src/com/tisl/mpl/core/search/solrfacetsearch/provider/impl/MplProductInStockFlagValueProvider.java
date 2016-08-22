@@ -95,8 +95,8 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 		if ((baseSiteModel != null) && (baseSiteModel.getStores() != null) && (!(baseSiteModel.getStores().isEmpty()))
 				&& (getCommerceStockService().isStockSystemEnabled(baseSiteModel.getStores().get(0))))
 		{
-			fieldValues
-					.addAll(createFieldValue(productCode, productType, indexConfig.getBaseSite().getStores().get(0), indexedProperty));
+			fieldValues.addAll(createFieldValue(productCode, productType, indexConfig.getBaseSite().getStores().get(0),
+					indexedProperty));
 		}
 		else
 		{
@@ -105,8 +105,8 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 		return fieldValues;
 	}
 
-	protected List<FieldValue> createFieldValue(final String productCode, final String productType, final BaseStoreModel baseStore,
-			final IndexedProperty indexedProperty)
+	protected List<FieldValue> createFieldValue(final String productCode, final String productType,
+			final BaseStoreModel baseStore, final IndexedProperty indexedProperty)
 	{
 		final List fieldValues = new ArrayList();
 		if (baseStore != null)
@@ -153,16 +153,20 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 
 	protected StockLevelStatus getBuyBoxStockLevelStatus(final String productCode, final String productType)
 	{
+		//final Integer availableStock = buyBoxService.getBuyboxInventoryForSearch(productCode, productType);
+		final int stockValue = buyBoxService.getBuyboxPricesForSearch(productCode).get(0).getAvailable().intValue();
 
-		final Integer availableStock = buyBoxService.getBuyboxInventoryForSearch(productCode, productType);
 
 		StockLevelStatus stockLevelStatus = StockLevelStatus.OUTOFSTOCK;
 
-		if (availableStock != null && availableStock.intValue() > 0)
+		if (stockValue > 0)
 		{
 			stockLevelStatus = StockLevelStatus.INSTOCK;
 		}
-
+		else
+		{
+			stockLevelStatus = StockLevelStatus.OUTOFSTOCK;
+		}
 		return stockLevelStatus;
 	}
 

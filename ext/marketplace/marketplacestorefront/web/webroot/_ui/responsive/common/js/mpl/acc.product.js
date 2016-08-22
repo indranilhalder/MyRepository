@@ -1096,18 +1096,19 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 var button_my_button = "#applyCustomPriceFilter";
 $(button_my_button)
 		.click(
-				function() {
-					// construct custom price query params
-					var minPriceSearchTxt = $('.minPriceSearchTxt').val();
-					var maxPriceSearchTxt = $('.maxPriceSearchTxt').val();
+				function() {					
+					// construct custom price query params					
+					var minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
+					var maxPriceSearchTxt = ($('.maxPriceSearchTxt').val() == null || $('.maxPriceSearchTxt').val() == "") ? 99999999 : $('.maxPriceSearchTxt').val() ;	
 					//var currentQryParam = $('.currentQueryParamsApply').val();
 					var currentQryParam = $('.currentPriceQueryParams').val();
 					var facetValue = $('.facetValue').val();
 
 					var queryParamsAry = currentQryParam.split(':');
-					var nonPriceQueryParams = "";
+					var nonPriceQueryParams = "";					
 					
-					if(minPriceSearchTxt == 0 && maxPriceSearchTxt == 0 || minPriceSearchTxt > 99999999 || maxPriceSearchTxt > 99999999){	
+					//if(minPriceSearchTxt == 0 && maxPriceSearchTxt == 0 || minPriceSearchTxt > 99999999 || maxPriceSearchTxt > 99999999){	
+					if(minPriceSearchTxt > 99999999 || maxPriceSearchTxt > 99999999){						
 						//alert("HIIIIIIIIIIIII");
 						return false;
 					}				
@@ -1120,16 +1121,26 @@ $(button_my_button)
 						var Price = "₹" + minPriceSearchTxt + "-" + "₹"
 								+ maxPriceSearchTxt;
 						
-						$('li.Price').find('input[type="text"]').each(
-								function() {
-									if ($(this).parents('.facet-list').css(
-											'display') != 'none') {
-										var facetValue = $(this).parents(
-												'.filter-Price').find(
-												'input[name="facetValue"]').val();
-										Price = Price;
-									}
-								});
+//						$('li.Price').find('input[type="text"]').each(
+//								function() {									
+//									if ($(this).parents('.facet-list').css(
+//											'display') != 'none') {										
+//										var facetValue = $(this).parents(
+//												'.filter-Price').find(
+//												'input[name="facetValue"]').val();
+//										alert("facetValue: "+facetValue);
+//										Price = Price;
+//									}
+//								});
+						
+						
+//						$('li.Price').find('input[type="checkbox"]').each(function(){	
+//							if ( $(this).parents('.facet-list').css('display') != 'none' ){
+//							var facetValue = $(this).parents('.filter-price').find('input[name="facetValue"]').val();			
+//							fullQuery = $(this).parents('.filter-price').find('input[name="q"]').val();
+//							allPrices = allPrices + ':price:' + facetValue;	
+//							}		   					
+//					   });	  
 		
 				
 						
@@ -1146,13 +1157,19 @@ $(button_my_button)
 								}
 							}
 						}
+						
+//						alert("facetValue: "+facetValue);
+//						alert("allPrices: "+allPrices);
+//						var finalQuery = nonPriceQueryParams + allPrices + ":priceValue:" + Price;
+//						alert("finalQuery: " +finalQuery);
+//						$('.qValueForCustomPrice').val(finalQuery);
 					
 						$('.qValueForCustomPrice').val(
 								nonPriceQueryParams + ":priceValue:" + Price);
 		
 						// submit brand apply form
 						$('form#customPriceFilter').submit();
-					}
+					}					
 					
 				});
 //End of Custom Price Filter
@@ -1167,9 +1184,9 @@ function isNumber(evt) {
 }
 
 $(".filter-price").click(
-		function() {
+		function() {			
 			var prices = splitPrice($(this).find('form').find(
-					'input[name=facetValue]').val());
+					'input[name=facetValue]').val());			
 			$('#customMinPrice').val(prices[0]);
 			$('#customMaxPrice').val(prices[1]);
 			$('#applyCustomPriceFilter').click();
@@ -1179,9 +1196,23 @@ $(".filter-price").click(
 
 //Splits priceValue:Rsxxx-Rsyyy to [xxx, yyy]
 function splitPrice(value) {
-	var priceRange = value.split('-');
+	var priceRange = null;	
+	if(value.includes("-"))
+	{
+		priceRange = value.split("-");		
+	}
+	else if(value.includes("and Above"))
+	{
+		priceRange = value.split("and Above");		
+	}	
 	var minPrice = priceRange[0].substring(1);
 	var maxPrice = priceRange[1].substring(1);
+
+//		var priceRange = value.split('-');
+//		alert("priceRange[0]: "+priceRange[0]);
+//		alert("priceRange[1]: "+priceRange[1]);	
+//		var minPrice = priceRange[0].substring(1);
+//		var maxPrice = priceRange[1].substring(1);	
 	return [ minPrice, maxPrice ];
 }
 
@@ -1201,19 +1232,21 @@ function queryParam(name) {
 //Loads the price range textboxes with previously
 //selected ranges.
 $(document).ready(function() {
-	var q = queryParam('q');
+	var q = queryParam('q');	
 	var priceRange = '';
-	var pvStr = ':priceValue:';
-	if (q.indexOf(pvStr) > -1) {
+	var pvStr = ':priceValue:';	
+	
+	if (q.indexOf(pvStr) > -1) {		
 		priceRange = q.substring(q.indexOf(pvStr) + pvStr.length);
 		if (priceRange.indexOf(':') > -1) {
 			priceRange = priceRange.substring(0, priceRange.indexOf(':'));
-		}
-		var prices = splitPrice(priceRange);
+		}		
+		var prices = splitPrice(priceRange);		
 		$('#customMinPrice').val(prices[0]);
-		$('#customMaxPrice').val(prices[1]);
-		$('li.price').find('div.facet-name').remove();
-		$('li.price').find('div.facet-values').remove();
+		$('#customMaxPrice').val(prices[1]);		
+		$('li.price').find('div.facet-name').hide();
+		$('li.price').find('div.facet-values').hide();
+		$('.priceBucketExpand').show();
 	}
 });
 

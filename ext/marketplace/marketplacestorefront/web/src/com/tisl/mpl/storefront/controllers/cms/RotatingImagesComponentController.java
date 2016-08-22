@@ -57,7 +57,8 @@ public class RotatingImagesComponentController extends AbstractCMSComponentContr
 		final LinkedHashSet<BannerComponentModel> moblileBanners = new LinkedHashSet<BannerComponentModel>();
 		for (final BannerComponentModel banner : component.getBanners())
 		{
-			if (banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
+
+			if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
 			{
 				moblileBanners.add(banner);
 			}
@@ -69,5 +70,6 @@ public class RotatingImagesComponentController extends AbstractCMSComponentContr
 		model.addAttribute("mobileView", moblileBanners);
 		model.addAttribute("desktopView", desktopBanners);
 		model.addAttribute("banners", component.getBanners());
+		model.addAttribute("timeout", component.getTimeout());
 	}
 }
