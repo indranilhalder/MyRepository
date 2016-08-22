@@ -123,8 +123,7 @@
 	<script>
    				window.onload =	function(){
    						checkIsServicable();
-   						var mincnt=	$('.js-mini-cart-count').text();
-   						$('#mybagcnt').html(mincnt);
+   						
    				}
 	</script>
 <!-- TISCR-320 -->
