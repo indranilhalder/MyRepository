@@ -201,7 +201,7 @@ public class MplCouponController
 			getMplCouponFacade().releaseVoucher(couponCode, cartModel);
 
 			//Recalculate cart after releasing coupon
-			getMplCouponFacade().recalculateCartForCoupon(cartModel, null);
+			getMplCouponFacade().recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
 
 			data = getMplCouponFacade().calculateValues(cartModel, true, redeem);
 

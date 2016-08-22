@@ -40,7 +40,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
@@ -89,7 +89,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 				while (iter.hasNext())
 				{
 					final Map.Entry mapEntry = (Map.Entry) iter.next();
-					final AbstractOrderEntry cartEntry = (AbstractOrderEntry) mapEntry.getValue();
+					final AbstractOrderEntry cartEntry = (AbstractOrderEntry) mapEntry.getValue(); //Changed to abstractOrderEntry for TPR-629
 					final String validProdUSSID = (String) mapEntry.getKey();
 
 					List<String> associatedItemsList = new ArrayList<String>();

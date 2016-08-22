@@ -4,6 +4,7 @@
 <%@ attribute name="index" required="true" type="java.lang.Integer" %>
 <%@ attribute name="showPotentialPromotions" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showHead" required="false" type="java.lang.Boolean" %>
+<!-- TPR-629 orderData added to tag parameters -->
 <%@ attribute name="orderData" required="false" type="de.hybris.platform.commercefacades.order.data.OrderData" %>
 <%@ attribute name="isCart" required="false" type="java.lang.Boolean" %>
 

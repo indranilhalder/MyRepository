@@ -111,7 +111,7 @@
 		<function-signature>java.lang.String determineAgeBand(java.lang.Integer)</function-signature>
 	</function>
 	
-	
+	<!-- TPR-629 -->
 	<function>
 		<description>
 			Get the age band for the specified age.
@@ -120,6 +120,7 @@
 		<function-class>com.tisl.mpl.storefront.tags.MPLFunctions</function-class>
 		<function-signature>boolean doesAppliedPromoExistForOrderEntry(de.hybris.platform.commercefacades.order.data.OrderData,int)</function-signature>
 	</function>
+	<!-- TPR-629 ends -->
 
 	
 

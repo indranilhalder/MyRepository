@@ -306,11 +306,11 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -606,7 +606,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169 --- Exception fixed for PMD and TPR-629
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
 	 */
 	@Override
@@ -694,7 +694,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 
 	/**
-	 * @Decsription : Fetch Order Details Based on GUID for new Payment Soln - Order before payment
+	 * @Decsription : Fetch Order Details Based on GUID for new Payment Soln - Order before payment TPR-629
 	 * @param: guid
 	 */
 	@Override

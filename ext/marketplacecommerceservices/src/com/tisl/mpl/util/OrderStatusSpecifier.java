@@ -55,6 +55,7 @@ public class OrderStatusSpecifier
 
 			}
 		}
+		//Commented for TPR-629
 		//if (flag || orderStatus.equals(OrderStatus.PAYMENT_PENDING)) //flag == true
 		//{
 		order.setStatus(orderStatus);

@@ -212,7 +212,7 @@ public class SellerBasedPromotionServiceImpl implements SellerBasedPromotionServ
 
 
 	/**
-	 * This method returns boolean result of fetching promotionModel based on promoCode and enabled status
+	 * This method returns boolean result of fetching promotionModel based on promoCode and enabled status. TPR-629
 	 */
 	@Override
 	public boolean getPromoDetails(final String promoCode)

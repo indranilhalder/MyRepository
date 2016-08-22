@@ -228,28 +228,28 @@ public interface MplPaymentFacade
 			String redirectAfterPayment, String format) throws EtailNonBusinessExceptions;
 
 
-	/**
-	 * This method creates an order in Juspay against which Payment will be processed
-	 *
-	 * @param cart
-	 * @param firstName
-	 * @param lastName
-	 * @param addressLine1
-	 * @param addressLine2
-	 * @param addressLine3
-	 * @param country
-	 * @param state
-	 * @param city
-	 * @param pincode
-	 * @param returnUrl
-	 * @param uid
-	 * @param channel
-	 * @return String
-	 * @throws EtailNonBusinessExceptions
-	 */
-	String createJuspayOrder(CartModel cart, String firstName, String lastName, String addressLine1, String addressLine2,
-			String addressLine3, String country, String state, String city, String pincode, String cardSaved, String returnUrl,
-			String uid, String channel) throws EtailNonBusinessExceptions;
+	//	/**
+	//	 * This method creates an order in Juspay against which Payment will be processed
+	//	 *
+	//	 * @param cart
+	//	 * @param firstName
+	//	 * @param lastName
+	//	 * @param addressLine1
+	//	 * @param addressLine2
+	//	 * @param addressLine3
+	//	 * @param country
+	//	 * @param state
+	//	 * @param city
+	//	 * @param pincode
+	//	 * @param returnUrl
+	//	 * @param uid
+	//	 * @param channel
+	//	 * @return String
+	//	 * @throws EtailNonBusinessExceptions
+	//	 */
+	//	String createJuspayOrder(CartModel cart, String firstName, String lastName, String addressLine1, String addressLine2,
+	//			String addressLine3, String country, String state, String city, String pincode, String cardSaved, String returnUrl,
+	//			String uid, String channel) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -290,11 +290,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -302,9 +302,9 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return Map<String, List<MplNetbankingData>>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;

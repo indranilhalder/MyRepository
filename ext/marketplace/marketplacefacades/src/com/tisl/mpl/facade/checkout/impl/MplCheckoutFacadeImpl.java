@@ -1210,7 +1210,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Override
 	public void saveDeliveryMethForFreebie(final AbstractOrderModel abstractOrderModel,
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
-			throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		getMplCommerceCartService().saveDeliveryMethForFreebie(abstractOrderModel, freebieModelMap, freebieParentQtyMap);
 	}
@@ -1225,7 +1225,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public boolean isCouponValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions
+	public boolean isCouponValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		boolean result = false;
 
@@ -1345,6 +1345,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 
 
+	/**
+	 * This mrtjod triggers before submit order of hooks, ie. for order splitting TPR-629
+	 */
 	@Override
 	public void beforeSubmitOrder(final OrderModel orderModel) throws InvalidCartException, CalculationException
 	{
@@ -1361,7 +1364,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 
 	/**
-	 * This method submits the order - ie. initiates the order fulfilment process
+	 * This method submits the order - ie. initiates the order fulfilment process TPR-629
 	 *
 	 * @param orderModel
 	 */

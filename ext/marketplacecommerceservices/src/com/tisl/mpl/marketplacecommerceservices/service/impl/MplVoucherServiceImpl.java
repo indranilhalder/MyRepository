@@ -77,6 +77,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	/**
 	 * @Description This method recalculates the cart after redeeming/releasing the voucher *
 	 * @param cartModel
+	 * @param orderModel
+	 *           for TPR-629
 	 *
 	 */
 	@Override
@@ -174,6 +176,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @Description Checks the cart after applying the voucher
 	 * @param lastVoucher
 	 * @param cartModel
+	 * @param orderModel
+	 *           for TPR-629
 	 * @throws EtailNonBusinessExceptions
 	 * @throws ModelSavingException
 	 * @throws VoucherOperationException
@@ -194,6 +198,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 			if (cartModel != null)
 			{
+				//For cart
 				final double cartSubTotal = cartModel.getSubtotal().doubleValue();
 				double voucherCalcValue = 0.0;
 				double promoCalcValue = 0.0;
@@ -309,6 +314,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			}
 			else if (orderModel != null)
 			{
+				//For order
 				final double cartSubTotal = orderModel.getSubtotal().doubleValue();
 				double voucherCalcValue = 0.0;
 				double promoCalcValue = 0.0;
@@ -445,6 +451,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	/**
 	 * @Description This is for releasing voucher
 	 * @param cartModel
+	 * @param orderModel
+	 *           TPR-629
 	 * @param voucherCode
 	 * @return VoucherDiscountData
 	 * @throws VoucherOperationException
@@ -459,6 +467,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			if (null != cartModel)
 			{
+				//For cart
 				releaseVoucher(voucherCode, cartModel, null); //Releases voucher
 				recalculateCartForCoupon(cartModel, null); //Recalculates cart after releasing voucher
 				getModelService().save(cartModel);
@@ -480,6 +489,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			}
 			else if (null != orderModel)
 			{
+				//For order
 				releaseVoucher(voucherCode, null, orderModel); //Releases voucher
 				recalculateCartForCoupon(null, orderModel); //Recalculates cart after releasing voucher
 				getModelService().save(cartModel);
@@ -519,7 +529,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	@Override
 	public List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(final VoucherModel voucherModel,
-			final AbstractOrderModel abstractOrderModel)
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		LOG.debug("Step 9:::Inside getOrderEntriesFromVoucherEntries");
 		final VoucherEntrySet voucherEntrySet = getVoucherModelService().getApplicableEntries(voucherModel, abstractOrderModel);
@@ -574,6 +584,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @Description This is for releasing voucher
 	 * @param cartModel
 	 * @param voucherCode
+	 * @param orderModel
+	 *           for TPR-629
 	 * @throws VoucherOperationException
 	 */
 	@Override
@@ -591,6 +603,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			}
 			else if (cartModel != null)
 			{
+				//For cart
 				LOG.debug("Step 3:::Voucher and cart is not null");
 
 				getVoucherService().releaseVoucher(voucherCode, cartModel); //Releases the voucher from the cart
@@ -610,6 +623,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			}
 			else if (null != orderModel)
 			{
+				//For order
 				LOG.debug("Step 3:::Voucher and cart is not null");
 
 				getVoucherService().releaseVoucher(voucherCode, orderModel); //Releases the voucher from the cart
@@ -665,7 +679,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	@Override
 	public List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(final VoucherModel voucherModel,
-			final AbstractOrderModel abstractOrderModel)
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final long startTime = System.currentTimeMillis();
 		LOG.debug("Step 11:::Inside getOrderEntryModelFromVouEntries");
@@ -693,7 +707,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	@Override
 	public void setApportionedValueForVoucher(final VoucherModel voucher, final AbstractOrderModel abstractOrderModel,
 			final String voucherCode, final List<AbstractOrderEntryModel> applicableOrderEntryList)
-			throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{

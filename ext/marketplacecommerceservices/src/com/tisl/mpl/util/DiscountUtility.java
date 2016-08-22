@@ -58,6 +58,7 @@ public class DiscountUtility
 	 * @return responseData
 	 */
 	public MplPromotionData populateData(final ProductPromotionModel productPromotion, final AbstractOrderModel abstractOrderModel)
+	//Changed to abstractOrderModel for TPR-629
 	{
 		final long startTime = System.currentTimeMillis();
 		MplPromotionData promoData = new MplPromotionData();
@@ -102,7 +103,7 @@ public class DiscountUtility
 	 * @return MplPromotionData
 	 */
 	public MplPromotionData populateCartPromoData(final OrderPromotionModel orderPromotion,
-			final AbstractOrderModel abstractOrderModel)
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final long startTime = System.currentTimeMillis();
 		MplPromotionData promoData = new MplPromotionData();
@@ -253,7 +254,7 @@ public class DiscountUtility
 	 * @return responseData
 	 */
 	private MplPromotionData getCartDiscountPromoData(final OrderPromotionModel orderPromotion,
-			final AbstractOrderModel abstractOrderModel)
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData cartPromoData = new MplPromotionData();
 		final List<PromotionPriceRowModel> priceRowList = new ArrayList<PromotionPriceRowModel>();
@@ -310,7 +311,7 @@ public class DiscountUtility
 	 * @return promoData
 	 */
 	private MplPromotionData getBuyAAboveXData(final ProductPromotionModel productPromotion,
-			final AbstractOrderModel abstractOrderModel)
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 
@@ -358,7 +359,7 @@ public class DiscountUtility
 	 * @return responseData
 	 */
 	private MplPromotionData getBuyACashBackData(final ProductPromotionModel productPromotion,
-			final AbstractOrderModel abstractOrderModel)
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 
@@ -410,7 +411,7 @@ public class DiscountUtility
 	 * @return responseData
 	 */
 	private MplPromotionData getBuyAandBCashBackData(final ProductPromotionModel productPromotion,
-			final AbstractOrderModel abstractOrderModel)
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 		final List<PromotionPriceRowModel> priceRowList = new ArrayList<PromotionPriceRowModel>();
@@ -464,7 +465,7 @@ public class DiscountUtility
 	 * @param abstractOrderModel
 	 * @return responseData
 	 */
-	private MplPromotionData getBOGOData(final ProductPromotionModel productPromotion, final AbstractOrderModel abstractOrderModel)
+	private MplPromotionData getBOGOData(final ProductPromotionModel productPromotion, final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 		final CustomProductBOGOFPromotionModel bogoModel = (CustomProductBOGOFPromotionModel) productPromotion;
@@ -504,7 +505,7 @@ public class DiscountUtility
 	 * @return MplPromotionData
 	 */
 	private MplPromotionData getBuyAandBPrecentageDiscountData(final ProductPromotionModel productPromotion,
-			final AbstractOrderModel abstractOrderModel)
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 
@@ -554,7 +555,7 @@ public class DiscountUtility
 	 * @return responseData
 	 */
 	private MplPromotionData getBuyAPercentageDiscountData(final ProductPromotionModel productPromotion,
-			final AbstractOrderModel abstractOrderModel)
+			final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 
@@ -600,7 +601,7 @@ public class DiscountUtility
 	 * @param abstractOrderModel
 	 * @return discount
 	 */
-	private Double calculateDiscount(final AbstractOrderModel abstractOrderModel)
+	private Double calculateDiscount(final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		double discount = 0.0d;
 		double totalPrice = 0.0D;

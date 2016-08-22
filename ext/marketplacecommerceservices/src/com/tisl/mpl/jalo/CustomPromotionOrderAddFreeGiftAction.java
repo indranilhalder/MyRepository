@@ -97,7 +97,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 				//final Product product = getFreeProduct(ctx);
 				final Unit unit = product.getUnit(ctx);
 				//Adding free gift to order
-				final AbstractOrderEntry orderEntry = order.addNewEntry(product, freeGiftQuantity, unit, false);
+				final AbstractOrderEntry orderEntry = order.addNewEntry(product, freeGiftQuantity, unit, false); //Changed to abstractOrderEntry for TPR-629
 				if (log.isDebugEnabled())
 				{
 					log.debug("(" + getPK() + ") apply: Adding " + 1L + " free gift to Cart with " + order.getAllEntries().size()

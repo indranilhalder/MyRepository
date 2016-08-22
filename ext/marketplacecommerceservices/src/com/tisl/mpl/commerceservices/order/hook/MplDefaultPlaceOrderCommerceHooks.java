@@ -150,7 +150,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			final OrderModel orderModel = commerceOrderResult.getOrder();
 
-			//new flow - fraud will not be coming at this stage as payment is happening after cart to order conversion
+			//new flow - fraud will not be coming at this stage as payment is happening after cart to order conversion	TPR-629
 			//			if (null != orderModel && StringUtils.isNotEmpty(orderModel.getGuid())
 			//					&& !(orderModel.getPaymentInfo() instanceof CODPaymentInfoModel))
 			//			{
@@ -223,12 +223,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 
 
-	/**
-	 * This method updates Fraud Model
-	 *
-	 * @param orderModel
-	 */
-	//Commented as this is not needed as per new soln -- Order before payment
+	//	/**
+	//	 * This method updates Fraud Model
+	//	 *
+	//	 * @param orderModel
+	//	 */
+	//Commented as this is not needed as per new soln -- Order before payment	TPR-629
 	//	private void updateFraudModel(final OrderModel orderModel)
 	//	{
 	//		final ArrayList<JuspayEBSResponseModel> riskList = new ArrayList<JuspayEBSResponseModel>();
@@ -281,6 +281,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//TISUTO-128
 		setFreebieParentTransactionId(orderList);
 		setBOGOParentTransactionId(orderList);
+
+		//Commented as ordercode creation is handled earlier for TPR-629
 		//		final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
 		//				.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
 		//		//private method for seting Sub-order Total-TISEE-3986

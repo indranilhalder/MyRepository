@@ -29,7 +29,7 @@ public class CartSaveInterceptor implements PrepareInterceptor
 	public void onPrepare(final Object object, final InterceptorContext arg1) throws InterceptorException
 	{
 		LOG.debug(Localization.getLocalizedString("payment.cartsaveinterceptor.message"));
-		if (object instanceof AbstractOrderModel)
+		if (object instanceof AbstractOrderModel) //Changes made from cartModel to abstractOrderModel TPR-629
 		{
 			final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) object;
 

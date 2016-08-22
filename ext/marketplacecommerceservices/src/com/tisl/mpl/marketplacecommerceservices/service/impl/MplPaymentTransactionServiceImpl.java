@@ -53,7 +53,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 	@Override
 	public List<PaymentTransactionEntryModel> createPaymentTranEntry(final GetOrderStatusResponse getOrderStatusResponse,
 			final AbstractOrderModel cart, final Map.Entry<String, Double> entry,
-			final List<PaymentTransactionEntryModel> paymentTransactionEntryList)
+			final List<PaymentTransactionEntryModel> paymentTransactionEntryList) //Changed to abstractOrderModel for TPR-629
 	{
 
 		final PaymentTransactionEntryModel paymentTransactionEntry = getModelService().create(PaymentTransactionEntryModel.class);
@@ -298,6 +298,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 	@Override
 	public PaymentTransactionModel createPaymentTransaction(final AbstractOrderModel cart,
 			final GetOrderStatusResponse orderStatusResponse, final List<PaymentTransactionEntryModel> paymentTransactionEntryList)
+	//Changed to abstractOrderModel for TPR-629
 	{
 		final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
 		try

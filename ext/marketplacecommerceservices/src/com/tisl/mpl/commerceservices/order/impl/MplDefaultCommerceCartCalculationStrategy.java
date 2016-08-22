@@ -82,6 +82,11 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 
 
 
+	/**
+	 * This method recalculates cart or order. Changes incorporated for TPR-629
+	 *
+	 * @param parameter
+	 */
 	@Override
 	public boolean recalculateCart(final CommerceCartParameter parameter)
 	{
@@ -94,6 +99,7 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			beforeCalculate(parameter);
 			if (null != orderModel)
 			{
+				//Recalculation based on cartModel
 				resetCartModel(orderModel);
 				getCalculationService().recalculate(orderModel);
 				getPromotionsService().updatePromotions(getPromotionGroups(), orderModel, true,
@@ -103,6 +109,7 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			}
 			else
 			{
+				//Recalculation based on orderModel
 				resetCartModel(cartModel);
 				getCalculationService().recalculate(cartModel);
 				getPromotionsService().updatePromotions(getPromotionGroups(), cartModel, true,
@@ -168,7 +175,7 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	 * @param abstractOrderModel
 	 * @return AbstractOrderModel
 	 */
-	private AbstractOrderModel resetCartModel(final AbstractOrderModel abstractOrderModel)
+	private AbstractOrderModel resetCartModel(final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		final List<AbstractOrderEntryModel> cartEntryList = new ArrayList<AbstractOrderEntryModel>();
 		for (final AbstractOrderEntryModel cartEntry : abstractOrderModel.getEntries())
@@ -212,7 +219,7 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	 * @param abstractOrderModel
 	 */
 
-	private void resetNetAmtAftrAllDisc(final AbstractOrderModel abstractOrderModel)
+	private void resetNetAmtAftrAllDisc(final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		// Code Added for TISPT-148
 		final List<AbstractOrderEntryModel> cartEntryList = new ArrayList<AbstractOrderEntryModel>();

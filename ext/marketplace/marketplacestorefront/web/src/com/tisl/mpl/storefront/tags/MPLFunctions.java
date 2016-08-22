@@ -183,7 +183,7 @@ public class MPLFunctions
 
 
 	/**
-	 * Test if a order has an applied promotion for the specified entry number.
+	 * Test if a order has an applied promotion for the specified entry number. TPR-629
 	 *
 	 * @param order
 	 *           the order
@@ -198,9 +198,17 @@ public class MPLFunctions
 
 
 
+	/**
+	 * This method returns boolean if promotion existes for order entry data TPR-629
+	 *
+	 * @param productPromotions
+	 * @param entryNumber
+	 * @return static
+	 */
 	protected static boolean doesPromotionExistForOrderEntry(final List<PromotionResultData> productPromotions,
 			final int entryNumber)
 	{
+		boolean flag = false;
 		if (productPromotions != null && !productPromotions.isEmpty())
 		{
 			final Integer entryNumberToFind = Integer.valueOf(entryNumber);
@@ -216,14 +224,14 @@ public class MPLFunctions
 						{
 							if (entryNumberToFind.equals(consumedEntry.getOrderEntryNumber()))
 							{
-								return true;
+								flag = true;
 							}
 						}
 					}
 				}
 			}
 		}
-		return false;
+		return flag;
 	}
 
 }

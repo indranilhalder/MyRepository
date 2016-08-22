@@ -306,7 +306,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				setCheckoutStepLinksForModel(model, getCheckoutStep());
 				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 				model.addAttribute("checkoutPageName", checkoutPageName);
-				model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE);
+				model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
 			}
 			else
 			{
@@ -493,7 +493,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			final AccountAddressForm addressForm = new AccountAddressForm();
 			addressForm.setCountryIso(MarketplacecheckoutaddonConstants.COUNTRYISO);
 
-			model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE);
+			model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
 
 			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 			model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSES, deliveryAddress);
@@ -1193,7 +1193,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					getResourceBreadcrumbBuilder().getBreadcrumbs(
 							MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
 			model.addAttribute("metaRobots", "noindex,nofollow");
-			model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE);
+			model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
 			setCheckoutStepLinksForModel(model, getCheckoutStep());
 		}
 		catch (final CMSItemNotFoundException cmsEx)
@@ -1402,7 +1402,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.TRUE);
 			model.addAttribute(ModelAttributetConstants.EDIT, Boolean.FALSE);
 			model.addAttribute(MarketplacecheckoutaddonConstants.NOADDRESS, Boolean.TRUE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE);
+			model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
 			timeOutSet(model);
 			this.prepareDataForPage(model);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));

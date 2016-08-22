@@ -180,7 +180,7 @@
 			dynamic="true">
 			<value code="ORDER_CANCELLED" />
 			<value code="PAYMENT_SUCCESSFUL" />
-			<value code="PAYMENT_FAILED" />
+			<value code="PAYMENT_FAILED" />	<!-- TPR-629 -->
 			<value code="RMS_VERIFICATION_PENDING" />
 			<value code="RMS_VERIFICATION_FAILED" />
 			<value code="PARTIALLY_ALLOCATED" />
@@ -271,8 +271,8 @@
 			<value code="PARTIALLY_ORDER_COLLECTED" />
 			<value code="PARTIALLY_ORDER_UNCOLLECTED" />
 			<value code="PARTIALLY_RETURNINITIATED_BY_RTO" />
-			<value code="PAYMENT_PENDING" />
-			<value code="PAYMENT_TIMEOUT" />
+			<value code="PAYMENT_PENDING" />	<!-- TPR-629 -->
+			<value code="PAYMENT_TIMEOUT" />	<!-- TPR-629 -->
 		</enumtype>
 
 		<!-- pcm changes! -->
@@ -4908,7 +4908,7 @@
 					<attribute qualifier="modeOfOrderPayment" type="java.lang.String">
 						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
-					</attribute>
+					</attribute>	<!-- TPR-629 -->
 				</attributes>
 			</itemtype>
 

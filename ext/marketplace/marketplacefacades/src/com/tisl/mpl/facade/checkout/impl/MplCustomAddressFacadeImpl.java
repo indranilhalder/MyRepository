@@ -369,6 +369,12 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		return prototype.getTotalPriceWithConvCharge();
 	}
 
+
+
+	/**
+	 * Method adds convenience charge to orderModel TPR-629
+	 *
+	 */
 	@Override
 	public PriceData addConvCharge(final OrderModel source, final OrderData prototype)
 	{
@@ -376,6 +382,11 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		return prototype.getConvenienceChargeForCOD();
 	}
 
+
+	/**
+	 * Method sets total with conv charge for orderModel TPR-629
+	 *
+	 */
 	@Override
 	public PriceData setTotalWithConvCharge(final OrderModel source, final OrderData prototype)
 	{
@@ -388,7 +399,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.checkout.MplCustomAddressFacade#populateDeliveryMethodData(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -479,9 +490,9 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * Set delivery mode using USSID
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param sellerArticleSKUID
 	 */
 	@Override

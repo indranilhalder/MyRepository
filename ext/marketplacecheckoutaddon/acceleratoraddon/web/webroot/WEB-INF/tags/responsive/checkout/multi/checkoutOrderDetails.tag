@@ -4,7 +4,7 @@
 <%@ attribute name="showPaymentInfo" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showTax" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showTaxEstimate" required="false" type="java.lang.Boolean" %>
-<%@ attribute name="isCart" required="false" type="java.lang.Boolean" %>
+<%@ attribute name="isCart" required="false" type="java.lang.Boolean" %>		<!-- TPR-629 -->
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template" %>
@@ -16,10 +16,10 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 <%@ taglib prefix="multi-checkout" tagdir="/WEB-INF/tags/addons/marketplacecheckoutaddon/responsive/checkout/multi" %>
 <%@ attribute name="cartData" required="false" type="de.hybris.platform.commercefacades.order.data.CartData" %>
-<%@ attribute name="orderData" required="false" type="de.hybris.platform.commercefacades.order.data.OrderData" %>
+<%@ attribute name="orderData" required="false" type="de.hybris.platform.commercefacades.order.data.OrderData" %>	<!-- TPR-629 -->
 
 
-
+<!-- TPR-629 orderData added to tag parameters -->
 <div class="right-block billing">
 	<div class="checkout-order-summary">
 		<%-- <div class="headline"><spring:theme code="checkout.multi.order.summary" text="Order Summary" /></div> --%>
