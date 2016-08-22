@@ -43,7 +43,7 @@ public class NewCustomSearchProductImageValueProvider
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-	private static final Logger LOG = Logger.getLogger(NewCustomSearchImageValueProvider.class);
+	private static final Logger LOG = Logger.getLogger(NewCustomSearchProductImageValueProvider.class);
 
 
 	private String mediaFormat;
@@ -133,18 +133,28 @@ public class NewCustomSearchProductImageValueProvider
 	@SuppressWarnings("deprecation")
 	protected MediaModel findMedia(final ProductModel product, final MediaFormatModel mediaFormat)
 	{
+
 		if ((product != null) && (mediaFormat != null))
 		{//TPR-796
 			final List<MediaContainerModel> galleryImages = product.getGalleryImages();
-
-			if ((galleryImages != null) && (!(galleryImages.isEmpty())))
+			List<MediaContainerModel> finalImg = null;
+			try
 			{
-				//final MediaContainerModel firstMediaContainerModel = galleryImages.get(0);
-
-				try
+				if ((galleryImages != null) && (!(galleryImages.isEmpty())))
 				{
+					//final MediaContainerModel firstMediaContainerModel = galleryImages.get(0);
+					final int imgeSize = galleryImages.size();
+					for (int counter = 0; counter < imgeSize; counter++)
+					{
+
+						final MediaModel image = getMediaContainerService().getMediaForFormat(galleryImages.get(counter), mediaFormat);
+						if (image != null)
+						{
+							finalImg = (List<MediaContainerModel>) image;
+						}
+					}
 					MediaModel media = null;
-					media = mplMediService.getMediaForIndexing(product, mediaFormat, galleryImages);
+					media = mplMediService.getMediaForIndexing(product, mediaFormat, finalImg);
 					if (media.getUrl() != null && media.getUrl().length() > 0)
 					{
 						LOG.debug("Domain sharding started for product code--> " + product.getCode().toString());
@@ -193,34 +203,34 @@ public class NewCustomSearchProductImageValueProvider
 					return media;
 				}
 
+			}
 
+			catch (final ModelNotFoundException localModelNotFoundException)
+			{
 
-				catch (final ModelNotFoundException localModelNotFoundException)
-				{
+				LOG.debug("Error finding Media for the Product" + localModelNotFoundException);
+				return null;
+			}
+			catch (final Exception e)
+			{
 
-					LOG.debug("Error finding Media for the Product" + localModelNotFoundException);
-					return null;
-				}
-				catch (final Exception e)
-				{
-
-					LOG.debug("Exception in finding Media" + e);
-					return null;
-				}
-
-				/*
-				 * final MediaModel firstMedia = getMediaContainerService().getMediaForFormat(firstMediaContainerModel,
-				 * mediaFormat); if (firstMedia != null) {
-				 *
-				 * return firstMedia; }
-				 */
+				LOG.debug("Exception in finding Media" + e);
+				return null;
 			}
 
 			/*
-			 * if (product instanceof PcmProductVariantModel) { return findMedia(((PcmProductVariantModel)
-			 * product).getBaseProduct(), mediaFormat); }
+			 * final MediaModel firstMedia = getMediaContainerService().getMediaForFormat(firstMediaContainerModel,
+			 * mediaFormat); if (firstMedia != null) {
+			 *
+			 * return firstMedia; }
 			 */
 		}
+
+		/*
+		 * if (product instanceof PcmProductVariantModel) { return findMedia(((PcmProductVariantModel)
+		 * product).getBaseProduct(), mediaFormat); }
+		 */
+
 		return null;
 	}
 
