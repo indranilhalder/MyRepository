@@ -467,6 +467,7 @@ ACC.carousel = {
     			}			
     		}	
 		});
+		$(".product-image-container.device .owl-stage-outer").prepend($(".product-image-container.device .wishlist-icon"))
 	}
 	
 	/*New Homepage change*/

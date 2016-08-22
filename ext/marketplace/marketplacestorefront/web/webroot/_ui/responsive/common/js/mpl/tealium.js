@@ -90,6 +90,8 @@ $(document).ready(
 								+ $("#product_id").val() + '"],';
 						tealiumData += '"page_subcategory_name":"'
 								+ $("#page_subcategory_name").val() + '",';
+						tealiumData += '"page_subcategory_name_L3":"'
+							+ $("#page_subcategory_name_L3").val() + '",';
 						tealiumData += '"product_brand":["'
 								+ $("#product_brand").val() + '"],';
 						tealiumData += '"site_section_detail":"'

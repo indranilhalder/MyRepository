@@ -2020,6 +2020,15 @@
 							unique="false" />
 						<persistence type="property"></persistence>
 					</attribute>
+					
+					<!-- TPR-627 -->
+					<attribute type="java.lang.Boolean" qualifier="isSshipCodEligble">
+						<description>COD Eligible for SSHIP PRODUCTS</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property"></persistence>
+					</attribute>
+					<!-- TPR-627 -->
 				</attributes>
 			</itemtype>
 

@@ -8665,7 +8665,8 @@ footer .banner {
   border: 1px solid #DFD1D5;
   margin-top: 0;
   float: left;
-  width: 100%; }
+  width: 100%;
+      position: relative; }
   .sign-in.tab-view .tabs::after {
     clear: both;
     content: "";
@@ -8675,7 +8676,7 @@ footer .banner {
     padding: 20px 20px 20px 20px;
     padding-bottom: 0;
     display: none;
-    position: relative; }
+   /*  position: relative; */ }
     .sign-in.tab-view .tabs > li.active {
       display: inline-block; }
     @media (min-width: 791px) {
@@ -8695,11 +8696,11 @@ footer .banner {
         .sign-in.tab-view .tabs > li .left p {
           line-height: 1.5;
           margin-bottom: 0; } }
-    .sign-in.tab-view .tabs > li .left form label {
+    /* .sign-in.tab-view .tabs > li .left form label {
       display: block;
       padding: 10px 0;
       font-size: 12px;
-      font-weight: normal; }
+      font-weight: normal; } */
       .sign-in.tab-view .tabs > li .left p{
       font-size:14px;
        font-weight: 500;}
@@ -8707,9 +8708,8 @@ footer .banner {
         .sign-in.tab-view .tabs > li .left form label {
           letter-spacing: 1.2px; } }
           .sign-in.tab-view .tabs > li .left form div#checkBox label,.sign-in.tab-view .tabs > li .left form div#checkBox label a{
-          	font-size: 11px;
+          	font-size: 14px;
 		    font-weight: 500;
-		    text-align: justify;
 		    letter-spacing: normal;
 		    text-transform: none;
 		    display: inline;
@@ -8766,10 +8766,10 @@ footer .banner {
       letter-spacing: 1.2px;
       text-decoration: underline;
       color: #A9143C; }
-      .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
+/*       .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
       padding: 20px 0 10px 0;
       text-align: center;
-      }
+      } */
       .sign-in.tab-view .tabs > li .left form .forgotten-password{
       text-align: center;
       padding:10px 0;
@@ -18325,7 +18325,7 @@ font-weight: 600;
 .appliedFacets{
 	padding-bottom:10px;
 }	
-.stockLevelStatus{
+.stockLevelStatus,.stockLevelStatusinStock {
   top: 40%;
     left: 0;
     right:0;
@@ -18341,7 +18341,7 @@ font-weight: 600;
     max-width: 105px;
     width: 100%;
 }
-.stockLevelStatus:hover{
+.stockLevelStatus:hover,.stockLevelStatusinStock:hover{
     color: #ff1c47;
 }
 .out-of-stock-product{
@@ -23834,9 +23834,6 @@ h5.questions a:hover {
     color: initial;
 }
 }
-
-#checkBox label:before{
-	top:-1px;}
 	
 	ul.wish-share {
 		margin-top:20px;
@@ -27119,6 +27116,15 @@ content: "";
     color: #000;
     max-width: 100%;
 } 
+
+.listing-leftmenu > li.facet.stockLevelStatusinStock{
+	font-weight: normal;
+    position: static;
+    border: none;
+    color: #000;
+    max-width: 100%;
+} 
+
 .offer-tooltip-wrapper span.offer-popover{
 	width:120%;
 }
@@ -30236,10 +30242,10 @@ body.page-checkout-login .top.checkout-top{
 line-height: normal;
     color: #ff1c47;
 }
-.addToCartTitle{
+/* .addToCartTitle{
 	margin-top: 15px;
 }
-  .compare label{
+ */  .compare label{
  float:left;
  padding-left: 0px !important;
  margin-top:-3px;
@@ -33727,6 +33733,8 @@ background: rgba(0, 0, 0, 0) url("../images/sprite.png") no-repeat scroll -43px 
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li.qty select{
 	background-image: url('../images/select-arrow.png');
+	padding-right: 20px;
+    background-position-x: 85%;
 }
 @media(max-width:790px) and (min-width:768px){
 	body.page-cartPage header > .content{
@@ -33776,7 +33784,7 @@ margin-bottom:52px;
 }
 .pdp-promo-block.promo-block>div{
 	width:100%;
-	text-align:center;
+/* 	text-align:center; */
 }
 
 .showAZBrandsImportant{
@@ -39444,7 +39452,7 @@ color:#fff; }
   color:#fff;}
 /*mini transient bag css changes starts*/
 header .content .right>ul>li.transient-mini-bag {
-	z-index: 500;
+	z-index: 10000;
 }
 header .content .right>ul>li.transient-mini-bag .mini-transient-bag {
 	position: absolute;
@@ -39677,7 +39685,7 @@ color:#777; }
 
 /*tata rewards css starts*/
 
- .sign-in.tab-view .tabs > li .left form div#checkBox label a.tata-rewards{
+ /* .sign-in.tab-view .tabs > li .left form div#checkBox label a.tata-rewards{
 		        border-bottom: 1px dashed #a9143c;
     			padding: 0;
     			display: inline-block;
@@ -39752,7 +39760,7 @@ color:#777; }
 #checkBox .popover.top{
         width: 300px !important;
 }
-}
+} */
 .exist-account{
 padding: 20px;
 margin-bottom: 10px;
@@ -39777,7 +39785,7 @@ display:inline;}
     left: 66px !important;
 }
 } */
-@media(max-width:790px) and (min-width:651px){
+/* @media(max-width:790px) and (min-width:651px){
 	#checkBox .popover.top{
     left: 174px !important;
 }
@@ -39812,7 +39820,7 @@ display:inline;}
     right: 100px !important;
 }
 
-}
+} */
 .error-message.payment-notification{
 	color: #60A119;
 }
@@ -42681,6 +42689,7 @@ margin-left: 20%;
 	display: block;
 	padding: 9px;
 	text-align: center;
+	text-transform: uppercase;
 }
 
 .product-info .size ul#variant li:last-child {
@@ -42753,6 +42762,7 @@ margin-left: 20%;
 .product-info .product-detail .Cta {
 	margin: 30px 0 0;
 	display: flex;
+	align-items: flex-end;
 }
 
 .product-info .product-detail .Cta #buyNow, .product-info .product-detail .Cta .addtocart-component
@@ -43405,9 +43415,6 @@ margin-left: 20%;
 	.TabWrap .tabs-block .nav-wrapper {
 		width: 90%;
 	}
-	.product-info>div.tabs-block {
-		width: 94%;
-	}
 	.product-info .SoldWrap>div.fullfilled-by {
 		padding-right: 0;
 	}
@@ -43416,6 +43423,11 @@ margin-left: 20%;
 	}
 }
 
+@media(min-width:791px) and (max-width:1300px) {
+	.product-info>div.tabs-block {
+			width: 94%;
+	}
+}
 /*Tablet Portrait: 
 ---------------------------------------------*/
 @media ( max-width :1024px) {
@@ -43946,13 +43958,14 @@ margin-left: 20%;
     width: 200%;
     left: -100%;
     text-align: center;
+    padding-bottom: 10px;
 }
 .product-info .product-detail .Cta .addtocart-component span {
 	position: relative;
     width: 200%;
     left: -100%;
     text-align: center;
-    top: 10px;
+    padding-bottom: 10px;
     display: block;
 }
 .product-info .product-detail .Cta .addtocart-component span#outOfStockId {
@@ -43961,6 +43974,7 @@ margin-left: 20%;
 .product-info .product-detail .Cta .addtocart-component #addToCartButtonId {
 	width: 100%;
 	position: static;
+	padding: 0;
 }
 /*mobile share*/
 .product-info .product-detail .wish-share>li .share>ul li {
@@ -44019,6 +44033,12 @@ body.page-productDetails .breadcrumbs.wrapper {
  @media (max-width: 767px) {
  	.zoomContainer {
  		display: none;
+ 	}
+ 	.product-info .product-detail .Cta .addtocart-component span,.product-info .product-detail .Cta .addtocart-component #addToCartFormTitle {
+ 		padding-top: 10px;
+ 	}
+ 	.product-info .product-detail .Cta .addtocart-component #addToCartButtonId {
+ 		padding: 0;
  	}
  }
   @media (min-width: 1025px) {
@@ -44104,7 +44124,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	position: absolute;
 	left: -10px;
 	top: 38px;
-	max-width: 575px;
+	width: 575px;
 	background: #fff;
 	z-index: 10;
 	text-align: center;
@@ -44161,6 +44181,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	position: fixed;
     width: 90%;
     left: 5%;
+    top: 50px;
      z-index: 100001;
 }
 
@@ -44380,8 +44401,8 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 
 .product-image-container.device a.wishlist-icon {
     position: absolute;
-    right: 10px;
-    top: 5px;
+    right: 15px;
+    top: 15px;
     z-index: 4;
  }
 /*wishlist icon end*/
@@ -44551,21 +44572,26 @@ padding:0 40px;	}
 .product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAlreadyAdded {
 	display: inline-block;
     position: fixed;
-    z-index: -1;
+   	z-index: 100000;
     left: 0;
     right: 0;
-	top: 50px;
+	top: -100px;
     margin: auto;
     max-width: 300px;
     text-align: center;
     opacity: 0;
-	transition: opacity 0.1s, top 0.35s;
 	font-size: 14px;
 	padding:12px 10px;
-	    color: #212121;
+	color: #212121;
     background: #f3f3f3;
     box-shadow: 0 1px 6px 0 rgba(0,0,0,.1);
-    border: 1px solid rgba(0,0,0,.1);
+  	border: 1px solid rgba(0,0,0,.1);
+  	transition: opacity 0.25s, top 0.45s;
+}
+
+.product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active, .product-info>div.wishAlreadyAdded.active{
+	opacity: 1;
+	top: 90px;
 }
 /* @media (max-width:767px){
 	.product-info>div.wishAddSucess,.product-info>div.wishAddLogin{
@@ -44624,12 +44650,6 @@ padding:0 40px;	}
     border-color: #ccc;
 }
 
-.product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active, .product-info>div.wishAlreadyAdded.active{
-	z-index: 100000;
-	opacity: 1;
-	top: 90px;
-}
-
 /*TPR-873 ends*/
 
 /*style guide*/
@@ -44661,6 +44681,7 @@ padding:0 40px;	}
 	display: block;
 	padding: 9px;
 	text-align: center;
+	text-transform: uppercase;
 	cursor: pointer;
 }
 
@@ -44947,7 +44968,7 @@ padding:0 40px;	}
 }
 @media(max-width:1024px){
 .product-info .picZoomer-pic-wp .zoom a:before, .product-image-container.device a.wishlist-icon:before {
-    margin-right: 50px;
+/*     margin-right: 30px; */
 }
 .product-image-container.device .owl-carousel .owl-item img{
 padding:0;
@@ -44987,11 +45008,207 @@ padding:0;
 	content: "";
 	display: block;
 	clear: both;
-<<<<<<< HEAD
-}
-=======
 }
 #mplAdvancedCategoryCarousel.owl-carousel .owl-stage-outer {
 	z-index: 2;
 }
->>>>>>> stash
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul {
+	padding-left: 15px;
+}
+
+/*Login Start*/
+.sign-in.wrapper{
+	    margin-left: 24px;
+    margin-right: 24px;
+    padding:0px;
+}
+.sign-in.tab-view .form-group{
+	    margin-top: -12px;}
+.sign-in.tab-view .tabs > li .left form input {
+    color: #a5a5a5;
+    font-size: 14px;
+    height: 46px;
+    margin-bottom: 20px;
+    width: 100%;
+    padding: 17px 18px;
+    letter-spacing: 1px;
+}
+.sign-in.tab-view .tabs > li .left p{
+	       padding: 5px 0 22px 2px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.sign-in.tab-view .tabs > li .left p.sign-in-welcomeMessage{
+    color: #a9143c;
+}
+.sign-in.tab-view .tabs > li .left form input#j_password_login{
+	margin-bottom: 8px;
+}
+.sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
+	padding:0px;
+}
+ .sign-in.tab-view .tabs > li .left form button {
+      width: 198px;
+      height: 45px;
+      line-height:45px;
+      padding: 0;
+      border:none;
+      background-color: #A9143C;
+      color: #fff;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: normal;
+      letter-spacing: 1px;
+      margin-top: 20px;
+      margin-bottom:19px; }
+            .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
+      text-align:left;
+          font-size: 14px;
+    border-bottom: 1px solid #eaeaeb;
+    padding: 0px 0px 21px;
+    letter-spacing: 1px;}
+    .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+    padding-top:28px;}
+        .sign-in.tab-view .tabs > li .left form div#checkBox label{
+    color: #7a7a7a;
+    float: left;
+    width: 80%;
+    line-height: 20px;
+        font-size: 14px;
+}
+        .sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+    height: 25px !important;
+    margin: 0;
+    width: 25px !important;
+    position: relative;
+    float: left;
+    border: 1px solid #fff !important;
+    box-shadow: 0 0 0 1px #666;
+    padding-left: 2px;
+    padding-top: 2px;
+    margin-right: 10px;
+    }
+    .sign-in.tab-view .tabs > li .left form div#checkBox input[type="checkbox"]:checked + label:before{
+        content: "";
+    font-size: 20px;
+    background: rgba(0, 0, 0, 0) url("../images/sprite.svg") no-repeat scroll -251px -1px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;}
+    .sign-in.tab-view .tabs > li .left form#extRegisterForm button{
+       margin: 35px 0 10px; }
+   .sign-in.tab-view .tabs > li .left form label.accept-cond {
+    clear: left;
+    display: block;
+    font-size: 14px;
+    color: #7a7a7a;
+    letter-spacing: 0;
+}
+.sign-in.tab-view .tabs > li .left form a.spec-notes {
+    color: #a7183e;
+    display: inline-block;
+    width:auto;
+    font-size:14px;
+}
+          .sign-in.tab-view .tabs > li .left form button:hover {		
+        background-color: #fff;
+    border: 1px solid #a9143c;
+    color: #a9143c;	
+}
+.vr-line {
+    background: #eaeaeb;
+    width: 1px;
+    height: 110px;
+    display: inline-block;
+}
+.or-rounded {
+    display: inline-block;
+    top: 158px;
+    float: left;
+    border: 1px solid #eaeaeb;
+    padding: 7px 9px 10px;
+    position: absolute;
+    left: 44.4%;
+    color: #7f7f7f;
+    font-size: 14px;
+    border-radius: 24px;
+    margin-left: 1px;
+    background: #ffffff;
+    letter-spacing: 1;
+}
+.vrt-line {
+    margin-top: 55px;
+    background: #eaeaeb;
+    width: 1px;
+    height: 110px;
+    display: inline-block;
+}
+@media (min-width: 980px){
+	.sign-in.tab-view{
+	margin:0px;}
+.sign-in.tab-view .nav{
+	display:none;
+}
+.sign-in.tab-view .tabs{
+	border:none;
+}
+.sign-in.wrapper .sign-in.tab-view {
+    width: 100%;
+}
+.sign-in.tab-view .tabs > li{
+	float:left;
+	padding:0px;
+	margin-top: 36px;
+}
+.sign-in.tab-view .tabs > li .left{
+	width:100%;
+}
+.sign-in.tab-view .tabs > li#sign_in_content{
+	padding-right: 116px;
+		width:45.8%;
+}
+.sign-in.tab-view .tabs > li#sign_up_content{
+	padding-left: 113px;
+    width: 47.6%;
+}
+.sign-in.tab-view .tabs > li.or{
+	    width: 1px;
+    min-height: 280px;
+    display: inline-block;
+    float: left;
+}
+
+      .sign-in.tab-view .tabs > li .left form a{
+      text-align: left;}
+
+    .sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
+        text-decoration: underline;
+    text-transform: capitalize;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight:normal;}
+    .sign-in.tab-view .tabs > li .left form a#newToTata{
+    font-size: 14px;
+    text-decoration: underline;  }
+
+
+}
+@media (max-width: 980px){
+
+.sign-in.tab-view .tabs, .sign-in.tab-view .nav{
+	border: 1px solid #cccccc;
+}
+.sign-in.tab-view .nav li{
+	    width: 25.3%;
+    padding: 18px 15px;
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    background-color: #b2b2b2;
+    color:#fff;
+}
+}
+
+
+/*Login End*/

@@ -1851,6 +1851,12 @@ $(document).ready(function(){
            	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html('0');
            }
            
+           if($("#pageType").val() == 'cart'){
+         		
+      			$('#mybagcnt').html(data.cartcount);
+             		
+             	}
+           
            if (!headerLoggedinStatus) {
 
                $("a.headeruserdetails").html("Sign In");
