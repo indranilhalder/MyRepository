@@ -216,8 +216,8 @@
 					slotId="perspectives" template="true">
 				</widget>
 				<!-- Tship Delivery tat @prabhakar.s@techouts -->
-				<widget widgetDefinitionId="com.techouts.widgets.tshipdeliverytatwidget"
-					id="tshipdeliverytat" slotId="perspectives" template="true"></widget>
+				<!-- <widget widgetDefinitionId="com.techouts.widgets.tshipdeliverytatwidget"
+					id="tshipdeliverytat" slotId="perspectives" template="true"></widget> -->
 
 				<!-- awb edit -->
 				<widget id="awbedit" widgetDefinitionId="com.hybris.oms.widgets.awbwidget"
