@@ -33,7 +33,7 @@ import com.hybris.oms.domain.buc.report.SellerAndLogisticsPerfRpt.dto.SellerAndL
 
 /**
  * @author Pradeep
- * 
+ *
  */
 public class PincodeLogisticsListController extends DefaultWidgetController
 {
@@ -46,6 +46,7 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 	private String startDate;
 	private String endDate;
+	private static final String SHIPMENTTYPE = "ALL";
 
 	private static final Logger LOG = LoggerFactory.getLogger(PincodeLogisticsListController.class);
 
@@ -58,7 +59,8 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 		startDate = dateFormat.format(cal.getTime());
 		endDate = dateFormat.format(new Date());
 		LOG.info("Start Date " + startDate + "******* End Date " + endDate);
-		sellerLogisticsRptList = (List<SellerAndLogisticsPerfRpt>) sellerAndLogisticsFacade.getOrderLinesByDate(startDate, endDate);
+		sellerLogisticsRptList = (List<SellerAndLogisticsPerfRpt>) sellerAndLogisticsFacade.getOrderLinesByDate(startDate, endDate,
+				SHIPMENTTYPE);
 		sellerLogisticsRptList.sort(PincodeLogisticsListController.pincodeLogisticsListComparator);
 		listview.setModel(new ListModelList(sellerLogisticsRptList));
 		listview.setItemRenderer(new PincodeLogisticsListRenderer());
@@ -66,9 +68,9 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 	}
 
 	/**
-	 * 
+	 *
 	 * @param startendTime
-	 * 
+	 *
 	 */
 	@SocketEvent(socketId = "startendDates")
 	public void editListView(final String startendDates)
@@ -78,7 +80,8 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 		startDate = startEndArray[0];
 		endDate = startEndArray[1];
 		LOG.info("Start Date " + startDate + "******* End Date " + endDate);
-		sellerLogisticsRptList = (List<SellerAndLogisticsPerfRpt>) sellerAndLogisticsFacade.getOrderLinesByDate(startDate, endDate);
+		sellerLogisticsRptList = (List<SellerAndLogisticsPerfRpt>) sellerAndLogisticsFacade.getOrderLinesByDate(startDate, endDate,
+				SHIPMENTTYPE);
 		sellerLogisticsRptList.sort(PincodeLogisticsListController.pincodeLogisticsListComparator);
 		listview.setModel(new ListModelList(sellerLogisticsRptList));
 		listview.setItemRenderer(new PincodeLogisticsListRenderer());
@@ -87,7 +90,7 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 
 	/**
 	 * export csv file from listview
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 
@@ -103,7 +106,7 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 
 	/**
 	 * This function used to export listbox to csv from listbox
-	 * 
+	 *
 	 * @param listbox
 	 * @throws InterruptedException
 	 */
