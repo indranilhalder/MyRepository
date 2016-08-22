@@ -2382,7 +2382,8 @@ public class CartsController extends BaseCommerceController
 					{
 						//gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + postalCode);
-						final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(cartDataOrdered, postalCode);
+						final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(cartDataOrdered, cartModel,
+								postalCode);
 						deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
 						LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
 					}
@@ -2627,7 +2628,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2912,14 +2913,17 @@ public class CartsController extends BaseCommerceController
 	 */
 	@RequestMapping(value = "/{cartId}/checkPinCodeAtCart", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public MplCartPinCodeResponseWsDTO checkPinCodeAtCart(@RequestParam final String pincode)
+	public MplCartPinCodeResponseWsDTO checkPinCodeAtCart(@PathVariable final String cartId, @RequestParam final String pincode)
 	{
 		final MplCartPinCodeResponseWsDTO response = new MplCartPinCodeResponseWsDTO();
 		List<PinCodeResponseData> pinCodeResponse = null;
+		CartModel cart = null;
 		try
 		{
 			LOG.debug(String.format("Checking servicibility for the pincode %s", pincode));
-			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrdering(true), pincode);
+			cart = mplPaymentWebFacade.findCartValues(cartId);
+			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrdering(true), cart,
+					pincode);
 			if (null != pinCodeResponse)
 			{
 				response.setPinCodeResponseList(pinCodeResponse);

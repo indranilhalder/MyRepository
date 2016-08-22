@@ -247,21 +247,19 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 *
-	 *
+	 * 
 	 * @param pincodeResponseData
-	 *
-	 *
+	 * 
 	 * @param deliveryModeMap
-	 *
-	 *
+	 * 
+	 * @param cartModel
+	 * 
 	 * @return boolean
-	 *
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean addCartCodEligible(Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
-			List<PinCodeResponseData> pincodeResponseData) throws EtailNonBusinessExceptions;
+	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
+			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc checking max added quantity with store configuration

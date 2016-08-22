@@ -1777,14 +1777,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			/**** Pincode check Details ***/
 			try
 			{
-				if (null != pincode && !pincode.isEmpty())
+				if (StringUtils.isNotEmpty(pincode))
 				{
 					//gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
 					if (LOG.isDebugEnabled())
 					{
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
 					}
-					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, pincode);
+					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
 					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
 				}
 			}
@@ -1798,7 +1798,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 
 			/* Product Details */
-			if (null != pincode && !pincode.isEmpty())
+			if (StringUtils.isNotEmpty(pincode))
 			{
 				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false);
 			}
@@ -1915,7 +1915,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
 					}
 
-					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, pincode);
+					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
 					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
 				}
 			}
@@ -2030,7 +2030,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 * @return List<PinCodeResponseData>
 	 */
 	@Override
-	public List<PinCodeResponseData> checkPinCodeAtCart(final CartData cartData, final String pincode)
+	public List<PinCodeResponseData> checkPinCodeAtCart(final CartData cartData, final CartModel cartModel, final String pincode)
 			throws EtailNonBusinessExceptions
 	{
 
@@ -2079,7 +2079,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//TISEE-957 isCodEligible flag update
 			if (null != responseData)
 			{
-				final boolean isCOdEligible = mplCartFacade.addCartCodEligible(deliveryModeDataMap, responseData);
+				final boolean isCOdEligible = mplCartFacade.addCartCodEligible(deliveryModeDataMap, responseData, cartModel);
 				LOG.info("isCOdEligible " + isCOdEligible);
 			}
 		}
@@ -2170,7 +2170,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				if (null != pincode && !pincode.isEmpty())
 				{
-					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, pincode);
+					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
 					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
 				}
 			}

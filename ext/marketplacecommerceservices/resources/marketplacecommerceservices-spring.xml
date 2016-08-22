@@ -806,12 +806,6 @@
 	</bean>
 	<bean id="merchantMasterXMLUtility" class="com.tisl.mpl.integration.job.MerchantMasterXMLUtility" />
 
-	<alias name="defaultCommerceSearchTextPopulator" alias="commerceSearchTextPopulator" />
-	<bean id="defaultCommerceSearchTextPopulator"
-		class="com.tisl.mpl.search.converters.populator.MplSolrTextPopulator">
-		<property name="solrFieldNameProvider" ref="solrFieldNameProvider" />
-	</bean>
-
 	<alias alias="cmsPageService" name="mplCMSPageService" />
 	<bean id="mplCMSPageService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl"

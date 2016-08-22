@@ -2282,7 +2282,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		try
 		{
 			final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
-			if (requestType != null && !cartSoftReservationDatalist.isEmpty() && pincode != null)
+			if (StringUtils.isNotEmpty(requestType) && CollectionUtils.isNotEmpty(cartSoftReservationDatalist)
+					&& StringUtils.isNotEmpty(pincode))
 			{
 				try
 				{
@@ -2988,13 +2989,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 	@Override
 	public boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
-			final List<PinCodeResponseData> pincodeResponseData) throws EtailNonBusinessExceptions
+			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions
 	{
 
 		boolean codEligible = true;
 		ServicesUtil.validateParameterNotNull(deliveryModeMap, "deliveryModeMap cannot be null");
 		ServicesUtil.validateParameterNotNull(pincodeResponseData, "pincodeResponseData cannot be null");
-		final CartModel cartModel = getCartService().getSessionCart();
+		if (cartModel == null)
+		{
+			cartModel = getCartService().getSessionCart();
+		}
 
 		// Check pincode response , if any of the item is not cod eligible , cart will not be cod eligible
 
