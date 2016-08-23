@@ -288,3 +288,7 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 
 <!--Track order PopUp and Detail page   -->
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.trackorder.js"></script>
+
+<!--Returns Page   -->
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/acc.returns.js"></script>
