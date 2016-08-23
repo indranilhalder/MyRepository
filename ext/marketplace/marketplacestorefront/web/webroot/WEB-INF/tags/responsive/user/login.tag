@@ -131,7 +131,7 @@
 
 	</form:form>
 	<!-- For  Gigya and API Social Login -->
-
+<div class="else-sec"><span class="else-brdrtp"></span><span class="else">or </span> <span class="else-brdrbtm"></span></div>
 <c:choose> 
   <c:when test="${isGigyaEnabled=='Y'}">
    <ul class="social-connect" id="gSignInWrapper">

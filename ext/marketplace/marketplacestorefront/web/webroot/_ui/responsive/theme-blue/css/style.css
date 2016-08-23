@@ -8601,14 +8601,14 @@ footer .banner {
   clear: both;
   content: "";
   display: table; }
-@media (min-width: 791px) {
+/* @media (min-width: 791px) {
   .sign-in.tab-view {
     margin-top: 20px;
     width: 80%;
     margin: 30px auto; } 
     .checkout-indent .sign-in.tab-view{
     margin-bottom:0px;
-    padding-bottom:70px;}}
+    padding-bottom:70px;}} */
 .sign-in.tab-view .nav {
   border: 1px solid #DFD1D5;
   width: 100%;
@@ -8639,10 +8639,10 @@ footer .banner {
     .sign-in.tab-view .nav li:after {
       position: absolute;
       content: '';
-      bottom: -2px;
+      bottom: -4px;
       left: 0;
       width: 100%;
-      height: 2px;
+      height: 5px;
       background-color: #fff;
       z-index: 1;
       opacity: 0;
@@ -8747,7 +8747,7 @@ footer .banner {
       font-size: 12px;
       font-weight: normal;
       letter-spacing: 1.2px;
-      margin: 10px auto; }
+      /* margin: 10px auto; */ }
       @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .left form button {
           width: 100%;
@@ -8755,17 +8755,7 @@ footer .banner {
           .sign-in.tab-view .tabs > li .left form button:hover {		
     background: #88102C;	
 }
-    .sign-in.tab-view .tabs > li .left form a {
-      display: block;
-      width: 100%;
-      text-align: center;
-      text-transform: uppercase;
-      padding: 10px 0;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      text-decoration: underline;
-      color: #A9143C; }
+  
 /*       .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
       padding: 20px 0 10px 0;
       text-align: center;
@@ -8815,7 +8805,7 @@ footer .banner {
       padding-right: 0;
       padding-top: 110px;
       background: transparent; }
-      @media (min-width: 791px) {
+      @media (min-width: 768px) {
         .sign-in.tab-view .tabs > li .register-section .social-connect {
           width: 40%;
           float: right;
@@ -8890,9 +8880,9 @@ footer .banner {
   width: 100%;
   display: inline-block;
   float: left; }
-  @media (min-width: 791px) {
+/*   @media (min-width: 791px) {
     .sign-in.wrapper .sign-in.tab-view {
-      width: 60%; } }
+      width: 60%; } } */
 .sign-in.wrapper .benefits {
   width: 100%;
   display: inline-block;
@@ -45022,9 +45012,10 @@ padding:0;
 
 /*Login Start*/
 .sign-in.wrapper{
-	    margin-left: 24px;
+	margin-left: 24px;
     margin-right: 24px;
     padding:0px;
+        width: auto;
 }
 .sign-in.tab-view .form-group{
 	    margin-top: -12px;}
@@ -45042,6 +45033,7 @@ padding:0;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-bottom:0px;
 }
 .sign-in.tab-view .tabs > li .left p.sign-in-welcomeMessage{
     color: #a9143c;
@@ -45049,8 +45041,13 @@ padding:0;
 .sign-in.tab-view .tabs > li .left form input#j_password_login{
 	margin-bottom: 8px;
 }
-.sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
+.sign-in.tab-view .tabs > li .left form a{
 	padding:0px;
+	display: block;
+      letter-spacing: 1px;
+      text-decoration: underline;
+      color: #A9143C;
+      font-size:14px;
 }
  .sign-in.tab-view .tabs > li .left form button {
       width: 198px;
@@ -45072,6 +45069,11 @@ padding:0;
     border-bottom: 1px solid #eaeaeb;
     padding: 0px 0px 21px;
     letter-spacing: 1px;}
+        .sign-in.tab-view .tabs > li .left form a#newToTata{
+    font-size: 14px;
+    text-decoration: underline;
+     font-weight: 500;
+    letter-spacing: 1px;  }
     .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
     padding-top:28px;}
         .sign-in.tab-view .tabs > li .left form div#checkBox label{
@@ -45092,6 +45094,7 @@ padding:0;
     padding-left: 2px;
     padding-top: 2px;
     margin-right: 10px;
+        margin-bottom: 1px;
     }
     .sign-in.tab-view .tabs > li .left form div#checkBox input[type="checkbox"]:checked + label:before{
         content: "";
@@ -45148,7 +45151,19 @@ padding:0;
     height: 110px;
     display: inline-block;
 }
-@media (min-width: 980px){
+.sign-in.tab-view .tabs > li .left form#extRegisterForm {
+        padding-bottom: 19px;
+        
+}
+.else-sec, .sign-in.tab-view .tabs > li#sign_up_content .else-sec{
+display:none;	
+}
+.sign-in.tab-view .nav{
+	width:50.6%;
+}
+.sign-in.tab-view .tabs > li#sign_up_content .social-connect{
+	display:none;}
+@media (min-width: 981px){
 	.sign-in.tab-view{
 	margin:0px;}
 .sign-in.tab-view .nav{
@@ -45192,13 +45207,16 @@ padding:0;
     font-size: 14px;
     letter-spacing: 1px;
     font-weight:normal;}
-    .sign-in.tab-view .tabs > li .left form a#newToTata{
-    font-size: 14px;
-    text-decoration: underline;  }
-
 
 }
 @media (max-width: 980px){
+	.sign-in.tab-view .tabs > li .left{
+	    width: 100%;}
+.sign-in.tab-view .tabs > li{
+	padding: 36px 12px 0;
+    width: 100%;
+    margin-top: 0;
+}
 
 .sign-in.tab-view .tabs, .sign-in.tab-view .nav{
 	border: 1px solid #cccccc;
@@ -45212,6 +45230,159 @@ padding:0;
     background-color: #b2b2b2;
     color:#fff;
 }
+.page-login .sign-in.tab-view .tabs > li .left form#loginForm {
+    width: 52%;
+    float: left;
+    padding: 0 38px 0px 10px;
+}
+.page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
+    float: left;
+    border-bottom: 0 none;
+    padding-bottom: 30px;
+}
+
+.else-sec {
+	display:block;
+    width: 5%;
+    float: left;
+    position: absolute;
+    top: 30px;
+    left: 50%;
+}
+.else-brdrbtm,.else-brdrtp {
+    height: 95px;
+    width: 1px;
+    background: #eaeaeb;
+    float: left;
+    margin: 0 20px;
+}
+.else-brdrtp {
+    margin-bottom: 10px;
+}
+ .else-brdrbtm {
+    margin-top: 10px;
+}
+.else {
+    float: left;
+    border: 1px solid #e4e4e4;
+    padding: 7px 9px 10px;
+    color: #7f7f7f;
+    font-size: 14px;
+    border-radius: 24px;
+    margin-left: 3px;
+    text-align: center;
+}
+.accept-cond {
+    margin-bottom: 22px;
+}
+.sign-in.tab-view .tabs > li .left form#extRegisterForm {
+        padding-top: 30px;
+}
+.sign-in.tab-view .tabs > li .left form button {
+    margin-bottom: 17px;
+}
+.sign-in.tab-view .tabs > li .left form#extRegisterForm button {
+   margin-bottom: 22px;
+}
+.sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+	padding-top:0px;
+}
+.sign-in.tab-view .tabs > li .left form div#checkBox{
+	overflow:hidden;
+}
+.sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+    margin-left: 2px;
+    margin-top: 2px;
+}
+}
+@media (max-width: 767px){
+	.sign-in.wrapper {
+   margin:0;
+   width:100%;
+}
+	.sign-in.tab-view .tabs{
+    border: 0 none;
+}
+.sign-in.tab-view .nav{
+	width:100%;
+}
+.sign-in.tab-view .tabs > li .left p{
+	display:none;
+}
+.page-login .sign-in.tab-view .tabs > li .left form{
+	    padding-top: 5px;
+}
+.page-login .sign-in.tab-view .tabs > li .left form#loginForm {
+    width: 100%;
+    padding:0px;
+}
+.sign-in.tab-view .tabs > li .left form input {
+    font-size: 10px;
+    letter-spacing: 0;
+}
+.sign-in.tab-view .tabs > li .left form a.js-password-forgotten {
+    float: right;
+    letter-spacing: 0;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size:12px;
+}
+.else-sec {
+    position: static;
+    width: 100%;
+    margin: 0 0 20px;
+}
+.else-brdrtp {
+    margin-right: 10px;
+}
+.else-brdrbtm,.else-brdrtp {
+    width: 44%;
+    height: 1px;
+    margin: 14px 0;
+}
+.else {
+    display: block;
+    padding: 7px;
+        font-size: 10px;
+}
+.else-brdrbtm {
+    margin-left: 10px;
+}
+.else-brdrbtm, .else-brdrtp {
+    width: 44%;
+    height: 1px;
+    margin: 14px 0;
+}
+.sign-in.tab-view .tabs > li .left form .forgotten-password_login{
+	overflow:hidden;
+}
+.sign-in.tab-view .tabs > li .left form button{
+	margin: 0;
+	width: 100%;
+}
+.page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
+	width: 100%;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+}
+.sign-in.tab-view .tabs > li .left form a#newToTata{
+	width:auto;
+	font-size:10px;
+	float:none;
+	 font-weight: bold;
+
+	}
+	.sign-in.tab-view .tabs > li .left form#extRegisterForm {
+    padding-top: 5px;
+}
+.sign-in.tab-view .tabs > li#sign_up_content .social-connect, .sign-in.tab-view .tabs > li#sign_up_content .else-sec{
+	display:block;
+}
+}
+@media (min-width:768px) and (max-width:790px){
+	
 }
 
 
