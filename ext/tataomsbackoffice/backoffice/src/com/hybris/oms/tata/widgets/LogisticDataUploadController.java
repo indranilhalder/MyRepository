@@ -193,7 +193,7 @@ public class LogisticDataUploadController extends DefaultWidgetController
 				//				xlsxtoCSVUsingBufferDynamic.xlsx("HD", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
 				final ExcelToCsvConverter excelToCsv = new ExcelToCsvConverter(statePropFile.getAbsolutePath());
 				excelToCsv.setStateCodesMap(stateCodes);
-				excelToCsv.convertEcelToCsv("HD", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
+				excelToCsv.convertExcelToCsv("HD", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
 
 				LOG.info("End Of Converting the file from xlsx file to required CSV format in TempLogServFile");
 				if (validationErrorFile.length() == 0)
@@ -314,7 +314,7 @@ public class LogisticDataUploadController extends DefaultWidgetController
 				//				xlsxtoCSVUsingBufferDynamic.xlsx("ED", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
 				final ExcelToCsvConverter excelToCsv = new ExcelToCsvConverter(statePropFile.getAbsolutePath());
 				excelToCsv.setStateCodesMap(stateCodes);
-				excelToCsv.convertEcelToCsv("ED", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
+				excelToCsv.convertExcelToCsv("ED", dest, tmpTplCSVInboundFile, validationErrorFile, fileNameTimeStamp);
 
 				LOG.info("End Of Converting the file from xlsx file to required CSV format in TempLogServFile");
 
