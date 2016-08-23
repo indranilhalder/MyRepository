@@ -1851,6 +1851,8 @@
 		<property name="offerprice"	type="String" />
 		<property name="eMItag" type="String" />
 		<property name="imageURL" type="String"/>
+		<!--TPR-796  -->
+		<property name="imageProdURL" type="String"/>
 		<property name="ratingvalue" type="String" />
 		<property name="stylenote" type="String" /> 
 		<property name="details" type="String" />

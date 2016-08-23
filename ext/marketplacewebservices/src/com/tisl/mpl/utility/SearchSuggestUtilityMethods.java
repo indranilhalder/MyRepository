@@ -7,7 +7,6 @@ import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
-import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
@@ -20,7 +19,6 @@ import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearc
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -615,7 +613,7 @@ public class SearchSuggestUtilityMethods
 		final List<SellingItemDetailWsDto> searchProductDTOList = new ArrayList<>();
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		List<GalleryImageData> galleryImages = null;
-		ProductData productDataImage = null;
+		final ProductData productDataImage = null;
 		for (final ProductData productData : searchPageData.getResults())
 		{
 
@@ -641,10 +639,10 @@ public class SearchSuggestUtilityMethods
 				 *
 				 * }
 				 */
-				productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
-						Arrays.asList(ProductOption.GALLERY));
+				//productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
+				//	Arrays.asList(ProductOption.GALLERY));
 
-				galleryImages = productDetailsHelper.getGalleryImagesMobile(productDataImage);
+				galleryImages = productDetailsHelper.getGalleryImagesMobile(productData);
 				if (null != (productData.getSavingsOnProduct()))
 				{
 					sellingItemDetail.setDiscountPercent(
@@ -707,6 +705,16 @@ public class SearchSuggestUtilityMethods
 
 					sellingItemDetail.setImageURL(imgData.getUrl());
 				}
+
+				/////////////// TPR-796
+				final ImageData imgDataProduct = getPrimaryImageForProductAndFormat(productData, "product");
+
+				if (imgDataProduct != null && imgDataProduct.getUrl() != null)
+				{
+
+					sellingItemDetail.setImageProdURL(imgDataProduct.getUrl());
+				}
+				///////////
 				if (null != productData.getDescription())
 				{
 					sellingItemDetail.setDetails(productData.getDescription());
