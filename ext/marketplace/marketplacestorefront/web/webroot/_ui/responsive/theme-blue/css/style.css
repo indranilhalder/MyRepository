@@ -20146,7 +20146,7 @@ font-size:14px;
 #EMITermTable th{
     font-weight: 500;
     vertical-align: middle;
-    text-align: left;
+    text-align: center;
     padding: 10px 5px;
     border-bottom:1px solid #cdcdcd;
 }
@@ -20156,6 +20156,7 @@ font-size:14px;
   vertical-align: middle;
   padding: 8px 15px;
   text-align: left;
+  text-align: center;
 }
 #EMITermTable td input[type="radio"]{
 display:none !important;
@@ -43167,7 +43168,7 @@ margin-left: 20%;
 }
 
 /*form*/
-.gig-comments-header, .gig-composebox-header {
+.gig-comments-header{
 	display: none;
 }
 
@@ -44982,6 +44983,9 @@ padding:0;
 @media(max-width:767px){
 .product-info .product-image-container.device .owl-carousel {
     padding: 0 8%;
+}
+#EMITermTable th {
+	width: auto;
 }
 }
 /*size guide n quickview fix*/
