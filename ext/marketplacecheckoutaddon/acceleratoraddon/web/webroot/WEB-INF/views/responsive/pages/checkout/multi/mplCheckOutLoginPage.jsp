@@ -38,6 +38,9 @@
     					if($(window).width()<981){
     						activateSignInTab();
     					}
+    					else{
+    						$("#sign_in_content, #sign_up_content").addClass('active');
+    					}
     				});
 				</script>
 				<ycommerce:testId code="checkoutStepTwo">
@@ -53,12 +56,12 @@
 
 		
 								<ul class="tabs">
-									<li id="sign_in_content" class="active">
+									<li id="sign_in_content">
 										<c:url value="/checkout/j_spring_security_check" var="loginAndCheckoutActionUrl" />
 										<multi-checkout:login actionNameKey="checkout.login.loginAndCheckout" action="${loginAndCheckoutActionUrl}"/>
 									</li>
 									<li class="or"><span class="vr-line"></span><span class="or-rounded"><spring:theme code="text.or" /></span><span class="vrt-line"></span></li>
-									<li id="sign_up_content" class="active">
+									<li id="sign_up_content">
 										<c:url value="/checkout/multi/checkoutlogin/checkoutRegister" var="registerAndCheckoutActionUrl" />
 										<multi-checkout:register actionNameKey="checkout.login.registerAndCheckout" action="${registerAndCheckoutActionUrl}" />
 									</li>

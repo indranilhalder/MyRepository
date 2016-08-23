@@ -11,7 +11,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
 <div class="left headline">
-<p>	<spring:theme code="login.sign.in.tab.title" /></p>
+<p class="sign-in-welcomeMessage">	<spring:theme code="login.sign.in.tab.title" /></p>
 
 <p style="display:none" class="description"><!--<spring:theme code="login.description" />--></p>
 
