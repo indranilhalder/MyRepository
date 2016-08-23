@@ -744,7 +744,7 @@
 
 		<!-- Product Feature Enum Ends -->
 
-		<!-- TPR-627 -->
+		<!-- TPR-627 , TPR-622 ENUM added --> 
 		<enumtype code="isSshipCodEligibleEnum" autocreate="true" generate="true"
 			dynamic="true">
 			<value code="yes" />
@@ -2026,14 +2026,14 @@
 						<persistence type="property"></persistence>
 					</attribute>
 					
-					<!-- TPR-627 -->
+					<!-- TPR-627 ,TPR-622 -->
 					<attribute type="isSshipCodEligibleEnum" qualifier="isSshipCodEligible">
 						<description>COD Eligibility check for SSHIP Poducts: isSshipCodEligible</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property"></persistence>
 					</attribute>
-					<!-- TPR-627 -->
+					<!-- TPR-627 ,TPR-622 -->
 				</attributes>
 			</itemtype>
 
