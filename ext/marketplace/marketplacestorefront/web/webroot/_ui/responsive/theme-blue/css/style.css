@@ -17154,26 +17154,6 @@ ul.social-connect > li a
 	margin-top:10px;
 	font-size:12px;
 }
-.sign-in.wrapper .sign-in.tab-view.checkoutSignPage
-	{
-		width:100%;
-		display:block;
-		float:none;
-		
-		
-	}
-@media(min-width:791px)
-{
-	.sign-in.wrapper .sign-in.tab-view.checkoutSignPage
-	{
-		width:80% !important;
-		display:block;
-		float:none;
-		margin:20px auto;
-		
-	}
-}
-
 
 .words li.long .toggle a {
 	  text-transform: capitalize !important;}
@@ -45063,7 +45043,7 @@ padding:0;
       letter-spacing: 1px;
       margin-top: 20px;
       margin-bottom:19px; }
-            .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
+.sign-in.tab-view .tabs > li .left form .forgotten-password{
       text-align:left;
           font-size: 14px;
     border-bottom: 1px solid #eaeaeb;
@@ -45155,7 +45135,7 @@ padding:0;
         padding-bottom: 19px;
         
 }
-.else-sec, .sign-in.tab-view .tabs > li#sign_up_content .else-sec{
+.else-sec{
 display:none;	
 }
 .sign-in.tab-view .nav{
@@ -45163,6 +45143,9 @@ display:none;
 }
 .sign-in.tab-view .tabs > li#sign_up_content .social-connect{
 	display:none;}
+	.sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout{
+	border-bottom:none;
+	padding-bottom:0px;}
 @media (min-width: 981px){
 	.sign-in.tab-view{
 	margin:0px;}
@@ -45230,13 +45213,12 @@ display:none;
     background-color: #b2b2b2;
     color:#fff;
 }
-.page-login .sign-in.tab-view .tabs > li .left form#loginForm {
+ .sign-in.tab-view .tabs > li .left form {
     width: 52%;
     float: left;
     padding: 0 38px 0px 10px;
 }
-.page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
-    float: left;
+.sign-in.tab-view .tabs > li .left form .forgotten-password{
     border-bottom: 0 none;
     padding-bottom: 30px;
 }
@@ -45276,7 +45258,7 @@ display:none;
     margin-bottom: 22px;
 }
 .sign-in.tab-view .tabs > li .left form#extRegisterForm {
-        padding-top: 30px;
+     /*    padding-top: 30px; */
 }
 .sign-in.tab-view .tabs > li .left form button {
     margin-bottom: 17px;
@@ -45294,6 +45276,10 @@ display:none;
     margin-left: 2px;
     margin-top: 2px;
 }
+.sign-in.tab-view .tabs > li#sign_up_content .social-connect{
+	display:block;
+	padding-top:0px;
+}
 }
 @media (max-width: 767px){
 	.sign-in.wrapper {
@@ -45309,10 +45295,10 @@ display:none;
 .sign-in.tab-view .tabs > li .left p{
 	display:none;
 }
-.page-login .sign-in.tab-view .tabs > li .left form{
+.sign-in.tab-view .tabs > li .left form{
 	    padding-top: 5px;
 }
-.page-login .sign-in.tab-view .tabs > li .left form#loginForm {
+.sign-in.tab-view .tabs > li .left form {
     width: 100%;
     padding:0px;
 }
@@ -45360,7 +45346,7 @@ display:none;
 	margin: 0;
 	width: 100%;
 }
-.page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
+.sign-in.tab-view .tabs > li .left form .forgotten-password{
 	width: 100%;
     font-size: 10px;
     font-weight: bold;
@@ -45377,13 +45363,10 @@ display:none;
 	.sign-in.tab-view .tabs > li .left form#extRegisterForm {
     padding-top: 5px;
 }
-.sign-in.tab-view .tabs > li#sign_up_content .social-connect, .sign-in.tab-view .tabs > li#sign_up_content .else-sec{
-	display:block;
+.sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout {
+    padding-top: 0px;
+    font-weight:normal;
 }
 }
-@media (min-width:768px) and (max-width:790px){
-	
-}
-
 
 /*Login End*/
