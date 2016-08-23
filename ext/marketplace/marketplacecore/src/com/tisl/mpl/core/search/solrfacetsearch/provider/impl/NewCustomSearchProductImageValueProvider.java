@@ -17,7 +17,10 @@ import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.config.exceptions.FieldValueProviderException;
 import de.hybris.platform.solrfacetsearch.provider.FieldNameProvider;
 import de.hybris.platform.solrfacetsearch.provider.FieldValue;
+import de.hybris.platform.solrfacetsearch.provider.FieldValueProvider;
+import de.hybris.platform.solrfacetsearch.provider.impl.AbstractPropertyFieldValueProvider;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +30,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tils.mpl.media.MplMediaService;
@@ -37,23 +39,22 @@ import com.tils.mpl.media.MplMediaService;
  * @author 973549
  *
  */
-public class NewCustomSearchProductImageValueProvider
+public class NewCustomSearchProductImageValueProvider extends AbstractPropertyFieldValueProvider
+		implements FieldValueProvider, Serializable
 {
 
-
-	@Autowired
-	private FlexibleSearchService flexibleSearchService;
 	private static final Logger LOG = Logger.getLogger(NewCustomSearchProductImageValueProvider.class);
-
 
 	private String mediaFormat;
 	private MediaService mediaService;
 	private MediaContainerService mediaContainerService;
 	private FieldNameProvider fieldNameProvider;
 
-	@Autowired
-	private MplMediaService mplMediService;
 
+	@Resource
+	private FlexibleSearchService flexibleSearchService;
+	@Resource
+	private MplMediaService mplMediService;
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
@@ -106,6 +107,7 @@ public class NewCustomSearchProductImageValueProvider
 		this.fieldNameProvider = fieldNameProvider;
 	}
 
+	@SuppressWarnings("deprecation")
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
