@@ -97,15 +97,7 @@
 							</listheader>
 						</listhead>
 					</listbox>
-					<template name="model">
-						<listitem>						
-							<listcell label="${each.orderId}"></listcell>
-							<listcell label="${each.orderLineId}"></listcell>
-							<listcell label="${each.sellerId}"></listcell>
-                           <listcell label="${each.slaveId}"></listcell>
-                           <listcell label="${each.sellerPromisedTime}"> </listcell>
-						</listitem>
-					</template>
+				
 				</panelchildren>
 			</panel>
 			<panel id="olpanel" style="height:40%;padding:0px">
