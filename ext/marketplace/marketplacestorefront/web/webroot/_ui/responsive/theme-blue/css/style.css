@@ -43170,7 +43170,7 @@ margin-left: 20%;
 }
 
 /*form*/
-.gig-comments-header, .gig-composebox-header {
+.gig-comments-header{
 	display: none;
 }
 
