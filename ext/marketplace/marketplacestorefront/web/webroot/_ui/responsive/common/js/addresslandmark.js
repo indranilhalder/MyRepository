@@ -13,6 +13,7 @@ $(document).ready(function(){
 });
 
 $(".address_landmarkOtherDiv").hide();
+$(".dupDisplay").hide();
 $(".address_postcode").blur(function() {
 	loadPincodeData();			
 });
@@ -31,6 +32,9 @@ function loadPincodeData() {
 				$('.otherOption').attr("value", "");
 				$('.otherOption').val("");
 				$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
+				$(".mainDrop").show();
+				$(".dupDisplay").hide();
+				$(".addState").show();
 				$('.address_landmarks').append($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
 				$(".address_townCity").prop("readonly", false);
 				$(".address_states").removeAttr("readonly").removeData("stateValue");
@@ -43,6 +47,8 @@ function loadPincodeData() {
 				$(".row .address_landmarkOtherDiv label").css("margin-top","15px");
     			$(".optionsLandmark, .optionsLandmark label, .optionsLandmark input,  .optionsLandmark select").show();
     			$(".address_landmarkOtherDiv").hide();
+    			$(".mainDrop").hide();
+				$(".dupDisplay").show();
     			$(".address_landmarkOther").attr("value", "");
     			$(".address_landmarkOther").val("");
     			$('.otherOption').attr("value", "Other");
@@ -129,8 +135,9 @@ function optionsLandmark1(e) {
 
 
 $(document).ready(function() {
-			$("#deliveryAddressForm").submit(
+			$("#saveBlockData").click(
 					function(event) {
+					
 						$(".main_error").hide();
 						$(".firstNameError").hide();
 						$(".lastNameError").hide();
@@ -138,67 +145,85 @@ $(document).ready(function() {
 						$(".address2Error").hide();
 						$(".address3Error").hide();
 						$(".mobileNumberError").hide();
+						$(".landMarkError").hide();
 						$(".cityError").hide();
 						$(".pincodeNoError").hide();
 						$(".stateError").hide();
-				      var mobile=$("#mobileNo").val();
-				      var mobile=mobile.trim();
-				      var isString = isNaN(mobile);
-				      var pincode=$("#pincode").val();
+				      
+				      var fname=$("#firstName").val();
+				      var lname=$("#lastName").val();
+				      var al1=$("#addressLine1").val();
+				      var al2=$("#addressLine2").val();
+				      var al3=$("#addressLine3").val();
 				      var state=$("#state").val();
-				      var name=$("#firstName").val();
-				      var lname=$("#lastName").val()
-				      debugger;
-						if (name.length < 1){
-							$(".firstNameError").show();
-							$(".firstNameError").text("First Name cannot be Blank");
-						}else if(checkWhiteSpace(name) == false){
-							 $(".firstNameError").show();
-				    	     $(".firstNameError").text("Enter only Alphabet");
-				       }else if (lname.length < 1) {
-							$(".lastNameError").show();
-							$(".lastNameError").text("Last Name cannot be Blank ");
-					   }else if(checkWhiteSpace(lname) == false){
-							 $(".lastNameError").show();
-				    	     $(".lastNameError").text("Enter only Alphabet");
-                      }else if ($("#addressLine1").val().length < 1) {
-							$(".address1Error").show();
-							$(".address1Error").text("Address Line 1 cannot be blank");
-						} else if ($("#addressLine2").val().length < 1) {
-							$(".address2Error").show();
-							$(".address2Error").text("Address Line 2 cannot be blank");
-						} else if ($("#addressLine3").val().length < 1) {
-							$(".address3Error").show();
-							$(".address3Error").text("Address Line 3 cannot be blank");
-						}else if(isString==true || mobile.trim()==''){
-							    $(".mobileNumberError").show();
-					            $(".mobileNumberError").text("Enter only Numbers");
-						}else if(mobile.length<=9 || mobile.length >= 11) {   
-					    	  $(".mobileNumberError").show();
-					          $(".mobileNumberError").text("Enter 10 Digit Number");
-					      }	else if ($("#city").val().length < 1){
-					    	  $(".cityError").show();
-					          $(".cityError").text("City cannot be blank");
-					      }else if(pincode.length < 1 && pincode.length > 6){
-					    	  $(".pincodeNoError").show();
-					          $(".pincodeNoError").text("Enter correct pincode");
-					      } else  if(state==null || state=="Select"){
-					    	  $(".stateError").show();
-					          $(".stateError").text("State cannot be Blank");
-					      }
-						else{
-		                       debugger;
+				      var mobile=$("#mobileNo").val();
+				      var pincode=$("#pincode").val();
+				      var isString = isNaN(mobile);
+				      var city=$("#city").val();
+				      
+				     	if(fname == null || fname.trim() == '' ){
+				  			$(".firstNameError").show();
+				  			$(".firstNameError").text("First Name cannot be Blank");
+				  			fname.focus();
+				  			return false;
+				  	}else if(lname == null || lname.trim() == '' ){
+			  			$(".lastNameError").show();
+			  			$(".lastNameError").text("Last Name cannot be Blank");
+			  			lname.focus();
+			  			return false;
+				  	}else if(al1 == null || al1.trim() == '' ){
+			  			$(".address1Error").show();
+			  			$(".address1Error").text("Address Line 1 cannot be blank");
+			  			al1.focus();
+			  			return false;
+				  	}else if(al2 == null || al2.trim() == '' ){
+			  			$(".address2Error").show();
+			  			$(".address2Error").text("Address Line 2 cannot be blank");
+			  			al2.focus();
+			  			return false;
+				  	}else if(al3 == null || al3.trim() == '' ){
+			  			$(".address3Error").show();
+			  			$(".address3Error").text("Address Line 3 cannot be blank");
+			  			al3.focus();
+			  			return false;
+				  	}else if(state == null || state=="Select" ){
+			  			$(".stateError").show();
+			  			$(".stateError").text("State cannot be Blank");
+			  			state.focus();
+			  			return false;
+				  	}else if(isString==true || mobile.trim()==''){
+			  			$(".mobileNumberError").show();
+			  			$(".mobileNumberError").text("Enter only Numbers");
+			  			mobile.focus();
+			  			return false;
+				  	}else if(mobile.length < 9 && mobile.length > 11){
+				    	  $(".pincodeNoError").show();
+				          $(".pincodeNoError").text("Enter correct mobile number");
+				          pincode.focus();
+				          return false;
+				  	}else if(pincode.length < 1 && pincode.length > 6){
+				    	  $(".pincodeNoError").show();
+				          $(".pincodeNoError").text("Enter correct pincode");
+				          pincode.focus();
+				          return false;
+				      }else if(city == null || city.trim() == '' ){
+			  			$(".cityError").show();
+			  			$(".cityError").text("City cannot be blank");
+			  			city.focus();
+			  			return false;
+				  	}else{
 						var data = $("#deliveryAddressForm").serialize();
 						var orderCode = $('#deliveryAddorderCode').val();
 						$.ajax({
 							url : ACC.config.encodedContextPath
 									+ "/my-account/" + orderCode
 									+ "/changeDeliveryAddress/",
-							type : 'GET',
+							type : 'POST',
 							data : data,
 							contentType: "text/application/html",
 							success : function(result){
 								if(result=='Pincode not Serviceable'){
+									alert("in ajax");
 									$("#changeAddressPopup").show();
 								/*	$("wrapBG1").show();*/
 									$("#showOTP").hide();
@@ -219,12 +244,12 @@ $(document).ready(function() {
 							},
 							error : function(result) {
 								console.log(result);
-								alert("error")
+								alert("error");
 							}
 
 						});
 					}
-						event.preventDefault();
+						/*event.preventDefault();*/
 					});
 
 
@@ -267,7 +292,7 @@ $(document).ready(function() {
 function newOTPGenerate(orderCode){
 	alert(orderCode);
 	 $.ajax({
-			type : "GET",
+			type : "POST",
 			url : ACC.config.encodedContextPath + "/my-account/newOTP",
 			data :"orderCode="+orderCode,
 			success : function(response) {
@@ -281,5 +306,3 @@ function newOTPGenerate(orderCode){
 			}
 		}); 
 } 
-
-
