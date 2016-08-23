@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -139,22 +140,20 @@ public class NewCustomSearchProductImageValueProvider extends AbstractPropertyFi
 		if ((product != null) && (mediaFormat != null))
 		{//TPR-796
 			final List<MediaContainerModel> galleryImages = product.getGalleryImages();
-			List<MediaContainerModel> finalImg = null;
+			final List<MediaContainerModel> finalImg = new ArrayList<>();
 			try
 			{
-				if ((galleryImages != null) && (!(galleryImages.isEmpty())))
+				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
-					//final MediaContainerModel firstMediaContainerModel = galleryImages.get(0);
-					final int imgeSize = galleryImages.size();
-					for (int counter = 0; counter < imgeSize; counter++)
+					for (int count = 0; count < galleryImages.size(); count++)
 					{
-
-						final MediaModel image = getMediaContainerService().getMediaForFormat(galleryImages.get(counter), mediaFormat);
+						final MediaModel image = getMediaContainerService().getMediaForFormat(galleryImages.get(count), mediaFormat);
 						if (image != null)
 						{
-							finalImg = (List<MediaContainerModel>) image;
+							finalImg.add(galleryImages.get(count));
 						}
 					}
+
 					MediaModel media = null;
 					media = mplMediService.getMediaForIndexing(product, mediaFormat, finalImg);
 					if (media.getUrl() != null && media.getUrl().length() > 0)
@@ -234,6 +233,7 @@ public class NewCustomSearchProductImageValueProvider extends AbstractPropertyFi
 		 */
 
 		return null;
+
 	}
 
 	/*

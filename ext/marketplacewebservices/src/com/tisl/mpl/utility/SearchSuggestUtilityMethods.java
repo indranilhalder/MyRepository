@@ -705,16 +705,6 @@ public class SearchSuggestUtilityMethods
 
 					sellingItemDetail.setImageURL(imgData.getUrl());
 				}
-
-				/////////////// TPR-796
-				final ImageData imgDataProduct = getPrimaryImageForProductAndFormat(productData, "product");
-
-				if (imgDataProduct != null && imgDataProduct.getUrl() != null)
-				{
-
-					sellingItemDetail.setImageProdURL(imgDataProduct.getUrl());
-				}
-				///////////
 				if (null != productData.getDescription())
 				{
 					sellingItemDetail.setDetails(productData.getDescription());
