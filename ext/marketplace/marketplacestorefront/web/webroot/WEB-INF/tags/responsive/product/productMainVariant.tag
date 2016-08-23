@@ -265,12 +265,19 @@ var productSizeVar = '${productSize}';
 				</c:forEach>
 			</c:forEach>
 		</select>
-		
-		<!-- Size guide Pop-up -->
-		<a class="size-guide" href="${sizeGuideUrl}" role="button"
+		<c:if test="${showSizeGuideForFA eq true}">
+			<a class="size-guide" href="${sizeGuideUrl}" role="button"
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
-		</a>
+			</a>
+		</c:if> 
+		<!-- Size guide Pop-up -->
+
+		
+		<%-- <a class="size-guide" href="${sizeGuideUrl}" role="button"
+			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
+				code="product.variants.size.guide" />
+		</a> --%>
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->
 		<!-- End Size guide Pop-up -->
 	</c:if>

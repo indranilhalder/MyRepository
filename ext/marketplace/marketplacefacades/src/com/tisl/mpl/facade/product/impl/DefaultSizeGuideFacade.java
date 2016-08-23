@@ -50,6 +50,12 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 	 */
 	private static final String CLOTHING = "Clothing";
 
+	/**
+	 * Added FashionAccessories START ::::
+	 *
+	 */
+	private static final String ACCESSORIES = "Accessories";
+
 	@Resource
 	private SizeGuideService sizeGuideService;
 
@@ -91,7 +97,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 					{
 						addToMap(sizeGuideDatas, sizeGuideModel.getDimension(), sizeGuideData);
 					}
-					else if (categoryType.equalsIgnoreCase(FOOTWEAR))
+					else if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
 					{
 						sizeGuideDataListForFootwear.add(sizeGuideData);
 					}
@@ -108,7 +114,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 					sizeGuideSortedDatas.put(key, sizeDataValues);
 				}
 			}
-			else if (categoryType.equalsIgnoreCase(FOOTWEAR))
+			else if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
 			{
 				Collections.sort(sizeGuideDataListForFootwear, sizeGuideComparator);
 				sizeGuideSortedDatas.put(productCode, sizeGuideDataListForFootwear);

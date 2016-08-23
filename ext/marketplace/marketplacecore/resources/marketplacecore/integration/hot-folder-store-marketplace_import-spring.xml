@@ -687,11 +687,11 @@ $language=language(isocode)[default='en'][unique=true];
 			    <!-- Header Before -->
 			    <!-- INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension[unique=true]; unit[unique=true];size[unique=true];value[unique=true];categoryCode;brand;fitType;imageUrl;usSize;euroSize;age;$catalogVersion -->
 			   <!-- Header Changes regards to TISPRO-180 Cell decorator Introduced,unique constraint removed for value and unit-->
-			    INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension[unique=true][cellDecorator=com.tisl.mpl.core.celldecorator.SizeGuideDimensionDecorator];unit;size[unique=true];value;categoryCode;brand;fitType;imageUrl;usSize;euroSize;age;$catalogVersion
+			    INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension[unique=true][cellDecorator=com.tisl.mpl.core.celldecorator.SizeGuideDimensionDecorator];unit;size[unique=true];value;categoryCode;brand;fitType;imageUrl;usSize;euroSize;age;cmsBeltSize;inchesBeltSize;inchesWaistSize;cmsWaistSize;inchesBeltLength;$catalogVersion
 			</value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11}</value>
+            <value>;{+0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16}</value>
         </property>
         </bean>
 	

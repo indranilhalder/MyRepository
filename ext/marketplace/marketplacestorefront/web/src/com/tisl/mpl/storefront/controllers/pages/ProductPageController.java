@@ -27,6 +27,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.util.MetaSanitizerUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.variants.VariantSortStrategy;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
@@ -60,6 +61,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -146,6 +148,10 @@ public class ProductPageController extends AbstractPageController
 	 */
 	private static final String CLOTHING = "Clothing";
 
+	/**
+	 * Added Size Guide For Accessories
+	 */
+	private static final String ACCESSORIES = "Accessories";
 	/**
 	 *
 	 */
@@ -548,7 +554,8 @@ public class ProductPageController extends AbstractPageController
 			{
 				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_BRAND, productData.getBrand().getBrandname());
 			}
-			if (FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
+			if (FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
+					|| ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				if (sizeguideList != null && CollectionUtils.isNotEmpty(sizeguideList.get(productCode)))
 				{
@@ -797,13 +804,84 @@ public class ProductPageController extends AbstractPageController
 						}
 					}
 				}
+				else if (categoryType.equalsIgnoreCase(ACCESSORIES))
+				{
+					for (final SizeGuideData data : sizeguideList.get(key))
+					{
+						if (data.getAge() != null && StringUtils.isNotBlank(data.getAge()))
+						{
+							headerMap.put(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.age"),
+									"Y");
+							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.age"))){
+								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.age"));
+							}
+						}
+						if (data.getDimensionSize() != null && StringUtils.isNotBlank(data.getDimensionSize()))
+						{
+							headerMap.put(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.size"),
+									"Y");
+							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.size"))){
+								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.size"));
+							}
+						}
+						if (data.getCmsBeltSize()!=null && StringUtils.isNotBlank(data.getCmsBeltSize()))
+						{
+							headerMap.put(
+									configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmsbeltsize"),
+									"Y");
+							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmsbeltsize"))){
+								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmsbeltsize"));
+							}
+						}
+						if (data.getInchesBeltSize()!=null && StringUtils.isNotBlank(data.getInchesBeltSize()))
+						{
+							headerMap.put(
+									configurationService.getConfiguration()
+											.getString("fashionaccessories.sizeguide.header.inchesbeltsize"), "Y");
+							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.inchesbeltsize"))){
+								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.inchesbeltsize"));
+							}
+						}
+						if (data.getCmsWaistSize()!=null && StringUtils.isNotEmpty(data.getCmsWaistSize()))
+						{
+							headerMap.put(
+									configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmswaistsize"),
+									"Y");
+							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmswaistsize"))){
+								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmswaistsize"));
+							}
+						}
+						if (data.getInchesWaistSize()!=null && StringUtils.isNotEmpty(data.getInchesWaistSize()))
+						{
+							headerMap.put(
+									configurationService.getConfiguration().getString(
+											"fashionaccessories.sizeguide.header.incheswaistsize"), "Y");
+							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.incheswaistsize"))){
+								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.incheswaistsize"));
+							}
+						}
+						if (data.getCmsWaistSize()!=null && StringUtils.isNotEmpty(data.getInchesBeltLength()))
+						{
+							headerMap.put(
+									configurationService.getConfiguration().getString(
+											"fashionaccessories.sizeguide.header.inchesbeltlength"), "Y");
+							if(!headerMapData.contains(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.inchesbeltlength"))){
+								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.inchesbeltlength"));
+							}
+						}
+					}
+				}
 			}
+			
+			if(!categoryType.equalsIgnoreCase(ACCESSORIES)){
 			for (final String keyData : headerMap.keySet())
 			{
 				headerMapData.add(keyData);
 			}
-
-			Collections.sort(headerMapData, sizeGuideHeaderComparator);
+			
+			
+				Collections.sort(headerMapData, sizeGuideHeaderComparator);
+			}
 		}
 		catch (final Exception e)
 		{
@@ -1411,7 +1489,45 @@ public class ProductPageController extends AbstractPageController
 			setUpMetaData(model, metaDescription, metaTitle, productCode);
 			populateTealiumData(productData, model, breadcrumbs);
 
+			/**
+			 * Add Filter for FA START :::::
+			 */
+			boolean showSizeGuideForFA = true;
+			if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productModel.getProductCategoryType()))
+			{
+				final Collection<CategoryModel> superCategories = productModel.getSupercategories();
+				final String configurationFA = configurationService.getConfiguration().getString(
+						"accessories.sideguide.category.showlist");
+				final String[] configurationFAs = configurationFA.split(",");
+				for (final CategoryModel supercategory : superCategories)
+				{
+					if (supercategory.getCode().startsWith("MPH"))
+					{
+						System.out.println("-------------categorycode: "+supercategory.getCode());
+						int num=0;
+						for (final String fashow : configurationFAs)
+						{
+							System.out.println("****************fashow: "+fashow);
+							if (!supercategory.getCode().startsWith(fashow))
+							{
+								num++;
+								if(num==3){
+									showSizeGuideForFA=false;
+									break;
+								}
+							}
+						}
 
+						break;
+					}
+				}
+
+
+			}
+			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
+			/**
+			 * Add Filter for FA END :::::
+			 */
 			//TISPRM-56
 			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
 			{
@@ -1441,8 +1557,6 @@ public class ProductPageController extends AbstractPageController
 		}
 
 	}
-
-
 
 
 	//TODO

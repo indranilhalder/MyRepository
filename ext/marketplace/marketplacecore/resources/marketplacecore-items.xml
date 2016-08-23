@@ -1786,6 +1786,28 @@
 							unique="false" />
 						<persistence type="property"></persistence>
 					</attribute>
+					<!-- Add Size Guide Columns for Fashion Accessories START:::: -->
+					<attribute qualifier="cmsBeltSize" type="java.lang.String">
+						<description>Belt Size (cms)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="inchesBeltSize" type="java.lang.String">
+						<description>Belt Size (inches)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="cmsWaistSize" type="java.lang.String">
+						<description>Waist size (cms)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="inchesWaistSize" type="java.lang.String">
+						<description>Waist size (in inches)</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="inchesBeltLength" type="java.lang.String">
+						<description>Belt Length (inches)</description>
+						<persistence type="property" />
+					</attribute>
+					<!-- Add Size Guide Columns for Fashion Accessories END:::: -->
 				</attributes>
 			</itemtype>
 
@@ -8349,7 +8371,7 @@
 						<key attribute="fulfillmentType" />
 						<key attribute="transportMode" />
 					</index>
-				</indexes>
+				</indexes> 
 			</itemtype>
 
 
