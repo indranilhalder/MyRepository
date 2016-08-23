@@ -860,7 +860,7 @@ public class ProductPageController extends AbstractPageController
 								headerMapData.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.incheswaistsize"));
 							}
 						}
-						if (data.getCmsWaistSize()!=null && StringUtils.isNotEmpty(data.getInchesBeltLength()))
+						if (data.getInchesBeltLength()!=null && StringUtils.isNotEmpty(data.getInchesBeltLength()))
 						{
 							headerMap.put(
 									configurationService.getConfiguration().getString(
@@ -1503,15 +1503,13 @@ public class ProductPageController extends AbstractPageController
 				{
 					if (supercategory.getCode().startsWith("MPH"))
 					{
-						System.out.println("-------------categorycode: "+supercategory.getCode());
 						int num=0;
 						for (final String fashow : configurationFAs)
 						{
-							System.out.println("****************fashow: "+fashow);
 							if (!supercategory.getCode().startsWith(fashow))
 							{
 								num++;
-								if(num==3){
+								if(num==configurationFAs.length){
 									showSizeGuideForFA=false;
 									break;
 								}
