@@ -13,7 +13,6 @@
  */
 package com.tisl.mpl.controllers.pages;
 
-import de.hybris.platform.acceleratorservices.payment.data.PaymentData;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
@@ -1250,10 +1249,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		try
 		{
-			final PaymentData silentOrderPageData = getPaymentFacade().beginSopCreateSubscription(
-					MarketplacecheckoutaddonConstants.CHECKOUTRESPONSEURL, MarketplacecheckoutaddonConstants.CHECKOUTCALLBACKURL);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SOPPAGEDATA, silentOrderPageData);
-			paymentForm.setParameters(silentOrderPageData.getParameters());
+			//TISSTRT-1390
+			//Commented as not used TPR-629
+			//final PaymentData silentOrderPageData = getPaymentFacade().beginSopCreateSubscription(
+			//		MarketplacecheckoutaddonConstants.CHECKOUTRESPONSEURL, MarketplacecheckoutaddonConstants.CHECKOUTCALLBACKURL);
+			//model.addAttribute(MarketplacecheckoutaddonConstants.SOPPAGEDATA, silentOrderPageData);
+			//paymentForm.setParameters(silentOrderPageData.getParameters());
 			model.addAttribute(MarketplacecheckoutaddonConstants.NEWPAYMENTFORMMPLURL,
 					MarketplacecheckoutaddonConstants.NEWPAYMENTVIEWURL);
 
@@ -4029,7 +4030,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

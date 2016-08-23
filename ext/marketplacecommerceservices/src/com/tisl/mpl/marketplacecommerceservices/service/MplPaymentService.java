@@ -12,7 +12,6 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
 import java.util.List;
@@ -146,15 +145,15 @@ public interface MplPaymentService
 	void paymentModeApportion(final AbstractOrderModel cart);
 
 
-	/**
-	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
-	 * success
-	 *
-	 * @param juspayOrderId
-	 * @param mplCustomerID
-	 * @return PaymentTransactionModel
-	 */
-	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
+	//	/**
+	//	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
+	//	 * success
+	//	 *
+	//	 * @param juspayOrderId
+	//	 * @param mplCustomerID
+	//	 * @return PaymentTransactionModel
+	//	 */
+	//	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
 
 	/**
 	 * This method returns the list of Countries
@@ -260,20 +259,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;

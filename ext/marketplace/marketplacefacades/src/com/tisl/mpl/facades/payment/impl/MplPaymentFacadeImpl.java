@@ -20,7 +20,6 @@ import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -743,44 +742,44 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	//			throw new EtailNonBusinessExceptions(e, "E0007");
 	//		}
 	//	}
-
-	/**
-	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
-	 *
-	 * @param orderId
-	 * @return String
-	 *
-	 */
-	@Override
-	public String getJuspayOrderStatus(final String orderId)
-	{
-		final PaymentService juspayService = new PaymentService();
-
-		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService.withKey(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-				.withMerchantId(
-						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
-
-		//creating OrderStatusRequest
-		final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
-		orderStatusRequest.withOrderId(orderId);
-		//creating OrderStatusResponse
-		GetOrderStatusResponse orderStatusResponse = new GetOrderStatusResponse();
-		try
-		{
-			//getting the response by calling get Order Status service
-			orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e);
-		}
-
-		//returning the statues of the order
-		return orderStatusResponse.getStatus();
-	}
+	//
+	//	/**
+	//	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
+	//	 *
+	//	 * @param orderId
+	//	 * @return String
+	//	 *
+	//	 */
+	//	@Override
+	//	public String getJuspayOrderStatus(final String orderId)
+	//	{
+	//		final PaymentService juspayService = new PaymentService();
+	//
+	//		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+	//				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+	//		juspayService.withKey(
+	//				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+	//				.withMerchantId(
+	//						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+	//
+	//		//creating OrderStatusRequest
+	//		final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
+	//		orderStatusRequest.withOrderId(orderId);
+	//		//creating OrderStatusResponse
+	//		GetOrderStatusResponse orderStatusResponse = new GetOrderStatusResponse();
+	//		try
+	//		{
+	//			//getting the response by calling get Order Status service
+	//			orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(e);
+	//		}
+	//
+	//		//returning the statues of the order
+	//		return orderStatusResponse.getStatus();
+	//	}
 
 
 	//This method is commented as a new method with different method parameters is used for TPR-629
@@ -1388,28 +1387,29 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	}
 
 
-	/**
-	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
-	 * success
-	 *
-	 * @param juspayOrderId
-	 * @param mplCustomerID
-	 * @return PaymentTransactionModel
-	 */
-	@Override
-	public PaymentTransactionModel getOrderStatusFromCart(final String juspayOrderId, final String mplCustomerID)
-	{
-		if (null != getMplPaymentService().getOrderStatusFromCart(juspayOrderId, mplCustomerID))
-		{
-			final PaymentTransactionModel paymentTransaction = getMplPaymentService().getOrderStatusFromCart(juspayOrderId,
-					mplCustomerID);
-			return paymentTransaction;
-		}
-		else
-		{
-			return null;
-		}
-	}
+	//Method not used after TPR-629
+	//	/**
+	//	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
+	//	 * success
+	//	 *
+	//	 * @param juspayOrderId
+	//	 * @param mplCustomerID
+	//	 * @return PaymentTransactionModel
+	//	 */
+	//	@Override
+	//	public PaymentTransactionModel getOrderStatusFromCart(final String juspayOrderId, final String mplCustomerID)
+	//	{
+	//		if (null != getMplPaymentService().getOrderStatusFromCart(juspayOrderId, mplCustomerID))
+	//		{
+	//			final PaymentTransactionModel paymentTransaction = getMplPaymentService().getOrderStatusFromCart(juspayOrderId,
+	//					mplCustomerID);
+	//			return paymentTransaction;
+	//		}
+	//		else
+	//		{
+	//			return null;
+	//		}
+	//	}
 
 
 
@@ -1591,11 +1591,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1646,9 +1646,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override

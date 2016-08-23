@@ -13,7 +13,6 @@ import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
@@ -146,12 +145,12 @@ public interface MplPaymentFacade
 	void saveCart(CartModel cart);
 
 
-	/**
-	 * This method sends request to JusPay to get the Order Status
-	 *
-	 * @return String
-	 *
-	 */
+	//	/**
+	//	 * This method sends request to JusPay to get the Order Status
+	//	 *
+	//	 * @return String
+	//	 *
+	//	 */
 	//String getOrderStatusFromJuspay();
 
 
@@ -185,25 +184,25 @@ public interface MplPaymentFacade
 	String fetchPhoneNumber(final AbstractOrderModel abstractOrderModel);
 
 
-	/**
-	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
-	 *
-	 * @param orderId
-	 * @return String
-	 *
-	 */
-	String getJuspayOrderStatus(String orderId);
+	//	/**
+	//	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
+	//	 *
+	//	 * @param orderId
+	//	 * @return String
+	//	 *
+	//	 */
+	//	String getJuspayOrderStatus(String orderId);
 
 
-	/**
-	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
-	 * success
-	 *
-	 * @param juspayOrderId
-	 * @param mplCustomerID
-	 * @return PaymentTransactionModel
-	 */
-	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
+	//	/**
+	//	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
+	//	 * success
+	//	 *
+	//	 * @param juspayOrderId
+	//	 * @param mplCustomerID
+	//	 * @return PaymentTransactionModel
+	//	 */
+	//	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
 
 	/**
 	 * This method takes the Mobile Number as input parameters and calls the service to check whether the customer is
@@ -290,11 +289,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -302,9 +301,9 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return Map<String, List<MplNetbankingData>>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;

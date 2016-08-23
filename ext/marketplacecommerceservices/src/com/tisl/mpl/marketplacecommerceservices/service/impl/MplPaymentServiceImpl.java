@@ -1694,31 +1694,31 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 	}
 
-
-	/**
-	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
-	 * success
-	 *
-	 * @param juspayOrderId
-	 * @param mplCustomerID
-	 * @return PaymentTransactionModel
-	 */
-	@Override
-	public PaymentTransactionModel getOrderStatusFromCart(final String juspayOrderId, final String mplCustomerID)
-	{
-		PaymentTransactionModel paymentTransaction = null;
-		if (null != getMplPaymentDao().getOrderStatusFromCart(juspayOrderId, mplCustomerID))
-		{
-			paymentTransaction = getMplPaymentDao().getOrderStatusFromCart(juspayOrderId, mplCustomerID);
-			//return paymentTransaction;	SONAR Fix
-		}
-		//		else
-		//		{
-		//			return null;	SONAR Fix
-		//		}
-
-		return paymentTransaction;
-	}
+	//Commented as not used after TPR-629
+	//	/**
+	//	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
+	//	 * success
+	//	 *
+	//	 * @param juspayOrderId
+	//	 * @param mplCustomerID
+	//	 * @return PaymentTransactionModel
+	//	 */
+	//	@Override
+	//	public PaymentTransactionModel getOrderStatusFromCart(final String juspayOrderId, final String mplCustomerID)
+	//	{
+	//		PaymentTransactionModel paymentTransaction = null;
+	//		if (null != getMplPaymentDao().getOrderStatusFromCart(juspayOrderId, mplCustomerID))
+	//		{
+	//			paymentTransaction = getMplPaymentDao().getOrderStatusFromCart(juspayOrderId, mplCustomerID);
+	//			//return paymentTransaction;	SONAR Fix
+	//		}
+	//		//		else
+	//		//		{
+	//		//			return null;	SONAR Fix
+	//		//		}
+	//
+	//		return paymentTransaction;
+	//	}
 
 
 	/**
