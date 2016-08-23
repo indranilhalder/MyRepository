@@ -744,7 +744,12 @@
 
 		<!-- Product Feature Enum Ends -->
 
-
+		<!-- TPR-627 -->
+		<enumtype code="isSshipCodEligibleEnum" autocreate="true" generate="true"
+			dynamic="true">
+			<value code="yes" />
+			<value code="no" />
+		</enumtype>
 
 
 
@@ -2022,8 +2027,8 @@
 					</attribute>
 					
 					<!-- TPR-627 -->
-					<attribute type="java.lang.Boolean" qualifier="isSshipCodEligble">
-						<description>COD Eligible for SSHIP PRODUCTS</description>
+					<attribute type="isSshipCodEligibleEnum" qualifier="isSshipCodEligible">
+						<description>Rich Attribute:-isSshipCodEligible</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property"></persistence>
