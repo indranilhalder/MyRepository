@@ -80,6 +80,15 @@ $(document).on("click",".rename_link",function(e){
 $(document).on("click",".js-rename-wishlist",function(e){
 	e.preventDefault();
 	$(".rename-input").html(null);
+	var wishName =$(this).prev('div').prev('span').text();
+	/*TPR-646*/
+	utag.link({
+		"link_obj" : this,
+	    "link_text": 'manage_wishlist_rename',
+	    "event_type": 'manage_wishlist_click',
+	    "wishlist_name" : "" + wishName
+	});
+	
 });
 function renameWishlist(newWishlistName) {
 	var oldName = $("#editWishListOld").val();
@@ -182,6 +191,15 @@ function disp(start,end)
 
 $(document).on("click",".sizeNotSpecified_wl",function(e){
 	e.preventDefault();
+	/*TPR-646*/
+	var productCode = $(this).closest(".add_to_cart_wl_form").find("input[name='productCodePost']").val();
+	utag.link({
+		"link_obj" : this,
+	    "link_text": 'add_tobag_wishlist',
+	    "event_type": 'add_tobag_wishlist',
+	    "product_sku_wishlist" : "" + productCode
+	});
+	/*TPR-646 ends*/
 	$("#redirectsToPdp_Wl").val($(this).parent().siblings(".redirectsToPdp_Wl").val());
 });
 
@@ -197,6 +215,7 @@ function redirectsToPDP(producturl) {
 
 $(document).on("click",".remove_product_from_wl",function(e){
 	e.preventDefault();
+	
 	$("#removeFrmWl_name").val($(this).parent().siblings('#particularWishlistName_wl').val());
 	$("#removeFrmWl_productcode").val($(this).parent().siblings('#productCode_wl').val());
 	$("#removeFrmWl_ussid").val($(this).parent().siblings('#ussid_wl').val());
@@ -209,6 +228,16 @@ $(document).on("click",".remove_product_from_wl",function(e){
 	$("#removeFrmWl_moppriceForMSD").val($(this).parent().siblings('#moppriceForMSD_wl').val());
 	$("#removeFrmWl_rootCategoryMSD").val($(this).parent().siblings('#rootCategoryMSD_wl').val());	
 	//End MSD
+	
+	/*TPR-646 Changes*/
+	var productCode = $(this).parent().siblings('#productCode_wl').val();
+	utag.link({
+		"link_obj" : this,
+        "link_text": 'remove_from_wishlist',
+        "event_type": 'remove_from_wishlist',
+        "product_sku_wishlist": "" + productCode
+    });
+	
 });
 
 $(document).on("click",".removeProductConfirmation",function(e){
@@ -345,3 +374,33 @@ $(document).on("keypress","#editWishList",function(e) {
 	var errorDiv = "#errRename";
 	validateSpcharWlName(e,wishlistname,mainDiv,errorDiv);
 }); 
+
+
+/*TPR-646 Changes*/
+$(document).on("click",".js-manage-myList",function(e){
+	e.preventDefault();
+	utag.link({
+		"link_obj" : this,
+	    "link_text": 'manage_wishlist',
+	    "event_type": 'manage_wishlist_click'
+	});
+});
+$(document).on("click",".manageWishlistClose",function(e){
+	e.preventDefault();
+	utag.link({
+		"link_obj" : this,
+	    "link_text": 'manage_wishlist_cancel',
+	    "event_type": 'manage_wishlist_click'
+	});
+});
+
+$(document).on("click",".delete_wishlist",function(e){
+	e.preventDefault();
+	var wishName = $(this).closest("td.delete").find("input[name='wishlistName']").val();
+	utag.link({
+		"link_obj" : this,
+	    "link_text": 'manage_wishlist_delete',
+	    "event_type": 'manage_wishlist_click',
+	    "wishlist_name" : "" + wishName
+	});
+});
