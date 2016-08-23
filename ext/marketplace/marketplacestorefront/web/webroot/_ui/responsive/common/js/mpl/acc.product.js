@@ -240,7 +240,7 @@ ACC.product = {
 		
 		$(document).on("click",".js-add-to-cart_wl",function(event){
 			event.preventDefault();
-			var formElem=$(this).closest(".add_to_cart_wl_form");					
+			var formElem=$(this).closest(".add_to_cart_wl_form");	
 			//For MSD
 			$("#AddToBagFrmWl_isMSDEnabled").val($(this).parent().siblings('#isMSDEnabled_wl_AddToBag').val());
 			$("#AddToBagFrmWl_isApparelExist").val($(this).parent().siblings('#isApparelExist_wl_AddToBag').val());
@@ -249,7 +249,18 @@ ACC.product = {
 			$("#AddToBagFrmWl_sppriceForMSD").val($(this).parent().siblings('#sppriceForMSD_wl_AddToBag').val());
 			$("#AddToBagFrmWl_moppriceForMSD").val($(this).parent().siblings('#moppriceForMSD_wl_AddToBag').val());
 			$("#AddToBagFrmWl_rootCategoryMSD").val($(this).parent().siblings('#rootCategoryMSD_wl_AddToBag').val());
-			//End MSD				
+			//End MSD	
+			
+			/*TPR-646*/
+			var productCode = $(this).closest(".add_to_cart_wl_form").find("input[name='productCodePost']").val();
+			utag.link({
+				"link_obj" : this,
+			    "link_text": 'add_tobag_wishlist',
+			    "event_type": 'add_tobag_wishlist',
+			    "product_sku_wishlist" : "" + productCode
+			});
+			
+			/*TPR-646 ends*/
 			  ACC.product.sendAddToBagWl(formElem.attr("id"));
 			return false;
 		  });
