@@ -266,7 +266,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CARTGUID = "cartGUID".intern();
 	public static final String CUSTOMERQUERY = "select {c:pk} from {customer As c} where {c.uid}=?uid".intern();
 	public static final String UID = "uid".intern();
-	public static final String ALLPROMOTIONSQUERY = "select {p:pk} from {abstractPromotion as p} where {p.enabled}='1' and sysdate()<={p.enddate} and sysdate()>={p.startdate}"
+	public static final String ALLPROMOTIONSQUERY = "select {p:pk} from {abstractPromotion as p} where {p.enabled}='1' and sysdate<={p.enddate} and sysdate>={p.startdate}"
 			.intern();
 
 	//TISPRO-179
@@ -1374,15 +1374,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CARTQUERY = "select {c:pk} from {Cart As c} where {c.guid}=?guid".intern();
 	public static final String ISBUYAGETPROMO = "isBuyAGetPromo".intern();
 
-	public static final String VOUCHERWITHINDATEQUERY = "select {d.voucher} from {DateRestriction as d} where sysdate()>={d.startdate} and sysdate()<={d.enddate}";
+	public static final String VOUCHERWITHINDATEQUERY = "select {d.voucher} from {DateRestriction as d} where sysdate>={d.startdate} and sysdate<={d.enddate}";
 
-	public static final String GETPROMOTIONS = "select {p:pk} from {AbstractPromotion as p} where {p.enabled}='1' and sysdate()<={p.enddate} and sysdate()>={p.startdate} and {immutableKeyHash} is null";
+	public static final String GETPROMOTIONS = "select {p:pk} from {AbstractPromotion as p} where {p.enabled}='1' and sysdate<={p.enddate} and sysdate>={p.startdate} and {immutableKeyHash} is null";
 	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
 
 	public static final String CARD_TYPE_CREDIT = "CREDIT".intern();
 	public static final String CARD_TYPE_DEBIT = "DEBIT".intern();
 
-	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate() and {p.voucherEndDate}>=?sysdate() ";
+	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate and {p.voucherEndDate}>=?sysdate ";
 
 	//CRM Ticket Type
 	public static final String TICKET_TYPE = "D";
