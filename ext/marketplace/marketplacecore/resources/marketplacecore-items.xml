@@ -2028,7 +2028,7 @@
 					
 					<!-- TPR-627 -->
 					<attribute type="isSshipCodEligibleEnum" qualifier="isSshipCodEligible">
-						<description>Rich Attribute:-isSshipCodEligible</description>
+						<description>COD Eligibility check for SSHIP Poducts: isSshipCodEligible</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property"></persistence>
