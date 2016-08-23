@@ -24,7 +24,7 @@
 
 	
 		<ul class="tabs">
-			<li id="sign_in_content">
+			<li id="sign_in_content" class="active">
 				<cms:pageSlot position="RightContentSlot" var="feature">
 					<cms:component component="${feature}" />
 				</cms:pageSlot>

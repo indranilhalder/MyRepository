@@ -56,7 +56,7 @@
 
 		
 								<ul class="tabs">
-									<li id="sign_in_content">
+									<li id="sign_in_content" class="active">
 										<c:url value="/checkout/j_spring_security_check" var="loginAndCheckoutActionUrl" />
 										<multi-checkout:login actionNameKey="checkout.login.loginAndCheckout" action="${loginAndCheckoutActionUrl}"/>
 									</li>

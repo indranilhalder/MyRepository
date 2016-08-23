@@ -33740,6 +33740,10 @@ margin-bottom:52px;
     overflow: auto;
     padding-left: 5px;
 }
+#error-Id, #emptyId{
+	clear:both;
+	padding-top:5px;
+}
 /*Mybag css changes ends*/
 .cart.wrapper .right-block .block.bottom.order-details address, .checkout.wrapper .product-block.addresses li.item address,
 .confirmation .left-block .address address{
@@ -45075,6 +45079,9 @@ padding:0;
     padding-top: 2px;
     margin-right: 10px;
         margin-bottom: 1px;
+            -webkit-transition: none;
+    -moz-transition:none;
+    transition: none;
     }
     .sign-in.tab-view .tabs > li .left form div#checkBox input[type="checkbox"]:checked + label:before{
         content: "";
@@ -45323,9 +45330,7 @@ display:none;
     width: 100%;
     margin: 0 0 20px;
 }
-.else-brdrtp {
-    margin-right: 10px;
-}
+
 .else-brdrbtm,.else-brdrtp {
     width: 44%;
     height: 1px;
@@ -45339,10 +45344,8 @@ display:none;
 .else-brdrbtm {
     margin-left: 10px;
 }
-.else-brdrbtm, .else-brdrtp {
-    width: 44%;
-    height: 1px;
-    margin: 14px 0;
+.else-brdrtp {
+    margin-right: 10px;
 }
 .sign-in.tab-view .tabs > li .left form .forgotten-password_login{
 	overflow:hidden;
@@ -45373,5 +45376,9 @@ display:none;
     font-weight:normal;
 }
 }
-
+@media (max-width: 450px){
+.else-brdrbtm, .else-brdrtp {
+    width: 41%;
+}
+}
 /*Login End*/
