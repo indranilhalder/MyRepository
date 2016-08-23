@@ -5688,7 +5688,28 @@
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
 					</attribute>
-
+					<!-- Search POC start-->
+					<attribute qualifier="isRangeFaceted"
+						type="java.lang.Boolean">
+						<description>Set this to true for Standardizing the Value</description>
+						<modifiers read="true" write="true" optional="true" />
+						<defaultvalue>false</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="isNumeric"
+						type="java.lang.Boolean">
+						<description>Set this to false for allowing Non Numeric Faceting</description>
+						<modifiers read="true" write="true" optional="true" />
+						<defaultvalue>true</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="unitType"
+						type="java.lang.String">
+						<description>Help in determining the unit system</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- Search POC ends -->
 				</attributes>
 			</itemtype>
 
@@ -8403,7 +8424,42 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-
+		
+		
+		<!-- Search POC start-->
+		<typegroup name="DataConversion">
+			<itemtype code="Sizesystem" autocreate="true" generate="true">
+				<deployment table="mplDataConversion" typecode="16010" />
+				<attributes>
+					<attribute autocreate="true" qualifier="Name" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="true" optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="From" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="To"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+				<attribute autocreate="true" qualifier="conversionUnit" 
+						type="java.lang.Double" generate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+							</attribute>
+				<attribute autocreate="true" qualifier="propertyName" 
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+		<!-- Search POC ends-->
 	</itemtypes>
 	
 </items>
