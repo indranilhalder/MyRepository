@@ -216,8 +216,8 @@
 					slotId="perspectives" template="true">
 				</widget>
 				<!-- Tship Delivery tat @prabhakar.s@techouts -->
-				<!-- <widget widgetDefinitionId="com.techouts.widgets.tshipdeliverytatwidget"
-					id="tshipdeliverytat" slotId="perspectives" template="true"></widget> -->
+				<widget widgetDefinitionId="com.techouts.widgets.tshipdeliverytatwidget"
+					id="tshipdeliverytat" slotId="perspectives" template="true"></widget>
 
 				<!-- awb edit -->
 				<widget id="awbedit" widgetDefinitionId="com.hybris.oms.widgets.awbwidget"
@@ -234,12 +234,7 @@
 				<widget id="configarable_params" widgetDefinitionId="com.hybris.oms.widgets.configurableParamWidget"
 					slotId="perspectives" template="true">
 				</widget>
-				<!-- added for delivery tat -->
-				<widget widgetDefinitionId="com.techouts.widgets.deliverytat"
-					title="delivery Tat widget" id="deliverytat" slotId="perspectives"
-					template="true">
-
-				</widget>
+				
 
 				<!-- Tship vs SShip Assignment Report -->
 
