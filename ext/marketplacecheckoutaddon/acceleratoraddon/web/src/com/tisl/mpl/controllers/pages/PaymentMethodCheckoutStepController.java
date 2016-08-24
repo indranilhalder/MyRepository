@@ -619,6 +619,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (null == orderModel)
 			{
 				//Existing code based on cartModel during first payment try
+				//getting CartModel
+				final CartModel cartModel = cartService.getSessionCart();
 				//getting Cartdata
 				final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 
@@ -632,7 +634,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					final Double totalCODCharge = Double.valueOf(cartData.getConvenienceChargeForCOD().getValue().doubleValue());
 
 					//saving COD Payment related info
-					getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge, null);
+					getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge, cartModel);
 
 					//adding Payment id to model
 					model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
@@ -4030,7 +4032,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

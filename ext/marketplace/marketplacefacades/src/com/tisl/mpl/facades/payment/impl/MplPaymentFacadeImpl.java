@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.facades.payment.impl;
 
+import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParameterNotNull;
+
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -144,15 +146,12 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public Map<String, Boolean> getPaymentModes(final String store, final boolean isMobile, final CartData cartDataMobile)
 			throws EtailNonBusinessExceptions
 	{
-
 		//Declare variable
 		final Map<String, Boolean> data = new HashMap<String, Boolean>();
-
 		try
 		{
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
-
 			boolean flag = false;
 			CartData cartData = null;
 			if (isMobile)
@@ -164,18 +163,20 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			{
 				cartData = getMplCustomAddressFacade().getCheckoutCart();
 			}
-
-
-			for (final OrderEntryData entry : cartData.getEntries())
+			//IQA changes TPR-629
+			if (cartData != null)
 			{
-
-				if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getCode() != null)
+				for (final OrderEntryData entry : cartData.getEntries())
 				{
-					if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+
+					if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getCode() != null)
 					{
-						LOG.info("Any product Content CnC Then break loop and change flag value");
-						flag = true;
-						break;
+						if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+						{
+							LOG.info("Any product Content CnC Then break loop and change flag value");
+							flag = true;
+							break;
+						}
 					}
 				}
 			}
@@ -449,6 +450,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 							.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, otp)
 							.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber), mobileNumber);
 		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.LOGERROR, e);
+		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.LOGERROR, e);
@@ -515,14 +520,20 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			throws EtailNonBusinessExceptions
 	{
 		//getting current customer details
-		//final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser(); TISPT-204 Point no 3
-		final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
-
-		final String customerPk = customer.getPk().toString();
-		final String customerEmail = customer.getOriginalUid();
-		final String customerPhoneNo = fetchPhoneNumber(abstractOrderModel);
-
+		String customerPk = null;
+		String customerEmail = null;
+		String customerPhoneNo = null;
 		boolean mplCustomerIsBlackListed = false;
+		//final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser(); TISPT-204 Point no 3
+		//IQA changes TPR-629
+		if (abstractOrderModel != null)
+		{
+			final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
+			customerPk = customer.getPk().toString();
+			customerEmail = customer.getOriginalUid();
+			customerPhoneNo = fetchPhoneNumber(abstractOrderModel);
+		}
+
 		try
 		{
 			//checking user blacklisted or not
@@ -577,7 +588,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			//saving cartmodel
 			final Double deliveryCost = cart.getDeliveryCost();
-			getModelService().save(cart);
+			getModelService().save(cart); // This has been done after debugging for setting the delivery cost.As delivery cost is no longer available
 			cart.setDeliveryCost(deliveryCost);
 			getModelService().save(cart);
 		}
@@ -1286,20 +1297,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	//TISPRD-361 method signature changes
 	@Override
-	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final OrderModel orderModel) //Parameter OrderModel added extra for TPR-629
+	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final AbstractOrderModel abstractOrderModel) //Parameter abstractOrderModel added extra for TPR-629
 			throws EtailNonBusinessExceptions, Exception
 	{
 		//getting the current user
 		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
 		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-
-		if (null == orderModel)
+		//IQA changes TPR-629 and Refactor
+		if (null != abstractOrderModel)
 		{
-			final CartModel cart = getCartService().getSessionCart();
-			final List<AbstractOrderEntryModel> entries = cart.getEntries();
+			final List<AbstractOrderEntryModel> entries = abstractOrderModel.getEntries();
 
 			//setting payment transaction for COD
-			getMplPaymentService().setPaymentTransactionForCOD(paymentMode, cart);
+			getMplPaymentService().setPaymentTransactionForCOD(paymentMode, abstractOrderModel);
 
 			if (null != mplCustomer)
 			{
@@ -1308,44 +1318,22 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					final String custName = mplCustomer.getName();
 
 					//saving COD PaymentInfo
-					getMplPaymentService().saveCODPaymentInfo(custName, cartValue, totalCODCharge, entries, cart);
+					getMplPaymentService().saveCODPaymentInfo(custName, cartValue, totalCODCharge, entries, abstractOrderModel);
 				}
 				else
 				{
 					final String custEmail = mplCustomer.getOriginalUid();
 
 					//saving COD PaymentInfo
-					getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, cart);
+					getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, abstractOrderModel);
 				}
 			}
-			getMplPaymentService().paymentModeApportion(cart);
+			getMplPaymentService().paymentModeApportion(abstractOrderModel);
+
 		}
 		else
 		{
-			final List<AbstractOrderEntryModel> entries = orderModel.getEntries();
-
-			//setting payment transaction for COD
-			getMplPaymentService().setPaymentTransactionForCOD(paymentMode, orderModel);
-
-			if (null != mplCustomer)
-			{
-				if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
-				{
-					final String custName = mplCustomer.getName();
-
-					//saving COD PaymentInfo
-					getMplPaymentService().saveCODPaymentInfo(custName, cartValue, totalCODCharge, entries, orderModel);
-				}
-				else
-				{
-					final String custEmail = mplCustomer.getOriginalUid();
-
-					//saving COD PaymentInfo
-					getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, orderModel);
-				}
-			}
-			getMplPaymentService().paymentModeApportion(orderModel);
-
+			LOG.debug("Unable to save COD PAyment Info");
 		}
 
 
@@ -1591,11 +1579,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1646,9 +1634,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -2046,24 +2034,25 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		//Declare variable
 		final Map<String, Boolean> data = new HashMap<String, Boolean>();
-
+		boolean flag = false;
 		try
 		{
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
-
-			boolean flag = false;
-
-			for (final OrderEntryData entry : orderData.getEntries())
+			//IQA changes TPR-629
+			if (orderData != null)
 			{
-
-				if (entry.getMplDeliveryMode() != null && StringUtils.isNotEmpty(entry.getMplDeliveryMode().getCode()))
+				for (final OrderEntryData entry : orderData.getEntries())
 				{
-					if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+
+					if (entry.getMplDeliveryMode() != null && StringUtils.isNotEmpty(entry.getMplDeliveryMode().getCode()))
 					{
-						LOG.info("Any product Content CnC Then break loop and change flag value");
-						flag = true;
-						break;
+						if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+						{
+							LOG.info("Any product Content CnC Then break loop and change flag value");
+							flag = true;
+							break;
+						}
 					}
 				}
 			}
@@ -2617,6 +2606,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	private String findParentUssId(final AbstractOrderEntryModel entryModel, final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel and abstractOrderEntryModel for TPR-629
 	{
+		//IQA Changes TPR-629
+		validateParameterNotNull(entryModel, MarketplaceFacadesConstants.CART_ENTRY_NULL);
+
 		final Long ussIdA = getQuantity(entryModel.getAssociatedItems().get(0), abstractOrderModel);
 		final Long ussIdB = getQuantity(entryModel.getAssociatedItems().get(1), abstractOrderModel);
 		final String ussIdADelMod = getDeliverModeForABgetC(entryModel.getAssociatedItems().get(0), abstractOrderModel);

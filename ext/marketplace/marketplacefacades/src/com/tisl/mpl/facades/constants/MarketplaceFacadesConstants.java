@@ -136,6 +136,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String SAVE_STORE_TOPORUDCT_FAIL_MSG = "no";
 	public static final String UNKNOWN = "unknown".intern();
 	public static final String DEFAULT_WISHLIST_NAME = "My Wishlist";
+	public static final String CART_ENTRY_NULL = "Cart Entry not present".intern();
 
 	private MarketplaceFacadesConstants()
 	{

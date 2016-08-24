@@ -550,7 +550,7 @@ public class PaymentServicesController extends BaseController
 								final Double totalCODCharge = cart.getConvenienceCharges();
 
 								//saving COD Payment related info
-								getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge, null);
+								getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge, cart);
 
 								//Mandatory checks agains cart
 								final boolean isValidCart = getMplPaymentFacade().checkCart(cart);

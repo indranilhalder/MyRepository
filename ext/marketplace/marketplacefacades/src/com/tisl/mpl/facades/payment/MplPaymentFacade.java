@@ -169,10 +169,11 @@ public interface MplPaymentFacade
 	 *
 	 * @param cartValue
 	 * @param totalCODCharge
+	 * @param abstractOrderModel
 	 */
-	//TISPRD-361
-	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge, OrderModel orderModel) throws EtailNonBusinessExceptions,
-			Exception;
+	//TISPRD-361 TPR-629 Refactor
+	void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final AbstractOrderModel abstractOrderModel) //Parameter OrderModel added extra for TPR-629
+			throws EtailNonBusinessExceptions, Exception;
 
 
 	/**

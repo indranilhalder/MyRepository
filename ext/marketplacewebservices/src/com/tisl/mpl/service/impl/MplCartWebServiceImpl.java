@@ -891,16 +891,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			final boolean resetReqd) throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
 		CartModel finalCart = null;
+		OrderModel finalOrder = null;
 		final List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
 		ProductData productData = null;
 		final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<>();
+		List<PromotionResultModel> promotionResult = null;
 		try
 		{
 			if (abstractOrderModel instanceof CartModel)
 			{
 				finalCart = (CartModel) abstractOrderModel;
 				finalCart.setChannel(SalesApplication.MOBILE);
-				getModelService().save(abstractOrderModel);
+				getModelService().save(finalCart);
 				if (resetReqd)
 				{
 					finalCart = mplCartFacade.removeDeliveryMode(finalCart);
@@ -911,9 +913,16 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 				abstractOrderModel = finalCart;
 			}
+			else if (abstractOrderModel instanceof OrderModel)
+			{
+				finalOrder = (OrderModel) abstractOrderModel;
+				finalOrder.setSalesApplication(SalesApplication.MOBILE);
+				getModelService().save(finalOrder);
+				abstractOrderModel = finalOrder;
+			}
 
-			List<PromotionResultModel> promotionResult = null;
-			if (null != abstractOrderModel.getAllPromotionResults() && !abstractOrderModel.getAllPromotionResults().isEmpty())
+
+			if (CollectionUtils.isNotEmpty(abstractOrderModel.getAllPromotionResults()))
 			{
 				promotionResult = new ArrayList(abstractOrderModel.getAllPromotionResults());
 			}
@@ -921,8 +930,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//Removed checkedPincode
 			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
 			/*
-			 * TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
-			 *
+			 * TISPT- 96
+			 * 
 			 * {
 			 */
 			for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderModel.getEntries())
@@ -985,7 +994,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 				else
 				{
-					LOG.info("*************** Mobile webservice root category is empty ********************");
+					LOG.debug("*************** Mobile webservice root category is empty ********************");
 				}
 
 				final String catId = mplProductWebService.getCategoryCodeOfProduct(productData);
@@ -1009,7 +1018,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 				else
 				{
-					LOG.info("*************** Mobile webservice images are empty ********************");
+					LOG.debug("*************** Mobile webservice images are empty ********************");
 				}
 
 				if (StringUtils.isNotEmpty(productData.getColour()))
@@ -1018,7 +1027,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 				else
 				{
-					LOG.info("*************** Mobile webservice color is empty ********************");
+					LOG.debug("*************** Mobile webservice color is empty ********************");
 				}
 				if (StringUtils.isNotEmpty(productData.getSize()))
 				{
@@ -1026,7 +1035,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 				else
 				{
-					LOG.info("*************** Mobile webservice size is empty ********************");
+					LOG.debug("*************** Mobile webservice size is empty ********************");
 				}
 				/* capacity */
 				if (abstractOrderEntry.getProduct() instanceof PcmProductVariantModel)
@@ -1046,7 +1055,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							}
 							else
 							{
-								LOG.info("*************** Mobile webservice product capacity empty********************");
+								LOG.debug("*************** Mobile webservice product capacity empty********************");
 							}
 						}
 					}
@@ -2080,7 +2089,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			if (null != responseData)
 			{
 				final boolean isCOdEligible = mplCartFacade.addCartCodEligible(deliveryModeDataMap, responseData, cartModel);
-				LOG.info("isCOdEligible " + isCOdEligible);
+				LOG.debug("isCOdEligible " + isCOdEligible);
 			}
 		}
 		catch (final Exception e)

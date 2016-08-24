@@ -13,6 +13,8 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -87,8 +89,6 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	private MplCheckoutFacade mplCheckoutFacade;
 	@Resource(name = "baseStoreService")
 	private BaseStoreService baseStoreService;
-	@Autowired
-	private Converter<OrderModel, OrderData> orderConverter;
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 
@@ -468,12 +468,12 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	}
 
 	/**
-	 * Check Valid Bin Number and Apply promotion for new char and saved card
+	 * Check Valid Bin Number and Apply promotion for new char and saved card --TPR-629
 	 *
 	 * @param binNo
 	 * @param bankName
 	 * @param paymentMode
-	 * @param cart
+	 * @param order
 	 * @return MplPromotionDTO
 	 * @throws EtailNonBusinessExceptions
 	 */
@@ -775,9 +775,11 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	 *
 	 * @param order
 	 * @return updated
+	 * @throws CalculationException
+	 * @throws InvalidCartException
 	 */
 	@Override
-	public boolean updateOrder(final OrderModel order) throws EtailBusinessExceptions, Exception
+	public boolean updateOrder(final OrderModel order) throws EtailBusinessExceptions, InvalidCartException, CalculationException
 	{
 		boolean updated = false;
 		OrderData orderData = null;
