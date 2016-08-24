@@ -50,7 +50,7 @@
 					<c:if test="${ not empty deliveryAddress.line3 }">
 						${fn:escapeXml(deliveryAddress.line3)},
 					</c:if>
-					<c:if test="${ not empty deliveryAddress.landmark }">
+					<c:if test="${ not empty deliveryAddress.landmark && deliveryAddress.landmark != 'NA'}">
 						${fn:escapeXml(deliveryAddress.landmark)},
 					</c:if>
 					<br>
