@@ -3448,7 +3448,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				newAddress.setLandmark(addressForm.getLandmark());
 			}
-			else
+			else if(null != addressForm.getOtherLandmark())
 			{
 				newAddress.setLandmark(addressForm.getOtherLandmark());
 			}
@@ -3566,7 +3566,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				newAddress.setLandmark(addressForm.getLandmark());
 			}
-			else
+			else if (null != addressForm.getOtherLandmark())
 			{
 				newAddress.setLandmark(addressForm.getOtherLandmark());
 			}
@@ -3812,7 +3812,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				selectedAddress.setLandmark(addressForm.getLandmark());
 			}
-			else
+			else if (null != addressForm.getOtherLandmark())
 			{
 				selectedAddress.setLandmark(addressForm.getOtherLandmark());
 			}
@@ -7029,7 +7029,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				addressData.setLandmark(addressForm.getLandmark());
 			}
-			else
+			else if (null != addressForm.getOtherLandmark())
 			{
 				addressData.setLandmark(addressForm.getOtherLandmark());
 			}
