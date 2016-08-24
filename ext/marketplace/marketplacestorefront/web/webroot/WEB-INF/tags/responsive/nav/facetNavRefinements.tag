@@ -28,17 +28,20 @@
 		</c:when>
 		
 		<c:otherwise>
-			<c:choose>
-				<c:when test="${(fn:length(searchCategory) > 5 || fn:length(categoryCode) > 5 && !fn:contains(categoryCode, 'mbh'))}">		   			     
-					<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
-			   	</c:when>
-		   		<c:otherwise>
-		   			<c:if test="${facet.genericFilter}">
-		   			    <%-- <input type="hidden" name="removeQueryUrlForPriceValue" value="${removeQueryUrlForPriceValue}" /> --%>		   			     
-				 		<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
-					</c:if> 
-		   		</c:otherwise>
-			 </c:choose>  
+			<c:set var="facetValuesForStock" value="${facet.values}" />
+			<c:set var="facetStockSize" value="${fn:length(facetValuesForStock)}" />
+			<c:if test="${facet.code != 'inStockFlag' || facetStockSize !='1'}">	
+				<c:choose>
+					<c:when test="${(fn:length(searchCategory) > 5 || fn:length(categoryCode) > 5 && !fn:contains(categoryCode, 'mbh'))}">
+						<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+				   	</c:when>
+			   		<c:otherwise>
+			   			<c:if test="${facet.genericFilter}">
+					 		<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+						</c:if> 
+			   		</c:otherwise>
+				 </c:choose> 
+			  </c:if>
 		</c:otherwise>
 	</c:choose>
 </c:forEach>
@@ -59,8 +62,8 @@
 
 
 				<li class="filter-inStockFlag">
-
-					<form action="#" method="get"> 
+					<c:set var="url" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+					<form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value=""/>
 								<input type="hidden" name="searchCategory" value="all"/>
 								<input type="hidden" name="q" value="${currentQuery}:inStockFlag:true"/>
