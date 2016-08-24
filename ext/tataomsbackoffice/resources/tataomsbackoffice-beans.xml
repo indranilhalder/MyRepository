@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!--
-  ~ [y] hybris Platform
-  ~
-  ~ Copyright (c) 2000-2015 hybris AG
-  ~ All rights reserved.
-  ~
-  ~ This software is the confidential and proprietary information of hybris
-  ~ ("Confidential Information"). You shall not disclose such Confidential
-  ~ Information and shall use it only in accordance with the terms of the
-  ~ license agreement you entered into with hybris.
-  -->
+<!-- ~ [y] hybris Platform ~ ~ Copyright (c) 2000-2015 hybris AG ~ All rights 
+	reserved. ~ ~ This software is the confidential and proprietary information 
+	of hybris ~ ("Confidential Information"). You shall not disclose such Confidential 
+	~ Information and shall use it only in accordance with the terms of the ~ 
+	license agreement you entered into with hybris. -->
 
-<!--
-	ATTENTION: This is just an example file. You have to edit it according to your needs.
--->
+<!-- ATTENTION: This is just an example file. You have to edit it according 
+	to your needs. -->
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="beans.xsd">
 
 
 	<bean class="com.hybris.oms.tata.data.MplTimeSlotsData">
@@ -23,13 +17,19 @@
 		<property name="fromTime" type="String"></property>
 		<property name="toTime" type="String"></property>
 	</bean>
-	
+
 	<bean class="com.hybris.oms.tata.data.MplBUCConfigurationsData">
 		<property name="airDeliveryBuffer" type="int"></property>
 		<property name="surDeliveryBuffer" type="int"></property>
 		<property name="sdCharge" type="double"></property>
 		<property name="edCharge" type="double"></property>
 	</bean>
-	
+	<bean class="com.techouts.backoffice.ShortUrlReportData">
+		<property name="orderId" type="String"></property>
+		<property name="longUrl" type="String"></property>
+		<property name="shortUrl" type="String"></property>
+		<property name="cliks" type="int"></property>
+		<property name="logins" type="int"></property>
+	</bean>
 
 </beans>
