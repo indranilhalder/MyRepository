@@ -115,10 +115,6 @@ public class InitialDataSystemSetup extends AbstractSystemSetup
 				String.format("/%s/import/sampledata/productCatalogs/%sProductCatalog/categories_watches.impex", new Object[]
 				{ "marketplaceinitialdata", MARKETPLACE }), false);
 
-		getSampleDataImportService().execute(this, context, importData);
-		getEventService().publishEvent(new SampleDataImportedEvent(context, importData));
-
-
 		importImpexFile(context, String.format(
 				"/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-hierarchy_watches_fa.impex", new Object[]
 				{ "marketplaceinitialdata", MARKETPLACE }), false);
@@ -134,6 +130,11 @@ public class InitialDataSystemSetup extends AbstractSystemSetup
 		importImpexFile(context, String.format(
 				"/%s/import/sampledata/productCatalogs/%sProductCatalog/classifications-system_watches.impex", new Object[]
 				{ "marketplaceinitialdata", MARKETPLACE }), false);
+		getSampleDataImportService().execute(this, context, importData);
+		getEventService().publishEvent(new SampleDataImportedEvent(context, importData));
+
+
+
 
 	}
 
