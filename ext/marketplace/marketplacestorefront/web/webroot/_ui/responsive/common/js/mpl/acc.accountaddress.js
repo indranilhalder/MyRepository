@@ -1042,17 +1042,17 @@ function editAddress(addressId) {
             document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
             flagLn = false;
         }
-        if (addressForm.line1.value == null || addressForm.line1.value == "") {
+        if (addressForm.line1.value == null || addressForm.line1.value.trim() == "") {
         	$("#errddressline1").css({"display":"block"});
         	document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 1</font>";
         	flagAd1 = false;
         }
-        if (addressForm.line2.value == null || addressForm.line2.value == "") {
+        if (addressForm.line2.value == null || addressForm.line2.value.trim() == "") {
         	$("#errddressline2").css({"display":"block"});
         	document.getElementById("erraddressline2").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 2</font>";
         	flagAd2 = false;
         }
-        if (addressForm.line3.value == null || addressForm.line3.value == "") {
+        if (addressForm.line3.value == null || addressForm.line3.value.trim() == "") {
         	$("#errddressline3").css({"display":"block"});
         	document.getElementById("erraddressline3").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 3</font>";
         	flagAd3 = false;
