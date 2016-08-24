@@ -8769,11 +8769,11 @@ footer .banner {
       letter-spacing: 1.2px;
       text-decoration: underline;
       color: #A9143C; }
-      .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
+      .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password,.page-login .sign-in.tab-view .tabs > li .left form .forgotten-password_register{
       padding: 20px 0 10px 0;
       text-align: center;
       }
-      .sign-in.tab-view .tabs > li .left form .forgotten-password{
+      .sign-in.tab-view .tabs > li .left form .forgotten-password,.sign-in.tab-view .tabs > li .left form .forgotten-password_register{
       text-align: center;
       padding:10px 0;
       font-size:11px;
