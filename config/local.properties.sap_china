@@ -1132,3 +1132,14 @@ buybox.lastruntime=SELECT m.p_mplconfigdate FROM mplconfiguration m WHERE ( m.p_
 #Added for facet top value count
 search.Facet.topValue=8
 search.categoryFacet.topValue=4
+
+######Size Guide for FA######
+###;MPH1600002,MPH1601002,MPH1602002
+accessories.sideguide.category.showlist=MPH1600002,MPH1601002,MPH1602002
+fashionaccessories.sizeguide.header.age=Years
+fashionaccessories.sizeguide.header.size=Size
+fashionaccessories.sizeguide.header.cmsbeltsize=Belt Size (cm)
+fashionaccessories.sizeguide.header.inchesbeltsize=Belt Size (inch)
+fashionaccessories.sizeguide.header.cmswaistsize=Waist (cm)
+fashionaccessories.sizeguide.header.incheswaistsize=Waist Size ( inch)
+fashionaccessories.sizeguide.header.inchesbeltlength=Belt Length (inch)
