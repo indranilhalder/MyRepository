@@ -190,8 +190,9 @@ function loadVariant(x){
 </li>
 </ul>
 <!-- share mobile -->
-<div class="size" style="font-size: 12px;">
+
 <c:if test="${noVariant!=true&&notApparel!=true}">
+<div class="size" style="font-size: 12px;">
 	<form:form action="/" id="sizevariantForm" method="post">
 		<input type="hidden" maxlength="10" size="1" id="sellersSkuListId"
 			name="sellersSkuListId" value="" />
@@ -298,8 +299,9 @@ function loadVariant(x){
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
 		</a> --%>
+	</div>
 </c:if>
-</div>
+
 <div id="allVariantOutOfStock" style="display: none;">
 	<spring:theme code="product.product.outOfStock" />
 </div>

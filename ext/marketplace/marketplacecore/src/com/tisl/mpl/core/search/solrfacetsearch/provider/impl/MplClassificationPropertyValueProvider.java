@@ -198,7 +198,6 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 		{
 			result.addAll(extractFieldValues(indexedProperty, null, feature.getValues()));
 		}
-		System.out.println("final result ************* " + result);
 		return result;
 	}
 }

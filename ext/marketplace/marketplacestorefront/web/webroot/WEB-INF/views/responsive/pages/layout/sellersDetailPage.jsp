@@ -446,7 +446,15 @@ var allSellers='${allsellers}';
 				</c:forEach>
 			</div>
 		</div>
-		
+		<div class="wishAddSucess">
+			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+		</div>
+		<div class="wishAddLogin">
+			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+		</div>
+		<div class="wishAlreadyAdded">
+			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+		</div>
 		<div class="product-detail">
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">

@@ -11,7 +11,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
 <div class="left headline">
-<p class="sign-in-welcomeMessage">	<spring:theme code="login.sign.in.tab.title" /></p>
+<p>	<spring:theme code="login.sign.in.tab.title" /></p>
 
 <p style="display:none" class="description"><!--<spring:theme code="login.description" />--></p>
 
@@ -26,26 +26,24 @@
 		</div>
 	</c:if>
 	
-		 <formElement:formInputBox idKey="j_username" labelKey="" placeholder="EMAIL ADDRESS"
+		 <formElement:formInputBox idKey="j_username" labelKey="login.email"
 			path="j_username" inputCSS="form-control" mandatory="true" />
 			<div class="help-block has-error" id="signinEmailIdDiv" style="display: none;"></div>
 		<formElement:formPasswordBox idKey="j_password"
-			labelKey="" path="j_password" inputCSS="form-control"
+			labelKey="login.password" path="j_password" inputCSS="form-control"
 			mandatory="true" />
 			<div class="help-block has-error" id="signinPasswordDiv" style="display: none;"></div>
-			
-			
-	<div class="forgotten-password forgotten-password_checkout">
-			<a href="<c:url value='/login/pw/request'/>" class="js-password-forgotten"> <spring:theme code="login.link.forgottenPwd" /></a>
-			<input type="hidden" name="Mobileno" id="Mobileno"
-				value="${Mobileno}" /> 
-	</div>
 	<div class="button_fwd_wrapper">
 		<ycommerce:testId code="login_Login_button">
 			<button type="submit" onclick="return checkSignInValidation('Checkout');"><spring:theme code="${actionNameKey}" /></button>
 		</ycommerce:testId>
 	</div>
 	
+	<div class="forgotten-password">
+			<a href="<c:url value='/login/pw/request'/>" class="js-password-forgotten"> <spring:theme code="login.link.forgottenPwd" /></a>
+			<input type="hidden" name="Mobileno" id="Mobileno"
+				value="${Mobileno}" /> 
+	</div>
 	<div class="forgotten-password">
 			New to Tatacliq? &nbsp;<a id="newToTata" href="javascript:void(0);">Register here</a>
 	</div>
@@ -116,10 +114,9 @@
 	</script>
 
 </form:form>
+</div>
 
-
-<%-- <span class="or"><spring:theme code="text.or"/></span> --%>
-<div class="else-sec"><span class="else-brdrtp"></span><span class="else">or </span> <span class="else-brdrbtm"></span></div>
+<span class="or"><spring:theme code="text.or"/></span>
 <!-- For  Gigya and API Social Login -->
 <c:choose>
 <c:when test="${isGigyaEnabled=='Y'}">
@@ -140,4 +137,3 @@
 </c:otherwise>
 </c:choose>
 <!-- End  Gigya and API Social Login -->
-</div>
