@@ -1,4 +1,6 @@
 $(document).ready(
+		
+
 		function() {
 
             var UTAG_SCRIPT_PROD = "<script type='text/javascript'>(function(a,b,c,d){a='//tags.tiqcdn.com/utag/tataunistore/main/prod/utag.js';b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);})();</script>";
@@ -20,6 +22,8 @@ $(document).ready(
 			
 			// Added for tealium
 			if (pageType == "homepage") {
+				
+			
 				// Added for tealium
 				/*$
 						.ajax({
@@ -86,6 +90,8 @@ $(document).ready(
 								+ $("#product_id").val() + '"],';
 						tealiumData += '"page_subcategory_name":"'
 								+ $("#page_subcategory_name").val() + '",';
+						tealiumData += '"page_subcategory_name_L3":"'
+							+ $("#page_subcategory_name_L3").val() + '",';
 						tealiumData += '"product_brand":["'
 								+ $("#product_brand").val() + '"],';
 						tealiumData += '"site_section_detail":"'
@@ -280,5 +286,14 @@ $(document).ready(
 				
 			}
 
-		
+			/*TPR-648 start*/
+			$('.shop-promos .promos a').click(function(){
+				var brandText=$(this).text()+ "_viewdetails";
+				var brandClick=$(this).text()+ "__click";
+				utag.link({"link_obj": this, "link_text": brandText, "event_type" : brandClick
+						});
+					
+			});
+			/*TPR-648 end*/
+			
 		});

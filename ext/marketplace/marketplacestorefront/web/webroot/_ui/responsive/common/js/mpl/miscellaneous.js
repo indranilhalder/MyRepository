@@ -151,6 +151,7 @@
  
 //Script from facetNavAppliedFilters.tag
  var serpSizeList=[];
+ function populateFacet(){
 	var serpSizeCount=-1;
 	var sizeCount=0;
 	var size= $('#sizeCountForAppliedFilter').val();
@@ -159,10 +160,10 @@
 	var arr = searchQuery.split(':');
 	for(var i = 0; i < arr.length; i++)
 	{
+		
 		if (arr[i]=='size')
 		{
 			sizeCount++;
-			//countFreq = 1;
 		}
 		else if (sizeCount >= 1)
 		{
@@ -174,6 +175,7 @@
 		}
 	}
 	}
+ }
 	//End
  
 	//Global Error Popup
