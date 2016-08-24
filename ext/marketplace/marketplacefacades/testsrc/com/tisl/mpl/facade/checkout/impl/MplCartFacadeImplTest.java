@@ -16,6 +16,7 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.order.CartService;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -160,6 +163,17 @@ public class MplCartFacadeImplTest
 		final CartData cartDataMock = Mockito.mock(CartData.class);
 		final List<PinCodeResponseData> omsDeliveryResponseMock = new ArrayList<PinCodeResponseData>();
 		mplCartFacadeImpl.getDeliveryMode(cartDataMock, omsDeliveryResponseMock);
+	}
+
+	@Test
+	public void isInventoryReservedMobile()
+	{
+
+		final String requestType = "payment";
+		final AbstractOrderModel abstractOrderModel = Mockito.mock(CartModel.class);
+		final String defaultPinCodeId = "500030";
+
+		Assert.assertEquals(true, mplCartFacadeImpl.isInventoryReservedMobile(requestType, abstractOrderModel, defaultPinCodeId));
 	}
 
 }

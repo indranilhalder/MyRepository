@@ -2476,7 +2476,7 @@ public class CartsController extends BaseCommerceController
 	}
 
 	/**
-	 * Returns order summary for mobile.
+	 * Returns order summary for mobile. --TPR-629
 	 *
 	 * @param cartId
 	 * @param pincode
@@ -2598,7 +2598,7 @@ public class CartsController extends BaseCommerceController
 	}
 
 	/**
-	 * Cart Reservation for Payment.
+	 * Cart Reservation for Payment. --TPR-629
 	 *
 	 * @queryparam fields Response configuration (list of fields, which should be returned in response)
 	 * @return Details of cart and it's entries
@@ -2628,7 +2628,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -3110,7 +3110,7 @@ public class CartsController extends BaseCommerceController
 	}
 
 	/**
-	 * @description method is called to resend the OTP Number for COD
+	 * @description method is called to resend the OTP Number for COD --TPR-629
 	 * @return ValidateOtpWsDto
 	 * @throws DuplicateUidException
 	 *            , InvalidKeyException ,NoSuchAlgorithmException

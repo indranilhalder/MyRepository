@@ -876,9 +876,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	}
 
 	/**
-	 * Method to fetch cart product details
+	 * Method to fetch cart product details -TPR-629
 	 *
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @param deliveryModeDataMap
 	 * @param isPinCodeCheckRequired
 	 * @param resetReqd
@@ -922,7 +922,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
 			/*
 			 * TISPT- 96 -- https://github.com/tcs-chennai/TCS_COMMERCE_REPO/pull/3577
-			 * 
+			 *
 			 * {
 			 */
 			for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderModel.getEntries())

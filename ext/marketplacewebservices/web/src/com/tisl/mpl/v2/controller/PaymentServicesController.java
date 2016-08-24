@@ -196,7 +196,7 @@ public class PaymentServicesController extends BaseController
 	}
 
 	/**
-	 * Check Valid Bin Number and Apply promotion for new char and saved card
+	 * Check Valid Bin Number and Apply promotion for new char and saved card --TPR-629
 	 *
 	 * @param binNo
 	 * @param bankName
@@ -501,8 +501,7 @@ public class PaymentServicesController extends BaseController
 
 
 	/**
-	 * @description Update Transaction and related Retails for COD alos create Order
-	 * @param cartId
+	 * @description Update Transaction and related Retails for COD also create Order --TPR-629
 	 * @param otpPin
 	 * @return PaymentServiceWsData
 	 * @throws EtailNonBusinessExceptions
@@ -659,9 +658,8 @@ public class PaymentServicesController extends BaseController
 
 	}
 
-	// Update Transaction Details for Credit Card /Debit Card / EMI
 	/**
-	 * @Description Update Transaction and related Retails for Credit Card /Debit Card / EMI and Create Card
+	 * @Description Update Transaction and related Retails for Credit Card /Debit Card / EMI and Create Card --TPR-629
 	 * @param paymentMode
 	 *           (Json)
 	 * @return PaymentServiceWsData
@@ -800,7 +798,7 @@ public class PaymentServicesController extends BaseController
 
 
 	/**
-	 * This method fetches delete the saved cards
+	 * @desc This method fetches delete the saved cards --TPR-629
 	 *
 	 * @return MplSavedCardDTO
 	 */
