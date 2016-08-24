@@ -1488,7 +1488,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
 								if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
 								{
-									//TPR-627
+									//TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
 									final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, cart, model);
 									if (!returnFlag)
 									{
@@ -1497,10 +1497,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								}
 								else
 								{
-									//TPR-627
-									final Boolean IsSshipCodEligble = richAttributeModel.get(0).getIsSshipCodEligble();
-									if (null != IsSshipCodEligble && IsSshipCodEligble.booleanValue())
+									//TPR-627, TPR-622
+									final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
+											.get(0).getIsSshipCodEligible().getCode()
+											: MarketplacecheckoutaddonConstants.NO);
+									// isSshipCodEligble to enable disable COD Eligible for SSHIP Products
+									if (StringUtils.isNotEmpty(isSshipCodEligble)
+											&& isSshipCodEligble.equalsIgnoreCase(MarketplacecheckoutaddonConstants.YES))
 									{
+										//TPR-627,TPR-622 Separate method the check COD Eligibility to avoid redundant code
 										final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, cart, model);
 										if (!returnFlag)
 										{
@@ -1676,7 +1681,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 	/**
-	 * TPR-627
+	 * TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
 	 *
 	 * @param richAttributeModel
 	 * @param cart

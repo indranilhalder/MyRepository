@@ -63,6 +63,12 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 		}
 
 		//Search POC start
+		if (source.getUnitType() != null)
+		{
+
+			target.setUnitType(source.getUnitType());
+
+		}
 		if (source.getIsRangeFaceted() == null)
 		{
 

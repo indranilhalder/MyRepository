@@ -59,7 +59,7 @@
 					</p>
 					</div>		 --%>			
 				<input type="checkbox" id="check_MyRewards" name="check_MyRewards" value="true"/>
-				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" target="_blank" class="tata-rewards">Tata Treats</a> (You can opt-out anytime) By opting in I agree to <a href="${tncmytatarewards }" target="_blank"> T&C </a> of Tata Treats.</label>
+				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" target="_blank" class="tata-rewards">Tata Treats</a> By opting in I agree to <a href="${tncmytatarewards }" target="_blank"> T&C </a> of Tata Treats.</label>
 		</div> 
 	
 	<div class="form-actions clearfix">
@@ -73,14 +73,14 @@
 	<span><a href="/store/mpl/en/login"> &nbsp;  Sign in here</a></span>
 	</div> -->
 </form:form>
-</div>
+
 <%-- <span class="or"><spring:theme code="text.or"/></span> --%>
+<div class="else-sec"><span class="else-brdrtp"></span><span class="else">or </span> <span class="else-brdrbtm"></span></div>
 <!-- For  Gigya and API Social Login -->
-<%-- <c:choose> 
+<c:choose> 
  <c:when test="${isGigyaEnabled=='Y'}">
 <ul class="social-connect" id="gSignInWrapper">
 <li>
-    <br />
    <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
     <div id="loginDivReg"></div>
     </li>
@@ -92,6 +92,7 @@
   <li class="customGPlusSignIn"><a class="go" href="${urlVisit}"><spring:theme code="register.new.google" text="Connect with Google" /></a></li>
 </ul>
  </c:otherwise>
-</c:choose>  --%>
+</c:choose> 
 
 <!-- End  Gigya and API Social Login -->
+</div>

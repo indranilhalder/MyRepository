@@ -30,7 +30,7 @@
 				</cms:pageSlot>
 			</li>
 			<li class="or"><span class="vr-line"></span><span class="or-rounded"><spring:theme code="text.or" /></span><span class="vrt-line"></span></li>
-			<li id="sign_up_content" class="active">
+			<li id="sign_up_content">
 				<cms:pageSlot position="LeftContentSlot" var="feature">
 					<cms:component component="${feature}" />
 				</cms:pageSlot>
@@ -80,6 +80,9 @@
 	$(window).on('load resize',function(){	
 		if($(window).width()<981){
 			activateSignInTab();
+		}
+		else{
+			$("#sign_in_content, #sign_up_content").addClass('active');
 		}
 	});
 	function removeErrorDiv(){
