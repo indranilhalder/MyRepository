@@ -33785,6 +33785,10 @@ margin-bottom:52px;
     overflow: auto;
     padding-left: 5px;
 }
+#error-Id, #emptyId{
+	clear:both;
+	padding-top:5px;
+}
 /*Mybag css changes ends*/
 .cart.wrapper .right-block .block.bottom.order-details address, .checkout.wrapper .product-block.addresses li.item address,
 .confirmation .left-block .address address{
@@ -43431,9 +43435,6 @@ margin-left: 20%;
 	.TabWrap .tabs-block .nav-wrapper {
 		width: 90%;
 	}
-	.product-info>div.tabs-block {
-		width: 94%;
-	}
 	.product-info .SoldWrap>div.fullfilled-by {
 		padding-right: 0;
 	}
@@ -43441,7 +43442,11 @@ margin-left: 20%;
 		font-size: 10px;
 	}
 }
-
+@media(min-width:791px) and (max-width:1300px) {
+	.product-info>div.tabs-block {
+			width: 94%;
+	}
+}
 /*Tablet Portrait: 
 ---------------------------------------------*/
 @media ( max-width :1024px) {
