@@ -737,7 +737,6 @@ public final class ModelAttributetConstants
 
 	public static final String BUILD_NUMBER = "buildNumber";
 
-
 	public static final String PHONE_NUMBER = "phoneNumber";
 	public static final String ADDRESS_CHANGE_ELIGIBLE = "addressChangeEligible";
 
@@ -746,6 +745,8 @@ public final class ModelAttributetConstants
 	public static final String RETURN_FORM = "returnForm";
 	public static final String RETURN_DATES = "returnDates";
 	public static final String RETURN_SLOT_TYPE = "RD";
+
 	public static final String LPNOTAVAILABLE_ERRORMSG = "Logistic Provider not available for given pincode ";
+
 
 }
