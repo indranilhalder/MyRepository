@@ -1081,12 +1081,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 			addressChangeEligible = mplDeliveryAddressFacade.isDeliveryAddressChangable(orderDetail.getCode());
-			if (addressChangeEligible)
-			{
-				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
-				phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
-				model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
-			}
 			AccountAddressForm accountAddressForm = new AccountAddressForm();
 			model.addAttribute("addressForm", accountAddressForm);
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
@@ -7003,7 +6997,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 
-	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method = RequestMethod.POST)
+	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method = RequestMethod.GET)
 	public String changeDeliveryAddress(@PathVariable final String orderCode,
 			@ModelAttribute("addressForm") final AccountAddressForm addressForm, Model model) throws CMSItemNotFoundException
 	{
@@ -7131,7 +7125,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
 		{
 			LOG.debug("OTP Validation And Oms Calling status");
-			validateOTPMesg = mplDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber, orderId);
+			validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerId, enteredOTPNumber, orderId);
 		}
 
 	   model.addAttribute("stringMessage", validateOTPMesg);
