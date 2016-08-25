@@ -469,7 +469,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public String validateOTP(String customerID,String enteredOTPNumber, String orderCode)
+	public String submitChangeDeliveryAddress(String customerID,String enteredOTPNumber, String orderCode)
 	{
 		String valditionMsg = null;
 
