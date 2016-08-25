@@ -19,7 +19,7 @@
 	value="${orderDetails.code}" />
 <div class="modal-dialog changeAdddd">
 	<div class="modal-content">
-		<form:form method="POST" id="deliveryAddressForm"
+		<form:form method="GET" id="deliveryAddressForm"
 			action="${request.contextPath}/my-account/changeDeliveryAddress"
 			commandName="addressForm">
 			<div class="modal-body">
@@ -144,7 +144,7 @@
 									selectCSSClass="l textInputChangeAddress address_states" 
 									labelKey="address.states"
 									path="state" mandatory="true" skipBlank="false"
-									skipBlankMessageKey="address.state.pleaseSelect"
+									skipBlankMessageKey="${orderDetails.deliveryAddress.state}"
 									items="${stateDataList}" selectedValue="${addressForm.state}"
 									itemValue="name" />
 								<div class="error_text stateError"></div>
@@ -243,9 +243,11 @@
 <style>
 #deliveryAddressForm .changeAddCheck{
 	padding: 5px;
-    height: 1px;
-    display: block !important; 
-    cursor: pointer;
+height: 17px;
+display: block !important;
+cursor: pointer;
+border-radius: 50% !important;
+width: 17px;
 }
 #deliveryAddressForm input[type="text"]{
 	height: 35px;
