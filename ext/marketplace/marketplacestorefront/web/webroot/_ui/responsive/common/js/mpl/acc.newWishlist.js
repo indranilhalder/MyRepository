@@ -47,6 +47,7 @@ $(document).on("click",".deleteWlConfirmation",function(e){
 function deleteWishlist(wishlistName){
 	var requiredUrl = ACC.config.encodedContextPath+"/my-account/deleteWishlist";
 	var dataString = "wishlistName=" +wishlistName;
+	var wishName= wishlistName.replace(/ /g,'').toLowerCase();
 	$.ajax({
 		url: requiredUrl,
 		type: "GET",
@@ -55,6 +56,14 @@ function deleteWishlist(wishlistName){
 		cache: false,
 		contentType : "application/json; charset=utf-8",
 		success : function(data) {
+			/*TPR-646*/
+			utag.link({
+				"link_obj" : this,
+			    "link_text": 'manage_wishlist_delete',
+			    "event_type": 'manage_wishlist_click',
+			    "wishlist_name" : "" + wishName
+			});
+			/*TPR-646 Ends*/
 			window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
 		},
 		//error : function(data) {
@@ -80,20 +89,14 @@ $(document).on("click",".rename_link",function(e){
 $(document).on("click",".js-rename-wishlist",function(e){
 	e.preventDefault();
 	$(".rename-input").html(null);
-	var wishName =$(this).prev('div').prev('span').text();
-	/*TPR-646*/
-	utag.link({
-		"link_obj" : this,
-	    "link_text": 'manage_wishlist_rename',
-	    "event_type": 'manage_wishlist_click',
-	    "wishlist_name" : "" + wishName
-	});
+	//var wishName =$(this).prev('div').prev('span').text();
 	
 });
 function renameWishlist(newWishlistName) {
 	var oldName = $("#editWishListOld").val();
 	var requiredUrl = ACC.config.encodedContextPath+"/my-account/editParticularWishlistName";
 	var dataString = "newWishlistName=" +newWishlistName+"&wishlistOldName=" +oldName;
+	var wishName= oldName.replace(/ /g,'').toLowerCase();
 	$.ajax({
 		url: requiredUrl,
 		type: "GET",
@@ -103,6 +106,15 @@ function renameWishlist(newWishlistName) {
 		contentType : "application/json; charset=utf-8",
 		success : function(data) {
 			if(data == "success") {
+				/*TPR-646*/
+				utag.link({
+					"link_obj" : this,
+				    "link_text": 'manage_wishlist_rename',
+				    "event_type": 'manage_wishlist_click',
+				    "wishlist_name" : "" + wishName
+				});
+				
+				
 				window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+newWishlistName;
 			}
 			else if(data == "duplicate_wishlist_name") {
@@ -229,15 +241,6 @@ $(document).on("click",".remove_product_from_wl",function(e){
 	$("#removeFrmWl_rootCategoryMSD").val($(this).parent().siblings('#rootCategoryMSD_wl').val());	
 	//End MSD
 	
-	/*TPR-646 Changes*/
-	var productCode = $(this).parent().siblings('#productCode_wl').val();
-	utag.link({
-		"link_obj" : this,
-        "link_text": 'remove_from_wishlist',
-        "event_type": 'remove_from_wishlist',
-        "product_sku_wishlist": "" + productCode
-    });
-	
 });
 
 $(document).on("click",".removeProductConfirmation",function(e){
@@ -309,7 +312,16 @@ function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isAppa
 				{
 					console.log('Error Adding trackers when remove from cart: '+err.message);					
 				}
-			}	
+			}
+			
+			/*TPR-646 Changes*/
+			utag.link({
+				"link_obj" : this,
+		        "link_text": 'remove_from_wishlist',
+		        "event_type": 'remove_from_wishlist',
+		        "product_sku_wishlist": "" + productCode
+		    });
+			
 			//END MSD
 //			window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
 			window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName;
@@ -391,16 +403,5 @@ $(document).on("click",".manageWishlistClose",function(e){
 		"link_obj" : this,
 	    "link_text": 'manage_wishlist_cancel',
 	    "event_type": 'manage_wishlist_click'
-	});
-});
-
-$(document).on("click",".delete_wishlist",function(e){
-	e.preventDefault();
-	var wishName = $(this).closest("td.delete").find("input[name='wishlistName']").val();
-	utag.link({
-		"link_obj" : this,
-	    "link_text": 'manage_wishlist_delete',
-	    "event_type": 'manage_wishlist_click',
-	    "wishlist_name" : "" + wishName
 	});
 });
