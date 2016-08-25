@@ -124,6 +124,37 @@ public class PincodeServiceImpl implements PincodeService
 		}
 	}
 
+	/**
+	 * Fetch all the Stores for a Pincode and radius.
+	 * 
+	 * @param gps
+	 * @param distance
+	 * @return Stores
+	 */
+	@Override
+	public Collection<PointOfServiceModel> getAllReturnableStores(final GPS gps, final double distance, final String sellerId)
+			throws LocationServiceException
+	{
+		try
+		{
+			Collection<PointOfServiceModel> result = new ArrayList<PointOfServiceModel>();
+			result = getPincodeDao().getAllReturnablePOSforSeller(gps, distance, sellerId);
+			return result;
+		}
+		catch (final PointOfServiceDaoException e)
+		{
+			throw new LocationServiceException(e.getMessage(), e);
+		}
+		catch (final LocationInstantiationException e)
+		{
+			throw new LocationServiceException(e.getMessage(), e);
+		}
+		catch (final GeoLocatorException e)
+		{
+			throw new LocationServiceException(e.getMessage(), e);
+		}
+	}
+
 	protected double calculateDistance(final GPS referenceGps, final PointOfServiceModel posModel) throws GeoLocatorException,
 			LocationServiceException
 	{
@@ -139,22 +170,23 @@ public class PincodeServiceImpl implements PincodeService
 	
 	/**
 	 * fetching all details about the given Pincode
-	 * @param  pincode
+	 * 
+	 * @param pincode
 	 * @return PincodeModel
 	 */
 	@Override
 	public PincodeModel getDetailsOfPincode(final String pincode)
 	{
-		PincodeModel pincodeModel = null;
+		final PincodeModel pincodeModel = null;
 		try
 		{
-			List<PincodeModel> pincodeModelList = pincodeDao.getAllDetailsOfPincode(pincode);
+			final List<PincodeModel> pincodeModelList = pincodeDao.getAllDetailsOfPincode(pincode);
 			if (!pincodeModelList.isEmpty())
 			{
 				return pincodeModelList.get(0);
 			}
-			else if(pincodeModelList.size()>1)
-			{	
+			else if (pincodeModelList.size() > 1)
+			{
 				LOG.error("More than one pincode model found for :" + pincode);
 			}
 			else

@@ -19,7 +19,7 @@ import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tisl.mpl.core.model.MplConfigModel;
 import com.tisl.mpl.core.mplconfig.dao.MplConfigDao;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
-
+import com.tisl.mpl.util.MplTimeconverUtility;
 
 
 /**
@@ -167,4 +167,41 @@ public class MplConfigServiceImpl implements MplConfigService
 		return configValue;
 	}
 
+        /**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<String> getDeliveryTimeSlots(String configKey)
+	{
+		List<MplTimeSlotsModel> configValueList = null;
+		ArrayList<String> deliverySlots=new ArrayList<String>();
+		
+		try
+		{
+		if (StringUtils.isNotEmpty(configKey))
+		{
+			configValueList = mplConfigDao.getDeliveryTimeSlotByKey(configKey);
+			
+			for (MplTimeSlotsModel timeslot : configValueList)
+			{
+				
+				StringBuffer sb=new StringBuffer(MplTimeconverUtility.convert24hoursTo12hours(timeslot.getFromTime()));
+				sb.append("-");
+				sb.append(MplTimeconverUtility.convert24hoursTo12hours(timeslot.getToTime()));
+				deliverySlots.add(new String(sb));
+			}
+			
+		}
+		}
+		catch(Exception e)
+		{
+			LOGGER.error("Congiguration Not foud for the Key:"+configKey);
+		}
+
+		if (LOGGER.isDebugEnabled())
+		{
+			LOGGER.debug("getConfigValueById() - config value for key:" + configKey + " is :" + configValueList);
+		}
+		return deliverySlots;
+	}
 }

@@ -44,6 +44,7 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.WishlistProductData;
+import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
@@ -149,6 +150,7 @@ import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.data.NewWishlistData;
 import com.tisl.mpl.data.ParticularWishlistData1;
 import com.tisl.mpl.data.RemoveWishlistData;
+import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.data.SendTicketRequestData;
@@ -160,6 +162,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.impl.MplCheckoutFacadeImpl;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.mystyleprofile.MyStyleProfileFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
@@ -195,6 +198,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MyWishListInHeaderComponentModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.GigyaService;
 import com.tisl.mpl.service.MplGigyaReviewCommentService;
@@ -208,6 +212,7 @@ import com.tisl.mpl.storefront.util.AllWishListCompareByDate;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.FriendsInviteForm;
 import com.tisl.mpl.storefront.web.forms.MplCustomerProfileForm;
+import com.tisl.mpl.storefront.web.forms.MplReturnsForm;
 import com.tisl.mpl.storefront.web.forms.ReturnPincodeCheckForm;
 import com.tisl.mpl.storefront.web.forms.ReturnRequestForm;
 import com.tisl.mpl.storefront.web.forms.validator.AccountAddressValidator;
@@ -413,6 +418,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@Autowired
 	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
+	
+	@Autowired
+	private PincodeServiceFacade pincodeServiceFacade;
+	
+	@Autowired
+        private MplConfigFacade mplConfigFacade;
 
 	/**
 	 *
@@ -768,6 +779,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 
+   
+		model.addAttribute(ModelAttributetConstants.RETURN_FORM, new MplReturnsForm());
+		
 		storeCmsPageInModel(model, getContentPageForLabelOrId(ORDER_HISTORY_CMS_PAGE));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ORDER_HISTORY_CMS_PAGE));
 		model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -1486,8 +1500,58 @@ public class AccountPageController extends AbstractMplSearchPageController
 			@RequestParam(ModelAttributetConstants.TRANSACTION_ID) final String transactionId, final Model model)
 			throws CMSItemNotFoundException
 	{
+		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
 		try
 		{
+			//OrderEntryData subOrderEntry = new OrderEntryData();
+			OrderEntryData orderEntry = new OrderEntryData();
+			List<OrderEntryData> returnOrderEntry = new ArrayList<OrderEntryData>();
+			final Map<String, List<OrderEntryData>> returnProductMap = new HashMap<>();
+			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
+			final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+			for (final OrderEntryData entry : subOrderEntries)
+			{
+				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+				{
+					orderEntry = entry;
+					returnOrderEntry = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(orderCode), transactionId);
+					returnProductMap.put(orderEntry.getTransactionId(), returnOrderEntry);
+					break;
+				}
+
+				boolean returnLogisticsAvailability = false;
+				//TISEE-5557
+				if (!(entry.isGiveAway() || entry.isIsBOGOapplied()))
+				//if (!(entry.isGiveAway() || entry.isIsBOGOapplied()
+				//		|| (null != entry.getAssociatedItems() && !entry.getAssociatedItems().isEmpty())))
+				{
+					returnLogisticsAvailability = true;
+				}
+				model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
+
+			}
+
+			final AccountAddressForm addressForm = new AccountAddressForm();
+			model.addAttribute(ModelAttributetConstants.ADDRESS_FORM, addressForm);
+			
+			final MplReturnsForm returnForm=new MplReturnsForm();
+			model.addAttribute(ModelAttributetConstants.RETURN_FORM, returnForm);
+			
+			
+
+			 List<String> timeSlots = mplConfigFacade.getDeliveryTimeSlots("RD");
+
+			model.addAttribute(ModelAttributetConstants.SCHEDULE_TIMESLOTS, timeSlots);
+
+			model.addAttribute(ModelAttributetConstants.ADDRESS_DATA,
+					mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()));
+			final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
+			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+			model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
+			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, orderEntry);
+			model.addAttribute(ModelAttributetConstants.SUB_ORDER, subOrderDetails);
+
 			sessionService.setAttribute(ModelAttributetConstants.TRANSACTION_ID, transactionId);
 			final ReturnPincodeCheckForm returnPincodeCheckForm = new ReturnPincodeCheckForm();
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
@@ -1514,6 +1578,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 				returnPincodeCheckForm.setLandmark(address.getLine3());
 			}
 			model.addAttribute(ModelAttributetConstants.RETURN_PINCODE_FORM, returnPincodeCheckForm);
+
+			if (orderEntry.getDeliveryPointOfService() != null)
+			{
+				returnableStores = pincodeServiceFacade.getAllReturnableStores(orderEntry.getDeliveryPointOfService().getAddress()
+						.getPostalCode(), orderEntry.getSelectedSellerInformation().getSellerID());
+			}
+			else
+			{
+				returnableStores = pincodeServiceFacade.getAllReturnableStores(subOrderDetails.getDeliveryAddress().getPostalCode(),
+						StringUtils.substring(orderEntry.getSelectedUssid(),0,6));
+			}
+
+			List<String> returnableDates =cancelReturnFacade.getReturnableDates(orderEntry);
+			
+			model.addAttribute(ModelAttributetConstants.RETURN_DATES,returnableDates);
+			
+			model.addAttribute(ModelAttributetConstants.RETURNABLE_SLAVES, returnableStores);
+
 		}
 		catch (final Exception e)
 		{
@@ -1682,6 +1764,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
 
 			}
+			model.addAttribute(ModelAttributetConstants.ADDRESS_DATA,
+					mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()));
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, orderEntry);
 			model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
 			model.addAttribute(ModelAttributetConstants.SUBORDER, subOrderDetails);
@@ -1885,7 +1969,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
 
-		final boolean cancellationStatus;
+		 boolean cancellationStatus=false;
 		try
 		{
 			OrderEntryData subOrderEntry = new OrderEntryData();
@@ -1897,7 +1981,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final String reasonCode = returnRequestForm.getReasonCode();
 			final String ticketTypeCode = returnRequestForm.getTicketTypeCode();
 			final String ussid = returnRequestForm.getUssid();
-			final String refundType = returnRequestForm.getRefundType();
+			//final String refundType = returnRequestForm.getRefundType();
 			final String transactionId = returnRequestForm.getTransactionId();
 
 			final ReturnItemAddressData returnAddrData = (ReturnItemAddressData) session.getAttribute(RETURN_ADDRESS);
@@ -1916,7 +2000,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
-			final CustomerData customerData = customerFacade.getCurrentCustomer();
+			//final CustomerData customerData = customerFacade.getCurrentCustomer();
 
 			model.addAttribute(ModelAttributetConstants.ORDERCODE, returnRequestForm.getOrderCode());
 
@@ -1930,7 +2014,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
-			if (ticketTypeCode.equalsIgnoreCase("R"))
+			//Bellow code written in RetrunPage Controller No use in this location
+			
+			/*if (ticketTypeCode.equalsIgnoreCase("R"))
 			{
 				cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
 						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData);
@@ -1940,7 +2026,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				cancellationStatus = cancelReturnFacade.implementCancelOrReturn(subOrderDetails, subOrderEntry, reasonCode, ussid,
 						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB);
 			}
-
+*/
 
 			if (!cancellationStatus)
 			{

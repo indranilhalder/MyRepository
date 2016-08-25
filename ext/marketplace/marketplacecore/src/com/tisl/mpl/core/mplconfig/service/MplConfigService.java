@@ -50,13 +50,21 @@ public interface MplConfigService
 	/**
 	 * This method is used to save values to the config. entries w.r.t the key.
 	 *
-	 * @param id
-	 * @param value
+	 *
+	 * @param configKey
 	 */
 	List<MplTimeSlotsModel> getDeliveryTimeSlotByKey(String configKey);
 	/**
 	 * @return
 	 */
 	public MplBUCConfigurationsModel getDeliveryCharges();
+	
+	/**
+	 * This method is used to save values to the config. entries w.r.t the key.
+	 *
+	 * @param id
+	 * @param value
+	 */
+	List<String> getDeliveryTimeSlots(String configKey);
 
 }

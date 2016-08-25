@@ -18,6 +18,7 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordercancel.OrderCancelEntry;
 import de.hybris.platform.ordercancel.OrderCancelException;
@@ -54,6 +55,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -61,23 +65,35 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.TypeofReturn;
+import com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.data.CODSelfShipData;
+import com.tisl.mpl.data.CODSelfShipResponseData;
+import com.tisl.mpl.data.CRMTicketUpdateData;
+import com.tisl.mpl.data.CRMTicketUpdateResponseData;
+import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
+import com.tisl.mpl.data.RTSAndRSSReturnInfoResponseData;
 import com.tisl.mpl.data.ReturnAddressInfo;
+import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
+import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.CRMTicketDetailModel;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.ordercancel.MplOrderCancelEntry;
 import com.tisl.mpl.ordercancel.MplOrderCancelRequest;
 import com.tisl.mpl.service.MplOrderCancelClientService;
@@ -85,12 +101,19 @@ import com.tisl.mpl.service.ReturnLogisticsService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.PushNotificationData;
 import com.tisl.mpl.wsdto.ReturnLogistics;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
+import com.tisl.mpl.wsdto.TicketUpdateRequestXML;
+import com.tisl.mpl.wsdto.TicketUpdateResponseXML;
+import com.tisl.mpl.xml.pojo.CODSelfShipmentRequest;
+import com.tisl.mpl.xml.pojo.CODSelfShipmentResponse;
 import com.tisl.mpl.xml.pojo.MplCancelOrderRequest;
 import com.tisl.mpl.xml.pojo.MplOrderIsCancellableResponse;
 import com.tisl.mpl.xml.pojo.OrderLineDataResponse;
+import com.tisl.mpl.xml.pojo.RTSAndRSSReturnInfoRequest;
+import com.tisl.mpl.xml.pojo.RTSAndRSSReturnInfoResponse;
 import com.tisl.mpl.xml.pojo.ReturnLogisticsResponse;
 
 
@@ -103,7 +126,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 {
 	@Autowired
 	private MplOrderService mplOrderService;
-
+	@Autowired
+	private MplOrderFacade mplOrderFacade;
 	@Autowired
 	private MplSNSMobilePushServiceImpl mplSNSMobilePushService;
 	@Resource(name = "orderModelService")
@@ -139,7 +163,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
 	@Autowired
 	private MPLRefundService mplRefundService;
-
+	
+	@Autowired
+	private MplSellerInformationService mplSellerInformationService;
+	
+	@Autowired
+	private MplPrefixablePersistentKeyGenerator persistentKeyGenerator;
+	
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
 
@@ -330,12 +360,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @return boolean Retun Item Pincode Serviceability
 	 */
 	@Override
-	public boolean implementReturnItem(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
-			final String reasonCode, final String ussid, final String ticketTypeCode, final CustomerData customerData,
-			final String refundType, final boolean isReturn, final SalesApplication salesApplication,
+	public boolean implementReturnItem(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,ReturnInfoData returninfoData,
+			 final CustomerData customerData, final SalesApplication salesApplication,
 			final ReturnItemAddressData returnAddress)
 	{
 
+		boolean isReturn=true;
+		String ticketTypeCode=returninfoData.getTicketTypeCode();
+		String reasonCode=returninfoData.getReasonCode();
+		
 		LOG.debug("Step 1 :*********************************** isReturn:" + isReturn);
 
 		boolean cancelOrRetrnanable = true;
@@ -363,7 +396,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			if ((ticketTypeCode.equalsIgnoreCase("C") || (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie))) //TISEE-933
 			{
 
-				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, reasonCode, ussid, pincode);
+				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, returninfoData.getReasonCode(), returninfoData.getUssid(), pincode);
 
 				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
 				{
@@ -411,7 +444,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						+ subOrderDetails.getCode());
 
 				final boolean ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode,
-						refundType, ussid, customerData, subOrderModel, returnAddress);
+						returninfoData.getRefundType(), returninfoData.getUssid(), customerData, subOrderModel, returnAddress,returninfoData);
 
 				LOG.debug("Step 4.1:***********************************Ticket creation status for sub order:" + ticketCreationStatus);
 				LOG.debug("Step 5 :*********************************** Refund and OMS call started");
@@ -1051,7 +1084,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	@Override
 	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String ticketTypeCode, final String reasonCode, final String refundType, final String ussid,
-			final CustomerData customerData, final OrderModel subOrderModel, final ReturnItemAddressData returnAddress)
+			final CustomerData customerData, final OrderModel subOrderModel, final ReturnItemAddressData returnAddress,ReturnInfoData returnInfoData)
 	{
 		boolean ticketCreationStatus = false;
 
@@ -1124,7 +1157,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				addressInfo.setPincode(returnAddress.getPincode());
 				addressInfo.setLandmark(returnAddress.getLandmark());
 			}
-
+			
+			//set ECOM request prefix as E to for COMM triggered Ticket
+			persistentKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
+			sendTicketRequestData.setEcomRequestId(persistentKeyGenerator.generate().toString());
+			sendTicketRequestData.setReturnPickupDate(returnInfoData.getReturnPickupDate());
+			sendTicketRequestData.setTimeSlotFrom(returnInfoData.getTimeSlotFrom());
+			sendTicketRequestData.setTimeSlotTo(returnInfoData.getTimeSlotTo());
 			sendTicketRequestData.setCustomerID(customerData.getUid());
 			sendTicketRequestData.setLineItemDataList(lineItemDataList);
 			sendTicketRequestData.setOrderId(subOrderModel.getParentReference().getCode());
@@ -1243,6 +1282,25 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		{
 			ticket.setShippingLastName(sendTicketRequestData.getAddressInfo().getShippingLastName());
 		}
+		
+		if (null != sendTicketRequestData.getReturnPickupDate())
+		{
+			ticket.setReturnPickupDate(sendTicketRequestData.getReturnPickupDate());
+		}
+		if (null != sendTicketRequestData.getTimeSlotFrom())
+		{
+			ticket.setTimeSlotFrom(sendTicketRequestData.getTimeSlotFrom());
+		}
+		if (null != sendTicketRequestData.getTimeSlotTo())
+		{
+			ticket.setTimeSlotTo(sendTicketRequestData.getTimeSlotTo());
+		}
+		if (null != sendTicketRequestData.getEcomRequestId())
+		{
+			ticket.setEcomRequestId(sendTicketRequestData.getEcomRequestId());
+		}
+		
+		
 
 		final TicketMasterXMLData ticketXmlData = ticketCreate.ticketCreationModeltoXMLData(sendTicketRequestData);
 		if (ticketXmlData != null)
@@ -1446,6 +1504,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @param reasonCode
 	 * @param subOrderDetails
 	 * @param subOrderModel
+	 * @param transactionId
 	 * @throws OrderCancelException
 	 */
 	private MplOrderCancelRequest buildCancelRequest(final String reasonCode, final OrderModel subOrderModel,
@@ -1851,6 +1910,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 			String returningTransactionId;
 			returningTransactionId = sessionService.getAttribute("transactionId");
+			String ussid=sessionService.getAttribute("ussid");
 			String transactionId = "";
 			for (final OrderEntryData eachEntry : entries)
 			{
@@ -1874,6 +1934,46 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						transactionId = eachEntry.getTransactionId();
 						returnLogistics.setTransactionId(eachEntry.getTransactionId());
 					}
+					
+					String returnFulfillmentType=null;
+					String returnFulfillmentByP1=null;
+					//getting the product code
+					final ProductModel productModel = mplOrderFacade.getProductForCode(eachEntry.getProduct().getCode());
+					
+					for (final SellerInformationModel sellerInfo : productModel.getSellerInformationRelator())
+					{
+						if(ussid ==sellerInfo.getUSSID())
+						{
+						if(CollectionUtils.isNotEmpty(sellerInfo.getRichAttribute()))
+						{
+						for (RichAttributeModel richAttribute : sellerInfo.getRichAttribute())
+						{
+							if(null != richAttribute.getReturnFulfillMode())
+							{
+								LOG.info(richAttribute.getReturnFulfillMode());
+							returnFulfillmentType=richAttribute.getReturnFulfillMode().getCode();
+							}
+	
+							if(null != richAttribute.getReturnFulfillModeByP1())
+							{
+								LOG.info(richAttribute.getReturnFulfillModeByP1());
+							returnFulfillmentByP1=richAttribute.getReturnFulfillModeByP1().getCode();
+							}
+						}
+						}
+						}
+					}
+					
+					if (StringUtils.isNotEmpty(returnFulfillmentType))
+					{
+						returnLogistics.setReturnFulfillmentType(returnFulfillmentType);
+					}
+					if(StringUtils.isNotEmpty(returnFulfillmentByP1))
+					{
+						returnLogistics.setReturnFulfillmentByP1(returnFulfillmentByP1);
+					}
+					
+					
 				}
 				returnLogisticsList.add(returnLogistics);
 			}
@@ -2045,7 +2145,47 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		return entryData;
 	}
+	
+	@Override
+	public RTSAndRSSReturnInfoResponseData retrunInfoCallToOMS(final RTSAndRSSReturnInfoRequestData returnInfoRequestData)
+	{
+		
+		RTSAndRSSReturnInfoRequest returnInfoRequest=new RTSAndRSSReturnInfoRequest();
+		RTSAndRSSReturnInfoResponseData returnInforesponse=new  RTSAndRSSReturnInfoResponseData();
+		returnInfoRequest.setOrderId(returnInfoRequestData.getOrderId());
+		returnInfoRequest.setAwbNum(returnInfoRequestData.getAWBNum());
+		returnInfoRequest.setLogisticsID(returnInfoRequestData.getLogisticsID());
+		returnInfoRequestData.setLPNameOther(returnInfoRequestData.getLPNameOther());
+		returnInfoRequestData.setRTSStore(returnInfoRequestData.getRTSStore());
+		returnInfoRequestData.setShipmentCharge(returnInfoRequestData.getShipmentCharge());
+		returnInfoRequestData.setReturnType(returnInfoRequestData.getReturnType());
+		returnInfoRequestData.setTransactionId(returnInfoRequestData.getTransactionId());
+		returnInfoRequestData.setShipmentProofURL(returnInfoRequestData.getShipmentProofURL());
 
+		try
+		{
+
+			if(LOG.isDebugEnabled())
+			{
+			LOG.debug("Sending Returninfo to OMS  ");
+			}
+			final RTSAndRSSReturnInfoResponse response = mplOrderCancelClientService.orderReturnInfoOMS(returnInfoRequest);
+
+			// below portion of code valid for cancel only
+			if (null != response)
+			{
+				returnInforesponse.setSuccess(response.getSuccess());
+			}	
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		
+		return returnInforesponse;
+	}
+
+	
 	/**
 	 * @description: To find the Cancellation is enabled/disabled
 	 * @param: currentStatus
@@ -2077,6 +2217,74 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		return cancelProduct;
 	}
 
+	
+	@Override
+	public CODSelfShipResponseData codPaymentInfoToFICO(CODSelfShipData codSelfShipData)
+	{
+		if(LOG.isDebugEnabled())
+		{
+		LOG.debug("Sending Returninfo to OMS  ");
+		}
+		
+		CODSelfShipmentRequest requestData=new CODSelfShipmentRequest();
+		requestData.setAmount(codSelfShipData.getAmount());
+		requestData.setBankAccount(codSelfShipData.getBankAccount());
+		requestData.setBankKey(codSelfShipData.getBankKey());
+		requestData.setTransactionID(codSelfShipData.getTransactionID());
+		requestData.setOrderDate(codSelfShipData.getOrderDate());
+		requestData.setTitle(codSelfShipData.getTitle());
+		requestData.setPaymentMode(codSelfShipData.getPaymentMode());
+		requestData.setBankName(codSelfShipData.getBankName());
+		requestData.setName(codSelfShipData.getName());
+		
+		CODSelfShipResponseData codSelfShipResponseData=new CODSelfShipResponseData();
+		try
+		{
+			final CODSelfShipmentResponse  response = mplOrderCancelClientService.codPaymentInfoToFICO(requestData);
+
+			// below portion of code valid for cancel only
+			if (null != response)
+			{
+				codSelfShipResponseData.setSuccess(response.getSuccess());
+			}	
+		}catch(Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	
+		
+		return codSelfShipResponseData;
+		
+	}
+	
+	/**
+    * @param updateTicketData
+    * @return CRMTicketUpdateResponseData
+    * 
+    */
+	@Override
+	public CRMTicketUpdateResponseData UpdateCRMTicket(CRMTicketUpdateData updateTicketData)
+	{
+		
+		TicketUpdateRequestXML requestXml=new TicketUpdateRequestXML();
+		CRMTicketUpdateResponseData responseData=new CRMTicketUpdateResponseData();
+		requestXml.setEcomRequestId(updateTicketData.getEcomRequestId());
+		requestXml.setRssAWBNumber(updateTicketData.getRssAWBNumber());
+		requestXml.setRssCharge(updateTicketData.getRssCharge());
+		requestXml.setRssDispathProofURL(updateTicketData.getRssDispathProofURL());
+		requestXml.setRssLPName(updateTicketData.getRssLPName());
+		requestXml.setRssOtherLPName(updateTicketData.getRssOtherLPName());
+		requestXml.setTicketId(updateTicketData.getTicketId());
+		requestXml.setTransactionId(updateTicketData.getTransactionId());
+		TicketUpdateResponseXML response=mplOrderCancelClientService.updateCRMTicket(requestXml);
+		
+	// below portion of code valid for cancel only
+			if (null != response)
+			{
+				responseData.setSuccess(response.getSuccess());
+			}	
+		return responseData;
+	}
 
 
 	/**
@@ -2095,6 +2303,78 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			stage = getMplRefundService().getOrderStatusStage(orderEntryStatus);
 		}
 		return stage;
+	}
+	
+	/**
+	 * @author TECHOUTS
+	 * 
+	 * @param orderEntryData
+	 * @return List<String>
+	 * 
+	 */
+	@Override
+	public List<String> getReturnableDates(OrderEntryData orderEntryData)
+	{
+		List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
+		final SellerInformationModel sellerInfoModel = getMplSellerInformationService()
+				.getSellerDetail(orderEntryData.getSelectedUssid());
+		
+
+		if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
+		{
+			richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+		}
+		
+		Date currentDate=new Date();
+		ConsignmentModel consignmentModel=mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
+		
+		List<String> returnableDates=new ArrayList<>();
+		if(null != consignmentModel )
+		{
+		final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(),
+				currentDate);
+		final int actualReturnWindow = Integer.parseInt(richAttributeModel.get(0).getReturnWindow());
+	
+		
+		if(actualReturnWindow>=returnWindow)
+		{
+			DateTime today = new DateTime().withTimeAtStartOfDay();
+			if((actualReturnWindow-returnWindow)>3)
+			{
+				for(int i=0; i<3; i++)
+				{
+				
+					DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd");
+					returnableDates.add(dtfOut.print( today.plusDays( i ).withTimeAtStartOfDay()));		   
+				}
+			}
+			else if((actualReturnWindow-returnWindow)==2)
+			{
+				for(int i=0; i<2; i++)
+				{
+					DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
+					returnableDates.add(dtfOut.print( today.plusDays( i ).withTimeAtStartOfDay()));		   
+				}
+			}
+			else if((actualReturnWindow-returnWindow)==1)
+			{
+				for(int i=0; i<1; i++)
+				{
+					DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
+					returnableDates.add(dtfOut.print( today.plusDays( i ).withTimeAtStartOfDay()));		   
+				}
+			}
+			else if((actualReturnWindow-returnWindow)==0)
+			{
+				
+					DateTimeFormatter dtfOut = DateTimeFormat.forPattern("MMM dd ");
+					returnableDates.add(dtfOut.print( today.plusDays(0).withTimeAtStartOfDay()));		   
+			}
+	
+		}
+		}
+		
+		return returnableDates;
 	}
 
 
@@ -2339,6 +2619,22 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	public void setMplRefundService(final MPLRefundService mplRefundService)
 	{
 		this.mplRefundService = mplRefundService;
+	}
+
+	/**
+	 * @return the mplSellerInformationService
+	 */
+	public MplSellerInformationService getMplSellerInformationService()
+	{
+		return mplSellerInformationService;
+	}
+
+	/**
+	 * @param mplSellerInformationService the mplSellerInformationService to set
+	 */
+	public void setMplSellerInformationService(MplSellerInformationService mplSellerInformationService)
+	{
+		this.mplSellerInformationService = mplSellerInformationService;
 	}
 
 
