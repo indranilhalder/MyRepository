@@ -1209,6 +1209,12 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 							}
 						}
 						// AJAX call
+						// Sprinner added for AJAX Call TPR-1105,TPR-1106
+						var browserURL = window.location.href.split('?');
+						var staticHost=$('#staticHost').val();
+						$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+						$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+						
 						filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 					}
 					
