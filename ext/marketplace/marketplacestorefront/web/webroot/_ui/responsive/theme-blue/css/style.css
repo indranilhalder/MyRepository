@@ -20140,7 +20140,7 @@ font-size:14px;
 /*  margin-bottom: 10px; */
  font-weight: 500;
  background: #fff;
- display: none;
+/*  display: none; */
  border-collapse: separate;
 }
 #EMITermTable th{
@@ -44076,12 +44076,12 @@ body.page-productDetails .breadcrumbs.wrapper {
 .select-wrapper:after,
 .Star .overall .Bottom > ul > li.active:after{font-family: "FontAwesome";}
  
-.Emi {
+.product-detail .Emi {
 	position: relative;
 	margin: -15px 0 0;
 }
 
-.Emi p {
+.product-detail .Emi p {
 	font-size: 14px;
 	letter-spacing: 1px;
 	left: -10px;
@@ -44093,7 +44093,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	padding: 12px 25px 12px 12px;
 }
 
-.Emi p:before {
+.product-detail .Emi p:before {
 	background: #fff;
 	bottom: 0;
 	content: "";
@@ -44104,13 +44104,13 @@ body.page-productDetails .breadcrumbs.wrapper {
 	z-index: 9999;
 }
 
-.Emi p.active {
+.product-detail .Emi p.active {
 	-webkit-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
 	-moz-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
 	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
 }
 
-.Emi p:after {
+.product-detail .Emi p:after {
 	color: #a9183c;
 	content: "\f107";
 	display: inline-block;
@@ -44120,7 +44120,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	top: 10px;
 }
 
-.Emi p+.modal-content {
+.product-detail .Emi p+.modal-content {
 	display: none;
 	position: absolute;
 	left: -10px;
@@ -44134,17 +44134,17 @@ body.page-productDetails .breadcrumbs.wrapper {
 	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
 }
 
-.Emi p.active+.modal-content {
+.product-detail .Emi p.active+.modal-content {
 	display: block;
 }
 
-.Emi-tableTitle {
+.product-detail .Emi-tableTitle {
 	font-size: 18px;
 	font-weight: bold;
 	text-transform: uppercase;
 }
 
-.Emi-subTitle {
+.product-detail .Emi-subTitle {
 	font-size: 13px;
 	letter-spacing: 0.5px;
 	margin: 0;
@@ -44154,7 +44154,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	padding: 15px 15px 5px;
 }
 
-.Emi .SelectWrap {
+.product-detail .Emi .SelectWrap {
 	display: inline-block;
 	position: relative;
 }
@@ -44169,16 +44169,16 @@ body.page-productDetails .breadcrumbs.wrapper {
 	top: 3px;
 } */
 
-#bankNameForEMI {
+.product-detail #bankNameForEMI {
 	width: 250px;
 	border: 2px solid #f5f5f5;
 }
 
-.Emi p.active.mobile {
+.product-detail .Emi p.active.mobile {
 	box-shadow: none;
 }
 
-.Emi p.active.mobile+.modal-content {
+.product-detail .Emi p.active.mobile+.modal-content {
 	position: fixed;
     width: 90%;
     left: 5%;
@@ -44186,7 +44186,7 @@ body.page-productDetails .breadcrumbs.wrapper {
      z-index: 100001;
 }
 
-.Emi .modal-content .Close{
+.product-detail .Emi .modal-content .Close{
     position: absolute;
     right: 10px;
     top: 5px;
