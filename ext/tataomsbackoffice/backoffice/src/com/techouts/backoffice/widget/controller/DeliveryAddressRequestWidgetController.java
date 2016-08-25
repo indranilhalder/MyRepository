@@ -4,17 +4,24 @@
 package com.techouts.backoffice.widget.controller;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Listbox;
 
 import com.hybris.cockpitng.annotations.SocketEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
+import com.hybris.oms.tata.renderer.DeliveryAdressReportItemRenderer;
+import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
+import com.tisl.mpl.facades.data.MplDeliveryAddressReportData;
 
 
 /**
@@ -26,11 +33,21 @@ import com.hybris.cockpitng.util.DefaultWidgetController;
 public class DeliveryAddressRequestWidgetController extends DefaultWidgetController
 {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LoggerFactory.getLogger(DeliveryAddressRequestWidgetController.class);
 	private String startDate;
 	private String endDate;
-	private Date fromDate;
-	private Date toDate;
+
+	@Wire
+	private Listbox listBoxData;
+
+	@WireVariable(value = "deliveryAddressFacade")
+	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
+
+	DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 
 	@Override
 	public void initialize(final Component comp)
@@ -40,10 +57,8 @@ public class DeliveryAddressRequestWidgetController extends DefaultWidgetControl
 		super.initialize(comp);
 		LOG.info("inside initialize method" + "Start Date " + cal.getTime() + "******* End Date " + new Date());
 
-		//	shipTxnInfo.setFromDate(cal.getTime());
-		//shipTxnInfo.setToDate(new Date());
-		//call method to get
-		getDeliveryAddressRequestInfo();
+
+		getDeliveryAddressRequestInfo(dateFormat.format(cal.getTime()), dateFormat.format(new Date()));
 
 	}
 
@@ -52,7 +67,6 @@ public class DeliveryAddressRequestWidgetController extends DefaultWidgetControl
 	 * @param startendDates
 	 *
 	 */
-	@SuppressWarnings("deprecation")
 	@SocketEvent(socketId = "startendDates")
 	public void getTshipVSshipReportBySocketEvent(final String startendDates)
 	{
@@ -60,26 +74,21 @@ public class DeliveryAddressRequestWidgetController extends DefaultWidgetControl
 		startDate = startEndArray[0];
 		endDate = startEndArray[1];
 
-		final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+
 		LOG.info(" inside sockent Start Date " + startDate + "******* End Date " + endDate);
 
-		try
-		{
-			fromDate = dateFormat.parse(startDate);
-			toDate = dateFormat.parse(endDate);
-		}
-		catch (final ParseException e)
-		{
-
-			e.printStackTrace();
-		}
-
-		getDeliveryAddressRequestInfo();
+		getDeliveryAddressRequestInfo(startDate, endDate);
 
 	}
 
-	private void getDeliveryAddressRequestInfo()
+	private void getDeliveryAddressRequestInfo(final String dateFrom, final String toDate)
 	{
+		final Collection<MplDeliveryAddressReportData> deliveryAddressData = mplDeliveryAddressFacade
+				.getDeliveryAddressRepot(dateFrom, toDate);
+
+		listBoxData.setModel(new ListModelList<MplDeliveryAddressReportData>(deliveryAddressData));
+		listBoxData.setItemRenderer(new DeliveryAdressReportItemRenderer());
 
 	}
 }
