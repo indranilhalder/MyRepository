@@ -3,7 +3,6 @@
  */
 package com.techouts.backoffice.widget.controller;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,12 +11,15 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zul.Datebox;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Messagebox;
 
-import com.hybris.cockpitng.annotations.SocketEvent;
+import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.tata.facade.ShortUrlFacade;
 import com.hybris.oms.tata.renderer.ShortUrlReportItemRenderer;
@@ -31,17 +33,24 @@ import com.techouts.backoffice.ShortUrlReportData;
  */
 public class ShortUrlMappingWidgetController extends DefaultWidgetController
 {
-	private static final Logger LOG = LoggerFactory.getLogger(ShortUrlMappingWidgetController.class);
-	private String startDate;
-	private String endDate;
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 
-	private Date fromDate;
-	private Date toDate;
+	private static final Logger LOG = LoggerFactory.getLogger(ShortUrlMappingWidgetController.class);
+
+	@Wire
+	private Datebox startdpic;
+	@Wire
+	private Datebox enddpic;
 
 	@Wire
 	private Listbox listBoxData;
+
 	@WireVariable
 	private ShortUrlFacade shortUrlFacade;
+	final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
 	@Override
 	public void initialize(final Component comp)
@@ -49,49 +58,68 @@ public class ShortUrlMappingWidgetController extends DefaultWidgetController
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -6);
 		super.initialize(comp);
-		LOG.info("inside initialize method" + "Start Date " + cal.getTime() + "******* End Date " + new Date());
+		startdpic.setValue(cal.getTime());
+		enddpic.setValue(new Date());
 
-		//	shipTxnInfo.setFromDate(cal.getTime());
-		//shipTxnInfo.setToDate(new Date());
-		//call method to get
+		LOG.info("inside initialize method" + "Start Date " + cal.getTime() + "******* End Date " + new Date());
 		getShortUrlMappingInfo(cal.getTime(), new Date());
+	}
+
+
+	/**
+	 * This method is to Get the selected date
+	 */
+	@ViewEvent(componentID = "startdpic", eventName = Events.ON_CHANGE)
+	public void getStartdpic()
+	{
+
+		if (startdpic.getValue() == null || enddpic.getValue() == null)
+		{
+			return;
+		}
+
+		if (dateFormat.format(startdpic.getValue()).compareTo(dateFormat.format(enddpic.getValue())) > 0)
+		{
+			msgBox("Start date must be less than or equal to End date");
+			return;
+		}
+
+		LOG.info("Start date " + startdpic.getValue() + "end date " + enddpic.getValue() + "output socket sended");
+		getShortUrlMappingInfo(startdpic.getValue(), enddpic.getValue());
 
 	}
 
 	/**
-	 *
-	 * @param startendDates
-	 *
+	 * This method is to Get the selected date
 	 */
-	@SuppressWarnings("deprecation")
-	@SocketEvent(socketId = "startendDates")
-	public void shortUrlTrackingReportBySocketEvent(final String startendDates)
+	@ViewEvent(componentID = "enddpic", eventName = Events.ON_CHANGE)
+	public void getEnddpic()
 	{
-		final String[] startEndArray = startendDates.trim().split(",");
-		startDate = startEndArray[0];
-		endDate = startEndArray[1];
-
-		LOG.info(" shortUrlTrackingReportBySocketEvent " + startDate + "******* End Date " + endDate);
-		final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-
-		try
+		if (startdpic.getValue() == null)
 		{
-
-			fromDate = formatter.parse(startDate);
-			toDate = formatter.parse(endDate);
-
-
+			msgBox("Please choose the Start Date");
+			return;
 		}
-		catch (final ParseException e)
+		if (enddpic.getValue() == null)
 		{
-
-			e.printStackTrace();
+			msgBox("Please choose the End Date");
+			return;
+		}
+		if (dateFormat.format(startdpic.getValue()).compareTo(dateFormat.format(enddpic.getValue())) > 0)
+		{
+			msgBox("End date must be greater than or equal to Start date");
+			return;
 		}
 
-		getShortUrlMappingInfo(fromDate, toDate);
-
+		LOG.info("Start date " + startdpic.getValue() + "end date " + enddpic.getValue() + "output socket sended");
+		getShortUrlMappingInfo(startdpic.getValue(), enddpic.getValue());
 	}
+
+	private void msgBox(final String mesg)
+	{
+		Messagebox.show(mesg, "Error", Messagebox.OK, Messagebox.ERROR);
+	}
+
 
 	private void getShortUrlMappingInfo(final Date fromDate, final Date toDate)
 	{
