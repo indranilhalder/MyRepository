@@ -67,7 +67,7 @@ public interface MplDeliveryAddressFacade
 	 * @param enteredOTPNumber
 	 * @return String msg Valid or not
 	 */
-	public String validateOTP(String customerId, String enteredOTPNumber, String orderCode);
+	public String submitChangeDeliveryAddress(String customerId, String enteredOTPNumber, String orderCode);
 
 	//Generate new OTP
 	public boolean generateNewOTP(String orderCode);
