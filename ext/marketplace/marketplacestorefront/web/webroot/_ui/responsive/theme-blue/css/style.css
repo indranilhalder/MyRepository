@@ -8503,7 +8503,7 @@ footer .banner {
       .top.checkout-top .content {
         margin-bottom: 0; }
         .sign-in.tab-view {
-    margin-top: 20px;} }
+    margin-top: 24px;} }
     .top.checkout-top .content ul {
       list-style: none; }
       .top.checkout-top .content ul li {
@@ -45413,11 +45413,32 @@ display:none;
 .sign-in.tab-view .tabs > li {
     padding: 35px 12px;
 }
+.sign-in.tab-view .tabs > li .left form div#checkBox label{
+	width:90%;
+}
 }
 @media (max-width: 450px){
 .else-brdrbtm, .else-brdrtp {
     width: 41%;
 }
+}
+.sign-in.tab-view .tabs input::-webkit-input-placeholder {
+	color: #a5a5a5;
+}
+
+.sign-in.tab-view .tabs input::-moz-placeholder {
+	color: #a5a5a5;
+}
+
+.sign-in.tab-view .tabs input:-moz-placeholder {
+	color: #a5a5a5;
+}
+
+.sign-in.tab-view .tabs input:-ms-input-placeholder {
+	color: #a5a5a5;
+}
+.sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
+	text-decoration:underline;
 }
 /*Login End*/
 /*pdp fix*/
