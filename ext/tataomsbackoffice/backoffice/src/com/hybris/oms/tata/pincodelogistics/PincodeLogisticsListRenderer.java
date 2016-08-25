@@ -58,8 +58,7 @@ public class PincodeLogisticsListRenderer implements ListitemRenderer
 		addListcell(listitem, String.valueOf(sellerLRpt.getActualTatOrder2Hotc()));
 		addListcell(listitem, String.valueOf(sellerLRpt.getTatConfHotc2Delvd()));
 		addListcell(listitem, String.valueOf(sellerLRpt.getActualTatHotc2Delvd()));
-
-
+		addListcell(listitem, String.valueOf(sellerLRpt.getPromisedDate()));
 
 	}
 

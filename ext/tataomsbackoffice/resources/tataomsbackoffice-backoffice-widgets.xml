@@ -584,8 +584,8 @@
 		outputId="startendDates" targetWidgetId="pincode_logistics_report_listview"
 		inputId="startendDates" />
 	<widget-connection sourceWidgetId="pincode_logistics_report_datepic"
-		outputId="shipmentType" targetWidgetId="pincode_logistics_report_listview"
-		inputId="shipmentType" />
+		outputId="selectedShipmentType" targetWidgetId="pincode_logistics_report_listview"
+		inputId="selectedShipmentType" />
 
 	<widget-connection sourceWidgetId="tataBUCperspective"
 		outputId="possiblePerspectives" targetWidgetId="backofficePerspectiveChooser"

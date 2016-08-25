@@ -46,7 +46,7 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 	private String startDate;
 	private String endDate;
-	private static final String SHIPMENTTYPE = "ALL";
+	private final String shipmentType = "ALL";
 
 	private static final Logger LOG = LoggerFactory.getLogger(PincodeLogisticsListController.class);
 
@@ -60,7 +60,7 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 		endDate = dateFormat.format(new Date());
 		LOG.info("Start Date " + startDate + "******* End Date " + endDate);
 		sellerLogisticsRptList = (List<SellerAndLogisticsPerfRpt>) sellerAndLogisticsFacade.getOrderLinesByDate(startDate, endDate,
-				SHIPMENTTYPE);
+				shipmentType);
 		sellerLogisticsRptList.sort(PincodeLogisticsListController.pincodeLogisticsListComparator);
 		listview.setModel(new ListModelList(sellerLogisticsRptList));
 		listview.setItemRenderer(new PincodeLogisticsListRenderer());
@@ -81,11 +81,45 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 		endDate = startEndArray[1];
 		LOG.info("Start Date " + startDate + "******* End Date " + endDate);
 		sellerLogisticsRptList = (List<SellerAndLogisticsPerfRpt>) sellerAndLogisticsFacade.getOrderLinesByDate(startDate, endDate,
-				SHIPMENTTYPE);
+				shipmentType);
 		sellerLogisticsRptList.sort(PincodeLogisticsListController.pincodeLogisticsListComparator);
 		listview.setModel(new ListModelList(sellerLogisticsRptList));
 		listview.setItemRenderer(new PincodeLogisticsListRenderer());
 	}
+
+	/**
+	 *
+	 * @param startendTime
+	 *
+	 */
+	@SocketEvent(socketId = "selectedShipmentType")
+	public void editListViewWithShipmentType(final String selectedShipmentType)
+	{
+
+		if (startDate == null)
+		{
+			Messagebox.show("Please choose the Start Date");
+			return;
+		}
+		if (endDate == null)
+		{
+			Messagebox.show("Please choose the End Date");
+			return;
+		}
+		if (startDate.compareTo(endDate) > 0)
+		{
+			Messagebox.show("End date must be greater than or equal to Start date");
+			return;
+		}
+
+		LOG.info("Start Date " + startDate + "******* End Date " + endDate + "shipment Type" + selectedShipmentType);
+		sellerLogisticsRptList = (List<SellerAndLogisticsPerfRpt>) sellerAndLogisticsFacade.getOrderLinesByDate(startDate, endDate,
+				selectedShipmentType);
+		sellerLogisticsRptList.sort(PincodeLogisticsListController.pincodeLogisticsListComparator);
+		listview.setModel(new ListModelList(sellerLogisticsRptList));
+		listview.setItemRenderer(new PincodeLogisticsListRenderer());
+	}
+
 
 
 	/**
@@ -151,7 +185,6 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 			{
 				cellLabel.append(saperator);
 			}
-
 			cellLabel.append(item.getCustomerId().concat(saperator));
 			cellLabel.append(item.getEmail().concat(saperator));
 			if (StringUtils.isEmpty(item.getMobileNo()))
@@ -166,6 +199,14 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 			cellLabel.append(String.valueOf(item.getActualTatOrder2Hotc()).concat(saperator));
 			cellLabel.append(String.valueOf(item.getTatConfHotc2Delvd()).concat(saperator));
 			cellLabel.append(String.valueOf(item.getActualTatHotc2Delvd()).concat(saperator));
+			if (StringUtils.isEmpty(item.getPromisedDate()))
+			{
+				cellLabel.append("NA".concat(saperator));
+			}
+			else
+			{
+				cellLabel.append(item.getPromisedDate().concat(saperator));
+			}
 			stringBuff.append(cellLabel.toString().concat("\n"));
 
 		}
