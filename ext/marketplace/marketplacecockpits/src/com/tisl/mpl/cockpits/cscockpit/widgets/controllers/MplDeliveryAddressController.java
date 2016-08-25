@@ -4,6 +4,11 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.controllers;
  * @author Techouts
  * 
  */
+import java.util.List;
+
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tisl.mpl.core.model.TemproryAddressModel;
 import com.tisl.mpl.facades.data.PincodeData;
 
@@ -40,10 +45,11 @@ public interface MplDeliveryAddressController {
 	 * @author Techouts
 	 * @param code
 	 * @param newDeliveryAddress
+	 * @param interfaceType 
 	 * @return boolean
 	 */
 	public abstract String changeDeliveryAddressCallToOMS(String code,
-			AddressModel newDeliveryAddress);
+			AddressModel newDeliveryAddress, String interfaceType,List<TransactionSDDto> transactionSDDtos);
 
 	/**
 	 * This Method is used to Get the temprory Address
@@ -73,5 +79,13 @@ public interface MplDeliveryAddressController {
 	 * @return PincodeData
 	 */
 	public PincodeData getPincodeData(String pincode);
+
+	/**
+	 * This method is used to check whether Scheduled delivery is possible or not 
+	 * @param parentReference
+	 * @return
+	 */
+	public abstract boolean checkScheduledDeliveryForOrder(
+			OrderModel parentReference);
 
 }

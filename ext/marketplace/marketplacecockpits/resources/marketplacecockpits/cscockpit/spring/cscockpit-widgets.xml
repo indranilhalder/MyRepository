@@ -689,34 +689,8 @@
 	</bean>
 
 
-
-<!-- 	<alias alias="csChangeDeliveryAddressWidgetConfig" name="defaultCsChangeDeliveryAddressWidgetConfig" /> -->
-<!-- 	<bean id="defaultCsChangeDeliveryAddressWidgetConfig" parent="csBaseWidgetConfig"> -->
-
-<!-- 		<property name="widgetTitle" -->
-<!-- 			value="cscockpit.widget.order.changeDeliveryAddress.create" /> -->
-<!-- 		<property name="widgetRenderer" ref="csChangeDeliveryAddressCreateWidgetRenderer" /> -->
-<!-- 		<property name="widgetController" ref="csCustomerController" /> -->
-<!-- 		<property name="widgetClass" -->
-<!-- 			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" /> -->
-<!-- 		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame" /> -->
-<!-- 		<property name="widgetModel"> -->
-<!-- 			<bean -->
-<!-- 				class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel" /> -->
-<!-- 		</property> -->
-
-<!-- 	</bean> -->
-
-<!-- 	<alias alias="csChangeDeliveryAddressCreateWidgetRenderer" name="defaultCsChangeDeliveryAddressCreateWidgetRenderer" /> -->
-<!-- 	<bean id="defaultCsChangeDeliveryAddressCreateWidgetRenderer" -->
-<!-- 		parent="abstractWidgetRenderer" -->
-<!-- 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplChangeDeliveryAddressWidgetRenderer"> -->
-<!-- 		<property name="callContextController" ref="csCallContextController" /> -->
-
-<!-- 	</bean> -->
-
 	<!-- Change Delivery Address -->
-	<alias alias="csChangeDeliveryAddressWidgetConfig" name="defaultCsChangeDeliveryAddressWidgetConfig" />
+  <alias alias="csChangeDeliveryAddressWidgetConfig" name="defaultCsChangeDeliveryAddressWidgetConfig" />
 	<bean id="defaultCsChangeDeliveryAddressWidgetConfig" parent="defaultCsAddressCreateWidgetConfig">
 		<property name="widgetRenderer" ref="csChangeDeliveryAddressCreateWidgetRenderer" />
 	</bean>
@@ -755,7 +729,13 @@
 		parent="abstractWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplChangeDeliveryOTPWidgetRenderer">
 		<property name="callContextController" ref="csCallContextController" />
-
+		<property name="detailRenderer">
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.renderers.details.impl.ProductSearchProductDetailRenderer">
+				<property name="urlStrategy" ref="csProductUrlStrategy" />
+				<property name="configurationCode" value="productDetails" />
+			</bean>
+		</property>
 	</bean>
 	
 
