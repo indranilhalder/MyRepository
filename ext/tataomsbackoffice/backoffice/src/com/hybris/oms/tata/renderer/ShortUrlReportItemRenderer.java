@@ -13,7 +13,7 @@ import com.techouts.backoffice.ShortUrlReportData;
 
 /**
  * this is used for short url item render purpose
- * 
+ *
  * @author prabhakar
  *
  */
@@ -34,8 +34,8 @@ public class ShortUrlReportItemRenderer implements ListitemRenderer
 		listitem.setValue(value);
 		addListcell(listitem, shortUrlData.getOrderId());
 		addListcell(listitem, shortUrlData.getShortUrl());
-		addListcell(listitem, String.valueOf(shortUrlData.getLogins()));
 		addListcell(listitem, String.valueOf(shortUrlData.getCliks()));
+		addListcell(listitem, String.valueOf(shortUrlData.getLogins()));
 		//addListcell(listitem, shortUrlData.getLongUrl());
 
 	}
