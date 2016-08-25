@@ -8688,13 +8688,13 @@ footer .banner {
         width: 115%;
         } }
     .sign-in.tab-view .tabs > li .left p {
-      line-height: 1.5;
+      line-height: 1;
       margin-bottom: 15px;
       font-size: 14px;
     font-weight: 500; }
       @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .left p {
-          line-height: 1.5;
+          line-height: 1;
           margin-bottom: 0; } }
       @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .left form label {
@@ -45169,6 +45169,8 @@ display:none;
 	padding-bottom:0px;}
 	      .sign-in.tab-view .tabs > li .left form .forgotten-password{
       display:block;} 
+      .sign-in.tab-view .tabs > li .left form a.js-password-forgotten:hover{
+    color: #000;}
 @media (min-width: 981px){
 	.sign-in.tab-view{
 	margin:0px;}
@@ -45415,6 +45417,9 @@ display:none;
 }
 .sign-in.tab-view .tabs > li .left form div#checkBox label{
 	width:90%;
+}
+.sign-in.tab-view {
+    margin-top: 0px;
 }
 }
 @media (max-width: 450px){
