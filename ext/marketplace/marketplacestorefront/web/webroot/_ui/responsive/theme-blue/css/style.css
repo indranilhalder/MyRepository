@@ -8601,14 +8601,14 @@ footer .banner {
   clear: both;
   content: "";
   display: table; }
-@media (min-width: 791px) {
+/* @media (min-width: 791px) {
   .sign-in.tab-view {
     margin-top: 20px;
     width: 80%;
     margin: 30px auto; } 
     .checkout-indent .sign-in.tab-view{
     margin-bottom:0px;
-    padding-bottom:70px;}}
+    padding-bottom:70px;}} */
 .sign-in.tab-view .nav {
   border: 1px solid #DFD1D5;
   width: 100%;
@@ -8639,10 +8639,10 @@ footer .banner {
     .sign-in.tab-view .nav li:after {
       position: absolute;
       content: '';
-      bottom: -2px;
+      bottom: -4px;
       left: 0;
       width: 100%;
-      height: 2px;
+      height: 5px;
       background-color: #fff;
       z-index: 1;
       opacity: 0;
@@ -8665,7 +8665,8 @@ footer .banner {
   border: 1px solid #DFD1D5;
   margin-top: 0;
   float: left;
-  width: 100%; }
+  width: 100%;
+      position: relative; }
   .sign-in.tab-view .tabs::after {
     clear: both;
     content: "";
@@ -8675,7 +8676,7 @@ footer .banner {
     padding: 20px 20px 20px 20px;
     padding-bottom: 0;
     display: none;
-    position: relative; }
+   /*  position: relative; */ }
     .sign-in.tab-view .tabs > li.active {
       display: inline-block; }
     @media (min-width: 791px) {
@@ -8695,21 +8696,12 @@ footer .banner {
         .sign-in.tab-view .tabs > li .left p {
           line-height: 1.5;
           margin-bottom: 0; } }
-    .sign-in.tab-view .tabs > li .left form label {
-      display: block;
-      padding: 10px 0;
-      font-size: 12px;
-      font-weight: normal; }
-      .sign-in.tab-view .tabs > li .left p{
-      font-size:14px;
-       font-weight: 500;}
       @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .left form label {
           letter-spacing: 1.2px; } }
           .sign-in.tab-view .tabs > li .left form div#checkBox label,.sign-in.tab-view .tabs > li .left form div#checkBox label a{
-          	font-size: 11px;
+          	font-size: 12px;
 		    font-weight: 500;
-		    text-align: justify;
 		    letter-spacing: normal;
 		    text-transform: none;
 		    display: inline;
@@ -8747,7 +8739,7 @@ footer .banner {
       font-size: 12px;
       font-weight: normal;
       letter-spacing: 1.2px;
-      margin: 10px auto; }
+       /* margin: 10px auto; */ }
       @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .left form button {
           width: 100%;
@@ -8755,21 +8747,11 @@ footer .banner {
           .sign-in.tab-view .tabs > li .left form button:hover {		
     background: #88102C;	
 }
-    .sign-in.tab-view .tabs > li .left form a {
-      display: block;
-      width: 100%;
-      text-align: center;
-      text-transform: uppercase;
-      padding: 10px 0;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      text-decoration: underline;
-      color: #A9143C; }
-      .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
+  
+/*       .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
       padding: 20px 0 10px 0;
       text-align: center;
-      }
+      } */
       .sign-in.tab-view .tabs > li .left form .forgotten-password{
       text-align: center;
       padding:10px 0;
@@ -8815,7 +8797,7 @@ footer .banner {
       padding-right: 0;
       padding-top: 110px;
       background: transparent; }
-      @media (min-width: 791px) {
+      @media (min-width: 768px) {
         .sign-in.tab-view .tabs > li .register-section .social-connect {
           width: 40%;
           float: right;
@@ -8890,9 +8872,9 @@ footer .banner {
   width: 100%;
   display: inline-block;
   float: left; }
-  @media (min-width: 791px) {
+/*   @media (min-width: 791px) {
     .sign-in.wrapper .sign-in.tab-view {
-      width: 60%; } }
+      width: 60%; } } */
 .sign-in.wrapper .benefits {
   width: 100%;
   display: inline-block;
@@ -17164,26 +17146,6 @@ ul.social-connect > li a
 	margin-top:10px;
 	font-size:12px;
 }
-.sign-in.wrapper .sign-in.tab-view.checkoutSignPage
-	{
-		width:100%;
-		display:block;
-		float:none;
-		
-		
-	}
-@media(min-width:791px)
-{
-	.sign-in.wrapper .sign-in.tab-view.checkoutSignPage
-	{
-		width:80% !important;
-		display:block;
-		float:none;
-		margin:20px auto;
-		
-	}
-}
-
 
 .words li.long .toggle a {
 	  text-transform: capitalize !important;}
@@ -23834,9 +23796,6 @@ h5.questions a:hover {
     color: initial;
 }
 }
-
-#checkBox label:before{
-	top:-1px;}
 	
 	ul.wish-share {
 		margin-top:20px;
@@ -39705,7 +39664,7 @@ color:#777; }
 
 /*tata rewards css starts*/
 
- .sign-in.tab-view .tabs > li .left form div#checkBox label a.tata-rewards{
+ /* .sign-in.tab-view .tabs > li .left form div#checkBox label a.tata-rewards{
 		        border-bottom: 1px dashed #a9143c;
     			padding: 0;
     			display: inline-block;
@@ -39780,7 +39739,7 @@ color:#777; }
 #checkBox .popover.top{
         width: 300px !important;
 }
-}
+} */
 .exist-account{
 padding: 20px;
 margin-bottom: 10px;
@@ -39805,7 +39764,7 @@ display:inline;}
     left: 66px !important;
 }
 } */
-@media(max-width:790px) and (min-width:651px){
+/* @media(max-width:790px) and (min-width:651px){
 	#checkBox .popover.top{
     left: 174px !important;
 }
@@ -39840,7 +39799,7 @@ display:inline;}
     right: 100px !important;
 }
 
-}
+} */
 .error-message.payment-notification{
 	color: #60A119;
 }
@@ -42534,6 +42493,7 @@ margin-left: 20%;
    }
    .listing-leftmenu .Price h4:after{
    content:none;}
+
 /* TPR-814 min-height responsive*/
 
 @media(max-width:790px){
@@ -43026,7 +42986,6 @@ margin-left: 20%;
 	border-bottom: 3px solid transparent;
 }
 .tab-details li{ width:50%; float:left;padding: 0 5% 0 0;}
-
 /*More Stuff Like This slider*/
 .page-productDetails .trending h1 {
 	margin: 0;
@@ -43187,7 +43146,7 @@ margin-left: 20%;
 }
 
 /*form*/
-.gig-comments-header {
+.gig-comments-header{
 	display: none;
 }
 
@@ -43442,6 +43401,7 @@ margin-left: 20%;
 		font-size: 10px;
 	}
 }
+
 @media(min-width:791px) and (max-width:1300px) {
 	.product-info>div.tabs-block {
 			width: 94%;
@@ -44057,12 +44017,12 @@ body.page-productDetails .breadcrumbs.wrapper {
  		padding: 0;
  	}
  }
-   @media (max-width: 1024px) {
-  	 .zoomContainer {
-  		display: none;
-  	} 
-  }
-  @media (min-width: 1025px) {
+  @media (max-width: 1024px) {
+ 	 .zoomContainer {
+ 		display: none;
+ 	} 
+ }
+ @media (min-width: 1025px) {
  	div.pdp {
  		margin-top: 40px;
  	}
@@ -45005,8 +44965,8 @@ padding:0;
     padding: 0 8%;
 }
 #EMITermTable th {
-  	width: auto;
-  }
+	width: auto;
+}
 }
 /*size guide n quickview fix*/
 .size-guide #addToCartButtonId {
@@ -45039,9 +44999,412 @@ padding:0;
 .pdp .product-info.wrapper .tabs-block .tabs.pdp li ul {
 	padding-left: 15px;
 }
+
+/*Login Start*/
+.sign-in.wrapper{
+	margin-left: 24px;
+    margin-right: 24px;
+    padding:0px;
+        width: auto;
+}
+@media only screen and (max-width: 1450px){
+.sign-in.wrapper {
+    margin: 0 auto;
+    max-width: 1200px;
+}}
+@media only screen and (max-width: 1250px){
+.sign-in.wrapper  {
+    padding: 0 24px;
+    max-width: inherit;
+}}
+.sign-in.tab-view .form-group{
+	    margin-top: -12px;}
+.sign-in.tab-view .tabs > li .left form input {
+color: #a5a5a5;
+    font-size: 12px;
+    height: 35px;
+    margin-bottom: 15px;
+    width: 100%;
+    padding: 0 10px;
+    letter-spacing: 1px;
+}
+.sign-in.tab-view .tabs > li .left p{
+	       padding: 5px 0 22px 2px;
+	           font-size: 12px;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    margin-bottom:0px;
+}
+.sign-in.tab-view .tabs > li .left p.sign-in-welcomeMessage{
+    color: #a9143c;
+}
+.sign-in.tab-view .tabs > li .left form a{
+	padding:0px;
+	display: block;
+      letter-spacing: 1px;
+      text-decoration: underline;
+      color: #A9143C;
+      font-size:14px;
+}
+ .sign-in.tab-view .tabs > li .left form button {
+          width: 150px;
+    height: 35px;
+    line-height: 35px;
+    padding: 0;
+    border: none;
+    background-color: #A9143C;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    margin-bottom: 19px; }
+.sign-in.tab-view .tabs > li .left form .forgotten-password{
+      text-align:left;
+          font-size: 14px;
+    padding: 0px 0px 21px;
+    letter-spacing: 1px;}
+    .sign-in.tab-view .tabs > li#sign_in_content form{
+    border-bottom: 1px solid #eaeaeb; }
+        .sign-in.tab-view .tabs > li .left form a#newToTata{
+    font-size: 14px;
+    text-decoration: underline;
+     font-weight: 500;
+    letter-spacing: 1px;  }
+    .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+    padding-top:28px;}
+        .sign-in.tab-view .tabs > li .left form div#checkBox label{
+    color: #7a7a7a;
+    float: left;
+    width: 70%;
+    line-height: 20px;
+        font-size: 12px;
+}
+        .sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+    height: 25px !important;
+    margin: 0;
+    width: 25px !important;
+    position: relative;
+    float: left;
+    border: 1px solid #fff !important;
+    box-shadow: 0 0 0 1px #666;
+    padding-left: 2px;
+    padding-top: 2px;
+    margin-right: 10px;
+        margin-bottom: 1px;
+            -webkit-transition: none;
+    -moz-transition:none;
+    transition: none;
+    }
+    .sign-in.tab-view .tabs > li .left form div#checkBox input[type="checkbox"]:checked + label:before{
+        content: "";
+    font-size: 20px;
+    background: rgba(0, 0, 0, 0) url("../images/sprite.svg") no-repeat scroll -251px -1px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;}
+    .sign-in.tab-view .tabs > li .left form#extRegisterForm button{
+       margin: 10px 0; }
+   .sign-in.tab-view .tabs > li .left form label.accept-cond {
+    clear: left;
+    display: block;
+    font-size: 12px;
+    color: #7a7a7a;
+    letter-spacing: 0;
+}
+.sign-in.tab-view .tabs > li .left form a.spec-notes {
+    color: #a7183e;
+    display: inline-block;
+    width:auto;
+    font-size:12px;
+}
+          .sign-in.tab-view .tabs > li .left form button:hover {		
+        background-color: #fff;
+    border: 1px solid #a9143c;
+    color: #a9143c;	
+}
+.vr-line {
+    background: #eaeaeb;
+    width: 1px;
+    height: 110px;
+    display: inline-block;
+}
+.or-rounded {
+    display: inline-block;
+    top: 158px;
+    float: left;
+    border: 1px solid #eaeaeb;
+    padding: 7px 9px 10px;
+    position: absolute;
+    left: 44.4%;
+    color: #7f7f7f;
+    font-size: 14px;
+    border-radius: 24px;
+    margin-left: 1px;
+    background: #ffffff;
+    letter-spacing: 1px;
+}
+.vrt-line {
+    margin-top: 55px;
+    background: #eaeaeb;
+    width: 1px;
+    height: 110px;
+    display: inline-block;
+}
+.sign-in.tab-view .tabs > li .left form#extRegisterForm {
+        padding-bottom: 19px;
+        
+}
+.else-sec{
+display:none;	
+}
+.sign-in.tab-view .nav{
+	width:50.6%;
+}
+.sign-in.tab-view .tabs > li#sign_up_content .social-connect{
+	display:none;}
+	.sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout{
+	border-bottom:none;
+	padding-bottom:0px;}
+	      .sign-in.tab-view .tabs > li .left form .forgotten-password{
+      display:block;} 
+@media (min-width: 981px){
+	.sign-in.tab-view{
+	margin:0px;}
+.sign-in.tab-view .nav{
+	display:none;
+}
+.sign-in.tab-view .tabs{
+	border:none;
+}
+.sign-in.wrapper .sign-in.tab-view {
+    width: 100%;
+}
+.sign-in.tab-view .tabs > li{
+	float:left;
+	padding:0px;
+	margin-top: 25px;
+}
+.sign-in.tab-view .tabs > li .left{
+	width:100%;
+}
+.sign-in.tab-view .tabs > li#sign_in_content{
+	padding-right: 116px;
+		width:45.8%;
+}
+.sign-in.tab-view .tabs > li#sign_up_content{
+	padding-left: 113px;
+    width: 47.6%;
+}
+.sign-in.tab-view .tabs > li.or{
+	    width: 1px;
+    min-height: 280px;
+    display: inline-block;
+    float: left;
+        margin-top: 36px;
+}
+
+      .sign-in.tab-view .tabs > li .left form a{
+      text-align: left;}
+
+    .sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
+        text-decoration: underline;
+    text-transform: capitalize;
+    font-size: 12px;
+    letter-spacing: 0px;
+    font-weight:normal;}
+        .sign-in.tab-view .tabs > li .login-section .social-connect,.checkout-shipping .social-connect {
+          width: 100%;
+          float: none;
+          margin:0px auto;
+      }
+      .sign-in.tab-view .tabs > li .left form .forgotten-password{
+      display:none;} 
+
+}
+@media (max-width: 980px){
+	.sign-in.tab-view .tabs > li .left{
+	    width: 100%;}
+.sign-in.tab-view .tabs > li{
+	padding: 35px 12px 0;
+    width: 100%;
+    margin-top: 0;
+}
+
+.sign-in.tab-view .tabs, .sign-in.tab-view .nav{
+	border: 1px solid #cccccc;
+}
+.sign-in.tab-view .nav li{
+	    width: 25.3%;
+    padding: 18px 15px;
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    background-color: #b2b2b2;
+    color:#fff;
+}
+ .sign-in.tab-view .tabs > li .left form {
+    width: 52%;
+    float: left;
+    padding: 0 38px 0px 10px;
+}
+.sign-in.tab-view .tabs > li .left form .forgotten-password{
+    border-bottom: 0 none;
+    padding-bottom: 30px;
+}
+
+.else-sec {
+	display:block;
+    width: 5%;
+    float: left;
+    position: absolute;
+    top: 30px;
+    left: 50%;
+}
+.else-brdrbtm,.else-brdrtp {
+    height: 95px;
+    width: 1px;
+    background: #eaeaeb;
+    float: left;
+    margin: 0 20px;
+}
+.else-brdrtp {
+    margin-bottom: 10px;
+}
+ .else-brdrbtm {
+    margin-top: 10px;
+}
+.else {
+    float: left;
+    border: 1px solid #e4e4e4;
+    padding: 7px 9px 10px;
+    color: #7f7f7f;
+    font-size: 14px;
+    border-radius: 24px;
+    margin-left: 3px;
+    text-align: center;
+}
+.accept-cond {
+    margin-bottom: 22px;
+}
+.sign-in.tab-view .tabs > li .left form#extRegisterForm {
+     /*    padding-top: 30px; */
+}
+.sign-in.tab-view .tabs > li .left form button {
+    margin-bottom: 17px;
+}
+.sign-in.tab-view .tabs > li .left form#extRegisterForm button {
+   margin-bottom: 22px;
+}
+.sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+	padding-top:0px;
+}
+.sign-in.tab-view .tabs > li .left form div#checkBox{
+	overflow:hidden;
+}
+.sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+    margin-left: 2px;
+    margin-top: 2px;
+}
+.sign-in.tab-view .tabs > li#sign_up_content .social-connect{
+	display:block;
+	padding-top:0px;
+}
+}
+@media (max-width: 767px){
+	.sign-in.wrapper {
+   margin:0;
+   width:100%;
+}
+	.sign-in.tab-view .tabs{
+    border: 0 none;
+}
+.sign-in.tab-view .nav{
+	width:100%;
+}
+.sign-in.tab-view .tabs > li .left p{
+	display:none;
+}
+.sign-in.tab-view .tabs > li .left form{
+	    padding-top: 5px;
+}
+.sign-in.tab-view .tabs > li .left form {
+    width: 100%;
+    padding:0px;
+}
+.sign-in.tab-view .tabs > li .left form input {
+    font-size: 10px;
+    letter-spacing: 0;
+}
+.sign-in.tab-view .tabs > li .left form a.js-password-forgotten {
+    float: right;
+    letter-spacing: 0;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size:12px;
+}
+.else-sec {
+    position: static;
+    width: 100%;
+    margin: 0 0 20px;
+}
+
+.else-brdrbtm,.else-brdrtp {
+    width: 44%;
+    height: 1px;
+    margin: 14px 0;
+}
+.else {
+    display: block;
+    padding: 7px;
+        font-size: 10px;
+}
+.else-brdrbtm {
+    margin-left: 10px;
+}
+.else-brdrtp {
+    margin-right: 10px;
+}
+.sign-in.tab-view .tabs > li .left form .forgotten-password_login{
+	overflow:hidden;
+}
+.sign-in.tab-view .tabs > li .left form button{
+	margin: 0;
+	width: 100%;
+}
+.sign-in.tab-view .tabs > li .left form .forgotten-password{
+	width: 100%;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+}
+.sign-in.tab-view .tabs > li .left form a#newToTata{
+	width:auto;
+	font-size:10px;
+	float:none;
+	 font-weight: bold;
+
+	}
+	.sign-in.tab-view .tabs > li .left form#extRegisterForm {
+    padding-top: 5px;
+}
+.sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout {
+    padding-top: 0px;
+    font-weight:normal;
+}
+}
+@media (max-width: 450px){
+.else-brdrbtm, .else-brdrtp {
+    width: 41%;
+}
+}
+/*Login End*/
 /*pdp fix*/
 @media (max-width: 500px) {
 	#zoomModal.modal .content {
 		max-width: 100%;
-}
+	}
 }
