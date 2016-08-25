@@ -162,7 +162,6 @@ tr.d0 td {
 				<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">	
 			<div class="pdp-promo-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
-				<br>
 				<a class="details">View more</a>
 			</div>
 			</c:if> <!-- end if check for channel web -->
@@ -172,7 +171,6 @@ tr.d0 td {
 			<c:otherwise>
 			<div class="pdp-promo-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
-				<br>
 				<a class="details">View more</a>
 			</div>
 			</c:otherwise>
@@ -190,6 +188,9 @@ tr.d0 td {
 			</div>			
 			<!-- TPR-275 ends -->
 			<product:productMainVariant /> 
+			<cms:pageSlot position="AddToCart" var="component">
+					<cms:component component="${component}" />
+				</cms:pageSlot>
 			<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
@@ -200,9 +201,30 @@ tr.d0 td {
 				<span id="fulFilledBySship"  style="display:none;"></span>
 				</div>
 			</div>
-			<cms:pageSlot position="AddToCart" var="component">
+			<c:if test="${isGigyaEnabled=='Y'}">
+				<ul class="star-review" id="pdp_rating">
+					<li class="empty"></li>
+					<li class="empty"></li>
+					<li class="empty"></li>
+					<li class="empty"></li>
+					<li class="empty"></li>
+					<span class="gig-rating-readReviewsLink_pdp"> <spring:theme
+							code="rating.noreviews" /></span>
+					<!-- OOTB Code Commented to facilitate Rest Call -->
+					<%-- <c:choose>
+				<c:when test="${not empty product.ratingCount}">
+					<a href="">${product.ratingCount} <spring:theme code="text.account.reviews"/></a> 
+				</c:when>
+				<c:otherwise>
+					<span><spring:theme code="text.no.reviews"/></span>
+					 
+				</c:otherwise>
+			</c:choose>  --%>
+				</ul>
+			</c:if>
+			<%-- <cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
-				</cms:pageSlot>
+				</cms:pageSlot> --%>
 			<%-- <div class="description">${product.summary}</div> --%>
 
 		
