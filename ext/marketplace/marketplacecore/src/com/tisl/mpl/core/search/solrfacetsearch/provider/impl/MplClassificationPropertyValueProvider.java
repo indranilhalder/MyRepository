@@ -151,7 +151,16 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 						{
 							value = ((ClassificationAttributeValue) value).getName();
 							//standardizing value
-							final Object temp = sizeStandard.getStandardValue(value.toString(), indexedProperty.getUnitType());
+							final Object temp;
+							if (indexedProperty.getIsNumeric().equals(Boolean.TRUE))
+							{
+								temp = sizeStandard.getStandardValue(value.toString(), indexedProperty.getUnitType());
+							}
+							else
+							{
+								temp = sizeStandard.getStandardValueNonNumeric(value.toString(), indexedProperty.getName(),
+										indexedProperty.getUnitType());
+							}
 							if (temp != null)
 							{
 								value = temp;

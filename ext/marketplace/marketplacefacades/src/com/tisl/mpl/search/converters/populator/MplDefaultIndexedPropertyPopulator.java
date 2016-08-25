@@ -80,6 +80,17 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 		{
 			target.setIsRangeFaceted(source.getIsRangeFaceted());
 		}
+		if (source.getIsNumeric() == null)
+		{
+
+			source.setIsNumeric(Boolean.TRUE);
+			target.setIsNumeric(source.getIsNumeric());
+
+		}
+		else
+		{
+			target.setIsNumeric(source.getIsNumeric());
+		}
 		////Search POC end
 	}
 }
