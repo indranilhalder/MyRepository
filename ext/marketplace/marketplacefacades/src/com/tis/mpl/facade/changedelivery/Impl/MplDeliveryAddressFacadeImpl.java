@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,6 +33,7 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,16 +42,19 @@ import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressDto;
 import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tis.mpl.facade.address.validator.MplAddressValidator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.TemproryAddressModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.data.ReturnAddressInfo;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.MplDeliveryAddressReportData;
 import com.tisl.mpl.facades.data.RescheduleData;
@@ -91,6 +96,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	
 	@Autowired
 	SessionService sessionService;
+	
+	@Autowired
+	MplConfigFacade mplConfigFacade;
 
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressFacadeImpl.class);
 
@@ -784,40 +792,29 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 
+	
 	@Override
 	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList)
 	{
-		 Map<String, Object> scheduledDeliveryDate = new HashMap<String, Object>();
-		 SimpleDateFormat to = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
-		 SimpleDateFormat newFormat = new SimpleDateFormat("MMM-dd");
-		 ArrayList<String> datesList = new ArrayList<String>();
+		Map<String, Object> scheduledDeliveryDate = new HashMap<String, Object>();
 		try
 		{
+			Map<String, List<String>> scheduledDeliveryTime=null;
 			for (TransactionEddDto transactionEddDto : transactionEddDtoList)
 			{
-				if (StringUtils.isNotEmpty(transactionEddDto.getEDD()))
+				scheduledDeliveryTime = getDateAndTimeMap(transactionEddDto.getEDD());
+				if (scheduledDeliveryTime != null && StringUtils.isNotEmpty(transactionEddDto.getEDD()))
 				{
-					 Map<String, ArrayList<String>> scheduledDeliveryTime = new HashMap<String, ArrayList<String>>();
-					 String stringDate = transactionEddDto.getEDD();
-					 Date date = to.parse(stringDate);
-					 String newdate = to.format(newFormat.parse(stringDate));
-					datesList.add(newdate);
-					DateTime dateTime = new DateTime(date);
-					dateTime = dateTime.plusDays(1);
-					datesList.add(dateTime.toString());
-					dateTime = dateTime.plusDays(1);
-					datesList.add(dateTime.toString());
-					scheduledDeliveryDate.put(transactionEddDto.getTransactionID(), datesList);
+					scheduledDeliveryDate.put(transactionEddDto.getEDD(), scheduledDeliveryTime);
 				}
 			}
 		}
-		catch (final ParseException parseException)
+		catch (final Exception parseException)
 		{
 			LOG.info("parseException raing converrting time" + parseException.getMessage());
 		}
 		return scheduledDeliveryDate;
 	}
-
 
 
 	@Override
@@ -858,5 +855,80 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			orderId.put(orIdsSet.getKey(), tempEpl);
 		}
 		return orderId.values();
+	}
+
+
+	private Map<String, List<String>> getDateAndTimeMap(String edd) throws java.text.ParseException
+	{
+		DateUtilHelper dateUtilHelper = new DateUtilHelper();
+		String estDeliveryDateAndTime = edd;
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+		String deteWithOutTIme = dateUtilHelper.getDateFromat(estDeliveryDateAndTime, format);
+		String timeWithOutDate = dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
+		List<String> calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTIme, format);
+		List<MplTimeSlotsModel> modelList = null;
+
+		modelList = mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
+		LOG.debug("********* Delivery Mode :" + MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
+		if (null != modelList)
+		{
+			Date startTime = null;
+			Date endTIme = null;
+			Date searchTime = null;
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+			List<MplTimeSlotsModel> timeList = new ArrayList<MplTimeSlotsModel>();
+			for (MplTimeSlotsModel mplTimeSlotsModel : modelList)
+			{
+				for (String selectedDate : calculatedDateList)
+				{
+					if (selectedDate.equalsIgnoreCase(deteWithOutTIme))
+					{
+						try
+						{
+							startTime = sdf.parse(mplTimeSlotsModel.getToTime());
+							endTIme = sdf.parse(mplTimeSlotsModel.getFromTime());
+							searchTime = sdf.parse(timeWithOutDate);
+						}
+						catch (java.text.ParseException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						if (startTime.compareTo(searchTime) > 0 && endTIme.compareTo(searchTime) > 0
+								&& startTime.compareTo(searchTime) != 0 && endTIme.compareTo(searchTime) != 0)
+						{
+							LOG.debug("startDate:" + DateFormatUtils.format(startTime, "HH:mm") + "endDate:"
+									+ DateFormatUtils.format(sdf.parse(mplTimeSlotsModel.getFromTime()), "HH:mm"));
+							timeList.add(mplTimeSlotsModel);
+						}
+					}
+				}
+			}
+			LOG.debug("timeList.size()**************" + timeList.size());
+			if (timeList.size() == 0)
+			{
+				String nextDate = dateUtilHelper.getNextDete(deteWithOutTIme, format);
+				calculatedDateList = dateUtilHelper.getDeteList(nextDate, format);
+				timeList.addAll(modelList);
+			}
+			List<String> finalTimeSlotList = null;
+			Map<String, List<String>> dateTimeslotMapList = new LinkedHashMap<String, List<String>>();
+			for (String selectedDate : calculatedDateList)
+			{
+
+				if (selectedDate.equalsIgnoreCase(deteWithOutTIme))
+				{
+					finalTimeSlotList = dateUtilHelper.convertFromAndToTimeSlots(timeList);
+				}
+				else
+				{
+					finalTimeSlotList = dateUtilHelper.convertFromAndToTimeSlots(modelList);
+				}
+				dateTimeslotMapList.put(selectedDate, finalTimeSlotList);
+			}
+			return dateTimeslotMapList;
+		}
+
+		return null;
 	}
 }
