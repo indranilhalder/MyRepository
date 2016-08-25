@@ -37,11 +37,11 @@ import com.tils.mpl.media.MplMediaService;
 
 
 /**
- * @author 973549
+ * @author TCS --TPR-796
  *
  */
-public class NewCustomSearchProductImageValueProvider extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class NewCustomSearchProductImageValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 
 	private static final Logger LOG = Logger.getLogger(NewCustomSearchProductImageValueProvider.class);
@@ -165,8 +165,8 @@ public class NewCustomSearchProductImageValueProvider extends AbstractPropertyFi
 						int numberOfHosts;
 						if (configurationService.getConfiguration().getString("search.media.numberofhosts") != null)
 						{
-							numberOfHosts = Integer.parseInt(
-									String.valueOf(configurationService.getConfiguration().getString("search.media.numberofhosts")));
+							numberOfHosts = Integer.parseInt(String.valueOf(configurationService.getConfiguration().getString(
+									"search.media.numberofhosts")));
 						}
 						else
 						{
@@ -222,7 +222,7 @@ public class NewCustomSearchProductImageValueProvider extends AbstractPropertyFi
 			/*
 			 * final MediaModel firstMedia = getMediaContainerService().getMediaForFormat(firstMediaContainerModel,
 			 * mediaFormat); if (firstMedia != null) {
-			 *
+			 * 
 			 * return firstMedia; }
 			 */
 		}

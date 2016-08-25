@@ -1684,7 +1684,9 @@
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
     	<property name="imageDiscription" type="String" />
-	<property name="componentType" type="String" />
+    	<!-- TPR-472 -->
+    	<property name="icid" type="String" />
+		<property name="componentType" type="String" />
     </bean>
     
      <bean class="com.tisl.mpl.wsdto.TextComponentWsDTO">
