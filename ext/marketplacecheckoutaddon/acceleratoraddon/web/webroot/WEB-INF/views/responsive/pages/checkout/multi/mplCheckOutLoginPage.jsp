@@ -29,7 +29,20 @@
 	<div class="row checkout-content">
 		<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}">
 			<jsp:body>
-			
+			<script>
+    				/* window.onload =	function(){
+    					//resetConvChargeElsewhere();
+    					activateSignInTab();
+    				} */
+    				$(window).on('load resize',function(){	
+    					if($(".sign-in.tab-view .nav").css("display") == "table"){
+    						activateSignInTab();
+    					}
+    					else{
+    						$("#sign_in_content, #sign_up_content").addClass('active');
+    					}
+    				});
+				</script>
 				<ycommerce:testId code="checkoutStepTwo">
 					<div class="checkout-shipping">
 						<div class="checkout-indent">
@@ -54,24 +67,6 @@
 									</li>
 			
 								</ul>
-								<c:choose>
-<c:when test="${isGigyaEnabled=='Y'}">
-<ul class="social-connect" id="gSignInWrapper">
- <li>
-    <br />
-   <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
-    <div id="loginDivCheckout"></div>
-  
-    </li>
-</ul>
-</c:when>
-<c:otherwise>
-<ul class="social-connect" id="gSignInWrapper">
-  <li><a class="fb" href="${urlVisitForFacebook}"><spring:theme code="register.new.facebook" text="Connect with Facebook" /></a></li>
-  <li class="customGPlusSignIn"><a class="go" href="${urlVisit}"><spring:theme code="register.new.google" text="Connect with Google" /></a></li>
-</ul>
-</c:otherwise>
-</c:choose>
 							</div>
 							</div>
 						</div>
@@ -89,18 +84,3 @@
 	</div>
 
 </template:page>
-
-<script>
-    				/* window.onload =	function(){
-    					//resetConvChargeElsewhere();
-    					activateSignInTab();
-    				} */
-    				$(window).on('load resize',function(){	
-    					if($(".sign-in.tab-view .nav").css("display") == "table"){
-    						activateSignInTab();
-    					}
-    					else{
-    						$("#sign_in_content, #sign_up_content").addClass('active');
-    					}
-    				});
-				</script>
