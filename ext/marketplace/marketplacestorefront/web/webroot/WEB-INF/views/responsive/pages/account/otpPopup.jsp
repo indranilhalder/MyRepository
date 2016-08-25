@@ -119,6 +119,7 @@ function generateOTP(orderId){
 </c:if>
 <style>
 .otpForm .messageSpace{
+550065
 	padding: 10px;
 }
 .otpForm .lableSpace{
