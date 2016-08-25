@@ -33,7 +33,7 @@
 		path="pwd" inputCSS="form-control password-strength" mandatory="true" />
 	<div class="help-block has-error" id="signupPasswordDiv" style="display: none;"></div>
 	
-	<formElement:formPasswordBox idKey="register.checkPwd"
+	<formElement:formConfirmPasswordBox idKey="register.checkPwd"
 		labelKey="" path="checkPwd" inputCSS="form-control"
 		mandatory="true" />
 	<div class="help-block has-error" id="signupConfirmPasswordDiv" style="display: none;"></div>

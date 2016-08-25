@@ -30,12 +30,12 @@
 	<div class="help-block has-error" id="signupEmailIdDiv" style="display: none;"></div>
 	
 	<formElement:formPasswordBox idKey="password_login" labelKey="" 
-		path="pwd" inputCSS="form-control password-strength" mandatory="true" />
+		path="pwd" inputCSS="form-control password-strength" mandatory="true"  />
 	<div class="help-block has-error" id="signupPasswordDiv" style="display: none;"></div>
 	
-	<formElement:formPasswordBox idKey="register.checkPwd_login"
+	<formElement:formConfirmPasswordBox idKey="register.checkPwd_login"
 		labelKey="" path="checkPwd" inputCSS="form-control"
-		mandatory="true" />
+		mandatory="true"  />
 <div class="help-block has-error" id="signupConfirmPasswordDiv" style="display: none;"></div>
 	<%-- <input type="hidden" id="recaptchaChallangeAnswered"
 		value="${requestScope.recaptchaChallangeAnswered}" /> --%>
