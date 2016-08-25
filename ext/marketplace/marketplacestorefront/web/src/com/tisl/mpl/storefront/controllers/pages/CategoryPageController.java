@@ -271,6 +271,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				{
 					model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
 					model.addAttribute("departments", searchPageData.getDepartments());
+					model.addAttribute("currentQuery", searchPageData.getCurrentQuery().getQuery().getValue());
 				}
 				//set url for 1st page
 				//				if (checkIfPagination(request) && searchQuery.quals && page == 0 && null != searchPageData.getCurrentQuery())
@@ -336,7 +337,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				/*
 				 * final List<ProductData> commonNormalProducts = new ArrayList<ProductData>(); final List<ProductData>
 				 * normalProductDatas = searchPageData.getResults();
-				 *
+				 * 
 				 * if (null != normalProductDatas) { for (final ProductData normalProduct : normalProductDatas) { for (final
 				 * ProductModel heroProduct : heroProducts) { if
 				 * (normalProduct.getCode().equalsIgnoreCase(heroProduct.getCode())) {
@@ -705,6 +706,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		{
 			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
 			model.addAttribute("departments", searchPageData.getDepartments());
+			model.addAttribute("currentQuery", searchPageData.getCurrentQuery().getQuery().getValue());
 		}
 		final boolean showCategoriesOnly = categorySearch.isShowCategoriesOnly();
 

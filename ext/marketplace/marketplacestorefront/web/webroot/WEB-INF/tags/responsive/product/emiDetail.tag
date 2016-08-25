@@ -6,45 +6,29 @@
 
 
 <!-- -EMI changes -->
-<div id="emiStickerId" class="emi" style="display:none; width: 80%;">
+<div class="Emi Emi_wrapper" id="emiStickerId" style="display:none">
+<p onclick="" ><!-- id="emiStickerId" class="emi" style="display:none; width: 80%;" -->
 	<spring:theme code="marketplace.emiavailable" />
-	 <a type="button" name="yes" id="prodEMI"
+	<%--  <a type="button" name="yes" id="prodEMI"
 		data-target="#modalProd" onclick="openPopForBankEMI()"
-		data-toggle="modal"><spring:theme code="marketplace.emiinfo"></spring:theme></a>  				
+		data-toggle="modal"><spring:theme code="marketplace.emiinfo"></spring:theme></a>  		 --%>		
 						
 		<input id="prodPrice" type="hidden" />
-</div>
-
-<div class="modal fade" id="modalProd" tabindex="-1" role="dialog"
-	aria-labelledby="myModalLabel" aria-hidden="true">
-	
-	<div class="content" style="width:50%">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">
-					<span class="Emi-tableTitle">EMI Details</span>
-					<span class="Emi-subTitle">EMI for the product is provided by the below banks</span>
-				</h4>
+</p>
+<!-- TPR-630 -->
+<div id="EMImodal-content" class="modal-content">
+<span class="Close">+</span>
+  <div class="modal-header">   
+    <h4 class="modal-title" id="myModalLabel"> <span class="Emi-tableTitle">EMI Details</span> <span class="Emi-subTitle">EMI for the product is provided by the below banks</span> </h4>
+  </div>
+  <div class="modal-body" id="modelId">
+			<div class="SelectWrap">
+				<select name="bankNameForEMI" id="bankNameForEMI"
+					onchange="populateEMIDetailsForPDP()"></select>
 			</div>
-			<div class="modal-body" id="modelId">
-
-<!-- TISPRO-533 -->
-
-
-<!-- <select name="bankNameForEMI" id="bankNameForEMI"
-onchange="getSelectedEMIBankForPDP()">
-</select> -->
-
-<select name="bankNameForEMI" id="bankNameForEMI" onchange="populateEMIDetailsForPDP()">
-</select>
-
-
-<div id="emiTableDiv" class="other-sellers">
-	<table id="EMITermTable" class="other-sellers-table emi-table">
-
-		<thead id="emiTableTHead" style="display:none">
+	<div id="emiTableDiv" class="other-sellers"> <span id="emiSelectBank" style="display:none">Please select a Bank again</span><span id="emiNoData" style="display:none">No data for the bank.</span>
+      <table id="EMITermTable" class="other-sellers-table emi-table">
+        <thead id="emiTableTHead" style="display:none">
 			<th><b><spring:theme
 						code="checkout.multi.paymentMethod.addPaymentDetails.terms" /></b></th>
 			<th><b><spring:theme
@@ -59,21 +43,8 @@ onchange="getSelectedEMIBankForPDP()">
 		<span id="emiSelectBank" style="display:none"><spring:theme code="emi.nobankselect"/></span>
 		<span id="emiNoData" style="display:none"><spring:theme code="emi.nodata"/></span>
 		</tbody>
-		
-	</table>
-
+      </table>
+    </div>
+  </div>
 </div>
-
-
-			</div>
-			<div class="modal-footer">
-				<!--   <button type="button" class="btn btn-default" 
-               data-dismiss="modal">Close
-            </button> -->
-			</div>
-		</div>
-		<!-- /.modal-content -->
-	</div>
-	<!-- /.modal-dialog -->
-	<div class="overlay" data-dismiss="modal"></div>
 </div>

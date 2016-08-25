@@ -19,4 +19,10 @@ public interface MplWishlistDao
 	public abstract List<Wishlist2Model> findAllWishlists(UserModel paramUserModel);
 
 	public List<Wishlist2EntryModel> findWishlistByUserAndUssid(final UserModel user, final String ussid);
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	public abstract List<Wishlist2Model> getWishListAgainstUser(UserModel user);
 }

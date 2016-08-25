@@ -72,7 +72,7 @@
 					</div>
 				</c:if>
 
-				<c:if test="${product.stock.stockLevelStatus eq 'outOfStock'}">
+				<%-- <c:if test="${product.stock.stockLevelStatus eq 'outOfStock'}">
 					<a id="stockIdDefault_${product.name}" class="stockLevelStatus"
 						href="${productUrl}" title="${product.name}"> <spring:theme
 							code="pickup.out.of.stock" text="Out Of Stock" />
@@ -83,7 +83,33 @@
 
 								code="pickup.out.of.stock" text="Out Of Stock" /></span>
 					</a>
-				</c:if>
+				</c:if> --%>
+				<c:choose>
+				 <c:when test="${product.stock.stockLevelStatus eq 'outOfStock'}">
+				  <input type="hidden" id="stockStatusId" value="true"/>
+					<a id="stockIdDefault_${product.name}" class="stockLevelStatus"
+						href="${productUrl}" title="${product.name}"> <spring:theme
+							code="pickup.out.of.stock" text="Out Of Stock" />
+					</a>
+					<a class="stockLevelStatus" href="${productUrl}"
+						title="${product.name}"> <span
+						id="stockIdFiltered_${product.name}"><spring:theme
+
+								code="pickup.out.of.stock" text="Out Of Stock" /></span>
+					</a>
+				  </c:when>
+				  <c:otherwise>				        
+				  		<%-- <div style="display:none" class="stockLevelStatusinStock"  id="stockIdFilteredVariant_${product.code}"></div> --%>
+						    <a style="display:none" id="stockIdDefault_${product.code}" class="stockLevelStatusinStock"
+								href="${productUrl}" title="${product.name}"> 
+							</a>
+						
+							<a  style="display:none" class="stockLevelStatusinStock" href="${productUrl}"
+								title="${product.name}"><span id="stockIdFiltered_${product.code}"></span>
+						    </a>
+						
+				 </c:otherwise>
+				</c:choose>
 				<div class="item quickview">
 					<%-- <c:if test="${product.isVariant eq true}"> --%>
 
