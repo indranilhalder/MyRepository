@@ -133,7 +133,7 @@
 
 <div class="else-sec"><span class="else-brdrtp"></span><span class="else">or </span> <span class="else-brdrbtm"></span></div>
 	<!-- For  Gigya and API Social Login -->
-<c:choose> 
+<%-- <c:choose> 
   <c:when test="${isGigyaEnabled=='Y'}">
    <ul class="social-connect" id="gSignInWrapper">
 <li>
@@ -152,7 +152,7 @@
 				code="register.new.google" text="Connect with Google" /></a></li>
 </ul>
   </c:otherwise>
-</c:choose>
+</c:choose> --%>
 
 <!-- End  Gigya and API Social Login -->
 </div>

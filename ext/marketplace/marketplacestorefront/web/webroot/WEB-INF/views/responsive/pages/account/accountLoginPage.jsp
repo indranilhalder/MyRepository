@@ -36,6 +36,29 @@
 				</cms:pageSlot>
 			</li>
 		</ul>
+		<!-- For  Gigya and API Social Login -->
+<c:choose> 
+  <c:when test="${isGigyaEnabled=='Y'}">
+   <ul class="social-connect" id="gSignInWrapper">
+<li>
+   <!--  <br /> -->
+   <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
+    <div id="loginDiv"></div>
+    
+    </li>
+</ul>
+  </c:when>
+  <c:otherwise>
+   <ul class="social-connect" id="gSignInWrapper">
+	<li><a class="fb" href="${urlVisitForFacebook}"><spring:theme
+				code="register.new.facebook" text="Connect with Facebook" /></a></li>
+	<li class="customGPlusSignIn"><a class="go" href="${urlVisit}"><spring:theme
+				code="register.new.google" text="Connect with Google" /></a></li>
+</ul>
+  </c:otherwise>
+</c:choose>
+
+<!-- End  Gigya and API Social Login -->
 	</div>
 <%-- 	<div class="benefits">
       <h2><spring:theme code="account.login.benfits"/></h2>
