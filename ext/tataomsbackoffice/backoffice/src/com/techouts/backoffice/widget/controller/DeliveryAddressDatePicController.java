@@ -6,63 +6,46 @@ package com.techouts.backoffice.widget.controller;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.select.annotation.Wire;
-import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Datebox;
-import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Messagebox;
 
 import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
-import com.hybris.oms.tata.facade.ShortUrlFacade;
-import com.hybris.oms.tata.renderer.ShortUrlReportItemRenderer;
-import com.techouts.backoffice.ShortUrlReportData;
 
 
 /**
- * this class is used for short url mapping report purpose
+ * this class is used for delivery address date pic
  *
  * @author prabhakar
+ *
  */
-public class ShortUrlMappingWidgetController extends DefaultWidgetController
+public class DeliveryAddressDatePicController extends DefaultWidgetController
 {
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(ShortUrlMappingWidgetController.class);
 
-	@Wire
 	private Datebox startdpic;
-	@Wire
 	private Datebox enddpic;
 
-	@Wire
-	private Listbox listBoxData;
 
-	@WireVariable
-	private ShortUrlFacade shortUrlFacade;
-	final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+	private static final Logger LOG = LoggerFactory.getLogger(DeliveryAddressDatePicController.class);
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
 
 	@Override
 	public void initialize(final Component comp)
 	{
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -6);
-		super.initialize(comp);
 		startdpic.setValue(cal.getTime());
 		enddpic.setValue(new Date());
+		super.initialize(comp);
 
-		LOG.info("inside initialize method" + "Start Date " + cal.getTime() + "******* End Date " + new Date());
-		getShortUrlMappingInfo(cal.getTime(), new Date());
+
 	}
 
 
@@ -72,6 +55,7 @@ public class ShortUrlMappingWidgetController extends DefaultWidgetController
 	@ViewEvent(componentID = "startdpic", eventName = Events.ON_CHANGE)
 	public void getStartdpic()
 	{
+
 
 		if (startdpic.getValue() == null || enddpic.getValue() == null)
 		{
@@ -84,8 +68,10 @@ public class ShortUrlMappingWidgetController extends DefaultWidgetController
 			return;
 		}
 
-		LOG.info("Start date " + startdpic.getValue() + "end date " + enddpic.getValue() + "output socket sended");
-		getShortUrlMappingInfo(startdpic.getValue(), enddpic.getValue());
+
+		sendOutput("startendDates", dateFormat.format(startdpic.getValue()) + "," + dateFormat.format(enddpic.getValue()));
+		LOG.info(
+				"Start date " + startdpic.getValue() + "end date " + dateFormat.format(enddpic.getValue()) + "output socket sended");
 
 	}
 
@@ -111,21 +97,14 @@ public class ShortUrlMappingWidgetController extends DefaultWidgetController
 			return;
 		}
 
-		LOG.info("Start date " + startdpic.getValue() + "end date " + enddpic.getValue() + "output socket sended");
-		getShortUrlMappingInfo(startdpic.getValue(), enddpic.getValue());
+		sendOutput("startendDates", dateFormat.format(startdpic.getValue()) + "," + dateFormat.format(enddpic.getValue()));
+		LOG.info(
+				"Start date " + startdpic.getValue() + "end date " + dateFormat.format(enddpic.getValue()) + "output socket sended");
+
 	}
 
 	private void msgBox(final String mesg)
 	{
 		Messagebox.show(mesg, "Error", Messagebox.OK, Messagebox.ERROR);
 	}
-
-
-	private void getShortUrlMappingInfo(final Date fromDate, final Date toDate)
-	{
-		final List<ShortUrlReportData> shortUrlData = shortUrlFacade.getShortUrlReportModels(fromDate, toDate);
-		listBoxData.setModel(new ListModelList<ShortUrlReportData>(shortUrlData));
-		listBoxData.setItemRenderer(new ShortUrlReportItemRenderer());
-	}
-
 }

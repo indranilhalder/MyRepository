@@ -22,7 +22,7 @@ public interface PincodeDao
 	 * @param gps
 	 * @param distance
 	 * @param sellerId
-	 * @return
+	 * @return Collection<PointOfServiceModel>
 	 */
 	Collection<PointOfServiceModel> getAllGeocodedPOS(GPS gps, double distance, String sellerId);
 
@@ -34,8 +34,8 @@ public interface PincodeDao
 	Collection<PointOfServiceModel> getAllGeocodedPOS(GPS gps, double distance);
 
 	/**
-	 * @param model
-	 * @return
+	 * @param pincode
+	 * @return PincodeModel
 	 */
 	PincodeModel getLatAndLongForPincode(final String pincode);
 
@@ -46,4 +46,14 @@ public interface PincodeDao
 	 * @return PincodeModel
 	 */
 	public List<PincodeModel> getAllDetailsOfPincode(final String pincode);
+	
+	/**
+	 *
+	 * @param center
+	 * @param radius
+	 * @param sellerId
+	 * @return Collection<PointOfServiceModel>
+	 */
+	public Collection<PointOfServiceModel> getAllReturnablePOSforSeller(final GPS center, final double radius,
+			final String sellerId);
 }

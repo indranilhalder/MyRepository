@@ -24,13 +24,13 @@ public interface PincodeService
 	List<Location> getSortedLocationsNearby(final GPS gps, final double distance, String sellerId);
 
 	/**
-	 * @param model
-	 * @return
+	 * @param pincode
+	 * @return PincodeModel
 	 */
 	PincodeModel getLatAndLongForPincode(final String pincode);
 
 	/**
-	 * 
+	 *
 	 * @param gps
 	 * @param distance
 	 * @return All the Stores for given gps and distance.
@@ -39,10 +39,19 @@ public interface PincodeService
 
 	/**
 	 * Gets the Details of the pincode
-	 * 
+	 *
 	 * @param pincode
 	 * @return PincodeModel
 	 */
 	public PincodeModel getDetailsOfPincode(final String pincode);
+
+	/**
+	 * @param gps
+	 * @param distance
+	 * @param sellerId
+	 * @return Collection<PointOfServiceModel>
+	 */
+	public Collection<PointOfServiceModel> getAllReturnableStores(GPS gps, double distance, String sellerId);
+
 
 }
