@@ -38,8 +38,11 @@ public class SizeGuideComparator implements Comparator<SizeGuideData>
 	@Override
 	public int compare(final SizeGuideData sizeData1, final SizeGuideData sizeData2)
 	{
-		final String value1 = sizeData1.getDimensionSize().replaceAll("\\s+", "").toUpperCase();
-		final String value2 = sizeData2.getDimensionSize().replaceAll("\\s+", "").toUpperCase();
+
+		final String value1 = sizeData1.getDimensionSize() != null ? sizeData1.getDimensionSize().replaceAll("\\s+", "")
+				.toUpperCase() : "";
+		final String value2 = sizeData2.getDimensionSize() != null ? sizeData2.getDimensionSize().replaceAll("\\s+", "")
+				.toUpperCase() : "";
 		//System.out.println("*********************sizeguide" + value1 + value2);
 		LOG.debug("*********************sizeguide" + value1 + value2);
 
