@@ -45225,9 +45225,9 @@ display:none;
       display:none;} 
       .sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout{
       display:block;} 
-      .sign-in.tab-view .tabs > li#sign_in_content form {
+/*       .sign-in.tab-view .tabs > li#sign_in_content form {
     border-bottom: 1px solid #eaeaeb;
-}
+} */
 
 }
 @media (max-width: 980px){
@@ -45444,6 +45444,9 @@ display:none;
 }
 .sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
 	text-decoration:underline;
+}
+#loginDiv, #loginDivCheckout {
+    margin-left: 37%;
 }
 /*Login End*/
 /*pdp fix*/
