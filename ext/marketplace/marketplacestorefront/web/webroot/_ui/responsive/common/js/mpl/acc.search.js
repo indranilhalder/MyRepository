@@ -401,8 +401,11 @@ function constructDepartmentHierarchy(inputArray) {
 					  $(".AvailabilitySize").show();
 					  $(".Availability").hide();
 								//}
+								
+					$("#stockIdDefault_" + product).parents('div.image').find('a img').addClass('out-of-stock-product');		
 					$("#stockIdDefault_" + product).html("OUT OF STOCK");
-					$("#stockIdDefault_" + product).show();					
+					$("#stockIdDefault_" + product).show();
+					
 //					$("#stockIdFilteredVariant_" + product).show();
 //					$("#stockIdFilteredVariant_" + product).html("OUT OF STOCK");
 					}
@@ -410,16 +413,17 @@ function constructDepartmentHierarchy(inputArray) {
 
 			} else {
 				for (j = 0; j < serpSizeList.length; j++) {
-					var sizeUrl = serpSizeList[j];
-					if (stckData[sizeUrl] != undefined) {
-						if (minPriceSize == serpSizeList[j]) {
-							
+					var sizeUrl = serpSizeList[j];					
+					if (stckData[sizeUrl] != undefined) {						
+						if (minPriceSize == serpSizeList[j]) {							
 							if(stckData[sizeMatched]=='outOfStock'){
 								 $(".AvailabilitySize").show();
 								 $(".Availability").hide();								
 								 
+								$("#stockIdDefault_" + product).parents('div.image').find('a img').addClass('out-of-stock-product');
 								$("#stockIdDefault_" + product).html("OUT OF STOCK");
-								$("#stockIdDefault_" + product).show();								
+								$("#stockIdDefault_" + product).show();	
+								
 //								$("#stockIdFilteredVariant_" + product).show();
 //								$("#stockIdFilteredVariant_" + product).html("OUT OF STOCK");
 								
@@ -520,10 +524,13 @@ function constructDepartmentHierarchy(inputArray) {
 	
 	 $(".facet-name.js-facet-name h4").each(function(){
 		 
-		 if($("#stockStatusId").val()!= "true"){
+		 /*if($("#stockStatusId").val()!= "true"){
+			 $(".Availability").hide();
+		 }*/
+		 var facetStockSize=$("#facetStockSize").val();
+		 if($("#stockStatusId").val()!= "true" && facetStockSize==1){
 			 $(".Availability").hide();
 		 }
-		 
 		if($(this).hasClass("true")){
 			$(this).addClass("active");
 			$(this).parent().siblings('.facet-values.js-facet-values.js-facet-form').addClass("active");
