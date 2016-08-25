@@ -218,7 +218,7 @@ $(document).ready(function() {
 							url : ACC.config.encodedContextPath
 									+ "/my-account/" + orderCode
 									+ "/changeDeliveryAddress/",
-							type : 'POST',
+							type : 'GET',
 							data : data,
 							contentType: "text/application/html",
 							success : function(result){
