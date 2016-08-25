@@ -8722,7 +8722,7 @@ footer .banner {
           height: 30px;
           line-height: 30px; } }
           .sign-in.tab-view .tabs > li .left form input:hover {		
-    border-color: #AB8791;		
+    border-color: #f0f4f5;		
 }		
 .sign-in.tab-view .tabs > li .left form input:focus {		
     border-color: #AB8791;		
@@ -45017,6 +45017,10 @@ padding:0;
     padding: 0 24px;
     max-width: inherit;
 }}
+@media only screen and (max-width: 1250px){
+.sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+    transform: scale(0.7);
+}}
 .sign-in.tab-view .form-group{
 	    margin-top: -12px;}
 .sign-in.tab-view .tabs > li .left form input {
@@ -45042,10 +45046,8 @@ color: #a5a5a5;
 .sign-in.tab-view .tabs > li .left form a{
 	padding:0px;
 	display: block;
-      letter-spacing: 1px;
-      text-decoration: underline;
       color: #A9143C;
-      font-size:14px;
+      font-size:12px;
 }
  .sign-in.tab-view .tabs > li .left form button {
           width: 150px;
@@ -45063,16 +45065,13 @@ color: #a5a5a5;
     margin-bottom: 19px; }
 .sign-in.tab-view .tabs > li .left form .forgotten-password{
       text-align:left;
-          font-size: 14px;
+          font-size: 12px;
     padding: 0px 0px 21px;
-    letter-spacing: 1px;}
-    .sign-in.tab-view .tabs > li#sign_in_content form{
-    border-bottom: 1px solid #eaeaeb; }
+}
         .sign-in.tab-view .tabs > li .left form a#newToTata{
-    font-size: 14px;
-    text-decoration: underline;
-     font-weight: 500;
-    letter-spacing: 1px;  }
+    font-size: 12px;
+   border-bottom: 1px solid #a7183e;
+     font-weight: 500;  }
     .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
     padding-top:28px;}
         .sign-in.tab-view .tabs > li .left form div#checkBox label{
@@ -45222,11 +45221,19 @@ display:none;
       }
       .sign-in.tab-view .tabs > li .left form .forgotten-password{
       display:none;} 
+      .sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout{
+      display:block;} 
+      .sign-in.tab-view .tabs > li#sign_in_content form {
+    border-bottom: 1px solid #eaeaeb;
+}
 
 }
 @media (max-width: 980px){
 	.sign-in.tab-view .tabs > li .left{
 	    width: 100%;}
+.sign-in.tab-view .tabs{
+    margin-bottom: 25px;
+}
 .sign-in.tab-view .tabs > li{
 	padding: 35px 12px 0;
     width: 100%;
@@ -45244,6 +45251,7 @@ display:none;
     text-transform: uppercase;
     background-color: #b2b2b2;
     color:#fff;
+    letter-spacing: 1px;
 }
  .sign-in.tab-view .tabs > li .left form {
     width: 52%;
@@ -45260,7 +45268,7 @@ display:none;
     width: 5%;
     float: left;
     position: absolute;
-    top: 30px;
+    top: 0px;
     left: 50%;
 }
 .else-brdrbtm,.else-brdrtp {
@@ -45290,13 +45298,14 @@ display:none;
     margin-bottom: 22px;
 }
 .sign-in.tab-view .tabs > li .left form#extRegisterForm {
-     /*    padding-top: 30px; */
+        padding-top: 30px;
+            padding-left: 0px;
 }
 .sign-in.tab-view .tabs > li .left form button {
     margin-bottom: 17px;
 }
 .sign-in.tab-view .tabs > li .left form#extRegisterForm button {
-   margin-bottom: 22px;
+   margin-bottom: 10px;
 }
 .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
 	padding-top:0px;
@@ -45310,13 +45319,14 @@ display:none;
 }
 .sign-in.tab-view .tabs > li#sign_up_content .social-connect{
 	display:block;
-	padding-top:0px;
+	padding-top:30px;
 }
 }
 @media (max-width: 767px){
 	.sign-in.wrapper {
    margin:0;
    width:100%;
+   padding:0px;
 }
 	.sign-in.tab-view .tabs{
     border: 0 none;
@@ -45337,6 +45347,8 @@ display:none;
 .sign-in.tab-view .tabs > li .left form input {
     font-size: 10px;
     letter-spacing: 0;
+        color: #676767;
+    height: 46px;
 }
 .sign-in.tab-view .tabs > li .left form a.js-password-forgotten {
     float: right;
@@ -45394,6 +45406,12 @@ display:none;
 .sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout {
     padding-top: 0px;
     font-weight:normal;
+}
+.sign-in.tab-view .nav li{
+    font-size: 13px;
+}
+.sign-in.tab-view .tabs > li {
+    padding: 35px 12px;
 }
 }
 @media (max-width: 450px){
