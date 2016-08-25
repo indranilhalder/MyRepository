@@ -288,8 +288,8 @@ $(document).ready(
 
 			/*TPR-648 start*/
 			$('.shop-promos .promos a').click(function(){
-				var brandText=$(this).text()+ "_viewdetails";
-				var brandClick=$(this).text()+ "__click";
+				var brandText=$(this).text().replace(/ /g,'').toLowerCase()+ "_viewdetails";
+				var brandClick="abcde_click";
 				utag.link({"link_obj": this, "link_text": brandText, "event_type" : brandClick
 						});
 					
