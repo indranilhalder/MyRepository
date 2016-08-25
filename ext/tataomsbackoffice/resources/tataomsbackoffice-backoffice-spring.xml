@@ -62,6 +62,7 @@
 			value="${com.techouts.order.return.upload.path:#{null}}" />
 		<property name="fragileOrderFileUploadPath"
 			value="${com.techouts.order.frigile.upload.path:#{null}}" />
+		<property name="fileHeaderProperty" value="${com.techouts.orderfile.headers:#{null}}"></property>
 	</bean>
 	<bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
 
@@ -133,5 +134,7 @@
 	</bean>
 	<alias name="defaultShortUrlFacade" alias="shortUrlFacade" />
 	<bean id="defaultShortUrlFacade" class="com.hybris.oms.tata.facade.impl.DefaultShortUrlFacade"></bean>
+
+	<bean id="bucFileComparitor" class="com.techouts.dataonboarding.util.BUCFileComparitor"></bean>
 
 </beans>
