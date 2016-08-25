@@ -889,10 +889,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 							endTIme = sdf.parse(mplTimeSlotsModel.getFromTime());
 							searchTime = sdf.parse(timeWithOutDate);
 						}
-						catch (java.text.ParseException e)
+						catch (ParseException parseException)
 						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						 LOG.info("parseException raing converrting time" + parseException.getMessage());
 						}
 						if (startTime.compareTo(searchTime) > 0 && endTIme.compareTo(searchTime) > 0
 								&& startTime.compareTo(searchTime) != 0 && endTIme.compareTo(searchTime) != 0)
