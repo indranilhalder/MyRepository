@@ -35,7 +35,7 @@
     					activateSignInTab();
     				} */
     				$(window).on('load resize',function(){	
-    					if($(window).width()<981){
+    					if($(".sign-in.tab-view .nav").css("display") == "table"){
     						activateSignInTab();
     					}
     					else{
