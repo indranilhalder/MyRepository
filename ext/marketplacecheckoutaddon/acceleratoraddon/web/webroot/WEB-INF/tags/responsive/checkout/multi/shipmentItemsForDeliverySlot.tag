@@ -264,7 +264,7 @@
 									<li class="deliverySlotRadio">
 									   <input type="hidden" id="mplconfigModel" name="mplconfigModel" value="${mplconfigModel}"/>
 									    <input type="hidden" id="selectedUssId" name="selectedUssId" value="${entry.selectedUssid}"/>
-										<button class="button reset pull-right" type="button" data-ussid="${entry.selectedUssid}" >Reset</button>
+										<button class="button reset pull-right" type="button" data-ussid="${entry.selectedUssid}" disabled="disabled">Reset</button>
 										<label class="heading" for="date">Preferred Date of Delivery</label>
 										<div class="row"  id="content">
 										
@@ -352,8 +352,9 @@
 	    
 	    	
 	    	$(".reset").click(function(){
-	    	
+	    		var currentReset = $(this);
 	    		$(this).parent().find(".scheduleDate input[type='radio']").prop('checked', false);
+	    		$(this).parent().find(".scheduleDate input[data-name='time']").prop('disabled', 'disabled');
 	    		var ussId=$(this).attr('data-ussid');
 	    		var mplconfigModel= $('#mplconfigModel').val();
 	    		
@@ -362,8 +363,10 @@
 	    	 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/updateDeliverySlotCostForEd",
 	    	 		data : dataString,
 	    	 		success : function(response) {
-	    	 			$("#totalWithConvField").empty().text(response+"0");
-	    	 			//alert("response"+response);
+	    	 			currentReset.prop('disabled','disabled');
+	    	 			var result = response.split("-");
+	    	 			$("#deliveryCostSpanId").empty().text(result[0]);
+	    	 			$("#totalWithConvField").empty().text(result[1]);
 	    	 		},
 	    	 		error : function(error) {
 
@@ -373,8 +376,10 @@
 	    	});
     
 	    	$(".timeTribhuvan").click(function(){
+	    		
 	    		var selectedElement = $(this);
 	    		var selectedParent  = selectedElement.closest(".scheduleDate");
+	    		var resetDisable = selectedElement.closest("li").children(".reset");
 	    		var elem = selectedElement.next().next().next();
 	    		var time; var temp; 
 	    		var date;
@@ -383,13 +388,15 @@
 	    		var datanametimeall = selectedParent.find(".timeDelivery input[data-name='time']");
 	    		var datanamedateall = selectedParent.find(".scheduleDate input[data-name='date']");
 	    		var datanametimeallDates = selectedParent.closest(".row").find(".scheduleDate .timeDelivery input[data-name='time']");
+	    		selectedUssId = $('#selectedUssId').val();
+	    		resetDisable.prop('disabled',false);
 	    		
 	    		datanametimeallDates.each(function(){
 	    			
 	    			if(!$(this).prop('checked')){
 	    			
 	    			 mplconfigModel = $('#mplconfigModel').val();
-	    			 selectedUssId = $('#selectedUssId').val();
+	    			 
 	    			}else{
 	    				temp = $(this).val();
 	    				mplconfigModel=0;
@@ -403,8 +410,8 @@
 	    		
 	    		if(selectedElement.attr('data-name')=='date'){
 	    			date = selectedElement.val();
-	    			datanamedateall.children('.timeDelivery').addClass("display");
-	    			
+	    			$(".scheduleDate .timeDelivery").addClass("display");
+	    		//	alert(resetDisable.attr('class'));
 	    			datanametimeall.prop('disabled',false);
 	    			
 	    			selectedParent.find(".timeDelivery input[data-name='time']").first().prop('checked','checked');
@@ -437,11 +444,16 @@
 	    	 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/deliverySlotCostForEd",
 	    	 		data : dataString,
 	    	 		success : function(response) {
-	    	 			$("#totalWithConvField").empty().text(response+"0");
-	    	 			//alert("response"+response);
+	    	 			var result = response.split("-");
+	    	 			if(response == '-'){
+	    	 				
+	    	 			}else{
+	    	 			$("#deliveryCostSpanId").empty().text(result[0]);
+	    	 			$("#totalWithConvField").empty().text(result[1]);
+	    	 		}
 	    	 		},
 	    	 		error : function(error) {
-
+	    	 			
 	    	 		}
 	    	 	});	
 	    		

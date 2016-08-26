@@ -291,4 +291,5 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
 	
 	public static final String UPDATE_DELIVERY_SLOTCOST_FOR_ED = "updateDeliverySlotCostForEd";
+	public static final String MPLDELIVERYSLOTSURL = "/deliverySlotsUrl";
 }

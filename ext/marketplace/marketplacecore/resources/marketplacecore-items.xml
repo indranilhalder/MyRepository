@@ -5632,6 +5632,46 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- End TISPRO-318 -->
+					
+					<!--Start  Added new Attributes  -->
+					
+					<attribute qualifier="fulfillmentTypeP1" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="fulfillmentTypeP2" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					
+					<attribute qualifier="isPrecious" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="isFragile" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="eddFrom" type="java.util.Date">
+						<modifiers optional="true" read="true" write="true" />
+						<description>for eddFrom</description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="eddTo" type="java.util.Date">
+						<modifiers optional="true" read="true" write="true" />
+						<description>for eddTo</description>
+						<persistence type="property" />
+					</attribute>
+					<!-- End Added new Attributes  -->
 				</attributes>
 			</itemtype>
 
@@ -5704,34 +5744,6 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 		<typegroup name="AccountManagement">
 
@@ -7751,33 +7763,6 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
-					
-					<!-- Added Attributes for Delivery Slots -->
-					<attribute autocreate="true" qualifier="edScheduledDate" type="java.lang.String"
-						generate="true">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					
-					<attribute autocreate="true" qualifier="timeSlotFrom" type="java.lang.String"
-						generate="true">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					
-					<attribute autocreate="true" qualifier="timeSlotTo" type="java.lang.String"
-						generate="true">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
-					
-					
-			
-					<!-- Added Attributes for Delivery Slots -->
-					
 				</attributes>
 			</itemtype>
 
@@ -8477,6 +8462,59 @@
 				</attributes>
 			</itemtype>
 		 </typegroup>
+		
+		
+		<!-- Tata Etail FL06 -->
+		<typegroup name="MarketplaceDeliveryTimeSlots">
+			<itemtype code="AbstractOrderEntry" autocreate="false"
+				generate="false">
+				<attributes>
+				
+					<attribute autocreate="true" qualifier="edScheduledDate" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="timeSlotFrom" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="timeSlotTo" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="fulfillmentMode" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="scheduledDeliveryCharge" type="java.lang.Double"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="returnStoreId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+				</attributes>
+			</itemtype>
+
+		</typegroup>
 		
 	</itemtypes>
 </items>

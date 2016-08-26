@@ -525,9 +525,11 @@
 			type="String"></property>
 			<property name="edScheduledDate"
 			type="java.util.Date"></property>
-			<property name="timeSlotFrom" type="java.lang.Integer"/>
-			<property name="timeSlotTo" type="java.lang.Integer"/>
-
+			<property name="timeSlotFrom" type="String"/>
+			<property name="timeSlotTo" type="String"/>
+			<property name="scheduledDeliveryCharge" type="Double"/>
+			<property name="returnStoreId" type="String"/>
+			
 			<!--Newly Added Fields for DeliverySlots  -->
 			<property name="deliverySlotsDates" type="java.util.List&lt;java.lang.String>"></property>
 			
