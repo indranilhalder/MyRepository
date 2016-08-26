@@ -2353,7 +2353,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	var txtMobile = document.getElementsByName("MobileNo")[0].value;
 	var result=firstName.value;
 	 
-	if(result == undefined || result == "" )
+	if(result == null || result == "" )
 	{	
 		$("#firstnameError").show();
 		$("#firstnameError").html("<p>First Name cannot be Blank</p>");
@@ -2372,7 +2372,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	}
 			
 	 result=lastName.value;
-	if(result == undefined || result == "")
+	if(result == null || result == "")
 	{	
 		$("#lastnameError").show();
 		$("#lastnameError").html("<p>Last Name cannot be Blank</p>");
@@ -2391,7 +2391,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	}
 	
 	result=address1.value;
-	if(result == undefined || result == "")
+	if(result == null || result.trim() == "")
 	{	
 		$("#address1Error").show();
 		$("#address1Error").html("<p>Address Line 1 cannot be blank</p>");	
@@ -2409,7 +2409,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	}	
 	
 	    result=address2.value;
-		if(result == undefined || result == "")
+		if(result == undefined || result.trim() == "")
 	{	
 		$("#address2Error").show();
 		$("#address2Error").html("<p>Address Line 2 cannot be blank</p>");
@@ -2427,7 +2427,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	}
 	
 	result=address3.value;
-	if(result == undefined || result == "")
+	if(result == undefined || result.trim() == "")
 	{	
 		$("#address3Error").show();
 		$("#address3Error").html("<p>Address line 3 cannot be blank</p>");

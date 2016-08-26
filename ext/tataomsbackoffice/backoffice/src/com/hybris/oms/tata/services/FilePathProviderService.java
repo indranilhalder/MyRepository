@@ -23,6 +23,24 @@ public class FilePathProviderService
 	private String landmarkUploadPath;
 	private String returnOrderFileUploadPath;
 	private String fragileOrderFileUploadPath;
+	private String fileHeaderProperty;
+
+	/**
+	 * @return the fileHeaderProperty
+	 */
+	public String getFileHeaderProperty()
+	{
+		return fileHeaderProperty;
+	}
+
+	/**
+	 * @param fileHeaderProperty
+	 *           the fileHeaderProperty to set
+	 */
+	public void setFileHeaderProperty(final String fileHeaderProperty)
+	{
+		this.fileHeaderProperty = fileHeaderProperty;
+	}
 
 	/**
 	 * @author prabhakar

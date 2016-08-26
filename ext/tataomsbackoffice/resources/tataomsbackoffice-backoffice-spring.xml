@@ -58,8 +58,11 @@
 		<!-- for pincodes upload -->
 		<property name="pincodesUploadPath" value="${tata.oms.pincodes.upload.path:#{null}}" />
 		<property name="landmarkUploadPath" value="${tata.oms.landmark.upload.path:#{null}}" />
-		<property name="returnOrderFileUploadPath" value="${com.techouts.order.return.upload.path:#{null}}" />
-		<property name="fragileOrderFileUploadPath" value="${com.techouts.order.frigile.upload.path:#{null}}" />
+		<property name="returnOrderFileUploadPath"
+			value="${com.techouts.order.return.upload.path:#{null}}" />
+		<property name="fragileOrderFileUploadPath"
+			value="${com.techouts.order.frigile.upload.path:#{null}}" />
+		<property name="fileHeaderProperty" value="${com.techouts.orderfile.headers:#{null}}"></property>
 	</bean>
 	<bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
 
@@ -90,7 +93,7 @@
 			</list>
 		</property>
 	</bean>
-	
+
 	<bean id="mplBUCConfigurationReversePopulator"
 		class="com.hybris.oms.tata.populator.MplBUCConfigurationsDataToModelReversePopulator" />
 
@@ -103,11 +106,11 @@
 				<ref bean="mplBUCConfigurationReversePopulator" />
 			</list>
 		</property>
-	</bean> 
-	
+	</bean>
+
 	<bean id="mplTimeSlotsReversePopulator"
 		class="com.hybris.oms.tata.populator.MplTimeSlotsDataToModelReversePopulator" />
-		
+
 	<alias name="defaultMplTimeSlotsReverseConverter" alias="mplTimeSlotsReverseConverter" />
 	<bean id="defaultMplTimeSlotsReverseConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.hybris.oms.tata.model.MplTimeSlotsModel" />
@@ -117,5 +120,21 @@
 			</list>
 		</property>
 	</bean>
+	<bean id="shortUrlPopulator"
+		class="com.hybris.oms.tata.populator.ShortUrlModelToDataPopulator" />
+
+	<alias name="defaultShortUrlConverter" alias="shortUrlConverter" />
+	<bean id="defaultShortUrlConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.techouts.backoffice.ShortUrlReportData" />
+		<property name="populators">
+			<list>
+				<ref bean="shortUrlPopulator" />
+			</list>
+		</property>
+	</bean>
+	<alias name="defaultShortUrlFacade" alias="shortUrlFacade" />
+	<bean id="defaultShortUrlFacade" class="com.hybris.oms.tata.facade.impl.DefaultShortUrlFacade"></bean>
+
+	<bean id="bucFileComparitor" class="com.techouts.dataonboarding.util.BUCFileComparitor"></bean>
 
 </beans>

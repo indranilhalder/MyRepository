@@ -1802,7 +1802,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				newAddress.setLandmark(addressForm.getLandmark());
 			}
-			else
+			else if(null != addressForm.getOtherLandmark())
 			{
 				newAddress.setLandmark(addressForm.getOtherLandmark());
 			}
@@ -1945,7 +1945,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				newAddress.setLandmark(addressForm.getLandmark());
 			}
-			else
+			else if (null != addressForm.getOtherLandmark())
 			{
 				newAddress.setLandmark(addressForm.getOtherLandmark());
 			}
@@ -2599,7 +2599,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 * @return PincodeData
 	 */
 
-	@RequestMapping(value = MarketplacecheckoutaddonConstants.LANDMARKS, method = RequestMethod.POST)
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.LANDMARKS, method = RequestMethod.GET)
 	@ResponseBody
 	public PincodeData getPincodedata(@RequestParam(value = "pincode") final String pincode)
 	{

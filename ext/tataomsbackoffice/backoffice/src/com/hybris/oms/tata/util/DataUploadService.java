@@ -17,7 +17,7 @@ import org.zkoss.util.media.Media;
  */
 public class DataUploadService
 {
-	private String msg = "";
+
 	private static final Logger LOG = LoggerFactory.getLogger(DataUploadService.class);
 
 	/**
@@ -29,34 +29,17 @@ public class DataUploadService
 	 */
 	public String dataUpload(final Media media, final File file) throws IOException
 	{
-		if (media.isBinary())
+		if (media.getStringData().length() == 0)
 		{
-			if (media.getStreamData().read() == -1)
-			{
-				LOG.info("File is Empty ...");
-				msg = "File is Empty ";
-			}
-			else
-			{
-				LOG.info(media.getStreamData().toString());
-				FileUtils.copyInputStreamToFile(media.getStreamData(), file);
-				msg = "File uploaded successfully";
-			}
+			LOG.info("File is Empty ...");
+			return "File is Empty ";
 		}
 		else
 		{
-			if (media.getStringData().length() == 0)
-			{
-				LOG.info("File is Empty ...");
-				msg = "File is Empty ";
-			}
-			else
-			{
-				LOG.info(media.getStringData().toString());
-				FileUtils.writeStringToFile(file, media.getStringData());
-				msg = "File uploaded successfully";
-			}
+			LOG.info(media.getStringData().toString());
+			FileUtils.writeStringToFile(file, media.getStringData());
+			return "File uploaded successfully";
 		}
-		return msg;
+
 	}
 }

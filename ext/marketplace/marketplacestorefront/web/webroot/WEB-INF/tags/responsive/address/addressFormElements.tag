@@ -265,12 +265,26 @@
 			</div>
 			</div>
 			<div class="half address-select">
-		<formElement:formSelectBox idKey="address.states" selectCSSClass="address_states"
-			labelKey="address.states" path="state" mandatory="true"
-			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelect"
-			items="${stateDataList}" selectedValue="${addressForm.state}"
-			itemValue="name"  />
-			<div class="help-block has-error" id="stateError" style="display: none;">		
+				<div class="mainDrop">
+				<formElement:formSelectBox idKey="address.states"
+					selectCSSClass="address_states addressRead" labelKey="address.states"
+					path="state" mandatory="true" skipBlank="false"
+					skipBlankMessageKey="address.state.pleaseSelect"
+					items="${stateDataList}" selectedValue="${addressForm.state}"
+					itemValue="name" />
+				<div class="help-block has-error" id="stateError"
+					style="display: none;"></div>
+				</div>
+					
+
+			<div class="dupDisplay">
+				<label><spring:theme code="text.addressBook.State"
+						text="State *" /></label>
+					<form:input path="state" id="address.statesReadOnly"
+						class="address_states addressDup" maxlength="30" readonly="readonly"/>
+					<div class="errorMessage">
+							<div id="erraddressCity"></div>
+					</div>
 			</div>
 			</div>
 			

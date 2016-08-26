@@ -7757,21 +7757,21 @@
 						generate="true">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 					</attribute>
 					
 					<attribute autocreate="true" qualifier="timeSlotFrom" type="java.lang.String"
 						generate="true">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 					</attribute>
 					
 					<attribute autocreate="true" qualifier="timeSlotTo" type="java.lang.String"
 						generate="true">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 					</attribute>
 					
 					

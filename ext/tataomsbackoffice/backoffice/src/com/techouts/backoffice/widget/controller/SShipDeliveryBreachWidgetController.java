@@ -34,6 +34,7 @@ import com.hybris.oms.domain.order.cancel.OrderCancelResponse;
 import com.hybris.oms.domain.sshiptxninfo.dto.SShipTxnInfo;
 import com.hybris.oms.domain.sshiptxnresponseinfo.dto.SShipTxnResponseInfo;
 import com.hybris.oms.domain.sshiptxnresponseinfo.dto.SShipTxnResponseInfos;
+import com.hybris.oms.tata.renderer.SShipTransactionInfoItemRenderer;
 
 
 /**
@@ -201,7 +202,7 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 		final SShipTxnResponseInfos sshipTxnResponse = sShipTxnFacade.getSShipTxns(shipTxnInfo);
 		final List<SShipTxnResponseInfo> listOfSshipResponse = sshipTxnResponse.getSShipTxnResponseInfo();
 		listBoxData.setModel(new ListModelList<SShipTxnResponseInfo>(listOfSshipResponse));
-
+		listBoxData.setItemRenderer(new SShipTransactionInfoItemRenderer());
 	}
 
 }

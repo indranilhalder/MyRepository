@@ -23,12 +23,18 @@ function loadPincodeData() {
     $.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/landmarks",
 		data: { 'pincode' : Pincode },
-		type: "POST",	
+		type: "GET",	
 		success : function(response) {
 			if(response == "" || response == " " || response == "NULL") {
 				$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
 				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
 				$(".row .address_landmarkOtherDiv label").css("margin-top","15px");
+				$("#stateListBox").prop("disabled",false);
+				$("#stateListBoxReadOnly").prop("disabled","disabled");
+				$(".addressRead").prop("disabled",false);
+				$(".addressDup").prop("disabled","disabled");
+				$(".mainDrop").show();
+				$(".dupDisplay").hide();
 				$('.otherOption').attr("value", "");
 				$('.otherOption').val("");
 				$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
@@ -40,13 +46,16 @@ function loadPincodeData() {
 				$(".address_states").removeAttr("readonly").removeData("stateValue");
 				
 			} else {
-    			//console.log(response.cityName);
 				$('.address_landmarks .unableto').remove();
 				$(".address_landmarks").removeAttr("disabled").css("padding-left","5px");
 				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
 				$(".row .address_landmarkOtherDiv label").css("margin-top","15px");
     			$(".optionsLandmark, .optionsLandmark label, .optionsLandmark input,  .optionsLandmark select").show();
     			$(".address_landmarkOtherDiv").hide();
+    			$("#stateListBox").prop("disabled","disabled");
+    			$("#stateListBoxReadOnly").prop("disabled",false);
+    			$(".addressRead").prop("disabled","disabled");
+    			$(".addressDup").prop("disabled",false);
     			$(".mainDrop").hide();
 				$(".dupDisplay").show();
     			$(".address_landmarkOther").attr("value", "");
@@ -54,7 +63,7 @@ function loadPincodeData() {
     			$('.otherOption').attr("value", "Other");
         		$(".address_townCity").val(response['cityName']).prop("readonly", true);
         		$('.address_landmarks').empty();
-        		 $('.address_landmarks').append($("<option></option>").attr("selected","selected").text("Select a Landmark").attr("value", "sel"));
+        		 $('.address_landmarks').append($("<option></option>").attr("selected","selected").text("Select a Landmark").attr("value", "NA"));
         		//then fill it with data from json post
         		  $.each(response.landMarks, function(key, value) {
         		       $('.address_landmarks').append($("<option></option>").attr("value",value.landmark)
@@ -69,7 +78,6 @@ function loadPincodeData() {
 			var string = "edit-address";
 			var shippingAddress = "my-account";
 			if(url.indexOf(string) >= "0") {
-				//alert(url);
 				var value = $(".address_landmarkOtherDiv").attr("data-value");
 				if($(".address_landmarks option[value='"+value+"']").length > "0") {
 					$(".address_landmarks").val(value);
@@ -86,7 +94,6 @@ function loadPincodeData() {
 			
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
-			  console.log(textStatus, errorThrown);
 		}
     });
 }
@@ -225,7 +232,6 @@ $(document).ready(function() {
 								if(result=='Pincode not Serviceable'){
 									alert("in ajax");
 									$("#changeAddressPopup").show();
-								/*	$("wrapBG1").show();*/
 									$("#showOTP").hide();
 									$(".wrapBG").show();
 									var height = $(window).height();
@@ -238,7 +244,6 @@ $(document).ready(function() {
 		
 								}else{
 								
-									/*alert(result);*/
 								$("#changeAddressPopup").empty().html(result).show();
 								}
 							},
@@ -249,7 +254,7 @@ $(document).ready(function() {
 
 						});
 					}
-						/*event.preventDefault();*/
+						
 					});
 
 

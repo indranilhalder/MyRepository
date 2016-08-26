@@ -408,15 +408,32 @@
 
 
 									<div class="half no-display">
-										<label><spring:theme code="text.addressBook.State" text="State *" /></label>
-										<form:select name="stateList" id="stateListBox" path="state" class="address_states"
-											 onChange="onAddressSelectValidate()">
-											<c:forEach items="${stateDataList}" var="state"
-												varStatus="stateStatus">
-												<option value="${state.name}">${state.name}</option>
-											</c:forEach>
-										</form:select>
-										<div class="errorMessage"><div id="erraddressState"></div></div> 
+										<div class="mainDrop">
+											<label><spring:theme code="text.addressBook.State"
+													text="State *" /></label>
+											<form:select name="stateList" id="stateListBox" path="state"
+												class="address_states" onChange="onAddressSelectValidate()">
+												<c:forEach items="${stateDataList}" var="state"
+													varStatus="stateStatus">
+													<option value="${state.name}">${state.name}</option>
+												</c:forEach>
+											</form:select>
+											<div class="errorMessage">
+												<div id="erraddressState"></div>
+											</div>
+										</div>
+
+										
+											<div class="dupDisplay">
+												<label><spring:theme code="text.addressBook.State"
+														text="State *" /></label>
+												<form:input path="state" id="stateListBoxReadOnly"
+													class="address_states" maxlength="30" readonly="readonly"/>
+												<div class="errorMessage">
+													<div id="erraddressCity"></div>
+												</div>
+											</div>
+
 									</div>
 									 
 

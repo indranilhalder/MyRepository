@@ -1,0 +1,28 @@
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+	<hlayout style="text-align:center">
+		<vlayout style="margin-top: 10px;font-size:14px">
+			<label value="START DATE"></label>
+		</vlayout>
+		<vlayout style="text-align:center">
+		<hlayout>
+			<datebox id="startdpic"  cols="12" constraint="no empty, no future: NOT EMPTY or NO FUTURE" format="short" width="230px" />
+			<label style="margin-top: 10px;font-size:12px;" value="(mm/dd/yy)"></label>
+			</hlayout>
+		</vlayout>
+		<vlayout style="margin-top: 10px;font-size:14px;margin-left: 20px">
+			<label value="END DATE"></label>
+		</vlayout>
+		<vlayout style="text-align:center">
+		<hlayout>
+			<datebox id="enddpic" cols="12" constraint="no empty, no future: NOT EMPTY or NO FUTURE" format="short" width="230px" />
+			<label style="margin-top: 10px;font-size:12px;" value="(mm/dd/yy)"></label>
+			</hlayout>
+		</vlayout>
+	</hlayout>
+</widget>

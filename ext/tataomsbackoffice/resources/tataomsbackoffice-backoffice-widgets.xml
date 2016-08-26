@@ -234,12 +234,7 @@
 				<widget id="configarable_params" widgetDefinitionId="com.hybris.oms.widgets.configurableParamWidget"
 					slotId="perspectives" template="true">
 				</widget>
-				<!-- added for delivery tat -->
-				<widget widgetDefinitionId="com.techouts.widgets.deliverytat"
-					title="delivery Tat widget" id="deliverytat" slotId="perspectives"
-					template="true">
-
-				</widget>
+				
 
 				<!-- Tship vs SShip Assignment Report -->
 
@@ -283,41 +278,8 @@
 				</widget>
 				<!-- add for short url tracking info -->
 				<widget id="short_url_tracking_collapseble" title="Short url Tracking Report"
-					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					widgetDefinitionId="com.techouts.widgets.shorturltrakingreport"
 					slotId="perspectives" template="true">
-
-					<widget id="shorturl_tracking_datepic" title="Short url tracking Date pickup"
-						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
-						slotId="center" template="false">
-
-					</widget>
-					<widget id="shorturl_tracking_widget_report" widgetDefinitionId="com.techouts.widgets.shorturltrakingreport"
-						slotId="bottom" title="Short url tracking widget" template="false">
-						<virtual-sockets />
-
-					</widget>
-					<setting key="widgetStyleAttribute" type="String"></setting>
-					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
-					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
-					<setting key="topHeight" type="String">14%</setting>
-					<setting key="centerCaption" type="String">Editor</setting>
-					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
-					</setting>
-					<setting key="centerHeight" type="String">14%</setting>
-					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
-					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
-					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
-					<setting key="bottomCaption" type="String"></setting>
-					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
-					<setting key="widgetStyleClass" type="String"></setting>
-					<setting key="topCaption" type="String">Short Url Tracking Report
-
-					</setting>
-					<setting key="centerPanelInitiallyLocked" type="Boolean">false
-					</setting>
-					<setting key="topPanelCollapsed" type="Boolean">true</setting>
-					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
-					<virtual-sockets />
 				</widget>
 
 
@@ -328,7 +290,7 @@
 					slotId="perspectives" template="true">
 
 					<widget id="delivery_address_request_datepic" title="Delivery Address request date pic "
-						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
+						widgetDefinitionId="com.techouts.widgets.deliveryaddressdatepic"
 						slotId="center" template="false">
 					</widget>
 					<widget id="delivery_address_request_widget_report"
@@ -622,8 +584,8 @@
 		outputId="startendDates" targetWidgetId="pincode_logistics_report_listview"
 		inputId="startendDates" />
 	<widget-connection sourceWidgetId="pincode_logistics_report_datepic"
-		outputId="shipmentType" targetWidgetId="pincode_logistics_report_listview"
-		inputId="shipmentType" />
+		outputId="selectedShipmentType" targetWidgetId="pincode_logistics_report_listview"
+		inputId="selectedShipmentType" />
 
 	<widget-connection sourceWidgetId="tataBUCperspective"
 		outputId="possiblePerspectives" targetWidgetId="backofficePerspectiveChooser"
@@ -644,8 +606,6 @@
 		outputId="startendDates" inputId="startendDates" sourceWidgetId="schdeuled_delivery_tracking_datepic" />
 	<widget-connection targetWidgetId="express_delivery_tracking_widget_report"
 		outputId="startendDates" inputId="startendDates" sourceWidgetId="express_delivery_tracking_datepic" />
-<widget-connection targetWidgetId="shorturl_tracking_widget_report"
-		outputId="startendDates" inputId="startendDates" sourceWidgetId="shorturl_tracking_datepic" />
 
 
 </widgets>
