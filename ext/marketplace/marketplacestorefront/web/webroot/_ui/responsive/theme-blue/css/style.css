@@ -45356,6 +45356,9 @@ display:none;
 	display:block;
 	padding-top:30px;
 }
+.sign-in.tab-view {
+    margin-top: 24px;
+}
 }
 @media (max-width: 790px){
 .marketplace-checkout {
