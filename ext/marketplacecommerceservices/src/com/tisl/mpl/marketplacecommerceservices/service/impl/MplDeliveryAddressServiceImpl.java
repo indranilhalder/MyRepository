@@ -293,6 +293,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 				addressModel.setFirstname(temproryAddressModel.getFirstname());
 				addressModel.setLastname(temproryAddressModel.getLastname());
 				addressModel.setPhone1(temproryAddressModel.getPhone1());
+				modelService.saveAll(addressModel);
 				orderModel.setDeliveryAddress(addressModel);
 			   temproryAddressModel.setIsApproval(false);
 			   temproryAddressModel.setIsProcessed(Boolean.TRUE);

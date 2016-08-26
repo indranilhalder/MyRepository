@@ -270,7 +270,7 @@ ${stringMessage}
   			var orderId=orderCode;
   			debugger;
   			 $.ajax({
- 				type : "GET",
+ 				type : "POST",
  				url : ACC.config.encodedContextPath +"/my-account/" +orderCode+"/reScheduledDeliveryDate",
  				data : "entryData=" + json,
  				contentType: "html/text",

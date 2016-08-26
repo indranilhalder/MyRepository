@@ -43,9 +43,10 @@ public class TemporaryAddressReversePopulator implements Populator<AddressData, 
 		temproryAddressModel.setPostalcode(addressData.getPostalCode());
 		temproryAddressModel.setPhone1(addressData.getPhone());
 		temproryAddressModel.setState(addressData.getState());
+		temproryAddressModel.setDistrict(addressData.getState());
+		temproryAddressModel.setCity(addressData.getCity());
 		temproryAddressModel.setBillingAddress(Boolean.valueOf(addressData.isBillingAddress()));
 		temproryAddressModel.setShippingAddress(Boolean.valueOf(addressData.isShippingAddress()));
-
 		if (addressData.getCountry() != null)
 		{
 			final String isocode = addressData.getCountry().getIsocode();

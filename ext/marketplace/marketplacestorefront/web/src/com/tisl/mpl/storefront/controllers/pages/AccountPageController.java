@@ -1081,12 +1081,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 			addressChangeEligible = mplDeliveryAddressFacade.isDeliveryAddressChangable(orderDetail.getCode());
-			if (addressChangeEligible)
-			{
-				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
-				phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
-				model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
-			}
 			AccountAddressForm accountAddressForm = new AccountAddressForm();
 			model.addAttribute("addressForm", accountAddressForm);
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
@@ -7121,8 +7115,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.GET)
-	public String validateOTP(@RequestParam(value = "orderId") final String orderId,
+	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.POST)
+	public String submitChangeDeliveryAddress(@RequestParam(value = "orderId") final String orderId,
 			@RequestParam(value = "otpNumber") final String enteredOTPNumber,Model model)
 	{
 		String validateOTPMesg = null;
@@ -7131,14 +7125,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
 		{
 			LOG.debug("OTP Validation And Oms Calling status");
-			validateOTPMesg = mplDeliveryAddressFacade.validateOTP(customerId, enteredOTPNumber, orderId);
+			validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerId, enteredOTPNumber, orderId);
 		}
 
 	   model.addAttribute("stringMessage", validateOTPMesg);
 		return ControllerConstants.Views.Pages.Account.OTPPopup;
 	}
 
-	@RequestMapping(value = RequestMappingUrlConstants.NEW_OTP_GENERATE, method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.NEW_OTP_GENERATE, method = RequestMethod.POST)
 	@ResponseBody
 	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
 	{
@@ -7149,7 +7143,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	@RequestMapping(value = RequestMappingUrlConstants.RESCHEDULEDDELIVERYDATE, method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.RESCHEDULEDDELIVERYDATE, method = RequestMethod.POST)
 	public String scheduledDeliveryDate(@PathVariable final String orderCode,
 			@RequestParam(value = "entryData") final String entryData)
 	{

@@ -36,7 +36,6 @@ import com.tisl.mpl.facade.data.LandMarksData;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.facades.product.data.StateData;
-import com.tisl.mpl.marketplacecommerceservices.daos.AccountAddressDao;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.widgets.InputWidget;
@@ -55,7 +54,6 @@ import de.hybris.platform.cscockpit.widgets.controllers.CustomerController;
 import de.hybris.platform.cscockpit.widgets.models.impl.DefaultMasterDetailListWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.AddressCreateWidgetRenderer;
 import de.hybris.platform.cscockpit.widgets.renderers.utils.PopupWidgetHelper;
-import de.hybris.platform.enumeration.EnumerationService;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.i18n.impl.DefaultCommonI18NService;
@@ -113,17 +111,16 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			final InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget,
 			final HtmlBasedComponent rootContainer) {
 
+		
 		final Div content = new Div();
 		final Div customerAddressContent = new Div();
-		//customerAddressContent.setClass(sclass);
-		customerAddressContent.setParent(content);
-		
+		content.appendChild(customerAddressContent);
+		TypedObject order = getOrder();
+		OrderModel ordermodel = (OrderModel) getOrder().getObject();
+	
 		if (isChangeDeliveryAddress) {
 			try {
-				//customerAddressContent.setClass("changeDeliveryAddress");
-				
-				TypedObject order = getOrder();
-				OrderModel ordermodel = modelService.create(OrderModel.class);
+			
 				if (null != order && null != order.getObject()) {
 					ordermodel = (OrderModel) order.getObject();
 				}
@@ -237,7 +234,41 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		address3Field.setSclass("address2ForAddressField");
 		address3Field.setMaxlength(30);
 
+		// Creates LandMark field
+		final Br br12 = new Br();
+		br12.setParent(customerAddressContent);
+		final Div landMarkDiv = new Div();
+		landMarkDiv.setParent(customerAddressContent);
+		landMarkDiv.setSclass("createNewAddress");
+		final Label landMarklabel = new Label(LabelUtils.getLabel(widget,
+				"landMark"));
+		landMarklabel.setParent(landMarkDiv);
+		final Listbox landMarkListbox = new Listbox();
+		try {
+			//landMarkListbox.setWidth("0px");
+			landMarkListbox.setClass("landMarkDropDownField");
+			landMarkListbox.setMultiple(false);
+			landMarkListbox.setMold("select");
+			landMarkListbox.setParent(landMarkDiv);
+		} catch (Exception e) {
+			System.out.println("setParent " + e.getCause());
+		}
 		
+		final Textbox landMarkField = createTextbox(landMarkDiv);
+		landMarkField.setName("Enter landMark1");
+		landMarkField.setRawValue("Enter landMark");
+		landMarkField.setSclass("landMarkAddressField");
+		landMarkField.setMaxlength(30);
+		
+		landMarkListbox.addEventListener(Events.ON_SELECT, new EventListener() {
+			@Override
+			public void onEvent(final Event event) throws InterruptedException,
+					ParseException, InvalidKeyException,
+					NoSuchAlgorithmException {
+				createLandMarkChangeEventListener(widget, landMarkListbox,
+						landMarkField);
+			}
+		});
 		// Creates City/District field
 		final Br br7 = new Br();
 		br7.setParent(customerAddressContent);
@@ -337,61 +368,44 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		mobileNumberField.setSclass("addressForMobileNumberField");
 		mobileNumberPrefixField.setSclass("addressForMobileNumberPrefixField");
 
-		// Creates LandMark field
-		final Br br12 = new Br();
-		br12.setParent(customerAddressContent);
-		final Div landMarkDiv = new Div();
-		landMarkDiv.setParent(customerAddressContent);
-		landMarkDiv.setSclass("createNewAddress");
-		final Label landMarklabel = new Label(LabelUtils.getLabel(widget,
-				"landMark"));
-		landMarklabel.setParent(landMarkDiv);
-		final Textbox landMarkField = createTextbox(landMarkDiv);
-		landMarkField.setSclass("address3ForAddressField");
-		landMarkField.setMaxlength(30);
-		final Listbox landMarkListbox = new Listbox();
-		try {
-			landMarkDiv.appendChild(landMarkListbox);
+		if (true) {
+			try {
+				TypedObject orderModel = getOrder();
+				OrderModel order1 = (OrderModel) orderModel.getObject();
+				AddressModel deliveryAddress = order1.getDeliveryAddress();
+				
+				if (null != deliveryAddress) {
+					//PincodeModel pincodeData = new PincodeModel();
+					//pincodeData.setPincode(deliveryAddress.getPostalcode());
+					PincodeData pincodeData = mplDeliveryAddressController
+							.getPincodeData(deliveryAddress.getPostalcode());
+					firstNameField.setValue(deliveryAddress.getFirstname());
+					lastNameField.setValue(deliveryAddress.getLastname());
+					postalCodeField.setValue(deliveryAddress.getPostalcode());
+					address1Field.setValue(deliveryAddress.getLine1());
+					address2Field.setValue(deliveryAddress.getLine2());
+					address3Field.setValue(deliveryAddress.getAddressLine3());
+					if (null == deliveryAddress.getLandmark() && pincodeData != null && null !=pincodeData.getLandMarks()) {
+						landMarkField.setVisible(false);
+						createlandMarkDropDown(widget, pincodeData.getLandMarks(),
+								landMarkListbox);
+					} else {
+						landMarkField.setValue(deliveryAddress.getLandmark());
+						landMarkField.setVisible(true);
+						Listitem listItem = new Listitem(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
+						listItem.setValue(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
+						listItem.setParent(landMarkListbox);
+						landMarkListbox.addItemToSelection(listItem);
+					}
+					if (null != deliveryAddress.getCity()) {
+						cityField.setValue(deliveryAddress.getCity());
+					} else {
+						cityField.setValue(deliveryAddress.getTown());
+					}
+					mobileNumberField.setValue(deliveryAddress.getPhone1());
+					
+					List<Listbox> stateList = stateFieldListBox.getItems();
 
-			landMarkListbox.setParent(landMarkDiv);
-		} catch (Exception e) {
-			System.out.println("setParent " + e.getCause());
-		}
-		landMarkListbox.addEventListener(Events.ON_SELECT, new EventListener() {
-			@Override
-			public void onEvent(final Event event) throws InterruptedException,
-					ParseException, InvalidKeyException,
-					NoSuchAlgorithmException {
-				createLandMarkChangeEventListener(widget, landMarkListbox,
-						landMarkField);
-			}
-		});
-
-		if (isChangeDeliveryAddress) {
-			TypedObject orderModel = getOrder();
-			OrderModel order = (OrderModel) orderModel.getObject();
-			AddressModel deliveryAddress = order.getDeliveryAddress();
-			if (null != deliveryAddress) {
-				PincodeData pincodeData = new PincodeData();
-				pincodeData = mplDeliveryAddressController
-						.getPincodeData(deliveryAddress.getPostalcode());
-				firstNameField.setValue(deliveryAddress.getFirstname());
-				lastNameField.setValue(deliveryAddress.getLastname());
-				address1Field.setValue(deliveryAddress.getLine1());
-				address2Field.setValue(deliveryAddress.getLandmark());
-				address3Field.setValue(deliveryAddress.getAddressLine3());
-				landMarkField.setValue(deliveryAddress.getLandmark());
-				postalCodeField.setValue(deliveryAddress.getPostalcode());
-				if (null != deliveryAddress.getCity()) {
-					cityField.setValue(deliveryAddress.getCity());
-				} else {
-					cityField.setValue(deliveryAddress.getTown());
-				}
-				mobileNumberField.setValue(deliveryAddress.getPhone1());
-				createlandMarkDropDown(widget, pincodeData.getLandMarks(),
-						landMarkListbox);
-				List<Listbox> stateList = stateFieldListBox.getItems();
-				try {
 					List<Listitem> items = stateFieldListBox.getItems();
 					for (Listitem item : items) {
 						String stateName = (String) item.getLabel();
@@ -401,9 +415,11 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 							stateFieldListBox.setDisabled(true);
 						}
 					}
-				} catch (Exception e) {
-					System.out.println(" State Data");
 				}
+				}
+			 catch (Exception e) {
+				LOG.error("Exception while getting the pincode data "
+						+ e.getMessage());
 			}
 		}
 		postalCodeField.addEventListener(
@@ -441,8 +457,10 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					&& selectedLandmark
 							.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS)) {
 				landMarkField.setDisabled(false);
+				landMarkField.setVisible(true);
 			} else {
 				landMarkField.setDisabled(true);
+				landMarkField.setVisible(false);
 			}
 		} catch (Exception e) {
 			LOG.error("Exception Occurred while getting landmark value"
@@ -456,24 +474,30 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		if (null != landMarkListbox && null != landMarkListbox.getItems()) {
 			landMarkListbox.getItems().clear();
 		}
-		landMarkListbox.setMultiple(false);
-		landMarkListbox.setMold("select");
-		Listitem listItem = new Listitem(
-				MarketplaceCockpitsConstants.SELECT_LANDMARK);
-		listItem.setValue(MarketplaceCockpitsConstants.SELECT_LANDMARK);
-		listItem.setParent(landMarkListbox);
-		landMarkListbox.addItemToSelection(listItem);
-		for (final LandMarksData landMark : landMarks) {
-			 listItem = new Listitem(landMark.getLandmark());
-			listItem.setValue(landMark.getLandmark());
+		Listitem listItem ;
+		if(null != landMarks) {
+			 listItem = new Listitem(
+					MarketplaceCockpitsConstants.SELECT_LANDMARK);
+			listItem.setValue(MarketplaceCockpitsConstants.SELECT_LANDMARK);
+			listItem.setParent(landMarkListbox);
+			landMarkListbox.addItemToSelection(listItem);
+			for (final LandMarksData landMark : landMarks) {
+				listItem = new Listitem(landMark.getLandmark());
+				listItem.setValue(landMark.getLandmark());
+				listItem.setParent(landMarkListbox);
+				landMarkListbox.addItemToSelection(listItem);
+			}
+			listItem = new Listitem(MarketplaceCockpitsConstants.OTHERS);
+			listItem.setValue(MarketplaceCockpitsConstants.OTHERS);
+			listItem.setParent(landMarkListbox);
+			landMarkListbox.addItemToSelection(listItem);
+		} else {
+			listItem = new Listitem(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
+			listItem.setValue(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
 			listItem.setParent(landMarkListbox);
 			landMarkListbox.addItemToSelection(listItem);
 		}
-		 listItem = new Listitem(
-				MarketplaceCockpitsConstants.OTHERS);
-		listItem.setValue(MarketplaceCockpitsConstants.OTHERS);
-		listItem.setParent(landMarkListbox);
-		landMarkListbox.addItemToSelection(listItem);
+		
 		landMarkListbox.setSelectedIndex(0);
 	}
 
@@ -840,15 +864,14 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 				return;
-			} else if (StringUtils.isBlank(LandMark)
-					|| StringUtils.isBlank(LandMark.trim())) {
-				Messagebox.show(LabelUtils.getLabel(widget,
-						"addressLandMarkValueField"), LabelUtils.getLabel(
-						widget, FAILED_VALIDATION), Messagebox.OK,
-						Messagebox.ERROR);
-				// valid = Boolean.FALSE;
-				return;
-			} else if (LandMark.length() > 20) {
+			}/*
+			 * else if (StringUtils.isBlank(LandMark) ||
+			 * StringUtils.isBlank(LandMark.trim())) {
+			 * Messagebox.show(LabelUtils.getLabel(widget,
+			 * "addressLandMarkValueField"), LabelUtils.getLabel( widget,
+			 * FAILED_VALIDATION), Messagebox.OK, Messagebox.ERROR); // valid =
+			 * Boolean.FALSE; return; }
+			 */else if (LandMark.length() > 20) {
 				Messagebox.show(
 						LabelUtils.getLabel(widget, "invalidLandmarkLength"),
 						LabelUtils.getLabel(widget, FAILED_VALIDATION),
@@ -990,11 +1013,11 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			final CustomerModel customerModel = (CustomerModel) widget
 					.getWidgetController().getCurrentCustomer().getObject();
 			// set the address to the model
-			final TemproryAddressModel deliveryAddress = modelService
-					.create(TemproryAddressModel.class);
+			final TemproryAddressModel deliveryAddress = new TemproryAddressModel();
 			TypedObject order = getOrder();
 			OrderModel orderModel = (OrderModel) order.getObject();
-			deliveryAddress.setOrderId(orderModel.getParentReference().getCode());
+			deliveryAddress.setOrderId(orderModel.getParentReference()
+					.getCode());
 			deliveryAddress.setOwner(customerModel);
 			deliveryAddress.setFirstname(firstName);
 			deliveryAddress.setLastname(lastName);
@@ -1103,7 +1126,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			popup.setParent(parentWindow);
 			popup.doHighlighted();
 			popup.setClosable(true);
-			popup.setWidth("900px");
+			popup.setWidth("1150px");
 			return popup;
 		} catch (Exception e) {
 			LOG.error("No bean id found with name csChangeDeliveryAddressOtpWidgetConfig"
