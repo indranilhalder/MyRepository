@@ -45521,6 +45521,10 @@ margin-top:0px;
 .sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
 	text-decoration:underline;
 }
+@media (max-width: 520px){
+.sign-in.tab-view .nav li {
+    font-size: 12px;
+}}
 /*Login End*/
 /*pdp fix*/
 @media (max-width: 500px) {
