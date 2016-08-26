@@ -1165,7 +1165,7 @@ $(button_my_button)
 //						$('.qValueForCustomPrice').val(finalQuery);
 					
 						$('.qValueForCustomPrice').val(
-								nonPriceQueryParams + ":priceValue:" + Price);
+								nonPriceQueryParams + ":price:" + Price);
 		
 						// submit brand apply form
 						$('form#customPriceFilter').submit();
@@ -1234,7 +1234,7 @@ function queryParam(name) {
 $(document).ready(function() {
 	var q = queryParam('q');	
 	var priceRange = '';
-	var pvStr = ':priceValue:';	
+	var pvStr = ':price:';	
 	
 	if (q.indexOf(pvStr) > -1) {		
 		priceRange = q.substring(q.indexOf(pvStr) + pvStr.length);

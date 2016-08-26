@@ -27,6 +27,14 @@ import org.springframework.beans.factory.annotation.Required;
  */
 public class MplCustomPriceSolrQueryPostProcessor implements SolrQueryPostProcessor
 {
+	/**
+	 *
+	 */
+	private static final String PRICE_VALUE = "priceValue";
+	/**
+	 *
+	 */
+	private static final String PRICE = "price";
 	private FieldNameProvider solrFieldNameProvider;
 
 	/**
@@ -49,7 +57,7 @@ public class MplCustomPriceSolrQueryPostProcessor implements SolrQueryPostProces
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.search.SolrQueryPostProcessor#process(org.apache.solr.client.solrj.SolrQuery,
 	 * de.hybris.platform.solrfacetsearch.search.SearchQuery)
@@ -66,7 +74,8 @@ public class MplCustomPriceSolrQueryPostProcessor implements SolrQueryPostProces
 		Breadcrumb priceBreadCrumb = null;
 		for (final Breadcrumb bc : paramSearchQuery.getBreadcrumbs())
 		{
-			if (bc.getFieldName().equalsIgnoreCase("priceValue"))
+			//if (bc.getFieldName().equalsIgnoreCase("priceValue"))
+			if (bc.getFieldName().equalsIgnoreCase(PRICE))
 			{
 				priceBreadCrumb = bc;
 				break;
@@ -85,14 +94,15 @@ public class MplCustomPriceSolrQueryPostProcessor implements SolrQueryPostProces
 		final List<String> fqList = Arrays.asList(paramSolrQuery.getFilterQueries());
 		for (final String fq : fqList)
 		{
-			if (fq.contains("price"))
+			if (fq.contains(PRICE))
 			{
 				paramSolrQuery.removeFilterQuery(fq);
 			}
 		}
 
 		// Add the custom price filter
-		final IndexedProperty priceProperty = paramSearchQuery.getIndexedType().getIndexedProperties().get("priceValue");
+		//final IndexedProperty priceProperty = paramSearchQuery.getIndexedType().getIndexedProperties().get("priceValue");
+		final IndexedProperty priceProperty = paramSearchQuery.getIndexedType().getIndexedProperties().get(PRICE_VALUE);
 		if (priceProperty == null)
 		{
 			// something wrong. LOG ERROR HERE.
