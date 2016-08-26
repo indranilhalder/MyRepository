@@ -45198,6 +45198,9 @@ display:none;
 .secure.secureTransaction.secMobile{
 	display:none;
 }
+.sign-in.tab-view .nav li:hover{
+	text-decoration:underline;
+}
 @media (min-width: 981px){
 	.sign-in.tab-view{
 	margin:0px;}
@@ -45496,7 +45499,7 @@ margin-top:0px;
 }
 @media (max-width: 650px){
 .secure.secureTransaction.secMobile:before{
-	top:-8px;
+	top:-16px;
 }
 }
 
