@@ -42464,27 +42464,17 @@ bottom:35px;
 
 /*Upgraded Owl carousel CSS ends*/
 /*Filter scroll changes start*/
-.listing.wrapper .left-block.bot {
+.listing.wrapper .left-block.bottom {
 position: absolute;
 bottom: 100px;
 } 
-.listing.wrapper .left-block.fixed {
+.listing.wrapper .left-block.fix {
 position: fixed;
 bottom: 5px;
 }
-.listing.wrapper .right-block.fixed {
-margin-left: 20%;
+.listing.wrapper .right-block  {
+float: right;
 }
-@media (max-width: 790px) {
-	.listing.wrapper .right-block.fixed {
-	margin-left: 30%;
-	}
-/*  header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 .words{
-	display:none;}
-	header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 > ul.words .short a{
-
-	display:block;}*/
-} 
 /*Filter scroll changes end*/
 /* TPR-168 */  
    #customPriceFilter .minPriceSearchTxt{
