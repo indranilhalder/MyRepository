@@ -45097,6 +45097,7 @@ color: #a5a5a5;
     width: 70%;
     line-height: 20px;
         font-size: 12px;
+        margin-left: 1px;
 }
         .sign-in.tab-view .tabs > li .left form div#checkBox label:before {
     height: 25px !important;
@@ -45369,6 +45370,9 @@ display:none;
 .sign-in.tab-view {
     margin-top: 24px;
 }
+.sign-in.tab-view .tabs>li .left form div#checkBox label {
+    width: 86%;
+}
 }
 @media (max-width: 790px){
 .marketplace-checkout {
@@ -45530,7 +45534,11 @@ margin-top:0px;
 }
 .else-brdrbtm, .else-brdrtp {
     width: 41%;
-}}
+}
+.sign-in.tab-view .tabs>li .left form div#checkBox label {
+    width: 100%;
+}
+}
 @media(min-width:768px) and (max-width:790px){
 	.secureTransaction {
     top: 42px;
