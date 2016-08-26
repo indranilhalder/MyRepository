@@ -214,7 +214,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
             	   	target.setFulfillmentTypeP1(MarketplaceomsservicesConstants.TSHIP);
             	   }
              }else{
-            	 target.setFulfillmentTypeP1(richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase()); 
+            	 target.setFulfillmentTypeP1(richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase()); 
              }
 				
 			}

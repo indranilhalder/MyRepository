@@ -74,14 +74,14 @@
 		<span id="couponValue" style="float: right"> </span>
 <input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
 	</li>
-    
+    <c:if test="${not empty mplconfigModel}">
     <li class="total" id="edtotal">
 		<div id="edtotalPriceConvChargeId">
 			ED Delivery Charge
 			<span id="edtotalWithConvField" style="float: right">${mplconfigModel }</span>
 		</div>
 	</li>
-    
+    </c:if> 
     
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">
