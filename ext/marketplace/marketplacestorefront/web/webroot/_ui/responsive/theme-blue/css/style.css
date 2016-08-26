@@ -45492,11 +45492,7 @@ margin-top:0px;
 	    margin-top: 10px;
 }
 }
-@media (max-width: 450px){
-.else-brdrbtm, .else-brdrtp {
-    width: 41%;
-}
-}
+
 @media (max-width: 650px){
 .secure.secureTransaction.secMobile:before{
 	top:-16px;
@@ -45524,6 +45520,9 @@ margin-top:0px;
 @media (max-width: 520px){
 .sign-in.tab-view .nav li {
     font-size: 12px;
+}
+.else-brdrbtm, .else-brdrtp {
+    width: 41%;
 }}
 /*Login End*/
 /*pdp fix*/
