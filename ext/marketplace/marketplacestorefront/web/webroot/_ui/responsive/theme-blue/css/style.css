@@ -8465,7 +8465,7 @@ footer .banner {
         font-size: 11px;
        } }
     .secure.secureTransaction:before {
-      font-family: 'FontAwesome';
+   /*    font-family: 'FontAwesome';
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       font-weight: 100;
@@ -8473,7 +8473,7 @@ footer .banner {
       font-size: 16px;
       color: #ffa800;
       margin-right: 5px;
-      vertical-align: bottom; }
+      vertical-align: bottom; */ }
   .top.checkout-top .marketplace {
     font-size: 16px;
     margin: 15px 5px;
@@ -8503,7 +8503,7 @@ footer .banner {
       .top.checkout-top .content {
         margin-bottom: 0; }
         .sign-in.tab-view {
-    margin-top: 24px;} }
+    margin-top: 25px;} }
     .top.checkout-top .content ul {
       list-style: none; }
       .top.checkout-top .content ul li {
@@ -8683,7 +8683,7 @@ footer .banner {
       .sign-in.tab-view .tabs > li .left {
         width: 50%;
         float: left; 
-        position:relative;}
+        /* position:relative; */}
         .sign-in.tab-view .tabs > li .left #checkBox {
         width: 115%;
         } }
@@ -20637,10 +20637,6 @@ font-weight:600;
    text-transform:uppercase; }
 @media (max-width: 650px)
 {
-.marketplace-checkout{
-	float:left;
-	margin: 15px auto;
-}
 .top.checkout-top .content ul li{
 	font-size:17px;
 	padding: 10px 0px;
@@ -27357,11 +27353,6 @@ header.compact	.marketplace img {
 		margin-top:5px;
 	}
 	
-}
-@media ( min-width : 651px) {
-	.marketplace-checkout img.image {
-		height: 40px;
-	}
 }
 body .account .account-header select.menu-select optgroup,.header-myAccount, .header-SignInShare{
 	text-transform: uppercase;
@@ -45017,6 +45008,9 @@ padding:0;
 }
 
 /*Login Start*/
+body.page-checkout-login header{
+	margin-bottom:0px
+}
 .sign-in.wrapper{
 	margin-left: 24px;
     margin-right: 24px;
@@ -45187,6 +45181,23 @@ display:none;
       display:block;} 
       .sign-in.tab-view .tabs > li .left form a.js-password-forgotten:hover{
     color: #000;}
+    .sign-in.tab-view .tabs > li form .help-block{
+       margin-top: -7px;
+    margin-bottom: 5px; }
+     .secure.secureTransaction:before, .secure.secureTransaction.secMobile:before {
+      content:'';
+        background: url("../images/checkout.png") no-repeat right 0;
+    margin: 0;
+    text-indent: -9999px;
+    position: absolute;
+       height: 22px;
+    right: 24px;
+    top: -9px;
+    width: 16px;
+    left: -22px; }
+.secure.secureTransaction.secMobile{
+	display:none;
+}
 @media (min-width: 981px){
 	.sign-in.tab-view{
 	margin:0px;}
@@ -45198,6 +45209,7 @@ display:none;
 }
 .sign-in.wrapper .sign-in.tab-view {
     width: 100%;
+        margin-bottom: 140px;
 }
 .sign-in.tab-view .tabs > li{
 	float:left;
@@ -45232,6 +45244,11 @@ display:none;
     font-size: 12px;
     letter-spacing: 0px;
     font-weight:normal;}
+    .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+        position: absolute;
+    bottom: -130px;
+    left: -8%;
+    right: 0;}
         .sign-in.tab-view .tabs > li .login-section .social-connect,.checkout-shipping .social-connect {
           width: 100%;
           float: none;
@@ -45241,9 +45258,9 @@ display:none;
       display:none;} 
       .sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout{
       display:block;} 
-      .sign-in.tab-view .tabs > li#sign_in_content form {
+/*       .sign-in.tab-view .tabs > li#sign_in_content form {
     border-bottom: 1px solid #eaeaeb;
-}
+} */
 
 }
 @media (max-width: 980px){
@@ -45437,10 +45454,36 @@ display:none;
 .sign-in.tab-view {
     margin-top: 0px;
 }
+.secure.secureTransaction{
+	display:none;
+}
+.secure.secureTransaction.secMobile{
+	display:block;
+}
+.secure.secureTransaction.secMobile:before{
+	top:-30px;
+}
+.marketplace-checkout img.image, .marketplace-checkout .simple-banner-component img {
+		height: 53px;
+	}
+	.marketplace-checkout {
+    margin: 0px auto;
+}
+body.page-checkout-login header > .content{
+	padding-bottom:0px !important
+}
+.top.checkout-top .content{
+	margin-bottom:0px;
+}
 }
 @media (max-width: 450px){
 .else-brdrbtm, .else-brdrtp {
     width: 41%;
+}
+}
+@media (max-width: 650px){
+.secure.secureTransaction.secMobile:before{
+	top:-8px;
 }
 }
 .sign-in.tab-view .tabs input::-webkit-input-placeholder {
