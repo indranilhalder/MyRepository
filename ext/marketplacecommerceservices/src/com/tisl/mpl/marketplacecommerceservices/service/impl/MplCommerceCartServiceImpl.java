@@ -1903,10 +1903,30 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	{
 
 		final List<PinCodeResponseData> responseList = new ArrayList<PinCodeResponseData>();
+		List<AbstractOrderEntryModel> cartEntryList =null;
 		try
 		{
 			//fetching response   from oms  against the pincode
 			PinCodeDeliveryModeListResponse response = null;
+			
+			for(PincodeServiceData dataObj: reqData){
+				final CartModel cartModel = getCartService().getSessionCart();
+				cartEntryList = cartModel.getEntries();
+				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList){
+					if (null != cartEntryModel ){
+						if(cartEntryModel.getSelectedUSSID().equalsIgnoreCase(dataObj.getUssid())){
+							cartEntryModel.setIsPrecious(dataObj.getIsPrecious());
+							cartEntryModel.setIsFragile(dataObj.getIsFragile());
+						}
+					}
+				}
+			}
+			LOG.debug("::::::Try to save cart Entry to :::::::::");
+			if(null !=cartEntryList && cartEntryList.size()>0){
+				LOG.debug("::::::In side If Statement :::::::::");
+			   getModelService().saveAll(cartEntryList);
+			}
+			LOG.debug("::::::SuccessFully Saved to All Cart Entries:::::::::");
 			try
 			{
 				response = getPinCodeDeliveryModeService().prepPinCodeDeliveryModetoOMS(pin, reqData);
@@ -3407,9 +3427,30 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 		boolean inventoryReservationStatus = true;
 		InventoryReservListResponse inventoryReservListResponse = null;
-
+		List<AbstractOrderEntryModel> cartEntryList =null;
 		if (requestType != null && !cartSoftReservationDatalist.isEmpty() && defaultPinCodeId != null)
 		{
+			
+			for(CartSoftReservationData dataObj: cartSoftReservationDatalist){
+				final CartModel cartModel = getCartService().getSessionCart();
+				 cartEntryList = cartModel.getEntries();
+				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList){
+					if (null != cartEntryModel ){
+						if(cartEntryModel.getSelectedUSSID().equalsIgnoreCase(dataObj.getUSSID())){
+							cartEntryModel.setFulfillmentMode(dataObj.getFulfillmentType());
+						//	cartEntryModel.setFulfillmentTypeP1(dataObj.getFulfillmentType());
+						//	cartEntryModel.setFulfillmentTypeP2(dataObj.getFulfillmentType());
+						}
+					}
+				}
+			}
+			LOG.debug("::::::Try to save cart Entry to :::::::::");
+			if(null !=cartEntryList && cartEntryList.size()>0){
+				LOG.debug("::::::In side If Statement :::::::::");
+			   getModelService().saveAll(cartEntryList);
+			}
+			LOG.debug("::::::SuccessFully Saved to All Cart Entries:::::::::");
+			
 			try
 			{
 				inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,

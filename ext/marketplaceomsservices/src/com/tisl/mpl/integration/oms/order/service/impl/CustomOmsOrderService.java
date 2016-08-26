@@ -121,19 +121,6 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 			httpErrorCode = getConfigurationService().getConfiguration()
 					.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 			order = getOrderConverter().convert(orderModel);
-			if (null != order.getOrderLines())
-			{
-				for (OrderLine orderLine : order.getOrderLines())
-				{
-					if (null != orderLine.getFulfillmentType())
-					{
-						orderLine.setFulfillmentTypeP1(orderLine.getFulfillmentType().name());
-						orderLine.setFulfillmentTypeP2(orderLine.getFulfillmentType().name());
-						orderLine.setIsPrecious("Y");
-						orderLine.setIsFragile("N");
-					}
-				}
-			}
 			//Order request xml and response xml changes made for Audit purpose
 			final String requestXml = getOrderAuditXml(order);
 			if (StringUtils.isNotEmpty(requestXml))

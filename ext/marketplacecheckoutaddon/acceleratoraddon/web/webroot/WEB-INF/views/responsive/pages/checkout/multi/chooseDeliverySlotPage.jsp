@@ -75,18 +75,15 @@
 				</script>
 				<ycommerce:testId code="checkoutStepTwo">
 				
-				<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/check" method="post" commandName="deliveryMethodForm">
+				<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/next" method="get" >
 				<!-- TISCR-305 starts -->
 				<button class="button" id="deliveryMethodSubmitUp" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
 				<!-- TISCR-305 ends -->
 					<div class="checkout-shipping left-block">
 					
 						<div class="checkout-indent">
-							<%-- <form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm"> --%>
 									<multi-checkout:shipmentItemsForDeliverySlot cartData="${cartData}" defaultPincode="${defaultPincode}"  showDeliveryAddress="true" />
 								<button class="button" id="deliveryMethodSubmit" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
-							<%-- </form:form> --%>
-							<%-- <p><spring:theme code="checkout.multi.deliveryMethod.message" text="Items will ship as soon as they are available. <br> See Order Summary for more information." /></p> --%>
 						</div>
 						
 						
@@ -106,11 +103,6 @@
 					showTaxEstimate="${showTaxEstimate}" showTax="${showTax}"  />
 			</div>
 			</div>
-		<%-- <div class="col-sm-12 col-lg-9">
-			<cms:pageSlot position="SideContent" var="feature" element="div" class="checkout-help">
-				<cms:component component="${feature}"/>
-			</cms:pageSlot>
-		</div> --%>
 	</div>
 
 </template:page>

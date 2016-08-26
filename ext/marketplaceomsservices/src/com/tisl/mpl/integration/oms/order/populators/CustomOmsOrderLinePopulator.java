@@ -190,19 +190,108 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			}
 
 
-			if (richAttributeModel.get(0).getDeliveryFulfillModes() != null
-					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
+			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
 			{
-				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
-
-				target.setFulfillmentMode(MplCodeMasterUtility.getglobalCode(fulfilmentType));
+				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
+				target.setFulfillmentMode(fulfilmentType);
 			}
 			else
 			{
 				LOG.debug("CustomOmsOrderLinePopulator : FulfillmentMode  is null ");
 			}
+			// Added the fields for OMS Order create
+			if (richAttributeModel.get(0).getDeliveryFulfillModes() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
 
+			{
+				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
+             if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
+            	   if(richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase().equalsIgnoreCase(MarketplaceomsservicesConstants.TSHIP)){
+            	   	target.setFulfillmentTypeP1(MarketplaceomsservicesConstants.SSHIP);
+            	   }else{
+            	   	target.setFulfillmentTypeP1(MarketplaceomsservicesConstants.TSHIP);
+            	   }
+             }else{
+            	 target.setFulfillmentTypeP1(richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase()); 
+             }
+				
+			}
+			else
+			{
+				LOG.debug("CustomOmsOrderLinePopulator : FulfillmentTypeP1  is null ");
+			}
+			
+			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
+
+			{
+				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
+            if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
+           	   if(richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase().equalsIgnoreCase(MarketplaceomsservicesConstants.TSHIP)){
+           	   	target.setFulfillmentTypeP2(MarketplaceomsservicesConstants.SSHIP);
+           	   }else{
+           	   	target.setFulfillmentTypeP2(MarketplaceomsservicesConstants.TSHIP);
+           	   }
+            }else{
+           	 target.setFulfillmentTypeP2(richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase()); 
+            }
+			}
+			else
+			{
+				LOG.debug("CustomOmsOrderLinePopulator : FulfillmentTypeP2  is null ");
+			}
+			
+			if (richAttributeModel.get(0).getIsPrecious() != null
+					&& richAttributeModel.get(0).getIsPrecious().getCode() != null)
+
+			{
+				final String isPrecious = richAttributeModel.get(0).getIsPrecious().getCode().toUpperCase();
+
+				target.setIsPrecious(isPrecious);
+			}
+			else
+			{
+				LOG.debug("CustomOmsOrderLinePopulator : IsPrecious  is null ");
+			}
+			
+			if (richAttributeModel.get(0).getIsFragile() != null
+					&& richAttributeModel.get(0).getIsFragile().getCode() != null)
+
+			{
+				final String isFragile = richAttributeModel.get(0).getIsFragile().getCode().toUpperCase();
+
+				target.setIsFragile(isFragile);
+			}
+			else
+			{
+				LOG.debug("CustomOmsOrderLinePopulator : IsFragile  is null ");
+			}
+			
+			if (source.getEdScheduledDate() != null)
+			{
+				target.setEdScheduledDate(String.valueOf(source.getEdScheduledDate()));
+			}
+			
+			if (source.getTimeSlotFrom() != null)
+			{
+				target.setTimeSlotFrom(String.valueOf(source.getTimeSlotFrom()));
+			}
+			
+			if (source.getTimeSlotTo() != null)
+			{
+				target.setTimeSlotTo(String.valueOf(source.getTimeSlotTo()));
+			}
+			
+			if (source.getScheduledDeliveryCharge() != null)
+			{
+				target.setScheduledDeliveryCharge(source.getScheduledDeliveryCharge().doubleValue());
+			}
+			
+		
+
+        //End Fields for OMS Order create
 			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = source.getMplDeliveryMode();
 			String deliveryModeCode = null;
 			if (mplZoneDeliveryModeValueModel != null && mplZoneDeliveryModeValueModel.getDeliveryMode() != null

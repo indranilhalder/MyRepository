@@ -79,6 +79,13 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	 *
 	 */
 	private static final String CNC = "CNC";
+	
+	
+	private static final String TSHIP = "TSHIP".intern();
+	private static final String SSHIP = "SSHIP".intern();
+	private static final String BOTH = "BOTH".intern();
+	
+	
 	private static final Logger LOG = Logger.getLogger(PinCodeDeliveryModeServiceImpl.class);
 	//OMS Pin code serviceablity
 	@Resource(name = "configurationService")
@@ -138,8 +145,15 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						}
 						if (null != reqData.get(i).getFullFillmentType())
 						{
-							fulfilmentTypeList.add(reqData.get(i).getFullFillmentType().toUpperCase());
-							//pincodereqObj.setFulfilmentType(reqData.get(i).getFullFillmentType().toUpperCase());
+							if(reqData.get(i).getFullFillmentType().equalsIgnoreCase(BOTH)){
+								 if(reqData.get(i).getDeliveryFulfillModeByP1().equalsIgnoreCase(TSHIP)){
+									 fulfilmentTypeList.add(SSHIP);
+								 }else{
+									 fulfilmentTypeList.add(TSHIP);
+								 }
+							}else{
+								fulfilmentTypeList.add(reqData.get(i).getFullFillmentType().toUpperCase());	
+							}
 						}
 						if(fulfilmentTypeList.size()>0){
 						pincodereqObj.setFulfilmentType(fulfilmentTypeList);
