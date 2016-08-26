@@ -2782,5 +2782,8 @@ function loadDefaultWishListName_SizeGuide() {
 	/*Offer popup*/
 	function offerPopup(comp) {
 		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+		if($("#OfferWrap .Inner .Left").children().length == 0) {
+			$("#OfferWrap .Inner .Left").remove();
+		}
 		$("#offerPopup").modal('show');
 	} 

@@ -44766,6 +44766,10 @@ padding:0 40px;	}
     padding-bottom: 1px;
 }
 #OfferWrap .Inner .right {
+    padding: 30px 5px;
+    width: 100%;
+}
+#OfferWrap .Inner .Left + .right {
     padding: 30px 5px 30px 20px;
 }
 #OfferWrap .Inner h3 {
@@ -44814,9 +44818,9 @@ padding:0 40px;	}
 }
 #OfferWrap .Inner .Left {
     width: 40%;
-     margin-top: 65px;
+     margin-top: 30px;
 }
-#OfferWrap .Inner .right {
+#OfferWrap .Inner .Left + .right {
     width: 60%;
 }
 #offerPopup:before{
@@ -44833,7 +44837,7 @@ padding:0 40px;	}
 	text-align:center;
 	font-size: 16px;
 	}
-	#OfferWrap .Inner .Left, #OfferWrap .Inner .right {
+	#OfferWrap .Inner .Left, #OfferWrap .Inner .Left + .right {
     width: 100%;
     margin-top:0px;
 }
