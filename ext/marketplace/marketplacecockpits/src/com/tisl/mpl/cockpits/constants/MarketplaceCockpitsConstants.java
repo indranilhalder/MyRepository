@@ -191,5 +191,9 @@ public final class MarketplaceCockpitsConstants extends
 
 	public static final String NONE_OF_ABOVE = "None of Above";
 	public static final String OTHERS = "Others";
+	public static final String NO_LANDMARKS_FOUND = "No LandMarks Found";
 	public static final String SELECT_LANDMARK = "Select LandMark";
+	public static final String CU = "CU";
+	public static final String SD = "SD";
+	public static final String CA = "CA";
 }

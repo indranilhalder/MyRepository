@@ -144,7 +144,7 @@
 									selectCSSClass="l textInputChangeAddress address_states" 
 									labelKey="address.states"
 									path="state" mandatory="true" skipBlank="false"
-									skipBlankMessageKey="address.state.pleaseSelect"
+									skipBlankMessageKey="${orderDetails.deliveryAddress.state}"
 									items="${stateDataList}" selectedValue="${addressForm.state}"
 									itemValue="name" />
 								<div class="error_text stateError"></div>
@@ -184,13 +184,12 @@
 								<c:set var="addressCount" value="${addressCount+1}" />
 								<div class="row">
 									<div class="col-md-2">
-										<input type="radio" class="addAddressToForm"
+										<input type="radio" class="addAddressToForm changeAddCheck"
 											data-item="changeAddress${status.count}"
-											name="select_address"
-											style="width: 15px; height: 15px; display: block; cursor: pointer;" />
+											name="select_address"/>
 									</div>
 									<div
-										class="col-md-9 addressTextChange changeAddress${status.count}">
+										class="col-md-9 addressTextChange addressSpace changeAddress${status.count}">
 										<b>Residential Address ${addressCount} - Default</b> <br /> <span
 											class="firstName">${orderDeliveryAddressList.firstName}</span><br />
 										<span class="lastName">${orderDeliveryAddressList.lastName}</span><br>
@@ -233,11 +232,29 @@
 			<p style="clear: both;"></p>
 			<div class="modal-footer">
 				<div class="error_text main_error"></div>
-				<button type="submit" id="saveBlockData" class="btn btn-primary">Save</button>
+				<button type="button" id="saveBlockData" class="btn btn-primary">Save</button>
 			</div>
 		</form:form>
 		<p style="clear: both;"></p>
 	</div>
 	<!-- /.modal-content -->
 </div>
+
+<style>
+#deliveryAddressForm .changeAddCheck{
+	padding: 5px;
+height: 17px;
+display: block !important;
+cursor: pointer;
+border-radius: 50% !important;
+width: 17px;
+}
+#deliveryAddressForm input[type="text"]{
+	height: 35px;
+}
+
+#deliveryAddressForm .addressSpace{
+	 margin-bottom: 15px;
+}
+</style>
 <!-- /.modal-dialog -->

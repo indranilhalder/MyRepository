@@ -33,7 +33,8 @@ public interface MplDeliveryAddressFacade
 	 * @param newDeliveryAddress
 	 * @return boolean
 	 */
-	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress, String interfaceType,List<TransactionSDDto> transactionSDDtos);
+	public String changeDeliveryRequestCallToOMS(String orderId, AddressModel newDeliveryAddress, String interfaceType,
+			List<TransactionSDDto> transactionSDDtos);
 
 
 	/**
@@ -67,7 +68,7 @@ public interface MplDeliveryAddressFacade
 	 * @param enteredOTPNumber
 	 * @return String msg Valid or not
 	 */
-	public String validateOTP(String customerId, String enteredOTPNumber, String orderCode);
+	public String submitChangeDeliveryAddress(String customerId, String enteredOTPNumber, String orderCode);
 
 	//Generate new OTP
 	public boolean generateNewOTP(String orderCode);
@@ -78,9 +79,15 @@ public interface MplDeliveryAddressFacade
 
 	public Map<String, Object> getDeliveryDate(List<TransactionEddDto> transactionEddDtoList);
 
-	public List<TransactionEddDto> getScheduledDeliveryDate(OrderModel orderModel,String newPincode);
-	
-	public ChangeDeliveryAddressResponseDto scheduledDeliveryDateRequestToOMS(OrderModel orderModel,String newPincode);
-	
-	public Collection<MplDeliveryAddressReportData> getDeliveryAddressRepot(String dateFrom,String toDate);
+	public List<TransactionEddDto> getScheduledDeliveryDate(OrderModel orderModel, String newPincode);
+
+	public ChangeDeliveryAddressResponseDto scheduledDeliveryDateRequestToOMS(OrderModel orderModel, String newPincode);
+
+	public Collection<MplDeliveryAddressReportData> getDeliveryAddressRepot(String dateFrom, String toDate);
+
+
+	/**
+	 * @param orderModel
+	 */
+	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel);
 }

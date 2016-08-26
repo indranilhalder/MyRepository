@@ -12,6 +12,8 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
@@ -108,11 +110,11 @@ public class MplDeliveryAddressControllerImpl extends
 	 */
 	@Override
 	public String changeDeliveryAddressCallToOMS(String orderId,
-			AddressModel newDeliveryAddress) throws EtailNonBusinessExceptions {
+			AddressModel newDeliveryAddress,String interfaceType,List<TransactionSDDto> transactionSDDtos) throws EtailNonBusinessExceptions {
 		String omsResponce = null;
 		try {
-			String interfaceType="CA";
-			List<TransactionSDDto> transactionSDDtos=null;
+			//String interfaceType="CA";
+			//List<TransactionSDDto> transactionSDDtos=null;
 			omsResponce = mplDeliveryAddressFacade
 					.changeDeliveryRequestCallToOMS(orderId, newDeliveryAddress,interfaceType,transactionSDDtos);
 		} catch (EtailNonBusinessExceptions e) {
@@ -189,6 +191,12 @@ public class MplDeliveryAddressControllerImpl extends
 			LOG.error(" Exception occurred while getting pincode data "+e.getMessage());
 		}
 		return pincodeData;
+	}
+
+
+	@Override
+	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel) {
+		return mplDeliveryAddressFacade.checkScheduledDeliveryForOrder(orderModel);
 	}
 
 }

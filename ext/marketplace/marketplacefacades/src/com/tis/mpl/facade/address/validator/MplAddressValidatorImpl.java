@@ -30,14 +30,9 @@ public class MplAddressValidatorImpl implements MplAddressValidator
 		if (StringUtils.isNotEmpty(addressModel.getStreetname()) && StringUtils.isNotEmpty(temproryAddressModel.getStreetname()))
 		{
 
-			if (addressModel.getStreetname().trim().equalsIgnoreCase(temproryAddressModel.getStreetname().trim()))
+			if (!addressModel.getStreetname().trim().equalsIgnoreCase(temproryAddressModel.getStreetname().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 
 		}
@@ -45,14 +40,9 @@ public class MplAddressValidatorImpl implements MplAddressValidator
 				&& StringUtils.isNotEmpty(temproryAddressModel.getStreetnumber()))
 		{
 
-			if (addressModel.getStreetnumber().trim().equalsIgnoreCase(temproryAddressModel.getStreetnumber().trim()))
+			if (!addressModel.getStreetnumber().trim().equalsIgnoreCase(temproryAddressModel.getStreetnumber().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 
 		}
@@ -60,67 +50,48 @@ public class MplAddressValidatorImpl implements MplAddressValidator
 				&& StringUtils.isNotEmpty(temproryAddressModel.getAddressLine3()))
 		{
 
-			if (addressModel.getAddressLine3().trim().equalsIgnoreCase(temproryAddressModel.getAddressLine3().trim()))
+			if (!addressModel.getAddressLine3().trim().equalsIgnoreCase(temproryAddressModel.getAddressLine3().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 
 		}
 		if (StringUtils.isNotEmpty(addressModel.getLandmark()) && StringUtils.isNotEmpty(temproryAddressModel.getLandmark()))
 		{
 
-			if (addressModel.getLandmark().trim().equalsIgnoreCase(temproryAddressModel.getLandmark().trim()))
+			if (!addressModel.getLandmark().trim().equalsIgnoreCase(temproryAddressModel.getLandmark().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 		}
 		if (StringUtils.isNotEmpty(addressModel.getDistrict()) && StringUtils.isNotEmpty(temproryAddressModel.getDistrict()))
 		{
 
-			if (addressModel.getDistrict().trim().equalsIgnoreCase(temproryAddressModel.getDistrict().trim()))
+			if (!addressModel.getDistrict().trim().equalsIgnoreCase(temproryAddressModel.getDistrict().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 		}
 		if (StringUtils.isNotEmpty(addressModel.getCity()) && StringUtils.isNotEmpty(temproryAddressModel.getCity()))
 		{
-			if (addressModel.getCity().trim().equalsIgnoreCase(temproryAddressModel.getCity().trim()))
+			if (!addressModel.getCity().trim().equalsIgnoreCase(temproryAddressModel.getCity().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 		}
 
-
 		if (StringUtils.isNotEmpty(addressModel.getPostalcode()) && StringUtils.isNotEmpty(temproryAddressModel.getPostalcode()))
 		{
-			if (addressModel.getPostalcode().trim().equalsIgnoreCase(temproryAddressModel.getPostalcode().trim()))
+			if (!addressModel.getPostalcode().trim().equalsIgnoreCase(temproryAddressModel.getPostalcode().trim()))
 			{
-				isChanged = false;
+				return true;
 			}
-			else
+		}
+		if (StringUtils.isNotEmpty(addressModel.getState()) && StringUtils.isNotEmpty(temproryAddressModel.getState()))
+		{
+			if (!addressModel.getState().trim().equalsIgnoreCase(temproryAddressModel.getState().trim()))
 			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 		}
 		return isChanged;
@@ -139,39 +110,24 @@ public class MplAddressValidatorImpl implements MplAddressValidator
 		boolean isChanged = false;
 		if (StringUtils.isNotEmpty(addressModel.getPhone1()) && StringUtils.isNotEmpty(temproryAddressModel.getPhone1()))
 		{
-			if (addressModel.getPhone1().trim().equalsIgnoreCase(temproryAddressModel.getPhone1().trim()))
+			if (!addressModel.getPhone1().trim().equalsIgnoreCase(temproryAddressModel.getPhone1().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 		}
 
 		if (StringUtils.isNotEmpty(addressModel.getFirstname()) && StringUtils.isNotEmpty(temproryAddressModel.getFirstname()))
 		{
-			if (addressModel.getFirstname().trim().equalsIgnoreCase(temproryAddressModel.getFirstname().trim()))
+			if (!addressModel.getFirstname().trim().equalsIgnoreCase(temproryAddressModel.getFirstname().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 		}
 		if (StringUtils.isNotEmpty(addressModel.getLastname()) && StringUtils.isNotEmpty(temproryAddressModel.getLastname()))
 		{
-			if (addressModel.getLastname().trim().equalsIgnoreCase(temproryAddressModel.getLastname().trim()))
+			if (!addressModel.getLastname().trim().equalsIgnoreCase(temproryAddressModel.getLastname().trim()))
 			{
-				isChanged = false;
-			}
-			else
-			{
-				isChanged = true;
-				return isChanged;
+				return true;
 			}
 		}
 		return isChanged;
