@@ -45485,7 +45485,7 @@ margin-top:0px;
 	display:block;
 }
 .secure.secureTransaction.secMobile:before{
-	top:-30px;
+	top:-22px;
 }
 .marketplace-checkout img.image, .marketplace-checkout .simple-banner-component img {
 		height: 53px;
@@ -45531,6 +45531,11 @@ margin-top:0px;
 .else-brdrbtm, .else-brdrtp {
     width: 41%;
 }}
+@media(min-width:768px) and (max-width:790px){
+	.secureTransaction {
+    top: 42px;
+}
+} 
 /*Login End*/
 /*pdp fix*/
 @media (max-width: 500px) {
