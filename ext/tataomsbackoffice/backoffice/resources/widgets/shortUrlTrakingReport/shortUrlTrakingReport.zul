@@ -46,7 +46,7 @@
 				</panelchildren>
 			</panel>
 			<panel
-				style="max-height:80%;height:75%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
+				style="max-height:80%;height:75%;border-bottom:3px solid #27394f;border:none">
 				<panelchildren>
 					<listbox id="listBoxData" multiple="true"
 						mold="paging" rows="12" checkmark="false"
