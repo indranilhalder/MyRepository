@@ -20611,8 +20611,8 @@ ul.accepted-cards li span img{
 .form-group {
 	margin-bottom: 15px;
 }
-.marketplace-checkout{
-	margin: 30px auto;
+.marketplace-checkout {
+    margin: 13px auto 30px;
 }
 .marketplace-checkout .simple-banner-component a{
 	display:inline;
@@ -20623,7 +20623,7 @@ ul.accepted-cards li span img{
 }
 .marketplace-checkout .simple-banner-component img{
 	cursor:default;
-	height:40px;
+	height:53px;
 }
 
 .secureTransaction{
@@ -45303,7 +45303,7 @@ display:none;
     width: 5%;
     float: left;
     position: absolute;
-    top: 0px;
+    top: 30px;
     left: 50%;
 }
 .else-brdrbtm,.else-brdrtp {
@@ -45355,6 +45355,17 @@ display:none;
 .sign-in.tab-view .tabs > li#sign_up_content .social-connect{
 	display:block;
 	padding-top:30px;
+}
+}
+@media (max-width: 790px){
+.marketplace-checkout {
+    margin: 24px auto;
+}
+body.page-checkout-login header > .content{
+	padding-bottom:0px !important
+}
+body.page-checkout-login header > .content .bottom .search{
+margin-top:0px;	
 }
 }
 @media (max-width: 767px){
@@ -45469,11 +45480,10 @@ display:none;
 	.marketplace-checkout {
     margin: 0px auto;
 }
-body.page-checkout-login header > .content{
-	padding-bottom:0px !important
-}
+
 .top.checkout-top .content{
 	margin-bottom:0px;
+	    margin-top: 10px;
 }
 }
 @media (max-width: 450px){
@@ -45486,6 +45496,7 @@ body.page-checkout-login header > .content{
 	top:-8px;
 }
 }
+
 .sign-in.tab-view .tabs input::-webkit-input-placeholder {
 	color: #a5a5a5;
 }
