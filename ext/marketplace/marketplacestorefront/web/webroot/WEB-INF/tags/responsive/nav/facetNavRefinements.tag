@@ -16,7 +16,7 @@
 </c:if> 
 
 <c:forEach items="${pageData.breadcrumbs}" var="breadcrumb">
-   <c:if test="${breadcrumb.facetName == 'priceValue'}">    
+   <c:if test="${breadcrumb.facetName == 'Price'}">    
 		<c:set var="removeQueryUrlForPriceValue" value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}" scope="page" />
    </c:if>
 </c:forEach>

@@ -577,7 +577,8 @@ function navigateToPage(queryString,textString)
 									<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 							</form>
 		</c:if>
-		<c:if test="${facetData.code eq 'Price'}">
+		
+		<c:if test="${facetData.code eq 'price'}">
 		    <div class="priceBucketExpand" style="display:none">		    				
 				<c:url value="${removeQueryUrlForPriceValue}" var="removeQueryUrl"/>
 				<a href="${removeQueryUrl}" ><span>Any Price</span></a>
