@@ -20623,7 +20623,7 @@ ul.accepted-cards li span img{
 }
 .marketplace-checkout .simple-banner-component img{
 	cursor:default;
-	height:53px;
+	height:40px;
 }
 
 .secureTransaction{
@@ -20633,7 +20633,7 @@ font-weight:600;
   position: absolute !important;
   z-index: 100;
   right: 10px;
-  top: 42px;
+  top: 33px;
    text-transform:uppercase; }
 @media (max-width: 650px)
 {
@@ -45014,6 +45014,9 @@ padding:0;
 /*Login Start*/
 body.page-checkout-login header{
 	margin-bottom:0px
+}
+.top.checkout-top .content {
+    margin-top: 10px;
 }
 .sign-in.wrapper{
 	margin-left: 24px;
