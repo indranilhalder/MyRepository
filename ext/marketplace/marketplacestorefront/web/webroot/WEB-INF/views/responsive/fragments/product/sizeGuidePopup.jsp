@@ -77,19 +77,19 @@ var productCodeSG = '${product.code}';
 										<c:if test="${sizeGuide eq 'Size'}">
 											<c:set var="size" value="Y"/>
 										</c:if>
-										<c:if test="${sizeGuide eq 'Belt Size (cms)' }">
+										<c:if test="${sizeGuide eq 'Belt Size (cm)' }">
 											<c:set var="cmsBeltSize" value="Y"/>
 										</c:if>
-										<c:if test="${sizeGuide eq 'Belt Size (inches)' }">
+										<c:if test="${sizeGuide eq 'Belt Size (inch)' }">
 											<c:set var="inchesBeltSize" value="Y"/>
 										</c:if>
-										<c:if test="${sizeGuide eq 'Waist (cms)' }">
+										<c:if test="${sizeGuide eq 'Waist (cm)' }">
 											<c:set var="cmsWaistSize" value="Y"/>
 										</c:if>
-										<c:if test="${sizeGuide eq 'Waist size (in inches)' }">
+										<c:if test="${sizeGuide eq 'Waist Size (inch)' }">
 											<c:set var="inchesWaistSize" value="Y"/>
 										</c:if>
-										<c:if test="${sizeGuide eq 'Belt Length (inches)' }">
+										<c:if test="${sizeGuide eq 'Belt Length (inch)' }">
 											<c:set var="inchesBeltLength" value="Y"/>
 										</c:if>
 									</c:forEach>
