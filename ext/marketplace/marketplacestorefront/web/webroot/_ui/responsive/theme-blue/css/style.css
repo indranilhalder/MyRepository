@@ -20102,7 +20102,7 @@ font-size:14px;
 /*  margin-bottom: 10px; */
  font-weight: 500;
  background: #fff;
- /* display: none; */
+/*  display: none; */
  border-collapse: separate;
 }
 #EMITermTable th{
@@ -44159,7 +44159,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	top: 3px;
 } */
 
-#bankNameForEMI {
+.product-detail #bankNameForEMI {
 	width: 250px;
 	border: 2px solid #f5f5f5;
 }
