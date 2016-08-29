@@ -42656,7 +42656,7 @@ margin-left: 20%;
 	border: 1px solid #ccc;
 	float: left;
 	text-align: center;
-	min-width: 33px;
+	min-width: 35px;
    	margin-bottom: 5px;
     margin-left: -1px;
     margin: 0 5px 5px 0;
@@ -45563,4 +45563,7 @@ margin-top:0px;
 	display: block;
 	margin-bottom: 10px;
     line-height: 1.5;
+}
+.pdp-promo-block.promo-block .pdp-promo-title {
+	cursor: pointer;
 }
