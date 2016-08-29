@@ -52,6 +52,7 @@ import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
+import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.controllers.pages.SearchPageController.UserPreferencesData;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -100,17 +101,61 @@ public class SellerPageController extends AbstractSearchPageController
 	private static final String BZ_ERROR_CMS_PAGE = "businessErrorFound";
 	private static final String NEW_SELLER_URL_PATTERN_PAGINATION = "/{sellerID}/page-{page}";
 
+	// For TPR-198
+	private static final String COMPILE_PATTERN = "page-[0-9]+";
+	private static final String METAROBOTS_VALUE = "noindex,follow";
+
+
 	//@RequestMapping(value = SELLER_ID_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	@SuppressWarnings("boxing")
 	@RequestMapping(value =
 	{ NEW_SELLER_URL_PATTERN_PAGINATION, SELLER_ID_PATH_VARIABLE_PATTERN }, method = RequestMethod.GET)
 	public String seller(@PathVariable("sellerID") final String sellerID,
 			@RequestParam(value = "q", required = false) final String searchQuery,
-			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "page", defaultValue = "0") final int page,
+			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode, final Model model,
 			final HttpServletRequest request) throws UnsupportedEncodingException
+	{
+
+		populateSellarResult(sellerID, searchQuery, page, pageSize, showMode, sortCode, model, request);
+		return getViewForPage(model);
+	}
+
+
+	// For AJAX Load : TPR-198
+	@SuppressWarnings("boxing")
+	@RequestMapping(value =
+	{ NEW_SELLER_URL_PATTERN_PAGINATION + "/getFacetData", SELLER_ID_PATH_VARIABLE_PATTERN + "/getFacetData" }, method = RequestMethod.GET)
+	public String sellerFacetSearch(@PathVariable("sellerID") final String sellerID,
+			@RequestParam(value = "q", required = false) final String searchQuery,
+			@RequestParam(value = "page", defaultValue = "0") final int page,
+			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
+			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
+			@RequestParam(value = "sort", required = false) final String sortCode, final Model model,
+			final HttpServletRequest request) throws UnsupportedEncodingException
+	{
+
+		populateSellarResult(sellerID, searchQuery, page, pageSize, showMode, sortCode, model, request);
+		return ControllerConstants.Views.Fragments.Product.SellerResultsPage;
+	}
+
+	/**
+	 * @param sellerID
+	 * @param searchQuery
+	 * @param page
+	 * @param pageSize
+	 * @param showMode
+	 * @param sortCode
+	 * @param model
+	 * @param request
+	 * @return String
+	 */
+	@SuppressWarnings("boxing")
+	private String populateSellarResult(final String sellerID, final String searchQuery, int page, Integer pageSize,
+			final ShowMode showMode, final String sortCode, final Model model, final HttpServletRequest request)
+			throws UnsupportedEncodingException
 	{
 		//Set the drop down text if the attribute is not empty or null
 
@@ -118,8 +163,7 @@ public class SellerPageController extends AbstractSearchPageController
 		model.addAttribute("searchCode", sellerID);
 		//Check if there is a landing page for the seller
 		final SellerMasterModel sellerMaster = mplSellerMasterService.getSellerMaster(sellerID);
-		//	pageSize = pageSize != null ? pageSize : 0;
-		//	updateUserPreferences(pageSize);
+
 		try
 		{
 			if (mplSellerMasterService.getSellerMaster(sellerID) != null)
@@ -127,7 +171,7 @@ public class SellerPageController extends AbstractSearchPageController
 				final String uri = request.getRequestURI();
 				if (uri.contains("page"))
 				{
-					final Pattern p = Pattern.compile("page-[0-9]+");
+					final Pattern p = Pattern.compile(COMPILE_PATTERN);
 					final Matcher m = p.matcher(uri);
 					if (m.find())
 					{
@@ -153,7 +197,7 @@ public class SellerPageController extends AbstractSearchPageController
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 						Collections.singletonList(new Breadcrumb("#", sellerName, LAST_LINK_CLASS)));
 
-				model.addAttribute("metaRobots", "noindex,follow");
+				model.addAttribute(ModelAttributetConstants.METAROBOTS, METAROBOTS_VALUE);
 				final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(sellerLandingPage.getKeywords());
 				final String metaDescription = MetaSanitizerUtil.sanitizeDescription(sellerLandingPage.getDescription());
 				setUpMetaData(model, metaKeywords, metaDescription);
@@ -171,7 +215,6 @@ public class SellerPageController extends AbstractSearchPageController
 				searchPageData = updatePageData(searchPageData, sellerID, searchQuery);
 				final StringBuilder urlBuilder = new StringBuilder(200);
 				final List<FacetData<SearchStateData>> facets = searchPageData.getFacets();
-				//if (null != facets && facets.size() > 0)
 				if (CollectionUtils.isNotEmpty(facets))
 				{
 					LOG.debug("Iterating through all Facets");
@@ -190,7 +233,7 @@ public class SellerPageController extends AbstractSearchPageController
 						}
 					}
 					LOG.debug("Url for Shop the Sale" + urlBuilder.toString());
-					model.addAttribute("shop_the_sale_url", urlBuilder.toString());
+					model.addAttribute(ModelAttributetConstants.SHOP_THE_SALE_URL, urlBuilder.toString());
 				}
 
 				storeCmsPageInModel(model, sellerLandingPage);
@@ -220,23 +263,16 @@ public class SellerPageController extends AbstractSearchPageController
 
 				searchQueryData.setValue(sellerLegalName);
 				SellerSearchEvaluator sellerSearch = null;
-				//				if (!resetAll)
-				//				{
-				//					sellerSearch = new SellerSearchEvaluator(sellerID, XSSFilterUtil.filter(searchQuery), page, showMode, sortCode);
-				//				}
-				//				else
-				//{
 				sellerSearch = new SellerSearchEvaluator(sellerID, XSSFilterUtil.filter(searchQuery), page, showMode, sortCode);
-				//}
 				sellerSearch.doSearch(searchQuery, pageSize);
 				populateModel(model, sellerSearch.getSearchPageData(), showMode);
-				model.addAttribute("dropDownText", sellerLegalName);
-				model.addAttribute("hideDepartments", Boolean.TRUE);
-				model.addAttribute("otherProducts", true);
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, sellerLegalName);
+				model.addAttribute(ModelAttributetConstants.HIDE_DEPARTMENTS, Boolean.TRUE);
+				model.addAttribute(ModelAttributetConstants.OTHER_PRODUCTS, true);
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 						searchBreadcrumbBuilder.getBreadcrumbs(null, sellerSearch.getSearchPageData()));
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
-						Collections.singletonList(new Breadcrumb("#", sellerLegalName, LAST_LINK_CLASS)));
+						Collections.singletonList(new Breadcrumb(ModelAttributetConstants.HASH_VAL, sellerLegalName, LAST_LINK_CLASS)));
 
 				storeCmsPageInModel(model, getContentPageForLabelOrId(SELLER_LISTING_CMS_PAGE_ID));
 			}
@@ -267,8 +303,7 @@ public class SellerPageController extends AbstractSearchPageController
 				LOG.error("Exception occured " + e1);
 			}
 		}
-
-		return getViewForPage(model);
+		return null;
 	}
 
 	/**

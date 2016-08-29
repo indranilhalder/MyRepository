@@ -607,8 +607,8 @@
 					<button type="submit" data-dismiss="modal" onClick="saveChangesWl()">
 						<spring:theme code="wishlist.save" />
 					</button>
-					
-					<a class="close" href="" data-dismiss="modal"><spring:theme code="text.button.cancel" /></a>
+					<!-- TPR-646 Changes added class -->
+					<a class="close manageWishlistClose" href="" data-dismiss="modal"><spring:theme code="text.button.cancel" /></a>
 					
 					</div>
 					</div>
