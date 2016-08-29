@@ -1966,7 +1966,7 @@ $(document).ready(function(){
 		utag.link(
 				{link_obj: this, link_text: 'concierge_view_details' , event_type : 'concierge_view_details' }
 				);
-
+	});
 
 	//TISPRD-4587
 	$(document).ajaxComplete(function(){
@@ -2002,5 +2002,5 @@ $(document).ready(function(){
 		}
 		
 		
->>>>>>> refs/heads/TCS_PROD_SUPPORT
+
 	});

@@ -406,7 +406,7 @@ ACC.carousel = {
 				lazyLoad:true*/
 			});
 		},4000);
->>>>>>> refs/heads/TCS_PROD_SUPPORT
+
 	},
 	
 	myReviewCarousel: function(){
