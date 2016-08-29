@@ -42659,7 +42659,7 @@ margin-left: 20%;
 
 .product-info .size ul#variant li a {
 	display: block;
-	padding: 9px;
+	padding: 9px 0;
 	text-align: center;
 	text-transform: uppercase;
 }
@@ -45041,7 +45041,7 @@ body.page-checkout-login header{
 .sign-in.tab-view .form-group{
 	    margin-top: -12px;}
 .sign-in.tab-view .tabs > li .left form input {
-color: #a5a5a5;
+color: #555;
     font-size: 12px;
     height: 35px;
     margin-bottom: 15px;
