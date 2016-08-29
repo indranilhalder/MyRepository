@@ -161,6 +161,10 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					{
 						requestData.setInterfaceType(interfaceType);
 					}
+					if (null != newDeliveryAddress.getLine1())
+					{
+						requestData.setAddress1(newDeliveryAddress.getLine1());
+					}
 					if (null != newDeliveryAddress.getLine2())
 					{
 						requestData.setAddress2(newDeliveryAddress.getLine2());
@@ -189,7 +193,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					{
 						requestData.setPincode(newDeliveryAddress.getPostalcode());
 					}
-					if (null != newDeliveryAddress.getPostalcode())
+					if (CollectionUtils.isNotEmpty(transactionSDDtos))
 					{
 						requestData.setTransactionSDDtos(transactionSDDtos);
 					}
