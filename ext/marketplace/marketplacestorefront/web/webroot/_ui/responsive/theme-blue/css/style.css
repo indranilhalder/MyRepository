@@ -39410,7 +39410,8 @@ button.make_payment[disabled] {
 } */
 
 .modal.size-guide .apparelSizes table{
-width: 100%;
+	width: auto;
+  	min-width: 100%;
     float: left;
     border: 1px solid #ccc;
     table-layout: fixed;
