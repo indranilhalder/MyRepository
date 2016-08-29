@@ -68,7 +68,7 @@
 								<div class="form-group">
 									<label for="pincode">Pincode*</label>
 									<form:input path="postcode" class="address_postcode"
-										id="pincode"
+										id="pincode" maxlength="6"
 										value="${orderDetails.deliveryAddress.postalCode}"  placeholder="Pincode" />
 									<div class="error_text pincodeNoError"></div>
 								</div>
@@ -118,7 +118,7 @@
 							<div class="address_landmarkOtherDiv">
 								<div class="col-md-12">
 									<label>Landmark</label>
-										<form:input class="otherLandMark" placeholder="Other Landmark" path="otherLandmark"/>
+										<form:input class="otherLandMark" placeholder="Other Landmark" path="otherLandmark"/>										
 								</div>
 							</div>
 						</div>
