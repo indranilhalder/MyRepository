@@ -789,13 +789,7 @@
  			<value code="no" />
  		</enumtype>
  		<!-- added by i324321 end -->
- 		
- 		 	<enumtype code="deliveryAddressEnum" autocreate="true"
-			generate="true" dynamic="true">
-			<value code="pincode_Not_Serviceable" />
-			<value code="Success" />
-			<value code="Internal_Server_Error_Please_try_again_later" />
-		</enumtype>
+
 	</enumtypes>
 		<!-- Product Feature Enum Ends -->
 
@@ -8413,13 +8407,6 @@
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
 							optional="false" unique="false" />
-					</attribute>
-
-					<attribute autocreate="true" qualifier="isApproval" type="boolean"
-						generate="true">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" unique="false" />
 					</attribute>
 
 					<attribute autocreate="true" qualifier="isProcessed"
