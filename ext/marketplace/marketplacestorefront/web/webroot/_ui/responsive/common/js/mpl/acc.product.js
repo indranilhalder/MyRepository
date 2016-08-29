@@ -130,6 +130,17 @@ ACC.product = {
 			 $("#qty1").val($("#quantity").val());
 			 
 				if($("#sizeSelected").val()!='no'){
+				
+					/*TPR-681*/
+					var productCodePost = $("#productCodePost").val();
+					utag.link({
+						link_obj: this, 
+						link_text: 'quick_view_addto_bag' , 
+						event_type : 'quick_view_addto_bag', 
+						product_sku_quick_view : productCodePost
+					});
+					/*TPR-681 Ends*/
+				
 				ACC.product.sendAddToBagQuick("addToCartFormQuick");
 				
 				}else{

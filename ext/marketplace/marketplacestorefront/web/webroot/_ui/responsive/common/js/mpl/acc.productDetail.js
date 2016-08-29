@@ -684,7 +684,15 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					}
 					//End MSD
 					
-					
+					/*TPR-656*/
+					utag.link({
+						link_obj: this, 
+						link_text: 'add_to_wishlist' , 
+						event_type : 'add_to_wishlist', 
+						product_sku_wishlist : productCodePost
+					});
+				/*TPR-656 Ends*/
+				
 					
 					//openPop(ussidValue);
 				//	$('#myModal').modal('hide');
