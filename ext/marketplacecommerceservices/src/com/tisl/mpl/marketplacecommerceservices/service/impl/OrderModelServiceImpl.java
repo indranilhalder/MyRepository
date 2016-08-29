@@ -78,7 +78,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrder(java.lang.String)
 	 */
 	@Override
@@ -107,7 +107,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrderStausCodeMaster(java.lang.String)
 	 */
 	@Override
@@ -118,7 +118,7 @@ public class OrderModelServiceImpl implements OrderModelService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrderStausCodeMasterList()
 	 */
 	@Override
@@ -174,4 +174,9 @@ public class OrderModelServiceImpl implements OrderModelService
 		return orderModelDao.updatePickUpDetailsDao(orderId, name, mobile);
 	}
 
+	@Override
+	public OrderModel getOrderModel(final String code)
+	{
+		return getOrderModelDao().getOrderModel(code);
+	}
 }

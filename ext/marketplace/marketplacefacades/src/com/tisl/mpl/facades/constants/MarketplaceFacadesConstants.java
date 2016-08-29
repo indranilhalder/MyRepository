@@ -95,6 +95,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String RETURN = "RETURN";
 	public static final String CANCEL = "CANCEL";
 	public static final String DELIVERY = "DELIVERY";
+	public static final String PAYMENT = "PAYMENT";
 
 	public static final String VALID_APPROVED = "valid.order.statuses.APPROVED";
 	public static final String VALID_SHIPPING = "valid.order.statuses.SHIPPING";
