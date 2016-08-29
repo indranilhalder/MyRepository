@@ -519,7 +519,6 @@ public class ProductPageController extends AbstractPageController
 			//model.addAttribute("product_category", productCategory);
 			model.addAttribute("product_category", breadcrumbs.get(0).getName());
 			model.addAttribute("page_subcategory_name_L3", productSubCategoryName);
-
 		}
 		catch (final Exception ex)
 		{

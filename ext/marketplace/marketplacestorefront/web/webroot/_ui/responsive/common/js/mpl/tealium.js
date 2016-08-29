@@ -19,7 +19,6 @@ $(document).ready(
 			
 			var pageType = $('#pageType').val();
 			var pageName=$('#pageName').val();
-		
 			
 			// Added for tealium
 			if (pageType == "homepage") {
@@ -314,5 +313,7 @@ $(document).ready(
 					
 			});
 			/*TPR-657 ends*/
+			
+			
 			
 		});
