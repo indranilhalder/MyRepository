@@ -79,7 +79,6 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 	//		}
 	//	}
 
-
 	/***
 	 * OrderId Based On We will get Temporary AddressModel
 	 *
@@ -92,16 +91,15 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 
 		try
 		{
-			final String queryString = "SELECT {o:" + TemproryAddressModel.PK
-					+ "} "+ "FROM {" + TemproryAddressModel._TYPECODE + " AS o} " + "WHERE {o." + TemproryAddressModel.ORDERID
-					+ "}=?orderId" + " AND {o." + TemproryAddressModel.ISAPPROVAL + "}=true";
+			final String queryString = "SELECT {o:" + TemproryAddressModel.PK + "} " + "FROM {" + TemproryAddressModel._TYPECODE
+					+ " AS o} " + "WHERE ({o:" + TemproryAddressModel.ORDERID + "})=?orderId" + " ORDER BY {o:"
+					+ TemproryAddressModel.CREATIONTIME + "} DESC";
 
 			FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
-			fQuery.addQueryParameter("orderId", orderId);			
+			fQuery.addQueryParameter("orderId", orderId);
 			SearchResult<TemproryAddressModel> searchResult = flexibleSearchService.search(fQuery);
 			List<TemproryAddressModel> tempAddrlist = searchResult.getResult();
 			return !tempAddrlist.isEmpty() ? tempAddrlist.get(0) : null;
-
 		}
 		catch (final FlexibleSearchException e)
 		{
@@ -114,17 +112,15 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 		return null;
 	}
 
-
 	@Override
-	public List<TemproryAddressModel> getTemporaryAddressModelList(String fromDate ,String toDate)
+	public List<TemproryAddressModel> getTemporaryAddressModelList(String fromDate, String toDate)
 	{
-		List<TemproryAddressModel> tempAddrlist=null;
+		List<TemproryAddressModel> tempAddrlist = null;
 		try
-		{	
-			 String SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES= "SELECT {cdrm:" + TemproryAddressModel.PK + "}"
-					+ " FROM {" + TemproryAddressModel._TYPECODE + " AS cdrm} " + "WHERE " + "{cdrm:"
-					+ TemproryAddressModel.CREATIONTIME + "} between ?fromDate and ?toDate and"+ "{cdrm:"
-					+ TemproryAddressModel.ISPROCESSED + "}  IS NOT NULL";
+		{
+			String SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES = "SELECT {cdrm:" + TemproryAddressModel.PK + "}" + " FROM {"
+					+ TemproryAddressModel._TYPECODE + " AS cdrm} " + "WHERE " + "{cdrm:" + TemproryAddressModel.CREATIONTIME
+					+ "} between ?fromDate and ?toDate and" + "{cdrm:" + TemproryAddressModel.ISPROCESSED + "}  IS NOT NULL";
 
 			FlexibleSearchQuery fQuery = new FlexibleSearchQuery(SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES);
 			fQuery.addQueryParameter("fromDate", fromDate);
