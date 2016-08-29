@@ -520,19 +520,7 @@ public class ProductPageController extends AbstractPageController
 			//model.addAttribute("product_category", productCategory);
 			model.addAttribute("product_category", breadcrumbs.get(0).getName());
 			model.addAttribute("page_subcategory_name_L3", productSubCategoryName);
-			//TPR-672 START
-			if (CollectionUtils.isNotEmpty(productData.getPotentialPromotions()))
-			{
-				for (final PromotionData promodata : productData.getPotentialPromotions())
-				{
-
-					model.addAttribute("product_applied_promotion_title", promodata.getTitle().toLowerCase());
-					model.addAttribute("product_applied_promotion_code", promodata.getCode().toLowerCase());
-
-				}
-
-			}
-			//TPR-672 END
+		
 		}
 		catch (final Exception ex)
 		{
