@@ -25,6 +25,7 @@ import de.hybris.platform.acceleratorcms.model.components.SimpleResponsiveBanner
 import de.hybris.platform.acceleratorcms.model.components.SubCategoryListComponentModel;
 import de.hybris.platform.cms2.model.contents.components.CMSLinkComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
+import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
 
 import com.tisl.mpl.core.model.BrandCollectionComponentModel;
 import com.tisl.mpl.core.model.BrandComponentModel;
@@ -110,6 +111,7 @@ public interface ControllerConstants
 			String PromotionalProductsComponent = _Prefix + PromotionalProductsComponentModel._TYPECODE + _Suffix;
 			String ContactUsTabComponent = _Prefix + ContactUsTabComponentModel._TYPECODE + _Suffix;
 			String MplBrandLogoComponent = _Prefix + MplBrandLogoComponentModel._TYPECODE + _Suffix;
+			String RotatingImagesComponent = _Prefix + RotatingImagesComponentModel._TYPECODE + _Suffix;
 		}
 	}
 

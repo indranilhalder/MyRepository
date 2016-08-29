@@ -1630,4 +1630,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	}
 
 	// implement here constants used by this extension
+
+	// Sonar Fix
+	public static final String ALLVARIANTSSTRING = "allVariantsString";
 }
