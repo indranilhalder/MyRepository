@@ -45009,6 +45009,9 @@ padding:0;
 .pdp .product-info.wrapper .tabs-block .tabs.pdp li ul {
 	padding-left: 15px;
 }
+body.pageLabel--Lingerie-page-revised .brand-content-grid .hero ul{
+	overflow:hidden;
+}
 
 /*  Chnage for TISPRD-4587 */
 .importantDisplay{
