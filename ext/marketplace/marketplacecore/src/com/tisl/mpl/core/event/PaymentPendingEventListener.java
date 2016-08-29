@@ -1,3 +1,6 @@
+/**
+ *
+ */
 package com.tisl.mpl.core.event;
 
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
@@ -23,11 +26,8 @@ import com.tisl.mpl.sms.MplSendSMSService;
 
 
 /**
- * <h1>Event Listener</h1> This listener extends AbstractSiteEventListener<PaymentPendingEvent>
- *
  * @author TCS
- * @version
- * @since 2016-08-19
+ *
  */
 public class PaymentPendingEventListener extends AbstractSiteEventListener<PaymentPendingEvent>
 {
@@ -64,13 +64,6 @@ public class PaymentPendingEventListener extends AbstractSiteEventListener<Payme
 		this.modelService = modelService;
 	}
 
-	/**
-	 * This method is used to sending the email and sms.
-	 *
-	 * @param paymentPlacedEvent
-	 *           This is the only parameter to of PaymentPendingEvent class
-	 * @return void.
-	 */
 	@Override
 	protected void onSiteEvent(final PaymentPendingEvent paymentPlacedEvent)
 	{

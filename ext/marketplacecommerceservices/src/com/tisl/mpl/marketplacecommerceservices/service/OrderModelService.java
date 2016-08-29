@@ -103,6 +103,5 @@ public interface OrderModelService
 	 */
 	OrderModel updatePickUpDetailService(final String orderId, final String name, final String mobile);
 
-	OrderModel getOrderModel(String code);
 
 }

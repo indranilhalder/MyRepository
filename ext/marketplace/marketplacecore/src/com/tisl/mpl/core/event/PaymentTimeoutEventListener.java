@@ -64,13 +64,6 @@ public class PaymentTimeoutEventListener extends AbstractSiteEventListener<Payme
 		this.modelService = modelService;
 	}
 
-	/**
-	 * This method is used to sending the email and sms.
-	 *
-	 * @param paymentPlacedEvent
-	 *           This is the only parameter to have PaymentTimeoutEvent class's object
-	 * @return void
-	 */
 	@Override
 	protected void onSiteEvent(final PaymentTimeoutEvent paymentTimeoutEvent)
 	{
@@ -150,7 +143,7 @@ public class PaymentTimeoutEventListener extends AbstractSiteEventListener<Payme
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.event.AbstractSiteEventListener#shouldHandleEvent(de.hybris.platform.servicelayer
 	 * .event.events.AbstractEvent)

@@ -881,34 +881,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final Map<String, Boolean> sortInvoice = new HashMap<>();
 		ConsignmentModel consignmentModel = null;
 		Map<String, List<AWBResponseData>> statusTrackMap = new HashMap<>();
-		Map<String, List<AWBResponseData>> paymentStatusMap = new HashMap<>();
 		final Map<String, List<OrderEntryData>> currentProductMap = new HashMap<>();
 		//TISEE-6290
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		List<OrderEntryData> cancelProduct = new ArrayList<>();
 		OrderModel subOrderModel = null;
-		OrderModel orderModel = null;
 		try
 		{
 			final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			final String finalOrderDate = getFormattedDate(orderDetail.getCreated());
 			final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
-			final List<OrderEntryData> orderList = orderDetail.getEntries();
-
-
-			for (final OrderEntryData orderEntry : orderList)
-			{
-				orderModel = orderModelService.getOrderModel(orderCode);
-				paymentStatusMap = getOrderDetailsFacade.getOrderPaymentStatus(orderEntry, orderDetail, orderModel);
-				if (null == orderEntry.getConsignment() && orderEntry.getQuantity() != 0)
-				{
-					if (orderDetail.getStatus() != null)
-					{
-						consignmentStatus = orderDetail.getStatus().getCode();
-					}
-				}
-				currentStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), consignmentStatus);
-			}
 
 			for (final OrderData subOrder : subOrderList)
 			{
@@ -1065,11 +1047,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 									}
 								}
 							}
-
 							statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, subOrder, subOrderModel);
 							trackStatusMap.put(orderEntry.getOrderLineId(), statusTrackMap);
 							currentStatusMap.put(orderEntry.getOrderLineId(), consignmentStatus);
-
 							if (consignmentModel != null)
 							{
 								formattedProductDate = getFormattedDate(consignmentModel.getEstimatedDelivery());
@@ -1111,7 +1091,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
 
 			model.addAttribute(ModelAttributetConstants.TRACK_STATUS, trackStatusMap);
-			model.addAttribute(ModelAttributetConstants.PAYMENT_STATUS, paymentStatusMap);
 			model.addAttribute(ModelAttributetConstants.CURRENT_STATUS, currentStatusMap);
 			//			model.addAttribute(ModelAttributetConstants.CANCEL_ENDPOINT_STATUS_NAME, configurationService.getConfiguration()
 			//					.getString(ModelAttributetConstants.CANCEL_ENDPOINT_STATUS, "HOTC"));

@@ -312,14 +312,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									/*
 									 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
 									 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
-									 * 
+									 *
 									 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
-									 * 
+									 *
 									 * if (null != orderproductdto.getUSSID()) {
-									 * 
+									 *
 									 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 									 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-									 * 
+									 *
 									 * }
 									 */
 
@@ -434,7 +434,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												/*
 												 * if (null != sellerEntry.getReplacement()) {
 												 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-												 * 
+												 *
 												 * }
 												 */
 												//for return
@@ -829,18 +829,18 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * subOrder, final ConsignmentData consignment) { final AWBResponseData trackingData = new AWBResponseData();
 	 * List<StatusRecordData> statusRecords = new ArrayList<>(); StatusRecordData statusRecord = new StatusRecordData();
 	 * try {
-	 * 
+	 *
 	 * final SimpleDateFormat smdfDate = new SimpleDateFormat(MarketplacecclientservicesConstants.DATE_FORMAT_AWB); final
 	 * SimpleDateFormat smdfTime = new SimpleDateFormat(MarketplacecclientservicesConstants.TIME_FORMAT_AWB);
-	 * 
+	 *
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue());
 	 * trackingData.setIsSelected(orderStatusCode.getDisplay().booleanValue());
-	 * 
+	 *
 	 * trackingData.setShipmentStatus(orderStatusCode.getResponseStatus());
 	 * trackingData.setResponseCode(orderStatusCode.getStatusCode());
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue()); statusRecords = new ArrayList<>();
 	 * statusRecord = new StatusRecordData();
-	 * 
+	 *
 	 * if (null != consignment) { statusRecord.setDate(smdfDate.format(consignment.getStatusDate()));
 	 * statusRecord.setTime(smdfTime.format(consignment.getStatusDate())); } else {
 	 * statusRecord.setDate(smdfDate.format(subOrder.getCreated()));
@@ -848,19 +848,19 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * statusRecord.setStatusDescription(orderStatusCode.getStatusMessage()); statusRecords.add(statusRecord);
 	 * trackingData.setStatusRecords(statusRecords); } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 * 
+	 *
 	 * return trackingData; }
 	 */
 
 
 	/*
 	 * @param orderCode
-	 * 
+	 *
 	 * @return
 	 */
 	/*
 	 * @param orderCode
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -989,63 +989,6 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			returnMap.put(MarketplaceFacadesConstants.SHIPPING, shippingMapList);
 			returnMap.put(MarketplaceFacadesConstants.CANCEL, cancelMapList);
 			returnMap.put(MarketplaceFacadesConstants.RETURN, returnMapList);
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			return returnMap;
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			return returnMap;
-		}
-		catch (final Exception e)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			return returnMap;
-		}
-		return returnMap;
-	}
-
-	@Override
-	public Map<String, List<AWBResponseData>> getOrderPaymentStatus(final OrderEntryData orderEntryDetail,
-			final OrderData orderDetails, final OrderModel orderModel)
-	{
-		List<AWBResponseData> paymentMapList = new ArrayList<AWBResponseData>(0);
-
-		final Map<String, List<AWBResponseData>> returnMap = new HashMap<String, List<AWBResponseData>>(0);
-
-		OrderStatusCodeMasterModel trackModel = null;
-
-		final Map<String, AWBResponseData> paymentMap = new LinkedHashMap<String, AWBResponseData>(0);
-
-		final Map<String, OrderStatusCodeMasterModel> orderStatusCodeMap = orderModelService.getOrderStausCodeMasterList();
-
-		try
-		{
-			if (orderModel.getHistoryEntries().size() > 0)
-			{
-				for (final OrderHistoryEntryModel orderHistoryEntry : orderModel.getHistoryEntries())
-				{
-					trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.PAYMENT
-							+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
-					if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT)
-							&& !isStatusAlradyExists(paymentMap, trackModel) && trackModel.getDisplay().booleanValue())
-					{
-						paymentMap.put(trackModel.getDotId().trim().toUpperCase(),
-								orderTrackingDetails(trackModel, orderHistoryEntry, orderDetails));
-					}
-
-				}
-
-			}
-			paymentMapList = getTrackOrderList(paymentMap);
-
-			LOG.info("************************paymentMapList: " + paymentMapList.size());
-
-			returnMap.put(MarketplaceFacadesConstants.PAYMENT, paymentMapList);
-
 		}
 		catch (final EtailBusinessExceptions e)
 		{

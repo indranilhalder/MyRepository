@@ -64,14 +64,6 @@ public class PaymentFailedEventListener extends AbstractSiteEventListener<Paymen
 		this.modelService = modelService;
 	}
 
-	/**
-	 * This method is used to sending the email and sms.
-	 *
-	 * @param paymentPlacedEvent
-	 *           This is the only parameter of PaymentFailedEvent class's object
-	 * @return void
-	 */
-
 	@Override
 	protected void onSiteEvent(final PaymentFailedEvent paymentFailedEvent)
 	{
@@ -150,7 +142,7 @@ public class PaymentFailedEventListener extends AbstractSiteEventListener<Paymen
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.event.AbstractSiteEventListener#shouldHandleEvent(de.hybris.platform.servicelayer
 	 * .event.events.AbstractEvent)
