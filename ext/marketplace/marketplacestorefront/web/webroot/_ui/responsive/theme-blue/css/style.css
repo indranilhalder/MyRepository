@@ -8613,10 +8613,10 @@ footer .banner {
  /*  border: 1px solid #DFD1D5; */
   width: 100%;
   float: left;
-  display: table; }
-  @media (min-width: 791px) {
+  display: block; }
+/*   @media (min-width: 791px) {
     .sign-in.tab-view .nav {
-      width: 42%; } }
+      width: 42%; } } */
   .sign-in.tab-view .nav li {
     padding: 10px;
     text-align: center;
@@ -8628,7 +8628,7 @@ footer .banner {
     -webkit-transition: background 0.3s;
     -moz-transition: background 0.3s;
     transition: background 0.3s;
-    display: table-cell;
+    display: inline-block;
     vertical-align: middle;
     float: none;
      }
@@ -45182,9 +45182,9 @@ color: #555;
 .else-sec{
 display:none;	
 }
-.sign-in.tab-view .nav{
+/* .sign-in.tab-view .nav{
 	width:50.6%;
-}
+} */
 .sign-in.tab-view .tabs > li#sign_up_content .social-connect{
 	display:none;}
 	.sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout{
@@ -45304,6 +45304,7 @@ display:none;
     color:#fff;
     letter-spacing: 1px;
         border: 1px solid #cccccc;
+            margin-right: -3px;
 }
  .sign-in.tab-view .tabs > li .left form {
     width: 52%;
@@ -45416,7 +45417,7 @@ margin-top:0px;
 .sign-in.tab-view .tabs > li .left form input {
     font-size: 10px;
     letter-spacing: 0;
-        color: #676767;
+        color: #555;
     height: 46px;
 }
 .sign-in.tab-view .tabs > li .left form a.js-password-forgotten {
@@ -45478,6 +45479,7 @@ margin-top:0px;
 }
 .sign-in.tab-view .nav li{
     font-size: 13px;
+        width: 50%;
 }
 .sign-in.tab-view .tabs > li {
     padding: 35px 12px;
