@@ -281,7 +281,7 @@ var productCodeSG = '${product.code}';
 									<c:if test="${age=='Y' }">
 									<c:choose>
 									     <c:when test="${not empty sizeGuideValue.age}">
-										<li>${sizeGuideValue.age}</li>
+										<li style="text-transform:Uppercase">${sizeGuideValue.age}</li>
 
 										</c:when>
 										<c:otherwise>
@@ -292,7 +292,7 @@ var productCodeSG = '${product.code}';
 									<c:if test="${size=='Y' }">
 									<c:choose>
 									     <c:when test="${not empty sizeGuideValue.dimensionSize}">
-										<li>${sizeGuideValue.dimensionSize}</li>
+										<li style="text-transform:Uppercase">${sizeGuideValue.dimensionSize}</li>
 
 										</c:when>
 										<c:otherwise>
@@ -303,7 +303,7 @@ var productCodeSG = '${product.code}';
 									<c:if test="${cmsBeltSize=='Y' }">
 									<c:choose>
 									     <c:when test="${not empty sizeGuideValue.cmsBeltSize}">
-										<li>${sizeGuideValue.cmsBeltSize}</li>
+										<li style="text-transform:Uppercase">${sizeGuideValue.cmsBeltSize}</li>
 
 										</c:when>
 										<c:otherwise>
@@ -314,7 +314,7 @@ var productCodeSG = '${product.code}';
 									<c:if test="${inchesBeltSize=='Y'}">
 									<c:choose>
 									     <c:when test="${not empty sizeGuideValue.inchesBeltSize}">
-										<li>${sizeGuideValue.inchesBeltSize}</li>
+										<li style="text-transform:Uppercase">${sizeGuideValue.inchesBeltSize}</li>
 
 										</c:when>
 										<c:otherwise>
@@ -325,7 +325,7 @@ var productCodeSG = '${product.code}';
 									<c:if test="${cmsWaistSize=='Y'}">
 									<c:choose>
 									     <c:when test="${not empty sizeGuideValue.cmsWaistSize}">
-										<li>${sizeGuideValue.cmsWaistSize}</li>
+										<li style="text-transform:Uppercase">${sizeGuideValue.cmsWaistSize}</li>
 
 										</c:when>
 										<c:otherwise>
@@ -336,7 +336,7 @@ var productCodeSG = '${product.code}';
 									<c:if test="${inchesWaistSize=='Y'}">
 									<c:choose>
 									     <c:when test="${not empty sizeGuideValue.inchesWaistSize}">
-										<li>${sizeGuideValue.inchesWaistSize}</li>
+										<li style="text-transform:Uppercase">${sizeGuideValue.inchesWaistSize}</li>
 
 										</c:when>
 										<c:otherwise>
@@ -347,7 +347,7 @@ var productCodeSG = '${product.code}';
 									 <c:if test="${inchesBeltLength=='Y'}">
 									<c:choose>
 									     <c:when test="${not empty sizeGuideValue.inchesBeltLength}">
-										<li>${sizeGuideValue.inchesBeltLength}</li>
+										<li style="text-transform:Uppercase">${sizeGuideValue.inchesBeltLength}</li>
 
 										</c:when>
 										<c:otherwise>
@@ -366,6 +366,11 @@ var productCodeSG = '${product.code}';
 			<div class="footwearNote" style="line-height:19px;">
 			<product:footwearNote/></div>
 			</c:if>		
+			<c:if test="${product.rootCategory=='Accessories' }">
+			<div class="footwearNote" style="line-height:19px;">
+				<product:fashionaccessorynote></product:fashionaccessorynote>
+			</div>
+			</c:if>
 		</div>
 
 			<div class="img">
