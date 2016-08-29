@@ -109,7 +109,7 @@ $(document).ready(
 							+promo_id+ '"]}';
 						//TPR-672 END
 						data = data.replace("}<TealiumScript>", tealiumData);
-						// console.log(data);
+						 console.log(data);
 						
 						$('#tealiumHome').html(data);
 					}
@@ -322,5 +322,15 @@ $(document).ready(
 					
 			});
 			/*TPR-657 ends*/
+			
+			/*TPR-667 Start*/
+			$('.newsletter #submit').click(function(){
+				utag.link({
+					"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
+				});
+			
+			
+			});
+			/*TPR-667 End*/
 			
 		});
