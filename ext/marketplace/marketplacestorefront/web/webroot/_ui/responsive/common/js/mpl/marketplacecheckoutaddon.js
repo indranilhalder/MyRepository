@@ -4802,3 +4802,4 @@ function teliumTrack(){
 	{"link_text": "pay_terms_conditions_click" , "event_type" : "terms_conditions_click"}
 	);
 }
+
