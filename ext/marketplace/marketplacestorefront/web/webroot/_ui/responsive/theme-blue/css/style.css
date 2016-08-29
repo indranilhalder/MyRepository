@@ -20611,8 +20611,8 @@ ul.accepted-cards li span img{
 .form-group {
 	margin-bottom: 15px;
 }
-.marketplace-checkout{
-	margin: 30px auto;
+.marketplace-checkout {
+    margin: 13px auto 30px;
 }
 .marketplace-checkout .simple-banner-component a{
 	display:inline;
@@ -20633,7 +20633,7 @@ font-weight:600;
   position: absolute !important;
   z-index: 100;
   right: 10px;
-  top: 42px;
+  top: 33px;
    text-transform:uppercase; }
 @media (max-width: 650px)
 {
@@ -25849,7 +25849,7 @@ line-height:40px;
 padding-top:25px;
 }
 }
-@media(max-width:790px){
+@media(max-width:767px){
 	.checkout-shipping ul.social-connect{
 width:100%;
 }
@@ -37944,7 +37944,7 @@ fieldset#cardDate .form-group .control-label, fieldset#startDate .form-group .co
 }
 
 #cboxLoadedContent {
-	overflow: hidden !important;
+	overflow: auto;
 	width: 839px !important;
 	-webkit-overflow-scrolling: touch;
 	min-height:30px !important;
@@ -44766,6 +44766,10 @@ padding:0 40px;	}
     padding-bottom: 1px;
 }
 #OfferWrap .Inner .right {
+    padding: 30px 5px;
+    width: 100%;
+}
+#OfferWrap .Inner .Left + .right {
     padding: 30px 5px 30px 20px;
 }
 #OfferWrap .Inner h3 {
@@ -44814,9 +44818,9 @@ padding:0 40px;	}
 }
 #OfferWrap .Inner .Left {
     width: 40%;
-     margin-top: 65px;
+     margin-top: 30px;
 }
-#OfferWrap .Inner .right {
+#OfferWrap .Inner .Left + .right {
     width: 60%;
 }
 #offerPopup:before{
@@ -44833,7 +44837,7 @@ padding:0 40px;	}
 	text-align:center;
 	font-size: 16px;
 	}
-	#OfferWrap .Inner .Left, #OfferWrap .Inner .right {
+	#OfferWrap .Inner .Left, #OfferWrap .Inner .Left + .right {
     width: 100%;
     margin-top:0px;
 }
@@ -45011,6 +45015,9 @@ padding:0;
 body.page-checkout-login header{
 	margin-bottom:0px
 }
+.top.checkout-top .content {
+    margin-top: 10px;
+}
 .sign-in.wrapper{
 	margin-left: 24px;
     margin-right: 24px;
@@ -45090,6 +45097,7 @@ color: #a5a5a5;
     width: 70%;
     line-height: 20px;
         font-size: 12px;
+        margin-left: 1px;
 }
         .sign-in.tab-view .tabs > li .left form div#checkBox label:before {
     height: 25px !important;
@@ -45198,6 +45206,9 @@ display:none;
 .secure.secureTransaction.secMobile{
 	display:none;
 }
+.sign-in.tab-view .nav li:hover{
+	text-decoration:underline;
+}
 @media (min-width: 981px){
 	.sign-in.tab-view{
 	margin:0px;}
@@ -45303,7 +45314,7 @@ display:none;
     width: 5%;
     float: left;
     position: absolute;
-    top: 0px;
+    top: 30px;
     left: 50%;
 }
 .else-brdrbtm,.else-brdrtp {
@@ -45355,6 +45366,23 @@ display:none;
 .sign-in.tab-view .tabs > li#sign_up_content .social-connect{
 	display:block;
 	padding-top:30px;
+}
+.sign-in.tab-view {
+    margin-top: 24px;
+}
+.sign-in.tab-view .tabs>li .left form div#checkBox label {
+    width: 86%;
+}
+}
+@media (max-width: 790px){
+.marketplace-checkout {
+    margin: 24px auto;
+}
+body.page-checkout-login header > .content{
+	padding-bottom:0px !important
+}
+body.page-checkout-login header > .content .bottom .search{
+margin-top:0px;	
 }
 }
 @media (max-width: 767px){
@@ -45461,7 +45489,7 @@ display:none;
 	display:block;
 }
 .secure.secureTransaction.secMobile:before{
-	top:-30px;
+	top:-22px;
 }
 .marketplace-checkout img.image, .marketplace-checkout .simple-banner-component img {
 		height: 53px;
@@ -45469,23 +45497,19 @@ display:none;
 	.marketplace-checkout {
     margin: 0px auto;
 }
-body.page-checkout-login header > .content{
-	padding-bottom:0px !important
-}
+
 .top.checkout-top .content{
 	margin-bottom:0px;
+	    margin-top: 10px;
 }
 }
-@media (max-width: 450px){
-.else-brdrbtm, .else-brdrtp {
-    width: 41%;
-}
-}
+
 @media (max-width: 650px){
 .secure.secureTransaction.secMobile:before{
-	top:-8px;
+	top:-16px;
 }
 }
+
 .sign-in.tab-view .tabs input::-webkit-input-placeholder {
 	color: #a5a5a5;
 }
@@ -45504,6 +45528,22 @@ body.page-checkout-login header > .content{
 .sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
 	text-decoration:underline;
 }
+@media (max-width: 520px){
+.sign-in.tab-view .nav li {
+    font-size: 12px;
+}
+.else-brdrbtm, .else-brdrtp {
+    width: 41%;
+}
+.sign-in.tab-view .tabs>li .left form div#checkBox label {
+    width: 100%;
+}
+}
+@media(min-width:768px) and (max-width:790px){
+	.secureTransaction {
+    top: 42px;
+}
+} 
 /*Login End*/
 /*pdp fix*/
 @media (max-width: 500px) {
