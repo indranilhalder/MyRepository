@@ -848,6 +848,9 @@ h2 {
     position: relative;
     clear: both;
     margin-bottom: 0; }
+    header .content .top{
+    min-height:50px;
+    }
     header .content .top::after, header .content .bottom::after {
       clear: both;
       content: "";
