@@ -50,7 +50,7 @@ public interface MplDeliveryAddressService
 
    public void removeTemporaryAddress(String orderCode);
 	
-   public boolean setStatusForTemporaryAddress(String orderId,boolean flag);
+   public void setStatusForTemporaryAddress(String orderId,boolean flag);
    
    public boolean updateContactDetails(TemproryAddressModel temproryAddressModel,OrderModel orderModel);
    
