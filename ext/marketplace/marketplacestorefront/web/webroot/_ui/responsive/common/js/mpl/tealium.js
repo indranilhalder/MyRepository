@@ -19,9 +19,14 @@ $(document).ready(
 			
 			var pageType = $('#pageType').val();
 			var pageName=$('#pageName').val();
+			
 			//TPR-672 START
+			if($("#product_applied_promotion_title").val() && $("#product_applied_promotion_code").val() !=undefined)
+			{
+				
 			var promo_title=$("#product_applied_promotion_title").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
 			var promo_id=$("#product_applied_promotion_code").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
+			}
 			//TPR-672 END
 			
 			
