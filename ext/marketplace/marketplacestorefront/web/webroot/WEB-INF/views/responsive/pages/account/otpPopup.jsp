@@ -57,11 +57,7 @@ $(document).ready(function(){
 		$("#changeAddressPopup,#otpPopup").hide();
 		$(".wrapBG").hide();
 	});
-	
-	
-	
-	 
-	
+		
 });
 function generateOTP(orderId){
 	 $(".otpError").hide();
