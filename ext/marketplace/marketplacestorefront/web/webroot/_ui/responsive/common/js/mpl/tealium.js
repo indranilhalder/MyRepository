@@ -20,6 +20,16 @@ $(document).ready(
 			var pageType = $('#pageType').val();
 			var pageName=$('#pageName').val();
 			
+			//TPR-672 START
+			if($("#product_applied_promotion_title").val() && $("#product_applied_promotion_code").val() !=undefined)
+			{
+				
+			var promo_title=$("#product_applied_promotion_title").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
+			var promo_id=$("#product_applied_promotion_code").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
+			}
+			//TPR-672 END
+			
+			
 			// Added for tealium
 			if (pageType == "homepage") {
 				
@@ -98,8 +108,16 @@ $(document).ready(
 								+ $("#site_section_detail").val() + '",';
 						tealiumData += '"product_category":["'
 								+ $("#product_category").val() + '"]}';
+						//TPR-672 START
+						tealiumData += '"promo_title":["'
+							+promo_title+ '"]}';
+						tealiumData += '"promo_id":["'
+							+promo_id+ '"]}';
+						//TPR-672 END
+					
 						data = data.replace("}<TealiumScript>", tealiumData);
 						// console.log(data);
+						
 						$('#tealiumHome').html(data);
 					}
 				});
@@ -295,5 +313,31 @@ $(document).ready(
 					
 			});
 			/*TPR-648 end*/
+			
+			
+			/*TPR-657 starts*/
+			$('.feedBack-block .search-feedback ul li').click(function(){				
+				var msg="search_feedback_start";
+				utag.link({"link_obj": this, "link_text": msg, "event_type" : msg
+						});
+					
+			});
+			$('.feedBack-block #feedBackFormNo .feed-back #submit_button').click(function(){				
+				var msg="search_feedback_submit";
+				utag.link({"link_obj": this, "link_text": msg, "event_type" : msg
+						});
+					
+			});
+			/*TPR-657 ends*/
+			/*TPR-667 Start*/
+			$('.newsletter #submit').click(function(){
+				utag.link({
+					"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
+				});
+			
+			
+			});
+			/*TPR-667 End*/
+			
 			
 		});

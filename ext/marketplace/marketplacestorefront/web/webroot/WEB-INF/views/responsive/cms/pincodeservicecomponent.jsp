@@ -10,7 +10,7 @@
 	<li><h3><spring:theme code="pdp.delivery.options"/></h3><p id="pdpPinCodeAvailable"><spring:theme code="product.pincode"/></p>
 	<span id="unsevisablePin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
 	<%--Tpr-634 - added for scope of improvement --%>
-	<span>
+	<span class="pincodeErrorMsg">
 		<span id="emptyPin" style="display:none;color:#ff1c47"><spring:theme code="product.empty.pincode"/></span>
 		<span id="wrongPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.invalid"/></span>
 		<span id="unsevisablePin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>

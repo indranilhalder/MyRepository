@@ -30,7 +30,7 @@
 				</cms:pageSlot>
 			</li>
 			<li class="or"><span class="vr-line"></span><span class="or-rounded"><spring:theme code="text.or" /></span><span class="vrt-line"></span></li>
-			<li id="sign_up_content">
+			<li id="sign_up_content" class="active">
 				<cms:pageSlot position="LeftContentSlot" var="feature">
 					<cms:component component="${feature}" />
 				</cms:pageSlot>
@@ -77,8 +77,9 @@
 	/* window.onload = function() {
 		activateSignInTab();
 	} */
+	
 	$(window).on('load resize',function(){	
-		if($(window).width()<981){
+		if($(".sign-in.tab-view .nav").css("display") == "table"){
 			activateSignInTab();
 		}
 		else{

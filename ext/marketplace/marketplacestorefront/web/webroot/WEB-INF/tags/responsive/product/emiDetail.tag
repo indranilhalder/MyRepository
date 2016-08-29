@@ -31,7 +31,7 @@
         <thead id="emiTableTHead" style="display:none">
 			<th width="5%"><spring:theme
 						code="checkout.multi.paymentMethod.addPaymentDetails.terms" /></th>
-			<th width="25%">><spring:theme
+			<th width="25%"><spring:theme
 						code="checkout.multi.paymentMethod.addPaymentDetails.interestRate" /></th>
 			<th width="35%"><spring:theme
 						code="checkout.multi.paymentMethod.addPaymentDetails.monthlyInstallment" /></th>
