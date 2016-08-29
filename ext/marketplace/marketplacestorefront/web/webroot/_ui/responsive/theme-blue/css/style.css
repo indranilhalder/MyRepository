@@ -8610,7 +8610,7 @@ footer .banner {
     margin-bottom:0px;
     padding-bottom:70px;}} */
 .sign-in.tab-view .nav {
-  border: 1px solid #DFD1D5;
+ /*  border: 1px solid #DFD1D5; */
   width: 100%;
   float: left;
   display: table; }
@@ -8701,7 +8701,7 @@ footer .banner {
           letter-spacing: 1.2px; } }
           .sign-in.tab-view .tabs > li .left form div#checkBox label,.sign-in.tab-view .tabs > li .left form div#checkBox label a{
           	font-size: 12px;
-		    font-weight: 500;
+		    font-weight: normal;
 		    letter-spacing: normal;
 		    text-transform: none;
 		    display: inline;
@@ -45291,7 +45291,7 @@ display:none;
     margin-top: 0;
 }
 
-.sign-in.tab-view .tabs, .sign-in.tab-view .nav{
+.sign-in.tab-view .tabs{
 	border: 1px solid #cccccc;
 }
 .sign-in.tab-view .nav li{
@@ -45303,6 +45303,7 @@ display:none;
     background-color: #b2b2b2;
     color:#fff;
     letter-spacing: 1px;
+        border: 1px solid #cccccc;
 }
  .sign-in.tab-view .tabs > li .left form {
     width: 52%;
