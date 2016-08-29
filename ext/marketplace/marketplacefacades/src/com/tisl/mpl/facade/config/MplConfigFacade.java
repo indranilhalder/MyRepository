@@ -18,6 +18,8 @@ String getCongigValue(final String configKey);
 
 List<MplTimeSlotsModel> getDeliveryTimeSlotByKey(String configKey);
 
+List<String> getDeliveryTimeSlots(String configKey);
+
 MplBUCConfigurationsModel getDeliveryCharges();
 
 }

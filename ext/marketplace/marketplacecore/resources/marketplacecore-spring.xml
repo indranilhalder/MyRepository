@@ -1616,4 +1616,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	
 	<bean id="dateUtilHelper" class="com.tisl.mpl.core.util.DateUtilHelper"/>
 	
+	<alias name="mplPrefixablePersistentKeyGenerator" alias="mplfixableKeyGenerator"/>
+	<bean id="mplPrefixablePersistentKeyGenerator" class=" com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator"/>
+
 </beans>

@@ -18,6 +18,7 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.GPS;
+import de.hybris.platform.storelocator.exception.LocationServiceException;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -499,6 +500,50 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			throw e;
 		}
 		return storeLocationRequestDataList;
+	}
+	/**
+	 * 
+	 * @param pincode
+	 * @param sellerId
+	 * @return List<PointOfServiceData>
+	 */
+	@Override
+	public List<PointOfServiceData> getAllReturnableStores(String pincode,String sellerId)
+	{
+		PincodeModel pincodeModel=pincodeService.getLatAndLongForPincode(pincode);
+	
+			final LocationDTO dto = new LocationDTO();
+			dto.setLongitude(pincodeModel.getLongitude().toString());
+			dto.setLatitude(pincodeModel.getLatitude().toString());
+			final Location myLocation = new LocationDtoWrapper(dto);
+	
+			final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+			final double configurableRadius = Double.parseDouble(configRadius);
+			LOG.debug("**********configrableRadius:" + configurableRadius);
+			List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
+			try
+			{
+			Collection<PointOfServiceModel> pointOfServiceModels=pincodeService.getAllReturnableStores(myLocation.getGPS(), configurableRadius, sellerId);
+			
+			if (CollectionUtils.isNotEmpty(pointOfServiceModels))
+			{
+				//convert model to data
+				posData = converters.convertAll(pointOfServiceModels, pointOfServiceConverter);
+				if (CollectionUtils.isNotEmpty(posData))
+				{
+					return posData;
+				}
+			}
+			}
+			catch(LocationServiceException e)
+			{
+				throw new EtailNonBusinessExceptions(e);
+			}
+			catch (Exception e) {
+				throw new EtailNonBusinessExceptions(e);
+			}
+		
+		return posData;
 	}
 
 	/**

@@ -86,4 +86,14 @@ public interface PincodeServiceFacade
 	 * @return PincodeData
 	 */
 	public PincodeData getAutoPopulatePincodeData(final String pincode);
+	
+	/**
+	 * Get all available Stores for Seller to return products at store
+	 *  
+	 * @param pincode
+	 * @param sellerId
+	 * @return List<PointOfServiceData>
+	 */
+	public List<PointOfServiceData> getAllReturnableStores(String pincode,String sellerId);
+
 }

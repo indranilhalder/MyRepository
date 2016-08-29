@@ -7688,7 +7688,34 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
-
+					
+					<attribute type="java.lang.String" qualifier="ecomRequestId">
+						<persistence type="property" />
+						<description>unique id for tracking </description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="returnPickupDate">
+						<persistence type="property" />
+						<description>Customer Scheduled product pickup date</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="timeSlotFrom">
+						<persistence type="property" />
+						<description>Customer Scheduled product pickup time slot from </description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="timeSlotTo">
+						<persistence type="property" />
+							<description>Customer Scheduled product pickup time slot To </description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
 
 				</attributes>
 			</itemtype>
@@ -8449,6 +8476,106 @@
 				</attributes>
 			</itemtype>
 		 </typegroup>
+		 	<typegroup name="BankDetailsInfoToFICO">
+			<itemtype code="BankDetailsInfoToFICOHistory" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.BankDetailsInfoToFICOHistory">
+				<description>Comm to FICO COD</description>
+			<attributes>
+				<attribute type="java.lang.String" qualifier="transactionType">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="orderDate">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="orderNo">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="transactionDate">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="orderRefNo">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="transactionID">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="name">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="title">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="customerNumber">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="amount">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="orderTag">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankName">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankKey">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="country">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="city">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="pobox">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="street">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankStreet">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankCity">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankBranch">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="region">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="bankCounrty">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="paymentMode">
+						<modifiers read="true" write="true" optional="true" search="true" />
+						<persistence type="property" />
+				</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
 		
 		
 		<!-- Tata Etail FL06 -->

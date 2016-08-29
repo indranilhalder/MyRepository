@@ -56,6 +56,17 @@ public class MplConfigFacadeImpl implements MplConfigFacade
 		return mplConfigService.getDeliveryCharges();
 	}
 
+   /**
+	 * Get configuration value from MplConfig Model by key
+	 * 
+	 * @param configKey
+	 * @return configurationValue
+	 */
+	@Override
+	public List<String> getDeliveryTimeSlots(String configKey)
+	{
+		return mplConfigService.getDeliveryTimeSlots(configKey);
+	}
 
 
 }

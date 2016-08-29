@@ -1588,11 +1588,22 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String TICKET_SUB_TYPE_CDA = "DAC";
 	public final static String ADDRESS_TYPE_HOME = "Home";
 	public final static String ADDRESS_TYPE_WORK = "Work";
-    public final static String DELIVERY_MODE_SD="SD";
+	public final static String DELIVERY_MODE_SD = "SD";
 	public final static String PINCODE_RESPONSE_DATA_TO_SESSION = "PincodeResponseDataForCart";
-    public final static String INTERFACE_TYPE_CA="CA";
-	public final static String INTERFACE_TYPE_CU="CU";
-	public final static String INTERFACE_TYPE_SD="SD";
+	public final static String INTERFACE_TYPE_CA = "CA";
+	public final static String INTERFACE_TYPE_CU = "CU";
+	public final static String INTERFACE_TYPE_SD = "SD";
+
+	public static final String RETURNABLE = "Y";
+	public static final String RETURN_SCHEDULE = "schedule";
+	public static final String RETURN_SELF = "self";
+	public static final String RETURN_RETURN_TO_STORE = "returntostore";
+	public static final String FULFILMENT_TYPE_BOTH = "both";
+	public static final String RETURN_TYPE_RTS = "RTS";
+	public static final String RETURN_TYPE_RSS = "RSS";
+	public static final String RETURN_TYPE_RSP = "RSP";
+	public static final String TICKETID_PREFIX_E = "E";
+	public static final String RETURN_METHOD_QUICKDROP = "quickdrop";
 
 	private MarketplacecommerceservicesConstants()
 	{

@@ -271,6 +271,10 @@
         <property name="source" type="String"/>
         <property name="ticketSubType" type="String"/>
 		<property name="addressInfo" type="com.tisl.mpl.data.ReturnAddressInfo"/>
+		<property name="ecomRequestId" type="String"/>
+		<property name="returnPickupDate" type="String"/>
+		<property name="timeSlotFrom" type="String"/>
+		<property name="timeSlotTo" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.data.SendTicketLineItemData">
@@ -655,5 +659,82 @@
 	<property name ="sourcePage" type = "String" />
 	<property name ="icid" type = "String" />
 	</bean>
+	
+	<bean class="com.tisl.mpl.data.CODSelfShipData">
+	<property name="transactionType" type="String"/>
+	<property name="orderDate" type="String"/>
+	<property name="transactionDate" type="String"/>
+	<property name="bankAccount" type="String"/>
+	<property name="bankBranch" type="String"/>
+	<property name="bankCity" type="String"/>
+	<property name="bankStreet" type="String"/>
+	<property name="region" type="String"/>
+	<property name="bankName" type="String"/>
+	<property name="bankKey" type="String"/>
+	<property name="country" type="String"/>
+	<property name="city" type="String"/>
+	<property name="pobox" type="String"/>
+	<property name="street" type="String"/>
+	<property name="name" type="String"/>
+	<property name="title" type="String"/>
+	<property name="customerNumber" type="String"/>
+	<property name="amount" type="String"/>
+	<property name="transactionID" type="String"/>
+	<property name="orderTag" type="String"/>
+	<property name="orderRefNo" type="String"/>
+	<property name="orderNo" type="String"/>
+	<property name="paymentMode" type="String"/>
+	<property name="bankCounrty" type="String"/>
+			
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.CODSelfShipResponseData">
+	<property name="success" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.CRMTicketUpdateData">
+	<property name="ecomRequestId" type="String"/>
+	<property name="ticketId" type="String"/>
+	<property name="transactionId" type="String"/>
+	<property name="rssLPName" type="String"/>
+	<property name="rssOtherLPName" type="String"/>
+	<property name="rssAWBNumber" type="String"/>
+	<property name="rssCharge" type="String"/>
+	<property name="rssDispathProofURL" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.CRMTicketUpdateResponseData">
+	<property name="success" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData">
+	<property name="orderId" type="String"/>
+	<property name="transactionId" type="String"/>
+	<property name="returnType" type="String"/>
+	<property name="rTSStore" type="java.util.List&lt;String>"/>
+	<property name="logisticsID" type="String"/>
+	<property name="lPNameOther" type="String"/>
+	<property name="aWBNum" type="String"/>
+	<property name="shipmentCharge" type="String"/>
+	<property name="shipmentProofURL" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.RTSAndRSSReturnInfoResponseData">
+	<property name="success" type="String"/>
+	</bean>
+
+				
+	<bean class="com.tisl.mpl.data.ReturnInfoData">
+	<property name="isReturn" type="String"/>
+	<property name="ecomRequestId" type="String"/>
+	<property name="reasonCode" type="String"/>
+	<property name="refundType" type="String"/>
+	<property name="returnPickupDate" type="String"/>
+	<property name="ticketTypeCode" type="String"/>
+	<property name="TimeSlotFrom" type="String"/>
+	<property name="timeSlotTo" type="String"/>
+	<property name="ussid" type="String"/>
+	</bean>
+	
 	
 </beans>

@@ -159,5 +159,12 @@ public final class RequestMappingUrlConstants
 	public static final String BEFORE_NON_LOGIN_TRACK_URL = "/beforeTrack/{orderId}";
 	public static final String TRACK_ORDER_DETAILS_PAGE_URL = "/shortDetails";
 	public static final String NON_LOGIN_TRACK_VALIDATE_URL = "/nonlogintrack";
+	public static final String RETURN_TO_STORE_AJAX = "/returnToStore";
+	public static final String LINK_INITIATE_RETURN="/initiateReturn";
+	public static final String LINK_MY_ACCOUNT_RETRUNS = "/my-account/returns";
+	public static final String LINK_UPDATE_RETURNINFO = "/updateReturnInfo";
+	public static final String LINK_TICKET_UPDATE = "/updateTicket";
+	public static final String LINK_EDIT_RETURN_ADDRESS = "/editReturnAddress";
+	public static final String LINK_ADD_RETURN_ADDRESS = "/addNewReturnAddress";
 
 }
