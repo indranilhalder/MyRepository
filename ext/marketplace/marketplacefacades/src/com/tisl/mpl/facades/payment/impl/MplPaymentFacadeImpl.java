@@ -2332,6 +2332,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			}
 
 			InitOrderRequest request = null;
+
 			if (flag)
 			{
 				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
@@ -2701,7 +2702,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				if (cartEntry.getSelectedUSSID().equalsIgnoreCase(ussid) && !cartEntry.getGiveAway().booleanValue())
 				{
 					qty = cartEntry.getQuantity();
-					cartEntry.getMplDeliveryMode().getDeliveryMode().getCode();
+					//cartEntry.getMplDeliveryMode().getDeliveryMode().getCode();
 				}
 
 			}

@@ -492,9 +492,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				//For order
 				releaseVoucher(voucherCode, null, orderModel); //Releases voucher
 				recalculateCartForCoupon(null, orderModel); //Recalculates cart after releasing voucher
-				getModelService().save(cartModel);
+				getModelService().save(orderModel); //TPR-1079
 
-				discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(0)));
+				discountData.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(0))); //TPR-1079
 				if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
 				{
 					msg = MarketplacecommerceservicesConstants.NOTAPPLICABLE;
@@ -626,7 +626,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				//For order
 				LOG.debug("Step 3:::Voucher and cart is not null");
 
-				getVoucherService().releaseVoucher(voucherCode, orderModel); //Releases the voucher from the cart
+				getVoucherService().releaseVoucher(voucherCode, orderModel); //Releases the voucher from the order
 				LOG.debug("Step 4:::Voucher released");
 				final List<AbstractOrderEntryModel> entryList = getOrderEntryModelFromVouEntries(voucher, orderModel);//new ArrayList<AbstractOrderEntryModel>();
 				for (final AbstractOrderEntryModel entry : entryList)//Resets the coupon details against the entries
@@ -641,6 +641,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 				LOG.debug("Step 5:::CouponCode, CouponValue  resetted");
 			}
+
 		}
 		catch (final JaloPriceFactoryException e)
 		{
