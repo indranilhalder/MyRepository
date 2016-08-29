@@ -4590,6 +4590,14 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				
 				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 				
+				/*TPR-656*/
+					utag.link({
+						link_obj: this, 
+						link_text: 'add_to_wishlist' , 
+						event_type : 'add_to_wishlist', 
+						product_sku_wishlist : productCode
+					});
+				/*TPR-656 Ends*/
 				
 				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
 				
