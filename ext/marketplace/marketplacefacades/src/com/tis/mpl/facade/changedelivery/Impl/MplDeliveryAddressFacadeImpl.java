@@ -377,7 +377,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 			if (isDifferentAddress || isDiffrentContact)
 			{
-				mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
 				mplDeliveryAddressService.saveTemporaryAddress(orderModel, temproryAddressModel);
 				String mobileNumber = null;
 				if (!temproryAddressModel.getPostalcode().equalsIgnoreCase(deliveryAddressModel.getPostalcode()))
@@ -398,6 +397,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						}
 						else
 						{
+							mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
 							scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
 						}
 
@@ -459,7 +459,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 	String generateOTP(String customerId,String mobileNumber) throws InvalidKeyException, NoSuchAlgorithmException
 	{
-		 String otp = otpGenericService.generateOTP(customerId, OTPTypeEnum.COD.getCode(), mobileNumber);
+		 String otp = otpGenericService.generateOTP(customerId, OTPTypeEnum.CDA.getCode(), mobileNumber);
 		return otp;
 	}
 
@@ -479,9 +479,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	{
 		String valditionMsg = null;
 
-		 OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.COD,
+		 OTPResponseData otpResponse = otpGenericService.validateOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.CDA,
 				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
-
 		//If OTP Valid then call to OMS for Pincode ServiceableCheck
 		if (otpResponse.getOTPValid().booleanValue())
 		{
@@ -499,12 +498,12 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					valditionMsg = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel, MarketplaceFacadesConstants.CA,transactionEddDtoList);
 					if (valditionMsg != null)
 					{
+						valditionMsg="success";
 						if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
 						{
-							boolean isAddressSaved = false;
-							//if Serviceable Pincode then Save in Order and set
+							 //if Pincode Serviceable  then Save in Order and set		
 							LOG.debug("change delivery address:MplChangeDeliveryAddressFacadeImpl");
-							isAddressSaved = mplDeliveryAddressService.saveDeliveryAddress(orderCode);
+							boolean isAddressSaved=mplDeliveryAddressService.saveDeliveryAddress(orderCode);
 							valditionMsg = MarketplaceFacadesConstants.SUCCESS;
 							try
 							{
