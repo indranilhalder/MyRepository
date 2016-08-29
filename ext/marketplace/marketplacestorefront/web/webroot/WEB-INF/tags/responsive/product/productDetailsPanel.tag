@@ -70,7 +70,7 @@ tr.d0 td {
 <input type="hidden" id="page_subcategory_name_L3" value="${page_subcategory_name_L3}" />
 <input type="hidden" id="product_brand" value="${product_brand}" />
 <input type="hidden" id="site_section_detail" value="${site_section_detail}" />
-<input type="hidden" id="product_category" value="${product_category}" />	
+<input type="hidden" id="product_category" value="${product_category}" />
 <!-- End Tealium -->
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>

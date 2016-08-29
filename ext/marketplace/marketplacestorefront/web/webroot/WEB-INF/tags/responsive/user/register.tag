@@ -59,7 +59,7 @@
 					</p>
 					</div>		 --%>			
 				<input type="checkbox" id="check_MyRewards" name="check_MyRewards" value="true"/>
-				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" target="_blank" class="tata-rewards">Tata Treats</a> By opting in I agree to <a href="${tncmytatarewards }" target="_blank"> T&C </a> of Tata Treats.</label>
+				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" target="_blank" class="tata-rewards">Tata Treats.</a> By opting in I agree to <a href="${tncmytatarewards }" target="_blank"> T&C </a> of Tata Treats.</label>
 		</div> 
 	
 	<div class="form-actions clearfix">
@@ -67,7 +67,7 @@
 			<button type="submit" onclick="return checkSignUpValidation('login');" ><spring:theme code='${actionNameKey}' /></button>
 		</ycommerce:testId>
 	</div>
-	<label class="accept-cond">By signing up, you agree to our <a href="/buyer-policies" class="spec-notes">T&amp;C </a></label>
+	<label class="accept-cond">By signing up, you agree to our <a href="/buyer-policies" target="_blank" class="spec-notes">T&amp;C </a></label>
 	<!-- <div class="exist-account">
 	<span>Already have a Tata CLiQ account?  </span>
 	<span><a href="/store/mpl/en/login"> &nbsp;  Sign in here</a></span>
