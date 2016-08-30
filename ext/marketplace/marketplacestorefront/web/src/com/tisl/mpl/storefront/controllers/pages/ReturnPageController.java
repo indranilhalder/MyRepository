@@ -11,13 +11,6 @@ import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.i18n.I18NFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
-
-import com.tisl.mpl.exception.EtailBusinessExceptions;
-import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facades.data.ReturnItemAddressData;
-import com.tisl.mpl.facades.product.data.ReturnReasonData;
-import com.tisl.mpl.facades.product.data.StateData;
-
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
@@ -51,12 +44,17 @@ import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
 import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.impl.MplCheckoutFacadeImpl;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
+import com.tisl.mpl.facades.data.ReturnItemAddressData;
+import com.tisl.mpl.facades.product.data.ReturnReasonData;
+import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
@@ -132,6 +130,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	{
 		final boolean cancellationStatus;
 		LOG.info(returnForm);
+		try{
 		OrderEntryData subOrderEntry = new OrderEntryData();
 	//	final HttpSession session = request.getSession();
 		final String orderCode = returnForm.getOrderCode();
@@ -188,8 +187,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.RETURN_FORM, returnForm);
 			model.addAttribute(ModelAttributetConstants.ADDRESS_FORM, new AccountAddressForm());
 			model.addAttribute(ModelAttributetConstants.SUBORDER, subOrderDetails);
-			final List<ReturnReasonData> reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
-			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+			
 			model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, subOrderEntry);
 			 List<String> timeSlots = mplConfigFacade.getDeliveryTimeSlots(ModelAttributetConstants.RETURN_SLOT_TYPE);
@@ -216,6 +214,22 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				model.addAttribute(ModelAttributetConstants.RETURN_DATES,returnableDates);
 				
 				model.addAttribute(ModelAttributetConstants.RETURNABLE_SLAVES, returnableStores);
+				
+				final List<ReturnReasonData> reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
+				
+				
+				if (!reasonDataList.isEmpty())
+				{
+					for (final ReturnReasonData reason : reasonDataList)
+					{
+						if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
+						{
+							model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reason.getReasonDescription());
+						}
+					}
+				}
+
+				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
 				
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 						ModelAttributetConstants.LPNOTAVAILABLE_ERRORMSG);
@@ -259,7 +273,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		returnData.setReasonCode(returnForm.getReturnReason());
 		returnData.setRefundType(returnForm.getRefundType());
 		returnData.setReturnPickupDate(returnForm.getScheduleReturnDate());
-		returnData.setTicketTypeCode("R");
+		returnData.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
 		returnData.setTimeSlotFrom(timeSlotFrom);
 		returnData.setTimeSlotTo(timeSlotto);
 		returnData.setUssid(returnForm.getUssid());
@@ -277,7 +291,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		returnAddrData.setState(returnForm.getState());
 		returnAddrData.setPincode(returnForm.getPincode());
 	
-		if (returnForm.getRefundType().equalsIgnoreCase("R"))
+		if (returnForm.getRefundType().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_TYPE))
 		{
 			cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,returnData, customerData, SalesApplication.WEB, returnAddrData);
 		}
@@ -326,8 +340,23 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		
 		storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUCCESS));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_SUCCESS));
+		return ControllerConstants.Views.Pages.Account.AccountReturnSuccessPage;
 		
-		 return ControllerConstants.Views.Pages.Account.AccountReturnSuccessPage;
+		}
+		catch(EtailNonBusinessExceptions e)
+		{
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					ModelAttributetConstants.RETURN_ERRORMSG);
+			return REDIRECT_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS;
+		}
+		catch (Exception e)
+		{
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					ModelAttributetConstants.RETURN_ERRORMSG);
+			return REDIRECT_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS;
+		}
+		
+		 
 	}
 	
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_UPDATE_RETURNINFO, method = RequestMethod.POST)
