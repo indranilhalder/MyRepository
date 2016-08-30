@@ -1052,23 +1052,25 @@ $(function() {
 								$('#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin')
 										.hide();
 								$("#emptyPin").show();
+								$("#pdpPinCodeAvailable").hide();
 								
 								$('#addToCartButton').show();
 								$('#buyNowButton').attr("disabled",false);
 								//TPR-794
-								$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
-								$("#pdpPinCodeAvailable").show();
+								//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
+								//$("#pdpPinCodeAvailable").show();
 								return false;
 							} else if (!regExp.test(pin)) {
 								$('#unsevisablePin,#unableprocessPin,#emptyPin').hide();
 								$("#wrongPin").show();
+								$("#pdpPinCodeAvailable").hide();
 								$("#serviceablePin").hide();
 							//	$("#pdpPinCodeAvailable").hide();
 								$('#addToCartButton').show();
 								$('#buyNowButton').attr("disabled",false);
 								//TPR-794
-								$("#pdpPinCodeAvailable").show();
-								$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
+								//$("#pdpPinCodeAvailable").show();
+								//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
 								return false;
 							}
 							var dataString = "pin=" + pin + "&productCode="
