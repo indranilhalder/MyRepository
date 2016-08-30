@@ -199,6 +199,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 			duration = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_ORDERDEALLOCATE);
 		}
+		//Added for TPR-629
 		else if (requestType.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING)
 				&& configurationService.getConfiguration().getString(
 						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_DURATION_PAYMENTPENDING) != null)

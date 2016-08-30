@@ -179,6 +179,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
 				{
+					//Order splitting and order fulfilment process will only be triggered for COD orders from here - TPR-629
 					try
 					{
 						beforeSubmitOrder(parameter, result);
@@ -198,7 +199,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
 				{
-					//Added to trigger notification
+					//Added to trigger notification for only COD orders TPR-629
 					final String trackOrderUrl = configurationService.getConfiguration().getString(
 							MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
 							+ orderModel.getCode();
@@ -299,9 +300,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -347,9 +348,14 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	}
 
 	/**
-	 * This method calls before submit order of hooks
+	 * This method calls before submit order of hooks. This method is changed to public so that it can be accessed from
+	 * elsewhere in case of prepaid orders TPR-629
 	 *
+	 * @param parameter
+	 * @param result
 	 * @throws CalculationException
+	 * @throws InvalidCartException
+	 *
 	 */
 	@Override
 	public void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
@@ -368,8 +374,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		{
 			commercePlaceOrderMethodHook.beforeSubmitOrder(parameter, result);
 		}
-
-		//getOrderService().submitOrder(result.getOrder());
 	}
 
 	protected void afterPlaceOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)

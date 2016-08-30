@@ -126,7 +126,12 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 
 
 	/**
-	 * Fetch Promotion Details based on promotion code and also based on enabled status //
+	 * Fetch Promotion Details based on promotion code and also based on enabled status. This method is written for
+	 * TPR-629 //
+	 *
+	 * @param promoCode
+	 * @return boolean
+	 *
 	 */
 	@Override
 	public boolean getPromoDetails(final String promoCode)

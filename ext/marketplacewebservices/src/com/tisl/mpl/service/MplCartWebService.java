@@ -93,12 +93,13 @@ public interface MplCartWebService
 	 * pincode response from OMS at cart level
 	 *
 	 * @param cartData
+	 * @param cartModel
 	 * @param pincode
 	 * @return List<PinCodeResponseData>
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public List<PinCodeResponseData> checkPinCodeAtCart(final CartData cartData, final String pincode)
-			throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+	public List<PinCodeResponseData> checkPinCodeAtCart(final CartData cartData, CartModel cartModel, final String pincode)
+			throws EtailNonBusinessExceptions;
 
 
 	/**

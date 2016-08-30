@@ -13,7 +13,6 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.ArrayList;
@@ -41,10 +40,8 @@ import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
-import com.tisl.mpl.marketplacecommerceservices.service.JuspayEBSService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
@@ -62,13 +59,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	@Resource(name = "mplProcessOrderDao")
 	private MplProcessOrderDao mplProcessOrderDao;
 	@Autowired
-	private JuspayEBSService juspayEBSService;
-	@Autowired
-	private MplJusPayRefundService mplJusPayRefundService;
-	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
-	@Autowired
-	private MplCancelOrderTicketImpl mplCancelOrderTicketImpl;
 	@Autowired
 	private OrderStatusSpecifier orderStatusSpecifier;
 	@Resource(name = "modelService")
@@ -83,17 +74,13 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private Converter<JuspayOrderStatusModel, GetOrderStatusResponse> juspayOrderResponseConverter;
 	@Resource(name = "mplPaymentService")
 	private MplPaymentService mplPaymentService;
-	@Resource
-	private SessionService sessionService;
 	@Autowired
 	private ConfigurationService configurationService;
 	@Autowired
 	private NotificationService notificationService;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService#getPaymentPedingOrders()
+	/**
+	 * This method processes pending orders
 	 */
 	@Override
 	public void processPaymentPedingOrders() throws EtailNonBusinessExceptions
@@ -103,6 +90,10 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		{
 			//DAO call to fetch PAYMENT PENDING orders
 			orders = getMplProcessOrderDao().getPaymentPedingOrders(OrderStatus.PAYMENT_PENDING.toString());
+		}
+		catch (final EtailNonBusinessExceptions e) //IQA for TPR-629
+		{
+			LOG.error("Error in getPaymentPedingOrders================================", e);
 		}
 		catch (final Exception e)
 		{
@@ -117,7 +108,11 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				try
 				{
 					final String cartGuid = orderModel.getGuid();
-					final MplPaymentAuditModel auditModel = getMplOrderDao().getAuditList(cartGuid);
+					MplPaymentAuditModel auditModel = null;
+					if (StringUtils.isNotEmpty(cartGuid)) //IQA for TPR-629
+					{
+						auditModel = getMplOrderDao().getAuditList(cartGuid);
+					}
 
 					if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
 					{
@@ -474,39 +469,6 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		this.mplProcessOrderDao = mplProcessOrderDao;
 	}
 
-	/**
-	 * @return the juspayEBSService
-	 */
-	public JuspayEBSService getJuspayEBSService()
-	{
-		return juspayEBSService;
-	}
-
-	/**
-	 * @param juspayEBSService
-	 *           the juspayEBSService to set
-	 */
-	public void setJuspayEBSService(final JuspayEBSService juspayEBSService)
-	{
-		this.juspayEBSService = juspayEBSService;
-	}
-
-	/**
-	 * @return the mplJusPayRefundService
-	 */
-	public MplJusPayRefundService getMplJusPayRefundService()
-	{
-		return mplJusPayRefundService;
-	}
-
-	/**
-	 * @param mplJusPayRefundService
-	 *           the mplJusPayRefundService to set
-	 */
-	public void setMplJusPayRefundService(final MplJusPayRefundService mplJusPayRefundService)
-	{
-		this.mplJusPayRefundService = mplJusPayRefundService;
-	}
 
 	/**
 	 * @return the mplCommerceCartService
@@ -525,22 +487,6 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		this.mplCommerceCartService = mplCommerceCartService;
 	}
 
-	/**
-	 * @return the mplCancelOrderTicketImpl
-	 */
-	public MplCancelOrderTicketImpl getMplCancelOrderTicketImpl()
-	{
-		return mplCancelOrderTicketImpl;
-	}
-
-	/**
-	 * @param mplCancelOrderTicketImpl
-	 *           the mplCancelOrderTicketImpl to set
-	 */
-	public void setMplCancelOrderTicketImpl(final MplCancelOrderTicketImpl mplCancelOrderTicketImpl)
-	{
-		this.mplCancelOrderTicketImpl = mplCancelOrderTicketImpl;
-	}
 
 	/**
 	 * @return the orderStatusSpecifier
@@ -645,22 +591,6 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		this.mplPaymentService = mplPaymentService;
 	}
 
-	/**
-	 * @return the sessionService
-	 */
-	public SessionService getSessionService()
-	{
-		return sessionService;
-	}
-
-	/**
-	 * @param sessionService
-	 *           the sessionService to set
-	 */
-	public void setSessionService(final SessionService sessionService)
-	{
-		this.sessionService = sessionService;
-	}
 
 	/**
 	 * @return the juspayOrderResponseConverter

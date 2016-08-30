@@ -13,7 +13,6 @@ import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
@@ -146,12 +145,12 @@ public interface MplPaymentFacade
 	void saveCart(CartModel cart);
 
 
-	/**
-	 * This method sends request to JusPay to get the Order Status
-	 *
-	 * @return String
-	 *
-	 */
+	//	/**
+	//	 * This method sends request to JusPay to get the Order Status
+	//	 *
+	//	 * @return String
+	//	 *
+	//	 */
 	//String getOrderStatusFromJuspay();
 
 
@@ -170,10 +169,11 @@ public interface MplPaymentFacade
 	 *
 	 * @param cartValue
 	 * @param totalCODCharge
+	 * @param abstractOrderModel
 	 */
-	//TISPRD-361
-	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge, OrderModel orderModel) throws EtailNonBusinessExceptions,
-			Exception;
+	//TISPRD-361 TPR-629 Refactor
+	void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final AbstractOrderModel abstractOrderModel) //Parameter OrderModel added extra for TPR-629
+			throws EtailNonBusinessExceptions, Exception;
 
 
 	/**
@@ -185,25 +185,25 @@ public interface MplPaymentFacade
 	String fetchPhoneNumber(final AbstractOrderModel abstractOrderModel);
 
 
-	/**
-	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
-	 *
-	 * @param orderId
-	 * @return String
-	 *
-	 */
-	String getJuspayOrderStatus(String orderId);
+	//	/**
+	//	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
+	//	 *
+	//	 * @param orderId
+	//	 * @return String
+	//	 *
+	//	 */
+	//	String getJuspayOrderStatus(String orderId);
 
 
-	/**
-	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
-	 * success
-	 *
-	 * @param juspayOrderId
-	 * @param mplCustomerID
-	 * @return PaymentTransactionModel
-	 */
-	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
+	//	/**
+	//	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
+	//	 * success
+	//	 *
+	//	 * @param juspayOrderId
+	//	 * @param mplCustomerID
+	//	 * @return PaymentTransactionModel
+	//	 */
+	//	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
 
 	/**
 	 * This method takes the Mobile Number as input parameters and calls the service to check whether the customer is
@@ -228,28 +228,28 @@ public interface MplPaymentFacade
 			String redirectAfterPayment, String format) throws EtailNonBusinessExceptions;
 
 
-	/**
-	 * This method creates an order in Juspay against which Payment will be processed
-	 *
-	 * @param cart
-	 * @param firstName
-	 * @param lastName
-	 * @param addressLine1
-	 * @param addressLine2
-	 * @param addressLine3
-	 * @param country
-	 * @param state
-	 * @param city
-	 * @param pincode
-	 * @param returnUrl
-	 * @param uid
-	 * @param channel
-	 * @return String
-	 * @throws EtailNonBusinessExceptions
-	 */
-	String createJuspayOrder(CartModel cart, String firstName, String lastName, String addressLine1, String addressLine2,
-			String addressLine3, String country, String state, String city, String pincode, String cardSaved, String returnUrl,
-			String uid, String channel) throws EtailNonBusinessExceptions;
+	//	/**
+	//	 * This method creates an order in Juspay against which Payment will be processed
+	//	 *
+	//	 * @param cart
+	//	 * @param firstName
+	//	 * @param lastName
+	//	 * @param addressLine1
+	//	 * @param addressLine2
+	//	 * @param addressLine3
+	//	 * @param country
+	//	 * @param state
+	//	 * @param city
+	//	 * @param pincode
+	//	 * @param returnUrl
+	//	 * @param uid
+	//	 * @param channel
+	//	 * @return String
+	//	 * @throws EtailNonBusinessExceptions
+	//	 */
+	//	String createJuspayOrder(CartModel cart, String firstName, String lastName, String addressLine1, String addressLine2,
+	//			String addressLine3, String country, String state, String city, String pincode, String cardSaved, String returnUrl,
+	//			String uid, String channel) throws EtailNonBusinessExceptions;
 
 
 	/**

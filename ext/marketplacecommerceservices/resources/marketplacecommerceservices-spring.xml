@@ -660,7 +660,7 @@
 	<bean id="CartSaveInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="CartSaveInterceptor" />
-		<property name="typeCode" value="AbstractOrder" />
+		<property name="typeCode" value="AbstractOrder" />		<!-- Changed for TPR-629 -->
 	</bean>
 	<!-- CartModelSave Interceptor ends -->
 
@@ -805,12 +805,6 @@
 		<property name="fetchMerchantMasterDao" ref="fetchMerchantMasterDao" />
 	</bean>
 	<bean id="merchantMasterXMLUtility" class="com.tisl.mpl.integration.job.MerchantMasterXMLUtility" />
-
-	<alias name="defaultCommerceSearchTextPopulator" alias="commerceSearchTextPopulator" />
-	<bean id="defaultCommerceSearchTextPopulator"
-		class="com.tisl.mpl.search.converters.populator.MplSolrTextPopulator">
-		<property name="solrFieldNameProvider" ref="solrFieldNameProvider" />
-	</bean>
 
 	<alias alias="cmsPageService" name="mplCMSPageService" />
 	<bean id="mplCMSPageService"

@@ -12,7 +12,6 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
 import java.util.List;
@@ -109,7 +108,7 @@ public interface MplPaymentService
 	 *            ,Exception
 	 */
 	void saveCODPaymentInfo(String custName, Double cartValue, Double totalCODCharge, List<AbstractOrderEntryModel> entries,
-			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions, Exception;
+			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -136,7 +135,7 @@ public interface MplPaymentService
 	 */
 	//TISPRD-361 method signature changes
 	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, AbstractOrderModel abstractOrderModel)
-			throws EtailNonBusinessExceptions, Exception;
+			throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -146,15 +145,15 @@ public interface MplPaymentService
 	void paymentModeApportion(final AbstractOrderModel cart);
 
 
-	/**
-	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
-	 * success
-	 *
-	 * @param juspayOrderId
-	 * @param mplCustomerID
-	 * @return PaymentTransactionModel
-	 */
-	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
+	//	/**
+	//	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
+	//	 * success
+	//	 *
+	//	 * @param juspayOrderId
+	//	 * @param mplCustomerID
+	//	 * @return PaymentTransactionModel
+	//	 */
+	//	PaymentTransactionModel getOrderStatusFromCart(String juspayOrderId, String mplCustomerID);
 
 	/**
 	 * This method returns the list of Countries
@@ -276,17 +275,16 @@ public interface MplPaymentService
 	 * 
 	 * @throws Exception
 	 */
-	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
+	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
 
 	/**
 	 * TISPT-200
 	 *
 	 * @param cartGuid
 	 * @return String
-	 * @throws Exception
 	 * @throws EtailNonBusinessExceptions
 	 */
-	String getAuditId(String cartGuid) throws EtailNonBusinessExceptions, Exception;
+	String getAuditId(String cartGuid) throws EtailNonBusinessExceptions;
 
 	/**
 	 * TIS-3168

@@ -11,6 +11,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.util.localization.Localization;
@@ -195,7 +196,7 @@ public class PaymentServicesController extends BaseController
 	}
 
 	/**
-	 * Check Valid Bin Number and Apply promotion for new char and saved card
+	 * Check Valid Bin Number and Apply promotion for new char and saved card --TPR-629
 	 *
 	 * @param binNo
 	 * @param bankName
@@ -228,33 +229,40 @@ public class PaymentServicesController extends BaseController
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				//TISPT-29
-				if (null != cart
-						&& StringUtils.isNotEmpty(paymentMode)
-						&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
-								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
-								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING) || paymentMode
-									.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)))
+				if (null != cart)
 				{
-					//setting in cartmodel
-					cart.setConvenienceCharges(Double.valueOf(0));
-					//saving cartmodel
-					modelService.save(cart);
-				}
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING) || paymentMode
+										.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)))
+					{
+						//setting in cartmodel
+						cart.setConvenienceCharges(Double.valueOf(0));
+						//saving cartmodel
+						modelService.save(cart);
+					}
 
-				if (getMplCheckoutFacade().isPromotionValid(cart))
-				{
-					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
-					promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, cart, userId, bankName);
+					if (getMplCheckoutFacade().isPromotionValid(cart))
+					{
+						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+						promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, cart, userId, bankName);
+					}
+					else
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+					}
+
 				}
 				else
 				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 				}
 
 			}
 			else
 			{
-				if (null != bankName && !bankName.equalsIgnoreCase("null"))
+				if (StringUtils.isNotEmpty(bankName) && !bankName.equalsIgnoreCase("null"))
 				{
 					getMplPaymentFacade().setBankForSavedCard(bankName);
 				}
@@ -283,10 +291,21 @@ public class PaymentServicesController extends BaseController
 				}
 			}
 		}
+		catch (final ModelSavingException ex)
+		{
+			// Error message for EtailNonBusinessExceptions Exceptions
+			LOG.error(MarketplacewebservicesConstants.BINVALIDATIONURL, ex);
+			ExceptionUtil.getCustomizedExceptionTrace(ex);
+			// Error message for All Exceptions
+			if (null != ex.getMessage())
+			{
+				promoPriceData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0007));
+				promoPriceData.setErrorCode(MarketplacecommerceservicesConstants.E0007);
+			}
+		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
 			// Error message for EtailNonBusinessExceptions Exceptions
-
 			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
 			if (null != ex.getErrorMessage())
 			{
@@ -307,6 +326,7 @@ public class PaymentServicesController extends BaseController
 		catch (final Exception e)
 		{
 			LOG.error(MarketplacewebservicesConstants.BINVALIDATIONURL, e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 			// Error message for All Exceptions
 			if (null != e.getMessage())
 			{
@@ -481,8 +501,7 @@ public class PaymentServicesController extends BaseController
 
 
 	/**
-	 * @description Update Transaction and related Retails for COD alos create Order
-	 * @param cartId
+	 * @description Update Transaction and related Retails for COD also create Order --TPR-629
 	 * @param otpPin
 	 * @return PaymentServiceWsData
 	 * @throws EtailNonBusinessExceptions
@@ -531,7 +550,7 @@ public class PaymentServicesController extends BaseController
 								final Double totalCODCharge = cart.getConvenienceCharges();
 
 								//saving COD Payment related info
-								getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge, null);
+								getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge, cart);
 
 								//Mandatory checks agains cart
 								final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
@@ -639,9 +658,8 @@ public class PaymentServicesController extends BaseController
 
 	}
 
-	// Update Transaction Details for Credit Card /Debit Card / EMI
 	/**
-	 * @Description Update Transaction and related Retails for Credit Card /Debit Card / EMI and Create Card
+	 * @Description Update Transaction and related Retails for Credit Card /Debit Card / EMI and Create Card --TPR-629
 	 * @param paymentMode
 	 *           (Json)
 	 * @return PaymentServiceWsData
@@ -780,7 +798,7 @@ public class PaymentServicesController extends BaseController
 
 
 	/**
-	 * This method fetches delete the saved cards
+	 * @desc This method fetches delete the saved cards --TPR-629
 	 *
 	 * @return MplSavedCardDTO
 	 */
@@ -788,7 +806,7 @@ public class PaymentServicesController extends BaseController
 	{ "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = MarketplacewebservicesConstants.GETPAYMENTMODE, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
 	@ResponseBody
-	public PaymentServiceWsData getPaymentModes(@RequestParam final String cartGuid)
+	public PaymentServiceWsData getPaymentModes(@RequestParam final String cartGuid) //629
 	{
 		PaymentServiceWsData paymentModesData = new PaymentServiceWsData();
 		CartModel cart = null;

@@ -77,7 +77,7 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 		for (final AbstractOrderEntry entry : order.getEntries())
 		{
 			double amtTobeDeductedAtlineItemLevel = 0.00D;
-			final AbstractOrderEntry cartEntry = entry;
+			final AbstractOrderEntry cartEntry = entry; //Changed to abstractOrderEntry for TPR-629
 			final double lineItemLevelPrice = cartEntry.getBasePriceAsPrimitive() * cartEntry.getQuantityAsPrimitive();
 			double productLevelDiscount = 0.00D;
 			if (null != cartEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)

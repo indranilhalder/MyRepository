@@ -2282,7 +2282,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		try
 		{
 			final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
-			if (requestType != null && !cartSoftReservationDatalist.isEmpty() && pincode != null)
+			if (StringUtils.isNotEmpty(requestType) && CollectionUtils.isNotEmpty(cartSoftReservationDatalist)
+					&& StringUtils.isNotEmpty(pincode))
 			{
 				try
 				{
@@ -2988,13 +2989,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 	@Override
 	public boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
-			final List<PinCodeResponseData> pincodeResponseData) throws EtailNonBusinessExceptions
+			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions
 	{
 
 		boolean codEligible = true;
 		ServicesUtil.validateParameterNotNull(deliveryModeMap, "deliveryModeMap cannot be null");
 		ServicesUtil.validateParameterNotNull(pincodeResponseData, "pincodeResponseData cannot be null");
-		final CartModel cartModel = getCartService().getSessionCart();
+		if (cartModel == null)
+		{
+			cartModel = getCartService().getSessionCart();
+		}
 
 		// Check pincode response , if any of the item is not cod eligible , cart will not be cod eligible
 
@@ -3372,8 +3376,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 		boolean inventoryReservationStatus = true;
 		InventoryReservListResponse inventoryReservListResponse = null;
-
-		if (requestType != null && !cartSoftReservationDatalist.isEmpty() && defaultPinCodeId != null)
+		// TPR-629 IQA changes
+		if (StringUtils.isNotEmpty(requestType) && CollectionUtils.isNotEmpty(cartSoftReservationDatalist)
+				&& StringUtils.isNotEmpty(defaultPinCodeId))
 		{
 			try
 			{
@@ -3528,7 +3533,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 
 	private List<CartSoftReservationData> populateDataForSoftReservation(final AbstractOrderModel abstractOrderModel)
-			throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 
 		CartSoftReservationData cartSoftReservationData = null;
@@ -3747,7 +3752,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @return void
 	 */
 	private void setFullFillmentTypeForFreebie(final CartSoftReservationData cartSoftReservationData,
-			final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions
+			final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -3811,7 +3816,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @param abstractOrderModel
 	 */
 	private String setParentforABgetC(final CartSoftReservationData cartSoftReservationData,
-			final AbstractOrderEntryModel entryModel, final AbstractOrderModel abstractOrderModel)
+			final AbstractOrderEntryModel entryModel, final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		String deliveryMode = null;
 		final Long ussIdA = getQuantity(entryModel.getAssociatedItems().get(0), abstractOrderModel);
@@ -3900,7 +3905,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @param abstractOrderModel
 	 * @return
 	 */
-	private String getDeliverModeForABgetC(final String ussid, final AbstractOrderModel abstractOrderModel)
+	private String getDeliverModeForABgetC(final String ussid, final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		// YTODO Auto-generated method stub
 		String deliveryMode = null;
@@ -3922,7 +3927,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @param abstractOrderModel
 	 * @return
 	 */
-	private Long getQuantity(final String ussid, final AbstractOrderModel abstractOrderModel)
+	private Long getQuantity(final String ussid, final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		// YTODO Auto-generated method stub
 		Long qty = null;
@@ -3949,7 +3954,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @return Tuple2<?, ?>
 	 */
 	private Tuple2<?, ?> getFreebieInventoryList(final AbstractOrderModel abstractOrderModel,
-			final AbstractOrderEntryModel entryModel)
+			final AbstractOrderEntryModel entryModel) //Changed to abstractOrderModel for TPR-629
 	{
 		List<CartSoftReservationData> reservationList = new ArrayList<CartSoftReservationData>();
 		boolean isFreebiePromotionApplied = false;
@@ -3999,6 +4004,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 	private List<CartSoftReservationData> populateFreebieInventoryData(final AbstractOrderModel abstractOrderModel,
 			final AbstractOrderEntryModel entryModel, final String productPromoCode)
+	//Changed to abstractOrderModel for TPR-629
 	{
 		final List<CartSoftReservationData> reservationList = new ArrayList<CartSoftReservationData>();
 		try
@@ -4746,9 +4752,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	public void saveDeliveryMethForFreebie(final AbstractOrderModel abstractOrderModel,
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
 			throws EtailNonBusinessExceptions
+	//Changed to abstractOrderModel for TPR-629
 	{
-		if (abstractOrderModel != null && abstractOrderModel.getEntries() != null && freebieModelMap != null
-				&& !freebieModelMap.isEmpty())
+		if (abstractOrderModel != null && abstractOrderModel.getEntries() != null && MapUtils.isNotEmpty(freebieModelMap))
 		{
 			for (final AbstractOrderEntryModel cartEntryModel : abstractOrderModel.getEntries())
 			{
@@ -4771,14 +4777,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 	private void saveDeliveryMethForFreebie(final AbstractOrderEntryModel cartEntryModel,
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
+	//Changed to abstractOrderModel for TPR-629
 	{
 
 		MplZoneDeliveryModeValueModel mplDeliveryMode = null;
-		if (cartEntryModel.getAssociatedItems().size() == 1)
+		if (cartEntryModel != null && cartEntryModel.getAssociatedItems().size() == 1)
 		{
 			mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
 		}
-		else if (cartEntryModel.getAssociatedItems().size() == 2
+		else if (cartEntryModel != null && cartEntryModel.getAssociatedItems().size() == 2
 				&& freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode() != null
 				&& freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1)).getDeliveryMode() != null
 				&& freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode().getCode() != null)
@@ -5002,7 +5009,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 
 	/**
-	 * This method recalculates order
+	 * This method recalculates order TPR-629
 	 *
 	 * @param orderModel
 	 */

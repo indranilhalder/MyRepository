@@ -6431,7 +6431,7 @@ public class UsersController extends BaseCommerceController
 
 	/**
 	 * @Description : For Juspay Order Creation. It returns juspayMerchantKey, juspayMerchantId,
-	 *              juspayReturnUrl,juspayOrderId
+	 *              juspayReturnUrl,juspayOrderId --TPR-629
 	 * @return OrderCreateInJusPayWsDto
 	 */
 	@Secured(
@@ -6583,7 +6583,7 @@ public class UsersController extends BaseCommerceController
 				{
 
 					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
-					getMplCartFacade().recalculateOrder(orderModel);
+					mplCartFacade.recalculateOrder(orderModel);
 					failFlag = true;
 					failErrorCode = MarketplacecommerceservicesConstants.B9075;
 				}

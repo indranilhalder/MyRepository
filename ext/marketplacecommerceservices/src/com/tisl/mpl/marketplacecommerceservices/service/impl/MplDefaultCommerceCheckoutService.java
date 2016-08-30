@@ -26,6 +26,8 @@ public class MplDefaultCommerceCheckoutService extends DefaultCommerceCheckoutSe
 	private MplCommercePlaceOrderStrategy mplCommercePlaceOrderStrategy;
 
 	/**
+	 * This method calls before submit order explicitly for TPR-629
+	 *
 	 * @throws CalculationException
 	 *
 	 */

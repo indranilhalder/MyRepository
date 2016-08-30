@@ -444,8 +444,7 @@ public class MplCommerceCartServiceImplTest
 		final ReservationItemWsDTO itemWsDto = Mockito.mock(ReservationItemWsDTO.class);
 		final CartSoftReservationData cartSoftReservationDataMock = Mockito.mock(CartSoftReservationData.class);
 		final CartData cartDataMock = Mockito.mock(CartData.class);
-		final CartModel cartModelMock = Mockito.mock(CartModel.class);
-		final String cartId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter cart id
+		final CartModel cartModelMock = Mockito.mock(CartModel.class);//TODO :Please enter cart Model
 		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final ReservationListWsDTO wsDto = Mockito.mock(ReservationListWsDTO.class);
 		final List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
@@ -530,40 +529,40 @@ public class MplCommerceCartServiceImplTest
 	 * wishlist2EntryModel.setUssid("123654098765485130011713");
 	 * given(mplCommerceCartServiceImpl.getGiftYourselfDetails(minGiftQuantity, allWishlists,
 	 * pincode)).willReturn(sortedWishList);
-	 *
+	 * 
 	 * final Map<String, List<Wishlist2EntryModel>> sortedWishListMap = new HashMap<String, List<Wishlist2EntryModel>>();
 	 * final List<GetWishListDataWsDTO> getWishListDataWsDTOList = new ArrayList<GetWishListDataWsDTO>(); final String
 	 * wishListName = "DefaultWishlist"; final List<Wishlist2EntryModel> wishlist2EntryModelList = new
 	 * ArrayList<Wishlist2EntryModel>();
-	 *
+	 * 
 	 * wishlist2EntryModelList.add(wishlist2EntryModel); sortedWishListMap.put((wishListName), wishlist2EntryModelList);
 	 * final List<GetWishListProductWsDTO> getWishListProductWsList = new ArrayList<GetWishListProductWsDTO>();
 	 * productModelMock.setArticleDescription("article 12"); productModelMock.setCode("987654321");
 	 * productModelMock.setManufacturerName("manufacturer21"); wishlist2EntryModel.setProduct(productModelMock); final
 	 * List<BrandModel> brandModelList = new ArrayList<BrandModel>(); brandModel.setDescription(
 	 * "Leading electronic Brand "); brandModel.setName("Samsung");
-	 *
+	 * 
 	 * brandModelList.add(brandModel); productModelMock.setBrands(brandModelList); final List<BuyBoxModel>
 	 * buyBoxModelList = buyBoxDao.getBuyBoxPriceForUssId(wishlist2EntryModel.getUssid());
 	 * buyBoxModel.setAvailable(Integer.valueOf(71)); buyBoxModel.setPrice(Double.valueOf(1234));
 	 * buyBoxModel.setSellerId("12345"); buyBoxModel.setSellerArticleSKU("123654098765485130011713");
 	 * buyBoxModel.setProduct("electronic");
-	 *
+	 * 
 	 * buyBoxModelList.add(buyBoxModel);
 	 * given(buyBoxDao.getBuyBoxPriceForUssId("123654098765485130011713")).willReturn(buyBoxModelList); Double finalPrice
 	 * = Double.valueOf(0.0); final Double mrpPrice = Double.valueOf(800); finalPrice = mrpPrice; final String color =
 	 * "red"; final String size = "34"; final String imageUrl = "www.getMyPic.com";
 	 * getWishListProductWsObj.setUSSID((wishlist2EntryModel.getUssid())); getWishListProductWsObj.setColor(color);
 	 * getWishListProductWsObj.setDate(wishlist2EntryModel.getAddedDate());
-	 *
+	 * 
 	 * getWishListProductWsObj.setImageURL(imageUrl); getWishListProductWsObj.setPrice(finalPrice);
 	 * getWishListProductWsObj.setProductBrand((brandModelList.get(0).getName()));
-	 *
+	 * 
 	 * getWishListProductWsObj.setProductcode("987654321");
 	 * getWishListProductWsObj.setSellerId((buyBoxModelList.get(0).getSellerId()));
 	 * getWishListProductWsObj.setSellerName((buyBoxModelList.get(0).getSellerName()));
 	 * getWishListProductWsObj.setSize(size); getWishListProductWsList.add(getWishListProductWsObj);
-	 *
+	 * 
 	 * getWishListDataWsDTOObj.setName(wishListName); getWishListDataWsDTOObj.setProducts(getWishListProductWsList);
 	 * getWishListDataWsDTOList.add(getWishListDataWsDTOObj);
 	 * given(mplCommerceCartServiceImpl.getTopTwoWishlistForUser(userModelMock, pincode)).willReturn(getWishListWsDTO); }
@@ -576,7 +575,7 @@ public class MplCommerceCartServiceImplTest
 		final MarketplaceDeliveryModeData deliveryModeData = Mockito.mock(MarketplaceDeliveryModeData.class);
 		final DeliveryDetailsData deliveryDetailsData = Mockito.mock(DeliveryDetailsData.class);
 		final PinCodeResponseData pinCodeResponseData = Mockito.mock(PinCodeResponseData.class);
-
+		final CartModel cartModelMock = Mockito.mock(CartModel.class);//TODO :Please enter cart Model
 		final List<MarketplaceDeliveryModeData> mpldeliveryModeData = new ArrayList<MarketplaceDeliveryModeData>();
 		final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		deliveryModeData.setName("");//TODO : Please enter name
@@ -601,7 +600,7 @@ public class MplCommerceCartServiceImplTest
 		codEligible = Boolean.FALSE;
 
 
-		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry))).thenReturn(
-				Boolean.valueOf((codEligible.booleanValue())));
+		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry, cartModelMock)))
+				.thenReturn(Boolean.valueOf((codEligible.booleanValue())));
 	}
 }

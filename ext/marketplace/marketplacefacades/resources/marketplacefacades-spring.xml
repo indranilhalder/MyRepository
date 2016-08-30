@@ -541,7 +541,6 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
      	<property name="mplPaymentService" ref="mplPaymentService" />
      	<property name="otpGenericService" ref="otpGenericService" />
      	<property name="blacklistService" ref="blacklistService" />
-     	<property name="businessProcessService" ref="businessProcessService" />
     </bean>
     <!-- Payment Ends -->
     
@@ -1554,7 +1553,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
     	<property name="solrFieldNameProvider" ref="solrFieldNameProvider" />
     </bean>
 	
-	
+	<alias name="defaultCommerceSearchTextPopulator" alias="commerceSearchTextPopulator" />
+	<bean id="defaultCommerceSearchTextPopulator" class="com.tisl.mpl.search.converters.populator.MplSolrTextPopulator" >
+		<property name="solrFieldNameProvider" ref="solrFieldNameProvider" />
+	</bean>
 	
 	<!-- Solr Authentication  -->
 	<!-- <alias  name="mplDefaultStandaloneSolrService" alias="standaloneSolrService"/>

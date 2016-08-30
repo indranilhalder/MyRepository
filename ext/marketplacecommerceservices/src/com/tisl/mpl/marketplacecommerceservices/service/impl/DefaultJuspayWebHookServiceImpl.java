@@ -92,7 +92,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @Description : Fetch Web Hook Data
 	 */
 	@Override
-	public void fetchWebHookData()
+	public void fetchWebHookData() throws EtailNonBusinessExceptions
 	{
 		List<JuspayWebhookModel> webHookDetailList = new ArrayList<JuspayWebhookModel>();
 		webHookDetailList = juspayWebHookDao.fetchWebHookData();
@@ -107,7 +107,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @Description : Fetch From Audit based on Web Hook Details
 	 * @param webHookDetailList
 	 */
-	private void validateWebHookData(final List<JuspayWebhookModel> webHookDetailList)
+	private void validateWebHookData(final List<JuspayWebhookModel> webHookDetailList) throws EtailNonBusinessExceptions
 	{
 		if (CollectionUtils.isNotEmpty(webHookDetailList))
 		{
@@ -167,6 +167,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @param webHookDetailList
 	 */
 	private void processWebhook(final JuspayWebhookModel hook, final List<JuspayWebhookModel> webHookDetailList)
+			throws EtailNonBusinessExceptions
 	{
 		//TISPRO-607
 		if (null != hook.getOrderStatus())
@@ -778,6 +779,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @param status
 	 */
 	private void getResponseBasedOnStatus(final JuspayWebhookModel oModel, final String orderId, final String status)
+			throws EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -843,10 +845,12 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		catch (final ModelNotFoundException exception)
 		{
 			LOG.error("Model not found while processing forward flow", exception);
+			throw new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0008);
 		}
 		catch (final Exception exception)
 		{
 			LOG.error("Exception while processing forward flow", exception);
+			throw new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
@@ -856,34 +860,41 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @param orderGuid
 	 * @return boolean
 	 */
-	private boolean checkParentOrderExists(final String orderGuid) throws Exception
+	private boolean checkParentOrderExists(final String orderGuid) throws EtailNonBusinessExceptions
 	{
-		final List<OrderModel> orders = getJuspayWebHookDao().fetchOrder(orderGuid);
-		if (!CollectionUtils.isEmpty(orders))
+		try
 		{
-			int subOrderCount = 0;
-			//int parentOrderCount = 0;
-			for (final OrderModel orderModel : orders)
+			final List<OrderModel> orders = getJuspayWebHookDao().fetchOrder(orderGuid);
+			if (!CollectionUtils.isEmpty(orders))
 			{
-				if (StringUtils.isNotEmpty(orderModel.getType()))
+				int subOrderCount = 0;
+				//int parentOrderCount = 0;
+				for (final OrderModel orderModel : orders)
 				{
-					if (orderModel.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUBORDER)
-							&& null != orderModel.getParentReference())
+					if (StringUtils.isNotEmpty(orderModel.getType()))
 					{
-						subOrderCount++;
-					}
-					else if (orderModel.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.PARENTORDER)
-							&& null != orderModel.getChildOrders() && !CollectionUtils.isEmpty(orderModel.getChildOrders()))
-					{
-						continue;
+						if (orderModel.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUBORDER)
+								&& null != orderModel.getParentReference())
+						{
+							subOrderCount++;
+						}
+						else if (orderModel.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.PARENTORDER)
+								&& null != orderModel.getChildOrders() && !CollectionUtils.isEmpty(orderModel.getChildOrders()))
+						{
+							continue;
+						}
 					}
 				}
+				return subOrderCount > 0;
 			}
-			return subOrderCount > 0;
+			else
+			{
+				return false;
+			}
 		}
-		else
+		catch (final Exception e)
 		{
-			return false;
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 

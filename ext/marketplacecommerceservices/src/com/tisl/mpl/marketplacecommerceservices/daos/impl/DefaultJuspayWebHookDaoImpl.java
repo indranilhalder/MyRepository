@@ -4,8 +4,10 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.Date;
@@ -20,6 +22,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.model.MplConfigurationModel;
 
@@ -44,13 +47,28 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	@Override
 	public List<JuspayWebhookModel> fetchWebHookData()
 	{
-		LOG.debug("Fetching WebHook Details");
-		final String queryString = //
-		"SELECT {jwm:" + JuspayWebhookModel.PK + "} "//
-				+ MarketplacecommerceservicesConstants.QUERYFROM + JuspayWebhookModel._TYPECODE + " AS jwm} ";
+		try
+		{
+			LOG.debug("Fetching WebHook Details");
+			final String queryString = //
+			"SELECT {jwm:" + JuspayWebhookModel.PK + "} "//
+					+ MarketplacecommerceservicesConstants.QUERYFROM + JuspayWebhookModel._TYPECODE + " AS jwm} ";
 
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		return getFlexibleSearchService().<JuspayWebhookModel> search(query).getResult();
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			return getFlexibleSearchService().<JuspayWebhookModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 	/**
@@ -77,14 +95,29 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	@Override
 	public List<OrderModel> fetchOrder(final String guid)
 	{
-		final String queryString = //
-		"SELECT {o:" + OrderModel.PK
-				+ "} "//
-				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS o} where" + "{o." + OrderModel.GUID
-				+ "} = ?guid";
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("guid", guid);
-		return getFlexibleSearchService().<OrderModel> search(query).getResult();
+		try
+		{
+			final String queryString = //
+			"SELECT {o:" + OrderModel.PK
+					+ "} "//
+					+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS o} where" + "{o." + OrderModel.GUID
+					+ "} = ?guid";
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("guid", guid);
+			return getFlexibleSearchService().<OrderModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 	/**

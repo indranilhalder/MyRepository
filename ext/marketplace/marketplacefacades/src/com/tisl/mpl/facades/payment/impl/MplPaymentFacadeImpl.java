@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.facades.payment.impl;
 
+import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParameterNotNull;
+
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -20,13 +22,10 @@ import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
-import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
@@ -113,15 +112,16 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	private SessionService sessionService;
 	@Resource
 	private ConfigurationService configurationService;
-	@Resource
-	private BusinessProcessService businessProcessService;
+	//Unused
+	//@Resource
+	//private BusinessProcessService businessProcessService;
 	@Autowired
 	private BinService binService;
 	@Autowired
 	private SendSMSFacade sendSMSFacade;
 
-	@Autowired
-	private FlexibleSearchService flexibleSearchService;
+	//@Autowired
+	//private FlexibleSearchService flexibleSearchService;
 
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
@@ -146,15 +146,12 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public Map<String, Boolean> getPaymentModes(final String store, final boolean isMobile, final CartData cartDataMobile)
 			throws EtailNonBusinessExceptions
 	{
-
 		//Declare variable
 		final Map<String, Boolean> data = new HashMap<String, Boolean>();
-
 		try
 		{
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
-
 			boolean flag = false;
 			CartData cartData = null;
 			if (isMobile)
@@ -166,18 +163,20 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			{
 				cartData = getMplCustomAddressFacade().getCheckoutCart();
 			}
-
-
-			for (final OrderEntryData entry : cartData.getEntries())
+			//IQA changes TPR-629
+			if (cartData != null)
 			{
-
-				if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getCode() != null)
+				for (final OrderEntryData entry : cartData.getEntries())
 				{
-					if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+
+					if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getCode() != null)
 					{
-						LOG.info("Any product Content CnC Then break loop and change flag value");
-						flag = true;
-						break;
+						if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+						{
+							LOG.info("Any product Content CnC Then break loop and change flag value");
+							flag = true;
+							break;
+						}
 					}
 				}
 			}
@@ -418,7 +417,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	@Override
 	public String generateOTPforCOD(final String customerID, final String mobileNumber, final String mplCustomerName,
-			final AbstractOrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException
+			final AbstractOrderModel orderModel) throws InvalidKeyException, NoSuchAlgorithmException //OrderModel added to handle TPR-629
 	{
 		String otp = getOtpGenericService().generateOTP(customerID, OTPTypeEnum.COD.getCode(), mobileNumber);
 		if (null == otp)
@@ -450,6 +449,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									mplCustomerName != null ? mplCustomerName : "There")
 							.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, otp)
 							.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber), mobileNumber);
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.LOGERROR, e);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -513,18 +516,24 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @return boolean
 	 */
 	@Override
-	public boolean isBlackListed(final String ipAddress, final AbstractOrderModel abstractOrderModel)
+	public boolean isBlackListed(final String ipAddress, final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel to handle TPR-629
 			throws EtailNonBusinessExceptions
 	{
 		//getting current customer details
-		//final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser(); TISPT-204 Point no 3
-		final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
-
-		final String customerPk = customer.getPk().toString();
-		final String customerEmail = customer.getOriginalUid();
-		final String customerPhoneNo = fetchPhoneNumber(abstractOrderModel);
-
+		String customerPk = null;
+		String customerEmail = null;
+		String customerPhoneNo = null;
 		boolean mplCustomerIsBlackListed = false;
+		//final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser(); TISPT-204 Point no 3
+		//IQA changes TPR-629
+		if (abstractOrderModel != null)
+		{
+			final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
+			customerPk = customer.getPk().toString();
+			customerEmail = customer.getOriginalUid();
+			customerPhoneNo = fetchPhoneNumber(abstractOrderModel);
+		}
+
 		try
 		{
 			//checking user blacklisted or not
@@ -574,209 +583,224 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	@Override
 	public void saveCart(final CartModel cart)
 	{
-		//saving cartmodel
-		final Double deliveryCost = cart.getDeliveryCost();
-		getModelService().save(cart);
-		cart.setDeliveryCost(deliveryCost);
-		getModelService().save(cart);
-	}
-
-
-	/**
-	 * This method creates an order in Juspay against which Payment will be processed
-	 *
-	 * @return String
-	 * @throws EtailNonBusinessExceptions
-	 *
-	 */
-	@Override
-	public String createJuspayOrder(final CartModel cart, final String firstName, final String lastName,
-			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
-			final String state, final String city, final String pincode, final String checkValues, final String returnUrl,
-			final String uid, final String channel) throws EtailNonBusinessExceptions
-	{
+		//Try/catch added as IQA for TPR-629
 		try
 		{
-			//creating PaymentService of Juspay
-			final PaymentService juspayService = new PaymentService();
-
-			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-			juspayService
-					.withKey(
-							getConfigurationService().getConfiguration().getString(
-									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
-							getConfigurationService().getConfiguration()
-									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
-
-			//getting the current customer to fetch customer Id and customer email
-			//CustomerModel customer = getModelService().create(CustomerModel.class);	//TISPT-200
-			CustomerModel customer = null;
-			if (null != uid)
-			{
-				customer = getMplPaymentService().getCustomer(uid);
-			}
-
-			//TISCR-421
-			String customerPhone = MarketplacecommerceservicesConstants.EMPTYSTRING;
-			//Code fix to send phone number to EBS
-			final AddressModel deliveryAddress = cart.getDeliveryAddress();
-			final AddressModel defaultAddress = null != customer ? customer.getDefaultShipmentAddress() : null; //TISPT-200
-			if (null != deliveryAddress)
-			{
-				if (StringUtils.isNotEmpty(deliveryAddress.getPhone1()))
-				{
-					customerPhone = deliveryAddress.getPhone1();
-				}
-				else if (StringUtils.isNotEmpty(deliveryAddress.getPhone2()))
-				{
-					customerPhone = deliveryAddress.getPhone2();
-				}
-			}
-			else if (null != defaultAddress)
-			{
-				if (StringUtils.isNotEmpty(defaultAddress.getPhone1()))
-				{
-					customerPhone = defaultAddress.getPhone1();
-				}
-				else if (StringUtils.isNotEmpty(defaultAddress.getPhone2()))
-				{
-					customerPhone = defaultAddress.getPhone2();
-				}
-			}
-			//Code fix ends
-
-			final String customerEmail = null != customer ? customer.getOriginalUid() : ""; //TISPT-200
-			//			String juspayOrderStatus = "";
-			String juspayOrderId = "";
-			boolean flag = false;
-			String resJusOrderId = null;
-
-			juspayOrderId = getMplPaymentService().createPaymentId();
-			LOG.debug("Order Id created by key generator is " + juspayOrderId);
-
-			//Create entry in Audit table
-			flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
-			final InitOrderRequest request;
-			if (flag)
-			{
-				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
-				{
-					//getting the sessionID from session set during payment page loading
-					final String sessionId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
-					//removing from session
-					getSessionService().removeAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
-
-					//creating InitOrderRequest of Juspay
-					// For netbanking firstname will be set as Bank Code
-					//TISCR-421:With sessionID for WEB orders
-					request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
-							.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
-							.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
-							.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl).withsessionId(sessionId);
-				}
-				else
-				{
-					//TISCR-421:Without sessionTD for MOBILE or other orders
-					request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
-							.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
-							.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
-							.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
-				}
-
-				LOG.info("Juspay Request Structure " + request);
-
-				//creating InitOrderResponse
-				final InitOrderResponse initOrderResponse = juspayService.initOrder(request);
-				if (null != initOrderResponse && StringUtils.isNotEmpty(initOrderResponse.getOrderId()))
-				{
-					resJusOrderId = initOrderResponse.getOrderId();
-					final String orderStatus = initOrderResponse.getStatus();
-					if (StringUtils.isNotEmpty(orderStatus))
-					{
-						LOG.info(MarketplacecommerceservicesConstants.JUSPAY_ORDER_RESP + resJusOrderId + " " + orderStatus);
-					}
-				}
-
-				//Adding orderID to session for later use to get Order status
-				getSessionService().setAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID, resJusOrderId);
-
-				//Update the Audit table before proceeding with payment
-				getMplPaymentService().createEntryInAudit(resJusOrderId, channel, cart.getGuid());
-			}
-
-			//returning order ID from initOrderResponse
-			return resJusOrderId;
-		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, "E0001");
+			//saving cartmodel
+			final Double deliveryCost = cart.getDeliveryCost();
+			getModelService().save(cart); // This has been done after debugging for setting the delivery cost.As delivery cost is no longer available
+			cart.setDeliveryCost(deliveryCost);
+			getModelService().save(cart);
 		}
 		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(e, "E0007");
-		}
-		catch (final AdapterException e)
-		{
-			throw e;
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			LOG.error("Something went wrong ", e);
-			throw new EtailNonBusinessExceptions(e, "E0007");
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, "E0007");
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
-	/**
-	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
-	 *
-	 * @param orderId
-	 * @return String
-	 *
-	 */
-	@Override
-	public String getJuspayOrderStatus(final String orderId)
-	{
-		final PaymentService juspayService = new PaymentService();
-
-		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService.withKey(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-				.withMerchantId(
-						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
-
-		//creating OrderStatusRequest
-		final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
-		orderStatusRequest.withOrderId(orderId);
-		//creating OrderStatusResponse
-		GetOrderStatusResponse orderStatusResponse = new GetOrderStatusResponse();
-		try
-		{
-			//getting the response by calling get Order Status service
-			orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e);
-		}
-
-		//returning the statues of the order
-		return orderStatusResponse.getStatus();
-	}
 
 
-	/**
-	 * This method sends request to JusPay to get the Order Status on completion of Payment
-	 *
-	 * @return String
-	 * @throws EtailNonBusinessExceptions
-	 *
-	 */
+	//Commented as this method is not used anymore after TPR-629
+	//	/**
+	//	 * This method creates an order in Juspay against which Payment will be processed
+	//	 *
+	//	 * @return String
+	//	 * @throws EtailNonBusinessExceptions
+	//	 *
+	//	 */
+	//	@Override
+	//	public String createJuspayOrder(final CartModel cart, final String firstName, final String lastName,
+	//			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
+	//			final String state, final String city, final String pincode, final String checkValues, final String returnUrl,
+	//			final String uid, final String channel) throws EtailNonBusinessExceptions
+	//	{
+	//		try
+	//		{
+	//			//creating PaymentService of Juspay
+	//			final PaymentService juspayService = new PaymentService();
+	//
+	//			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+	//					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+	//			juspayService
+	//					.withKey(
+	//							getConfigurationService().getConfiguration().getString(
+	//									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
+	//							getConfigurationService().getConfiguration()
+	//									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+	//
+	//			//getting the current customer to fetch customer Id and customer email
+	//			//CustomerModel customer = getModelService().create(CustomerModel.class);	//TISPT-200
+	//			CustomerModel customer = null;
+	//			if (null != uid)
+	//			{
+	//				customer = getMplPaymentService().getCustomer(uid);
+	//			}
+	//
+	//			//TISCR-421
+	//			String customerPhone = MarketplacecommerceservicesConstants.EMPTYSTRING;
+	//			//Code fix to send phone number to EBS
+	//			final AddressModel deliveryAddress = cart.getDeliveryAddress();
+	//			final AddressModel defaultAddress = null != customer ? customer.getDefaultShipmentAddress() : null; //TISPT-200
+	//			if (null != deliveryAddress)
+	//			{
+	//				if (StringUtils.isNotEmpty(deliveryAddress.getPhone1()))
+	//				{
+	//					customerPhone = deliveryAddress.getPhone1();
+	//				}
+	//				else if (StringUtils.isNotEmpty(deliveryAddress.getPhone2()))
+	//				{
+	//					customerPhone = deliveryAddress.getPhone2();
+	//				}
+	//			}
+	//			else if (null != defaultAddress)
+	//			{
+	//				if (StringUtils.isNotEmpty(defaultAddress.getPhone1()))
+	//				{
+	//					customerPhone = defaultAddress.getPhone1();
+	//				}
+	//				else if (StringUtils.isNotEmpty(defaultAddress.getPhone2()))
+	//				{
+	//					customerPhone = defaultAddress.getPhone2();
+	//				}
+	//			}
+	//			//Code fix ends
+	//
+	//			final String customerEmail = null != customer ? customer.getOriginalUid() : ""; //TISPT-200
+	//			//			String juspayOrderStatus = "";
+	//			String juspayOrderId = "";
+	//			boolean flag = false;
+	//			String resJusOrderId = null;
+	//
+	//			juspayOrderId = getMplPaymentService().createPaymentId();
+	//			LOG.debug("Order Id created by key generator is " + juspayOrderId);
+	//
+	//			//Create entry in Audit table
+	//			flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
+	//			final InitOrderRequest request;
+	//			if (flag)
+	//			{
+	//				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
+	//				{
+	//					//getting the sessionID from session set during payment page loading
+	//					final String sessionId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
+	//					//removing from session
+	//					getSessionService().removeAttribute(MarketplacecommerceservicesConstants.EBS_SESSION_ID);
+	//
+	//					//creating InitOrderRequest of Juspay
+	//					// For netbanking firstname will be set as Bank Code
+	//					//TISCR-421:With sessionID for WEB orders
+	//					request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
+	//							.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
+	//							.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
+	//							.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl).withsessionId(sessionId);
+	//				}
+	//				else
+	//				{
+	//					//TISCR-421:Without sessionTD for MOBILE or other orders
+	//					request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
+	//							.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
+	//							.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
+	//							.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
+	//				}
+	//
+	//				LOG.info("Juspay Request Structure " + request);
+	//
+	//				//creating InitOrderResponse
+	//				final InitOrderResponse initOrderResponse = juspayService.initOrder(request);
+	//				if (null != initOrderResponse && StringUtils.isNotEmpty(initOrderResponse.getOrderId()))
+	//				{
+	//					resJusOrderId = initOrderResponse.getOrderId();
+	//					final String orderStatus = initOrderResponse.getStatus();
+	//					if (StringUtils.isNotEmpty(orderStatus))
+	//					{
+	//						LOG.info(MarketplacecommerceservicesConstants.JUSPAY_ORDER_RESP + resJusOrderId + " " + orderStatus);
+	//					}
+	//				}
+	//
+	//				//Adding orderID to session for later use to get Order status
+	//				getSessionService().setAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID, resJusOrderId);
+	//
+	//				//Update the Audit table before proceeding with payment
+	//				getMplPaymentService().createEntryInAudit(resJusOrderId, channel, cart.getGuid());
+	//			}
+	//
+	//			//returning order ID from initOrderResponse
+	//			return resJusOrderId;
+	//		}
+	//		catch (final NullPointerException e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, "E0001");
+	//		}
+	//		catch (final ModelSavingException e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, "E0007");
+	//		}
+	//		catch (final AdapterException e)
+	//		{
+	//			throw e;
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			LOG.error("Something went wrong ", e);
+	//			throw new EtailNonBusinessExceptions(e, "E0007");
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, "E0007");
+	//		}
+	//	}
+	//
+	//	/**
+	//	 * This method sends request to JusPay to get the Order Status everytime the user enters the payment screen
+	//	 *
+	//	 * @param orderId
+	//	 * @return String
+	//	 *
+	//	 */
+	//	@Override
+	//	public String getJuspayOrderStatus(final String orderId)
+	//	{
+	//		final PaymentService juspayService = new PaymentService();
+	//
+	//		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+	//				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+	//		juspayService.withKey(
+	//				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+	//				.withMerchantId(
+	//						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+	//
+	//		//creating OrderStatusRequest
+	//		final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
+	//		orderStatusRequest.withOrderId(orderId);
+	//		//creating OrderStatusResponse
+	//		GetOrderStatusResponse orderStatusResponse = new GetOrderStatusResponse();
+	//		try
+	//		{
+	//			//getting the response by calling get Order Status service
+	//			orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(e);
+	//		}
+	//
+	//		//returning the statues of the order
+	//		return orderStatusResponse.getStatus();
+	//	}
+
+
+	//This method is commented as a new method with different method parameters is used for TPR-629
+	//	/**
+	//	 * This method sends request to JusPay to get the Order Status on completion of Payment
+	//	 *
+	//	 * @return String
+	//	 * @throws EtailNonBusinessExceptions
+	//	 *
+	//	 */
 	//	@Override
 	//	public String getOrderStatusFromJuspay() throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	//	{
@@ -1273,20 +1297,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	//TISPRD-361 method signature changes
 	@Override
-	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final OrderModel orderModel) //Parameter OrderModel added extra for TPR-629
+	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final AbstractOrderModel abstractOrderModel) //Parameter abstractOrderModel added extra for TPR-629
 			throws EtailNonBusinessExceptions, Exception
 	{
 		//getting the current user
 		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
 		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-
-		if (null == orderModel)
+		//IQA changes TPR-629 and Refactor
+		if (null != abstractOrderModel)
 		{
-			final CartModel cart = getCartService().getSessionCart();
-			final List<AbstractOrderEntryModel> entries = cart.getEntries();
+			final List<AbstractOrderEntryModel> entries = abstractOrderModel.getEntries();
 
 			//setting payment transaction for COD
-			getMplPaymentService().setPaymentTransactionForCOD(paymentMode, cart);
+			getMplPaymentService().setPaymentTransactionForCOD(paymentMode, abstractOrderModel);
 
 			if (null != mplCustomer)
 			{
@@ -1295,44 +1318,22 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					final String custName = mplCustomer.getName();
 
 					//saving COD PaymentInfo
-					getMplPaymentService().saveCODPaymentInfo(custName, cartValue, totalCODCharge, entries, cart);
+					getMplPaymentService().saveCODPaymentInfo(custName, cartValue, totalCODCharge, entries, abstractOrderModel);
 				}
 				else
 				{
 					final String custEmail = mplCustomer.getOriginalUid();
 
 					//saving COD PaymentInfo
-					getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, cart);
+					getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, abstractOrderModel);
 				}
 			}
-			getMplPaymentService().paymentModeApportion(cart);
+			getMplPaymentService().paymentModeApportion(abstractOrderModel);
+
 		}
 		else
 		{
-			final List<AbstractOrderEntryModel> entries = orderModel.getEntries();
-
-			//setting payment transaction for COD
-			getMplPaymentService().setPaymentTransactionForCOD(paymentMode, orderModel);
-
-			if (null != mplCustomer)
-			{
-				if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
-				{
-					final String custName = mplCustomer.getName();
-
-					//saving COD PaymentInfo
-					getMplPaymentService().saveCODPaymentInfo(custName, cartValue, totalCODCharge, entries, orderModel);
-				}
-				else
-				{
-					final String custEmail = mplCustomer.getOriginalUid();
-
-					//saving COD PaymentInfo
-					getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, orderModel);
-				}
-			}
-			getMplPaymentService().paymentModeApportion(orderModel);
-
+			LOG.debug("Unable to save COD PAyment Info");
 		}
 
 
@@ -1374,28 +1375,29 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	}
 
 
-	/**
-	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
-	 * success
-	 *
-	 * @param juspayOrderId
-	 * @param mplCustomerID
-	 * @return PaymentTransactionModel
-	 */
-	@Override
-	public PaymentTransactionModel getOrderStatusFromCart(final String juspayOrderId, final String mplCustomerID)
-	{
-		if (null != getMplPaymentService().getOrderStatusFromCart(juspayOrderId, mplCustomerID))
-		{
-			final PaymentTransactionModel paymentTransaction = getMplPaymentService().getOrderStatusFromCart(juspayOrderId,
-					mplCustomerID);
-			return paymentTransaction;
-		}
-		else
-		{
-			return null;
-		}
-	}
+	//Method not used after TPR-629
+	//	/**
+	//	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
+	//	 * success
+	//	 *
+	//	 * @param juspayOrderId
+	//	 * @param mplCustomerID
+	//	 * @return PaymentTransactionModel
+	//	 */
+	//	@Override
+	//	public PaymentTransactionModel getOrderStatusFromCart(final String juspayOrderId, final String mplCustomerID)
+	//	{
+	//		if (null != getMplPaymentService().getOrderStatusFromCart(juspayOrderId, mplCustomerID))
+	//		{
+	//			final PaymentTransactionModel paymentTransaction = getMplPaymentService().getOrderStatusFromCart(juspayOrderId,
+	//					mplCustomerID);
+	//			return paymentTransaction;
+	//		}
+	//		else
+	//		{
+	//			return null;
+	//		}
+	//	}
 
 
 
@@ -1638,7 +1640,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @throws Exception
 	 */
 	@Override
-	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception
+	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions
 	{
 		List<BankforNetbankingModel> bankList = null;
 		try
@@ -1754,10 +1756,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//logging error message
 			LOG.error(MarketplacecommerceservicesConstants.SAVEDCCERROR, e);
 		}
-		catch (final EtailBusinessExceptions e)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.SAVEDCCERROR, e);
-		}
+		//Commented for PMD
+		//		catch (final EtailBusinessExceptions e)
+		//		{
+		//			LOG.error(MarketplacecommerceservicesConstants.SAVEDCCERROR, e);
+		//		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.SAVEDCCERROR, e);
@@ -1869,11 +1872,12 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				}
 			}
 		}
-		catch (final NullPointerException e)
-		{
-			//logging error message
-			LOG.error(MarketplacecommerceservicesConstants.SAVEDCARDERROR, e);
-		}
+		//Commented for PMD
+		//		catch (final NullPointerException e)
+		//		{
+		//			//logging error message
+		//			LOG.error(MarketplacecommerceservicesConstants.SAVEDCARDERROR, e);
+		//		}
 		catch (final EtailBusinessExceptions e)
 		{
 			LOG.error(MarketplacecommerceservicesConstants.SAVEDCARDERROR, e);
@@ -2021,32 +2025,34 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @param store
 	 * @return Map<String, Boolean>
 	 * @throws EtailNonBusinessExceptions
+	 * @throws EtailBusinessExceptions
 	 *
 	 */
 	@Override
-	public Map<String, Boolean> getPaymentModes(final String store, final OrderData orderData) throws EtailNonBusinessExceptions
+	public Map<String, Boolean> getPaymentModes(final String store, final OrderData orderData) throws EtailNonBusinessExceptions,
+			EtailBusinessExceptions
 	{
-
 		//Declare variable
 		final Map<String, Boolean> data = new HashMap<String, Boolean>();
-
+		boolean flag = false;
 		try
 		{
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
-
-			boolean flag = false;
-
-			for (final OrderEntryData entry : orderData.getEntries())
+			//IQA changes TPR-629
+			if (orderData != null)
 			{
-
-				if (entry.getMplDeliveryMode() != null && StringUtils.isNotEmpty(entry.getMplDeliveryMode().getCode()))
+				for (final OrderEntryData entry : orderData.getEntries())
 				{
-					if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+
+					if (entry.getMplDeliveryMode() != null && StringUtils.isNotEmpty(entry.getMplDeliveryMode().getCode()))
 					{
-						LOG.info("Any product Content CnC Then break loop and change flag value");
-						flag = true;
-						break;
+						if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+						{
+							LOG.info("Any product Content CnC Then break loop and change flag value");
+							flag = true;
+							break;
+						}
 					}
 				}
 			}
@@ -2073,11 +2079,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B6001);
 			}
 		}
-		catch (final EtailBusinessExceptions e)
-		{
-			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
-			throw e;
-		}
 		catch (final Exception e)
 		{
 			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
@@ -2093,6 +2094,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/**
 	 * This method sends request to JusPay to get the Order Status on completion of Payment for new Payment Solution
+	 * TPR-629
 	 *
 	 * @return String
 	 * @throws EtailNonBusinessExceptions
@@ -2202,10 +2204,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			LOG.error("Cart total and Juspay end total are not same!!!", e);
 			throw new EtailBusinessExceptions("Cart Total and Transaction total at Juspay Mismatch", e);
 		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw e;
-		}
+		//		catch (final EtailNonBusinessExceptions e)
+		//		{
+		//			throw e;
+		//		}
 		catch (final Exception e)
 		{
 			LOG.error("Failed to save order status in payment transaction with error: ", e);
@@ -2219,7 +2221,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 	/**
-	 * This method creates an order in Juspay against which Payment will be processed. This is for new payment soln
+	 * This method creates an order in Juspay against which Payment will be processed. This is for new payment soln for
+	 * TPR-629
 	 *
 	 * @return String
 	 * @throws EtailNonBusinessExceptions
@@ -2329,6 +2332,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			}
 
 			InitOrderRequest request = null;
+
 			if (flag)
 			{
 				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
@@ -2419,11 +2423,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			LOG.error("Something went wrong ", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
+		//		catch (final EtailNonBusinessExceptions e)
+		//		{
+		//			LOG.error("Something went wrong ", e);
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		//		}
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
@@ -2510,9 +2514,12 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 
 	}
-
 
 	/**
 	 * This method populates delivery point of service for freebie
@@ -2523,7 +2530,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	@Override
 	public void populateDelvPOSForFreebie(final AbstractOrderModel abstractOrderModel,
-			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap) //Changed to abstractOrderModel for TPR-629
 	{
 		if (abstractOrderModel != null && abstractOrderModel.getEntries() != null && MapUtils.isNotEmpty(freebieModelMap))
 		{
@@ -2598,8 +2605,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @param abstractOrderModel
 	 * @return delivery mode
 	 */
-	private String findParentUssId(final AbstractOrderEntryModel entryModel, final AbstractOrderModel abstractOrderModel)
+	private String findParentUssId(final AbstractOrderEntryModel entryModel, final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel and abstractOrderEntryModel for TPR-629
 	{
+		//IQA Changes TPR-629
+		validateParameterNotNull(entryModel, MarketplaceFacadesConstants.CART_ENTRY_NULL);
+
 		final Long ussIdA = getQuantity(entryModel.getAssociatedItems().get(0), abstractOrderModel);
 		final Long ussIdB = getQuantity(entryModel.getAssociatedItems().get(1), abstractOrderModel);
 		final String ussIdADelMod = getDeliverModeForABgetC(entryModel.getAssociatedItems().get(0), abstractOrderModel);
@@ -2655,7 +2665,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @param abstractOrderModel
 	 * @return delivery mode
 	 */
-	private String getDeliverModeForABgetC(final String ussid, final AbstractOrderModel abstractOrderModel)
+	private String getDeliverModeForABgetC(final String ussid, final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		String deliveryMode = null;
 		try
@@ -2682,7 +2692,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @param abstractOrderModel
 	 * @return Long
 	 */
-	private Long getQuantity(final String ussid, final AbstractOrderModel abstractOrderModel)
+	private Long getQuantity(final String ussid, final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		Long qty = null;
 		try
@@ -2692,7 +2702,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				if (cartEntry.getSelectedUSSID().equalsIgnoreCase(ussid) && !cartEntry.getGiveAway().booleanValue())
 				{
 					qty = cartEntry.getQuantity();
-					cartEntry.getMplDeliveryMode().getDeliveryMode().getCode();
+					//cartEntry.getMplDeliveryMode().getDeliveryMode().getCode();
 				}
 
 			}
@@ -2710,25 +2720,28 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * TPR-629
 	 *
 	 * @return double
-	 * @throws Exception
+	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public double calculateTotalDiscount(final List<PromotionResultData> promoResultList) throws Exception
+	public double calculateTotalDiscount(final List<PromotionResultData> promoResultList) throws EtailNonBusinessExceptions
 	{
 		double totalDiscount = 0l;
-		for (final PromotionResultData promotionResultData : promoResultList)
+		if (CollectionUtils.isNotEmpty(promoResultList)) //IQA for TPR-629
 		{
-			final String st = promotionResultData.getDescription();
-			final String result = stripNonDigits(st);
+			for (final PromotionResultData promotionResultData : promoResultList)
+			{
+				final String st = promotionResultData.getDescription();
+				final String result = stripNonDigits(st);
 
-			try
-			{
-				totalDiscount = totalDiscount + Double.parseDouble(result);
-			}
-			catch (final Exception e)
-			{
-				LOG.error("Exception during double parsing ", e);
-				totalDiscount = totalDiscount + 0;
+				try
+				{
+					totalDiscount = totalDiscount + Double.parseDouble(result);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Exception during double parsing ", e);
+					totalDiscount = totalDiscount + 0;
+				}
 			}
 		}
 		return totalDiscount;
@@ -2738,20 +2751,28 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 	/**
+	 * TPR-629
 	 *
 	 * @param input
 	 * @return String
 	 */
-	private static String stripNonDigits(final CharSequence input) throws Exception
+	private static String stripNonDigits(final CharSequence input)
 	{
 		final StringBuilder sb = new StringBuilder(input.length());
-		for (int i = 0; i < input.length(); i++)
+		try
 		{
-			final char c = input.charAt(i);
-			if ((c > 47 && c < 58) || (c == 46))
+			for (int i = 0; i < input.length(); i++)
 			{
-				sb.append(c);
+				final char c = input.charAt(i);
+				if ((c > 47 && c < 58) || (c == 46))
+				{
+					sb.append(c);
+				}
 			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return sb.toString();
 	}
@@ -2901,27 +2922,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void setConfigurationService(final ConfigurationService configurationService)
 	{
 		this.configurationService = configurationService;
-	}
-
-
-
-	/**
-	 * @return the businessProcessService
-	 */
-	public BusinessProcessService getBusinessProcessService()
-	{
-		return businessProcessService;
-	}
-
-
-
-	/**
-	 * @param businessProcessService
-	 *           the businessProcessService to set
-	 */
-	public void setBusinessProcessService(final BusinessProcessService businessProcessService)
-	{
-		this.businessProcessService = businessProcessService;
 	}
 
 

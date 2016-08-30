@@ -98,13 +98,18 @@ public class MplFraudModelServiceImpl implements MplFraudModelService
 			}
 
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, "E0001");
-		}
+		//PMD and IQA for TPR-629
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, "E0001");
+		//		}
 		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(e, "E0007");
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
 	}
@@ -207,14 +212,20 @@ public class MplFraudModelServiceImpl implements MplFraudModelService
 			}
 
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, "E0001");
-		}
+		//PMD and IQA for TPR-629
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, "E0001");
+		//		}
 		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(e, "E0007");
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
 
 	}
 

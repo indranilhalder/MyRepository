@@ -335,7 +335,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void saveCardDetailsFromJuspay(final GetOrderStatusResponse orderStatusResponse, final Map<String, Double> paymentMode,
-			final AbstractOrderModel cart) throws EtailNonBusinessExceptions
+			final AbstractOrderModel cart) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		if (null != orderStatusResponse)
 		{
@@ -403,8 +403,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 	/**
-	 * This method is setting paymentTransactionModel and the paymentTransactionEntryModel against the cart for non-COD
-	 * payment modes including wallet
+	 * This method is setting paymentTransactionModel and the paymentTransactionEntryModel against the order for non-COD
+	 * payment modes including wallet. After TPR-629, payment details will be attached to order
 	 *
 	 * @param orderStatusResponse
 	 * @param paymentMode
@@ -413,7 +413,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void setPaymentTransaction(final GetOrderStatusResponse orderStatusResponse, final Map<String, Double> paymentMode,
-			final AbstractOrderModel order) throws EtailNonBusinessExceptions
+			final AbstractOrderModel order) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -543,11 +543,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param paymentMode
 	 * @param abstractOrderModel
 	 * @throws EtailNonBusinessExceptions
-	 *            , Exception
 	 */
 	@Override
 	public void setPaymentTransactionForCOD(final Map<String, Double> paymentMode, final AbstractOrderModel abstractOrderModel)
-			throws EtailNonBusinessExceptions, Exception
+			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -648,14 +647,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/**
 	 * This private method is used to set the values in DebitCardPaymentInfoModel after getting successful response from
-	 * Juspay
+	 * Juspay. After TPR-629, payment details will be attached to order
 	 *
 	 * @param cart
 	 * @param orderStatusResponse
 	 * @return CartModel
 	 */
 	private AbstractOrderModel setValueInDebitCardPaymentInfo(final AbstractOrderModel cart,
-			final GetOrderStatusResponse orderStatusResponse)
+			final GetOrderStatusResponse orderStatusResponse) //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -788,14 +787,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/**
 	 * This private method is used to set the values in CreditCardPaymentInfoModel after getting successful response from
-	 * Juspay
+	 * Juspay. After TPR-629, payment details will be attached to order
 	 *
 	 * @param cart
 	 * @param orderStatusResponse
 	 * @return CartModel
 	 */
 	private AbstractOrderModel setValueInCreditCardPaymentInfo(final AbstractOrderModel cart,
-			final GetOrderStatusResponse orderStatusResponse) throws EtailNonBusinessExceptions
+			final GetOrderStatusResponse orderStatusResponse) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -1003,14 +1002,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 	/**
-	 * This private method is used to set the values in EMIPaymentInfoModel after getting successful response from Juspay
+	 * This private method is used to set the values in EMIPaymentInfoModel after getting successful response from
+	 * Juspay. After TPR-629, payment details will be attached to order
 	 *
 	 * @param cart
 	 * @param response
 	 * @return CartModel
 	 */
 	//Exception handled and unwanted code commented TPR-629
-	private AbstractOrderModel setValueInEMIPaymentInfo(final AbstractOrderModel cart, final GetOrderStatusResponse response)
+	private AbstractOrderModel setValueInEMIPaymentInfo(final AbstractOrderModel cart, final GetOrderStatusResponse response) //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -1235,13 +1235,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/**
 	 * This private method is used to set the values in NetbankingPaymentInfoModel after getting successful response from
-	 * Juspay
+	 * Juspay. After TPR-629, payment details will be attached to order
 	 *
 	 * @param cart
 	 * @param response
 	 * @return CartModel
 	 */
-	private AbstractOrderModel setValueInNetbankingPaymentInfo(final AbstractOrderModel cart, final GetOrderStatusResponse response)
+	private AbstractOrderModel setValueInNetbankingPaymentInfo(final AbstractOrderModel cart, final GetOrderStatusResponse response) //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -1332,13 +1332,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param totalCODCharge
 	 * @param entries
 	 * @throws EtailNonBusinessExceptions
-	 *            ,Exception
 	 *
 	 */
 	@Override
 	public void saveCODPaymentInfo(final String custName, final Double cartValue, final Double totalCODCharge,
 			final List<AbstractOrderEntryModel> entries, final AbstractOrderModel abstractOrderModel) //Parameter AbstractOrderModel added extra for TPR-629
-			throws EtailNonBusinessExceptions, Exception
+			throws EtailNonBusinessExceptions
 	{
 		if (null != entries)
 		{
@@ -1595,7 +1594,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	//Try catch fixed and save all implemented instead of save
 	@Override
-	public void paymentModeApportion(final AbstractOrderModel abstractOrderModel)
+	public void paymentModeApportion(final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -1695,31 +1694,31 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 	}
 
-
-	/**
-	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
-	 * success
-	 *
-	 * @param juspayOrderId
-	 * @param mplCustomerID
-	 * @return PaymentTransactionModel
-	 */
-	@Override
-	public PaymentTransactionModel getOrderStatusFromCart(final String juspayOrderId, final String mplCustomerID)
-	{
-		PaymentTransactionModel paymentTransaction = null;
-		if (null != getMplPaymentDao().getOrderStatusFromCart(juspayOrderId, mplCustomerID))
-		{
-			paymentTransaction = getMplPaymentDao().getOrderStatusFromCart(juspayOrderId, mplCustomerID);
-			//return paymentTransaction;	SONAR Fix
-		}
-		//		else
-		//		{
-		//			return null;	SONAR Fix
-		//		}
-
-		return paymentTransaction;
-	}
+	//Commented as not used after TPR-629
+	//	/**
+	//	 * This method is used to check whether a Juspay order Id is present in PaymentTransactionModel in cart with status
+	//	 * success
+	//	 *
+	//	 * @param juspayOrderId
+	//	 * @param mplCustomerID
+	//	 * @return PaymentTransactionModel
+	//	 */
+	//	@Override
+	//	public PaymentTransactionModel getOrderStatusFromCart(final String juspayOrderId, final String mplCustomerID)
+	//	{
+	//		PaymentTransactionModel paymentTransaction = null;
+	//		if (null != getMplPaymentDao().getOrderStatusFromCart(juspayOrderId, mplCustomerID))
+	//		{
+	//			paymentTransaction = getMplPaymentDao().getOrderStatusFromCart(juspayOrderId, mplCustomerID);
+	//			//return paymentTransaction;	SONAR Fix
+	//		}
+	//		//		else
+	//		//		{
+	//		//			return null;	SONAR Fix
+	//		//		}
+	//
+	//		return paymentTransaction;
+	//	}
 
 
 	/**
@@ -1775,7 +1774,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	public MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
 			final OrderModel orderModel, final MplPromoPriceData promoPriceData) throws ModelSavingException, NumberFormatException,
 			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
-			JaloPriceFactoryException, EtailNonBusinessExceptions
+			JaloPriceFactoryException, EtailNonBusinessExceptions //Additional parameters added for TPR-629
 	{
 		final long startTime = System.currentTimeMillis();
 		//final MplPromoPriceData promoPriceData = new MplPromoPriceData();
@@ -1783,20 +1782,23 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		if (null != cartModel)
 		{
 			//Reset Voucher Apportion
-			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
+			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()) && null != cartModel.getDiscounts().get(0)) //IQA for TPR-629
 			{
 				final List<AbstractOrderEntryModel> entryList = getMplVoucherService().getOrderEntryModelFromVouEntries(
 						(VoucherModel) cartModel.getDiscounts().get(0), cartModel); //Since only 1 voucher is applied to the cart and
 				//before promotion calculation only 1 discount will be present
 
-				for (final AbstractOrderEntryModel entry : entryList)
-
+				if (CollectionUtils.isNotEmpty(entryList)) //IQA for TPR-629
 				{
-					entry.setCouponCode("");
-					entry.setCouponValue(Double.valueOf(0.00D));
-					//getModelService().save(entry);
+					for (final AbstractOrderEntryModel entry : entryList)
+
+					{
+						entry.setCouponCode("");
+						entry.setCouponValue(Double.valueOf(0.00D));
+						//getModelService().save(entry);
+					}
+					getModelService().saveAll(entryList);
 				}
-				getModelService().saveAll(entryList);
 			}
 
 
@@ -1865,23 +1867,28 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			promoPriceData.setVoucherDiscount(discData);
 		}
+
+		//Logic when order is there for customers
 		else if (null != orderModel)
 		{
 			//Reset Voucher Apportion
-			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) && null != orderModel.getDiscounts().get(0)) //IQA for TPR-629
 			{
 				final List<AbstractOrderEntryModel> entryList = getMplVoucherService().getOrderEntryModelFromVouEntries(
 						(VoucherModel) orderModel.getDiscounts().get(0), orderModel); //Since only 1 voucher is applied to the cart and
 				//before promotion calculation only 1 discount will be present
 
-				for (final AbstractOrderEntryModel entry : entryList)
-
+				if (CollectionUtils.isNotEmpty(entryList)) //IQA for TPR-629
 				{
-					entry.setCouponCode("");
-					entry.setCouponValue(Double.valueOf(0.00D));
-					//getModelService().save(entry);
+					for (final AbstractOrderEntryModel entry : entryList)
+
+					{
+						entry.setCouponCode("");
+						entry.setCouponValue(Double.valueOf(0.00D));
+						//getModelService().save(entry);
+					}
+					getModelService().saveAll(entryList);
 				}
-				getModelService().saveAll(entryList);
 			}
 
 
@@ -1953,7 +1960,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 
 
-
 		final long endTime = System.currentTimeMillis();
 		LOG.debug("Exiting service applyPromotions()======" + (endTime - startTime));
 		return promoPriceData;
@@ -1967,7 +1973,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<MplPromotionData> getAppliedPromotionDetails(final AbstractOrderModel abstractOrderModel,
-			final AbstractOrderData abstractOrderData) throws EtailNonBusinessExceptions
+			final AbstractOrderData abstractOrderData) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		MplPromotionData responseData = new MplPromotionData();
 
@@ -2032,52 +2038,66 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *
 	 */
 	private void calculatePromotion(final CartModel cartModel, final OrderModel orderModel, final CartData cartData,
-			final OrderData orderData)
+			final OrderData orderData) //Added  orderModel and orderData to handle TPR-629---order before payment
 	{
 		final long startTime = System.currentTimeMillis();
-		if (null != cartModel)
+		//Try/catch handled for IQA TPR-629
+		try
 		{
-			final Double deliveryCost = cartModel.getDeliveryCost();
-			final CommerceCartParameter parameter = new CommerceCartParameter();
-			parameter.setEnableHooks(true);
-			parameter.setCart(cartModel);
-			getCalculationStrategy().recalculateCart(parameter);
+			if (null != cartModel)
+			{
+				//When customer has cartModel
+				final Double deliveryCost = cartModel.getDeliveryCost();
+				final CommerceCartParameter parameter = new CommerceCartParameter();
+				parameter.setEnableHooks(true);
+				parameter.setCart(cartModel);
+				getCalculationStrategy().recalculateCart(parameter);
 
-			final Double subTotal = cartModel.getSubtotal();
-			final Double cartDiscount = populateCartDiscountPrice(cartModel, null);
-			final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue()
-					- cartDiscount.doubleValue());
+				final Double subTotal = cartModel.getSubtotal();
+				final Double cartDiscount = populateCartDiscountPrice(cartModel, null);
+				final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue()
+						- cartDiscount.doubleValue());
 
-			cartModel.setDeliveryCost(deliveryCost);
+				cartModel.setDeliveryCost(deliveryCost);
 
-			//TISEE-5354
-			final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
-			cartModel.setTotalPrice(totalPrice);
+				//TISEE-5354
+				final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
+				cartModel.setTotalPrice(totalPrice);
 
-			getModelService().save(cartModel);
-			getMplCommerceCartService().setTotalWithConvCharge(cartModel, cartData);
+				getModelService().save(cartModel);
+				getMplCommerceCartService().setTotalWithConvCharge(cartModel, cartData);
+			}
+			else if (null != orderModel)
+			{
+				//When customer has orderModel
+				final Double deliveryCost = orderModel.getDeliveryCost();
+				final CommerceCartParameter parameter = new CommerceCartParameter();
+				parameter.setEnableHooks(true);
+				parameter.setOrder(orderModel);
+				getCalculationStrategy().recalculateCart(parameter);
+
+				final Double subTotal = orderModel.getSubtotal();
+				final Double orderDiscount = populateCartDiscountPrice(null, orderModel);
+				final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue()
+						- orderDiscount.doubleValue());
+
+				orderModel.setDeliveryCost(deliveryCost);
+
+				//TISEE-5354
+				final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
+				orderModel.setTotalPrice(totalPrice);
+
+				getModelService().save(orderModel);
+				getMplCommerceCartService().setTotalWithConvCharge(orderModel, orderData);
+			}
 		}
-		else if (null != orderModel)
+		catch (final ModelSavingException e)
 		{
-			final Double deliveryCost = orderModel.getDeliveryCost();
-			final CommerceCartParameter parameter = new CommerceCartParameter();
-			parameter.setEnableHooks(true);
-			parameter.setOrder(orderModel);
-			getCalculationStrategy().recalculateCart(parameter);
-
-			final Double subTotal = orderModel.getSubtotal();
-			final Double orderDiscount = populateCartDiscountPrice(null, orderModel);
-			final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue()
-					- orderDiscount.doubleValue());
-
-			orderModel.setDeliveryCost(deliveryCost);
-
-			//TISEE-5354
-			final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
-			orderModel.setTotalPrice(totalPrice);
-
-			getModelService().save(orderModel);
-			getMplCommerceCartService().setTotalWithConvCharge(orderModel, orderData);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
 
@@ -2091,7 +2111,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @Description : Calculate Total Discount Value for Showing on Payment Screen
 	 * @return dicountData
 	 */
-	private PriceData calculateTotalDiscount(final AbstractOrderModel abstractOrderModel)
+	private PriceData calculateTotalDiscount(final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
 	{
 		BigDecimal discount = null;
 		double totalPrice = 0.0D;
@@ -2134,13 +2154,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param cart
 	 * @return Double
 	 */
-	private Double populateCartDiscountPrice(final CartModel cart, final OrderModel order)
+	private Double populateCartDiscountPrice(final CartModel cart, final OrderModel order) //Added orderModel to handle TPR-629
 	{
 		final long startTime = System.currentTimeMillis();
 		LOG.debug("Entering Service populateCartDiscountPrice()=====" + System.currentTimeMillis());
 		Double value = Double.valueOf(0);
 		if (null != cart)
 		{
+			//When customer has cart-->first time payment
 			final CartData cartData = getMplExtendedCartConverter().convert(cart);
 
 			if (cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
@@ -2151,6 +2172,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		else if (null != order)
 		{
+			//When customer has order-->2nd or later time payment after one failed attempt
 			final OrderData orderData = orderConverter.convert(order);
 
 			if (orderData.getTotalDiscounts() != null && orderData.getTotalDiscounts().getValue() != null)
@@ -2243,10 +2265,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param channel
 	 * @param cartGuId
 	 * @return boolean
+	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
 	@Override
 	public boolean createEntryInAudit(final String juspayOrderId, final String channel, final String cartGuId)
+			throws EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -2307,17 +2331,23 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			return flag;
 
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
-		}
+		//Commented for TPR-629
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
+		//		}
 		catch (final ModelSavingException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
-		catch (final EtailNonBusinessExceptions e)
+		//		catch (final EtailNonBusinessExceptions e)
+		//		{
+		//			throw e;
+		//		}
+		//Catch added for IQA TPR-629
+		catch (final Exception e)
 		{
-			throw e;
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
@@ -2330,7 +2360,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *
 	 */
 	@Override
-	public boolean updateAuditEntry(final GetOrderStatusResponse orderStatusResponse)
+	public boolean updateAuditEntry(final GetOrderStatusResponse orderStatusResponse) throws EtailNonBusinessExceptions
 	{
 		boolean flag = false;
 		try
@@ -2542,18 +2572,23 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				getModelService().save(auditModel);
 			}
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
-		}
+		//PMD Fixes
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
+		//		}
 		catch (final ModelSavingException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
-		catch (final EtailNonBusinessExceptions e)
+		catch (final Exception e)
 		{
-			throw e;
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+		//		catch (final EtailNonBusinessExceptions e)
+		//		{
+		//			throw e;
+		//		}
 		return flag;
 	}
 
@@ -2565,6 +2600,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void setEBSRiskStatus(final String riskStatus, final JuspayEBSResponseModel juspayEBSResponseModel)
+			throws EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -2581,13 +2617,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				juspayEBSResponseModel.setEbsRiskStatus(EBSResponseStatus.REJECTED);
 			}
 		}
-		catch (final NullPointerException e)
+		//PMD Fix
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
+		//		}
+		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw e;
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
@@ -2599,6 +2636,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void setEBSRiskLevel(final String riskLevel, final JuspayEBSResponseModel juspayEBSResponseModel)
+			throws EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -2615,13 +2653,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				juspayEBSResponseModel.setEbsRiskLevel(EBSRiskLevelEnum.GREEN);
 			}
 		}
-		catch (final NullPointerException e)
+		//PMD Fix
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
+		//		}
+		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw e;
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
@@ -2636,7 +2675,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void saveCreditCard(final GetOrderStatusResponse orderStatusResponse, final AbstractOrderModel cart,
-			final String sameAsShipping) throws EtailNonBusinessExceptions
+			final String sameAsShipping) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -2667,7 +2706,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void saveDebitCard(final GetOrderStatusResponse orderStatusResponse, final AbstractOrderModel cart)
-			throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		String checkValues = "".intern();
 		String[] parts = null;
@@ -2701,7 +2740,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @return AddressModel
 	 */
 	private AddressModel billingAddressForSavedCard(final GetOrderStatusResponse orderStatusResponse,
-			final AbstractOrderModel cart, final String sameAsShipping)
+			final AbstractOrderModel cart, final String sameAsShipping) //Changed to abstractOrderModel for TPR-629
 	{
 		AddressModel address = null;
 		try
@@ -2845,7 +2884,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param sameAsShipping
 	 */
 	private void saveCards(final GetOrderStatusResponse orderStatusResponse, final Map<String, Double> paymentMode,
-			final AbstractOrderModel cart, final String sameAsShipping) throws EtailNonBusinessExceptions
+			final AbstractOrderModel cart, final String sameAsShipping) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		//		if (null != orderStatusResponse && null != orderStatusResponse.getCardResponse()
 		//				&& StringUtils.isNotEmpty(cart.getModeOfPayment()))
@@ -2944,11 +2983,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2960,13 +2999,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
-	 * @throws Exception
+	 * 
+	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception
+	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions
 	{
 		return getMplPaymentDao().getNetBankingBanks();
 	}
@@ -2979,11 +3018,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *
 	 * @param cartGuid
 	 * @return String
-	 * @throws Exception
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public String getAuditId(final String cartGuid) throws EtailNonBusinessExceptions, Exception
+	public String getAuditId(final String cartGuid) throws EtailNonBusinessExceptions
 	{
 		final List<MplPaymentAuditModel> auditList = getMplPaymentDao().getAuditId(cartGuid);
 		String auditId = null;
@@ -3004,7 +3042,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 
 	/**
-	 * This method updates already created entry in the Audit Table with response from Juspay --- TIS-3168
+	 * This method updates already created entry in the Audit Table with response from Juspay --- TIS-3168 and TPR-629
 	 *
 	 * @param orderStatusResponse
 	 *
@@ -3012,6 +3050,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	@Override
 	public boolean updateAuditEntry(final GetOrderStatusResponse orderStatusResponse,
 			final GetOrderStatusRequest orderStatusRequest, final OrderModel orderModel, final Map<String, Double> paymentMode)
+			throws EtailNonBusinessExceptions
 	{
 		boolean flag = false;
 		try
@@ -3278,10 +3317,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.error("Exception in parsing into json ", e);
 			throw new EtailNonBusinessExceptions(e);
 		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw e;
-		}
+		//PMD Fix
+		//		catch (final EtailNonBusinessExceptions e)
+		//		{
+		//			throw e;
+		//		}
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
@@ -3306,11 +3346,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 
 	/**
+	 * This method updates the fraud model wrt order model
 	 *
 	 * @param orderModel
+	 * @param juspayEBSResponseModel
+	 * @param mplAudit
+	 * @throws EtailNonBusinessExceptions
 	 */
 	private void updateFraudModel(final OrderModel orderModel, final JuspayEBSResponseModel juspayEBSResponseModel,
-			final MplPaymentAuditModel mplAudit)
+			final MplPaymentAuditModel mplAudit) throws EtailNonBusinessExceptions
 	{
 		if (null != juspayEBSResponseModel && StringUtils.isNotEmpty(juspayEBSResponseModel.getEbsRiskPercentage())
 				&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase("-1.0"))

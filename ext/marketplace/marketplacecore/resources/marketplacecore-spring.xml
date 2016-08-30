@@ -1675,5 +1675,8 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
 	
+	<!-- TISPRD-4666 -->
+	<bean id="facetDisplayNameComparator" class="com.tisl.mpl.core.comparator.DisplayFacetNameComparator" />	
+		
 	
 </beans>

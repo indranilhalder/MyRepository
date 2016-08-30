@@ -13,6 +13,7 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 
+<!-- TPR-629 orderData added to tag parameters -->
 <%@ attribute name="isCart" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="orderData" required="false" type="de.hybris.platform.commercefacades.order.data.OrderData" %>
 

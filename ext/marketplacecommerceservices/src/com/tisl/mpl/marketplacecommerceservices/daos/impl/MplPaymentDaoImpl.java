@@ -306,11 +306,11 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -605,14 +605,12 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 	}
 
 	/*
-	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 * @Description : Fetching bank name for net banking-- TISPT-169 --- Exception fixed for PMD and TPR-629
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
-	 * @throws Exception
 	 */
 	@Override
-	public List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception
+	public List<BankforNetbankingModel> getNetBankingBanks() /* throws EtailNonBusinessExceptions , Exception */
 	{
 		try
 		{
@@ -635,10 +633,10 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
-		}
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		//		}
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
@@ -649,15 +647,14 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 
 	/**
-	 * This method picks up the latest audit id against the cart guid which is in submitted status TISPT-200
+	 * This method picks up the latest audit id against the cart guid which is in submitted status TISPT-200 ---
+	 * Exception fixed for PMD and TPR-629
 	 *
 	 * @param cartGuid
 	 * @return List<MplPaymentAuditModel>
-	 * @throws EtailNonBusinessExceptions
-	 * @throws Exception
 	 */
 	@Override
-	public List<MplPaymentAuditModel> getAuditId(final String cartGuid) throws EtailNonBusinessExceptions, Exception
+	public List<MplPaymentAuditModel> getAuditId(final String cartGuid) /* throws EtailNonBusinessExceptions , Exception */
 	{
 		try
 		{
@@ -681,10 +678,10 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
-		}
+		//		catch (final NullPointerException e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		//		}
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
@@ -697,7 +694,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 
 	/**
-	 * @Decsription : Fetch Order Details Based on GUID for new Payment Soln - Order before payment
+	 * @Decsription : Fetch Order Details Based on GUID for new Payment Soln - Order before payment TPR-629
 	 * @param: guid
 	 */
 	@Override

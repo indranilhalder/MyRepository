@@ -101,7 +101,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	@Override
 	public void recalculateCartForCoupon(final CartModel cartModel, final OrderModel orderModel) throws EtailNonBusinessExceptions
 	{
-		getMplVoucherService().recalculateCartForCoupon(cartModel, orderModel);
+		getMplVoucherService().recalculateCartForCoupon(cartModel, orderModel); //OrderModel added for TPR-629
 	}
 
 

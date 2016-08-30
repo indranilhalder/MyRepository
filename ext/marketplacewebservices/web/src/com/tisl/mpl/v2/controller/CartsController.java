@@ -31,7 +31,6 @@ import de.hybris.platform.commercefacades.promotion.CommercePromotionRestriction
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
@@ -41,7 +40,6 @@ import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.promotion.CommercePromotionRestrictionException;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.PaginationData;
-import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.dto.order.CartModificationWsDTO;
@@ -77,7 +75,6 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
@@ -117,7 +114,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.granule.json.JSON;
-import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -227,15 +223,12 @@ public class CartsController extends BaseCommerceController
 	private AccountAddressFacade accountAddressFacade;
 	@Resource
 	private UserService userService;
-	@Resource
-	private CustomerAccountService customerAccountService;
 	@Resource(name = "mplCheckoutFacade")
 	private MplCheckoutFacade mplCheckoutFacade;
 	@Resource
 	private MplCustomerProfileService mplCustomerProfileService;
 	@Resource
 	private MplCommerceCartCalculationStrategy calculationStrategy;
-
 	@Resource
 	private CommerceCartService commerceCartService;
 	@Resource
@@ -246,23 +239,14 @@ public class CartsController extends BaseCommerceController
 	private WishlistFacade wishlistFacade;
 	@Resource
 	private SiteConfigService siteConfigService;
-	@Resource(name = "sessionService")
-	private SessionService sessionService;
-
-	@Resource(name = "binService")
-	private BinService binService;
-
 	@Resource(name = "mplStoreLocatorFacade")
 	private MplStoreLocatorFacade mplStoreLocatorFacade;
-
 	@Resource
 	private BaseSiteService baseSiteService;
 	@Autowired
 	private MplCouponWebFacade mplCouponWebFacade;
-
 	@Resource(name = "mplSlaveMasterFacade")
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
-
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
 	//	@Autowired
@@ -2382,7 +2366,8 @@ public class CartsController extends BaseCommerceController
 					{
 						//gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + postalCode);
-						final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(cartDataOrdered, postalCode);
+						final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(cartDataOrdered, cartModel,
+								postalCode);
 						deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
 						LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
 					}
@@ -2475,7 +2460,7 @@ public class CartsController extends BaseCommerceController
 	}
 
 	/**
-	 * Returns order summary for mobile.
+	 * Returns order summary for mobile. --TPR-629
 	 *
 	 * @param cartId
 	 * @param pincode
@@ -2597,7 +2582,7 @@ public class CartsController extends BaseCommerceController
 	}
 
 	/**
-	 * Cart Reservation for Payment.
+	 * Cart Reservation for Payment. --TPR-629
 	 *
 	 * @queryparam fields Response configuration (list of fields, which should be returned in response)
 	 * @return Details of cart and it's entries
@@ -2627,7 +2612,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2801,24 +2786,6 @@ public class CartsController extends BaseCommerceController
 		return success;
 	}
 
-	private void applyPromotions(final CartModel cart)
-	{
-		//final CartModel cart = cartService.getSessionCart();
-		//recalculating cart
-		try
-		{
-			//commerceCartService.recalculateCart(cart);
-			final CommerceCartParameter parameter = new CommerceCartParameter();
-			parameter.setEnableHooks(true);
-			parameter.setCart(cart);
-			calculationStrategy.recalculateCart(parameter);
-		}
-		catch (final Exception e)
-		{
-			LOG.error(" Exception in applyPromotions due to " + e);
-		}
-	}
-
 	/**
 	 * @description Select the delivery mode against the unique SKU (ussId)
 	 * @param cartId
@@ -2912,14 +2879,17 @@ public class CartsController extends BaseCommerceController
 	 */
 	@RequestMapping(value = "/{cartId}/checkPinCodeAtCart", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public MplCartPinCodeResponseWsDTO checkPinCodeAtCart(@RequestParam final String pincode)
+	public MplCartPinCodeResponseWsDTO checkPinCodeAtCart(@PathVariable final String cartId, @RequestParam final String pincode)
 	{
 		final MplCartPinCodeResponseWsDTO response = new MplCartPinCodeResponseWsDTO();
 		List<PinCodeResponseData> pinCodeResponse = null;
+		CartModel cart = null;
 		try
 		{
 			LOG.debug(String.format("Checking servicibility for the pincode %s", pincode));
-			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrdering(true), pincode);
+			cart = mplPaymentWebFacade.findCartValues(cartId);
+			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrdering(true), cart,
+					pincode);
 			if (null != pinCodeResponse)
 			{
 				response.setPinCodeResponseList(pinCodeResponse);
@@ -3106,7 +3076,7 @@ public class CartsController extends BaseCommerceController
 	}
 
 	/**
-	 * @description method is called to resend the OTP Number for COD
+	 * @description method is called to resend the OTP Number for COD --TPR-629
 	 * @return ValidateOtpWsDto
 	 * @throws DuplicateUidException
 	 *            , InvalidKeyException ,NoSuchAlgorithmException
