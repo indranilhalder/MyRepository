@@ -284,6 +284,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String GUID = "guid";
 	public static final String REDIRECTSTRING = "redirect";
 	public static final String REDIRECTTOPAYMENT = "redirect_to_payment";
+	public final static String PAYMENTIMEOUTRRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.PaymentTimeoutError";
 
 	private MarketplacecheckoutaddonConstants()
 	{

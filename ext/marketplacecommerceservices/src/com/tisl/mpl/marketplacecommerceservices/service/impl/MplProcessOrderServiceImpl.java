@@ -3,10 +3,13 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
@@ -14,11 +17,14 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
+import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,10 +46,12 @@ import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
@@ -78,12 +86,16 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private ConfigurationService configurationService;
 	@Autowired
 	private NotificationService notificationService;
+	@Resource(name = "mplVoucherDao")
+	private MplVoucherDao mplVoucherDao;
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;
 
 	/**
 	 * This method processes pending orders
 	 */
 	@Override
-	public void processPaymentPedingOrders() throws EtailNonBusinessExceptions
+	public void processPaymentPedingOrders()
 	{
 		List<OrderModel> orders = new ArrayList<OrderModel>();
 		try
@@ -93,11 +105,11 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		}
 		catch (final EtailNonBusinessExceptions e) //IQA for TPR-629
 		{
-			LOG.error("Error in getPaymentPedingOrders================================", e);
+			LOG.error("Error in getPaymentPedingOrders while fetching pending orders================================", e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Error in getPaymentPedingOrders================================", e);
+			LOG.error("Error in getPaymentPedingOrders while fetching pending orders================================", e);
 		}
 
 		if (CollectionUtils.isNotEmpty(orders))
@@ -173,14 +185,14 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									else
 									{
 										//Change order status & process order based on Webhook status
-										takeActionAgainstOrder(juspayWebhookModel, orderModel);
+										takeActionAgainstOrder(juspayWebhookModel, orderModel, true);
 										uniqueList.add(juspayWebhookModel);
 									}
 								}
 								else
 								{
 									//Change order status & process order based on Webhook status
-									takeActionAgainstOrder(juspayWebhookModel, orderModel);
+									takeActionAgainstOrder(juspayWebhookModel, orderModel, true);
 									uniqueList.add(juspayWebhookModel);
 								}
 							}
@@ -195,6 +207,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+
+							removeVoucherInvalidation(orderModel);
 
 							//Email and sms for Payment_Timeout
 							final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
@@ -220,7 +234,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							{
 								if (!juspayWebhookModel.getIsExpired().booleanValue())
 								{
-									takeActionAgainstOrder(juspayWebhookModel, orderModel);
+									takeActionAgainstOrder(juspayWebhookModel, orderModel, false);
 								}
 							}
 						}
@@ -254,7 +268,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					}
 
 				}
-				catch (final InvalidCartException | CalculationException | EtailNonBusinessExceptions e)
+				catch (final InvalidCartException | CalculationException | EtailNonBusinessExceptions | VoucherOperationException e)
 				{
 					LOG.error("Error in getPaymentPedingOrders================================", e);
 				}
@@ -312,17 +326,20 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	 *
 	 * @param juspayWebhookModel
 	 * @param orderModel
+	 * @param positive
 	 * @throws CalculationException
 	 * @throws InvalidCartException
+	 * @throws VoucherOperationException
 	 */
-	private void takeActionAgainstOrder(final JuspayWebhookModel juspayWebhookModel, final OrderModel orderModel)
-			throws InvalidCartException, CalculationException, EtailNonBusinessExceptions
+	private void takeActionAgainstOrder(final JuspayWebhookModel juspayWebhookModel, final OrderModel orderModel,
+			final boolean positive) throws InvalidCartException, CalculationException, EtailNonBusinessExceptions,
+			VoucherOperationException
 	{
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
 				+ orderModel.getCode();
 		if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_SUCCEEDED")
-				&& !juspayWebhookModel.getIsExpired().booleanValue())
+				&& !juspayWebhookModel.getIsExpired().booleanValue() && positive)
 		{
 			if (null == orderModel.getPaymentInfo())
 			{
@@ -357,8 +374,14 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			juspayWebhookModel.setIsExpired(Boolean.TRUE);
 		}
 		else if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_FAILED")
-				&& !juspayWebhookModel.getIsExpired().booleanValue())
+				&& !juspayWebhookModel.getIsExpired().booleanValue() && !positive)
 		{
+			//Added for failure transactions
+			if (null == orderModel.getPaymentInfo())
+			{
+				updateOrder(orderModel, juspayWebhookModel);
+			}
+
 			//getting PinCode against Order
 			final String defaultPinCode = getPinCodeForOrder(orderModel);
 
@@ -367,6 +390,13 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 
 			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+
+			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+			{
+				final PromotionVoucherModel voucherModel = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
+				getMplVoucherService().releaseVoucher(voucherModel.getVoucherCode(), null, orderModel);
+				getMplVoucherService().recalculateCartForCoupon(null, orderModel);
+			}
 			//Email and sms for Payment_Failed
 			try
 			{
@@ -384,7 +414,6 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			juspayWebhookModel.setIsExpired(Boolean.TRUE);
 		}
 	}
-
 
 	/**
 	 * This method returns the tat for processing the order in the job
@@ -451,6 +480,37 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		}
 
 	}
+
+
+
+
+	/**
+	 * This method only removes voucher invalidation created
+	 *
+	 * @param orderModel
+	 */
+	private void removeVoucherInvalidation(final OrderModel orderModel)
+	{
+		if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+		{
+
+			final CustomerModel customer = (CustomerModel) orderModel.getUser();
+			final List<VoucherInvalidationModel> invalidationList = new ArrayList<VoucherInvalidationModel>(getMplVoucherDao()
+					.findVoucherInvalidation(orderModel.getDiscounts().get(0).getCode(), customer.getOriginalUid(),
+							orderModel.getCode()));
+
+			final Iterator<VoucherInvalidationModel> iter = invalidationList.iterator();
+
+			//Remove the existing discount
+			while (iter.hasNext())
+			{
+				final VoucherInvalidationModel model = iter.next();
+				getModelService().remove(model);
+			}
+		}
+	}
+
+
 
 	/**
 	 * @return the mplProcessOrderDao
@@ -643,6 +703,40 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	public void setNotificationService(final NotificationService notificationService)
 	{
 		this.notificationService = notificationService;
+	}
+
+	/**
+	 * @return the mplVoucherDao
+	 */
+	public MplVoucherDao getMplVoucherDao()
+	{
+		return mplVoucherDao;
+	}
+
+	/**
+	 * @param mplVoucherDao
+	 *           the mplVoucherDao to set
+	 */
+	public void setMplVoucherDao(final MplVoucherDao mplVoucherDao)
+	{
+		this.mplVoucherDao = mplVoucherDao;
+	}
+
+	/**
+	 * @return the mplVoucherService
+	 */
+	public MplVoucherService getMplVoucherService()
+	{
+		return mplVoucherService;
+	}
+
+	/**
+	 * @param mplVoucherService
+	 *           the mplVoucherService to set
+	 */
+	public void setMplVoucherService(final MplVoucherService mplVoucherService)
+	{
+		this.mplVoucherService = mplVoucherService;
 	}
 
 

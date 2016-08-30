@@ -12,6 +12,7 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.enums.CreditCardType;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -471,15 +472,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						try
 						{
 							//Check handled to remove concurrent scenario - TPR-629
-							if (null == order.getPaymentInfo())
+							if (null == order.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(order.getStatus()))
 							{
 								getModelService().save(paymentTransactionEntry);
 								paymentTransactionEntryList.add(paymentTransactionEntry);
 							}
-							else
+							else if (null != order.getPaymentInfo())
 							{
 								LOG.error("Order already has payment info -- not saving paymentTransactionEntry>>>"
 										+ order.getPaymentInfo().getCode());
+							}
+							else
+							{
+								LOG.error("Payment_Timeout order status for orderCode>>>" + order.getCode());
 							}
 
 						}
@@ -504,7 +509,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				paymentTransactionList.add(payTranModel);
 			}
 
-			if (null == order.getPaymentInfo())
+			if (null == order.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(order.getStatus()))
 			{
 				order.setPaymentTransactions(paymentTransactionList);
 
@@ -518,9 +523,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					saveCards(orderStatusResponse, paymentMode, order, sameAsShipping);
 				}
 			}
-			else
+			else if (null != order.getPaymentInfo())
 			{
 				LOG.error("Order already has payment info -- not saving order or card models>>>" + order.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error("Payment_Timeout order status for orderCode>>>" + order.getCode());
 			}
 
 		}
@@ -582,14 +591,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
 			paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
 
-			if (null == abstractOrderModel.getPaymentInfo())
+			if (null == abstractOrderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(abstractOrderModel.getStatus()))
 			{
 				getModelService().save(paymentTransactionEntry);
 				paymentTransactionEntryList.add(paymentTransactionEntry);
 			}
 			else
 			{
-				LOG.error("PaymentInfo already available.....not saving any more paymentTransactionEntry model");
+				LOG.error("PaymentInfo already available or order is Payment_Timeout.....not saving any more paymentTransactionEntry model");
 			}
 
 			if (null != abstractOrderModel.getPaymentInfo())
@@ -619,17 +628,21 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 
 
-			if (null == abstractOrderModel.getPaymentInfo())
+			if (null == abstractOrderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(abstractOrderModel.getStatus()))
 			{
 				getModelService().save(paymentTransactionModel);
 				paymentTransactionList.add(paymentTransactionModel);
 				abstractOrderModel.setPaymentTransactions(paymentTransactionList);
 				getModelService().save(abstractOrderModel);
 			}
-			else
+			else if (null != abstractOrderModel.getPaymentInfo())
 			{
 				LOG.error("PaymentInfo already available.....not saving any more paymentTransactionModel and not setting against the abstractOrderModel>>>"
 						+ abstractOrderModel.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error("Payment_Timeout order status for orderCode>>>" + abstractOrderModel.getCode());
 			}
 
 		}
@@ -749,17 +762,21 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//saving the debitcardpaymentinfomodel
 			//try
 			//{
-			if (null == cart.getPaymentInfo())
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
 			{
 				getModelService().save(debitCardPaymentInfoModel);
 				//setting paymentinfo in cart
 				cart.setPaymentInfo(debitCardPaymentInfoModel);
 				cart.setPaymentAddress(cart.getDeliveryAddress());
 			}
-			else
+			else if (null != cart.getPaymentInfo())
 			{
 				LOG.error("Order already has payment info -- not saving debitCardPaymentInfoModel>>>"
 						+ cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
 			}
 
 			//}
@@ -972,17 +989,21 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//	LOG.error("Exception while saving credit card payment info with " + e);
 			//}
 
-			if (null == cart.getPaymentInfo())
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
 			{
 				getModelService().save(creditCardPaymentInfoModel);
 				//setting paymentinfo in cart
 				cart.setPaymentInfo(creditCardPaymentInfoModel);
 				cart.setPaymentAddress(address);
 			}
-			else
+			else if (null != cart.getPaymentInfo())
 			{
 				LOG.error("Order already has payment info -- not saving creditCardPaymentInfoModel>>>"
 						+ cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
 			}
 		}
 		catch (final ModelSavingException e)
@@ -1195,9 +1216,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				emiPaymentInfoModel.setBillingAddress(address);
 			}
 
-			if (null == cart.getPaymentInfo())
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
 			{
-				//saving the creditCardPaymentInfoModel
+				//saving the emiPaymentInfoModel
 				getModelService().save(emiPaymentInfoModel);
 				//}
 				//catch (final ModelSavingException e)
@@ -1208,9 +1229,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				cart.setPaymentInfo(emiPaymentInfoModel);
 				cart.setPaymentAddress(address);
 			}
-			else
+			else if (null != cart.getPaymentInfo())
 			{
 				LOG.error("Order already has payment info -- not saving emiPaymentInfoModel>>>" + cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
 			}
 
 		}
@@ -1254,7 +1279,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else
 			{
-				nbPaymentInfoModel.setCode("DUMMY_NB_" + cart.getGuid());
+				//nbPaymentInfoModel.setCode("DUMMY_NB_" + cart.getGuid());		//Erroneous code fixed
+				nbPaymentInfoModel.setCode("DUMMY_NB_" + System.currentTimeMillis());
 			}
 
 			//if (null != getUserService().getCurrentUser())		//Commented for TPR-629
@@ -1292,7 +1318,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				nbPaymentInfoModel.setBank(nbBankModel);
 			}
 
-			if (null == cart.getPaymentInfo())
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
 			{
 				//saving the nbPaymentInfoModel
 				getModelService().save(nbPaymentInfoModel);
@@ -1301,9 +1327,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				cart.setPaymentInfo(nbPaymentInfoModel);
 				cart.setPaymentAddress(cart.getDeliveryAddress());
 			}
-			else
+			else if (null != cart.getPaymentInfo())
 			{
 				LOG.error("Order already has payment info -- not saving nbPaymentInfoModel>>>" + cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
 			}
 
 		}
@@ -1416,7 +1446,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		cODPaymentInfoModel.setCashOwner(custName);
 		cODPaymentInfoModel.setCode(MarketplacecommerceservicesConstants.COD + "_" + entries.get(0).getOrder().getCode());
 		cODPaymentInfoModel.setUser(getUserService().getCurrentUser());
-		if (null == abstractOrderModel.getPaymentInfo())
+		if (null == abstractOrderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(abstractOrderModel.getStatus()))
 		{
 			try
 			{
@@ -1455,16 +1485,21 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				throw new EtailNonBusinessExceptions(e, "Exception while saving cart with");
 			}
 		}
-		else
+		else if (null != abstractOrderModel.getPaymentInfo())
 		{
 			LOG.error("Order already has payment info -- not saving cODPaymentInfoModel and not attaching to abstractOrderModel>>>"
 					+ abstractOrderModel.getPaymentInfo().getCode());
+		}
+		else
+		{
+			LOG.error("Payment_Timeout order status for orderCode>>>" + abstractOrderModel.getCode());
 		}
 	}
 
 	/**
 	 * This method is used set the saved card details in SavedCardModel
 	 *
+	 * @param user
 	 * @param response
 	 * @param address
 	 */
@@ -1531,6 +1566,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	/**
 	 * This method is used set the saved card details in SavedCardModel
 	 *
+	 * @param user
 	 * @param response
 	 */
 	private void setInSavedDebitCard(final GetOrderStatusResponse response, final UserModel user)
@@ -2983,11 +3019,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2999,9 +3035,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override

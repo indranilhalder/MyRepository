@@ -312,30 +312,31 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 
 			final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
-			if (realEbs.equalsIgnoreCase("Y"))
+			if (realEbs.equalsIgnoreCase("Y") && StringUtils.isNotEmpty(orderModel.getGuid()))
 			{
-				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+				//				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+				//				{
+				//					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				//				}
+				//				else
+				//				{
+				//if (StringUtils.isNotEmpty(orderModel.getGuid()))
+				//{
+				final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
+				if (null != mplAudit)
 				{
-					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-				}
-				else
-				{
-					if (StringUtils.isNotEmpty(orderModel.getGuid()))
+					final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAudit.getAuditEntries();
+					if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
 					{
-						final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
-						if (null != mplAudit)
-						{
-							final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAudit.getAuditEntries();
-							if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
-							{
-								updateOrderStatus(mplAuditEntryList, orderModel);
-							}
-						}
+						updateOrderStatus(mplAuditEntryList, orderModel);
 					}
 				}
+				//}
 			}
 		}
 	}
+
+	//}
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249

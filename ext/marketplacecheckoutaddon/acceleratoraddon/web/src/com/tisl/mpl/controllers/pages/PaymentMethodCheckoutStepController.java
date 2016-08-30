@@ -27,6 +27,7 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -652,7 +653,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//Handled for OrderModel TPR-629
 			else
 			{
-				if (null == orderModel.getPaymentInfo())
+				if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
 				{
 					final Double orderValue = orderModel.getSubtotal();
 					final Double totalCODCharge = orderModel.getConvenienceCharges();
@@ -2355,7 +2356,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		try
 		{
 			final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
-			if (null == orderToBeUpdated.getPaymentInfo())
+			if (null == orderToBeUpdated.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
 			{
 				final String orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
 				//Redirection when transaction is successful i.e. CHARGED
@@ -3230,7 +3231,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				if (null == orderModel.getPaymentInfo())
+				if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
 				{
 					//Code for orderModel --- do not create order again TPR-629
 					boolean redirectFlag = false;
@@ -3263,9 +3264,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
 					}
 				}
-				else
+				else if (null != orderModel.getPaymentInfo())
 				{
 					LOG.error("Order already has payment info >>>" + orderModel.getPaymentInfo().getCode());
+					return "redirect_with_details";
+				}
+				else
+				{
+					LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode());
 					return "redirect_with_details";
 				}
 			}
@@ -3481,6 +3487,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
 				return redirectToOrderConfirmationPage(orderData);
+			}
+			else if (null == orderToBeUpdated.getPaymentInfo() && OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
+			{
+				LOG.error("Issue with update order...redirecting to payment page only");
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.PAYMENTIMEOUTRRORMSG);
+				return getCheckoutStep().currentStep();
 			}
 			else
 			{
@@ -4032,7 +4045,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

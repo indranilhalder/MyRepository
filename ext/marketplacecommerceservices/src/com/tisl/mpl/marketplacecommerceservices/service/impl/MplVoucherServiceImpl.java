@@ -494,7 +494,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				recalculateCartForCoupon(null, orderModel); //Recalculates cart after releasing voucher
 				getModelService().save(orderModel); //TPR-1079
 
-				discountData.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(0))); //TPR-1079
+				discountData.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(0))); //TPR-1079/
 				if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
 				{
 					msg = MarketplacecommerceservicesConstants.NOTAPPLICABLE;

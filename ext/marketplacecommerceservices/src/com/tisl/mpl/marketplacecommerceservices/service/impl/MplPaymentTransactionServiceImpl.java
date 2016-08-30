@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
@@ -136,14 +137,18 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			}
 
 			//Check handled to remove concurrent scenario - TPR-629
-			if (null == cart.getPaymentInfo())
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
 			{
 				getModelService().save(paymentTransactionEntry);
 				paymentTransactionEntryList.add(paymentTransactionEntry);
 			}
-			else
+			else if (null != cart.getPaymentInfo())
 			{
 				LOG.error("Order already has payment info -- not saving paymentTransactionEntry>>>" + cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
 			}
 		}
 		catch (final ModelSavingException e)
@@ -362,14 +367,18 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			}
 
 			//Check handled to remove concurrent scenario - TPR-629
-			if (null == cart.getPaymentInfo())
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
 			{
 				getModelService().save(paymentTransactionModel);
 				//paymentTransactionList.add(paymentTransactionModel);
 			}
-			else
+			else if (null != cart.getPaymentInfo())
 			{
 				LOG.error("Order already has payment info -- not saving paymentTransaction>>>" + cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error("Payment_Timeout order status for orderCode>>>" + cart.getCode());
 			}
 
 		}

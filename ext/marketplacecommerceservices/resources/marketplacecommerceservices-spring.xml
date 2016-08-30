@@ -1773,7 +1773,7 @@
 	<bean id="mplKeywordRedirectDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplKeywordRedirectDaoImpl">
 	</bean>
 
-	<!-- New Payment Solution Starts -->	
+	<!-- New Payment Solution Starts TPR-629-->	
 	<bean id="mplProcessOrderService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProcessOrderServiceImpl">
 		<property name="orderService" ref="orderService" />
@@ -1783,7 +1783,8 @@
 	<bean id="mplProcessOrderDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplProcessOrderDaoImpl" />
 
-
+	<bean id="mplVoucherDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplVoucherDaoImpl" />
 
 </beans>
 
