@@ -106,10 +106,11 @@ ACC.cartitem = {
 								trackMAD(productCodeMSD,salesHierarchyCategoryMSD,subPriceForMSD,"INR");
 								}						
 							//window.location.reload();
-							var divId='#entry-'+entryNumber;
+							//TPR-634
+							var liId='#entry-'+entryNumber;
 							//$(divId).css("opacity","0.5");
 							//var undoButtonHtml="<form:form id='addToCartForm' action='/cart/add' method='post'><input type='hidden' maxlength='3' size='1' id='qty' name='qty' value='1'/><input type='hidden' maxlength='3' id='ussid' name='ussid' value='1234567889' /><button type='submit' class='undoRemove'>Undo</button>";
-							localStorage.setItem("deletedEntry", $(divId).html());
+							localStorage.setItem("deletedEntry", $(liId).html());
 							localStorage.setItem("showDeletedEntry", "true");
 							window.location.reload();
 						},
@@ -155,6 +156,7 @@ var trackMAD = function(ProductId,CategoryId,Price,Currency) {
 		}
 	}
 }
+//TPR-634
 $(document).on("click", ".undo-add-to-cart", function(e) {
 	e.preventDefault();
 	$(this).closest("form").find("input[name='CSRFToken']").val(ACC.config.CSRFToken);

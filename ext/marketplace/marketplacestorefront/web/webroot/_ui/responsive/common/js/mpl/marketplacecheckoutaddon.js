@@ -3286,7 +3286,9 @@ function populatePincodeDeliveryMode(response,buttonType){
 		//console.log(pincodeServiceError);
 		var elementId = $(".desktop li:nth-child(3) ul");
 		elementId.hide();
-		$(".pincodeServiceError").text(pincodeServiceError);		
+		$(".pincodeServiceError").text(pincodeServiceError);
+		//TPR-933
+		$('.success_msg').hide();
 	}else{
 		$('#unsevisablePin').hide();
 		$(".pincodeServiceError").hide();
@@ -3326,7 +3328,8 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#"+ussId).remove();
 		var newUi = document.createElement("ul");
 		newUi.setAttribute("id", ussId);
-		
+		//TPR-933 class added
+		newUi.setAttribute("class", "success_msg");
 		var jsonObj=deliveryModeJsonObj[key].validDeliveryModes;
 		
 		var inventory=deliveryModeJsonObj[key].stockCount;

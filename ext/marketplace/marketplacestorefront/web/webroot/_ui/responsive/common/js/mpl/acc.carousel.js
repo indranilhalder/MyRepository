@@ -102,17 +102,17 @@ ACC.carousel = {
 			items:1,
     		loop: true,
     		nav:true,
-    		dots:true,
+    		dots:false,
     		navText:[]
 		});
 		/*TPR-268*/
-		$("#rotatingImageMobile").owlCarousel({
+		/*$("#rotatingImageMobile").owlCarousel({
 			items:1,
     		loop: true,
     		nav:true,
-    		dots:true,
+    		dots:false,
     		navText:[]
-		});
+		});*/
 		/*if(typeof homePageBannerTimeout!== "undefined"){
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
 			//alert(timeout);
@@ -130,8 +130,9 @@ ACC.carousel = {
 		if(typeof homePageBannerTimeout!== "undefined"){
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
 			//alert(timeout);
-			$("#rotatingImageTimeout").owlCarousel({
+			$(".home-rotatingImage").owlCarousel({
 				items:1,
+				nav:false,
 				dots:true,
 				loop: true,
 		        autoplay: true,
@@ -139,14 +140,14 @@ ACC.carousel = {
 		        autoplayTimeout: timeout
 		    });
 			/*TPR-268*/
-			$("#rotatingImageTimeoutMobile").owlCarousel({
+			/*$("#rotatingImageTimeoutMobile").owlCarousel({
 				items:1,
 				dots:true,
-				loop: true,
+				loop: false,
 		        autoplay: true,
 		        autoHeight : true,
 		        autoplayTimeout: timeout
-		    });
+		    });*/
 		/*	$("#rotatingImageTimeout").append('<div class="hbpagination"></div>');
 			var bannerLength = $('#rotatingImageTimeout .owl-item').length;
 			for (var i = 0 ; i<bannerLength; i++ ) {
@@ -367,43 +368,44 @@ ACC.carousel = {
 	},
 	
 	advancedCategoryCarousel: function(){
-		
-		/*$("#mplAdvancedCategoryCarousel").owlCarousel({
-					items:4,
-            		loop: true,
-            		nav:true,
-            		dots:false,
-            		navText:[],
-            		responsive : {
-            			// breakpoint from 0 up
-            			0 : {
-            				items:1,
-            				stagePadding: 50,
-            			},
-            			// breakpoint from 480 up
-            			480 : {
-            				items:2,
-            				stagePadding: 50,
-            			},
-            			// breakpoint from 768 up
-            			768 : {
-            				items:3,
-            			},
-            			// breakpoint from 768 up
-            			1280 : {
-            				items:4,
-            			}			
-            		}	
-			navigation:true,
-			navigationText : [],
-			pagination:false,
-			itemsDesktop : [5000,4], 
-			itemsDesktopSmall : [1400,4], 
-			itemsTablet: [650,2], 
-			itemsMobile : [480,2], 
-			rewindNav: false,
-			lazyLoad:true
-		});*/
+		setTimeout(function(){
+			$("#mplAdvancedCategoryCarousel").owlCarousel({
+				items:4,
+        		loop: true,
+        		nav:true,
+        		dots:false,
+        		navText:[],
+        		responsive : {
+        			// breakpoint from 0 up
+        			0 : {
+        				items:1,
+        				stagePadding: 50,
+        			},
+        			// breakpoint from 480 up
+        			480 : {
+        				items:2,
+        				stagePadding: 50,
+        			},
+        			// breakpoint from 768 up
+        			768 : {
+        				items:3,
+        			},
+        			// breakpoint from 768 up
+        			1280 : {
+        				items:4,
+        			}			
+        		}	
+			/*navigation:true,
+				navigationText : [],
+				pagination:false,
+				itemsDesktop : [5000,4], 
+				itemsDesktopSmall : [1400,4], 
+				itemsTablet: [650,2], 
+				itemsMobile : [480,2], 
+				rewindNav: false,
+				lazyLoad:true*/
+			});
+		},4000);
 	},
 	
 	myReviewCarousel: function(){
@@ -451,7 +453,7 @@ ACC.carousel = {
 	pdpProductCarousel: function(){
 		$("#pdpProductCarousel").owlCarousel({
 			items:1,
-    		loop: true,
+    		loop: ($("#pdpProductCarousel img").length == 1)?false:true,
     		navText:[],
     		responsive : {
     			// breakpoint from 0 up
@@ -466,6 +468,7 @@ ACC.carousel = {
     			}			
     		}	
 		});
+		$(".product-image-container.device .owl-stage-outer").prepend($(".product-image-container.device .wishlist-icon"))
 	}
 	
 	/*New Homepage change*/

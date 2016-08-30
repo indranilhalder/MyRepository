@@ -147,7 +147,6 @@ tr.d0 td {
 			<product:emiDetail product="${product}" />
 			
 			<!-- TISPRM-97 starts -->
-<!-- 			TISPRD-4861 -->
 				<!-- TPR-772 starts -->
 			<div class="pdp-promo-block promo-block" style="display:none">
 			<!-- TPR-772 ends -->
@@ -178,16 +177,6 @@ tr.d0 td {
 			</c:choose>
 			
 			</c:if>
-			</div>
-			<!-- TISPRM-97 ends -->
-			<ycommerce:testId
-				code="productDetails_productNamePrice_label_${product.code}">
-				<h3 class="seller">Sold by <span id="sellerNameId"></span></h3>
-			</ycommerce:testId>
-			<div class="fullfilled-by">
-			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
-			<span id="fulFilledBySship"  style="display:none;"></span>
-
 			</div>
 			<!-- TISPRM-97 ends -->
 			<!-- TPR-275 starts  -->

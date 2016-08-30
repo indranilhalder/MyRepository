@@ -399,24 +399,33 @@ function constructDepartmentHierarchy(inputArray) {
 					if(stckData[sizeMatched]=='outOfStock'){
 						
 					  $(".AvailabilitySize").show();
+					  $(".Availability").hide();
 								//}
-						
-					$("#stockIdFilteredVariant_" + product).show();
-					$("#stockIdFilteredVariant_" + product).html("OUT OF STOCK");
+								
+					$("#stockIdDefault_" + product).parents('div.image').find('a img').addClass('out-of-stock-product');		
+					$("#stockIdDefault_" + product).html("OUT OF STOCK");
+					$("#stockIdDefault_" + product).show();
+					
+//					$("#stockIdFilteredVariant_" + product).show();
+//					$("#stockIdFilteredVariant_" + product).html("OUT OF STOCK");
 					}
 				}
 
 			} else {
 				for (j = 0; j < serpSizeList.length; j++) {
-					var sizeUrl = serpSizeList[j];
-					if (stckData[sizeUrl] != undefined) {
-						if (minPriceSize == serpSizeList[j]) {
-							
+					var sizeUrl = serpSizeList[j];					
+					if (stckData[sizeUrl] != undefined) {						
+						if (minPriceSize == serpSizeList[j]) {							
 							if(stckData[sizeMatched]=='outOfStock'){
 								 $(".AvailabilitySize").show();
-								$("#stockIdFilteredVariant_" + product).show();
-								$("#stockIdFilteredVariant_" + product).html(
-										"OUT OF STOCK");
+								 $(".Availability").hide();								
+								 
+								$("#stockIdDefault_" + product).parents('div.image').find('a img').addClass('out-of-stock-product');
+								$("#stockIdDefault_" + product).html("OUT OF STOCK");
+								$("#stockIdDefault_" + product).show();	
+								
+//								$("#stockIdFilteredVariant_" + product).show();
+//								$("#stockIdFilteredVariant_" + product).html("OUT OF STOCK");
 								
 							}
 							/*$("#stockIdFiltered_" + product).val(
@@ -428,6 +437,7 @@ function constructDepartmentHierarchy(inputArray) {
 		}
 		}
 	}
+
 
 	//update product minimum price and mrp
 	function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,minPriceValue,product) {
@@ -513,6 +523,11 @@ function constructDepartmentHierarchy(inputArray) {
 	});
 	
 	 $(".facet-name.js-facet-name h4").each(function(){
+		 
+		 if($("#stockStatusId").val()!= "true"){
+			 $(".Availability").hide();
+		 }
+		 
 		if($(this).hasClass("true")){
 			$(this).addClass("active");
 			$(this).parent().siblings('.facet-values.js-facet-values.js-facet-form').addClass("active");
