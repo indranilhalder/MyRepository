@@ -59,7 +59,19 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 			value2 = arg1.getName().replaceAll("\\s+", "").toUpperCase();
 		}
 
-		if (value1 == null || value2 == null)
+		if (value1 == null && value2 == null)
+		{
+			return 0;
+		}
+		else if (value1 == null)
+		{
+			return -1;
+		}
+		else if (value2 == null)
+		{
+			return 1;
+		}
+		else if (value1.equals(value2)||value1==value2)
 		{
 			return 0;
 		}

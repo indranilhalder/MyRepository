@@ -387,10 +387,11 @@ public class ProductPageController extends AbstractPageController
 	{
 		final List<MetaElementData> metadata = new LinkedList<>();
 		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
-		metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
+		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
 		metadata.add(createMetaElement("productCode", pdCode));
 		//metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
 		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
+		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
 
 	}
 
@@ -1488,10 +1489,11 @@ public class ProductPageController extends AbstractPageController
 	{
 		final List<MetaElementData> metadata = new LinkedList<>();
 		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
-		metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
+		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
 		metadata.add(createMetaElement("productCode", productCode));
 		// metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
 		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
+		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
 	}
 
 

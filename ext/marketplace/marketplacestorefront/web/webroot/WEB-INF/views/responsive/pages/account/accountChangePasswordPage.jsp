@@ -75,7 +75,7 @@
 					</div>
 					<div class="form-field-button">
 							<button type="submit" class="btn-block blue">Update Password</button>
-							<button type="button" class="btn-block red" onclick="window.location='${profileUrl}'">Cancel</button>
+							<button type="button" class="btn-block red" onclick="window.location='${updateProfileUrl}'">Cancel</button>
 							</div>
 						</form:form>
 
