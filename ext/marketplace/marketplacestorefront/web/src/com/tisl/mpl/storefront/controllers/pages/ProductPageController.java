@@ -40,7 +40,6 @@ import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
-import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
@@ -519,6 +518,7 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute("product_brand", productBrand);
 			//model.addAttribute("product_category", productCategory);
 			model.addAttribute("product_category", breadcrumbs.get(0).getName());
+
 			model.addAttribute("page_subcategory_name_L3", productSubCategoryName);
 			//TPR-672 START
 			if (CollectionUtils.isNotEmpty(productData.getPotentialPromotions()))

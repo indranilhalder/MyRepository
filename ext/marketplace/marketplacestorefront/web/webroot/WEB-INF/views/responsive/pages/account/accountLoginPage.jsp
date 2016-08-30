@@ -79,7 +79,7 @@
 	} */
 	
 	$(window).on('load resize',function(){	
-		if($(".sign-in.tab-view .nav").css("display") == "table"){
+		if($(".sign-in.tab-view .nav").css("display") == "block"){
 			activateSignInTab();
 		}
 		else{

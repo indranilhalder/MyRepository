@@ -2742,7 +2742,7 @@ function loadDefaultWishListName_SizeGuide() {
 			}
 		})
 		
-		$(document).on("click",".product-detail .promo-block .details",function(e){
+		$(document).on("click",".product-detail .promo-block .pdp-promo-title",function(e){
 			e.preventDefault();
 			offerPopup($("#promotionDetailsId").html());
 		});

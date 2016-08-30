@@ -1128,18 +1128,24 @@ $(document).on('click','.go-to-bag.mini-cart-checkout-button',function(){
 
 //Code changes start for TPR -168//
 
+
+
 //For AJAX Call  
 $(document).on("click",'#applyCustomPriceFilter',function(){					
+
 					// construct custom price query params					
 					var minPriceSearchTxt = ($('.minPriceSearchTxt').val() == null || $('.minPriceSearchTxt').val() == "") ? 0 : $('.minPriceSearchTxt').val() ;
 					var maxPriceSearchTxt = ($('.maxPriceSearchTxt').val() == null || $('.maxPriceSearchTxt').val() == "") ? 99999999 : $('.maxPriceSearchTxt').val() ;	
+
 					var currentQryParam = $('.currentPriceQueryParams').val();
 					var facetValue = $('.facetValue').val();
 
 					var queryParamsAry = currentQryParam.split(':');
 					var nonPriceQueryParams = "";					
 					
+
 					if(minPriceSearchTxt > 99999999 || maxPriceSearchTxt > 99999999){						
+
 						return false;
 					}				
 					else{
@@ -1151,7 +1157,29 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						var Price = "₹" + minPriceSearchTxt + "-" + "₹"
 								+ maxPriceSearchTxt;
 						
+
+
+
+
+
+
+
+
+
+
+
+
 						
+
+
+
+
+
+
+
+
+
+
 						for (var i = 0; i < queryParamsAry.length; i = i + 2) {					
 							if (queryParamsAry[i].indexOf('price') == -1) {								
 								if (nonPriceQueryParams != "") {
@@ -1166,15 +1194,23 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 							}
 						}
 						
+
+
+
+
+
 					
 						$('.qValueForCustomPrice').val(
-								nonPriceQueryParams + ":priceValue:" + Price);
+								nonPriceQueryParams + ":price:" + Price);
+
+
 
 						var dataString = null;
 						var nonEmptyDataString= null;
 						
 						// generating datastring and postAjaxURL
 						$("#customPriceFilter").find('input[type="hidden"]').each(function(){
+
 							if(dataString == null){
 								dataString = $(this).attr('name')+"="+$(this).val();
 							}
@@ -1242,6 +1278,7 @@ function isNumber(evt) {
 }
 
 $(document).on("change",'.filter-price',function(){
+
 			var prices = splitPrice($(this).find('form').find(
 					'input[name=facetValue]').val());			
 			$('#customMinPrice').val(prices[0]);
@@ -1296,7 +1333,7 @@ $(document).ready(function() {
 function loadPriceRange(){
 	var q = queryParam('q');
 	var priceRange = '';
-	var pvStr = ':priceValue:';	
+	var pvStr = ':price:';	
 	
 	if (q.indexOf(pvStr) > -1) {		
 		priceRange = q.substring(q.indexOf(pvStr) + pvStr.length);
@@ -1310,16 +1347,7 @@ function loadPriceRange(){
 		$('li.price').find('div.facet-values').hide();
 		$('.priceBucketExpand').show();
 	}
+
 }
 
 //Code changes end for TPR -168//
-
-
-
-
-	
-
-
-
-
-

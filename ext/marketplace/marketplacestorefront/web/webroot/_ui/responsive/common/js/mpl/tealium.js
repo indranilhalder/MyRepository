@@ -29,6 +29,7 @@ $(document).ready(
 			}
 			//TPR-672 END
 			
+
 			
 			// Added for tealium
 			if (pageType == "homepage") {
