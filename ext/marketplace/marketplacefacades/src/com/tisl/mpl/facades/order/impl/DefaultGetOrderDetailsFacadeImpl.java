@@ -312,14 +312,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									/*
 									 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
 									 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
-									 *
+									 * 
 									 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
-									 *
+									 * 
 									 * if (null != orderproductdto.getUSSID()) {
-									 *
+									 * 
 									 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 									 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-									 *
+									 * 
 									 * }
 									 */
 
@@ -434,7 +434,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												/*
 												 * if (null != sellerEntry.getReplacement()) {
 												 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-												 *
+												 * 
 												 * }
 												 */
 												//for return
@@ -829,18 +829,18 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * subOrder, final ConsignmentData consignment) { final AWBResponseData trackingData = new AWBResponseData();
 	 * List<StatusRecordData> statusRecords = new ArrayList<>(); StatusRecordData statusRecord = new StatusRecordData();
 	 * try {
-	 *
+	 * 
 	 * final SimpleDateFormat smdfDate = new SimpleDateFormat(MarketplacecclientservicesConstants.DATE_FORMAT_AWB); final
 	 * SimpleDateFormat smdfTime = new SimpleDateFormat(MarketplacecclientservicesConstants.TIME_FORMAT_AWB);
-	 *
+	 * 
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue());
 	 * trackingData.setIsSelected(orderStatusCode.getDisplay().booleanValue());
-	 *
+	 * 
 	 * trackingData.setShipmentStatus(orderStatusCode.getResponseStatus());
 	 * trackingData.setResponseCode(orderStatusCode.getStatusCode());
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue()); statusRecords = new ArrayList<>();
 	 * statusRecord = new StatusRecordData();
-	 *
+	 * 
 	 * if (null != consignment) { statusRecord.setDate(smdfDate.format(consignment.getStatusDate()));
 	 * statusRecord.setTime(smdfTime.format(consignment.getStatusDate())); } else {
 	 * statusRecord.setDate(smdfDate.format(subOrder.getCreated()));
@@ -848,19 +848,19 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * statusRecord.setStatusDescription(orderStatusCode.getStatusMessage()); statusRecords.add(statusRecord);
 	 * trackingData.setStatusRecords(statusRecords); } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 *
+	 * 
 	 * return trackingData; }
 	 */
 
 
 	/*
 	 * @param orderCode
-	 *
+	 * 
 	 * @return
 	 */
 	/*
 	 * @param orderCode
-	 *
+	 * 
 	 * @return
 	 */
 	@Override
@@ -895,7 +895,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			{
 				for (final OrderHistoryEntryModel orderHistoryEntry : subOrderModel.getHistoryEntries())
 				{
-					//****************************** Payment Block TRP1081
+					//****************************** Payment Block
 					trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.PAYMENT
 							+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
 					if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT)
@@ -1024,6 +1024,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		}
 		return returnMap;
 	}
+
+
+
 
 	private List<AWBResponseData> getTrackOrderList(final Map<String, AWBResponseData> awbMap)
 	{
