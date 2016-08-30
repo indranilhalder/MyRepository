@@ -112,7 +112,7 @@ public class TrackOrderPageController extends AbstractPageController
 	private LocaleResolver localeResolver;
 
 	/**
-	 * @Description Generates short URL for a given order code
+	 * @Description This method is used to update the TULShortUrlreportModel 
 	 * @param orderCode
 	 * @param request
 	 * @return shortUrl
