@@ -192,9 +192,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 *
+	 * 
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 *
+	 * 
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -403,9 +403,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 *
+	 * 
 	 * @param orderNumber
-	 *
+	 * 
 	 * @param lineID
 	 */
 
@@ -453,7 +453,7 @@ public class OrdersController extends BaseCommerceController
 
 									/*
 									 * final File invoiceFile = new File(invoicePathURL); FileInputStream input = null;
-									 *
+									 * 
 									 * if (invoiceFile.exists()) { String invoiceFileName = null; final String preInvoiceFileName
 									 * = invoiceFile.getName(); if (!preInvoiceFileName.isEmpty()) { final int index =
 									 * preInvoiceFileName.lastIndexOf('.'); if (index > 0) { invoiceFileName =
@@ -965,11 +965,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1179,10 +1179,8 @@ public class OrdersController extends BaseCommerceController
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E9047);
 			}
-
 			else
 			{
-
 				if (null != orderDetail.getDeliveryAddress())
 				{
 					orderTrackingWsDTO.setDeliveryAddress(setAddress(orderDetail, 2));
@@ -1195,8 +1193,9 @@ public class OrdersController extends BaseCommerceController
 				{
 					orderTrackingWsDTO.setPickupPersonMobile(orderDetail.getPickupPhoneNumber());
 				}
-
+				//Not implemented
 				orderTrackingWsDTO.setGiftWrapCharge(MarketplacecommerceservicesConstants.ZERO);
+
 				if (null != orderDetail.getCreated())
 				{
 					orderTrackingWsDTO.setOrderDate(orderDetail.getCreated());
@@ -1219,11 +1218,7 @@ public class OrdersController extends BaseCommerceController
 				{
 					orderTrackingWsDTO.setDeliveryCharge(orderDetail.getDeliveryCost().getValue().toString());
 				}
-				//TISST-13769
-				//				if (null != orderDetail.getTotalPrice() && StringUtils.isNotEmpty(orderDetail.getTotalPrice().getValue().toString()))
-				//				{
-				//					orderTrackingWsDTO.setTotalOrderAmount(orderDetail.getTotalPrice().getValue().toString());
-				//				}
+
 				if (null != orderDetail.getTotalPriceWithConvCharge()
 						&& StringUtils.isNotEmpty(orderDetail.getTotalPriceWithConvCharge().getValue().toString()))
 				{
@@ -1240,7 +1235,6 @@ public class OrdersController extends BaseCommerceController
 					orderTrackingWsDTO.setSubTotal(orderDetail.getSubTotal().getValue().toString());
 				}
 				//TISEE-4660 ends
-
 				//TISST-13769
 				if (null != orderDetail.getTotalDiscounts()
 						&& StringUtils.isNotEmpty(orderDetail.getTotalDiscounts().getValue().toString()))
@@ -1286,7 +1280,6 @@ public class OrdersController extends BaseCommerceController
 						else
 						{
 							//getting the product code
-							//							final ProductModel productModel = productService.getProductForCode(entry.getProduct().getCode());
 							final ProductModel productModel = defaultMplOrderFacade.getProductForCode(product.getCode());
 
 							orderproductdto = new OrderProductWsDTO();
@@ -1299,8 +1292,8 @@ public class OrdersController extends BaseCommerceController
 								orderproductdto.setStoreDetails(mplDataMapper.map(orderEntry.getDeliveryPointOfService(),
 										PointOfServiceWsDTO.class, "DEFAULT"));
 							}
-
-							if (StringUtils.isNotEmpty(orderEntry.getAmountAfterAllDisc().toString()))
+							if (null != orderEntry.getAmountAfterAllDisc()
+									&& StringUtils.isNotEmpty(orderEntry.getAmountAfterAllDisc().getValue().toString()))
 							{
 								orderproductdto.setPrice(orderEntry.getAmountAfterAllDisc().getValue().toString());
 							}
@@ -1329,14 +1322,6 @@ public class OrdersController extends BaseCommerceController
 								orderproductdto.setProductColour(product.getColour());
 							}
 							/* Fulfillment type */
-							/*
-							 * final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) productModel
-							 * .getRichAttribute(); if (richAttributeModel != null &&
-							 * richAttributeModel.get(0).getDeliveryFulfillModes() != null) { final String fullfillmentData =
-							 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() .toUpperCase(); if
-							 * (fullfillmentData != null && !fullfillmentData.isEmpty()) {
-							 * orderproductdto.setFulfillment(fullfillmentData); } }
-							 */
 							if (orderEntry.isGiveAway())
 							{
 								isGiveAway = "Y";
@@ -1351,15 +1336,6 @@ public class OrdersController extends BaseCommerceController
 								orderproductdto.setAssociatedProducts(orderEntry.getAssociatedItems());
 							}
 							//Delivery date is the final delivery date
-							/*
-							 * if (null != entry.getMplDeliveryMode()) {
-							 *
-							 * if (null != entry.getMplDeliveryMode().getDescription() &&
-							 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
-							 *
-							 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
-							 */
-
 							/* capacity */
 							if (productModel instanceof PcmProductVariantModel)
 							{
@@ -1438,19 +1414,6 @@ public class OrdersController extends BaseCommerceController
 										{
 											consignmentStatus = orderDetail.getStatus().getCode();
 											//cancellation window not required
-											/*
-											 * if (null != rm.getCancellationWindow()) { final Date sysDate = new Date(); final int
-											 * cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
-											 * subOrder.getCreated(), sysDate); final int actualCancelWindow =
-											 * Integer.parseInt(rm.getCancellationWindow()); if (cancelWindow < actualCancelWindow
-											 * && checkOrderStatus(subOrder.getStatus().getCode(),
-											 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
-											 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
-											 * orderproductdto.setCancel(Boolean.TRUE);
-											 *
-											 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
-											 * orderproductdto.setCancel(Boolean.FALSE); }
-											 */
 											if (checkOrderStatus(orderDetail.getStatus().getCode(),
 													MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue()
 													&& !orderEntry.isGiveAway() && !orderEntry.isIsBOGOapplied())
@@ -1611,10 +1574,10 @@ public class OrdersController extends BaseCommerceController
 								//Delivery date is the final delivery date
 								/*
 								 * if (null != entry.getMplDeliveryMode()) {
-								 *
+								 * 
 								 * if (null != entry.getMplDeliveryMode().getDescription() &&
 								 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
-								 *
+								 * 
 								 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
 								 */
 
@@ -1649,7 +1612,7 @@ public class OrdersController extends BaseCommerceController
 
 								/*
 								 * if (null != orderproductdto.getUSSID()) {
-								 *
+								 * 
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
 								 */
@@ -1722,7 +1685,7 @@ public class OrdersController extends BaseCommerceController
 												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
 												 * orderproductdto.setCancel(Boolean.TRUE);
-												 *
+												 * 
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1750,9 +1713,9 @@ public class OrdersController extends BaseCommerceController
 												 * actualCancelWindow && checkOrderStatus(consignmentStatus,
 												 * MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied())
-												 *
+												 * 
 												 * { orderproductdto.setCancel(Boolean.TRUE);
-												 *
+												 * 
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1780,7 +1743,7 @@ public class OrdersController extends BaseCommerceController
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 *
+											 * 
 											 * }
 											 */
 											//for return
@@ -1871,7 +1834,7 @@ public class OrdersController extends BaseCommerceController
 								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
 								 * consignmentModel.getReturnCarrier()) {
 								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
-								 *
+								 * 
 								 * }
 								 */
 								//End
