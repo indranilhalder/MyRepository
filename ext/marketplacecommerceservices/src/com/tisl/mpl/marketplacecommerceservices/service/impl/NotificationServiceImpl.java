@@ -246,8 +246,7 @@ public class NotificationServiceImpl implements NotificationService
 				eventService.publishEvent(paymentFailedEvent);
 			}
 			catch (final Exception e1)
-			{ // YTODO
-			  // Auto-generated catch block
+			{
 				LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
 			}
 		}
@@ -267,8 +266,7 @@ public class NotificationServiceImpl implements NotificationService
 				eventService.publishEvent(paymentTimeoutEvent);
 			}
 			catch (final Exception e1)
-			{ // YTODO
-			  // Auto-generated catch block
+			{
 				LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
 			}
 		}

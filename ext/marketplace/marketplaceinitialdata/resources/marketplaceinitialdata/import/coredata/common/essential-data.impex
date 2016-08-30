@@ -23,11 +23,11 @@ INSERT_UPDATE Language;isocode[unique=true];fallbackLanguages(isocode);active[de
 
 # Currencies
 INSERT_UPDATE Currency;isocode[unique=true];conversion;digits;symbol
-;GBP;1;2;Ãƒâ€šÃ‚Â£
-;EUR;1;2;ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
+;GBP;1;2;ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£
+;EUR;1;2;ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬
 ;USD;1,4;2;$
-;JPY;120;0;Ãƒâ€šÃ‚Â¥
-;INR;1;2;₹
+;JPY;120;0;ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¥
+;INR;1;2;â‚¹
 
 # SiteMap Language Currencies
 INSERT_UPDATE SiteMapLanguageCurrency;&siteMapLanguageCurrency;language(isoCode)[unique=true];currency(isocode)[unique=true];
@@ -466,6 +466,11 @@ INSERT_UPDATE OrderStatusCodeMaster;id[unique=true];statusCode;responseStatus;st
 ;100038;REFUND_IN_PROGRESS;Manual refund initiated;Manual refund has been initiated;CANCEL;true;true;ff1c47;D11;
 ;100039;CLOSED_ON_CANCELLATION;Order Cancelled and Closed;Order has been cancelled and closed;CANCEL;true;true;ff1c47;D11;
 ;100040;ORDER_CANCELLED;Order Cancelled;Your order has been cancelled;CANCEL;true;true;ff1c47;D11; 
+
+
+;100041;PAYMENT_PENDING;Payment Pending;Oops! technical delay;PAYMENT;true;true;ff0000;D12;
+;100042;PAYMENT_TIMEOUT;Payment Timeout;Oops! technical issue;PAYMENT;true;true;ff0000;D12;
+;100043;PAYMENT_FAILED;Payment Failed;Invalid payment details;PAYMENT;true;true;ff0000;D12;
 
 
 ###Payment Related

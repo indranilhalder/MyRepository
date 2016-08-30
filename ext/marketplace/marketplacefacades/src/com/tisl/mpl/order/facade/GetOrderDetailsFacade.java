@@ -26,6 +26,9 @@ public interface GetOrderDetailsFacade
 	public Map<String, List<AWBResponseData>> getOrderStatusTrack(OrderEntryData orderEntryDetail, OrderData subOrder,
 			OrderModel subOrderModel);
 
+	public Map<String, List<AWBResponseData>> getOrderPaymentStatus(final OrderEntryData orderEntryDetail,
+			final OrderData subOrder, final OrderModel subOrderModel);
+
 	public boolean isPickUpButtonEditable(OrderData parentOrder);
 
 	public List<ConsignmentStatus> getPickUpButtonDisableOptions();

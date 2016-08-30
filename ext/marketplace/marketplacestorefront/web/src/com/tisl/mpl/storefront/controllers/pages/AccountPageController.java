@@ -886,11 +886,30 @@ public class AccountPageController extends AbstractMplSearchPageController
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		List<OrderEntryData> cancelProduct = new ArrayList<>();
 		OrderModel subOrderModel = null;
+		OrderModel orderModel = null;
 		try
 		{
-			final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+
+			orderModel = orderModelService.getOrderModel(orderCode);
+			final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 			final String finalOrderDate = getFormattedDate(orderDetail.getCreated());
 			final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
+			final List<OrderEntryData> orderList = orderDetail.getEntries();
+			//TRP1081
+			for (final OrderEntryData orderEntry : orderList)
+			{
+				//statusTrackMap = getOrderDetailsFacade.getOrderPaymentStatus(orderEntry, orderDetail, orderModel);
+				statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, orderDetail, orderModel);
+				if (null == orderEntry.getConsignment() && orderEntry.getQuantity() != 0)
+				{
+					if (orderDetail.getStatus() != null)
+					{
+						consignmentStatus = orderDetail.getStatus().getCode();
+					}
+				}
+				trackStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), statusTrackMap);
+				currentStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), consignmentStatus);
+			}
 
 			for (final OrderData subOrder : subOrderList)
 			{
@@ -1047,9 +1066,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 									}
 								}
 							}
+
 							statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, subOrder, subOrderModel);
 							trackStatusMap.put(orderEntry.getOrderLineId(), statusTrackMap);
 							currentStatusMap.put(orderEntry.getOrderLineId(), consignmentStatus);
+
 							if (consignmentModel != null)
 							{
 								formattedProductDate = getFormattedDate(consignmentModel.getEstimatedDelivery());

@@ -875,6 +875,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		List<AWBResponseData> shippingMapList = new ArrayList<AWBResponseData>();
 		List<AWBResponseData> cancelMapList = new ArrayList<AWBResponseData>();
 		List<AWBResponseData> returnMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> paymentMapList = new ArrayList<AWBResponseData>();
 		OrderStatusCodeMasterModel trackModel = null;
 
 		final Map<String, AWBResponseData> awbApprovalMap = new LinkedHashMap<String, AWBResponseData>();
@@ -882,6 +883,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		final Map<String, AWBResponseData> awbShippingMap = new LinkedHashMap<String, AWBResponseData>();
 		final Map<String, AWBResponseData> awbCancelMap = new LinkedHashMap<String, AWBResponseData>();
 		final Map<String, AWBResponseData> awbReturnMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> paymentMap = new LinkedHashMap<String, AWBResponseData>();
 
 		try
 		{
@@ -893,8 +895,21 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			{
 				for (final OrderHistoryEntryModel orderHistoryEntry : subOrderModel.getHistoryEntries())
 				{
-					if (orderEntryDetail.getOrderLineId().equalsIgnoreCase(orderHistoryEntry.getLineId()))
+					//****************************** Payment Block TRP1081
+					trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.PAYMENT
+							+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+					if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT)
+							&& !isStatusAlradyExists(paymentMap, trackModel) && trackModel.getDisplay().booleanValue())
 					{
+						paymentMap.put(trackModel.getDotId().trim().toUpperCase(),
+								orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+					}
+
+					if (StringUtils.isNotEmpty(orderEntryDetail.getOrderLineId())
+							&& StringUtils.isNotEmpty(orderHistoryEntry.getLineId())
+							&& orderEntryDetail.getOrderLineId().equalsIgnoreCase(orderHistoryEntry.getLineId()))
+					{
+
 						//****************************** Approval Block
 						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.APPROVED
 								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
@@ -972,6 +987,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				}
 			}
 
+			paymentMapList = getTrackOrderList(paymentMap);
 			approvalMapList = getTrackOrderList(awbApprovalMap);
 			processingMapList = getTrackOrderList(awbProcessingMap);
 			shippingMapList = getTrackOrderList(awbShippingMap);
@@ -984,6 +1000,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			LOG.info("************************cancelMapList: " + cancelMapList.size());
 			LOG.info("************************returnMapList: " + returnMapList.size());
 
+			returnMap.put(MarketplaceFacadesConstants.PAYMENT, paymentMapList);
 			returnMap.put(MarketplaceFacadesConstants.APPROVED, approvalMapList);
 			returnMap.put(MarketplaceFacadesConstants.PROCESSING, processingMapList);
 			returnMap.put(MarketplaceFacadesConstants.SHIPPING, shippingMapList);
