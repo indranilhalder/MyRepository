@@ -91,7 +91,7 @@
 				</panelchildren>
 			</panel>
 		<panel
-				style="max-height:50%;height:60%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
+				style="max-height:70%;height:60%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
 				<panelchildren>
                    <label value="@bind(vm.responseMeassage)" visible="@bind(vm.showMessage)"></label>
 					<listbox model="@bind(vm.listOfTransactions)"
