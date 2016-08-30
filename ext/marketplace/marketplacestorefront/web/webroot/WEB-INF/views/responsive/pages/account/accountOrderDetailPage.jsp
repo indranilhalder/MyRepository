@@ -1326,7 +1326,10 @@
 	</div>
 			<div class="removeModalAfterLoad" id="changeAddressPopup">
 			  <order:changeDeliveryAddress orderDetails="${subOrder}" />
-            </div><!-- /.modal -->
+            </div>
+            <div class="removeModalAfterLoad" id="otpPopup">
+            </div>
+            <!-- /.modal -->
  
         <div class="wrapBG" style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; z-index: 99999; display: none;"></div>
         
@@ -1670,12 +1673,6 @@ $(function() {
 			  $(".wrapBG").css("height",height);
 			  $("#changeAddressPopup").css("z-index","999999");
 		});
-		 
-	 	$("#saveBlockData").click(function(){
-				$("#changeAddressPopup").hide();
-				$("#showOrderDetails").show();
-				$("#showOrderDetails").css("z-index","999999");
-		});
 		
  	$(".submitSchedule").click(function(){
 			$("#changeAddressPopup, #showOrderDetails").hide();
@@ -1684,13 +1681,20 @@ $(function() {
 		});
 		 
 		 $(".close").click(function(){
-			 $("#changeAddressPopup").hide();
+			 $("#changeAddressPopup,#otpPopup").hide();
 			 $(".wrapBG, #showOrderDetails").hide();
 			 $("#showOTP").hide();
 		 });
-		 //$(".pickupeditbtn").hide(); 
 		 
  	
 
 	 });	 
 </script>
+<style>
+#otpPopup{
+    z-index: 999999;
+    position: fixed;
+    top: 10px;
+    left: 25%;
+}
+</style>

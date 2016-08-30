@@ -144,7 +144,7 @@ function optionsLandmark1(e) {
 $(document).ready(function() {
 			$("#saveBlockData").click(
 					function(event) {
-					
+						var validate = true;
 						$(".main_error").hide();
 						$(".firstNameError").hide();
 						$(".lastNameError").hide();
@@ -166,59 +166,58 @@ $(document).ready(function() {
 				      var mobile=$("#mobileNo").val();
 				      var pincode=$("#pincode").val();
 				      var isString = isNaN(mobile);
+				      var hasString = isNaN(pincode);
 				      var city=$("#city").val();
 				      
-				     	if(fname == null || fname.trim() == '' ){
+				     if(fname == null || fname.trim() == '' ){
 				  			$(".firstNameError").show();
 				  			$(".firstNameError").text("First Name cannot be Blank");
-				  			fname.focus();
-				  			return false;
-				  	}else if(lname == null || lname.trim() == '' ){
+				  			validate = false;
+				  	} if(lname == null || lname.trim() == '' ){
 			  			$(".lastNameError").show();
 			  			$(".lastNameError").text("Last Name cannot be Blank");
-			  			lname.focus();
-			  			return false;
-				  	}else if(al1 == null || al1.trim() == '' ){
+			  			validate = false;
+				  	} if(al1 == null || al1.trim() == '' ){
 			  			$(".address1Error").show();
 			  			$(".address1Error").text("Address Line 1 cannot be blank");
-			  			al1.focus();
-			  			return false;
-				  	}else if(al2 == null || al2.trim() == '' ){
+			  			validate = false;
+				  	} if(al2 == null || al2.trim() == '' ){
 			  			$(".address2Error").show();
 			  			$(".address2Error").text("Address Line 2 cannot be blank");
-			  			al2.focus();
-			  			return false;
-				  	}else if(al3 == null || al3.trim() == '' ){
+			  			validate = false;
+				  	} if(al3 == null || al3.trim() == '' ){
 			  			$(".address3Error").show();
 			  			$(".address3Error").text("Address Line 3 cannot be blank");
-			  			al3.focus();
-			  			return false;
-				  	}else if(state == null || state=="Select" ){
+			  			validate = false;
+				  	} if(state == null || state=="Select" ){
 			  			$(".stateError").show();
 			  			$(".stateError").text("State cannot be Blank");
-			  			state.focus();
-			  			return false;
-				  	}else if(isString==true || mobile.trim()==''){
+			  			validate = false;
+				  	}
+				  	if(isString==true || mobile.trim()==''){
 			  			$(".mobileNumberError").show();
 			  			$(".mobileNumberError").text("Enter only Numbers");
-			  			mobile.focus();
-			  			return false;
-				  	}else if(mobile.length < 9 && mobile.length > 11){
-				    	  $(".pincodeNoError").show();
-				          $(".pincodeNoError").text("Enter correct mobile number");
-				          pincode.focus();
-				          return false;
-				  	}else if(pincode.length < 1 && pincode.length > 6){
+			  			validate = false;
+				  	} 
+				  	if(hasString==true || pincode.trim()==''){
+			  			$(".pincodeNoError").show();
+			  			$(".pincodeNoError").text("Enter only Numbers");
+			  			validate = false;
+				  	}
+				  	if(mobile.length < 9 && mobile.length > 11){
+				    	  $(".mobileNumberError").show();
+				          $(".mobileNumberError").text("Enter correct mobile number");
+				          validate = false;
+				  	} if(pincode.length < 1 && pincode.length > 6){
 				    	  $(".pincodeNoError").show();
 				          $(".pincodeNoError").text("Enter correct pincode");
-				          pincode.focus();
-				          return false;
-				      }else if(city == null || city.trim() == '' ){
+				          validate = false;
+				      }if(city == null || city.trim() == '' ){
 			  			$(".cityError").show();
 			  			$(".cityError").text("City cannot be blank");
-			  			city.focus();
-			  			return false;
-				  	}else{
+			  			validate = false;
+				  	}
+				      if(validate == true){
 						var data = $("#deliveryAddressForm").serialize();
 						var orderCode = $('#deliveryAddorderCode').val();
 						$.ajax({
@@ -230,7 +229,6 @@ $(document).ready(function() {
 							contentType: "text/application/html",
 							success : function(result){
 								if(result=='Pincode not Serviceable'){
-									alert("in ajax");
 									$("#changeAddressPopup").show();
 									$("#showOTP").hide();
 									$(".wrapBG").show();
@@ -241,10 +239,9 @@ $(document).ready(function() {
 									$(".pincodeNoError").text(result);
 								}else if(result =='Updated'){
 									window.location.href=ACC.config.encodedContextPath+"/my-account/order/?orderCode="+orderCode+"&isServiceable="+true;
-		
 								}else{
-								
-								$("#changeAddressPopup").empty().html(result).show();
+									$("#changeAddressPopup").hide();
+									$("#otpPopup").html(result).show();
 								}
 							},
 							error : function(result) {
@@ -272,8 +269,9 @@ $(document).ready(function() {
 	
 	
 	$(".close").click(function() {
-		$("#showOTP").hide();
+		$("#showOTP,#otpPopup").hide();
 		$(".wrapBG1").hide();
+		
 	});
 	
 	$(".addAddressToForm").click(function(){

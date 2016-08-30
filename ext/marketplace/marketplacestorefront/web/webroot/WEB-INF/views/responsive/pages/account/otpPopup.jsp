@@ -54,14 +54,10 @@ ${stringMessage}
 $(document).ready(function(){
 
 	$(".close,.wrapBG").click(function() {
-		$("#changeAddressPopup").hide();
+		$("#changeAddressPopup,#otpPopup").hide();
 		$(".wrapBG").hide();
 	});
-	
-	
-	
-	 
-	
+		
 });
 function generateOTP(orderId){
 	 $(".otpError").hide();

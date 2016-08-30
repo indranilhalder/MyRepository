@@ -56,10 +56,16 @@ public class MplAddressValidatorImpl implements MplAddressValidator
 			}
 
 		}
-		if (StringUtils.isNotEmpty(addressModel.getLandmark()) && StringUtils.isNotEmpty(temproryAddressModel.getLandmark()))
+		if (StringUtils.isNotEmpty(temproryAddressModel.getLandmark()))
 		{
-
-			if (!addressModel.getLandmark().trim().equalsIgnoreCase(temproryAddressModel.getLandmark().trim()))
+			if (StringUtils.isNotEmpty(addressModel.getLandmark()))
+			{
+				if (!addressModel.getLandmark().trim().equalsIgnoreCase(temproryAddressModel.getLandmark().trim()))
+				{
+					return true;
+				}
+			}
+			else
 			{
 				return true;
 			}
