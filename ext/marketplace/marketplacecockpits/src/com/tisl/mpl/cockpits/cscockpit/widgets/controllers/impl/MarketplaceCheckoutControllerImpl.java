@@ -26,11 +26,14 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceability
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 
 import de.hybris.platform.catalog.impl.DefaultCatalogVersionService;
@@ -114,8 +117,9 @@ public class MarketplaceCheckoutControllerImpl extends
 	private MplPaymentService mplPaymentService;
 	
 	@Autowired
-	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;	
-	
+	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;
+	@Autowired
+	private MplCartFacade mplCartFacade;
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
 	
@@ -159,7 +163,7 @@ public class MarketplaceCheckoutControllerImpl extends
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions {
 
 		List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
-				.getResponseForPinCode(product, pin, isDeliveryDateRequired,
+				.getResponseForPinCode(null,product, pin, isDeliveryDateRequired,
 						ussid);
 
 		return responseData;
@@ -363,7 +367,7 @@ public class MarketplaceCheckoutControllerImpl extends
 
 			for (final AbstractOrderEntryModel cartEntry : cart.getEntries()) {
 				List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
-						.getResponseForPinCode(cartEntry.getProduct(), pincode,
+						.getResponseForPinCode(cart.getGuid(),cartEntry.getProduct(), pincode,
 								MarketplaceCockpitsConstants.NO,
 								cartEntry.getSelectedUSSID());
 				if (responseData == null) {
@@ -718,6 +722,19 @@ public class MarketplaceCheckoutControllerImpl extends
 
 	public void setMplVoucherService(MplVoucherService mplVoucherService) {
 		this.mplVoucherService = mplVoucherService;
+	}
+
+	@Override
+	public InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(
+			InvReserForDeliverySlotsRequestData deliverySlotsRequestData) {
+		InvReserForDeliverySlotsResponseData omsResponceData = null;
+		try {
+			omsResponceData = mplCartFacade.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData);
+		}catch(Exception e) {
+			LOG.error("Exception while getting the delivery Slots from OMS "+e.getMessage());
+		}
+
+		return omsResponceData;
 	}	
 	
 	

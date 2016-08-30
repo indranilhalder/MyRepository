@@ -61,6 +61,7 @@ import de.hybris.platform.cscockpit.exceptions.PaymentException;
 import de.hybris.platform.cscockpit.exceptions.ResourceMessage;
 import de.hybris.platform.cscockpit.exceptions.ValidationException;
 import de.hybris.platform.cscockpit.utils.TypeUtils;
+import de.hybris.platform.cscockpit.widgets.controllers.OrderController;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultBasketController;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.JaloSession;
@@ -264,7 +265,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions {
 
 		List<PinCodeResponseData> responseData = marketplaceServiceabilityCheckHelper
-				.getResponseForPinCode(product, pin, isDeliveryDateRequired, ussid);
+				.getResponseForPinCode(null,product, pin, isDeliveryDateRequired, ussid);
 		LOG.info("responseData size:" + responseData);
 
 		return responseData;
@@ -369,7 +370,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 						//	final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
 						//		MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
 						List<PinCodeResponseData> pincoderesponseDataList = marketplaceServiceabilityCheckHelper
-								.getResponseForPinCode(cartEntry.getProduct(),String.valueOf(cartEntry.getOrder().getDeliveryAddress().getPostalcode()),
+								.getResponseForPinCode(null,cartEntry.getProduct(),String.valueOf(cartEntry.getOrder().getDeliveryAddress().getPostalcode()),
 										"Y",cartEntry.getSelectedUSSID());
 
 						if(null != pincoderesponseDataList && pincoderesponseDataList.size()>0)
@@ -380,23 +381,25 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 								{
 									for (final DeliveryDetailsData DeliveryData : responseData.getValidDeliveryModes())
 									{
-										if(MarketplaceCockpitsConstants.delCodeMap
-												.get(DeliveryData.getType()).equalsIgnoreCase(cartEntry.getMplDeliveryMode().getDeliveryMode().getCode())) {
-											if(!DeliveryData.getType().equalsIgnoreCase(MarketplacecclientservicesConstants.CNC)) {
-												if (null != DeliveryData.getServiceableSlaves() && DeliveryData.getServiceableSlaves().size() > 0)
-												{
-													cartSoftReservationRequestData.setServiceableSlaves(DeliveryData.getServiceableSlaves());
+										if(DeliveryData.getIsPincodeServiceable()) {
+											if(MarketplaceCockpitsConstants.delCodeMap
+													.get(DeliveryData.getType()).equalsIgnoreCase(cartEntry.getMplDeliveryMode().getDeliveryMode().getCode())) {
+												if(!DeliveryData.getType().equalsIgnoreCase(MarketplacecclientservicesConstants.CNC)) {
+													if (null != DeliveryData.getServiceableSlaves() && DeliveryData.getServiceableSlaves().size() > 0)
+													{
+														cartSoftReservationRequestData.setServiceableSlaves(DeliveryData.getServiceableSlaves());
+													}
 												}
-											}
-											else if (null != DeliveryData.getCNCServiceableSlavesData()
-													&& DeliveryData.getCNCServiceableSlavesData().size() > 0)
-											{
-												cartSoftReservationRequestData.setCncServiceableSlaves(DeliveryData.getCNCServiceableSlavesData());
-											}
-											if (null != DeliveryData.getFulfilmentType())
-											{
-												cartSoftReservationRequestData.setFulfillmentType(DeliveryData.getFulfilmentType());
+												else if (null != DeliveryData.getCNCServiceableSlavesData()
+														&& DeliveryData.getCNCServiceableSlavesData().size() > 0)
+												{
+													cartSoftReservationRequestData.setCncServiceableSlaves(DeliveryData.getCNCServiceableSlavesData());
+												}
+												if (null != DeliveryData.getFulfilmentType())
+												{
+													cartSoftReservationRequestData.setFulfillmentType(DeliveryData.getFulfilmentType());
 
+												}
 											}
 										}
 									}
@@ -731,7 +734,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		        throw new ValidationException(errorMessages);
 		      }
 			List<PinCodeResponseData> pinCodeResponses = marketplaceServiceabilityCheckHelper
-					.getResponseForPinCode(
+					.getResponseForPinCode(entry.getOrder().getGuid(),
 							entry.getProduct(),
 							String.valueOf(entry.getOrder()
 									.getDeliveryAddress().getPostalcode()),
