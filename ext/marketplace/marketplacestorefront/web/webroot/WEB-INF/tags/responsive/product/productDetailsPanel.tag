@@ -75,6 +75,11 @@ tr.d0 td {
 <input type="hidden" id="product_applied_promotion_title" value="${product_applied_promotion_title}" />
 <input type="hidden" id="product_applied_promotion_code" value="${product_applied_promotion_code}" />
 <!-- TPR-672 END -->
+<!-- TPR-429 START-->
+<input type="hidden" id="pdpSellerIDs" value='${pdpSellerIDs}'/>
+<input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
+<input type="hidden" id="pdpOtherSellerIDs" value=''/>
+<!-- TPR-429 END-->
 <!-- End Tealium -->
 
 <!-- TISPRM-56 -->

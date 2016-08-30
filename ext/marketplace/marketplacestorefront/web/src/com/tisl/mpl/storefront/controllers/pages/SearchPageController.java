@@ -270,12 +270,14 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 				}
-
-
+				//For TPR-666
+				model.addAttribute(ModelAttributetConstants.SEARCH_TYPE, "brand_search");
 			}
 
 			else
 			{
+				//For TPR-666
+				model.addAttribute(ModelAttributetConstants.SEARCH_TYPE, "main_search");
 				if (dropDownValue != null)
 				{
 
