@@ -83,6 +83,7 @@
 									label="Search" onClick="@command('lpAwbSearch')" />
 							</vlayout>
 						</hlayout>
+						
 					</vlayout>
 				</panelchildren>
 			</panel>
@@ -90,8 +91,8 @@
 			<panel
 				style="max-height:50%;height:50%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
 				<panelchildren>
-
-					<listbox model="@load(vm.listOfTransactions)"
+                    <label id="" value="@bind(vm.responseMeassage)" visible="@bind(vm.showMessage)"></label>
+					<listbox model="@bind(vm.listOfTransactions)"
 						id="listBoxData" mold="paging" rows="10"
 						emptyMessage="No result found in the result">		
 						<listhead sizable="true">		
@@ -143,7 +144,7 @@
 								<button style="float:right"
 									onClick="@command('saveAllTransactions')" label="Save" />
 							</vlayout>
-						</hlayout>
+						</hlayout>				
 					</vlayout>
 				</panelchildren>
 			</panel>

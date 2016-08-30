@@ -28,6 +28,7 @@ public class SShipTransactionInfoItemRenderer implements ListitemRenderer
 		listitem.setValue(value);
 		addListcell(listitem, sshipInfo.getOrderId());
 		addListcell(listitem, sshipInfo.getOrderLineId());
+		addListcell(listitem, sshipInfo.getOrderLineStatus());
 		addListcell(listitem, sshipInfo.getSellerId());
 		addListcell(listitem, sshipInfo.getSlaveId());
 		addListcell(listitem, String.valueOf(sshipInfo.getSellerPromisedTime().toString()));

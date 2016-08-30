@@ -49,6 +49,8 @@ public class LpoverrideWidgetController
 	private String selectionLpName;
 	private Boolean isReturn = Boolean.FALSE;
 	private final String transactionType = "LP";
+	private String responseMeassage = "";
+	private Boolean showMessage = Boolean.TRUE;
 	private List<TransactionInfo> listOfTransactions; //incoming transactions
 	private Set<String> lpList; //active logistcs Partners
 
@@ -56,9 +58,6 @@ public class LpoverrideWidgetController
 	private final Map<String, TransactionInfo> map = new HashMap<String, TransactionInfo>();//modifed transaction
 
 	private List<String> ordersStatus;// orders statuses
-
-
-
 	@WireVariable("orderLogisticsRestClient")
 	private OrderLogisticsFacade orderLogisticsUpdateFacade;
 
@@ -130,7 +129,7 @@ public class LpoverrideWidgetController
 
 	/*
 	 * this method is used for active order statuses
-	 * 
+	 *
 	 * @return active order staueses
 	 */
 	private List<String> getOrderStatuses()
@@ -139,7 +138,6 @@ public class LpoverrideWidgetController
 		{
 			ordersStatus = new ArrayList<String>();
 		}
-
 		if (isReturn.equals(Boolean.FALSE))
 		{
 			ordersStatus.clear();
@@ -149,7 +147,6 @@ public class LpoverrideWidgetController
 			ordersStatus.add("PICKCONF");
 			ordersStatus.add("HOTCOURI");
 			ordersStatus.add("SCANNED");
-
 		}
 		else
 		{
@@ -161,19 +158,17 @@ public class LpoverrideWidgetController
 		return ordersStatus;
 	}
 
-
 	/*
 	 * this method is used for search the list of orders based on the parameters
 	 */
 	@Command("lpAwbSearch")
 	@NotifyChange(
-	{ "listOfTransactions" })
+	{ "listOfTransactions", "showMessage" })
 	public void lpAwbSearch()
 	{
 		LOG.info("inside lpawb search");
-
+		showMessage = Boolean.FALSE;
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
-
 		try
 		{
 			if (StringUtils.isNotEmpty(selectionOrderStatus))
@@ -216,7 +211,6 @@ public class LpoverrideWidgetController
 				LOG.info("slave id : =" + txtSlaveId);
 				lpAwbSearch.setSlaveId(txtSlaveId);
 			}
-
 			lpAwbSearch.setTransactionType(transactionType);
 			lpAwbSearch.setIsReturn(isReturn);
 
@@ -245,19 +239,18 @@ public class LpoverrideWidgetController
 	 * this method is used to persist the modified transactions
 	 */
 	@Command("saveAllTransactions")
+	@NotifyChange(
+	{ "listOfTransactions", "responseMeassage", "showMessage" })
 	public void saveAllTransactions()
 	{
 		LOG.info("inside save all transaction");
 		listOfTransactions = new ArrayList<TransactionInfo>(map.values());
-
 		if (listOfOrderLineInfo == null)
 		{
 			listOfOrderLineInfo = new ArrayList<OrderLineInfo>();
 		}
-
 		for (final TransactionInfo transaction : listOfTransactions)
 		{
-
 			final OrderLineInfo orderLineInfo = new OrderLineInfo();
 			orderLineInfo.setOrderId(transaction.getOrderId());
 			orderLineInfo.setTransactionId(transaction.getTransactionId());
@@ -267,7 +260,6 @@ public class LpoverrideWidgetController
 			orderLineInfo.setNextLP(Boolean.FALSE);//this will get from checkbox button
 			listOfOrderLineInfo.add(orderLineInfo);
 		}
-
 		LOG.info("list of orders" + listOfOrderLineInfo.toString());
 		final LPOverrideAWBEdit lpOverrideEdit = new LPOverrideAWBEdit();
 		lpOverrideEdit.setOrderLineInfo(listOfOrderLineInfo);
@@ -275,7 +267,6 @@ public class LpoverrideWidgetController
 		lpOverrideEdit.setUserId(userService.getCurrentUser().getUid());
 		lpOverrideEdit.setRoleId(userService.getCurrentUser().getUid()); //logic has to be get used role hear
 		lpOverrideEdit.setTransactionType(transactionType);
-
 		final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
 				.updateOrderLogisticOrAwbNumber(lpOverrideEdit);
 		final List<OrderLineResponse> orderLineResponse = lpOverrideAwbEditResponse.getOrderLineResponse();
@@ -288,11 +279,28 @@ public class LpoverrideWidgetController
 			message.append(orderResponse.getTransactionId() + "\t" + orderResponse.getStatus() + "\n");
 		}
 		listOfTransactions.clear();
-		Messagebox.show("" + message.toString());
-
+		responseMeassage = message.toString();
+		showMessage = Boolean.TRUE;
 	}
 
 	/* all setter and getter methods */
+	/**
+	 * @return the responseMeassage
+	 */
+	public String getResponseMeassage()
+	{
+		return responseMeassage;
+	}
+
+	/**
+	 * @param responseMeassage
+	 *           the responseMeassage to set
+	 */
+	public void setResponseMeassage(final String responseMeassage)
+	{
+		this.responseMeassage = responseMeassage;
+	}
+
 	/**
 	 * @return the listOfOrderLineInfo
 	 */
@@ -310,9 +318,6 @@ public class LpoverrideWidgetController
 		this.listOfOrderLineInfo = listOfOrderLineInfo;
 	}
 
-
-
-
 	/**
 	 * @return the lpList
 	 */
@@ -320,8 +325,6 @@ public class LpoverrideWidgetController
 	{
 		return lpList;
 	}
-
-
 
 	/**
 	 * @param lpList
@@ -331,8 +334,6 @@ public class LpoverrideWidgetController
 	{
 		this.lpList = lpList;
 	}
-
-
 
 	/**
 	 * @return the listOfTransactions
@@ -477,8 +478,6 @@ public class LpoverrideWidgetController
 		this.selectionLpName = selectionLpName;
 	}
 
-
-
 	/**
 	 * @return the transactionType
 	 */
@@ -487,4 +486,20 @@ public class LpoverrideWidgetController
 		return transactionType;
 	}
 
+	/**
+	 * @return the showMessage
+	 */
+	public Boolean getShowMessage()
+	{
+		return showMessage;
+	}
+
+	/**
+	 * @param showMessage
+	 *           the showMessage to set
+	 */
+	public void setShowMessage(final Boolean showMessage)
+	{
+		this.showMessage = showMessage;
+	}
 }

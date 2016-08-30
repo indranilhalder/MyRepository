@@ -189,8 +189,6 @@
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="configarable_params">
      </explorer-tree:navigation-node>
-      <explorer-tree:navigation-node id="deliverytat">
-     </explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="tshipdeliverytat"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="sshipdeliverybreach"></explorer-tree:navigation-node>
      

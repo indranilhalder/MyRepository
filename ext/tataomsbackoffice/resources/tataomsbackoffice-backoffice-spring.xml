@@ -59,10 +59,13 @@
 		<property name="pincodesUploadPath" value="${tata.oms.pincodes.upload.path:#{null}}" />
 		<property name="landmarkUploadPath" value="${tata.oms.landmark.upload.path:#{null}}" />
 		<property name="returnOrderFileUploadPath"
-			value="${com.techouts.order.return.upload.path:#{null}}" />
+			value="${com.techouts.order.return.logistics.upload.path:#{null}}" />
 		<property name="fragileOrderFileUploadPath"
-			value="${com.techouts.order.frigile.upload.path:#{null}}" />
-		<property name="fileHeaderProperty" value="${com.techouts.orderfile.headers:#{null}}"></property>
+			value="${com.techouts.order.pfsd.logistics.upload.path:#{null}}" />
+		<property name="forwardFileHeaderProperty"
+			value="${com.techouts.forwardorderfile.headers:#{null}}" />
+		<property name="returnFileHeaderProperty"
+			value="${com.techouts.returnorderfile.headers:#{null}}"></property>
 	</bean>
 	<bean id="csvFileToZipFileService" class="com.hybris.oms.tata.services.CsvFileToZipFileService"></bean>
 
@@ -134,7 +137,5 @@
 	</bean>
 	<alias name="defaultShortUrlFacade" alias="shortUrlFacade" />
 	<bean id="defaultShortUrlFacade" class="com.hybris.oms.tata.facade.impl.DefaultShortUrlFacade"></bean>
-
 	<bean id="bucFileComparitor" class="com.techouts.dataonboarding.util.BUCFileComparitor"></bean>
-
 </beans>

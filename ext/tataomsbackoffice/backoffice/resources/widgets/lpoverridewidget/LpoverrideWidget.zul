@@ -90,15 +90,11 @@
 					</vlayout>
 				</panelchildren>
 			</panel>
-
-
-
-
-			<panel
-				style="max-height:50%;height:50%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
+		<panel
+				style="max-height:50%;height:60%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
 				<panelchildren>
-
-					<listbox model="@load(vm.listOfTransactions)"
+                   <label value="@bind(vm.responseMeassage)" visible="@bind(vm.showMessage)"></label>
+					<listbox model="@bind(vm.listOfTransactions)"
 						id="listBoxData" mold="paging" rows="10"
 						emptyMessage="No result found in the result">
 
@@ -118,8 +114,11 @@
 							<listheader style="text-align:left"
 								label="Seller Id">
 							</listheader>
-							<listheader width="200px"
+							<listheader width="100px"
 								style="text-align:left" label="LP Name">
+							</listheader>
+							<listheader width="100px"
+								style="text-align:left" label="next Lp Name">
 							</listheader>
 							<listheader style="text-align:left"
 								label="Awb Number">
@@ -134,13 +133,11 @@
 									label="@load(item.transactionId)" />
 								<listcell label="@load(item.slaveId)" />
 								<listcell label="@load(item.sellerId)" />
+								<listcell label="@load(item.logisticName)" />
 								<listcell>
-									<label
-										value="@load(item.logisticName)"  
-										onChange="@command('onChangeTransactionInfo',transaction=item)" />
 									<listbox
-										selectedItem="@save(item.logisticName)" mold="select"
-										model="@load(vm.lpList)">
+										selectedItem="@save(item.logisticName)" onSelect="@command('onChangeTransactionInfo',transaction=item)"
+										mold="select" model="@load(vm.lpList)">
 										<template name="model">
 											<listitem label="${each}" />
 										</template>

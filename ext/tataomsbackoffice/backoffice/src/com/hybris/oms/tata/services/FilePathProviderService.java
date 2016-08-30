@@ -23,23 +23,42 @@ public class FilePathProviderService
 	private String landmarkUploadPath;
 	private String returnOrderFileUploadPath;
 	private String fragileOrderFileUploadPath;
-	private String fileHeaderProperty;
+	private String forwardFileHeaderProperty;
+	private String returnFileHeaderProperty;
+
 
 	/**
-	 * @return the fileHeaderProperty
+	 * @return the forwardFileHeaderProperty
 	 */
-	public String getFileHeaderProperty()
+	public String getForwardFileHeaderProperty()
 	{
-		return fileHeaderProperty;
+		return forwardFileHeaderProperty;
 	}
 
 	/**
-	 * @param fileHeaderProperty
-	 *           the fileHeaderProperty to set
+	 * @param forwardFileHeaderProperty
+	 *           the forwardFileHeaderProperty to set
 	 */
-	public void setFileHeaderProperty(final String fileHeaderProperty)
+	public void setForwardFileHeaderProperty(final String forwardFileHeaderProperty)
 	{
-		this.fileHeaderProperty = fileHeaderProperty;
+		this.forwardFileHeaderProperty = forwardFileHeaderProperty;
+	}
+
+	/**
+	 * @return the returnFileHeaderProperty
+	 */
+	public String getReturnFileHeaderProperty()
+	{
+		return returnFileHeaderProperty;
+	}
+
+	/**
+	 * @param returnFileHeaderProperty
+	 *           the returnFileHeaderProperty to set
+	 */
+	public void setReturnFileHeaderProperty(final String returnFileHeaderProperty)
+	{
+		this.returnFileHeaderProperty = returnFileHeaderProperty;
 	}
 
 	/**

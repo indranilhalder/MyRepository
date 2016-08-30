@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
@@ -30,7 +32,10 @@ import com.hybris.oms.api.ordercancel.CancelOrderFacade;
 import com.hybris.oms.api.sshiptxn.SShipTxnFacade;
 import com.hybris.oms.domain.order.cancel.CancelOrderLine;
 import com.hybris.oms.domain.order.cancel.OrderCancelRequest;
-import com.hybris.oms.domain.order.cancel.OrderCancelResponse;
+import com.hybris.oms.domain.order.cancel.OrderCancellableCheckRequest;
+import com.hybris.oms.domain.order.cancel.OrderCancellableCheckRequests;
+import com.hybris.oms.domain.order.cancel.OrderCancellableCheckResponse;
+import com.hybris.oms.domain.order.cancel.OrderCancellableCheckResponses;
 import com.hybris.oms.domain.sshiptxninfo.dto.SShipTxnInfo;
 import com.hybris.oms.domain.sshiptxnresponseinfo.dto.SShipTxnResponseInfo;
 import com.hybris.oms.domain.sshiptxnresponseinfo.dto.SShipTxnResponseInfos;
@@ -51,7 +56,7 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LoggerFactory.getLogger(SShipDeliveryBreachWidgetController.class);
-
+	private static final String ORDERSTATUS = "ORDCANCL";
 	@Wire
 	private Datebox startdpic;
 	@Wire
@@ -68,11 +73,9 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 	private Textbox txtSlaveId;
 	@Wire
 	private Label msg;
-
 	@WireVariable("sshipTxnRestClient")
 	private SShipTxnFacade sShipTxnFacade;
-
-	@WireVariable("cancelOrderRestClient")
+	@WireVariable("orderCancellationRestClient")
 	private CancelOrderFacade cancelOrderFacade;
 
 	@Override
@@ -86,7 +89,7 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 		shipTxnInfo.setFromDate(cal.getTime());
 		shipTxnInfo.setToDate(new Date());
 		displaySshipDeiveryBreachData(shipTxnInfo);
-
+		listBoxData.setMultiple(true);
 	}
 
 	@ViewEvent(componentID = "sshipOrderSearch", eventName = Events.ON_CLICK)
@@ -121,7 +124,6 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 			++count;
 			shipTxnInfo.setSlaveId(txtSlaveId.getValue().trim());
 		}
-
 		if (count > 0)
 		{
 			displaySshipDeiveryBreachData(shipTxnInfo);
@@ -147,9 +149,7 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 			shipTxnInfo.setFromDate(startdpic.getValue());
 			shipTxnInfo.setToDate(enddpic.getValue());
 			displaySshipDeiveryBreachData(shipTxnInfo);
-
 		}
-
 	}
 
 	@ViewEvent(componentID = "sshipOrderCancel", eventName = Events.ON_CLICK)
@@ -163,33 +163,82 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 			return;
 		}
 		final Set<Listitem> setOfListBox = listBoxData.getSelectedItems();
-		final List<CancelOrderLine> listOfCancelOrders = new ArrayList<CancelOrderLine>();
+		//check for Order Cancel ,weather is given order eligible or not
+		final List<OrderCancellableCheckRequest> checkCancellableOrders = new ArrayList<OrderCancellableCheckRequest>();
 		for (final Listitem listItem : setOfListBox)
 		{
 			final SShipTxnResponseInfo sshipTxnOrder = listItem.getValue();
-			final CancelOrderLine cancelOrderLine = new CancelOrderLine();
-			cancelOrderLine.setOrderId(sshipTxnOrder.getOrderId());
-			cancelOrderLine.setTransactionId(sshipTxnOrder.getOrderLineId());
-			listOfCancelOrders.add(cancelOrderLine);
-
+			final OrderCancellableCheckRequest orderCancelCheckRequest = new OrderCancellableCheckRequest();
+			if (StringUtils.isNotEmpty(sshipTxnOrder.getOrderLineStatus())
+					&& sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUS))
+			{
+				continue;
+			}
+			orderCancelCheckRequest.setOrderId(sshipTxnOrder.getOrderId());
+			orderCancelCheckRequest.setTransactionId(sshipTxnOrder.getOrderLineId());
+			checkCancellableOrders.add(orderCancelCheckRequest);
 			LOG.info("call for cancel Order Id" + sshipTxnOrder + "transaction id");
 		}
-		orderCancelRequest.setCancelOrderLine(listOfCancelOrders);
-		final OrderCancelResponse orderCancelResponse = cancelOrderFacade.cancelOrderLine(orderCancelRequest);
-
-		final List<CancelOrderLine> listOfCancelOrderLine = orderCancelResponse.getCancelOrderLine(); //deleted order records
-
-		final StringBuilder message = new StringBuilder("**list of canceld orders");
-
-		for (final CancelOrderLine cancelOrderline : listOfCancelOrderLine)
+		final OrderCancellableCheckRequests orderCancellableCheckRequests = new OrderCancellableCheckRequests();
+		orderCancellableCheckRequests.setOrderCancellableCheckRequests(checkCancellableOrders);
+		//calling the facade to
+		final OrderCancellableCheckResponses orderCancellableCheckResponse = cancelOrderFacade
+				.checkOrderLineCancellable(orderCancellableCheckRequests);
+		final List<OrderCancellableCheckResponse> orderCancelResponse = orderCancellableCheckResponse
+				.getOrderCancellableCheckResponses();
+		if (orderCancelResponse.contains(Boolean.FALSE))
 		{
-			message.append(cancelOrderline.getOrderId() + "transaction id" + cancelOrderline.getTransactionId());
+			final StringBuilder cancelOrderMessage = new StringBuilder("the follwoing  order not possible to cancel");
+			int index = 0;
+			for (final OrderCancellableCheckResponse orderCancelCheckResponse : orderCancelResponse)
+			{
+				if (orderCancelCheckResponse.getIsCancellable() == Boolean.FALSE)
+				{
+					cancelOrderMessage.append(checkCancellableOrders.get(index).getOrderId());
+				}
+				++index;
+			}
+			msg.setValue(cancelOrderMessage.toString());
 		}
+		else
+		{
+			Messagebox.show("Are you sure to remove?", "Order Cancel Dialog", Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION,
+					new org.zkoss.zk.ui.event.EventListener()
+					{
+						public void onEvent(final Event evt) throws InterruptedException
+						{
+							if (evt.getName().equals("onOK"))
+							{
+								final List<CancelOrderLine> cancelOrderList = new ArrayList<CancelOrderLine>();
+								for (final Listitem listItem : setOfListBox)
+								{
+									final SShipTxnResponseInfo sshipTxnOrder = listItem.getValue();
+									final CancelOrderLine cancelOrderLine = new CancelOrderLine();
+									cancelOrderLine.setOrderId(sshipTxnOrder.getOrderId());
+									cancelOrderLine.setTransactionId(sshipTxnOrder.getOrderLineId());
+									cancelOrderLine.setReturnCancelFlag("C");
+									cancelOrderLine.setReasonCode("05");
+									cancelOrderLine.setReturnCancelRemarks("The product is missing a part");
+									cancelOrderLine.setRequestId(new Random(123456789) + "CANCEL");
+									cancelOrderList.add(cancelOrderLine);
+								}
 
-		msg.setValue(message.toString());
+								final OrderCancelRequest orderCancelRequest = new OrderCancelRequest();
+								orderCancelRequest.setCancelOrderLine(cancelOrderList);
+								cancelOrderFacade.cancelOrderLine(orderCancelRequest);
+								Messagebox.show(" Order Cancel Success", "Order Cancellation Dialog", Messagebox.OK,
+										Messagebox.INFORMATION);
+								listBoxData.clearSelection();
 
+							}
+							else
+							{
+								Messagebox.show("Removing Canceled", "Order Cancel Dialog", Messagebox.OK, Messagebox.INFORMATION);
+							}
+						}
+					});
+		}
 	}
-
 
 	private void msgBox(final String mesg)
 	{
@@ -198,11 +247,9 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 
 	private void displaySshipDeiveryBreachData(final SShipTxnInfo shipTxnInfo)
 	{
-
 		final SShipTxnResponseInfos sshipTxnResponse = sShipTxnFacade.getSShipTxns(shipTxnInfo);
 		final List<SShipTxnResponseInfo> listOfSshipResponse = sshipTxnResponse.getSShipTxnResponseInfo();
 		listBoxData.setModel(new ListModelList<SShipTxnResponseInfo>(listOfSshipResponse));
 		listBoxData.setItemRenderer(new SShipTransactionInfoItemRenderer());
 	}
-
 }

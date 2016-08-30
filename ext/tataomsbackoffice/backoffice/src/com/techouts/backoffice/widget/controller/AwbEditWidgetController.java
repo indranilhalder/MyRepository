@@ -48,23 +48,19 @@ public class AwbEditWidgetController
 	private String selectionOrderStatus;
 	private String selectionLpName;
 	private Boolean isReturn = Boolean.FALSE;
+	private String responseMeassage = "";
 	private final String transactionType = "AWB";
 	private List<TransactionInfo> listOfTransactions; //incoming transactions
 	private Set<String> lpList; //active logistcs Partners
-
+	private Boolean showMessage = Boolean.TRUE;
 	private List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>(); //outgoing transactions
 	private final Map<String, TransactionInfo> map = new HashMap<String, TransactionInfo>();//modifed transaction
-
 	private List<String> ordersStatus;// orders statuses
-
-
-
 	@WireVariable("orderLogisticsRestClient")
 	private OrderLogisticsFacade orderLogisticsUpdateFacade;
 
 	@WireVariable("logisticsRestClient")
 	private LogisticsFacade logisticsFacade;
-
 	@WireVariable
 	private UserService userService;
 
@@ -76,7 +72,6 @@ public class AwbEditWidgetController
 		LOG.info("inside init");
 		ordersStatus = getOrderStatuses();
 		lpList = getLpSet();
-
 	}
 
 	private Set<String> getLpSet()
@@ -95,7 +90,6 @@ public class AwbEditWidgetController
 			}
 		}
 		return lpList;
-
 	}
 
 	/*
@@ -130,7 +124,7 @@ public class AwbEditWidgetController
 
 	/*
 	 * this method is used for active order statuses
-	 * 
+	 *
 	 * @return active order staueses
 	 */
 	private List<String> getOrderStatuses()
@@ -149,7 +143,6 @@ public class AwbEditWidgetController
 			ordersStatus.add("PICKCONF");
 			ordersStatus.add("HOTCOURI");
 			ordersStatus.add("SCANNED");
-
 		}
 		else
 		{
@@ -157,7 +150,6 @@ public class AwbEditWidgetController
 			ordersStatus.add("REVERSEAWB");
 			ordersStatus.add("RETURINIT");
 		}
-
 		return ordersStatus;
 	}
 
@@ -167,13 +159,12 @@ public class AwbEditWidgetController
 	 */
 	@Command("lpAwbSearch")
 	@NotifyChange(
-	{ "listOfTransactions" })
+	{ "listOfTransactions", "showMessage" })
 	public void lpAwbSearch()
 	{
 		LOG.info("inside lpawb search");
-
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
-
+		showMessage = Boolean.FALSE;
 		try
 		{
 			if (StringUtils.isNotEmpty(selectionOrderStatus))
@@ -216,13 +207,9 @@ public class AwbEditWidgetController
 				LOG.info("slave id : =" + txtSlaveId);
 				lpAwbSearch.setSlaveId(txtSlaveId);
 			}
-
 			lpAwbSearch.setTransactionType(transactionType);
 			lpAwbSearch.setIsReturn(isReturn);
-
-
 			listOfTransactions = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch).getTransactionInfo(); //if response
-
 		}
 		catch (final InvalidLpOverrideSearchParams exception)
 		{
@@ -245,7 +232,7 @@ public class AwbEditWidgetController
 	 */
 	@Command("saveAllTransactions")
 	@NotifyChange(
-	{ "listOfTransactions" })
+	{ "listOfTransactions", "responseMeassage", "showMessage" })
 	public void saveAllTransactions()
 	{
 		LOG.info("inside save all transaction");
@@ -275,17 +262,14 @@ public class AwbEditWidgetController
 		final LPOverrideAWBEditResponse lpOverrideAwbEditResponse = orderLogisticsUpdateFacade
 				.updateOrderLogisticOrAwbNumber(lpOverrideEdit);
 		final List<OrderLineResponse> orderLineResponse = lpOverrideAwbEditResponse.getOrderLineResponse();
-
-		final StringBuilder message = new StringBuilder("*** transactions statuses***" + "/n");
-
+		final StringBuilder message = new StringBuilder();
 		for (final OrderLineResponse orderResponse : orderLineResponse)
 		{
-
-			message.append(orderResponse.getTransactionId() + "\t" + orderResponse.getStatus() + "\n");
+			message.append(orderResponse.getTransactionId() + "  " + orderResponse.getStatus());
 		}
 		listOfTransactions.clear();
-		Messagebox.show("" + message.toString());
-
+		responseMeassage = message.toString();
+		showMessage = Boolean.TRUE;
 	}
 
 	/* all setter and getter methods */
@@ -306,9 +290,6 @@ public class AwbEditWidgetController
 		this.listOfOrderLineInfo = listOfOrderLineInfo;
 	}
 
-
-
-
 	/**
 	 * @return the lpList
 	 */
@@ -316,8 +297,6 @@ public class AwbEditWidgetController
 	{
 		return lpList;
 	}
-
-
 
 	/**
 	 * @param lpList
@@ -327,8 +306,6 @@ public class AwbEditWidgetController
 	{
 		this.lpList = lpList;
 	}
-
-
 
 	/**
 	 * @return the listOfTransactions
@@ -473,8 +450,6 @@ public class AwbEditWidgetController
 		this.selectionLpName = selectionLpName;
 	}
 
-
-
 	/**
 	 * @return the transactionType
 	 */
@@ -483,4 +458,37 @@ public class AwbEditWidgetController
 		return transactionType;
 	}
 
+	/**
+	 * @return the showMessage
+	 */
+	public Boolean getShowMessage()
+	{
+		return showMessage;
+	}
+
+	/**
+	 * @param showMessage
+	 *           the showMessage to set
+	 */
+	public void setShowMessage(final Boolean showMessage)
+	{
+		this.showMessage = showMessage;
+	}
+
+	/**
+	 * @return the responseMeassage
+	 */
+	public String getResponseMeassage()
+	{
+		return responseMeassage;
+	}
+
+	/**
+	 * @param responseMeassage
+	 *           the responseMeassage to set
+	 */
+	public void setResponseMeassage(final String responseMeassage)
+	{
+		this.responseMeassage = responseMeassage;
+	}
 }
