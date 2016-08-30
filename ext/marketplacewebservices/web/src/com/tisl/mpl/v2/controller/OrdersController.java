@@ -48,6 +48,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.variants.model.VariantProductModel;
 
 import java.text.SimpleDateFormat;
@@ -191,9 +192,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 * 
+	 *
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 * 
+	 *
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -402,9 +403,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 * 
+	 *
 	 * @param orderNumber
-	 * 
+	 *
 	 * @param lineID
 	 */
 
@@ -452,7 +453,7 @@ public class OrdersController extends BaseCommerceController
 
 									/*
 									 * final File invoiceFile = new File(invoicePathURL); FileInputStream input = null;
-									 * 
+									 *
 									 * if (invoiceFile.exists()) { String invoiceFileName = null; final String preInvoiceFileName
 									 * = invoiceFile.getName(); if (!preInvoiceFileName.isEmpty()) { final int index =
 									 * preInvoiceFileName.lastIndexOf('.'); if (index > 0) { invoiceFileName =
@@ -964,11 +965,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1161,14 +1162,19 @@ public class OrdersController extends BaseCommerceController
 		String consignmentStatus = "";
 		OrderStatusCodeMasterModel customerStatusModel = null;
 		OrderData orderDetail = null;
+		OrderModel orderModel = null;
 		OrderModel subOrderModel = null;
 		String isGiveAway = "N", formattedProductDate = MarketplacecommerceservicesConstants.EMPTY, formattedActualProductDate = MarketplacecommerceservicesConstants.EMPTY;
 		ConsignmentModel consignmentModel = null;
+		List<OrderData> subOrderList = null;
+		SellerInformationModel sellerInfoModel = null;
 		try
 		{
-
-			orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
-
+			orderModel = orderModelService.getOrderModel(orderCode);
+			if (orderModel != null)
+			{
+				orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+			}
 			if (null == orderDetail)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E9047);
@@ -1176,10 +1182,7 @@ public class OrdersController extends BaseCommerceController
 
 			else
 			{
-				if (null != orderDetail.getMplPaymentInfo() && null != orderDetail.getMplPaymentInfo().getBillingAddress())
-				{
-					orderTrackingWsDTO.setBillingAddress(setAddress(orderDetail, 1));
-				}
+
 				if (null != orderDetail.getDeliveryAddress())
 				{
 					orderTrackingWsDTO.setDeliveryAddress(setAddress(orderDetail, 2));
@@ -1246,11 +1249,13 @@ public class OrdersController extends BaseCommerceController
 				}
 				if (null != orderDetail.getMplPaymentInfo())
 				{
+					if (null != orderDetail.getMplPaymentInfo().getBillingAddress())
+					{
+						orderTrackingWsDTO.setBillingAddress(setAddress(orderDetail, 1));
+					}
 					if (null != orderDetail.getMplPaymentInfo().getPaymentOption())
 					{
-
 						final String paymentOption = orderDetail.getMplPaymentInfo().getPaymentOption();
-
 						orderTrackingWsDTO.setPaymentMethod(paymentOption);
 
 						if (paymentOption.equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT)
@@ -1267,9 +1272,258 @@ public class OrdersController extends BaseCommerceController
 						}
 					}
 				}
+				//
+				subOrderList = orderDetail.getSellerOrderList();
+				if (CollectionUtils.isEmpty(subOrderList))
+				{
+					for (final OrderEntryData orderEntry : orderDetail.getEntries())
+					{
+						final ProductData product = orderEntry.getProduct();
+						if (null == product)
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E9048);
+						}
+						else
+						{
+							//getting the product code
+							//							final ProductModel productModel = productService.getProductForCode(entry.getProduct().getCode());
+							final ProductModel productModel = defaultMplOrderFacade.getProductForCode(product.getCode());
 
-				final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
-				if (orderDetail.getSellerOrderList() != null && !orderDetail.getSellerOrderList().isEmpty())
+							orderproductdto = new OrderProductWsDTO();
+							ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
+							//set image
+							orderproductdto.setImageURL(setImageURL(product));
+
+							if (null != orderEntry.getDeliveryPointOfService())
+							{
+								orderproductdto.setStoreDetails(mplDataMapper.map(orderEntry.getDeliveryPointOfService(),
+										PointOfServiceWsDTO.class, "DEFAULT"));
+							}
+
+							if (StringUtils.isNotEmpty(orderEntry.getAmountAfterAllDisc().toString()))
+							{
+								orderproductdto.setPrice(orderEntry.getAmountAfterAllDisc().getValue().toString());
+							}
+							if (null != product.getBrand() && StringUtils.isNotEmpty(product.getBrand().getBrandname()))
+							{
+								orderproductdto.setProductBrand(product.getBrand().getBrandname());
+							}
+							if (null != product.getCode() && StringUtils.isNotEmpty(product.getCode()))
+							{
+								orderproductdto.setProductcode(product.getCode());
+							}
+							if (StringUtils.isNotEmpty(product.getName()))
+							{
+								orderproductdto.setProductName(product.getName());
+							}
+							if (StringUtils.isNotEmpty(product.getSize()))
+							{
+								orderproductdto.setProductSize(product.getSize());
+							}
+							if (StringUtils.isNotEmpty(product.getVariantType()))
+							{
+								orderproductdto.setVariantOptions(product.getVariantType());
+							}
+							if (StringUtils.isNotEmpty(product.getColour()))
+							{
+								orderproductdto.setProductColour(product.getColour());
+							}
+							/* Fulfillment type */
+							/*
+							 * final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) productModel
+							 * .getRichAttribute(); if (richAttributeModel != null &&
+							 * richAttributeModel.get(0).getDeliveryFulfillModes() != null) { final String fullfillmentData =
+							 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() .toUpperCase(); if
+							 * (fullfillmentData != null && !fullfillmentData.isEmpty()) {
+							 * orderproductdto.setFulfillment(fullfillmentData); } }
+							 */
+							if (orderEntry.isGiveAway())
+							{
+								isGiveAway = "Y";
+							}
+							else
+							{
+								isGiveAway = "N";
+							}
+							orderproductdto.setIsGiveAway(isGiveAway);
+							if (null != orderEntry.getAssociatedItems())
+							{
+								orderproductdto.setAssociatedProducts(orderEntry.getAssociatedItems());
+							}
+							//Delivery date is the final delivery date
+							/*
+							 * if (null != entry.getMplDeliveryMode()) {
+							 *
+							 * if (null != entry.getMplDeliveryMode().getDescription() &&
+							 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
+							 *
+							 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
+							 */
+
+							/* capacity */
+							if (productModel instanceof PcmProductVariantModel)
+							{
+								final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) productModel;
+								final String selectedCapacity = selectedVariantModel.getCapacity();
+								final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
+								if (null != baseProduct.getVariants() && null != selectedCapacity)
+								{
+									for (final VariantProductModel vm : baseProduct.getVariants())
+									{
+										final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
+										if (selectedCapacity.equals(pm.getCapacity()))
+										{
+											orderproductdto.setCapacity(pm.getCapacity());
+										}
+
+									}
+								}
+							}
+
+							if (StringUtils.isNotEmpty(orderEntry.getSelectedUssid()))
+							{
+								sellerInfoModel = getMplSellerInformationService().getSellerDetail(orderEntry.getSelectedUssid());
+							}
+							if (sellerInfoModel != null
+									&& sellerInfoModel.getRichAttribute() != null
+									&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+							{
+								/* Fulfillment type */
+								final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+										.getDeliveryFulfillModes().getCode();
+								if (StringUtils.isNotEmpty(fulfillmentType))
+								{
+									orderproductdto.setFulfillment(fulfillmentType);
+								}
+								//Seller info
+								if (sellerInfoModel.getUSSID() != null
+										&& sellerInfoModel.getUSSID().equalsIgnoreCase(orderEntry.getSelectedUssid()))
+								{
+									if (null != sellerInfoModel.getSellerID())
+									{
+										orderproductdto.setSellerID(sellerInfoModel.getSellerID());
+									}
+									else
+									{
+										orderproductdto.setSellerID(MarketplacecommerceservicesConstants.NA);
+									}
+
+									if (null != sellerInfoModel.getSellerName())
+									{
+										orderproductdto.setSellerName(sellerInfoModel.getSellerName());
+									}
+									else
+									{
+										orderproductdto.setSellerName(MarketplacecommerceservicesConstants.NA);
+									}
+
+									if (null != sellerInfoModel.getUSSID())
+									{
+										orderproductdto.setUSSID(sellerInfoModel.getUSSID());
+										//orderproductdto.setSerialno(orderproductdto.getUSSID());
+									}
+									else
+									{
+										orderproductdto.setUSSID(MarketplacecommerceservicesConstants.NA);
+										//orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA);
+									}
+									for (final RichAttributeModel rm : sellerInfoModel.getRichAttribute())
+									{
+										if (!mplOrderFacade.isChildCancelleable(orderDetail, orderEntry.getTransactionId()))
+										{
+											orderproductdto.setCancel(Boolean.FALSE);
+										}
+										if (null == orderEntry.getConsignment() && orderEntry.getQuantity().doubleValue() != 0
+												&& null != orderDetail.getStatus())
+										{
+											consignmentStatus = orderDetail.getStatus().getCode();
+											//cancellation window not required
+											/*
+											 * if (null != rm.getCancellationWindow()) { final Date sysDate = new Date(); final int
+											 * cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+											 * subOrder.getCreated(), sysDate); final int actualCancelWindow =
+											 * Integer.parseInt(rm.getCancellationWindow()); if (cancelWindow < actualCancelWindow
+											 * && checkOrderStatus(subOrder.getStatus().getCode(),
+											 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
+											 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
+											 * orderproductdto.setCancel(Boolean.TRUE);
+											 *
+											 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
+											 * orderproductdto.setCancel(Boolean.FALSE); }
+											 */
+											if (checkOrderStatus(orderDetail.getStatus().getCode(),
+													MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue()
+													&& !orderEntry.isGiveAway() && !orderEntry.isIsBOGOapplied())
+											{
+												orderproductdto.setCancel(Boolean.TRUE);
+
+											}
+											else
+											{
+												orderproductdto.setCancel(Boolean.FALSE);
+											}
+										}
+										else
+										{
+											orderproductdto.setCancel(Boolean.FALSE);
+										}
+
+										if (null != rm.getExchangeAllowedWindow())
+										{
+											orderproductdto.setExchangePolicy(rm.getExchangeAllowedWindow());
+
+										}
+									}
+								}
+							}
+							final Map<String, List<AWBResponseData>> returnMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry,
+									orderDetail, orderModel);
+							orderproductdto.setStatusDisplayMsg(setStatusDisplayMessage(returnMap, consignmentModel));
+							//setting current product status Display
+							if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
+									&& returnMap.get(MarketplaceFacadesConstants.CANCEL) != null
+									&& returnMap.get(MarketplaceFacadesConstants.CANCEL).size() > 0)
+							{
+								orderproductdto.setStatusDisplay(MarketplaceFacadesConstants.CANCEL);
+							}
+							else if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
+									&& returnMap.get(MarketplaceFacadesConstants.RETURN) != null
+									&& returnMap.get(MarketplaceFacadesConstants.RETURN).size() > 0)
+							{
+								orderproductdto.setStatusDisplay(MarketplaceFacadesConstants.RETURN);
+							}
+							else
+							{
+								customerStatusModel = orderModelService.getOrderStausCodeMaster(consignmentStatus);
+								if (customerStatusModel != null)
+								{
+									orderproductdto.setStatusDisplay(customerStatusModel.getStage());
+								}
+								else
+								{
+									orderproductdto.setStatusDisplay(MarketplacecommerceservicesConstants.NA);
+								}
+							}
+							//Check if invoice is available
+							orderproductdto.setIsInvoiceAvailable(Boolean.FALSE);
+							//Check if Shipment details is available
+							final Ordershipmentdetailstdto ordershipmentdetailstdto1 = new Ordershipmentdetailstdto();
+							ordershipmentdetailstdto1.setStatus(MarketplacecommerceservicesConstants.NA);
+							ordershipmentdetailstdto1.setStatusDate(new Date());
+							ordershipmentdetailstdtos.add(ordershipmentdetailstdto1);
+							orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
+
+							orderproductdtos.add(orderproductdto);
+						}
+					}
+					orderTrackingWsDTO.setProducts(orderproductdtos);
+					orderTrackingWsDTO.setIsPickupUpdatable(getOrderDetailsFacade.isPickUpButtonEditable(orderDetail));
+					orderTrackingWsDTO.setStatusDisplay(orderDetail.getStatusDisplay());
+					orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
+				else if (CollectionUtils.isNotEmpty(subOrderList))
 				{
 					for (final OrderData subOrder : subOrderList)
 					{
@@ -1306,7 +1560,7 @@ public class OrdersController extends BaseCommerceController
 								{
 									orderproductdto.setPrice(entry.getAmountAfterAllDisc().getValue().toString());
 								}
-								if (null != product.getBrand() && StringUtils.isNotEmpty(product.getBrand().toString()))
+								if (null != product.getBrand() && StringUtils.isNotEmpty(product.getBrand().getBrandname()))
 								{
 									orderproductdto.setProductBrand(product.getBrand().getBrandname());
 								}
@@ -1357,10 +1611,10 @@ public class OrdersController extends BaseCommerceController
 								//Delivery date is the final delivery date
 								/*
 								 * if (null != entry.getMplDeliveryMode()) {
-								 * 
+								 *
 								 * if (null != entry.getMplDeliveryMode().getDescription() &&
 								 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
-								 * 
+								 *
 								 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
 								 */
 
@@ -1395,13 +1649,12 @@ public class OrdersController extends BaseCommerceController
 
 								/*
 								 * if (null != orderproductdto.getUSSID()) {
-								 * 
+								 *
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
 								 */
 
 								//}
-								SellerInformationModel sellerInfoModel = null;
 								if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
 								{
 									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
@@ -1469,7 +1722,7 @@ public class OrdersController extends BaseCommerceController
 												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
 												 * orderproductdto.setCancel(Boolean.TRUE);
-												 * 
+												 *
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1497,9 +1750,9 @@ public class OrdersController extends BaseCommerceController
 												 * actualCancelWindow && checkOrderStatus(consignmentStatus,
 												 * MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied())
-												 * 
+												 *
 												 * { orderproductdto.setCancel(Boolean.TRUE);
-												 * 
+												 *
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1527,7 +1780,7 @@ public class OrdersController extends BaseCommerceController
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 * 
+											 *
 											 * }
 											 */
 											//for return
@@ -1618,7 +1871,7 @@ public class OrdersController extends BaseCommerceController
 								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
 								 * consignmentModel.getReturnCarrier()) {
 								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
-								 * 
+								 *
 								 * }
 								 */
 								//End
@@ -1749,10 +2002,7 @@ public class OrdersController extends BaseCommerceController
 				}
 			}
 		}
-		catch (
-
-		final EtailNonBusinessExceptions e)
-
+		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			if (null != e.getErrorMessage())
@@ -1761,10 +2011,7 @@ public class OrdersController extends BaseCommerceController
 			}
 			orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		catch (
-
-		final EtailBusinessExceptions e)
-
+		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
@@ -1773,13 +2020,11 @@ public class OrdersController extends BaseCommerceController
 			}
 			orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-
-		catch (
-
-		final Exception e)
-
+		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			orderTrackingWsDTO.setError(MarketplacecommerceservicesConstants.E0000);
+			orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return orderTrackingWsDTO;
 
@@ -2046,6 +2291,13 @@ public class OrdersController extends BaseCommerceController
 			{
 				getOrderHistoryListWsDTO.setErrorCode(e.getErrorCode());
 			}
+			getOrderHistoryListWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			getOrderHistoryListWsDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			getOrderHistoryListWsDTO.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			getOrderHistoryListWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return getOrderHistoryListWsDTO;
