@@ -147,6 +147,11 @@ tr.d0 td {
 		                
 		              <ul class="item-edit-details">
 		              	<c:if test="${entry.updateable}">
+		              			<c:forEach items="${entry.product.seller}" var="seller">
+								<c:if test="${seller.ussid eq entry.selectedSellerInformation.ussid }">
+								<c:set var="stock" value="${seller.availableStock }"/>
+								</c:if>
+								</c:forEach>
 							<ycommerce:testId code="cart_product_removeProduct">
 		                  		<li> 
 			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}"><span><spring:theme code="cart.remove"/></span></a>
@@ -157,6 +162,7 @@ tr.d0 td {
 								<input type="hidden" name="productCodePost" value="${entry.product.code}" />
 								<input type="hidden" name="wishlistNamePost" value="N" />
 								<input type="hidden" name="ussid" value="${entry.selectedSellerInformation.ussid}" />
+								<input type="hidden" name="stock" value="${stock}" />
 								<div class="undo-text-wrapper">
 								<p><spring:theme code="mpl.myBag.product.remove.text"/></p>
 								<h4><spring:theme code="mpl.myBag.product.remove.removed"/></h4>

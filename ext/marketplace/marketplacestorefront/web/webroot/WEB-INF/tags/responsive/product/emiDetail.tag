@@ -29,14 +29,14 @@
 	<div id="emiTableDiv" class="other-sellers"> <span id="emiSelectBank" style="display:none">Please select a Bank again</span><span id="emiNoData" style="display:none">No data for the bank.</span>
       <table id="EMITermTable" class="other-sellers-table emi-table">
         <thead id="emiTableTHead" style="display:none">
-			<th><b><spring:theme
-						code="checkout.multi.paymentMethod.addPaymentDetails.terms" /></b></th>
-			<th><b><spring:theme
-						code="checkout.multi.paymentMethod.addPaymentDetails.interestRate" /></b></th>
-			<th><b><spring:theme
-						code="checkout.multi.paymentMethod.addPaymentDetails.monthlyInstallment" /></b></th>
-			<th><b><spring:theme
-						code="checkout.multi.paymentMethod.addPaymentDetails.interestPayable" /></b></th>
+			<th width="5%"><spring:theme
+						code="checkout.multi.paymentMethod.addPaymentDetails.terms" /></th>
+			<th width="25%"><spring:theme
+						code="checkout.multi.paymentMethod.addPaymentDetails.interestRate" /></th>
+			<th width="35%"><spring:theme
+						code="checkout.multi.paymentMethod.addPaymentDetails.monthlyInstallment" /></th>
+			<th width="35%"><spring:theme
+						code="checkout.multi.paymentMethod.addPaymentDetails.interestPayable" /></th>
 		</thead>
 		
 		<tbody id="emiTableTbody">

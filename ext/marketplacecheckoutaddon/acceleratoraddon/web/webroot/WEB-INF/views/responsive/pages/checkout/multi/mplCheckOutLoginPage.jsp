@@ -30,14 +30,23 @@
 		<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}">
 			<jsp:body>
 			<script>
-    				window.onload =	function(){
+    				/* window.onload =	function(){
     					//resetConvChargeElsewhere();
     					activateSignInTab();
-    				}
+    				} */
+    				$(window).on('load resize',function(){	
+    					if($(".sign-in.tab-view .nav").css("display") == "block"){
+    						activateSignInTab();
+    					}
+    					else{
+    						$("#sign_in_content, #sign_up_content").addClass('active');
+    					}
+    				});
 				</script>
 				<ycommerce:testId code="checkoutStepTwo">
 					<div class="checkout-shipping">
 						<div class="checkout-indent">
+						<div class="sign-in wrapper">
 							<div class="sign-in tab-view checkoutSignPage">
 								<ul class="nav">
 									<li id="signIn_link" class="active"><spring:theme code="text.signin" text="Sign In"/></li>
@@ -51,12 +60,14 @@
 										<c:url value="/checkout/j_spring_security_check" var="loginAndCheckoutActionUrl" />
 										<multi-checkout:login actionNameKey="checkout.login.loginAndCheckout" action="${loginAndCheckoutActionUrl}"/>
 									</li>
+									<li class="or"><span class="vr-line"></span><span class="or-rounded"><spring:theme code="text.or" /></span><span class="vrt-line"></span></li>
 									<li id="sign_up_content">
 										<c:url value="/checkout/multi/checkoutlogin/checkoutRegister" var="registerAndCheckoutActionUrl" />
 										<multi-checkout:register actionNameKey="checkout.login.registerAndCheckout" action="${registerAndCheckoutActionUrl}" />
 									</li>
 			
 								</ul>
+							</div>
 							</div>
 						</div>
 					</div>

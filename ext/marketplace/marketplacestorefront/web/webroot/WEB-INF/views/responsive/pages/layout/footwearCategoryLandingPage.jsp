@@ -59,7 +59,7 @@
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
 
-<div class="listing wrapper">
+<div  id="productGrid" class="listing wrapper"> <!-- Added for TPR-198 -->
 			<div class="left-block">
 				<cms:pageSlot position="Section7A" var="feature">
 
