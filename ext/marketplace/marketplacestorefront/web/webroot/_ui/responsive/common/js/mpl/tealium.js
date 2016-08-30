@@ -233,6 +233,8 @@ $(document).ready(
 							+ $("#product_id").val() + ',';
 						tealiumData += '"product_brand":'
 							+ $("#product_brand").val() + ',';
+						tealiumData += '"page_subcategory_name_L3":"'
+							+ $("#page_subcategory_name_L3").val() + '",';
 						tealiumData += '"page_subcategory_name":'
 							+ $("#page_subcategory_name").val() + ',';
 						tealiumData += '"product_category":'
@@ -274,6 +276,8 @@ $(document).ready(
 							+ $("#product_brand").val() + ',';
 						tealiumData += '"page_subcategory_name":'
 							+ $("#page_subcategory_name").val() + ',';
+						tealiumData += '"page_subcategory_name_L3":"'
+							+ $("#page_subcategory_name_L3").val() + '",';
 						tealiumData += '"product_category":'
 							+ $("#product_category").val() + '}';
 						data = data.replace("}<TealiumScript>", tealiumData);
