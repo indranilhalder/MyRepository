@@ -62,6 +62,7 @@ $(document).ready(function(){
 function generateOTP(orderId){
 	 $(".otpError").hide();
     $(".serverError").hide();
+    
 	 var numberOTP=$("#OTP").val();
 	 var isString = isNaN(numberOTP);
     var numberOTP=numberOTP.trim();
@@ -79,9 +80,8 @@ function generateOTP(orderId){
 			success : function(response) {
 				if(response=="Pincode not Serviceable"){
 					$("#changeAddressPopup").show();
-					$("wrapBG1").show();
-					$("#showOTP").hide();
-					$(".wrapBG").hide();
+					$("#otpPopup").hide();
+					$(".wrapBG").show();
 					var height = $(window).height();
 					$(".wrapBG").css("height", height);
 					$("#changeAddressPopup").css("z-index", "999999");
@@ -90,8 +90,7 @@ function generateOTP(orderId){
 				}
 				else if(response=="INVALID"){	
 					$(".otpError").show();
-					$(".otpError").text("Invalid OTP, Please Re-enter.");
-					
+					$(".otpError").text("Invalid OTP, Please Re-enter.");		
 				}else if(response=="Internal Server Error, Please try again later"){
 					$(".otpError").show();
 					$(".otpError").text(response);
@@ -112,7 +111,6 @@ function generateOTP(orderId){
 }
 
 </script>
-</c:if>
 <style>
 .otpForm .messageSpace{
 550065
@@ -132,3 +130,4 @@ function generateOTP(orderId){
     background-color: #a9143c;
 }
 </style>
+</c:if>
