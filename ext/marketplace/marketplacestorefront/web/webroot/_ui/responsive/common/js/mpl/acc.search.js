@@ -521,10 +521,6 @@ function constructDepartmentHierarchy(inputArray) {
 	});
 	
 	 $(".facet-name.js-facet-name h4").each(function(){
-		 
-		 /*if($("#stockStatusId").val()!= "true"){
-			 $(".Availability").hide();
-		 }*/
 		 var facetStockSize=$("#facetStockSize").val();
 		 if($("#stockStatusId").val()!= "true" && facetStockSize==1){
 			 $(".Availability").hide();
