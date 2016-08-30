@@ -395,18 +395,18 @@ ACC.carousel = {
         				items:4,
         			}			
         		}	
-	/*navigation:true,
-		navigationText : [],
-		pagination:false,
-		itemsDesktop : [5000,4], 
-		itemsDesktopSmall : [1400,4], 
-		itemsTablet: [650,2], 
-		itemsMobile : [480,2], 
-		rewindNav: false,
-		lazyLoad:true*/
-	});
-		},4000)
-		
+
+			/*navigation:true,
+				navigationText : [],
+				pagination:false,
+				itemsDesktop : [5000,4], 
+				itemsDesktopSmall : [1400,4], 
+				itemsTablet: [650,2], 
+				itemsMobile : [480,2], 
+				rewindNav: false,
+				lazyLoad:true*/
+			});
+		},4000);
 	},
 	
 	myReviewCarousel: function(){

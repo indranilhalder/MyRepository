@@ -8610,13 +8610,13 @@ footer .banner {
     margin-bottom:0px;
     padding-bottom:70px;}} */
 .sign-in.tab-view .nav {
-  border: 1px solid #DFD1D5;
+ /*  border: 1px solid #DFD1D5; */
   width: 100%;
   float: left;
-  display: table; }
-  @media (min-width: 791px) {
+  display: block; }
+/*   @media (min-width: 791px) {
     .sign-in.tab-view .nav {
-      width: 42%; } }
+      width: 42%; } } */
   .sign-in.tab-view .nav li {
     padding: 10px;
     text-align: center;
@@ -8628,7 +8628,7 @@ footer .banner {
     -webkit-transition: background 0.3s;
     -moz-transition: background 0.3s;
     transition: background 0.3s;
-    display: table-cell;
+    display: inline-block;
     vertical-align: middle;
     float: none;
      }
@@ -8701,7 +8701,7 @@ footer .banner {
           letter-spacing: 1.2px; } }
           .sign-in.tab-view .tabs > li .left form div#checkBox label,.sign-in.tab-view .tabs > li .left form div#checkBox label a{
           	font-size: 12px;
-		    font-weight: 500;
+		    font-weight: normal;
 		    letter-spacing: normal;
 		    text-transform: none;
 		    display: inline;
@@ -20103,7 +20103,7 @@ font-size:14px;
 /*  margin-bottom: 10px; */
  font-weight: 500;
  background: #fff;
- /* display: none; */
+/*  display: none; */
  border-collapse: separate;
 }
 #EMITermTable th{
@@ -42656,7 +42656,7 @@ margin-left: 20%;
 	border: 1px solid #ccc;
 	float: left;
 	text-align: center;
-	min-width: 33px;
+	min-width: 35px;
    	margin-bottom: 5px;
     margin-left: -1px;
     margin: 0 5px 5px 0;
@@ -42664,7 +42664,7 @@ margin-left: 20%;
 
 .product-info .size ul#variant li a {
 	display: block;
-	padding: 10px 9px;
+	padding: 10px 5px;
 	text-align: center;
 	text-transform: uppercase;
 }
@@ -42904,7 +42904,7 @@ margin-left: 20%;
 	padding: 0 25px 0 0;
 	float: left;
 	line-height: 20px;
-	font-weight: bold;
+	font-weight: 600;
 	    text-transform: uppercase;
 	        letter-spacing: .5px;
 }
@@ -44015,7 +44015,7 @@ body.page-productDetails .breadcrumbs.wrapper {
  	}
  	.pdp-promo-block.promo-block a.details{
  	    display: inline-block;
- 	    margin-left: 10px;
+ 	    margin-left: 3px;
  	}
  	
  }
@@ -44164,7 +44164,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	top: 3px;
 } */
 
-#bankNameForEMI {
+.product-detail #bankNameForEMI {
 	width: 250px;
 	border: 2px solid #f5f5f5;
 }
@@ -45182,9 +45182,9 @@ color: #555;
 .else-sec{
 display:none;	
 }
-.sign-in.tab-view .nav{
+/* .sign-in.tab-view .nav{
 	width:50.6%;
-}
+} */
 .sign-in.tab-view .tabs > li#sign_up_content .social-connect{
 	display:none;}
 	.sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout{
@@ -45291,7 +45291,7 @@ display:none;
     margin-top: 0;
 }
 
-.sign-in.tab-view .tabs, .sign-in.tab-view .nav{
+.sign-in.tab-view .tabs{
 	border: 1px solid #cccccc;
 }
 .sign-in.tab-view .nav li{
@@ -45303,6 +45303,8 @@ display:none;
     background-color: #b2b2b2;
     color:#fff;
     letter-spacing: 1px;
+        border: 1px solid #cccccc;
+            margin-right: -3px;
 }
  .sign-in.tab-view .tabs > li .left form {
     width: 52%;
@@ -45415,7 +45417,7 @@ margin-top:0px;
 .sign-in.tab-view .tabs > li .left form input {
     font-size: 10px;
     letter-spacing: 0;
-        color: #676767;
+        color: #555;
     height: 46px;
 }
 .sign-in.tab-view .tabs > li .left form a.js-password-forgotten {
@@ -45477,6 +45479,7 @@ margin-top:0px;
 }
 .sign-in.tab-view .nav li{
     font-size: 13px;
+        width: 50%;
 }
 .sign-in.tab-view .tabs > li {
     padding: 35px 12px;
@@ -45560,4 +45563,14 @@ margin-top:0px;
 	display: block;
 	margin-bottom: 10px;
     line-height: 1.5;
+}
+.pdp-promo-block.promo-block .pdp-promo-title {
+	cursor: pointer;
+}
+
+.OtherSellers .Padd .InfoWrap .Content>div.Buying .OSErrorMsg {
+	font-size: 12px;
+    text-align: center;
+    margin-bottom: 10px;
+	color: #ff1c47;
 }
