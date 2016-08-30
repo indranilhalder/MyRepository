@@ -1942,7 +1942,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					
 					for (final SellerInformationModel sellerInfo : productModel.getSellerInformationRelator())
 					{
-						if(ussid ==sellerInfo.getUSSID())
+						if(ussid.equalsIgnoreCase(sellerInfo.getUSSID()))
 						{
 						if(CollectionUtils.isNotEmpty(sellerInfo.getRichAttribute()))
 						{
@@ -2155,12 +2155,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		returnInfoRequest.setOrderId(returnInfoRequestData.getOrderId());
 		returnInfoRequest.setAwbNum(returnInfoRequestData.getAWBNum());
 		returnInfoRequest.setLogisticsID(returnInfoRequestData.getLogisticsID());
-		returnInfoRequestData.setLPNameOther(returnInfoRequestData.getLPNameOther());
-		returnInfoRequestData.setRTSStore(returnInfoRequestData.getRTSStore());
-		returnInfoRequestData.setShipmentCharge(returnInfoRequestData.getShipmentCharge());
-		returnInfoRequestData.setReturnType(returnInfoRequestData.getReturnType());
-		returnInfoRequestData.setTransactionId(returnInfoRequestData.getTransactionId());
-		returnInfoRequestData.setShipmentProofURL(returnInfoRequestData.getShipmentProofURL());
+	    returnInfoRequest.setLpNameOther(returnInfoRequestData.getLPNameOther());
+		returnInfoRequest.setRtsStore(returnInfoRequestData.getRTSStore());
+		returnInfoRequest.setShipmentCharge(returnInfoRequestData.getShipmentCharge());
+		returnInfoRequest.setReturnType(returnInfoRequestData.getReturnType());
+		returnInfoRequest.setTransactionId(returnInfoRequestData.getTransactionId());
+		returnInfoRequest.setShipmentProofURL(returnInfoRequestData.getShipmentProofURL());
 
 		try
 		{
@@ -2169,6 +2169,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 			LOG.debug("Sending Returninfo to OMS  ");
 			}
+			LOG.info("Return Info Call to OMS data:"+returnInfoRequest);
+		
 			final RTSAndRSSReturnInfoResponse response = mplOrderCancelClientService.orderReturnInfoOMS(returnInfoRequest);
 
 			// below portion of code valid for cancel only
