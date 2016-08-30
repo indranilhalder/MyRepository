@@ -1766,10 +1766,10 @@
 	<!-- Bean for POC Search starts-->
 
 	<bean id="standardizationDao"
-		class="com.tisl.mpl.StandardizationFactory.StandardizationDaoImpl">
+		class="com.tisl.mpl.standardizationfactory.StandardizationDaoImpl">
 	</bean>
 	<bean id="standardizationService"
-		class="com.tisl.mpl.StandardizationFactory.StandardizationServiceImpl">
+		class="com.tisl.mpl.standardizationfactory.StandardizationServiceImpl">
 	</bean>
 	
 	<bean id="sizeStandardInterceptor"
