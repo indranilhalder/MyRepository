@@ -502,7 +502,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					valditionMsg = changeDeliveryRequestCallToOMS(orderCode, temproryAddressModel, MarketplaceFacadesConstants.CA,transactionEddDtoList);
 					if (valditionMsg != null)
 					{
-						valditionMsg="success";
 						if (valditionMsg.equalsIgnoreCase(MarketplaceFacadesConstants.SUCCESS))
 						{
 							 //if Pincode Serviceable  then Save in Order and set		
@@ -526,7 +525,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						else
 						{
 							mplDeliveryAddressService.setStatusForTemporaryAddress(orderCode, false);
-							valditionMsg =MarketplaceFacadesConstants.FAILURE;
+							valditionMsg =MarketplaceFacadesConstants.PINCODE_NOT_SERVICEABLE;
 						}
 					}
 					else
