@@ -1604,6 +1604,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RETURN_TYPE_RSP = "RSP";
 	public static final String TICKETID_PREFIX_E = "E";
 	public static final String RETURN_METHOD_QUICKDROP = "quickdrop";
+	public static final String RETURN_TYPE = "R";
 
 	private MarketplacecommerceservicesConstants()
 	{
