@@ -140,22 +140,19 @@ function optionsLandmark1(e) {
 	}	
 }
 
-
-$(document).ready(function() {
-			$("#saveBlockData").click(
-					function(event) {
-						var validate = true;
-						$(".main_error").hide();
-						$(".firstNameError").hide();
-						$(".lastNameError").hide();
-						$(".address1Error").hide();
-						$(".address2Error").hide();
-						$(".address3Error").hide();
-						$(".mobileNumberError").hide();
-						$(".landMarkError").hide();
-						$(".cityError").hide();
-						$(".pincodeNoError").hide();
-						$(".stateError").hide();
+function checkPopupDataOrderHistory() {
+					var validate = true;
+					$(".main_error").hide();
+					$(".firstNameError").hide();
+					$(".lastNameError").hide();
+					$(".address1Error").hide();
+					$(".address2Error").hide();
+					$(".address3Error").hide();
+					$(".mobileNumberError").hide();
+					$(".landMarkError").hide();
+					$(".cityError").hide();
+					$(".pincodeNoError").hide();
+					$(".stateError").hide();
 				      
 				      var fname=$("#firstName").val();
 				      var lname=$("#lastName").val();
@@ -168,16 +165,27 @@ $(document).ready(function() {
 				      var isString = isNaN(mobile);
 				      var hasString = isNaN(pincode);
 				      var city=$("#city").val();
+				      var letters = new RegExp(/^[A-z]*$/);
 				      
 				     if(fname == null || fname.trim() == '' ){
 				  			$(".firstNameError").show();
 				  			$(".firstNameError").text("First Name cannot be Blank");
 				  			validate = false;
-				  	} if(lname == null || lname.trim() == '' ){
+				  	}else if(letters.test(fname) == false){
+				  		$(".firstNameError").show();
+			  			$(".firstNameError").text("First Name should contain only alphabets");
+			  			validate = false;
+				  	}
+				     if(lname == null || lname.trim() == '' ){
 			  			$(".lastNameError").show();
 			  			$(".lastNameError").text("Last Name cannot be Blank");
 			  			validate = false;
-				  	} if(al1 == null || al1.trim() == '' ){
+				  	}else if(letters.test(lname) == false){
+				  		$(".lastNameError").show();
+			  			$(".lastNameError").text("Last Name should contain only alphabets");
+			  			validate = false;
+				  	}   
+				     if(al1 == null || al1.trim() == '' ){
 			  			$(".address1Error").show();
 			  			$(".address1Error").text("Address Line 1 cannot be blank");
 			  			validate = false;
@@ -216,6 +224,10 @@ $(document).ready(function() {
 			  			$(".cityError").show();
 			  			$(".cityError").text("City cannot be blank");
 			  			validate = false;
+				  	}else if(letters.test(city) == false){
+				  		$(".cityError").show();
+			  			$(".cityError").text("City should contain only alphabets");
+			  			validate = false;
 				  	}
 				      if(validate == true){
 						var data = $("#deliveryAddressForm").serialize();
@@ -242,21 +254,18 @@ $(document).ready(function() {
 								}else{
 									$("#changeAddressPopup").hide();
 									$("#otpPopup").html(result).show();
+									$(".wrapBG").show();
 								}
 							},
 							error : function(result) {
-								console.log(result);
 								alert("error");
 							}
 
 						});
 					}
 						
-					});
-
-
-
-
+					}
+$(document).ready(function() {
 	$("#geneateOTP").click(function() {
 		$("#changeAddressPopup").hide();
 		$("wrapBG1").hide();
@@ -270,13 +279,11 @@ $(document).ready(function() {
 	
 	$(".close").click(function() {
 		$("#showOTP,#otpPopup").hide();
-		$(".wrapBG1").hide();
-		
+		$(".wrapBG1").hide();	
 	});
 	
 	$(".addAddressToForm").click(function(){
 		var className = $(this).attr("data-item");
-	
 		$("#firstName").val($("."+className+" .firstName").text());
 		$("#lastName").val($("."+className+" .lastName").text());
 		$("#addressLine1").val($("."+className+" .addressLine1").text());
@@ -290,10 +297,7 @@ $(document).ready(function() {
 	
 });
 
-
-
 function newOTPGenerate(orderCode){
-	alert(orderCode);
 	 $.ajax({
 			type : "POST",
 			url : ACC.config.encodedContextPath + "/my-account/newOTP",
