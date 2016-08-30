@@ -11410,7 +11410,7 @@ button.otherSellersFont {
 .reviews .header h2 {
     text-align: center;
     font-size: 28px;
-    padding: 40px 0 20px;
+    padding: 10px 0 20px;
     font-weight: 500;
     font-family: "Montserrat";
 }
@@ -22439,6 +22439,7 @@ ul.color-swatch li span{
 }
 span.sizesAvailable { 
 	opacity:0;
+	display: none;
 	}
 .productParentList:hover .sizesAvailable { 
 	position:relative !important;
@@ -45623,4 +45624,7 @@ margin-top:0px;
 	 padding: 0;
     height: auto;
     padding-top: 10px;
+}
+body.no-scroll {
+	overflow-y: hidden; 
 }

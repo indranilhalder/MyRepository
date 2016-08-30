@@ -2721,18 +2721,21 @@ function loadDefaultWishListName_SizeGuide() {
 				$(this).addClass("active mobile");
 				$("body").append("<div class='emi-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 				openPopForBankEMI();
+				$("body").addClass("no-scroll");
 				
 			}
 		});
 		$(document).on("click",".emi-overlay,.Emi .modal-content .Close",function(){
 			$(".Emi > p").removeClass("active mobile");
 			$(".emi-overlay").remove();
+			$("body").removeClass("no-scroll");
 		});
 		
 		$(window).resize(function(){
 			if($(window).width() > 1024){
 				$(".Emi > p").removeClass("active mobile");
 				$(".emi-overlay").remove();
+				$("body").removeClass("no-scroll");
 			}
 		})
 		

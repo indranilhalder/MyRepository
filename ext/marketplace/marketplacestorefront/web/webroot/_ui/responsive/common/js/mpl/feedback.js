@@ -1979,3 +1979,18 @@ $(document).ajaxComplete(function(){
 		$("body").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
 	}
 });
+
+var ia_prod;
+$(window).resize(function(){
+	clearTimeout(ia_prod);
+	ia_prod = setTimeout(function(){
+		var a = $(".pdp .trending#ia_products .image").height()/2 + 20;
+		$(".pdp .trending#ia_products .owl-controls").css("top",a)
+	},100);
+});
+$(window).scroll(function(){
+	if($(window).scrollTop()  > $(".pdp .trending#ia_products").offset().top - $(window).height()) {
+		var a = $(".pdp .trending#ia_products .image").height()/2 + 20;
+		$(".pdp .trending#ia_products .owl-controls").css("top",a);
+	}
+})
