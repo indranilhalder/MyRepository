@@ -43445,18 +43445,18 @@ float: right;
 	/*Products Right Share*/
 	.color-swatch {
 		float: left;
-		width: 50%;
+		width: 100%;
 	}
 	.product-info .product-content .wish-share.desktop {
-		display: none;
+		    padding: 0px 8%;
 	}
-	.product-info .product-detail .wish-share.mobile {
+	/* .product-info .product-detail .wish-share.mobile {
 		clear: none;
 		display: block;
 		float: right;
 		width: 40%;
 		margin: 0;
-	}
+	} */
 	.product-info .product-detail .wish-share.mobile li {
 		padding: 0;
 		width: 100%;
