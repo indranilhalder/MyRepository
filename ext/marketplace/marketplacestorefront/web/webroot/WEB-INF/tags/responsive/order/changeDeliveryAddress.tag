@@ -70,7 +70,7 @@
 									<form:input path="postcode" class="address_postcode"
 										id="pincode" maxlength="6"
 										value="${orderDetails.deliveryAddress.postalCode}"  placeholder="Pincode" />
-									<div class="error_text pincodeNoError"></div>
+									<div  class="error_text pincodeNoError"></div>
 								</div>
 							</div>
 						</div>
@@ -232,7 +232,7 @@
 			<p style="clear: both;"></p>
 			<div class="modal-footer">
 				<div class="error_text main_error"></div>
-				<button type="button" id="saveBlockData" class="btn btn-primary">Save</button>
+				<button type="button" onclick="checkPopupDataOrderHistory()" class="btn btn-primary saveBlockData">Save</button>
 			</div>
 		</form:form>
 		<p style="clear: both;"></p>
