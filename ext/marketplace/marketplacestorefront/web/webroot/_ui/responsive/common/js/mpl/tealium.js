@@ -21,11 +21,14 @@ $(document).ready(
 			var pageName=$('#pageName').val();
 			
 			//TPR-672 START
+			var promo_title='';
+			var promo_id='';
+			
 			if($("#product_applied_promotion_title").val() && $("#product_applied_promotion_code").val() !=undefined)
 			{
 				
-			var promo_title=$("#product_applied_promotion_title").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
-			var promo_id=$("#product_applied_promotion_code").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
+			promo_title=$("#product_applied_promotion_title").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
+			promo_id=$("#product_applied_promotion_code").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
 			}
 			//TPR-672 END
 			
@@ -330,15 +333,7 @@ $(document).ready(
 					
 			});
 			/*TPR-657 ends*/
-			/*TPR-667 Start*/
-			$('.newsletter #submit').click(function(){
-				utag.link({
-					"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
-				});
-			
-			
-			});
-			/*TPR-667 End*/
+		
 			
 			
 		});
