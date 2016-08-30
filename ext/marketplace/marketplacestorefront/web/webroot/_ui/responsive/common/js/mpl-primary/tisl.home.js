@@ -1962,7 +1962,7 @@ $(document).ready(function(){
 
 
 	//TISPRD-4587
-	/*$(document).ajaxComplete(function(){
+	$(document).ajaxComplete(function(){
 		$("div#appendedAtoZBrands").eq(1).children("div#A-E").show();
 		$(".lazy-brands>div.toggle.A-ZBrands,div#appendedAtoZBrands>div#A-E").mouseenter(function(){
 			$("div#appendedAtoZBrands").eq(1).children("div#A-E").show();
@@ -1980,7 +1980,7 @@ $(document).ready(function(){
 			$("div#appendedAtoZBrands").eq(1).siblings("div#groups").children("div#group").children("a.brandGroupLink").css({"border-bottom-style": "none","font-weight": "400"});
 			$(this).children("a.brandGroupLink").css({"border-bottom-width": "3px","border-bottom-style": "solid","font-weight":"bold"}); 
 		});
-	}); */
+	}); 
 
 	$(document).on("click","div.brandClass + span#mobile-menu-toggle",function(){
 		if($(this).siblings("ul.images").children().length == 0){
@@ -1999,7 +1999,7 @@ $(document).ready(function(){
 
 	
 /***************  Change for TISPRD-4587 **********/
-	$(document).on("mouseenter",".A-ZBrands",function(){
+	/*$(document).on("mouseenter",".A-ZBrands",function(){
 		
 		if($("#A-E").css("display") == "block"){
 			
@@ -2037,6 +2037,6 @@ $(document).ready(function(){
 			} else {
 				$(".azWrapper").eq(1).children("#A-E").removeClass("importantDisplay");
 			}
-		});
+		});*/
 
 
