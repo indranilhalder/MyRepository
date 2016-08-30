@@ -15,6 +15,7 @@ package com.tisl.mpl.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
+import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.validation.ValidationResults;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.PaymentDetailsForm;
@@ -232,10 +233,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//		serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(true));
 		//		modelService.save(serviceCart);
 
+		//TPR-1080
+		ValidationResults validationResult = null;
 		//Validator called explicitly TPR-629
 		if (StringUtils.isEmpty(guid))
 		{
-			paymentValidator.validateOnEnter(redirectAttributes);
+			validationResult = paymentValidator.validateOnEnter(redirectAttributes);
+		}
+		if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
+		{
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 		}
 		//redirecting to previous page for anonymous user
 		if (getUserFacade().isAnonymousUser())
