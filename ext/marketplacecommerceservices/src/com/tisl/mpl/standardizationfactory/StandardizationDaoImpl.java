@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.StandardizationFactory;
+package com.tisl.mpl.standardizationfactory;
 
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;

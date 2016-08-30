@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.StandardizationFactory;
+package com.tisl.mpl.standardizationfactory;
 
 import java.util.List;
 
