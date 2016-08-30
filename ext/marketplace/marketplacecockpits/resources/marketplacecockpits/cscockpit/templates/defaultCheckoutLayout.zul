@@ -12,6 +12,7 @@
 		<div id="checkoutCartTotalsWidget" class="checkoutCartTotalsWidget"/>
 		<div class="clear"></div>
 	</div>
+	<div id="checkoutScheduleDeliveryWidget" class="appliedPromotionsWidget"></div>
 	<div id="checkoutCartAppliedPromotionsWidget" class="appliedPromotionsWidget"/>
 	<div id="checkoutCouponAppliedWidget" class="appliedPromotionsWidget"/>
 	<div id="cartPaymentTransactionsWidget" class="orderPaymentTransactionsWidget"/>

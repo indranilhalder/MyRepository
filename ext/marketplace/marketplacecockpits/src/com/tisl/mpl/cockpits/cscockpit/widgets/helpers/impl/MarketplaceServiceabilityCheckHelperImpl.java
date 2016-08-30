@@ -129,7 +129,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	 * @description this method checks the restriction list and calls pincode service accordingly
 	 */
 	@Override
-	public List<PinCodeResponseData> getResponseForPinCode(final ProductModel product, final String pin,
+	public List<PinCodeResponseData> getResponseForPinCode(final String cartId,final ProductModel product, final String pin,
 			final String isDeliveryDateRequired, final String ussid) throws EtailNonBusinessExceptions,
 			ClientEtailNonBusinessExceptions
 	{
@@ -164,7 +164,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 				 * final List<PincodeServiceData> requestData = populatePinCodeServiceData(product, isDeliveryDateRequired,
 				 * ussid);
 				 */
-				final List<PincodeServiceData> requestData = populatePinCodeServiceData(product, isDeliveryDateRequired, ussid,
+				final List<PincodeServiceData> requestData = populatePinCodeServiceData(cartId,product, isDeliveryDateRequired, ussid,
 						myLocation.getGPS(), Double.parseDouble(configurableRadius));
 
 				final List<String> ussidList = new ArrayList<String>();
@@ -462,7 +462,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	 * @return the list
 	 */
 
-	private List<PincodeServiceData> populatePinCodeServiceData(final ProductModel productModel,
+	private List<PincodeServiceData> populatePinCodeServiceData(final String cartId,final ProductModel productModel,
 			final String isDeliveryDateRequired, final String ussid, final GPS gps, final Double configurableRadius)
 	{
 		final List<PincodeServiceData> requestData = new WeakArrayList<>();
@@ -494,6 +494,9 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 								data.setMopPrice(formPriceData(buybox.getPrice()));
 								data.setIsFragile(sd.getIsFragile());
 								data.setIsPrecious(sd.getIsPrecious());
+								if(null != cartId) {
+									data.setCartId(cartId);
+								}
 								// Added To get Near By Stores
 								final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
 										sd.getSellerID());
@@ -530,7 +533,9 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 							data.setIsDeliveryDateRequired(isDeliveryDateRequired);
 							data.setPrice(buybox.getPrice());
 							data.setMopPrice(formPriceData(buybox.getPrice()));
-
+                            if(null != cartId) {
+                            	data.setCartId(cartId);
+                            }
 							// Added To get Near By Stores
 							final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
 									sd.getSellerID());
