@@ -21,6 +21,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMe
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
@@ -254,6 +255,24 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					&& (cartData != null && cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
 			{
 				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
+				// TPR-429 START
+				String cartLevelSellerID = null;
+				final List<OrderEntryData> sellerList = cartData.getEntries();
+				for (final OrderEntryData seller : sellerList)
+				{
+					final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+					if (cartLevelSellerID != null)
+					{
+						cartLevelSellerID += "_" + sellerID;
+					}
+					else
+					{
+						cartLevelSellerID = sellerID;
+					}
+				}
+				model.addAttribute(MarketplacecheckoutaddonConstants.CART_LEVEL_SELLER_IDS, cartLevelSellerID);
+				// TPR-429 END
+
 				//  TISPRD-1951  START //
 
 				// Checking whether inventory is availbale or not

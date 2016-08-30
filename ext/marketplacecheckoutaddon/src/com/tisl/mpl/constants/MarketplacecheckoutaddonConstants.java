@@ -170,6 +170,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String ADDRESSTYPE = "addressType";
 	public static final String COUNTRYISO = "IN";
 	public static final String TIMEOUT = "timeout";
+	//TPR-429
+	public static final String CART_LEVEL_SELLER_IDS = "cartLevelSellerIDs";
 
 	// Request Mapping URL
 
