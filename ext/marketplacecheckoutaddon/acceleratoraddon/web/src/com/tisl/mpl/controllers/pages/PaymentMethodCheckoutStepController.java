@@ -234,21 +234,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		// TPR-429 START
 		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-		String checkoutSellerID = null;
-		final List<OrderEntryData> sellerList = cartData.getEntries();
-		for (final OrderEntryData seller : sellerList)
-		{
-			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-			if (checkoutSellerID != null)
-			{
-				checkoutSellerID += "_" + sellerID;
-			}
-			else
-			{
-				checkoutSellerID = sellerID;
-			}
-		}
-		model.addAttribute(MarketplacecheckoutaddonConstants.CART_LEVEL_SELLER_IDS, checkoutSellerID);
+		final String checkoutSellerID = populateCheckoutSellers(cartData);
+
+		model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 		// TPR-429 END
 
 		if (cartModel != null)
@@ -422,6 +410,32 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		model.addAttribute("checkoutPageName", checkoutPageName);
 		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, getMplCustomAddressFacade().getCheckoutCart());
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddPaymentMethodPage;
+	}
+
+	/**
+	 * For TPR-429
+	 *
+	 * @doc populates the seller IDs of the product during checkout
+	 * @param cartData
+	 * @return checkoutSellerID
+	 */
+	private String populateCheckoutSellers(final CartData cartData)
+	{
+		String checkoutSellerID = null;
+		final List<OrderEntryData> sellerList = cartData.getEntries();
+		for (final OrderEntryData seller : sellerList)
+		{
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (checkoutSellerID != null)
+			{
+				checkoutSellerID += "_" + sellerID;
+			}
+			else
+			{
+				checkoutSellerID = sellerID;
+			}
+		}
+		return checkoutSellerID;
 	}
 
 	/**

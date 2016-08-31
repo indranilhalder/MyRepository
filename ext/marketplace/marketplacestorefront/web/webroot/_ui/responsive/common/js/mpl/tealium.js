@@ -264,9 +264,7 @@ $(document).ready(
 						tealiumData += '"page_subcategory_name":'
 							+ $("#page_subcategory_name").val() + ',';
 						tealiumData += '"product_category":'
-							+ $("#product_category").val() + ',';
-						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
-							+ $("#cartLevelSellerIDs").val() + '"}';
+							+ $("#product_category").val() + '"}';
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
 					}
@@ -307,14 +305,13 @@ $(document).ready(
 						tealiumData += '"product_category":'
 							+ $("#product_category").val() + ',';
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
-							+ $("#cartLevelSellerIDs").val() + '"}';
+							+ $("#checkoutSellerIDs").val() + '"}';
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$("#tealiumHome").html(data);
 					
 						
 					}
 				});
-				
 				
 				
 				

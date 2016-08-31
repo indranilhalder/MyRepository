@@ -256,21 +256,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
 				// TPR-429 START
-				String cartLevelSellerID = null;
-				final List<OrderEntryData> sellerList = cartData.getEntries();
-				for (final OrderEntryData seller : sellerList)
-				{
-					final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-					if (cartLevelSellerID != null)
-					{
-						cartLevelSellerID += "_" + sellerID;
-					}
-					else
-					{
-						cartLevelSellerID = sellerID;
-					}
-				}
-				model.addAttribute(MarketplacecheckoutaddonConstants.CART_LEVEL_SELLER_IDS, cartLevelSellerID);
+				final String cartLevelSellerID = populateCheckoutSellers(cartData);
+
+				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 				// TPR-429 END
 
 				//  TISPRD-1951  START //
@@ -461,23 +449,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 			List<PinCodeResponseData> responseData = null;
 			final CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-			// TPR-429 START
-			String checkoutSellerID = null;
-			final List<OrderEntryData> sellerList = cartUssidData.getEntries();
-			for (final OrderEntryData seller : sellerList)
-			{
-				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-				if (checkoutSellerID != null)
-				{
-					checkoutSellerID += "_" + sellerID;
-				}
-				else
-				{
-					checkoutSellerID = sellerID;
-				}
-			}
-			model.addAttribute(MarketplacecheckoutaddonConstants.CART_LEVEL_SELLER_IDS, checkoutSellerID);
-			// TPR-429 END
+
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 
 
@@ -494,6 +466,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			}
 
 			LOG.debug(">>>>>>>>>>  Step 5:  Cod status setting done  ");
+
+			// TPR-429 START
+			final String checkoutSellerID = populateCheckoutSellers(cartUssidData);
+
+			model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
+			// TPR-429 END
 
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			List<AddressData> deliveryAddress = null;
@@ -584,6 +562,32 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 		}
 		return returnPage;
+	}
+
+	/**
+	 * For TPR-429
+	 *
+	 * @doc populates the seller IDs of the product during checkout
+	 * @param cartData
+	 * @return checkoutSellerID
+	 */
+	private String populateCheckoutSellers(final CartData cartData)
+	{
+		String checkoutSellerID = null;
+		final List<OrderEntryData> sellerList = cartData.getEntries();
+		for (final OrderEntryData seller : sellerList)
+		{
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (checkoutSellerID != null)
+			{
+				checkoutSellerID += "_" + sellerID;
+			}
+			else
+			{
+				checkoutSellerID = sellerID;
+			}
+		}
+		return checkoutSellerID;
 	}
 
 	/**
