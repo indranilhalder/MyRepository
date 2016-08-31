@@ -354,7 +354,7 @@ $(document).ready(
 /*TPR-429 Start*/
 /*TPR-689 (Part of TPR-429) Start*/
 $(document).on('click','#buyNowButton',function(){
-	var productSKU = $('.add_to_cart_form').find('input[type="hidden"]#ussid').val();
+	var productSKU = $('.add_to_cart_form').find('input[type="hidden"]#productCodePost').val();
 	utag.link({
 		link_obj: this,
 		link_text: 'buynow' ,
