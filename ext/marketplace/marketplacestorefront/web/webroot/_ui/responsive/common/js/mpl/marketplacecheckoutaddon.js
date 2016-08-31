@@ -1455,7 +1455,8 @@ $("#otpMobileNUMField").focus(function(){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment?value="+guid); //TIS 404
 				}
 				else{
-
+					//TISSTRT-1391
+					window.sessionStorage.removeItem("header");
 					 //TISPRO-313
 					if($(".redirect").val()=="false"){
 						Juspay.startSecondFactor();
@@ -1577,7 +1578,9 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay .spinner").remove();
 					$("#no-click").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
-				}else{		
+				}else{	
+					//TISSTRT-1391
+					window.sessionStorage.removeItem("header");
 					 //TISPRO-313
 					 if($(".redirect").val()=="false"){
 						Juspay.startSecondFactor();
@@ -2958,6 +2961,8 @@ function submitNBForm(){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment?value="+guid); //TIS 404
 				}
 				else{
+					//TISSTRT-1391 
+					window.sessionStorage.removeItem("header");
 					//TISPRO-153
 					sendTealiumData();
 
