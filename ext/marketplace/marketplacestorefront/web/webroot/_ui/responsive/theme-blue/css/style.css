@@ -45622,3 +45622,162 @@ margin-top:0px;
     height: auto;
     padding-top: 10px;
 }
+/* checkout start */
+.top.checkout-top .content {
+    margin: 0px !important;
+    padding:0px !important;
+}
+body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header{
+    text-transform: uppercase;
+    Background: #ffffff;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 99;
+    padding: 30px 24px;
+    max-width: 100%;
+    border-bottom: 1px solid #f9f9f9;
+}
+.marketplace-checkout {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.marketplace-checkout .logo {
+    float: left;
+    width: 118px;
+}
+.marketplace-checkout span {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 18px;
+    letter-spacing: 1px;
+    position: absolute;
+    left: 52.6%;
+    margin: -15px 0 0 -8%;
+    top: 50%;
+}
+.marketplace-checkout .simple-banner-component img {
+    height: auto;
+    /* max-width:inherit; */
+}
+.checkout-header.login  {
+    background-color: #f8f8f8;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 49px 0 38px 2px;
+    text-transform: uppercase;
+    margin: 86px 0 0;
+    text-align: left;
+}
+.checkout-header.login .checkout-container {
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+.checkout-header.login .checkout-container h1 {
+    letter-spacing: 1px;
+}
+ body.page-checkout-login .top.checkout-top .content ul{
+ display:none;}
+@media only screen and (max-width: 1450px){
+	body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header{
+    padding: 20px 24px;
+}
+.marketplace-checkout {
+    max-width: 1200px;
+}
+.marketplace-checkout .logo {
+    width: 95px;
+}
+.marketplace-checkout span {
+    font-size: 20px;
+    margin: 21px 0 0 -8.2%;
+}
+.checkout-header.login {
+    font-size: 20px;
+    padding: 30px 0;
+    margin: 98px 0 0;
+}
+.checkout-header.login .checkout-container {
+    max-width: 1200px;
+    padding: 0;
+}
+}
+@media only screen and (max-width: 1250px){
+.checkout-header.login .checkout-container {
+    padding: 0 24px;
+    max-width: inherit;
+}
+}
+.tab-logo {
+    display: none;
+}
+@media (max-width: 980px){
+.desktop-logo {
+    display: none;
+}
+.tab-logo {
+    display: block;
+}
+.marketplace-checkout span {
+    background: url("../images/checkout.png") no-repeat right 0;
+    margin: 0;
+    text-indent: -9999px;
+    position: absolute;
+    height: 22px;
+    right: 0px;
+    top: 21px;
+    width: 16px;
+    left: inherit;
+}
+.tab-logo img {
+    width: 200px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.marketplace-checkout .logo {
+   float: none;
+    width: auto;
+    text-align: center;
+    position: relative;
+}
+body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
+    border-bottom: 2px solid #f9f9f9;
+}
+.checkout-header.login {
+	    padding: 27px 0;
+    margin: 90px 0 0;
+}
+}
+@media (max-width: 790px){
+.marketplace-checkout .tab-logo .simple-banner-component img {
+       width: 190px;
+    margin-top: 10px;
+}
+}
+@media (max-width: 767px){
+body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
+    border: 0 none;
+    padding: 0;}
+    .marketplace-checkout span {
+        right: 4px;
+    top: 11px;
+}
+.sign-in.wrapper {
+    margin: 65px 0 0;
+}
+.marketplace-checkout .tab-logo .simple-banner-component img {
+    margin-top: 0px;
+}
+}
+@media (max-width: 980px) and (min-width: 768px){
+body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
+    padding: 0px 24px 15px;
+}
+.marketplace-checkout .logo {
+    margin: 0 auto;
+    width: auto;
+}
+}
+
+/* checkout end */
