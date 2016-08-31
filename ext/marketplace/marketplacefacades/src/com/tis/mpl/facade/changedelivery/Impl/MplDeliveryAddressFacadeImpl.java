@@ -817,50 +817,45 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 
+ /***
+  * Argument dateFrom and dateTo
+  * Changed Delivery Address Report Method 
+  * return List<MplDeliveryAddressReportData>
+  */
 	@Override
-	public Collection<MplDeliveryAddressReportData> getDeliveryAddressRepot(String dateFrom,String dateTo)
+	public List<MplDeliveryAddressReportData> getDeliveryAddressRepot(String dateFrom, String dateTo)
 	{
-		
-		Map<String, MplDeliveryAddressReportData> orderId = new HashMap<>();
-		List<String> listEmpl = new ArrayList<>();
-		MplDeliveryAddressReportData mplData;
 		List<TemproryAddressModel> temproryAddressModelList = mplDeliveryAddressService.getTemporaryAddressModelList(dateFrom,
 				dateTo);
+		Map<String, MplDeliveryAddressReportData> orderIDList = new HashMap<String, MplDeliveryAddressReportData>();
+
 		if (CollectionUtils.isNotEmpty(temproryAddressModelList))
 		{
 			for (TemproryAddressModel temproryAddressModel : temproryAddressModelList)
 			{
-				listEmpl.add(temproryAddressModel.getOrderId());
-				mplData = new MplDeliveryAddressReportData();
-				mplData.setOrderId(temproryAddressModel.getOrderId());
+				MplDeliveryAddressReportData mplDeliveryAddressReportData = null;
+				if (orderIDList.containsKey(temproryAddressModel.getOrderId()))
+				{
+					mplDeliveryAddressReportData = orderIDList.get(temproryAddressModel.getOrderId());
+				}
+				else
+				{
+					mplDeliveryAddressReportData = new MplDeliveryAddressReportData();
+					mplDeliveryAddressReportData.setOrderId(temproryAddressModel.getOrderId());
+
+					orderIDList.put(temproryAddressModel.getOrderId(), mplDeliveryAddressReportData);
+				}
 				if (!temproryAddressModel.getIsProcessed().booleanValue())
 				{
-					mplData.setFailureRequsetCount(1);
-
-					if (orderId.containsKey(temproryAddressModel.getOrderId()))
-					{
-						MplDeliveryAddressReportData tempEpl = orderId.remove(temproryAddressModel.getOrderId());
-						tempEpl.setFailureRequsetCount(tempEpl.getFailureRequsetCount() + 1);
-						orderId.put(temproryAddressModel.getOrderId(), tempEpl);
-					}
-					else
-					{
-						orderId.put(temproryAddressModel.getOrderId(), mplData);
-					}
+					mplDeliveryAddressReportData.setFailureRequsetCount(mplDeliveryAddressReportData.getFailureRequsetCount() + 1);
 				}
-
-			}
-			for (Entry<String, MplDeliveryAddressReportData> orIdsSet : orderId.entrySet())
-			{
-				int count = Collections.frequency(listEmpl, orIdsSet.getKey());
-				MplDeliveryAddressReportData tempEpl = orderId.remove(orIdsSet.getKey());
-				tempEpl.setTotalRequestCount(count);
-				orderId.put(orIdsSet.getKey(), tempEpl);
+				mplDeliveryAddressReportData.setTotalRequestCount(mplDeliveryAddressReportData.getTotalRequestCount() + 1);
 			}
 		}
-		return orderId.values();
+		List<MplDeliveryAddressReportData> list = new ArrayList<MplDeliveryAddressReportData>(orderIDList.values());
+		return list;
 	}
-	
+
 	
 	private Map<String, List<String>> getDateAndTimeMap(
 			String edd) throws java.text.ParseException {
