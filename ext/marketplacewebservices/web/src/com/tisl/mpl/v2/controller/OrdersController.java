@@ -192,9 +192,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 * 
+	 *
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 * 
+	 *
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -403,9 +403,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 * 
+	 *
 	 * @param orderNumber
-	 * 
+	 *
 	 * @param lineID
 	 */
 
@@ -453,7 +453,7 @@ public class OrdersController extends BaseCommerceController
 
 									/*
 									 * final File invoiceFile = new File(invoicePathURL); FileInputStream input = null;
-									 * 
+									 *
 									 * if (invoiceFile.exists()) { String invoiceFileName = null; final String preInvoiceFileName
 									 * = invoiceFile.getName(); if (!preInvoiceFileName.isEmpty()) { final int index =
 									 * preInvoiceFileName.lastIndexOf('.'); if (index > 0) { invoiceFileName =
@@ -965,11 +965,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1170,6 +1170,7 @@ public class OrdersController extends BaseCommerceController
 		SellerInformationModel sellerInfoModel = null;
 		try
 		{
+			//TPR-815
 			orderModel = orderModelService.getOrderModel(orderCode);
 			if (orderModel != null)
 			{
@@ -1266,7 +1267,7 @@ public class OrdersController extends BaseCommerceController
 						}
 					}
 				}
-				//
+				//TPR-815 check parent order first
 				subOrderList = orderDetail.getSellerOrderList();
 				if (CollectionUtils.isEmpty(subOrderList))
 				{
@@ -1574,10 +1575,10 @@ public class OrdersController extends BaseCommerceController
 								//Delivery date is the final delivery date
 								/*
 								 * if (null != entry.getMplDeliveryMode()) {
-								 * 
+								 *
 								 * if (null != entry.getMplDeliveryMode().getDescription() &&
 								 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
-								 * 
+								 *
 								 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
 								 */
 
@@ -1612,7 +1613,7 @@ public class OrdersController extends BaseCommerceController
 
 								/*
 								 * if (null != orderproductdto.getUSSID()) {
-								 * 
+								 *
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
 								 */
@@ -1685,7 +1686,7 @@ public class OrdersController extends BaseCommerceController
 												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
 												 * orderproductdto.setCancel(Boolean.TRUE);
-												 * 
+												 *
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1713,9 +1714,9 @@ public class OrdersController extends BaseCommerceController
 												 * actualCancelWindow && checkOrderStatus(consignmentStatus,
 												 * MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied())
-												 * 
+												 *
 												 * { orderproductdto.setCancel(Boolean.TRUE);
-												 * 
+												 *
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1743,7 +1744,7 @@ public class OrdersController extends BaseCommerceController
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 * 
+											 *
 											 * }
 											 */
 											//for return
@@ -1834,7 +1835,7 @@ public class OrdersController extends BaseCommerceController
 								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
 								 * consignmentModel.getReturnCarrier()) {
 								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
-								 * 
+								 *
 								 * }
 								 */
 								//End
@@ -2075,6 +2076,19 @@ public class OrdersController extends BaseCommerceController
 		List<AWBResponseData> statusResponse = null;
 		try
 		{
+			//final boolean flag = false; TPR-815
+			if (returnMap.get(MarketplaceFacadesConstants.PAYMENT) != null)
+			{
+				responseList = new StatusResponseListDTO();
+				statusMessages = new ArrayList<StatusResponseDTO>();
+				statusResponse = returnMap.get(MarketplaceFacadesConstants.PAYMENT);
+				statusMessages = setStatusResponse(statusResponse, consignment, false, false);
+				responseList.setStatusList(statusMessages);
+				if (statusMessages.size() > 0)
+				{
+					displayMsg.put(MarketplaceFacadesConstants.PAYMENT, responseList);
+				}
+			}
 			//final boolean flag = false;
 			if (returnMap.get(MarketplaceFacadesConstants.APPROVED) != null)
 			{
