@@ -51,17 +51,14 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestPa
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
-import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.PincodeModel;
-import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
-import de.hybris.platform.storelocator.data.AddressData;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -189,7 +186,6 @@ import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
 public class MiscsController extends BaseController
 {
 
-
 	@Resource(name = "userFacade")
 	private UserFacade userFacade;
 	@Resource(name = "storeSessionFacade")
@@ -204,35 +200,26 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	@Resource
 	private ModelService modelService;
-
 	@Autowired
 	private ForgetPasswordFacade forgetPasswordFacade;
-
 	@Autowired
 	private ExtendedUserServiceImpl userexService;
 	@Autowired
 	private WishlistFacade wishlistFacade;
-
 	@Autowired
 	private MplSellerMasterService mplSellerInformationService;
-
 	@Autowired
 	private UserService userService;
-
 	@Autowired
 	private MplCustomerProfileService mplCustomerProfileService;
-
 	@Autowired
 	private Wishlist2Service wishlistService;
-
 	@Resource(name = "passwordStrengthValidator")
 	private Validator passwordStrengthValidator;
-
 	@Autowired
 	private MplCartFacade mplCartFacade;
 	@Autowired
 	private ExtendedUserService extUserService;
-
 	@Autowired
 	private CustomerAccountService customerAccountService;
 	@Autowired
@@ -243,318 +230,53 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	@Resource(name = "i18NFacade")
 	private I18NFacade i18NFacade;
-
 	@Autowired
 	private MplCommerceCartServiceImpl mplCommerceCartService;
-
 	@Autowired
 	private MplRestrictionServiceImpl restrictionserviceimpl;
-
 	@Autowired
 	private MplValidateAgainstXSDService mplValidateAgainstXSDService;
-
 	@Autowired
 	private MplSellerMasterService mplSellerMasterService;
-
 	@Resource(name = "mplCustomCategoryService")
 	private MplCustomCategoryService mplCustomCategoryService;
 	@Autowired
 	private UpdateFeedbackFacade updateFeedbackFacade;
 	@Autowired
 	private MplNetBankingFacade mplNetBankingFacade;
-
 	@Autowired
 	private MplSlaveMasterService mplSlaveMasterService;
-
 	@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
-
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
-
-	/**
-	 * @return the configurationService
-	 */
-	public ConfigurationService getConfigurationService()
-	{
-		return configurationService;
-	}
-
-	/**
-	 * @param configurationService
-	 *           the configurationService to set
-	 */
-	public void setConfigurationService(final ConfigurationService configurationService)
-	{
-		this.configurationService = configurationService;
-	}
-
-	/**
-	 * @return the modelService
-	 */
-	public ModelService getModelService()
-	{
-		return modelService;
-	}
-
-	/**
-	 * @param modelService
-	 *           the modelService to set
-	 */
-	public void setModelService(final ModelService modelService)
-	{
-		this.modelService = modelService;
-	}
-
-	/**
-	 * @return the forgetPasswordFacade
-	 */
-	public ForgetPasswordFacade getForgetPasswordFacade()
-	{
-		return forgetPasswordFacade;
-	}
-
-	/**
-	 * @param forgetPasswordFacade
-	 *           the forgetPasswordFacade to set
-	 */
-	public void setForgetPasswordFacade(final ForgetPasswordFacade forgetPasswordFacade)
-	{
-		this.forgetPasswordFacade = forgetPasswordFacade;
-	}
-
-	/**
-	 * @return the userexService
-	 */
-	public ExtendedUserServiceImpl getUserexService()
-	{
-		return userexService;
-	}
-
-	/**
-	 * @param userexService
-	 *           the userexService to set
-	 */
-	public void setUserexService(final ExtendedUserServiceImpl userexService)
-	{
-		this.userexService = userexService;
-	}
-
-	/**
-	 * @return the wishlistFacade
-	 */
-	public WishlistFacade getWishlistFacade()
-	{
-		return wishlistFacade;
-	}
-
-	/**
-	 * @param wishlistFacade
-	 *           the wishlistFacade to set
-	 */
-	public void setWishlistFacade(final WishlistFacade wishlistFacade)
-	{
-		this.wishlistFacade = wishlistFacade;
-	}
-
-	/**
-	 * @return the mplSellerInformationService
-	 */
-	public MplSellerMasterService getMplSellerInformationService()
-	{
-		return mplSellerInformationService;
-	}
-
-	/**
-	 * @param mplSellerInformationService
-	 *           the mplSellerInformationService to set
-	 */
-	public void setMplSellerInformationService(final MplSellerMasterService mplSellerInformationService)
-	{
-		this.mplSellerInformationService = mplSellerInformationService;
-	}
-
-	/**
-	 * @return the wishlistService
-	 */
-	public Wishlist2Service getWishlistService()
-	{
-		return wishlistService;
-	}
-
-	/**
-	 * @param wishlistService
-	 *           the wishlistService to set
-	 */
-	public void setWishlistService(final Wishlist2Service wishlistService)
-	{
-		this.wishlistService = wishlistService;
-	}
-
-	/**
-	 * @return the mplCartFacade
-	 */
-	public MplCartFacade getMplCartFacade()
-	{
-		return mplCartFacade;
-	}
-
-	/**
-	 * @param mplCartFacade
-	 *           the mplCartFacade to set
-	 */
-	public void setMplCartFacade(final MplCartFacade mplCartFacade)
-	{
-		this.mplCartFacade = mplCartFacade;
-	}
-
-	/**
-	 * @return the mplCommerceCartService
-	 */
-	public MplCommerceCartServiceImpl getMplCommerceCartService()
-	{
-		return mplCommerceCartService;
-	}
-
-	/**
-	 * @param mplCommerceCartService
-	 *           the mplCommerceCartService to set
-	 */
-	public void setMplCommerceCartService(final MplCommerceCartServiceImpl mplCommerceCartService)
-	{
-		this.mplCommerceCartService = mplCommerceCartService;
-	}
-
-	/**
-	 * @return the mplSellerMasterService
-	 */
-	public MplSellerMasterService getMplSellerMasterService()
-	{
-		return mplSellerMasterService;
-	}
-
-	/**
-	 * @param mplSellerMasterService
-	 *           the mplSellerMasterService to set
-	 */
-	public void setMplSellerMasterService(final MplSellerMasterService mplSellerMasterService)
-	{
-		this.mplSellerMasterService = mplSellerMasterService;
-	}
-
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
-
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
-	}
-
-	/**
-	 * @return the mplCategoryService
-	 */
-	public MplCategoryService getMplCategoryService()
-	{
-		return mplCategoryService;
-	}
-
-	/**
-	 * @param mplCategoryService
-	 *           the mplCategoryService to set
-	 */
-	public void setMplCategoryService(final MplCategoryService mplCategoryService)
-	{
-		this.mplCategoryService = mplCategoryService;
-	}
-
-	/**
-	 * @return the mplCustomCategoryService
-	 */
-	public MplCustomCategoryService getMplCustomCategoryService()
-	{
-		return mplCustomCategoryService;
-	}
-
-	/**
-	 * @param mplCustomCategoryService
-	 *           the mplCustomCategoryService to set
-	 */
-	public void setMplCustomCategoryService(final MplCustomCategoryService mplCustomCategoryService)
-	{
-		this.mplCustomCategoryService = mplCustomCategoryService;
-	}
-
-	protected I18NFacade getI18NFacade()
-	{
-		return i18NFacade;
-	}
-
 	@Resource(name = "mplPaymentFacade")
 	private MplPaymentFacade mplPaymentFacade;
-
-	public MplPaymentFacade getMplPaymentFacade()
-	{
-		return mplPaymentFacade;
-	}
-
-	/**
-	 * @param mplPaymentFacade
-	 *           the mplPaymentFacade to set
-	 */
-	public void setMplPaymentFacade(final MplPaymentFacade mplPaymentFacade)
-	{
-		this.mplPaymentFacade = mplPaymentFacade;
-	}
-
-	@Autowired
-	private Populator<AddressData, AddressModel> addressReversePopulator;
 	@Autowired
 	private MplVersionService mplVersionService;
-
-	private static final Logger LOG = Logger.getLogger(MiscsController.class);
-
 	//Priority
-
 	//Added for SNS
 	@Resource(name = "cmsComponentService")
 	private CMSComponentService cmsComponentService;
-
 	@Resource(name = "productSearchFacade")
 	private ProductSearchFacade<ProductData> productSearchFacade;
-
 	@Resource(name = "enumerationService")
 	private EnumerationService enumerationService;
-
 	@Resource(name = "defaultMplProductSearchFacade")
 	private DefaultMplProductSearchFacade searchFacade;
-
 	@Resource(name = "mplCategoryServiceImpl")
 	private MplCategoryService mplCategoryService;
-
 	@Autowired
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
-
 	//End of Declaration for SNS
-
 	@Resource(name = "pinCodeFacade")
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
-
 	@Autowired
 	private PriceDataFactory priceDataFactory;
-
 	/*
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
 	 */
-
+	private static final Logger LOG = Logger.getLogger(MiscsController.class);
 
 	/**
 	 * Lists all available languages (all languages used for a particular store). If the list of languages for a base
@@ -1333,7 +1055,7 @@ public class MiscsController extends BaseController
 	 * @param productCode
 	 * @return List<PinCodeResponseData> from OMS
 	 */
-	@RequestMapping(value = MarketplacewebservicesConstants.URL, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPORJSON)
+	@RequestMapping(value = MarketplacewebservicesConstants.CHECK_PINCODE, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPORJSON)
 	@ResponseBody
 	public PinWsDto getPin(@RequestParam(value = "pin") final String pin,
 			@RequestParam(value = "productCode") final List<String> productCode) throws CMSItemNotFoundException
@@ -1611,7 +1333,7 @@ public class MiscsController extends BaseController
 	public AboutUsResultWsData getAboutUs(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 			throws CMSItemNotFoundException
 	{
-		final AboutUsResultWsData aboutUsBannerData = getMplCustomCategoryService().getAboutus();
+		final AboutUsResultWsData aboutUsBannerData = mplCustomCategoryService.getAboutus();
 
 		return aboutUsBannerData;
 	}
@@ -1628,7 +1350,7 @@ public class MiscsController extends BaseController
 	public HelpAndServicestWsData getHelpNServices(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 			throws CMSItemNotFoundException
 	{
-		final HelpAndServicestWsData helpNservicesData = getMplCustomCategoryService().getHelpnServices();
+		final HelpAndServicestWsData helpNservicesData = mplCustomCategoryService.getHelpnServices();
 
 		return helpNservicesData;
 
