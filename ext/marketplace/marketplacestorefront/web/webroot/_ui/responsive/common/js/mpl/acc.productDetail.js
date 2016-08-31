@@ -1395,7 +1395,6 @@ $( document ).ready(function() {
 					if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
-
 						//TPR-772
 						$(".promo-block").show();
 

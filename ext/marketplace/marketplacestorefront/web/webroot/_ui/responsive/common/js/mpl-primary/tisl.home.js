@@ -1968,7 +1968,6 @@ $(document).ready(function(){
 		
 	});
 
-
 	//TISPRD-4587
 	$(document).ajaxComplete(function(){
 		$("div#appendedAtoZBrands").eq(1).children("div#A-E").show();
@@ -1989,7 +1988,6 @@ $(document).ready(function(){
 			$(this).children("a.brandGroupLink").css({"border-bottom-width": "3px","border-bottom-style": "solid","font-weight":"bold"}); 
 		});
 	}); 
-
 	$(document).on("click","div.brandClass + span#mobile-menu-toggle",function(){
 		if($(this).siblings("ul.images").children().length == 0){
 			$(this).siblings("div.brandClass").mouseover();

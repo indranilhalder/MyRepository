@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.StandardizationFactory;
+package com.tisl.mpl.standardizationfactory;
 
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -28,7 +28,7 @@ public class StandardizationServiceImpl implements StandardizationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.StandardizationFactory.StandardizationService#getStandardValue(java.lang.String)
 	 */
 	@Override
@@ -69,7 +69,7 @@ public class StandardizationServiceImpl implements StandardizationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.StandardizationFactory.StandardizationService#getStandardValueNonNumeric(java.lang.String,
 	 * boolean)
 	 */

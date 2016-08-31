@@ -116,6 +116,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//	private static final String LAST_LINK_CLASS = "active";
 
 	private static final String PAGE = "page";
+	private static final String PAGEVAl = "Page";
+	private static final String SHOW = "show";
+	private static final String SORT = "sort";
+	private static final String CATERGORYCODE = "categoryCode";
 
 	protected static final Logger LOG = Logger.getLogger(CategoryPageController.class);
 	//Added For TISPRD-1243
@@ -307,11 +311,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 */
 	@RequestMapping(value =
 	{ NEW_CATEGORY_URL_PATTERN, NEW_CATEGORY_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
-	public String category(@PathVariable("categoryCode") String categoryCode,
+	public String category(@PathVariable(CATERGORYCODE) String categoryCode,
 			@RequestParam(value = "q", required = false) String searchQuery,
 			@RequestParam(value = PAGE, defaultValue = "0") int pageNo,
-			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
-			@RequestParam(value = "sort", required = false) final String sortCode,
+			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
+			@RequestParam(value = SORT, required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
@@ -442,6 +446,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, pageNo, showMode, sortCode,
 						model, request, response, pageFacets);
+
+
 				return performSearch;
 			}
 			catch (final Exception exp)
@@ -538,11 +544,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 */
 	@ResponseBody
 	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/facets", method = RequestMethod.GET)
-	public FacetRefinement<SearchStateData> getFacets(@PathVariable("categoryCode") String categoryCode,
+	public FacetRefinement<SearchStateData> getFacets(@PathVariable(CATERGORYCODE) String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = PAGE, defaultValue = "0") final int pageNum,
-			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
-			@RequestParam(value = "sort", required = false) final String sortCode) throws UnsupportedEncodingException
+			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
+			@RequestParam(value = SORT, required = false) final String sortCode) throws UnsupportedEncodingException
 	{
 		categoryCode = categoryCode.toUpperCase();
 		return performSearchAndGetFacets(categoryCode, searchQuery, pageNum, showMode, sortCode);
@@ -561,11 +567,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 */
 	@ResponseBody
 	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
-	public SearchResultsData<ProductData> getResults(@PathVariable("categoryCode") String categoryCode,
+	public SearchResultsData<ProductData> getResults(@PathVariable(CATERGORYCODE) String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = PAGE, defaultValue = "0") final int pgNum,
-			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
-			@RequestParam(value = "sort", required = false) final String sortCode) throws UnsupportedEncodingException
+			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
+			@RequestParam(value = SORT, required = false) final String sortCode) throws UnsupportedEncodingException
 	{
 		categoryCode = categoryCode.toUpperCase();
 		return performSearchAndGetResultsData(categoryCode, searchQuery, pgNum, showMode, sortCode);

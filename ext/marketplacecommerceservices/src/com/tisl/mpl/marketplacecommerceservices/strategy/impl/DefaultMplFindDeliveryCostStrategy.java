@@ -251,33 +251,32 @@ public class DefaultMplFindDeliveryCostStrategy extends AbstractBusinessService 
 	@Override
 	public boolean isTShip(final String selectedUssid)
 	{
+		boolean tShip = false;
 		LOG.debug("MplDefaultFindDeliveryFulfillModeStrategy" + selectedUssid);
 		try
 		{
 			final RichAttributeModel richAttribute = findDeliveryFulfillMode(selectedUssid);
 			if (DeliveryFulfillModesEnum.TSHIP.getCode().equalsIgnoreCase(richAttribute.getDeliveryFulfillModes().getCode()))
 			{
-				return true;
+				tShip = true;
 			}
 			else
 			{
 				if (null != richAttribute.getIsSshipCodEligible()
 						&& richAttribute.getIsSshipCodEligible().getCode().equalsIgnoreCase("yes"))
 				{
-					return true;
-				}
-				else
-				{
-					return false;
+					tShip = true;
 				}
 
+
 			}
+
 		}
 		catch (final Exception ex)
 		{
 			LOG.error(ex);
 		}
-		return false;
+		return tShip;
 
 		//return DeliveryFulfillModesEnum.TSHIP.getCode().equalsIgnoreCase(richAttribute.getDeliveryFulfillModes().getCode());
 	}

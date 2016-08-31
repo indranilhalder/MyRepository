@@ -949,7 +949,6 @@ public class ProductPageController extends AbstractPageController
 
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-
 					//The promotion populator has been added as a business requirement to display promotion details in other sellers page
 					ProductOption.PROMOTIONS,
 					//ProductOption.CLASSIFICATION,

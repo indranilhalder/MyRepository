@@ -4,15 +4,12 @@ package com.tisl.mpl.interceptor;
  *@author TCS
  */
 
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
 import de.hybris.platform.servicelayer.interceptor.PrepareInterceptor;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.tisl.mpl.core.model.SizesystemModel;
+import org.apache.commons.lang.StringUtils;
+
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -23,8 +20,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 public class SizeStandardInterceptor implements PrepareInterceptor
 {
 
-	@Autowired
-	private ConfigurationService configurationService;
+
 
 	/**
 	 * @Javadoc

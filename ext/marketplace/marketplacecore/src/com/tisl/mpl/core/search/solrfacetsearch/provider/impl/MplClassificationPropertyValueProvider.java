@@ -28,7 +28,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.StandardizationFactory.StandardizationService;
+import com.tisl.mpl.standardizationfactory.StandardizationService;
 
 
 public class MplClassificationPropertyValueProvider extends ClassificationPropertyValueProvider
