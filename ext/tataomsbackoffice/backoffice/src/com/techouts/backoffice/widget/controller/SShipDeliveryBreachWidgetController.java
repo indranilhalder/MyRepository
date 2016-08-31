@@ -40,6 +40,7 @@ import com.hybris.oms.domain.sshiptxninfo.dto.SShipTxnInfo;
 import com.hybris.oms.domain.sshiptxnresponseinfo.dto.SShipTxnResponseInfo;
 import com.hybris.oms.domain.sshiptxnresponseinfo.dto.SShipTxnResponseInfos;
 import com.hybris.oms.tata.renderer.SShipTransactionInfoItemRenderer;
+import com.techouts.backoffice.exception.InvalideOrderCancelException;
 
 
 /**
@@ -56,7 +57,8 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LoggerFactory.getLogger(SShipDeliveryBreachWidgetController.class);
-	private static final String ORDERSTATUS = "ORDCANCL";
+	private static final String ORDERSTATUSONE = "ORDCANCL";
+	private static final String ORDERSTATUSTWO = "CLONCANC";
 	@Wire
 	private Datebox startdpic;
 	@Wire
@@ -155,57 +157,54 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 	@ViewEvent(componentID = "sshipOrderCancel", eventName = Events.ON_CLICK)
 	public void sshipOrderCancel()
 	{
-		final OrderCancelRequest orderCancelRequest = new OrderCancelRequest();
+		try
+		{
 
-		if (listBoxData.getSelectedItem() == null || listBoxData.getSelectedItem().equals(""))
-		{
-			Messagebox.show("Please Select One List Item", "OrderCancel Dialog", Messagebox.OK, Messagebox.INFORMATION);
-			return;
-		}
-		final Set<Listitem> setOfListBox = listBoxData.getSelectedItems();
-		//check for Order Cancel ,weather is given order eligible or not
-		final List<OrderCancellableCheckRequest> checkCancellableOrders = new ArrayList<OrderCancellableCheckRequest>();
-		for (final Listitem listItem : setOfListBox)
-		{
-			final SShipTxnResponseInfo sshipTxnOrder = listItem.getValue();
-			final OrderCancellableCheckRequest orderCancelCheckRequest = new OrderCancellableCheckRequest();
-			if (StringUtils.isNotEmpty(sshipTxnOrder.getOrderLineStatus())
-					&& sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUS))
+			final OrderCancelRequest orderCancelRequest = new OrderCancelRequest();
+			if (listBoxData.getSelectedItem() == null || listBoxData.getSelectedItem().equals(""))
 			{
-				continue;
+				Messagebox.show("Please Select One List Item", "OrderCancel Dialog", Messagebox.OK, Messagebox.INFORMATION);
+				return;
 			}
-			orderCancelCheckRequest.setOrderId(sshipTxnOrder.getOrderId());
-			orderCancelCheckRequest.setTransactionId(sshipTxnOrder.getOrderLineId());
-			checkCancellableOrders.add(orderCancelCheckRequest);
-			LOG.info("call for cancel Order Id" + sshipTxnOrder + "transaction id");
-		}
-		final OrderCancellableCheckRequests orderCancellableCheckRequests = new OrderCancellableCheckRequests();
-		orderCancellableCheckRequests.setOrderCancellableCheckRequests(checkCancellableOrders);
-		//calling the facade to
-		final OrderCancellableCheckResponses orderCancellableCheckResponse = cancelOrderFacade
-				.checkOrderLineCancellable(orderCancellableCheckRequests);
-		final List<OrderCancellableCheckResponse> orderCancelResponse = orderCancellableCheckResponse
-				.getOrderCancellableCheckResponses();
-		if (orderCancelResponse.contains(Boolean.FALSE))
-		{
-			final StringBuilder cancelOrderMessage = new StringBuilder("the follwoing  order not possible to cancel");
+			final Set<Listitem> setOfListBox = listBoxData.getSelectedItems();
+			//check for Order Cancel ,weather is given order eligible or not
+			final List<OrderCancellableCheckRequest> checkOrdersForCancel = new ArrayList<OrderCancellableCheckRequest>();
+
+			for (final Listitem listItem : setOfListBox) // filter one ignoring for cancellable check the status orders equal to ORDCANCL ,CLONCANC
+			{
+				final SShipTxnResponseInfo sshipTxnOrder = listItem.getValue();
+				final OrderCancellableCheckRequest orderCancelCheckRequest = new OrderCancellableCheckRequest();
+				if (StringUtils.isNotEmpty(sshipTxnOrder.getOrderLineStatus())
+						&& sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUSONE)
+						|| sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUSTWO))
+				{
+					throw new InvalideOrderCancelException("this Order is Allready Canceld ");
+				}
+				orderCancelCheckRequest.setOrderId(sshipTxnOrder.getOrderId());
+				orderCancelCheckRequest.setTransactionId(sshipTxnOrder.getOrderLineId());
+				checkOrdersForCancel.add(orderCancelCheckRequest);
+			}
+			final OrderCancellableCheckRequests orderCancellableCheckRequests = new OrderCancellableCheckRequests(); //dto to send oms to check the eligible orders for cancel
+			orderCancellableCheckRequests.setOrderCancellableCheckRequests(checkOrdersForCancel);
+
+			final OrderCancellableCheckResponses orderCancellableCheckResponse = cancelOrderFacade
+					.checkOrderLineCancellable(orderCancellableCheckRequests);
+			final List<OrderCancellableCheckResponse> orderCancelResponse = orderCancellableCheckResponse
+					.getOrderCancellableCheckResponses();
 			int index = 0;
 			for (final OrderCancellableCheckResponse orderCancelCheckResponse : orderCancelResponse)
 			{
 				if (orderCancelCheckResponse.getIsCancellable() == Boolean.FALSE)
 				{
-					cancelOrderMessage.append(checkCancellableOrders.get(index).getOrderId());
+					throw new InvalideOrderCancelException(
+							"Not Possible to Cancel This Order" + checkOrdersForCancel.get(index).getOrderId());
 				}
 				++index;
 			}
-			msg.setValue(cancelOrderMessage.toString());
-		}
-		else
-		{
 			Messagebox.show("Are you sure to remove?", "Order Cancel Dialog", Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION,
 					new org.zkoss.zk.ui.event.EventListener()
 					{
-						public void onEvent(final Event evt) throws InterruptedException
+						public void onEvent(final Event evt) throws InterruptedException, InvalideOrderCancelException
 						{
 							if (evt.getName().equals("onOK"))
 							{
@@ -213,6 +212,14 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 								for (final Listitem listItem : setOfListBox)
 								{
 									final SShipTxnResponseInfo sshipTxnOrder = listItem.getValue();
+
+									if (StringUtils.isNotEmpty(sshipTxnOrder.getOrderLineStatus())
+											&& sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUSONE)
+											|| sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUSTWO))
+									{
+										throw new InvalideOrderCancelException("this Order is Allready Canceld ");
+									}
+
 									final CancelOrderLine cancelOrderLine = new CancelOrderLine();
 									cancelOrderLine.setOrderId(sshipTxnOrder.getOrderId());
 									cancelOrderLine.setTransactionId(sshipTxnOrder.getOrderLineId());
@@ -228,7 +235,6 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 								cancelOrderFacade.cancelOrderLine(orderCancelRequest);
 								Messagebox.show(" Order Cancel Success", "Order Cancellation Dialog", Messagebox.OK,
 										Messagebox.INFORMATION);
-								listBoxData.clearSelection();
 
 							}
 							else
@@ -237,6 +243,11 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 							}
 						}
 					});
+		}
+		catch (final Exception e)
+		{
+
+			Messagebox.show(e.getMessage());
 		}
 	}
 
