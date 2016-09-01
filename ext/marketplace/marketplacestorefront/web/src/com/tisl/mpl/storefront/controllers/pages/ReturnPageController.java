@@ -42,6 +42,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
+import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -143,6 +144,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		List<OrderEntryData> returnOrderEntry = new ArrayList<OrderEntryData>();
 		final Map<String, List<OrderEntryData>> returnProductMap = new HashMap<>();
 		final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+		final CustomerData customerData = customerFacade.getCurrentCustomer();
 		for (final OrderEntryData entry : subOrderEntries)
 		{
 			if (entry.getTransactionId().equalsIgnoreCase(transactionId))
@@ -160,7 +162,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
 		}
 		
-	   
+	   //for schedule pickup
 		if(StringUtils.isNotBlank(returnForm.getReturnMethod()) &&  MarketplacecommerceservicesConstants.RETURN_SCHEDULE.equalsIgnoreCase(returnForm.getReturnMethod()))
 		{
 			
@@ -235,10 +237,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 						ModelAttributetConstants.LPNOTAVAILABLE_ERRORMSG);
 				
 			return ControllerConstants.Views.Pages.Account.AccountOrderReturnPincodeServiceCheck;
-		}
-		
-		
-		final CustomerData customerData = customerFacade.getCurrentCustomer();
+		}	   
 		
 		ReturnInfoData returnData=new ReturnInfoData();
 		
@@ -246,7 +245,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		
 		String timeSlotFrom=null;
 		String timeSlotto=null;
-		for (String string : times)
+		for (String time : times)
 		{
 			if(null==timeSlotFrom)
 			{
@@ -254,7 +253,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				{
 					LOG.debug("Return Pickup Slot From Time :"+timeSlotFrom+" for the TransactionId :"+returnForm.getTransactionId());
 				}
-			timeSlotFrom=string;
+			timeSlotFrom=time;
 			}
 			else
 			{
@@ -262,7 +261,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				{
 					LOG.debug("Return Pickup Slot From Time :"+timeSlotto+" for the TransactionId :"+returnForm.getTransactionId());
 				}
-			 timeSlotto=string;
+			 timeSlotto=time;
 			}
 			
 		}
@@ -309,6 +308,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		}
 		}
 		
+		//for quick drop
 		if(returnForm.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP))
 		{
 		RTSAndRSSReturnInfoRequestData infoRequestData=new RTSAndRSSReturnInfoRequestData();
@@ -318,13 +318,14 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		infoRequestData.setRTSStore(stores);
 		infoRequestData.setTransactionId(transactionId);
 		infoRequestData.setReturnType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
+		//return info call to OMS 
 			cancelReturnFacade.retrunInfoCallToOMS(infoRequestData);
 		}
 		
-		if(returnForm.getIsCODorder().equalsIgnoreCase("Y"))
+		if(returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
 		{
 		CODSelfShipData selfShipData=new CODSelfShipData();
-		
+		selfShipData.setCustomerNumber(customerData.getUid());
 		selfShipData.setTitle(returnForm.getTitle());
 		selfShipData.setName(returnForm.getAccountHolderName());
 		selfShipData.setBankAccount(returnForm.getAccountNumber());
@@ -334,8 +335,25 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		selfShipData.setTransactionID(returnForm.getTransactionId());
 		selfShipData.setPaymentMode(returnForm.getTransactionType());
 		
-		//selfShipData.setTitle(title);
-		cancelReturnFacade.codPaymentInfoToFICO(selfShipData);
+		if(null != returnForm.getIsCODorder() &&  returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) )
+		{
+			//set ordertag POSTPAIDRRF for COD orders
+		selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
+		}
+		else 
+		{
+			//set ordertag POSTPAIDRRF for PREPAID orders
+			selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_PREPAID);
+		}
+		
+		CODSelfShipResponseData responseData=cancelReturnFacade.codPaymentInfoToFICO(selfShipData);
+		
+		if(responseData.getSuccess() == null || !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS) )
+		{
+			//save payment details in commerce 
+			cancelReturnFacade.saveCODReturnsBankDetails(selfShipData);	
+			
+		}
 		}
 		
 		storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUCCESS));
@@ -347,12 +365,14 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		{
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 					ModelAttributetConstants.RETURN_ERRORMSG);
+					LOG.error(e);
 			return REDIRECT_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS;
 		}
 		catch (Exception e)
 		{
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 					ModelAttributetConstants.RETURN_ERRORMSG);
+					LOG.error(e);
 			return REDIRECT_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS;
 		}
 		
@@ -426,6 +446,27 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				
 				errorAddress.setTitle(errorMsg);
 	        return errorAddress;
+			}
+			
+			//return logistics check 
+			final String orderCode = addressForm.getOrderCode();
+			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			boolean returnLogisticsCheck = true;
+			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(subOrderDetails,
+					addressForm.getPostcode());
+			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
+			{
+				model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE, response.getResponseMessage());
+				if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL))
+				{
+					returnLogisticsCheck = false;
+				}
+			}
+
+			if(! returnLogisticsCheck)
+			{
+				errorAddress.setTitle(ModelAttributetConstants.LPNOTAVAILABLE_ERRORMSG);
+				return errorAddress;
 			}
 
 			final AddressData newAddress = new AddressData();
