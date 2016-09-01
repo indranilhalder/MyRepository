@@ -4248,7 +4248,7 @@ $("#couponSubmitButton").click(function(){
 		$(this).css("opacity","1");
 	}
 	else if($("#couponFieldId").val()!="" && $('#couponFieldId').prop('readonly') == true)
-	{
+	{   
 		$("#appliedCouponError").css("display","block");	
 		//document.getElementById("couponError").innerHTML="Coupon is already applied";
 		$(this).prop('disabled', false);
@@ -4300,6 +4300,8 @@ $("#couponSubmitButton").click(function(){
 	 				}
 	 				//$("#couponError").css("display","block");	
 	 				//document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
+	 				//TPR-658
+	 				onSubmitAnalytics("invalid_coupon");
 	 			}
 	 			else{
 		 			if(response.couponRedeemed==true){
@@ -4315,7 +4317,9 @@ $("#couponSubmitButton").click(function(){
 			 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> is applied successfully");
 			 				$('#couponMessage').show();
 			 				$('#couponMessage').delay(2000).fadeOut('slow');
-			 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500);		 		
+			 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500);
+			 				//TPR-658
+			 				onSubmitAnalytics("success");
 			 			}
 		 				else
 		 				{
@@ -4334,6 +4338,19 @@ $("#couponSubmitButton").click(function(){
 	}
 	}//End of session checking
 });
+
+//TPR-658 START
+function onSubmitAnalytics(msg){
+	var couponCode = $('#couponFieldId').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/'/g,"");
+	utag.link({
+		link_obj: this,
+		link_text: 'apply_coupon_'+msg ,
+		event_type : 'apply_coupon',
+		coupon_code : couponCode
+	});
+}
+// TPR-658 END
+
 
 $("#couponFieldId").focus(function(){
 	//$("#couponError").css("display","none");	
