@@ -7167,14 +7167,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 							}
 						}
 						fullfillmentDataMap = mplCartFacade.getOrderEntryFullfillmentMode(orderDetail);
-						model.addAttribute("orderDetail", orderDetail);
+						model.addAttribute(ModelAttributetConstants.ORDERDETAIL, orderDetail);
 						model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
-						model.addAttribute("txnScheduleData", scheduledDeliveryData);
+						model.addAttribute(ModelAttributetConstants.TXNSCHEDULEDATA, scheduledDeliveryData);
 						return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 					}
 					else
 					{
-						model.addAttribute("stringMessage",MessageConstants.PINCODE_NOT_SERVICEABLE);
+						model.addAttribute(ModelAttributetConstants.STRINGMEAASGE,MessageConstants.PINCODE_NOT_SERVICEABLE);
 						return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 					}
 				}
@@ -7184,24 +7184,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 					String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
 					phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
 					model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
-					model.addAttribute("orderCode", orderCode);
+					model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
 					return ControllerConstants.Views.Pages.Account.OTPPopup;
 				}
 
 			}
 			else
 			{
-			  	 model.addAttribute("stringMessage",MessageConstants.UPDATED);
+			  	 model.addAttribute(ModelAttributetConstants.STRINGMEAASGE,MessageConstants.UPDATED);
 				 return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 			}
 
 		}
- 		 model.addAttribute("stringMessage",errorMsg);
+ 		 model.addAttribute(ModelAttributetConstants.STRINGMEAASGE,errorMsg);
 		 return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 	}
 
 
-	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.POST)
+	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.GET)
 	public String submitChangeDeliveryAddress(@RequestParam(value = "orderId") final String orderId,
 			@RequestParam(value = "otpNumber") final String enteredOTPNumber,Model model)
 	{
@@ -7213,7 +7213,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			LOG.debug("OTP Validation And Oms Calling status");
 			validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerId, enteredOTPNumber, orderId);
 		}
-	   model.addAttribute("stringMessage", validateOTPMesg);
+	   model.addAttribute(ModelAttributetConstants.STRINGMEAASGE, validateOTPMesg);
 		return ControllerConstants.Views.Pages.Account.OTPPopup;
 	}
 
