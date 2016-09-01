@@ -270,12 +270,14 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 				}
-
-
+				//For TPR-666
+				model.addAttribute(ModelAttributetConstants.SEARCH_TYPE, "brand_search");
 			}
 
 			else
 			{
+				//For TPR-666
+				model.addAttribute(ModelAttributetConstants.SEARCH_TYPE, "main_search");
 				if (dropDownValue != null)
 				{
 
@@ -679,9 +681,18 @@ public class SearchPageController extends AbstractSearchPageController
 
 		model.addAttribute("page_name", "Search Results Page:" + breadcrumbName);
 		//TPR-430
-		model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
-		model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName().replaceAll(" ", "_").toLowerCase());
-		model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase());
+		if (null != breadcrumbs.get(0).getName())
+		{
+			model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
+		}
+		if (null != breadcrumbs.get(1).getName())
+		{
+			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName().replaceAll(" ", "_").toLowerCase());
+		}
+		if (null != breadcrumbs.get(2).getName())
+		{
+			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase());
+		}
 
 	}
 

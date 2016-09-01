@@ -1610,6 +1610,14 @@ public class ProductPageController extends AbstractPageController
 	{
 		model.addAttribute(ModelAttributetConstants.GALLERY_IMAGES, productDetailsHelper.getGalleryImages(productData));
 		model.addAttribute(ModelAttributetConstants.PRODUCT, productData);
+		// For TPR-429
+		final List<SellerInformationData> sellerInfoList = productData.getSeller();
+		final List<String> sellerList = new ArrayList<String>();
+		for (final SellerInformationData seller : sellerInfoList)
+		{
+			sellerList.add(seller.getSellerID());
+		}
+		model.addAttribute(ModelAttributetConstants.PDP_SELLER_IDS, sellerList);
 	}
 
 	protected void sortVariantOptionData(final ProductData productData)
