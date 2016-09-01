@@ -126,7 +126,7 @@
 									</ul>
 								</div>
 								<div class="col-md-4 col-sm-4 col-xs-4 editAddress">
-									<a href="#" class="changeAddressLink" data-class="address${i.count}"><spring:theme code="text.order.returns.editaddress"/></a>
+									<a href="#" class="changeAddressLinkPop" data-class="address${i.count}"><spring:theme code="text.order.returns.editaddress"/></a>
 								</div>		
 							</div> 
 						</c:forEach>
@@ -141,8 +141,8 @@
 					<br />
 					<c:forEach var="returnDate" items="${returnDates}" varStatus="i">
 					<div class="selectRadio date col-md-4 col-sm-4 col-xs-4">
-						<input class="radioButton" type="radio" value="pickDate"
-							name="selectDate" checked /> <br />
+						<input class="radioButton selectRadioDate${i.index}" type="radio" value="pickDate"
+							name="selectDate" /> <br />
 						<p style="clear: both"></p>
 						<div>${returnDate}</div>
 					</div>
