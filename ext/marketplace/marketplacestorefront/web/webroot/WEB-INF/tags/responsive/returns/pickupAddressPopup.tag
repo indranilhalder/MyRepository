@@ -71,7 +71,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="pincode"><spring:theme code="text.order.returns.pincode"/></label> <form:input path="postcode"
-											class="form-control textInputChangeAddress" id="pincode"
+											class="form-control textInputChangeAddress address_postcode" id="pincode"
 											placeholder="Pincode" maxlength="6"/>
 									</div>
 								</div>
@@ -80,14 +80,20 @@
 										id="mobileNo" placeholder="9876543210" maxlength="10"/>
 								</div>
 							</div>
+							
 							<div class="row">
-								<div class="col-md-12">
+								<div class="col-md-12 optionsLandmark">
+									<label>Landmark*</label>
+									<form:select style="height: 40px;" path="landmark" id="landmark" value="${addressForm.landmark}" class="address_landmarks"
+													maxlength="30"></form:select>
+								</div>
+								<div class="col-md-12 address_landmarkOtherDiv">
 									<label for="landmark">
-<spring:theme code="text.order.returns.landmark"/></label>
+                          <spring:theme code="text.order.returns.landmark"/> Other</label>
 									<div class="input-group-addon">
 										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 									</div>
-									<form:input path="line3" class="form-control textInputChangeAddress"
+									<form:input path="line3" class="form-control textInputChangeAddress address_landmarkOther"
 										id="landmark" placeholder="Enter your nearest landmark"/>
 								</div>
 							</div>
@@ -95,7 +101,7 @@
 								<div class="col-md-12" style="margin-top: 10px;">
 									<div class="form-group">
 										<label for="city"><spring:theme code="text.order.returns.city"/></label> <form:input path="townCity"
-											class="form-control textInputChangeAddress" id="city"
+											class="form-control textInputChangeAddress address_townCity" id="city"
 											placeholder="City"/>
 									</div>
 								</div>
@@ -105,7 +111,7 @@
 
 										
 									<label for="state"><spring:theme code="text.order.returns.state"/></label> 
-									<form:select cssClass="form-control textInputChangeAddress" name="stateList" id="stateListBox" path="state"
+									<form:select cssClass="form-control textInputChangeAddress address_states" name="stateList" id="stateListBox" path="state"
 											 onChange="onAddressSelectValidate()" >
 											<c:forEach items="${stateDataList}" var="state"
 												varStatus="stateStatus">
@@ -149,11 +155,11 @@
 				</div>
 				<form:hidden path="orderCode" value="${orderCode}"/>
 									
-				<p style="clear: both;"></p>
+				<%-- <p style="clear: both;"></p>
 				<div class="modal-footer">
 					<button type="submit" id="saveAddress" class="btn btn-primary light-blue">	
 					<spring:theme code="text.order.returns.savebutton"/></button>
-				</div>
+				</div> --%>
 				
 			</form:form>
 		</div>
@@ -165,4 +171,4 @@
 
 
 <div class="wrapBG"
-	style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; z-index: 99999; display: none;"></div>
+	style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; display: none;"></div>
