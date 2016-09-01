@@ -68,6 +68,12 @@
 								</div>
 							</div>
 							<div class="row">
+								<div class="col-md-12 form-group">
+									<label for="addressLine3"><spring:theme code="text.order.returns.addressline2"/></label> <form:input path="line3" class="form-control textInputChangeAddress"
+										id="addressLine2" placeholder="Address Line 3"/>
+								</div>
+							</div>
+							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="pincode"><spring:theme code="text.order.returns.pincode"/></label> <form:input path="postcode"
@@ -83,18 +89,18 @@
 							
 							<div class="row">
 								<div class="col-md-12 optionsLandmark">
-									<label>Landmark*</label>
+									<label><spring:theme code="text.order.returns.landmark"/>*</label>
 									<form:select style="height: 40px;" path="landmark" id="landmark" value="${addressForm.landmark}" class="address_landmarks"
 													maxlength="30"></form:select>
 								</div>
 								<div class="col-md-12 address_landmarkOtherDiv">
 									<label for="landmark">
-                          <spring:theme code="text.order.returns.landmark"/> Other</label>
+                          <spring:theme code="text.order.returns.landmarkother"/></label>
 									<div class="input-group-addon">
 										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 									</div>
-									<form:input path="line3" class="form-control textInputChangeAddress address_landmarkOther"
-										id="landmark" placeholder="Enter your nearest landmark"/>
+									<form:input path="otherLandmark" class="form-control textInputChangeAddress address_landmarkOther"
+										id="otherLandmark" placeholder="Enter your nearest landmark"/>
 								</div>
 							</div>
 							<div class="row">
