@@ -18,14 +18,11 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
@@ -136,7 +133,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	/**
 	 * @param orderId
 	 * @param newDeliveryAddress
-	 * @return
+	 * 
 	 */
 	private ChangeDeliveryAddressDto getChangeDeliveryRequestData(String orderId,AddressModel newDeliveryAddress,
 			 String interfaceType,List<TransactionSDDto> transactionSDDtos)
@@ -226,9 +223,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 *
 	 * @author Techouts
 	 * @param Order
-	 * @param customerId
 	 * @param source
-	 * @return void
 	 */
 	@Override
 	public void createcrmTicketForChangeDeliveryAddress(OrderModel Order, String costomerId,String source)
@@ -633,6 +628,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 
+	@Override
 	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel)
 	{
 		boolean isEligibleScheduledDelivery = false;
@@ -889,10 +885,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 							endTIme = sdf.parse(mplTimeSlotsModel.getFromTime());
 							searchTime = sdf.parse(timeWithOutDate);
 						}
-						catch (java.text.ParseException e)
+						catch (final Exception parseException)
 						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							LOG.info("parseException raing converrting time" + parseException.getMessage());
 						}
 						if (startTime.compareTo(searchTime) > 0 && endTIme.compareTo(searchTime) > 0
 								&& startTime.compareTo(searchTime) != 0 && endTIme.compareTo(searchTime) != 0)
