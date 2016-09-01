@@ -45424,10 +45424,13 @@ display:none;
     margin: 24px auto;
 }
 body.page-checkout-login header > .content{
-	padding-bottom:0px !important
+	padding:0px !important
 }
 body.page-checkout-login header > .content .bottom .search{
 margin-top:0px;	
+}
+body.page-checkout-login .top.checkout-top nav{
+	display:block !important;
 }
 }
 @media (max-width: 767px){
@@ -45451,6 +45454,7 @@ margin-top:0px;
 .sign-in.tab-view .tabs > li .left form {
     width: 100%;
     padding:0px;
+      padding-top: 5px;
 }
 .sign-in.tab-view .tabs > li .left form input {
     font-size: 10px;
