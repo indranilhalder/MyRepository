@@ -1980,6 +1980,7 @@ $(document).ajaxComplete(function(){
 	}
 });
 
+
 $(document).ready(function(){
 	$(".feature-collections h2").each(function(){
 		var txth2 = $(this).text();
@@ -1991,3 +1992,20 @@ $(document).ready(function(){
 	});
 	
 });
+
+/*checkout login error start*/
+$(document).ready(function() {
+	 $(window).on('load resize',function(){	
+		 header_ht = $("header").outerHeight();
+$("body:not(.page-checkout-login) .top.checkout-top .content").css("margin-top",header_ht);
+if ($("body.page-checkout-login .global-alerts").length > 0){
+	$(".top.checkout-top .content").css("margin-top","0px");
+	$(".global-alerts").css("margin-top",header_ht+"px");
+}
+$(document).click(".global-alerts .close", function(){
+	$(".global-alerts").css("margin-top","0px");
+	$(".top.checkout-top .content").css("margin-top",header_ht+"px");
+});
+	 });
+});
+/*checkout login error end */
