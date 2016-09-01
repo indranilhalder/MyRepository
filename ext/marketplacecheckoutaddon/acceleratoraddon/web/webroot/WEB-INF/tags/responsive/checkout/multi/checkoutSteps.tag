@@ -11,6 +11,11 @@
 <ycommerce:testId code="checkoutSteps">
 	<div class="top checkout-top">
 		<div class="content">
+		<nav class="checkout-header login">
+  			<div class="checkout-container">
+    		<h1>Login / Sign Up</h1>
+  		</div>
+		</nav>
 			<ul class="nav">
 				<c:forEach items="${checkoutSteps}" var="checkoutStep"
 					varStatus="status">
