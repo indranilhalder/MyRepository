@@ -395,6 +395,7 @@ ACC.carousel = {
         				items:4,
         			}			
         		}	
+
 			/*navigation:true,
 				navigationText : [],
 				pagination:false,

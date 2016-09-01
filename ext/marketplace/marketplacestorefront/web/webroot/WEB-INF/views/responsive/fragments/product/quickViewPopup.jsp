@@ -614,7 +614,7 @@ display:none;
 			<span id="outOfStockIdQuick" style="display: none"  class="out_of_stock">
 				<font color="red"><spring:theme code="product.product.outOfStock" /></font>
 				<%-- <input type="button" id="add_to_wishlist_quick" onClick="openPop_quick('${buyboxUssid}');scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/> --%>
-				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick();scrollbottom();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
+				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			</span>				
 	<%-- </c:if> --%>
 	</ycommerce:testId>    
@@ -622,7 +622,7 @@ display:none;
 				<ul class="wish-share">
 					<li><!-- <span id="addedMessage" style="display:none"></span> -->
 						<%-- <a onClick="openPop_quick('${buyboxUssid}');scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'>....<spring:theme code="text.add.to.wishlist"/></a></li> --%>
-						<a onClick="openPop_quick();scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li>
+						<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li>
 				<%-- <a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li> --%>
 					<li>
 						<div class="share">
@@ -651,7 +651,7 @@ display:none;
 							</li>
 							
 							<li><%-- <a class="mail" data-target="#popUpModal" data-url="${SHARED_PATH}"></a> --%>
-							<a class="mail" id="mailQuick" role="button" data-toggle="popover" data-placement="bottom" onClick="scrollbottom();"></a></li>
+							<a class="mail" id="mailQuick" role="button" data-toggle="popover" data-placement="bottom" ></a></li>
 							</ul>
 						</div>
 					</li>
@@ -673,8 +673,8 @@ display:none;
 			
 			function scrollbottom() {
 				//alert();
-				  $("#cboxLoadedContent").animate({ scrollTop: $('#cboxLoadedContent')[0].scrollHeight }, "slow");
-				 return false;
+				 /*  $("#cboxLoadedContent").animate({ scrollTop: $('#cboxLoadedContent')[0].scrollHeight }, "slow");
+				 return false; */
 				};
 			
   </script>

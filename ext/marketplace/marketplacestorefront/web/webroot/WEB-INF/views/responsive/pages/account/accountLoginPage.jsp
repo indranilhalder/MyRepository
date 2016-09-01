@@ -29,14 +29,15 @@
 					<cms:component component="${feature}" />
 				</cms:pageSlot>
 			</li>
-			<li id="sign_up_content">
+			<li class="or"><span class="vr-line"></span><span class="or-rounded"><spring:theme code="text.or" /></span><span class="vrt-line"></span></li>
+			<li id="sign_up_content" class="active">
 				<cms:pageSlot position="LeftContentSlot" var="feature">
 					<cms:component component="${feature}" />
 				</cms:pageSlot>
 			</li>
 		</ul>
 	</div>
-	<div class="benefits">
+<%-- 	<div class="benefits">
       <h2><spring:theme code="account.login.benfits"/></h2>
       <ul>
         <li>
@@ -61,7 +62,7 @@
           </div>              
         </li>
       </ul>
-    </div>
+    </div> --%>
 	</div>
 </template:page>
 
@@ -73,9 +74,18 @@
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script type="text/javascript"src="${commonResourcePath}/js/acc.forgottenpassword.js"></script> --%>
 <script>
-	window.onload = function() {
+	/* window.onload = function() {
 		activateSignInTab();
-	}
+	} */
+	
+	$(window).on('load resize',function(){	
+		if($(".sign-in.tab-view .nav").css("display") == "block"){
+			activateSignInTab();
+		}
+		else{
+			$("#sign_in_content, #sign_up_content").addClass('active');
+		}
+	});
 	function removeErrorDiv(){
   		$('#errorDiv').css('display','none');
     }

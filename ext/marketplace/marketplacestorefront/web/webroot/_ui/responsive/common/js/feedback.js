@@ -1309,4 +1309,6 @@ $(document).ready(function(){
 		rewindNav: false,
 		lazyLoad:true*/
 	});
+
 });
+
