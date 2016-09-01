@@ -34,7 +34,7 @@
 													<span class="productName"><spring:theme code="text.order.returns.colourlable"/> ${entryReturn.product.colour}</span><br/>
 												</c:if>
 												<c:forEach items="${entryReturn.product.seller}" var="seller">
-													<c:if test="${seller.ussid eq seller.ussid}">
+													<c:if test="${ussid eq seller.ussid}">
 														<c:set var="sellerId" value="${seller.sellerID}" />
 													</c:if>
 												</c:forEach>
