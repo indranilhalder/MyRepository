@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.util.CookieGenerator;
 
 import com.tisl.mpl.storefront.interceptors.beforecontroller.RequireHardLoginBeforeControllerHandler;
+import com.tisl.mpl.storefront.security.cookie.KeepAliveCookieGenerator;
 
 
 /**
@@ -42,6 +43,25 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 	private final MessageDigest sha;
 
 	private CookieGenerator cookieGenerator;
+
+	private KeepAliveCookieGenerator keepAliveCookieGenerator;
+
+	/**
+	 * @return the keepAliveCookieGenerator
+	 */
+	public KeepAliveCookieGenerator getKeepAliveCookieGenerator()
+	{
+		return keepAliveCookieGenerator;
+	}
+
+	/**
+	 * @param keepAliveCookieGenerator
+	 *           the keepAliveCookieGenerator to set
+	 */
+	public void setKeepAliveCookieGenerator(final KeepAliveCookieGenerator keepAliveCookieGenerator)
+	{
+		this.keepAliveCookieGenerator = keepAliveCookieGenerator;
+	}
 
 	public DefaultGUIDCookieStrategy() throws NoSuchAlgorithmException
 	{
@@ -63,6 +83,8 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 		final String guid = createGUID();
 
 		getCookieGenerator().addCookie(response, guid);
+		//POC Add the Keep Alive Cookie on login
+		getKeepAliveCookieGenerator().addCookie(response);
 		request.getSession().setAttribute(RequireHardLoginBeforeControllerHandler.SECURE_GUID_SESSION_KEY, guid);
 
 		if (LOG.isInfoEnabled())
@@ -81,6 +103,8 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 		 */
 		// Its a secure page, we can delete the cookie
 		getCookieGenerator().removeCookie(response);
+		//Delete the Keep alive cookie
+		getKeepAliveCookieGenerator().removeCookie(response);
 		//}
 	}
 

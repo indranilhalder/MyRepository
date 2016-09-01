@@ -181,6 +181,7 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 			}
 			getUserTypeCookieGenerator().addCookie(response, userType);
 		}
+		updateKeepAliveCookie(request, response);
 
 		filterChain.doFilter(request, response);
 	}
@@ -213,4 +214,29 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 	}
 
 
+	/**
+	 * @param request
+	 * @param response
+	 */
+	private void updateKeepAliveCookie(final HttpServletRequest request, final HttpServletResponse response)
+	{
+		LOG.info("For any request coming we should update the Keep Alive cookie if present");
+		final String sessionTimeout = getConfigurationService().getConfiguration().getString("default.session.timeout");
+		final int sessionTimeoutvalue = (Integer.valueOf(sessionTimeout)).intValue();
+		final Cookie[] cookies = request.getCookies();
+		if (cookies != null)
+		{
+			for (final Cookie cookie : cookies)
+			{
+				if (cookie.getName().equals("keepAlive"))
+				{
+					LOG.info("Found the Keep Alive Cookie. Hence adding back to response with new expiry timeout");
+					cookie.setMaxAge(sessionTimeoutvalue);
+					cookie.setPath("/");
+					response.addCookie(cookie);
+				}
+			}
+		}
+
+	}
 }
