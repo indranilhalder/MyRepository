@@ -1981,10 +1981,13 @@ $(document).ajaxComplete(function(){
 });
 /*checkout login error start*/
 $(document).ready(function() {
-if ($(".global-alerts").length > 0){
-	$(".checkout-header.login").css("margin-top","0px");
-	$(".global-alerts").css("margin-top","98px");
+	 $(window).on('load resize',function(){	
+if ($("body.page-checkout-login .global-alerts").length > 0){
+	$(".checkout-header.login, .sign-in.wrapper").css("margin-top","0px");
+	header_ht = $("body.page-checkout-login header").outerHeight();
+	$(".global-alerts").css("margin-top",header_ht+"px");
 	
 }
+	 });
 });
 /*checkout login error end */

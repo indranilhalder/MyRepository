@@ -45429,9 +45429,6 @@ body.page-checkout-login header > .content{
 body.page-checkout-login header > .content .bottom .search{
 margin-top:0px;	
 }
-body.page-checkout-login .top.checkout-top nav{
-	display:block !important;
-}
 }
 @media (max-width: 767px){
 	.sign-in.wrapper {
@@ -45783,6 +45780,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .marketplace-checkout .logo {
     margin: 0 auto;
     width: auto;
+}
+body.page-checkout-login .top.checkout-top nav{
+	display:block;
 }
 }
 body:not(.page-checkout-login) .checkout-header.login{
