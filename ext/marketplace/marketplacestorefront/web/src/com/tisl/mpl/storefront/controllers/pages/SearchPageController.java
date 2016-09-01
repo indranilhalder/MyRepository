@@ -679,7 +679,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 		model.addAttribute("page_name", "Search Results Page:" + breadcrumbName);
 		//TPR-430
-		if (null != breadcrumbs.get(0).getName())
+		/*if (null != breadcrumbs.get(0).getName())
 		{
 			model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
 		}
@@ -690,7 +690,7 @@ public class SearchPageController extends AbstractSearchPageController
 		if (null != breadcrumbs.get(2).getName())
 		{
 			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase());
-		}
+		}*/
 
 
 	}
