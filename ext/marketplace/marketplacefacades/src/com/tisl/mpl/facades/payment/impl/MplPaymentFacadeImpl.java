@@ -2428,10 +2428,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		//			LOG.error("Something went wrong ", e);
 		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		//		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
+		//		catch (final Exception e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		//		}
 	}
 
 

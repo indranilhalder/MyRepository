@@ -160,7 +160,7 @@ function displayNetbankingForm(){
 			//resetConvCharge();	TISPT-29
 			$('input:password').val("");
 			$(".name_on_card").val("");	
-			applyPromotion(null);
+			applyPromotion(null,"none","none");
 			$("#paymentDetails, #netbanking, #make_nb_payment").css("display","block");
 			$(".make_payment_top_nb").css("display","block");
 			$("#submitButtons, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton").css("display","none");
@@ -188,7 +188,7 @@ function displayEMIForm(){
 	$("#paymentMode").val("EMI");
 	$('input:password').val("");
 	$(".name_on_card").val("");	
-	applyPromotion(null);
+	applyPromotion(null,"none","none");
 	//resetConvCharge();	TISPT-29
 	$("#paymentDetails, #emi").css("display","block");
 	$("#emi-notice").hide();
@@ -322,7 +322,7 @@ function displayCODForm()
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
 				//$("#no-click").remove();
-				applyPromotion(null);
+				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_TSHIP")
 			{
@@ -330,7 +330,7 @@ function displayCODForm()
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
 				//$("#no-click").remove();
-				applyPromotion(null);
+				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
 			{
@@ -338,7 +338,7 @@ function displayCODForm()
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
 				//$("#no-click").remove();
-				applyPromotion(null);
+				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
 			{
@@ -346,7 +346,7 @@ function displayCODForm()
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
 				//$("#no-click").remove();
-				applyPromotion(null);
+				applyPromotion(null,"none","none");
 			}
 			else{
 				if(isCodSet == false){
@@ -382,7 +382,7 @@ function displayCODForm()
 								}
 								//document.getElementById("totalWithConvField").innerHTML=totalPrice; TISPT-29
 								if(paymentMode!=null){
-									applyPromotion(null);
+									applyPromotion(null,"none","none");
 								}
 								isCodSet = true;
 							}
@@ -456,7 +456,7 @@ function displayDCForm(){
 		$(".accepted-cards .visa").parent().css("display","inline-block");
 		$(".accepted-cards .master").parent().css("display","inline-block");
 		$(".accepted-cards .amex").parent().css("display","none");
-		applyPromotion(null);
+		applyPromotion(null,"none","none");
 	}	
 	else
 	{
@@ -785,7 +785,7 @@ function getSelectedEMIBank(){
 		//$("#COD, #emi, #netbanking, #card, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton, #mobileNoError, #OTPGenerationErrorMessage, #codMessage, #customerBlackListMessage, #otpValidationMessage, #wrongOtpValidationMessage, #expiredOtpValidationMessage, #fulfillmentMessage, #codItemEligibilityMessage, #emptyOTPMessage, #resendOTPMessage, #savedEMICard").css("display","none");
 		
 		$("#card, #emi-notice").css("display","none");
-		applyPromotion(null);
+		applyPromotion(null,"none","none");
 	}
 }
 
@@ -1030,7 +1030,7 @@ function displayFormForCC(){
 		$(".accepted-cards .amex").parent().css("display","inline-block");
 		populateBillingAddress();
 		if($("#paymentMode").val()!='EMI'){
-			applyPromotion(null);
+			applyPromotion(null,"none","none");
 		}
 		
 	}
@@ -1237,7 +1237,7 @@ $("#otpMobileNUMField").focus(function(){
 			document.getElementById("totalWithConvField").innerHTML=totalPrice;
  			isCodSet = false;
  			if(paymentMode!=null){
- 				applyPromotion(null);
+ 				applyPromotion(null,"none","none");
 			}
  		},
  		error : function(resp) {
@@ -1645,12 +1645,12 @@ $("#otpMobileNUMField").focus(function(){
 			}
 			else{
 		var bin_current_status = getCardBinstatus();
-		dopayment(bin_current_status);
+		//dopayment(bin_current_status);
 			}
   })
   
   function getCardBinstatus(){
-	 var status = validateCardNo();
+	 var status = validateCardNo("formSubmit");
 	 return status;
   }
  
@@ -1793,7 +1793,7 @@ $("#otpMobileNUMField").focus(function(){
 		$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-		applyPromotion(null);
+		applyPromotion(null,"none","none");
 	}
 	else if($("#paymentMode").val()=="EMI"){
 		var selectedBank=$("#bankNameForEMI").val();
@@ -1825,7 +1825,7 @@ $("#otpMobileNUMField").focus(function(){
 		$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-		applyPromotion(null);
+		applyPromotion(null,"none","none");
 	}
 	//TISEE-5555
 	$('.security_code_hide').prop('disabled', true);
@@ -2123,7 +2123,7 @@ function validateCVV() {
 
 
 
-function validateCardNo() {
+function validateCardNo(formSubmit) {
 	var value=$("#cardNo").val();
 	var errorHandle = document.getElementById("cardNoError"); 
 	var cardType= $("#cardType").val();
@@ -2143,47 +2143,56 @@ function validateCardNo() {
 	// accept only digits, dashes or spaces	
 	if (/[^0-9-\s]+/.test(value)) {
 		binStatus=false;
+		dopayment(binStatus);
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(value.length<13 || value.length>19){
 		binStatus=false;
+		dopayment(binStatus);
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(cardType=='MAESTRO' && !(value.length==13 || value.length==14 || value.length==15 || value.length==16 || value.length==17 || value.length==18 || value.length==19)){
 		binStatus=false;
+		dopayment(binStatus);
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(cardType=='VISA' && !(value.length==16 || value.length==13)){
 		binStatus=false;
+		dopayment(binStatus);
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(cardType=='MASTERCARD' && value.length!=16){
 		binStatus=false;
+		dopayment(binStatus);
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(cardType=='AMEX' && value.length!=15){
 		binStatus=false;
+		dopayment(binStatus);
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	//TISPRO-572 - Commenting check for EMI in case of AMEX
 	else if(cardType=='AMEX' && value.length==15 && (/*$("#paymentMode").val()=='EMI' ||*/ $("#paymentMode").val()=='Debit Card')){
 		binStatus=false;
+		dopayment(binStatus);
 		errorHandle.innerHTML = "Please enter a valid debit card";
 		return false;
 	}
 	else if(cardType=='MAESTRO' && (value.length==16 || value.length==18 || value.length==19) && ($("#paymentMode").val()=='EMI' || $("#paymentMode").val()=='Credit Card')){
 		binStatus=false;
+		dopayment(binStatus);
 		errorHandle.innerHTML = "Please enter a valid credit card";
 		return false;
 	}
 	else if(cardType==""){
 		binStatus=false;
+		dopayment(binStatus);
 		errorHandle.innerHTML = "Sorry, the entered card type is not supported";
 		return false;
 	}
@@ -2206,6 +2215,7 @@ function validateCardNo() {
 	}*/
 	else if(result==false){
 		binStatus=false;
+		dopayment(binStatus);
 		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
@@ -2220,6 +2230,7 @@ function validateCardNo() {
 		success : function(response) {	
 			if(!response.isValid)
 			{
+				dopayment(binStatus);
 				errorHandle.innerHTML = "Cannot proceed. Please try with diff card";
 				return false;
 			}
@@ -2229,8 +2240,12 @@ function validateCardNo() {
 				{
 					binStatus=true;
 					if($("#paymentMode").val()!='EMI'){
-						applyPromotion(null);
-					}					
+						applyPromotion(null,binStatus,formSubmit);
+					}
+					else
+					{
+						dopayment(binStatus);
+					}
 					errorHandle.innerHTML = "";
 					return true;
 				}
@@ -2246,12 +2261,14 @@ function validateCardNo() {
 						{
 							if(selectedBank!="select" && responseBankVal.includes(selectedBankVal)){
 								binStatus=true;
+								dopayment(binStatus);
 								//applyPromotion();
 								errorHandle.innerHTML = "";
 								return true;			
 							}
 							else if(selectedBank!="select" && !responseBankVal.includes(selectedBankVal)){
 								binStatus=false;
+								dopayment(binStatus);
 								errorHandle.innerHTML = "Please enter a card same as the selected bank";
 								return false;	
 							}
@@ -2259,6 +2276,7 @@ function validateCardNo() {
 						else
 						{
 							binStatus=false;
+							dopayment(binStatus);
 							errorHandle.innerHTML = "Please enter a valid Credit Card number";
 						}
 					}
@@ -2266,13 +2284,14 @@ function validateCardNo() {
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 						{
 							binStatus=true;
-							applyPromotion(null);
+							applyPromotion(null,binStatus,formSubmit);
 							errorHandle.innerHTML = "";
 							return true;
 						}
 						else
 						{
 							binStatus=false;
+							dopayment(binStatus);
 							errorHandle.innerHTML = "Please enter a valid Credit Card number";
 						}
 					}
@@ -2280,13 +2299,14 @@ function validateCardNo() {
 						if(response.cardType=="" || response.cardType==null || response.cardType=="DEBIT" || response.cardType=="DC" || response.cardType=="Debit")
 						{
 							binStatus=true;
-							applyPromotion(null);
+							applyPromotion(null,binStatus,formSubmit);
 							errorHandle.innerHTML = "";
 							return true;
 						}
 						else
 						{
 							binStatus=false;
+							dopayment(binStatus);
 							errorHandle.innerHTML = "Please enter a valid Debit Card number";
 						}
 					}
@@ -2295,9 +2315,10 @@ function validateCardNo() {
 		},
 		error : function(resp) {
 			binStatus=false;
+			dopayment(binStatus);
 			errorHandle.innerHTML = "   Please enter a valid card number ";
 			$("#promotionApplied").css("display","none");
-			resetConvCharge();
+			//resetConvCharge(binStatus);		//Commenting as method commented for perf fixes
 			return false;
 		}
 	});		
@@ -2673,18 +2694,19 @@ function setBankForSavedCard(bankName){
 //	});	
 
 	bankNameSelected=bankName;
-	applyPromotion(bankName);	
+	applyPromotion(bankName,"none","none");	
 
 }
 
 
-function applyPromotion(bankName)
+//TPR-629---changes in parameter
+function applyPromotion(bankName,binValue,formSubmit)
 {
 	var staticHost=$('#staticHost').val();
 	$("body").append("<div id='no-click1' style='opacity:0.15; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner1" style="position: fixed; left: 40%;top:45%; height: 30px;">'); 
 
-	$(".make_payment").attr('disabled','true');
+	$(".make_payment, #make_saved_cc_payment_up, #make_cc_payment_up, #make_nb_payment_up, #paymentButtonId_up").attr('disabled','true');
 	var paymentMode=$("#paymentMode").val();
 	$("#promotionApplied,#promotionMessage").css("display","none");
 	var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
@@ -2706,11 +2728,6 @@ function applyPromotion(bankName)
 //			}
 			else
 			{
-				if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect_to_payment")
-				{
-					document.getElementById("juspayErrorMsg").innerHTML="Existing Promotion has expired";
-					$("#juspayconnErrorDiv").css("display","block");
-				}
 				var totalDiscount=0;
 				var productDiscount="";
 				var orderDiscount="";
@@ -2791,6 +2808,8 @@ function applyPromotion(bankName)
 						$("#"+ussid+"_productPriceId").html(ussidPrice);
 					}
 				}
+				$("#no-click").remove();
+				$(".make_payment, #make_saved_cc_payment_up, #make_cc_payment_up, #make_nb_payment_up, #paymentButtonId_up").removeAttr('disabled');
 				//TISPT-29
 				if(paymentMode=='EMI' || paymentMode=='Credit Card' || paymentMode=='Debit card' || paymentMode=='Netbanking')
 				{
@@ -2798,9 +2817,18 @@ function applyPromotion(bankName)
 				}
 				var cartTotal=response.totalPrice.value;
 				
-				if(paymentMode=='EMI')
+				if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect_to_payment")
 				{
-					if(selectedBank==""){
+					document.getElementById("juspayErrorMsg").innerHTML="Existing Promotion has expired";
+					$("#juspayconnErrorDiv").css("display","block");
+				}
+				else if(paymentMode=='EMI')
+				{
+					if(formSubmit=="formSubmit")
+					{
+						dopayment(binValue);
+					}
+					else if(selectedBank==""){
 						//var cartTotal=response.totalPrice.value;
 						$.ajax({
 							url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/getEMIBanks",
@@ -2891,14 +2919,21 @@ function applyPromotion(bankName)
 						});
 					}
 				}
-				$("#no-click").remove();
-				$(".make_payment").removeAttr('disabled');
+				else if(paymentMode=='Credit Card' || paymentMode=='Debit card')
+				{
+					if(formSubmit=="formSubmit")
+					{
+						dopayment(binValue);
+					}
+				}
+				//$("#no-click").remove();
+				//$(".make_payment").removeAttr('disabled');
 			}
 			$("#no-click1,.spinner1").remove();			
-			if(isNewCard){//if this variable is true resetting the opacity
-			$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-			isNewCard = false;
-		}
+			//if(isNewCard){//if this variable is true resetting the opacity
+			//$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			//isNewCard = false;
+		//}
 
 		},
 		error : function(resp) {
@@ -3831,16 +3866,14 @@ $("#cardNo").blur(function(){
 		if($("#make_cc_payment").data("mouseDown") != "clicked"){
 			//Check if session is timed out before validating card
 			if(isSessionActive()){
-				validateCardNo();
+				validateCardNo("none");
 			}
 			else{
 				redirectToCheckoutLogin();
 			}
 		}
-	} else {
-		 document.getElementById("cardNoError").innerHTML="Please enter a valid card number ";
+	} 
 
-	}
 });
 $(".name_on_card").blur(function(){
 	if($(".name_on_card").val()!="")
@@ -4756,4 +4789,10 @@ function pinCodeDiv(){
 });*/
 $('#popUpExpAddress').on('hidden.bs.modal', function () {
 	 checkExpressCheckoutPincodeService('typeExpressCheckoutDD');
+});
+
+
+//TPR-629
+$(".juspayCloseButton").on("click", function(){
+	$("#juspayconnErrorDiv").hide();
 });

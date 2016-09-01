@@ -21,8 +21,8 @@
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
 <cart:tealiumCartParameters/>
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
-				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">
-					<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
+				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
+					<button class="close juspayCloseButton" type="button">&times;</button>
 					<span id="juspayErrorMsg">Some issues are there with payment</span>
 				</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
