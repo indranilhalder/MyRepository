@@ -1982,12 +1982,16 @@ $(document).ajaxComplete(function(){
 /*checkout login error start*/
 $(document).ready(function() {
 	 $(window).on('load resize',function(){	
+		 header_ht = $("header").outerHeight();
+$("body:not(.page-checkout-login) .top.checkout-top .content").css("margin-top",header_ht);
 if ($("body.page-checkout-login .global-alerts").length > 0){
-	$(".checkout-header.login, .sign-in.wrapper").css("margin-top","0px");
-	header_ht = $("body.page-checkout-login header").outerHeight();
+	$(".top.checkout-top .content").css("margin-top","0px");
 	$(".global-alerts").css("margin-top",header_ht+"px");
-	
 }
+$(document).click(".global-alerts .close", function(){
+	$(".global-alerts").css("margin-top","0px");
+	$(".top.checkout-top .content").css("margin-top",header_ht+"px");
+});
 	 });
 });
 /*checkout login error end */
