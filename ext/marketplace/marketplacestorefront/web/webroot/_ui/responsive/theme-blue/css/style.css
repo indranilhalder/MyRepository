@@ -45763,7 +45763,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     border: 0 none;
     padding: 0;}
     .marketplace-checkout span {
-        right: 4px;
+        right: 16px;
     top: 11px;
 }
 .sign-in.wrapper {
