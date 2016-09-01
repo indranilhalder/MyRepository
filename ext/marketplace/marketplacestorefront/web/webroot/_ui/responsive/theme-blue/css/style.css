@@ -40974,3 +40974,10 @@ h4 {
 	color: #fff;
     background-color: #A9143C;
 }
+#addAddressForm .errorCodemessage{
+	color: red;
+	padding: 0px 0px 10px 32px;
+}
+.thirdTataCliq .body-Content{
+	padding-bottom: 395px;
+}
