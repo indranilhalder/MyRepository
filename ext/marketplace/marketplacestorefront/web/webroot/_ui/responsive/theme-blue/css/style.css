@@ -42432,6 +42432,8 @@ bottom:35px;
 /*Upgraded Owl carousel CSS ends*/
 
 
+/* TPR-245 SEO Heading Starts */
+
 /* Home Page Starts */
 
 /* body.page-homepage #bestPicks.feature-collections h2{
@@ -43210,6 +43212,8 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	}
 }
 
+
+/* TPR-245 SEO Ends */
 
 /*Filter scroll changes start*/
 .listing.wrapper .left-block.bottom {
@@ -46403,3 +46407,16 @@ margin-top:0px;
     height: auto;
     padding-top: 10px;
 }
+
+
+/* SEO Starts */
+
+.reviews .header h3{
+	text-align: center;
+    font-size: 28px;
+    padding: 40px 0 20px;
+    font-weight: 500;
+    font-family: "Montserrat";
+}
+
+/* SEO Ends */
