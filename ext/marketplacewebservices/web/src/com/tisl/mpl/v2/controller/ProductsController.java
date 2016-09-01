@@ -52,6 +52,7 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.servicelayer.i18n.I18NService;
+import de.hybris.platform.util.localization.Localization;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -212,8 +213,7 @@ public class ProductsController extends BaseController
 	 * Returns a list of products and additional data such as: available facets, available sorting and pagination
 	 * options. It can include spelling suggestions.To make spelling suggestions work you need to:
 	 * <ul>
-	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.
-	 * </li>
+	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.</li>
 	 * <li>Have indexed properties configured to be used for spellchecking.</li>
 	 * </ul>
 	 *
@@ -529,8 +529,8 @@ public class ProductsController extends BaseController
 	@RequestMapping(value = "/{productCode}/references", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductReferenceListWsDTO exportProductReferences(@PathVariable final String productCode,
-			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize, @RequestParam final String referenceType,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize,
+			@RequestParam final String referenceType, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final List<ProductOption> opts = Lists.newArrayList(OPTIONS);
 		final ProductReferenceTypeEnum referenceTypeEnum = ProductReferenceTypeEnum.valueOf(referenceType);
@@ -777,10 +777,9 @@ public class ProductsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			if (null != e.getMessage())
-			{
-				sizeGuideDataList.setError(e.getMessage());
-			}
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			sizeGuideDataList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			sizeGuideDataList.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			sizeGuideDataList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return sizeGuideDataList;
@@ -1025,10 +1024,10 @@ public class ProductsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
-			//e.printStackTrace();
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			productSearchPage.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			productSearchPage.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + ":" + e);
 		}
 		return productSearchPage;
 	}
@@ -1337,8 +1336,8 @@ public class ProductsController extends BaseController
 				else
 				{
 
-					searchPageData = searchFacade.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID,
-							pageableData);
+					searchPageData = searchFacade
+							.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID, pageableData);
 				}
 			}
 			//final List<String> filter = new ArrayList<String>();

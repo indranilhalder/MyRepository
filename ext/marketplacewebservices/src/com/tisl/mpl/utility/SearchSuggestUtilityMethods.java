@@ -168,7 +168,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -625,7 +625,7 @@ public class SearchSuggestUtilityMethods
 				//productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 				//	Arrays.asList(ProductOption.GALLERY));
 				//TPR-796
-				galleryImages = productDetailsHelper.getGalleryImagesMobile(productData);
+				galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
 
 				if (CollectionUtils.isNotEmpty(galleryImages))
 				{

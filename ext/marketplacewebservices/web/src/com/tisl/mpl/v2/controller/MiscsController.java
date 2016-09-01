@@ -501,6 +501,7 @@ public class MiscsController extends BaseController
 				return userResult;
 
 			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -518,13 +519,12 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			userResult.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			userResult.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
-			return userResult;
 		}
-		LOG.debug(MarketplacecommerceservicesConstants.DATA_SAVED_MSG);
-		userResult.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
+
 
 		return userResult;
 	}
@@ -625,13 +625,11 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			userResult.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			userResult.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
-			return userResult;
 		}
-		LOG.debug(MarketplacecommerceservicesConstants.DATA_SAVED_MSG);
-		userResult.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 		return userResult;
 	} //End of sellerInformation
 
@@ -640,9 +638,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1076,7 +1074,7 @@ public class MiscsController extends BaseController
 					 * Arrays.asList(ProductOption.BASIC, ProductOption.PRICE)); } else { throw new
 					 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); } PincodeServiceData data = null;
 					 * MarketplaceDeliveryModeData deliveryModeData = null; List<PinCodeResponseData> response = null;
-					 *
+					 * 
 					 * if (null != productData && null != productData.getSeller()) { for (final SellerInformationData seller
 					 * : productData.getSeller()) { final List<MarketplaceDeliveryModeData> deliveryModeList = new
 					 * ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if
@@ -1085,7 +1083,7 @@ public class MiscsController extends BaseController
 					 * seller.getUssid()) { deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(),
 					 * seller.getUssid()); } deliveryModeList.add(deliveryModeData); }
 					 * data.setDeliveryModes(deliveryModeList); }
-					 *
+					 * 
 					 * if (StringUtils.isNotEmpty(seller.getFullfillment())) {
 					 * data.setFullFillmentType(seller.getFullfillment()); } if
 					 * (StringUtils.isNotEmpty(seller.getShippingMode())) { data.setTransportMode(seller.getShippingMode());
@@ -1161,16 +1159,9 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			final EtailNonBusinessExceptions ex = new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
-			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
-			if (null != ex.getErrorMessage())
-			{
-				pinWsDto.setError(ex.getErrorMessage());
-			}
-			if (null != ex.getErrorCode())
-			{
-				pinWsDto.setErrorCode(ex.getErrorCode());
-			}
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			pinWsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+			pinWsDto.setErrorCode(MarketplacecommerceservicesConstants.B9004);
 			pinWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return pinWsDto;
@@ -1213,6 +1204,7 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception e)
 		{
+
 			dataList.setError(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return dataMapper.map(dataList, StateListWsDto.class, fields);
@@ -1242,9 +1234,17 @@ public class MiscsController extends BaseController
 					{
 						result.setType(MarketplacecommerceservicesConstants.CATEGORY);
 					}
+					result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 			}
 
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			result.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9421));
+			result.setErrorCode(MarketplacecommerceservicesConstants.B9421);
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1272,6 +1272,13 @@ public class MiscsController extends BaseController
 			}
 			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			result.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			result.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
 		return result;
 	}
 
@@ -1285,7 +1292,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1298,7 +1305,7 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 *
+	 * 
 	 * } return deliveryModeData; }
 	 */
 	/**
@@ -1411,16 +1418,13 @@ public class MiscsController extends BaseController
 		{
 			dataList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			dataList.setError(MarketplacecommerceservicesConstants.SEARCH_NOT_FOUND);
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
-			return dataList;
 		}
 		catch (final Exception e)
 		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			dataList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			dataList.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			dataList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			dataList.setError(MarketplacecommerceservicesConstants.SEARCH_NOT_FOUND);
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
-			return dataList;
-
 		}
 
 		return dataList;

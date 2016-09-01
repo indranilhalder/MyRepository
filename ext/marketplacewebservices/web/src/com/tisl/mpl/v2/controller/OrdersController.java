@@ -47,6 +47,7 @@ import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.variants.model.VariantProductModel;
 
 import java.text.SimpleDateFormat;
@@ -190,9 +191,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 * 
+	 *
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 * 
+	 *
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -401,9 +402,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 * 
+	 *
 	 * @param orderNumber
-	 * 
+	 *
 	 * @param lineID
 	 */
 
@@ -451,7 +452,7 @@ public class OrdersController extends BaseCommerceController
 
 									/*
 									 * final File invoiceFile = new File(invoicePathURL); FileInputStream input = null;
-									 * 
+									 *
 									 * if (invoiceFile.exists()) { String invoiceFileName = null; final String preInvoiceFileName
 									 * = invoiceFile.getName(); if (!preInvoiceFileName.isEmpty()) { final int index =
 									 * preInvoiceFileName.lastIndexOf('.'); if (index > 0) { invoiceFileName =
@@ -476,10 +477,10 @@ public class OrdersController extends BaseCommerceController
 									}
 									catch (final Exception ex)
 									{
-										LOG.error("Exception is" + ex);
+										ExceptionUtil.getCustomizedExceptionTrace(ex);
+										response.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+										response.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 										response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-										response.setError(MarketplacewebservicesConstants.ETAIL_NON_BUSINESS_EXCEPTION + ex);
-										LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
 										return response;
 									}
 
@@ -950,11 +951,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1343,10 +1344,10 @@ public class OrdersController extends BaseCommerceController
 								//Delivery date is the final delivery date
 								/*
 								 * if (null != entry.getMplDeliveryMode()) {
-								 * 
+								 *
 								 * if (null != entry.getMplDeliveryMode().getDescription() &&
 								 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
-								 * 
+								 *
 								 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
 								 */
 
@@ -1381,7 +1382,7 @@ public class OrdersController extends BaseCommerceController
 
 								/*
 								 * if (null != orderproductdto.getUSSID()) {
-								 * 
+								 *
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
 								 */
@@ -1455,7 +1456,7 @@ public class OrdersController extends BaseCommerceController
 												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
 												 * orderproductdto.setCancel(Boolean.TRUE);
-												 * 
+												 *
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1483,9 +1484,9 @@ public class OrdersController extends BaseCommerceController
 												 * actualCancelWindow && checkOrderStatus(consignmentStatus,
 												 * MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied())
-												 * 
+												 *
 												 * { orderproductdto.setCancel(Boolean.TRUE);
-												 * 
+												 *
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1513,7 +1514,7 @@ public class OrdersController extends BaseCommerceController
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 * 
+											 *
 											 * }
 											 */
 											//for return
@@ -1604,7 +1605,7 @@ public class OrdersController extends BaseCommerceController
 								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
 								 * consignmentModel.getReturnCarrier()) {
 								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
-								 * 
+								 *
 								 * }
 								 */
 								//End
@@ -1735,10 +1736,7 @@ public class OrdersController extends BaseCommerceController
 				}
 			}
 		}
-		catch (
-
-		final EtailNonBusinessExceptions e)
-
+		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			if (null != e.getErrorMessage())
@@ -1747,10 +1745,7 @@ public class OrdersController extends BaseCommerceController
 			}
 			orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		catch (
-
-		final EtailBusinessExceptions e)
-
+		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
@@ -1759,13 +1754,12 @@ public class OrdersController extends BaseCommerceController
 			}
 			orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-
-		catch (
-
-		final Exception e)
-
+		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			orderTrackingWsDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			orderTrackingWsDTO.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return orderTrackingWsDTO;
 
@@ -2113,10 +2107,9 @@ public class OrdersController extends BaseCommerceController
 		}
 		catch (final Exception e)
 		{
-			if (null != e.getMessage())
-			{
-				result.setError(e.getMessage());
-			}
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			result.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			result.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 
