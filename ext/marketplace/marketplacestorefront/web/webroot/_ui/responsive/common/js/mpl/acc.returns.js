@@ -78,15 +78,15 @@
 				return false;
 			} else if($(".slectionRefund #accountHolderName").val().length < 4) {
 				//Please Enter Valid Account Holder Name.
-				$(".secondTataCliq .accContents").append("<div class='errorText'>Please Enter Valid Account Holder Name.</div>");
+				$(".secondTataCliq .accContents").append("<div class='errorText'>Please Enter Valid Account Holder Name. Mininum  4 charactor required</div>");
 				return false;
 			} else if($(".slectionRefund #bankName").val().length < 3) {
 				//Please Enter Valid Bank Name.
-				$(".secondTataCliq .accContents").append("<div class='errorText'>Please Enter Valid Bank Name.</div>");
+				$(".secondTataCliq .accContents").append("<div class='errorText'>Please Enter Valid Bank Name. Mininum  3 charactor required</div>");
 				return false;
 			} else if($(".slectionRefund #iFSCCode").val().length < 11) {
 				//Please Enter Valid IFSC Code.
-				$(".secondTataCliq .accContents").append("<div class='errorText'>Please Enter Valid IFSC Code.</div>");
+				$(".secondTataCliq .accContents").append("<div class='errorText'>Please Enter Valid 11 charactor IFSC Code. </div>");
 				return false;
 			} else {
 				return true;
@@ -140,8 +140,8 @@
 				
 						
 					} else {
-						//if(checkCODValidations())
-						//{
+						/*if(checkCODValidations())
+						{*/
 							$(".thirdTataCliq").addClass("removeMargin");
 							$(".secondTataCliq").addClass("removeMargin");
 							$(".thirdTataCliq .returnMethod").show();
@@ -157,7 +157,7 @@
 							} else {
 								getScheduledPikupData();
 							}
-						//}
+						/*}*/
 					}  
 				} else {
 				$(".secondTataCliq .accContents").append("<div class='errorTextSelection'>Please select atleast one Return Type.</div>");
