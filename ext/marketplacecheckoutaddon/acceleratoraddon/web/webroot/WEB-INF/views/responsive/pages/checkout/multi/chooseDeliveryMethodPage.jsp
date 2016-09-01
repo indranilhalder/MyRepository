@@ -1,4 +1,3 @@
-
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
@@ -187,7 +186,7 @@
 									<li class="header">		
   										<ul>		
              								 <li><spring:theme code="checkout.multi.deliveryAddress.savedAddress"	text="Saved Addresses" /></li>		
-              								<li class="pincode-button"><a href="${request.contextPath}/checkout/multi/delivery-method/new-address"> 
+              								<li class="pincode-button"><a href="#${request.contextPath}/checkout/multi/delivery-method/new-address"> 
 											<spring:theme code="checkout.multi.deliveryAddress.useNewAddress" text="Use New Address"></spring:theme>
 										</a></li>		
           								</ul>		
@@ -303,7 +302,7 @@
 															</li>
 															</address> --%>
 															
-															<a href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"><spring:theme code="checkout.multi.deliveryAddress.editAddress" text="Edit Address"></spring:theme> </a>
+															<a href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}" class="edit_address"><spring:theme code="checkout.multi.deliveryAddress.editAddress" text="Edit Address"></spring:theme> </a>
 														</ul>
 												
 													</div>
@@ -529,7 +528,8 @@
 			</multi-checkout:checkoutSteps>			
 				
 		</c:if>
-		
+	<div class="addnewAddresPage"></div>	
+	<div class="editnewAddresPage"></div>
 	<div class="right-block shipping">
 			<div class="checkout-order-summary">
 				<multi-checkout:orderTotals cartData="${cartData}"

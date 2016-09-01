@@ -2404,6 +2404,7 @@ function validatePin() {
 
 
 $("#newAddressButton,#newAddressButtonUp").click(function() {
+	console.log("newAddressButton ");
 	var validate=true;
 	var regPostcode = /^([1-9])([0-9]){5}$/;
     var mob = /^[1-9]{1}[0-9]{9}$/;
@@ -4286,7 +4287,38 @@ $(".remove-coupon-button").click(function(){
  	});	 
 });
 
+$(".pincode-button").click(function(){
+	
+	$.ajax({
+ 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
+ 		type: "GET",
+ 		cache: false,
+ 		dataType: "html",
+ 		success : function(response) {
+ 			$(".addnewAddresPage").html(response);
+ 		},
+ 		error : function(resp) {
+ 		}
+ 		
+ 		});
+});
 
+$(".edit_address").click(function(){
+	
+	$.ajax({
+ 		url: ACC.config.encodedContextPath + $(this).attr("href"),
+ 		type: "GET",
+ 		cache: false,
+ 		dataType: "html",
+ 		success : function(response) {
+ 			$(".editnewAddresPage").html(response);
+ 		},
+ 		error : function(resp) {
+ 		}
+ 		
+ 		});
+	return false;
+});
 $(document).ready(function(){
 	if($('#couponFieldId').prop('readonly') == false)
 	{
