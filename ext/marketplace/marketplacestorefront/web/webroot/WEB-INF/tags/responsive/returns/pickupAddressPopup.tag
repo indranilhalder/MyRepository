@@ -141,7 +141,13 @@
 
 					</div>
 					</fieldset>	
+					<div class="row errorCodemessage"></div>					
+				<p style="clear: both;"></p>
+				<div class="modal-footer">
+					<button type="submit" id="saveAddress" class="btn btn-primary light-blue">	
+					<spring:theme code="text.order.returns.savebutton"/></button>
 				</div>
+				<form:hidden path="orderCode" value="${orderCode}"/>
 									
 				<p style="clear: both;"></p>
 				<div class="modal-footer">
