@@ -498,9 +498,6 @@
 			}else if($("#addAddressForm #mobileNo").val().length < 10) {
 				$("#addAddressForm .errorText").show().text("Please enter valid Mobile number");
 				return false;
-			}else if($("#addAddressForm #landmark").val().length < 2) {
-				$("#addAddressForm .errorText").show().text("Please enter Landmark");
-				return false;
 			}else if($("#addAddressForm #city").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter City");
 				return false;
@@ -511,7 +508,14 @@
 			else if($("#addAddressForm #country").val().length < 2) {
 				$("#addAddressForm .errorText").show().text("Please enter Country");
 				return false;
-			}
+			}else if($("#addAddressForm #landmark").val().length < 2) 
+			{
+				if($("#addAddressForm #otherLandmark").val().length < 2)
+					{
+					$("#addAddressForm .errorText").show().text("Please enter Landmark");
+					return false;
+					}	
+		    }
 			else {
 				return true;
 			}
