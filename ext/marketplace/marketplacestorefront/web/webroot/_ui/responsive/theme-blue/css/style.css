@@ -40618,7 +40618,7 @@ body .account .track{
  	}
  	
  	.accordtionTataCliq .accContents .quickDropArea, .accordtionTataCliq .accContents .scheduledPickupArea {
- 		height: 210px;
+ 		height: 211px;
  		overflow-x: hidden;
  		overflow-y: scroll;
  		margin-top: 10px;
@@ -40796,7 +40796,7 @@ body .account .track{
 
 .input-group-addon {
 	position: absolute;
-	top: 12px;
+	top: 29px;
 	left: 13px;
 	z-index: 9;
 	height: 40px;
@@ -40970,7 +40970,7 @@ h4 {
 	display: none;
 }
 
-#saveAddress:hover {
+#saveAddress:hover, #saveAddress:active, #saveAddress:focus {
 	color: #fff;
     background-color: #A9143C;
 }
@@ -40980,4 +40980,13 @@ h4 {
 }
 .thirdTataCliq .body-Content{
 	padding-bottom: 395px;
+}
+#addAddressForm #new-address-option-1 + label, #new-address-option-2 + label{
+	width:100%;
+}
+
+
+
+.page-returnSubmit .wrapper {
+	padding-bottom: 50px;
 }
