@@ -7202,7 +7202,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.POST)
 	public String submitChangeDeliveryAddress(@RequestParam(value = "orderId") final String orderId,
 			@RequestParam(value = "otpNumber") final String enteredOTPNumber,Model model)
 	{
