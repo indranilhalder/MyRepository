@@ -111,8 +111,9 @@ public class ReturnLogisticsServiceImpl implements ReturnLogisticsService
 							else
 							{
 								//if P1 fulfillment type is SSHIP set first fulfillment type as SSHIP
-								returnFulfilmentTypes.add(StringUtils.upperCase(MarketplaceclientservicesConstants.SSHIP_CODE));
 								returnFulfilmentTypes.add(StringUtils.upperCase(returnLogisticsObj.getReturnFulfillmentByP1()));
+								returnFulfilmentTypes.add(StringUtils.upperCase(MarketplaceclientservicesConstants.TSHIP_CODE));
+								
 							}
 						}
 						else
