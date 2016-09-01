@@ -1310,7 +1310,5 @@ $(document).ready(function(){
 		lazyLoad:true*/
 	});
 
-		if($(".product-detail .color-swatch").children().length == 0) {
-			$(".product-detail .color-swatch").remove();
-		}
 });
+

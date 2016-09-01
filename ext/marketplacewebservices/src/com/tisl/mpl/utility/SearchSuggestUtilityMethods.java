@@ -7,7 +7,6 @@ import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
-import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
@@ -20,7 +19,6 @@ import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearc
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -170,7 +168,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -615,7 +613,6 @@ public class SearchSuggestUtilityMethods
 		final List<SellingItemDetailWsDto> searchProductDTOList = new ArrayList<>();
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		List<GalleryImageData> galleryImages = null;
-		ProductData productDataImage = null;
 		for (final ProductData productData : searchPageData.getResults())
 		{
 
@@ -625,29 +622,19 @@ public class SearchSuggestUtilityMethods
 			if (null != productData && null != productData.getCode())
 			{
 
-				/*
-				 * final ProductModel productModel = productService.getProductForCode(defaultPromotionManager.catalogData(),
-				 * productData.getCode());
-				 * 
-				 * ProductData productData1 = null; if (null != productModel) { productData1 =
-				 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.GALLERY)); } else { throw
-				 * new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); }
-				 * 
-				 * 
-				 * if (null != productData1) { final List<GalleryImageData> gallaryImages =
-				 * mplProductWebService.getGalleryImages(productData1);
-				 * 
-				 * if (!gallaryImages.isEmpty()) { sellingItemDetail.setGalleryImagesList(gallaryImages); }
-				 * 
-				 * }
-				 */
-				productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
-						Arrays.asList(ProductOption.GALLERY));
+				//productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
+				//	Arrays.asList(ProductOption.GALLERY));
+				//TPR-796
+				galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
 
-				galleryImages = productDetailsHelper.getGalleryImagesMobile(productDataImage);
 				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
 					sellingItemDetail.setGalleryImagesList(galleryImages);
+				}
+				if (null != (productData.getSavingsOnProduct()))
+				{
+					sellingItemDetail.setDiscountPercent(Integer.valueOf(
+							String.valueOf(productData.getSavingsOnProduct().getValue().toString())).toString());
 				}
 				if (null != productData.getName())
 				{
@@ -1323,6 +1310,7 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
 						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
+
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
@@ -1330,7 +1318,7 @@ public class SearchSuggestUtilityMethods
 					facetWsDTO.setMultiSelect(Boolean.valueOf((facate.isCategory())));
 					if (null != facate.getName())
 					{
-						facetWsDTO.setName(facate.getName());
+						facetWsDTO.setName(StringUtils.capitalize(facate.getName()));
 					}
 					facetWsDTO.setCategory(Boolean.valueOf((facate.isCategory())));
 					facetWsDTO.setPriority(Integer.valueOf((facate.getPriority())));
@@ -1409,7 +1397,7 @@ public class SearchSuggestUtilityMethods
 					categoryHierarchy.setMultiSelect(Boolean.valueOf((facate.isCategory())));
 					if (null != facate.getName())
 					{
-						categoryHierarchy.setName(facate.getName());
+						categoryHierarchy.setName(StringUtils.capitalize(facate.getName()));
 					}
 					categoryHierarchy.setCategory(Boolean.valueOf((facate.isCategory())));
 					categoryHierarchy.setPriority(Integer.valueOf((facate.getPriority())));
@@ -1533,6 +1521,8 @@ public class SearchSuggestUtilityMethods
 								if (value != null && value.getCode().equalsIgnoreCase(l4Depart.getCategoryCode()))
 								{
 									l4Depart.setSelected(Boolean.valueOf(value.isSelected()));
+									//TPR-796
+									l4Depart.setQuantity((int) (value.getCount()));
 									if (value.isSelected())
 									{
 										flag = true;
@@ -1564,6 +1554,8 @@ public class SearchSuggestUtilityMethods
 							if (value != null && value.getCode().equalsIgnoreCase(l3Depart.getCategoryCode()))
 							{
 								l3Depart.setSelected(Boolean.valueOf(value.isSelected()));
+								//TPR-796
+								l3Depart.setQuantity((int) (value.getCount()));
 								if (value.isSelected())
 								{
 									flag = true;
@@ -1598,6 +1590,8 @@ public class SearchSuggestUtilityMethods
 						if (value != null && value.getCode().equalsIgnoreCase(l2Depart.getCategoryCode()))
 						{
 							l2Depart.setSelected(Boolean.valueOf(value.isSelected()));
+							//TPR-796
+							l2Depart.setQuantity((int) (value.getCount()));
 							if (value.isSelected())
 							{
 								flag = true;
@@ -1627,6 +1621,8 @@ public class SearchSuggestUtilityMethods
 					if (value != null && value.getCode().equalsIgnoreCase(l1Depart.getCategoryCode()))
 					{
 						l1Depart.setSelected(Boolean.valueOf(value.isSelected()));
+						//TPR-796
+						l1Depart.setQuantity((int) (value.getCount()));
 						if (value.isSelected())
 						{
 							flag = true;

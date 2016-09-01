@@ -52,6 +52,7 @@ import com.tisl.mpl.facades.cms.data.ComponentData;
 import com.tisl.mpl.facades.cms.data.HeroComponentData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
 import com.tisl.mpl.facades.cms.data.HomePageComponentData;
+import com.tisl.mpl.facades.cms.data.ImageListComponentData;
 import com.tisl.mpl.facades.cms.data.LinkedCollectionsData;
 import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
@@ -74,7 +75,7 @@ import com.tisl.mpl.model.cms.components.MobileCollectionLinkComponentModel;
 import com.tisl.mpl.model.cms.components.PromotionalProductsComponentModel;
 import com.tisl.mpl.model.cms.components.SmallBrandMobileAppComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
-import com.tisl.mpl.facades.cms.data.ImageListComponentData;
+
 
 /**
  * @author 584443
@@ -479,6 +480,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 							{
 								banner.setImageDiscription(bannerComponent.getMedia().getDescription());
 							}
+							// TPR-472
+							if (bannerComponent.getPk() != null)
+							{
+								banner.setIcid(bannerComponent.getPk().getLongValueAsString());
+							}
 							if (bannerComponent.getMedia().getUrl2() != null)
 							{
 								banner.setUrl(bannerComponent.getMedia().getUrl2());
@@ -523,6 +529,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								{
 									banner.setImageDiscription(cmsMediaPara.getMedia().getDescription());
 								}
+								// TPR-472
+								if (cmsMediaPara.getPk() != null)
+								{
+									banner.setIcid(cmsMediaPara.getPk().getLongValueAsString());
+								}
 								if (cmsMediaPara.getMedia().getUrl2() != null)
 								{
 									banner.setUrl(cmsMediaPara.getMedia().getUrl2());
@@ -562,7 +573,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 							try
 							{
 								productModel = productService.getProductForCode(productCode);
-								if (null !=productModel && null != productModel.getPicture())
+								if (null != productModel && null != productModel.getPicture())
 								{
 									productComp.setImage(productModel.getPicture().getUrl2());
 								}

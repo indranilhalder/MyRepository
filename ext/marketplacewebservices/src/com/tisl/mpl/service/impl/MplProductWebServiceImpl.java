@@ -181,7 +181,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							final double savingPriceCalPer = (savingPriceCal / buyBoxData.getMrp().getDoubleValue().doubleValue()) * 100;
 							final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
 							final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
-							productDetailMobile.setDiscount(roundedOffValue.toString());
+							productDetailMobile.setDiscountPercent(roundedOffValue.toString());
 
 						}
 						else if (buyBoxData.getPrice() != null && buyBoxData.getPrice().getValue().doubleValue() > 0)
@@ -191,7 +191,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							final double savingPriceCalPer = (savingPriceCal / buyBoxData.getMrp().getDoubleValue().doubleValue()) * 100;
 							final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
 							final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
-							productDetailMobile.setDiscount(roundedOffValue.toString());
+							productDetailMobile.setDiscountPercent(roundedOffValue.toString());
 						}
 					}
 				}
@@ -235,7 +235,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setIsCOD(isProductCOD);
 				}
-				if (null != buyboxdataCheck && null != getEligibleDeliveryModes(buyboxdataCheck))
+				if (null != buyboxdataCheck)
 				{
 					productDetailMobile.setEligibleDeliveryModes(getEligibleDeliveryModes(buyboxdataCheck));
 				}
@@ -1584,6 +1584,20 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							}
 						}
 					}
+					//TPR-797
+					if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()) && productData.getAllVariantsId().size() > 1)
+					{
+						productData.getAllVariantsId().remove(productData.getCode());
+						for (final String variants : productData.getAllVariantsId())
+						{
+							if (variants.equalsIgnoreCase(variantData.getCode()))
+							{
+								sizeLinkData.setIsAvailable(true);
+							}
+						}
+					}
+
+					//
 					if (null != variantData.getCapacity())
 					{
 						capacityLinkData = new CapacityLinkData();

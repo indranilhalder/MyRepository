@@ -1623,6 +1623,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISPRO-675
 	public static final String EMIBANK = "emi_bank".intern();
 	public static final String EMITENURE = "emi_tenure".intern();
+	public static final String B9421 = "B9421".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{
