@@ -140,7 +140,17 @@ public interface CancelReturnFacade
 	String getOrderStatusStage(String orderEntryStatus);
 	
 	
+	/**
+	 * 
+	 * @param ussid
+	 * @return List<String>
+	 */
 	List<String> getReturnableDates(OrderEntryData ussid);
+	
+	/**
+	 * @param codSelfShipData
+	 */
+	public void saveCODReturnsBankDetails(CODSelfShipData codSelfShipData);
 
 
 }
