@@ -57,9 +57,7 @@
 		</c:when>
 		<c:otherwise>
 			<c:if test="${empty hideSecureTransaction}">
-				<span class="secure secureTransaction"> <spring:theme
-						code="text.secure.transaction" /></span>
-						<span class="secure secureTransaction secMobile"></span>
+						<!-- <span class="secure secureTransaction secMobile"></span> -->
 			</c:if>
 		</c:otherwise>
 	</c:choose>
@@ -89,6 +87,7 @@
 						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
+					
 					</c:if>
 				</div>
 				<div class="right">
@@ -153,9 +152,22 @@
 				<c:otherwise>
 					<div class="marketplace-checkout">
 						<c:if test="${empty hideLogo}">
-							<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
+							<%-- <cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 								<cms:component component="${logo}" />
-							</cms:pageSlot>
+							</cms:pageSlot> --%>
+							<div class="logo">
+							<div class="desktop-logo" data-logo="marketplace">
+						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
+							<cms:component component="${logo}"/>
+						</cms:pageSlot>
+					</div>
+					<div class="tab-logo">
+						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
+							<cms:component component="${logo}"/>
+						</cms:pageSlot>
+					</div>
+					</div>
+					<span>CHECKOUT</span>
 						</c:if>
 					</div>
 				</c:otherwise>
