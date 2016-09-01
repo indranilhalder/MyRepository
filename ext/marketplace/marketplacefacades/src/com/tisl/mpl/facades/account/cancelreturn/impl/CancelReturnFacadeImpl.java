@@ -66,6 +66,7 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.TypeofReturn;
 import com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator;
+import com.tisl.mpl.core.model.BankDetailsInfoToFICOHistoryModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -161,6 +162,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	@Autowired
 	private MplCheckoutFacade mplCheckoutFacade;
 	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
+	
+	@Resource(name="codReturnPaymentInfoReverseConverter")
+	Converter<CODSelfShipData,BankDetailsInfoToFICOHistoryModel> codReturnPaymentInfoReverseConverter;
 	@Autowired
 	private MPLRefundService mplRefundService;
 	
@@ -1910,7 +1914,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 			String returningTransactionId;
 			returningTransactionId = sessionService.getAttribute("transactionId");
-			String ussid=sessionService.getAttribute("ussid");
 			String transactionId = "";
 			for (final OrderEntryData eachEntry : entries)
 			{
@@ -1942,7 +1945,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					
 					for (final SellerInformationModel sellerInfo : productModel.getSellerInformationRelator())
 					{
-						if(ussid.equalsIgnoreCase(sellerInfo.getUSSID()))
+						if(eachEntry.getSelectedUssid().equalsIgnoreCase(sellerInfo.getUSSID()))
 						{
 						if(CollectionUtils.isNotEmpty(sellerInfo.getRichAttribute()))
 						{
@@ -2238,6 +2241,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		requestData.setPaymentMode(codSelfShipData.getPaymentMode());
 		requestData.setBankName(codSelfShipData.getBankName());
 		requestData.setName(codSelfShipData.getName());
+		requestData.setOrderTag(codSelfShipData.getOrderTag());
 		
 		CODSelfShipResponseData codSelfShipResponseData=new CODSelfShipResponseData();
 		try
@@ -2377,6 +2381,22 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		
 		return returnableDates;
+	}
+	
+	/**
+	 * @author TECHOUTS 
+	 * save bank details for COD order in case of COMM-FICO call failure  
+	 * @param codSelfShipData
+	 */
+	@Override
+	public void saveCODReturnsBankDetails(CODSelfShipData codSelfShipData)
+	{
+		BankDetailsInfoToFICOHistoryModel codReturnPaymentModel=null;
+		codReturnPaymentModel = codReturnPaymentInfoReverseConverter.convert(codSelfShipData);
+		if(codReturnPaymentModel != null)
+		{
+		modelService.save(codReturnPaymentModel);
+		}
 	}
 
 

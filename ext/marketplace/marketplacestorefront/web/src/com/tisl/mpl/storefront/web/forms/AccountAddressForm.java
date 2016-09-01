@@ -23,7 +23,24 @@ public class AccountAddressForm extends AddressForm
 	private String locality;
 	private String landmark;
 	private String otherLandmark;
+	private String orderCode;
 
+
+	/**
+	 * @return the orderCode
+	 */
+	public String getOrderCode()
+	{
+		return orderCode;
+	}
+
+	/**
+	 * @param orderCode the orderCode to set
+	 */
+	public void setOrderCode(String orderCode)
+	{
+		this.orderCode = orderCode;
+	}
 
 	/**
 	 * @return the locality

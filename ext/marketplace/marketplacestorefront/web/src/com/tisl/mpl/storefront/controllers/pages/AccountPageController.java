@@ -1545,6 +1545,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, orderEntry);
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER, subOrderDetails);
+			model.addAttribute(ModelAttributetConstants.USSID, ussid);
 
 			sessionService.setAttribute(ModelAttributetConstants.TRANSACTION_ID, transactionId);
 			final ReturnPincodeCheckForm returnPincodeCheckForm = new ReturnPincodeCheckForm();
