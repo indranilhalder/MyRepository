@@ -618,8 +618,9 @@ dVJTWsi5hQQ7T+AWcRAACHxa3zmnUdE6rR+gfcxRQA4IH1SmVN0gvWdYzhwkq9fsq6CAAPRgcA8ENV/k
 						$(".update"+temp+" li span.phoneNumber").text($("#addAddressForm #mobileNo").val());
 						
 						$(".update"+temp).prev().find("input").prop("checked", "checked");
-						//showPickupTimeDate(temp);
+						showPickupTimeDate(temp);
 						
+						//$("#changeAddressPopup, .wrapBG").fadeOut(300);
 				  
 				  },
 				  error:function(data){
