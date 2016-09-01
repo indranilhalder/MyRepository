@@ -1979,3 +1979,15 @@ $(document).ajaxComplete(function(){
 		$("body").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
 	}
 });
+
+$(document).ready(function(){
+	$(".feature-collections h2").each(function(){
+		var txth2 = $(this).text();
+		$(this).replaceWith("<h3>"+txth2+"</h3>");
+	});
+	$(".feature-collections h1").each(function(){
+		var txth1 = $(this).text();
+		$(this).replaceWith("<h2>"+txth1+"</h2>");
+	});
+	
+});
