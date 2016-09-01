@@ -160,8 +160,7 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 					webResource = client.resource(UriBuilder.fromUri(
 					configurationService.getConfiguration().getString("oms.returns.returninfo.url")).build());
 		}
-		}
-
+	
 		try
 		{
 			if (null != webResource)
