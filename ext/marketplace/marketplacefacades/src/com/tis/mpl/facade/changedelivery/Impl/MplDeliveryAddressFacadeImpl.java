@@ -18,14 +18,11 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
@@ -136,7 +133,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	/**
 	 * @param orderId
 	 * @param newDeliveryAddress
-	 * @return
+	 * 
 	 */
 	private ChangeDeliveryAddressDto getChangeDeliveryRequestData(String orderId,AddressModel newDeliveryAddress,
 			 String interfaceType,List<TransactionSDDto> transactionSDDtos)
@@ -226,9 +223,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 *
 	 * @author Techouts
 	 * @param Order
-	 * @param customerId
 	 * @param source
-	 * @return void
 	 */
 	@Override
 	public void createcrmTicketForChangeDeliveryAddress(OrderModel Order, String costomerId,String source)
@@ -633,6 +628,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 
+	@Override
 	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel)
 	{
 		boolean isEligibleScheduledDelivery = false;
@@ -817,50 +813,45 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 
 
+ /***
+  * Argument dateFrom and dateTo
+  * Changed Delivery Address Report Method 
+  * return List<MplDeliveryAddressReportData>
+  */
 	@Override
-	public Collection<MplDeliveryAddressReportData> getDeliveryAddressRepot(String dateFrom,String dateTo)
+	public List<MplDeliveryAddressReportData> getDeliveryAddressRepot(String dateFrom, String dateTo)
 	{
-		
-		Map<String, MplDeliveryAddressReportData> orderId = new HashMap<>();
-		List<String> listEmpl = new ArrayList<>();
-		MplDeliveryAddressReportData mplData;
 		List<TemproryAddressModel> temproryAddressModelList = mplDeliveryAddressService.getTemporaryAddressModelList(dateFrom,
 				dateTo);
+		Map<String, MplDeliveryAddressReportData> orderIDList = new HashMap<String, MplDeliveryAddressReportData>();
+
 		if (CollectionUtils.isNotEmpty(temproryAddressModelList))
 		{
 			for (TemproryAddressModel temproryAddressModel : temproryAddressModelList)
 			{
-				listEmpl.add(temproryAddressModel.getOrderId());
-				mplData = new MplDeliveryAddressReportData();
-				mplData.setOrderId(temproryAddressModel.getOrderId());
+				MplDeliveryAddressReportData mplDeliveryAddressReportData = null;
+				if (orderIDList.containsKey(temproryAddressModel.getOrderId()))
+				{
+					mplDeliveryAddressReportData = orderIDList.get(temproryAddressModel.getOrderId());
+				}
+				else
+				{
+					mplDeliveryAddressReportData = new MplDeliveryAddressReportData();
+					mplDeliveryAddressReportData.setOrderId(temproryAddressModel.getOrderId());
+
+					orderIDList.put(temproryAddressModel.getOrderId(), mplDeliveryAddressReportData);
+				}
 				if (!temproryAddressModel.getIsProcessed().booleanValue())
 				{
-					mplData.setFailureRequsetCount(1);
-
-					if (orderId.containsKey(temproryAddressModel.getOrderId()))
-					{
-						MplDeliveryAddressReportData tempEpl = orderId.remove(temproryAddressModel.getOrderId());
-						tempEpl.setFailureRequsetCount(tempEpl.getFailureRequsetCount() + 1);
-						orderId.put(temproryAddressModel.getOrderId(), tempEpl);
-					}
-					else
-					{
-						orderId.put(temproryAddressModel.getOrderId(), mplData);
-					}
+					mplDeliveryAddressReportData.setFailureRequsetCount(mplDeliveryAddressReportData.getFailureRequsetCount() + 1);
 				}
-
-			}
-			for (Entry<String, MplDeliveryAddressReportData> orIdsSet : orderId.entrySet())
-			{
-				int count = Collections.frequency(listEmpl, orIdsSet.getKey());
-				MplDeliveryAddressReportData tempEpl = orderId.remove(orIdsSet.getKey());
-				tempEpl.setTotalRequestCount(count);
-				orderId.put(orIdsSet.getKey(), tempEpl);
+				mplDeliveryAddressReportData.setTotalRequestCount(mplDeliveryAddressReportData.getTotalRequestCount() + 1);
 			}
 		}
-		return orderId.values();
+		List<MplDeliveryAddressReportData> list = new ArrayList<MplDeliveryAddressReportData>(orderIDList.values());
+		return list;
 	}
-	
+
 	
 	private Map<String, List<String>> getDateAndTimeMap(
 			String edd) throws java.text.ParseException {
@@ -894,10 +885,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 							endTIme = sdf.parse(mplTimeSlotsModel.getFromTime());
 							searchTime = sdf.parse(timeWithOutDate);
 						}
-						catch (java.text.ParseException e)
+						catch (final Exception parseException)
 						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							LOG.info("parseException raing converrting time" + parseException.getMessage());
 						}
 						if (startTime.compareTo(searchTime) > 0 && endTIme.compareTo(searchTime) > 0
 								&& startTime.compareTo(searchTime) != 0 && endTIme.compareTo(searchTime) != 0)
