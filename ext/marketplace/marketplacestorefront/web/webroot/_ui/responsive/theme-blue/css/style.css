@@ -42461,7 +42461,34 @@ bottom:35px;
 	font-size: 28px;
     font-weight: 500;
 }
-
+.trending h2,.trending h3{
+	position: relative;
+    z-index: 2;
+    left: 50%;
+    margin: 60px 0 35px;
+    padding: 0 30px;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+.trending h2 span,.trending h3 span{
+	font-size: 28px;
+    line-height: 45px;
+    vertical-align: middle;
+    float: left;
+    font-weight: 500;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.trending h2::after,.trending h3::after{
+	clear: both;
+    content: "";
+    display: table;
+}
 
 @media (min-width: 791px){
 	.feature-categories h2{
@@ -42471,6 +42498,16 @@ bottom:35px;
 	.brands h2, .virtues h2{
 		padding: 40px 0 55px;
     	font-weight: 500;
+	}
+	.trending h2{
+		display: block;
+    	left: auto;
+    	-webkit-transform: none;
+    	-moz-transform: none;
+    	-ms-transform: none;
+    	-o-transform: none;
+    	transform: none;
+    	height: 50px;
 	}
 }
 /* Category Ends */
