@@ -739,6 +739,10 @@ public final class ModelAttributetConstants
 
 	public static final String PHONE_NUMBER = "phoneNumber";
 	public static final String ADDRESS_CHANGE_ELIGIBLE = "addressChangeEligible";
+	public static final String STRINGMEAASGE="stringMessage";
+	public static final String ORDERDETAIL="orderDetail";
+	public static final String TXNSCHEDULEDATA="txnScheduleData";
+	
 
 	public static final String SCHEDULE_TIMESLOTS = "timeSlots";
 	public static final String RETURNABLE_SLAVES = "returnableSlaves";
