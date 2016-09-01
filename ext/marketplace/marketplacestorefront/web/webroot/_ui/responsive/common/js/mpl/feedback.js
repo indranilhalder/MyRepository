@@ -1979,3 +1979,12 @@ $(document).ajaxComplete(function(){
 		$("body").find(".content-block-slider.electronic-brand-slider").removeClass("timeout-slider");
 	}
 });
+/*checkout login error start*/
+$(document).ready(function() {
+if ($(".global-alerts").length > 0){
+	$(".checkout-header.login").css("margin-top","0px");
+	$(".global-alerts").css("margin-top","98px");
+	
+}
+});
+/*checkout login error end */

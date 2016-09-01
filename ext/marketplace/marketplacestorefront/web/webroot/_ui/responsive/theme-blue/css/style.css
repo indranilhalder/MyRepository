@@ -45683,6 +45683,8 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header{
 }
  body.page-checkout-login .top.checkout-top .content ul{
  display:none;}
+ body.page-checkout-login .alert {
+ margin-bottom: 0px;}
 @media only screen and (max-width: 1450px){
 	body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header{
     padding: 20px 24px;
@@ -45782,6 +45784,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     margin: 0 auto;
     width: auto;
 }
+}
+body:not(.page-checkout-login) .checkout-header.login{
+	display:none;
 }
 
 /* checkout end */
