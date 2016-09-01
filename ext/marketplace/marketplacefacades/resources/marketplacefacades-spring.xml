@@ -1597,7 +1597,18 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="mplAddressValidatorImpl"
 		class="com.tis.mpl.facade.address.validator.MplAddressValidatorImpl">
     </bean>
+		<bean id="mplCODReturnPaymentInfoReversePopulator" class="com.tisl.mpl.facade.codpayment.populator.MplCODReturnPaymentInfoReversePopulator">
+	</bean>
 	
+	<alias name="defaultMplCODReturnPaymentInfoReverseConverter" alias="codReturnPaymentInfoReverseConverter"/>
+	<bean id="defaultMplCODReturnPaymentInfoReverseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.core.model.BankDetailsInfoToFICOHistoryModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplCODReturnPaymentInfoReversePopulator"/>
+			</list>
+		</property>
+	</bean>
 	<!-- close R2.3 Changes -->
 	
 </beans>
