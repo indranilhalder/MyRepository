@@ -157,8 +157,9 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 		final StringWriter stringWriter = new StringWriter();
 		if (null != client && null != configurationService)
 		{
-			webResource = client.resource(UriBuilder.fromUri(
-					configurationService.getConfiguration().getString("oms.returns.endpoint.url")).build());
+					webResource = client.resource(UriBuilder.fromUri(
+					configurationService.getConfiguration().getString("oms.returns.returninfo.url")).build());
+		}
 		}
 
 		try
