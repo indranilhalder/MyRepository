@@ -61,14 +61,14 @@
 				<%-- 	<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}"> --%>
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
 							src="//${staticHost}/_ui/responsive/common/images/transparent.png">
-						<span>On Offer</span>
+						<span>On<br>Offer</span>
 					</div>
 		         </c:if>
 				<c:if test="${product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
 							src="//${staticHost}/_ui/responsive/common/images/transparent.png">
-						<span>online exclusive</span>
+						<span>online<br>exclusive</span>
 					</div>
 				</c:if>
 
@@ -166,6 +166,31 @@
 							</form:form>
 						</div>
 					</c:if>
+					<!-- TPR-632 -->
+					<div class="productInfo">
+					<ul>
+						<!-- commented as part of defect fix - 3in1_box_178 -->
+						<%-- <li>Size : ${product.displaySize}</li> --%>
+						<!-- TISSTRT - 985  TISPRO-277::Size of footwear products are not displayed in SERP page-->
+						<c:if
+							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
+							                          || product.productCategoryType eq 'Footwear') }">
+
+
+							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
+							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+							</span></li>
+						</c:if>
+						<%-- <li>Color: ${product.swatchColor}</li> --%>
+						<c:if
+							test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'Electronics'}">
+							<li><span class="capacity-list">Capacity: <span class="size-col">${product.capacity}</span></span></li>
+						</c:if>
+						<c:if test="${not empty product.ratingCount}">
+							<li><span class="rating-list">Rating Count : <span class="size-col">${product.ratingCount}</span></span></li>
+						</c:if>
+					</ul>
+				</div>
 				</div>
 
 				<!-- Added for Addtocart -->
@@ -331,21 +356,21 @@
 				</c:if> --%>
 				<%-- <c:if
 					test="${not empty product.productCategoryType && product.productCategoryType == 'Clothing'}"> --%>
-				<div class="productInfo">
+				<%-- <div class="productInfo">
 					<ul>
 						<!-- commented as part of defect fix - 3in1_box_178 -->
-						<%-- <li>Size : ${product.displaySize}</li> --%>
+						<li>Size : ${product.displaySize}</li>
 						<!-- TISSTRT - 985  TISPRO-277::Size of footwear products are not displayed in SERP page-->
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
 							                          || product.productCategoryType eq 'Footwear') }">
 
 
-							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
-							<li class="product-size-list"><span class="product-size">Size:${product.displaySize}<%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+							<li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li>
+							<li class="product-size-list"><span class="product-size">Size:${product.displaySize}Price : ${product.displayPrice}### ${product.displayUrl}
 							</span></li>
 						</c:if>
-						<%-- <li>Color: ${product.swatchColor}</li> --%>
+						<li>Color: ${product.swatchColor}</li>
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'Electronics'}">
 							<li>Capacity: ${product.capacity}</li>
@@ -354,7 +379,7 @@
 							<li>Rating Count : ${product.ratingCount}</li>
 						</c:if>
 					</ul>
-				</div>
+				</div> --%>
 				<%-- </c:if> --%>
 
 			</div>

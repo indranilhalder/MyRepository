@@ -452,7 +452,7 @@ function navigateToPage(queryString,textString)
 				</div>
 				</div>
 			</c:if>
-		</div>
+		
 		
 		
 		
@@ -480,7 +480,7 @@ function navigateToPage(queryString,textString)
 								<input type="button" name ="submitPriceFilter" id ="applyCustomPriceFilter"	value="GO"/>
 						</form>							
 		</c:if>
-		
+		</div>
 		
 		
 		

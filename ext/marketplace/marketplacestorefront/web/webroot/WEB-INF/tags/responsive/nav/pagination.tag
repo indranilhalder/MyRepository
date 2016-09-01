@@ -78,13 +78,13 @@
 			<c:if test="${not empty searchPageData.sorts}">				
 				<c:if test="${ top}">
 					<!-- <div class="helper clearfix hidden-md hidden-lg"></div> -->
-					<div>
+					<div class="prolist-sort">
 					<div class="sort-refine-bar wrapped-form sort">
 					
 							<div class="form-group">
 								<form id="sortForm${top ? '1' : '2'}" name="sortForm${top ? '1' : '2'}" method="get" action="#">
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
-									<label class="sortBy">Sort by:</label>
+									<label class="sortBy">Sort by</label>
 									<select class="black-arrow" id="sortOptions${top ? '1' : '2'}" name="sort" onchange="sortByFilterResult(${top ? '1' : '2'})"> <!-- On change method added for TPR-198 -->
 										<option disabled><spring:theme code="${themeMsgKey}.sortTitle"/></option>
 										<c:forEach items="${searchPageData.sorts}" var="sort">
@@ -183,8 +183,7 @@
 					<div class="form-group wrapped-form view">
 
 				<form id="pageSize_form${top ? '1' : '2'}" name="pageSize_form${top ? '1' : '2'}" method="get" action="#" class="pageSizeForm">
-					<label for="pageSizeOptions${top ? '1' : '2'}">
-						<spring:theme code="${themeMsgKey}.display"/>:	</label>
+					<label for="pageSizeOptions${top ? '1' : '2'}"><spring:theme code="${themeMsgKey}.display"/></label>
 						<select class="black-arrow" id="pageSizeOptions${top ? '1' : '2'}" name="pageSize" class="pageSizeOptions" onchange="viewByFilterResult(${top ? '1' : '2'})">
 							<option value="24" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 24 ? 'selected="selected"' : ''}>24</option>
 							<option value="48" ${not empty searchPageData.pagination.pageSize and searchPageData.pagination.pageSize eq 48 ? 'selected="selected"' : ''}>48</option>
