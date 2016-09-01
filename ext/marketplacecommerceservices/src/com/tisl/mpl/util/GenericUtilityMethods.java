@@ -714,11 +714,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1019,6 +1019,7 @@ public class GenericUtilityMethods
 		String adobeProductSku = null;
 		String page_subCategory_name = null;
 		String cartTotal = null;
+		String page_subcategory_name_L3 = "";
 		final List<String> productBrandList = new ArrayList<String>();
 		final List<String> productCategoryList = new ArrayList<String>();
 		final List<String> productIdList = new ArrayList<String>();
@@ -1029,6 +1030,7 @@ public class GenericUtilityMethods
 		final List<String> productUnitPriceList = new ArrayList<String>();
 		final List<String> pageSubCategories = new ArrayList<String>();
 		final List<String> adobeProductSkuList = new ArrayList<String>();
+		final List<String> pageSubCategoriesL3 = new ArrayList<String>();
 
 		try
 		{
@@ -1098,6 +1100,11 @@ public class GenericUtilityMethods
 							page_subCategory_name = appendQuote((String) categoryStrings[1]);
 							pageSubCategories.add(page_subCategory_name);
 						}
+						if (categoryStrings.length >= 3)
+						{
+							page_subcategory_name_L3 = appendQuote((String) categoryStrings[2]);
+							pageSubCategoriesL3.add(page_subcategory_name_L3);
+						}
 						productBrandList.add(brand);
 						productCategoryList.add(category);
 						productIdList.add(sku);
@@ -1140,8 +1147,10 @@ public class GenericUtilityMethods
 				model.addAttribute("productSkuList", productSkuList);
 				model.addAttribute("productUnitPriceList", productUnitPriceList);
 				model.addAttribute("pageSubCategories", pageSubCategories);
+				model.addAttribute("pageSubCategoriesL3", pageSubCategoriesL3);
 				model.addAttribute("adobe_product", adobeProductSku);
 				model.addAttribute("cart_total", cartTotal);
+
 			}
 		}
 		catch (final Exception te)

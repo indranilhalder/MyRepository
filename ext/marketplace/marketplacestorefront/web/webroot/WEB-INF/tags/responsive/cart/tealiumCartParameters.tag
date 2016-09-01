@@ -4,6 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <input type="hidden" id="product_brand" value='${productBrandList}'/>
+<input type="hidden" id="page_subcategory_name_L3" value='${pageSubCategoriesL3}'/>
 <input type="hidden" id="page_subcategory_name" value='${pageSubCategories}'/>
 <input type="hidden" id="product_id" value='${productIdList}'/>
 <input type="hidden" id="product_category" value='${productCategoryList}'/>
