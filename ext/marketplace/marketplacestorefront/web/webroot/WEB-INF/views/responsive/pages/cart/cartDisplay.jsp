@@ -100,23 +100,35 @@
 
 	<div class="top block MyBag-pincode" id="pinCodeDispalyDiv">
 		<h2><spring:theme code="cart.delivery.options" /></h2>
-		<input type="hidden"  name = "defaultPinCodeIdsDefault" id= "defaultPinCodeIdsDefault"  value="${defaultPinCode}"/>
+		<%-- <input type="hidden"  name = "defaultPinCodeIdsDefault" id= "defaultPinCodeIdsDefault"  value="${defaultPinCode}"/>
 			<div id="defaultPinDiv">
 				<p><spring:theme code="product.pincode" /> 
 				<input id= "defaultPinCodeIdsq" name = "defaultPinCodeIdsq" style="font-weight: bold;" value="${defaultPinCode}"/></p> 
-				<a id="changePinAnchor" onClick="pinCodeDiv()">Change </a>
-			</div>
-			
+				<input id="pin" type="text" value="${defaultPinCode}" maxlength="6" onkeypress="return isNum(event)"/>
+				<a id="changePinAnchor" onClick="pinCodeDiv()">Change </a> 
+				<!-- <button class="orange submit" id="pdpPincodeCheck"  onClick="pinCodeDiv()">Change Pincode</button> -->
+			</div> --%>
 			<div id="changePinDiv">
-				<p><spring:theme code="product.pincode.input" /></p>
-				<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
-				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit');"><spring:theme code="product.submit"/></button>
+				<%-- <p><spring:theme code="product.pincode.input" /></p> --%>
+				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p>
+				<p id="unserviceablepincode"></p>
+				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
+				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
+				<c:choose>
+		 		<c:when test="${not empty defaultPinCode}">
+				<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+				</c:when>
+		   		 <c:otherwise>
+		    	<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+		   		</c:otherwise>
+				 </c:choose>
+				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit');"><spring:theme code="text.submit"/></button>
 			</div>
 		
 		
 		
-		<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
-		<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
+		<%-- <p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
+		<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p> --%>
 		
 		
 	</div>

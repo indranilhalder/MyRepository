@@ -35,15 +35,14 @@
 				<c:if test="${!product.isOnlineExclusive && product.isOfferExisting}">
 					<div style="z-index: 2;" class="on-sale">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="//${staticHost}/_ui/responsive/common/images/transparent.png"> <span>On Offer</span>
+							src="//${staticHost}/_ui/responsive/common/images/transparent.png"><span>On<br>Offer</span>
 					</div>
 				</c:if>
 				
 				<c:if test="${product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="//${staticHost}/_ui/responsive/common/images/transparent.png"> <span>online
-							exclusive</span>
+							src="//${staticHost}/_ui/responsive/common/images/transparent.png"><span>online<br>exclusive</span>
 					</div>
 				</c:if>
 
@@ -111,6 +110,26 @@
 
 			</div>
 			</c:if>
+			<!-- TPR-523 -->
+			<div class="productInfo">
+					<ul>
+						<!-- commented as part of defect fix - 3in1_box_178 -->
+						<%-- <li>Size : ${product.displaySize}</li> --%>
+						<c:if
+						test="${not empty product.productCategoryType && product.isVariant && product.productCategoryType eq 'Apparel'}">
+						
+						 <li class="product-size-list"><span class="product-size">Size : <span class="size-col">${product.displaySize}</span></span></li>
+						 </c:if>
+						<%-- <li>Color: ${product.swatchColor}</li> --%>
+						<c:if
+							test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'Electronics'}">
+							<li><span class="capacity-list">Capacity: <span class="size-col">${product.capacity}</span></span></li>
+						</c:if>
+						<c:if test="${not empty product.ratingCount}">
+							<li><span class="rating-list">Rating Count : <span class="size-col">${product.ratingCount}</span></span></li>
+						</c:if>
+					</ul>
+				</div>
 			
 </div>	
 			<!-- Added for Addtocart -->
@@ -190,16 +209,16 @@
 				</c:if> --%>
 				<%-- <c:if
 					test="${not empty product.productCategoryType && product.productCategoryType == 'Clothing'}"> --%>
-				<div class="productInfo">
+				<%-- <div class="productInfo">
 					<ul>
 						<!-- commented as part of defect fix - 3in1_box_178 -->
-						<%-- <li>Size : ${product.displaySize}</li> --%>
+						<li>Size : ${product.displaySize}</li>
 						<c:if
 						test="${not empty product.productCategoryType && product.isVariant && product.productCategoryType eq 'Apparel'}">
 						
 						 <li class="product-size-list"><span class="product-size">Size : ${product.displaySize}</span></li>
 						 </c:if>
-						<%-- <li>Color: ${product.swatchColor}</li> --%>
+						<li>Color: ${product.swatchColor}</li>
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'Electronics'}">
 							<li>Capacity: ${product.capacity}</li>
@@ -208,7 +227,7 @@
 							<li>Rating Count : ${product.ratingCount}</li>
 						</c:if>
 					</ul>
-				</div>
+				</div> --%>
 				<%-- </c:if> --%>
 
 			</div>
