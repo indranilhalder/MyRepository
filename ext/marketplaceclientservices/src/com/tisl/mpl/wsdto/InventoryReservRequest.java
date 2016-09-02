@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "invReserve", propOrder =
-{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode" ,"ServiceableSlaves"})
+{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode","transportMode","ServiceableSlaves"})
 public class InventoryReservRequest
 {
 	@XmlElement(name = "ussId")
@@ -37,6 +37,10 @@ public class InventoryReservRequest
 	
 	@XmlElement(name = "ServiceableSlaves")
 	private List<ServiceableSlavesDTO> ServiceableSlaves;
+	
+	@XmlElement(name = "transportMode")
+	private String transportMode;
+	
 	
 
 	/**
@@ -181,5 +185,19 @@ public class InventoryReservRequest
 		ServiceableSlaves = serviceableSlaves;
 	}
 
+	/**
+	 * @return the transportMode
+	 */
+	public String getTransportMode()
+	{
+		return transportMode;
+	}
 
+	/**
+	 * @param transportMode the transportMode to set
+	 */
+	public void setTransportMode(String transportMode)
+	{
+		this.transportMode = transportMode;
+	}
 }

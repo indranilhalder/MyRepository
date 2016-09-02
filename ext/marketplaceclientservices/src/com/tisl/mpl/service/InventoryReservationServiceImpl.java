@@ -122,6 +122,13 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				{
 					reqObj.setQuantity(cartObj.getQuantity().toString());
 				}
+				
+				if (cartObj.getTransportMode() != null)
+				{
+					reqObj.setTransportMode(cartObj.getTransportMode().toString());
+				}
+				
+				
 				// Added code for Inventory Reservation Request change
 				if ((null != cartObj.getServiceableSlaves() && cartObj.getServiceableSlaves().size() > 0))
 				{

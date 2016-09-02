@@ -101,6 +101,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.model.BrandModel;
@@ -3438,6 +3439,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					if (null != cartEntryModel ){
 						if(cartEntryModel.getSelectedUSSID().equalsIgnoreCase(dataObj.getUSSID())){
 							cartEntryModel.setFulfillmentMode(dataObj.getFulfillmentType());
+							cartEntryModel.setFulfillmentType(dataObj.getFulfillmentType());
 						//	cartEntryModel.setFulfillmentTypeP1(dataObj.getFulfillmentType());
 						//	cartEntryModel.setFulfillmentTypeP2(dataObj.getFulfillmentType());
 						}
@@ -3797,6 +3799,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								{
 									LOG.debug("populateDataForSoftReservation :  Fulfillment type not received for the "
 											+ entryModel.getSelectedUSSID());
+								}
+								
+
+								if(richAttributeModel != null && richAttributeModel.get(0) != null
+										&& richAttributeModel.get(0).getShippingModes() != null
+										&& richAttributeModel.get(0).getShippingModes().getCode() != null){
+								cartSoftReservationData.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(richAttributeModel.get(0).getShippingModes().getCode().toUpperCase()));
 								}
 							}
 						}

@@ -202,29 +202,16 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				LOG.debug("CustomOmsOrderLinePopulator : FulfillmentMode  is null ");
 			}
 			// Added the fields for OMS Order create
-			if (richAttributeModel.get(0).getDeliveryFulfillModes() != null
-					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-
-			{
-				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
-             if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
-            	   if(richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase().equalsIgnoreCase(MarketplaceomsservicesConstants.TSHIP)){
-            	   	target.setFulfillmentTypeP1(MarketplaceomsservicesConstants.SSHIP);
-            	   }else{
-            	   	target.setFulfillmentTypeP1(MarketplaceomsservicesConstants.TSHIP);
-            	   }
-             }else{
-            	 target.setFulfillmentTypeP1(richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase()); 
-             }
-				
-			}
-			else
-			{
-				LOG.debug("CustomOmsOrderLinePopulator : FulfillmentTypeP1  is null ");
-			}
-			
 			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
+
+			{
+				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
+            	   	target.setFulfillmentTypeP1(fulfilmentType);
+         }
+			
+				if (richAttributeModel.get(0).getDeliveryFulfillModes() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
 
 			{
 				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
@@ -235,7 +222,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
            	   	target.setFulfillmentTypeP2(MarketplaceomsservicesConstants.TSHIP);
            	   }
             }else{
-           	 target.setFulfillmentTypeP2(richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase()); 
+           	 target.setFulfillmentTypeP2(fulfilmentType); 
             }
 			}
 			else
