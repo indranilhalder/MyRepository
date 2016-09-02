@@ -74,7 +74,7 @@ function generateOTP(orderId){
 	     $(".otpError").text("Invalid OTP, Please Re-enter.");
    } else{
 		$.ajax({
-			type : "POST",
+			type : "GET",
 			url : ACC.config.encodedContextPath + "/my-account/validationOTP",
 			data : "orderId=" + orderId + "&otpNumber="+$("#OTP").val(),
 			success : function(response) {
