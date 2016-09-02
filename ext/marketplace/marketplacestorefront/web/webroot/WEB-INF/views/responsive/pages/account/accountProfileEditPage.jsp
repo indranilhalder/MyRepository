@@ -293,7 +293,6 @@
 				<!-- End of Update Password -->
 			
 				<!-- Update NickName -->
-			
 				<div class="nickname">
 					<h2><spring:theme code="profile.Nickname" text="Nickname"/></h2>
 					<p><spring:theme code="profile.Nickname.details" text="What's your alter ego called?"/></p>
@@ -321,4 +320,3 @@
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript"
 	src="${commonResourcePath}/js/acc.accountaddress.js"></script> --%>
-
