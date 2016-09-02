@@ -422,8 +422,8 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				/*TPR-643 starts*/
 				utag.link({
 					link_obj: this, 
-					link_text: 'pdp_image_zoom' , 
-					event_type : 'pdp_image_zoom' 
+					link_text: 'pdp_image_click' , 
+					event_type : 'pdp_image_click' 
 				});
 				/*TPR-643 ends*/
 			}
