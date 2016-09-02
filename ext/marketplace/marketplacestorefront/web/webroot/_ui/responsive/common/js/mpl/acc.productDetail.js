@@ -1564,7 +1564,13 @@ $( document ).ready(function() {
 				 $("#pdpPincodeCheckDList").show();
 				 $("#buyNowButton").attr("disabled",true);
 			}
+		},
+		// For buybox seller and other seller in PDP
+		//TPR-429
+		complete: function() {
+			differentiateSeller();
 		}
+		
 	});
 //}
 	$(".size-guide").click(function(){
