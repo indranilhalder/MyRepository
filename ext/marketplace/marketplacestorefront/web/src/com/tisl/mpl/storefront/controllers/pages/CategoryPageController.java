@@ -16,6 +16,7 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorservices.data.RequestContextData;
+import de.hybris.platform.acceleratorservices.storefront.data.MetaElementData;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
@@ -41,6 +42,7 @@ import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,6 +70,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -421,7 +424,29 @@ public class CategoryPageController extends AbstractCategoryPageController
 				final String categoryName = category.getName();
 
 
-				setUpMetaDataForContentPage(model, categoryLandingPage);
+				//(TPR-243) SEO Meta Tags and Titles for Landing Page *: starts
+
+				final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(category.getSeoContents());
+				String metaKeywords = null;
+				String metaDescription = null;
+				String metaTitle = null;
+
+				if (CollectionUtils.isEmpty(seoContent))
+				{
+					setUpMetaDataForContentPage(model, categoryLandingPage);
+
+				}
+				/*
+				 * (TPR-243) SEO Meta Tags and Titles for Landing Page *: ends else
+				 */
+				else
+				{
+					metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
+					metaDescription = seoContent.get(seoContent.size() - 1).getSeoMetaDescription();
+					metaTitle = seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
+					setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
+					updatePageTitle(model, metaTitle);
+				}
 
 				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 						getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
@@ -836,27 +861,32 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		/* (TPR-243) SEO Meta Tags and Titles for Listing Page */
 
-		//		final SeoContentModel seoContent = category.getSeoContent();
-		//		String metaKeywords = null;
-		//		String metaDescription = null;
-		//		String metaTitle = null;
-		//		if (null != seoContent)
-		//		{
-		//
-		//			metaKeywords = seoContent.getSeoMetaKeyword();
-		//			metaDescription = seoContent.getSeoMetaDescription();
-		//			metaTitle = seoContent.getSeoMetaTitle();
-		//		}
-		//		//metaKeywords = MetaSanitizerUtil.sanitizeKeywords(metaKeywords);
-		//		//	metaDescription = MetaSanitizerUtil.sanitizeDescription(metaDescription);
-		//		setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
-		//		updatePageTitle(model, metaTitle);
-		//		final List<Breadcrumb> breadcrumbs = getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, searchPageData);
-		//		populateTealiumData(breadcrumbs, model);
-		//		return getViewPage(categorySearch.getCategoryPage());
-		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(category.getKeywords());
-		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(category.getDescription());
-		setUpMetaData(model, metaKeywords, metaDescription);
+		final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(category.getSeoContents());
+		String metaKeywords = null;
+		String metaDescription = null;
+		String metaTitle = null;
+		if (CollectionUtils.isEmpty(seoContent))
+		{
+
+			metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
+			metaDescription = seoContent.get(seoContent.size() - 1).getSeoMetaDescription();
+			metaTitle = seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
+			setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
+			updatePageTitle(model, metaTitle);
+		}
+
+
+
+		else
+		{
+
+			metaKeywords = MetaSanitizerUtil.sanitizeKeywords(category.getKeywords());
+			metaDescription = MetaSanitizerUtil.sanitizeDescription(category.getDescription());
+			updatePageTitle(category, searchPageData.getBreadcrumbs(), model);
+			setUpMetaData(model, metaKeywords, metaDescription);
+
+		}
+
 		final List<Breadcrumb> breadcrumbs = getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, searchPageData);
 		populateTealiumData(breadcrumbs, model);
 		return getViewPage(categorySearch.getCategoryPage());
@@ -885,6 +915,32 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//	{
 	//		model.addAttribute("metaPageTitle", metaTitle);
 	//	}
+
+
+	/* changes for metaData content - (TPR-243) SEO Meta Tags and Titles */
+	/**
+	 * @param model
+	 * @param metaKeywords
+	 * @param metaDescription
+	 * @param metaTitle
+	 */
+	private void setUpMetaDataForSeo(final Model model, final String metaKeywords, final String metaDescription,
+			final String metaTitle)
+	{
+		final List<MetaElementData> metadata = new LinkedList<>();
+		metadata.add(createMetaElement("keywords", metaKeywords));
+		metadata.add(createMetaElement("description", metaDescription));
+		//metadata.add(createMetaElement("title", metaTitle));
+		model.addAttribute("metatags", metadata);
+
+	}
+
+	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
+	private void updatePageTitle(final Model model, final String metaTitle)
+	{
+		model.addAttribute("metaPageTitle", metaTitle);
+	}
+
 
 
 	/**
