@@ -7084,12 +7084,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 
-	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method = {RequestMethod.POST, RequestMethod.GET})
 	public String changeDeliveryAddress(@PathVariable final String orderCode,
 			@ModelAttribute("addressForm") final AccountAddressForm addressForm, Model model) throws CMSItemNotFoundException
 	{
 		String errorMsg = mplAddressValidator.validate(addressForm);
-
 		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCCESS))
 		{
 			AddressData addressData = new AddressData();
@@ -7202,7 +7201,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = RequestMethod.POST)
+	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = {RequestMethod.POST, RequestMethod.GET})
 	public String submitChangeDeliveryAddress(@RequestParam(value = "orderId") final String orderId,
 			@RequestParam(value = "otpNumber") final String enteredOTPNumber,Model model)
 	{
@@ -7218,7 +7217,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		return ControllerConstants.Views.Pages.Account.OTPPopup;
 	}
 
-	@RequestMapping(value = RequestMappingUrlConstants.NEW_OTP_GENERATE, method = RequestMethod.POST)
+	@RequestMapping(value = RequestMappingUrlConstants.NEW_OTP_GENERATE, method ={RequestMethod.POST, RequestMethod.GET})
 	@ResponseBody
 	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
 	{
@@ -7229,7 +7228,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	@RequestMapping(value = RequestMappingUrlConstants.RESCHEDULEDDELIVERYDATE, method = RequestMethod.POST)
+	@RequestMapping(value = RequestMappingUrlConstants.RESCHEDULEDDELIVERYDATE, method = {RequestMethod.POST, RequestMethod.GET})
 	public String scheduledDeliveryDate(@PathVariable final String orderCode,
 			@RequestParam(value = "entryData") final String entryData)
 	{
