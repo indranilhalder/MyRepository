@@ -40397,8 +40397,8 @@ body .account .track{
 	background: #fff;
 	border-radius: 5px;
 	padding: 10px 10px 50px 10px;
+	width: 653px;
 }
-
 #showTrackOrder .modal-dialog .trackPopupText {
 	color: #333;
 	font-size: 10px;
@@ -40436,7 +40436,6 @@ body .account .track{
 #showTrackOrder .modal-dialog h4 {
 	width: 95%;
 	font-size: 24px;
-	padding-bottom: 30px;
 }
 
 #showTrackOrder .modal-dialog .close {
@@ -40447,6 +40446,12 @@ body .account .track{
 	border: 1px solid #ccc;
 	margin-top:18px !important;
     margin-right:-10px !important;
+}
+
+@media screen and (max-width: 620px){
+#showTrackOrder .modal-dialog {
+		width: auto !important;
+	}
 }
 
 /* Track Order PopUp end */
