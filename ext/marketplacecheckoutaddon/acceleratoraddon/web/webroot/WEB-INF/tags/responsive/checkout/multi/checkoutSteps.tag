@@ -16,7 +16,15 @@
     		<h1>Login / Sign Up</h1>
   		</div>
 		</nav>
-			<ul class="nav">
+		<div class="container-address nav">
+    <div class="progress-barcheck">
+      <div class="progress-barg"><span class="step2"></span></div>
+      <div class="step-1 finish"><a href="checkout-delivery.html">delivery <i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
+      <div class="step-2 inprogress active"><a href="checkout-combination.html">address&nbsp;<i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
+      <div class="step-3 finalstep "><a href="checkout-payment.html">Payment&nbsp;<i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
+    </div>
+  </div>
+			<%-- <ul class="nav">
 				<c:forEach items="${checkoutSteps}" var="checkoutStep"
 					varStatus="status">
 					<c:url value="${checkoutStep.url}" var="stepUrl" />
@@ -25,7 +33,7 @@
 							<c:set scope="page" var="activeCheckoutStepNumber"
 								value="${checkoutStep.stepNumber}" />
 							<li class="sign-in active">
-								<%-- <a href="${stepUrl}" class="step-head js-checkout-step active"> --%>
+								<a href="${stepUrl}" class="step-head js-checkout-step active">
 								<span>${checkoutStep.stepNumber}.</span>&nbsp;<spring:theme
 									code="checkout.multi.${checkoutStep.progressBarId}" /> <!-- 	</a> -->
 
@@ -34,7 +42,7 @@
 						<c:when
 							test="${checkoutStep.stepNumber > activeCheckoutStepNumber}">
 							<li class="delivery">
-								<%-- 	<a href="${stepUrl}" class="step-head js-checkout-step "> --%>
+									<a href="${stepUrl}" class="step-head js-checkout-step ">
 								<span>${checkoutStep.stepNumber}.</span>&nbsp;<spring:theme
 									code="checkout.multi.${checkoutStep.progressBarId}" /> <!-- 	</a> -->
 
@@ -63,7 +71,7 @@
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
-			</ul>
+			</ul> --%>
 		</div>
 	</div>
 	<c:forEach items="${checkoutSteps}" var="checkoutStep"
