@@ -216,7 +216,7 @@ function checkPopupDataOrderHistory() {
 				    	  $(".mobileNumberError").show();
 				          $(".mobileNumberError").text("Enter correct mobile number");
 				          validate = false;
-				  	} if(pincode.length < 1 && pincode.length > 6){
+				  	} if(pincode.length < 6 ){
 				    	  $(".pincodeNoError").show();
 				          $(".pincodeNoError").text("Enter correct pincode");
 				          validate = false;
@@ -299,7 +299,7 @@ $(document).ready(function() {
 
 function newOTPGenerate(orderCode){
 	 $.ajax({
-			type : "POST",
+			type : "GET",
 			url : ACC.config.encodedContextPath + "/my-account/newOTP",
 			data :"orderCode="+orderCode,
 			success : function(response) {
