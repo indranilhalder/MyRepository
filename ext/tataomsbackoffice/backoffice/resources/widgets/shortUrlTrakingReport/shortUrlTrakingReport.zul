@@ -46,10 +46,10 @@
 				</panelchildren>
 			</panel>
 			<panel
-				style="max-height:80%;height:75%;border-bottom:3px solid #27394f;border:none">
+				style="max-height:70%;height:60%;border-bottom:3px solid #27394f;border:none">
 				<panelchildren>
 					<listbox id="listBoxData" multiple="true"
-						mold="paging" rows="12" checkmark="false"
+						mold="paging" pageSize="15" checkmark="false"
 						emptyMessage="No result found in the result">
 						<listhead sizable="true">
 							<listheader style="text-align:left"

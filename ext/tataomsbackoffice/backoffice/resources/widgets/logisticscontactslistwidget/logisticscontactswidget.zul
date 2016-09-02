@@ -8,35 +8,34 @@
 	<button id="deleteItem" style="height:30px"
 		image="${wr}/images/delete-icon.png">
 	</button>
-	<listbox id="listview" rows="6"
-		emptyMessage="No result found in the result" mold="paging"
-		pagingPosition="top" pageSize="6">
+	<listbox id="listview" mold="paging" pageSize="10"
+		emptyMessage="No result found in the result" >
 		<listhead sizable="true">
-			<listheader width="150px" style="text-align:left"
-				label="LOGISTICS ID">
+			<listheader width="200px" style="text-align:left"
+				label="LOGISTICS ID" >
 			</listheader>
-			<listheader width="150px" style="text-align:left"
+			<listheader width="200px" style="text-align:left"
 				label="LOGISTICS NAME">
 			</listheader>
-			<listheader width="150px" style="text-align:left"
+			<listheader width="200px" style="text-align:left"
 				label="Is Scheduled">
 			</listheader>
-			<listheader width="150px" style="text-align:left"
+			<listheader width="200px" style="text-align:left"
 				label="ACTIVE">
 			</listheader>
-			<listheader width="150px" style="text-align:left"
+			<listheader width="200px" style="text-align:left"
 				label="ADDRESS">
 			</listheader>
-			<listheader width="150px" style="text-align:left"
+			<listheader width="200px" style="text-align:left"
 				label="CONTACT NAME">
 			</listheader>
-			<listheader width="150px" style="text-align:left"
+			<listheader width="200px" style="text-align:left"
 				label="CONTACT PHONE NO">
 			</listheader>
-			<listheader width="150 px" style="text-align:left"
-				label="CONTACT EMAIL">
+			<listheader  width="200px" style="text-align:left"
+				label="CONTACT EMAIL" >
 			</listheader>
-			<listheader width="150 px" style="text-align:left"
+			<listheader  width="200px" style="text-align:left"
 				label="CONTACT FAX">
 			</listheader>
 		</listhead>

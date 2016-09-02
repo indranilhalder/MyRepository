@@ -17,7 +17,7 @@
 				<panelchildren>
 
 					<listbox id="listBoxData" multiple="true"
-						checkmark="false"  rows="10" emptyMessage="No result found in the result">
+						checkmark="false"  mold="paging" pageSize="10" emptyMessage="No result found in the result">
 
 						<listhead sizable="true">
 							<listheader style="text-align:left"

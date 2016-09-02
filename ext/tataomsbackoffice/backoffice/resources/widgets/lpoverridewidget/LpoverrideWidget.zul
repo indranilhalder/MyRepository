@@ -95,7 +95,7 @@
 				<panelchildren>
                    <label value="@bind(vm.responseMeassage)" visible="@bind(vm.showMessage)"></label>
 					<listbox model="@bind(vm.listOfTransactions)"
-						id="listBoxData" mold="paging" rows="10"
+						id="listBoxData" mold="paging" pageSize="8" pagingPosition="top"
 						emptyMessage="No result found in the result">
 
 						<listhead sizable="true">

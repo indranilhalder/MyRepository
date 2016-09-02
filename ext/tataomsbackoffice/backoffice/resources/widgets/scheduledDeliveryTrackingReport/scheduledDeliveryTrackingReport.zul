@@ -16,8 +16,8 @@
 				style="max-height:70%;height:70%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
 				<panelchildren>
 
-					<listbox id="listBoxData" multiple="true"
-						checkmark="false" emptyMessage="No result found in the result" rows="10">
+					<listbox id="listBoxData" multiple="true" mold="paging" pageSize="10"
+						checkmark="false" emptyMessage="No result found in the result" >
 
 						<listhead sizable="true">
 							<listheader style="text-align:left"

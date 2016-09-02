@@ -74,10 +74,10 @@
 				</panelchildren>
 			</panel>
 			<panel
-				style="max-height:60%;height:60%;border-bottom:3px solid #27394f;border:none">
+				style="max-height:60%;height:55%;border-bottom:3px solid #27394f;border:none">
 				<panelchildren>
                
-					<listbox id="listBoxData"   rows="10"
+					<listbox id="listBoxData"  rows="10"
 						checkmark="true" emptyMessage="No result found in the result">
 						<listhead sizable="true">
 							<listheader style="text-align:left"

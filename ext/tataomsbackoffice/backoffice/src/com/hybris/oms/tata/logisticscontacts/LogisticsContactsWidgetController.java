@@ -5,7 +5,8 @@ package com.hybris.oms.tata.logisticscontacts;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
@@ -24,17 +25,16 @@ import com.hybris.oms.tata.renderer.LogisticsContactsListItemRenderer;
 
 /**
  * Controller Class to do CRUD operation to the LogisticsController
- * 
+ *
  * @author Saood
- * 
+ *
  */
 public class LogisticsContactsWidgetController extends DefaultWidgetController
 {
-	@Autowired
-	private LogisticsFacade logisticsRestClient;
 
 	@WireVariable("logisticsRestClient")
 	private LogisticsFacade logisticsFacade;
+	private static final Logger LOG = LoggerFactory.getLogger(LogisticsContactsWidgetController.class);
 
 	// listbox to capture one row
 	private Listbox listview;
@@ -54,9 +54,9 @@ public class LogisticsContactsWidgetController extends DefaultWidgetController
 
 	/**
 	 * This is a method to capture the event which is generated at the time of clicking of the Add symbol.
-	 * 
+	 *
 	 * @event ON_Click
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	@ViewEvent(componentID = "createItem", eventName = Events.ON_CLICK)
@@ -69,9 +69,9 @@ public class LogisticsContactsWidgetController extends DefaultWidgetController
 
 	/**
 	 * This is a method to capture the event which is generated at the time of clicking of the Edit symbol.
-	 * 
+	 *
 	 * @event ON_Click
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	@ViewEvent(componentID = "editItem", eventName = Events.ON_CLICK)
@@ -91,9 +91,9 @@ public class LogisticsContactsWidgetController extends DefaultWidgetController
 
 	/**
 	 * This is a method to capture the event which is generated at the time of clicking of the Delete symbol.
-	 * 
+	 *
 	 * @event ON_Click
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	@ViewEvent(componentID = "deleteItem", eventName = Events.ON_CLICK)
@@ -113,8 +113,8 @@ public class LogisticsContactsWidgetController extends DefaultWidgetController
 							if (evt.getName().equals("onOK"))
 							{
 								final Logistics logistics = (Logistics) listview.getSelectedItem().getValue();
-								logisticsRestClient.deleteLogistics(logistics.getLogisticsid());
-								final List<Logistics> logisticsContacts = (List<Logistics>) logisticsRestClient.getAll();
+								logisticsFacade.deleteLogistics(logistics.getLogisticsid());
+								final List<Logistics> logisticsContacts = (List<Logistics>) logisticsFacade.getAll();
 
 								//setting all the logistics contact value in a ListModelList to display it in zul
 								listview.setModel(new ListModelList(logisticsContacts));
@@ -137,7 +137,7 @@ public class LogisticsContactsWidgetController extends DefaultWidgetController
 
 	/**
 	 * getting the list items while adding
-	 * 
+	 *
 	 * @param logistics
 	 * @throws InterruptedException
 	 */
@@ -148,8 +148,7 @@ public class LogisticsContactsWidgetController extends DefaultWidgetController
 		if (logistics.booleanValue())
 		{
 			//getting the logistics Contacts
-			final List<Logistics> logisticsContacts = (List<Logistics>) logisticsRestClient.getAll();
-
+			final List<Logistics> logisticsContacts = (List<Logistics>) logisticsFacade.getAll();
 			listview.setModel(new ListModelList(logisticsContacts));
 			listview.setItemRenderer(new LogisticsContactsListItemRenderer());
 		}
@@ -169,7 +168,7 @@ public class LogisticsContactsWidgetController extends DefaultWidgetController
 		if (logistics_edit.booleanValue())
 		{
 			//getting the logistics Contacts
-			final List<Logistics> logistics = (List<Logistics>) logisticsRestClient.getAll();
+			final List<Logistics> logistics = (List<Logistics>) logisticsFacade.getAll();
 
 			listview.setModel(new ListModelList(logistics));
 			listview.setItemRenderer(new LogisticsContactsListItemRenderer());

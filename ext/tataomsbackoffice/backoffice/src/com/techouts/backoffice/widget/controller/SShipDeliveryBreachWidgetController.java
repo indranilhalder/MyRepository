@@ -178,7 +178,7 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 						&& sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUSONE)
 						|| sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUSTWO))
 				{
-					throw new InvalideOrderCancelException("this Order is Allready Canceld ");
+					throw new InvalideOrderCancelException("This order is already cancelled ");
 				}
 				orderCancelCheckRequest.setOrderId(sshipTxnOrder.getOrderId());
 				orderCancelCheckRequest.setTransactionId(sshipTxnOrder.getOrderLineId());
@@ -217,7 +217,7 @@ public class SShipDeliveryBreachWidgetController extends DefaultWidgetController
 											&& sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUSONE)
 											|| sshipTxnOrder.getOrderLineStatus().equalsIgnoreCase(ORDERSTATUSTWO))
 									{
-										throw new InvalideOrderCancelException("this Order is Allready Canceld ");
+										throw new InvalideOrderCancelException("This order is already cancelled");
 									}
 
 									final CancelOrderLine cancelOrderLine = new CancelOrderLine();
