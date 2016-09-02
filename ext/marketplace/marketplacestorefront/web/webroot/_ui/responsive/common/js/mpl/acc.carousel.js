@@ -407,7 +407,6 @@ ACC.carousel = {
 				lazyLoad:true*/
 			});
 		},4000);
-
 	},
 	
 	myReviewCarousel: function(){
@@ -490,5 +489,4 @@ ACC.carousel = {
 	
 
 };
-
 
