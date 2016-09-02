@@ -418,6 +418,14 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				    zoomWindowFadeIn: 500,
 				    zoomWindowFadeOut: 750
 				       });
+			
+				/*TPR-643 starts*/
+				utag.link({
+					link_obj: this, 
+					link_text: 'pdp_image_zoom' , 
+					event_type : 'pdp_image_zoom' 
+				});
+				/*TPR-643 ends*/
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");
@@ -1878,6 +1886,16 @@ function populateEMIDetailsForPDP(){
 		var selectedBank = $('#bankNameForEMI :selected').text();
 		var contentData = '';
 		if (selectedBank != "select") {
+			
+			/*TPR-641 starts*/
+			emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").toLowerCase();
+			utag.link({
+				link_obj: this, 
+				link_text: emiBankSelectedTealium , 
+				event_type : 'emi_option_selected'
+			});
+			/*TPR-641 ends*/
+			
 			var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
 			$.ajax({
 				url : ACC.config.encodedContextPath + "/p-getTerms",
