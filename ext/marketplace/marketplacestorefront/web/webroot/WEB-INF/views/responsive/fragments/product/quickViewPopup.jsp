@@ -261,8 +261,7 @@ tr.d0 td {
  	// var avgrating = '${product.averageRating}';
  		//alert(":-:"+avgrating);
  		
- }
- 	  
+ }	  
  </script>
  <style type="text/css">
 tr.d0 td {
@@ -478,23 +477,7 @@ display:none;
 <a href="#" class="gig--readReviewsLink"></a>
 	<span id="gig-rating-readReviewsLink_quick" ></span>	
   <input type="hidden" id="rating_review" value="${product.code}">
-		 <ul class="star-review" id="quick_view_rating">
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
 		
-		<%-- 	<c:choose>
-				<c:when test="${not empty product.ratingCount}">
-			
-					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
-				</c:when>
-				<c:otherwise> --%>
-					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span>
-				<%-- </c:otherwise>
-			</c:choose> --%>
-			</ul> 
 			
 <!-- 			 <script>
 				var avgrating = '${product.averageRating}';
@@ -513,19 +496,7 @@ display:none;
 				
 			</script>  -->
  
- 	<div class="fullfilled-by">
-		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
-		<%-- <c:choose>
-		<c:when test="${fn:toLowerCase(fullfilmentType) == fn:toLowerCase('sship')}">
-			<span id="fullFilledById">${sellerName}</span>
-		</c:when>
-		<c:otherwise>
-			<span id="fullFilledById"><spring:theme code="product.default.fulfillmentType"/></span>
-		</c:otherwise>
-		</c:choose> --%>
-		<span id="fulFilledByTshipQuick" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
-			<span id="fulFilledBySshipQuick"  style="display:none;"></span>
-	</div>
+ 	
    <div class="product-content" style="margin-top:15px;">
 	   <div class="swatch">
 	<product:viewQuickViewVariant/>
@@ -617,7 +588,37 @@ display:none;
 				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			</span>				
 	<%-- </c:if> --%>
-	</ycommerce:testId>    
+	</ycommerce:testId> 
+	<div class="fullfilled-by">
+		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
+		<%-- <c:choose>
+		<c:when test="${fn:toLowerCase(fullfilmentType) == fn:toLowerCase('sship')}">
+			<span id="fullFilledById">${sellerName}</span>
+		</c:when>
+		<c:otherwise>
+			<span id="fullFilledById"><spring:theme code="product.default.fulfillmentType"/></span>
+		</c:otherwise>
+		</c:choose> --%>
+		<span id="fulFilledByTshipQuick" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+			<span id="fulFilledBySshipQuick"  style="display:none;"></span>
+	</div>
+	 <ul class="star-review" id="quick_view_rating">
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+		
+		<%-- 	<c:choose>
+				<c:when test="${not empty product.ratingCount}">
+			
+					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
+				</c:when>
+				<c:otherwise> --%>
+					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span>
+				<%-- </c:otherwise>
+			</c:choose> --%>
+			</ul>    
 <!-- adding to wishlist -->
 				<ul class="wish-share">
 					<li><!-- <span id="addedMessage" style="display:none"></span> -->
