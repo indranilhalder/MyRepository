@@ -46,9 +46,10 @@
 			<!----- Right Navigation ENDS --------->
 			<div class="right-account">
 				<div class="info card-list">
-					<h1>
+					<h2>
 						<spring:theme code="text.account.SavedCards" text="Saved Cards" /><span><spring:theme code="text.account.SavedCards.details" text="Add, delete and manage your credit/debit card details here." /></span>
-					</h1>
+					</h2>
+					
 					<ul class="saved-cards">
 					
 						<c:choose>
