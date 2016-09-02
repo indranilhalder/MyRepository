@@ -1117,6 +1117,18 @@ $(function() {
 												$('#buyNowButton').attr("disabled",true);
 												//TPR-794
 												$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+												
+												/*TPR-642*/
+												utag.link({
+													link_obj: this, 
+													link_text: 'pdp_pincode_check_failure' , 
+													event_type : 'pdp_pincode_check' , 
+													pdp_pin_sku : productCode, 
+													pdp_pin_status : 'not_servicable', 
+													pdp_pin_value : pin, 
+													pdp_pin_delivery : 'error'
+												});
+											/*TPR-642 ends*/
 												return false;
 											}
 											// check if oms service is down
@@ -1130,11 +1142,24 @@ $(function() {
 												$("#codId").show();
 												//TPR-794
 												$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+												
+												/*TPR-642*/
+												utag.link({
+													link_obj: this, 
+													link_text: 'pdp_pincode_check_failure' , 
+													event_type : 'pdp_pincode_check' , 
+													pdp_pin_sku : productCode, 
+													pdp_pin_status : 'not_servicable', 
+													pdp_pin_value : pin, 
+													pdp_pin_delivery : 'error'
+												});
+											/*TPR-642 ends*/
 												return false;
 											} else {
 												// refreshing seller list after
 												// getting pincode response
 												refreshSellers(data, buyboxSeller);
+												deliverModeTealium = new Array();
 												for ( var i in data) {
 													var pincodedata = data[i];
 													ussid = pincodedata['ussid'];
@@ -1204,6 +1229,7 @@ $(function() {
 															if (home == true) {
 																$("#home").show();
 																$("#homeli").show();
+																deliverModeTealium.push("home");
 															} else {
 																$("#home").hide();
 																$("#homeli").hide();
@@ -1213,6 +1239,7 @@ $(function() {
 																$("#express").show();
 
 																$("#expressli").show();
+																deliverModeTealium.push("express");
 															} else {
 																$("#express").hide();
 																$("#expressli").hide();
@@ -1220,13 +1247,25 @@ $(function() {
 															}if (click == true) {
 																$("#collect").show();
 																$("#collectli").show();
+																deliverModeTealium.push("clickandcollect");
 															} else {
 
 																$("#collect").hide();
 																$("#collectli").hide();
 															}
 															// }
-
+															
+															/*TPR-642*/
+																utag.link({
+																	link_obj: this, 
+																	link_text: 'pdp_pincode_check_success' , 
+																	event_type : 'pdp_pincode_check' , 
+																	pdp_pin_sku : productCode, 
+																	pdp_pin_status : 'servicable', 
+																	pdp_pin_value : pin, 
+																	pdp_pin_delivery : deliverModeTealium.join("_")
+																});
+															/*TPR-642 ends*/
 
 														} else {
 															$("#home").hide();
@@ -1249,6 +1288,18 @@ $(function() {
 															}
 															$('#addToCartButton').hide();
 															$('#unsevisablePin').show();
+															
+															/*TPR-642*/
+															utag.link({
+																link_obj: this, 
+																link_text: 'pdp_pincode_check_failure' , 
+																event_type : 'pdp_pincode_check' , 
+																pdp_pin_sku : productCode, 
+																pdp_pin_status : 'not_servicable', 
+																pdp_pin_value : pin, 
+																pdp_pin_delivery : 'error'
+															});
+														/*TPR-642 ends*/
 														}
 													}
 												}
@@ -1274,6 +1325,7 @@ $(function() {
 													$('#unsevisablePin').show();
 													$('#pdpPinCodeAvailable').hide();
 												}
+												
 											}
 											$("#pinCodeChecked")
 													.val(pinCodeChecked);
