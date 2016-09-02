@@ -10,7 +10,7 @@
 
 
 <div id="ReviewSecion" class="reviews">
-<div class="header ">
+<div class="header">
       <h3>Your Rating</h3>
 </div>
 <div class="overview">
