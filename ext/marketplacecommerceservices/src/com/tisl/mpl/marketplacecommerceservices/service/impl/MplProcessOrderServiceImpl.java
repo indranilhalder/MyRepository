@@ -6,7 +6,6 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -15,6 +14,7 @@ import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -86,10 +86,10 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private ConfigurationService configurationService;
 	@Autowired
 	private NotificationService notificationService;
-	@Resource(name = "mplVoucherDao")
-	private MplVoucherDao mplVoucherDao;
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;
+	@Resource(name = "mplVoucherDao")
+	private MplVoucherDao mplVoucherDao;
 
 	/**
 	 * This method processes pending orders
@@ -483,32 +483,40 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 
 
-
 	/**
-	 * This method only removes voucher invalidation created
-	 *
+	 * This method removes voucher invalidation model when payment is timed-out, without releasing the coupon.
+	 * 
 	 * @param orderModel
+	 * @throws EtailNonBusinessExceptions
 	 */
-	private void removeVoucherInvalidation(final OrderModel orderModel)
+	private void removeVoucherInvalidation(final OrderModel orderModel) throws EtailNonBusinessExceptions
 	{
-		if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+		try
 		{
-
-			final CustomerModel customer = (CustomerModel) orderModel.getUser();
-			final List<VoucherInvalidationModel> invalidationList = new ArrayList<VoucherInvalidationModel>(getMplVoucherDao()
-					.findVoucherInvalidation(orderModel.getDiscounts().get(0).getCode(), customer.getOriginalUid(),
-							orderModel.getCode()));
-
-			final Iterator<VoucherInvalidationModel> iter = invalidationList.iterator();
-
-			//Remove the existing discount
-			while (iter.hasNext())
+			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
 			{
-				final VoucherInvalidationModel model = iter.next();
-				getModelService().remove(model);
+
+				final CustomerModel customer = (CustomerModel) orderModel.getUser();
+				final List<VoucherInvalidationModel> invalidationList = new ArrayList<VoucherInvalidationModel>(getMplVoucherDao()
+						.findVoucherInvalidation(orderModel.getDiscounts().get(0).getCode(), customer.getOriginalUid(),
+								orderModel.getCode()));
+
+				final Iterator<VoucherInvalidationModel> iter = invalidationList.iterator();
+
+				//Remove the existing discount
+				while (iter.hasNext())
+				{
+					final VoucherInvalidationModel model = iter.next();
+					getModelService().remove(model);
+				}
 			}
 		}
+		catch (final ModelRemovalException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0020);
+		}
 	}
+
 
 
 
@@ -705,22 +713,6 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		this.notificationService = notificationService;
 	}
 
-	/**
-	 * @return the mplVoucherDao
-	 */
-	public MplVoucherDao getMplVoucherDao()
-	{
-		return mplVoucherDao;
-	}
-
-	/**
-	 * @param mplVoucherDao
-	 *           the mplVoucherDao to set
-	 */
-	public void setMplVoucherDao(final MplVoucherDao mplVoucherDao)
-	{
-		this.mplVoucherDao = mplVoucherDao;
-	}
 
 	/**
 	 * @return the mplVoucherService
@@ -737,6 +729,23 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	public void setMplVoucherService(final MplVoucherService mplVoucherService)
 	{
 		this.mplVoucherService = mplVoucherService;
+	}
+
+	/**
+	 * @return the mplVoucherDao
+	 */
+	public MplVoucherDao getMplVoucherDao()
+	{
+		return mplVoucherDao;
+	}
+
+	/**
+	 * @param mplVoucherDao
+	 *           the mplVoucherDao to set
+	 */
+	public void setMplVoucherDao(final MplVoucherDao mplVoucherDao)
+	{
+		this.mplVoucherDao = mplVoucherDao;
 	}
 
 

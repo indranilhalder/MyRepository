@@ -4253,11 +4253,12 @@ $("#couponSubmitButton").click(function(){
 	else{
 		var couponCode=$("#couponFieldId").val();
 		var paymentMode=$("#paymentMode").val();
+		var guid=$("#guid").val();
 		$.ajax({
 	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
 	 		type: "GET",
 	 		cache: false,
-	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected},
+	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
@@ -4341,11 +4342,12 @@ $("#couponFieldId").focus(function(){
 
 $(".remove-coupon-button").click(function(){
 	var couponCode=$("#couponFieldId").val();
+	var guid=$("#guid").val();
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
  		type: "GET",
  		cache: false,
- 		data: { 'couponCode' : couponCode },
+ 		data: { 'couponCode' : couponCode , 'guid' : guid},
  		success : function(response) {
  			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
  			$("#codAmount").text(response.totalPrice.formattedValue);

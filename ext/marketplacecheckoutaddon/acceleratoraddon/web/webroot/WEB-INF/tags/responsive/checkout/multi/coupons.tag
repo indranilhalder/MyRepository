@@ -1,4 +1,3 @@
-<%@ attribute name="cartData" required="true" type="de.hybris.platform.commercefacades.order.data.CartData" %>
 <%@ attribute name="showTax" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showTaxEstimate" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="subtotalsCssClasses" required="false" type="java.lang.String" %>
