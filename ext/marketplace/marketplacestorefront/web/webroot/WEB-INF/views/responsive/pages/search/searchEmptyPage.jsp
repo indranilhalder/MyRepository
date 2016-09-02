@@ -9,6 +9,7 @@
 <input type="hidden" id="search_keyword" value="${searchPageData.freeTextSearch}">
 <input type="hidden" id="searchCategory" value="${searchCategory}">
 <input type="hidden" id="search_results" value="${searchPageData.pagination.totalNumberOfResults}">
+<input type="hidden" id="search_type" value="${searchType}">	<!-- For TPR-666 -->
 <template:page pageTitle="${pageTitle}">
 <script language='javascript'>
 $(document).ready(function() {

@@ -418,6 +418,14 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				    zoomWindowFadeIn: 500,
 				    zoomWindowFadeOut: 750
 				       });
+			
+				/*TPR-643 starts*/
+				utag.link({
+					link_obj: this, 
+					link_text: 'pdp_image_click' , 
+					event_type : 'pdp_image_click' 
+				});
+				/*TPR-643 ends*/
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");
@@ -684,7 +692,15 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					}
 					//End MSD
 					
-					
+					/*TPR-656*/
+					utag.link({
+						link_obj: this, 
+						link_text: 'add_to_wishlist' , 
+						event_type : 'add_to_wishlist', 
+						product_sku_wishlist : productCodePost
+					});
+				/*TPR-656 Ends*/
+				
 					
 					//openPop(ussidValue);
 				//	$('#myModal').modal('hide');
@@ -1547,7 +1563,13 @@ $( document ).ready(function() {
 				 $("#pdpPincodeCheckDList").show();
 				 $("#buyNowButton").attr("disabled",true);
 			}
+		},
+		// For buybox seller and other seller in PDP
+		//TPR-429
+		complete: function() {
+			differentiateSeller();
 		}
+		
 	});
 //}
 	$(".size-guide").click(function(){
@@ -1869,6 +1891,16 @@ function populateEMIDetailsForPDP(){
 		var selectedBank = $('#bankNameForEMI :selected').text();
 		var contentData = '';
 		if (selectedBank != "select") {
+			
+			/*TPR-641 starts*/
+			emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").toLowerCase();
+			utag.link({
+				link_obj: this, 
+				link_text: emiBankSelectedTealium , 
+				event_type : 'emi_option_selected'
+			});
+			/*TPR-641 ends*/
+			
 			var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
 			$.ajax({
 				url : ACC.config.encodedContextPath + "/p-getTerms",
