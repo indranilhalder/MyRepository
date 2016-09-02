@@ -180,6 +180,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	private final String checkoutPageName1 = "New Address";
 	private final String selectAddress = "Select Address";
+	private static final String ADDRESS_CODE_PATH_VARIABLE_PATTERN = "{addressCode:.*}";
 
 	@Autowired
 	private MplSellerInformationFacade mplSellerInformationFacade;
@@ -2355,6 +2356,44 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 	}
 
+	/**
+	 * TRP- 1215
+	 *
+	 * @description method is called to set DefaultAddress from existing Address of the customer
+	 * @param addressCode
+	 * @param redirectModel
+	 * @param model
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.LINK_SET_DEFAUT_ADDRESS + ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	@RequireHardLogIn
+	@ResponseBody
+	public boolean setDefaultAddress(@PathVariable("addressCode") final String addressCode,
+			final RedirectAttributes redirectModel, final Model model) throws CMSItemNotFoundException
+	{
+		try
+		{
+			final AddressData addressData = new AddressData();
+			addressData.setDefaultAddress(true);
+			addressData.setVisibleInAddressBook(true);
+			addressData.setId(addressCode);
+			userFacade.setDefaultAddress(addressData);
+			return true;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions in setDefaultAddress ", e);
+			return false;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailBusinessExceptions in setDefaultAddress ", e);
+			return false;
+		}
+	}
 
 	/**
 	 * @return the mplCartFacade

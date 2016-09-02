@@ -4286,7 +4286,7 @@ $(".remove-coupon-button").click(function(){
  		}
  	});	 
 });
-
+//TPR-1214
 $(".pincode-button").click(function(){
 	
 	$.ajax({
@@ -4302,7 +4302,7 @@ $(".pincode-button").click(function(){
  		
  		});
 });
-
+//TPR-1213
 $(".edit_address").click(function(){
 	
 	$.ajax({
@@ -4319,6 +4319,29 @@ $(".edit_address").click(function(){
  		});
 	return false;
 });
+//TPR-1215
+$(".defaultAddress").click(function(){
+	
+	$.ajax({
+ 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/set-default-address/"+ $(this).attr("data-address-id"),
+ 		type: "GET",
+ 		cache: false,
+ 		dataType: "text",
+ 		success : function(response) {
+ 			if(response == 'true'){
+ 				alert("Default address set");
+ 			}else{
+ 				alert("Unable to set default address");
+ 			}
+ 		},
+ 		error : function(response) {
+ 			alert('Inside eror'+response);
+ 		}
+ 		
+ 		});
+	return false;
+});
+
 $(document).ready(function(){
 	if($('#couponFieldId').prop('readonly') == false)
 	{

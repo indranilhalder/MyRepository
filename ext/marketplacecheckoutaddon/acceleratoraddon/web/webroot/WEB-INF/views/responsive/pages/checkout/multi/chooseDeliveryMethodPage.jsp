@@ -303,6 +303,7 @@
 															</address> --%>
 															
 															<a href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}" class="edit_address"><spring:theme code="checkout.multi.deliveryAddress.editAddress" text="Edit Address"></spring:theme> </a>
+															<a href="#nogo" class="defaultAddress" data-address-id="${deliveryAddress.id}">Make this default address</a>
 														</ul>
 												
 													</div>
