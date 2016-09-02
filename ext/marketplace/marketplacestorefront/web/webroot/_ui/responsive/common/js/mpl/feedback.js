@@ -1990,6 +1990,10 @@ $(document).ready(function(){
 		var txth1 = $(this).text();
 		$(this).replaceWith("<h2>"+txth1+"</h2>");
 	});
+	$(".menu li h3").each(function(){
+		var txth = $(this).text();
+		$(this).replaceWith("<h2>"+txth+"</h2>");
+	});
 	
 });
 
