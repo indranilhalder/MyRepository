@@ -1138,8 +1138,8 @@ $(document).ready(function(){
 				
 	/*----- Start of SERP pagination ----*/
 				
-		$(".pagination").parents(".bottom-pagination").find("li.prev a").append("<span class='lookbook-only'> Page</span>");
-		$(".pagination").parents(".bottom-pagination").find("li.next a").append("<span class='lookbook-only'> Page</span>");
+	/*	$(".pagination").parents(".bottom-pagination").find("li.prev a").append("<span class='lookbook-only'> Page</span>");
+		$(".pagination").parents(".bottom-pagination").find("li.next a").append("<span class='lookbook-only'> Page</span>");*/
 		
 	/*----- END of SERP pagination ----*/		
 		
@@ -1626,7 +1626,7 @@ $(document).ready(function(){
 		//loadGigya();
 		var sort_top=parseInt($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top"));
 		$(window).on("load resize", function() {
-			if($(window).width() <= 633){
+			if($(window).width() <= 773){
 				$('.listing.wrapper .left-block').css('margin-top','20px');
 				var search_text_height = $(".listing.wrapper .search-result h2").height();
 				var search_spelling_height = $(".searchSpellingSuggestionPrompt").height();
@@ -1702,7 +1702,8 @@ $(document).ready(function(){
 		$(window).on("load resize", function() {
 		if($(".listing.wrapper").length > 0){
 			if($(".searchSpellingSuggestionPrompt").length>0){
-				$(".toggle-filterSerp").css("margin-top","40px");
+				$(".toggle-filterSerp").css("margin-top",$(".searchSpellingSuggestionPrompt").height() + 40 + "px");
+				$(".listing.wrapper .right-block").css("padding-top",$(".searchSpellingSuggestionPrompt").height() + 50 + "px");
 			}
 			if($(".toggle-filterSerp").length>0){
 				var sort_top= $(".toggle-filterSerp").offset().top - $(".listing.wrapper").offset().top - 20;
