@@ -1501,8 +1501,11 @@ public class SearchSuggestUtilityMethods
 				}
 
 			}
+		}
 
-			//re-attaching L1 filter
+		//re-attaching Facet selection into filter
+		if (CollectionUtils.isNotEmpty(facetValues))
+		{
 			for (final DepartmentFilterWsDto l1Depart : l1Map.values())
 			{
 
