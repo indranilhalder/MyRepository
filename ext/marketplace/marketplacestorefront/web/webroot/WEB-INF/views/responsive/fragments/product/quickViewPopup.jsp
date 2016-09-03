@@ -421,7 +421,7 @@ display:none;
     <div class="product-detail">
     
     <h2 class="company">
-              <span class="logo"></span>${product.brand.brandname}&nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName}</h2><!-- Convert into AJAX call -->
+              <span class="logo"></span>${product.brand.brandname}</h2><!-- Convert into AJAX call -->
               
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     <div class="price">
@@ -501,15 +501,15 @@ display:none;
 	   <div class="swatch">
 	<product:viewQuickViewVariant/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantityCount"/>
-	<div class="qty">
+	<%-- <div class="qty">
 	<!-- TISPRM-131 -->
-		<%-- <p> <spring:theme code="product.configureproductscount.qty"/></p> --%>
-		<%-- <select id="quantity">		
+		<p> <spring:theme code="product.configureproductscount.qty"/></p>
+		<select id="quantity">		
 		<c:forEach var="qtyCnt" begin="1" end="${maxQuantityCount}">
    		<option value="${qtyCnt}">${qtyCnt}</option>
 		</c:forEach>
-		</select> --%>
-	</div> 
+		</select>
+	</div> --%> 
 
 </div>
 <%--  <div id="ajax-loader" style="margin: 0 auto; height:20px; width: 20px;"><img src="${commonResourcePath}/images/ajax-loader.gif"></div> --%>     
@@ -589,6 +589,8 @@ display:none;
 			</span>				
 	<%-- </c:if> --%>
 	</ycommerce:testId> 
+	<div class="SoldWrap">
+	<div class="seller">Sold by <span id="sellerNameIdQuick"></span></div>
 	<div class="fullfilled-by">
 		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
 		<%-- <c:choose>
@@ -601,6 +603,7 @@ display:none;
 		</c:choose> --%>
 		<span id="fulFilledByTshipQuick" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
 			<span id="fulFilledBySshipQuick"  style="display:none;"></span>
+	</div>
 	</div>
 	 <ul class="star-review" id="quick_view_rating">
 				<li class="empty"></li>

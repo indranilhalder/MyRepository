@@ -10659,7 +10659,10 @@ body .account .right-account .order-history .pagination li{
 .quickview .product-info .product-detail .star-review,
 .product-info .product-detail .fullfilled-by {
     font-size: 12px;
-    margin: 25px 0 0px 0;
+    margin: 15px 0 0px 0;
+}
+.quickview .product-info .product-detail .star-review{
+font-size: 17px;
 }
 .quickview .product-info .product-detail .price{
 	margin:0px;
@@ -24745,7 +24748,7 @@ button#buyNowButton[disabled="disabled"] {
 }
 .quickview .quick-view-popup.product-info .product-content .swatch .sizeVariantForm{	
 	float:left;
-	padding-bottom:20px;
+	/* padding-bottom:20px; */
 }
 body .account .right-account ul.address_pagination {
 	float:right;
@@ -46273,6 +46276,7 @@ border-right: 2px solid #9b9b9b;
 	padding: 0;
     border: none;
     height: auto;
+    margin: 0;
 }
 .quickview .product-content #variantForm .select-size > span {
 	display: none;
@@ -46330,5 +46334,8 @@ border-right: 2px solid #9b9b9b;
 .quickview .product-content .color-swatch li {
 	box-shadow: none
 }
+.quickview .product-content .star-review {
+    color: #fbb928;
+    }
 /*Quickview changes end*/
 
