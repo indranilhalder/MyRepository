@@ -702,6 +702,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0021 = "E0021";
 	public static final String E0022 = "E0022";
 
+	//TPR-629
+	public static final String E0023 = "E0023";
+
 
 	//System/Non Business constants
 
