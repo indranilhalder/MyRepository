@@ -323,4 +323,13 @@ $(document).ready(
 				});
 			/*TPR-694 ends*/
 			
+			/*TPR- 659 starts*/
+			$(document).on("click",".view-cliq-offers",function(){
+				alert("viewcliq......")
+				utag.link(
+		    			{link_obj: this, link_text: 'home_top_deal_view_offers' , event_type : 'home_top_deal_view_offers'}
+		    			);
+				});
+			/*TPR- 659  ends*/
+			
 		});
