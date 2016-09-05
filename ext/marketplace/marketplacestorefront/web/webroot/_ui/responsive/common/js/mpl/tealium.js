@@ -214,6 +214,13 @@ $(document).ready(
 					type : 'GET',
 					cache : false,
 					success : function(data) {
+						var qtyUpdated;
+						if(window.sessionStorage.getItem("qtyUpdate")!=null){
+							qtyUpdated=window.sessionStorage.getItem("qtyUpdate");
+						}
+						else{
+							qtyUpdated=false;
+						}
 						var tealiumData = "";
 						tealiumData += ',"cart_total":"'
 								+ $("#cart_total").val() + '",';
@@ -235,6 +242,8 @@ $(document).ready(
 							+ $("#product_brand").val() + ',';
 						tealiumData += '"page_subcategory_name":'
 							+ $("#page_subcategory_name").val() + ',';
+						tealiumData += '"product_quantity_update":'
+							+ qtyUpdated + ',';
 						tealiumData += '"product_category":'
 							+ $("#product_category").val() + '}';
 						data = data.replace("}<TealiumScript>", tealiumData);

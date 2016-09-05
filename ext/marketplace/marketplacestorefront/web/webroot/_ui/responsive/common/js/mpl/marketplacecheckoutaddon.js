@@ -4081,6 +4081,7 @@ $("#state").focus(function(){
 
 
 function updateCart(formId){
+	window.sessionStorage.setItem("qtyUpdate","true");
 	var entryNumber = formId.split("_");
 	var form = $('#updateCartForm' + entryNumber[1]);
 	form.submit();
