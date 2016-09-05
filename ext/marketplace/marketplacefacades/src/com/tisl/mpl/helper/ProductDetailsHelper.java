@@ -72,6 +72,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
@@ -127,6 +128,9 @@ public class ProductDetailsHelper
 
 	@Autowired
 	private ExtendedUserServiceImpl userexService;
+
+	@Resource(name = "buyBoxService")
+	private BuyBoxService buyBoxService;
 
 	//SOnar fixes
 	//@Autowired
@@ -187,8 +191,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 *
-	 *
+	 * 
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -852,15 +856,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -1079,5 +1083,80 @@ public class ProductDetailsHelper
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return existUssid;
+	}
+
+	/**
+	 * @param productCode
+	 * @param ussid
+	 * @param user
+	 * @param valueOf
+	 * @return
+	 */
+	public boolean addSingleToWishListForPLP(final String productCode, final Boolean sizeSelected)
+	{
+		boolean add = false;
+		final String wishName = MarketplaceFacadesConstants.DEFAULT_WISHLIST_NAME;
+		Wishlist2Model lastCreatedWishlist = null;
+		final UserModel user = userService.getCurrentUser();
+		String ussid = null;
+		if (getBuyBoxService().getBuyboxPricesForSearch(productCode) != null)
+		{
+			ussid = getBuyBoxService().getBuyboxPricesForSearch(productCode).get(0).getSellerArticleSKU();
+		}
+		try
+		{
+			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
+			if (null != lastCreatedWishlist)
+			{
+				add = wishlistFacade.addProductToWishlist(lastCreatedWishlist, productCode, ussid, sizeSelected.booleanValue());
+
+				LOG.debug("addToWishListInPopup: ***** getLastCreatedWishlist: add" + add);
+			}
+			else
+			{
+				LOG.debug("addToWishListInPopup: ***** New Create");
+				final Wishlist2Model createdWishlist = wishlistFacade.createNewWishlist(user, wishName, productCode);
+				add = wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, sizeSelected.booleanValue());
+				final WishlistData wishData = new WishlistData();
+				wishData.setParticularWishlistName(createdWishlist.getName());
+				//existingWishlist = wishlistFacade.getWishlistForName(wishName);
+				wishData.setProductCode(productCode);
+			}
+			if (!add) //add == false
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3002);
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+
+			throw e;
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return add;
+	}
+
+	/**
+	 * @return the buyBoxService
+	 */
+	public BuyBoxService getBuyBoxService()
+	{
+		return buyBoxService;
+	}
+
+	/**
+	 * @param buyBoxService
+	 *           the buyBoxService to set
+	 */
+	public void setBuyBoxService(final BuyBoxService buyBoxService)
+	{
+		this.buyBoxService = buyBoxService;
 	}
 }
