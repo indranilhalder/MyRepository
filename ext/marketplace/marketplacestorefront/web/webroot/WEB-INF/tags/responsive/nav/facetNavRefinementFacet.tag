@@ -47,6 +47,7 @@ function navigateToPage(queryString,textString)
 	<c:set var="facetStockSize" value="${fn:length(facetValuesForStock)}" />
 	
 </c:if>
+<input type="hidden" id="facetStockSize" value="${facetStockSize}"/>
 <!-- //display url -->
 <c:set var="url" value="${requestScope['javax.servlet.forward.request_uri']}"/>
 <c:if test="${fn:contains(url, 'page')}">

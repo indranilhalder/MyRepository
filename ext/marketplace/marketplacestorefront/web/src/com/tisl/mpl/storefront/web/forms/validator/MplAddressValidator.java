@@ -89,7 +89,7 @@ public class MplAddressValidator
 		{
 			returnStatement = "address.firstName.invalid";
 		}
-		else if (!CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(firstName)
+		else if (!CommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(firstName)
 				|| StringUtils.length(firstName) > MAX_FIELD_LENGTH_140)
 		{
 			returnStatement = "address.firstName.invalid.new";
@@ -98,7 +98,7 @@ public class MplAddressValidator
 		{
 			returnStatement = "address.lastName.invalid";
 		}
-		else if (!CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(lastName)
+		else if (!CommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(lastName)
 				|| StringUtils.length(lastName) > MAX_FIELD_LENGTH_140)
 		{
 			returnStatement = "address.lastName.invalid.new";
@@ -131,7 +131,7 @@ public class MplAddressValidator
 		{
 			returnStatement = "address.townCity.invalid";
 		}
-		else if (!CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(townCity))
+		else if (!CommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(townCity))
 		{
 			returnStatement = "address.townCity.invalid.alphaAndSpace";
 		}

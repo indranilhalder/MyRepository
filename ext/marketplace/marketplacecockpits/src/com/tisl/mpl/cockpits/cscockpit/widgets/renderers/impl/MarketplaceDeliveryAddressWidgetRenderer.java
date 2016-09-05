@@ -1,11 +1,8 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.zkoss.zhtml.Br;
@@ -13,8 +10,6 @@ import org.zkoss.zk.ui.api.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Button;
-import org.zkoss.zul.Combobox;
-import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Listbox;
@@ -26,10 +21,8 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.daos.AccountAddressDao;
-import com.tisl.mpl.model.StateModel;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
-import de.hybris.platform.cockpit.services.values.ObjectValueContainer;
 import de.hybris.platform.cockpit.widgets.InputWidget;
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -429,6 +422,12 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 						Messagebox.OK, Messagebox.ERROR);
 				return;
 			}
+			else if (!MarketplaceCockpitCommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(firstNameField.getValue()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "invalidFirstNameChar"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				return;
+			}
 			
 			else if (StringUtils.isBlank(lastNameField.getValue()) || StringUtils.isBlank(lastNameField.getValue().trim()))
 			{
@@ -443,6 +442,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 						Messagebox.OK, Messagebox.ERROR);
 					return;
 			}
+			else if (!MarketplaceCockpitCommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(lastNameField.getValue()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "invalidLastNameChar"), LabelUtils.getLabel(widget, FAILED_VALIDATION), 
+						Messagebox.OK, Messagebox.ERROR);
+					return;
+			}
+			
 			else if (StringUtils.isBlank(addressField.getValue()) || StringUtils.isBlank(addressField.getValue().trim()))
 			{
 				Messagebox.show(LabelUtils.getLabel(widget, "addressLine1ValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
@@ -496,6 +502,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 						Messagebox.OK, Messagebox.ERROR);
 					return;
 			}
+			else if (!MarketplaceCockpitCommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(cityField.getValue()))
+			{
+					Messagebox.show(LabelUtils.getLabel(widget, "invalidCityChar"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+					return;
+			}
+			
 			else if (stateFieldListBox.getSelectedItem() == null || stateFieldListBox.getSelectedItem().getLabel().equalsIgnoreCase("Select"))
 			{
 				Messagebox.show(LabelUtils.getLabel(widget, "stateTypeValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),

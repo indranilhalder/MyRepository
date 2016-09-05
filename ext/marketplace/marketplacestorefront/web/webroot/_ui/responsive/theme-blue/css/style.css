@@ -848,6 +848,9 @@ h2 {
     position: relative;
     clear: both;
     margin-bottom: 0; }
+    header .content .top{
+    min-height:50px;
+    }
     header .content .top::after, header .content .bottom::after {
       clear: both;
       content: "";
@@ -8766,11 +8769,11 @@ footer .banner {
       letter-spacing: 1.2px;
       text-decoration: underline;
       color: #A9143C; }
-      .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password{
+      .page-login .sign-in.tab-view .tabs > li .left form .forgotten-password,.page-login .sign-in.tab-view .tabs > li .left form .forgotten-password_register{
       padding: 20px 0 10px 0;
       text-align: center;
       }
-      .sign-in.tab-view .tabs > li .left form .forgotten-password{
+      .sign-in.tab-view .tabs > li .left form .forgotten-password,.sign-in.tab-view .tabs > li .left form .forgotten-password_register{
       text-align: center;
       padding:10px 0;
       font-size:11px;
@@ -39407,7 +39410,8 @@ button.make_payment[disabled] {
 } */
 
 .modal.size-guide .apparelSizes table{
-width: 100%;
+	width: auto;
+  	min-width: 100%;
     float: left;
     border: 1px solid #ccc;
     table-layout: fixed;
@@ -42464,27 +42468,17 @@ bottom:35px;
 
 /*Upgraded Owl carousel CSS ends*/
 /*Filter scroll changes start*/
-.listing.wrapper .left-block.bot {
+.listing.wrapper .left-block.bottom {
 position: absolute;
 bottom: 100px;
 } 
-.listing.wrapper .left-block.fixed {
+.listing.wrapper .left-block.fix {
 position: fixed;
 bottom: 5px;
 }
-.listing.wrapper .right-block.fixed {
-margin-left: 20%;
+.listing.wrapper .right-block  {
+float: right;
 }
-@media (max-width: 790px) {
-	.listing.wrapper .right-block.fixed {
-	margin-left: 30%;
-	}
-/*  header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 .words{
-	display:none;}
-	header .content .container > .right > ul:first-child > li#shopMicrositeSeller li.level1 > ul.words .short a{
-
-	display:block;}*/
-} 
 /*Filter scroll changes end*/
 /* TPR-168 */  
    #customPriceFilter .minPriceSearchTxt{
@@ -45016,3 +45010,11 @@ padding:0;
 .pdp .product-info.wrapper .tabs-block .tabs.pdp li ul {
 	padding-left: 15px;
 }
+body.pageLabel--Lingerie-page-revised .brand-content-grid .hero ul{
+	overflow:hidden;
+}
+
+/*  Chnage for TISPRD-4587 */
+ .importantDisplay{ 
+ 	display: block !important; 
+ } 
