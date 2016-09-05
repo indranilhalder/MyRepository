@@ -558,22 +558,34 @@ public class SearchSuggestUtilityMethods
 		return productSearchPage;
 	}
 
+	//TPR-817
+	public ProductSearchPageWsDto setPDPSearchPageData(
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
+	{
+		final ProductSearchPageWsDto productSearchPage = new ProductSearchPageWsDto();
+		if (null != searchPageData.getResults())
+		{
+			// serp product results comes here
+			final List<SellingItemDetailWsDto> searchProductDTOList = getProductResults(searchPageData);
+			if (searchProductDTOList != null)
+			{
+				productSearchPage.setSearchresult(searchProductDTOList);
+				productSearchPage.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
+			}
+		}
+		else
+		{
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
+		}
 
-
-
-	//	private final List<GalleryImageData> getGalleryImagesList(final List<Map<String, String>> galleryImages)
-	//	{
-	//		final List<GalleryImageData> galleryImageList = new ArrayList<GalleryImageData>();
-	//		GalleryImageData galleryImage = null;
-	//		for (final Map<String, String> map : galleryImages)
-	//		{
-	//			galleryImage = new GalleryImageData();
-	//			galleryImage.setGalleryImages(map);
-	//			galleryImageList.add(galleryImage);
-	//		}
-	//
-	//		return galleryImageList;
-	//	}
+		return productSearchPage;
+	}
 
 
 

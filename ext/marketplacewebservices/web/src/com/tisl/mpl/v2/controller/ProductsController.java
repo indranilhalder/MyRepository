@@ -939,7 +939,6 @@ public class ProductsController extends BaseController
 						searchSuggestUtilityMethods.setSearchPageData(productSearchPage, searchPageData);
 					}
 				}
-
 				else
 				{
 
