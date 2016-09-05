@@ -449,3 +449,17 @@ $('#newAddressButtonUp').click(function(){
 });
 
 /*TPR-663 END*/
+
+/*TPR-645 Start*/
+$(document).on('click','.jqtree-title.jqtree_common',function(){
+	var val= $(this).text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['-]/g,"");
+	var name=$(this).parents('form').siblings('div').find('h4').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/'/g,"");
+	var msg = name+"_"+val;
+	utag.link({
+		link_obj: this,
+		link_text: msg ,
+		event_type : 'search_filter_usage',
+		search_filter : msg 
+	});
+})
+/*TPR-645 End*/
