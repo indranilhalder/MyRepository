@@ -1118,7 +1118,7 @@ $(function() {
 												//TPR-794
 												$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 												
-												/*TPR-642*/
+												/*TPR-642 & 640*/
 												utag.link({
 													link_obj: this, 
 													link_text: 'pdp_pincode_check_failure' , 
@@ -1128,7 +1128,7 @@ $(function() {
 													pdp_pin_value : pin, 
 													pdp_pin_delivery : 'error'
 												});
-											/*TPR-642 ends*/
+											/*TPR-642 & 640 ends*/
 												return false;
 											}
 											// check if oms service is down
@@ -1143,7 +1143,7 @@ $(function() {
 												//TPR-794
 												$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 												
-												/*TPR-642*/
+												/*TPR-642 & 640*/
 												utag.link({
 													link_obj: this, 
 													link_text: 'pdp_pincode_check_failure' , 
@@ -1153,7 +1153,7 @@ $(function() {
 													pdp_pin_value : pin, 
 													pdp_pin_delivery : 'error'
 												});
-											/*TPR-642 ends*/
+											/*TPR-642 & 640 ends*/
 												return false;
 											} else {
 												// refreshing seller list after
@@ -1255,7 +1255,7 @@ $(function() {
 															}
 															// }
 															
-															/*TPR-642*/
+															/*TPR- 642 & 640*/
 																utag.link({
 																	link_obj: this, 
 																	link_text: 'pdp_pincode_check_success' , 
@@ -1265,7 +1265,7 @@ $(function() {
 																	pdp_pin_value : pin, 
 																	pdp_pin_delivery : deliverModeTealium.join("_")
 																});
-															/*TPR-642 ends*/
+															/*TPR-642 & 640 ends*/
 
 														} else {
 															$("#home").hide();
@@ -1289,7 +1289,7 @@ $(function() {
 															$('#addToCartButton').hide();
 															$('#unsevisablePin').show();
 															
-															/*TPR-642*/
+															/*TPR-642 & 640 */
 															utag.link({
 																link_obj: this, 
 																link_text: 'pdp_pincode_check_failure' , 
@@ -1299,7 +1299,7 @@ $(function() {
 																pdp_pin_value : pin, 
 																pdp_pin_delivery : 'error'
 															});
-														/*TPR-642 ends*/
+														/*TPR-642 & 640 ends*/
 														}
 													}
 												}
