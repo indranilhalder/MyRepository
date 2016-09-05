@@ -173,7 +173,7 @@
 							</form:form>
 						</div>
 					</c:if>
-					<!-- TPR-632 -->
+					<!-- TPR-523 -->
 					<div class="productInfo">
 					<ul>
 						<!-- commented as part of defect fix - 3in1_box_178 -->

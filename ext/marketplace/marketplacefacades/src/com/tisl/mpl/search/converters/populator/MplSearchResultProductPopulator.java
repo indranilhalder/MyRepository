@@ -243,8 +243,9 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 	{
 		final List<ImageData> result = new ArrayList<ImageData>();
 
-
 		addImageData(source, "searchPage", result);
+		//TPR-796
+		addImageData(source, "product", result);
 
 
 		return result;

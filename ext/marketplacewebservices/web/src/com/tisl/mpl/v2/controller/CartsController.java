@@ -2703,16 +2703,13 @@ public class CartsController extends BaseCommerceController
 				cartDetailsData.setErrorCode(ex.getErrorCode());
 			}
 		}
-		catch (final Exception ex)
+		catch (final Exception e)
 		{
-			// Error message for All Exceptions
-			if (null != ex.getMessage())
-			{
-				cartDetailsData.setError(ex.getMessage());
-				cartDetailsData.setErrorCode(MarketplacecommerceservicesConstants.B9004);
-			}
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			cartDetailsData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+			cartDetailsData.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+			cartDetailsData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-
 		return cartDetailsData;
 	}
 
@@ -3141,12 +3138,12 @@ public class CartsController extends BaseCommerceController
 		}
 		catch (final Exception e)
 		{
-			if (null != e.getMessage())
-			{
-				response.setError(e.getMessage());
-			}
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			response.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+			response.setErrorCode(MarketplacecommerceservicesConstants.B9004);
 			response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+
 		return response;
 	}
 

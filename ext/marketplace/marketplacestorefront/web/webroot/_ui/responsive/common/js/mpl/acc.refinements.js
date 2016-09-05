@@ -318,8 +318,8 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 		    	$("#categoryPageDeptHierTreeForm #categoryPageDeptHierTree").hide(100);
 			}
 			
-			var filter_height=$(".facet-list.filter-opt").height() + 55;
-			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");
+			/*var filter_height=$(".facet-list.filter-opt").height() + 55;
+			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");*/
 			
 			// Scroll up to the top
 			$("body,html").animate({scrollTop:0},500);

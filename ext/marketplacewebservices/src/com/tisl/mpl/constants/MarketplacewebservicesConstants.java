@@ -301,7 +301,7 @@ public class MarketplacewebservicesConstants
 
 
 	// Pincode Servicibility
-	public static final String URL = "/{baseSiteId}/users/{userId}/checkPincode";
+	public static final String CHECK_PINCODE = "/{baseSiteId}/users/{userId}/checkPincode";
 	public static final String CREATEENTRYINAUDITURL = "/createEntryInAudit";
 	public static final String SAVEDCARDS = "/savedCards";
 	public static final String REMOVESAVEDCARDS = "/removeSavedCards";

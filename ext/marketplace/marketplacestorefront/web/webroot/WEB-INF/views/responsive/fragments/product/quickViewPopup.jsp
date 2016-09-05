@@ -261,8 +261,7 @@ tr.d0 td {
  	// var avgrating = '${product.averageRating}';
  		//alert(":-:"+avgrating);
  		
- }
- 	  
+ }	  
  </script>
  <style type="text/css">
 tr.d0 td {
@@ -422,7 +421,7 @@ display:none;
     <div class="product-detail">
     
     <h2 class="company">
-              <span class="logo"></span>${product.brand.brandname}&nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName}</h2><!-- Convert into AJAX call -->
+              <span class="logo"></span>${product.brand.brandname}</h2><!-- Convert into AJAX call -->
               
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     <div class="price">
@@ -478,23 +477,7 @@ display:none;
 <a href="#" class="gig--readReviewsLink"></a>
 	<span id="gig-rating-readReviewsLink_quick" ></span>	
   <input type="hidden" id="rating_review" value="${product.code}">
-		 <ul class="star-review" id="quick_view_rating">
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
 		
-		<%-- 	<c:choose>
-				<c:when test="${not empty product.ratingCount}">
-			
-					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
-				</c:when>
-				<c:otherwise> --%>
-					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span>
-				<%-- </c:otherwise>
-			</c:choose> --%>
-			</ul> 
 			
 <!-- 			 <script>
 				var avgrating = '${product.averageRating}';
@@ -513,32 +496,20 @@ display:none;
 				
 			</script>  -->
  
- 	<div class="fullfilled-by">
-		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
-		<%-- <c:choose>
-		<c:when test="${fn:toLowerCase(fullfilmentType) == fn:toLowerCase('sship')}">
-			<span id="fullFilledById">${sellerName}</span>
-		</c:when>
-		<c:otherwise>
-			<span id="fullFilledById"><spring:theme code="product.default.fulfillmentType"/></span>
-		</c:otherwise>
-		</c:choose> --%>
-		<span id="fulFilledByTshipQuick" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
-			<span id="fulFilledBySshipQuick"  style="display:none;"></span>
-	</div>
+ 	
    <div class="product-content" style="margin-top:15px;">
 	   <div class="swatch">
 	<product:viewQuickViewVariant/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantityCount"/>
-	<div class="qty">
+	<%-- <div class="qty">
 	<!-- TISPRM-131 -->
-		<%-- <p> <spring:theme code="product.configureproductscount.qty"/></p> --%>
-		<%-- <select id="quantity">		
+		<p> <spring:theme code="product.configureproductscount.qty"/></p>
+		<select id="quantity">		
 		<c:forEach var="qtyCnt" begin="1" end="${maxQuantityCount}">
    		<option value="${qtyCnt}">${qtyCnt}</option>
 		</c:forEach>
-		</select> --%>
-	</div> 
+		</select>
+	</div> --%> 
 
 </div>
 <%--  <div id="ajax-loader" style="margin: 0 auto; height:20px; width: 20px;"><img src="${commonResourcePath}/images/ajax-loader.gif"></div> --%>     
@@ -617,17 +588,50 @@ display:none;
 				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			</span>				
 	<%-- </c:if> --%>
-	</ycommerce:testId>    
+	</ycommerce:testId> 
+	<div class="SoldWrap">
+	<div class="seller">Sold by <span id="sellerNameIdQuick"></span></div>
+	<div class="fullfilled-by">
+		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
+		<%-- <c:choose>
+		<c:when test="${fn:toLowerCase(fullfilmentType) == fn:toLowerCase('sship')}">
+			<span id="fullFilledById">${sellerName}</span>
+		</c:when>
+		<c:otherwise>
+			<span id="fullFilledById"><spring:theme code="product.default.fulfillmentType"/></span>
+		</c:otherwise>
+		</c:choose> --%>
+		<span id="fulFilledByTshipQuick" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+			<span id="fulFilledBySshipQuick"  style="display:none;"></span>
+	</div>
+	</div>
+	 <ul class="star-review" id="quick_view_rating">
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+		
+		<%-- 	<c:choose>
+				<c:when test="${not empty product.ratingCount}">
+			
+					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
+				</c:when>
+				<c:otherwise> --%>
+					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span>
+				<%-- </c:otherwise>
+			</c:choose> --%>
+			</ul>    
 <!-- adding to wishlist -->
 				<ul class="wish-share">
-					<li><!-- <span id="addedMessage" style="display:none"></span> -->
-						<%-- <a onClick="openPop_quick('${buyboxUssid}');scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'>....<spring:theme code="text.add.to.wishlist"/></a></li> --%>
-						<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li>
+					<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
+						<a onClick="openPop_quick('${buyboxUssid}');scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'>....<spring:theme code="text.add.to.wishlist"/></a></li>
+						<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li> --%>
 				<%-- <a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li> --%>
 					<li>
 						<div class="share">
-							<span><spring:theme code="product.socialmedia.share"/></span>
-							<ul style="width: 200px;">
+							<%-- <span><spring:theme code="product.socialmedia.share"/></span> --%>
+							<ul style="width: 100%;">
 								<li>
 							<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text())"></a>
 							</li>
@@ -656,6 +660,9 @@ display:none;
 						</div>
 					</li>
 				</ul>
+				<div class="full-details">
+<a href="${productUrl}" class="quick-view-prod-details-link"><spring:theme code="quickview.productdetails"/></a>
+</div>
 				
 	<script>
 			$(".g-interactivepost").attr("data-contenturl",window.location.host+$('#productUrl').text());
@@ -767,9 +774,9 @@ display:none;
 		<input type="hidden" id="loggedInQuick" value="true"/> 
 		</sec:authorize>
  	
-<div class="quick-view-prod-details-container">
+<%-- <div class="quick-view-prod-details-container">
 <a href="${productUrl}" class="quick-view-prod-details-link"><spring:theme code="quickview.productdetails"/></a>
-</div>
+</div> --%>
 <span id="addtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addtobagerror" style="display:none"><spring:theme code="product.error"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>

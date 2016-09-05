@@ -16,17 +16,6 @@
 		</div>
 	</div>
 </div> --%>
-	<!-- TPR-844 -->
-			<div class="wishAddLoginPlp">
-			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
-			</div>
-			<div class="wishAddSucessPlp">
-			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
-			</div>
-			<div class="wishAlreadyAddedPlp">
-			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
-			</div>
-	<!-- TPR-844 -->
 <div class="right-block">
 	<nav:searchSpellingSuggestion spellingSuggestion="${searchPageData.spellingSuggestion}" />
 

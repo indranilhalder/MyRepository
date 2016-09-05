@@ -5971,6 +5971,11 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TISPRO-540 - Payment Type -->
+					<!-- TPR-174 - Welcome back status message -->
+					<attribute qualifier="merged" type="java.lang.Boolean">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>

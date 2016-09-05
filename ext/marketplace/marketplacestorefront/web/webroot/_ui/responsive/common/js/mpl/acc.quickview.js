@@ -129,9 +129,9 @@ function setBuyBoxDetails()
 								
 								$(this).attr("disabled",true);
 								
-								$(this).css({
+								/*$(this).css({
 									"color": "gray"
-							});
+							});*/
 								$(this).on("mouseenter",function(){
 									$(this).parent("li").css("background","#fff");
 									
@@ -141,7 +141,7 @@ function setBuyBoxDetails()
 								      event.preventDefault();
 								      return false;
 								   });
-							$(this).parent().css("border-color","gray");
+							//$(this).parent().css("border-color","gray");
 							}
 						
 					});

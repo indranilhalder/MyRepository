@@ -53,6 +53,7 @@ import javax.servlet.http.Cookie;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -605,6 +606,90 @@ public class ProductDetailsHelper
 						galleryImages.add(formats);
 
 					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return galleryImageList;
+	}
+
+	/**
+	 * frame gallery images for mobile web service TPR-796
+	 *
+	 * @param productData
+	 * @return List<Map<String, String>>
+	 */
+	public List<GalleryImageData> getPrimaryGalleryImagesMobile(final ProductData productData)
+	{
+		int currentIndex = 0;
+		final List<Map<String, String>> galleryImages = new ArrayList<>();
+		final List<GalleryImageData> galleryImageList = new ArrayList<GalleryImageData>();
+		GalleryImageData galleryImageData = null;
+		try
+		{
+			if (CollectionUtils.isNotEmpty(productData.getImages()))
+			{
+				final List<ImageData> images = new ArrayList<>();
+				for (final ImageData image : productData.getImages())
+				{
+					if (ImageDataType.PRIMARY.equals(image.getImageType()))
+					{
+						images.add(image);
+					}
+				}
+				/*
+				 * final BeanComparator reverseOrderBeanComparator = new BeanComparator(MEDIA_PRIORITY, new
+				 * ReverseComparator( new ComparableComparator())); Collections.sort(images, reverseOrderBeanComparator);
+				 */
+				//final Comparator<ImageData> comp = new BeanComparator(MEDIA_PRIORITY);
+				//Collections.sort(images, comp);
+				if (CollectionUtils.isNotEmpty(images))
+				{
+					Map<String, String> formats = new HashMap<String, String>();
+					galleryImageData = new GalleryImageData();
+					if (images.get(0).getGalleryIndex() != null)
+					{
+						currentIndex = images.get(0).getGalleryIndex().intValue();
+					}
+					for (final ImageData image : images)
+					{
+						if (null != image.getGalleryIndex() && currentIndex != image.getGalleryIndex().intValue())
+						{
+							galleryImages.add(formats);
+							galleryImageData.setGalleryImages(formats);
+							galleryImageList.add(galleryImageData);
+							formats = new HashMap<>();
+							galleryImageData = new GalleryImageData();
+							currentIndex = image.getGalleryIndex().intValue();
+						}
+						if (null != image.getFormat() && !image.getFormat().isEmpty() && null != image.getUrl()
+								&& !image.getUrl().isEmpty())
+						{
+							formats.put(image.getFormat(), image.getUrl());
+							galleryImageData.setGalleryImages(formats);
+						}
+						if (null != image.getMediaType() && null != image.getMediaType().getCode())
+						{
+							galleryImageData.setMediaType(image.getMediaType().getCode());
+						}
+						if (null != image.getMediaType() && null != image.getMediaType().getCode()
+								&& image.getMediaType().getCode().equalsIgnoreCase("Video"))
+						{
+							galleryImageData.setStaticImage("store/_ui/responsive/common/images/video-play.png");
+						}
+
+					}
+
+					galleryImageList.add(galleryImageData);
+
+					if (MapUtils.isNotEmpty(formats))
+					{
+						galleryImages.add(formats);
+					}
+
 				}
 			}
 		}

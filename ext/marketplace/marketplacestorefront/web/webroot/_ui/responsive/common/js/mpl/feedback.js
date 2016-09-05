@@ -1565,11 +1565,12 @@ $(document).ready(function(){
 		$(window).on("load resize", function() {
 			var filter_height = 0;
 			if ($(".searchSpellingSuggestionPrompt").is(":visible")) {
-				filter_height=$(".searchSpellingSuggestionPrompt").outerHeight() + 95;
-			} else {
-				filter_height=$(".facet-list.filter-opt").height() + 55;
-			}
+				filter_height=$(".searchSpellingSuggestionPrompt").outerHeight() + 72;
+			 /*else {
+				filter_height=$(".facet-list.filter-opt").height() + 32;
+			}*/
 			$(".listing.wrapper .left-block").css("margin-top",filter_height+"px");
+			}
 		});
 		
 		$('.checkout.wrapper .product-block.addresses li.item .addressEntry').click(function(){
@@ -1697,6 +1698,9 @@ $(document).ready(function(){
 			var filter_html = $(".listing.wrapper .right-block .facet-values.js-facet-values").html();
 			$(".listing.wrapper .left-block").before(filter_html);
 			$(".listing.wrapper .right-block .facet-values.js-facet-values").html("").hide();
+			}
+			else{
+				$(".facet-list.filter-opt").hide();
 			}
 		});
 		$(window).on("load resize", function() {

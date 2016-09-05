@@ -654,6 +654,8 @@
     	<property name="typeId" type="String" />
     	<property name="typeVal" type="String" />
     	<property name="imageDiscription" type="String" />
+    	<!-- TPR-472 -->
+    	<property name="icid" type="String" />
     	<property name="componentType" type="String" />
     </bean>
 
