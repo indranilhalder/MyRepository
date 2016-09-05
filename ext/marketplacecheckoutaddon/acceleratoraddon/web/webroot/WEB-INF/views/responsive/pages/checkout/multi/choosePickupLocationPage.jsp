@@ -292,6 +292,13 @@
 					else {
 						submitPickupPersionDetails();
 					}
+					
+					<!------ TPR - 639 --------->
+					
+					utag.link(
+								{link_text: 'collectatstore_pickup_submit' , event_type : 'collectatstore_pickup_submit'}
+							 );
+					<!------ TPR - 639 --------->
 				}
 			});
 			
@@ -814,6 +821,11 @@
 							    	var url =  iconURLPrefix${status1.index} + 'marker' + parseInt(iconNumber) +'.png';
 							    	icons${status1.index}[number] = url;
 							    	processMap${status1.index}();
+							    	<!-- TPR-639 -->
+									utag.link(
+									{link_text: 'collectatstore_store_selection' , event_type : 'collectatstore_store_selection'}
+									);
+									<!-- TPR-639 -->
 							    	//console.log(url);
 							    });
 								
