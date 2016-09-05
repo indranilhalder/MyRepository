@@ -13,7 +13,7 @@
  */
 package com.tisl.mpl.v2.controller;
 
-import de.hybris.platform.catalog.enums.ProductReferenceTypeEnum;
+import de.hybris.platform.catalog.constants.GeneratedCatalogConstants.Enumerations.ProductReferenceTypeEnum;
 import de.hybris.platform.commercefacades.catalog.CatalogFacade;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
@@ -213,7 +213,8 @@ public class ProductsController extends BaseController
 	 * Returns a list of products and additional data such as: available facets, available sorting and pagination
 	 * options. It can include spelling suggestions.To make spelling suggestions work you need to:
 	 * <ul>
-	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.</li>
+	 * <li>Make sure enableSpellCheck on the SearchQuery is set to true. By default it should be already set to true.
+	 * </li>
 	 * <li>Have indexed properties configured to be used for spellchecking.</li>
 	 * </ul>
 	 *
@@ -325,14 +326,21 @@ public class ProductsController extends BaseController
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-
-			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			if (null != e.getErrorMessage())
 			{
 				product.setError(e.getErrorMessage());
 			}
-
+			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+		//TPR-799
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			product.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			product.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
 		return product;
 	}
 
@@ -529,8 +537,8 @@ public class ProductsController extends BaseController
 	@RequestMapping(value = "/{productCode}/references", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductReferenceListWsDTO exportProductReferences(@PathVariable final String productCode,
-			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize,
-			@RequestParam final String referenceType, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam(required = false, defaultValue = MAX_INTEGER) final int pageSize, @RequestParam final String referenceType,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final List<ProductOption> opts = Lists.newArrayList(OPTIONS);
 		final ProductReferenceTypeEnum referenceTypeEnum = ProductReferenceTypeEnum.valueOf(referenceType);
@@ -1336,8 +1344,8 @@ public class ProductsController extends BaseController
 				else
 				{
 
-					searchPageData = searchFacade
-							.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID, pageableData);
+					searchPageData = searchFacade.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SELLER_ID,
+							pageableData);
 				}
 			}
 			//final List<String> filter = new ArrayList<String>();
