@@ -54,8 +54,8 @@
 					function goActive() {
 					      startTimer();
 					}
+					//TPR-1214
 					$("#newAddressButton,#newAddressButtonUp").click(function() {
-						console.log("newAddressButton ");
 						var validate=true;
 						var regPostcode = /^([1-9])([0-9]){5}$/;
 					    var mob = /^[1-9]{1}[0-9]{9}$/;
@@ -117,54 +117,10 @@
 							$("#address1Error").html("<p>Address Line 1 cannot be blank</p>");	
 							validate= false;
 						}
-						/*else if(regAddress.test(result) == false)  
-						{ 
-							$("#address1Error").show();
-							$("#address1Error").html("<p>Address Line 1 must be alphanumeric only</p>");
-							validate= false;
-						}  */
-							else
+						else
 						{
 							$("#address1Error").hide();
 						}	
-						
-						   /* result=address2.value;
-							if(result == undefined || result == "")
-						{	
-							$("#address2Error").show();
-							$("#address2Error").html("<p>Address Line 2 cannot be blank</p>");
-							validate= false;
-						}
-						else if(regAddress.test(result) == false)  
-						{ 
-							$("#address2Error").show();
-							$("#address2Error").html("<p>Address Line 2 must be alphanumeric only</p>");
-							validate= false;
-						}
-						else
-						{
-							$("#address2Error").hide();
-						}*/
-						
-						/*result=address3.value;
-						if(result == undefined || result == "")
-						{	
-							$("#address3Error").show();
-							$("#address3Error").html("<p>Address line 3 cannot be blank</p>");
-							validate= false;
-						}
-						else if(regAddress.test(result) == false)  
-						{ 
-							$("#address3Error").show();
-							$("#address3Error").html("<p>Address line 3 must be alphanumeric only</p>");	
-							validate= false;
-						}  
-						else
-						{
-							$("#address3Error").hide();	
-						}*/
-						
-						
 						  result=city.value;
 						if(result == undefined || result == "")
 						{	
@@ -246,28 +202,27 @@
 					    	{
 							address3.value=encodeURIComponent(address3.value);
 					    	}
-							$('#addressForm').submit();	
-							
-//							$.ajax({
-//								url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/"+zipcode,
-//								type: "GET",
-//								cache: false,
-//								success : function(response) {
-//									console.log("response "+response);
-//									var values=response.split("|");
-//									var isServicable=values[0];
-//									if(isServicable=='N'){
-//										$("#addressPincodeServicableDiv").show();
-//										$("#addressPincodeServicableDiv").html("<p>Pincode is not serviceable</p>");
-//									}else{
-//									
-//										$('#addressForm').submit();	
-//									}
-//								},
-//								error : function(resp) {
-//									alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
-//								}
-//							});	 
+							$.ajax({
+						 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
+						 		type: "POST",
+						 		data:$("#addressForm").serialize(),
+						 		cache: false,
+						 		dataType: "json",
+						 		success : function(response) {
+						 		if(response.hasOwnProperty("error")){
+						 			
+						 		}else if(response.hasOwnProperty("redirect_url")){
+						 		var redirectUrl = response.redirect_url;
+						 		var url = redirectUrl.substr(redirectUrl.indexOf(':')+1,redirectUrl.length);
+						 		
+						 		window.location.href = ACC.config.encodedContextPath + url;
+						 		}	
+						 		},
+						 		error : function(resp) {
+						 			
+						 		}
+						 		
+						 		});
 						}
 						return false;
 					});
