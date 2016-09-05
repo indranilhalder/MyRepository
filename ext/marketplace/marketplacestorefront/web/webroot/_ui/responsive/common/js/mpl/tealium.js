@@ -198,7 +198,14 @@ $(document).ready(
 								tealiumData += '"page_name":"'
 									+ $("#page_name").val() + '",';
 								tealiumData += '"categoryId":"'
-									+ $("#categoryId").val() + '"}';
+									+ $("#categoryId").val() + '",';
+								/*TPR-430*/
+								tealiumData += '"product_category":"'
+									+ $("#product_category").val() + '",';
+								tealiumData += '"page_subcategory_name":"'
+									+ $("#page_subcategory_name").val() + '",';
+								tealiumData += '"page_subcategory_name_L3":"'
+									+ $("#page_subcategory_name_L3").val() + '"}';
 								data = data.replace("}<TealiumScript>", tealiumData);
 								$('#tealiumHome').html(data);
 							}
@@ -225,8 +232,14 @@ $(document).ready(
 							+ $("#page_name").val() + '",';
 						tealiumData += '"search_results":"'
 							+ $("#search_results").val() + '",';
-						tealiumData += '"search_type":"'		// TPR-666
-							+ $("#search_type").val() +'"}';
+						tealiumData += '"product_category":"'
+							+ $("#product_category").val() + '",';
+						tealiumData += '"product_category":"'
+							+ $("#product_category").val() + '",';
+						tealiumData += '"page_subcategory_name":"'		// TPR-430
+							+ $("#page_subcategory_name").val() +'",';
+						tealiumData += '"page_subcategory_name_L3":"'		// TPR-430
+							+ $("#page_subcategory_name_L3").val() +'",';
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
 					}
@@ -261,12 +274,13 @@ $(document).ready(
 							+ $("#product_id").val() + ',';
 						tealiumData += '"product_brand":'
 							+ $("#product_brand").val() + ',';
-						tealiumData += '"page_subcategory_name_L3":"'
-							+ $("#page_subcategory_name_L3").val() + '",';
-						tealiumData += '"page_subcategory_name":'
-							+ $("#page_subcategory_name").val() + ',';
-						tealiumData += '"product_category":'
-							+ $("#product_category").val() + '"}';
+						TPR-430
+						tealiumData += '"page_subcategory_name":"'
+							+ $("#page_subcategory_name").val() + '",';
+					tealiumData += '"page_subcategory_name_L3":"'
+						+ $("#page_subcategory_name_L3").val() + '",';
+					tealiumData += '"product_category":["'
+						+ $("#product_category").val() + '"],';
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
 					}

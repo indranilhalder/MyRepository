@@ -20,7 +20,9 @@ import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorservices.enums.CheckoutFlowEnum;
 import de.hybris.platform.acceleratorservices.enums.CheckoutPciOptionEnum;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.ProductBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
@@ -42,9 +44,11 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.core.Constants.USER;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -168,6 +172,12 @@ public class CartPageController extends AbstractPageController
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
 
+	@Autowired
+	private ProductBreadcrumbBuilder productBreadcrumbBuilder;
+
+	@Autowired
+	private ProductService productService;
+
 	/*
 	 * Display the cart page
 	 */
@@ -278,7 +288,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 * 
+	 *
 	 * }
 	 */
 
@@ -483,7 +493,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 * 
+	 *
 	 * @param model ,redirectModel
 	 */
 
@@ -960,7 +970,33 @@ public class CartPageController extends AbstractPageController
 		//TISPT-174
 		//populateTealiumData(model, cartData);
 		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-
+		//TPR-430
+		final List<String> productCategoryList = new ArrayList<String>();
+		final List<String> pageSubCategories = new ArrayList<String>();
+		final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
+		if (cartData.getEntries() != null && !cartData.getEntries().isEmpty())
+		{
+			for (final OrderEntryData entry : cartData.getEntries())
+			{
+				final ProductModel productModel = productService.getProductForCode(entry.getProduct().getCode());
+				final List<Breadcrumb> breadcrumbs = productBreadcrumbBuilder.getBreadcrumbs(productModel);
+				if (null != entry.getProduct().getCategories())
+				{
+					productCategoryList.add(breadcrumbs.get(0).getName());
+				}
+				if (breadcrumbs.size() > 1)
+				{
+					pageSubCategories.add(breadcrumbs.get(1).getName());
+				}
+				if (breadcrumbs.size() > 2)
+				{
+					pageSubcategoryNameL3List.add(breadcrumbs.get(2).getName());
+				}
+			}
+			model.addAttribute("product_category", productCategoryList);
+			model.addAttribute("page_subcategory_name", pageSubCategories);
+			model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
+		}
 	}
 
 
@@ -1275,7 +1311,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1332,7 +1368,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
