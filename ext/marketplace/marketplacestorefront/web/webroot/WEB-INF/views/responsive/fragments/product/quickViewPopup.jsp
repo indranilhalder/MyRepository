@@ -624,14 +624,14 @@ display:none;
 			</ul>    
 <!-- adding to wishlist -->
 				<ul class="wish-share">
-					<li><!-- <span id="addedMessage" style="display:none"></span> -->
-						<%-- <a onClick="openPop_quick('${buyboxUssid}');scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'>....<spring:theme code="text.add.to.wishlist"/></a></li> --%>
-						<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li>
+					<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
+						<a onClick="openPop_quick('${buyboxUssid}');scrollbottom();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'>....<spring:theme code="text.add.to.wishlist"/></a></li>
+						<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li> --%>
 				<%-- <a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement='bottom'><spring:theme code="text.add.to.wishlist"/></a></li> --%>
 					<li>
 						<div class="share">
-							<span><spring:theme code="product.socialmedia.share"/></span>
-							<ul style="width: 200px;">
+							<%-- <span><spring:theme code="product.socialmedia.share"/></span> --%>
+							<ul style="width: 100%;">
 								<li>
 							<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text())"></a>
 							</li>
@@ -660,6 +660,9 @@ display:none;
 						</div>
 					</li>
 				</ul>
+				<div class="full-details">
+<a href="${productUrl}" class="quick-view-prod-details-link"><spring:theme code="quickview.productdetails"/></a>
+</div>
 				
 	<script>
 			$(".g-interactivepost").attr("data-contenturl",window.location.host+$('#productUrl').text());
@@ -771,9 +774,9 @@ display:none;
 		<input type="hidden" id="loggedInQuick" value="true"/> 
 		</sec:authorize>
  	
-<div class="quick-view-prod-details-container">
+<%-- <div class="quick-view-prod-details-container">
 <a href="${productUrl}" class="quick-view-prod-details-link"><spring:theme code="quickview.productdetails"/></a>
-</div>
+</div> --%>
 <span id="addtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addtobagerror" style="display:none"><spring:theme code="product.error"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>

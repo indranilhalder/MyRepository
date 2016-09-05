@@ -10896,7 +10896,7 @@ button.otherSellersFont {
     float: left;
 }
 .quickview .product-info .product-content .wish-share>li{
-	 padding: 20px 0;
+	 padding: 0;
 }
 .product-info .product-content .wish-share>li a {
     text-transform: uppercase;
@@ -10924,7 +10924,7 @@ button.otherSellersFont {
     content: "\e603"
 }
 .quickview .product-info .product-content .wish-share>li:last-child {
-    width: 50%;
+    width: 100%;
     margin-right: 0
 }
 .product-info .product-content .wish-share>li .share {
@@ -10947,14 +10947,14 @@ button.otherSellersFont {
     font-weight: 100;
     content: "\f045"
 }
-.quickview .product-info .product-content .wish-share>li .share:hover ul {
+ .quickview .product-info .product-content .wish-share>li .share:hover ul {
     max-height: 200px;
     -webkit-transition: max-height 0.15s;
     -moz-transition: max-height 0.15s;
     transition: max-height 0.15s
-}
+} 
 .quickview .product-info .product-content .wish-share>li .share>ul {
-    margin-left: -50%;
+    /* margin-left: -50%; */
     display: block;
     max-height: 0;
     overflow: hidden;
@@ -10963,7 +10963,7 @@ button.otherSellersFont {
     transition: max-height 0.3s
 }
 .quickview .product-info .product-content .wish-share>li .share>ul li {
-    padding: 15px 5px 5px 5px;
+    /* padding: 15px 5px 5px 5px;*/    
     display: inline-block;
 }
 .product-info .product-content .wish-share>li .share>ul li>button{
@@ -10982,7 +10982,7 @@ button.otherSellersFont {
     font-size: 16px
 }
 .quickview .product-info .product-content .wish-share>li .share>ul li a:before {
-    color: #A9143C;}
+    color: #b2b2b2;}
 .product-info .product-content .wish-share>li .share>ul li a.in:before {
     content: "\f16d"
 }
@@ -23794,8 +23794,11 @@ h5.questions a:hover {
 		margin-bottom:20px;
 	}
 	.quickview .product-info .product-content ul.wish-share{
-		margin-top:20px;
-		margin-bottom:60px;
+		margin-top:40px;
+		margin-bottom:20px;
+	    display: inline-block;
+    	width: 50%;
+    	vertical-align: top;
 	}
 
 .searchSpellingSuggestionPrompt{
@@ -46337,5 +46340,45 @@ border-right: 2px solid #9b9b9b;
 .quickview .product-content .star-review {
     color: #fbb928;
     }
+ .quickview .product-info .product-content .wish-share>li .share ul {
+    max-height: 200px;
+}
+.quickview .product-info .product-content .wish-share>li:last-child {
+	float: none;
+}
+.quickview .product-info .product-content .full-details{
+	display: inline-block;
+	width: 49%;
+	vertical-align: top;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    float: right;
+}
+.quickview .product-info .product-content .full-details a{
+	font-size: 12px;
+	text-transform: uppercase;
+	font-weight: bold;
+	text-align: right;
+    display: block; 
+    padding-top: 5px;
+}
+.quickview .product-info .product-content .full-details a:after {
+	content: "";
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	margin-left: 5px;
+	border-right: 1px solid #a9143c;
+	border-top: 1px solid #a9143c;
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	transform: rotate(45deg);
+	}
+	.quickview .product-info .product-content .swatch .color-swatch li {
+		width: 22px;
+		height: 22px;
+	}
 /*Quickview changes end*/
 
