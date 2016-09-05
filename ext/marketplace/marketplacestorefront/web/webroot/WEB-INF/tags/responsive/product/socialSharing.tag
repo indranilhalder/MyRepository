@@ -27,7 +27,7 @@
 				 var PopUpLeftPosition = screen.width/2 - popUpWidth/2;
 				    var PopUpTopPosition= screen.height/2 - popUpHeight/2;
 			function openPopup(url,buttontype) {
-				alert(buttontype);
+				//alert(buttontype);
 				//TPR-674
 				utag.link({link_obj: this, link_text: buttontype , event_type : 'share_button_click' });
 				    window.open(url, 'popup_id','scrollbars,resizable,height='+popUpHeight+',width='+ popUpWidth +',left='+ PopUpLeftPosition +',top='+ PopUpTopPosition);
