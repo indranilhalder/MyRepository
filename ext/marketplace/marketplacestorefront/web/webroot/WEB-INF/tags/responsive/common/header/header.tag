@@ -168,6 +168,7 @@
 					</div>
 					</div>
 					<span>CHECKOUT</span>
+					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next">Proceed to Pay</button>
 						</c:if>
 					</div>
 				</c:otherwise>

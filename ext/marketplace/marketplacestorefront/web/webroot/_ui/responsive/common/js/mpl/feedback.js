@@ -2045,3 +2045,11 @@ $(window).scroll(function(){
 		$(".pdp .trending#ia_products .owl-controls").css("top",a);
 	}
 });
+
+/*checkout address modified starts*/
+
+$(document).on("click",".acc_head",function(){
+	$(this).siblings(".acc_content").slideToggle();
+});
+
+/*checkout address modified ends*/
