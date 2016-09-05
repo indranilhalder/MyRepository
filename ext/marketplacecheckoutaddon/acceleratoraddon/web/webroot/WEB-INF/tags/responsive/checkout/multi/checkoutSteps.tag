@@ -24,15 +24,19 @@
       <div class="step-3 finalstep "><a href="checkout-payment.html">Payment&nbsp;<i class="fa fa-caret-right fa-caret"></i></a><span></span></div> -->
 
 		
+				<div class="progress-barg">
 				<c:forEach items="${checkoutSteps}" var="checkoutStep"
 					varStatus="status">
-					<c:if test="${checkoutStep.stepNumber eq 1}">
-					<div class="progress-barg"><span class="step${checkoutStep.stepNumber}"></span></div>
+					<c:if test="${checkoutStep.progressBarId eq progressBarId}">
+					<c:set scope="page" var="activeCheckoutBarStepNumber" value="${checkoutStep.stepNumber}" />
 					</c:if>
-					
-					
-					
-					
+					</c:forEach>
+					<span class="step${activeCheckoutBarStepNumber}"></span>
+				</div> 
+			
+				<c:forEach items="${checkoutSteps}" var="checkoutStep"
+					varStatus="status">
+				
 					<c:url value="${checkoutStep.url}" var="stepUrl" />
 					<c:choose>
 						<c:when test="${progressBarId eq checkoutStep.progressBarId}">
