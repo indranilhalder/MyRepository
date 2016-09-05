@@ -411,7 +411,6 @@ public class ProductPageController extends AbstractPageController
 		String productName = null;
 		String categoryId = null;
 		String productUnitPrice = null;
-		String productSubCategoryName = null;
 
 		try
 		{
@@ -433,20 +432,12 @@ public class ProductPageController extends AbstractPageController
 				categoryId = productCategoryIdList.get(0);
 			}
 
-			if (productCategoryStrings.length >= 2)
-			{
-				//productSubCategoryName =(String) productCategoryStrings[1];
-				productSubCategoryName = ((String) productCategoryStrings[1]).replaceAll(" ", "_").toLowerCase();
-			}
-
 			if (productData != null)
 			{
 				if (productData.getCode() != null)
 				{
 					productSku = productData.getCode();
 
-					//if (buyBoxFacade != null)
-					//{
 					final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productSku);
 					if (buyboxdata != null)
 					{
@@ -513,14 +504,21 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute("category_id", categoryId);
 			model.addAttribute("page_section_name", "");
 			model.addAttribute("product_id", productData.getCode());
-			//	model.addAttribute("page_subcategory_name", productSubCategoryName);
-			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName());
+			if (breadcrumbs.size() > 1)
+			{
+				model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName());
+			}
 			model.addAttribute("site_section_detail", productData.getRootCategory());
 			model.addAttribute("product_brand", productBrand);
-			//model.addAttribute("product_category", productCategory);
-			model.addAttribute("product_category", breadcrumbs.get(0).getName());
-
-			model.addAttribute("page_subcategory_name_L3", productSubCategoryName);
+			if (breadcrumbs.size() > 0)
+			{
+				model.addAttribute("product_category", breadcrumbs.get(0).getName());
+			}
+			//TPR-430
+			if (breadcrumbs.size() > 2)
+			{
+				model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName());
+			}
 			//TPR-672 START
 			if (CollectionUtils.isNotEmpty(productData.getPotentialPromotions()))
 			{

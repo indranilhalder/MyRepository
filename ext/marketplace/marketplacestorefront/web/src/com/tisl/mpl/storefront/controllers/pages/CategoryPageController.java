@@ -259,8 +259,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				if (CollectionUtils.isNotEmpty(normalProductDatas))
 				{
-					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
-							searchPageData.getDepartmentHierarchyData());
+					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
 					model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
 					model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery().getValue());
 				}
@@ -278,8 +277,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(
-					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+					MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -414,8 +413,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				//if (normalProductDatas.size() > 0)
 				if (CollectionUtils.isNotEmpty(normalProductDatas))
 				{
-					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
-							searchPageData.getDepartmentHierarchyData());
+					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
 					model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
 					model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery().getValue());
 				}
@@ -454,8 +452,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			catch (final Exception exp)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(
-						new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
 				try
 				{
 					return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
@@ -470,8 +468,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(
-					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+					MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -511,14 +509,17 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		model.addAttribute("page_name", "Product Grid:" + breadcrumbName);
 		//TPR-430
-		model.addAttribute("product_category", breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase());
-		if (null != breadcrumbs.get(1).getName())
+		if (breadcrumbs.size() > 0)
 		{
-			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName().replaceAll(" ", "_").toLowerCase());
+			model.addAttribute("product_category", breadcrumbs.get(0).getName());
 		}
-		if (null != breadcrumbs.get(2).getName())
+		if (breadcrumbs.size() > 1)
 		{
-			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase());
+			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName());
+		}
+		if (breadcrumbs.size() > 2)
+		{
+			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName());
 		}
 	}
 
@@ -732,8 +733,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> updatePageData(
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData, final String whichSearch,
-			final String searchQuery)
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData,
+			final String whichSearch, final String searchQuery)
 	{
 		// YTODO Auto-generated method stub
 		if (null != whichSearch)
@@ -940,8 +941,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 		private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData;
 		private final String pageFacets;
 
-		public CategorySearchEvaluator(final String categoryCode, final String searchQuery, final int page, final ShowMode showMode,
-				final String sortCode, final CategoryPageModel categoryPage, final String pageFacets)
+		public CategorySearchEvaluator(final String categoryCode, final String searchQuery, final int page,
+				final ShowMode showMode, final String sortCode, final CategoryPageModel categoryPage, final String pageFacets)
 		{
 			this.categoryCode = categoryCode;
 			this.searchQueryData.setValue(searchQuery);
