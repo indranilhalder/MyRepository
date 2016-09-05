@@ -326,7 +326,7 @@ $(document).ready(
 			/*TPR-694 starts*/
 			$(document).on('click','#tabs_details',function(){
 			
-				alert("viewdetails......")
+			//	alert("viewdetails......")
 				utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'
 							}); 
 				});
@@ -334,7 +334,7 @@ $(document).ready(
 			
 			/*TPR- 659 starts*/
 			$(document).on("click",".view-cliq-offers",function(){
-				alert("viewcliq......")
+		//		alert("viewcliq......")
 				utag.link(
 		    			{link_obj: this, link_text: 'home_top_deal_view_offers' , event_type : 'home_top_deal_view_offers'}
 		    			);
