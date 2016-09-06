@@ -328,7 +328,17 @@ $(document).ready(function(){
 				});
 			
 			});	
-	
+	$(".facet-list.filter-opt li").each(function(){
+		if($(this).find("input.colour").length > 0){
+			var selected_colour = $(this).find("input.applied-color").val();
+			$(".left-block .product-facet .facet.colour .facet-list li.filter-colour").each(function(){
+			var colour_name = $(this).find("input[name=facetValue]").val().split("_", 1);
+			if(colour_name == selected_colour){
+				$(this).addClass("selected-colour");
+			}
+			});
+		}
+	});
 	/*-----------END of SERP Codes-----------------*/ 
 	
 		
@@ -1702,6 +1712,17 @@ $(document).ready(function(){
 			else{
 				$(".facet-list.filter-opt").hide();
 			}
+			$(".facet-list.filter-opt li").each(function(){
+				if($(this).find("input.colour").length > 0){
+					var selected_colour = $(this).find("input.applied-color").val();
+					$(".left-block .product-facet .facet.colour .facet-list li.filter-colour").each(function(){
+					var colour_name = $(this).find("input[name=facetValue]").val().split("_", 1);
+					if(colour_name == selected_colour){
+						$(this).addClass("selected-colour");
+					}
+					});
+				}
+			});
 		});
 		$(window).on("load resize", function() {
 		if($(".listing.wrapper").length > 0){
