@@ -25304,9 +25304,6 @@ body .account .right-account .order-history.order-details li.item .actions a:vis
 	display: none;
 }
 @media(max-width:650px){
-	.listing.wrapper .left-block .product-facet.js-product-facet.listing-leftmenu{
-	display:none;
-	padding-top:10px;}
 	.listing.wrapper .right-block .listing-menu > div .wrapped-form.sort select#sortOptions1{
 margin: 0px;
 padding-left: 0px;} 
@@ -34215,6 +34212,33 @@ cursor: auto;
 .listing.wrapper .pagination li.active span {
     width: 13px;
     display: inline-block;
+}
+.product-facet .filter-colour.selected-colour .js-facet-colourbutton {
+    background-image: url(../images/color-tick.png);
+    transition: all .2s;
+    opacity: 1;
+}
+.product-facet .facet .facet-name .brandSelectAllMain{
+	left: 0;
+    width: 100%;
+}
+.listing-leftmenu .search button{
+	border-left: 1px solid #cccccc;
+    height: 28px;
+    margin: 3px 1px 0 0;
+    width: 30px;
+}
+.listing-leftmenu .search input.brandSearchTxt{
+	border: 1px #cccccc solid !important;
+    height: 30px;
+    padding: 5px 5px 5px 10px !important;
+    font-style: normal;
+}
+.listing-leftmenu .search button:before{
+	color: #a7183e;
+}
+.product-facet .filter-colour input[value='White_FFFFFF'] ~ .js-facet-colourbutton {
+    border: 1px solid rgb(204, 211, 217) !important;
 }
 @media (max-width: 790px){
 .product-listing.product-grid li.product-item, .listing.wrapper .right-block .product-list > li{
@@ -43128,7 +43152,7 @@ left: 5px;
 .listing.wrapper .left-block.fix {
 position: fixed;
 bottom: 5px;
-left: 20px;
+left: 0px;
 }
 .listing.wrapper .right-block  {
 float: right;
