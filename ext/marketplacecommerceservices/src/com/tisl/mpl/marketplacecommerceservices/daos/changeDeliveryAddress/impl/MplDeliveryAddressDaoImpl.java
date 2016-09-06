@@ -86,7 +86,7 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 	 * @return TemproryAddressModel
 	 */
 	@Override
-	public TemproryAddressModel getTemporaryAddressModel(String orderId)
+	public TemproryAddressModel getTemporaryAddressModel(final String orderId)
 	{
 
 		try
@@ -95,15 +95,15 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 					+ " AS o} " + "WHERE ({o:" + TemproryAddressModel.ORDERID + "})=?orderId" + " ORDER BY {o:"
 					+ TemproryAddressModel.CREATIONTIME + "} DESC";
 
-			FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
 			fQuery.addQueryParameter("orderId", orderId);
-			SearchResult<TemproryAddressModel> searchResult = flexibleSearchService.search(fQuery);
-			List<TemproryAddressModel> tempAddrlist = searchResult.getResult();
+			final SearchResult<TemproryAddressModel> searchResult = flexibleSearchService.search(fQuery);
+			final List<TemproryAddressModel> tempAddrlist = searchResult.getResult();
 			return !tempAddrlist.isEmpty() ? tempAddrlist.get(0) : null;
 		}
 		catch (final FlexibleSearchException e)
 		{
-			LOG.error(" FlSearchException exception " + e.getMessage());
+			LOG.error(" FlexibleSearchException while getting the temprory Address " + e.getMessage());
 		}
 		catch (final Exception e)
 		{
@@ -113,30 +113,30 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 	}
 
 	@Override
-	public List<TemproryAddressModel> getTemporaryAddressModelList(String fromDate, String toDate)
+	public List<TemproryAddressModel> getTemporaryAddressModelList(final String fromDate, final String toDate)
 	{
 		List<TemproryAddressModel> tempAddrlist = null;
 		try
 		{
-			String SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES = "SELECT {cdrm:" + TemproryAddressModel.PK + "}" + " FROM {"
+			final String SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES = "SELECT {cdrm:" + TemproryAddressModel.PK + "}" + " FROM {"
 					+ TemproryAddressModel._TYPECODE + " AS cdrm} " + "WHERE " + "{cdrm:" + TemproryAddressModel.CREATIONTIME
 					+ "} between ?fromDate and ?toDate and" + "{cdrm:" + TemproryAddressModel.ISPROCESSED + "}  IS NOT NULL";
 
-			FlexibleSearchQuery fQuery = new FlexibleSearchQuery(SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES);
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(SHORT_URL_REPORT_QUERY_BETWEEN_TWO_DATES);
 			fQuery.addQueryParameter("fromDate", fromDate);
 			fQuery.addQueryParameter("toDate", toDate);
-			SearchResult<TemproryAddressModel> searchResult = flexibleSearchService.search(fQuery);
+			final SearchResult<TemproryAddressModel> searchResult = flexibleSearchService.search(fQuery);
 			tempAddrlist = searchResult.getResult();
 			return !tempAddrlist.isEmpty() ? tempAddrlist : null;
 
 		}
 		catch (final FlexibleSearchException e)
 		{
-			LOG.error(" FlSearchException exception " + e.getMessage());
+			LOG.error(" FlexibleSearch Exception while geting the temprory Address  " + e.getMessage());
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occurree getting the temparory address " + e.getMessage());
+			LOG.error("Exception occurred while  getting the temparory address " + e.getMessage());
 		}
 		return null;
 	}
