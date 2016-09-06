@@ -7,7 +7,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 
-
+${welcome_message}
 <c:if test="${not empty cartData.entries}">
     <c:url value="/cart/checkout" var="checkoutUrl" scope="session"/>
     <c:url value="${continueUrl}" var="continueShoppingUrl" scope="session"/>
