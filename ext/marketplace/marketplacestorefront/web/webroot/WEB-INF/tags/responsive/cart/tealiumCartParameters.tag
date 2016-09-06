@@ -5,6 +5,10 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <input type="hidden" id="product_brand" value='${productBrandList}'/>
+
+<input type="hidden" id="page_subcategory_name_L3" value='${pageSubCategoriesL3}'/>
+<input type="hidden" id="page_subcategory_name" value='${pageSubCategories}'/>
+
 <input type="hidden" id="product_id" value='${productIdList}'/>
 <input type="hidden" id="product_sku" value='${productSkuList}'/>
 <input type="hidden" id="adobe_product" value="${adobe_product}"/>
