@@ -1547,6 +1547,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private List<VariantOptionMobileData> getVariantDetailsForProduct(final ProductData productData)
 	{
 		final List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
+		SizeLinkData sizeLinkData = null;
+		CapacityLinkData capacityLinkData = null;
+		ColorLinkData colorLinkData = null;
 		try
 		{
 			if (CollectionUtils.isNotEmpty(productData.getVariantOptions()))
@@ -1554,10 +1557,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				for (final VariantOptionData variantData : productData.getVariantOptions())
 				{
 					final VariantOptionMobileData variantMobileData = new VariantOptionMobileData();
-					final ColorLinkData colorLinkData = new ColorLinkData();
-					SizeLinkData sizeLinkData = null;
-					CapacityLinkData capacityLinkData = null;
-
+					colorLinkData = new ColorLinkData();
 					if (StringUtils.isNotEmpty(variantData.getColour()))
 					{
 						colorLinkData.setColor(variantData.getColour());
@@ -1586,7 +1586,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							{
 								sizeLinkData.setUrl(sizeEntry.getKey());
 							}
-							//TPR-797
+							//TPR-797---TISSTRT-1403
 							if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()) && productData.getAllVariantsId().size() > 1)
 							{
 								productData.getAllVariantsId().remove(productData.getCode());
@@ -1605,11 +1605,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						variantMobileData.setSizelink(sizeLinkData);
 					}
 
-					if (null != variantData.getCapacity())
+					if (StringUtils.isNotEmpty(variantData.getCapacity()))
 					{
 						capacityLinkData = new CapacityLinkData();
 						capacityLinkData.setCapacity(variantData.getCapacity());
-						if (null != variantData.getUrl())
+						if (StringUtils.isNotEmpty(variantData.getUrl()))
 						{
 							capacityLinkData.setUrl(variantData.getUrl());
 						}
