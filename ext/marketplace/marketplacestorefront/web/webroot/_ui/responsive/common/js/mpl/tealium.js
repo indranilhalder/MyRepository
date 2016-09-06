@@ -488,3 +488,33 @@ $(document).on('click','.jqtree-title.jqtree_common',function(){
 	});
 })
 /*TPR-645 End*/
+
+/*TPR-650 Start*/
+$(document).on('mousedown','.owl-prev,.owl-next',function(e){
+	var direction='';
+	var title='';
+	if($(this).parents('.owl-carousel').parents('.trending').length > 0){
+		title=$(this).parents('.owl-carousel').parents('.trending').find('h1>span').text().trim();
+	}
+	else{
+		title=$(this).parents('.owl-carousel').parent('div').find('h1').text().trim();
+	}
+	
+	if($(e.currentTarget).hasClass('owl-next')){
+		direction="Next";
+	}
+	else{
+		direction="Previous";
+	}
+	title = title.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	direction = direction.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var msg = (title+"_"+direction);
+	if(title){
+		utag.link({
+			link_obj: this,
+			link_text: msg,
+			event_type : title+"_navigation_click"
+		});
+	}
+})
+/*TPR-650 End*/

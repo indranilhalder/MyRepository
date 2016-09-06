@@ -361,7 +361,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 
 //TPR-645
 function onFilterClickAnalytics(filterName,filterValue){
-	var msg = (filterName+"_"+filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/'/g,"");
+	var msg = (filterName+"_"+filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	utag.link({
 		link_obj: this,
 		link_text: msg ,

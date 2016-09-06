@@ -209,7 +209,7 @@ ACC.storefinder = {
 			// TPR-647 start
 			utag.link({
 				link_obj: this,
-				link_text:'find_a_store:'+$('#storelocator-query').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/'/g,"") ,
+				link_text:'find_a_store:'+$('#storelocator-query').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"") ,
 				event_type:'find_a_store'
 			});
 			//TPR-647 end
