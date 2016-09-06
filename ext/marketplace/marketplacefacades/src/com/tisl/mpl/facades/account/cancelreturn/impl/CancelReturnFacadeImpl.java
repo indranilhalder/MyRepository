@@ -172,7 +172,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private MplSellerInformationService mplSellerInformationService;
 	
 	@Autowired
-	private MplPrefixablePersistentKeyGenerator persistentKeyGenerator;
+	private MplPrefixablePersistentKeyGenerator prefixableKeyGenerator;
 	
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
@@ -399,9 +399,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			LOG.debug("Step 2: ***********************************Ticket Type code : " + ticketTypeCode);
 			if ((ticketTypeCode.equalsIgnoreCase("C") || (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie))) //TISEE-933
 			{
-
-				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, returninfoData.getReasonCode(), returninfoData.getUssid(), pincode);
-
+				
+				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, returninfoData.getReasonCode(), returninfoData.getUssid(), pincode,returninfoData.getReturnFulfillmentMode());
+			
 				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
 				{
 					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
@@ -1130,19 +1130,27 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						returnLogisticsCheck = false;
 					}
 					LOG.info(">>createTicketInCRM >> Setting Type of Return :" + returnLogisticsCheck);
-					if (returnLogisticsCheck)
+					
+					if(returnInfoData.getReturnMethod() != null)
+					{
+					if( returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_SELFSHIP))
+					{
+						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSS);
+					}
+					else if(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP))
+					{
+						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
+					}
+					else if(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SCHEDULE))
+					{
+				   if (returnLogisticsCheck)
 					{
 						//LOG.info("Setting Type of Return::::::" + returnLogisticsCheck);
-						sendTicketRequestData.setTicketSubType("RSP");
+						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSP);
 					}
-					else
-					{
-						//LOG.info("Setting Type of Return::::::" +returnLogisticsCheck);
-						sendTicketRequestData.setTicketSubType("RSS");
+					
 					}
-
-					//lineItemDataList.add(sendTicketLineItemData);
-					//End
+					}
 				}
 
 				lineItemDataList.add(sendTicketLineItemData);
@@ -1163,8 +1171,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			}
 			
 			//set ECOM request prefix as E to for COMM triggered Ticket
-			persistentKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
-			sendTicketRequestData.setEcomRequestId(persistentKeyGenerator.generate().toString());
+			prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
+			sendTicketRequestData.setEcomRequestId(prefixableKeyGenerator.generate().toString());
 			sendTicketRequestData.setReturnPickupDate(returnInfoData.getReturnPickupDate());
 			sendTicketRequestData.setTimeSlotFrom(returnInfoData.getTimeSlotFrom());
 			sendTicketRequestData.setTimeSlotTo(returnInfoData.getTimeSlotTo());
@@ -1463,7 +1471,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	// Return Item Pincode Property
 	private MplCancelOrderRequest populateOrderLineData(final OrderEntryData subOrderEntry, final String ticketTypeCode,
-			final OrderModel subOrderModel, final String reasonCode, final String ussid, final String pincode) throws Exception
+			final OrderModel subOrderModel, final String reasonCode, final String ussid, final String pincode,final String returnFulfillmentMode) throws Exception
 	{
 
 		final MplCancelOrderRequest orderLineRequest = new MplCancelOrderRequest();
@@ -1487,6 +1495,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				orderLineData.setReturnCancelRemarks(getReasonDesc(reasonCode));
 				orderLineData.setPinCode(pincode);
+				orderLineData.setReturnFulfillmentMode(returnFulfillmentMode);
 			}
 			if (StringUtils.isNotEmpty(subEntry.getOrderLineId()))
 			{
@@ -1997,6 +2006,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						if (null != orderLine.getTransactionId())
 						{
 							returnLogRespData.setTransactionId(orderLine.getTransactionId());
+						}
+						if (null != orderLine.getReturnFulfillmentType())
+						{
+							returnLogRespData.setReturnFulfillmentType(orderLine.getReturnFulfillmentType());
 						}
 						if (null != orderLine.getIsReturnLogisticsAvailable())
 						{
