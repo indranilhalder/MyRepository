@@ -192,4 +192,7 @@ public final class MessageConstants
 	public static final String ORDER_CAROUSEL_SIZE = "mpl.account.review.orderCarousel.size";
 	//feebback survey
 	public static final String FEEDBACK_SURVEY_URL = "mpl.feedback.survey";
+	// TPR-174
+	public static final String WELCOME_BACK_MESSAGE = "Your cart has been updated - Do you want to review ?";
+
 }
