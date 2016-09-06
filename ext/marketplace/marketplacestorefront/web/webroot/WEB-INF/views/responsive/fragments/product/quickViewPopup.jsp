@@ -305,6 +305,7 @@ display:none;
 <div class="quick-view-popup product-info wrapper">
 
 <div class="product-image-container">
+	<a class="wishlist-icon" onclick="openPop_quick()"></a>
    <c:set var="increment" value="0"/>
 <c:set var="thumbNailImageLength" value="${fn:length(galleryImages)}" />
 
@@ -365,13 +366,7 @@ display:none;
 		<%-- </c:if> --%>
 		</div>
 		
-		<div id="emiStickerId" class="emi" style="display:none;">
-							<spring:theme code="marketplace.emiavailable" />&nbsp;
-							<a type="button" name="yes" id="prodEMI"
-		data-target="#modalProd" onclick="openPopForBankEMI_quick()"
-		data-toggle="modal"><spring:theme code="marketplace.emiinfo"></spring:theme></a> <input id="prodPrice" type="hidden" />
-						</div>
-				<product:emiDetail product="${product}" />
+		
 	
 <%-- 		<c:choose>
 		<c:when test="${spPrice ne null}">
@@ -422,7 +417,7 @@ display:none;
     <div class="product-detail">
     
     <h2 class="company">
-              <span class="logo"></span>${product.brand.brandname}&nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName}</h2><!-- Convert into AJAX call -->
+              <span class="logo"></span>${product.brand.brandname}<%-- &nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName} --%></h2><!-- Convert into AJAX call -->
               
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     <div class="price">
@@ -475,27 +470,21 @@ display:none;
 	</p>
     
   </div>   
+  
+  <!-- TPR-924 -->
+  <div id="emiStickerId" class="Emi Emi_wrapper" style="display:none;">
+							<spring:theme code="marketplace.emiavailable" />&nbsp;
+							<a type="button" name="yes" id="prodEMI"
+		data-target="#modalProd" onclick="openPopForBankEMI_quick()"
+		data-toggle="modal"><spring:theme code="marketplace.emiinfo"></spring:theme></a> <input id="prodPrice" type="hidden" />
+	</div>
+	<product:emiDetail product="${product}" />
+	<!-- TPR-924 Ends-->
+	
 <a href="#" class="gig--readReviewsLink"></a>
 	<span id="gig-rating-readReviewsLink_quick" ></span>	
   <input type="hidden" id="rating_review" value="${product.code}">
-		 <ul class="star-review" id="quick_view_rating">
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
-		
-		<%-- 	<c:choose>
-				<c:when test="${not empty product.ratingCount}">
-			
-					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
-				</c:when>
-				<c:otherwise> --%>
-					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span>
-				<%-- </c:otherwise>
-			</c:choose> --%>
-			</ul> 
-			
+					
 <!-- 			 <script>
 				var avgrating = '${product.averageRating}';
 				//alert(":-:"+avgrating);
@@ -513,19 +502,19 @@ display:none;
 				
 			</script>  -->
  
- 	<div class="fullfilled-by">
+ 	<%-- <div class="fullfilled-by">
 		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
-		<%-- <c:choose>
+		<c:choose>
 		<c:when test="${fn:toLowerCase(fullfilmentType) == fn:toLowerCase('sship')}">
 			<span id="fullFilledById">${sellerName}</span>
 		</c:when>
 		<c:otherwise>
 			<span id="fullFilledById"><spring:theme code="product.default.fulfillmentType"/></span>
 		</c:otherwise>
-		</c:choose> --%>
+		</c:choose>
 		<span id="fulFilledByTshipQuick" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
 			<span id="fulFilledBySshipQuick"  style="display:none;"></span>
-	</div>
+	</div> --%>
    <div class="product-content" style="margin-top:15px;">
 	   <div class="swatch">
 	<product:viewQuickViewVariant/>
@@ -541,6 +530,12 @@ display:none;
 	</div> 
 
 </div>
+ <!-- TPR-924 -->
+		 <div id="buyNowQv"> 
+	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart-qv">
+				<spring:theme code="buyNow.button.pdp" />
+			</button>
+	    </div> 
 <%--  <div id="ajax-loader" style="margin: 0 auto; height:20px; width: 20px;"><img src="${commonResourcePath}/images/ajax-loader.gif"></div> --%>     
 <!-- add to cart functionality -->
 <div id="addToCartFormQuickTitle" class="addToCartTitle">
@@ -563,10 +558,49 @@ display:none;
 		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
 		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
 		 
+		 <!-- TPR-924 -->
+		<!--  <div id="buyNow"> -->
+	       <%--  <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart">
+				<spring:theme code="buyNow.button.pdp" />
+			</button> --%>
+	    <!--  </div> -->
+		 
 		 <button id="addToCartButtonQuick" type="${buttonType}"
 												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
 												<spring:theme code="basket.add.to.basket" />
 											</button>
+		<!-- TPR-924 -->									
+		<div class="SoldWrap">
+				<ycommerce:testId
+					code="productDetails_productNamePrice_label_${product.code}">
+					<!-- <div class="seller">Sold by <span id="sellerNameId"></span></div> -->
+					<div class="seller">Sold by <span id="sellerNameIdQuick"></span>${sellerName}</div>					
+				</ycommerce:testId>
+				<div class="fullfilled-by">
+				<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+				<span id="fulFilledBySship"  style="display:none;"></span>
+				</div>
+		</div>
+		
+		 <ul class="star-review" id="quick_view_rating">
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+				<li class="empty"></li>
+		
+		<%-- 	<c:choose>
+				<c:when test="${not empty product.ratingCount}">
+			
+					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
+				</c:when>
+				<c:otherwise> --%>
+					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span>
+				<%-- </c:otherwise>
+			</c:choose> --%>
+			</ul> 
+		
+		<!-- TPR-924 Ends-->
 		<span id="dListedErrorMsg" style="display: none"  class="dlist_message">
 		<spring:theme code="pdp.delisted.message" />
 	</span>
