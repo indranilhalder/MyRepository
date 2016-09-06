@@ -161,39 +161,39 @@
 		<div class='half'>
 		
 		<formElement:formInputBox idKey="address.firstName"
-			labelKey="address.firstName" path="firstName" 
-			mandatory="true" maxLength="40"/>
+			 path="firstName" 
+			mandatory="true" maxLength="40" placeholder="FirstName*"/>
 			<div class="help-block has-error" id="firstnameError" style="display: none;">		
 			</div>	
 			</div>
 			<div class='half'>
 		<formElement:formInputBox idKey="address.surname"
-			labelKey="address.surname" path="lastName" 
-			mandatory="true" maxLength="40"/>
+			 path="lastName" 
+			mandatory="true" maxLength="40" placeholder="Lastname*"/>
 			<div class="help-block has-error" id="lastnameError" style="display: none;">		
 			</div>
 			</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line1"
-			labelKey="address.line1" path="line1"
-			mandatory="true" maxLength="40"/>
+			 path="line1"
+			mandatory="true" maxLength="40"  placeholder="Address Line 1*"/>
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line2"
-			labelKey="address.line2" path="line2" 
-			mandatory="true" maxLength="40"/>
+			 path="line2" 
+			mandatory="true" maxLength="40" placeholder="Address Line 2"/>
 			 <div class="help-block has-error" id="address2Error" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line3"
-			labelKey="address.line3" path="line3" 
-			mandatory="true" maxLength="40" />
+			 path="line3" 
+			mandatory="true" maxLength="40" placeholder="Address Line 3"/>
 			 <div class="help-block has-error" id="address3Error" style="display: none;">
 			</div>
 			</div>
@@ -201,8 +201,8 @@
 		<div class='full'>
 		<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.townCity"
-			labelKey="address.townCity" path="townCity" 
-			mandatory="true" maxLength="40"/>
+			 path="townCity" 
+			mandatory="true" maxLength="40" placeholder="City*"/>
 			<div class="help-block has-error" id="cityError" style="display: none;">
 			</div>
 			</div>
@@ -235,8 +235,8 @@
 		<%-- <formElement:formInputBox idKey="address.states" labelKey="address.states" path="state" inputCSS="form-control" mandatory="true"/> --%>
 		<div class='half'>
 		<formElement:formInputBox idKey="address.postcode"
-			labelKey="address.postcode" path="postcode"
-			mandatory="true" maxLength="6" />
+			path="postcode"
+			mandatory="true" maxLength="6" placeholder="Pincode*" />
 		<div class="help-block has-error" id="addressPincodeServicableDiv"
 			style="display: none;"></div>
 			<div class="help-block has-error" id="pincodeError" style="display: none;">
@@ -251,8 +251,8 @@
      </select>
         <input type="hidden" name="myselect" value="myselectedvalue" /> 
 	 	<form:input type="text" idKey="address.mobile" id="mobileNonewForm"
-			labelKey="address.mobile" path="MobileNo" inputCSS="form-control"
-			mandatory="true" maxLength="10"/> 
+			 path="MobileNo" inputCSS="form-control"
+			mandatory="true" maxLength="10" placeholder="Mobile Number*"/> 
 			<div class="help-block has-error" id="mobileError" style="display: none;">		
 			</div>	 
 		</div>	

@@ -47978,399 +47978,7 @@ body.no-scroll {
 
   /* checkout-payment.css ends*/
   
-  
-  /* checkout-combination.css starts */
-  
-  /*Desktop
----------------------------------------------*/
-/*Progress Bar */
-.checkTab .choose-address {
-    border: 1px solid #e4e4e4;
-    padding: 28px 21px 29px 29px;
-    overflow: hidden;
-    margin-bottom: 30px;
-}
-
-.checkTab .choose-address h2 {
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.checkTab .choose-address .cart-items {
-    padding: 0;
-    font-weight: normal;
-    color: #999999;
-}
-
-.checkTab .choose-address form {
-    margin-top: 26px;
-}
-
-.checkTab .address-list {
-    width: 47%;
-    margin-right: 5%;
-    /* padding: 30px 30px 38px 34px; */
-    /* margin-bottom: 60px; */
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.checkTab .map-view {
-    width: 47%;
-}
-
-.checkTab .address-list:nth-of-type(2n) {
-    margin-right: 0;
-}
-
-.checkTab .address-list:last-of-type {
-    margin-bottom: 0;
-}
-
-.checkTab .add-address,.checkTab .formaddress {
-    float: left;
-    margin-right: 0;
-    width: 47.3%;
-    padding: 40px 0;
-    clear: none;
-    margin-bottom: 0;
-    min-height: 165px;
-}
-
-.checkTab .formaddress {
-    padding: 29px;
-    margin-top: 0;
-}
-
-.checkTab .smk_accordion .accordion_in .acc_head {
-    padding: 0;
-}
-
-.checkTab .smk_accordion .accordion_in .acc_content {
-    margin: 0;
-    background-color: #ffffff;
-}
-
-.checkTab .smk_accordion .accordion_in.acc_active {
-    background: url(../images/up-arrow.png) 98% 36px no-repeat;
-}
-
-.checkTab .smk_accordion .accordion_in {
-    background-position: 98% 36px;
-}
-
-.checkTab .choose-address.choose-retailer .address-list {
-    padding: 30px 29px 25px 34px;
-    width: 47%;
-}
-
-.checkTab .dist {
-    width: 22%;
-}
-
-.checkTab .formaddress form .name-address {
-    width: 47.7%;
-}
-
-@media only screen and (max-width: 1450px) {
-    .checkTab .choose-address {
-        padding: 15px 20px;
-        margin-bottom: 20px;
-    }
-
-    .checkTab .address-list {
-        width: 47%;
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-
-    .checkTab .address-list .address {
-        width: 88%;
-    }
-
-    .checkTab .add-address, .checkTab .formaddress,.checkTab .map-view {
-        width: 47.2%;
-    }
-
-    .checkTab .choose-retailer .address-list .address {
-        width: 67%;
-    }
-
-    .checkTab .dist {
-        width: 25%;
-    }
-
-    .checkTab .smk_accordion .accordion_in {
-        background-position: 98% 28px;
-    }
-
-    .checkTab .add-address, .checkTab .formaddress {
-        min-height: 133px;
-        padding: 35px;
-    }
-
-    .checkTab .smk_accordion .accordion_in.acc_active {
-        background: rgba(0, 0, 0, 0) url("../images/up-arrow.png") no-repeat scroll 98% 28px;
-    }
-
-    .checkTab .address-list .address {
-        width: 84%;
-    }
-
-    .checkTab .smk_accordion .accordion_in .acc_content, .checkTab .smk_accordion .accordion_in .acc_head {
-        padding: 0 24px;
-    }
-    .checkTab .smk_accordion .accordion_in .acc_content{
-    	margin-top: 26px;
-    	display: none;
-    }
-    
-}
-
-@media only screen and (max-width: 1350px) {
-    .checkTab .address-list {
-        margin-right:45px;
-    }
-
-    .checkTab .choose-address.choose-retailer .address-list {
-        padding: 20px;
-    }
-
-    .checkTab .choose-retailer .address-list .address {
-        width: 65%;
-    }
-}
-
-/*Tablet Portrait */
-/*---------------------------------------------*/
-@media(max-width: 980px) {
-    .checkTab .choose-address {
-        border:0 none;
-        border-top: 1px solid #e4e4e4;
-        padding: 18px 0 0 0;
-    }
-
-    .checkTab .address-list {
-        width: 100%;
-        padding: 22px 2px;
-        margin-bottom: 0;
-        border: 0 none;
-        border-bottom: 1px solid #e4e4e4;
-    }
-
-    .checkTab .smk_accordion .accordion_in.acc_active,.checkTab .smk_accordion .accordion_in {
-        background-position: 98% 18px;
-    }
-
-    .checkTab .choose-address h2 {
-        font-size: 16px;
-    }
-
-    .checkTab .choose-address form {
-        margin-top: 20px;
-    }
-
-    .checkTab .address-list:last-of-type {
-        border: 0 none;
-    }
-
-    .checkTab .address-list .address span {
-        display: block;
-    }
-
-    .checkTab .choose-address.choose-retailer form {
-        margin-top: 0;
-    }
-
-    .checkTab .choose-address.choose-retailer .address-list {
-        padding: 25px 2px 25px;
-        width: 100%;
-    }
-
-    .checkTab .add-address,.checkTab .formaddress,.checkTab .map-view {
-        width: 100%;
-        border: 1px solid #e4e4e4;
-        background: #fff;
-        padding: 40px 0 20px;
-    }
-
-    .checkTab .formaddress {
-        border: 0 none;
-    }
-
-    .proceed-button {
-        right: 0;
-    }
-
-    .checkTab .edit,.checkTab .dist {
-        float: right;
-        margin-right: 10px;
-    }
-
-    .checkTab .choose-address.choose-retailer .cart-items {
-        padding-bottom: 28px;
-    }
-
-    .checkTab .map-view {
-        min-height: 130px;
-        padding: 50px 0;
-        min-height: 60px;
-        margin: 0 0 30px;
-    }
-
-    .checkTab .choose-address.choose-retailer {
-        border-bottom: 1px solid #e4e4e4;
-    }
-}
-
-/*Mobile
----------------------------------------------*/
-@media(max-width: 767px) {
-    .checkTab .choose-address h2 {
-        font-size:12px;
-        padding-bottom: 9px;
-    }
-
-    .checkTab .choose-address .cart-items {
-        font-size: 10px;
-    }
-
-    .checkTab .choose-address {
-        margin-bottom: 20px;
-    }
-
-    .checkTab .choose-address.choose-retailer {
-        margin-bottom: 100px;
-    }
-
-    .checkTab .choose-address form {
-        margin-top: 0;
-    }
-
-    .checkTab .address-list .address {
-        font-size: 12px;
-        width: 75%;
-    }
-
-    .checkTab .address-list:last-of-type {
-        border-bottom: 0 none;
-    }
-
-    .checkTab .add-address {
-        border: 1px solid #e4e4e4;
-    }
-
-    .checkTab .dist {
-        float: right;
-        width: 30%;
-    }
-
-    .checkTab .map-view {
-        border: 0 none;
-        border-top: 1px solid #e4e4e4;
-        padding: 20px 0 0;
-        min-height: 30px;
-        line-height: 15px;
-    }
-
-    .checkTab .dist {
-        width: 23%;
-    }
-
-    .checkTab .choose-address.choose-retailer {
-        border-bottom: 0 none;
-    }
-
-    .proceed-button.mobile-only,.checkout-footer {
-        display: none;
-    }
-
-    .checkTab .choose-address.choose-retailer .cart-items {
-        padding-bottom: 0;
-    }
-
-    .choose-info {
-        margin-bottom: 50px;
-    }
-
-    .checkTab .choose-retailer .address-list .address {
-        width: 53%;
-    }
-
-    .address-list .address .name {
-        padding-bottom: 0;
-    }
-
-    .checkTab .address-list {
-        padding: 10px 2px 15px;
-    }
-
-    .checkTab .add-address, .checkTab .formaddress {
-        min-height: 130px;
-        padding-top: 30px;
-    }
-
-    .checkTab .choose-address.choose-retailer .address-list {
-        padding: 15px 0;
-        width: 100%;
-        margin: 0;
-    }
-
-    .checkTab .address-list input[type="radio"] + label::before {
-        margin-left: 2px;
-    }
-
-    .checkTab .smk_accordion .accordion_in .acc_head, .checkTab .formaddress {
-        padding: 0 12px;
-    }
-
-    .checkTab .choose-address .address-list, .checkTab .choose-address.choose-retailer .address-list {
-        padding: 10px 12px 15px;
-    }
-
-    .checkTab .add-address {
-        float: none;
-        width: 93%;
-        clear: both;
-        margin: 0 auto;
-    }
-
-    .checkTab .smk_accordion .accordion_in .acc_content {
-        padding: 0;
-    }
-}
-
-@media(max-width: 450px) {
-    .checkTab .choose-retailer .address-list .address {
-        width: 53%;
-    }
-
-    .checkTab .map-view {
-        min-height: 20px;
-        padding: 12px 0 0;
-    }
-
-    .checkTab .dist {
-        width: 30%;
-    }
-
-    .checkTab .formaddress form .name-address {
-        width: 47.3%;
-    }
-
-    .checkTab .choose-address h2 {
-        padding-bottom: 5px;
-    }
-
-    .checkTab .choose-address .address-list,.checkTab .choose-address.choose-retailer .address-list {
-        padding: 15px 12px;
-    }
-}
-  
-  
-   /* checkout-combination.css ends */
-   
-   /* checkout-address.css starts */
+  /* checkout-address.css starts */
    
    /*Desktop
 ---------------------------------------------*/
@@ -49359,6 +48967,399 @@ body.no-scroll {
    
    
    /* checkout-address.css ends */
+  
+  /* checkout-combination.css starts */
+  
+  /*Desktop
+---------------------------------------------*/
+/*Progress Bar */
+.checkTab .choose-address {
+    border: 1px solid #e4e4e4;
+    padding: 28px 21px 29px 29px;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.checkTab .choose-address h2 {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.checkTab .choose-address .cart-items {
+    padding: 0;
+    font-weight: normal;
+    color: #999999;
+}
+
+.checkTab .choose-address form {
+    margin-top: 26px;
+}
+
+.checkTab .address-list {
+    width: 47%;
+    margin-right: 5%;
+    /* padding: 30px 30px 38px 34px; */
+    /* margin-bottom: 60px; */
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.checkTab .map-view {
+    width: 47%;
+}
+
+.checkTab .address-list:nth-of-type(2n) {
+    margin-right: 0;
+}
+
+.checkTab .address-list:last-of-type {
+    margin-bottom: 0;
+}
+
+.checkTab .add-address,.checkTab .formaddress {
+    float: left;
+    margin-right: 0;
+    width: 47.3%;
+    padding: 40px 0;
+    clear: none;
+    margin-bottom: 0;
+    min-height: 165px;
+}
+
+.checkTab .formaddress {
+    padding: 29px;
+    margin-top: 0;
+}
+
+.checkTab .smk_accordion .accordion_in .acc_head {
+    padding: 0;
+}
+
+.checkTab .smk_accordion .accordion_in .acc_content {
+    margin: 0;
+    background-color: #ffffff;
+}
+
+.checkTab .smk_accordion .accordion_in.acc_active {
+    background: url(../images/up-arrow.png) 98% 36px no-repeat;
+}
+
+.checkTab .smk_accordion .accordion_in {
+    background-position: 98% 36px;
+}
+
+.checkTab .choose-address.choose-retailer .address-list {
+    padding: 30px 29px 25px 34px;
+    width: 47%;
+}
+
+.checkTab .dist {
+    width: 22%;
+}
+
+.checkTab .formaddress form .name-address {
+    width: 47.7%;
+}
+
+@media only screen and (max-width: 1450px) {
+    .checkTab .choose-address {
+        padding: 15px 20px;
+        margin-bottom: 20px;
+    }
+
+    .checkTab .address-list {
+        width: 47%;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .checkTab .address-list .address {
+        width: 88%;
+    }
+
+    .checkTab .add-address, .checkTab .formaddress,.checkTab .map-view {
+        width: 47.2%;
+    }
+
+    .checkTab .choose-retailer .address-list .address {
+        width: 67%;
+    }
+
+    .checkTab .dist {
+        width: 25%;
+    }
+
+    .checkTab .smk_accordion .accordion_in {
+        background-position: 98% 28px;
+    }
+
+    .checkTab .add-address, .checkTab .formaddress {
+        min-height: 133px;
+        padding: 35px;
+    }
+
+    .checkTab .smk_accordion .accordion_in.acc_active {
+        background: rgba(0, 0, 0, 0) url("../images/up-arrow.png") no-repeat scroll 98% 28px;
+    }
+
+    .checkTab .address-list .address {
+        width: 84%;
+    }
+
+    .checkTab .smk_accordion .accordion_in .acc_content, .checkTab .smk_accordion .accordion_in .acc_head {
+        padding: 0 24px;
+    }
+    .checkTab .smk_accordion .accordion_in .acc_content{
+    	margin-top: 26px;
+    	display: none;
+    }
+    
+}
+
+@media only screen and (max-width: 1350px) {
+    .checkTab .address-list {
+        margin-right:45px;
+    }
+
+    .checkTab .choose-address.choose-retailer .address-list {
+        padding: 20px;
+    }
+
+    .checkTab .choose-retailer .address-list .address {
+        width: 65%;
+    }
+}
+
+/*Tablet Portrait */
+/*---------------------------------------------*/
+@media(max-width: 980px) {
+    .checkTab .choose-address {
+        border:0 none;
+        border-top: 1px solid #e4e4e4;
+        padding: 18px 0 0 0;
+    }
+
+    .checkTab .address-list {
+        width: 100%;
+        padding: 22px 2px;
+        margin-bottom: 0;
+        border: 0 none;
+        border-bottom: 1px solid #e4e4e4;
+    }
+
+    .checkTab .smk_accordion .accordion_in.acc_active,.checkTab .smk_accordion .accordion_in {
+        background-position: 98% 18px;
+    }
+
+    .checkTab .choose-address h2 {
+        font-size: 16px;
+    }
+
+    .checkTab .choose-address form {
+        margin-top: 20px;
+    }
+
+    .checkTab .address-list:last-of-type {
+        border: 0 none;
+    }
+
+    .checkTab .address-list .address span {
+        display: block;
+    }
+
+    .checkTab .choose-address.choose-retailer form {
+        margin-top: 0;
+    }
+
+    .checkTab .choose-address.choose-retailer .address-list {
+        padding: 25px 2px 25px;
+        width: 100%;
+    }
+
+    .checkTab .add-address,.checkTab .formaddress,.checkTab .map-view {
+        width: 100%;
+        border: 1px solid #e4e4e4;
+        background: #fff;
+        padding: 40px 0 20px;
+    }
+
+    .checkTab .formaddress {
+        border: 0 none;
+    }
+
+    .proceed-button {
+        right: 0;
+    }
+
+    .checkTab .edit,.checkTab .dist {
+        float: right;
+        margin-right: 10px;
+    }
+
+    .checkTab .choose-address.choose-retailer .cart-items {
+        padding-bottom: 28px;
+    }
+
+    .checkTab .map-view {
+        min-height: 130px;
+        padding: 50px 0;
+        min-height: 60px;
+        margin: 0 0 30px;
+    }
+
+    .checkTab .choose-address.choose-retailer {
+        border-bottom: 1px solid #e4e4e4;
+    }
+}
+
+/*Mobile
+---------------------------------------------*/
+@media(max-width: 767px) {
+    .checkTab .choose-address h2 {
+        font-size:12px;
+        padding-bottom: 9px;
+    }
+
+    .checkTab .choose-address .cart-items {
+        font-size: 10px;
+    }
+
+    .checkTab .choose-address {
+        margin-bottom: 20px;
+    }
+
+    .checkTab .choose-address.choose-retailer {
+        margin-bottom: 100px;
+    }
+
+    .checkTab .choose-address form {
+        margin-top: 0;
+    }
+
+    .checkTab .address-list .address {
+        font-size: 12px;
+        width: 75%;
+    }
+
+    .checkTab .address-list:last-of-type {
+        border-bottom: 0 none;
+    }
+
+    .checkTab .add-address {
+        border: 1px solid #e4e4e4;
+    }
+
+    .checkTab .dist {
+        float: right;
+        width: 30%;
+    }
+
+    .checkTab .map-view {
+        border: 0 none;
+        border-top: 1px solid #e4e4e4;
+        padding: 20px 0 0;
+        min-height: 30px;
+        line-height: 15px;
+    }
+
+    .checkTab .dist {
+        width: 23%;
+    }
+
+    .checkTab .choose-address.choose-retailer {
+        border-bottom: 0 none;
+    }
+
+    .proceed-button.mobile-only,.checkout-footer {
+        display: none;
+    }
+
+    .checkTab .choose-address.choose-retailer .cart-items {
+        padding-bottom: 0;
+    }
+
+    .choose-info {
+        margin-bottom: 50px;
+    }
+
+    .checkTab .choose-retailer .address-list .address {
+        width: 53%;
+    }
+
+    .address-list .address .name {
+        padding-bottom: 0;
+    }
+
+    .checkTab .address-list {
+        padding: 10px 2px 15px;
+    }
+
+    .checkTab .add-address, .checkTab .formaddress {
+        min-height: 130px;
+        padding-top: 30px;
+    }
+
+    .checkTab .choose-address.choose-retailer .address-list {
+        padding: 15px 0;
+        width: 100%;
+        margin: 0;
+    }
+
+    .checkTab .address-list input[type="radio"] + label::before {
+        margin-left: 2px;
+    }
+
+    .checkTab .smk_accordion .accordion_in .acc_head, .checkTab .formaddress {
+        padding: 0 12px;
+    }
+
+    .checkTab .choose-address .address-list, .checkTab .choose-address.choose-retailer .address-list {
+        padding: 10px 12px 15px;
+    }
+
+    .checkTab .add-address {
+        float: none;
+        width: 93%;
+        clear: both;
+        margin: 0 auto;
+    }
+
+    .checkTab .smk_accordion .accordion_in .acc_content {
+        padding: 0;
+    }
+}
+
+@media(max-width: 450px) {
+    .checkTab .choose-retailer .address-list .address {
+        width: 53%;
+    }
+
+    .checkTab .map-view {
+        min-height: 20px;
+        padding: 12px 0 0;
+    }
+
+    .checkTab .dist {
+        width: 30%;
+    }
+
+    .checkTab .formaddress form .name-address {
+        width: 47.3%;
+    }
+
+    .checkTab .choose-address h2 {
+        padding-bottom: 5px;
+    }
+
+    .checkTab .choose-address .address-list,.checkTab .choose-address.choose-retailer .address-list {
+        padding: 15px 12px;
+    }
+}
+  
+  
+   /* checkout-combination.css ends */
+   
+   
    
   body:not(.page-multiStepCheckoutSummaryPage) #deliveryAddressSubmitUp{
    	display: none;
@@ -49380,4 +49381,40 @@ body.no-scroll {
  .acc_content{
  	display: block;
  }
+/*  .checkout.wrapper .product-block.addresses.new-form li.item .half label, .checkout.wrapper .product-block.addresses.new-form li.item .full label{
+ 	display:none;
+ } */
+/*  @media (min-width:651px){ */
+ .formaddress .checkout-indent.left-block.address-form{
+ 	width:100%;
+ 	margin-top: 7px;
+ 	overflow: hidden;
+ }
+  .formaddress .checkout-indent #new-address-option-1 + label, #new-address-option-2 + label {
+ 	width: 49%;
+ }
+  .formaddress .checkout-indent .i18nAddressForm.address-form{
+  	padding: 0 2px;
+  }
+ .formaddress .checkout-indent .product-block li.item{
+  	border:none;
+  } 
+  #countrySelector.clearfix{
+  display:none;
+  }
+  .checkout.wrapper .formaddress .product-block.addresses.new-form li.item input{
+  margin-bottom: 20px;
+    font-size: 14px;
+    border: 1px solid #dbdbdb;
+    height: 44px;
+    padding-left: 17px;
+    color: #a5a5a5;
+  }
+  @media (min-width: 651px){
+  .checkout.wrapper .formaddress .product-block.addresses li.item{
+      padding: 0px;
+  } 
+  }
+  
+ /* } */
  /* change here for modified checkout page ends */

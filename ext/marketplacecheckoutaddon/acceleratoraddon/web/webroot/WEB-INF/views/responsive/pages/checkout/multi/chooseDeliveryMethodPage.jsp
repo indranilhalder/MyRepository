@@ -167,16 +167,16 @@
 			}
     			</script>
 				<ycommerce:testId code="checkoutStepTwo"> 
-					<div class="checkout-shipping"> 
+					<div class="checkout-shipping checkTab"> 
 					<c:if test="${not empty deliveryAddresses}"> 
 								
 										<form id="selectAddressForm" action="${request.contextPath}/checkout/multi/delivery-method/select-address" method="get">
 											<c:set var='countWork'  value='1' />
 											<c:set var='countHome'  value='1' />
 											<!-- TISCR-305 starts -->
-											<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></button>
+											<%-- <button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></button> --%>
 											<!-- TISCR-305 ends -->
-						<div class="checkout-indent left-block address-form">
+						<%-- <div class="checkout-indent left-block address-form">
 						
 								<h1>
 									<spring:theme code="checkout.summary.shippingAddress" text="Shipping Address"></spring:theme>
@@ -191,12 +191,12 @@
 										</a></li>		
           								</ul>		
   									</li>
-									<%-- <c:if test="${not empty deliveryAddresses}"> 
+									<c:if test="${not empty deliveryAddresses}"> 
 								
 										<form id="selectAddressForm" action="${request.contextPath}/checkout/multi/delivery-method/select-address" method="get">
 											<c:set var='countWork'  value='1' />
 
-											<c:set var='countHome'  value='1' /> --%>
+											<c:set var='countHome'  value='1' />
 											
 											
 											<div class="addressList">
@@ -291,7 +291,7 @@
 															</address>
 															</c:if>
 															
-															<%-- <address>
+															<address>
 															<li>${fn:escapeXml(deliveryAddress.title)}	 ${fn:escapeXml(deliveryAddress.firstName)}&nbsp; ${fn:escapeXml(deliveryAddress.lastName)}</br>
 															${fn:escapeXml(deliveryAddress.line1)}, &nbsp;  ${fn:escapeXml(deliveryAddress.line2)},  &nbsp;  ${fn:escapeXml(deliveryAddress.line3)},  &nbsp; </br> 
 															${fn:escapeXml(deliveryAddress.town)}, &nbsp;${fn:escapeXml(deliveryAddress.state)}, &nbsp; ${fn:escapeXml(deliveryAddress.postalCode)} <!--DSC_006 : Fix for Checkout Address State display issue -->
@@ -300,24 +300,270 @@
 															<c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
 															<c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if>  															
 															</li>
-															</address> --%>
+															</address>
 															
 															<a href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}" class="edit_address"><spring:theme code="checkout.multi.deliveryAddress.editAddress" text="Edit Address"></spring:theme> </a>
 															<a href="#nogo" class="defaultAddress" data-address-id="${deliveryAddress.id}">Make this default address</a>
 														</ul>
 												
 													</div>
-								
+								</li>
 												</c:forEach>
 													
 											</div>
 											<button id="deliveryAddressSubmit" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></button>
 
 
-										
+										</ul>
+						</div> --%>
+						
+						
+						
+						<!-- change here for modified checkout page starts -->
+									
+									<div class="address-accordion smk_accordion acc_with_icon">
+  <div class="choose-address accordion_in">
+    
+      <div class="acc_head"><div class="acc_icon_expand"></div><h2>Choose Address</h2><p class="cart-items">To send three items in your cart</p></div>
+      
+	  	<div class="acc_content">
+		
+      <form>
+        <!-- <div class="address-list ">
+          <input type="radio" class="radio1" name="address" id="list1" checked="">
+          <label for="list1"></label>
+          <p class="address"> <span class="name">Lucy Gellert</span> <span>37 Noalimba Avenue, LONG PLAIN, NSW 2360</span> <span>Phone: 02 9736 2453</span> 
+		   <span class="default">
+		  <input type="radio" value="Make this default address" class="regular-radio" name="default" id="radio-default1" checked="">				      
+		  <label for="radio-default1">Make this default address</label>
+		  </span>
+		  </p>
+		  <span class="edit"></span>
+          </div> -->
+          
+          <c:forEach items="${deliveryAddresses}" var="deliveryAddress" varStatus="status">
+        <div class="address-list">
+        	<c:choose>
+			<c:when test="${deliveryAddress.defaultAddress}">
+          <input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}"  id="radio_${deliveryAddress.id}" checked="checked"/>
+          <label for="list2"></label>
+           </c:when>
+           <c:otherwise>
+           	<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}"  id="radio_${deliveryAddress.id}"/>
+          	<label for="list2"></label>
+           </c:otherwise>
+           
+           </c:choose>
+           
+          
+          <p class="address"> 
+          <c:choose>
+          <c:when test="${deliveryAddress.addressType eq 'Work'}">
+          <span class="name commercial" for="radio_${deliveryAddress.id}">
+          <spring:theme code="checkout.multi.deliveryAddress.commercialAddress" text="Commercial Addresses"/>
+          <c:if test="${deliveryAddress.defaultAddress}">
+          - <spring:theme code="checkout.multi.deliveryAddress.defaultAddress" text="Default Addresses"/> <br/>
+          </c:if>
+          </span> 
+          
+          <c:set var='countWork'  value='${countWork+1}' />
+          </c:when>
+          <c:otherwise>
+           <span class="name residential" for="radio_${deliveryAddress.id}">
+           <spring:theme code="checkout.multi.deliveryAddress.residentialAddress" text="Residential Addresses"/>
+           <c:out value="${countHome}"></c:out>
+           <c:if test="${deliveryAddress.defaultAddress}">
+           - <spring:theme code="checkout.multi.deliveryAddress.defaultAddress" text="Default Addresses"/> <br/>
+           </c:if>
+           </span>
+          </c:otherwise>
+          
+          </c:choose>
+          
+          <c:set var="myline2" value="${fn:trim(deliveryAddress.line2)}"/>
+		  <c:set var="myline3" value="${fn:trim(deliveryAddress.line3)}"/>
+		  
+		  <c:if test="${empty myline2  && empty myline3}">
+		  <span>
+		  
+		  ${fn:escapeXml(deliveryAddress.title)}	 ${fn:escapeXml(deliveryAddress.firstName)}&nbsp; ${fn:escapeXml(deliveryAddress.lastName)}</br>
+		  ${fn:escapeXml(deliveryAddress.line1)}, &nbsp;</br>
+		  ${fn:escapeXml(deliveryAddress.town)}, &nbsp;${fn:escapeXml(deliveryAddress.state)}, &nbsp; ${fn:escapeXml(deliveryAddress.postalCode)} <!--DSC_006 : Fix for Checkout Address State display issue -->
+		  ${fn:escapeXml(deliveryAddress.country.isocode)}<c:if test="${not empty deliveryAddress.region.name}">&nbsp; ${fn:escapeXml(deliveryAddress.region.name)}</c:if></br>
+		  <spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br>
+		  <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
+		  <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if>
+		  
+		  </span>
+		  </c:if>
+		  
+		  <c:if test="${not empty myline2  && empty myline3}">
+		   <span>
+		   ${fn:escapeXml(deliveryAddress.title)}	 ${fn:escapeXml(deliveryAddress.firstName)}&nbsp; ${fn:escapeXml(deliveryAddress.lastName)}</br>
+		   ${fn:escapeXml(deliveryAddress.line1)}, &nbsp;  ${fn:escapeXml(deliveryAddress.line2)},    &nbsp; </br> 
+		   ${fn:escapeXml(deliveryAddress.town)}, &nbsp;${fn:escapeXml(deliveryAddress.state)}, &nbsp; ${fn:escapeXml(deliveryAddress.postalCode)} <!--DSC_006 : Fix for Checkout Address State display issue -->
+		   ${fn:escapeXml(deliveryAddress.country.isocode)}<c:if test="${not empty deliveryAddress.region.name}">&nbsp; ${fn:escapeXml(deliveryAddress.region.name)}</c:if></br>
+		   <spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br>
+		   <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
+		   <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if>
+		  
+		  </span>
+		  </c:if>
+		  <c:if test="${ empty myline2  && not empty myline3}">
+		  <span>
+		  ${fn:escapeXml(deliveryAddress.title)}	 ${fn:escapeXml(deliveryAddress.firstName)}&nbsp; ${fn:escapeXml(deliveryAddress.lastName)}</br>
+		  ${fn:escapeXml(deliveryAddress.line1)}, &nbsp; ${fn:escapeXml(deliveryAddress.line3)},  &nbsp; </br> 
+		  ${fn:escapeXml(deliveryAddress.town)}, &nbsp;${fn:escapeXml(deliveryAddress.state)}, &nbsp; ${fn:escapeXml(deliveryAddress.postalCode)} <!--DSC_006 : Fix for Checkout Address State display issue -->
+		  ${fn:escapeXml(deliveryAddress.country.isocode)}<c:if test="${not empty deliveryAddress.region.name}">&nbsp; ${fn:escapeXml(deliveryAddress.region.name)}</c:if></br>
+		  <spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br>
+		  <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
+		  <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if>
+		  </span>
+		  </c:if>
+		  
+		  <c:if test="${not empty myline2  && not empty myline3}">
+		  <span>
+		  ${fn:escapeXml(deliveryAddress.title)}	 ${fn:escapeXml(deliveryAddress.firstName)}&nbsp; ${fn:escapeXml(deliveryAddress.lastName)}</br>
+		  ${fn:escapeXml(deliveryAddress.line1)}, &nbsp;  ${fn:escapeXml(deliveryAddress.line2)},  &nbsp;  ${fn:escapeXml(deliveryAddress.line3)},  &nbsp; </br> 
+		  ${fn:escapeXml(deliveryAddress.town)}, &nbsp;${fn:escapeXml(deliveryAddress.state)}, &nbsp; ${fn:escapeXml(deliveryAddress.postalCode)} <!--DSC_006 : Fix for Checkout Address State display issue -->
+		  ${fn:escapeXml(deliveryAddress.country.isocode)}<c:if test="${not empty deliveryAddress.region.name}">&nbsp; ${fn:escapeXml(deliveryAddress.region.name)}</c:if></br>
+		  <spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br>
+		  <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
+		  <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if>
+		  </span>
+		  </c:if>
+		  
+		  
+		  
+         <!--  <span>37 Noalimba Avenue, LONG PLAIN, NSW 2360</span> <span>Phone: 02 9736 2453</span> -->
+		  <span class="default">
+		  <input type="radio" value="Make this default address" class="regular-radio" name="default" id="radio-default2">				      
+		  <label for="radio-default2">Make this default address</label>
+		  </span>
+		  </p>
+		  <span class="edit">
+		  <a href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}" class="edit_address"></a>
+		  </span>
+		  
+           </div>
+           </c:forEach>
+		 <!--   <div class="address-list">
+          <input type="radio" class="radio1" name="address" id="list3">
+          <label for="list3"></label>
+          <p class="address"> <span class="name">Lucy Gellert</span> <span>37 Noalimba Avenue, LONG PLAIN, NSW 2360</span> <span>Phone: 02 9736 2453</span> 
+		  <span class="default">
+		  <input type="radio" value="Make this default address" class="regular-radio" name="default" id="radio-default3">				      
+		  <label for="radio-default3">Make this default address</label>
+		  </span>
+		  </p>
+		  <span class="edit"></span>
+           </div> -->
+      </form>
+	  <div class="formaddress" style="display: none;">
+		<div class="heading-form"><h3>Add New Address</h3><input type="button" value="cancel" class="cancelBtn"></div>
+	  <form>		
+		<input type="text" placeholder="Firstname*" class="name-address">
+		<input type="text" placeholder="Lastname*" class="name-address">
+		<input type="text" placeholder="phone number*">
+		<input type="text" placeholder="Post code*">
+		<input type="text" placeholder="address line1*">
+		<input type="text" placeholder="address line2">
+		<input type="text" placeholder="city*">
+		<input type="text" placeholder="state*">
+		<input type="text" placeholder="country*">  
+		<input type="submit" value="save" class="saveBtn"> 
+	  </form>	  
+	  </div>
+     <div class="add-address" style="display: block;">
+        <p id="address-form"><span class="addsign pincode-button">
+        
+        </span>
+        <a class="pincode-button"> 
+		<spring:theme code="checkout.multi.deliveryAddress.useNewAddress" text="Use New Address"></spring:theme>
+		</a>
+        </p>
+		
+      </div>
+	  
+	  </div> 
+   
+  </div>
+ <%--  <div class="choose-address choose-retailer accordion_in">
+			
+			<!-- <div class="acc_head"><div class="acc_icon_expand"></div><h2>Choose Retailer</h2><p class="cart-items">To collect three items in your cart</p></div> -->			
+			<div class="acc_content">
+			
+			<form>
+			<div class="address-list">	
+				<input type="radio" class="radio1" name="address" id="list4" checked="">
+				<label for="list4"></label>				
+				<p class="address">
+					<span class="name">Croma Phoenix Market City</span>
+					<span>Phoenix Market City, Chennai 142</span>
+					<span>Velachery 600042</span>
+					<span class="work-hours">PiQ up hrs : 11:00 - 20:30</span>
+					<span class="week-off">Weekly Off : All Days Open</span>
+				</p>
+				<p class="dist">
+					<span class="dist-calc">2.5 miles</span>
+					<span class="get-directions">get directions</span>
+				</p>
+			</div>
+			<div class="address-list">	
+				<input type="radio" class="radio1" name="address" id="list5">
+				<label for="list5"></label>				
+				<p class="address">
+					<span class="name">Croma Phoenix Market City</span>
+					<span>Phoenix Market City, Chennai 142</span>
+					<span>Velachery 600042</span>
+					<span class="work-hours">PiQ up hrs : 11:00 - 20:30</span>
+					<span class="week-off">Weekly Off : All Days Open</span>
+				</p>
+				<p class="dist">
+					<span class="dist-calc">2.5 miles</span>
+					<span class="get-directions">get directions</span>
+				</p>
+				
+			</div>
+			<div class="address-list">	
+				<input type="radio" class="radio1" name="address" id="list6">
+				<label for="list6"></label>				
+				<p class="address">
+					<span class="name">Croma Phoenix Market City</span>
+					<span>Phoenix Market City, Chennai 142</span>
+					<span>Velachery 600042</span>
+					<span class="work-hours">PiQ up hrs : 11:00 - 20:30</span>
+					<span class="week-off">Weekly Off : All Days Open</span>
+				</p>
+				<p class="dist">
+					<span class="dist-calc">2.5 miles</span>
+					<span class="get-directions">get directions</span>
+				</p>
+				
+			</div>
+			</form>
+			<div class="map-view">
+				<p>Map view</p>				
+			</div>
+			</div>
+		
+		</div> --%>
+</div>
+				
+				
+									
+									<!-- change here for modified checkout page ends -->
 						
 						</form>
+						
 									</c:if>
+									
+									
+									
+									
+									
+									
+									
 					</div>
 					</div>
 				</ycommerce:testId>
@@ -531,6 +777,7 @@
 		</c:if>
 	<div class="addnewAddresPage"></div>	
 	<div class="editnewAddresPage"></div>
+
 	<div class="right-block shipping">
 			<div class="checkout-order-summary">
 				<multi-checkout:orderTotals cartData="${cartData}"

@@ -256,7 +256,7 @@
 						</c:choose>						
 					</c:otherwise>
 				</c:choose> 
-							<div class="checkout-indent left-block address-form">
+							 <div class="checkout-indent left-block address-form">
 								<h1>
 									<spring:theme code="checkout.summary.shippingAddress" text="Shipping Address"></spring:theme>
 								</h1>
@@ -279,7 +279,7 @@
 																				regions="${regions}" cancelUrl="${currentStepUrl}" />
 									  	</li>
 									  	</ul>
-									</div>
+									</div> 
 							</div>
 						
 					</ycommerce:testId>

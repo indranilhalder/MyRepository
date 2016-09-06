@@ -2051,5 +2051,14 @@ $(window).scroll(function(){
 $(document).on("click",".acc_head",function(){
 	$(this).siblings(".acc_content").slideToggle();
 });
+$(document).on("click",".add-address",function(){
+	$(this).siblings(".formaddress").slideToggle();
+	$(this).slideToggle();
+});
+$(document).on("click",".cancelBtn",function(){
+	$(this).parents(".formaddress").siblings(".add-address").slideToggle();
+	$(this).parents(".formaddress").slideToggle();
+});
+
 
 /*checkout address modified ends*/
