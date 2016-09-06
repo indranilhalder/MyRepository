@@ -1558,6 +1558,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					final VariantOptionMobileData variantMobileData = new VariantOptionMobileData();
 					colorLinkData = new ColorLinkData();
+					sizeLinkData = new SizeLinkData();
+					capacityLinkData = new CapacityLinkData();
+					// For Color
 					if (StringUtils.isNotEmpty(variantData.getColour()))
 					{
 						colorLinkData.setColor(variantData.getColour());
@@ -1573,11 +1576,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					}
 					variantMobileData.setColorlink(colorLinkData);
 
+					//For Size
 					if (MapUtils.isNotEmpty(variantData.getSizeLink()))
 					{
 						for (final Map.Entry<String, String> sizeEntry : variantData.getSizeLink().entrySet())
 						{
-							sizeLinkData = new SizeLinkData();
 							if (StringUtils.isNotEmpty(sizeEntry.getValue()))
 							{
 								sizeLinkData.setSize(sizeEntry.getValue());
@@ -1586,38 +1589,41 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							{
 								sizeLinkData.setUrl(sizeEntry.getKey());
 							}
-							//TPR-797---TISSTRT-1403
-							if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()) && productData.getAllVariantsId().size() > 1)
+						}
+					}
+					//TPR-797---TISSTRT-1403
+
+					if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()) && productData.getAllVariantsId().size() > 1)
+					{
+						productData.getAllVariantsId().remove(productData.getCode());
+						for (final String variants : productData.getAllVariantsId())
+						{
+							if (variants.equalsIgnoreCase(variantData.getCode()))
 							{
-								productData.getAllVariantsId().remove(productData.getCode());
-								for (final String variants : productData.getAllVariantsId())
-								{
-									if (variants.equalsIgnoreCase(variantData.getCode()))
-									{
-										sizeLinkData.setIsAvailable(true);
-									}
-								}
+								sizeLinkData.setIsAvailable(true);
 							}
 						}
 					}
-					if (null != sizeLinkData)
+					if (StringUtils.isNotEmpty(sizeLinkData.getUrl()))
 					{
 						variantMobileData.setSizelink(sizeLinkData);
 					}
 
+					//For Electronics Capacity
 					if (StringUtils.isNotEmpty(variantData.getCapacity()))
 					{
-						capacityLinkData = new CapacityLinkData();
 						capacityLinkData.setCapacity(variantData.getCapacity());
 						if (StringUtils.isNotEmpty(variantData.getUrl()))
 						{
 							capacityLinkData.setUrl(variantData.getUrl());
 						}
 					}
-					if (null != capacityLinkData)
+
+					if (StringUtils.isNotEmpty(capacityLinkData.getUrl()))
 					{
 						variantMobileData.setCapacityLink(capacityLinkData);
 					}
+
 					variantDataList.add(variantMobileData);
 				}
 			}
