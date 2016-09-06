@@ -223,6 +223,12 @@
 							$(".pickUpPersonAjax").append("<span class='pickupText'>Pickup Person Details Have Successfully Added.</span>");
 						}
 						$("#pickupPersonSubmit").text("1");
+						
+						<!---TPR-639-->
+						utag.link(
+								{link_text: 'collectatstore_pickup_submit' , event_type : 'collectatstore_pickup_submit'}
+							 );
+						<!---End of TPR-639-->
 
 					},
 					error : function(xhr, status, error) {
@@ -294,10 +300,10 @@
 					}
 					
 					<!------ TPR - 639 --------->
-					
+					/* 
 					utag.link(
 								{link_text: 'collectatstore_pickup_submit' , event_type : 'collectatstore_pickup_submit'}
-							 );
+							 ); */
 					<!------ TPR - 639 --------->
 				}
 			});
