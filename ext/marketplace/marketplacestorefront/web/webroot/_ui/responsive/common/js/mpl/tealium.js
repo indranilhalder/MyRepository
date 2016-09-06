@@ -406,7 +406,7 @@ $(document).on('click','#buyNowButton',function(){
 /*TPR-689 End*/
 
 
-$(document).on('click','.btn-block.js-add-to-cart',function(){
+$(document).on('mousedown','.btn-block.js-add-to-cart',function(){
 	
 	var eventType;
 	var parentWrap = $(this).parents('div.pdp').attr('class');
