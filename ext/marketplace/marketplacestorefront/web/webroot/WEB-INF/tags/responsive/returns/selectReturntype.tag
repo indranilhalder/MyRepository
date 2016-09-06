@@ -17,7 +17,7 @@
 							<div class="selectReason selectRefund col-md-12">
 								<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
 							<!-- 	<input class="radioButton" onclick="changeRadioColor('refund')" type="radio" value="refund" name="return" checked /> -->
-									<form:radiobutton class="radioButton" onclick="changeRadioColor('refund')" path="refundType"  value="refund" checked="checked" />
+									<form:radiobutton class="radioButton" onclick="changeRadioColor('refund')" path="refundType"  value="R" checked="checked" />
 								</div>
 								<div class="col-md-10 col-sm-10 col-xs-10">
 									<b><spring:theme code="text.order.returns.returnandrefund"/></b> <br/>
@@ -100,7 +100,6 @@
 									<b><spring:theme code="text.order.returns.refundmode"/></b> <br/>
 									<form:select name="size" class="refundMode" path="refundMode">
 										    <form:option value="NEFT" >NEFT</form:option>
-											<form:option value="IFSC">IFSC</form:option>
 											<form:option value="RTGF">RTGF</form:option>						
 									</form:select>
 								</div>
@@ -109,7 +108,7 @@
 									<form:select name="size" class="refundMode" path="title">
 										    <form:option value="mr" >MR</form:option>
 											<form:option value="Mrs">MRs</form:option>
-																
+											<form:option value="Company">Company</form:option>				
 									</form:select>
 								</div>
 							</div>
