@@ -59,6 +59,14 @@ import com.tisl.mpl.wsdto.VariantOptionsWsDto;
  * @author TCS
  *
  */
+/**
+ * @author 1047001
+ *
+ */
+/**
+ * @author 1047001
+ *
+ */
 public class SearchSuggestUtilityMethods
 {
 	@SuppressWarnings("unused")
@@ -388,6 +396,12 @@ public class SearchSuggestUtilityMethods
 		return secondrootname;
 	}
 
+	/**
+	 * @desc setting Facets (Filter) in the Search
+	 * @param productSearchPage
+	 * @param searchPageData
+	 * @return
+	 */
 	public ProductSearchPageWsDto setSearchPageData(final ProductSearchPageWsDto productSearchPage,
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
@@ -547,7 +561,39 @@ public class SearchSuggestUtilityMethods
 				}
 			}
 			productSearchPage.setFacetdata(searchfacetDTOList);
+		}
+		else
+		{
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
+		}
 
+		return productSearchPage;
+	}
+
+	/**
+	 * @desc setting Products in the Search --TPR-817
+	 * @param searchPageData
+	 * @return
+	 */
+	public ProductSearchPageWsDto setPDPSearchPageData(
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
+	{
+		final ProductSearchPageWsDto productSearchPage = new ProductSearchPageWsDto();
+		if (null != searchPageData.getResults())
+		{
+			// serp product results comes here
+			final List<SellingItemDetailWsDto> searchProductDTOList = getProductResults(searchPageData);
+			if (searchProductDTOList != null)
+			{
+				productSearchPage.setSearchresult(searchProductDTOList);
+				productSearchPage.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
+			}
 		}
 		else
 		{
@@ -560,24 +606,12 @@ public class SearchSuggestUtilityMethods
 
 
 
-
-	//	private final List<GalleryImageData> getGalleryImagesList(final List<Map<String, String>> galleryImages)
-	//	{
-	//		final List<GalleryImageData> galleryImageList = new ArrayList<GalleryImageData>();
-	//		GalleryImageData galleryImage = null;
-	//		for (final Map<String, String> map : galleryImages)
-	//		{
-	//			galleryImage = new GalleryImageData();
-	//			galleryImage.setGalleryImages(map);
-	//			galleryImageList.add(galleryImage);
-	//		}
-	//
-	//		return galleryImageList;
-	//	}
-
-
-
 	// Check if Keyword exists
+	/**
+	 * @desc Setting keyword redirect in search
+	 * @param searchText
+	 * @return
+	 */
 	public Map<String, List<String>> getKeywordSearch(String searchText)
 	{
 		//TODO parse the URL and remove any extra sort query within it
@@ -606,6 +640,11 @@ public class SearchSuggestUtilityMethods
 		return params;
 	}
 
+	/**
+	 * @desc Setting Products in the search response
+	 * @param searchPageData
+	 * @return
+	 */
 	private List<SellingItemDetailWsDto> getProductResults(
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
@@ -866,6 +905,12 @@ public class SearchSuggestUtilityMethods
 		return searchProductDTOList;
 	}
 
+	/**
+	 * @desc Setting Images data
+	 * @param product
+	 * @param format
+	 * @return
+	 */
 	private ImageData getPrimaryImageForProductAndFormat(final ProductData product, final String format)
 	{
 		if (product != null && format != null)
@@ -885,55 +930,12 @@ public class SearchSuggestUtilityMethods
 		return null;
 	}
 
-	//	private List<Map<String, String>> getGalleryImages(final ProductData productData)
-	//	{
-	//
-	//		final List<Map<String, String>> galleryImages = new ArrayList<>();
-	//		if (CollectionUtils.isNotEmpty(productData.getImages()))
-	//		{
-	//			final List<ImageData> images = new ArrayList<>();
-	//			for (final ImageData image : productData.getImages())
-	//			{
-	//				if (ImageDataType.GALLERY.equals(image.getImageType()))
-	//				{
-	//					images.add(image);
-	//				}
-	//			}
-	//			Collections.sort(images, new Comparator<ImageData>()
-	//			{
-	//				@Override
-	//				public int compare(final ImageData image1, final ImageData image2)
-	//				{
-	//					return image1.getGalleryIndex().compareTo(image2.getGalleryIndex());
-	//				}
-	//			});
-	//
-	//			if (CollectionUtils.isNotEmpty(images))
-	//			{
-	//				int currentIndex = images.get(0).getGalleryIndex().intValue();
-	//				Map<String, String> formats = new HashMap<String, String>();
-	//				for (final ImageData image : images)
-	//				{
-	//					if (currentIndex != image.getGalleryIndex().intValue())
-	//					{
-	//						galleryImages.add(formats);
-	//						formats = new HashMap<>();
-	//						currentIndex = image.getGalleryIndex().intValue();
-	//					}
-	//					if (null != image.getFormat() && null != image.getUrl())
-	//					{
-	//						formats.put(image.getFormat(), image.getUrl());
-	//					}
-	//				}
-	//				if (!formats.isEmpty() && formats.equals(MarketplacecommerceservicesConstants.THUMBNAIL))
-	//				{
-	//					galleryImages.add(formats);
-	//				}
-	//			}
-	//		}
-	//		return galleryImages;
-	//	}
 
+	/**
+	 * @desc Setting department hierarchy in the filter
+	 * @param departmentFilters
+	 * @return
+	 */
 	public DepartmentHierarchyWs getDepartmentHierarchy(final List<String> departmentFilters)
 	{
 		final Set<String> traversedDepartments = new HashSet<String>();
@@ -1297,6 +1299,12 @@ public class SearchSuggestUtilityMethods
 		return newDepartment;
 	}
 
+	/**
+	 * @desc Setting Filters in the DTO
+	 * @param productSearchPage
+	 * @param searchPageData
+	 * @return
+	 */
 	public ProductSearchPageWsDto setFilterData(final ProductSearchPageWsDto productSearchPage,
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
@@ -1435,6 +1443,12 @@ public class SearchSuggestUtilityMethods
 		return productSearchPage;
 	}
 
+	/**
+	 * @desc Setting department hierarchy with facet count
+	 * @param departmentFilters
+	 * @param facetValues
+	 * @return
+	 */
 	public DepartmentHierarchyWs getDepartmentHierarchy(final List<String> departmentFilters,
 			final List<FacetValueData<SearchStateData>> facetValues)
 	{
