@@ -232,6 +232,8 @@ $(document).ready(
 							+ $("#page_name").val() + '",';
 						tealiumData += '"search_results":"'
 							+ $("#search_results").val() + '",';
+						tealiumData += '"search_type":"'		// TPR-666
+							+ $("#search_type").val() + '",';
 						tealiumData += '"product_category":"'
 							+ $("#product_category").val().replace(/[^a-z0-9\s]/gi, '').replace(/[\s]+/g, '_').toLowerCase() + '",';
 						tealiumData += '"page_subcategory_name":"'		// TPR-430
