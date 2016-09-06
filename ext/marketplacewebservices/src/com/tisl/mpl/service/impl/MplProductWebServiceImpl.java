@@ -46,6 +46,7 @@ import java.util.TreeMap;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -1548,7 +1549,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		final List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
 		try
 		{
-			if (null != productData.getVariantOptions())
+			if (CollectionUtils.isNotEmpty(productData.getVariantOptions()))
 			{
 				for (final VariantOptionData variantData : productData.getVariantOptions())
 				{
@@ -1556,48 +1557,54 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					final ColorLinkData colorLinkData = new ColorLinkData();
 					SizeLinkData sizeLinkData = null;
 					CapacityLinkData capacityLinkData = null;
-					if (null != variantData.getColour())
+
+					if (StringUtils.isNotEmpty(variantData.getColour()))
 					{
 						colorLinkData.setColor(variantData.getColour());
 					}
 					//checking for colour hex code
-					if (null != variantData.getColourCode())
+					if (StringUtils.isNotEmpty(variantData.getColourCode()))
 					{
 						colorLinkData.setColorHexCode(variantData.getColourCode());
 					}
-					if (null != variantData.getUrl())
+					if (StringUtils.isNotEmpty(variantData.getUrl()))
 					{
 						colorLinkData.setColorurl(variantData.getUrl());
 					}
-					if (null != variantData.getSizeLink() && !variantData.getSizeLink().isEmpty())
+					variantMobileData.setColorlink(colorLinkData);
+
+					if (MapUtils.isNotEmpty(variantData.getSizeLink()))
 					{
 						for (final Map.Entry<String, String> sizeEntry : variantData.getSizeLink().entrySet())
 						{
 							sizeLinkData = new SizeLinkData();
-							if (null != sizeEntry.getValue())
+							if (StringUtils.isNotEmpty(sizeEntry.getValue()))
 							{
 								sizeLinkData.setSize(sizeEntry.getValue());
 							}
-							if (null != sizeEntry.getKey())
+							if (StringUtils.isNotEmpty(sizeEntry.getKey()))
 							{
 								sizeLinkData.setUrl(sizeEntry.getKey());
 							}
-						}
-					}
-					//TPR-797
-					if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()) && productData.getAllVariantsId().size() > 1)
-					{
-						productData.getAllVariantsId().remove(productData.getCode());
-						for (final String variants : productData.getAllVariantsId())
-						{
-							if (variants.equalsIgnoreCase(variantData.getCode()))
+							//TPR-797
+							if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()) && productData.getAllVariantsId().size() > 1)
 							{
-								sizeLinkData.setIsAvailable(true);
+								productData.getAllVariantsId().remove(productData.getCode());
+								for (final String variants : productData.getAllVariantsId())
+								{
+									if (variants.equalsIgnoreCase(variantData.getCode()))
+									{
+										sizeLinkData.setIsAvailable(true);
+									}
+								}
 							}
 						}
 					}
+					if (null != sizeLinkData)
+					{
+						variantMobileData.setSizelink(sizeLinkData);
+					}
 
-					//
 					if (null != variantData.getCapacity())
 					{
 						capacityLinkData = new CapacityLinkData();
@@ -1606,12 +1613,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						{
 							capacityLinkData.setUrl(variantData.getUrl());
 						}
-
-					}
-					variantMobileData.setColorlink(colorLinkData);
-					if (null != sizeLinkData)
-					{
-						variantMobileData.setSizelink(sizeLinkData);
 					}
 					if (null != capacityLinkData)
 					{

@@ -591,7 +591,7 @@ public class ProductDetailsHelper
 						if (null != image.getMediaType() && null != image.getMediaType().getCode()
 								&& image.getMediaType().getCode().equalsIgnoreCase("Video"))
 						{
-							galleryImageData.setStaticImage("store/_ui/responsive/common/images/video-play.png");
+							galleryImageData.setStaticImage(MarketplaceFacadesConstants.STATIC_VIDEO);
 						}
 
 					}
@@ -674,7 +674,8 @@ public class ProductDetailsHelper
 						if (null != image.getMediaType() && null != image.getMediaType().getCode()
 								&& image.getMediaType().getCode().equalsIgnoreCase("Video"))
 						{
-							galleryImageData.setStaticImage("store/_ui/responsive/common/images/video-play.png");
+							//IQA comment
+							galleryImageData.setStaticImage(MarketplaceFacadesConstants.STATIC_VIDEO);
 						}
 
 					}
