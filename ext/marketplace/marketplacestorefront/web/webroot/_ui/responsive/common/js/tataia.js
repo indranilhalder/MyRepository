@@ -924,12 +924,14 @@ if (searchCategory_id){
 			    /* Category code for Dropdown Filter in hot and search widgets */
 			    var categoryCodeForFilters = [] ;
 			    $.each($('input#for_ia_hot_dropdown_name'),function(i,val){  
-			    	categoryFilters.push(val.value);
+			    	categoryFilters.push(val.value.split("||")[0]);
 				});
 			    $.each($('input#for_ia_hot_dropdown_code'),function(i,val){  
 			    	categoryCodeForFilters.push(val.value);
 				});
-			    
+			    /*Removing duplicate categories*/
+			    categoryFilters = jQuery.unique(categoryFilters);
+			    categoryCodeForFilters = jQuery.unique(categoryCodeForFilters);			    
 			    /*SortBY dropdown*/
 			    var sortHtml = '<div class="select-view ia_select-view-sort">';
 			    	sortHtml += '<div class="select-list ia_select-list-sort"><span class="selected sortSelected">Sort by: '+sortDropdownselected+'</span><ul id="ia_category_select" style="width: auto;">';
