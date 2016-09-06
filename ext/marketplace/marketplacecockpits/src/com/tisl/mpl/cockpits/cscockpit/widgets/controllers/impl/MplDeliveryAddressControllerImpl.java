@@ -12,8 +12,6 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hybris.oms.domain.changedeliveryaddress.ChangeDeliveryAddressResponseDto;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
@@ -77,7 +75,7 @@ public class MplDeliveryAddressControllerImpl extends
 								.getParentReference().getCode());
 			}
 		} catch (Exception e) {
-			LOG.error("Exception occurred " + e.getCause());
+			LOG.error("Exception occurred while checking whether change delivery Address for order id  " + orderModel.getParentReference().getCode());
 		}
 
 		return changable;
@@ -121,7 +119,7 @@ public class MplDeliveryAddressControllerImpl extends
 			throw new EtailNonBusinessExceptions(e.getRootCause(),
 					e.getErrorCode());
 		} catch (Exception e) {
-			LOG.error("Exception occurred " + e.getCause());
+			LOG.error("Exception occurred in  changeDeliveryRequestCallToOMS " + e.getCause());
 		}
 		return omsResponce;
 
@@ -141,10 +139,10 @@ public class MplDeliveryAddressControllerImpl extends
 		try {
 			tempAddress = mplDeliveryAddressDao.getTemporaryAddressModel(orderId);
 		} catch (ModelNotFoundException e) {
-			LOG.error("Model Not Found Exception " + e.getMessage());
+			LOG.error("Model Not Found Exception while getting temprory Address for order Id " + orderId);
 			throw new ModelNotFoundException(e);
 		} catch (Exception e) {
-			LOG.error("Exception occurred " + e.getMessage());
+			LOG.error("Exception occurred  while getting the temprory Address for the order id" + orderId);
 		}
 		return tempAddress;
 	}
@@ -165,10 +163,10 @@ public class MplDeliveryAddressControllerImpl extends
 		try {
 			mplDeliveryAddressService.saveDeliveryAddress(orderId);
 		} catch (ModelSavingException e) {
-			LOG.error("ModelSavingException" + e.getMessage());
+			LOG.error("ModelSavingException  while saving the Changed delivery Address " + e.getMessage());
 			throw new ModelSavingException(e.getMessage());
 		} catch (Exception e) {
-			LOG.error("Exception occurred " + e.getMessage());
+			LOG.error("Exception occurred while saving the Changed delivery Address" + e.getMessage());
 		}
 
 	}
