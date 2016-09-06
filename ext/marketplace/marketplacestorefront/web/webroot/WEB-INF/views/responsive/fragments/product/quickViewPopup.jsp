@@ -40,6 +40,25 @@ tr.d0 td {
 	function gotoLogin() {
 		window.open(ACC.config.encodedContextPath + "/login", "_self");
 	}
+	
+	$(document).ready(function() {
+
+
+// 		 $("#buyNowQv").click(function(){
+// 			 testMethod();	       
+// 		  });
+
+		$('#buyNowQv .js-add-to-cart-qv').click(function(event){
+			
+			 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+				$("#addToCartFormQuick").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+				$("#addToCartFormQuick").show();
+		 	    return false;
+		 }else{			 
+			ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
+		}
+		});
+	});
 
 	var wishListList = [];
 
@@ -530,6 +549,13 @@ display:none;
 	</div> 
 
 </div>
+ <!-- TPR-924 -->
+		 <div id="buyNowQv"> 
+	        <button style="display: block" id="buyNowButton_qv"  class="btn-block js-add-to-cart-qv">
+				<spring:theme code="buyNow.button.pdp" />
+			</button>
+	    </div> 
+	    <!-- TPR-924 -->
 
 <%--  <div id="ajax-loader" style="margin: 0 auto; height:20px; width: 20px;"><img src="${commonResourcePath}/images/ajax-loader.gif"></div> --%>     
 <!-- add to cart functionality -->
@@ -553,13 +579,13 @@ display:none;
 		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
 		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
 		 
-		  <!-- TPR-924 -->
+		 <%--  <!-- TPR-924 -->
 		 <div id="buyNowQv"> 
-	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart-qv">
+	        <span style="display: block" id="buyNowButton_qv"  class="btn-block js-add-to-cart-qv">
 				<spring:theme code="buyNow.button.pdp" />
-			</button>
+			</span>
 	    </div> 
-	    <!-- TPR-924 -->
+	    <!-- TPR-924 --> --%>
 		 
 		 <button id="addToCartButtonQuick" type="${buttonType}"
 												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
