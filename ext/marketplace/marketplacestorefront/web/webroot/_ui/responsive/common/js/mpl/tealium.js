@@ -253,6 +253,13 @@ $(document).ready(
 					type : 'GET',
 					cache : false,
 					success : function(data) {
+						var qtyUpdated;
+						if(window.sessionStorage.getItem("qtyUpdate")!=null){
+							qtyUpdated=window.sessionStorage.getItem("qtyUpdate");
+						}
+						else{
+							qtyUpdated=false;
+						}
 						var tealiumData = "";
 						tealiumData += ',"cart_total":"'
 								+ $("#cart_total").val() + '",';
@@ -271,7 +278,10 @@ $(document).ready(
 						tealiumData += '"product_id":'
 							+ $("#product_id").val() + ',';
 						tealiumData += '"product_brand":'
-							+ $("#product_brand").val() + ',';
+							+ $("#product_brand").val() + ',';				
+						tealiumData += '"product_quantity_update":'
+							+ qtyUpdated + ',';				
+
 //						TPR-430
 						tealiumData += '"page_subcategory_name":"'
 							+ $("#page_subcategory_name").val() + '",';
@@ -358,8 +368,25 @@ $(document).ready(
 					
 			});
 			/*TPR-657 ends*/
-		
 			
+			/*TPR-694 starts*/
+			$(document).on('click','#tabs_details',function(){
+
+			
+			//	alert("viewdetails......")
+				utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'
+							}); 
+				});
+			/*TPR-694 ends*/
+			
+			/*TPR- 659 starts*/
+			$(document).on("click",".view-cliq-offers",function(){
+		//		alert("viewcliq......")
+				utag.link(
+		    			{link_obj: this, link_text: 'home_top_deal_view_offers' , event_type : 'home_top_deal_view_offers'}
+		    			);
+				});
+			/*TPR- 659  ends*/
 			
 		});
 
