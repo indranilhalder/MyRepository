@@ -288,7 +288,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 *
+	 * 
 	 * }
 	 */
 
@@ -493,7 +493,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 *
+	 * 
 	 * @param model ,redirectModel
 	 */
 
@@ -982,15 +982,18 @@ public class CartPageController extends AbstractPageController
 				final List<Breadcrumb> breadcrumbs = productBreadcrumbBuilder.getBreadcrumbs(productModel);
 				if (null != entry.getProduct().getCategories())
 				{
-					productCategoryList.add(breadcrumbs.get(0).getName());
+					productCategoryList.add(GenericUtilityMethods.appendQuote(breadcrumbs.get(0).getName().replaceAll("[^\\w\\s]", "")
+							.replaceAll(" ", "_").toLowerCase()));
 				}
 				if (breadcrumbs.size() > 1)
 				{
-					pageSubCategories.add(breadcrumbs.get(1).getName());
+					pageSubCategories.add(GenericUtilityMethods.appendQuote(breadcrumbs.get(1).getName().replaceAll("[^\\w\\s]", "")
+							.replaceAll(" ", "_").toLowerCase()));
 				}
 				if (breadcrumbs.size() > 2)
 				{
-					pageSubcategoryNameL3List.add(breadcrumbs.get(2).getName());
+					pageSubcategoryNameL3List.add(GenericUtilityMethods.appendQuote(breadcrumbs.get(2).getName()
+							.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase()));
 				}
 			}
 			model.addAttribute("product_category", productCategoryList);
@@ -1311,7 +1314,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1368,7 +1371,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
