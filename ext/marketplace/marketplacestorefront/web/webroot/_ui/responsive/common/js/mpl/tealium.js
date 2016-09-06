@@ -237,7 +237,7 @@ $(document).ready(
 						tealiumData += '"page_subcategory_name":"'		// TPR-430
 							+ $("#page_subcategory_name").val() +'",';
 						tealiumData += '"page_subcategory_name_L3":"'		// TPR-430
-							+ $("#page_subcategory_name_L3").val() +'",';
+							+ $("#page_subcategory_name_L3").val() +'"}';
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
 					}
@@ -272,7 +272,7 @@ $(document).ready(
 							+ $("#product_id").val() + ',';
 						tealiumData += '"product_brand":'
 							+ $("#product_brand").val() + ',';
-						TPR-430
+//						TPR-430
 						tealiumData += '"page_subcategory_name":"'
 							+ $("#page_subcategory_name").val() + '",';
 					tealiumData += '"page_subcategory_name_L3":"'
