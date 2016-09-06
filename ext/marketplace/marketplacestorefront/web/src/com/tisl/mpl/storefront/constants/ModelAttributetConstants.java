@@ -774,4 +774,9 @@ public final class ModelAttributetConstants
 	public static final String Homepage_Title = "Online Shopping Site in India for Mobiles, Electronics & Fashion at TataCLiQ";
 	public static final String Homepage_Description = "Online Shopping in India for Mobiles, Electronics, Men & Women Clothing, Shoes at TataCLiQ. Get 100% Genuine products!";
 	public static final String Homepage_Keyword = "Online Shopping sites, online shopping store, online shopping, Online mobile shopping, shopping online, TataCLiQ";
+	// TPR-666
+	public static final String SEARCH_TYPE = "searchType";
+	//TPR-429
+	public static final String CART_LEVEL_SELLER_IDS = "cartLevelSellerIDs";
+	public static final String PDP_SELLER_IDS = "pdpSellerIDs";
 }

@@ -8,7 +8,6 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
-import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.Registry;
@@ -1014,23 +1013,24 @@ public class GenericUtilityMethods
 		String quantity = null;
 		String basePrice = null;//base price for a cart entry
 		String totalEntryPrice = null;
-		String category = null;
+		//		String category = null;
 		String brand = null;
 		String adobeProductSku = null;
-		String page_subCategory_name = null;
+		//		String page_subCategory_name = null;
 		String cartTotal = null;
-		String page_subcategory_name_L3 = "";
+		//		String page_subcategory_name_L3 = null;
 		final List<String> productBrandList = new ArrayList<String>();
-		final List<String> productCategoryList = new ArrayList<String>();
+		//		final List<String> productCategoryList = new ArrayList<String>();
 		final List<String> productIdList = new ArrayList<String>();
 		final List<String> productListPriceList = new ArrayList<String>();
 		final List<String> productNameList = new ArrayList<String>();
 		final List<String> productQuantityList = new ArrayList<String>();
 		final List<String> productSkuList = new ArrayList<String>();
 		final List<String> productUnitPriceList = new ArrayList<String>();
-		final List<String> pageSubCategories = new ArrayList<String>();
+		//		final List<String> pageSubCategories = new ArrayList<String>();
+		//		final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
 		final List<String> adobeProductSkuList = new ArrayList<String>();
-		final List<String> pageSubCategoriesL3 = new ArrayList<String>();
+
 
 		try
 		{
@@ -1040,6 +1040,7 @@ public class GenericUtilityMethods
 				{
 					cartTotal = cartData.getTotalPrice().getValue().toPlainString();
 				}
+
 				if (CollectionUtils.isNotEmpty(cartData.getEntries()))
 				{
 					for (final OrderEntryData entry : cartData.getEntries())
@@ -1072,41 +1073,45 @@ public class GenericUtilityMethods
 							}
 						}
 
-						final List<String> categoryList = new ArrayList<String>();
+						//						final List<String> categoryList = new ArrayList<String>();
 						//START [05-Feb-2016] R2.1 - Adding only a Null Check to fix Card payment issue.
 						//Check that if (entry.getProduct().getCategories() != null) then only execute the loop. Else just log an
 						//error message and continue.
-						if (entry.getProduct() != null && entry.getProduct().getCategories() != null)
-						{
-							for (final CategoryData categoryData : entry.getProduct().getCategories())
-							{
-								categoryList.add(categoryData.getName());
-							}
-						}
-						//End [05-Feb-2016] R2.1 - Adding Null Check to fix Card payment issue.
-						final Object[] categoryStrings = categoryList.toArray();
+						//						if (entry.getProduct() != null && entry.getProduct().getCategories() != null)
+						//						{
+						//							for (final CategoryData categoryData : entry.getProduct().getCategories())
+						//							{
+						//								categoryList.add(categoryData.getName());
+						//							}
+						//						}
 
-						if (categoryStrings.length > 0)
-						{
-							category = appendQuote((String) categoryStrings[0]);
-						}
+						//End [05-Feb-2016] R2.1 - Adding Null Check to fix Card payment issue.
+						//						final Object[] categoryStrings = categoryList.toArray();
+
+						//						if (categoryStrings.length > 0)
+						//						{
+						//							category = appendQuote((String) categoryStrings[0]).replaceAll(" ", "_").toLowerCase();
+						//						}
 
 						if (entry.getProduct() != null && entry.getProduct().getBrand() != null)
 						{
 							brand = appendQuote(entry.getProduct().getBrand().getBrandname());
 						}
-						if (categoryStrings.length >= 2)
-						{
-							page_subCategory_name = appendQuote((String) categoryStrings[1]);
-							pageSubCategories.add(page_subCategory_name);
-						}
-						if (categoryStrings.length >= 3)
-						{
-							page_subcategory_name_L3 = appendQuote((String) categoryStrings[2]);
-							pageSubCategoriesL3.add(page_subcategory_name_L3);
-						}
+						//TPR-430
+						//						if (categoryStrings.length >= 1)
+						//						{
+						//							page_subCategory_name = appendQuote((String) categoryStrings[1]).replaceAll(" ", "_").toLowerCase();
+						//							pageSubCategories.add(page_subCategory_name);
+						//						}
+						//						if (categoryStrings.length >= 2)
+						//						{
+						//							page_subcategory_name_L3 = appendQuote((String) categoryStrings[2]).replaceAll(" ", "_").toLowerCase();
+						//							pageSubcategoryNameL3List.add(page_subcategory_name_L3);
+						//
+						//						}
+
 						productBrandList.add(brand);
-						productCategoryList.add(category);
+						//						productCategoryList.add(category);
 						productIdList.add(sku);
 						productListPriceList.add(totalEntryPrice);
 						productNameList.add(name);
@@ -1139,18 +1144,19 @@ public class GenericUtilityMethods
 				}
 
 				model.addAttribute("productBrandList", productBrandList);
-				model.addAttribute("productCategoryList", productCategoryList);
+
 				model.addAttribute("productIdList", productIdList);
 				model.addAttribute("productListPriceList", productListPriceList);
 				model.addAttribute("productNameList", productNameList);
 				model.addAttribute("productQuantityList", productQuantityList);
 				model.addAttribute("productSkuList", productSkuList);
 				model.addAttribute("productUnitPriceList", productUnitPriceList);
-				model.addAttribute("pageSubCategories", pageSubCategories);
-				model.addAttribute("pageSubCategoriesL3", pageSubCategoriesL3);
 				model.addAttribute("adobe_product", adobeProductSku);
 				model.addAttribute("cart_total", cartTotal);
-
+				//TPR-430
+				//				model.addAttribute("pageSubCategories", pageSubCategories);
+				//				model.addAttribute("productCategoryList", productCategoryList);
+				//				model.addAttribute("page_subcategory_name_L3", pageSubcategoryNameL3List);
 			}
 		}
 		catch (final Exception te)

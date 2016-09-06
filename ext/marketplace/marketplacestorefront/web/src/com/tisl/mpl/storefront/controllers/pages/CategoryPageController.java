@@ -508,8 +508,19 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 
 		model.addAttribute("page_name", "Product Grid:" + breadcrumbName);
-
-
+		//TPR-430
+		if (breadcrumbs.size() > 0)
+		{
+			model.addAttribute("product_category", breadcrumbs.get(0).getName());
+		}
+		if (breadcrumbs.size() > 1)
+		{
+			model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName());
+		}
+		if (breadcrumbs.size() > 2)
+		{
+			model.addAttribute("page_subcategory_name_L3", breadcrumbs.get(2).getName());
+		}
 	}
 
 	/**

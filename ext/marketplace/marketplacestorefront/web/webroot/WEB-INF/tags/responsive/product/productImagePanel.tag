@@ -47,7 +47,13 @@
 				$("#zoomModal .imageList ul li img").css("height", thumbnailImageHeight);
 			},1000)
 		}
-		
+		/*TPR-643*/
+		utag.link({
+			link_obj: this, 
+			link_text: 'pdp_image_zoom' , 
+			event_type : 'pdp_image_zoom' 
+		});
+		/*TPR-643 Ends*/
 	}
 
 	function closing() {
