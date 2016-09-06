@@ -46457,9 +46457,58 @@ border-right: 2px solid #9b9b9b;
 	-o-transform: rotate(45deg);
 	transform: rotate(45deg);
 	}
-	.quickview .product-info .product-content .swatch .color-swatch li {
-		width: 22px;
-		height: 22px;
+.quickview .product-info .product-content .swatch .color-swatch li {
+	width: 22px;
+	height: 22px;
+}
+.quickview .product-info .product-content, .quickview #variantForm {
+	width: 100%;
+}
+@media (max-width:1024px) {
+	.quickview .quick-view-popup.product-info.product-info.wrapper .product-image-container {
+		display: block;
+		/*width: 52%; */
 	}
+	.quickview .product-info .product-detail {
+		margin-right: 0;
+	}
+}
+.quickview .product-info .product-content #buyNowQv {
+	width: 50%;
+    margin-top: 0;
+   	letter-spacing: 0;
+   	font-weight: bold;
+}
+.quickview .product-info .product-content #addToCartButtonQuick {
+    font-size: 12px;
+    letter-spacing: 1px;
+    height: 42px;
+    padding: 0px 10px;
+    font-weight: 500;
+    clear: both;
+    background-color: #fff !important;
+    color: #A9143C !important;
+    border: 1px solid #A9143C;
+    vertical-align: middle;
+    text-transform: uppercase;
+    width: 100%; 
+     margin: 0;
+}
+.quickview .product-info .product-detail .Cta{
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+}
+.quickview .product-info .product-detail #addToCartFormQuick {
+    position: relative;
+    width: 50%;
+   
+}
+.product-info .product-content #addToCartFormQuickTitle{
+    text-align: center;
+    padding-top: 10px;	
+}
+
+
 /*Quickview changes end*/
 
