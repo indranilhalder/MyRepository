@@ -33,8 +33,8 @@ import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStr
  * @author TCS
  *
  */
-public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMergingStrategy implements
-		ExtCommerceCartMergingStrategy
+public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMergingStrategy
+		implements ExtCommerceCartMergingStrategy
 {
 	@Resource
 	private UserService userService;
@@ -108,7 +108,9 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 					newCartParameter.setUssid((null != entry.getSelectedUSSID()) ? entry.getSelectedUSSID() : "");
 					newCartParameter.setUnit(entry.getUnit());
 					newCartParameter.setCreateNewEntry(false);
-
+					//TPR-174
+					toCart.setMerged(Boolean.TRUE);
+					getModelService().save(toCart);
 					mergeModificationToList(mplCommerceAddToCartStrategy.addToCart(newCartParameter), modifications);
 				}
 			}
