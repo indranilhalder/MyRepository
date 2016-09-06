@@ -30,7 +30,7 @@ public class MplTimeconverUtility
 		String _12HourTime = null;
 		 try {       
           SimpleDateFormat _24HourSDF = new SimpleDateFormat("HH:mm");
-          SimpleDateFormat _12HourSDF = new SimpleDateFormat("hh:mm:ss a");
+          SimpleDateFormat _12HourSDF = new SimpleDateFormat("hh:mm a");
           Date _24HourDt = _24HourSDF.parse(time);
           _12HourTime=_12HourSDF.format(_24HourDt);
       } 
@@ -51,7 +51,7 @@ public class MplTimeconverUtility
 			String _24HourTime = null;
 			 try { 
 		SimpleDateFormat _24HourSDF = new SimpleDateFormat("HH:mm");
-      SimpleDateFormat _12HourSDF = new SimpleDateFormat("hh:mm:ss a");
+      SimpleDateFormat _12HourSDF = new SimpleDateFormat("hh:mm a");
       Date date = _24HourSDF.parse(time);
       _24HourTime=_12HourSDF.format(date);
 		      } 
@@ -77,12 +77,12 @@ public class MplTimeconverUtility
 		 
 		if(StringUtils.isNotEmpty(fromTime))
 		{
-			toAndFrom.add(StringUtils.substring(fromTime, 1, 8));
+			toAndFrom.add(fromTime);
 		}
 		
 		if(StringUtils.isNotEmpty(string[1]))
 		{
-			toAndFrom.add(StringUtils.substring(toTime, 1, 8));
+			toAndFrom.add(toTime);
 		}	 
 		
 		 return toAndFrom;
