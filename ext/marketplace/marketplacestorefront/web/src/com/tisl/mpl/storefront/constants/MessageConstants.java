@@ -193,6 +193,6 @@ public final class MessageConstants
 	//feebback survey
 	public static final String FEEDBACK_SURVEY_URL = "mpl.feedback.survey";
 	// TPR-174
-	public static final String WELCOME_BACK_MESSAGE = "Your cart has been updated - Do you want to review ?";
+	public static final String WELCOME_BACK_MESSAGE = "Your previous products have been added to cart . Do you want to retain them ??";
 
 }
