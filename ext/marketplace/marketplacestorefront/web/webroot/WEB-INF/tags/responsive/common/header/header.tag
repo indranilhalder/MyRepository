@@ -20,6 +20,17 @@
 	<c:set var="hideSecureTransaction" value="true"></c:set>
 	<c:set var="hideLogo" value="true"></c:set>
 </c:if>
+<!-- TPR-844 -->
+			<div class="wishAddLoginPlp">
+			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+			</div>
+			<div class="wishAddSucessPlp">
+			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+			</div>
+			<div class="wishAlreadyAddedPlp">
+			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+			</div>
+	<!-- TPR-844 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <header>	
 	<!-- For Infinite Analytics Start -->

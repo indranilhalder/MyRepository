@@ -364,13 +364,13 @@ display:none;
 		<%-- </c:if> --%>
 		</div>
 		
-		<div id="emiStickerId" class="emi" style="display:none;">
+<%-- 		<div id="emiStickerId" class="emi" style="display:none;">
 							<spring:theme code="marketplace.emiavailable" />&nbsp;
 							<a type="button" name="yes" id="prodEMI"
 		data-target="#modalProd" onclick="openPopForBankEMI_quick()"
 		data-toggle="modal"><spring:theme code="marketplace.emiinfo"></spring:theme></a> <input id="prodPrice" type="hidden" />
-						</div>
-				<product:emiDetail product="${product}" />
+						</div> --%>
+<%-- 		emi		<product:emiDetail product="${product}" /> --%>
 	
 <%-- 		<c:choose>
 		<c:when test="${spPrice ne null}">
@@ -497,7 +497,8 @@ display:none;
 			</script>  -->
  
  	
-   <div class="product-content" style="margin-top:15px;">
+   <div class="product-content" style="margin-top:5px;">
+   <product:emiDetail product="${product}" />
 	   <div class="swatch">
 	<product:viewQuickViewVariant/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantityCount"/>
@@ -517,6 +518,14 @@ display:none;
 <div id="addToCartFormQuickTitle" class="addToCartTitle">
 		</div>
 	<ycommerce:testId code="quickview_addToCart_button_${product.code}">
+	<div class="Cta">
+	 <!-- TPR-924 -->
+		 <div id="buyNowQv"> 
+	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart-qv">
+				<spring:theme code="buyNow.button.pdp" />
+			</button>
+	    </div> 
+	    <!-- TPR-924 -->
 		<%-- <form:form id="addToCartFormQuick" action="${request.contextPath }/cart/add" method="post" class="add_to_cart_form"> --%>
 		<form:form id="addToCartFormQuick" action="#" method="post" class="add_to_cart_form">
 		<span id="addToCartFormQuickTitleSuccess" class="addToCartTitle">
@@ -533,7 +542,7 @@ display:none;
 		<input type="hidden" maxlength="3" size="1" id="stock" name="stock"
 		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
 		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
-		 
+		
 		 <button id="addToCartButtonQuick" type="${buttonType}"
 												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
 												<spring:theme code="basket.add.to.basket" />
@@ -588,6 +597,7 @@ display:none;
 				<input type="button" id="add_to_wishlist_quick" onClick="openPop_quick();" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			</span>				
 	<%-- </c:if> --%>
+	</div>
 	</ycommerce:testId> 
 	<div class="SoldWrap">
 	<div class="seller">Sold by <span id="sellerNameIdQuick"></span></div>
@@ -805,6 +815,10 @@ display:none;
     -webkit-transition: font-weight 0.15s;
     -moz-transition: font-weight 0.15s;
     transition: font-weight 0.15s;
+}
+#cboxLoadedContent {
+	margin-top: 0;
+	overflow: visible !important;
 }
 </style>
 
