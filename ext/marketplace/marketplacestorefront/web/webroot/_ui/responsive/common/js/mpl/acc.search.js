@@ -547,6 +547,7 @@ function constructDepartmentHierarchy(inputArray) {
 	 
 	 $( document ).ready(function() {
 		//Add to Wishlist PLP TPR-844 CR
+		 $(".wishlist a").mouseover();
 		var productCodePost = $("#productCode").val();
 		getLastModifiedWishlistForPLP(productCodePost);
 		//Ended here//
@@ -642,3 +643,4 @@ $(document).on("click",".plp-wishlist",function(e){
 		    return productCode.toUpperCase();
 			
 		}
+		
