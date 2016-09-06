@@ -104,7 +104,7 @@
 				$(".thirdTataCliq .returnMethod").show();
 				$(".secondTataCliq .reasonType").hide();
 				$(".thirdTataCliq .returnMethod .selectReturnMethod").addClass("greyColor");
-			} else if(selection == "refund") {
+			} else if(selection == "R") {
 				console.log(returnMethod);
 				if(returnMethod == "COD")  {
 					checkCODValidations();

@@ -161,12 +161,63 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			}
 			model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
 		}
+		final List<ReturnReasonData> reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
+		
+		
+		if (!reasonDataList.isEmpty())
+		{
+			for (final ReturnReasonData reason : reasonDataList)
+			{
+				if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
+				{
+					model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reason.getReasonDescription());
+				}
+			}
+		}
+
+		model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+		//if logistic partner not available for the given pin code 
+		model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE,
+				MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
+		model.addAttribute(ModelAttributetConstants.RETURN_FORM, returnForm);
+		model.addAttribute(ModelAttributetConstants.ADDRESS_FORM, new AccountAddressForm());
+		model.addAttribute(ModelAttributetConstants.SUB_ORDER, subOrderDetails);
+		model.addAttribute(ModelAttributetConstants.REFUNDTYPE,returnForm.getRefundType());
+		model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
+		model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, subOrderEntry);
+		
+		 //get available time slots for return pickup
+		 List<String> timeSlots = mplConfigFacade.getDeliveryTimeSlots(ModelAttributetConstants.RETURN_SLOT_TYPE);
+
+			model.addAttribute(ModelAttributetConstants.SCHEDULE_TIMESLOTS, timeSlots);
+
+			model.addAttribute(ModelAttributetConstants.ADDRESS_DATA,
+					mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()));
+			List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
+			
+			if (subOrderEntry.getDeliveryPointOfService() != null)
+			{
+				returnableStores = pincodeServiceFacade.getAllReturnableStores(subOrderEntry.getDeliveryPointOfService().getAddress()
+						.getPostalCode(), subOrderEntry.getSelectedSellerInformation().getSellerID());
+			}
+			else
+			{
+				returnableStores = pincodeServiceFacade.getAllReturnableStores(subOrderDetails.getDeliveryAddress().getPostalCode(),
+						StringUtils.substring(subOrderEntry.getSelectedUssid(),0,6));
+			}
+         //get next available schedule return pickup dates for order entry 
+			List<String> returnableDates =cancelReturnFacade.getReturnableDates(subOrderEntry);
+			
+			model.addAttribute(ModelAttributetConstants.RETURN_DATES,returnableDates);
+			
+			model.addAttribute(ModelAttributetConstants.RETURNABLE_SLAVES, returnableStores);
 		
 	   //for schedule pickup
 		if(StringUtils.isNotBlank(returnForm.getReturnMethod()) &&  MarketplacecommerceservicesConstants.RETURN_SCHEDULE.equalsIgnoreCase(returnForm.getReturnMethod()))
 		{
 			
 		boolean returnLogisticsCheck = true;
+		String returnFulfillmentType =null;
 		final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(subOrderDetails,
 				pinCode);
 		for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
@@ -175,6 +226,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL))
 			{
 				returnLogisticsCheck = false;
+				returnFulfillmentType=response.getReturnFulfillmentType();
 			}
 		}
 		storeContentPageTitleInModel(model, MessageConstants.RETURN_REQUEST);
@@ -183,56 +235,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		
 		if (!returnLogisticsCheck)
 		{
-			//if logistic partner not available for the given pin code 
-			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE,
-					MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
-			model.addAttribute(ModelAttributetConstants.RETURN_FORM, returnForm);
-			model.addAttribute(ModelAttributetConstants.ADDRESS_FORM, new AccountAddressForm());
-			model.addAttribute(ModelAttributetConstants.SUBORDER, subOrderDetails);
-			
-			model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
-			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, subOrderEntry);
-			 List<String> timeSlots = mplConfigFacade.getDeliveryTimeSlots(ModelAttributetConstants.RETURN_SLOT_TYPE);
-
-				model.addAttribute(ModelAttributetConstants.SCHEDULE_TIMESLOTS, timeSlots);
-
-				model.addAttribute(ModelAttributetConstants.ADDRESS_DATA,
-						mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()));
-				List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
-				
-				if (subOrderEntry.getDeliveryPointOfService() != null)
-				{
-					returnableStores = pincodeServiceFacade.getAllReturnableStores(subOrderEntry.getDeliveryPointOfService().getAddress()
-							.getPostalCode(), subOrderEntry.getSelectedSellerInformation().getSellerID());
-				}
-				else
-				{
-					returnableStores = pincodeServiceFacade.getAllReturnableStores(subOrderDetails.getDeliveryAddress().getPostalCode(),
-							StringUtils.substring(subOrderEntry.getSelectedUssid(),0,6));
-				}
-
-				List<String> returnableDates =cancelReturnFacade.getReturnableDates(subOrderEntry);
-				
-				model.addAttribute(ModelAttributetConstants.RETURN_DATES,returnableDates);
-				
-				model.addAttribute(ModelAttributetConstants.RETURNABLE_SLAVES, returnableStores);
-				
-				final List<ReturnReasonData> reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
-				
-				
-				if (!reasonDataList.isEmpty())
-				{
-					for (final ReturnReasonData reason : reasonDataList)
-					{
-						if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
-						{
-							model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reason.getReasonDescription());
-						}
-					}
-				}
-
-				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
-				
+			GlobalMessages.addMessage(model, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						ModelAttributetConstants.LPNOTAVAILABLE_ERRORMSG,null);
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 						ModelAttributetConstants.LPNOTAVAILABLE_ERRORMSG);
 				
@@ -266,16 +270,17 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			
 		}
 		
-		String returnPickupDate=returnForm.getScheduleReturnTime();
+		String returnPickupDate=returnForm.getScheduleReturnDate();
 		//returnData.setIsReturn("");
-		returnData.setEcomRequestId(returnPickupDate);
 		returnData.setReasonCode(returnForm.getReturnReason());
 		returnData.setRefundType(returnForm.getRefundType());
-		returnData.setReturnPickupDate(returnForm.getScheduleReturnDate());
+		returnData.setReturnPickupDate(returnPickupDate);
 		returnData.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
 		returnData.setTimeSlotFrom(timeSlotFrom);
 		returnData.setTimeSlotTo(timeSlotto);
 		returnData.setUssid(returnForm.getUssid());
+		returnData.setReturnMethod(returnForm.getReturnMethod());
+		returnData.setReturnFulfillmentMode(returnFulfillmentType);
 		
 		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
 		
@@ -439,7 +444,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				model.addAttribute(ModelAttributetConstants.ACCOUNT_ADDRESS, Boolean.TRUE);
 				final List<String> AddressRadioTypeList = getAddressRadioTypeList();
 				model.addAttribute(ModelAttributetConstants.ADDRESS_RADIO_TYPE_LIST, AddressRadioTypeList);
-			
+			  
 				model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 						accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK));
 				model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
@@ -476,6 +481,15 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			newAddress.setLastName(addressForm.getLastName());
 			newAddress.setLine1(addressForm.getLine1());
 			newAddress.setLine2(addressForm.getLine2());
+			newAddress.setLine3(addressForm.getLine3());
+			if(StringUtils.isBlank(addressForm.getLandmark()))
+			{
+			newAddress.setLandmark(addressForm.getOtherLandmark());
+			}
+			else 
+			{
+			newAddress.setLandmark(addressForm.getLandmark());	
+			}
 			newAddress.setTown(addressForm.getTownCity());
 			newAddress.setPostalCode(addressForm.getPostcode());
 			newAddress.setBillingAddress(false);

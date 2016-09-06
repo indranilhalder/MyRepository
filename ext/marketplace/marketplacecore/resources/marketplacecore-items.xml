@@ -8576,6 +8576,68 @@
 				</attribute>
 				</attributes>
 			</itemtype>
+			<itemtype code="MplCustomerBanckAccount" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.MplCustomerBanckAccount">
+				<description>Captured bank details for COD returns Payment </description>
+				<attributes>
+				<attribute type="java.lang.String" qualifier="customerId"  >
+			    <description>Customer Id</description>	
+			    <persistence type="property" />
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="customerName"  >
+			    <persistence type="property" />
+			    <description>Customer Name</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="title"  >
+			    <persistence type="property" />
+			    <description>Title</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="accountNumber"  >
+			    <persistence type="property" />
+			    <description>Account Number</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="accountHolderName"  >
+			    <persistence type="property" />
+			    <description>Account holder name </description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="ifscCode"  >
+			    <persistence type="property" />
+			    <description>IFSC code </description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+				  <attribute type="java.lang.String" qualifier="bankName"  >
+				  <persistence type="property" />
+			    <description>Bank name</description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+			    <attribute type="java.lang.String" qualifier="refundMode"  >
+			    <persistence type="property" />
+			    <description>Refund Mode </description>	
+			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+			    </attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="MplLPHolidays" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.MplLPHolidays">
+				<description>Logistics holidays</description>
+				<attributes>
+				<attribute type="java.lang.String" qualifier="lpname">
+				 <persistence type="property" />
+				<description>Logistic partner name </description>
+				 <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="workingDays">
+				<persistence type="property" />
+				<description>Working days</description>
+				 <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
+				</attribute>
+				</attributes>
+			</itemtype>
 		</typegroup>
 		
 		

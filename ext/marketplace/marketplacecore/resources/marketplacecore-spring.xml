@@ -1616,7 +1616,16 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	
 	<bean id="dateUtilHelper" class="com.tisl.mpl.core.util.DateUtilHelper"/>
 	
-	<alias name="mplPrefixablePersistentKeyGenerator" alias="mplfixableKeyGenerator"/>
-	<bean id="mplPrefixablePersistentKeyGenerator" class=" com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator"/>
+	<alias name="defaultPrefixableKeyGenerator" alias="prefixableKeyGenerator"/>
+	<!-- Key generator for Ecomm request ID for CRM ticket create -->
+	<bean id="defaultPrefixableKeyGenerator"
+		class="com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="ecommCode" />
+		<property name="digits" value="9" />
+		<property name="start" value="100000001" />
+		<property name="numeric" value="false" />
+	</bean>
+	
 
 </beans>
