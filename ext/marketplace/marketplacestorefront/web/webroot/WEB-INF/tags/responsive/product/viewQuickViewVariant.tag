@@ -14,7 +14,7 @@
 
 
 
-	function selectProductSize() {
+	function selectProductSize() { 
 		var requiredUrl = $("#sizevariant option:selected").val();
 		if (requiredUrl == "#") {
 			return false;

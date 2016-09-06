@@ -471,7 +471,7 @@ display:none;
     
   </div>   
   
-  <!-- TPR-924 -->
+  
   <div id="emiStickerId" class="Emi Emi_wrapper" style="display:none;">
 							<spring:theme code="marketplace.emiavailable" />&nbsp;
 							<a type="button" name="yes" id="prodEMI"
@@ -479,7 +479,7 @@ display:none;
 		data-toggle="modal"><spring:theme code="marketplace.emiinfo"></spring:theme></a> <input id="prodPrice" type="hidden" />
 	</div>
 	<product:emiDetail product="${product}" />
-	<!-- TPR-924 Ends-->
+	
 	
 <a href="#" class="gig--readReviewsLink"></a>
 	<span id="gig-rating-readReviewsLink_quick" ></span>	
@@ -530,12 +530,7 @@ display:none;
 	</div> 
 
 </div>
- <!-- TPR-924 -->
-		 <div id="buyNowQv"> 
-	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart-qv">
-				<spring:theme code="buyNow.button.pdp" />
-			</button>
-	    </div> 
+
 <%--  <div id="ajax-loader" style="margin: 0 auto; height:20px; width: 20px;"><img src="${commonResourcePath}/images/ajax-loader.gif"></div> --%>     
 <!-- add to cart functionality -->
 <div id="addToCartFormQuickTitle" class="addToCartTitle">
@@ -558,18 +553,19 @@ display:none;
 		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
 		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
 		 
-		 <!-- TPR-924 -->
-		<!--  <div id="buyNow"> -->
-	       <%--  <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart">
+		  <!-- TPR-924 -->
+		 <div id="buyNowQv"> 
+	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart-qv">
 				<spring:theme code="buyNow.button.pdp" />
-			</button> --%>
-	    <!--  </div> -->
+			</button>
+	    </div> 
+	    <!-- TPR-924 -->
 		 
 		 <button id="addToCartButtonQuick" type="${buttonType}"
 												class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
 												<spring:theme code="basket.add.to.basket" />
 											</button>
-		<!-- TPR-924 -->									
+										
 		<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
@@ -600,7 +596,7 @@ display:none;
 			</c:choose> --%>
 			</ul> 
 		
-		<!-- TPR-924 Ends-->
+		
 		<span id="dListedErrorMsg" style="display: none"  class="dlist_message">
 		<spring:theme code="pdp.delisted.message" />
 	</span>
