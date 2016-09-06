@@ -57,9 +57,9 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 
 	@Override
-	public boolean isDeliveryAddressChangable(String orderId)
+	public boolean isDeliveryAddressChangable(final String orderId)
 	{
-		 List<String> ChangableOrdeStatus = Arrays.asList(OrderStatus.PAYMENT_SUCCESSFUL.getCode(),
+		final List<String> ChangableOrdeStatus = Arrays.asList(OrderStatus.PAYMENT_SUCCESSFUL.getCode(),
 				OrderStatus.ORDER_ALLOCATED.getCode(), OrderStatus.PICK_LIST_GENERATED.getCode(),
 				OrderStatus.ORDER_REALLOCATED.getCode(), OrderStatus.PICK_CONFIRMED.getCode(), OrderStatus.ORDER_REJECTED.getCode(),
 				OrderStatus.PENDING_SELLER_ASSIGNMENT.getCode());
@@ -68,12 +68,12 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		try
 		{
 			LOG.info("Inside isDeliveryAddressChangable  method  , Checking for orderID " + orderId);
-			 OrderModel orderModel = orderModelDao.getOrderModel(orderId);
+			final OrderModel orderModel = orderModelDao.getOrderModel(orderId);
 			if (null != orderModel.getChildOrders())
 			{
-				for (OrderModel sellerOrder : orderModel.getChildOrders())
+				for (final OrderModel sellerOrder : orderModel.getChildOrders())
 				{
-					for (AbstractOrderEntryModel entry : sellerOrder.getEntries())
+					for (final AbstractOrderEntryModel entry : sellerOrder.getEntries())
 					{
 						String deliveryMode = StringUtils.EMPTY;
 						String entryStatus = orderModel.getStatus().getCode();
@@ -85,7 +85,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						}
 						if (null != entry && null != entry.getSelectedUSSID())
 						{
-							 SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
+							final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
 									.getSelectedUSSID());
 							if (null != sellerInfoModel && null != sellerInfoModel.getSellerMaster()
 									&& null != sellerInfoModel.getSellerMaster().getIsCDAllowed())
@@ -110,7 +110,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 							if (CollectionUtils.isNotEmpty(entry.getConsignmentEntries()))
 							{
-								 ConsignmentStatus consignmentStatus = entry.getConsignmentEntries().iterator().next()
+								final ConsignmentStatus consignmentStatus = entry.getConsignmentEntries().iterator().next()
 										.getConsignment().getStatus();
 								LOG.debug("Consignment status for entry " + entry.getTransactionID() + " is"
 										+ consignmentStatus.getCode());
@@ -135,16 +135,17 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 				}
 			}
 		}
-		catch ( Exception e)
+		catch (final Exception e)
 		{
-			LOG.error("Exception occurred " + e.getCause());
+			LOG.error("Exception occurred while checking whether address is changable or not for order id " + orderId + " "
+					+ e.getCause());
 		}
 		LOG.debug("Delivery Address changable : " + changable);
 		return changable;
 	}
 
 	@Override
-	public boolean saveTemporaryAddress(OrderModel orderModel,TemproryAddressModel temproryAddressModel)
+	public boolean saveTemporaryAddress(final OrderModel orderModel, final TemproryAddressModel temproryAddressModel)
 	{
 		boolean isTempAddressSave = false;
 		try
@@ -157,13 +158,13 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 				isTempAddressSave = true;
 			}
 		}
-		catch (ModelSavingException expection)
+		catch (final ModelSavingException e)
 		{
-			LOG.error("TemproryAddressModel" + expection.getMessage());
+			LOG.error("ModelSavingException while saving temprory address" + e.getMessage());
 		}
-		catch (NullPointerException expection)
+		catch (final NullPointerException e)
 		{
-			LOG.error("TemproryAddressModel" + expection.getMessage());
+			LOG.error("NullPointerException while saving temprory address" + e.getMessage());
 		}
 		return isTempAddressSave;
 	}
@@ -172,50 +173,51 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 
 	@Override
-	public boolean saveDeliveryAddress(String orderCode)
+	public boolean saveDeliveryAddress(final String orderCode)
 	{
+		LOG.info("Inside saveDeliveryAddress Method");
 		boolean isDeliveryAddressChanged = false;
 		try
 		{
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-			  TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
+				final TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
 				if (temproryAddressModel != null)
 				{
-					
-						 OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-						if (orderModel != null)
+
+					final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+					if (orderModel != null)
+					{
+						final UserModel user = orderModel.getUser();
+						final List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
+						final Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
+						final Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
+						if (null != deliveryAddresses)
 						{
-							 UserModel user = orderModel.getUser();
-							 List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
-							 Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
-							 Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
-							if (null != deliveryAddresses)
-							{
-								deliveryAddressesList.addAll(deliveryAddresses);
-							}
-							if (null != user.getAddresses())
-							{
-								customerAddressesList.addAll(user.getAddresses());
-							}
-							temproryAddressModel.setIsProcessed(Boolean.TRUE);
-							deliveryAddressesList.add(temproryAddressModel);
-							customerAddressesList.add(temproryAddressModel);
-							orderModel.setDeliveryAddress(temproryAddressModel);
-							user.setAddresses(customerAddressesList);
-							orderModel.setDeliveryAddresses(deliveryAddressesList);
-							modelService.saveAll(temproryAddressModel);
-							modelService.saveAll(orderModel);
-							modelService.saveAll(user);
-							isDeliveryAddressChanged = true;
+							deliveryAddressesList.addAll(deliveryAddresses);
 						}
+						if (null != user.getAddresses())
+						{
+							customerAddressesList.addAll(user.getAddresses());
+						}
+						temproryAddressModel.setIsProcessed(Boolean.TRUE);
+						deliveryAddressesList.add(temproryAddressModel);
+						customerAddressesList.add(temproryAddressModel);
+						orderModel.setDeliveryAddress(temproryAddressModel);
+						user.setAddresses(customerAddressesList);
+						orderModel.setDeliveryAddresses(deliveryAddressesList);
+						modelService.saveAll(temproryAddressModel);
+						modelService.saveAll(orderModel);
+						modelService.saveAll(user);
+						isDeliveryAddressChanged = true;
 					}
 				}
-		
+			}
+
 		}
-		catch (ModelSavingException expection)
+		catch (final ModelSavingException expection)
 		{
-			LOG.error("OrderModel chnage deliveryAddress" + expection.getMessage());
+			LOG.error("ModelSavingException Exception while saving changed delivery Address" + expection.getMessage());
 		}
 		return isDeliveryAddressChanged;
 	}
@@ -227,29 +229,29 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
     *
     */
 	@Override
-	public TemproryAddressModel getTemporaryAddressModel(String orderCode)
+	public TemproryAddressModel getTemporaryAddressModel(final String orderCode)
 	{
 		return mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
 	}
 
 
 	@Override
-	public void removeTemporaryAddress(String orderCode)
+	public void removeTemporaryAddress(final String orderCode)
 	{
 		try
 		{
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-				 TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
+				final TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderCode);
 				if (temproryAddressModel != null && StringUtils.isNotEmpty(temproryAddressModel.getPostalcode()))
 				{
 					modelService.remove(temproryAddressModel);
 				}
 			}
 		}
-		catch (NullPointerException exception)
+		catch (final NullPointerException exception)
 		{
-			LOG.error(" Remove TemprorydeliveryAddress" + exception.getMessage());
+			LOG.error(" NullPointerException while removing TemprorydeliveryAddress" + exception.getMessage());
 		}
 
 	}
@@ -257,9 +259,9 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 
 	@Override
-	public void setStatusForTemporaryAddress(String orderId, boolean isProcessed)
+	public void setStatusForTemporaryAddress(final String orderId, final boolean isProcessed)
 	{
-		TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderId);
+		final TemproryAddressModel temproryAddressModel = mplDeliveryAddressDao.getTemporaryAddressModel(orderId);
 		try
 		{
 			if (temproryAddressModel != null)
@@ -268,14 +270,14 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 				modelService.saveAll(temproryAddressModel);
 			}
 		}
-		catch (ModelSavingException expection)
+		catch (final ModelSavingException e)
 		{
-			LOG.error("OrderModel Change DeliveryAddress" + expection.getMessage());
+			LOG.error("ModelSavingException while setting status for TemporaryAddress" + e.getMessage());
 		}
 	}
 
 	@Override
-	public boolean updateContactDetails(TemproryAddressModel temproryAddressModel, OrderModel orderModel)
+	public boolean updateContactDetails(final TemproryAddressModel temproryAddressModel, final OrderModel orderModel)
 	{
 		boolean isUpdatedDetails = false;
 		try
@@ -289,16 +291,24 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 				isUpdatedDetails = true;
 			}
 		}
-		catch (ModelSavingException expection)
+		catch (final ModelSavingException e)
 		{
-			LOG.error("In OrderModel Update Contact Details" + expection.getMessage());
+			LOG.error("ModelSavingException while updating contact details" + e.getMessage());
 		}
 		return isUpdatedDetails;
 	}
 
 	@Override
-	public List<TemproryAddressModel> getTemporaryAddressModelList(String dateFrom, String toDate)
+	public List<TemproryAddressModel> getTemporaryAddressModelList(final String dateFrom, final String toDate)
 	{
-		return mplDeliveryAddressDao.getTemporaryAddressModelList(dateFrom, toDate);
+		try
+		{
+			return mplDeliveryAddressDao.getTemporaryAddressModelList(dateFrom, toDate);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occurred while getting the TemporaryAddressModelList" + e.getMessage());
+		}
+		return null;
 	}
 }
