@@ -84,7 +84,7 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 
 		getCookieGenerator().addCookie(response, guid);
 		//POC Add the Keep Alive Cookie on login
-		getKeepAliveCookieGenerator().addCookie(response);
+		getKeepAliveCookieGenerator().addCookie(response, createGUID());
 		request.getSession().setAttribute(RequireHardLoginBeforeControllerHandler.SECURE_GUID_SESSION_KEY, guid);
 
 		if (LOG.isInfoEnabled())
