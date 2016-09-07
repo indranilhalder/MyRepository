@@ -221,6 +221,8 @@
 		<property name="cookieSecure" value="false"/>
 		<property name="cookieMaxAge" value="360000000"/>
 		<property name="useDefaultPath" value="false"/>
+		<property name="useDefaultDomain" value="false"/>
+		<property name="customDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 	</bean>
 	
 	<bean id="defaultUserTypeCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.UserTypeCookieGenerator" >
@@ -228,6 +230,8 @@
 		<property name="cookieSecure" value="false"/>
 		<property name="cookieMaxAge" value="360000000"/>
 		<property name="useDefaultPath" value="false"/>
+		<property name="useDefaultDomain" value="false"/>
+		<property name="customDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 	</bean>
 	<!-- BTG filters -->
 	<bean id="abstractBtgFilter" class="com.tisl.mpl.storefront.filters.btg.AbstractBtgFilter" abstract="true" >
