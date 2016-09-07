@@ -437,10 +437,13 @@ public class CategoryPageController extends AbstractCategoryPageController
 				 */
 				else
 				{
-					List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(category.getSeoContents());
-					metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
-					metaDescription = seoContent.get(seoContent.size() - 1).getSeoMetaDescription();
-					metaTitle = seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
+					final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(category.getSeoContents());
+					if (seoContent.size() >= 1)
+					{
+						metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
+						metaDescription = seoContent.get(seoContent.size() - 1).getSeoMetaDescription();
+						metaTitle = seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
+					}
 					setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
 					updatePageTitle(model, metaTitle);
 				}
@@ -490,6 +493,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		catch (final Exception exception)
 		{
+
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
 					MarketplacecommerceservicesConstants.E0000));
 			try
@@ -874,7 +878,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		String metaKeywords = null;
 		String metaDescription = null;
 		String metaTitle = null;
-		if (CollectionUtils.isEmpty(seoContent))
+		if (CollectionUtils.isNotEmpty(seoContent))
 		{
 
 			metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();
@@ -883,9 +887,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 			setUpMetaDataForSeo(model, metaKeywords, metaDescription, metaTitle);
 			updatePageTitle(model, metaTitle);
 		}
-
-
-
 		else
 		{
 
