@@ -486,6 +486,10 @@ public class CustomerXMLUtlity
 				{
 					customerAddress.setCountry(addressModel.getCountry().getIsocode());
 				}
+				else
+				{
+					customerAddress.setCountry(MarketplacecommerceservicesConstants.DEFAULT_COUNTRY_CODE);
+				}
 				if (null != customerModel.getDefaultShipmentAddress()
 						&& customerModel.getDefaultShipmentAddress().equals(addressModel))
 				{
@@ -496,7 +500,15 @@ public class CustomerXMLUtlity
 				{
 					customerAddress.setAddressType(addressModel.getAddressType());
 				}
-				customerAddressList.add(customerAddress);
+				if (null != customerAddress.getDefaultFlag()
+						&& customerAddress.getDefaultFlag().equals(MarketplacecclientservicesConstants.X))
+				{
+					customerAddressList.add(0, customerAddress);
+				}
+				else
+				{
+					customerAddressList.add(customerAddress);
+				}
 				LOG.debug("added to customer list");
 			}
 		} //End of address loop
