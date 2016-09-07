@@ -100,7 +100,8 @@ ACC.carousel = {
 	myFun: function(){
 		$(".electronic-rotatingImage").owlCarousel({
 			items:1,
-    		loop: true,
+    		//loop: true,
+			loop: $("#rotatingImage img").length == 1 ? false : true,
     		nav:true,
     		dots:false,
     		navText:[]
