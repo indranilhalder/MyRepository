@@ -111,7 +111,7 @@ ${welcome_message}
 			<div id="changePinDiv">
 				<%-- <p><spring:theme code="product.pincode.input" /></p> --%>
 				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p>
-				<p id="unserviceablepincode"></p>
+				<p id="unserviceablepincode" style="display:none"></p>
 				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
 				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 				<c:choose>

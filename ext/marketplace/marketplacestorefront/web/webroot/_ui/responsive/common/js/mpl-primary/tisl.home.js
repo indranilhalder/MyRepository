@@ -269,6 +269,23 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
             data: "&productCount=" + $('li.wishlist').find('a').attr("data-count"),
             success: function(html) {
                 $("div.wishlist-info").html(html);
+                /*TPR-844*/
+                var wlCode = [];
+				$(".wlCode").each(function(){
+					wlCode.push($(this).text().trim());
+				});
+				$(".plpWlcode").each(function(){
+					var productURL = $(this).text(), n = productURL.lastIndexOf("-"), productCode=productURL.substring(n+1, productURL.length);
+					//wlPlpCode.push(productCode.toUpperCase());
+					
+					for(var i = 0; i < wlCode.length; i++) {
+						if(productCode.toUpperCase() == wlCode[i]) {
+							console.log("Controle Inside");
+							$(this).siblings(".plp-wishlist").addClass("added");
+						}
+					}
+				});
+				/*TPR-844*/
             }
         });
     },300);

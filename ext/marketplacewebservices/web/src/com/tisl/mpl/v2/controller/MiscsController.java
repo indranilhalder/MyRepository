@@ -163,6 +163,7 @@ import com.tisl.mpl.wsdto.ListPinCodeServiceData;
 import com.tisl.mpl.wsdto.MplAutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
 import com.tisl.mpl.wsdto.PinWsDto;
+import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 import com.tisl.mpl.wsdto.RestrictionPins;
 import com.tisl.mpl.wsdto.SearchDropdownWsDTO;
 import com.tisl.mpl.wsdto.SellerMasterWsDTO;
@@ -273,6 +274,9 @@ public class MiscsController extends BaseController
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
 	@Autowired
 	private PriceDataFactory priceDataFactory;
+
+	private static final String DROPDOWN_BRAND = "MBH";
+	private static final String DROPDOWN_CATEGORY = "MSH";
 	/*
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
 	 */
@@ -638,9 +642,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -948,6 +952,137 @@ public class MiscsController extends BaseController
 		return resultData;
 	}
 
+
+	/**
+	 * @Description : For Search and Suggest
+	 * @param type
+	 * @param typeValue
+	 * @param page
+	 * @param fields
+	 * @return resultData
+	 */
+	@RequestMapping(value = "/{baseSiteId}/getPDPWidgets", method =
+	{ RequestMethod.POST, RequestMethod.GET }, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ProductSearchPageWsDto searchProductDto(@RequestParam(required = true) final String type,
+			@RequestParam(required = true) final String typeValue, @RequestParam(required = true) final int page,
+			@RequestParam(required = false) final String categoryCode, @RequestParam(required = true) final int pageSize,
+			@RequestParam(required = false) final String sortCode,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	{
+		String searchText = "";
+		ProductSearchPageWsDto productSearchPage = new ProductSearchPageWsDto();
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+		try
+		{
+			final PageableData pageableData = createPageableData(page, pageSize, sortCode, ShowMode.Page);
+			final SearchStateData searchState = new SearchStateData();
+			final SearchQueryData searchQueryData = new SearchQueryData();
+
+			if (StringUtils.isNotEmpty(typeValue) && StringUtils.isNotEmpty(type))
+			{
+				if (type.equalsIgnoreCase("offer"))
+				{
+					if (StringUtils.isNotEmpty(categoryCode))
+					{
+						searchText = ":relevance:category:" + categoryCode + ":allPromotions:" + typeValue;
+					}
+					else
+					{
+						searchText = ":relevance:allPromotions:" + typeValue;
+					}
+				}
+				else if (type.equalsIgnoreCase("color"))
+				{
+					if (StringUtils.isNotEmpty(categoryCode))
+					{
+						searchText = ":relevance:category:" + categoryCode + ":colour:" + typeValue;
+					}
+					else
+					{
+						searchText = ":relevance:colour:" + typeValue;
+					}
+				}
+				else
+				{
+					if (StringUtils.isNotEmpty(categoryCode))
+					{
+						searchText = ":relevance:category:" + categoryCode + ":size:" + typeValue;
+					}
+					else
+					{
+						searchText = ":relevance:size:" + typeValue;
+					}
+				}
+
+				searchQueryData.setValue(searchText);
+				searchState.setQuery(searchQueryData);
+				searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+						.textSearch(searchState, pageableData);
+
+				if (searchPageData != null)
+				{
+					productSearchPage = searchSuggestUtilityMethods.setPDPSearchPageData(searchPageData);
+				}
+				//setting category
+				if (StringUtils.isNotEmpty(categoryCode))
+				{
+					productSearchPage.setCategoryCode(categoryCode);
+				}
+
+				final ProductSearchPageWsDto sortingvalues = dataMapper.map(searchPageData, ProductSearchPageWsDto.class, fields);
+				if (null != sortingvalues)
+				{
+					if (null != sortingvalues.getPagination())
+					{
+						productSearchPage.setPagination(sortingvalues.getPagination());
+					}
+					if (null != sortingvalues.getSorts())
+					{
+						productSearchPage.setSorts(sortingvalues.getSorts());
+					}
+					if (null != sortingvalues.getCurrentQuery())
+					{
+						productSearchPage.setCurrentQuery(sortingvalues.getCurrentQuery());
+					}
+					if (null != searchPageData.getSpellingSuggestion()
+							&& null != searchPageData.getSpellingSuggestion().getSuggestion())
+					{
+						productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
+					}
+				}
+			}
+			else
+			{
+				productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				productSearchPage.setError(MarketplacecommerceservicesConstants.INVALIDSEARCHKEY);
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			//e.printStackTrace();
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			//e.printStackTrace();
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + ":" + e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			productSearchPage.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			productSearchPage.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return productSearchPage;
+	}
+
 	/**
 	 * @Description :Populate DTO Data
 	 * @param wsData
@@ -1074,7 +1209,7 @@ public class MiscsController extends BaseController
 					 * Arrays.asList(ProductOption.BASIC, ProductOption.PRICE)); } else { throw new
 					 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); } PincodeServiceData data = null;
 					 * MarketplaceDeliveryModeData deliveryModeData = null; List<PinCodeResponseData> response = null;
-					 * 
+					 *
 					 * if (null != productData && null != productData.getSeller()) { for (final SellerInformationData seller
 					 * : productData.getSeller()) { final List<MarketplaceDeliveryModeData> deliveryModeList = new
 					 * ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if
@@ -1083,7 +1218,7 @@ public class MiscsController extends BaseController
 					 * seller.getUssid()) { deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(),
 					 * seller.getUssid()); } deliveryModeList.add(deliveryModeData); }
 					 * data.setDeliveryModes(deliveryModeList); }
-					 * 
+					 *
 					 * if (StringUtils.isNotEmpty(seller.getFullfillment())) {
 					 * data.setFullFillmentType(seller.getFullfillment()); } if
 					 * (StringUtils.isNotEmpty(seller.getShippingMode())) { data.setTransportMode(seller.getShippingMode());
@@ -1292,7 +1427,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1305,7 +1440,7 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 * 
+	 *
 	 * } return deliveryModeData; }
 	 */
 	/**

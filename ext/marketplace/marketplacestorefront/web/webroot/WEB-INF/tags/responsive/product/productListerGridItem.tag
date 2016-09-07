@@ -59,6 +59,7 @@
 					title="${product.name}"> <%-- <product:productPrimaryImage
 						product="${product}" format="searchPage" /> --%> <product:productSearchPrimaryImage product="${product}" format="searchPage"/>
 						<span class="plp-wishlist" data-product="${productUrl}"></span>
+						<span class="plpWlcode" style="display: none;">${productUrl}</span>
 			
 
 				</a>
