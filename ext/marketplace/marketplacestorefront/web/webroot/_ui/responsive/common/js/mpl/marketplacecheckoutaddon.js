@@ -3148,8 +3148,9 @@ $(document).ready(function(){
 
 
 
-function checkPincodeServiceability(buttonType)
+function checkPincodeServiceability(buttonType,el)
 {
+//	alert($(el).attr("id")+" :::button id")
 	$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
 	//$("#pinCodeDispalyDiv .spinner").css("left",(($("#pinCodeDispalyDiv").width()+$("#pinCodeDispalyDiv").width())/2)+10);
 	$("body").append("<div id='no-click' style='opacity:0.6; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -3164,6 +3165,9 @@ function checkPincodeServiceability(buttonType)
 			});
 		 $("#cartPinCodeAvailable").hide();//TPR-1055
 		//setTimeout(function(){
+		 $("#unserviceablepincode").hide();//tpr-1341
+		 $("#AvailableMessage").hide();
+		 $(".pincodeServiceError").hide();
 		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#no-click").remove();
 		//},500);
@@ -3175,6 +3179,10 @@ function checkPincodeServiceability(buttonType)
     	$("#defaultPinCodeIds").css("color","red");
         $("#error-Id").show();
         $("#cartPinCodeAvailable").hide();//TPR-1055
+        $("#cartItemBlankPincode").hide();//tpr-1341
+        $("#unserviceablepincode").hide();
+        $("#AvailableMessage").hide();
+        $(".pincodeServiceError").hide();
 		$("#emptyId").hide();
 		$("#error-Id").css({
 			"color":"red",
@@ -3189,12 +3197,15 @@ function checkPincodeServiceability(buttonType)
         
     }
 	//TPR-1055 starts
-	else if($("#pinCodeButtonIds").text() == 'Change Pincode'){
+	else if($("#pinCodeButtonIds").text() == 'Change Pincode'&& $(el).attr("id") =="pinCodeButtonIds"){
 		
 		//$("#defaultPinCodeIds").removeAttr('disabled');
 		$("#unserviceablepincode").hide();
 		$("#cartPinCodeAvailable").show();
-		$("#cartPinCodeAvailable").html("Enter your pincode to see your available delivery options");
+		 $(".pincodeServiceError").hide();
+		 $("#AvailableMessage").hide();
+		//$("#cartPinCodeAvailable").html("Enter your pincode to see your available delivery options");
+		 $("#cartPinCodeAvailable").show();
 		$("#pinCodeButtonIds").text("Check Availability");
 		 $('#defaultPinCodeIds').focus();
 		$("#pinCodeDispalyDiv .spinner").remove();
@@ -3224,8 +3235,9 @@ function checkPincodeServiceability(buttonType)
  				//	alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  				//	TISPRD-1666 - console replaced with alert and resp print
  				$("#cartPinCodeAvailable").hide();
- 				
- 				$("#unserviceablepincode").html("One or more item(s) are not available at this location. Please remove the item(s) to proceed or try an other pincode.");
+ 				$("#AvailableMessage").hide();
+ 				$("#unserviceablepincode").show();
+ 			//	$("#unserviceablepincode").html("One or more item(s) are not available at this location. Please remove the item(s) to proceed or try an other pincode?");//tpr-1329
  				$("#unserviceablepincode").show();
  				
  				populatePincodeDeliveryMode(response,buttonType);
@@ -3254,12 +3266,15 @@ function checkPincodeServiceability(buttonType)
  	 				$('#defaultPinCodeIds').blur();
  	 				if ( $('#defaultPinCodeIds').val() == "") {
  	 				
- 	 					$("#cartPinCodeAvailable").html("Enter your pincode to see your available delivery options");
+ 	 				//	$("#cartPinCodeAvailable").html("Enter your pincode to see your available delivery options");
+ 	 					$("#cartPinCodeAvailable").show();
  	 					$("#pinCodeButtonIds").text("Check Availability")
  	 					
  	 				} else {
- 	 					
- 	 					$("#cartPinCodeAvailable").html("Available delivery options for the pincode " +selectedPincode+ " are");
+ 	 					$("#cartPinCodeAvailable").hide();
+ 	 					$("#unserviceablepincode").hide();
+ 	 					$("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
+ 	 					$("#AvailableMessage").show();
  	 					$("#pinCodeButtonIds").text("Change Pincode")
  	 				}
  		},
@@ -3282,17 +3297,26 @@ function checkPincodeServiceability(buttonType)
  	 		//},500);
  		}
  	});
-
 	
 
    }
 }
+
 //TPR-1055
 $("#defaultPinCodeIds").click(function(){
+	$("#unserviceablepincode").hide();
+	 
 	if($("#pinCodeButtonIds").text() == 'Change Pincode'){
 		$("#pinCodeButtonIds").text("Check Availability");
-		$("#cartPinCodeAvailable").html("Enter your pincode to see your available delivery options");
+		$("#AvailableMessage").hide();
+		//$("#cartPinCodeAvailable").html("Enter your pincode to see your available delivery options");
+		$("#cartPinCodeAvailable").show();
+		 $(".pincodeServiceError").hide();
+		 $( "#error-Id").hide();
+		 $("#emptyId").hide();
+		
 	}
+	
 });
 //TPR-1055 ends
 	
@@ -3537,7 +3561,8 @@ function checkIsServicable()
 	//TPR-1055
 	var selectedPincode=$("#defaultPinCodeIds").val();
 	//$("#defaultPinCodeIds").prop('disabled', true);
-	$("#pinCodeButtonIds").text("Change Pincode");
+	$("#pinCodeButtonIds").text("Check Availability");//tpr-1334
+	$("#unserviceablepincode").hide();
 	//TPR-1055 ends
 	if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
 	
@@ -3550,13 +3575,16 @@ function checkIsServicable()
 	 			var responeStr=response.split("|");
 	 			if(responeStr[0]=="N"){
 	 			$("#cartPinCodeAvailable").hide();
- 				$("#unserviceablepincode").html("One or more item(s) are not available at this location. Please remove the item(s) to proceed or try an other pincode.");
- 				$("#unserviceablepincode").show();
+	 			$("#AvailableMessage").hide();
+ 				//$("#unserviceablepincode").html("One or more item(s) are not available at this location. Please remove the item(s) to proceed or try an other pincode?");
+ 				$("#unserviceablepincode").show();//TPR-1329
 	 			}
 	 			else{
-	 				
-	 				$("#cartPinCodeAvailable").html("Available delivery options for the pincode " +selectedPincode+ " are");
-	 				$("#cartPinCodeAvailable").show();
+	 				$("#unserviceablepincode").hide();
+	 				$("#cartPinCodeAvailable").hide();
+	 				$("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
+	 				$("#AvailableMessage").show();
+	 				$("#pinCodeButtonIds").text("Change Pincode");
 	 			}
 	 			// TPR-1055 ends
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');

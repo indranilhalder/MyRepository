@@ -401,7 +401,8 @@ tr.d0 td {
 								</c:when>
 								
 								<c:when test="${empty selectedPincode ||  fn:length(selectedPincode) == 0  }"> 
-									<spring:theme code="cart.pincode.blank"/>
+									<!-- TPR-1341 -->
+									<p id="cartItemBlankPincode"><spring:theme code="cart.pincode.blank"/></p>
 								</c:when>
 								
 		            			<%-- Commented as part of performance fix TISPT-104
