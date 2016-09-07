@@ -372,7 +372,7 @@ $(document).ready(
 			/*TPR-657 ends*/
 			
 			/*TPR-694 starts*/
-			$(document).on('click','#tabs_details',function(){
+			$(document).on('click','.details',function(){
 
 			
 			//	alert("viewdetails......")
