@@ -31482,10 +31482,11 @@ body.page-homepage .feature-collections{
 .product-facet .filter-colour input[type="submit"] {
     margin-left: 0;
     margin-right: 0;
-    width: 25px !important;
-    height: 25px !important;
+    width: 26px !important;
+    height: 26px !important;
     padding: 0 !important;
-    border-radius: 50%;
+    border-radius: 0;
+    border: 0 !important;
 }
 .product-facet .filter-colour input.js-facet-colourbutton {
     margin-left: 0;
@@ -34014,7 +34015,7 @@ body.template-pages-category-productGridPage .breadcrumbs,body.template-pages-se
     height: 15px;
     width: 15px;
 }
-.left-block .product-facet .facet.colour .facet-list li.filter-colour {
+.left-block .product-facet .facet.Colour .facet-list li.filter-colour {
     margin: 5px 7px 7px 5px !important;
 }
 .left-block .facet-values.js-facet-values.js-facet-form {
