@@ -198,7 +198,7 @@
 							code="text.select.size" /></span>
 			</c:otherwise>
 			</c:choose> 
-				<ul label="sizes">
+				<ul label="sizes" id="quickViewVariant">
 				 <li style="display:none;"><a href="#" class="js-reference-item cboxElement">select size</a></li>
 				 <%-- <li><spring:theme
 							code="text.select.size" /></li> --%>
