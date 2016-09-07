@@ -56,7 +56,7 @@
 					}
 					</script>
 					<ycommerce:testId code="checkoutStepTwo">
-						<div class="checkout-shipping">
+						<div class="checkout-shipping formaddress">
 						<c:choose>
 					<c:when test="${edit eq true}">
 						<ycommerce:testId code="multicheckout_saveAddress_button">
@@ -84,7 +84,7 @@
 						</c:choose>						
 					</c:otherwise>
 				</c:choose> 
-							<div class="checkout-indent left-block address-form">
+							<div class="checkout-indent left-block address-form ">
 								<h1>
 									<spring:theme code="checkout.summary.shippingAddress" text="Shipping Address"></spring:theme>
 								</h1>

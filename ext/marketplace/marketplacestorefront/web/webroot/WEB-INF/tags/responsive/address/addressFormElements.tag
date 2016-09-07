@@ -173,6 +173,21 @@
 			<div class="help-block has-error" id="lastnameError" style="display: none;">		
 			</div>
 			</div>
+			<!-- <div class='half'> -->
+         <div class='full'>
+          <%-- <label for="myselect"><spring:theme code="text.addressBook.PhoneNumber" text="Mobile Number" /></label>	 --%>	
+      <div class="showPhone">
+		<select name="myselect" disabled="disabled">
+       <option value="myselectedvalue" selected="selected">+91</option>
+     </select>
+        <input type="hidden" name="myselect" value="myselectedvalue" /> 
+	 	<form:input type="text" idKey="address.mobile" id="mobileNonewForm"
+			 path="MobileNo" inputCSS="form-control"
+			mandatory="true" maxLength="10" placeholder="Mobile Number*"/> 
+			<div class="help-block has-error" id="mobileError" style="display: none;">		
+			</div>	 
+		</div>	
+		</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line1"
@@ -206,20 +221,22 @@
 			<div class="help-block has-error" id="cityError" style="display: none;">
 			</div>
 			</div>
-			<div class="half address-select">
+			<!-- <div class="half address-select"> -->
+			<div class="full address-select">
 		<formElement:formSelectBox idKey="address.states"
-			labelKey="address.states" path="state" mandatory="true"
-			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelect"
+			 path="state" mandatory="true"
+			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelectState"
 			items="${stateDataList}" selectedValue="${addressForm.state}"
 			itemValue="name"  />
 			<div class="help-block has-error" id="stateError" style="display: none;">		
 			</div>
 			</div>
 				   		
-		<div class="half country-select">
+		<!-- <div class="half country-select"> -->
+		<div class="full country-select">
 		<c:set var='count'  value='1' />
 		<div class="country">
-		<label><spring:theme code="address.selectCountry"/></label>
+		<%-- <label><spring:theme code="address.selectCountry"/></label> --%>
 		
 		    	<c:forEach items="${supportedCountries}" var="country">
 					<c:if test="${country.isocode eq 'IN' and count==1}">
@@ -233,7 +250,8 @@
 		</div>
 				
 		<%-- <formElement:formInputBox idKey="address.states" labelKey="address.states" path="state" inputCSS="form-control" mandatory="true"/> --%>
-		<div class='half'>
+		<!-- <div class='half'> -->
+		<div class='full'>
 		<formElement:formInputBox idKey="address.postcode"
 			path="postcode"
 			mandatory="true" maxLength="6" placeholder="Pincode*" />
@@ -243,7 +261,8 @@
 			</div>
 			</div>
 				
-         <div class='half'>
+         <%-- <!-- <div class='half'> -->
+         <div class='full'>
           <label for="myselect"><spring:theme code="text.addressBook.PhoneNumber" text="Mobile Number" /></label>		
       <div class="showPhone">
 		<select name="myselect" disabled="disabled">
@@ -256,7 +275,7 @@
 			<div class="help-block has-error" id="mobileError" style="display: none;">		
 			</div>	 
 		</div>	
-		</div>
+		</div> --%>
 			</fieldset>						
 			
 

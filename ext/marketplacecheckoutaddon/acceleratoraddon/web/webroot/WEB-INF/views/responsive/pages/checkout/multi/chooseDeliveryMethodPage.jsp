@@ -445,6 +445,8 @@
 		  <a href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}" class="edit_address"></a>
 		  </span>
 		  
+		  
+		  <div class="editnewAddresPage"></div>
            </div>
            </c:forEach>
 		 <!--   <div class="address-list">
@@ -461,7 +463,7 @@
       </form>
 	  <div class="formaddress" style="display: none;">
 		<div class="heading-form"><h3>Add New Address</h3><input type="button" value="cancel" class="cancelBtn"></div>
-	  <form>		
+	  <%-- <form>		
 		<input type="text" placeholder="Firstname*" class="name-address">
 		<input type="text" placeholder="Lastname*" class="name-address">
 		<input type="text" placeholder="phone number*">
@@ -472,7 +474,34 @@
 		<input type="text" placeholder="state*">
 		<input type="text" placeholder="country*">  
 		<input type="submit" value="save" class="saveBtn"> 
-	  </form>	  
+	  </form>	   --%>
+	  
+	   <div class="checkout-indent left-block address-form">
+								<%-- <h1>
+									<spring:theme code="checkout.summary.shippingAddress" text="Shipping Address"></spring:theme>
+								</h1>
+								<div class="checkout-shipping-items-header"><spring:theme code="checkout.multi.shipment.items" arguments="${cartData.deliveryItemsQuantity}" text="Shipment - ${cartData.deliveryItemsQuantity} Item(s)"></spring:theme></div> --%>
+									<ul class="product-block addresses new-form account-section">
+									  	<%-- <li class="header">
+									  		<ul class="account-section-header">
+									        <li><spring:theme	code="checkout.multi.deliveryAddress.newAddress" text="New Address"> </spring:theme> </li>																  			 			 							        
+									        <li class="pincode-button"><a href="${request.contextPath}/checkout/multi/delivery-method/selectaddress">
+									        
+									         <c:if test="${addressFlag eq 'T'}"> 
+											<spring:theme code="checkout.multi.deliveryAddress.useSavedAddress" text="Use a Saved Address"></spring:theme>
+											 </c:if>
+										</a></li>
+										
+									      </ul>
+									  	</li> --%>
+									  	<li class="item account-section-content	 account-section-content-small ">
+									  	<address:addressFormSelector supportedCountries="${countries}"
+																				regions="${regions}" cancelUrl="${currentStepUrl}" />
+									  	</li>
+									  	</ul>
+									  	<!-- <input type="submit" value="save" class="saveBtn"> -->
+									</div>
+	  
 	  </div>
      <div class="add-address" style="display: block;">
         <p id="address-form"><span class="addsign pincode-button">
@@ -776,7 +805,7 @@
 				
 		</c:if>
 	<div class="addnewAddresPage"></div>	
-	<div class="editnewAddresPage"></div>
+	
 
 	<div class="right-block shipping">
 			<div class="checkout-order-summary">

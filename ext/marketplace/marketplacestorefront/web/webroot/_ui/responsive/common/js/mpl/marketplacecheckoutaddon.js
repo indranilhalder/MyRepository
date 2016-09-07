@@ -4304,7 +4304,7 @@ $(".pincode-button").click(function(){
 });
 //TPR-1213
 $(".edit_address").click(function(){
-	
+	//$(this).parents().find(".address, label").toggle();
 	$.ajax({
  		url: ACC.config.encodedContextPath + $(this).attr("href"),
  		type: "GET",
@@ -4312,6 +4312,7 @@ $(".edit_address").click(function(){
  		dataType: "html",
  		success : function(response) {
  			$(".editnewAddresPage").html(response);
+ 			$(".editnewAddresPage .checkout-shipping.formaddress").prepend("<input type='button' value='cancel' class='cancelBtnEdit'>");
  		},
  		error : function(resp) {
  		}

@@ -2048,7 +2048,7 @@ $(window).scroll(function(){
 
 /*checkout address modified starts*/
 
-$(document).on("click",".acc_head",function(){
+/*$(document).on("click",".acc_head",function(){
 	$(this).siblings(".acc_content").slideToggle();
 });
 $(document).on("click",".add-address",function(){
@@ -2058,7 +2058,32 @@ $(document).on("click",".add-address",function(){
 $(document).on("click",".cancelBtn",function(){
 	$(this).parents(".formaddress").siblings(".add-address").slideToggle();
 	$(this).parents(".formaddress").slideToggle();
-});
+});*/
+if ($(".address-accordion").length) {
+    $(".address-accordion").smk_Accordion({
+        closeAble: true,
+        closeOther: false,
+        slideSpeed: 750,
+    })
+}
+$(".formaddress").hide();
+$("#address-form").click(function() {
+    $(".add-address").hide();
+    $(".formaddress").slideToggle();
 
+});
+  $(".cancelBtn").click(function() {
+        $(".formaddress").slideUp();
+        $(".add-address").slideDown();
+    });
+	  $(document).on("click",".cancelBtnEdit",function(){	
+	  $(this).parent(".formaddress").slideUp();
+  });
+
+/*	$(document).on("click",".edit",function(e){	
+		 e.stopPropagation();
+	alert("hi");
+	$(this).prev(".address").css("display","none");
+});*/
 
 /*checkout address modified ends*/
