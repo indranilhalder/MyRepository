@@ -34237,6 +34237,12 @@ cursor: auto;
     text-align: center;
     padding: 0 5px;
 }
+.listing.wrapper .pagination li.prev {
+    padding-right: 10px;
+}
+.listing.wrapper .pagination li.next {
+    padding-left: 10px;
+}
 .listing.wrapper .pagination li a {
     width: 13px;
 }
@@ -34321,6 +34327,9 @@ cursor: auto;
     line-height: 41px;
     text-align: center;
 }
+.toggle-filterSerp{
+text-indent: 2.5px;
+}
 .toggle-filterSerp:after {
     content: "";
     position: absolute;
@@ -34340,7 +34349,7 @@ cursor: auto;
     font-size: 12px;
     text-align: center;
 }
-.wrapped-form select {
+.listing.wrapper .right-block .listing-menu > div .wrapped-form.sort select {
     background: none;
     text-transform: uppercase;
     height: 41px;
@@ -34348,6 +34357,11 @@ cursor: auto;
     margin-left: 0px !important;
     width: auto !important;
     float: none !important;
+    line-height: 44px;
+    text-indent: 2px;
+}
+.listing.wrapper .product-listing .product-item .product-tile p.savings span {
+    margin-top: 0 !important;
 }
 .sort-refine-bar.mobile:after {
     content: "";
@@ -34358,8 +34372,8 @@ cursor: auto;
     zoom: 0.7;
     -moz-transform: scale(0.7);
     -moz-transform-origin: 0 0;
-    right: 9px;
-    top: 14px;
+    right: 12px;
+    top: 17px;
     height: 26px;
     width: 25px;
 }
@@ -34443,6 +34457,8 @@ li.product-item:nth-of-type(2n) .product-tile {
 .listing.wrapper .right-block .listing-menu>div .wrapped-form.sort select{
 	color: #fff;
     background: #000;
+    line-height: 28px;
+    text-indent: 0.01;
     }
 .listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile{
     right: 0;
@@ -34510,7 +34526,7 @@ padding-top: 0px !important;
 padding-top:15px !important;
 }
 }
-.IAQuickView,.iaAddToCartButton{
+.IAQuickView,.iaAddToCartButton,div.MSDQuickView{
 	height: 80px !important;
 	font-weight: 600;
 }
@@ -39665,9 +39681,27 @@ border: 2px solid #000 !important;
         border-radius: 50%;
 }     
  
- div.MSDQuickView, div.MSDQuickView:before{
-    content: "\e60b";
-    display: block;
+ div.MSDQuickView{
+    font-weight: 600 !important;
+    color:#000 !important;
+}
+div.MSDQuickView:before{
+	font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\f105";
+    color:#000 !important;
+    position: absolute;
+    font-size: 18px;
+    margin-top: 1px;
+    margin-left: 10px;
+    left: 70%;
+    top: 8px;
+    font-weight: 100;
+    padding: 1px;
+    height: 14px;
+    line-height: 11px;
+    width: 14px;
 }
 .spacer {
     padding: 0 10px;
@@ -39702,9 +39736,8 @@ border: 2px solid #000 !important;
     font-size:17px;
 }
 div.MSDQuickView, div.MSDQuickView:before {
-	font-size:17px;
-	font-weight:100;
-	color:#a9143c;
+	font-size:18px;
+	color:#000;
 }
 @media (min-width: 651px){
 .spacer {
@@ -41975,10 +42008,6 @@ Samsung Galaxy S5 -----------
 }
 .slider.product .frame .overflow .slide {
 	width: 100%;
-}
-
-div.MSDQuickView:before {
-	font-family: 'icomoon';
 }
 
 @media ( max-width :650px) {
@@ -46295,24 +46324,16 @@ margin-top:0px;
     padding-top: 10px;
 }
 .plp-wishlist{
+    background: url('../images/wishlist.png') no-repeat 0 0;
+    padding: 0;
+    height: 15px;
+    width: 16px;
     position: absolute;
+    right: 10px;
     top: 10px;
-    right: 5px;
     }
-.plp-wishlist:before{
-	font-family: 'icomoon';
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-weight: 100;
-    content: "\e602";
-    font-size: 18px;
-    color: #a9143c;
-    margin-right: 5px;
-    position: relative;
-    font-weight: bold;
-}
-.plp-wishlist.added:before {
-	content: "\e603";
+.plp-wishlist.added {
+	background-position: 0 -17px;
 }
 /*Quickview changes start*/
 .quickview .sizetext{
