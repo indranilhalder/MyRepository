@@ -70,6 +70,7 @@ function init_iaplugin() {
   } 
 }
 
+
 /*Check referring values*/
 function refCheck() {
   if (document.URL.indexOf('req=') > -1) {
@@ -194,7 +195,8 @@ function buildParams(moreParams) {
     'user_id': uid,
     'user_type': user_type,
     'ecompany': ecompany,
-    'site_page_type': site_page_type
+    'site_page_type': site_page_type,
+    'client_type':'web_site'
   };
 
   if(search_string !== "") {
@@ -214,11 +216,13 @@ function buildParams(moreParams) {
   }
   if(spid !== "") {
     currentParams.site_product_id = spid;
+   
   }
   if(domain !== "") {
     currentParams.domain = domain;
   }
-  //undefined issue fix in prod console
+  
+ //undefined issue fix in prod console
   if(typeof(site_product_array)!= 'undefined' && site_product_array.length > 0) { //if multiple site product ids
     var spids = {};
     currentParams.site_product_id = '';
@@ -227,6 +231,7 @@ function buildParams(moreParams) {
     }
     currentParams.site_product_id = currentParams.site_product_id.substring(0, currentParams.site_product_id.length - 1);
   }
+  
   if(typeof(category_array)!= 'undefined' && category_array.length > 0) { //if multiple site product ids
 	    var spids = {};
 	    currentParams.category_id = '';
@@ -345,13 +350,17 @@ function callRecApi(params, requestURL) {
     contentType: 'text/javascript; charset=utf-8',
     data: params,
     success: function(response, textStatus, jXHR) {
-      requestURL = requestURL.substr(requestURL.indexOf("recommendations/")+"recommendations/".length)
-      requestURL = requestURL.substr(0, requestURL.indexOf("/jsonp"));
-      if(requestURL.indexOf("products/") > -1) {
-        requestURL = requestURL.substr(requestURL.indexOf("products/")+"products/".length)
-      }
-      if(requestURL === "products") {
-        requestURL = "normal";
+      if(requestURL.indexOf('recommendations/') > -1) {
+        requestURL = requestURL.substr(requestURL.indexOf("recommendations/")+"recommendations/".length);
+        if(requestURL.indexOf('/jsonp') > -1) {
+          requestURL = requestURL.substr(0, requestURL.indexOf("/jsonp"));
+        }
+        if(requestURL.indexOf("products/") > -1) {
+          requestURL = requestURL.substr(requestURL.indexOf("products/")+"products/".length);
+        }
+        if(requestURL === "products") {
+          requestURL = "normal";
+        }
       }
       updatePage(response, requestURL);
     }, error: function(jqXHR, textStatus, errorThrown) {

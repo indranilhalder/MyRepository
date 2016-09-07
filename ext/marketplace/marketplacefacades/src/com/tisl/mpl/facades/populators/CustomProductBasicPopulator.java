@@ -72,6 +72,8 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 
 	private static int seoTitleLimit = 100;
 	private static int seoDescLimit = 200;
+	//TISPRD-4977
+	private static int seoKeywordLimit = 150;
 
 	/**
 	 * @param configurationService
@@ -278,6 +280,9 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 				String.valueOf(seoTitleLimit)));
 		seoDescLimit = Integer.parseInt(configurationService.getConfiguration().getString("seo.desc.limit",
 				String.valueOf(seoDescLimit)));
+		//TISPRD-4977
+		seoKeywordLimit = Integer.parseInt(configurationService.getConfiguration().getString("seo.keyword.limit",
+				String.valueOf(seoKeywordLimit)));
 		final StringBuilder seoMetaTitle = new StringBuilder(200);
 		if (null != seoContents && !(seoContents.isEmpty()))
 		{
@@ -339,6 +344,21 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 					}
 				}
 			}
+			//TISPRD-4977
+			if (null != seoContentModel.getSeoMetaKeyword())
+			{
+				//Populating keyword from SeoMetaDescription
+				final String seoKeyword = seoContentModel.getSeoMetaKeyword();
+				if (seoKeyword.length() > seoKeywordLimit)
+				{
+					productData.setSeoMetaKeyword(seoKeyword.substring(0, seoKeywordLimit - 1));
+				}
+				else
+				{
+					productData.setSeoMetaKeyword(seoKeyword);
+				}
+			}
+
 		}
 		else
 		{
