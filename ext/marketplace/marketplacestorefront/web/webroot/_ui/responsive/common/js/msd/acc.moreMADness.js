@@ -168,7 +168,7 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
                               		  } else {
                               		  sizes.sort() /*Not a string-based size array, sort normally*/
                               		  }
-                              		  dS = dS + '<span class="sizesAvailableMSD" style="padding:5px;">Size : ['+sizes+'] </span>';
+                              		  dS = dS + '<span class="sizesAvailableMSD">Size :  <span class="size-col">['+sizes+'] </span></span>';
                               		 }
                                 }                                
                             } 
@@ -258,6 +258,9 @@ function showBothMSD(productElementMSD) {
 	var qvMSD = productElementMSD.getElementsByClassName("MSDQuickView")[0];	 
 	qvMSD.style.zIndex = 11;
 	qvMSD.style.visibility = "visible";	
+	// Added as part of TPR-859 (size on hover)
+	var size_bottom = $(productElementMSD).find(".short-info").height() + 31;
+	$(productElementMSD).find(".sizesAvailableMSD").css("bottom",size_bottom + "px");
 	}
 
 
