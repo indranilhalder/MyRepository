@@ -34,10 +34,12 @@
 				<c:choose>
 					<c:when test="${(fn:length(searchCategory) > 5 || fn:length(categoryCode) > 5 && !fn:contains(categoryCode, 'mbh'))}">
 						<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+				   		<nav:facetNavRefinementFacetMobile facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 				   	</c:when>
 			   		<c:otherwise>
 			   			<c:if test="${facet.genericFilter}">
 					 		<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+					 		<nav:facetNavRefinementFacetMobile facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 						</c:if> 
 			   		</c:otherwise>
 				 </c:choose> 

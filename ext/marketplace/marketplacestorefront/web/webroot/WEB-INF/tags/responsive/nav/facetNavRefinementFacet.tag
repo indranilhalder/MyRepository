@@ -27,6 +27,7 @@ function navigateToPage(queryString,textString)
 	window.open(urlString,"_self");
 }
 </script>
+<div class="facet_desktop">
 <c:if test="${not empty facetData.values}">
 <c:if test="${facetData.code ne 'category'}">
 <c:if test="${facetData.code ne 'snsCategory' && facetData.code ne 'micrositeSnsCategory'}">
@@ -496,6 +497,7 @@ function navigateToPage(queryString,textString)
 			</c:if>
 </c:if>
 </c:if>
+</div>
 <script>
 	
 

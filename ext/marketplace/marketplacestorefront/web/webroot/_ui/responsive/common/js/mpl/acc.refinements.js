@@ -1,3 +1,4 @@
+var filterMobileQuery="";
 ACC.refinements = {
 
 	_autoload: [
@@ -97,7 +98,7 @@ ACC.refinements = {
 		var browserURL = window.location.href.split('?');
 
 		// AJAX for checkbox
-		$(document).on("change",".js-product-facet .js-facet-checkbox",function(){
+		$(document).on("change",".js-product-facet .facet_desktop .js-facet-checkbox",function(){
 			var staticHost=$('#staticHost').val();
 			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
@@ -153,8 +154,40 @@ ACC.refinements = {
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 		})
 		
+		//TPR-845
+		$(document).on("change",".js-product-facet .facet_mobile .js-facet-checkbox",function(){
+			filterMobileQuery += $(this).parents("form").find('input[name="q"]').val();
+			//var hv = $('input[name=q]').val();
+			alert(filterMobileQuery);
+			
+			var str1 = "ABCDEFGHIJKLMNOP";
+			var str2 = "DEFG";
+
+			alert("========="+sttr1.search(str2));
+			
+			
+			$(this).parents("form").find('input[type="hidden"]').each(function(){
+				if(dataString == null){
+					dataString = $(this).attr('name')+"="+$(this).val();
+				}
+				else{
+					dataString = dataString + ("&"+$(this).attr('name')+"="+$(this).val());
+				}
+				
+				if($(this).val().length >0){
+					if(nonEmptyDataString == null){
+						nonEmptyDataString = $(this).attr('name')+"="+$(this).val();
+					}
+					else{
+						nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
+					}
+				}
+			})
+			
+		})
+		
 		// AJAX for Colourbutton and sizebuttons 
-		$(document).on("click",".js-product-facet .js-facet-colourbutton , .js-product-facet .js-facet-sizebutton",function(){
+		$(document).on("click",".js-product-facet .facet_desktop .js-facet-colourbutton , .js-product-facet .facet_desktop .js-facet-sizebutton",function(){
 			
 			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
