@@ -326,12 +326,12 @@ $(document).ready(
 							+ $("#product_id").val() + ',';
 						tealiumData += '"product_brand":'
 							+ $("#product_brand").val() + ',';
-						tealiumData += '"page_subcategory_name":'
-							+ $("#page_subcategory_name").val() + ',';
+						tealiumData += '"page_subcategory_name":"'
+							+ $("#page_subcategory_name").val() + '",';
 						tealiumData += '"page_subcategory_name_L3":"'
 							+ $("#page_subcategory_name_L3").val() + '",';
-						tealiumData += '"product_category":'
-							+ $("#product_category").val() + ',';
+						tealiumData += '"product_category":"'
+							+ $("#product_category").val() + '",';
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
 							+ $("#checkoutSellerIDs").val() + '"}';
 						data = data.replace("}<TealiumScript>", tealiumData);
