@@ -8,12 +8,13 @@
 <div class="payment-method">
 										
 							</div>
+		
 				<div class="accordtionTataCliq  secondTataCliq col-md-12">
 					<div class="accHeading"><spring:theme code="text.order.returns.returntypelable" /></div>
-					
+					<c:set var="customerBankDetails" value="${customerBankDetails}"> </c:set>
 					<div class="accContents reasonType col-md-12">
 						<div class="col-md-4">
-							<b>Return Type : </b> <br/>
+							<b>Return Type :</b> <br/>
 							<div class="selectReason selectRefund col-md-12">
 								<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
 							<!-- 	<input class="radioButton" onclick="changeRadioColor('refund')" type="radio" value="refund" name="return" checked /> -->
@@ -80,11 +81,11 @@
 								<div class="col-md-4 col-sm-4">
 
 									<b><spring:theme code="text.order.returns.accountnumber"/></b> <br/>
-									<form:password onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="16" minlength="16" path="accountNumber" name="accountNumber" placeholder="Account Number" />
+									<form:password onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="16" minlength="16" path="accountNumber" name="accountNumber" placeholder="Account Number" value="${customerBankDetails.bankAccount}" />
 								</div>
 								<div class="col-md-4 col-sm-4">
 									<b><spring:theme code="text.order.returns.reenteraccountnumber"/></b> <br/>
-									<form:input onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="16" minlength="16" type="text" path="reEnterAccountNumber" name="reaccountNumber" placeholder="Re-Account Number" />
+									<form:input onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="16" minlength="16" type="text" path="reEnterAccountNumber" name="reaccountNumber" placeholder="Re-Account Number" value="${customerBankDetails.bankAccount}" />
 								</div>
 								<div class="col-md-4 col-sm-4 suggestionText">
 									<span><spring:theme code="text.order.returns.safetyinformationlable1"/></span><br/>
@@ -94,19 +95,19 @@
 							<div class="col-md-12 col-sm-12">
 								<div class="col-md-4 col-sm-4">
 									<b><spring:theme code="text.order.returns.accountholdername"/></b> <br/>
-									<form:input type="text" onkeyup="this.value=this.value.replace(/[^A-z\s]/g,'');" maxlength="40"  path="accountHolderName" name="accountHolderName" placeholder="Account Holder Name" />
+									<form:input type="text" onkeyup="this.value=this.value.replace(/[^A-z\s]/g,'');" maxlength="40"  path="accountHolderName" name="accountHolderName" placeholder="Account Holder Name" value="${customerBankDetails.name}" />
 								</div>
 								<div class="col-md-2 col-sm-2">
 									<b><spring:theme code="text.order.returns.refundmode"/></b> <br/>
-									<form:select name="size" class="refundMode" path="refundMode">
+									<form:select name="size" class="refundMode" path="refundMode" value="${customerBankDetails.transactionType}">
 										    <form:option value="NEFT" >NEFT</form:option>
 											<form:option value="RTGF">RTGF</form:option>						
 									</form:select>
 								</div>
 								<div class="col-md-2 col-sm-2">
 									<b><spring:theme code="text.order.returns.title"/></b> <br/>
-									<form:select name="size" class="refundMode" path="title">
-										    <form:option value="mr" >MR</form:option>
+									<form:select name="size" class="refundMode" path="title" value="${customerBankDetails.title}">
+										    <form:option  value="mr" >MR</form:option>
 											<form:option value="Mrs">MRs</form:option>
 											<form:option value="Company">Company</form:option>				
 									</form:select>
@@ -115,14 +116,14 @@
 							<div class="col-md-12 col-sm-12">
 								<div class="col-md-4 col-sm-4">
 									<b><spring:theme code="text.order.returns.bankname"/></b> <br/>
-									<form:input  onkeyup="this.value=this.value.replace(/[^A-z\s]/g,'');" path="bankName" type="text"  name="bankName" placeholder="Bank Name" />
+									<form:input  onkeyup="this.value=this.value.replace(/[^A-z\s]/g,'');" path="bankName" type="text"  name="bankName" placeholder="Bank Name" value="${customerBankDetails.bankName}" />
 								</div>
 								<div class="col-md-4 col-sm-4">
 									<b><spring:theme code="text.order.returns.ifsccode"/></b> <br/>
-									<form:input  path="iFSCCode"  onkeyup="this.value=this.value.replace(/[^A-z0-9]/g,'');"   maxlength="11" minlength="" type="text" name="ifscCode" placeholder="IFSC CODE" />
+									<form:input  path="iFSCCode"  onkeyup="this.value=this.value.replace(/[^A-z0-9]/g,'');"   maxlength="11" minlength="" type="text" name="ifscCode" placeholder="IFSC CODE"  value="${customerBankDetails.bankKey}"/>
 								</div>
 								<div class="col-md-4 col-sm-4 suggestionText">
-									<span><spring:theme code="text.order.returns.safetyinformationlabl3"/></span><br/>
+									<%-- <span><spring:theme code="text.order.returns.safetyinformationlabl3"/></span><br/> --%>
 								</div>
 							</div>
 							
