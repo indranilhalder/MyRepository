@@ -51,6 +51,11 @@ public class SizeGuidePopulator<SOURCE extends SizeGuideModel, TARGET extends Si
 			sizeGuideData.setEuroSize(sizeGuideModel.getEuroSize());
 			sizeGuideData.setAge(sizeGuideModel.getAge());
 			sizeGuideData.setUsSize(sizeGuideModel.getUsSize());
+			sizeGuideData.setCmsBeltSize(sizeGuideModel.getCmsBeltSize());
+			sizeGuideData.setCmsWaistSize(sizeGuideModel.getCmsWaistSize());
+			sizeGuideData.setInchesBeltLength(sizeGuideModel.getInchesBeltLength());
+			sizeGuideData.setInchesBeltSize(sizeGuideModel.getInchesBeltSize());
+			sizeGuideData.setInchesWaistSize(sizeGuideModel.getInchesWaistSize());
 		}
 
 	}

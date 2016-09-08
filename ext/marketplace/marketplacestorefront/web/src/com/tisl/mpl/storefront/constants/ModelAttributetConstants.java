@@ -211,6 +211,12 @@ public final class ModelAttributetConstants
 	public static final String OPERATION = "operation";
 	//	pdp changes
 	public static final String CLOTHING = "Clothing";
+
+	//Added by SAP for Watches & FashionAccessories  :::  START
+	public static final String FASHION_ACCESSORIES = "Accessories";
+	public static final String WATCHES = "Watches";
+	//Added by SAP for Watches & FashionAccessories  :::  END
+
 	public static final String INVITE_URL = "/store/mpl/en/login/?affiliateId=";
 	public static final String SELECT_DAY = "selectDay";
 	public static final String SELECT_MONTH = "selectmonth";
@@ -255,6 +261,8 @@ public final class ModelAttributetConstants
 	public static final String SHIPPING_MODE = "shippingMode";
 	public static final String CONFIGURABLE_ATTRIBUTE = "classification.attributes.";
 	public static final String MAP_CONFIGURABLE_ATTRIBUTE = "mapConfigurableAttribute";
+
+	public static final String MAP_CONFIGURABLE_ATTRIBUTES = "mapConfigurableAttributes";
 	public static final String SELLER_ID = "sellerID";
 
 	public static final String PIN = "pin";

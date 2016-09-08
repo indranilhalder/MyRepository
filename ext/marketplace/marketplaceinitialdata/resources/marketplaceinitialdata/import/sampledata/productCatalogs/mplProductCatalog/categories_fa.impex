@@ -1,0 +1,61 @@
+$uidGroup=admingroup,marketplaceGroup,ETAILREAD
+$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged']));;;;;;;;;
+$catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged'])[unique=true,default='mplProductCatalog:Staged'];;;;;;;;;
+;;;;;;;;;
+
+INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid);
+;MSH1;Sales;;mplProductCatalog:Staged;$uidGroup
+# L1
+;MSH16;Accessories;MSH1;mplProductCatalog:Staged;$uidGroup
+;MSH17;Kids & Baby;MSH1;mplProductCatalog:Staged;$uidGroup
+;MSH18;Office & Stationery;MSH1;mplProductCatalog:Staged;$uidGroup
+;MSH19;Home;MSH1;mplProductCatalog:Staged;$uidGroup
+
+# L2
+;MSH1610;Men;MSH16;mplProductCatalog:Staged;$uidGroup
+;MSH1611;Women;MSH16;mplProductCatalog:Staged;$uidGroup
+;MSH1612;Kids & Baby;MSH16;mplProductCatalog:Staged;$uidGroup
+;MSH1710;Accessories; MSH17;mplProductCatalog:Staged;$uidGroup
+;MSH1810;Stationery;MSH18;mplProductCatalog:Staged;$uidGroup
+;MSH1910;Utility;MSH19;mplProductCatalog:Staged;$uidGroup
+
+# L3 Accessories -> Men -> ...
+;MSH1610100;Bags & Wallets;MSH1610;mplProductCatalog:Staged;$uidGroup
+;MSH1610101;Hair Accessories;MSH1610;mplProductCatalog:Staged;$uidGroup
+;MSH1610102;Belts;MSH1610;mplProductCatalog:Staged;$uidGroup
+;MSH1610103;Fashion Essentials;MSH1610;mplProductCatalog:Staged;$uidGroup
+
+# L3 Accessories -> Women -> ...
+;MSH1611100;Bags & Wallets;MSH1611;mplProductCatalog:Staged;$uidGroup
+;MSH1611101;Hair Accessories;MSH1611;mplProductCatalog:Staged;$uidGroup
+;MSH1611102;Belts;MSH1611;mplProductCatalog:Staged;$uidGroup
+;MSH1611103;Others;MSH1611;mplProductCatalog:Staged;$uidGroup
+
+# L3 Accessories -> Kids & Baby -> ...
+;MSH1612100;Bags & Wallets;MSH1612;mplProductCatalog:Staged;$uidGroup
+;MSH1612101;Hair Accessories;MSH1612;mplProductCatalog:Staged;$uidGroup
+;MSH1612102;Belts;MSH1612;mplProductCatalog:Staged;$uidGroup
+;MSH1612103;Fashion Essentials;MSH1612;mplProductCatalog:Staged;$uidGroup
+
+# L3 Kids & Baby -> Accessories -> ...
+;MSH1710100;Bags & Wallets;MSH1710;mplProductCatalog:Staged;$uidGroup
+;MSH1710101;Hair Accessories;MSH1710;mplProductCatalog:Staged;$uidGroup
+;MSH1710102;Belts;MSH1710;mplProductCatalog:Staged;$uidGroup
+;MSH1710103;Fashion Essentials;MSH1710;mplProductCatalog:Staged;$uidGroup
+
+# L3 Office & Stationery -> Stationery -> ...
+;MSH1810100;Organisers;MSH1810;mplProductCatalog:Staged;$uidGroup
+;MSH1810101;Notebooks;MSH1810;mplProductCatalog:Staged;$uidGroup
+;MSH1810102;Pen Stand;MSH1810;mplProductCatalog:Staged;$uidGroup
+;MSH1810103;Others;MSH1810;mplProductCatalog:Staged;$uidGroup
+;MSH1810104;Writing;MSH1810;mplProductCatalog:Staged;$uidGroup
+
+# L3 Home -> Utility -> ...
+;MSH1910100;Umbrella;MSH1910;mplProductCatalog:Staged;$uidGroup
+;MSH1910101;Laces;MSH1910;mplProductCatalog:Staged;$uidGroup
+;MSH1910102;Sequins;MSH1910;mplProductCatalog:Staged;$uidGroup
+;MSH1910103;Keychains;MSH1910;mplProductCatalog:Staged;$uidGroup
+;MSH1910104;Others;MSH1910;mplProductCatalog:Staged;$uidGroup
+;MSH1910105;Helmets;MSH1910;mplProductCatalog:Staged;$uidGroup
+;MSH1910106;Charms;MSH1910;mplProductCatalog:Staged;$uidGroup
+
