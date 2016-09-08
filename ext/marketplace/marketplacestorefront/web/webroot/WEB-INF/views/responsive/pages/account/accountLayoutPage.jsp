@@ -45,7 +45,7 @@
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation Starts --------->
 			<div class="right-account">
-				<h1>Overview</h1>
+				<h2>Overview</h2>
 				
 				<ul class="menu">
 				<cms:pageSlot position="BodyContent" var="feature">

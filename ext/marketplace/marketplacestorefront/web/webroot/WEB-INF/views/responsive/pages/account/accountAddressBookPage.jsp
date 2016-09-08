@@ -60,7 +60,7 @@
 				<div id="address_item" class="info card-list">
 					<!-- Heading for saved Cards -->
 
-					<h1>
+					<h2>
 						<c:if test="${fn:length(addressData)>10}">
 						<ul class="pagination address_pagination">
 						 <li id="prev"></li></ul>
@@ -69,7 +69,7 @@
 							text="My Address" />
 							<span><spring:theme code="text.account.addressBook.savedAddress.details"
 							text="Where in the world are you located? Edit, delete or change your address here." /></span>
-					</h1>
+					</h2>
 					
 					
 					

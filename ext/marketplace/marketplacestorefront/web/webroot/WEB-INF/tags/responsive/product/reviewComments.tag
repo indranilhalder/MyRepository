@@ -9,9 +9,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 
-<div id="ReviewSecion" class="reviews" >
-<div class="header ">
-      <h2>Your Rating</h2>
+<div id="ReviewSecion" class="reviews">
+<div class="header">
+      <h3>Your Rating</h3>
 </div>
 <div class="overview">
 <div class="tabs-block">

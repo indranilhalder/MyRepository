@@ -21,7 +21,15 @@
 <html lang="${currentLanguage.isocode}">
 <head>
 	<title>
-	${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
+			<c:choose>
+		<c:when test="${isCategoryPage}">
+		
+		 ${not empty metaPageTitle ?metaPageTitle:not empty pageTitle ? pageTitle : 'Tata'}
+		</c:when>
+		<c:otherwise>
+			 ${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
+		</c:otherwise>
+	</c:choose>	
 	</title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">
