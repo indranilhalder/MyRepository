@@ -498,10 +498,4 @@ function navigateToPage(queryString,textString)
 </c:if>
 </c:if>
 </div>
-<script>
-	
-
-
-	
-</script>
 

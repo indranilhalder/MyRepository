@@ -98,3 +98,5 @@
 			</div>
 		
 	</li>
+<button class="filter-apply">Apply</button>
+<button class="filter-clear">clear all</button>
