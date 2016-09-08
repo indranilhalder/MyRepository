@@ -68,6 +68,7 @@ import com.tisl.mpl.core.enums.TypeofReturn;
 import com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator;
 import com.tisl.mpl.core.model.BankDetailsInfoToFICOHistoryModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
+import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.CODSelfShipData;
@@ -81,6 +82,7 @@ import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
@@ -89,6 +91,7 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
+import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
@@ -164,7 +167,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
 	
 	@Resource(name="codReturnPaymentInfoReverseConverter")
-	Converter<CODSelfShipData,BankDetailsInfoToFICOHistoryModel> codReturnPaymentInfoReverseConverter;
+	private Converter<CODSelfShipData,BankDetailsInfoToFICOHistoryModel> codReturnPaymentInfoReverseConverter;
+	
+	@Resource(name="mplCustomerBankDetailsReverseConverter")
+	private Converter<CODSelfShipData,MplCustomerBankAccountDetailsModel> mplCustomerBankDetailsReverseConverter;
+	
+	@Resource(name="mplCustomerBankDetailsConverter")
+	private Converter<MplCustomerBankAccountDetailsModel,CODSelfShipData> mplCustomerBankDetailsConverter;
+	
+	@Autowired
+	private MPLReturnService mplReturnService;
+	
 	@Autowired
 	private MPLRefundService mplRefundService;
 	
@@ -2404,12 +2417,77 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	@Override
 	public void saveCODReturnsBankDetails(CODSelfShipData codSelfShipData)
 	{
-		BankDetailsInfoToFICOHistoryModel codReturnPaymentModel=null;
+		try
+		{
+		BankDetailsInfoToFICOHistoryModel codReturnPaymentModel=modelService.create(BankDetailsInfoToFICOHistoryModel.class);
 		codReturnPaymentModel = codReturnPaymentInfoReverseConverter.convert(codSelfShipData);
 		if(codReturnPaymentModel != null)
 		{
 		modelService.save(codReturnPaymentModel);
 		}
+		}catch(Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e,"Exception Occured during saving COD bank details ");
+		}
+	}
+	
+	/**
+	 * @author TECHOUTS
+	 * @param codSelfShipData
+	 */
+	@Override
+	public void insertUpdateCustomerBankDetails(CODSelfShipData codSelfShipData)
+	{
+		try
+		{
+			MplCustomerBankAccountDetailsModel customerBankDetailsModel= null;
+			
+			customerBankDetailsModel = mplReturnService.getCustomerBakDetailsById(codSelfShipData.getCustomerNumber());
+						
+			if(customerBankDetailsModel !=null)
+			{
+				//update existing customer account details 
+				mplCustomerBankDetailsReverseConverter.convert(codSelfShipData, customerBankDetailsModel);
+			}
+			else
+			{
+				// insert new account details 
+				customerBankDetailsModel=modelService.create(MplCustomerBankAccountDetailsModel.class);
+		   	customerBankDetailsModel=mplCustomerBankDetailsReverseConverter.convert(codSelfShipData);
+			}
+			
+			if(customerBankDetailsModel != null)
+			{
+			modelService.save(customerBankDetailsModel);
+			}
+			
+		}
+		catch (Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
+		
+	}
+	
+	
+	@Override
+	public CODSelfShipData getCustomerBankDetailsByCustomerId(String  customerId)
+	{
+		CODSelfShipData codSelfShipData=null;
+		try
+		{
+		
+      MplCustomerBankAccountDetailsModel customerBankDetailsModel=mplReturnService.getCustomerBakDetailsById(customerId);
+   		
+		codSelfShipData=mplCustomerBankDetailsConverter.convert(customerBankDetailsModel);
+		}
+		catch(Exception e)
+		{
+			throw new EtailBusinessExceptions("Exception occured while retriving  customer bank details with customer Id "+customerId);
+		}
+		
+		return codSelfShipData;
+		
 	}
 
 
@@ -2671,6 +2749,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	{
 		this.mplSellerInformationService = mplSellerInformationService;
 	}
+
+	
+
+	
 
 
 
