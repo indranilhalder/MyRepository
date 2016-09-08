@@ -40,6 +40,8 @@ public interface MarketplacecheckoutaddonControllerConstants
 				String SilentOrderPostPage = ADDON_PREFIX + "pages/checkout/multi/silentOrderPostPage";
 				String GiftWrapPage = ADDON_PREFIX + "pages/checkout/multi/giftWrapPage";
 				String PAYMENTDETAILSPAGE = ADDON_PREFIX + "pages/checkout/multi/enterPaymentDetailsPage";
+				String ChooseAddNewAddressPage = ADDON_PREFIX + "pages/checkout/multi/addNewAddressPage";
+				String ChooseDeliveryMethodEditPage = ADDON_PREFIX + "pages/checkout/multi/editAddressDetailsPage";
 			}
 		}
 

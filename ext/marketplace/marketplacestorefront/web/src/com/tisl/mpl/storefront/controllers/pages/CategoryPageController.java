@@ -954,6 +954,32 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 
+	/* changes for metaData content - (TPR-243) SEO Meta Tags and Titles */
+	/**
+	 * @param model
+	 * @param metaKeywords
+	 * @param metaDescription
+	 * @param metaTitle
+	 */
+	private void setUpMetaDataForSeo(final Model model, final String metaKeywords, final String metaDescription,
+			final String metaTitle)
+	{
+		final List<MetaElementData> metadata = new LinkedList<>();
+		metadata.add(createMetaElement("keywords", metaKeywords));
+		metadata.add(createMetaElement("description", metaDescription));
+		//metadata.add(createMetaElement("title", metaTitle));
+		model.addAttribute("metatags", metadata);
+
+	}
+
+	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
+	private void updatePageTitle(final Model model, final String metaTitle)
+	{
+		model.addAttribute("metaPageTitle", metaTitle);
+	}
+
+
+
 	/**
 	 * check if the request contains paging information
 	 *

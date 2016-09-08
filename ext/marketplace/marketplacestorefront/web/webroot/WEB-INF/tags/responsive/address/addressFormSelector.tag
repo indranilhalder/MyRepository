@@ -96,8 +96,8 @@
 							</c:when>
 							<c:otherwise>
 								<ycommerce:testId code="multicheckout_saveAddress_button">
-									<button id="newAddressButton" class="button" type="submit">
-										<spring:theme code="mobile.checkout.continue.button" text="Continue"/>
+									<button id="newAddressButton" class="button" type="button">
+										<spring:theme code="mobile.checkout.continue.save" text="Continue"/>
 									</button>
 								</ycommerce:testId>
 							</c:otherwise>

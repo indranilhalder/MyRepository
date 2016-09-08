@@ -81,6 +81,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.granule.json.JSONObject;
 import com.tisl.mpl.checkout.form.DeliveryMethodEntry;
 import com.tisl.mpl.checkout.form.DeliveryMethodForm;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
@@ -180,6 +181,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	private final String checkoutPageName1 = "New Address";
 	private final String selectAddress = "Select Address";
+	private static final String ADDRESS_CODE_PATH_VARIABLE_PATTERN = "{addressCode:.*}";
 
 	@Autowired
 	private MplSellerInformationFacade mplSellerInformationFacade;
@@ -1329,7 +1331,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
 		}
 		model.addAttribute("checkoutPageName", checkoutPageName1);
-		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
+		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodEditPage;
 	}
 
 	/**
@@ -1420,7 +1422,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.error("Exception occured while adding new address:", ex);
 		}
 		model.addAttribute("checkoutPageName", checkoutPageName1);
-		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
+		//return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
+		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseAddNewAddressPage;
 	}
 
 	/**
@@ -1507,18 +1510,21 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
 	@RequireHardLogIn
-	public String add(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model)
-			throws CMSItemNotFoundException
+	public @ResponseBody JSONObject add(final AccountAddressForm addressForm, final BindingResult bindingResult,
+			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
+		//TPR-1214
+		// Save call has been changed to Ajax for saving a new address instead of HTTP request submission.
+		final JSONObject jsonObj = new JSONObject();
 		try
 		{
 			final String errorMsg = mplAddressValidator.validate(addressForm);
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-
 			if ((!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
 					|| bindingResult.hasErrors())
 			{
+
 				this.prepareDataForPage(model);
 				model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFORM, addressForm);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
@@ -1539,66 +1545,75 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
 				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.TRUE);
 				timeOutSet(model);
-				return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
+				//return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseAddNewAddressPage;
+				jsonObj.put("error", errorMsg);
 			}
+			else
+			{
+				if (StringUtils.isNotBlank(addressForm.getCountryIso()))
+				{
+					model.addAttribute(ModelAttributetConstants.REGIONS,
+							getI18NFacade().getRegionsForCountryIso(addressForm.getCountryIso()));
+					model.addAttribute(ModelAttributetConstants.COUNTRY, addressForm.getCountryIso());
+				}
 
-			if (StringUtils.isNotBlank(addressForm.getCountryIso()))
-			{
-				model.addAttribute(ModelAttributetConstants.REGIONS,
-						getI18NFacade().getRegionsForCountryIso(addressForm.getCountryIso()));
-				model.addAttribute(ModelAttributetConstants.COUNTRY, addressForm.getCountryIso());
-			}
+				final AddressData newAddress = new AddressData();
+				newAddress.setTitleCode(addressForm.getTitleCode());
+				newAddress.setFirstName(addressForm.getFirstName());
+				newAddress.setLastName(addressForm.getLastName());
+				newAddress.setLine1(addressForm.getLine1());
+				newAddress.setLine2(addressForm.getLine2());
+				newAddress.setTown(addressForm.getTownCity());
+				newAddress.setPostalCode(addressForm.getPostcode());
+				newAddress.setBillingAddress(false);
+				newAddress.setShippingAddress(true);
+				newAddress.setAddressType(addressForm.getAddressType());
+				newAddress.setState(addressForm.getState());
+				newAddress.setPhone(addressForm.getMobileNo());
+				newAddress.setLine3(addressForm.getLine3());
+				newAddress.setLocality(addressForm.getLocality());
 
-			final AddressData newAddress = new AddressData();
-			newAddress.setTitleCode(addressForm.getTitleCode());
-			newAddress.setFirstName(addressForm.getFirstName());
-			newAddress.setLastName(addressForm.getLastName());
-			newAddress.setLine1(addressForm.getLine1());
-			newAddress.setLine2(addressForm.getLine2());
-			newAddress.setTown(addressForm.getTownCity());
-			newAddress.setPostalCode(addressForm.getPostcode());
-			newAddress.setBillingAddress(false);
-			newAddress.setShippingAddress(true);
-			newAddress.setAddressType(addressForm.getAddressType());
-			newAddress.setState(addressForm.getState());
-			newAddress.setPhone(addressForm.getMobileNo());
-			newAddress.setLine3(addressForm.getLine3());
-			newAddress.setLocality(addressForm.getLocality());
-			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
-			{
-				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
-				newAddress.setCountry(countryData);
-			}
-			if (StringUtils.isNotEmpty(addressForm.getRegionIso()))
-			{
-				final RegionData regionData = getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso());
-				newAddress.setRegion(regionData);
-			}
-			if (addressForm.getSaveInAddressBook() != null)
-			{
-				newAddress.setVisibleInAddressBook(addressForm.getSaveInAddressBook().booleanValue());
-				if (addressForm.getSaveInAddressBook().booleanValue() && getUserFacade().isAddressBookEmpty())
+				if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
+				{
+					final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
+					newAddress.setCountry(countryData);
+				}
+				if (StringUtils.isNotEmpty(addressForm.getRegionIso()))
+				{
+					final RegionData regionData = getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso());
+					newAddress.setRegion(regionData);
+				}
+				if (addressForm.getSaveInAddressBook() != null)
+				{
+					newAddress.setVisibleInAddressBook(addressForm.getSaveInAddressBook().booleanValue());
+					if (addressForm.getSaveInAddressBook().booleanValue() && getUserFacade().isAddressBookEmpty())
+					{
+						newAddress.setDefaultAddress(true);
+					}
+				}
+				else if (getCheckoutCustomerStrategy().isAnonymousCheckout())
 				{
 					newAddress.setDefaultAddress(true);
+					newAddress.setVisibleInAddressBook(true);
 				}
-			}
-			else if (getCheckoutCustomerStrategy().isAnonymousCheckout())
-			{
-				newAddress.setDefaultAddress(true);
-				newAddress.setVisibleInAddressBook(true);
-			}
-			accountAddressFacade.addaddress(newAddress);
-			getMplCustomAddressFacade().setDeliveryAddress(newAddress);
-			//TISUTO-12 , TISUTO-11
-			final String redirectURL = getMplCartFacade().checkPincodeAndInventory(addressForm.getPostcode());
-			if (redirectURL.trim().length() > 0)
-			{
-				return redirectURL;
-			}
+				accountAddressFacade.addaddress(newAddress);
+				getMplCustomAddressFacade().setDeliveryAddress(newAddress);
+				//TISUTO-12 , TISUTO-11
+				final String redirectURL = getMplCartFacade().checkPincodeAndInventory(addressForm.getPostcode());
+				if (redirectURL.trim().length() > 0)
+				{
+					jsonObj.put("redirect_url", redirectURL);
+					//return redirectURL;
+				}
+				else
+				{
+					jsonObj.put("redirect_url", getCheckoutStep().nextStep());
+				}
 
-			//Recalculating Cart Model
-			LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
-			getMplCheckoutFacade().reCalculateCart(cartData);
+				//Recalculating Cart Model
+				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
+				getMplCheckoutFacade().reCalculateCart(cartData);
+			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -1614,7 +1629,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		{
 			LOG.error("Exception occured while saving new address :", e);
 		}
-		return getCheckoutStep().nextStep();
+		//return getCheckoutStep().nextStep();
+		return jsonObj;
 	}
 
 	/**
@@ -2203,7 +2219,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2352,6 +2368,44 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 	}
 
+	/**
+	 * TRP- 1215
+	 *
+	 * @description method is called to set DefaultAddress from existing Address of the customer
+	 * @param addressCode
+	 * @param redirectModel
+	 * @param model
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.LINK_SET_DEFAUT_ADDRESS + ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	@RequireHardLogIn
+	@ResponseBody
+	public boolean setDefaultAddress(@PathVariable("addressCode") final String addressCode,
+			final RedirectAttributes redirectModel, final Model model) throws CMSItemNotFoundException
+	{
+		try
+		{
+			final AddressData addressData = new AddressData();
+			addressData.setDefaultAddress(true);
+			addressData.setVisibleInAddressBook(true);
+			addressData.setId(addressCode);
+			userFacade.setDefaultAddress(addressData);
+			return true;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions in setDefaultAddress ", e);
+			return false;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailBusinessExceptions in setDefaultAddress ", e);
+			return false;
+		}
+	}
 
 	/**
 	 * @return the mplCartFacade
