@@ -49213,6 +49213,8 @@ body.no-scroll {
     .checkTab .choose-address.choose-retailer {
         border-bottom: 1px solid #e4e4e4;
     }
+    .checkTab .smk_accordion .accordion_in .acc_content{
+    margin-top:20px;}
 }
 
 /*Mobile
@@ -49330,6 +49332,8 @@ body.no-scroll {
     .checkTab .smk_accordion .accordion_in .acc_content {
         padding: 0;
     }
+     .checkTab .smk_accordion .accordion_in .acc_content{
+    margin-top:0px;}
 }
 
 @media(max-width: 450px) {
@@ -49512,6 +49516,9 @@ body.no-scroll {
 }
 .editnewAddresPage{
 	clear:both;
+}
+.form-additionals .control-label.add-address-left-label,.form-additionals .form-group .checkbox{
+	display:none;
 }
 @media only screen and (max-width: 1450px){
 .cart.wrapper {

@@ -324,7 +324,7 @@
 									<div class="address-accordion smk_accordion acc_with_icon">
   <div class="choose-address accordion_in">
     
-      <div class="acc_head"><div class="acc_icon_expand"></div><h2>Choose Address</h2><p class="cart-items">To send three items in your cart</p></div>
+      <div class="acc_head"><div class="acc_icon_expand"></div><h2>Choose Address</h2><p class="cart-items"><spring:theme code="checkout.multi.shipment.items" arguments="${cartData.deliveryItemsQuantity}" text="Shipment - ${cartData.deliveryItemsQuantity} Item(s)"></spring:theme></p></div>
       
 	  	<div class="acc_content">
 		
