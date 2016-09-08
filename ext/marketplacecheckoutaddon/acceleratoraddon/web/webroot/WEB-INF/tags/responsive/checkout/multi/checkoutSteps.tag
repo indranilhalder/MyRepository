@@ -16,7 +16,7 @@
     		<h1>Login / Sign Up</h1>
   		</div>
 		</nav>
-		<div class="container-address">
+		<div class="container-address nav">
 			<div class="progress-barcheck">
       <%-- <div class="progress-barg"><span class="step${checkoutStep.stepNumber}"></span></div> --%>
      <!--  <div class="step-1 finish"><a href="checkout-delivery.html">Sign In <i class="fa fa-caret-right fa-caret"></i></a><span></span></div>

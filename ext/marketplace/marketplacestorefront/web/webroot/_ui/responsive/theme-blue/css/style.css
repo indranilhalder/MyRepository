@@ -45819,12 +45819,27 @@ body:not(.page-checkout-login) .checkout-header.login{
 
 
 .progress-barcheck .active a,  .progress-barcheck .step-done a{ color:#a7183e; }
+.progress-barcheck .step-3 span {
+    border: 1px solid #efefef;
+    right: 8.5%;
+    width: 25px;
+    height: 25px;
+    /* top: -6px; */
+    top: 24px;
+}
+.progress-barcheck .step-3 a{
+	padding-right: 25%;
+    text-align: right;
+}
+.progress-barcheck .step-1.step-done a{
+	    padding-left: 19%;
+}
  @media only screen and (max-width:1450px){
 	.progress-barcheck div a{  font-size: 13px;}
 	}
 @media only screen and (max-width:1024px){
 .progress-barcheck {  padding:20px 0 0;}
-.progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{top:11px;}
+.progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{top:12px;}
 .progress-barcheck .step-1.finalstep span, .progress-barcheck .step-2.finalstep span, .progress-barcheck .step-3.finalstep span{top:14px;}
 }
 @media only screen and (max-width: 1250px){
@@ -45877,17 +45892,28 @@ body:not(.page-checkout-login) .checkout-header.login{
 .progress-barcheck .step1 {  width: 8%;}
 .progress-barcheck .step3 {    width: 90%;}
 .progress-barcheck .step-3.finalstep span {    right: 6%;}
-.wrapper .container-address {margin-top: -10px;}
+.wrapper .container-address {margin-top: -12px;}
 .wrapper .container-address { padding: 14px 0 0;}
 .progress-barcheck div a {font-size: 11px;}
+.progress-barcheck .step-3 span{
+	    right: 6%;
+}
+.progress-barcheck .step-3 a {
+	padding-right:0;
+}
 }
 @media(max-width:479px){
 	 .progress-barcheck div.step-3.active a {    padding-right: 0;}
-	 .progress-barcheck .step-3.finalstep span {    right: 9%;}
+	 .progress-barcheck .step-3 span {    right: 9%;}
 
 }
 body:not(.page-checkout-login) .step-body .checkout-shipping{
 	    padding-top: 120px;
+}
+@media (max-width: 980px) and (min-width: 791px){
+.wrapper .container-address {
+   margin-top: -16px;
+}
 }
 /* checkout progress bar end */
 /* checkout address start */
