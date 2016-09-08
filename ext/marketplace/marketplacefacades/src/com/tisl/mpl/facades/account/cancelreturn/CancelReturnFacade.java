@@ -151,6 +151,16 @@ public interface CancelReturnFacade
 	 * @param codSelfShipData
 	 */
 	public void saveCODReturnsBankDetails(CODSelfShipData codSelfShipData);
+	
+	/**
+	 * @param codSelfShipData
+	 */
+	public void insertUpdateCustomerBankDetails(CODSelfShipData codSelfShipData);
+	
+	/**
+	 * @param customerId
+	 */
+	public CODSelfShipData getCustomerBankDetailsByCustomerId(String customerId);
 
 
 }
