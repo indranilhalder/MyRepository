@@ -54,6 +54,159 @@
 					function goActive() {
 					      startTimer();
 					}
+					
+					//TPR-1214
+					$("#newAddressButton,#newAddressButtonUp").click(function() {
+						var validate=true;
+						var regPostcode = /^([1-9])([0-9]){5}$/;
+					    var mob = /^[1-9]{1}[0-9]{9}$/;
+					    var letters = /^[a-zA-Z]+$/; 
+					    var cityPattern = /^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/;
+					    var firstName = document.getElementById("address.firstName");
+						var lastName = document.getElementById("address.surname");
+						var address1 = document.getElementById("address.line1");
+						var regAddress = /^[0-9a-zA-Z\-\/\,\s]+$/;
+						var address2 = document.getElementById("address.line2");
+						var address3 = document.getElementById("address.line3");
+						var city= document.getElementById("address.townCity");
+						var stateValue = document.getElementById("address.states");
+						var zipcode = document.getElementsByName("postcode")[0].value;
+						var txtMobile = document.getElementsByName("MobileNo")[0].value;
+						var result=firstName.value;
+						 
+						if(result == undefined || result == "" )
+						{	
+							$("#firstnameError").show();
+							$("#firstnameError").html("<p>First Name cannot be Blank</p>");
+							validate= false;
+						}
+						else if(letters.test(result) == false)  
+						{ 
+							$("#firstnameError").show();
+							/*Error message changed TISPRD-427*/
+							$("#firstnameError").html("<p>First name should not contain any special characters or space</p>");
+							validate= false;
+						}  
+						else
+						{
+							$("#firstnameError").hide();
+						}
+								
+						 result=lastName.value;
+						if(result == undefined || result == "")
+						{	
+							$("#lastnameError").show();
+							$("#lastnameError").html("<p>Last Name cannot be Blank</p>");
+							validate= false;
+						}
+						else if(letters.test(result) == false)  
+						{ 
+							$("#lastnameError").show();
+							/*Error message changed TISPRD-427*/
+							$("#lastnameError").html("<p>Last name should not contain any special characters or space</p>");
+							validate= false;
+						} 
+						else
+						{
+							$("#lastnameError").hide();
+						}
+						
+						result=address1.value;
+						if(result == undefined || result == "")
+						{	
+							$("#address1Error").show();
+							$("#address1Error").html("<p>Address Line 1 cannot be blank</p>");	
+							validate= false;
+						}
+						else
+						{
+							$("#address1Error").hide();
+						}	
+						  result=city.value;
+						if(result == undefined || result == "")
+						{	
+							$("#cityError").show();
+							$("#cityError").html("<p>City cannot be blank</p>");
+							 validate=false;
+						}
+						else if(cityPattern.test(result) == false)  
+						{ 
+							$("#cityError").show();
+							$("#cityError").html("<p>City must be alphabet only</p>");
+							validate= false;
+						}
+						else
+						{
+							$("#cityError").hide();
+						}
+
+						result=stateValue.options[stateValue.selectedIndex].value;
+						if(result == undefined || result == "")
+						{	
+							$("#stateError").show();
+							$("#stateError").html("<p>Please choose a state</p>");
+							 validate = false;
+						}
+						else
+						{
+							$("#stateError").hide();
+						}
+						
+					   if(zipcode == undefined || zipcode == "")
+						{	
+							$("#pincodeError").show();
+							$("#pincodeError").html("<p>Please enter a pincode</p>");
+							validate = false;
+						}
+					    else if(regPostcode.test(zipcode) == false){
+					        $("#pincodeError").show();
+					        $("#pincodeError").html("<p>Please enter a valid pincode</p>");
+							validate= false;  
+						}
+					    else
+						{
+							$("#pincodeError").hide();
+						}
+					 
+					   if(txtMobile  == undefined || txtMobile == "")
+						{	
+							$("#mobileError").show();
+							$("#mobileError").html("<p>Please enter mobile no.</p>");
+					        validate = false;
+						}
+					    else if (mob.test(txtMobile) == false) {
+							$("#mobileError").show();
+							$("#mobileError").html("<p> Please enter correct mobile no.</p>");
+							 validate=false;   
+					    }
+					       else
+						{
+							$("#mobileError").hide();
+						}
+					   
+						if(validate==false)
+						{
+							return false;
+						}
+						else
+						{
+							if(address1.value.indexOf('#')!=-1)
+					    	{
+							address1.value=encodeURIComponent(address1.value);
+					    	}
+							
+							if(address2.value.indexOf('#')!=-1)
+					    	{
+							address2.value=encodeURIComponent(address2.value);
+					    	}
+							if(address3.value.indexOf('#')!=-1)
+					    	{
+							address3.value=encodeURIComponent(address3.value);
+					    	}
+							$('#addressForm').submit();
+						}
+						return false;
+					});
 					</script>
 					<ycommerce:testId code="checkoutStepTwo">
 						<div class="checkout-shipping formaddress">

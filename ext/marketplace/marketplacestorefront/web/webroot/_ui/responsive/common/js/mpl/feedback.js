@@ -2040,7 +2040,7 @@ $(window).resize(function(){
 	},100);
 });
 $(window).scroll(function(){
-	if($(window).scrollTop()  > $(".pdp .trending#ia_products").offset().top - $(window).height()) {
+	if($(".pdp .trending#ia_products").children().length > 0 && $(window).scrollTop()  > $(".pdp .trending#ia_products").offset().top - $(window).height()) {
 		var a = $(".pdp .trending#ia_products .image").height()/2 + 20;
 		$(".pdp .trending#ia_products .owl-controls").css("top",a);
 	}
@@ -2077,9 +2077,15 @@ $("#address-form").click(function() {
         $(".add-address").slideDown();
     });
 	  $(document).on("click",".cancelBtnEdit",function(){	
-	  $(this).parent(".formaddress").slideUp();
+		 // console.log("sadsadfsf");
+		  var cancel_id = $(this).attr('id');
+		  //console.log(cancel_id);
+		  var address_id = cancel_id.split('-');
+		 // console.log(address_id);
+		$('#'+address_id[1]).slideUp();  
+	  //$(this).parents().find(".formaddress").slideUp();
   });
-
+$(".checkTab .address-list").last().addClass("last");
 /*	$(document).on("click",".edit",function(e){	
 		 e.stopPropagation();
 	alert("hi");
