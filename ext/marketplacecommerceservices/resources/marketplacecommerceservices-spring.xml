@@ -375,7 +375,7 @@
 		class="com.tisl.mpl.interceptors.ExtCustomerOriginalUIDInterceptor">
 		<!-- <property name="modelService" ref="modelService" /> -->
 	</bean>
-	
+
 	<!-- Prodcut Service Implementation -->
  	<alias name="mplProductService" alias="mplProductService" />
  	<bean id="mplProductService"
@@ -1760,12 +1760,15 @@
 
 	<bean id="buyBoxImportUtil" class="com.tisl.mpl.buyboxdataimport.BuyBoxImportUtility">
 	</bean>
+	
 	<bean id="buyBoxDataImportJob" class="com.tisl.mpl.buyboxdataimportjob.BuyBoxDataExtractJob"
 		parent="abstractJobPerformable">
 			<property name="modelService" ref="modelService" />
 			</bean>
 	<!-- New Buy Box Implementation End -->
-
+	<!-- New Keyword Redirection Implementation End -->
+	<bean id="mplKeywordRedirectDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplKeywordRedirectDaoImpl">
+	</bean>
 
 </beans>
 
