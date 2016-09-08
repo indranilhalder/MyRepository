@@ -1430,6 +1430,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				orderEntryModel.setFulfillmentType(abstractOrderEntryModel.getFulfillmentType());
 			}
+			if (abstractOrderEntryModel.getFulfillmentTypeP1() != null)
+			{
+				orderEntryModel.setFulfillmentTypeP1(abstractOrderEntryModel.getFulfillmentTypeP1());
+			}
+			if (abstractOrderEntryModel.getFulfillmentTypeP2() != null)
+			{
+				orderEntryModel.setFulfillmentTypeP2(abstractOrderEntryModel.getFulfillmentTypeP2());
+			}
 			if (abstractOrderEntryModel.getScheduledDeliveryCharge() != null)
 			{
 				orderEntryModel.setScheduledDeliveryCharge(abstractOrderEntryModel.getScheduledDeliveryCharge());
