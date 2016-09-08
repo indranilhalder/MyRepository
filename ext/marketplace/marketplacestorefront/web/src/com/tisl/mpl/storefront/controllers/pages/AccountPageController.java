@@ -143,6 +143,7 @@ import com.tisl.mpl.core.model.MyRecommendationsConfigurationModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.AddressTypeData;
+import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.ExistingWishlistData;
@@ -150,7 +151,6 @@ import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.data.NewWishlistData;
 import com.tisl.mpl.data.ParticularWishlistData1;
 import com.tisl.mpl.data.RemoveWishlistData;
-import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.data.SendTicketRequestData;
@@ -1532,9 +1532,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final MplReturnsForm returnForm=new MplReturnsForm();
 			model.addAttribute(ModelAttributetConstants.RETURN_FORM, returnForm);
 			
-			
-
 			 List<String> timeSlots = mplConfigFacade.getDeliveryTimeSlots("RD");
+			 
+			 
 
 			model.addAttribute(ModelAttributetConstants.SCHEDULE_TIMESLOTS, timeSlots);
 
@@ -1556,6 +1556,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final AddressData address = orderDetails.getDeliveryAddress();
 			storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUBMIT));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_SUBMIT));
+			
+			final CustomerData customerData = customerFacade.getCurrentCustomer();
+			try
+			{
+			CODSelfShipData codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(customerData.getUid());
+			model.addAttribute(ModelAttributetConstants.CUSTOMER_BANK_DETAILS, codSelfShipData);
+			}
+			catch(EtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :"+customerData.getUid()+" Actual Stack trace "+e);
+			}
+			catch (Exception e) {
+				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :"+customerData.getUid()+" Actual Stack trace "+e);
+			}
+			
+			
+			
+
 			returnPincodeCheckForm.setTransactionId(transactionId);
 			returnPincodeCheckForm.setOrderCode(orderCode);
 			returnPincodeCheckForm.setUssid(ussid);
@@ -1582,19 +1600,28 @@ public class AccountPageController extends AbstractMplSearchPageController
 			else
 			{
 				returnableStores = pincodeServiceFacade.getAllReturnableStores(subOrderDetails.getDeliveryAddress().getPostalCode(),
-						StringUtils.substring(orderEntry.getSelectedUssid(),0,6));
+						StringUtils.substring(orderEntry.getSelectedUssid(), 0, 6));
 			}
-
-			List<String> returnableDates =cancelReturnFacade.getReturnableDates(orderEntry);
-			
-			model.addAttribute(ModelAttributetConstants.RETURN_DATES,returnableDates);
-			
 			model.addAttribute(ModelAttributetConstants.RETURNABLE_SLAVES, returnableStores);
+			try
+			{
+				List<String> returnableDates = cancelReturnFacade.getReturnableDates(orderEntry);
+
+				model.addAttribute(ModelAttributetConstants.RETURN_DATES, returnableDates);
+			}
+			catch (EtailNonBusinessExceptions e)
+			{
+				LOG.error("Error during fetching Returnable Dates :" + e);
+			}
+			catch(Exception e)
+			{
+				LOG.error("Error during fetching Returnable Dates :" + e);
+			}
 
 		}
 		catch (final Exception e)
 		{
-			LOG.info("<<<<<<<<<<<<<<< Order Return Pincode Serviceability Check >>>>>>>>>>" + e.getStackTrace());
+			LOG.info("<<<<<<<<<<<<<<< Order Return Pincode Serviceability Check >>>>>>>>>>" + e);
 		}
 		return ControllerConstants.Views.Pages.Account.AccountOrderReturnPincodeServiceCheck;
 	}

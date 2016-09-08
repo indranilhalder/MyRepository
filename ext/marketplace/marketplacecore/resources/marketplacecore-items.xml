@@ -8576,8 +8576,8 @@
 				</attribute>
 				</attributes>
 			</itemtype>
-			<itemtype code="MplCustomerBanckAccount" autocreate="true"
-				generate="true" jaloclass="com.tisl.mpl.core.jalo.MplCustomerBanckAccount">
+			<itemtype code="MplCustomerBankAccountDetails" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.MplCustomerBankAccountDetails">
 				<description>Captured bank details for COD returns Payment </description>
 				<attributes>
 				<attribute type="java.lang.String" qualifier="customerId"  >
@@ -8615,9 +8615,9 @@
 			    <description>Bank name</description>	
 			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
 			    </attribute>
-			    <attribute type="java.lang.String" qualifier="refundMode"  >
+			    <attribute type="java.lang.String" qualifier="paymentMode"  >
 			    <persistence type="property" />
-			    <description>Refund Mode </description>	
+			    <description>Refund payment Mode </description>	
 			    <modifiers unique="true" optional="false" read="true" write="true" search="true"/>
 			    </attribute>
 				</attributes>
