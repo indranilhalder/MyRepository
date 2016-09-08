@@ -52,7 +52,7 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 			throws CommerceCartMergingException
 	{
 		final UserModel currentUser = this.userService.getCurrentUser();
-
+		boolean cartMerged = false;
 		if ((currentUser == null) || (this.userService.isAnonymousUser(currentUser)))
 		{
 			throw new AccessDeniedException("Only logged user can merge carts!");
@@ -100,6 +100,7 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 				if (isProductAddRequired)
 				{
 					final CommerceCartParameter newCartParameter = new CommerceCartParameter();
+
 					newCartParameter.setEnableHooks(true);
 					newCartParameter.setCart(toCart);
 					newCartParameter.setProduct(entry.getProduct());
@@ -109,8 +110,8 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 					newCartParameter.setUnit(entry.getUnit());
 					newCartParameter.setCreateNewEntry(false);
 					//TPR-174
-					toCart.setMerged(Boolean.TRUE);
-					getModelService().save(toCart);
+					cartMerged = true;
+					//getModelService().save(toCart);
 					mergeModificationToList(mplCommerceAddToCartStrategy.addToCart(newCartParameter), modifications);
 				}
 			}
@@ -121,7 +122,11 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 		}
 
 		toCart.setCalculated(Boolean.FALSE);
-
+		//TPR-174
+		if (cartMerged)
+		{
+			toCart.setMerged(Boolean.TRUE);
+		}
 		getModelService().save(toCart);
 		getModelService().remove(fromCart);
 	}
