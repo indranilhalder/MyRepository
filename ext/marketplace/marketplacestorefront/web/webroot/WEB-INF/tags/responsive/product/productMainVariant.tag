@@ -129,7 +129,7 @@ var productSizeVar = '${productSize}';
 					</c:otherwise>
 				</c:choose>
 
-				<c:if test="${product.rootCategory=='Electronics'}">
+				<c:if test="${product.rootCategory=='Electronics' || product.rootCategory=='Watches'}">
 					<c:set var="notApparel" value="true" />
 				</c:if>
 				<c:if test="${not empty notApparel}">
@@ -329,17 +329,16 @@ share mobile -->
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
-			</c:forEach>
-			<c:if test="${showSizeGuideForFA eq true}">
+			</c:forEach>			
+		
+		</ul>
+		<!-- Size guide Pop-up -->
+		<c:if test="${showSizeGuideForFA eq true}">
 			<a class="size-guide" href="${sizeGuideUrl}" role="button"
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
 			</a>
 		</c:if> 
-		<!-- Size guide Pop-up -->
-		</ul>
-		
-		
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->
 		<!-- End Size guide Pop-up -->
 	</div>
