@@ -43,16 +43,12 @@ tr.d0 td {
 	
 	$(document).ready(function() {
 
-
-// 		 $("#buyNowQv").click(function(){
-// 			 testMethod();	       
-// 		  });
-
 		$('#buyNowQv .js-add-to-cart-qv').click(function(event){
 			
 			 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
-				$("#addToCartFormQuick").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-				$("#addToCartFormQuick").show();
+				$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+				$("#addToCartFormQuickTitle").show();
+				$("#addToCartFormQuickTitle").fadeOut(5000);
 		 	    return false;
 		 }else{			 
 			ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
@@ -549,6 +545,8 @@ display:none;
 	</div> 
 
 </div>
+<div id="addToCartFormQuickTitle" class="addToCartTitle">
+		</div>
  <!-- TPR-924 -->
 		 <div id="buyNowQv"> 
 	        <button style="display: block" id="buyNowButton_qv"  class="btn-block js-add-to-cart-qv">
@@ -559,8 +557,7 @@ display:none;
 
 <%--  <div id="ajax-loader" style="margin: 0 auto; height:20px; width: 20px;"><img src="${commonResourcePath}/images/ajax-loader.gif"></div> --%>     
 <!-- add to cart functionality -->
-<div id="addToCartFormQuickTitle" class="addToCartTitle">
-		</div>
+
 	<ycommerce:testId code="quickview_addToCart_button_${product.code}">
 		<%-- <form:form id="addToCartFormQuick" action="${request.contextPath }/cart/add" method="post" class="add_to_cart_form"> --%>
 		<form:form id="addToCartFormQuick" action="#" method="post" class="add_to_cart_form">

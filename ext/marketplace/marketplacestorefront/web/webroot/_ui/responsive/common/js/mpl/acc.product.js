@@ -423,7 +423,7 @@ sendAddToBag : function(formId, isBuyNow) {
 		$("#" + formId + "Title").show();
 		return false;
 	} else {
-		alert(isBuyNow);
+		
 		$.ajax({
 					url : ACC.config.encodedContextPath + "/cart/add",
 					data : dataString,
