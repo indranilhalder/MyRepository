@@ -47,7 +47,6 @@ tr.d0 td {
 			
 			 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
 				$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-				$("#addToCartFormQuickTitle").show();
 				$("#addToCartFormQuickTitle").fadeOut(5000);
 		 	    return false;
 		 }else{			 
