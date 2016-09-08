@@ -76,10 +76,10 @@
 
 			<div class="right-account">
 				<div>
-					<h1>
+					<h2>
 						<spring:theme code="text.account.MarketplacePreferences"
 							text="Marketplace Preferences" />
-					</h1>
+					</h2>
 					<p>
 						<spring:theme code="account.marketplacePreferences.text"
 							text="The pit stop to tell us all about your favourite brands, categories and likes" />
@@ -88,7 +88,6 @@
 
 
 				<div class="email-pref">
-
 					<h2>
 						<spring:theme code="text.marketplacePreferences.subTitle"
 							text="Newsletter: #StayQued" />
