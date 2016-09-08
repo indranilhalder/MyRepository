@@ -46865,7 +46865,7 @@ body:not(.page-checkout-login) .step-body .checkout-shipping{
 }
 @media (max-width: 980px) and (min-width: 791px){
 .wrapper .container-address {
-   margin-top: -16px;
+   margin-top: -28px;
 }
 }
 /* checkout progress bar end */
