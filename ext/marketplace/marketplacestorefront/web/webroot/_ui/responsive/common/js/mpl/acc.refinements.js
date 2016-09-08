@@ -163,10 +163,16 @@ ACC.refinements = {
 			if(updatedsearchQuery==''){
 				updatedsearchQuery=filterMobileQuery;
 			}else{
-				updatedsearchQuery+=createSearchQuery(filterMobileQuery);	
+				var newFilter=createSearchQuery(filterMobileQuery);	
+				if(updatedsearchQuery.includes(newFilter))
+				{
+					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
+				}
+				else{
+					updatedsearchQuery+=newFilter;
+				}
 			}
-			console.log("updatedsearchQuery : "+updatedsearchQuery);	
-			
+			console.log("updatedsearchQuery : "+updatedsearchQuery);			
 		})
 		
 		// AJAX for Colourbutton and sizebuttons 
@@ -226,12 +232,22 @@ ACC.refinements = {
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 		})
 		
+		//TPR-845
 		$(document).on("click",".js-product-facet .facet_mobile .js-facet-colourbutton , .js-product-facet .facet_mobile .js-facet-sizebutton",function(){
 			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
 			if(updatedsearchQuery==''){
 				updatedsearchQuery=filterMobileQuery;
+				
 			}else{
-				updatedsearchQuery+=createSearchQuery(filterMobileQuery);	
+				var newFilter=createSearchQuery(filterMobileQuery);
+				
+				if(updatedsearchQuery.includes(newFilter))
+				{
+					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
+				}
+				else{
+					updatedsearchQuery+=newFilter;
+				}			
 			}
 			console.log("updatedsearchQuery : "+updatedsearchQuery);
 			
@@ -274,6 +290,8 @@ ACC.refinements = {
 		})
 		
 		/*TPR-198 : AJAX Call in SERP and PDP END*/
+		
+		
 		
 		
 		$(document).on("click",".js-product-facet .js-more-facet-values-link",function(e){
@@ -369,13 +387,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	
 }
 
+//TPR-845
 function createSearchQuery(filterMobileQuery){
 	var queryString='';
 	var splited=filterMobileQuery.split(':');
 	for (k = 0; k < splited.length; k++) {
 	if(splited.length-3<k){
-	queryString+=':'+splited[k]
-	}
+		queryString+=':'+splited[k];
+		}
 	}
 	return queryString;
 }

@@ -46533,6 +46533,20 @@ border-right: 2px solid #9b9b9b;
     padding-top: 10px;	
 }
 
-
 /*Quickview changes end*/
 
+/*TPR-845*/
+.listing-leftmenu > div.facet_mobile{
+	display:none;
+}
+.listing-leftmenu > div.facet_desktop{
+	display:block;
+}
+@media(max-width:790px){
+.listing-leftmenu > div.facet_mobile{
+	display: block;
+}
+.listing-leftmenu > div.facet_desktop{
+	display: none;
+}
+} 
