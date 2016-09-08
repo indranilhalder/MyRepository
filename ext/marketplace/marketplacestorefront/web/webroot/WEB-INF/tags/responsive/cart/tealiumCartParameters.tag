@@ -19,5 +19,5 @@
 <input type="hidden" id="checkoutSellerIDs" value='${checkoutSellerIDs}'/>
 <!-- TPR-430 -->
 <input type="hidden" id="product_category" value='${product_category}'/>
-<input type="hidden" id="page_subcategory_name" value='${fn:escapeXml(page_subcategory_name)}'/>
+<input type="hidden" id="page_subcategory_name" value='${page_subcategory_name}'/>
 <input type="hidden" id="page_subcategory_name_L3" value='${page_subcategory_name_L3}'/>
