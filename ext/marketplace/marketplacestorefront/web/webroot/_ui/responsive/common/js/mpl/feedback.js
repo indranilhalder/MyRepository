@@ -336,6 +336,11 @@ $(document).ready(function(){
 			if(colour_name == selected_colour){
 				$(this).addClass("selected-colour");
 			}
+			if(selected_colour == "Multicolor"){
+				if(colour_name == "Multi"){
+					$(this).addClass("selected-multi-colour");
+				}
+			}
 			});
 		}
 	});
@@ -1174,8 +1179,8 @@ $(document).ready(function(){
 	
 	/*---- Start of added for hero products demarcation ---*/
 	
-	if($(".product-listing.product-grid.hero_carousel").children().length>0){
-		$(".product-listing.product-grid.hero_carousel").css("border-bottom","2px solid #f0f4f5");
+	if($(".product-listing.product-grid.hero_carousel .owl-stage").children().length>0){
+		$(".product-listing.product-grid.hero_carousel").css("border-bottom","1px solid #e5e5e5");
 		$(".product-listing.product-grid.hero_carousel").before("<h3 class='heroTitle'>Shop Our Top Picks</h3>");
 		
 	}
@@ -1719,6 +1724,11 @@ $(document).ready(function(){
 					var colour_name = $(this).find("input[name=facetValue]").val().split("_", 1);
 					if(colour_name == selected_colour){
 						$(this).addClass("selected-colour");
+					}
+					if(selected_colour == "Multicolor"){
+						if(colour_name == "Multi"){
+							$(this).addClass("selected-multi-colour");
+						}
 					}
 					});
 				}

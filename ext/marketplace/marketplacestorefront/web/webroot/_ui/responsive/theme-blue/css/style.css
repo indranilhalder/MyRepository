@@ -19672,7 +19672,7 @@ color: #ff829a;
 	}
 }
 @media (max-width:970px){
-	.product-tile .image .quickview,  .IAQuickView, .MSDQuickView,.iaAddToCartButton, span.sizesAvailableMSD{
+	.product-tile .image .quickview,  .IAQuickView, .MSDQuickView,.iaAddToCartButton, span.sizesAvailableMSD, span.sizesAvailable{
 		display: none !important;
 	}
 	#colorbox, #cboxOverlay{
@@ -22433,19 +22433,28 @@ ul.color-swatch li span{
     border: 1px solid rgb(204, 211, 217);
 }
 span.sizesAvailable { 
-	opacity:0;
+	opacity: 0;
+    font-size: 12px;
+    overflow: hidden;
+    text-transform: uppercase;
+    font-weight: normal !important;
+    width: calc(100% - 10px);
+    width: 100%;
+    border-bottom: none;
+    padding: 10px 0 2px 0 !important;
+    border-top: 1px solid #c6c6c6;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    position: absolute;
+    bottom: 110px;
+    z-index: 11;
+    left: 0;
 	}
 .productParentList:hover .sizesAvailable { 
-	position:relative !important;
-	display: block !important;
+	display: block;
 	opacity:1;
-	border-top: 1px dotted #A9143C;
-	border-bottom: 1px dotted #A9143C;
-	font-size: 12px;
-	font-weight: 500;
-	overflow: hidden;
-    word-break: break-word;
-    width: 221px; 
  }
 .ia_trending{
     font-size: 24px;
@@ -22465,7 +22474,7 @@ span.sizesAvailable {
 }
 .IAQuickView span {
 	color: #000 !important;
-    margin: 14px 0;
+    margin: 16px 0;
     display: inline-block;
     position: relative;
         width: 100%;
@@ -22478,7 +22487,6 @@ span.sizesAvailable {
     position: absolute;
     font-size: 18px;
     margin-top: 1px;
-    margin-left: 10px;
     left: 70%;
     top: -2px;
     font-weight: 100;
@@ -22486,8 +22494,13 @@ span.sizesAvailable {
     height: 14px;
     line-height: 11px;
     width: 14px;
-    
-    
+}
+.IAQuickView.ia_both span:before {
+    left: auto;
+    right:0;
+}
+span.sizesAvailable:hover {
+    color: #000 !important;
 }
 .iaAddToCartButton span:before {
 	font-family: 'FontAwesome';
@@ -22505,6 +22518,13 @@ span.sizesAvailable {
     height: 14px;
     line-height: 11px;
     width: 14px;
+}
+.iaAddToCartButton.ia_both span:before {
+    left: auto;
+    right:0;
+}
+.iaAddToCartButton.ia_both span {
+    border-left: 1px solid #857d7b;
 }
 div.complete-your-look h1 {
     text-align: center;
@@ -31486,7 +31506,7 @@ body.page-homepage .feature-collections{
     height: 26px !important;
     padding: 0 !important;
     border-radius: 0;
-    border: 0 !important;
+    border: 1px solid #fff !important
 }
 .product-facet .filter-colour input.js-facet-colourbutton {
     margin-left: 0;
@@ -31495,7 +31515,7 @@ body.page-homepage .feature-collections{
     height: 26px !important;
     padding: 0 !important;
     border-radius: 0;
-    border: 0 !important;
+    border: 1px solid #fff !important
 }
 @media(max-width:650px){
 	.cart.wrapper .product-block li.item, .confirmation .product-block li.item{
@@ -33882,6 +33902,11 @@ body.page-cartPage .cart.wrapper .right-block {
 .MyBag-pincode #changePinDiv>p#unserviceablepincode{
 	color:#ff1c47;
 }
+p.cartItemBlankPincode {
+    font-size: 12px;
+    line-height: 22px;
+    color: #777777;
+}
 /*Mybag css changes ends*/
 .cart.wrapper .right-block .block.bottom.order-details address, .checkout.wrapper .product-block.addresses li.item address,
 .confirmation .left-block .address address{
@@ -33906,6 +33931,9 @@ body.page-cartPage .cart.wrapper .right-block {
 /*PLP changes starts*/
 body.template-pages-category-productGridPage .breadcrumbs,body.template-pages-search-searchGridPage .breadcrumbs {
     margin: 10px 0 30px;
+}
+body.template-pages-category-productGridPage .trending h1,body.template-pages-search-searchGridPage .trending h1 {
+    margin-top: 35px;
 }
 .list_title h1 {
     font-size: 28px;
@@ -34278,6 +34306,11 @@ cursor: auto;
 }
 .product-facet .filter-colour.selected-colour .js-facet-colourbutton {
     background-image: url(../images/color-tick.png);
+    transition: all .2s;
+    opacity: 1;
+}
+.product-facet .filter-colour.selected-multi-colour input[type="submit"] {
+    background-image: url(../images/multi-color-tick.png) !important;
     transition: all .2s;
     opacity: 1;
 }

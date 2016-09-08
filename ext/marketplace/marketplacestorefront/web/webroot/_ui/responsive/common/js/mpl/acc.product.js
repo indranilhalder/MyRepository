@@ -423,6 +423,7 @@ sendAddToBag : function(formId, isBuyNow) {
 		$("#" + formId + "Title").show();
 		return false;
 	} else {
+		
 		$.ajax({
 					url : ACC.config.encodedContextPath + "/cart/add",
 					data : dataString,
@@ -535,9 +536,12 @@ sendAddToBag : function(formId, isBuyNow) {
 						}
 						// End MSD
 						if (isSuccess == true) {
+							alert('Redirection is going to start--'+isSuccess);
 							var cartUrl = ACC.config.encodedContextPath
 									+ "/cart";
 							location.href = cartUrl;
+						}else{
+							alert('Redirection failed--'+isSuccess);
 						}
 					},
 					complete : function() {
@@ -550,7 +554,122 @@ sendAddToBag : function(formId, isBuyNow) {
 				});
 	}
 },
-	sendAddToBagQuick: function(formId){
+
+sendAddToBagQuick:function(formId){
+	alert(formId);
+	 var input_name="qty";
+	  var stock_id="stock";
+	 var dataString=$('#'+formId).serialize();	
+	 var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
+	 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
+	 var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
+	 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
+	 var ussid=$('#ussid_quick').val();
+	 /*if(parseInt(stock)<parseInt(quantity)){
+		    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
+		    $("#"+formId+"noInventory").show().fadeOut(6000);
+  			 return false;
+      	 }*/
+	  
+		  
+	$.ajax({
+		url : ACC.config.encodedContextPath + "/cart/add",
+		data : dataString,
+		type : "POST",
+		cache : false,
+		beforeSend: function(){
+	        $('#ajax-loader').show();
+	    },
+		success : function(data) {
+			alert(data);
+			if(data.indexOf("cnt:") >= 0){
+			//$("#"+formId+"TitleSuccess").html("");
+			//$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
+
+			//$("#"+formId+"TitleSuccess").show().fadeOut(5000);
+
+			//$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
+			//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
+			ACC.product.showTransientCart(ussid);
+			ACC.product.scrollForTransientCart();
+			//ACC.product.displayAddToCart(data,formId,false);
+			$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
+			}
+			else if(data=="reachedMaxLimit") {
+				$("#"+formId+"Title").html("");
+				$("#"+formId+"Title").html("<br/><font color='#ff1c47'>"+$('#bagtofull').html()+"</font>");
+				$("#"+formId+"Title").show().fadeOut(5000);
+			}
+			
+			else if(data=="crossedMaxLimit"){
+				$("#"+formId+"Title").html("");
+				$("#"+formId+"Title").html("<font color='#ff1c47'>"+$('#bagfull').text()+"</font>");
+				$("#"+formId+"Title").show().fadeOut(5000);
+			}
+			else if(data=="outofinventory"){
+				 //$("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
+				$("#addToCartFormnoInventory").show().fadeOut(6000);
+		   	     return false;
+			}
+			else if(data=="willexceedeinventory"){
+				 $("#"+formId+"excedeInventory").html("<font color='#ff1c47'>" + $('#addToCartFormexcedeInventory').text() + "</font>");
+				 $("#"+formId+"excedeInventory").show().fadeOut(6000);
+		   		 return false;
+			}
+			else{
+				alert('In else');
+				$("#"+formId+"Title").html("");
+				$("#"+formId+"Title").html("<br/><font color='#ff1c47'>"+$('#addtobagerror').text()+"</font>");
+				$("#"+formId+"Title").show().fadeOut(5000);
+			}
+		
+			//For MSD
+			var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
+			if(isMSDEnabled === 'true')
+			{
+			//console.log(isMSDEnabled);
+			var isApparelExist  = $("input[name=isApparelExist]").val();
+			//console.log(isApparelExist);				
+			var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
+			//console.log(salesHierarchyCategoryMSD);
+			var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
+			//console.log(rootCategoryMSD);				
+			var productCodeMSD =  $("input[name=productCodeMSD]").val();
+			//console.log(productCodeMSD);				
+			var priceformad =  $("input[id=price-for-mad]").val();
+			//console.log(priceformad);				
+			
+			if(typeof isMSDEnabled === 'undefined')
+			{
+				isMSDEnabled = false;						
+			}
+			
+			if(typeof isApparelExist === 'undefined')
+			{
+				isApparelExist = false;						
+			}	
+			
+			if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
+				{					
+				ACC.track.trackAddToCartForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
+				}	
+			}
+			
+			//End MSD
+			
+		},
+		complete: function(){
+	        $('#ajax-loader').hide();
+	    },
+		error : function(resp) {
+			alert("Add to Bag unsuccessful");
+		}
+	});
+	  
+},
+
+	sendToCartPageQuick: function(formId,isBuyNow){
+		
 		 var input_name="qty";
 		  var stock_id="stock";
 		 var dataString=$('#'+formId).serialize();	
@@ -564,7 +683,8 @@ sendAddToBag : function(formId, isBuyNow) {
 			    $("#"+formId+"noInventory").show().fadeOut(6000);
 	   			 return false;
 	       	 }*/
-		  
+		  if(isBuyNow){
+			  
 		$.ajax({
 			url : ACC.config.encodedContextPath + "/cart/add",
 			data : dataString,
@@ -574,6 +694,7 @@ sendAddToBag : function(formId, isBuyNow) {
 		        $('#ajax-loader').show();
 		    },
 			success : function(data) {
+				var isSuccess=true;
 				if(data.indexOf("cnt:") >= 0){
 				//$("#"+formId+"TitleSuccess").html("");
 				//$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
@@ -582,8 +703,8 @@ sendAddToBag : function(formId, isBuyNow) {
 
 				//$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
 				//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
-				ACC.product.showTransientCart(ussid);
-				ACC.product.scrollForTransientCart();
+//				ACC.product.showTransientCart(ussid);
+//				ACC.product.scrollForTransientCart();
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
@@ -645,6 +766,10 @@ sendAddToBag : function(formId, isBuyNow) {
 					ACC.track.trackAddToCartForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
 					}	
 				}
+				if(isSuccess){
+					
+					location.href=ACC.config.encodedContextPath + '/cart';
+				}
 				//End MSD
 				
 			},
@@ -655,6 +780,10 @@ sendAddToBag : function(formId, isBuyNow) {
 			//	alert("Add to Bag unsuccessful");
 			}
 		});
+		  }
+		  /*else{
+			  alert('BuyNow Qv False');
+		  }*/
 	},
 	
 	//SizeGuide 
@@ -1315,6 +1444,7 @@ function queryParam(name) {
 //Loads the price range textboxes with previously
 //selected ranges.
 $(document).ready(function() {
+	
 	loadPriceRange();
 });
 
