@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,7 @@ import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.MplCRMTicketUpdateForm;
 import com.tisl.mpl.storefront.web.forms.MplReturnsForm;
@@ -105,11 +107,13 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	private UserFacade userFacade;
 
 	@Autowired
-   MplConfigFacade mplConfigFacade;
+    private  MplConfigFacade mplConfigFacade;
 	@Autowired
 	private PincodeServiceFacade pincodeServiceFacade;
 	@Autowired
 	private MplCheckoutFacadeImpl mplCheckoutFacadeImpl;
+	@Resource(name = "frontEndErrorHelper")
+	private FrontEndErrorHelper frontEndErrorHelper;
 
 	private static final String RETURN_SUCCESS = "returnSuccess";
 	private static final String RETURN_SUBMIT = "returnSubmit";
@@ -195,20 +199,56 @@ public class ReturnPageController extends AbstractMplSearchPageController
 					mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()));
 			List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
 			
+			final String sellerId=subOrderEntry.getSelectedSellerInformation().getSellerID();
+			String  pincode;
 			if (subOrderEntry.getDeliveryPointOfService() != null)
 			{
+				pincode=subOrderEntry.getDeliveryPointOfService().getAddress().getPostalCode();
 				returnableStores = pincodeServiceFacade.getAllReturnableStores(subOrderEntry.getDeliveryPointOfService().getAddress()
-						.getPostalCode(), subOrderEntry.getSelectedSellerInformation().getSellerID());
+						.getPostalCode(),sellerId );
 			}
 			else
 			{
+				pincode=subOrderDetails.getDeliveryAddress().getPostalCode();
 				returnableStores = pincodeServiceFacade.getAllReturnableStores(subOrderDetails.getDeliveryAddress().getPostalCode(),
-						StringUtils.substring(subOrderEntry.getSelectedUssid(),0,6));
+						sellerId);
 			}
-         //get next available schedule return pickup dates for order entry 
-			List<String> returnableDates =cancelReturnFacade.getReturnableDates(subOrderEntry);
 			
-			model.addAttribute(ModelAttributetConstants.RETURN_DATES,returnableDates);
+			if(LOG.isDebugEnabled())
+			{
+				LOG.debug("Bellow Store were eligible for Return ");
+				if(CollectionUtils.isNotEmpty(returnableStores))
+				{
+				for (PointOfServiceData pointOfServiceData : returnableStores)
+				{
+					LOG.debug(pointOfServiceData.getDisplayName());
+				}
+				}
+				else
+				{
+					LOG.debug("could not found Returnable Store for the seller Id :"+sellerId +"Pincode :"+pincode );
+				}
+			}
+			
+			try
+			{
+				 //get next available schedule return pickup dates for order entry 
+				List<String> returnableDates =cancelReturnFacade.getReturnableDates(subOrderEntry);
+				
+				model.addAttribute(ModelAttributetConstants.RETURN_DATES,returnableDates);
+			}catch(EtailNonBusinessExceptions e)
+			{
+				LOG.error(e);
+				ExceptionUtil.etailNonBusinessExceptionHandler(e);
+				
+			}
+			catch (Exception e)
+			{
+				LOG.error(e);
+				ExceptionUtil.getCustomizedExceptionTrace(e);
+				
+			}
+        
 			
 			model.addAttribute(ModelAttributetConstants.RETURNABLE_SLAVES, returnableStores);
 		
@@ -271,7 +311,6 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		}
 		
 		String returnPickupDate=returnForm.getScheduleReturnDate();
-		//returnData.setIsReturn("");
 		returnData.setReasonCode(returnForm.getReturnReason());
 		returnData.setRefundType(returnForm.getRefundType());
 		returnData.setReturnPickupDate(returnPickupDate);
@@ -338,7 +377,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		selfShipData.setBankKey(returnForm.getiFSCCode());
 		selfShipData.setOrderNo(returnForm.getOrderCode());
 		selfShipData.setTransactionID(returnForm.getTransactionId());
-		selfShipData.setPaymentMode(returnForm.getTransactionType());
+		selfShipData.setPaymentMode(returnForm.getRefundMode());
 		
 		if(null != returnForm.getIsCODorder() &&  returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) )
 		{
@@ -351,14 +390,31 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_PREPAID);
 		}
 		
-		CODSelfShipResponseData responseData=cancelReturnFacade.codPaymentInfoToFICO(selfShipData);
+				try
+				{
+					//inser or update Customer Bank Details
+					cancelReturnFacade.insertUpdateCustomerBankDetails(selfShipData);
+					CODSelfShipResponseData responseData=cancelReturnFacade.codPaymentInfoToFICO(selfShipData);
+					
+					if(responseData.getSuccess() == null || !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS) )
+					{
+						//saving bank details failed payment details in commerce 
+						cancelReturnFacade.saveCODReturnsBankDetails(selfShipData);	
+						LOG.debug("Failed to post COD return paymnet details to FICO Order No:"+orderCode);
+					}
+				}
+				catch (EtailNonBusinessExceptions e)
+				{
+					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
+							+ " Exception cause :" + e);
+				}
+				catch (Exception e)
+				{
+					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
+							+ " Exception cause :" + e);
+				}
 		
-		if(responseData.getSuccess() == null || !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS) )
-		{
-			//save payment details in commerce 
-			cancelReturnFacade.saveCODReturnsBankDetails(selfShipData);	
-			
-		}
+		
 		}
 		
 		storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUCCESS));
