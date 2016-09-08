@@ -4323,7 +4323,7 @@ $(".edit_address").click(function(){
  			$("#"+address_id_new[1]).html(response);
  		//	$(this).parents().find(".edit").next(".editnewAddresPage").show();
  			//$(".editnewAddresPage .checkout-shipping.formaddress").prepend("<input type='button' value='cancel' class='cancelBtnEdit'>");
- 			$("#"+address_id_new[1]).prepend("<div class='heading-form'><h3>Edit Address</h3><input type='button' value='cancel' class='cancelBtnEdit' id='cancel-"+address_id_new[1]+"'></div>");
+ 			$("#"+address_id_new[1] + " .checkout-shipping.formaddress").prepend("<div class='heading-form'><h3>Edit Address</h3><input type='button' value='cancel' class='cancelBtnEdit' id='cancel-"+address_id_new[1]+"'></div>");
  			$("#"+address_id_new[1]).slideDown();
  		},
  		error : function(resp) {

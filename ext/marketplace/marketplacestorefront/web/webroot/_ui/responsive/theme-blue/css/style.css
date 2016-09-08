@@ -49501,9 +49501,6 @@ body.no-scroll {
 .checkout-shipping.formaddress{
 	border:none;
 }
-.address-list .address span.name + span{
-	padding-bottom:0px;
-}
 .checkout.wrapper .formaddress .product-block.addresses.new-form li.item input#address.postcode.form-control{
 	margin-top:-5px;
 }
@@ -49512,6 +49509,9 @@ body.no-scroll {
 }
 .editnewAddresPage .heading-form{
 	padding-top:15px;
+}
+.editnewAddresPage{
+	clear:both;
 }
 @media only screen and (max-width: 1450px){
 .cart.wrapper {

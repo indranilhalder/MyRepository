@@ -384,64 +384,55 @@
 		  <c:set var="myline3" value="${fn:trim(deliveryAddress.line3)}"/>
 		  
 		  <c:if test="${empty myline2  && empty myline3}">
-		  <span>
+		  <span style="padding-bottom:0px;">
 		  
 		  ${fn:escapeXml(deliveryAddress.title)}</span>	
-		  <span>${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)}, &nbsp;
-		 ${fn:escapeXml(deliveryAddress.postalCode)} <!--DSC_006 : Fix for Checkout Address State display issue -->
-		 ${fn:escapeXml(deliveryAddress.country.isocode)} </span><c:if test="${not empty deliveryAddress.region.name}">&nbsp; <span>${fn:escapeXml(deliveryAddress.region.name)}</span></c:if></br>
+		  <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;
+		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span><c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span></c:if>
 		  <spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br>
-		  <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
-		  <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if>
+		  <%-- <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
+		  <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if> --%>
 		  
 		  
 		  </c:if>
 		  
 		  <c:if test="${not empty myline2  && empty myline3}">
-		   <span>
-		   ${fn:escapeXml(deliveryAddress.title)}	 </span>
-		  <span> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;
-		    ${fn:escapeXml(deliveryAddress.lastName)}</span>
-		   <span>${fn:escapeXml(deliveryAddress.line1)}, &nbsp;
-		   ${fn:escapeXml(deliveryAddress.line2)},    &nbsp;
-		  ${fn:escapeXml(deliveryAddress.town)}, &nbsp;
-		  ${fn:escapeXml(deliveryAddress.state)}, &nbsp;
+		   <span style="padding-bottom:0px;">
+		   ${fn:escapeXml(deliveryAddress.title)}</span>
+		  <span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		   <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;
 		${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
-		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span><c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span></c:if></br>
-		   <spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br>
-		   <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
-		   <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if>
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span><c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span></c:if>
+		   <spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br>
+		  <%--  <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
+		   <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if> --%>
 		  
 		 
 		  </c:if>
 		  <c:if test="${ empty myline2  && not empty myline3}">
 		  
-		  <span>${fn:escapeXml(deliveryAddress.title)}	</span>
-		 <span>${fn:escapeXml(deliveryAddress.firstName)}&nbsp;
-		  <span> ${fn:escapeXml(deliveryAddress.lastName)}</span>
-		 <span> ${fn:escapeXml(deliveryAddress.line1)}, &nbsp;
-		${fn:escapeXml(deliveryAddress.line3)},  &nbsp; 
-		  ${fn:escapeXml(deliveryAddress.town)}, &nbsp;
-		 ${fn:escapeXml(deliveryAddress.state)}, &nbsp; 
+		  <span style="padding-bottom:0px;">${fn:escapeXml(deliveryAddress.title)}</span>
+		 <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		 <span> ${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp; 
 		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
-		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span><c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span></c:if></br>
-		  <spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br>
-		  <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
-		  <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if>
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span><c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span></c:if>
+		  <spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br>
+		 <%--  <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
+		  <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if> --%>
 		  
 		  </c:if>
 		  
 		  <c:if test="${not empty myline2  && not empty myline3}">
-		  <span>
-		  ${fn:escapeXml(deliveryAddress.title)}</span>	<span> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		  <span>${fn:escapeXml(deliveryAddress.line1)}, &nbsp;${fn:escapeXml(deliveryAddress.line2)},  &nbsp;${fn:escapeXml(deliveryAddress.line3)},  &nbsp;
-		${fn:escapeXml(deliveryAddress.town)}, &nbsp;${fn:escapeXml(deliveryAddress.state)}, &nbsp;${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
-		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span><c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span></c:if></br>
-		  <spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br>
-		  <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
-		  <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if>
-		  </span>
+		  <span style="padding-bottom:0px;">
+		  ${fn:escapeXml(deliveryAddress.title)}</span><span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;
+		${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span><c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span></c:if>
+		  <spring:theme code="checkout.phone.no" text="+91"/>&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br>
+		  <%-- <c:if test="${deliveryAddress.addressType eq 'Home'}"> <spring:theme code="checkout.addresstype.residential"/> </c:if>  
+		  <c:if test="${deliveryAddress.addressType eq 'Work'}">  <spring:theme code="checkout.addresstype.commercial"/> </c:if> --%>
 		  </c:if>
 		  
 		  
