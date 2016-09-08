@@ -749,6 +749,7 @@ public final class ModelAttributetConstants
 	public static final String RETURN_FORM = "returnForm";
 	public static final String RETURN_DATES = "returnDates";
 	public static final String RETURN_SLOT_TYPE = "RD";
+	public static final String CUSTOMER_BANK_DETAILS = "customerBankDetails";
 
 	public static final String LPNOTAVAILABLE_ERRORMSG = "Logistic Provider not available for given pincode ";
 
