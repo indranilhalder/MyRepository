@@ -46731,7 +46731,6 @@ body:not(.page-checkout-login) .checkout-header.login{
 }
 
 /* checkout end */
-<<<<<<< HEAD
 /* checkout progress bar start */
 .wrapper .container-address {
     background: #fff none repeat scroll 0 0;
@@ -46846,7 +46845,7 @@ body:not(.page-checkout-login) .checkout-header.login{
 .progress-barcheck .step1 {  width: 8%;}
 .progress-barcheck .step3 {    width: 90%;}
 .progress-barcheck .step-3.finalstep span {    right: 6%;}
-.wrapper .container-address {margin-top: -12px;}
+.wrapper .container-address {margin-top: -10px;}
 .wrapper .container-address { padding: 14px 0 0;}
 .progress-barcheck div a {font-size: 11px;}
 .progress-barcheck .step-3 span{
