@@ -4,9 +4,8 @@
 	xmlns:w="http://www.zkoss.org/2005/zk/client"
 	xmlns:zk="http://www.zkoss.org/2005/zk"
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
-	height="100%" apply="org.zkoss.bind.BindComposer"
-	viewModel="@id('vm') @init('com.techouts.backoffice.widget.controller.AwbEditWidgetController')">
-	<columnlayout width="100%" height="100%">
+	height="100%">
+	<columnlayout width="100%" height="100%" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('com.techouts.backoffice.widget.controller.AwbEditWidgetController')">
 		<columnchildren width="100%">
 			<panel
 				style="height:20%;font-size:14px;border-bottom:3px solid #27394f;border:none">
@@ -80,7 +79,7 @@
 							<vlayout
 								style="width:100px;margin-left:10px">
 								<button style="float:right"
-									label="Search" onClick="@command('lpAwbSearch')" />
+									label="Search" onClick="@command('awbSearch')" />
 							</vlayout>
 						</hlayout>
 						
@@ -89,9 +88,8 @@
 			</panel>
 						
 			<panel
-				style="max-height:70%;height:60%;overflow-x:hidden;overflow-y:auto;border-bottom:3px solid #27394f;border:none">
+				style="max-height:70%;height:60%;border-bottom:3px solid #27394f;border:none">
 				<panelchildren>
-                    <label id="" value="@bind(vm.responseMeassage)" visible="@bind(vm.showMessage)"></label>
 					<listbox model="@bind(vm.listOfTransactions)"
 						id="listBoxData" mold="paging" pageSize="10" pagingPosition="top"
 						emptyMessage="No result found in the result">		

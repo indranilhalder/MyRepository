@@ -34,7 +34,7 @@ import com.techouts.backoffice.exception.InvalidLpOverrideSearchParams;
 
 
 /**
- * this controller class for Lp override
+ * this controller class for awb edit
  *
  * @author prabhakar
  */
@@ -48,13 +48,11 @@ public class AwbEditWidgetController
 	private String selectionOrderStatus;
 	private String selectionLpName;
 	private Boolean isReturn = Boolean.FALSE;
-	private String responseMeassage = "";
 	private final String transactionType = "AWB";
 	private List<TransactionInfo> listOfTransactions; //incoming transactions
 	private Set<String> lpList; //active logistcs Partners
-	private Boolean showMessage = Boolean.TRUE;
-	private List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>(); //outgoing transactions
-	private final Map<String, TransactionInfo> map = new HashMap<String, TransactionInfo>();//modifed transaction
+	private List<OrderLineInfo> listOfOrderLineInfo;
+	private Map<String, TransactionInfo> map;
 	private List<String> ordersStatus;// orders statuses
 	@WireVariable("orderLogisticsRestClient")
 	private OrderLogisticsFacade orderLogisticsUpdateFacade;
@@ -66,12 +64,20 @@ public class AwbEditWidgetController
 
 	@Init
 	@NotifyChange(
-	{ "ordersStatus", "lpList" })
+	{ "ordersStatus", "lpList", "listOfTransactions" })
 	public void init()
 	{
 		LOG.info("inside init");
 		ordersStatus = getOrderStatuses();
 		lpList = getLpSet();
+		if (map == null)
+		{
+			map = new HashMap<String, TransactionInfo>();
+		}
+		if (listOfTransactions == null)
+		{
+			listOfTransactions = new ArrayList<TransactionInfo>();
+		}
 	}
 
 	private Set<String> getLpSet()
@@ -157,14 +163,13 @@ public class AwbEditWidgetController
 	/*
 	 * this method is used for search the list of orders based on the parameters
 	 */
-	@Command("lpAwbSearch")
+	@Command("awbSearch")
 	@NotifyChange(
-	{ "listOfTransactions", "showMessage" })
+	{ "listOfTransactions" })
 	public void lpAwbSearch()
 	{
 		LOG.info("inside lpawb search");
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
-		showMessage = Boolean.FALSE;
 		try
 		{
 			if (StringUtils.isNotEmpty(selectionOrderStatus))
@@ -232,17 +237,15 @@ public class AwbEditWidgetController
 	 */
 	@Command("saveAllTransactions")
 	@NotifyChange(
-	{ "listOfTransactions", "responseMeassage", "showMessage" })
+	{ "listOfTransactions" })
 	public void saveAllTransactions()
 	{
 		LOG.info("inside save all transaction");
-		listOfTransactions = new ArrayList<TransactionInfo>(map.values());
-
 		if (listOfOrderLineInfo == null)
 		{
 			listOfOrderLineInfo = new ArrayList<OrderLineInfo>();
 		}
-		for (final TransactionInfo transaction : listOfTransactions)
+		for (final TransactionInfo transaction : map.values())
 		{
 			final OrderLineInfo orderLineInfo = new OrderLineInfo();
 			orderLineInfo.setOrderId(transaction.getOrderId());
@@ -265,11 +268,12 @@ public class AwbEditWidgetController
 		final StringBuilder message = new StringBuilder();
 		for (final OrderLineResponse orderResponse : orderLineResponse)
 		{
-			message.append(orderResponse.getTransactionId() + "  " + orderResponse.getStatus());
+			message.append(orderResponse.getTransactionId() + "\t " + orderResponse.getStatus());
 		}
-		listOfTransactions.clear();
-		responseMeassage = message.toString();
-		showMessage = Boolean.TRUE;
+		Messagebox.show(message.toString());
+		map.clear();
+		listOfOrderLineInfo.clear();
+		message.setLength(0);
 	}
 
 	/* all setter and getter methods */
@@ -456,39 +460,5 @@ public class AwbEditWidgetController
 	public String getTransactionType()
 	{
 		return transactionType;
-	}
-
-	/**
-	 * @return the showMessage
-	 */
-	public Boolean getShowMessage()
-	{
-		return showMessage;
-	}
-
-	/**
-	 * @param showMessage
-	 *           the showMessage to set
-	 */
-	public void setShowMessage(final Boolean showMessage)
-	{
-		this.showMessage = showMessage;
-	}
-
-	/**
-	 * @return the responseMeassage
-	 */
-	public String getResponseMeassage()
-	{
-		return responseMeassage;
-	}
-
-	/**
-	 * @param responseMeassage
-	 *           the responseMeassage to set
-	 */
-	public void setResponseMeassage(final String responseMeassage)
-	{
-		this.responseMeassage = responseMeassage;
 	}
 }
