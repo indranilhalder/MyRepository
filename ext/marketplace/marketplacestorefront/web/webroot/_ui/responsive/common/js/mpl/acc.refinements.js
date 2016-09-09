@@ -1,3 +1,6 @@
+
+var updatedsearchQuery = "";
+var dummyForm ;
 ACC.refinements = {
 
 	_autoload: [
@@ -97,7 +100,7 @@ ACC.refinements = {
 		var browserURL = window.location.href.split('?');
 
 		// AJAX for checkbox
-		$(document).on("change",".js-product-facet .js-facet-checkbox",function(){
+		$(document).on("change",".js-product-facet .facet_desktop .js-facet-checkbox",function(){
 			var staticHost=$('#staticHost').val();
 			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
@@ -153,8 +156,27 @@ ACC.refinements = {
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 		})
 		
+		//TPR-845
+		$(document).on("change",".js-product-facet .facet_mobile .js-facet-checkbox",function(){
+			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
+			dummyForm = $(this).parents("form");
+			if(updatedsearchQuery==''){
+				updatedsearchQuery=filterMobileQuery;
+			}else{
+				var newFilter=createSearchQuery(filterMobileQuery);	
+				if(updatedsearchQuery.includes(newFilter))
+				{
+					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
+				}
+				else{
+					updatedsearchQuery+=newFilter;
+				}
+			}
+			console.log("updatedsearchQuery : "+updatedsearchQuery);			
+		})
+		
 		// AJAX for Colourbutton and sizebuttons 
-		$(document).on("click",".js-product-facet .js-facet-colourbutton , .js-product-facet .js-facet-sizebutton",function(){
+		$(document).on("click",".js-product-facet .facet_desktop .js-facet-colourbutton , .js-product-facet .facet_desktop .js-facet-sizebutton",function(){
 			
 			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
@@ -210,6 +232,27 @@ ACC.refinements = {
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 		})
 		
+		//TPR-845
+		$(document).on("click",".js-product-facet .facet_mobile .js-facet-colourbutton , .js-product-facet .facet_mobile .js-facet-sizebutton",function(){
+			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
+			if(updatedsearchQuery==''){
+				updatedsearchQuery=filterMobileQuery;
+				
+			}else{
+				var newFilter=createSearchQuery(filterMobileQuery);
+				
+				if(updatedsearchQuery.includes(newFilter))
+				{
+					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
+				}
+				else{
+					updatedsearchQuery+=newFilter;
+				}			
+			}
+			console.log("updatedsearchQuery : "+updatedsearchQuery);
+			
+		})
+		
 		// AJAX for removal of filters
 		$(document).on("click",".facet-list.filter-opt .remove_filter , .priceBucketExpand .any_price",function(e){
 			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -247,6 +290,8 @@ ACC.refinements = {
 		})
 		
 		/*TPR-198 : AJAX Call in SERP and PDP END*/
+		
+		
 		
 		
 		$(document).on("click",".js-product-facet .js-more-facet-values-link",function(e){
@@ -342,3 +387,99 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	
 }
 
+//TPR-845
+function createSearchQuery(filterMobileQuery){
+	var queryString='';
+	var splited=filterMobileQuery.split(':');
+	for (k = 0; k < splited.length; k++) {
+	if(splited.length-3<k){
+		queryString+=':'+splited[k];
+		}
+	}
+	return queryString;
+}
+
+//AJAX for removal of filters
+$(document).on("click",".filter-apply",function(e){
+	$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+	// generating postAjaxURL
+	var browserURL = window.location.href.split('?');
+	var dataString = null;
+	var nonEmptyDataString= null;
+	
+	// generating datastring and postAjaxURL
+	dummyForm.find('input[type="hidden"]').each(function(){
+		if(dataString == null){
+			dataString = $(this).attr('name')+"="+$(this).val();
+		}
+		else{
+			if($(this).attr('name') == 'q'){
+				dataString = dataString + ("&"+$(this).attr('name')+"="+updatedsearchQuery);
+			}else{
+				dataString = dataString + ("&"+$(this).attr('name')+"="+$(this).val());
+			}
+			
+		}
+		console.log("dataString : "+dataString);
+		
+		if($(this).val().length >0){
+			if(nonEmptyDataString == null){
+				nonEmptyDataString = $(this).attr('name')+"="+$(this).val();
+			}
+			else{
+				nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
+			}
+		}
+	})
+	
+	// generating postAjaxURL
+	var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+	var requiredUrl="";
+	var action = dummyForm.attr('action');
+	
+	// generating request mapping URL
+	if($("#isCategoryPage").val() == 'true'){
+		action = action.split('/c-');
+		action = action[1].split('/');
+		requiredUrl = "/c-"+action[0];
+		requiredUrl += "/getFacetData";
+	} else {
+		if(action.indexOf("/getFacetData") == -1){
+			if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1){
+				requiredUrl = action.concat("/getFacetData");
+			}
+			else{
+				requiredUrl = action.concat("getFacetData");
+			}
+		}
+		else{
+			requiredUrl = action;
+		}
+	}
+	// AJAX call
+	console.log("Controle Came");
+
+	filterDataAjax(requiredUrl,dataString,pageURL);
+	return false;
+})
+
+//TPR-845
+$(document).on("click"," .filter-clear ",function(e){
+	$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+
+	var browserURL = window.location.href;
+	var pageURL;
+	if(browserURL.indexOf("%3A")!=-1){
+		pageURL = browserURL.substring(0,browserURL.indexOf("%3A"));
+	}
+	else{
+		pageURL=browserURL;
+	}
+	
+	//redirecting to pageURL on page reload
+	window.location.href =pageURL;
+	return false;
+})
+;
