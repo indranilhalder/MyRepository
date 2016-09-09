@@ -457,9 +457,29 @@ $(document).on("click",".filter-apply",function(e){
 			requiredUrl = action;
 		}
 	}
-		// AJAX call
+	// AJAX call
 	console.log("Controle Came");
+
 	filterDataAjax(requiredUrl,dataString,pageURL);
 	return false;
 })
 
+//TPR-845
+$(document).on("click"," .filter-clear ",function(e){
+	$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+
+	var browserURL = window.location.href;
+	var pageURL;
+	if(browserURL.indexOf("%3A")!=-1){
+		pageURL = browserURL.substring(0,browserURL.indexOf("%3A"));
+	}
+	else{
+		pageURL=browserURL;
+	}
+	
+	//redirecting to pageURL on page reload
+	window.location.href =pageURL;
+	return false;
+})
+;
