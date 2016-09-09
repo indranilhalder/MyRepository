@@ -2086,6 +2086,13 @@ $("#address-form").click(function() {
 	  //$(this).parents().find(".formaddress").slideUp();
   });
 $(".checkTab .address-list").last().addClass("last");
+if($(".choose-address .acc_content").children(".address-list").length == 0){
+	$(".add-address").css({
+	  margin : "0px auto",
+	  float: "none"
+});
+$(".checkTab .formaddress").css("width","100%");
+}
 /*	$(document).on("click",".edit",function(e){	
 		 e.stopPropagation();
 	alert("hi");
