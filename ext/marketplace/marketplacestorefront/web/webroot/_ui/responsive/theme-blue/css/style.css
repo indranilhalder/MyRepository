@@ -46917,7 +46917,7 @@ body:not(.page-checkout-login) .checkout-header.login{
     z-index: 99;
 }
  /* Progress bar*/
-.progress-barcheck {  padding:30px 0 0;  height:60px;  position:relative;  z-index:1;}
+.progress-barcheck { /*  padding:30px 0 0; */  height:60px;  position:relative;  z-index:1;}
 .progress-barcheck .progress-barg {  background: #ebebeb;  width: 100%;  height: 14px;  border-radius:25px;}
 .progress-barcheck .step1, .progress-barcheck .step2, .progress-barcheck .step3 {  background: #a7183e;  height: 14px;  z-index: 1;  display: block;  position: relative;   border-radius:25px; }
 .progress-barcheck div {  float: left;  width: 33.33%;  text-align: center;}
@@ -46967,8 +46967,8 @@ body:not(.page-checkout-login) .checkout-header.login{
 	.progress-barcheck div a{  font-size: 13px;}
 	}
 @media only screen and (max-width:1024px){
-.progress-barcheck {  padding:20px 0 0;}
-.progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{top:12px;}
+/* .progress-barcheck {  padding:20px 0 0;} */
+.progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{top:11px;}
 .progress-barcheck .step-1.finalstep span, .progress-barcheck .step-2.finalstep span, .progress-barcheck .step-3.finalstep span{top:14px;}
 }
 @media only screen and (max-width: 1250px){
@@ -47043,6 +47043,7 @@ body:not(.page-checkout-login) .step-body .checkout-shipping{
 .wrapper .container-address {
    margin-top: -28px;
 }
+.progress-barcheck .step-3:not(.active) span, .progress-barcheck .step-3:not(.step-done) span{top:14px;}
 }
 /* checkout progress bar end */
 /* checkout address start */
@@ -47122,7 +47123,7 @@ body.no-scroll {
     padding: 0;
     list-style: none;
     margin-bottom: 20px;
-    padding: 120px 0 0;
+   /*  padding: 120px 0 0; */
 }
 
 .smk_accordion .accordion_in {
@@ -49632,6 +49633,7 @@ body.no-scroll {
 }
 .checkout-shipping.formaddress{
 	border:none;
+	padding-top:0px !important;
 }
 .checkout.wrapper .formaddress .product-block.addresses.new-form li.item input#address.postcode.form-control{
 	margin-top:-5px;
@@ -49645,9 +49647,9 @@ body.no-scroll {
 .editnewAddresPage{
 	clear:both;
 }
-.form-additionals .control-label.add-address-left-label,.form-additionals .form-group .checkbox{
+.editnewAddresPage .form-additionals .form-group .checkbox{
 	display:none;
-}
+} 
 @media only screen and (max-width: 1450px){
 .cart.wrapper {
     margin: 0 auto;
