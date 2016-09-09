@@ -63,21 +63,21 @@ function navigateToPage(queryString,textString)
 	
 			<c:when test="${facetData.code == 'inStockFlag'}">
 			<c:if test="${facetStockSize=='2'}">
-				<h4 class="${facetData.genericFilter}">${facetData.name}</h4>
+				<h4 class="${facetData.genericFilter}"><span class="category-icons"><span></span></span><span class="filter-nav">${facetData.name}</span></h4>
 			</c:if>		 
 			</c:when> 
 			<%-- <c:when test="${facetData.code == 'price'}">
 				<h4 class="true">${facetData.name}</h4>
 			</c:when> --%>
 			<c:otherwise>
-				<h4 class="true">${facetData.name}</h4>
+				<h4 class="true"><span class="category-icons"><span></span></span><span class="filter-nav">${facetData.name}</span></h4>
 			</c:otherwise>
 	   </c:choose>
 		
                                 	
 		</div>
-
 		<div class="facet-values js-facet-values js-facet-form ">
+		<p class="filter-name">${facetData.name}</p>
 			<c:if test="${not empty facetData.topValues}">
 				<ul class="facet-list js-facet-top-values active">
 					<c:forEach items="${facetData.topValues}" var="facetValue">
